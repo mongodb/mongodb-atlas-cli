@@ -22,11 +22,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const atlasCreateTemplate = "Project '{{.Id}}' created.\n"
@@ -58,8 +57,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newCreateProjectGroup() atlasv2.Group {
-	return atlasv2.Group{
+func (opts *CreateOpts) newCreateProjectGroup() *atlasv2.Group {
+	return &atlasv2.Group{
 		Name:                      opts.name,
 		OrgId:                     opts.ConfigOrgID(),
 		WithDefaultAlertsSettings: opts.defaultAlertSettings(),
@@ -85,7 +84,10 @@ func (opts *CreateOpts) newRegionUsageRestrictions() *string {
 }
 
 func (opts *CreateOpts) newCreateProjectOptions() *atlasv2.CreateProjectApiParams {
-	return &atlasv2.CreateProjectApiParams{ProjectOwnerId: &opts.projectOwnerID, Group: pointer.Get(opts.newCreateProjectGroup())}
+	return &atlasv2.CreateProjectApiParams{
+		ProjectOwnerId: &opts.projectOwnerID,
+		Group:          opts.newCreateProjectGroup(),
+	}
 }
 
 // atlas project(s) create <name> [--orgId orgId] [--ownerID ownerID] [--withoutDefaultAlertSettings].

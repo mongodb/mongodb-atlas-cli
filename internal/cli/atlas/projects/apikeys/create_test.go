@@ -23,9 +23,10 @@ import (
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestCreate_Run(t *testing.T) {
@@ -42,7 +43,7 @@ func TestCreate_Run(t *testing.T) {
 	createOpts.ProjectID = "5a0a1e7e0f2912c554080adc"
 
 	apiKey := &atlasv2.CreateAtlasProjectApiKey{
-		Desc:  &createOpts.description,
+		Desc:  createOpts.description,
 		Roles: []string{},
 	}
 	expected := &atlasv2.ApiKeyUserDetails{
@@ -62,4 +63,8 @@ Public API Key public
 Private API Key private
 `, buf.String())
 	t.Log("buf:", buf.String())
+}
+
+func TestCreateTemplate(t *testing.T) {
+	test.VerifyOutputTemplate(t, createTemplate, atlasv2.ApiKeyUserDetails{})
 }

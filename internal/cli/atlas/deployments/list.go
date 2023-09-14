@@ -26,11 +26,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201006/admin"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -42,7 +43,6 @@ type ListOpts struct {
 	store         store.ClusterLister
 	credStore     store.CredentialsGetter
 	config        setup.ProfileReader
-	debug         bool
 }
 
 type Deployment struct {
@@ -201,7 +201,7 @@ func ListBuilder() *cobra.Command {
 
 			opts.defaultSetter.OutWriter = cmd.OutOrStdout()
 
-			opts.podmanClient = podman.NewClient(opts.debug, opts.OutWriter)
+			opts.podmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
 			return opts.podmanClient.Ready(cmd.Context())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -210,7 +210,6 @@ func ListBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
 
 	return cmd
 }

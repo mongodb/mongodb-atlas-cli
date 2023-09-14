@@ -21,7 +21,8 @@ import (
 
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestUpdateOpts_Run(t *testing.T) {
@@ -47,4 +48,8 @@ func TestUpdateOpts_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestUpdateTemplate(t *testing.T) {
+	test.VerifyOutputTemplate(t, updateTemplate, &atlasv2.ApiKeyUserDetails{})
 }

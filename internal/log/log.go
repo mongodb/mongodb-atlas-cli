@@ -40,7 +40,11 @@ func New(w io.Writer, l Level) *Logger {
 	}
 }
 
-func (l *Logger) SetOutput(w io.Writer) {
+func (l *Logger) Writer() io.Writer {
+	return l.w
+}
+
+func (l *Logger) SetWriter(w io.Writer) {
 	l.w = w
 }
 
@@ -104,8 +108,12 @@ func (l Logger) Warningf(format string, a ...any) (int, error) {
 
 var std = New(os.Stderr, WarningLevel)
 
-func SetOutput(w io.Writer) {
-	std.SetOutput(w)
+func Writer() io.Writer {
+	return std.Writer()
+}
+
+func SetWriter(w io.Writer) {
+	std.SetWriter(w)
 }
 
 func SetLevel(level Level) {

@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20230201006/admin"
+	admin "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -263,10 +263,10 @@ func (m *MockDBUserCertificateCreator) EXPECT() *MockDBUserCertificateCreatorMoc
 }
 
 // CreateDBUserCertificate mocks base method.
-func (m *MockDBUserCertificateCreator) CreateDBUserCertificate(arg0, arg1 string, arg2 int) (*admin.UserCert, error) {
+func (m *MockDBUserCertificateCreator) CreateDBUserCertificate(arg0, arg1 string, arg2 int) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDBUserCertificate", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*admin.UserCert)
+	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

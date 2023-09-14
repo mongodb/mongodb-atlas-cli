@@ -19,7 +19,7 @@ import (
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
-	"github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys"
+	"github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azkeys"
 )
 
 type AzureKeyIdentifier struct {
@@ -61,8 +61,8 @@ func (ki *AzureKeyIdentifier) DecryptKey(key []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	algo := azkeys.JSONWebKeyEncryptionAlgorithmRSAOAEP
-	r, err := client.Decrypt(context.Background(), ki.KeyName, ki.KeyVersion, azkeys.KeyOperationsParameters{
+	algo := azkeys.EncryptionAlgorithmRSAOAEP
+	r, err := client.Decrypt(context.Background(), ki.KeyName, ki.KeyVersion, azkeys.KeyOperationParameters{
 		Value:     key,
 		Algorithm: &algo,
 	}, nil)

@@ -57,7 +57,7 @@ func Builder() *cobra.Command {
 		Short: "MongoDB Atlas operations.",
 		Long:  deprecatedMessage,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			log.SetOutput(cmd.ErrOrStderr())
+			log.SetWriter(cmd.ErrOrStderr())
 
 			_, _ = log.Warning(deprecatedMessage)
 			if err := opts.InitFlow(config.Default())(); err != nil {

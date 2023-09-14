@@ -17,7 +17,7 @@ package commonerrors
 import (
 	"errors"
 
-	"go.mongodb.org/atlas-sdk/v20230201006/admin"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 var (

@@ -22,11 +22,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type CreateOpts struct {
@@ -62,10 +61,8 @@ func (opts *CreateOpts) Run() error {
 
 func (opts *CreateOpts) newExportJob() *atlasv2.DiskBackupExportJobRequest {
 	customData := make([]atlasv2.BackupLabel, 0, len(opts.customData))
-	for key, value := range opts.customData {
-		pair := atlasv2.BackupLabel{}
-		pair.Key, pair.Value = pointer.Get(key), pointer.Get(value)
-		customData = append(customData, pair)
+	for k, v := range opts.customData {
+		customData = append(customData, newBackupLabel(k, v))
 	}
 	createRequest := &atlasv2.DiskBackupExportJobRequest{
 		SnapshotId:     opts.snapshotID,
@@ -73,6 +70,13 @@ func (opts *CreateOpts) newExportJob() *atlasv2.DiskBackupExportJobRequest {
 		CustomData:     customData,
 	}
 	return createRequest
+}
+
+func newBackupLabel(k, v string) atlasv2.BackupLabel {
+	return atlasv2.BackupLabel{
+		Key:   &k,
+		Value: &v,
+	}
 }
 
 // atlas backup(s) export(s) job(s) –-clusterName clusterName [--bucketId bucketId] [--projectId projectId].

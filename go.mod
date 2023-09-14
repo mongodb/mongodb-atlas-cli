@@ -7,7 +7,7 @@ require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.7.2
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.3.1
-	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys v0.10.0
+	github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azkeys v1.0.1
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2
 	github.com/PaesslerAG/jsonpath v0.1.1
@@ -16,16 +16,16 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.13.37
 	github.com/aws/aws-sdk-go-v2/service/kms v1.24.5
 	github.com/briandowns/spinner v1.23.0
-	github.com/containers/podman/v4 v4.6.1
+	github.com/containers/podman/v4 v4.6.2
 	github.com/creack/pty v1.1.18
-	github.com/evergreen-ci/shrub v0.0.0-20220520145438-44fbdf0045c8
+	github.com/evergreen-ci/shrub v0.0.0-20230905131908-6b01f04bb1d2
 	github.com/gemalto/kmip-go v0.0.9
 	github.com/go-test/deep v1.1.0
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/golang/mock v1.6.0
 	github.com/google/go-github/v50 v50.2.0
 	github.com/google/uuid v1.3.1
-	github.com/hinshun/vt10x v0.0.0-20220119200601-820417d04eec
+	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02
 	github.com/jba/templatecheck v0.7.0
 	github.com/klauspost/compress v1.16.7
 	github.com/mattn/go-isatty v0.0.19
@@ -42,7 +42,7 @@ require (
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
 	go.mongodb.org/atlas v0.31.0
-	go.mongodb.org/atlas-sdk/v20230201006 v20230201006.0.0
+	go.mongodb.org/atlas-sdk/v20230201008 v20230201008.0.0
 	go.mongodb.org/mongo-driver v1.12.1
 	go.mongodb.org/ops-manager v0.53.0
 	golang.org/x/crypto v0.13.0
@@ -66,7 +66,7 @@ require (
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	cloud.google.com/go/iam v1.1.1 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.3.0 // indirect
-	github.com/Azure/azure-sdk-for-go/sdk/keyvault/internal v0.7.1 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/internal v1.0.0 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v1.1.1 // indirect
 	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/PaesslerAG/gval v1.0.0 // indirect
@@ -89,7 +89,7 @@ require (
 	github.com/container-orchestrated-devices/container-device-interface v0.5.4 // indirect
 	github.com/containers/common v0.55.3 // indirect
 	github.com/containers/image/v5 v5.26.1 // indirect
-	github.com/containers/storage v1.48.0 // indirect
+	github.com/containers/storage v1.48.1 // indirect
 	github.com/coreos/stream-metadata-go v0.4.2 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

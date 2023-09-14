@@ -15,7 +15,7 @@
 package atlas
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -44,7 +44,7 @@ type ProjectDescriber interface {
 }
 
 type ProjectUsersLister interface {
-	ProjectUsers(string, *atlas.ListOptions) (*atlasv2.PaginatedApiAppUser, error)
+	ProjectUsers(string, *atlas.ListOptions) (*atlasv2.PaginatedAppUser, error)
 }
 
 type ProjectUserDeleter interface {
@@ -107,7 +107,7 @@ func (s *Store) DeleteProject(projectID string) error {
 }
 
 // ProjectUsers lists all IAM users in a project.
-func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAppUser, error) {
+func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedAppUser, error) {
 	res := s.clientv2.ProjectsApi.ListProjectUsers(s.ctx, projectID)
 	if opts != nil {
 		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)

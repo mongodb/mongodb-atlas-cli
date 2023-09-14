@@ -28,20 +28,26 @@ import (
 	"github.com/containers/podman/v4/pkg/machine"
 )
 
-var ErrPodmanNotFound = errors.New("podman not found in your system, check requirements at http://docpage")
+var (
+	ErrPodmanNotFound  = errors.New("podman not found in your system, check requirements at http://docpage")
+	ErrNetworkNotFound = errors.New("network ip range was not found")
+)
 
 type Diagnostic struct {
 	Installed    bool
 	MachineFound bool
 	MachineState string
 	MachineInfo  *machine.InspectInfo
-	VersionFound bool
 	Version      *Version
 	Images       []string
+	Errors       []string
 }
+
+const PodmanRunningState = machine.Running
 
 type RunContainerOpts struct {
 	Detach   bool
+	Remove   bool
 	Image    string
 	Name     string
 	Hostname string
@@ -54,6 +60,7 @@ type RunContainerOpts struct {
 	Args       []string
 	Entrypoint string
 	Cmd        string
+	IP         string
 }
 
 type Container struct {
@@ -131,6 +138,18 @@ type Client interface {
 	Version(ctx context.Context) (*Version, error)
 	Logs(ctx context.Context) ([]interface{}, error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
+	Network(ctx context.Context, name string) (*Network, error)
+	Exec(ctx context.Context, name string, args ...string) error
+}
+
+type Network struct {
+	ID         string `json:"ID"`
+	Name       string `json:"Name"`
+	DNSEnabled string `json:"DNSEnabled"`
+	Subnets    []struct {
+		Subnet  string `json:"Subnet"`
+		Gateway string `json:"gateway"`
+	} `json:"Subnets"`
 }
 
 type client struct {
@@ -140,35 +159,34 @@ type client struct {
 
 func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	d := &Diagnostic{
-		Installed: true,
+		Installed:    true,
+		MachineFound: true,
 	}
 
 	err := Installed()
 	if err != nil {
 		d.Installed = false
-		return d
+		d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman installed: %w", err).Error())
 	}
 
 	d.Version, err = o.Version(ctx)
 	if err != nil {
-		d.VersionFound = false
-		return d
+		d.Errors = append(d.Errors, fmt.Errorf("failed to collect podman version: %w", err).Error())
 	}
-
-	d.VersionFound = true
 
 	info, err := o.machineInspect(ctx)
 	if err != nil {
 		d.MachineFound = false
-		return d
+		d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman machine: %w", err).Error())
+	} else {
+		d.MachineInfo = info
+		d.MachineState = info.State
 	}
 
-	d.MachineFound = true
-	d.MachineInfo = info
-	d.MachineState = info.State
-
 	images, err := o.ListImages(ctx, "")
-	if err == nil {
+	if err != nil {
+		d.Errors = append(d.Errors, fmt.Errorf("failed to list podman images: %w", err).Error())
+	} else {
 		d.Images = make([]string, 0, len(images))
 		for _, img := range images {
 			d.Images = append(d.Images, img.Names...)
@@ -204,7 +222,7 @@ func (o *client) machineStart(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	if info.State != machine.Running {
+	if info.State != PodmanRunningState {
 		_, err := o.runPodman(ctx, "machine", "start")
 		if err != nil {
 			return err
@@ -282,8 +300,16 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 		arg = append(arg, "-e", envVar+"="+value)
 	}
 
+	if opts.IP != "" {
+		arg = append(arg, "--ip", opts.IP)
+	}
+
 	if opts.Detach {
 		arg = append(arg, "-d")
+	}
+
+	if opts.Remove {
+		arg = append(arg, "--rm")
 	}
 
 	if opts.Entrypoint != "" {
@@ -397,6 +423,29 @@ func (o *client) ContainerLogs(ctx context.Context, name string) ([]string, erro
 
 	logs := strings.Split(string(output), "\n")
 	return logs, nil
+}
+
+func (o *client) Network(ctx context.Context, name string) (*Network, error) {
+	output, err := o.runPodman(ctx, "network", "inspect", name, "--format", "json")
+	if err != nil {
+		return nil, err
+	}
+
+	var n []*Network
+	if err = json.Unmarshal(output, &n); err != nil {
+		return nil, err
+	}
+
+	if len(n) == 0 {
+		return nil, ErrNetworkNotFound
+	}
+
+	return n[0], err
+}
+
+func (o *client) Exec(ctx context.Context, name string, args ...string) error {
+	_, err := o.runPodman(ctx, append([]string{"exec", name}, args...)...)
+	return err
 }
 
 func NewClient(debug bool, outWriter io.Writer) Client {

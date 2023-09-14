@@ -30,12 +30,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func splitOutput(cmd *exec.Cmd) (error, string, string) {
+func splitOutput(cmd *exec.Cmd) (string, string, error) {
 	var o, e bytes.Buffer
 	cmd.Stdout = &o
 	cmd.Stderr = &e
 	err := cmd.Run()
-	return err, o.String(), e.String()
+	return o.String(), e.String(), err
 }
 
 func TestDeployments(t *testing.T) {
@@ -100,7 +100,7 @@ func TestDeployments(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		err, o, e := splitOutput(cmd)
+		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
 
 		req.Equal(
@@ -172,7 +172,7 @@ func TestDeployments(t *testing.T) {
 		req.NoError(err, string(r))
 	})
 
-	var indexId string
+	var indexID string
 	t.Run("Wait for search index", func(t *testing.T) {
 		for {
 			t.Log("Waiting for index...")
@@ -192,7 +192,7 @@ func TestDeployments(t *testing.T) {
 				continue // no status found
 			}
 			if status == "STEADY" {
-				indexId, _ = results[0]["id"].(string)
+				indexID, _ = results[0]["id"].(string)
 				break
 			}
 		}
@@ -204,7 +204,7 @@ func TestDeployments(t *testing.T) {
 			"search",
 			"index",
 			"describe",
-			indexId,
+			indexID,
 			"--deploymentName",
 			"test",
 		)

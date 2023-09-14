@@ -400,28 +400,18 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 		return err
 	}
 
-	tmCtx, cancel := context.WithTimeout(ctx, waitMongotTimeout)
+	return opts.waitForMongot(ctx)
+}
+
+func (opts *SetupOpts) waitForMongot(parentCtx context.Context) error {
+	ctx, cancel := context.WithTimeout(parentCtx, waitMongotTimeout)
 	defer cancel()
 	for {
 		select {
-		case <-tmCtx.Done():
-			return tmCtx.Err()
+		case <-ctx.Done():
+			return ctx.Err()
 		default:
-			_, err := opts.podmanClient.RunContainer(tmCtx, podman.RunContainerOpts{
-				Remove:   true,
-				Detach:   false,
-				Image:    opts.MongodDockerImageName(),
-				Name:     opts.LocalCheckHostname(),
-				Hostname: opts.LocalCheckHostname(),
-				EnvVars: map[string]string{
-					"MONGOTHOST": opts.internalMongotAddress(),
-				},
-				Entrypoint: "/bin/sh",
-				Args:       []string{"-c", `mongosh $MONGOTHOST --eval "db.adminCommand('ping')"`},
-				Network:    opts.LocalNetworkName(),
-			})
-
-			if err == nil { // ping was successful
+			if err := opts.podmanClient.Exec(ctx, opts.LocalMongodHostname(), "/bin/sh", "-c", fmt.Sprintf("mongosh %s --eval \"db.adminCommand('ping')\"", opts.internalMongotAddress())); err == nil { // ping was successful
 				return nil
 			}
 		}

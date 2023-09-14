@@ -139,6 +139,7 @@ type Client interface {
 	Logs(ctx context.Context) ([]interface{}, error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
 	Network(ctx context.Context, name string) (*Network, error)
+	Exec(ctx context.Context, name string, args ...string) error
 }
 
 type Network struct {
@@ -440,6 +441,11 @@ func (o *client) Network(ctx context.Context, name string) (*Network, error) {
 	}
 
 	return n[0], err
+}
+
+func (o *client) Exec(ctx context.Context, name string, args ...string) error {
+	_, err := o.runPodman(ctx, append([]string{"exec", name}, args...)...)
+	return err
 }
 
 func NewClient(debug bool, outWriter io.Writer) Client {

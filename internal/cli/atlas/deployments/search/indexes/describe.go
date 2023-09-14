@@ -74,12 +74,12 @@ func (opts *DescribeOpts) RunAtlas() error {
 }
 
 func (opts *DescribeOpts) RunLocal(ctx context.Context) error {
-	connectionString, e := opts.ConnectionString(ctx)
-	if e != nil {
-		return e
+	connectionString, err := opts.ConnectionString(ctx)
+	if err != nil {
+		return err
 	}
 
-	if err := opts.mongodbClient.Connect(ctx, connectionString, connectWaitSeconds); err != nil {
+	if err = opts.mongodbClient.Connect(ctx, connectionString, connectWaitSeconds); err != nil {
 		return err
 	}
 	defer opts.mongodbClient.Disconnect(ctx)
@@ -106,6 +106,12 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DescribeOpts) validateAndPrompt(ctx context.Context) error {
+	if opts.indexID == "" {
+		if err := promptRequiredName("Search Index ID", &opts.indexID); err != nil {
+			return err
+		}
+	}
+
 	if opts.DeploymentName == "" {
 		if err := opts.DeploymentOpts.Select(ctx); err != nil {
 			return err

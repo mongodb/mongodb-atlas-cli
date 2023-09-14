@@ -16,7 +16,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.13.37
 	github.com/aws/aws-sdk-go-v2/service/kms v1.24.5
 	github.com/briandowns/spinner v1.23.0
-	github.com/containers/podman/v4 v4.6.1
+	github.com/containers/podman/v4 v4.6.2
 	github.com/creack/pty v1.1.18
 	github.com/evergreen-ci/shrub v0.0.0-20230905131908-6b01f04bb1d2
 	github.com/gemalto/kmip-go v0.0.9
@@ -89,7 +89,7 @@ require (
 	github.com/container-orchestrated-devices/container-device-interface v0.5.4 // indirect
 	github.com/containers/common v0.55.3 // indirect
 	github.com/containers/image/v5 v5.26.1 // indirect
-	github.com/containers/storage v1.48.0 // indirect
+	github.com/containers/storage v1.48.1 // indirect
 	github.com/coreos/stream-metadata-go v0.4.2 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

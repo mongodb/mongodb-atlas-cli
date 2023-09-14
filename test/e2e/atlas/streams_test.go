@@ -33,6 +33,10 @@ const (
 )
 
 func TestStreams(t *testing.T) {
+	if IsGov() {
+		t.Skip("Skipping Streams integration test, Streams processing is not enabled in cloudgov")
+	}
+
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("atlasStreams")
 

@@ -53,8 +53,7 @@ type Deployment struct {
 
 const listTemplate = `NAME	TYPE	MDB VER	STATE
 {{range .}}{{.Name}}	{{.Type}}	{{.MongoDBVersion}}	{{.StateName}}
-{{end}}
-`
+{{end}}`
 
 const MaxItemsPerPage = 500
 

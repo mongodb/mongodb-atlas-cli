@@ -120,7 +120,6 @@ atlasCluster2   ATLAS   7.0.0     IDLE
 atlasCluster1   ATLAS   7.0.0     IDLE
 localTest1      LOCAL   7.0.0     IDLE
 localTest2      LOCAL   6.0.9     IDLE
-
 `, buf.String())
 	t.Log(buf.String())
 }

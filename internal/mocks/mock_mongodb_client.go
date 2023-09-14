@@ -187,6 +187,21 @@ func (mr *MockDatabaseMockRecorder) SearchIndex(arg0, arg1 interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndex", reflect.TypeOf((*MockDatabase)(nil).SearchIndex), arg0, arg1)
 }
 
+// SearchIndexes mocks base method.
+func (m *MockDatabase) SearchIndexes(arg0 context.Context, arg1 string) ([]*mongodbclient.SearchIndexDefinition, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchIndexes", arg0, arg1)
+	ret0, _ := ret[0].([]*mongodbclient.SearchIndexDefinition)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchIndexes indicates an expected call of SearchIndexes.
+func (mr *MockDatabaseMockRecorder) SearchIndexes(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndexes", reflect.TypeOf((*MockDatabase)(nil).SearchIndexes), arg0, arg1)
+}
+
 // MockSearchIndex is a mock of SearchIndex interface.
 type MockSearchIndex struct {
 	ctrl     *gomock.Controller
@@ -237,4 +252,19 @@ func (m *MockSearchIndex) SearchIndex(arg0 context.Context, arg1 string) (*mongo
 func (mr *MockSearchIndexMockRecorder) SearchIndex(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndex", reflect.TypeOf((*MockSearchIndex)(nil).SearchIndex), arg0, arg1)
+}
+
+// SearchIndexes mocks base method.
+func (m *MockSearchIndex) SearchIndexes(arg0 context.Context, arg1 string) ([]*mongodbclient.SearchIndexDefinition, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchIndexes", arg0, arg1)
+	ret0, _ := ret[0].([]*mongodbclient.SearchIndexDefinition)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchIndexes indicates an expected call of SearchIndexes.
+func (mr *MockSearchIndexMockRecorder) SearchIndexes(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndexes", reflect.TypeOf((*MockSearchIndex)(nil).SearchIndexes), arg0, arg1)
 }

@@ -25,7 +25,10 @@ import (
 
 const (
 	listSearchIndexes = "$listSearchIndexes"
+	addFields         = "$addFields"
 	idField           = "id"
+	collectionField   = "collection"
+	databaseField     = "database"
 )
 
 var ErrSearchIndexNotFound = errors.New("search Index not found")
@@ -33,17 +36,18 @@ var ErrSearchIndexNotFound = errors.New("search Index not found")
 type SearchIndex interface {
 	CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) error
 	SearchIndex(ctx context.Context, id string) (*SearchIndexDefinition, error)
+	SearchIndexes(ctx context.Context, coll string) ([]*SearchIndexDefinition, error)
 }
 
 type SearchIndexDefinition struct {
-	ID         string                                 `json:"id"`
-	Name       string                                 `json:"name"`
-	Collection string                                 `json:"collection"`
-	Database   string                                 `json:"database"`
-	Analyzer   *string                                `json:"analyzer,omitempty"`
-	Analyzers  []admin.ApiAtlasFTSAnalyzers           `json:"analyzers,omitempty"`
-	Synonyms   []admin.SearchSynonymMappingDefinition `json:"synonyms,omitempty"`
-	Mappings   *admin.ApiAtlasFTSMappings             `json:"mappings,omitempty"`
+	Name       string                                 `bson:"name,omitempty"`
+	ID         string                                 `bson:"id,omitempty"`
+	Collection string                                 `bson:"collection,omitempty"`
+	Database   string                                 `bson:"database,omitempty"`
+	Analyzer   *string                                `bson:"analyzer,omitempty"`
+	Analyzers  []admin.ApiAtlasFTSAnalyzers           `bson:"analyzers,omitempty"`
+	Synonyms   []admin.SearchSynonymMappingDefinition `bson:"synonyms,omitempty"`
+	Mappings   *admin.ApiAtlasFTSMappings             `bson:"mappings,omitempty"`
 }
 
 func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) error {
@@ -86,7 +90,7 @@ func (o *database) SearchIndex(ctx context.Context, id string) (*SearchIndexDefi
 	// We search the index in all the collections of the database
 	for _, coll := range collectionNames {
 		cursor, err := o.db.Collection(coll).Aggregate(ctx, newSearchIndexPipeline(id))
-		if err != nil {
+		if err != nil || cursor == nil {
 			return nil, err
 		}
 		var results []SearchIndexDefinition
@@ -106,6 +110,20 @@ func (o *database) SearchIndex(ctx context.Context, id string) (*SearchIndexDefi
 	return nil, fmt.Errorf("index `%s` not found: %w", id, ErrSearchIndexNotFound)
 }
 
+func (o *database) SearchIndexes(ctx context.Context, coll string) ([]*SearchIndexDefinition, error) {
+	cursor, err := o.db.Collection(coll).Aggregate(ctx, newSearchIndexesPipeline(o.db.Name(), coll))
+	if err != nil || cursor == nil {
+		return nil, err
+	}
+
+	var results []*SearchIndexDefinition
+	if err = cursor.All(ctx, &results); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
 func newSearchIndexPipeline(id string) []*bson.D {
 	return []*bson.D{
 		{
@@ -113,6 +131,28 @@ func newSearchIndexPipeline(id string) []*bson.D {
 				Key: listSearchIndexes, Value: []bson.E{
 					{
 						Key: idField, Value: id,
+					},
+				},
+			},
+		},
+	}
+}
+
+func newSearchIndexesPipeline(db, coll string) []*bson.D {
+	return []*bson.D{
+		{
+			{
+				Key: listSearchIndexes, Value: bson.D{},
+			},
+		},
+		{
+			{
+				Key: addFields, Value: bson.D{
+					{
+						Key: collectionField, Value: coll,
+					},
+					{
+						Key: databaseField, Value: db,
 					},
 				},
 			},

@@ -29,10 +29,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201007/admin"
 )
 
-var listTemplate = `ID	NAME	DATABASE	COLLECTION
-{{.ID}}	{{.Name}}	{{.Database}}	{{.Collection}}
+var listTemplate = `ID	NAME	DATABASE	COLLECTION{{range .}}
+{{.ID}}	{{.Name}}	{{.Database}}	{{.Collection}}{{end}}
 `
 
 type ListOpts struct {
@@ -41,7 +42,7 @@ type ListOpts struct {
 	options.DeploymentOpts
 	search.IndexOpts
 	mongodbClient mongodbclient.MongoDBClient
-	store         store.SearchIndexDescriber
+	store         store.SearchIndexLister
 }
 
 func (opts *ListOpts) Run(ctx context.Context) error {
@@ -50,7 +51,7 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 	}
 
 	err := opts.RunLocal(ctx)
-	if err != nil && (errors.Is(err, options.ErrDeploymentNotFound) || errors.Is(err, mongodbclient.ErrSearchIndexNotFound)) {
+	if err != nil && (errors.Is(err, options.ErrDeploymentNotFound)) {
 		return opts.RunAtlas()
 	}
 
@@ -58,19 +59,12 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 }
 
 func (opts *ListOpts) RunAtlas() error {
-	r, err := opts.store.SearchIndex(opts.ConfigProjectID(), opts.DeploymentName, opts.indexID)
+	r, err := opts.store.SearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, opts.DBName, opts.Collection)
 	if err != nil {
 		return err
 	}
 
-	index := mongodbclient.SearchIndexDefinition{
-		ID:         *r.IndexID,
-		Name:       r.Name,
-		Collection: r.CollectionName,
-		Database:   r.Database,
-	}
-
-	return opts.Print(index)
+	return opts.Print(newSearchIndexDefinition(r))
 }
 
 func (opts *ListOpts) RunLocal(ctx context.Context) error {
@@ -84,7 +78,7 @@ func (opts *ListOpts) RunLocal(ctx context.Context) error {
 	}
 	defer opts.mongodbClient.Disconnect(ctx)
 
-	r, err := opts.mongodbClient.SearchIndex(ctx, opts.indexID)
+	r, err := opts.mongodbClient.Database(opts.DBName).SearchIndexes(ctx, opts.Collection)
 	if err != nil {
 		return err
 	}
@@ -127,6 +121,20 @@ func (opts *ListOpts) validateAndPrompt(ctx context.Context) error {
 	return nil
 }
 
+func newSearchIndexDefinition(indexes []atlasv2.ClusterSearchIndex) []*mongodbclient.SearchIndexDefinition {
+	out := make([]*mongodbclient.SearchIndexDefinition, len(indexes))
+	for i, v := range indexes {
+		out[i] = &mongodbclient.SearchIndexDefinition{
+			ID:         *v.IndexID,
+			Name:       v.Name,
+			Collection: v.CollectionName,
+			Database:   v.Database,
+		}
+	}
+
+	return out
+}
+
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
@@ -140,7 +148,7 @@ func ListBuilder() *cobra.Command {
 			w := cmd.OutOrStdout()
 			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
 			return opts.PreRunE(
-				opts.InitOutput(w, describeTemplate),
+				opts.InitOutput(w, listTemplate),
 				opts.InitStore(opts.PodmanClient),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient,
@@ -151,7 +159,7 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.DeploymentName, flag.ClusterName, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

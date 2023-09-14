@@ -17,7 +17,7 @@
 package atlas
 
 import (
-	"go.mongodb.org/atlas-sdk/v20230201007/admin"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_data_federation_private_endpoint.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas DataFederationPrivateEndpointLister,DataFederationPrivateEndpointDescriber,DataFederationPrivateEndpointCreator,DataFederationPrivateEndpointDeleter

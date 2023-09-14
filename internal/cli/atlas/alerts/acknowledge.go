@@ -27,7 +27,7 @@ import (
 	customTime "github.com/mongodb/mongodb-atlas-cli/internal/time"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201007/admin"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type AcknowledgeOpts struct {

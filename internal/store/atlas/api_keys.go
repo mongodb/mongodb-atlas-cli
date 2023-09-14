@@ -15,7 +15,7 @@
 package atlas
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -34,7 +34,7 @@ type ProjectAPIKeyDeleter interface {
 }
 
 type ProjectAPIKeyAssigner interface {
-	AssignProjectAPIKey(string, string, *atlasv2.CreateAtlasProjectApiKey) error
+	AssignProjectAPIKey(string, string, *atlasv2.UpdateAtlasProjectApiKey) error
 }
 
 type OrganizationAPIKeyLister interface {
@@ -46,7 +46,7 @@ type OrganizationAPIKeyDescriber interface {
 }
 
 type OrganizationAPIKeyUpdater interface {
-	UpdateOrganizationAPIKey(string, string, *atlasv2.CreateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error)
+	UpdateOrganizationAPIKey(string, string, *atlasv2.UpdateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error)
 }
 
 type OrganizationAPIKeyCreator interface {
@@ -74,7 +74,7 @@ func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlasv2.ApiKeyUserD
 }
 
 // UpdateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlasv2.CreateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error) {
+func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlasv2.UpdateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error) {
 	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKey(s.ctx, orgID, apiKeyID, input).Execute()
 	return result, err
 }
@@ -108,7 +108,7 @@ func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlasv2.Creat
 }
 
 // AssignProjectAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlasv2.CreateAtlasProjectApiKey) error {
+func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlasv2.UpdateAtlasProjectApiKey) error {
 	_, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKeyRoles(s.ctx, projectID, apiKeyID, input).Execute()
 	return err
 }

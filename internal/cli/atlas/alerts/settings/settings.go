@@ -18,7 +18,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201007/admin"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const (
@@ -150,12 +150,11 @@ func (opts *ConfigOpts) newNotification() *admin.AlertsNotificationRootForGroup 
 }
 
 func (opts *ConfigOpts) newMetricThreshold() *admin.ServerlessMetricThreshold {
-	metricName := strings.ToUpper(opts.metricThresholdMetricName)
 	operator := strings.ToUpper(opts.metricThresholdOperator)
 	mode := strings.ToUpper(opts.metricThresholdMode)
 	units := strings.ToUpper(opts.metricThresholdUnits)
 	result := &admin.ServerlessMetricThreshold{
-		MetricName: &metricName,
+		MetricName: strings.ToUpper(opts.metricThresholdMetricName),
 		Operator:   &operator,
 		Threshold:  &opts.metricThresholdThreshold,
 		Units:      &units,

@@ -20,7 +20,7 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestBuildAtlasInheritedRoles(t *testing.T) {

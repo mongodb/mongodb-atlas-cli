@@ -103,9 +103,12 @@ func TestDeployments(t *testing.T) {
 		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
 
+		lines := strings.Split(o, "\n")
+
 		req.Equal(
 			4, // title, content, empty line, empty line
-			len(strings.Split(o, "\n")),
+			len(lines),
+			lines,
 		)
 	})
 

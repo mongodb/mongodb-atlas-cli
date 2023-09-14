@@ -32,6 +32,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/compass"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -109,6 +110,7 @@ type SetupOpts struct {
 	connectWith   string
 	force         bool
 	s             *spinner.Spinner
+	atlasSetup    *setup.Opts
 }
 
 func (opts *SetupOpts) initPodmanClient() error {
@@ -534,7 +536,16 @@ func (opts *SetupOpts) promptDeploymentType() error {
 		},
 	}
 
-	return telemetry.TrackAskOne(p, &opts.DeploymentType, nil)
+	err := telemetry.TrackAskOne(p, &opts.DeploymentType, nil)
+	if err != nil {
+		return err
+	}
+
+	if !strings.EqualFold(opts.DeploymentType, atlasCluster) && !strings.EqualFold(opts.DeploymentType, localCluster) {
+		return fmt.Errorf("%w: %s", errDeploymentTypeNotImplemented, deploymentTypeDescription[opts.DeploymentType])
+	}
+
+	return nil
 }
 
 func (opts *SetupOpts) setDefaultSettings() (ok bool, err error) {
@@ -613,8 +624,9 @@ func (opts *SetupOpts) validateAndPrompt() error {
 		}
 	}
 
-	if strings.EqualFold(opts.DeploymentType, atlasCluster) {
-		return fmt.Errorf("%w: %s", errDeploymentTypeNotImplemented, deploymentTypeDescription[opts.DeploymentType])
+	// Defer prompts to Atlas command
+	if opts.DeploymentType == atlasCluster {
+		return nil
 	}
 
 	ok, err := opts.setDefaultSettings()
@@ -657,16 +669,7 @@ Port	{{.Port}}
 	return nil
 }
 
-func (opts *SetupOpts) Run(ctx context.Context) error {
-	if err := opts.validateAndPrompt(); err != nil {
-		if errors.Is(err, errSkip) {
-			_, _ = fmt.Fprintf(opts.OutWriter, "%s\n", err)
-			return nil
-		}
-
-		return err
-	}
-
+func (opts *SetupOpts) RunLocal(ctx context.Context) error {
 	if err := opts.createLocalDeployment(ctx); err != nil {
 		return err
 	}
@@ -681,10 +684,62 @@ Connection string: %s
 	return opts.runConnectWith(cs)
 }
 
+func (opts *SetupOpts) RunAtlas(ctx context.Context) error {
+	s := setup.Builder()
+
+	// remove "deployment" from the arg
+	os.Args = os.Args[1:]
+
+	var newArgs []string
+	for i := 0; i < len(os.Args); i++ {
+		// skip unknown flags
+		if os.Args[i] == fmt.Sprintf("--%s", flag.TypeFlag) {
+			_, _ = log.Debugf("Skipped flag: %s %s\n", os.Args[i], os.Args[i+1])
+			i++ // skip the arg after flag
+			continue
+		}
+
+		// skip cluster name argument
+		if os.Args[i] == opts.DeploymentName {
+			_, _ = log.Debugf("Skipped deployment name and set as a flag: %s\n", os.Args[i])
+			newArgs = append(newArgs, fmt.Sprintf("--%s", flag.ClusterName))
+			newArgs = append(newArgs, os.Args[i])
+			continue
+		}
+
+		newArgs = append(newArgs, os.Args[i])
+	}
+
+	// update args
+	os.Args = newArgs
+
+	// run atlas setup
+	_, err := s.ExecuteContextC(ctx)
+	return err
+}
+
+func (opts *SetupOpts) Run(ctx context.Context) error {
+	if err := opts.validateAndPrompt(); err != nil {
+		if errors.Is(err, errSkip) {
+			_, _ = fmt.Fprintf(opts.OutWriter, "%s\n", err)
+			return nil
+		}
+
+		return err
+	}
+
+	if opts.DeploymentType == localCluster {
+		return opts.RunLocal(ctx)
+	}
+
+	return opts.RunAtlas(ctx)
+}
+
 // atlas deployments setup.
 func SetupBuilder() *cobra.Command {
 	opts := &SetupOpts{
-		settings: defaultSettings,
+		settings:   defaultSettings,
+		atlasSetup: &setup.Opts{},
 	}
 	cmd := &cobra.Command{
 		Use:   "setup [deploymentName]",
@@ -708,13 +763,19 @@ func SetupBuilder() *cobra.Command {
 		},
 	}
 
+	// Local and Atlas
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
-	cmd.Flags().IntVar(&opts.Port, flag.Port, 0, usage.MongodPort)
 	cmd.Flags().StringVar(&opts.MdbVersion, flag.MDBVersion, "", usage.MDBVersion)
 	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWith)
 
 	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
-	cmd.Flags().BoolVar(&opts.force, flag.Force, false, usage.Force)
+
+	// Local only
+	cmd.Flags().IntVar(&opts.Port, flag.Port, 0, usage.MongodPort)
+
+	// Atlas only
+	opts.atlasSetup.SetupAtlasFlags(cmd)
+	opts.atlasSetup.SetupFlowFlags(cmd)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.MDBVersion, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return mdbVersions, cobra.ShellCompDirectiveDefault

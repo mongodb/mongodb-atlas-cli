@@ -60,6 +60,7 @@ func TestCreate_Run(t *testing.T) {
 		},
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
+			Template:  createTemplate,
 		},
 		mongodbClient: mockMongodbClient,
 	}

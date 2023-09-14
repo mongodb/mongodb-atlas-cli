@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"time"
 
-	"go.mongodb.org/atlas-sdk/v20230201007/admin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -28,12 +27,13 @@ import (
 
 var errConnectFailed = errors.New("failed to connect to mongodb server")
 
-//go:generate mockgen -destination=../mocks/mock_mongodb_client.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient MongoDBClient,Database
+//go:generate mockgen -destination=../mocks/mock_mongodb_client.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient MongoDBClient,Database,SearchIndex
 
 type MongoDBClient interface {
 	Connect(ctx context.Context, connectionString string, waitSeconds int64) error
 	Disconnect(ctx context.Context)
 	Database(db string) Database
+	SearchIndex(ctx context.Context, id string) (*SearchIndexDefinition, error)
 }
 
 type mongodbClient struct {
@@ -42,17 +42,6 @@ type mongodbClient struct {
 
 func NewClient() MongoDBClient {
 	return &mongodbClient{}
-}
-
-type Database interface {
-	RunCommand(ctx context.Context, runCommand interface{}) (interface{}, error)
-	InsertOne(ctx context.Context, collection string, doc interface{}) (interface{}, error)
-	InitiateReplicaSet(ctx context.Context, rsName string, hostname string, internalPort int, externalPort int) error
-	CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) error
-}
-
-type database struct {
-	db *mongo.Database
 }
 
 func (o *mongodbClient) Connect(ctx context.Context, connectionString string, waitSeconds int64) error {
@@ -72,83 +61,26 @@ func (o *mongodbClient) Connect(ctx context.Context, connectionString string, wa
 	return nil
 }
 
+func (o *mongodbClient) SearchIndex(ctx context.Context, id string) (*SearchIndexDefinition, error) {
+	dbs, err := o.client.ListDatabaseNames(ctx, bson.D{}, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// We search the index in all the databases
+	for _, db := range dbs {
+		if index, _ := o.Database(db).SearchIndex(ctx, id); index != nil {
+			return index, nil
+		}
+	}
+
+	return nil, fmt.Errorf("index `%s` not found: %w", id, ErrSearchIndexNotFound)
+}
+
 func (o *mongodbClient) Disconnect(ctx context.Context) {
 	_ = o.client.Disconnect(ctx)
 }
 
 func (o *mongodbClient) Database(name string) Database {
 	return &database{db: o.client.Database(name)}
-}
-
-func (o *database) RunCommand(ctx context.Context, runCmd interface{}) (interface{}, error) {
-	r := o.db.RunCommand(ctx, runCmd)
-	if err := r.Err(); err != nil {
-		return nil, err
-	}
-
-	var cmdResult bson.M
-	if err := r.Decode(&cmdResult); err != nil {
-		return nil, err
-	}
-	return cmdResult, nil
-}
-
-func (o *database) InsertOne(ctx context.Context, col string, doc interface{}) (interface{}, error) {
-	return o.db.Collection(col).InsertOne(ctx, doc)
-}
-
-func (o *database) InitiateReplicaSet(ctx context.Context, rsName string, hostname string, internalPort int, externalPort int) error {
-	return o.db.RunCommand(ctx, bson.D{{Key: "replSetInitiate", Value: bson.M{
-		"_id":       rsName,
-		"version":   1,
-		"configsvr": false,
-		"members": []bson.M{
-			{
-				"_id":  0,
-				"host": fmt.Sprintf("%s:%d", hostname, internalPort),
-				"horizons": bson.M{
-					"external": fmt.Sprintf("localhost:%d", externalPort),
-				},
-			},
-		},
-	}}}).Err()
-}
-
-func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) error {
-	// todo: CLOUDP-199915 Use go-driver search index management helpers instead of createSearchIndex command
-	return o.db.RunCommand(ctx, bson.D{
-		{
-			Key:   "createSearchIndexes",
-			Value: collection,
-		},
-		{
-			Key: "indexes",
-			Value: []bson.D{
-				{
-					{
-						Key:   "name",
-						Value: idx.Name,
-					},
-					{
-						Key: "definition",
-						Value: &searchIndexDefinition{
-							Name:      idx.Name,
-							Analyzer:  idx.Analyzer,
-							Analyzers: idx.Analyzers,
-							Mappings:  idx.Mappings,
-							Synonyms:  idx.Synonyms,
-						},
-					},
-				},
-			},
-		},
-	}).Err()
-}
-
-type searchIndexDefinition struct {
-	Name      string                                 `json:"name"`
-	Analyzer  *string                                `json:"analyzer,omitempty"`
-	Analyzers []admin.ApiAtlasFTSAnalyzers           `json:"analyzers,omitempty"`
-	Mappings  *admin.ApiAtlasFTSMappings             `json:"mappings,omitempty"`
-	Synonyms  []admin.SearchSynonymMappingDefinition `json:"synonyms,omitempty"`
 }

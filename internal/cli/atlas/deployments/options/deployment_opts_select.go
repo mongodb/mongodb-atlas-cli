@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package options
 
 import (
@@ -25,7 +26,7 @@ import (
 )
 
 var errEmptyDeployments = errors.New("currently there are no deployment in your local system")
-var errDeploymentNotFound = errors.New("deployment not found")
+var ErrDeploymentNotFound = errors.New("deployment not found")
 
 func (opts *DeploymentOpts) findContainer(ctx context.Context) (*podman.Container, error) {
 	containers, err := opts.PodmanClient.ListContainers(ctx, MongodHostnamePrefix)
@@ -41,7 +42,7 @@ func (opts *DeploymentOpts) findContainer(ctx context.Context) (*podman.Containe
 		}
 	}
 
-	return nil, fmt.Errorf("%w: %s", errDeploymentNotFound, opts.DeploymentName)
+	return nil, fmt.Errorf("%w: %s", ErrDeploymentNotFound, opts.DeploymentName)
 }
 
 func (opts *DeploymentOpts) CheckIfDeploymentExists(ctx context.Context) error {

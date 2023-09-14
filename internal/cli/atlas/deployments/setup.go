@@ -34,6 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/workflows"
 	"github.com/mongodb/mongodb-atlas-cli/internal/compass"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
@@ -736,34 +737,26 @@ func (opts *SetupOpts) RunLocal(ctx context.Context) error {
 func (opts *SetupOpts) RunAtlas(ctx context.Context) error {
 	s := setup.Builder()
 
-	// remove "deployment" from the arg
-	os.Args = os.Args[1:]
-
+	// remove global flags and unknown flags
 	var newArgs []string
-	for i := 0; i < len(os.Args); i++ {
-		// skip unknown flags
-		if os.Args[i] == fmt.Sprintf("--%s", flag.TypeFlag) {
-			_, _ = log.Debugf("Skipped flag: %s %s\n", os.Args[i], os.Args[i+1])
-			i++ // skip the arg after flag
-			continue
-		}
+	log.Debugf("Removing flags and args from original args %s\n", os.Args)
+	newArgs, err := workflows.RemoveFlagsAndArgs(map[string]string{flag.TypeFlag: "1"}, map[string]bool{opts.DeploymentName: true}, os.Args)
+	if err != nil {
+		return err
+	}
 
-		// skip cluster name argument
-		if os.Args[i] == opts.DeploymentName {
-			_, _ = log.Debugf("Skipped deployment name and set as a flag: %s\n", os.Args[i])
-			newArgs = append(newArgs, fmt.Sprintf("--%s", flag.ClusterName))
-			newArgs = append(newArgs, os.Args[i])
-			continue
-		}
-
-		newArgs = append(newArgs, os.Args[i])
+	// replace deployment name with cluster name
+	if opts.DeploymentName != "" {
+		newArgs = append(newArgs, fmt.Sprintf("--%s", flag.ClusterName))
+		newArgs = append(newArgs, opts.DeploymentName)
 	}
 
 	// update args
-	os.Args = newArgs
+	s.SetArgs(newArgs)
 
 	// run atlas setup
-	_, err := s.ExecuteContextC(ctx)
+	log.Debugf("Starting to run atlas setup with args %s\n", newArgs)
+	_, err = s.ExecuteContextC(ctx)
 	return err
 }
 
@@ -816,8 +809,6 @@ func SetupBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 	cmd.Flags().StringVar(&opts.MdbVersion, flag.MDBVersion, "", usage.MDBVersion)
 	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWith)
-
-	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
 
 	// Local only
 	cmd.Flags().IntVar(&opts.Port, flag.Port, 0, usage.MongodPort)

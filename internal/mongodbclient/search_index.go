@@ -36,14 +36,14 @@ type SearchIndex interface {
 }
 
 type SearchIndexDefinition struct {
-	ID         string                                 `json:"id"`
-	Name       string                                 `json:"name"`
-	Collection string                                 `json:"collection"`
-	Database   string                                 `json:"database"`
-	Analyzer   *string                                `json:"analyzer,omitempty"`
-	Analyzers  []admin.ApiAtlasFTSAnalyzers           `json:"analyzers,omitempty"`
-	Synonyms   []admin.SearchSynonymMappingDefinition `json:"synonyms,omitempty"`
-	Mappings   *admin.ApiAtlasFTSMappings             `json:"mappings,omitempty"`
+	ID         string                                 `bson:"id,omitempty"`
+	Name       string                                 `bson:"name,omitempty"`
+	Collection string                                 `bson:"collection,omitempty"`
+	Database   string                                 `bson:"database,omitempty"`
+	Analyzer   *string                                `bson:"analyzer,omitempty"`
+	Analyzers  []admin.ApiAtlasFTSAnalyzers           `bson:"analyzers,omitempty"`
+	Synonyms   []admin.SearchSynonymMappingDefinition `bson:"synonyms,omitempty"`
+	Mappings   *admin.ApiAtlasFTSMappings             `bson:"mappings,omitempty"`
 }
 
 func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) error {

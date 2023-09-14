@@ -194,6 +194,6 @@ func TestDescribeBuilder(t *testing.T) {
 		t,
 		DescribeBuilder(),
 		0,
-		[]string{flag.ClusterName, flag.ProjectID},
+		[]string{flag.DeploymentName, flag.ProjectID},
 	)
 }

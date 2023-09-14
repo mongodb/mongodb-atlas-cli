@@ -28,7 +28,10 @@ import (
 	"github.com/containers/podman/v4/pkg/machine"
 )
 
-var ErrPodmanNotFound = errors.New("podman not found in your system, check requirements at http://docpage")
+var (
+	ErrPodmanNotFound  = errors.New("podman not found in your system, check requirements at http://docpage")
+	ErrNetworkNotFound = errors.New("network ip range was not found")
+)
 
 type Diagnostic struct {
 	Installed    bool
@@ -57,6 +60,7 @@ type RunContainerOpts struct {
 	Args       []string
 	Entrypoint string
 	Cmd        string
+	IP         string
 }
 
 type Container struct {
@@ -134,6 +138,17 @@ type Client interface {
 	Version(ctx context.Context) (*Version, error)
 	Logs(ctx context.Context) ([]interface{}, error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
+	Network(ctx context.Context, name string) (*Network, error)
+}
+
+type Network struct {
+	ID         string `json:"ID"`
+	Name       string `json:"Name"`
+	DNSEnabled string `json:"DNSEnabled"`
+	Subnets    []struct {
+		Subnet  string `json:"Subnet"`
+		Gateway string `json:"gateway"`
+	} `json:"Subnets"`
 }
 
 type client struct {
@@ -284,6 +299,10 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 		arg = append(arg, "-e", envVar+"="+value)
 	}
 
+	if opts.IP != "" {
+		arg = append(arg, "--ip", opts.IP)
+	}
+
 	if opts.Detach {
 		arg = append(arg, "-d")
 	}
@@ -403,6 +422,24 @@ func (o *client) ContainerLogs(ctx context.Context, name string) ([]string, erro
 
 	logs := strings.Split(string(output), "\n")
 	return logs, nil
+}
+
+func (o *client) Network(ctx context.Context, name string) (*Network, error) {
+	output, err := o.runPodman(ctx, "network", "inspect", name, "--format", "json")
+	if err != nil {
+		return nil, err
+	}
+
+	var n []*Network
+	if err = json.Unmarshal(output, &n); err != nil {
+		return nil, err
+	}
+
+	if len(n) == 0 {
+		return nil, ErrNetworkNotFound
+	}
+
+	return n[0], err
 }
 
 func NewClient(debug bool, outWriter io.Writer) Client {

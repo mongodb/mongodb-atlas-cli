@@ -55,7 +55,7 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 		},
 		{
 			Key: "indexes",
-			Value: []bson.D{
+			Value: []bson.D {
 				{
 					{
 						Key:   "name",

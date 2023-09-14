@@ -85,11 +85,11 @@ func TestDescribe_RunLocal(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	expected := &mongodbclient.SearchIndexDefinition{
-		Name:       "name",
-		ID:         "test",
-		Collection: "coll",
-		Database:   "db",
+	expected := &atlasv2.ClusterSearchIndex{
+		Name:           "name",
+		IndexID:        pointer.GetStringPointerIfNotEmpty("test"),
+		CollectionName: "coll",
+		Database:       "db",
 	}
 
 	mockMongodbClient.
@@ -176,11 +176,11 @@ func TestDescribe_RunAtlas(t *testing.T) {
 		}, nil).
 		Times(1)
 
-	expected := &mongodbclient.SearchIndexDefinition{
-		Name:       "name",
-		ID:         "test",
-		Collection: "coll",
-		Database:   "db",
+	expected := &atlasv2.ClusterSearchIndex{
+		Name:           "name",
+		IndexID:        pointer.GetStringPointerIfNotEmpty("test"),
+		CollectionName: "coll",
+		Database:       "db",
 	}
 
 	test.VerifyOutputTemplate(t, describeTemplate, expected)

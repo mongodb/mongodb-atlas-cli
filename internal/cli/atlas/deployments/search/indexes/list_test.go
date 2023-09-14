@@ -28,7 +28,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
@@ -98,12 +97,12 @@ func TestList_RunLocal(t *testing.T) {
 		Return(mockDB).
 		Times(1)
 
-	expected := []*mongodbclient.SearchIndexDefinition{
+	expected := []*atlasv2.ClusterSearchIndex{
 		{
-			Name:       expectedName,
-			ID:         expectedID,
-			Collection: expectedCollection,
-			Database:   expectedDB,
+			Name:           expectedName,
+			IndexID:        pointer.GetStringPointerIfNotEmpty(expectedID),
+			CollectionName: expectedCollection,
+			Database:       expectedDB,
 		},
 	}
 
@@ -191,12 +190,12 @@ func TestList_RunAtlas(t *testing.T) {
 		}, nil).
 		Times(1)
 
-	expected := []*mongodbclient.SearchIndexDefinition{
+	expected := []*atlasv2.ClusterSearchIndex{
 		{
-			Name:       expectedName,
-			ID:         expectedID,
-			Collection: expectedCollection,
-			Database:   expectedDB,
+			Name:           expectedName,
+			IndexID:        pointer.GetStringPointerIfNotEmpty(expectedID),
+			CollectionName: expectedCollection,
+			Database:       expectedDB,
 		},
 	}
 

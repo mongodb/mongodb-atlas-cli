@@ -35,8 +35,8 @@ var ErrSearchIndexNotFound = errors.New("search Index not found")
 
 type SearchIndex interface {
 	CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) error
-	SearchIndex(ctx context.Context, id string) (*SearchIndexDefinition, error)
-	SearchIndexes(ctx context.Context, coll string) ([]*SearchIndexDefinition, error)
+	SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error)
+	SearchIndexes(ctx context.Context, coll string) ([]*admin.ClusterSearchIndex, error)
 }
 
 type SearchIndexDefinition struct {
@@ -81,7 +81,7 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 	}).Err()
 }
 
-func (o *database) SearchIndex(ctx context.Context, id string) (*SearchIndexDefinition, error) {
+func (o *database) SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error) {
 	collectionNames, err := o.db.ListCollectionNames(ctx, bson.D{}, nil)
 	if err != nil {
 		return nil, err
@@ -98,19 +98,20 @@ func (o *database) SearchIndex(ctx context.Context, id string) (*SearchIndexDefi
 			return nil, err
 		}
 		if len(results) >= 1 {
-			return &SearchIndexDefinition{
+			searchIndexDef := &SearchIndexDefinition{
 				ID:         results[0].ID,
 				Name:       results[0].Name,
 				Collection: coll,
 				Database:   o.db.Name(),
-			}, nil
+			}
+			return newClusterSearchIndex(searchIndexDef), nil
 		}
 	}
 
 	return nil, fmt.Errorf("index `%s` not found: %w", id, ErrSearchIndexNotFound)
 }
 
-func (o *database) SearchIndexes(ctx context.Context, coll string) ([]*SearchIndexDefinition, error) {
+func (o *database) SearchIndexes(ctx context.Context, coll string) ([]*admin.ClusterSearchIndex, error) {
 	cursor, err := o.db.Collection(coll).Aggregate(ctx, newSearchIndexesPipeline(o.db.Name(), coll))
 	if err != nil || cursor == nil {
 		return nil, err
@@ -121,7 +122,7 @@ func (o *database) SearchIndexes(ctx context.Context, coll string) ([]*SearchInd
 		return nil, err
 	}
 
-	return results, nil
+	return newClusterSearchIndexes(results), nil
 }
 
 func newSearchIndexPipeline(id string) []*bson.D {
@@ -158,4 +159,23 @@ func newSearchIndexesPipeline(db, coll string) []*bson.D {
 			},
 		},
 	}
+}
+
+func newClusterSearchIndex(index *SearchIndexDefinition) *admin.ClusterSearchIndex {
+	return &admin.ClusterSearchIndex{
+		Name:           index.Name,
+		IndexID:        &index.ID,
+		CollectionName: index.Collection,
+		Database:       index.Database,
+	}
+}
+
+func newClusterSearchIndexes(indexes []*SearchIndexDefinition) []*admin.ClusterSearchIndex {
+	out := make([]*admin.ClusterSearchIndex, len(indexes))
+
+	for i, v := range indexes {
+		out[i] = newClusterSearchIndex(v)
+	}
+
+	return out
 }

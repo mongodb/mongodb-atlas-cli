@@ -30,11 +30,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 var listTemplate = `ID	NAME	DATABASE	COLLECTION{{range .}}
-{{.ID}}	{{.Name}}	{{.Database}}	{{.Collection}}{{end}}
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}{{end}}
 `
 
 type ListOpts struct {
@@ -64,8 +63,7 @@ func (opts *ListOpts) RunAtlas() error {
 	if err != nil {
 		return err
 	}
-
-	return opts.Print(newSearchIndexDefinition(r))
+	return opts.Print(r)
 }
 
 func (opts *ListOpts) RunLocal(ctx context.Context) error {
@@ -120,20 +118,6 @@ func (opts *ListOpts) validateAndPrompt(ctx context.Context) error {
 	}
 
 	return nil
-}
-
-func newSearchIndexDefinition(indexes []atlasv2.ClusterSearchIndex) []*mongodbclient.SearchIndexDefinition {
-	out := make([]*mongodbclient.SearchIndexDefinition, len(indexes))
-	for i, v := range indexes {
-		out[i] = &mongodbclient.SearchIndexDefinition{
-			ID:         *v.IndexID,
-			Name:       v.Name,
-			Collection: v.CollectionName,
-			Database:   v.Database,
-		}
-	}
-
-	return out
 }
 
 func ListBuilder() *cobra.Command {

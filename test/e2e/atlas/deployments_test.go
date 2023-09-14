@@ -229,7 +229,7 @@ func TestDeployments(t *testing.T) {
 		var o, e bytes.Buffer
 		cmd.Stdout = &o
 		cmd.Stderr = &e
-		err = cmd.Run()
+		err := cmd.Run()
 		req.NoError(err, e.String())
 
 		a := assert.New(t)
@@ -256,7 +256,7 @@ func TestDeployments(t *testing.T) {
 		var o, e bytes.Buffer
 		cmd.Stdout = &o
 		cmd.Stderr = &e
-		err = cmd.Run()
+		err := cmd.Run()
 		req.NoError(err, e.String())
 		a := assert.New(t)
 		a.Contains(o.String(), indexName)

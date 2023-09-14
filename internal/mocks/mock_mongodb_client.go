@@ -77,10 +77,10 @@ func (mr *MockMongoDBClientMockRecorder) Disconnect(arg0 interface{}) *gomock.Ca
 }
 
 // SearchIndex mocks base method.
-func (m *MockMongoDBClient) SearchIndex(arg0 context.Context, arg1 string) (*mongodbclient.SearchIndexDefinition, error) {
+func (m *MockMongoDBClient) SearchIndex(arg0 context.Context, arg1 string) (*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SearchIndex", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbclient.SearchIndexDefinition)
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -173,10 +173,10 @@ func (mr *MockDatabaseMockRecorder) RunCommand(arg0, arg1 interface{}) *gomock.C
 }
 
 // SearchIndex mocks base method.
-func (m *MockDatabase) SearchIndex(arg0 context.Context, arg1 string) (*mongodbclient.SearchIndexDefinition, error) {
+func (m *MockDatabase) SearchIndex(arg0 context.Context, arg1 string) (*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SearchIndex", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbclient.SearchIndexDefinition)
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -188,10 +188,10 @@ func (mr *MockDatabaseMockRecorder) SearchIndex(arg0, arg1 interface{}) *gomock.
 }
 
 // SearchIndexes mocks base method.
-func (m *MockDatabase) SearchIndexes(arg0 context.Context, arg1 string) ([]*mongodbclient.SearchIndexDefinition, error) {
+func (m *MockDatabase) SearchIndexes(arg0 context.Context, arg1 string) ([]*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SearchIndexes", arg0, arg1)
-	ret0, _ := ret[0].([]*mongodbclient.SearchIndexDefinition)
+	ret0, _ := ret[0].([]*admin.ClusterSearchIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -240,10 +240,10 @@ func (mr *MockSearchIndexMockRecorder) CreateSearchIndex(arg0, arg1, arg2 interf
 }
 
 // SearchIndex mocks base method.
-func (m *MockSearchIndex) SearchIndex(arg0 context.Context, arg1 string) (*mongodbclient.SearchIndexDefinition, error) {
+func (m *MockSearchIndex) SearchIndex(arg0 context.Context, arg1 string) (*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SearchIndex", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbclient.SearchIndexDefinition)
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -255,10 +255,10 @@ func (mr *MockSearchIndexMockRecorder) SearchIndex(arg0, arg1 interface{}) *gomo
 }
 
 // SearchIndexes mocks base method.
-func (m *MockSearchIndex) SearchIndexes(arg0 context.Context, arg1 string) ([]*mongodbclient.SearchIndexDefinition, error) {
+func (m *MockSearchIndex) SearchIndexes(arg0 context.Context, arg1 string) ([]*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SearchIndexes", arg0, arg1)
-	ret0, _ := ret[0].([]*mongodbclient.SearchIndexDefinition)
+	ret0, _ := ret[0].([]*admin.ClusterSearchIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

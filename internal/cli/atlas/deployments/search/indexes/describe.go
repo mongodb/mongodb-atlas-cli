@@ -32,7 +32,7 @@ import (
 )
 
 var describeTemplate = `ID	NAME	DATABASE	COLLECTION
-{{.ID}}	{{.Name}}	{{.Database}}	{{.Collection}}
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}
 `
 
 type DescribeOpts struct {
@@ -63,14 +63,7 @@ func (opts *DescribeOpts) RunAtlas() error {
 		return err
 	}
 
-	index := mongodbclient.SearchIndexDefinition{
-		ID:         *r.IndexID,
-		Name:       r.Name,
-		Collection: r.CollectionName,
-		Database:   r.Database,
-	}
-
-	return opts.Print(index)
+	return opts.Print(r)
 }
 
 func (opts *DescribeOpts) RunLocal(ctx context.Context) error {

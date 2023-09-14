@@ -16,7 +16,6 @@ package deployments
 
 import (
 	"context"
-	"fmt"
 	"sort"
 	"strings"
 
@@ -167,10 +166,7 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 	}
 
 	if !opts.isCliAuthenticated() {
-		_, err = fmt.Fprint(
-			opts.OutWriter,
-			"To get output for both local and Atlas clusters, run \"atlas login\" command to authenticate your Atlas account.\n",
-		)
+		_, err = log.Warningln("To get output for both local and Atlas clusters, run \"atlas login\" command to authenticate your Atlas account.")
 		return err
 	}
 

@@ -16,7 +16,6 @@ package indexes
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -36,6 +35,7 @@ import (
 const (
 	namePattern        = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	connectWaitSeconds = 10
+	createTemplate     = "Your search index is being created"
 )
 
 type CreateOpts struct {
@@ -70,8 +70,7 @@ func (opts *CreateOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	fmt.Fprintf(opts.OutWriter, "Your search index is being created")
-	return nil
+	return opts.Print(nil)
 }
 
 func (opts *CreateOpts) initMongoDBClient() error {
@@ -127,7 +126,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{
 		IndexOpts: search.IndexOpts{
 			Analyzer: search.DefaultAnalyzer,
-			Dynamic:  false,
+			Dynamic:  true,
 			Fs:       afero.NewOsFs(),
 		},
 	}
@@ -143,7 +142,7 @@ func CreateBuilder() *cobra.Command {
 			w := cmd.OutOrStdout()
 			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
 			return opts.PreRunE(
-				opts.InitOutput(w, ""),
+				opts.InitOutput(w, createTemplate),
 				opts.InitStore(opts.PodmanClient),
 				opts.initMongoDBClient,
 			)

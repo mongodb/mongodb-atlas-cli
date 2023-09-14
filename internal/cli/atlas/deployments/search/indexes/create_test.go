@@ -115,7 +115,7 @@ func TestCreate_Run(t *testing.T) {
 	t.Log(buf.String())
 }
 
-func TestListBuilder(t *testing.T) {
+func TestCreateBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		CreateBuilder(),

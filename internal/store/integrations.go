@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store IntegrationCreator,IntegrationLister,IntegrationDeleter,IntegrationDescriber

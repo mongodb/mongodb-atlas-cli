@@ -29,7 +29,7 @@ import (
 	operatorProject "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/project"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"

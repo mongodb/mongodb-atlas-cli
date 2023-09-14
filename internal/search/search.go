@@ -15,7 +15,7 @@
 package search
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 	"go.mongodb.org/ops-manager/search"

@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20230201007/admin"
+	admin "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -188,7 +188,7 @@ func (m *MockOrganizationAPIKeyUpdater) EXPECT() *MockOrganizationAPIKeyUpdaterM
 }
 
 // UpdateOrganizationAPIKey mocks base method.
-func (m *MockOrganizationAPIKeyUpdater) UpdateOrganizationAPIKey(arg0, arg1 string, arg2 *admin.CreateAtlasOrganizationApiKey) (*admin.ApiKeyUserDetails, error) {
+func (m *MockOrganizationAPIKeyUpdater) UpdateOrganizationAPIKey(arg0, arg1 string, arg2 *admin.UpdateAtlasOrganizationApiKey) (*admin.ApiKeyUserDetails, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateOrganizationAPIKey", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.ApiKeyUserDetails)
@@ -338,7 +338,7 @@ func (m *MockProjectAPIKeyAssigner) EXPECT() *MockProjectAPIKeyAssignerMockRecor
 }
 
 // AssignProjectAPIKey mocks base method.
-func (m *MockProjectAPIKeyAssigner) AssignProjectAPIKey(arg0, arg1 string, arg2 *admin.CreateAtlasProjectApiKey) error {
+func (m *MockProjectAPIKeyAssigner) AssignProjectAPIKey(arg0, arg1 string, arg2 *admin.UpdateAtlasProjectApiKey) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AssignProjectAPIKey", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)

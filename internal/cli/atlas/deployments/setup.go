@@ -176,11 +176,7 @@ func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, st
 		return errList
 	}
 
-	if err := opts.validateLocalDeploymentsSettings(containers); err != nil {
-		return err
-	}
-
-	return nil
+	return opts.validateLocalDeploymentsSettings(containers)
 }
 
 func (opts *SetupOpts) internalIPs(ctx context.Context) error {

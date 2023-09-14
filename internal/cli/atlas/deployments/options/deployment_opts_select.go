@@ -50,6 +50,7 @@ func (opts *DeploymentOpts) CheckIfDeploymentExists(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+
 	opts.updateFields(c)
 	return nil
 }

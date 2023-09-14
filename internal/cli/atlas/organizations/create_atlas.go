@@ -27,7 +27,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 var createAtlasTemplate = "Organization '{{.Organization.Id}}' created.\n"
@@ -59,7 +59,7 @@ func (opts *CreateAtlasOpts) Run() error {
 	if len(opts.apiKeyRole) > 0 {
 		o.ApiKey = &atlasv2.CreateAtlasOrganizationApiKey{}
 		o.ApiKey.Roles = opts.apiKeyRole
-		o.ApiKey.Desc = &opts.apiKeyDescription
+		o.ApiKey.Desc = opts.apiKeyDescription
 	}
 
 	r, err := opts.store.CreateAtlasOrganization(o)

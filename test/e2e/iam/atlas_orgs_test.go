@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20230201007/admin"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestAtlasOrgs(t *testing.T) {

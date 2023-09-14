@@ -80,9 +80,8 @@ func DeleteBuilder() *cobra.Command {
 			if len(args) == 1 {
 				opts.DeploymentName = args[0]
 			}
-			w := cmd.OutOrStdout()
-			opts.podmanClient = podman.NewClient(log.IsDebugLevel(), w)
-			return opts.PreRunE(opts.InitOutput(w, ""), opts.InitStore(opts.podmanClient))
+			opts.podmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
+			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), ""), opts.InitStore(opts.podmanClient))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())

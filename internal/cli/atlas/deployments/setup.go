@@ -62,6 +62,7 @@ const (
 	skipConnect        = "skip"
 	spinnerSpeed       = 100 * time.Millisecond
 	shortStepCount     = 2
+	waitMongotTimeout  = 5 * time.Minute
 )
 
 var (
@@ -104,15 +105,16 @@ type SetupOpts struct {
 	cli.GlobalOpts
 	podmanClient  podman.Client
 	mongodbClient mongodbclient.MongoDBClient
-	debug         bool
 	settings      string
 	connectWith   string
 	force         bool
+	mongodIP      string
+	mongotIP      string
 	s             *spinner.Spinner
 }
 
 func (opts *SetupOpts) initPodmanClient() error {
-	opts.podmanClient = podman.NewClient(opts.debug, opts.OutWriter)
+	opts.podmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
 	return nil
 }
 
@@ -174,13 +176,25 @@ func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, st
 		return errList
 	}
 
-	if err := opts.validateLocalDeploymentsSettings(containers); err != nil {
+	return opts.validateLocalDeploymentsSettings(containers)
+}
+
+func (opts *SetupOpts) internalIPs(ctx context.Context) error {
+	n, err := opts.podmanClient.Network(ctx, opts.LocalNetworkName())
+	if err != nil {
 		return err
 	}
 
-	if _, err := opts.podmanClient.CreateNetwork(ctx, opts.LocalNetworkName()); err != nil {
+	_, ipNet, err := net.ParseCIDR(n.Subnets[0].Subnet)
+	if err != nil {
 		return err
 	}
+
+	ipNet.IP[3] = 10
+	opts.mongodIP = ipNet.IP.String()
+	ipNet.IP[3] = 11
+	opts.mongotIP = ipNet.IP.String()
+
 	return nil
 }
 
@@ -249,6 +263,15 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	// create local deployment
 	opts.logStepStarted(fmt.Sprintf("Creating your cluster %s...", opts.DeploymentName), currentStep, steps)
 	defer opts.stop()
+
+	if _, err := opts.podmanClient.CreateNetwork(ctx, opts.LocalNetworkName()); err != nil {
+		return err
+	}
+
+	if err := opts.internalIPs(ctx); err != nil {
+		return err
+	}
+
 	keyFileContents := base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))
 
 	if err := opts.configureMongod(ctx, keyFileContents); err != nil {
@@ -275,7 +298,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 				"DBPATH":          "/data/db",
 				"KEYFILE":         "/data/configdb/keyfile",
 				"REPLSETNAME":     replicaSetName,
-				"MONGOTHOST":      fmt.Sprintf("%s:%d", opts.LocalMongotHostname(), internalMongotPort),
+				"MONGOTHOST":      opts.internalMongotAddress(),
 			},
 			Volumes: map[string]string{
 				mongodDataVolume: "/data/db",
@@ -284,6 +307,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 				opts.Port: internalMongodPort,
 			},
 			Network: opts.LocalNetworkName(),
+			IP:      opts.mongodIP,
 			// wrap the entrypoint with a chain of commands that
 			// creates the keyfile in the container and sets the 400 permissions for it,
 			// then starts the entrypoint with the local dev config
@@ -334,6 +358,14 @@ func (opts *SetupOpts) initReplicaSet(ctx context.Context) error {
 	return err
 }
 
+func (opts *SetupOpts) internalMongodAddress() string {
+	return fmt.Sprintf("%s:%d", opts.mongodIP, internalMongodPort)
+}
+
+func (opts *SetupOpts) internalMongotAddress() string {
+	return fmt.Sprintf("%s:%d", opts.mongotIP, internalMongotPort)
+}
+
 func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents string) error {
 	mongotDataVolume := opts.LocalMongotDataVolume()
 	if _, err := opts.podmanClient.CreateVolume(ctx, mongotDataVolume); err != nil {
@@ -345,14 +377,14 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 		return err
 	}
 
-	_, err := opts.podmanClient.RunContainer(ctx, podman.RunContainerOpts{
+	if _, err := opts.podmanClient.RunContainer(ctx, podman.RunContainerOpts{
 		Detach:     true,
 		Image:      options.MongotDockerImageName,
 		Name:       opts.LocalMongotHostname(),
 		Hostname:   opts.LocalMongotHostname(),
 		Entrypoint: "/bin/sh",
 		EnvVars: map[string]string{
-			"MONGODHOST":      fmt.Sprintf("%s:%d", opts.LocalMongodHostname(), internalMongodPort),
+			"MONGODHOST":      opts.internalMongodAddress(),
 			"DATADIR":         "/var/lib/mongot",
 			"KEYFILEPATH":     "/var/lib/mongot/keyfile",
 			"KEYFILECONTENTS": keyFileContents,
@@ -363,9 +395,27 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 			mongotMetricsVolume: "/var/lib/mongot/metrics",
 		},
 		Network: opts.LocalNetworkName(),
-	})
+		IP:      opts.mongotIP,
+	}); err != nil {
+		return err
+	}
 
-	return err
+	return opts.waitForMongot(ctx)
+}
+
+func (opts *SetupOpts) waitForMongot(parentCtx context.Context) error {
+	ctx, cancel := context.WithTimeout(parentCtx, waitMongotTimeout)
+	defer cancel()
+	for {
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		default:
+			if err := opts.podmanClient.Exec(ctx, opts.LocalMongodHostname(), "/bin/sh", "-c", fmt.Sprintf("mongosh %s --eval \"db.adminCommand('ping')\"", opts.internalMongotAddress())); err == nil { // ping was successful
+				return nil
+			}
+		}
+	}
 }
 
 func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Container) error {
@@ -660,7 +710,7 @@ Port	{{.Port}}
 func (opts *SetupOpts) Run(ctx context.Context) error {
 	if err := opts.validateAndPrompt(); err != nil {
 		if errors.Is(err, errSkip) {
-			_, _ = fmt.Fprintf(opts.OutWriter, "%s\n", err)
+			_, _ = log.Warningln(err)
 			return nil
 		}
 
@@ -673,10 +723,9 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 
 	cs := fmt.Sprintf("mongodb://localhost:%d/?directConnection=true", opts.Port)
 
-	fmt.Fprintf(opts.OutWriter, `Cluster created!
-Connection string: %s
-
-`, cs)
+	_, _ = log.Warningln("Cluster created!")
+	_, _ = fmt.Fprintf(opts.OutWriter, "Connection string: %s\n", cs)
+	_, _ = log.Warningln("")
 
 	return opts.runConnectWith(cs)
 }
@@ -713,7 +762,6 @@ func SetupBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.MdbVersion, flag.MDBVersion, "", usage.MDBVersion)
 	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWith)
 
-	cmd.Flags().BoolVarP(&opts.debug, flag.Debug, flag.DebugShort, false, usage.Debug)
 	cmd.Flags().BoolVar(&opts.force, flag.Force, false, usage.Force)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.MDBVersion, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {

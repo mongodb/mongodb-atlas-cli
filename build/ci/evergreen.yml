@@ -197,6 +197,19 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
+  "update podman":
+    - command: shell.exec
+      type: setup
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        shell: bash
+        script: |
+          set -Eeou pipefail
+          export PATH="$ADD_PATH:$PATH"
+          sudo yum update -y podman
+          sudo yum install -y netavark
+          sudo /bin/sh -c "cat /usr/share/containers/containers.conf | sed 's|network_backend = \"cni\"|network_backend = \"netavark\"|' > /usr/share/containers/containers2.conf && mv /usr/share/containers/containers2.conf /usr/share/containers/containers.conf"
   "install snyk":
     - command: shell.exec
       type: setup
@@ -1305,6 +1318,28 @@ tasks:
           MCLI_SERVICE: cloudgov
           E2E_TAGS: atlas,cleanup
           E2E_PARALLEL: 16
+  - name: atlas_deployments_e2e
+    tags: ["e2e","deployments","atlas"]
+    must_have_test_results: true
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "update podman"
+      - func: "e2e test"
+        timeout_secs: 11400 # 3 hours 10 minutes
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,deployments
+          E2E_TIMEOUT: 3h
 buildvariants:
   - name: code_health
     display_name: "Code Health"
@@ -1443,5 +1478,13 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: .snyk
+  - name: e2e_atlas_deployments
+    display_name: "E2E Atlas Deployments Tests"
+    run_on:
+      - rhel80-large
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .atlas"
 include:
   - filename: build/ci/release.yml

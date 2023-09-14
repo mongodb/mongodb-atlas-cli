@@ -127,7 +127,7 @@ Use the --help flag with any command for more info on that command.`,
 			"toc": "true",
 		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			log.SetOutput(cmd.ErrOrStderr())
+			log.SetWriter(cmd.ErrOrStderr())
 			if debugLevel {
 				log.SetLevel(log.DebugLevel)
 			}

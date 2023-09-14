@@ -40,8 +40,8 @@ type SearchIndex interface {
 }
 
 type SearchIndexDefinition struct {
-	Name       string                                 `bson:"name,omitempty"`
 	ID         string                                 `bson:"id,omitempty"`
+	Name       string                                 `bson:"name,omitempty"`
 	Collection string                                 `bson:"collection,omitempty"`
 	Database   string                                 `bson:"database,omitempty"`
 	Analyzer   *string                                `bson:"analyzer,omitempty"`

@@ -32,7 +32,6 @@ func shouldRemoveFlagAndArgs(flags map[string]string, arg string) (int, error) {
 	}
 
 	return -1, nil
-
 }
 
 func RemoveFlagsAndArgs(flagsToBeRemoved map[string]string, argsToBeRemoved map[string]bool, args []string) ([]string, error) {
@@ -49,7 +48,7 @@ func RemoveFlagsAndArgs(flagsToBeRemoved map[string]string, argsToBeRemoved map[
 
 		if flagArgsCount >= 0 {
 			_, _ = log.Warningf("Skipped flag %s and %d args\n", args[i], flagArgsCount)
-			i = i + flagArgsCount // skip the args after flag
+			i += flagArgsCount // skip the args after flag
 			continue
 		}
 

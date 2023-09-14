@@ -739,7 +739,7 @@ func (opts *SetupOpts) RunAtlas(ctx context.Context) error {
 
 	// remove global flags and unknown flags
 	var newArgs []string
-	log.Debugf("Removing flags and args from original args %s\n", os.Args)
+	_, _ = log.Debugf("Removing flags and args from original args %s\n", os.Args)
 	newArgs, err := workflows.RemoveFlagsAndArgs(map[string]string{flag.TypeFlag: "1"}, map[string]bool{opts.DeploymentName: true}, os.Args)
 	if err != nil {
 		return err
@@ -755,7 +755,7 @@ func (opts *SetupOpts) RunAtlas(ctx context.Context) error {
 	s.SetArgs(newArgs)
 
 	// run atlas setup
-	log.Debugf("Starting to run atlas setup with args %s\n", newArgs)
+	_, _ = log.Debugf("Starting to run atlas setup with args %s\n", newArgs)
 	_, err = s.ExecuteContextC(ctx)
 	return err
 }

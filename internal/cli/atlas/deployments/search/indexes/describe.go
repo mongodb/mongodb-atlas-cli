@@ -149,7 +149,7 @@ func DescribeBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.DeploymentName, flag.ClusterName, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd

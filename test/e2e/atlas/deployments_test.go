@@ -116,15 +116,9 @@ func TestDeployments(t *testing.T) {
 		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
 
-<<<<<<< HEAD
 		req.Equal(`NAME   TYPE    MDB VER   STATE
 test   LOCAL   7.0.1     IDLE
 `, o)
-
-=======
-		a := assert.New(t)
-		a.Contains(o, deploymentName)
->>>>>>> master
 	})
 
 	ctx := context.Background()

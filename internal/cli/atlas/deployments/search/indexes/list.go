@@ -20,6 +20,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -31,42 +32,41 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `ID	NAME	DATABASE	COLLECTION
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}
+var listTemplate = `ID	NAME	DATABASE	COLLECTION{{range .}}
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}{{end}}
 `
 
-type DescribeOpts struct {
+type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	options.DeploymentOpts
-	indexID       string
+	search.IndexOpts
 	mongodbClient mongodbclient.MongoDBClient
-	store         store.SearchIndexDescriber
+	store         store.SearchIndexLister
 }
 
-func (opts *DescribeOpts) Run(ctx context.Context) error {
+func (opts *ListOpts) Run(ctx context.Context) error {
 	if err := opts.validateAndPrompt(ctx); err != nil {
 		return err
 	}
 
 	err := opts.RunLocal(ctx)
-	if err != nil && (errors.Is(err, options.ErrDeploymentNotFound) || errors.Is(err, mongodbclient.ErrSearchIndexNotFound)) {
+	if err != nil && (errors.Is(err, options.ErrDeploymentNotFound)) {
 		return opts.RunAtlas()
 	}
 
 	return err
 }
 
-func (opts *DescribeOpts) RunAtlas() error {
-	r, err := opts.store.SearchIndex(opts.ConfigProjectID(), opts.DeploymentName, opts.indexID)
+func (opts *ListOpts) RunAtlas() error {
+	r, err := opts.store.SearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, opts.DBName, opts.Collection)
 	if err != nil {
 		return err
 	}
-
 	return opts.Print(r)
 }
 
-func (opts *DescribeOpts) RunLocal(ctx context.Context) error {
+func (opts *ListOpts) RunLocal(ctx context.Context) error {
 	connectionString, err := opts.ConnectionString(ctx)
 	if err != nil {
 		return err
@@ -77,7 +77,7 @@ func (opts *DescribeOpts) RunLocal(ctx context.Context) error {
 	}
 	defer opts.mongodbClient.Disconnect(ctx)
 
-	r, err := opts.mongodbClient.SearchIndex(ctx, opts.indexID)
+	r, err := opts.mongodbClient.Database(opts.DBName).SearchIndexes(ctx, opts.Collection)
 	if err != nil {
 		return err
 	}
@@ -85,12 +85,12 @@ func (opts *DescribeOpts) RunLocal(ctx context.Context) error {
 	return opts.Print(r)
 }
 
-func (opts *DescribeOpts) initMongoDBClient() error {
+func (opts *ListOpts) initMongoDBClient() error {
 	opts.mongodbClient = mongodbclient.NewClient()
 	return nil
 }
 
-func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
+func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -98,9 +98,15 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DescribeOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.indexID == "" {
-		if err := promptRequiredName("Search Index ID", &opts.indexID); err != nil {
+func (opts *ListOpts) validateAndPrompt(ctx context.Context) error {
+	if opts.DBName == "" {
+		if err := promptRequiredName("Database", &opts.DBName); err != nil {
+			return err
+		}
+	}
+
+	if opts.Collection == "" {
+		if err := promptRequiredName("Collection", &opts.Collection); err != nil {
 			return err
 		}
 	}
@@ -114,35 +120,34 @@ func (opts *DescribeOpts) validateAndPrompt(ctx context.Context) error {
 	return nil
 }
 
-func DescribeBuilder() *cobra.Command {
-	opts := &DescribeOpts{}
+func ListBuilder() *cobra.Command {
+	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe [indexId]",
-		Short: "Describe a search index for the specified deployment.",
-		Args:  require.MaximumNArgs(1),
+		Use:     "list",
+		Short:   "List all Atlas Search indexes for a deployment.",
+		Aliases: []string{"ls"},
+		Args:    require.NoArgs,
 		Annotations: map[string]string{
-			"indexIdDesc": "ID of the index.",
-			"output":      describeTemplate,
+			"output": listTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			w := cmd.OutOrStdout()
 			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
 			return opts.PreRunE(
-				opts.InitOutput(w, describeTemplate),
+				opts.InitOutput(w, listTemplate),
 				opts.InitStore(opts.PodmanClient),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) == 1 {
-				opts.indexID = args[0]
-			}
 			return opts.Run(cmd.Context())
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
+	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
+	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd

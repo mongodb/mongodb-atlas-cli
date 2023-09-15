@@ -95,6 +95,7 @@ const (
 	policiesEntity               = "policies"
 	teamsEntity                  = "teams"
 	setupEntity                  = "setup"
+	deploymentEntity             = "deployments"
 )
 
 // AlertConfig constants.

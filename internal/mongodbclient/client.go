@@ -35,14 +35,24 @@ type MongoDBClient interface {
 	Disconnect(ctx context.Context)
 	Database(db string) Database
 	SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error)
+	DeleteSearchIndex(id string) error
 }
 
 type mongodbClient struct {
 	client *mongo.Client
+	ctx    context.Context
 }
 
 func NewClient() MongoDBClient {
-	return &mongodbClient{}
+	return &mongodbClient{
+		ctx: context.Background(),
+	}
+}
+
+func NewClientWithContext(context context.Context) MongoDBClient {
+	return &mongodbClient{
+		ctx: context,
+	}
 }
 
 func (o *mongodbClient) Connect(ctx context.Context, connectionString string, waitSeconds int64) error {
@@ -76,6 +86,28 @@ func (o *mongodbClient) SearchIndex(ctx context.Context, id string) (*admin.Clus
 	}
 
 	return nil, fmt.Errorf("index `%s` not found: %w", id, ErrSearchIndexNotFound)
+}
+
+func (o *mongodbClient) DeleteSearchIndex(id string) error {
+	index, err := o.SearchIndex(o.ctx, id)
+	if err != nil {
+		return err
+	}
+
+	if index == nil {
+		return fmt.Errorf("index `%s` not found: %w", id, ErrSearchIndexNotFound)
+	}
+	_, err = o.Database(index.Database).RunCommand(o.ctx, bson.D{
+		{
+			Key:   "dropSearchIndex",
+			Value: index.CollectionName,
+		},
+		{
+			Key:   "name",
+			Value: index.Name,
+		},
+	})
+	return err
 }
 
 func (o *mongodbClient) Disconnect(ctx context.Context) {

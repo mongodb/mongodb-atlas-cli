@@ -17,6 +17,7 @@ package atlas_test
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -77,21 +78,35 @@ func TestDeploymentsAtlas(t *testing.T) {
 		req.NoError(err, string(resp))
 		assert.Contains(t, string(resp), "Cluster available")
 	})
-
 	// TODO: Update with deployments delete CLOUDP-199629
-	t.Cleanup(func() {
+	t.Run("Delete Cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"delete",
 			clusterName,
-			"--projectId", g.projectID,
 			"--force",
+			"--projectId", g.projectID,
 		)
-
 		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
 
-		r, delErr := cmd.CombinedOutput()
-		req.NoError(delErr, string(r))
+		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
+		assert.Equal(t, expected, string(resp))
+	})
+
+	t.Run("Watch cluster deletion", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"watch",
+			clusterName,
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		// this command will fail with 404 once the cluster is deleted
+		// we just need to wait for this to close the project
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
 	})
 	// TODO: Add support for connect CLOUDP-199422
 }

@@ -284,6 +284,8 @@ test   LOCAL   7.0.1     IDLE
 			indexEntity,
 			"rm",
 			indexID,
+			"--deploymentName",
+			deploymentName,
 			"--force",
 			"--debug",
 		)

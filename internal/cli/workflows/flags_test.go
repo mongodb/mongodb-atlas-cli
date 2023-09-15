@@ -23,7 +23,7 @@ func TestRemoveGlobalFlagsAndArgs(t *testing.T) {
 		"debug": "1",
 	}
 	argsToBeRemoved := map[string]bool{}
-	args := []string{"--debug", "value1", "arg1"}
+	args := []string{"binary", "command", "subcommand", "--debug", "value1", "arg1"}
 
 	expectedNewArgs := []string{"arg1"} // "--debug" and "value1" should be removed
 
@@ -43,7 +43,7 @@ func TestRemoveArgs(t *testing.T) {
 	argsToBeRemoved := map[string]bool{
 		"arg1": true,
 	}
-	args := []string{"arg1", "arg2", "arg3"}
+	args := []string{"binary", "command", "subcommand", "arg1", "arg2", "arg3"}
 
 	expectedNewArgs := []string{"arg2", "arg3"} // "arg1" should be removed
 
@@ -65,7 +65,7 @@ func TestNoRemoval(t *testing.T) {
 	argsToBeRemoved := map[string]bool{
 		"arg1": true,
 	}
-	args := []string{"--verbose", "arg2"}
+	args := []string{"binary", "command", "subcommand", "--verbose", "arg2"}
 
 	expectedNewArgs := []string{"--verbose", "arg2"} // No removal
 

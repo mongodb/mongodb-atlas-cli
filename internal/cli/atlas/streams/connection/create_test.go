@@ -60,6 +60,7 @@ func TestCreate_Run(t *testing.T) {
 		fs:              fs,
 		filename:        fileName,
 		streamsInstance: "Example Instance",
+		name:            "Example Conn Name",
 	}
 
 	name := "Example Conn Name"

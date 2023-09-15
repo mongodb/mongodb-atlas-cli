@@ -14,11 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-if [ ! -f "$KEYFILEPATH" ]
-then
-    echo "$KEYFILECONTENTS" > "$KEYFILEPATH"
-    chmod 400 "$KEYFILEPATH"
-fi
+echo "$KEYFILECONTENTS" > "$KEYFILEPATH"
 
 /etc/mongot-localdev/mongot \
                      --data-dir "$DATADIR" \

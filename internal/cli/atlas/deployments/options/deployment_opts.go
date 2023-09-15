@@ -33,7 +33,7 @@ const (
 	spinnerSpeed         = 100 * time.Millisecond
 	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
 	clusterNamePattern    = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
-	MongotDockerImageName = "docker.io/mongodb/apix_test:mongot-preview"
+	MongotDockerImageName = "docker.io/mongodb/mongodb-atlas-search:latest"
 )
 
 var (

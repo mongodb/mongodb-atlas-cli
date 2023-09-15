@@ -37,17 +37,17 @@ func (m *MockMongoDBClient) EXPECT() *MockMongoDBClientMockRecorder {
 }
 
 // Connect mocks base method.
-func (m *MockMongoDBClient) Connect(arg0 context.Context, arg1 string, arg2 int64) error {
+func (m *MockMongoDBClient) Connect(arg0 string, arg1 int64) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Connect", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "Connect", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Connect indicates an expected call of Connect.
-func (mr *MockMongoDBClientMockRecorder) Connect(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockMongoDBClientMockRecorder) Connect(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Connect", reflect.TypeOf((*MockMongoDBClient)(nil).Connect), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Connect", reflect.TypeOf((*MockMongoDBClient)(nil).Connect), arg0, arg1)
 }
 
 // Database mocks base method.
@@ -79,30 +79,30 @@ func (mr *MockMongoDBClientMockRecorder) DeleteSearchIndex(arg0 interface{}) *go
 }
 
 // Disconnect mocks base method.
-func (m *MockMongoDBClient) Disconnect(arg0 context.Context) {
+func (m *MockMongoDBClient) Disconnect() {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Disconnect", arg0)
+	m.ctrl.Call(m, "Disconnect")
 }
 
 // Disconnect indicates an expected call of Disconnect.
-func (mr *MockMongoDBClientMockRecorder) Disconnect(arg0 interface{}) *gomock.Call {
+func (mr *MockMongoDBClientMockRecorder) Disconnect() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Disconnect", reflect.TypeOf((*MockMongoDBClient)(nil).Disconnect), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Disconnect", reflect.TypeOf((*MockMongoDBClient)(nil).Disconnect))
 }
 
 // SearchIndex mocks base method.
-func (m *MockMongoDBClient) SearchIndex(arg0 context.Context, arg1 string) (*admin.ClusterSearchIndex, error) {
+func (m *MockMongoDBClient) SearchIndex(arg0 string) (*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchIndex", arg0, arg1)
+	ret := m.ctrl.Call(m, "SearchIndex", arg0)
 	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SearchIndex indicates an expected call of SearchIndex.
-func (mr *MockMongoDBClientMockRecorder) SearchIndex(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockMongoDBClientMockRecorder) SearchIndex(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndex", reflect.TypeOf((*MockMongoDBClient)(nil).SearchIndex), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndex", reflect.TypeOf((*MockMongoDBClient)(nil).SearchIndex), arg0)
 }
 
 // MockDatabase is a mock of Database interface.

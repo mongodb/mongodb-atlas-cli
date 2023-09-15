@@ -74,10 +74,10 @@ func (opts *DeleteOpts) RunLocal(ctx context.Context) error {
 		return err
 	}
 
-	if err = opts.mongodbClient.Connect(ctx, connectionString, connectWaitSeconds); err != nil {
+	if err = opts.mongodbClient.Connect(connectionString, connectWaitSeconds); err != nil {
 		return err
 	}
-	defer opts.mongodbClient.Disconnect(ctx)
+	defer opts.mongodbClient.Disconnect()
 
 	return opts.Delete(opts.mongodbClient.DeleteSearchIndex, opts.Entry)
 }

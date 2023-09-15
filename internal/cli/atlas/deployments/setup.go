@@ -118,9 +118,11 @@ func (opts *SetupOpts) initPodmanClient() error {
 	return nil
 }
 
-func (opts *SetupOpts) initMongoDBClient() error {
-	opts.mongodbClient = mongodbclient.NewClient()
-	return nil
+func (opts *SetupOpts) initMongoDBClient(ctx context.Context) func() error {
+	return func() error {
+		opts.mongodbClient = mongodbclient.NewClientWithContext(ctx)
+		return nil
+	}
 }
 
 func (opts *SetupOpts) logStepStarted(msg string, currentStep int, totalSteps int) {
@@ -328,10 +330,10 @@ func (opts *SetupOpts) initReplicaSet(ctx context.Context) error {
 	}
 
 	const waitSeconds = 60
-	if err := opts.mongodbClient.Connect(ctx, connectionString, waitSeconds); err != nil {
+	if err := opts.mongodbClient.Connect(connectionString, waitSeconds); err != nil {
 		return err
 	}
-	defer opts.mongodbClient.Disconnect(ctx)
+	defer opts.mongodbClient.Disconnect()
 	db := opts.mongodbClient.Database("admin")
 
 	// initiate ReplicaSet
@@ -749,7 +751,7 @@ func SetupBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 				opts.initPodmanClient,
-				opts.initMongoDBClient,
+				opts.initMongoDBClient(cmd.Context()),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

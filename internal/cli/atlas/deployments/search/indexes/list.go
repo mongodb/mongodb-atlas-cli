@@ -72,10 +72,10 @@ func (opts *ListOpts) RunLocal(ctx context.Context) error {
 		return err
 	}
 
-	if err = opts.mongodbClient.Connect(ctx, connectionString, connectWaitSeconds); err != nil {
+	if err = opts.mongodbClient.Connect(connectionString, connectWaitSeconds); err != nil {
 		return err
 	}
-	defer opts.mongodbClient.Disconnect(ctx)
+	defer opts.mongodbClient.Disconnect()
 
 	r, err := opts.mongodbClient.Database(opts.DBName).SearchIndexes(ctx, opts.Collection)
 	if err != nil {

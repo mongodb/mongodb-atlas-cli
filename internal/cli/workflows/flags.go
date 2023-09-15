@@ -73,5 +73,7 @@ func RemoveFlagsAndArgs(flagsToBeRemoved map[string]string, argsToBeRemoved map[
 
 		newArgs = append(newArgs, arg)
 	}
-	return newArgs[2:], nil
+
+	_, _ = log.Debugf("Removing 3 first terms in %s \n", newArgs)
+	return newArgs[3:], nil
 }

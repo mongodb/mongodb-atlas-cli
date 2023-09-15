@@ -757,8 +757,6 @@ func (opts *SetupOpts) RunAtlas(ctx context.Context) error {
 		newArgs = append(newArgs, fmt.Sprintf("--%s", flag.ClusterName), opts.DeploymentName)
 	}
 
-	// remove atlas deployments from args
-	newArgs = newArgs[2:]
 	// update args
 	s.SetArgs(newArgs)
 

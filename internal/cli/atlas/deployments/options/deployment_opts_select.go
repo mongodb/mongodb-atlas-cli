@@ -66,7 +66,7 @@ func (opts *DeploymentOpts) Select(ctx context.Context) error {
 	}
 
 	if len(containers) == 1 {
-		opts.DeploymentName = containers[0].Names[0]
+		opts.DeploymentName = LocalDeploymentName(containers[0].Names[0])
 		return nil
 	}
 

@@ -751,6 +751,8 @@ func (opts *SetupOpts) RunAtlas(ctx context.Context) error {
 		newArgs = append(newArgs, opts.DeploymentName)
 	}
 
+	// remove atlas deployments from args
+	newArgs = newArgs[2:]
 	// update args
 	s.SetArgs(newArgs)
 
@@ -794,6 +796,9 @@ func SetupBuilder() *cobra.Command {
 			if len(args) == 1 {
 				opts.DeploymentName = args[0]
 			}
+
+			opts.force = opts.atlasSetup.Confirm
+
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 				opts.initPodmanClient,

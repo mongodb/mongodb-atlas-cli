@@ -28,7 +28,6 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage streams for your project.",
 		Long:    `The streams command provides access to your Atlas Streams configurations. You can create, edit, and delete streams, as well as change the connection registry.`,
-		Hidden:  true,
 	}
 	cmd.AddCommand(instance.Builder(), connection.Builder())
 

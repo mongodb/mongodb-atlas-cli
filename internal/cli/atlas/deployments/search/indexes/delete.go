@@ -17,7 +17,6 @@ package indexes
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -121,7 +120,6 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <indexId>",
 		Aliases: []string{"rm"},
 		Short:   "Delete the specified search index from the specified cluster.",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Data Access Admin"),
 		Args:    require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",

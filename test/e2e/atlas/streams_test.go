@@ -28,10 +28,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
-const (
-	defaultInstanceName = "DefaultInstance"
-)
-
 func TestStreams(t *testing.T) {
 	if IsGov() {
 		t.Skip("Skipping Streams integration test, Streams processing is not enabled in cloudgov")
@@ -318,5 +314,4 @@ func TestStreams(t *testing.T) {
 		expected := fmt.Sprintf("Atlas Streams processor instance '%s' deleted\n", instanceName)
 		a.Equal(expected, string(resp))
 	})
-
 }

@@ -30,13 +30,19 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+func splitOutput(cmd *exec.Cmd) (string, string, error) {
+	var o, e bytes.Buffer
+	cmd.Stdout = &o
+	cmd.Stderr = &e
+	err := cmd.Run()
+	return o.String(), e.String(), err
+}
+
 func TestDeployments(t *testing.T) {
 	req := require.New(t)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	req.NoError(err)
-
-	var connectionString string
 
 	t.Run("Setup", func(t *testing.T) {
 		defer func(t *testing.T) {
@@ -68,14 +74,8 @@ func TestDeployments(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		var o, e bytes.Buffer
-		cmd.Stdout = &o
-		cmd.Stderr = &e
-		err = cmd.Run()
-		req.NoError(err, e.String())
-
-		connectionString = strings.TrimSpace(o.String())
-		connectionString = strings.Replace(connectionString, "Connection string: ", "", 1)
+		r, setupErr := cmd.CombinedOutput()
+		req.NoError(setupErr, string(r))
 	})
 
 	t.Cleanup(func() {
@@ -92,12 +92,46 @@ func TestDeployments(t *testing.T) {
 		req.NoError(delErr, string(r))
 	})
 
+	t.Run("List deployments", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			"deployments",
+			"list",
+		)
+
+		cmd.Env = os.Environ()
+
+		o, e, err := splitOutput(cmd)
+		req.NoError(err, e)
+
+		lines := strings.Split(o, "\n")
+
+		req.Equal(
+			4, // title, content, empty line, empty line
+			len(lines),
+			lines,
+		)
+	})
+
 	ctx := context.Background()
 	var client *mongo.Client
 	var myDB *mongo.Database
 	var myCol *mongo.Collection
 
 	t.Run("Connect to database", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			"deployments",
+			"connect",
+			"test",
+			"--connectWith",
+			"connectionString",
+		)
+
+		cmd.Env = os.Environ()
+
+		r, err := cmd.CombinedOutput()
+		req.NoError(err, string(r))
+
+		connectionString := strings.TrimSpace(string(r))
 		client, err = mongo.Connect(ctx, options.Client().ApplyURI(connectionString))
 		req.NoError(err)
 		myDB = client.Database("myDB")
@@ -121,42 +155,28 @@ func TestDeployments(t *testing.T) {
 	})
 
 	t.Run("Create Search Index", func(t *testing.T) {
-		result := myDB.RunCommand(ctx, bson.D{
-			{
-				Key:   "createSearchIndexes",
-				Value: "myCol",
-			},
-			{
-				Key: "indexes",
-				Value: []bson.D{
-					{
-						{
-							Key:   "name",
-							Value: "test",
-						},
-						{
-							Key: "definition",
-							Value: bson.D{
-								{
-									Key:   "name",
-									Value: "test",
-								},
-								{
-									Key: "mappings",
-									Value: bson.D{
-										{
-											Key:   "dynamic",
-											Value: true,
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		})
-		req.NoError(result.Err())
+		cmd := exec.Command(cliPath,
+			"deployments",
+			"search",
+			"index",
+			"create",
+			"idxTest",
+			"--deploymentName",
+			"test",
+			"--db",
+			myDB.Name(),
+			"--collection",
+			myCol.Name(),
+		)
+
+		cmd.Env = os.Environ()
+
+		r, err := cmd.CombinedOutput()
+		req.NoError(err, string(r))
+	})
+
+	var indexID string
+	t.Run("Wait for search index", func(t *testing.T) {
 		for {
 			t.Log("Waiting for index...")
 			cursor, err := myCol.Aggregate(ctx, mongo.Pipeline{
@@ -175,16 +195,34 @@ func TestDeployments(t *testing.T) {
 				continue // no status found
 			}
 			if status == "STEADY" {
+				indexID, _ = results[0]["id"].(string)
 				break
 			}
 		}
+	})
+
+	t.Run("Describe search index", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			"deployments",
+			"search",
+			"index",
+			"describe",
+			indexID,
+			"--deploymentName",
+			"test",
+		)
+
+		cmd.Env = os.Environ()
+
+		r, err := cmd.CombinedOutput()
+		req.NoError(err, string(r))
 	})
 
 	t.Run("Test search index", func(t *testing.T) {
 		c, err := myCol.Aggregate(ctx, bson.A{
 			bson.M{
 				"$search": bson.M{
-					"index": "test",
+					"index": "idxTest",
 					"text": bson.M{
 						"query": "test1",
 						"path":  "name",

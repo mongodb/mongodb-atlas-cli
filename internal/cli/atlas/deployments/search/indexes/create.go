@@ -35,7 +35,7 @@ import (
 const (
 	namePattern        = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	connectWaitSeconds = 10
-	createTemplate     = "Your search index is being created"
+	createTemplate     = "Your search index is being created\n"
 )
 
 type CreateOpts struct {

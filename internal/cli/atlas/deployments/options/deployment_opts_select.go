@@ -65,6 +65,11 @@ func (opts *DeploymentOpts) Select(ctx context.Context) error {
 		return errEmptyDeployments
 	}
 
+	if len(containers) == 1 {
+		opts.DeploymentName = containers[0].Names[0]
+		return nil
+	}
+
 	names := make([]string, 0, len(containers))
 	for _, c := range containers {
 		name := LocalDeploymentName(c.Names[0])

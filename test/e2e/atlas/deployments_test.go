@@ -18,6 +18,7 @@ package atlas_test
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -37,6 +38,7 @@ const (
 	indexName      = "indexTest"
 	deploymentName = "test"
 	createMessage  = "Your search index is being created"
+	deletedMessage = "Index '%s' deleted"
 )
 
 func splitOutput(cmd *exec.Cmd) (string, string, error) {
@@ -268,5 +270,26 @@ func TestDeployments(t *testing.T) {
 		req.NoError(err, e.String())
 		a := assert.New(t)
 		a.Contains(o.String(), indexName)
+	})
+
+	t.Run("Delete Index", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
+			"rm",
+			indexID,
+			"--debug",
+		)
+
+		cmd.Env = os.Environ()
+
+		var o, e bytes.Buffer
+		cmd.Stdout = &o
+		cmd.Stderr = &e
+		err := cmd.Run()
+		req.NoError(err, e.String())
+		a := assert.New(t)
+		a.Contains(o.String(), fmt.Sprintf(deletedMessage, indexID))
 	})
 }

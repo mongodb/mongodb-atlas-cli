@@ -50,9 +50,11 @@ func splitOutput(cmd *exec.Cmd) (string, string, error) {
 }
 
 func TestDeployments(t *testing.T) {
-	req := require.New(t)
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("deployments")
 
 	cliPath, err := e2e.AtlasCLIBin()
+	req := require.New(t)
 	req.NoError(err)
 
 	t.Run("Setup", func(t *testing.T) {
@@ -107,6 +109,8 @@ func TestDeployments(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"list",
+			"--projectId",
+			g.projectID,
 		)
 
 		cmd.Env = os.Environ()
@@ -114,8 +118,9 @@ func TestDeployments(t *testing.T) {
 		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
 
-		a := assert.New(t)
-		a.Contains(o, deploymentName)
+		req.Equal(`NAME   TYPE    MDB VER   STATE
+test   LOCAL   7.0.1     IDLE
+`, o)
 	})
 
 	ctx := context.Background()

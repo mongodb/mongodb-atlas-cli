@@ -41,7 +41,6 @@ var (
 		"rhel9",
 		"debian10",
 		"debian11",
-		"ubuntu18.04",
 		"ubuntu20.04",
 		"ubuntu22.04",
 	}
@@ -51,7 +50,6 @@ var (
 		"centos8":      "centos8-rpm",
 		"rhel9":        "rhel9-rpm",
 		"amazonlinux2": "amazonlinux2-rpm",
-		"ubuntu18.04":  "ubuntu18.04-deb",
 		"ubuntu20.04":  "ubuntu20.04-deb",
 		"ubuntu22.04":  "ubuntu22.04-deb",
 		"debian10":     "debian10-deb",
@@ -62,7 +60,6 @@ var (
 		"centos8":      "rhel80",
 		"rhel9":        "rhel90",
 		"amazonlinux2": "amazon2",
-		"ubuntu18.04":  "ubuntu1804",
 		"ubuntu20.04":  "ubuntu2004",
 		"ubuntu22.04":  "ubuntu2204",
 		"debian10":     "debian10",

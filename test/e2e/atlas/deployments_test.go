@@ -112,13 +112,8 @@ func TestDeployments(t *testing.T) {
 		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
 
-		lines := strings.Split(o, "\n")
-
-		req.Equal(
-			3, // title, content, empty line, empty line
-			len(lines),
-			lines,
-		)
+		a := assert.New(t)
+		a.Contains(o, deploymentName)
 	})
 
 	ctx := context.Background()

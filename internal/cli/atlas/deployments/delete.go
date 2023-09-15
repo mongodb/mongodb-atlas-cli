@@ -69,9 +69,10 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Deployment '%s' deleted\n", "Deployment not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:   "delete [deploymentName]",
-		Short: "Delete a deployment.",
-		Args:  require.MaximumNArgs(1),
+		Use:     "delete [deploymentName]",
+		Short:   "Delete a deployment.",
+		Aliases: []string{"rm"},
+		Args:    require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"deploymentNameDesc": "Name of the deployment you want to delete.",
 			"output":             opts.SuccessMessage(),

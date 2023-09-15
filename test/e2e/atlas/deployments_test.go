@@ -107,13 +107,10 @@ func TestDeployments(t *testing.T) {
 		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
 
-		lines := strings.Split(o, "\n")
+		req.Equal(`NAME   TYPE    MDB VER   STATE
+test   LOCAL   7.0.1     IDLE
+`, o)
 
-		req.Equal(
-			3, // title, content, empty line
-			len(lines),
-			lines,
-		)
 	})
 
 	ctx := context.Background()

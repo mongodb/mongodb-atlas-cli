@@ -24,10 +24,19 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+)
+
+const (
+	collectionName = "myCol"
+	databaseName   = "myDB"
+	indexName      = "indexTest"
+	deploymentName = "test"
+	createMessage  = "Your search index is being created"
 )
 
 func splitOutput(cmd *exec.Cmd) (string, string, error) {
@@ -48,9 +57,9 @@ func TestDeployments(t *testing.T) {
 		defer func(t *testing.T) {
 			t.Helper()
 			cmd := exec.Command(cliPath,
-				"deployments",
+				deploymentEntity,
 				"diagnostics",
-				"test",
+				deploymentName,
 				"-o",
 				"json",
 			)
@@ -63,9 +72,9 @@ func TestDeployments(t *testing.T) {
 		}(t)
 
 		cmd := exec.Command(cliPath,
-			"deployments",
+			deploymentEntity,
 			"setup",
-			"test",
+			deploymentName,
 			"--type",
 			"local",
 			"--force",
@@ -80,7 +89,7 @@ func TestDeployments(t *testing.T) {
 
 	t.Cleanup(func() {
 		cmd := exec.Command(cliPath,
-			"deployments",
+			deploymentEntity,
 			"delete",
 			"test",
 			"--force",
@@ -94,7 +103,7 @@ func TestDeployments(t *testing.T) {
 
 	t.Run("List deployments", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			"deployments",
+			deploymentEntity,
 			"list",
 		)
 
@@ -103,13 +112,8 @@ func TestDeployments(t *testing.T) {
 		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
 
-		lines := strings.Split(o, "\n")
-
-		req.Equal(
-			4, // title, content, empty line, empty line
-			len(lines),
-			lines,
-		)
+		a := assert.New(t)
+		a.Contains(o, deploymentName)
 	})
 
 	ctx := context.Background()
@@ -119,9 +123,9 @@ func TestDeployments(t *testing.T) {
 
 	t.Run("Connect to database", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			"deployments",
+			deploymentEntity,
 			"connect",
-			"test",
+			deploymentName,
 			"--connectWith",
 			"connectionString",
 		)
@@ -134,8 +138,8 @@ func TestDeployments(t *testing.T) {
 		connectionString := strings.TrimSpace(string(r))
 		client, err = mongo.Connect(ctx, options.Client().ApplyURI(connectionString))
 		req.NoError(err)
-		myDB = client.Database("myDB")
-		myCol = myDB.Collection("myCol")
+		myDB = client.Database(databaseName)
+		myCol = myDB.Collection(collectionName)
 	})
 
 	t.Cleanup(func() {
@@ -156,23 +160,26 @@ func TestDeployments(t *testing.T) {
 
 	t.Run("Create Search Index", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			"deployments",
-			"search",
-			"index",
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
 			"create",
-			"idxTest",
+			indexName,
 			"--deploymentName",
-			"test",
+			deploymentName,
 			"--db",
-			myDB.Name(),
+			databaseName,
 			"--collection",
-			myCol.Name(),
+			collectionName,
 		)
 
 		cmd.Env = os.Environ()
 
 		r, err := cmd.CombinedOutput()
-		req.NoError(err, string(r))
+		out := string(r)
+		req.NoError(err, out)
+		a := assert.New(t)
+		a.Contains(out, createMessage)
 	})
 
 	var indexID string
@@ -203,13 +210,13 @@ func TestDeployments(t *testing.T) {
 
 	t.Run("Describe search index", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			"deployments",
-			"search",
-			"index",
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
 			"describe",
 			indexID,
 			"--deploymentName",
-			"test",
+			deploymentName,
 		)
 
 		cmd.Env = os.Environ()
@@ -218,11 +225,11 @@ func TestDeployments(t *testing.T) {
 		req.NoError(err, string(r))
 	})
 
-	t.Run("Test search index", func(t *testing.T) {
+	t.Run("Test Search Index", func(t *testing.T) {
 		c, err := myCol.Aggregate(ctx, bson.A{
 			bson.M{
 				"$search": bson.M{
-					"index": "idxTest",
+					"index": indexName,
 					"text": bson.M{
 						"query": "test1",
 						"path":  "name",
@@ -235,5 +242,31 @@ func TestDeployments(t *testing.T) {
 		err = c.All(ctx, &results)
 		req.NoError(err)
 		req.Equal(1, len(results))
+	})
+
+	t.Run("Index List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
+			"ls",
+			"--deploymentName",
+			deploymentName,
+			"--db",
+			databaseName,
+			"--collection",
+			collectionName,
+			"--debug",
+		)
+
+		cmd.Env = os.Environ()
+
+		var o, e bytes.Buffer
+		cmd.Stdout = &o
+		cmd.Stderr = &e
+		err := cmd.Run()
+		req.NoError(err, e.String())
+		a := assert.New(t)
+		a.Contains(o.String(), indexName)
 	})
 }

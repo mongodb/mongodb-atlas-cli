@@ -19,14 +19,15 @@ package indexes
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
@@ -34,33 +35,38 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
-func TestDescribe_RunLocal(t *testing.T) {
+func TestList_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockPodman := mocks.NewMockClient(ctrl)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
-	mockStore := mocks.NewMockSearchIndexDescriber(ctrl)
+	mockDB := mocks.NewMockDatabase(ctrl)
+	mockStore := mocks.NewMockSearchIndexLister(ctrl)
 	ctx := context.Background()
 
 	const (
-		expectedIndexName       = "idx1"
 		expectedLocalDeployment = "localDeployment1"
 		expectedDB              = "db1"
 		expectedCollection      = "col1"
+		expectedName            = "test"
+		expectedID              = "1"
 	)
 
 	buf := new(bytes.Buffer)
-	opts := &DescribeOpts{
+	opts := &ListOpts{
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			DeploymentName: expectedLocalDeployment,
 		},
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
-			Template:  describeTemplate,
+			Template:  listTemplate,
 		},
 		mongodbClient: mockMongodbClient,
-		indexID:       "test",
-		store:         mockStore,
+		IndexOpts: search.IndexOpts{
+			DBName:     expectedDB,
+			Collection: expectedCollection,
+		},
+		store: mockStore,
 	}
 
 	mockPodman.
@@ -85,16 +91,24 @@ func TestDescribe_RunLocal(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	expected := &atlasv2.ClusterSearchIndex{
-		Name:           "name",
-		IndexID:        pointer.GetStringPointerIfNotEmpty("test"),
-		CollectionName: "coll",
-		Database:       "db",
-	}
-
 	mockMongodbClient.
 		EXPECT().
-		SearchIndex(ctx, "test").
+		Database(expectedDB).
+		Return(mockDB).
+		Times(1)
+
+	expected := []*atlasv2.ClusterSearchIndex{
+		{
+			Name:           expectedName,
+			IndexID:        pointer.GetStringPointerIfNotEmpty(expectedID),
+			CollectionName: expectedCollection,
+			Database:       expectedDB,
+		},
+	}
+
+	mockDB.
+		EXPECT().
+		SearchIndexes(ctx, expectedCollection).
 		Return(expected, nil).
 		Times(1)
 
@@ -102,39 +116,47 @@ func TestDescribe_RunLocal(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `ID     NAME   DATABASE   COLLECTION
-test   name   db         coll
-`, buf.String())
+	assert.Equal(t, fmt.Sprintf(`ID    NAME   DATABASE   COLLECTION
+%s     %s   %s        %s
+`, expectedID, expectedName, expectedDB, expectedCollection), buf.String())
 	t.Log(buf.String())
 }
 
-func TestDescribe_RunAtlas(t *testing.T) {
+func TestList_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockPodman := mocks.NewMockClient(ctrl)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
-	mockStore := mocks.NewMockSearchIndexDescriber(ctrl)
+	mockStore := mocks.NewMockSearchIndexLister(ctrl)
 	ctx := context.Background()
 
 	const (
-		expectedIndexName       = "idx1"
 		expectedLocalDeployment = "localDeployment1"
 		expectedDB              = "db1"
 		expectedCollection      = "col1"
+		expectedName            = "test"
+		expectedID              = "1"
+		expectedProjectID       = "1"
 	)
 
 	buf := new(bytes.Buffer)
-	opts := &DescribeOpts{
+	opts := &ListOpts{
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			DeploymentName: expectedLocalDeployment,
 		},
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
-			Template:  describeTemplate,
+			Template:  listTemplate,
 		},
 		mongodbClient: mockMongodbClient,
-		indexID:       "test",
-		store:         mockStore,
+		IndexOpts: search.IndexOpts{
+			DBName:     expectedDB,
+			Collection: expectedCollection,
+		},
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: expectedProjectID,
+		},
+		store: mockStore,
 	}
 
 	mockPodman.
@@ -148,52 +170,46 @@ func TestDescribe_RunAtlas(t *testing.T) {
 			},
 		}, nil).
 		Times(1)
-	mockMongodbClient.
-		EXPECT().
-		Disconnect(ctx).
-		Times(1)
 
 	mockMongodbClient.
 		EXPECT().
 		Connect(ctx, "mongodb://localhost:0/?directConnection=true", int64(10)).
-		Return(nil).
-		Times(1)
-
-	mockMongodbClient.
-		EXPECT().
-		SearchIndex(ctx, "test").
-		Return(nil, mongodbclient.ErrSearchIndexNotFound).
+		Return(options.ErrDeploymentNotFound).
 		Times(1)
 
 	mockStore.
 		EXPECT().
-		SearchIndex(opts.ProjectID, opts.DeploymentName, opts.indexID).
-		Return(&atlasv2.ClusterSearchIndex{
-			Name:           "name",
-			Database:       "db",
-			CollectionName: "coll",
-			IndexID:        pointer.GetStringPointerIfNotEmpty("test"),
+		SearchIndexes(opts.ProjectID, opts.DeploymentName, opts.DBName, opts.Collection).
+		Return([]atlasv2.ClusterSearchIndex{
+			{
+				Name:           expectedName,
+				Database:       expectedDB,
+				CollectionName: expectedCollection,
+				IndexID:        pointer.GetStringPointerIfNotEmpty(expectedID),
+			},
 		}, nil).
 		Times(1)
 
-	expected := &atlasv2.ClusterSearchIndex{
-		Name:           "name",
-		IndexID:        pointer.GetStringPointerIfNotEmpty("test"),
-		CollectionName: "coll",
-		Database:       "db",
+	expected := []*atlasv2.ClusterSearchIndex{
+		{
+			Name:           expectedName,
+			IndexID:        pointer.GetStringPointerIfNotEmpty(expectedID),
+			CollectionName: expectedCollection,
+			Database:       expectedDB,
+		},
 	}
 
-	test.VerifyOutputTemplate(t, describeTemplate, expected)
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 	if err := opts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestDescribeBuilder(t *testing.T) {
+func TestListBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		DescribeBuilder(),
+		ListBuilder(),
 		0,
-		[]string{flag.DeploymentName, flag.ProjectID},
+		[]string{flag.DeploymentName, flag.ProjectID, flag.Database, flag.Collection},
 	)
 }

@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"time"
 
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -33,7 +34,7 @@ type MongoDBClient interface {
 	Connect(ctx context.Context, connectionString string, waitSeconds int64) error
 	Disconnect(ctx context.Context)
 	Database(db string) Database
-	SearchIndex(ctx context.Context, id string) (*SearchIndexDefinition, error)
+	SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error)
 }
 
 type mongodbClient struct {
@@ -61,7 +62,7 @@ func (o *mongodbClient) Connect(ctx context.Context, connectionString string, wa
 	return nil
 }
 
-func (o *mongodbClient) SearchIndex(ctx context.Context, id string) (*SearchIndexDefinition, error) {
+func (o *mongodbClient) SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error) {
 	dbs, err := o.client.ListDatabaseNames(ctx, bson.D{}, nil)
 	if err != nil {
 		return nil, err

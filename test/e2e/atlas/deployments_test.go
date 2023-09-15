@@ -39,9 +39,11 @@ func splitOutput(cmd *exec.Cmd) (string, string, error) {
 }
 
 func TestDeployments(t *testing.T) {
-	req := require.New(t)
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("deployments")
 
 	cliPath, err := e2e.AtlasCLIBin()
+	req := require.New(t)
 	req.NoError(err)
 
 	t.Run("Setup", func(t *testing.T) {
@@ -96,6 +98,8 @@ func TestDeployments(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			"deployments",
 			"list",
+			"--projectId",
+			g.projectID,
 		)
 
 		cmd.Env = os.Environ()
@@ -106,7 +110,7 @@ func TestDeployments(t *testing.T) {
 		lines := strings.Split(o, "\n")
 
 		req.Equal(
-			4, // title, content, empty line, empty line
+			3, // title, content, empty line
 			len(lines),
 			lines,
 		)

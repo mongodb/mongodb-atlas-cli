@@ -1,0 +1,94 @@
+.. _atlas-deployments-setup:
+
+=======================
+atlas deployments setup
+=======================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Create a local deployment.
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas deployments setup [deploymentName] [options]
+
+.. Code end marker, please don't delete this comment
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - deploymentName
+     - string
+     - false
+     - Name of the deployment you want to setup.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --connectWith
+     - string
+     - false
+     - Method of connection. Valid values are mongosh, compass and skip.
+   * - --force
+     - 
+     - false
+     - Flag that indicates whether to skip the confirmation prompt before proceeding with the requested action.
+   * - -h, --help
+     - 
+     - false
+     - help for setup
+   * - --mdbVersion
+     - string
+     - false
+     - Major MongoDB version of the cluster.
+   * - --port
+     - int
+     - false
+     - Port to which the MongoDB server listens to for client connections.
+   * - --type
+     - string
+     - false
+     - Type of the deployment that you want to create. Valid values are ATLAS or LOCAL.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

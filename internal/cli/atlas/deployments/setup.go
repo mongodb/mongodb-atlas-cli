@@ -465,9 +465,10 @@ func (opts *SetupOpts) promptDeploymentName() error {
 
 func (opts *SetupOpts) promptMdbVersion() error {
 	p := &survey.Select{
-		Message: "MongoDB Version",
+		Message: "Major MongoDB Version",
 		Options: mdbVersions,
 		Default: opts.MdbVersion,
+		Help:    "Major MongoDB Version of the cluster. Will pick the latest minor version available.",
 	}
 
 	return telemetry.TrackAskOne(p, &opts.MdbVersion, nil)

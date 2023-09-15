@@ -771,7 +771,7 @@ func (opts *SetupOpts) RunAtlas(ctx context.Context) error {
 func (opts *SetupOpts) Run(ctx context.Context) error {
 	if err := opts.validateAndPrompt(); err != nil {
 		if errors.Is(err, errSkip) {
-			_, _ = fmt.Fprintf(opts.OutWriter, "%s\n", err)
+			_, _ = log.Warningln(err)
 			return nil
 		}
 

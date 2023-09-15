@@ -17,7 +17,6 @@ package atlas_test
 
 import (
 	"bytes"
-	"context"
 	"os"
 	"os/exec"
 	"strings"
@@ -26,10 +25,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func TestDeployments(t *testing.T) {
+func TestDeploymentsAtlas(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("setup")
 	cliPath, err := e2e.AtlasCLIBin()
@@ -38,9 +36,6 @@ func TestDeployments(t *testing.T) {
 
 	clusterName, err := RandClusterName()
 	req.NoError(err)
-
-	tagKey := "env"
-	tagValue := "e2etestlocal"
 
 	var connectionString string
 
@@ -54,7 +49,6 @@ func TestDeployments(t *testing.T) {
 			"--force",
 			"--skipMongosh",
 			"--skipSampleData",
-			"--tag", tagKey+"="+tagValue,
 			"--debug",
 			"--projectId", g.projectID,
 		)
@@ -99,14 +93,5 @@ func TestDeployments(t *testing.T) {
 		r, delErr := cmd.CombinedOutput()
 		req.NoError(delErr, string(r))
 	})
-
-	ctx := context.Background()
-	var client *mongo.Client
-	var myDB *mongo.Database
-	var myCol *mongo.Collection
-
 	// TODO: Add support for connect CLOUDP-199422
-	t.Cleanup(func() {
-		_ = client.Disconnect(ctx)
-	})
 }

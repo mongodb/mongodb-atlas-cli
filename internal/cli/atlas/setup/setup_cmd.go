@@ -632,9 +632,9 @@ func Builder() *cobra.Command {
 	// TODO: Add support to MDB version and Connect with to setup command
 	var str string
 	cmd.Flags().StringVar(&str, flag.MDBVersion, "", usage.MDBVersion)
-	cmd.Flags().MarkHidden(flag.MDBVersion)
+	_ = cmd.Flags().MarkHidden(flag.MDBVersion)
 	cmd.Flags().StringVar(&str, flag.ConnectWith, "", usage.ConnectWith)
-	cmd.Flags().MarkHidden(flag.ConnectWith)
+	_ = cmd.Flags().MarkHidden(flag.ConnectWith)
 
 	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().BoolVarP(&opts.DefaultValue, flag.Default, "Y", false, usage.QuickstartDefault)

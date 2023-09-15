@@ -55,12 +55,12 @@ func RemoveFlagsAndArgs(flagsToBeRemoved map[string]string, argsToBeRemoved map[
 		// remove global flags
 		flagArgsCount, err := shouldRemoveFlagAndArgs(flagsToBeRemoved, arg)
 		if err != nil {
-			_, _ = log.Warningf("Error while removing flags and arg(s): %s\n", err)
+			_, _ = log.Debugf("Error while removing flags and arg(s): %s\n", err)
 			return nil, err
 		}
 
 		if flagArgsCount >= 0 {
-			_, _ = log.Warningf("Skipped flag %s and %d args\n", args[i], flagArgsCount)
+			_, _ = log.Debugf("Skipped flag %s and %d arg(s)\n", args[i], flagArgsCount)
 			i += flagArgsCount // skip the args after flag
 			continue
 		}

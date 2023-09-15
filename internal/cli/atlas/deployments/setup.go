@@ -638,7 +638,7 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 		if !compass.Detect() {
 			return errCompassNotInstalled
 		}
-		if _, err := fmt.Fprintln(opts.OutWriter, "Launching MongoDB Compass..."); err != nil {
+		if _, err := log.Warningln("Launching MongoDB Compass..."); err != nil {
 			return err
 		}
 		return compass.Run("", "", cs)

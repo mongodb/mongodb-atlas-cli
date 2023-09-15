@@ -115,7 +115,7 @@ func TestDeployments(t *testing.T) {
 		lines := strings.Split(o, "\n")
 
 		req.Equal(
-			4, // title, content, empty line, empty line
+			3, // title, content, empty line, empty line
 			len(lines),
 			lines,
 		)
@@ -173,9 +173,9 @@ func TestDeployments(t *testing.T) {
 			"--deploymentName",
 			deploymentName,
 			"--db",
-			myDB.Name(),
+			databaseName,
 			"--collection",
-			myCol.Name(),
+			collectionName,
 		)
 
 		cmd.Env = os.Environ()
@@ -248,35 +248,6 @@ func TestDeployments(t *testing.T) {
 		req.NoError(err)
 		req.Equal(1, len(results))
 	})
-
-	// t.Run("Index Create", func(t *testing.T) {
-	//	t.Helper()
-	//	cmd := exec.Command(cliPath,
-	//		deploymentEntity,
-	//		searchEntity,
-	//		indexEntity,
-	//		"create",
-	//		indexName,
-	//		"--deploymentName",
-	//		deploymentName,
-	//		"--db",
-	//		databaseName,
-	//		"--collection",
-	//		collectionName,
-	//		"--debug",
-	//	)
-	//
-	//	cmd.Env = os.Environ()
-	//
-	//	var o, e bytes.Buffer
-	//	cmd.Stdout = &o
-	//	cmd.Stderr = &e
-	//	err := cmd.Run()
-	//	req.NoError(err, e.String())
-	//
-	//	a := assert.New(t)
-	//	a.Contains(o.String(), createMessage)
-	//})
 
 	t.Run("Index List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

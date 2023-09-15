@@ -73,5 +73,5 @@ func RemoveFlagsAndArgs(flagsToBeRemoved map[string]string, argsToBeRemoved map[
 
 		newArgs = append(newArgs, arg)
 	}
-	return newArgs, nil
+	return newArgs[2:], nil
 }

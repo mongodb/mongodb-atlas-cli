@@ -740,15 +740,21 @@ func (opts *SetupOpts) RunAtlas(ctx context.Context) error {
 	// remove global flags and unknown flags
 	var newArgs []string
 	_, _ = log.Debugf("Removing flags and args from original args %s\n", os.Args)
-	newArgs, err := workflows.RemoveFlagsAndArgs(map[string]string{flag.TypeFlag: "1"}, map[string]bool{opts.DeploymentName: true}, os.Args)
+
+	flagstoRemove := map[string]string{
+		flag.TypeFlag:    "1",
+		flag.MDBVersion:  "1", // TODO: CLOUDP-200331
+		flag.ConnectWith: "1", // TODO: CLOUDP-199422
+	}
+
+	newArgs, err := workflows.RemoveFlagsAndArgs(flagstoRemove, map[string]bool{opts.DeploymentName: true}, os.Args)
 	if err != nil {
 		return err
 	}
 
 	// replace deployment name with cluster name
 	if opts.DeploymentName != "" {
-		newArgs = append(newArgs, fmt.Sprintf("--%s", flag.ClusterName))
-		newArgs = append(newArgs, opts.DeploymentName)
+		newArgs = append(newArgs, fmt.Sprintf("--%s", flag.ClusterName), opts.DeploymentName)
 	}
 
 	// remove atlas deployments from args

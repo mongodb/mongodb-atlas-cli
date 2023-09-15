@@ -584,7 +584,7 @@ func Builder() *cobra.Command {
 		Example: `  # Override default cluster settings like name, provider, or database username by using the command options
   atlas setup --clusterName Test --provider GCP --username dbuserTest`,
 		Hidden: false,
-		Args:   require.MaximumNArgs(1),
+		Args:   require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			defaultProfile := config.Default()
 			opts.config = defaultProfile
@@ -628,13 +628,6 @@ func Builder() *cobra.Command {
 	// Setup related
 	opts.SetupAtlasFlags(cmd)
 	opts.SetupFlowFlags(cmd)
-
-	// TODO: Add support to MDB version and Connect with to setup command
-	var str string
-	cmd.Flags().StringVar(&str, flag.MDBVersion, "", usage.MDBVersion)
-	_ = cmd.Flags().MarkHidden(flag.MDBVersion)
-	cmd.Flags().StringVar(&str, flag.ConnectWith, "", usage.ConnectWith)
-	_ = cmd.Flags().MarkHidden(flag.ConnectWith)
 
 	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().BoolVarP(&opts.DefaultValue, flag.Default, "Y", false, usage.QuickstartDefault)

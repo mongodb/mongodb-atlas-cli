@@ -102,8 +102,7 @@ func (opts *CreateOpts) status(ctx context.Context) (string, error) {
 		return "", err
 	}
 	var results []bson.M
-	err = cursor.All(ctx, &results)
-	if err != nil {
+	if err = cursor.All(ctx, &results); err != nil {
 		return "", err
 	}
 	if len(results) == 0 {

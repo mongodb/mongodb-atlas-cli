@@ -191,7 +191,16 @@ func (opts *SetupOpts) internalIPs(ctx context.Context) error {
 		return err
 	}
 
-	_, ipNet, err := net.ParseCIDR(n.Subnets[0].Subnet)
+	var subnet string
+	if len(n.Subnets) > 0 {
+		subnet = n.Subnets[0].Subnet
+	} else {
+		subnet = n.Plugins[0].IPAM.Ranges[0][0].Subnet
+	}
+
+	fmt.Println("************", subnet)
+
+	_, ipNet, err := net.ParseCIDR(subnet)
 	if err != nil {
 		return err
 	}

@@ -196,8 +196,9 @@ func ListBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
-		PostRun: func(cmd *cobra.Command, args []string) {
+		PostRunE: func(cmd *cobra.Command, args []string) error {
 			opts.PostRunMessages()
+			return nil
 		},
 	}
 

@@ -229,6 +229,7 @@ func newMachineInitArgs() []string {
 	defaultMachineMemoryUint64, err := strconv.ParseUint(defaultMachineMemory, 10, 64)
 	if err != nil {
 		_, _ = log.Warning(err)
+		return args
 	}
 
 	if memory.Available > defaultMachineMemoryUint64 {
@@ -240,11 +241,13 @@ func newMachineInitArgs() []string {
 	cores, err := cpu.Counts(false)
 	if err != nil {
 		_, _ = log.Warning(err)
+		return args
 	}
 
 	defaultCPUs, err := strconv.Atoi(defaultMachineCPUs)
 	if err != nil {
 		_, _ = log.Warning(err)
+		return args
 	}
 
 	if cores >= defaultCPUs {

@@ -60,13 +60,13 @@ func TestStreams(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var instances atlasv2.PaginatedApiStreamsTenant
-		err = json.Unmarshal(resp, &instances)
-		a.NoError(err)
+		req.NoError(json.Unmarshal(resp, &instances))
+
 		// These instances don't have a default instance, since the projects are instantiated automatically
-		a.Len(instances.Results, 0)
+		a.Empty(instances.Results, "A new project should have no instances")
 	})
 
 	t.Run("Creating a streams instance", func(t *testing.T) {
@@ -86,11 +86,11 @@ func TestStreams(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var instance atlasv2.StreamsTenant
-		err = json.Unmarshal(resp, &instance)
-		a.NoError(err)
+		req.NoError(json.Unmarshal(resp, &instance))
+
 		a.Equal(*instance.Name, instanceName)
 	})
 
@@ -106,11 +106,11 @@ func TestStreams(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var instances atlasv2.PaginatedApiStreamsTenant
-		err = json.Unmarshal(resp, &instances)
-		a.NoError(err)
+		req.NoError(json.Unmarshal(resp, &instances))
+
 		a.Len(instances.Results, 1)
 		a.Equal(*instances.Results[0].Name, instanceName)
 		a.Equal(instances.Results[0].DataProcessRegion.CloudProvider, "AWS")
@@ -130,11 +130,11 @@ func TestStreams(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var instance atlasv2.StreamsTenant
-		err = json.Unmarshal(resp, &instance)
-		a.NoError(err)
+		req.NoError(json.Unmarshal(resp, &instance))
+
 		a.Equal(*instance.Name, instanceName)
 		a.Equal(instance.DataProcessRegion.CloudProvider, "AWS")
 		a.Equal(instance.DataProcessRegion.Region, "VIRGINIA_USA")
@@ -158,11 +158,11 @@ func TestStreams(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var instance atlasv2.StreamsTenant
-		err = json.Unmarshal(resp, &instance)
-		a.NoError(err)
+		req.NoError(json.Unmarshal(resp, &instance))
+
 		a.Equal(*instance.Name, instanceName)
 		a.Equal(instance.DataProcessRegion.CloudProvider, "AWS")
 		a.Equal(instance.DataProcessRegion.Region, "VIRGINIA_USA")
@@ -186,11 +186,11 @@ func TestStreams(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var connection atlasv2.StreamsConnection
-		err = json.Unmarshal(resp, &connection)
-		a.NoError(err)
+		req.NoError(json.Unmarshal(resp, &connection))
+
 		a.Equal(*connection.Name, connectionName)
 	})
 
@@ -209,11 +209,10 @@ func TestStreams(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var connection atlasv2.StreamsConnection
-		err = json.Unmarshal(resp, &connection)
-		a.NoError(err)
+		req.NoError(json.Unmarshal(resp, &connection))
 
 		a.Equal(*connection.Name, connectionName)
 		a.Equal(*connection.Type, "Kafka")
@@ -234,11 +233,10 @@ func TestStreams(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var response atlasv2.PaginatedApiStreamsConnection
-		err = json.Unmarshal(resp, &response)
-		a.NoError(err)
+		req.NoError(json.Unmarshal(resp, &response))
 
 		connections := response.Results
 		a.Len(connections, 1)
@@ -264,11 +262,11 @@ func TestStreams(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		var connection atlasv2.StreamsConnection
-		err = json.Unmarshal(resp, &connection)
-		a.NoError(err)
+		req.NoError(json.Unmarshal(resp, &connection))
+
 		a.Equal(*connection.Name, connectionName)
 		a.Equal(*connection.Security.Protocol, "SSL")
 	})
@@ -288,7 +286,7 @@ func TestStreams(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("'%s' deleted\n", connectionName)
 		a.Equal(expected, string(resp))
@@ -309,7 +307,7 @@ func TestStreams(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("Atlas Streams processor instance '%s' deleted\n", instanceName)
 		a.Equal(expected, string(resp))

@@ -54,15 +54,15 @@ func (opts *DeleteOpts) PostRun() error {
 	}
 
 	watcher := watchers.NewWatcher(
-		watchers.ClusterDeleted,
+		*watchers.ClusterDeleted,
 		watchers.NewAtlasClusterStateDescriber(
 			opts.store.(store.AtlasClusterDescriber),
 			opts.ProjectID,
 			opts.Entry,
 		),
-		time.Duration(opts.Timeout),
 	)
 
+	watcher.Timeout = time.Duration(opts.Timeout)
 	if err := opts.WatchWatcher(watcher); err != nil {
 		return err
 	}

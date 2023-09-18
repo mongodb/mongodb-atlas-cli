@@ -16,7 +16,6 @@ package indexes
 
 import (
 	"context"
-	"time"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -29,16 +28,18 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	"github.com/mongodb/mongodb-atlas-cli/internal/watchers"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const (
 	namePattern        = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	connectWaitSeconds = 10
-	createTemplate     = "Your search index is being created\n"
+	createTemplate     = "Search index created\n"
+	notFoundState      = "NOT_FOUND"
 )
 
 type CreateOpts struct {
@@ -84,23 +85,56 @@ func (opts *CreateOpts) initMongoDBClient(ctx context.Context) func() error {
 	}
 }
 
-func (opts *CreateOpts) PostRun(_ context.Context) error {
+func (opts *CreateOpts) status(ctx context.Context) (string, error) {
+	if err := opts.mongodbClient.Connect(opts.connectionString, connectWaitSeconds); err != nil {
+		return "", err
+	}
+	defer opts.mongodbClient.Disconnect()
+
+	db := opts.mongodbClient.Database(opts.index.Database)
+	col := db.Collection(opts.index.CollectionName)
+	cursor, err := col.Aggregate(ctx, mongo.Pipeline{
+		{
+			{Key: "$listSearchIndexes", Value: bson.D{}},
+		},
+	})
+	if err != nil {
+		return "", err
+	}
+	var results []bson.M
+	err = cursor.All(ctx, &results)
+	if err != nil {
+		return "", err
+	}
+	if len(results) == 0 {
+		return notFoundState, nil
+	}
+	status, ok := results[0]["status"].(string)
+	if !ok {
+		return notFoundState, nil
+	}
+	return status, nil
+}
+
+func (opts *CreateOpts) watch(ctx context.Context) (bool, error) {
+	state, err := opts.status(ctx)
+	if err != nil {
+		return false, err
+	}
+	if state == "STEADY" {
+		return true, nil
+	}
+	return false, nil
+}
+
+func (opts *CreateOpts) PostRun(ctx context.Context) error {
 	if !opts.EnableWatch {
 		return opts.Print(nil)
 	}
 
-	watcher := watchers.NewWatcher(
-		watchers.LocalSearchIndexCreated,
-		watchers.NewLocalSearchIndexStateDescriber(
-			opts.connectionString,
-			opts.index.Name,
-			opts.index.Database,
-			opts.index.CollectionName,
-		),
-		time.Duration(opts.Timeout),
-	)
-
-	if err := opts.WatchWatcher(watcher); err != nil {
+	if err := opts.Watch(func() (bool, error) {
+		return opts.watch(ctx)
+	}); err != nil {
 		return err
 	}
 

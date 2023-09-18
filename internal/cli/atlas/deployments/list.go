@@ -166,7 +166,7 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 	return nil
 }
 
-func (opts *ListOpts) PostRun(ctx context.Context) error {
+func (opts *ListOpts) PostRun(_ context.Context) error {
 	return opts.PostRunMessages()
 }
 

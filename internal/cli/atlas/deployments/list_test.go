@@ -204,7 +204,9 @@ func TestWarnMissingPodman(t *testing.T) {
 `, buf.String())
 	t.Log(buf.String())
 
-	listOpts.PostRun(ctx)
+	if err := listOpts.PostRun(ctx); err != nil {
+		t.Fatalf("PostRun() unexpected error: %v", err)
+	}
 	assert.Equal(t, `NAME   TYPE   MDB VER   STATE
 To get output for both local and Atlas clusters, install Podman.
 `, buf.String())

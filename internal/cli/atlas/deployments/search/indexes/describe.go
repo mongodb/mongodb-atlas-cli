@@ -72,12 +72,12 @@ func (opts *DescribeOpts) RunLocal(ctx context.Context) error {
 		return err
 	}
 
-	if err = opts.mongodbClient.Connect(ctx, connectionString, connectWaitSeconds); err != nil {
+	if err = opts.mongodbClient.Connect(connectionString, connectWaitSeconds); err != nil {
 		return err
 	}
-	defer opts.mongodbClient.Disconnect(ctx)
+	defer opts.mongodbClient.Disconnect()
 
-	r, err := opts.mongodbClient.SearchIndex(ctx, opts.indexID)
+	r, err := opts.mongodbClient.SearchIndex(opts.indexID)
 	if err != nil {
 		return err
 	}
@@ -85,9 +85,11 @@ func (opts *DescribeOpts) RunLocal(ctx context.Context) error {
 	return opts.Print(r)
 }
 
-func (opts *DescribeOpts) initMongoDBClient() error {
-	opts.mongodbClient = mongodbclient.NewClient()
-	return nil
+func (opts *DescribeOpts) initMongoDBClient(ctx context.Context) func() error {
+	return func() error {
+		opts.mongodbClient = mongodbclient.NewClientWithContext(ctx)
+		return nil
+	}
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
@@ -131,7 +133,7 @@ func DescribeBuilder() *cobra.Command {
 				opts.InitOutput(w, describeTemplate),
 				opts.InitStore(opts.PodmanClient),
 				opts.initStore(cmd.Context()),
-				opts.initMongoDBClient,
+				opts.initMongoDBClient(cmd.Context()),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

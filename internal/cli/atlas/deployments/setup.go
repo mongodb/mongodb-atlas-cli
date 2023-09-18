@@ -58,7 +58,7 @@ const (
 	replicaSetName     = "rs-localdev"
 	defaultSettings    = "default"
 	customSettings     = "custom"
-	skipSettings       = "skip"
+	cancelSettings     = "cancel"
 	compassConnect     = "compass"
 	mongoshConnect     = "mongosh"
 	skipConnect        = "skip"
@@ -68,7 +68,7 @@ const (
 )
 
 var (
-	errSkip                         = errors.New("setup skipped")
+	errCancel                       = errors.New("setup cancelled")
 	errMustBeInt                    = errors.New("input must be an integer")
 	errPortOutOfRange               = errors.New("port must within the range 1..65535")
 	errPortNotAvailable             = errors.New("port not available")
@@ -82,11 +82,11 @@ var (
 		localCluster: "Local Database",
 		atlasCluster: "Atlas Database",
 	}
-	settingOptions      = []string{defaultSettings, customSettings, skipSettings}
+	settingOptions      = []string{defaultSettings, customSettings, cancelSettings}
 	settingsDescription = map[string]string{
 		defaultSettings: "With default settings",
 		customSettings:  "With custom settings",
-		skipSettings:    "Skip set up",
+		cancelSettings:  "Cancel set up",
 	}
 	connectWithOptions     = []string{mongoshConnect, compassConnect, skipConnect}
 	connectWithDescription = map[string]string{
@@ -121,9 +121,11 @@ func (opts *SetupOpts) initPodmanClient() error {
 	return nil
 }
 
-func (opts *SetupOpts) initMongoDBClient() error {
-	opts.mongodbClient = mongodbclient.NewClient()
-	return nil
+func (opts *SetupOpts) initMongoDBClient(ctx context.Context) func() error {
+	return func() error {
+		opts.mongodbClient = mongodbclient.NewClientWithContext(ctx)
+		return nil
+	}
 }
 
 func (opts *SetupOpts) logStepStarted(msg string, currentStep int, totalSteps int) {
@@ -331,10 +333,10 @@ func (opts *SetupOpts) initReplicaSet(ctx context.Context) error {
 	}
 
 	const waitSeconds = 60
-	if err := opts.mongodbClient.Connect(ctx, connectionString, waitSeconds); err != nil {
+	if err := opts.mongodbClient.Connect(connectionString, waitSeconds); err != nil {
 		return err
 	}
-	defer opts.mongodbClient.Disconnect(ctx)
+	defer opts.mongodbClient.Disconnect()
 	db := opts.mongodbClient.Database("admin")
 
 	// initiate ReplicaSet
@@ -465,9 +467,10 @@ func (opts *SetupOpts) promptDeploymentName() error {
 
 func (opts *SetupOpts) promptMdbVersion() error {
 	p := &survey.Select{
-		Message: "MongoDB Version",
+		Message: "Major MongoDB Version",
 		Options: mdbVersions,
 		Default: opts.MdbVersion,
+		Help:    "Major MongoDB Version of the cluster. Will pick the latest minor version available.",
 	}
 
 	return telemetry.TrackAskOne(p, &opts.MdbVersion, nil)
@@ -701,8 +704,8 @@ Port	{{.Port}}
 	}
 
 	switch opts.settings {
-	case skipSettings:
-		return errSkip
+	case cancelSettings:
+		return errCancel
 	case customSettings:
 		if err := opts.promptDeploymentName(); err != nil {
 			return err
@@ -768,7 +771,7 @@ func (opts *SetupOpts) RunAtlas(ctx context.Context) error {
 
 func (opts *SetupOpts) Run(ctx context.Context) error {
 	if err := opts.validateAndPrompt(); err != nil {
-		if errors.Is(err, errSkip) {
+		if errors.Is(err, errCancel) {
 			_, _ = log.Warningln(err)
 			return nil
 		}
@@ -806,7 +809,7 @@ func SetupBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 				opts.initPodmanClient,
-				opts.initMongoDBClient,
+				opts.initMongoDBClient(cmd.Context()),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

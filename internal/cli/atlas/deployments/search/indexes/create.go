@@ -64,10 +64,10 @@ func (opts *CreateOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	if err = opts.mongodbClient.Connect(ctx, opts.connectionString, connectWaitSeconds); err != nil {
+	if err = opts.mongodbClient.Connect(opts.connectionString, connectWaitSeconds); err != nil {
 		return err
 	}
-	defer opts.mongodbClient.Disconnect(ctx)
+	defer opts.mongodbClient.Disconnect()
 
 	opts.index, err = opts.NewSearchIndex()
 	if err != nil {
@@ -77,9 +77,11 @@ func (opts *CreateOpts) Run(ctx context.Context) error {
 	return opts.mongodbClient.Database(opts.index.Database).CreateSearchIndex(ctx, opts.index.CollectionName, opts.index)
 }
 
-func (opts *CreateOpts) initMongoDBClient() error {
-	opts.mongodbClient = mongodbclient.NewClient()
-	return nil
+func (opts *CreateOpts) initMongoDBClient(ctx context.Context) func() error {
+	return func() error {
+		opts.mongodbClient = mongodbclient.NewClientWithContext(ctx)
+		return nil
+	}
 }
 
 func (opts *CreateOpts) PostRun(_ context.Context) error {
@@ -171,7 +173,7 @@ func CreateBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.InitOutput(w, createTemplate),
 				opts.InitStore(opts.PodmanClient),
-				opts.initMongoDBClient,
+				opts.initMongoDBClient(cmd.Context()),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

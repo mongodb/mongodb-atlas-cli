@@ -18,6 +18,7 @@ package atlas_test
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -244,4 +245,56 @@ test   LOCAL   7.0.1     IDLE
 		req.Equal(1, len(results))
 	})
 
+<<<<<<< HEAD
+=======
+	t.Run("Index List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
+			"ls",
+			"--deploymentName",
+			deploymentName,
+			"--db",
+			databaseName,
+			"--collection",
+			collectionName,
+			"--debug",
+		)
+
+		cmd.Env = os.Environ()
+
+		var o, e bytes.Buffer
+		cmd.Stdout = &o
+		cmd.Stderr = &e
+		err := cmd.Run()
+		req.NoError(err, e.String())
+		a := assert.New(t)
+		a.Contains(o.String(), indexName)
+	})
+
+	t.Run("Delete Index", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
+			"rm",
+			indexID,
+			"--deploymentName",
+			deploymentName,
+			"--force",
+			"--debug",
+		)
+
+		cmd.Env = os.Environ()
+
+		var o, e bytes.Buffer
+		cmd.Stdout = &o
+		cmd.Stderr = &e
+		err := cmd.Run()
+		req.NoError(err, e.String())
+		a := assert.New(t)
+		a.Contains(o.String(), fmt.Sprintf("Index '%s' deleted", indexID))
+	})
+>>>>>>> master
 }

@@ -101,14 +101,14 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DescribeOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.indexID == "" {
-		if err := promptRequiredName("Search Index ID", &opts.indexID); err != nil {
+	if opts.DeploymentName == "" {
+		if err := opts.DeploymentOpts.Select(ctx); err != nil {
 			return err
 		}
 	}
 
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
+	if opts.indexID == "" {
+		if err := promptRequiredName("Search Index ID", &opts.indexID); err != nil {
 			return err
 		}
 	}

@@ -112,7 +112,11 @@ func TestCreate_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `Your search index is being created
+	if err := opts.PostRun(ctx); err != nil {
+		t.Fatalf("PostRun() unexpected error: %v", err)
+	}
+
+	assert.Equal(t, `Search index created
 `, buf.String())
 	t.Log(buf.String())
 }

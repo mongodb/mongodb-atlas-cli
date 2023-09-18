@@ -37,8 +37,6 @@ const (
 	databaseName   = "myDB"
 	indexName      = "indexTest"
 	deploymentName = "test"
-	createMessage  = "Your search index is being created"
-	deletedMessage = "Index '%s' deleted"
 )
 
 func splitOutput(cmd *exec.Cmd) (string, string, error) {
@@ -82,7 +80,6 @@ func TestDeployments(t *testing.T) {
 			"--type",
 			"local",
 			"--force",
-			"--debug",
 		)
 
 		cmd.Env = os.Environ()
@@ -178,6 +175,7 @@ test   LOCAL   7.0.1     IDLE
 			databaseName,
 			"--collection",
 			collectionName,
+			"-w",
 		)
 
 		cmd.Env = os.Environ()
@@ -186,33 +184,35 @@ test   LOCAL   7.0.1     IDLE
 		out := string(r)
 		req.NoError(err, out)
 		a := assert.New(t)
-		a.Contains(out, createMessage)
+		a.Contains(out, "Search index created")
 	})
 
 	var indexID string
-	t.Run("Wait for search index", func(t *testing.T) {
-		for {
-			t.Log("Waiting for index...")
-			cursor, err := myCol.Aggregate(ctx, mongo.Pipeline{
-				{
-					{Key: "$listSearchIndexes", Value: bson.D{}},
-				},
-			})
-			req.NoError(err)
-			var results []bson.M
-			req.NoError(cursor.All(ctx, &results))
-			if len(results) == 0 {
-				continue // no index found
-			}
-			status, ok := results[0]["status"].(string)
-			if !ok {
-				continue // no status found
-			}
-			if status == "STEADY" {
-				indexID, _ = results[0]["id"].(string)
-				break
-			}
-		}
+
+	t.Run("Index List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
+			"ls",
+			"--deploymentName",
+			deploymentName,
+			"--db",
+			databaseName,
+			"--collection",
+			collectionName,
+		)
+
+		cmd.Env = os.Environ()
+
+		o, e, err := splitOutput(cmd)
+		req.NoError(err, e)
+		a := assert.New(t)
+		a.Contains(o, indexName)
+
+		lines := strings.Split(o, "\n")
+		cols := strings.Fields(lines[1])
+		indexID = cols[0]
 	})
 
 	t.Run("Describe search index", func(t *testing.T) {
@@ -251,32 +251,6 @@ test   LOCAL   7.0.1     IDLE
 		req.Equal(1, len(results))
 	})
 
-	t.Run("Index List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			deploymentEntity,
-			searchEntity,
-			indexEntity,
-			"ls",
-			"--deploymentName",
-			deploymentName,
-			"--db",
-			databaseName,
-			"--collection",
-			collectionName,
-			"--debug",
-		)
-
-		cmd.Env = os.Environ()
-
-		var o, e bytes.Buffer
-		cmd.Stdout = &o
-		cmd.Stderr = &e
-		err := cmd.Run()
-		req.NoError(err, e.String())
-		a := assert.New(t)
-		a.Contains(o.String(), indexName)
-	})
-
 	t.Run("Delete Index", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
@@ -298,6 +272,6 @@ test   LOCAL   7.0.1     IDLE
 		err := cmd.Run()
 		req.NoError(err, e.String())
 		a := assert.New(t)
-		a.Contains(o.String(), fmt.Sprintf(deletedMessage, indexID))
+		a.Contains(o.String(), fmt.Sprintf("Index '%s' deleted", indexID))
 	})
 }

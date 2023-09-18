@@ -29,8 +29,10 @@ import (
 )
 
 var (
-	ErrPodmanNotFound  = errors.New("podman not found in your system, check requirements at http://docpage")
-	ErrNetworkNotFound = errors.New("network ip range was not found")
+	ErrPodmanNotFound    = errors.New("podman not found in your system, check requirements at http://docpage")
+	ErrNetworkNotFound   = errors.New("network ip range was not found")
+	defaultMachineCPUs   = "2"
+	defaultMachineMemory = "2048"
 )
 
 type Diagnostic struct {
@@ -201,7 +203,11 @@ func (o *client) machineInit(ctx context.Context) error {
 		return nil
 	}
 
-	_, err = o.runPodman(ctx, "machine", "init")
+	if _, err = o.runPodman(ctx, "machine", "init"); err != nil {
+		return err
+	}
+
+	_, err = o.runPodman(ctx, "machine", "set", "--cpus", defaultMachineCPUs, "--memory", defaultMachineMemory)
 	return err
 }
 

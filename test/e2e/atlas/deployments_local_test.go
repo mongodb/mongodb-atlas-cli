@@ -187,6 +187,8 @@ test   LOCAL   7.0.1     IDLE
 		a.Contains(out, "Your search index is being created")
 	})
 
+	var indexID string
+
 	t.Run("Index List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
@@ -206,25 +208,29 @@ test   LOCAL   7.0.1     IDLE
 		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
 		a := assert.New(t)
-		a.Equal(`fdasfdsa`, o)
+		a.Contains(o, indexName)
+
+		lines := strings.Split(o, "\n")
+		cols := strings.Fields(lines[1])
+		indexID = cols[0]
 	})
 
-	// t.Run("Describe search index", func(t *testing.T) {
-	// 	cmd := exec.Command(cliPath,
-	// 		deploymentEntity,
-	// 		searchEntity,
-	// 		indexEntity,
-	// 		"describe",
-	// 		indexID,
-	// 		"--deploymentName",
-	// 		deploymentName,
-	// 	)
+	t.Run("Describe search index", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
+			"describe",
+			indexID,
+			"--deploymentName",
+			deploymentName,
+		)
 
-	// 	cmd.Env = os.Environ()
+		cmd.Env = os.Environ()
 
-	// 	r, err := cmd.CombinedOutput()
-	// 	req.NoError(err, string(r))
-	// })
+		r, err := cmd.CombinedOutput()
+		req.NoError(err, string(r))
+	})
 
 	t.Run("Test Search Index", func(t *testing.T) {
 		c, err := myCol.Aggregate(ctx, bson.A{
@@ -245,8 +251,6 @@ test   LOCAL   7.0.1     IDLE
 		req.Equal(1, len(results))
 	})
 
-<<<<<<< HEAD
-=======
 	t.Run("Index List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
@@ -264,13 +268,10 @@ test   LOCAL   7.0.1     IDLE
 
 		cmd.Env = os.Environ()
 
-		var o, e bytes.Buffer
-		cmd.Stdout = &o
-		cmd.Stderr = &e
-		err := cmd.Run()
-		req.NoError(err, e.String())
+		o, e, err := splitOutput(cmd)
+		req.NoError(err, e)
 		a := assert.New(t)
-		a.Contains(o.String(), indexName)
+		a.Contains(o, indexName)
 	})
 
 	t.Run("Delete Index", func(t *testing.T) {
@@ -296,5 +297,4 @@ test   LOCAL   7.0.1     IDLE
 		a := assert.New(t)
 		a.Contains(o.String(), fmt.Sprintf("Index '%s' deleted", indexID))
 	})
->>>>>>> master
 }

@@ -56,6 +56,7 @@ const (
 	mdb6               = "6.0"
 	mdb7               = "7.0"
 	replicaSetName     = "rs-localdev"
+	maxConns           = "32200" // --maxConns https://jira.mongodb.org/browse/SERVER-51233: Given the default max_map_count is 65530, we can support ~32200 connections
 	defaultSettings    = "default"
 	customSettings     = "custom"
 	cancelSettings     = "cancel"
@@ -302,6 +303,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 				"KEYFILECONTENTS": keyFileContents,
 				"DBPATH":          "/data/db",
 				"KEYFILE":         "/data/configdb/keyfile",
+				"MAXCONNS":        maxConns,
 				"REPLSETNAME":     replicaSetName,
 				"MONGOTHOST":      opts.internalMongotAddress(),
 			},

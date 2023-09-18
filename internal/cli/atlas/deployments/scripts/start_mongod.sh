@@ -25,5 +25,6 @@ python3 /usr/local/bin/docker-entrypoint.py \
         --dbpath "$DBPATH" \
         --keyFile "$KEYFILE" \
         --replSet "$REPLSETNAME" \
+        --maxConns "$MAXCONNS" \
         --setParameter "mongotHost=$MONGOTHOST" \
         --setParameter "searchIndexManagementHostAndPort=$MONGOTHOST"

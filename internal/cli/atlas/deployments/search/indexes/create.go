@@ -55,11 +55,11 @@ type CreateOpts struct {
 
 func (opts *CreateOpts) Run(ctx context.Context) error {
 	var err error
-	if err := opts.PodmanClient.Ready(ctx); err != nil {
+	if err = opts.PodmanClient.Ready(ctx); err != nil {
 		return err
 	}
 
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	if err = opts.validateAndPrompt(ctx); err != nil {
 		return err
 	}
 

@@ -150,6 +150,14 @@ type Network struct {
 		Subnet  string `json:"Subnet"`
 		Gateway string `json:"gateway"`
 	} `json:"Subnets"`
+	Plugins []struct {
+		IPAM struct {
+			Ranges [][]struct {
+				Gateway string `json:"gateway"`
+				Subnet  string `json:"subnet"`
+			} `json:"ranges"`
+		} `json:"ipam"`
+	} `json:"plugins"`
 }
 
 type client struct {
@@ -435,6 +443,8 @@ func (o *client) Network(ctx context.Context, name string) (*Network, error) {
 	if err = json.Unmarshal(output, &n); err != nil {
 		return nil, err
 	}
+
+	fmt.Println("***\n", n[0], "\n***")
 
 	if len(n) == 0 {
 		return nil, ErrNetworkNotFound

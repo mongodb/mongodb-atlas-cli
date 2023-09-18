@@ -151,8 +151,6 @@ func TestWarnMissingPodman(t *testing.T) {
 	ctx := context.Background()
 
 	buf := new(bytes.Buffer)
-	log.SetWriter(buf)
-
 	listOpts := &ListOpts{
 		store:  mockStore,
 		config: mockProfileReader,
@@ -169,6 +167,7 @@ func TestWarnMissingPodman(t *testing.T) {
 		},
 	}
 
+	log.SetWriter(buf)
 	emptyClusters := &admin.PaginatedAdvancedClusterDescription{
 		Results: []admin.AdvancedClusterDescription{},
 	}

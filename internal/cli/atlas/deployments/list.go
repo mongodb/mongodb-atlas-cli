@@ -184,11 +184,12 @@ func ListBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.config = config.Default()
 			opts.CredStore = config.Default()
+			log.SetWriter(cmd.OutOrStdout())
 
 			if err := opts.PreRunE(
 				opts.initStore(cmd.Context()),
 				func() error { return opts.defaultSetter.InitStore(cmd.Context()) },
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate)); err != nil {
+				opts.InitOutput(log.Writer(), listTemplate)); err != nil {
 				return err
 			}
 

@@ -21,6 +21,8 @@ import (
 	"context"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -75,10 +77,12 @@ func TestList_Run(t *testing.T) {
 
 	buf := new(bytes.Buffer)
 	listOpts := &ListOpts{
-		store:        mockStore,
-		credStore:    mockCredentialsGetter,
-		config:       mockProfileReader,
-		podmanClient: mockPodman,
+		store:  mockStore,
+		config: mockProfileReader,
+		DeploymentOpts: options.DeploymentOpts{
+			PodmanClient: mockPodman,
+			CredStore:    mockCredentialsGetter,
+		},
 		GlobalOpts: cli.GlobalOpts{
 			ProjectID: "64f670f0bf789926667dad1a",
 		},
@@ -103,7 +107,13 @@ func TestList_Run(t *testing.T) {
 		EXPECT().
 		AuthType().
 		Return(config.OAuth).
-		Times(2)
+		Times(1)
+
+	mockPodman.
+		EXPECT().
+		Ready(ctx).
+		Return(nil).
+		Times(1)
 
 	mockPodman.
 		EXPECT().
@@ -131,4 +141,73 @@ func TestListBuilder(t *testing.T) {
 		0,
 		[]string{flag.ProjectID},
 	)
+}
+
+func TestWarnMissingPodman(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockClusterLister(ctrl)
+	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
+	mockProfileReader := mocks.NewMockProfileReader(ctrl)
+	mockPodman := mocks.NewMockClient(ctrl)
+	ctx := context.Background()
+
+	buf := new(bytes.Buffer)
+	log.SetWriter(buf)
+
+	listOpts := &ListOpts{
+		store:  mockStore,
+		config: mockProfileReader,
+		DeploymentOpts: options.DeploymentOpts{
+			PodmanClient: mockPodman,
+			CredStore:    mockCredentialsGetter,
+		},
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: "64f670f0bf789926667dad1a",
+		},
+		OutputOpts: cli.OutputOpts{
+			Template:  listTemplate,
+			OutWriter: buf,
+		},
+	}
+
+	emptyClusters := &admin.PaginatedAdvancedClusterDescription{
+		Results: []admin.AdvancedClusterDescription{},
+	}
+
+	mockStore.
+		EXPECT().
+		ProjectClusters(listOpts.ProjectID,
+			&mongodbatlas.ListOptions{
+				PageNum:      cli.DefaultPage,
+				ItemsPerPage: MaxItemsPerPage,
+			},
+		).
+		Return(emptyClusters, nil).
+		Times(1)
+
+	mockCredentialsGetter.
+		EXPECT().
+		AuthType().
+		Return(config.OAuth).
+		Times(2)
+
+	mockPodman.
+		EXPECT().
+		Ready(ctx).
+		Return(podman.ErrPodmanNotFound).
+		Times(1)
+
+	if err := listOpts.Run(ctx); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+
+	assert.Equal(t, `NAME   TYPE   MDB VER   STATE
+`, buf.String())
+	t.Log(buf.String())
+
+	listOpts.PostRunMessages()
+	assert.Equal(t, `NAME   TYPE   MDB VER   STATE
+To get output for both local and Atlas clusters, install Podman.
+`, buf.String())
+	t.Log(buf.String())
 }

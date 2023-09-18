@@ -16,13 +16,15 @@ package options
 import (
 	"errors"
 	"fmt"
-	"log"
 	"regexp"
 	"strings"
 	"time"
 
 	"github.com/briandowns/spinner"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 )
 
@@ -46,6 +48,7 @@ type DeploymentOpts struct {
 	MdbVersion     string
 	Port           int
 	PodmanClient   podman.Client
+	CredStore      store.CredentialsGetter
 	s              *spinner.Spinner
 }
 
@@ -110,4 +113,18 @@ func ValidateDeploymentName(n string) error {
 		return fmt.Errorf("%w: %s", errInvalidDeploymentName, n)
 	}
 	return nil
+}
+
+func (opts *DeploymentOpts) PostRunMessages() {
+	if !opts.IsCliAuthenticated() {
+		_, _ = log.Warningln("To get output for both local and Atlas clusters, run \"atlas login\" command to authenticate your Atlas account.")
+	}
+
+	if err := podman.Installed(); err == podman.ErrPodmanNotFound {
+		_, _ = log.Warningln("To get output for both local and Atlas clusters, install Podman.")
+	}
+}
+
+func (opts *DeploymentOpts) IsCliAuthenticated() bool {
+	return opts.CredStore.AuthType() != config.NotLoggedIn
 }

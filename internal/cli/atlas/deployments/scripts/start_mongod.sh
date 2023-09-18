@@ -20,11 +20,12 @@ then
     chmod 400 "$KEYFILE"
 fi
 
+# --maxConns https://jira.mongodb.org/browse/SERVER-51233: Given the default max_map_count is 65530, we can support ~32200 connections
 python3 /usr/local/bin/docker-entrypoint.py \
         --transitionToAuth \
         --dbpath "$DBPATH" \
         --keyFile "$KEYFILE" \
         --replSet "$REPLSETNAME" \
-        --maxConns 32200 \ # https://jira.mongodb.org/browse/SERVER-51233: Given the default max_map_count is 65530, we can support ~32200 connections
+        --maxConns 32200 \
         --setParameter "mongotHost=$MONGOTHOST" \
         --setParameter "searchIndexManagementHostAndPort=$MONGOTHOST"

@@ -167,7 +167,6 @@ func TestWarnMissingPodman(t *testing.T) {
 		},
 	}
 
-	log.SetWriter(buf)
 	emptyClusters := &admin.PaginatedAdvancedClusterDescription{
 		Results: []admin.AdvancedClusterDescription{},
 	}
@@ -203,11 +202,13 @@ func TestWarnMissingPodman(t *testing.T) {
 `, buf.String())
 	t.Log(buf.String())
 
+	newBuf := new(bytes.Buffer)
+	log.SetWriter(newBuf)
+
 	if err := listOpts.PostRun(ctx); err != nil {
 		t.Fatalf("PostRun() unexpected error: %v", err)
 	}
-	assert.Equal(t, `NAME   TYPE   MDB VER   STATE
-To get output for both local and Atlas clusters, install Podman.
-`, buf.String())
-	t.Log(buf.String())
+	assert.Equal(t, `To get output for both local and Atlas clusters, install Podman.
+`, newBuf.String())
+	t.Log(newBuf.String())
 }

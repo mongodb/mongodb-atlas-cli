@@ -16,6 +16,7 @@ package indexes
 
 import (
 	"context"
+	"time"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -28,8 +29,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/watchers"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const (
@@ -39,43 +42,67 @@ const (
 )
 
 type CreateOpts struct {
+	cli.WatchOpts
 	cli.GlobalOpts
 	cli.OutputOpts
 	options.DeploymentOpts
 	search.IndexOpts
-	mongodbClient mongodbclient.MongoDBClient
+	mongodbClient    mongodbclient.MongoDBClient
+	connectionString string
+	index            *admin.ClusterSearchIndex
 }
 
 func (opts *CreateOpts) Run(ctx context.Context) error {
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	var err error
+
+	if err = opts.validateAndPrompt(ctx); err != nil {
 		return err
 	}
 
-	connectionString, e := opts.ConnectionString(ctx)
-	if e != nil {
-		return e
-	}
-
-	if err := opts.mongodbClient.Connect(ctx, connectionString, connectWaitSeconds); err != nil {
-		return err
-	}
-	defer opts.mongodbClient.Disconnect(ctx)
-
-	idx, err := opts.NewSearchIndex()
+	opts.connectionString, err = opts.ConnectionString(ctx)
 	if err != nil {
 		return err
 	}
 
-	if err := opts.mongodbClient.Database(idx.Database).CreateSearchIndex(ctx, idx.CollectionName, idx); err != nil {
+	if err = opts.mongodbClient.Connect(ctx, opts.connectionString, connectWaitSeconds); err != nil {
+		return err
+	}
+	defer opts.mongodbClient.Disconnect(ctx)
+
+	opts.index, err = opts.NewSearchIndex()
+	if err != nil {
 		return err
 	}
 
-	return opts.Print(nil)
+	return opts.mongodbClient.Database(opts.index.Database).CreateSearchIndex(ctx, opts.index.CollectionName, opts.index)
 }
 
 func (opts *CreateOpts) initMongoDBClient() error {
 	opts.mongodbClient = mongodbclient.NewClient()
 	return nil
+}
+
+func (opts *CreateOpts) PostRun(_ context.Context) error {
+	if !opts.EnableWatch {
+		return opts.Print(nil)
+	}
+
+	watcher := watchers.NewWatcher(
+		watchers.LocalSearchIndexCreated,
+		watchers.NewLocalSearchIndexStateDescriber(
+			opts.connectionString,
+			opts.index.Name,
+			opts.index.Database,
+			opts.index.CollectionName,
+		),
+		time.Duration(opts.Timeout),
+	)
+
+	if err := opts.WatchWatcher(watcher); err != nil {
+		return err
+	}
+
+	return opts.Print(nil)
 }
 
 func (opts *CreateOpts) validateAndPrompt(ctx context.Context) error {
@@ -153,12 +180,17 @@ func CreateBuilder() *cobra.Command {
 			}
 			return opts.Run(cmd.Context())
 		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PostRun(cmd.Context())
+		},
 	}
 
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVarP(&opts.Filename, flag.File, flag.FileShort, "", usage.SearchFilename)
+	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
+	cmd.Flags().UintVar(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 
 	_ = cmd.MarkFlagFilename(flag.File)
 

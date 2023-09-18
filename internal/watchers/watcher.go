@@ -61,19 +61,20 @@ type StateDescriber interface {
 }
 
 type Watcher struct {
-	Timeout            time.Duration // TODO: Timeout support - CLOUDP-181597
+	timeout            time.Duration // TODO: Timeout support - CLOUDP-181597
 	NonConstantBackoff bool
-	stateTransition    StateTransition
+	stateTransition    *StateTransition
 	describer          StateDescriber
 	hasStarted         bool
 }
 
 const defaultWait = 4 * time.Second
 
-func NewWatcher(stateTransition StateTransition, describer StateDescriber) *Watcher {
+func NewWatcher(stateTransition *StateTransition, describer StateDescriber, timeout time.Duration) *Watcher {
 	return &Watcher{
 		stateTransition: stateTransition,
 		describer:       describer,
+		timeout:         timeout,
 	}
 }
 

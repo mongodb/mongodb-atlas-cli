@@ -107,15 +107,15 @@ func (opts *CreateOpts) PostRun() error {
 	}
 
 	watcher := watchers.NewWatcher(
-		*watchers.ClusterCreated,
+		watchers.ClusterCreated,
 		watchers.NewAtlasClusterStateDescriber(
 			opts.store.(store.AtlasClusterDescriber),
 			opts.ProjectID,
 			opts.name,
 		),
+		time.Duration(opts.Timeout),
 	)
 
-	watcher.Timeout = time.Duration(opts.Timeout)
 	if err := opts.WatchWatcher(watcher); err != nil {
 		return err
 	}

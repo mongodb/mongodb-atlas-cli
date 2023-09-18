@@ -69,8 +69,10 @@ type Container struct {
 	State string   `json:"State"`
 	Image string   `json:"Image"`
 	Ports []struct {
-		HostPort      int `json:"host_port"`
-		ContainerPort int `json:"container_port"`
+		HostPort        int `json:"host_port"`
+		ContainerPort   int `json:"container_port"`
+		HostPort3x      int `json:"hostPort"`
+		ContainerPort3x int `json:"containerPort"`
 	} `json:"Ports,omitempty"`
 	Labels map[string]string `json:"Labels"`
 }
@@ -368,6 +370,14 @@ func (o *client) ListContainers(ctx context.Context, nameFilter string) ([]*Cont
 
 	var containers []*Container
 	err = json.Unmarshal(response, &containers)
+
+	for _, c := range containers {
+		if len(c.Ports) > 0 && c.Ports[0].ContainerPort3x > 0 {
+			c.Ports[0].ContainerPort = c.Ports[0].ContainerPort3x
+			c.Ports[0].HostPort = c.Ports[0].HostPort3x
+		}
+	}
+
 	return containers, err
 }
 

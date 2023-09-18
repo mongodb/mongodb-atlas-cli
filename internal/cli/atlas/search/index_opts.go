@@ -26,6 +26,7 @@ import (
 
 const DefaultAnalyzer = "lucene.standard"
 const deprecatedFlagMessage = "please use --file instead"
+const failedToLoadIndexMessage = "failed to parse JSON file due to %s"
 
 type IndexOpts struct {
 	Name           string
@@ -77,7 +78,7 @@ func (opts *IndexOpts) NewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
 	if len(opts.Filename) > 0 {
 		index := &atlasv2.ClusterSearchIndex{}
 		if err := file.Load(opts.Fs, opts.Filename, index); err != nil {
-			return nil, err
+			return nil, fmt.Errorf(failedToLoadIndexMessage, err.Error())
 		}
 		return index, nil
 	}

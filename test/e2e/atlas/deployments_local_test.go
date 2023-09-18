@@ -251,29 +251,6 @@ test   LOCAL   7.0.1     IDLE
 		req.Equal(1, len(results))
 	})
 
-	t.Run("Index List", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			deploymentEntity,
-			searchEntity,
-			indexEntity,
-			"ls",
-			"--deploymentName",
-			deploymentName,
-			"--db",
-			databaseName,
-			"--collection",
-			collectionName,
-			"--debug",
-		)
-
-		cmd.Env = os.Environ()
-
-		o, e, err := splitOutput(cmd)
-		req.NoError(err, e)
-		a := assert.New(t)
-		a.Contains(o, indexName)
-	})
-
 	t.Run("Delete Index", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,

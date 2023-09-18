@@ -128,6 +128,20 @@ func (m *MockDatabase) EXPECT() *MockDatabaseMockRecorder {
 	return m.recorder
 }
 
+// Collection mocks base method.
+func (m *MockDatabase) Collection(arg0 string) mongodbclient.Collection {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Collection", arg0)
+	ret0, _ := ret[0].(mongodbclient.Collection)
+	return ret0
+}
+
+// Collection indicates an expected call of Collection.
+func (mr *MockDatabaseMockRecorder) Collection(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Collection", reflect.TypeOf((*MockDatabase)(nil).Collection), arg0)
+}
+
 // CreateSearchIndex mocks base method.
 func (m *MockDatabase) CreateSearchIndex(arg0 context.Context, arg1 string, arg2 *admin.ClusterSearchIndex) error {
 	m.ctrl.T.Helper()

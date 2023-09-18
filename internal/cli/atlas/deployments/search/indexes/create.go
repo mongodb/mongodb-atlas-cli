@@ -30,47 +30,52 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const (
 	namePattern        = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	connectWaitSeconds = 10
-	createTemplate     = "Your search index is being created\n"
+	createTemplate     = "Search index created\n"
+	notFoundState      = "NOT_FOUND"
 )
 
 type CreateOpts struct {
+	cli.WatchOpts
 	cli.GlobalOpts
 	cli.OutputOpts
 	options.DeploymentOpts
 	search.IndexOpts
-	mongodbClient mongodbclient.MongoDBClient
+	mongodbClient    mongodbclient.MongoDBClient
+	connectionString string
+	index            *admin.ClusterSearchIndex
 }
 
 func (opts *CreateOpts) Run(ctx context.Context) error {
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	var err error
+
+	if err = opts.validateAndPrompt(ctx); err != nil {
 		return err
 	}
 
-	connectionString, e := opts.ConnectionString(ctx)
-	if e != nil {
-		return e
-	}
-
-	if err := opts.mongodbClient.Connect(connectionString, connectWaitSeconds); err != nil {
-		return err
-	}
-	defer opts.mongodbClient.Disconnect()
-
-	idx, err := opts.NewSearchIndex()
+	opts.connectionString, err = opts.ConnectionString(ctx)
 	if err != nil {
 		return err
 	}
 
-	if err := opts.mongodbClient.Database(idx.Database).CreateSearchIndex(ctx, idx.CollectionName, idx); err != nil {
+	if err = opts.mongodbClient.Connect(opts.connectionString, connectWaitSeconds); err != nil {
+		return err
+	}
+	defer opts.mongodbClient.Disconnect()
+
+	opts.index, err = opts.NewSearchIndex()
+	if err != nil {
 		return err
 	}
 
-	return opts.Print(nil)
+	return opts.mongodbClient.Database(opts.index.Database).CreateSearchIndex(ctx, opts.index.CollectionName, opts.index)
 }
 
 func (opts *CreateOpts) initMongoDBClient(ctx context.Context) func() error {
@@ -78,6 +83,61 @@ func (opts *CreateOpts) initMongoDBClient(ctx context.Context) func() error {
 		opts.mongodbClient = mongodbclient.NewClientWithContext(ctx)
 		return nil
 	}
+}
+
+func (opts *CreateOpts) status(ctx context.Context) (string, error) {
+	if err := opts.mongodbClient.Connect(opts.connectionString, connectWaitSeconds); err != nil {
+		return "", err
+	}
+	defer opts.mongodbClient.Disconnect()
+
+	db := opts.mongodbClient.Database(opts.index.Database)
+	col := db.Collection(opts.index.CollectionName)
+	cursor, err := col.Aggregate(ctx, mongo.Pipeline{
+		{
+			{Key: "$listSearchIndexes", Value: bson.D{}},
+		},
+	})
+	if err != nil {
+		return "", err
+	}
+	var results []bson.M
+	if err = cursor.All(ctx, &results); err != nil {
+		return "", err
+	}
+	if len(results) == 0 {
+		return notFoundState, nil
+	}
+	status, ok := results[0]["status"].(string)
+	if !ok {
+		return notFoundState, nil
+	}
+	return status, nil
+}
+
+func (opts *CreateOpts) watch(ctx context.Context) (bool, error) {
+	state, err := opts.status(ctx)
+	if err != nil {
+		return false, err
+	}
+	if state == "STEADY" {
+		return true, nil
+	}
+	return false, nil
+}
+
+func (opts *CreateOpts) PostRun(ctx context.Context) error {
+	if !opts.EnableWatch {
+		return opts.Print(nil)
+	}
+
+	if err := opts.Watch(func() (bool, error) {
+		return opts.watch(ctx)
+	}); err != nil {
+		return err
+	}
+
+	return opts.Print(nil)
 }
 
 func (opts *CreateOpts) validateAndPrompt(ctx context.Context) error {
@@ -155,12 +215,17 @@ func CreateBuilder() *cobra.Command {
 			}
 			return opts.Run(cmd.Context())
 		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PostRun(cmd.Context())
+		},
 	}
 
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVarP(&opts.Filename, flag.File, flag.FileShort, "", usage.SearchFilename)
+	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
+	cmd.Flags().UintVar(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 
 	_ = cmd.MarkFlagFilename(flag.File)
 

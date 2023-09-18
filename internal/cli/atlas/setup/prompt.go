@@ -96,7 +96,7 @@ func newClusterCreateConfirm() survey.Prompt {
 }
 
 func newClusterDefaultConfirm(tier string) survey.Prompt {
-	message := "Do you want to setup your Atlas database with default settings??"
+	message := "Do you want to setup your Atlas database with default settings?"
 	if tier != DefaultAtlasTier {
 		message = "Are you ready to create your Atlas cluster with the above settings?"
 	}

@@ -85,6 +85,18 @@ type Notifier struct {
 	writer         io.Writer
 }
 
+type AuthRequirements int64
+
+const (
+	// command does not require authentication.
+	NoAuth AuthRequirements = 0
+	// command requires authentication.
+	RequiredAuth AuthRequirements = 1
+	// command can work with or without authentication,
+	// and if access token token is found, try to refresh it.
+	OptionalAuth AuthRequirements = 2
+)
+
 func handleSignal() {
 	sighandle.Notify(func(sig os.Signal) {
 		telemetry.FinishTrackingCommand(telemetry.TrackOptions{
@@ -141,14 +153,19 @@ Use the --help flag with any command for more info on that command.`,
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
 			}
-			if shouldCheckCredentials(cmd) {
-				return prerun.ExecuteE(
+			if authReq := shouldCheckCredentials(cmd); authReq != NoAuth {
+				if err := prerun.ExecuteE(
 					opts.InitFlow(config.Default()),
 					func() error {
 						return opts.RefreshAccessToken(cmd.Context())
 					},
-					validate.Credentials,
-				)
+				); err != nil {
+					return err
+				}
+
+				if authReq == RequiredAuth {
+					return validate.Credentials()
+				}
 			}
 
 			return nil
@@ -264,7 +281,7 @@ func shouldSetService(cmd *cobra.Command) bool {
 	return true
 }
 
-func shouldCheckCredentials(cmd *cobra.Command) bool {
+func shouldCheckCredentials(cmd *cobra.Command) AuthRequirements {
 	searchByName := []string{
 		"__complete",
 		"help",
@@ -272,25 +289,25 @@ func shouldCheckCredentials(cmd *cobra.Command) bool {
 	}
 	for _, n := range searchByName {
 		if cmd.Name() == n {
-			return false
+			return NoAuth
 		}
 	}
-	skipFor := []string{
-		fmt.Sprintf("%s %s", atlas, "completion"),  // completion commands do not require credentials
-		fmt.Sprintf("%s %s", atlas, "config"),      // user wants to set credentials
-		fmt.Sprintf("%s %s", atlas, "auth"),        // user wants to set credentials
-		fmt.Sprintf("%s %s", atlas, "login"),       // user wants to set credentials
-		fmt.Sprintf("%s %s", atlas, "setup"),       // user wants to set credentials
-		fmt.Sprintf("%s %s", atlas, "register"),    // user wants to set credentials
-		fmt.Sprintf("%s %s", atlas, "quickstart"),  // command supports login
-		fmt.Sprintf("%s %s", atlas, "deployments"), // command supports local
+	customRequirements := map[string]AuthRequirements{
+		fmt.Sprintf("%s %s", atlas, "completion"):  NoAuth,       // completion commands do not require credentials
+		fmt.Sprintf("%s %s", atlas, "config"):      NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "auth"):        NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "login"):       NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "setup"):       NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "register"):    NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "quickstart"):  NoAuth,       // command supports login
+		fmt.Sprintf("%s %s", atlas, "deployments"): OptionalAuth, // command supports local and Atlas
 	}
-	for _, p := range skipFor {
+	for p, r := range customRequirements {
 		if strings.HasPrefix(cmd.CommandPath(), p) {
-			return false
+			return r
 		}
 	}
-	return true
+	return RequiredAuth
 }
 
 func formattedVersion() string {

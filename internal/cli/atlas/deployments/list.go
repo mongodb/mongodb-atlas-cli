@@ -166,6 +166,10 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 	return nil
 }
 
+func (opts *ListOpts) PostRun(ctx context.Context) error {
+	return opts.PostRunMessages()
+}
+
 // atlas deployments list.
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
@@ -197,8 +201,7 @@ func ListBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 		PostRunE: func(cmd *cobra.Command, args []string) error {
-			opts.PostRunMessages()
-			return nil
+			return opts.PostRun(cmd.Context())
 		},
 	}
 

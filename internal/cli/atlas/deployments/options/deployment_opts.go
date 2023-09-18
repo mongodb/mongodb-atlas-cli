@@ -115,14 +115,21 @@ func ValidateDeploymentName(n string) error {
 	return nil
 }
 
-func (opts *DeploymentOpts) PostRunMessages() {
+func (opts *DeploymentOpts) PostRunMessages() error {
 	if !opts.IsCliAuthenticated() {
-		_, _ = log.Warningln("To get output for both local and Atlas clusters, run \"atlas login\" command to authenticate your Atlas account.")
+		_, err := log.Warningln("To get output for both local and Atlas clusters, run \"atlas login\" command to authenticate your Atlas account.")
+		if err != nil {
+			return err
+		}
 	}
 
 	if err := podman.Installed(); err == podman.ErrPodmanNotFound {
-		_, _ = log.Warningln("To get output for both local and Atlas clusters, install Podman.")
+		_, err = log.Warningln("To get output for both local and Atlas clusters, install Podman.")
+		if err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
 func (opts *DeploymentOpts) IsCliAuthenticated() bool {

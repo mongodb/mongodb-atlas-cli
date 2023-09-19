@@ -440,7 +440,7 @@ func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Con
 
 func (opts *SetupOpts) promptSettings() error {
 	p := &survey.Select{
-		Message: "How do you want to setup your local MongoDB database?",
+		Message: "How do you want to set up your local MongoDB database?",
 		Options: settingOptions,
 		Default: opts.settings,
 		Description: func(value string, index int) string {

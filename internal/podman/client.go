@@ -259,14 +259,6 @@ func newMachineInitArgs() []string {
 	return args
 }
 
-func (o *client) machineSet(ctx context.Context) error {
-	if _, err := o.runPodman(ctx, "machine", "set", "--cpus", defaultMachineCPUs, "--memory", defaultMachineMemory); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (o *client) machineInspect(ctx context.Context) (*machine.InspectInfo, error) {
 	b, err := o.runPodman(ctx, "machine", "inspect", machine.DefaultMachineName)
 	if err != nil {
@@ -308,10 +300,6 @@ func (o *client) Ready(ctx context.Context) error {
 	}
 
 	if err := o.machineInit(ctx); err != nil {
-		return err
-	}
-
-	if err := o.machineSet(ctx); err != nil {
 		return err
 	}
 

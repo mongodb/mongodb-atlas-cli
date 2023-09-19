@@ -27,7 +27,6 @@ import (
 
 	"github.com/containers/podman/v4/pkg/machine"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/shirou/gopsutil/v3/cpu"
 	"github.com/shirou/gopsutil/v3/mem"
 )
 
@@ -238,12 +237,7 @@ func newMachineInitArgs() []string {
 		_, _ = log.Warningf(notEnoughMemoryAvailable, memory.Available, defaultMachineMemory)
 	}
 
-	cores, err := cpu.Counts(false)
-	if err != nil {
-		_, _ = log.Warning(err)
-		return args
-	}
-
+	cores := runtime.NumCPU()
 	defaultCPUs, err := strconv.Atoi(defaultMachineCPUs)
 	if err != nil {
 		_, _ = log.Warning(err)

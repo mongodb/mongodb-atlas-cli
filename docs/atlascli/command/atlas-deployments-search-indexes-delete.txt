@@ -1,8 +1,8 @@
-.. _atlas-deployments-connect:
+.. _atlas-deployments-search-indexes-delete:
 
-=========================
-atlas deployments connect
-=========================
+=======================================
+atlas deployments search indexes delete
+=======================================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,7 @@ atlas deployments connect
    :depth: 1
    :class: singlecol
 
-Connect to a deployment.
+Delete the specified search index from the specified cluster.
 
 Syntax
 ------
@@ -20,7 +20,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas deployments connect [deploymentName] [options]
+   atlas deployments search indexes delete <indexId> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -35,10 +35,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - deploymentName
+   * - indexId
      - string
-     - false
-     - Name of the deployment that you want to connect to.
+     - true
+     - ID of the index.
 
 Options
 -------
@@ -51,14 +51,22 @@ Options
      - Type
      - Required
      - Description
-   * - --connectWith
+   * - --deploymentName
      - string
      - false
-     - Method for connecting to the deployment. Valid values are mongosh, compass, and skip.
+     - Name of the cluster.
+   * - --force
+     - 
+     - false
+     - Flag that indicates whether to skip the confirmation prompt before proceeding with the requested action.
    * - -h, --help
      - 
      - false
-     - help for connect
+     - help for delete
+   * - --projectId
+     - string
+     - false
+     - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
 
 Inherited Options
 -----------------
@@ -75,4 +83,13 @@ Inherited Options
      - string
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Output
+------
+
+If the command succeeds, the CLI returns output similar to the following sample. Values in brackets represent your values.
+
+.. code-block::
+
+   Index '<Name>' deleted
 

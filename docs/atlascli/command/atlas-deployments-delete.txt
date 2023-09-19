@@ -38,7 +38,7 @@ Arguments
    * - deploymentName
      - string
      - false
-     - Name of the deployment you want to delete.
+     - Name of the deployment that you want to delete.
 
 Options
 -------

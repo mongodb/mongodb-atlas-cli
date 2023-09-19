@@ -12,7 +12,7 @@ atlas deployments
    :depth: 1
    :class: singlecol
 
-Manage Atlas and local deployments.
+Manage cloud and local deployments.
 
 Options
 -------
@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-deployments-connect` - Connects to a deployment.
+* :ref:`atlas-deployments-connect` - Connect to a deployment.
 * :ref:`atlas-deployments-delete` - Delete a deployment.
 * :ref:`atlas-deployments-list` - Return all deployments.
 * :ref:`atlas-deployments-search` - Manage search for Atlas and local deployments.

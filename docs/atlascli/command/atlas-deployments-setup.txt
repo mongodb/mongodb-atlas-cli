@@ -38,7 +38,7 @@ Arguments
    * - deploymentName
      - string
      - false
-     - Name of the deployment you want to setup.
+     - Name of the deployment that you want to setup.
 
 Options
 -------
@@ -51,14 +51,30 @@ Options
      - Type
      - Required
      - Description
+   * - --accessListIp
+     - strings
+     - false
+     - IP address to be allowed to access the deployment.
+
+       Mutually exclusive with --currentIp.
    * - --connectWith
      - string
      - false
-     - Method of connection. Valid values are mongosh, compass and skip.
+     - Method for connecting to the deployment. Valid values are mongosh, compass, and skip.
+   * - --currentIp
+     - 
+     - false
+     - Flag that adds the IP address from the host that is currently executing the command to the access list.
+
+       Mutually exclusive with --accessListIp.
+   * - --enableTerminationProtection
+     - 
+     - false
+     - Enables termination protection for your cluster. You can't delete a cluster with termination protection enabled.
    * - --force
      - 
      - false
-     - Flag that indicates whether to skip the confirmation prompt before proceeding with the requested action.
+     - If specified, skips asking for input and creates a cluster with default settings for any options you don't specify.
    * - -h, --help
      - 
      - false
@@ -67,14 +83,50 @@ Options
      - string
      - false
      - Major MongoDB version of the cluster.
+   * - --password
+     - string
+     - false
+     - Password for the user.
    * - --port
      - int
      - false
-     - Port to which the MongoDB server listens to for client connections.
+     - Port that the MongoDB server listens to for client connections.
+   * - --projectId
+     - string
+     - false
+     - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
+   * - --provider
+     - string
+     - false
+     - Name of your cloud service provider. Valid values are AWS, AZURE, or GCP.
+   * - -r, --region
+     - string
+     - false
+     - Physical location of your MongoDB cluster. For a complete list of supported AWS regions, see: https://www.mongodb.com/docs/atlas/reference/amazon-aws/. For a complete list of supported Azure regions, see: https://www.mongodb.com/docs/atlas/reference/microsoft-azure/#microsoft-azure. For a complete list of supported GCP regions, see: https://www.mongodb.com/docs/atlas/reference/google-gcp/..
+   * - --skipMongosh
+     - 
+     - false
+     - Indicates whether to skip accessing your deployment with MongoDB Shell.
+   * - --skipSampleData
+     - 
+     - false
+     - Indicates whether to skip loading sample data into your Atlas cluster.
+   * - --tag
+     - stringToString
+     - false
+     - List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the cluster. This value defaults to [].
+   * - --tier
+     - string
+     - false
+     - Tier for each data-bearing server in the cluster. To learn more about cluster tiers, see https://www.mongodb.com/docs/atlas/manage-clusters/#select-cluster-tier. This value defaults to "M0".
    * - --type
      - string
      - false
      - Type of the deployment that you want to create. Valid values are ATLAS or LOCAL.
+   * - --username
+     - string
+     - false
+     - Username for authenticating to MongoDB.
 
 Inherited Options
 -----------------

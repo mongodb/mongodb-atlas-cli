@@ -77,6 +77,14 @@ Options
      - 
      - false
      - help for create
+   * - -w, --watch
+     - 
+     - false
+     - Watch the command until it completes its execution or the watch times out. To set the time that the watch times out, use the --watchTimeout option.
+   * - --watchTimeout
+     - uint
+     - false
+     - Time in seconds until a watch times out. After a watch times out, the CLI no longer watches the command.
 
 Inherited Options
 -----------------

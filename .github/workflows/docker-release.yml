@@ -35,7 +35,7 @@ jobs:
         with:
           platforms: ${{ env.PLATFORMS }}
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
         with:
           platforms: ${{ env.PLATFORMS }}
       - name: Login to Docker Hub

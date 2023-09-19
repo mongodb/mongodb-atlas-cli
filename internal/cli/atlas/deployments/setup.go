@@ -799,7 +799,7 @@ func SetupBuilder() *cobra.Command {
 		Short: "Create a local deployment.",
 		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
-			"deploymentNameDesc": "Name of the deployment that you want to setup.",
+			"deploymentNameDesc": "Name of the deployment that you want to set up.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {

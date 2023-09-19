@@ -16,6 +16,7 @@ package deployments
 
 import (
 	"context"
+	"errors"
 	"sort"
 	"strings"
 
@@ -154,7 +155,7 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 	}
 
 	mdbContainers, err := opts.getLocalDeployments(ctx)
-	if err != nil && err != podman.ErrPodmanNotFound {
+	if err != nil && !errors.Is(err, podman.ErrPodmanNotFound) {
 		return err
 	}
 

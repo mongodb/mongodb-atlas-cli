@@ -74,7 +74,7 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Args:    require.MaximumNArgs(1),
 		Annotations: map[string]string{
-			"deploymentNameDesc": "Name of the deployment you want to delete.",
+			"deploymentNameDesc": "Name of the deployment that you want to delete.",
 			"output":             opts.SuccessMessage(),
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

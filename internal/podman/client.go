@@ -26,11 +26,26 @@ import (
 	"strings"
 
 	"github.com/containers/podman/v4/pkg/machine"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/shirou/gopsutil/v3/mem"
 )
 
 var (
-	ErrPodmanNotFound  = errors.New("podman not found in your system, check requirements at http://docpage")
+	ErrPodmanNotFound  = errors.New("podman not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs")
 	ErrNetworkNotFound = errors.New("network ip range was not found")
+)
+
+const (
+	defaultMachineCPUs       = "2"
+	defaultMachineMemory     = "2048"
+	notEnoughMemoryAvailable = `
+Your available memory '%d' is below '%s'. Using default podman memory settings.
+
+`
+	notEnoughCPUsAvailable = `
+Your available CPU cores '%d' is below '%s'. Using default podman CPU settings.
+
+`
 )
 
 type Diagnostic struct {
@@ -201,8 +216,41 @@ func (o *client) machineInit(ctx context.Context) error {
 		return nil
 	}
 
-	_, err = o.runPodman(ctx, "machine", "init")
-	return err
+	if _, err = o.runPodman(ctx, newMachineInitArgs()...); err != nil {
+		return err
+	}
+	return nil
+}
+
+func newMachineInitArgs() []string {
+	args := []string{"machine", "init"}
+	memory, _ := mem.VirtualMemory()
+	defaultMachineMemoryUint64, err := strconv.ParseUint(defaultMachineMemory, 10, 64)
+	if err != nil {
+		_, _ = log.Warning(err)
+		return args
+	}
+
+	if memory.Available > defaultMachineMemoryUint64 {
+		args = append(args, "--memory", defaultMachineMemory)
+	} else {
+		_, _ = log.Warningf(notEnoughMemoryAvailable, memory.Available, defaultMachineMemory)
+	}
+
+	cores := runtime.NumCPU()
+	defaultCPUs, err := strconv.Atoi(defaultMachineCPUs)
+	if err != nil {
+		_, _ = log.Warning(err)
+		return args
+	}
+
+	if cores >= defaultCPUs {
+		args = append(args, "--cpus", defaultMachineCPUs)
+	} else {
+		_, _ = log.Warningf(notEnoughCPUsAvailable, cores, defaultMachineCPUs)
+	}
+
+	return args
 }
 
 func (o *client) machineInspect(ctx context.Context) (*machine.InspectInfo, error) {
@@ -240,6 +288,10 @@ func Installed() error {
 }
 
 func (o *client) Ready(ctx context.Context) error {
+	if err := Installed(); err != nil {
+		return err
+	}
+
 	if runtime.GOOS != "windows" && runtime.GOOS != "darwin" {
 		// macOs and Windows require VMs
 		return nil

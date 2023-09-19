@@ -40,7 +40,7 @@ Options
    * - --accessListIp
      - strings
      - false
-     - IP address to be allowed to access the deployment.
+     - IP address to grant access to the deployment.
 
        Mutually exclusive with --currentIp.
    * - --clusterName
@@ -88,7 +88,7 @@ Options
    * - -r, --region
      - string
      - false
-     - Physical location of your MongoDB cluster. For a complete list of supported AWS regions, see: https://www.mongodb.com/docs/atlas/reference/amazon-aws/. For a complete list of supported Azure regions, see: https://www.mongodb.com/docs/atlas/reference/microsoft-azure/#microsoft-azure. For a complete list of supported GCP regions, see: https://www.mongodb.com/docs/atlas/reference/google-gcp/..
+     - Physical location of your MongoDB cluster. For a complete list of supported AWS regions, see: https://dochub.mongodb.org/core/aws-atlas. For a complete list of supported Azure regions, see: https://dochub.mongodb.org/core/azure-atlas. For a complete list of supported GCP regions, see: https://dochub.mongodb.org/core/gcp-atlas..
    * - --skipMongosh
      - 
      - false
@@ -96,7 +96,7 @@ Options
    * - --skipSampleData
      - 
      - false
-     - Indicates whether to skip loading sample data into your Atlas cluster.
+     - Indicates whether to skip loading sample data into your MongoDB cluster.
    * - --tag
      - stringToString
      - false

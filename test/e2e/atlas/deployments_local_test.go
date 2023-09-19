@@ -18,6 +18,7 @@ package atlas_test
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -36,7 +37,6 @@ const (
 	databaseName   = "myDB"
 	indexName      = "indexTest"
 	deploymentName = "test"
-	createMessage  = "Your search index is being created"
 )
 
 func splitOutput(cmd *exec.Cmd) (string, string, error) {
@@ -48,9 +48,11 @@ func splitOutput(cmd *exec.Cmd) (string, string, error) {
 }
 
 func TestDeployments(t *testing.T) {
-	req := require.New(t)
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("deployments")
 
 	cliPath, err := e2e.AtlasCLIBin()
+	req := require.New(t)
 	req.NoError(err)
 
 	t.Run("Setup", func(t *testing.T) {
@@ -78,7 +80,6 @@ func TestDeployments(t *testing.T) {
 			"--type",
 			"local",
 			"--force",
-			"--debug",
 		)
 
 		cmd.Env = os.Environ()
@@ -105,6 +106,8 @@ func TestDeployments(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"list",
+			"--projectId",
+			g.projectID,
 		)
 
 		cmd.Env = os.Environ()
@@ -112,8 +115,9 @@ func TestDeployments(t *testing.T) {
 		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
 
-		a := assert.New(t)
-		a.Contains(o, deploymentName)
+		req.Equal(`NAME   TYPE    MDB VER   STATE
+test   LOCAL   7.0.1     IDLE
+`, o)
 	})
 
 	ctx := context.Background()
@@ -171,6 +175,7 @@ func TestDeployments(t *testing.T) {
 			databaseName,
 			"--collection",
 			collectionName,
+			"-w",
 		)
 
 		cmd.Env = os.Environ()
@@ -179,33 +184,35 @@ func TestDeployments(t *testing.T) {
 		out := string(r)
 		req.NoError(err, out)
 		a := assert.New(t)
-		a.Contains(out, createMessage)
+		a.Contains(out, "Search index created")
 	})
 
 	var indexID string
-	t.Run("Wait for search index", func(t *testing.T) {
-		for {
-			t.Log("Waiting for index...")
-			cursor, err := myCol.Aggregate(ctx, mongo.Pipeline{
-				{
-					{Key: "$listSearchIndexes", Value: bson.D{}},
-				},
-			})
-			req.NoError(err)
-			var results []bson.M
-			req.NoError(cursor.All(ctx, &results))
-			if len(results) == 0 {
-				continue // no index found
-			}
-			status, ok := results[0]["status"].(string)
-			if !ok {
-				continue // no status found
-			}
-			if status == "STEADY" {
-				indexID, _ = results[0]["id"].(string)
-				break
-			}
-		}
+
+	t.Run("Index List", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
+			"ls",
+			"--deploymentName",
+			deploymentName,
+			"--db",
+			databaseName,
+			"--collection",
+			collectionName,
+		)
+
+		cmd.Env = os.Environ()
+
+		o, e, err := splitOutput(cmd)
+		req.NoError(err, e)
+		a := assert.New(t)
+		a.Contains(o, indexName)
+
+		lines := strings.Split(o, "\n")
+		cols := strings.Fields(lines[1])
+		indexID = cols[0]
 	})
 
 	t.Run("Describe search index", func(t *testing.T) {
@@ -244,18 +251,16 @@ func TestDeployments(t *testing.T) {
 		req.Equal(1, len(results))
 	})
 
-	t.Run("Index List", func(t *testing.T) {
+	t.Run("Delete Index", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			searchEntity,
 			indexEntity,
-			"ls",
+			"rm",
+			indexID,
 			"--deploymentName",
 			deploymentName,
-			"--db",
-			databaseName,
-			"--collection",
-			collectionName,
+			"--force",
 			"--debug",
 		)
 
@@ -267,6 +272,6 @@ func TestDeployments(t *testing.T) {
 		err := cmd.Run()
 		req.NoError(err, e.String())
 		a := assert.New(t)
-		a.Contains(o.String(), indexName)
+		a.Contains(o.String(), fmt.Sprintf("Index '%s' deleted", indexID))
 	})
 }

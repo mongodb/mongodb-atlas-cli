@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
-package indexes
+package mongodbclient
 
 import (
-	"testing"
+	"context"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		4,
-		[]string{},
-	)
+type Collection interface {
+	Aggregate(context.Context, interface{}) (*mongo.Cursor, error)
+}
+
+type collection struct {
+	collection *mongo.Collection
+}
+
+func (o *collection) Aggregate(ctx context.Context, pipeline interface{}) (*mongo.Cursor, error) {
+	return o.collection.Aggregate(ctx, pipeline)
 }

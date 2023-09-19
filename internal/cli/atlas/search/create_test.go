@@ -17,6 +17,7 @@
 package search
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -27,6 +28,8 @@ import (
 
 const testName = "default"
 const testJSON = `{"name":"default"}`
+const testInvalidJSON = `{"name:"default"}`
+const fileName = "atlas_search_index_create_test.json"
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -57,7 +60,6 @@ func TestCreateOpts_Run(t *testing.T) {
 	t.Run("file run", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		// create test file
-		fileName := "atlas_search_index_create_test.json"
 		_ = afero.WriteFile(appFS, fileName, []byte(testJSON), 0600)
 
 		opts := &CreateOpts{
@@ -77,6 +79,28 @@ func TestCreateOpts_Run(t *testing.T) {
 			Times(1)
 		if err := opts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
+		}
+	})
+
+	t.Run("invalid file run", func(t *testing.T) {
+		appFS := afero.NewMemMapFs()
+		// create test file
+		_ = afero.WriteFile(appFS, fileName, []byte(testInvalidJSON), 0600)
+
+		opts := &CreateOpts{
+			store: mockStore,
+		}
+		opts.Filename = fileName
+		opts.Fs = appFS
+
+		_, err := opts.NewSearchIndex()
+		if err == nil {
+			t.Fatalf("newSearchIndex() expected error")
+		}
+
+		expectedError := "failed to parse JSON file due to"
+		if !strings.Contains(err.Error(), expectedError) {
+			t.Fatalf("newSearchIndex() unexpected error: %v expected: %s", err, expectedError)
 		}
 	})
 }

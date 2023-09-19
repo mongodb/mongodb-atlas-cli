@@ -82,12 +82,12 @@ func TestList_RunLocal(t *testing.T) {
 		Times(1)
 	mockMongodbClient.
 		EXPECT().
-		Disconnect(ctx).
+		Disconnect().
 		Times(1)
 
 	mockMongodbClient.
 		EXPECT().
-		Connect(ctx, "mongodb://localhost:0/?directConnection=true", int64(10)).
+		Connect("mongodb://localhost:0/?directConnection=true", int64(10)).
 		Return(nil).
 		Times(1)
 
@@ -173,7 +173,7 @@ func TestList_RunAtlas(t *testing.T) {
 
 	mockMongodbClient.
 		EXPECT().
-		Connect(ctx, "mongodb://localhost:0/?directConnection=true", int64(10)).
+		Connect("mongodb://localhost:0/?directConnection=true", int64(10)).
 		Return(options.ErrDeploymentNotFound).
 		Times(1)
 

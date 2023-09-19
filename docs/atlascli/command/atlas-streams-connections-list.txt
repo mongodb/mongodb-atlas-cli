@@ -12,7 +12,7 @@ atlas streams connections list
    :depth: 1
    :class: singlecol
 
-Returns all Atlas Streams connections from your Atlas streams instance.
+Returns all Atlas Stream Processing connections from your Atlas Stream Processing instance.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
 
@@ -44,7 +44,7 @@ Options
    * - -i, --instance
      - string
      - false
-     - The name of your MongoDB Atlas streams instance.
+     - The name of your Atlas Stream Processing instance.
    * - -o, --output
      - string
      - false

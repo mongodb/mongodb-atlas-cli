@@ -12,9 +12,9 @@ atlas streams instances
    :depth: 1
    :class: singlecol
 
-Atlas Stream Processor instances
+Manage Atlas Stream Processing instances.
 
-Create, list, update and delete your Atlas Stream Processor instances
+Create, list, update and delete your Atlas Stream Processing instances.
 
 Options
 -------
@@ -51,11 +51,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-streams-instances-create` - Create an Atlas Stream Processor Instance for your project
-* :ref:`atlas-streams-instances-delete` - Delete an Atlas Stream Processor Instance
-* :ref:`atlas-streams-instances-describe` - Describe an Atlas Stream Processor Instances for your project
-* :ref:`atlas-streams-instances-list` - List all the Atlas Stream Processor Instances for your project
-* :ref:`atlas-streams-instances-update` - Updates an Atlas Stream Processor Instance for your project
+* :ref:`atlas-streams-instances-create` - Create an Atlas Stream Processing instance for your project
+* :ref:`atlas-streams-instances-delete` - Delete an Atlas Stream Processing instance.
+* :ref:`atlas-streams-instances-describe` - Describe an Atlas Stream Processing instance for your project.
+* :ref:`atlas-streams-instances-list` - List all the Atlas Stream Processing instances for your project.
+* :ref:`atlas-streams-instances-update` - Updates an Atlas Stream Processing instance for your project.
 
 
 .. toctree::

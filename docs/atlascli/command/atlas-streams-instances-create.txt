@@ -12,9 +12,9 @@ atlas streams instances create
    :depth: 1
    :class: singlecol
 
-Create an Atlas Stream Processor Instance for your project
+Create an Atlas Stream Processing instance for your project
 
-To get started quickly, specify a name, a cloud provider, and a region to configure an Atlas Streams processor instance.To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+To get started quickly, specify a name, a cloud provider, and a region to configure an Atlas Stream Processing instance.To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------
@@ -40,7 +40,7 @@ Arguments
    * - name
      - string
      - true
-     - Name of the Atlas Streams processor instance. The instance name cannot be changed after the processor is created. The name can contain ASCII letters, numbers, and hyphens.
+     - Name of the Atlas Stream Processing instance. After creation, you can't change the name of the instance. The name can contain ASCII letters, numbers, and hyphens.
 
 Options
 -------
@@ -68,11 +68,11 @@ Options
    * - --provider
      - string
      - true
-     - Cloud service provider that applies to the provisioned Atlas Streams instance. This value defaults to "AWS".
+     - Cloud service provider that applies to the provisioned Atlas Stream Processing instance. This value defaults to "AWS".
    * - -r, --region
      - string
      - true
-     - Human-readable label that identifies the physical location of your Atlas Streams Processor instance. The region can affect network latency and performance if it is far from your source or sink.
+     - Human-readable label that identifies the physical location of your Atlas Stream Processing instance. The region can affect network latency and performance if it is far from your source or sink.
 
 Inherited Options
 -----------------
@@ -105,5 +105,5 @@ Examples
 
 .. code-block::
 
-   # Deploy an Atlas Streams provider instance called myProcessor for the project with the ID 5e2211c17a3e5a48f5497de3:
+   # Deploy an Atlas Stream Processing instance called myProcessor for the project with the ID 5e2211c17a3e5a48f5497de3:
    atlas streams create myProcessor --projectId 5e2211c17a3e5a48f5497de3 --provider AWS --region VIRGINIA_USA

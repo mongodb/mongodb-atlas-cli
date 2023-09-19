@@ -12,9 +12,9 @@ atlas streams connections
    :depth: 1
    :class: singlecol
 
-Atlas Stream Processor connections.
+Manage Atlas Stream Processing connections.
 
-Create, list, update and delete your Atlas Stream Processor connections
+Create, list, update and delete your Atlas Stream Processing connections
 
 Options
 -------
@@ -52,10 +52,10 @@ Related Commands
 ----------------
 
 * :ref:`atlas-streams-connections-create` - Creates a connection for an Atlas streams instance.
-* :ref:`atlas-streams-connections-delete` - Remove the specified Atlas streams connection from your project.
-* :ref:`atlas-streams-connections-describe` - Return the details for the specified Atlas Streams Connection.
-* :ref:`atlas-streams-connections-list` - Returns all Atlas Streams connections from your Atlas streams instance.
-* :ref:`atlas-streams-connections-update` - Modify the details of the specified connection within your Atlas Streams instance.
+* :ref:`atlas-streams-connections-delete` - Remove the specified Atlas Stream Processing connection from your project.
+* :ref:`atlas-streams-connections-describe` - Return the details for the specified Atlas Stream Processing connection.
+* :ref:`atlas-streams-connections-list` - Returns all Atlas Stream Processing connections from your Atlas Stream Processing instance.
+* :ref:`atlas-streams-connections-update` - Modify the details of the specified connection within your Atlas Stream Processing instance.
 
 
 .. toctree::

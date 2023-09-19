@@ -12,7 +12,7 @@ atlas streams connections describe
    :depth: 1
    :class: singlecol
 
-Return the details for the specified Atlas Streams Connection.
+Return the details for the specified Atlas Stream Processing connection.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
@@ -40,7 +40,7 @@ Arguments
    * - streamConnectionName
      - string
      - true
-     - Name of the Atlas Streams Connection
+     - Name of the Atlas Stream Processing connection.
 
 Options
 -------
@@ -60,7 +60,7 @@ Options
    * - -i, --instance
      - string
      - true
-     - The name of your MongoDB Atlas streams instance.
+     - The name of your Atlas Stream Processing instance.
    * - -o, --output
      - string
      - false

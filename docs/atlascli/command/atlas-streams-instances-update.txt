@@ -12,9 +12,9 @@ atlas streams instances update
    :depth: 1
    :class: singlecol
 
-Updates an Atlas Stream Processor Instance for your project
+Updates an Atlas Stream Processing instance for your project.
 
-An Atlas Streams processor instance with running processors cannot be updated without stopping the processes first.
+Before updating an Atlas Streams Processing instance, you must first stop all processes associated with it.
 To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
@@ -41,7 +41,7 @@ Arguments
    * - name
      - string
      - true
-     - Name of the Atlas Streams processor instance. The instance name cannot be changed after the processor is created. The name can contain ASCII letters, numbers, and hyphens.
+     - Name of the Atlas Stream Processing instance. After creation, you can't change the name of the instance. The name can contain ASCII letters, numbers, and hyphens.
 
 Options
 -------
@@ -69,11 +69,11 @@ Options
    * - --provider
      - string
      - true
-     - Cloud service provider that applies to the provisioned Atlas Streams instance. This value defaults to "AWS".
+     - Cloud service provider that applies to the provisioned Atlas Stream Processing instance. This value defaults to "AWS".
    * - -r, --region
      - string
      - true
-     - Human-readable label that identifies the physical location of your Atlas Streams Processor instance. The region can affect network latency and performance if it is far from your source or sink.
+     - Human-readable label that identifies the physical location of your Atlas Stream Processing instance. The region can affect network latency and performance if it is far from your source or sink.
 
 Inherited Options
 -----------------
@@ -106,5 +106,5 @@ Examples
 
 .. code-block::
 
-   # Modify the Atlas Streams processor instance configuration with the ID 5d1113b25a115342cca2d1aa:
+   # Modify the Atlas Stream Processing instance configuration with the ID 5d1113b25a115342cca2d1aa:
    atlas streams instances update 5d1113b25a115342cca2d1aa --provider AWS --provider VIRGINIA_USA

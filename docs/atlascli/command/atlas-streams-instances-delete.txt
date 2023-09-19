@@ -12,11 +12,11 @@ atlas streams instances delete
    :depth: 1
    :class: singlecol
 
-Delete an Atlas Stream Processor Instance
+Delete an Atlas Stream Processing instance.
 
 The command prompts you to confirm the operation when you run the command without the --force option.
 
-An Atlas Streams processor instance with running processors cannot be deleted without stopping the processes first.
+Before deleting an Atlas Streams Processing instance, you must first stop all processes associated with it.
 To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
@@ -100,11 +100,11 @@ Examples
 
 .. code-block::
 
-   # Remove an Atlas Streams processor instance after prompting for a confirmation:
+   # Remove an Atlas Stream Processing instance after prompting for a confirmation:
    atlas streams delete myProcessorInstance
 
    
 .. code-block::
 
-   # Remove an Atlas Streams processor instance named myProcessorInstance without requiring confirmation:
+   # Remove an Atlas Stream Processing instance named myProcessorInstance without requiring confirmation:
    atlas streams delete myProcessorInstance --force

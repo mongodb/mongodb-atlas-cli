@@ -14,7 +14,7 @@ atlas streams
 
 Manage streams for your project.
 
-The streams command provides access to your Atlas Streams configurations. You can create, edit, and delete streams, as well as change the connection registry.
+The streams command provides access to your Atlas Stream Processing configurations. You can create, edit, and delete streams, as well as change the connection registry.
 
 Options
 -------
@@ -51,8 +51,8 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-streams-connections` - Atlas Stream Processor connections.
-* :ref:`atlas-streams-instances` - Atlas Stream Processor instances
+* :ref:`atlas-streams-connections` - Manage Atlas Stream Processing connections.
+* :ref:`atlas-streams-instances` - Manage Atlas Stream Processing instances.
 
 
 .. toctree::

@@ -56,7 +56,7 @@ Options
    * - -f, --file
      - string
      - true
-     - Path to a JSON configuration file that defines an Atlas Streams connection.
+     - Path to a JSON configuration file that defines an Atlas Stream Processing connection.
    * - -h, --help
      - 
      - false
@@ -64,7 +64,7 @@ Options
    * - -i, --instance
      - string
      - true
-     - The name of your MongoDB Atlas streams instance.
+     - The name of your Atlas Stream Processing instance.
    * - -o, --output
      - string
      - false
@@ -105,12 +105,12 @@ Examples
 
 .. code-block::
 
-   # create a new connection for Atlas Streams:
+   # create a new connection for Atlas Stream Processing:
    atlas streams connection create kafkaprod -i test01 -f kafkaConfig.json
 
 
 .. code-block::
 
-   # create a new connection using the name from the file
+   # create a new connection using the name from a cluster configuration file
    atlas streams connection create -i test01 -f clusterConfig.json
 

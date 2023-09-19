@@ -12,7 +12,7 @@ atlas streams connections delete
    :depth: 1
    :class: singlecol
 
-Remove the specified Atlas streams connection from your project.
+Remove the specified Atlas Stream Processing connection from your project.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
@@ -64,7 +64,7 @@ Options
    * - -i, --instance
      - string
      - true
-     - The name of your MongoDB Atlas streams instance.
+     - The name of your Atlas Stream Processing instance.
    * - --projectId
      - string
      - false

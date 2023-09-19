@@ -12,7 +12,7 @@ atlas streams instances describe
    :depth: 1
    :class: singlecol
 
-Describe an Atlas Stream Processor Instances for your project
+Describe an Atlas Stream Processing instance for your project.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
 
@@ -98,10 +98,10 @@ Examples
 
 .. code-block::
 
-   # Return an Atlas Stream processor with a specific name:
+   # Return an Atlas Stream Processing instance with a specific name:
    atlas streams describe myProcessor
    
 .. code-block::
 
-   # Return a JSON-formatted Atlas Stream processor with a specific name:
+   # Return a JSON-formatted Atlas Stream Processing instance with a specific name:
    atlas streams describe myProcessor --output json

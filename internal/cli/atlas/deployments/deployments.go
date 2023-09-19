@@ -33,7 +33,7 @@ func Builder() *cobra.Command {
 		Hidden:  true,
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage Atlas and local deployments.",
+		Short:   "Manage cloud and local deployments.",
 	}
 
 	cmd.AddCommand(

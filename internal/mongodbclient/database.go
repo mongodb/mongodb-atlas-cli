@@ -27,10 +27,17 @@ type Database interface {
 	InsertOne(ctx context.Context, collection string, doc interface{}) (interface{}, error)
 	InitiateReplicaSet(ctx context.Context, rsName string, hostname string, internalPort int, externalPort int) error
 	SearchIndex
+	Collection(string) Collection
 }
 
 type database struct {
 	db *mongo.Database
+}
+
+func (o *database) Collection(name string) Collection {
+	return &collection{
+		collection: o.db.Collection(name),
+	}
 }
 
 func (o *database) RunCommand(ctx context.Context, runCmd interface{}) (interface{}, error) {

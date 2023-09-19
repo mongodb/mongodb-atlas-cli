@@ -99,6 +99,12 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) validateAndPrompt(ctx context.Context) error {
+	if opts.DeploymentName == "" {
+		if err := opts.DeploymentOpts.Select(ctx); err != nil {
+			return err
+		}
+	}
+
 	if opts.DBName == "" {
 		if err := promptRequiredName("Database", &opts.DBName); err != nil {
 			return err
@@ -107,12 +113,6 @@ func (opts *ListOpts) validateAndPrompt(ctx context.Context) error {
 
 	if opts.Collection == "" {
 		if err := promptRequiredName("Collection", &opts.Collection); err != nil {
-			return err
-		}
-	}
-
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
 			return err
 		}
 	}

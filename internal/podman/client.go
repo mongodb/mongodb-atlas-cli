@@ -32,7 +32,7 @@ import (
 )
 
 var (
-	ErrPodmanNotFound  = errors.New("podman not found in your system, check requirements at http://docpage")
+	ErrPodmanNotFound  = errors.New("podman not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs")
 	ErrNetworkNotFound = errors.New("network ip range was not found")
 )
 
@@ -294,6 +294,10 @@ func Installed() error {
 }
 
 func (o *client) Ready(ctx context.Context) error {
+	if err := Installed(); err != nil {
+		return err
+	}
+
 	if runtime.GOOS != "windows" && runtime.GOOS != "darwin" {
 		// macOs and Windows require VMs
 		return nil

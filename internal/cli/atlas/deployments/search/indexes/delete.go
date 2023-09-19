@@ -97,14 +97,14 @@ func (opts *DeleteOpts) initMongoDBClient(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.Entry == "" {
-		if err := promptRequiredName("Search Index ID", &opts.Entry); err != nil {
+	if opts.DeploymentName == "" {
+		if err := opts.DeploymentOpts.Select(ctx); err != nil {
 			return err
 		}
 	}
 
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
+	if opts.Entry == "" {
+		if err := promptRequiredName("Search Index ID", &opts.Entry); err != nil {
 			return err
 		}
 	}

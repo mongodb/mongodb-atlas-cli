@@ -954,7 +954,7 @@ tasks:
           E2E_TAGS: atlas,livemigrations
   # Streams commands tests
   - name: atlas_streams
-    tags: ["e2e","generic","atlas"]
+    tags: ["e2e","generic","atlas". "assigned_to_jira_team_cloudp_atlas_streams"]
     must_have_test_results: true
     depends_on:
       - name: compile

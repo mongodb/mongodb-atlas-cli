@@ -16,6 +16,7 @@ package deployments
 
 import (
 	"context"
+	"errors"
 	"sort"
 	"strings"
 
@@ -37,10 +38,9 @@ import (
 type ListOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
+	options.DeploymentOpts
 	defaultSetter cli.DefaultSetterOpts
-	podmanClient  podman.Client
 	store         store.ClusterLister
-	credStore     store.CredentialsGetter
 	config        setup.ProfileReader
 }
 
@@ -77,12 +77,8 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *ListOpts) isCliAuthenticated() bool {
-	return opts.credStore.AuthType() != config.NotLoggedIn
-}
-
 func (opts *ListOpts) getAtlasDeployments() ([]Deployment, error) {
-	if !opts.isCliAuthenticated() {
+	if !opts.IsCliAuthenticated() {
 		return nil, nil
 	}
 
@@ -122,7 +118,11 @@ func (opts *ListOpts) getAtlasDeployments() ([]Deployment, error) {
 }
 
 func (opts *ListOpts) getLocalDeployments(ctx context.Context) ([]Deployment, error) {
-	mdbContainers, err := opts.podmanClient.ListContainers(ctx, options.MongodHostnamePrefix)
+	if err := opts.PodmanClient.Ready(ctx); err != nil {
+		return nil, err
+	}
+
+	mdbContainers, err := opts.PodmanClient.ListContainers(ctx, options.MongodHostnamePrefix)
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +155,7 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 	}
 
 	mdbContainers, err := opts.getLocalDeployments(ctx)
-	if err != nil {
+	if err != nil && !errors.Is(err, podman.ErrPodmanNotFound) {
 		return err
 	}
 
@@ -164,12 +164,11 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	if !opts.isCliAuthenticated() {
-		_, err = log.Warningln("To get output for both local and Atlas clusters, run \"atlas login\" command to authenticate your Atlas account.")
-		return err
-	}
-
 	return nil
+}
+
+func (opts *ListOpts) PostRun(_ context.Context) error {
+	return opts.PostRunMessages()
 }
 
 // atlas deployments list.
@@ -185,22 +184,26 @@ func ListBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.config = config.Default()
-			opts.credStore = config.Default()
+			opts.CredStore = config.Default()
+			log.SetWriter(cmd.OutOrStdout())
 
 			if err := opts.PreRunE(
 				opts.initStore(cmd.Context()),
 				func() error { return opts.defaultSetter.InitStore(cmd.Context()) },
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate)); err != nil {
+				opts.InitOutput(log.Writer(), listTemplate)); err != nil {
 				return err
 			}
 
 			opts.defaultSetter.OutWriter = cmd.OutOrStdout()
 
-			opts.podmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
-			return opts.podmanClient.Ready(cmd.Context())
+			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
+			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PostRun(cmd.Context())
 		},
 	}
 

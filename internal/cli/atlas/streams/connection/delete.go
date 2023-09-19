@@ -55,7 +55,7 @@ func DeleteBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "delete <connectionName>",
-		Short: "Remove the specified Atlas streams connection from your project.",
+		Short: "Remove the specified Atlas Stream Processing connection from your project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{

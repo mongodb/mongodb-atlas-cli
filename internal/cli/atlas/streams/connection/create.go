@@ -98,10 +98,10 @@ func CreateBuilder() *cobra.Command {
 			"connectionNameDesc": "Name of the connection",
 			"output":             createTemplate,
 		},
-		Example: `# create a new connection for Atlas Streams:
+		Example: `# create a new connection for Atlas Stream Processing:
   atlas streams connection create kafkaprod -i test01 -f kafkaConfig.json
 
-# create a new connection using the name from the file
+# create a new connection using the name from a cluster configuration file
   atlas streams connection create -i test01 -f clusterConfig.json
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

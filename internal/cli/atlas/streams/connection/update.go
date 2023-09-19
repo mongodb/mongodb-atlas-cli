@@ -83,14 +83,14 @@ func UpdateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "update <connectionName>",
-		Short: "Modify the details of the specified connection within your Atlas Streams instance.",
+		Short: "Modify the details of the specified connection within your Atlas Stream Processing instance.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"connectionNameDesc": "Name of the connection",
+			"connectionNameDesc": "Name of the connection.",
 			"output":             updateTemplate,
 		},
-		Example: `# update an Atlas Streams connection:
+		Example: `# update an Atlas Stream Processing connection:
   atlas streams connection update kafkaprod -i test01 -f kafkaConfig.json
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {

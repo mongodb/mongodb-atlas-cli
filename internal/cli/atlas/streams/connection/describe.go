@@ -63,11 +63,11 @@ func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
 		Use:   "describe <streamConnectionName>",
-		Short: "Return the details for the specified Atlas Streams Connection.",
+		Short: "Return the details for the specified Atlas Stream Processing connection.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"streamConnectionNameDesc": "Name of the Atlas Streams Connection",
+			"streamConnectionNameDesc": "Name of the Atlas Stream Processing connection.",
 		},
 		Example: `# retrieves stream connection 'ExampleConnection' in instance 'ExampleInstance':
 atlas streams connection describe ExampleConnection --instance ExampleInstance

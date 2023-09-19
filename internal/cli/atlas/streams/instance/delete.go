@@ -54,15 +54,15 @@ func DeleteBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "delete <name>",
-		Short: "Delete an Atlas Stream Processor Instance",
+		Short: "Delete an Atlas Stream Processing instance.",
 		Long: `The command prompts you to confirm the operation when you run the command without the --force option.
 
-An Atlas Streams processor instance with running processors cannot be deleted without stopping the processes first.
+Before deleting an Atlas Streams Processing instance, you must first stop all processes associated with it.
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Example: fmt.Sprintf(`  # Remove an Atlas Streams processor instance after prompting for a confirmation:
+		Example: fmt.Sprintf(`  # Remove an Atlas Stream Processing instance after prompting for a confirmation:
   %[1]s streams delete myProcessorInstance
 
-  # Remove an Atlas Streams processor instance named myProcessorInstance without requiring confirmation:
+  # Remove an Atlas Stream Processing instance named myProcessorInstance without requiring confirmation:
   %[1]s streams delete myProcessorInstance --force`, cli.ExampleAtlasEntryPoint()),
 		Aliases: []string{"rm"},
 		Args:    require.ExactArgs(1),

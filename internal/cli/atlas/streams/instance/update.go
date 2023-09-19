@@ -87,15 +87,15 @@ func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
 		Use:   "update <name>",
-		Short: "Updates an Atlas Stream Processor Instance for your project",
-		Long: `An Atlas Streams processor instance with running processors cannot be updated without stopping the processes first.
+		Short: "Updates an Atlas Stream Processing instance for your project.",
+		Long: `Before updating an Atlas Streams Processing instance, you must first stop all processes associated with it.
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
-			"nameDesc": "Name of the Atlas Streams processor instance. The instance name cannot be changed after the processor is created. The name can contain ASCII letters, numbers, and hyphens.",
+			"nameDesc": "Name of the Atlas Stream Processing instance. After creation, you can't change the name of the instance. The name can contain ASCII letters, numbers, and hyphens.",
 			"output":   updateTemplate,
 		},
-		Example: fmt.Sprintf(`  # Modify the Atlas Streams processor instance configuration with the ID 5d1113b25a115342cca2d1aa:
+		Example: fmt.Sprintf(`  # Modify the Atlas Stream Processing instance configuration with the ID 5d1113b25a115342cca2d1aa:
   %s streams instances update 5d1113b25a115342cca2d1aa --provider AWS --provider VIRGINIA_USA`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

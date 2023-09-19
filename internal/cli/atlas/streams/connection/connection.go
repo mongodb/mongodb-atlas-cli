@@ -26,8 +26,8 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Atlas Stream Processor connections.",
-		Long:    `Create, list, update and delete your Atlas Stream Processor connections`,
+		Short:   "Manage Atlas Stream Processing connections.",
+		Long:    `Create, list, update and delete your Atlas Stream Processing connections`,
 	}
 
 	cmd.AddCommand(

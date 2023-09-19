@@ -63,7 +63,7 @@ func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "Returns all Atlas Streams connections from your Atlas streams instance.",
+		Short:   "Returns all Atlas Stream Processing connections from your Atlas Stream Processing instance.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(0),

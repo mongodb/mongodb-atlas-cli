@@ -108,10 +108,10 @@ func ConnectBuilder() *cobra.Command {
 	opts := &ConnectOpts{}
 	cmd := &cobra.Command{
 		Use:   "connect [deploymentName]",
-		Short: "Connects to a deployment.",
+		Short: "Connect to a deployment.",
 		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
-			"deploymentNameDesc": "Name of the deployment you want to connect.",
+			"deploymentNameDesc": "Name of the deployment that you want to connect to.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {

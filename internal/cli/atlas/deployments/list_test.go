@@ -75,10 +75,12 @@ func TestList_Run(t *testing.T) {
 
 	buf := new(bytes.Buffer)
 	listOpts := &ListOpts{
-		store:        mockStore,
-		credStore:    mockCredentialsGetter,
-		config:       mockProfileReader,
-		podmanClient: mockPodman,
+		store:  mockStore,
+		config: mockProfileReader,
+		DeploymentOpts: options.DeploymentOpts{
+			PodmanClient: mockPodman,
+			CredStore:    mockCredentialsGetter,
+		},
 		GlobalOpts: cli.GlobalOpts{
 			ProjectID: "64f670f0bf789926667dad1a",
 		},
@@ -103,7 +105,13 @@ func TestList_Run(t *testing.T) {
 		EXPECT().
 		AuthType().
 		Return(config.OAuth).
-		Times(2)
+		Times(1)
+
+	mockPodman.
+		EXPECT().
+		Ready(ctx).
+		Return(nil).
+		Times(1)
 
 	mockPodman.
 		EXPECT().

@@ -153,7 +153,7 @@ func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, current
 		}
 	}
 
-	if mongotImages, err = opts.podmanClient.ListImages(ctx, opts.MongodDockerImageName()); err != nil {
+	if mongotImages, err = opts.podmanClient.ListImages(ctx, options.MongotDockerImageName); err != nil {
 		return err
 	}
 

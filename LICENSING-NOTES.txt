@@ -1,0 +1,1 @@
+Any other software pulled down during your use of the CLI will be subject to its own license and copyright notice, which will be included in that package.

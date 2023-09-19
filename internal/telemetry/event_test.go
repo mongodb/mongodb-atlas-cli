@@ -335,6 +335,20 @@ func TestWithEmpty(t *testing.T) {
 	assert.Equal(t, true, e.Properties["empty"])
 }
 
+func TestWithAnonymousID(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
+	e := newEvent(withAnonymousID())
+	assert.NotEmpty(t, e.Properties["anonymous_id"])
+}
+
+func TestWithDeploymentType(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
+	e := newEvent(WithDeploymentType("test"))
+	assert.Equal(t, e.Properties["deployment_type"], "test")
+}
+
 func TestWithSignal(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 

@@ -18,11 +18,13 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"io"
+	"os"
 	"regexp"
 	"runtime"
 	"strings"
 	"time"
 
+	"github.com/denisbrodbeck/machineid"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
@@ -38,9 +40,9 @@ type Event struct {
 	Properties map[string]interface{} `json:"properties"`
 }
 
-type eventOpt func(Event)
+type EventOpt func(Event)
 
-func withHelpCommand(cmd *cobra.Command, args []string) eventOpt {
+func withHelpCommand(cmd *cobra.Command, args []string) EventOpt {
 	return func(event Event) {
 		if cmd.Name() != "help" {
 			return
@@ -60,7 +62,7 @@ type ConfigNameGetter interface {
 	Name() string
 }
 
-func withProfile(c ConfigNameGetter) eventOpt { // either "default" or base64 hash
+func withProfile(c ConfigNameGetter) EventOpt { // either "default" or base64 hash
 	return func(event Event) {
 		if c.Name() == config.DefaultProfile {
 			event.Properties["profile"] = config.DefaultProfile
@@ -72,14 +74,14 @@ func withProfile(c ConfigNameGetter) eventOpt { // either "default" or base64 ha
 	}
 }
 
-func withPrompt(p, k string) eventOpt {
+func withPrompt(p, k string) EventOpt {
 	return func(event Event) {
 		event.Properties["prompt"] = sanitizePrompt(p)
 		event.Properties["prompt_type"] = k
 	}
 }
 
-func withChoice(c string) eventOpt {
+func withChoice(c string) EventOpt {
 	return func(event Event) {
 		event.Properties["choice"] = sanitizeSelectOption(c)
 	}
@@ -97,13 +99,13 @@ func sanitizePrompt(q string) string {
 	return bracketsRegex.ReplaceAllString(q, "[]")
 }
 
-func withDefault(d bool) eventOpt {
+func withDefault(d bool) EventOpt {
 	return func(event Event) {
 		event.Properties["default"] = d
 	}
 }
 
-func withEmpty(e bool) eventOpt {
+func withEmpty(e bool) EventOpt {
 	return func(event Event) {
 		event.Properties["empty"] = e
 	}
@@ -114,7 +116,7 @@ type CmdName interface {
 	CalledAs() string
 }
 
-func withCommandPath(cmd CmdName) eventOpt {
+func withCommandPath(cmd CmdName) EventOpt {
 	return func(event Event) {
 		cmdPath := cmd.CommandPath()
 		event.Properties["command"] = strings.ReplaceAll(cmdPath, " ", "-")
@@ -124,7 +126,7 @@ func withCommandPath(cmd CmdName) eventOpt {
 	}
 }
 
-func withDuration(cmd *cobra.Command) eventOpt {
+func withDuration(cmd *cobra.Command) EventOpt {
 	return func(event Event) {
 		if cmd.Context() == nil {
 			_, _ = log.Debugln("telemetry: context not found")
@@ -141,11 +143,32 @@ func withDuration(cmd *cobra.Command) eventOpt {
 	}
 }
 
+func withCI() EventOpt {
+	return func(event Event) {
+		_, ok := os.LookupEnv("CI")
+		event.Properties["ci"] = ok
+	}
+}
+
+func withAnonymousID() EventOpt {
+	return func(event Event) {
+		id, err := machineid.ProtectedID(config.ToolName)
+		log.Debugf("error generating machine id: %v\n", err)
+		event.Properties["anonymous_id"] = id
+	}
+}
+
+func WithDeploymentType(t string) EventOpt {
+	return func(event Event) {
+		event.Properties["deployment_type"] = t
+	}
+}
+
 type CmdFlags interface {
 	Flags() *pflag.FlagSet
 }
 
-func withFlags(cmd CmdFlags) eventOpt {
+func withFlags(cmd CmdFlags) EventOpt {
 	return func(event Event) {
 		setFlags := make([]string, 0, cmd.Flags().NFlag())
 		cmd.Flags().Visit(func(f *pflag.Flag) {
@@ -158,14 +181,14 @@ func withFlags(cmd CmdFlags) eventOpt {
 	}
 }
 
-func withVersion() eventOpt {
+func withVersion() EventOpt {
 	return func(event Event) {
 		event.Properties["version"] = version.Version
 		event.Properties["git_commit"] = version.GitCommit
 	}
 }
 
-func withOS() eventOpt {
+func withOS() EventOpt {
 	return func(event Event) {
 		event.Properties["os"] = runtime.GOOS
 		event.Properties["arch"] = runtime.GOARCH
@@ -177,7 +200,7 @@ type Authenticator interface {
 	PrivateAPIKey() string
 }
 
-func withAuthMethod(c Authenticator) eventOpt {
+func withAuthMethod(c Authenticator) EventOpt {
 	return func(event Event) {
 		if c.PublicAPIKey() != "" && c.PrivateAPIKey() != "" {
 			event.Properties["auth_method"] = "api_key"
@@ -193,7 +216,7 @@ type ServiceGetter interface {
 	OpsManagerURL() string
 }
 
-func withService(c ServiceGetter) eventOpt {
+func withService(c ServiceGetter) EventOpt {
 	return func(event Event) {
 		event.Properties["service"] = c.Service()
 		if c.OpsManagerURL() != "" {
@@ -206,7 +229,7 @@ type ProjectIDGetter interface {
 	ProjectID() string
 }
 
-func withProjectID(cmd CmdFlags, c ProjectIDGetter) eventOpt {
+func withProjectID(cmd CmdFlags, c ProjectIDGetter) EventOpt {
 	return func(event Event) {
 		fromFlag, _ := cmd.Flags().GetString(flag.ProjectID)
 
@@ -225,7 +248,7 @@ type OrgIDGetter interface {
 	OrgID() string
 }
 
-func withOrgID(cmd CmdFlags, c OrgIDGetter) eventOpt {
+func withOrgID(cmd CmdFlags, c OrgIDGetter) EventOpt {
 	return func(event Event) {
 		fromFlag, _ := cmd.Flags().GetString(flag.OrgID)
 
@@ -244,7 +267,7 @@ type Printer interface {
 	OutOrStdout() io.Writer
 }
 
-func withTerminal(cmd Printer) eventOpt {
+func withTerminal(cmd Printer) EventOpt {
 	return func(event Event) {
 		if terminal.IsCygwinTerminal(cmd.OutOrStdout()) {
 			event.Properties["terminal"] = "cygwin"
@@ -257,7 +280,7 @@ func withTerminal(cmd Printer) eventOpt {
 	}
 }
 
-func withInstaller(installer *string) eventOpt {
+func withInstaller(installer *string) EventOpt {
 	return func(event Event) {
 		if installer != nil {
 			event.Properties["installer"] = *installer
@@ -265,7 +288,7 @@ func withInstaller(installer *string) eventOpt {
 	}
 }
 
-func withError(err error) eventOpt {
+func withError(err error) EventOpt {
 	return func(event Event) {
 		event.Properties["result"] = "ERROR"
 
@@ -275,20 +298,20 @@ func withError(err error) eventOpt {
 	}
 }
 
-func withSignal(s string) eventOpt {
+func withSignal(s string) EventOpt {
 	return func(event Event) {
 		event.Properties["signal"] = s
 	}
 }
 
-func withUserAgent() eventOpt {
+func withUserAgent() EventOpt {
 	return func(event Event) {
 		event.Properties["UserAgent"] = config.UserAgent
 		event.Properties["HostName"] = config.HostName
 	}
 }
 
-func newEvent(opts ...eventOpt) Event {
+func newEvent(opts ...EventOpt) Event {
 	var event = Event{
 		Timestamp: time.Now(),
 		Source:    config.ToolName,

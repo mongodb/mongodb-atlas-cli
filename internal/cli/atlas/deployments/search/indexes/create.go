@@ -143,8 +143,11 @@ func (opts *CreateOpts) PostRun(ctx context.Context) error {
 	}); err != nil {
 		return err
 	}
-	defer opts.PostRunMessages()
-	return opts.Print(opts.index)
+
+	if err := opts.Print(opts.index); err != nil {
+		return err
+	}
+	return opts.PostRunMessages()
 }
 
 func (opts *CreateOpts) validateAndPrompt(ctx context.Context) error {

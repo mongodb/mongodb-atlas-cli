@@ -835,6 +835,7 @@ func SetupBuilder() *cobra.Command {
 	opts.atlasSetup.SetupFlowFlags(cmd)
 	cmd.Flags().Lookup(flag.Region).Usage = usage.DeploymentRegion
 	cmd.Flags().Lookup(flag.Tag).Usage = usage.DeploymentTag
+	cmd.Flags().Lookup(flag.EnableTerminationProtection).Usage = usage.EnableTerminationProtectionForDeployment
 	cmd.Flags().Lookup(flag.SkipSampleData).Usage = usage.SkipSampleDataDeployment
 	cmd.Flags().Lookup(flag.Force).Usage = usage.ForceDeploymentsSetup
 

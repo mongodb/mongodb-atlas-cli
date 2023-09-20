@@ -98,12 +98,12 @@ func CreateBuilder() *cobra.Command {
 			"connectionNameDesc": "Name of the connection",
 			"output":             createTemplate,
 		},
-		Example: `# create a new connection for Atlas Stream Processing:
-  atlas streams connection create kafkaprod -i test01 -f kafkaConfig.json
+		Example: fmt.Sprintf(`# create a new connection for Atlas Stream Processing:
+  %[1]s streams connection create kafkaprod -i test01 -f kafkaConfig.json
 
 # create a new connection using the name from a cluster configuration file
-  atlas streams connection create -i test01 -f clusterConfig.json
-`,
+  %[1]s streams connection create -i test01 -f clusterConfig.json
+`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 0 {
 				opts.name = args[0]

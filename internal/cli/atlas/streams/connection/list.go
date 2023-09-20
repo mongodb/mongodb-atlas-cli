@@ -66,9 +66,9 @@ func ListBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(0),
-		Example: `# list all connections within ExampleInstance:
-atlas streams connection list --instance ExampleInstance
-`,
+		Example: fmt.Sprintf(`# list all connections within ExampleInstance:
+%[1]s streams connection list --instance ExampleInstance
+`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

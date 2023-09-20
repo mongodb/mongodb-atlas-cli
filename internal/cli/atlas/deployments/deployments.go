@@ -23,7 +23,7 @@ import (
 )
 
 var (
-	errCompassNotInstalled = errors.New("could not find MongoDB Compass, install MongoDB Compass: https://dochub.mongodb.org/core/install-compass")
+	errCompassNotInstalled = errors.New("did not find MongoDB Compass, install: https://dochub.mongodb.org/core/install-compass")
 	errMongoshNotInstalled = errors.New("mongosh was not found, install mongosh: https://dochub.mongodb.org/core/install-mongosh")
 )
 

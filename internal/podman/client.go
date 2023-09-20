@@ -384,7 +384,7 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 	}
 
 	if runtime.GOOS == "linux" {
-		arg = append(arg, "--cgroup-parent=/etc/subuid")
+		arg = append(arg, "--cgroup-parent=/etc/subuid", "--cgroupns=private")
 	}
 
 	arg = append(arg, opts.Args...)

@@ -66,11 +66,9 @@ func TestListOpts_Run(t *testing.T) {
 	}
 	t.Log(buf.String())
 	test.VerifyOutputTemplate(t, listTemplate, expected)
-	assert.Equal(t, `NAME          TYPE    SERVERS
-ExampleConn   Kafka   example.com:8080
-
+	assert.Equal(t, `NAME           TYPE      SERVERS
+ExampleConn    Kafka     example.com:8080
 ExampleConn2   Cluster   MyCluster
-
 `, buf.String())
 }
 

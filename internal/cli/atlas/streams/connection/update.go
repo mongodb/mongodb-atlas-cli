@@ -91,7 +91,7 @@ func UpdateBuilder() *cobra.Command {
 			"output":             updateTemplate,
 		},
 		Example: `# update an Atlas Stream Processing connection:
-  atlas streams connection update kafkaprod -i test01 -f kafkaConfig.json
+  atlas streams connection update kafkaprod --instance test01 -f kafkaConfig.json
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

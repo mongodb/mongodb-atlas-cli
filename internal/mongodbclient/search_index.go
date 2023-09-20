@@ -124,9 +124,9 @@ func (o *database) SearchIndexByName(ctx context.Context, name string, collectio
 		return nil, err
 	}
 
-	for index := range indexes {
-		if indexes[index].Name == name && indexes[index].Database == o.db.Name() {
-			return indexes[index], nil
+	for _, index := range indexes {
+		if index.Name == name && index.Database == o.db.Name() {
+			return index, nil
 		}
 	}
 

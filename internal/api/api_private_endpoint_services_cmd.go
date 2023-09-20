@@ -117,15 +117,6 @@ func createPrivateEndpointBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", "", `Unique 24-hexadecimal digit string that identifies the private endpoint service for which you want to create a private endpoint.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-
-	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-
-	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-
-	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-
-	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -214,9 +205,6 @@ func createPrivateEndpointServiceBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-
-	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -277,7 +265,6 @@ func deletePrivateEndpointBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "&quot;AWS&quot;", `Cloud service provider that manages this private endpoint.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique string that identifies the private endpoint you want to delete. The format of the **endpointId** parameter differs for AWS and Azure. You must URL encode the **endpointId** for Azure private endpoints.`)
 	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", "", `Unique 24-hexadecimal digit string that identifies the private endpoint service from which you want to delete a private endpoint.`)
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -338,7 +325,6 @@ func deletePrivateEndpointServiceBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "&quot;AWS&quot;", `Cloud service provider that manages this private endpoint service.`)
 	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", "", `Unique 24-hexadecimal digit string that identifies the private endpoint service that you want to delete.`)
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -401,7 +387,6 @@ func getPrivateEndpointBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "&quot;AWS&quot;", `Cloud service provider that manages this private endpoint.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique string that identifies the private endpoint you want to return. The format of the **endpointId** parameter differs for AWS and Azure. You must URL encode the **endpointId** for Azure private endpoints.`)
 	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", "", `Unique 24-hexadecimal digit string that identifies the private endpoint service for which you want to return a private endpoint.`)
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -462,7 +447,6 @@ func getPrivateEndpointServiceBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "&quot;AWS&quot;", `Cloud service provider that manages this private endpoint service.`)
 	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", "", `Unique 24-hexadecimal digit string that identifies the private endpoint service that you want to return.`)
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -516,7 +500,6 @@ func getRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -571,7 +554,6 @@ func listPrivateEndpointServicesBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "&quot;AWS&quot;", `Cloud service provider that manages this private endpoint service.`)
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -659,7 +641,6 @@ func toggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 

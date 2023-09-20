@@ -72,7 +72,6 @@ func disableSlowOperationThresholdingBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -124,7 +123,6 @@ func enableSlowOperationThresholdingBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -197,7 +195,6 @@ func listSlowQueriesBuilder() *cobra.Command {
 
 - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time.
 - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.`)
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -265,7 +262,6 @@ func listSlowQueryNamespacesBuilder() *cobra.Command {
 
 - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time.
 - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.`)
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -351,7 +347,6 @@ func listSuggestedIndexesBuilder() *cobra.Command {
 
 - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time.
 - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.`)
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 

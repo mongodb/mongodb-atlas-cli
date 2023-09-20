@@ -90,7 +90,6 @@ func listAccessLogsByClusterNameBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", `One Internet Protocol address that attempted to authenticate with the database.`)
 	cmd.Flags().IntVar(&opts.nLogs, "nLogs", 20000, `Maximum number of lines from the log to return.`)
 	cmd.Flags().Int64Var(&opts.start, "start", 0, `Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.`)
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -161,7 +160,6 @@ func listAccessLogsByHostnameBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", `One Internet Protocol address that attempted to authenticate with the database.`)
 	cmd.Flags().IntVar(&opts.nLogs, "nLogs", 20000, `Maximum number of lines from the log to return.`)
 	cmd.Flags().Int64Var(&opts.start, "start", 0, `Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.`)
-
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 

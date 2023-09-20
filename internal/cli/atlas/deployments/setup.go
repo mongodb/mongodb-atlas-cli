@@ -211,7 +211,8 @@ func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needPodmanSetu
 
 	setupState := opts.podmanClient.Diagnostics(ctx)
 
-	if !setupState.MachineFound || setupState.MachineState != "running" {
+	if setupState.MachineRequired &&
+		(!setupState.MachineFound || setupState.MachineState != "running") {
 		steps++
 		needPodmanSetup = true
 	}

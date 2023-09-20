@@ -74,9 +74,7 @@ func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracke
 	}
 
 	if !t.storeSet {
-		options := []store.Option{store.UnauthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry()}
-
-		options = append(options, store.Service(config.CloudService))
+		options := []store.Option{store.UnauthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry(), store.Service(config.CloudService)}
 
 		if t.unauthStore, err = store.New(options...); err != nil {
 			_, _ = log.Debugf("telemetry: failed to set unauth store: %v\n", err)

@@ -5,11 +5,11 @@ gitHost: github.com
 templateDir: config/go-templates
 isGoSubmodule: true
 packageName: api
-inputSpec: https://github.com/mongodb/atlas-sdk-go/raw/v0.7.0/openapi/atlas-api-transformed.yaml
+inputSpec: https://github.com/mongodb/atlas-sdk-go/raw/v20230201008.0.0/openapi/atlas-api-transformed.yaml
 files:
   cmd.mustache:
     templateType: API
     destinationFilename: _cmd.go
-  generated.mustache:
+  api.mustache:
     destinationFilename: api.go
     templateType: SupportingFiles

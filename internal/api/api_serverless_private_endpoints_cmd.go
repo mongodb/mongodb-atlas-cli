@@ -51,8 +51,8 @@ func (opts *createServerlessPrivateEndpointOpts) initClient() func() error {
 	}
 }
 
-func (opts *createServerlessPrivateEndpointOpts) readData() (*admin.ServerlessTenantEndpointCreate, error) {
-	var out *admin.ServerlessTenantEndpointCreate
+func (opts *createServerlessPrivateEndpointOpts) readData() (*admin.ServerlessTenantCreateRequest, error) {
+	var out *admin.ServerlessTenantCreateRequest
 
 	var buf []byte
 	var err error
@@ -82,7 +82,7 @@ func (opts *createServerlessPrivateEndpointOpts) Run(ctx context.Context, w io.W
 		GroupId:      opts.groupId,
 		InstanceName: opts.instanceName,
 
-		ServerlessTenantEndpointCreate: data,
+		ServerlessTenantCreateRequest: data,
 	}
 	resp, _, err := opts.client.ServerlessPrivateEndpointsApi.CreateServerlessPrivateEndpointWithParams(ctx, params).Execute()
 	if err != nil {
@@ -382,6 +382,14 @@ func updateServerlessPrivateEndpointBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance associated with the tenant endpoint that will be updated.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 24-hexadecimal digit string that identifies the tenant endpoint which will be updated.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())

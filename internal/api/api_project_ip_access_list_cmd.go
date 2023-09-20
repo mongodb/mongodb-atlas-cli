@@ -53,8 +53,8 @@ func (opts *createProjectIpAccessListOpts) initClient() func() error {
 	}
 }
 
-func (opts *createProjectIpAccessListOpts) readData() ([]*admin.NetworkPermissionEntry, error) {
-	var out []*admin.NetworkPermissionEntry
+func (opts *createProjectIpAccessListOpts) readData() (*[]admin.NetworkPermissionEntry, error) {
+	var out *[]admin.NetworkPermissionEntry
 
 	var buf []byte
 	var err error

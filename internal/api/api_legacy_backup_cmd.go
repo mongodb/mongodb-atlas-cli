@@ -549,8 +549,8 @@ func (opts *updateLegacySnapshotRetentionOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateLegacySnapshotRetentionOpts) readData() (*admin.Snapshot, error) {
-	var out *admin.Snapshot
+func (opts *updateLegacySnapshotRetentionOpts) readData() (*admin.BackupSnapshot, error) {
+	var out *admin.BackupSnapshot
 
 	var buf []byte
 	var err error
@@ -581,7 +581,7 @@ func (opts *updateLegacySnapshotRetentionOpts) Run(ctx context.Context, w io.Wri
 		ClusterName: opts.clusterName,
 		SnapshotId:  opts.snapshotId,
 
-		Snapshot: data,
+		BackupSnapshot: data,
 	}
 	resp, _, err := opts.client.LegacyBackupApi.UpdateLegacySnapshotRetentionWithParams(ctx, params).Execute()
 	if err != nil {
@@ -663,8 +663,8 @@ func (opts *updateLegacySnapshotScheduleOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateLegacySnapshotScheduleOpts) readData() (*admin.SnapshotSchedule, error) {
-	var out *admin.SnapshotSchedule
+func (opts *updateLegacySnapshotScheduleOpts) readData() (*admin.ApiAtlasSnapshotSchedule, error) {
+	var out *admin.ApiAtlasSnapshotSchedule
 
 	var buf []byte
 	var err error
@@ -694,7 +694,7 @@ func (opts *updateLegacySnapshotScheduleOpts) Run(ctx context.Context, w io.Writ
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
-		SnapshotSchedule: data,
+		ApiAtlasSnapshotSchedule: data,
 	}
 	resp, _, err := opts.client.LegacyBackupApi.UpdateLegacySnapshotScheduleWithParams(ctx, params).Execute()
 	if err != nil {

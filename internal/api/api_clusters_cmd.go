@@ -32,6 +32,252 @@ import (
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
+type createClusterOpts struct {
+	cli.GlobalOpts
+	cli.OutputOpts
+	client  *admin.APIClient
+	groupId string
+
+	filename string
+	fs       afero.Fs
+}
+
+func (opts *createClusterOpts) initClient() func() error {
+	return func() error {
+		var err error
+		opts.client, err = newClientWithAuth()
+		return err
+	}
+}
+
+func (opts *createClusterOpts) readData() (*admin.AdvancedClusterDescription, error) {
+	var out *admin.AdvancedClusterDescription
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createClusterOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
+	params := &admin.CreateClusterApiParams{
+		GroupId: opts.groupId,
+
+		AdvancedClusterDescription: data,
+	}
+	resp, _, err := opts.client.ClustersApi.CreateClusterWithParams(ctx, params).Execute()
+	if err != nil {
+		return err
+	}
+
+	return jsonwriter.Print(w, resp)
+}
+
+func createClusterBuilder() *cobra.Command {
+	opts := createClusterOpts{
+		fs: afero.NewOsFs(),
+	}
+	cmd := &cobra.Command{
+		Use:   "createCluster",
+		Short: "Create One Multi-Cloud Cluster from One Project",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.initClient(),
+			)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	_ = cmd.MarkFlagRequired("groupId")
+	return cmd
+}
+
+type deleteClusterOpts struct {
+	cli.GlobalOpts
+	cli.OutputOpts
+	client        *admin.APIClient
+	groupId       string
+	clusterName   string
+	retainBackups bool
+}
+
+func (opts *deleteClusterOpts) initClient() func() error {
+	return func() error {
+		var err error
+		opts.client, err = newClientWithAuth()
+		return err
+	}
+}
+
+func (opts *deleteClusterOpts) Run(ctx context.Context, _ io.Writer) error {
+	params := &admin.DeleteClusterApiParams{
+		GroupId:       opts.groupId,
+		ClusterName:   opts.clusterName,
+		RetainBackups: &opts.retainBackups,
+	}
+	_, err := opts.client.ClustersApi.DeleteClusterWithParams(ctx, params).Execute()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func deleteClusterBuilder() *cobra.Command {
+	opts := deleteClusterOpts{}
+	cmd := &cobra.Command{
+		Use:   "deleteCluster",
+		Short: "Remove One Multi-Cloud Cluster from One Project",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.initClient(),
+			)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().BoolVar(&opts.retainBackups, "retainBackups", false, `Flag that indicates whether to retain backup snapshots for the deleted dedicated cluster.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	_ = cmd.MarkFlagRequired("groupId")
+	_ = cmd.MarkFlagRequired("clusterName")
+	return cmd
+}
+
+type getClusterOpts struct {
+	cli.GlobalOpts
+	cli.OutputOpts
+	client      *admin.APIClient
+	groupId     string
+	clusterName string
+}
+
+func (opts *getClusterOpts) initClient() func() error {
+	return func() error {
+		var err error
+		opts.client, err = newClientWithAuth()
+		return err
+	}
+}
+
+func (opts *getClusterOpts) Run(ctx context.Context, w io.Writer) error {
+	params := &admin.GetClusterApiParams{
+		GroupId:     opts.groupId,
+		ClusterName: opts.clusterName,
+	}
+	resp, _, err := opts.client.ClustersApi.GetClusterWithParams(ctx, params).Execute()
+	if err != nil {
+		return err
+	}
+
+	return jsonwriter.Print(w, resp)
+}
+
+func getClusterBuilder() *cobra.Command {
+	opts := getClusterOpts{}
+	cmd := &cobra.Command{
+		Use:   "getCluster",
+		Short: "Return One Multi-Cloud Cluster from One Project",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.initClient(),
+			)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	_ = cmd.MarkFlagRequired("groupId")
+	_ = cmd.MarkFlagRequired("clusterName")
+	return cmd
+}
+
 type getClusterAdvancedConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
@@ -267,6 +513,70 @@ func listCloudProviderRegionsBuilder() *cobra.Command {
 	return cmd
 }
 
+type listClustersOpts struct {
+	cli.GlobalOpts
+	cli.OutputOpts
+	client                            *admin.APIClient
+	groupId                           string
+	includeCount                      bool
+	itemsPerPage                      int
+	pageNum                           int
+	includeDeletedWithRetainedBackups bool
+}
+
+func (opts *listClustersOpts) initClient() func() error {
+	return func() error {
+		var err error
+		opts.client, err = newClientWithAuth()
+		return err
+	}
+}
+
+func (opts *listClustersOpts) Run(ctx context.Context, w io.Writer) error {
+	params := &admin.ListClustersApiParams{
+		GroupId:                           opts.groupId,
+		IncludeCount:                      &opts.includeCount,
+		ItemsPerPage:                      &opts.itemsPerPage,
+		PageNum:                           &opts.pageNum,
+		IncludeDeletedWithRetainedBackups: &opts.includeDeletedWithRetainedBackups,
+	}
+	resp, _, err := opts.client.ClustersApi.ListClustersWithParams(ctx, params).Execute()
+	if err != nil {
+		return err
+	}
+
+	return jsonwriter.Print(w, resp)
+}
+
+func listClustersBuilder() *cobra.Command {
+	opts := listClustersOpts{}
+	cmd := &cobra.Command{
+		Use:   "listClusters",
+		Short: "Return All Clusters in One Project",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.initClient(),
+			)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+	cmd.Flags().BoolVar(&opts.includeDeletedWithRetainedBackups, "includeDeletedWithRetainedBackups", false, `Flag that indicates whether to return Clusters with retain backups.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	_ = cmd.MarkFlagRequired("groupId")
+	return cmd
+}
+
 type listClustersForAllProjectsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
@@ -378,6 +688,197 @@ func loadSampleDatasetBuilder() *cobra.Command {
 	return cmd
 }
 
+type testFailoverOpts struct {
+	cli.GlobalOpts
+	cli.OutputOpts
+	client      *admin.APIClient
+	groupId     string
+	clusterName string
+}
+
+func (opts *testFailoverOpts) initClient() func() error {
+	return func() error {
+		var err error
+		opts.client, err = newClientWithAuth()
+		return err
+	}
+}
+
+func (opts *testFailoverOpts) Run(ctx context.Context, _ io.Writer) error {
+	params := &admin.TestFailoverApiParams{
+		GroupId:     opts.groupId,
+		ClusterName: opts.clusterName,
+	}
+	_, err := opts.client.ClustersApi.TestFailoverWithParams(ctx, params).Execute()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func testFailoverBuilder() *cobra.Command {
+	opts := testFailoverOpts{}
+	cmd := &cobra.Command{
+		Use:   "testFailover",
+		Short: "Test Failover for One Multi-Cloud Cluster",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.initClient(),
+			)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	_ = cmd.MarkFlagRequired("groupId")
+	_ = cmd.MarkFlagRequired("clusterName")
+	return cmd
+}
+
+type updateClusterOpts struct {
+	cli.GlobalOpts
+	cli.OutputOpts
+	client      *admin.APIClient
+	groupId     string
+	clusterName string
+
+	filename string
+	fs       afero.Fs
+}
+
+func (opts *updateClusterOpts) initClient() func() error {
+	return func() error {
+		var err error
+		opts.client, err = newClientWithAuth()
+		return err
+	}
+}
+
+func (opts *updateClusterOpts) readData() (*admin.AdvancedClusterDescription, error) {
+	var out *admin.AdvancedClusterDescription
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateClusterOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
+	params := &admin.UpdateClusterApiParams{
+		GroupId:     opts.groupId,
+		ClusterName: opts.clusterName,
+
+		AdvancedClusterDescription: data,
+	}
+	resp, _, err := opts.client.ClustersApi.UpdateClusterWithParams(ctx, params).Execute()
+	if err != nil {
+		return err
+	}
+
+	return jsonwriter.Print(w, resp)
+}
+
+func updateClusterBuilder() *cobra.Command {
+	opts := updateClusterOpts{
+		fs: afero.NewOsFs(),
+	}
+	cmd := &cobra.Command{
+		Use:   "updateCluster",
+		Short: "Modify One Multi-Cloud Cluster from One Project",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.initClient(),
+			)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	_ = cmd.MarkFlagRequired("groupId")
+	_ = cmd.MarkFlagRequired("clusterName")
+	return cmd
+}
+
 type updateClusterAdvancedConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
@@ -479,6 +980,10 @@ func updateClusterAdvancedConfigurationBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -505,8 +1010,8 @@ func (opts *upgradeSharedClusterOpts) initClient() func() error {
 	}
 }
 
-func (opts *upgradeSharedClusterOpts) readData() (*admin.LegacyClusterDescription, error) {
-	var out *admin.LegacyClusterDescription
+func (opts *upgradeSharedClusterOpts) readData() (*admin.LegacyAtlasCluster, error) {
+	var out *admin.LegacyAtlasCluster
 
 	var buf []byte
 	var err error
@@ -535,7 +1040,7 @@ func (opts *upgradeSharedClusterOpts) Run(ctx context.Context, w io.Writer) erro
 	params := &admin.UpgradeSharedClusterApiParams{
 		GroupId: opts.groupId,
 
-		LegacyClusterDescription: data,
+		LegacyAtlasCluster: data,
 	}
 	resp, _, err := opts.client.ClustersApi.UpgradeSharedClusterWithParams(ctx, params).Execute()
 	if err != nil {
@@ -564,6 +1069,8 @@ func upgradeSharedClusterBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -751,12 +1258,18 @@ func clustersBuilder() *cobra.Command {
 		Short: `Returns, adds, edits, and removes database deployments. Changes to cluster configurations can affect costs. This resource requires your Project ID.`,
 	}
 	cmd.AddCommand(
+		createClusterBuilder(),
+		deleteClusterBuilder(),
+		getClusterBuilder(),
 		getClusterAdvancedConfigurationBuilder(),
 		getClusterStatusBuilder(),
 		getSampleDatasetLoadStatusBuilder(),
 		listCloudProviderRegionsBuilder(),
+		listClustersBuilder(),
 		listClustersForAllProjectsBuilder(),
 		loadSampleDatasetBuilder(),
+		testFailoverBuilder(),
+		updateClusterBuilder(),
 		updateClusterAdvancedConfigurationBuilder(),
 		upgradeSharedClusterBuilder(),
 		upgradeSharedClusterToServerlessBuilder(),

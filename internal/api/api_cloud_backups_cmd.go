@@ -208,8 +208,8 @@ func (opts *createBackupRestoreJobOpts) initClient() func() error {
 	}
 }
 
-func (opts *createBackupRestoreJobOpts) readData() (*admin.DiskBackupRestoreJob, error) {
-	var out *admin.DiskBackupRestoreJob
+func (opts *createBackupRestoreJobOpts) readData() (*admin.DiskBackupSnapshotRestoreJob, error) {
+	var out *admin.DiskBackupSnapshotRestoreJob
 
 	var buf []byte
 	var err error
@@ -239,7 +239,7 @@ func (opts *createBackupRestoreJobOpts) Run(ctx context.Context, w io.Writer) er
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
-		DiskBackupRestoreJob: data,
+		DiskBackupSnapshotRestoreJob: data,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.CreateBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
@@ -2069,8 +2069,8 @@ func (opts *updateSnapshotRetentionOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateSnapshotRetentionOpts) readData() (*admin.SnapshotRetention, error) {
-	var out *admin.SnapshotRetention
+func (opts *updateSnapshotRetentionOpts) readData() (*admin.BackupSnapshotRetention, error) {
+	var out *admin.BackupSnapshotRetention
 
 	var buf []byte
 	var err error
@@ -2101,7 +2101,7 @@ func (opts *updateSnapshotRetentionOpts) Run(ctx context.Context, w io.Writer) e
 		ClusterName: opts.clusterName,
 		SnapshotId:  opts.snapshotId,
 
-		SnapshotRetention: data,
+		BackupSnapshotRetention: data,
 	}
 	resp, _, err := opts.client.CloudBackupsApi.UpdateSnapshotRetentionWithParams(ctx, params).Execute()
 	if err != nil {

@@ -111,6 +111,8 @@ func createOrganizationBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -696,6 +698,60 @@ func listOrganizationsBuilder() *cobra.Command {
 	return cmd
 }
 
+type removeOrganizationUserOpts struct {
+	cli.GlobalOpts
+	cli.OutputOpts
+	client *admin.APIClient
+	orgId  string
+	userId string
+}
+
+func (opts *removeOrganizationUserOpts) initClient() func() error {
+	return func() error {
+		var err error
+		opts.client, err = newClientWithAuth()
+		return err
+	}
+}
+
+func (opts *removeOrganizationUserOpts) Run(ctx context.Context, w io.Writer) error {
+	params := &admin.RemoveOrganizationUserApiParams{
+		OrgId:  opts.orgId,
+		UserId: opts.userId,
+	}
+	resp, _, err := opts.client.OrganizationsApi.RemoveOrganizationUserWithParams(ctx, params).Execute()
+	if err != nil {
+		return err
+	}
+
+	return jsonwriter.Print(w, resp)
+}
+
+func removeOrganizationUserBuilder() *cobra.Command {
+	opts := removeOrganizationUserOpts{}
+	cmd := &cobra.Command{
+		Use:   "removeOrganizationUser",
+		Short: "Remove One MongoDB Cloud User from One Organization",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.initClient(),
+			)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.userId, "userId", "", `Unique 24-hexadecimal digit string that identifies the user to be deleted.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	_ = cmd.MarkFlagRequired("orgId")
+	_ = cmd.MarkFlagRequired("userId")
+	return cmd
+}
+
 type renameOrganizationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
@@ -714,8 +770,8 @@ func (opts *renameOrganizationOpts) initClient() func() error {
 	}
 }
 
-func (opts *renameOrganizationOpts) readData() (*admin.Organization, error) {
-	var out *admin.Organization
+func (opts *renameOrganizationOpts) readData() (*admin.AtlasOrganization, error) {
+	var out *admin.AtlasOrganization
 
 	var buf []byte
 	var err error
@@ -744,7 +800,7 @@ func (opts *renameOrganizationOpts) Run(ctx context.Context, w io.Writer) error 
 	params := &admin.RenameOrganizationApiParams{
 		OrgId: opts.orgId,
 
-		Organization: data,
+		AtlasOrganization: data,
 	}
 	resp, _, err := opts.client.OrganizationsApi.RenameOrganizationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -967,6 +1023,97 @@ func updateOrganizationInvitationByIdBuilder() *cobra.Command {
 	return cmd
 }
 
+type updateOrganizationRolesOpts struct {
+	cli.GlobalOpts
+	cli.OutputOpts
+	client *admin.APIClient
+	orgId  string
+	userId string
+
+	filename string
+	fs       afero.Fs
+}
+
+func (opts *updateOrganizationRolesOpts) initClient() func() error {
+	return func() error {
+		var err error
+		opts.client, err = newClientWithAuth()
+		return err
+	}
+}
+
+func (opts *updateOrganizationRolesOpts) readData() (*admin.UpdateOrgRolesForUser, error) {
+	var out *admin.UpdateOrgRolesForUser
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateOrganizationRolesOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
+	params := &admin.UpdateOrganizationRolesApiParams{
+		OrgId:  opts.orgId,
+		UserId: opts.userId,
+
+		UpdateOrgRolesForUser: data,
+	}
+	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationRolesWithParams(ctx, params).Execute()
+	if err != nil {
+		return err
+	}
+
+	return jsonwriter.Print(w, resp)
+}
+
+func updateOrganizationRolesBuilder() *cobra.Command {
+	opts := updateOrganizationRolesOpts{
+		fs: afero.NewOsFs(),
+	}
+	cmd := &cobra.Command{
+		Use:   "updateOrganizationRoles",
+		Short: "Update Organization Roles for One MongoDB Cloud User",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.initClient(),
+			)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.userId, "userId", "", `Unique 24-hexadecimal digit string that identifies the user to modify.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	_ = cmd.MarkFlagRequired("orgId")
+	_ = cmd.MarkFlagRequired("userId")
+	return cmd
+}
+
 type updateOrganizationSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
@@ -1073,9 +1220,11 @@ func organizationsBuilder() *cobra.Command {
 		listOrganizationProjectsBuilder(),
 		listOrganizationUsersBuilder(),
 		listOrganizationsBuilder(),
+		removeOrganizationUserBuilder(),
 		renameOrganizationBuilder(),
 		updateOrganizationInvitationBuilder(),
 		updateOrganizationInvitationByIdBuilder(),
+		updateOrganizationRolesBuilder(),
 		updateOrganizationSettingsBuilder(),
 	)
 	return cmd

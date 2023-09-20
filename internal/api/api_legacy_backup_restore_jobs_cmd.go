@@ -51,8 +51,8 @@ func (opts *createLegacyBackupRestoreJobOpts) initClient() func() error {
 	}
 }
 
-func (opts *createLegacyBackupRestoreJobOpts) readData() (*admin.RestoreJob, error) {
-	var out *admin.RestoreJob
+func (opts *createLegacyBackupRestoreJobOpts) readData() (*admin.BackupRestoreJob, error) {
+	var out *admin.BackupRestoreJob
 
 	var buf []byte
 	var err error
@@ -82,7 +82,7 @@ func (opts *createLegacyBackupRestoreJobOpts) Run(ctx context.Context, w io.Writ
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
-		RestoreJob: data,
+		BackupRestoreJob: data,
 	}
 	resp, _, err := opts.client.LegacyBackupRestoreJobsApi.CreateLegacyBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {

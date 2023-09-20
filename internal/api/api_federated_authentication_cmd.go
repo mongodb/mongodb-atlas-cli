@@ -51,8 +51,8 @@ func (opts *createRoleMappingOpts) initClient() func() error {
 	}
 }
 
-func (opts *createRoleMappingOpts) readData() (*admin.RoleMapping, error) {
-	var out *admin.RoleMapping
+func (opts *createRoleMappingOpts) readData() (*admin.AuthFederationRoleMapping, error) {
+	var out *admin.AuthFederationRoleMapping
 
 	var buf []byte
 	var err error
@@ -82,7 +82,7 @@ func (opts *createRoleMappingOpts) Run(ctx context.Context, w io.Writer) error {
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId:                opts.orgId,
 
-		RoleMapping: data,
+		AuthFederationRoleMapping: data,
 	}
 	resp, _, err := opts.client.FederatedAuthenticationApi.CreateRoleMappingWithParams(ctx, params).Execute()
 	if err != nil {
@@ -943,8 +943,8 @@ func (opts *updateRoleMappingOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateRoleMappingOpts) readData() (*admin.RoleMapping, error) {
-	var out *admin.RoleMapping
+func (opts *updateRoleMappingOpts) readData() (*admin.AuthFederationRoleMapping, error) {
+	var out *admin.AuthFederationRoleMapping
 
 	var buf []byte
 	var err error
@@ -975,7 +975,7 @@ func (opts *updateRoleMappingOpts) Run(ctx context.Context, w io.Writer) error {
 		Id:                   opts.id,
 		OrgId:                opts.orgId,
 
-		RoleMapping: data,
+		AuthFederationRoleMapping: data,
 	}
 	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateRoleMappingWithParams(ctx, params).Execute()
 	if err != nil {

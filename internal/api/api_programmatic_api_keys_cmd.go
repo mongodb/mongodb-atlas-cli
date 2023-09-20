@@ -51,8 +51,8 @@ func (opts *addProjectApiKeyOpts) initClient() func() error {
 	}
 }
 
-func (opts *addProjectApiKeyOpts) readData() ([]*admin.UserRoleAssignment, error) {
-	var out []*admin.UserRoleAssignment
+func (opts *addProjectApiKeyOpts) readData() (*[]admin.UserAccessRoleAssignment, error) {
+	var out *[]admin.UserAccessRoleAssignment
 
 	var buf []byte
 	var err error
@@ -82,7 +82,7 @@ func (opts *addProjectApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
 		GroupId:   opts.groupId,
 		ApiUserId: opts.apiUserId,
 
-		UserRoleAssignment: data,
+		UserAccessRoleAssignment: data,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.AddProjectApiKeyWithParams(ctx, params).Execute()
 	if err != nil {
@@ -139,8 +139,8 @@ func (opts *createApiKeyOpts) initClient() func() error {
 	}
 }
 
-func (opts *createApiKeyOpts) readData() (*admin.CreateApiKey, error) {
-	var out *admin.CreateApiKey
+func (opts *createApiKeyOpts) readData() (*admin.CreateAtlasOrganizationApiKey, error) {
+	var out *admin.CreateAtlasOrganizationApiKey
 
 	var buf []byte
 	var err error
@@ -169,7 +169,7 @@ func (opts *createApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.CreateApiKeyApiParams{
 		OrgId: opts.orgId,
 
-		CreateApiKey: data,
+		CreateAtlasOrganizationApiKey: data,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.CreateApiKeyWithParams(ctx, params).Execute()
 	if err != nil {
@@ -230,8 +230,8 @@ func (opts *createApiKeyAccessListOpts) initClient() func() error {
 	}
 }
 
-func (opts *createApiKeyAccessListOpts) readData() ([]*admin.UserAccessList, error) {
-	var out []*admin.UserAccessList
+func (opts *createApiKeyAccessListOpts) readData() (*[]admin.UserAccessList, error) {
+	var out *[]admin.UserAccessList
 
 	var buf []byte
 	var err error
@@ -324,8 +324,8 @@ func (opts *createProjectApiKeyOpts) initClient() func() error {
 	}
 }
 
-func (opts *createProjectApiKeyOpts) readData() (*admin.CreateApiKey, error) {
-	var out *admin.CreateApiKey
+func (opts *createProjectApiKeyOpts) readData() (*admin.CreateAtlasProjectApiKey, error) {
+	var out *admin.CreateAtlasProjectApiKey
 
 	var buf []byte
 	var err error
@@ -354,7 +354,7 @@ func (opts *createProjectApiKeyOpts) Run(ctx context.Context, w io.Writer) error
 	params := &admin.CreateProjectApiKeyApiParams{
 		GroupId: opts.groupId,
 
-		CreateApiKey: data,
+		CreateAtlasProjectApiKey: data,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.CreateProjectApiKeyWithParams(ctx, params).Execute()
 	if err != nil {
@@ -877,8 +877,8 @@ func (opts *updateApiKeyOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateApiKeyOpts) readData() (*admin.CreateApiKey, error) {
-	var out *admin.CreateApiKey
+func (opts *updateApiKeyOpts) readData() (*admin.UpdateAtlasOrganizationApiKey, error) {
+	var out *admin.UpdateAtlasOrganizationApiKey
 
 	var buf []byte
 	var err error
@@ -908,7 +908,7 @@ func (opts *updateApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
 		OrgId:     opts.orgId,
 		ApiUserId: opts.apiUserId,
 
-		CreateApiKey: data,
+		UpdateAtlasOrganizationApiKey: data,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.UpdateApiKeyWithParams(ctx, params).Execute()
 	if err != nil {
@@ -971,8 +971,8 @@ func (opts *updateApiKeyRolesOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateApiKeyRolesOpts) readData() (*admin.CreateApiKey, error) {
-	var out *admin.CreateApiKey
+func (opts *updateApiKeyRolesOpts) readData() (*admin.UpdateAtlasProjectApiKey, error) {
+	var out *admin.UpdateAtlasProjectApiKey
 
 	var buf []byte
 	var err error
@@ -1006,7 +1006,7 @@ func (opts *updateApiKeyRolesOpts) Run(ctx context.Context, w io.Writer) error {
 		ItemsPerPage: &opts.itemsPerPage,
 		IncludeCount: &opts.includeCount,
 
-		CreateApiKey: data,
+		UpdateAtlasProjectApiKey: data,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.UpdateApiKeyRolesWithParams(ctx, params).Execute()
 	if err != nil {

@@ -1,3 +1,4 @@
+api.go
 api_access_tracking_cmd.go
 api_alert_configurations_cmd.go
 api_alerts_cmd.go
@@ -24,7 +25,6 @@ api_legacy_backup_restore_jobs_cmd.go
 api_maintenance_windows__cmd.go
 api_mongo_db_cloud_users_cmd.go
 api_monitoring_and_logs_cmd.go
-api_multi_cloud_clusters_cmd.go
 api_network_peering_cmd.go
 api_online_archive_cmd.go
 api_organizations_cmd.go
@@ -33,13 +33,14 @@ api_private_endpoint_services_cmd.go
 api_programmatic_api_keys_cmd.go
 api_project_ip_access_list_cmd.go
 api_projects_cmd.go
+api_push_based_log_export_cmd.go
 api_rolling_index_cmd.go
 api_root_cmd.go
 api_serverless_instances_cmd.go
 api_serverless_private_endpoints_cmd.go
 api_shared_tier_restore_jobs_cmd.go
 api_shared_tier_snapshots_cmd.go
+api_streams_cmd.go
 api_teams_cmd.go
-api_test__cmd.go
 api_third_party_integrations_cmd.go
 api_x509_authentication_cmd.go

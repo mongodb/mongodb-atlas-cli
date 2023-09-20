@@ -51,8 +51,8 @@ func (opts *createAtlasSearchIndexOpts) initClient() func() error {
 	}
 }
 
-func (opts *createAtlasSearchIndexOpts) readData() (*admin.FTSIndex, error) {
-	var out *admin.FTSIndex
+func (opts *createAtlasSearchIndexOpts) readData() (*admin.ClusterSearchIndex, error) {
+	var out *admin.ClusterSearchIndex
 
 	var buf []byte
 	var err error
@@ -82,7 +82,7 @@ func (opts *createAtlasSearchIndexOpts) Run(ctx context.Context, w io.Writer) er
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
-		FTSIndex: data,
+		ClusterSearchIndex: data,
 	}
 	resp, _, err := opts.client.AtlasSearchApi.CreateAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {
@@ -345,8 +345,8 @@ func (opts *updateAtlasSearchIndexOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateAtlasSearchIndexOpts) readData() (*admin.FTSIndex, error) {
-	var out *admin.FTSIndex
+func (opts *updateAtlasSearchIndexOpts) readData() (*admin.ClusterSearchIndex, error) {
+	var out *admin.ClusterSearchIndex
 
 	var buf []byte
 	var err error
@@ -377,7 +377,7 @@ func (opts *updateAtlasSearchIndexOpts) Run(ctx context.Context, w io.Writer) er
 		ClusterName: opts.clusterName,
 		IndexId:     opts.indexId,
 
-		FTSIndex: data,
+		ClusterSearchIndex: data,
 	}
 	resp, _, err := opts.client.AtlasSearchApi.UpdateAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {

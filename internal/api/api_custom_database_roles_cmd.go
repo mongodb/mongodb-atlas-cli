@@ -50,8 +50,8 @@ func (opts *createCustomDatabaseRoleOpts) initClient() func() error {
 	}
 }
 
-func (opts *createCustomDatabaseRoleOpts) readData() (*admin.CustomDBRole, error) {
-	var out *admin.CustomDBRole
+func (opts *createCustomDatabaseRoleOpts) readData() (*admin.UserCustomDBRole, error) {
+	var out *admin.UserCustomDBRole
 
 	var buf []byte
 	var err error
@@ -80,7 +80,7 @@ func (opts *createCustomDatabaseRoleOpts) Run(ctx context.Context, w io.Writer) 
 	params := &admin.CreateCustomDatabaseRoleApiParams{
 		GroupId: opts.groupId,
 
-		CustomDBRole: data,
+		UserCustomDBRole: data,
 	}
 	resp, _, err := opts.client.CustomDatabaseRolesApi.CreateCustomDatabaseRoleWithParams(ctx, params).Execute()
 	if err != nil {

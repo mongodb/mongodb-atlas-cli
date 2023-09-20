@@ -18,15 +18,172 @@ package api
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"io"
+	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
+
+type createCostExplorerQueryProcessOpts struct {
+	cli.GlobalOpts
+	cli.OutputOpts
+	client *admin.APIClient
+	orgId  string
+
+	filename string
+	fs       afero.Fs
+}
+
+func (opts *createCostExplorerQueryProcessOpts) initClient() func() error {
+	return func() error {
+		var err error
+		opts.client, err = newClientWithAuth()
+		return err
+	}
+}
+
+func (opts *createCostExplorerQueryProcessOpts) readData() (*admin.CostExplorerFilterRequestBody, error) {
+	var out *admin.CostExplorerFilterRequestBody
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createCostExplorerQueryProcessOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
+	params := &admin.CreateCostExplorerQueryProcessApiParams{
+		OrgId: opts.orgId,
+
+		CostExplorerFilterRequestBody: data,
+	}
+	resp, _, err := opts.client.InvoicesApi.CreateCostExplorerQueryProcessWithParams(ctx, params).Execute()
+	if err != nil {
+		return err
+	}
+
+	return jsonwriter.Print(w, resp)
+}
+
+func createCostExplorerQueryProcessBuilder() *cobra.Command {
+	opts := createCostExplorerQueryProcessOpts{
+		fs: afero.NewOsFs(),
+	}
+	cmd := &cobra.Command{
+		Use:   "createCostExplorerQueryProcess",
+		Short: "Create Cost Explorer query process",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.initClient(),
+			)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	_ = cmd.MarkFlagRequired("orgId")
+	return cmd
+}
+
+type createCostExplorerQueryProcess1Opts struct {
+	cli.GlobalOpts
+	cli.OutputOpts
+	client *admin.APIClient
+	orgId  string
+	token  string
+}
+
+func (opts *createCostExplorerQueryProcess1Opts) initClient() func() error {
+	return func() error {
+		var err error
+		opts.client, err = newClientWithAuth()
+		return err
+	}
+}
+
+func (opts *createCostExplorerQueryProcess1Opts) Run(ctx context.Context, w io.Writer) error {
+	params := &admin.CreateCostExplorerQueryProcess1ApiParams{
+		OrgId: opts.orgId,
+		Token: opts.token,
+	}
+	resp, _, err := opts.client.InvoicesApi.CreateCostExplorerQueryProcess1WithParams(ctx, params).Execute()
+	if err != nil {
+		return err
+	}
+
+	return jsonwriter.Print(w, resp)
+}
+
+func createCostExplorerQueryProcess1Builder() *cobra.Command {
+	opts := createCostExplorerQueryProcess1Opts{}
+	cmd := &cobra.Command{
+		Use:   "createCostExplorerQueryProcess1",
+		Short: "Return results from a given Cost Explorer query, or notify that the results are not ready yet.",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.initClient(),
+			)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.token, "token", "", `Unique 64 digit string that identifies the Cost Explorer query.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	_ = cmd.MarkFlagRequired("orgId")
+	_ = cmd.MarkFlagRequired("token")
+	return cmd
+}
 
 type downloadInvoiceCSVOpts struct {
 	cli.GlobalOpts
@@ -44,17 +201,17 @@ func (opts *downloadInvoiceCSVOpts) initClient() func() error {
 	}
 }
 
-func (opts *downloadInvoiceCSVOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *downloadInvoiceCSVOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DownloadInvoiceCSVApiParams{
 		OrgId:     opts.orgId,
 		InvoiceId: opts.invoiceId,
 	}
-	_, err := opts.client.InvoicesApi.DownloadInvoiceCSVWithParams(ctx, params).Execute()
+	resp, _, err := opts.client.InvoicesApi.DownloadInvoiceCSVWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return nil
+	return jsonwriter.Print(w, resp)
 }
 
 func downloadInvoiceCSVBuilder() *cobra.Command {
@@ -251,6 +408,8 @@ func invoicesBuilder() *cobra.Command {
 		Short: `Returns invoices.`,
 	}
 	cmd.AddCommand(
+		createCostExplorerQueryProcessBuilder(),
+		createCostExplorerQueryProcess1Builder(),
 		downloadInvoiceCSVBuilder(),
 		getInvoiceBuilder(),
 		listInvoicesBuilder(),

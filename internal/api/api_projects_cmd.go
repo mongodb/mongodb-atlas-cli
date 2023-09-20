@@ -108,7 +108,7 @@ func createProjectBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.projectOwnerId, "projectOwnerId", "", `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud user to whom to grant the Project Owner role on the specified project. If you set this parameter, it overrides the default value of the oldest Organization Owner. `)
+	cmd.Flags().StringVar(&opts.projectOwnerId, "projectOwnerId", "", `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud user to whom to grant the Project Owner role on the specified project. If you set this parameter, it overrides the default value of the oldest Organization Owner.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -386,6 +386,8 @@ func deleteProjectLimitBuilder() *cobra.Command {
 | dataFederation.bytesProcessed.daily | Limit on the number of bytes processed across all Data Federation tenants for the current day | N/A | N/A |
 | dataFederation.bytesProcessed.weekly | Limit on the number of bytes processed across all Data Federation tenants for the current week | N/A | N/A |
 | dataFederation.bytesProcessed.monthly | Limit on the number of bytes processed across all Data Federation tenants for the current month | N/A | N/A |
+| atlas.project.deployment.privateServiceConnectionsPerRegionGroup | Number of Private Serivce Connections per Region Group | 50 | 100|
+| atlas.project.deployment.privateServiceConnectionsSubnetMask | Subnet mask for GCP PSC Networks. Has lower limit of 20. | 27 | 27|
 `)
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
@@ -614,6 +616,8 @@ func getProjectLimitBuilder() *cobra.Command {
 | dataFederation.bytesProcessed.daily | Limit on the number of bytes processed across all Data Federation tenants for the current day | N/A | N/A |
 | dataFederation.bytesProcessed.weekly | Limit on the number of bytes processed across all Data Federation tenants for the current week | N/A | N/A |
 | dataFederation.bytesProcessed.monthly | Limit on the number of bytes processed across all Data Federation tenants for the current month | N/A | N/A |
+| atlas.project.deployment.privateServiceConnectionsPerRegionGroup | Number of Private Serivce Connections per Region Group | 50 | 100|
+| atlas.project.deployment.privateServiceConnectionsSubnetMask | Subnet mask for GCP PSC Networks. Has lower limit of 20. | 27 | 27|
 `)
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
@@ -983,8 +987,8 @@ func (opts *setProjectLimitOpts) initClient() func() error {
 	}
 }
 
-func (opts *setProjectLimitOpts) readData() (*admin.Limit, error) {
-	var out *admin.Limit
+func (opts *setProjectLimitOpts) readData() (*admin.DataFederationLimit, error) {
+	var out *admin.DataFederationLimit
 
 	var buf []byte
 	var err error
@@ -1014,7 +1018,7 @@ func (opts *setProjectLimitOpts) Run(ctx context.Context, w io.Writer) error {
 		LimitName: opts.limitName,
 		GroupId:   opts.groupId,
 
-		Limit: data,
+		DataFederationLimit: data,
 	}
 	resp, _, err := opts.client.ProjectsApi.SetProjectLimitWithParams(ctx, params).Execute()
 	if err != nil {
@@ -1054,10 +1058,26 @@ func setProjectLimitBuilder() *cobra.Command {
 | dataFederation.bytesProcessed.daily | Limit on the number of bytes processed across all Data Federation tenants for the current day | N/A | N/A |
 | dataFederation.bytesProcessed.weekly | Limit on the number of bytes processed across all Data Federation tenants for the current week | N/A | N/A |
 | dataFederation.bytesProcessed.monthly | Limit on the number of bytes processed across all Data Federation tenants for the current month | N/A | N/A |
+| atlas.project.deployment.privateServiceConnectionsPerRegionGroup | Number of Private Serivce Connections per Region Group | 50 | 100|
+| atlas.project.deployment.privateServiceConnectionsSubnetMask | Subnet mask for GCP PSC Networks. Has lower limit of 20. | 27 | 27|
 `)
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
@@ -1334,6 +1354,99 @@ func updateProjectInvitationByIdBuilder() *cobra.Command {
 	return cmd
 }
 
+type updateProjectRolesOpts struct {
+	cli.GlobalOpts
+	cli.OutputOpts
+	client  *admin.APIClient
+	groupId string
+	userId  string
+
+	filename string
+	fs       afero.Fs
+}
+
+func (opts *updateProjectRolesOpts) initClient() func() error {
+	return func() error {
+		var err error
+		opts.client, err = newClientWithAuth()
+		return err
+	}
+}
+
+func (opts *updateProjectRolesOpts) readData() (*admin.UpdateGroupRolesForUser, error) {
+	var out *admin.UpdateGroupRolesForUser
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateProjectRolesOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
+	params := &admin.UpdateProjectRolesApiParams{
+		GroupId: opts.groupId,
+		UserId:  opts.userId,
+
+		UpdateGroupRolesForUser: data,
+	}
+	resp, _, err := opts.client.ProjectsApi.UpdateProjectRolesWithParams(ctx, params).Execute()
+	if err != nil {
+		return err
+	}
+
+	return jsonwriter.Print(w, resp)
+}
+
+func updateProjectRolesBuilder() *cobra.Command {
+	opts := updateProjectRolesOpts{
+		fs: afero.NewOsFs(),
+	}
+	cmd := &cobra.Command{
+		Use:   "updateProjectRoles",
+		Short: "Update Project Roles for One MongoDB Cloud User",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.initClient(),
+			)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.userId, "userId", "", `Unique 24-hexadecimal digit string that identifies the user to modify.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	_ = cmd.MarkFlagRequired("groupId")
+	_ = cmd.MarkFlagRequired("userId")
+	return cmd
+}
+
 type updateProjectSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
@@ -1456,6 +1569,7 @@ func projectsBuilder() *cobra.Command {
 		updateProjectBuilder(),
 		updateProjectInvitationBuilder(),
 		updateProjectInvitationByIdBuilder(),
+		updateProjectRolesBuilder(),
 		updateProjectSettingsBuilder(),
 	)
 	return cmd

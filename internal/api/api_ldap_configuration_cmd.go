@@ -47,16 +47,16 @@ func (opts *deleteLDAPConfigurationOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteLDAPConfigurationOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *deleteLDAPConfigurationOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.client.LDAPConfigurationApi.DeleteLDAPConfigurationWithParams(ctx, params).Execute()
+	resp, _, err := opts.client.LDAPConfigurationApi.DeleteLDAPConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return nil
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteLDAPConfigurationBuilder() *cobra.Command {
@@ -301,8 +301,8 @@ func (opts *verifyLDAPConfigurationOpts) initClient() func() error {
 	}
 }
 
-func (opts *verifyLDAPConfigurationOpts) readData() (*admin.NDSLDAPVerifyConnectivityJobRequestParams, error) {
-	var out *admin.NDSLDAPVerifyConnectivityJobRequestParams
+func (opts *verifyLDAPConfigurationOpts) readData() (*admin.LDAPVerifyConnectivityJobRequestParams, error) {
+	var out *admin.LDAPVerifyConnectivityJobRequestParams
 
 	var buf []byte
 	var err error
@@ -331,7 +331,7 @@ func (opts *verifyLDAPConfigurationOpts) Run(ctx context.Context, w io.Writer) e
 	params := &admin.VerifyLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 
-		NDSLDAPVerifyConnectivityJobRequestParams: data,
+		LDAPVerifyConnectivityJobRequestParams: data,
 	}
 	resp, _, err := opts.client.LDAPConfigurationApi.VerifyLDAPConfigurationWithParams(ctx, params).Execute()
 	if err != nil {

@@ -49,8 +49,8 @@ func (opts *createUserOpts) initClient() func() error {
 	}
 }
 
-func (opts *createUserOpts) readData() (*admin.AppUser, error) {
-	var out *admin.AppUser
+func (opts *createUserOpts) readData() (*admin.CloudAppUser, error) {
+	var out *admin.CloudAppUser
 
 	var buf []byte
 	var err error
@@ -78,7 +78,7 @@ func (opts *createUserOpts) Run(ctx context.Context, w io.Writer) error {
 	}
 	params := &admin.CreateUserApiParams{
 
-		AppUser: data,
+		CloudAppUser: data,
 	}
 	resp, _, err := opts.client.MongoDBCloudUsersApi.CreateUserWithParams(ctx, params).Execute()
 	if err != nil {

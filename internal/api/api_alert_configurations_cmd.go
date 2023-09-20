@@ -50,8 +50,8 @@ func (opts *createAlertConfigurationOpts) initClient() func() error {
 	}
 }
 
-func (opts *createAlertConfigurationOpts) readData() (*admin.AlertConfigViewForNdsGroup, error) {
-	var out *admin.AlertConfigViewForNdsGroup
+func (opts *createAlertConfigurationOpts) readData() (*admin.GroupAlertsConfig, error) {
+	var out *admin.GroupAlertsConfig
 
 	var buf []byte
 	var err error
@@ -80,7 +80,7 @@ func (opts *createAlertConfigurationOpts) Run(ctx context.Context, w io.Writer) 
 	params := &admin.CreateAlertConfigurationApiParams{
 		GroupId: opts.groupId,
 
-		AlertConfigViewForNdsGroup: data,
+		GroupAlertsConfig: data,
 	}
 	resp, _, err := opts.client.AlertConfigurationsApi.CreateAlertConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -441,8 +441,8 @@ func (opts *toggleAlertConfigurationOpts) initClient() func() error {
 	}
 }
 
-func (opts *toggleAlertConfigurationOpts) readData() (*admin.Toggle, error) {
-	var out *admin.Toggle
+func (opts *toggleAlertConfigurationOpts) readData() (*admin.AlertsToggle, error) {
+	var out *admin.AlertsToggle
 
 	var buf []byte
 	var err error
@@ -472,7 +472,7 @@ func (opts *toggleAlertConfigurationOpts) Run(ctx context.Context, w io.Writer) 
 		GroupId:       opts.groupId,
 		AlertConfigId: opts.alertConfigId,
 
-		Toggle: data,
+		AlertsToggle: data,
 	}
 	resp, _, err := opts.client.AlertConfigurationsApi.ToggleAlertConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
@@ -532,8 +532,8 @@ func (opts *updateAlertConfigurationOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateAlertConfigurationOpts) readData() (*admin.AlertConfigViewForNdsGroup, error) {
-	var out *admin.AlertConfigViewForNdsGroup
+func (opts *updateAlertConfigurationOpts) readData() (*admin.GroupAlertsConfig, error) {
+	var out *admin.GroupAlertsConfig
 
 	var buf []byte
 	var err error
@@ -563,7 +563,7 @@ func (opts *updateAlertConfigurationOpts) Run(ctx context.Context, w io.Writer) 
 		GroupId:       opts.groupId,
 		AlertConfigId: opts.alertConfigId,
 
-		AlertConfigViewForNdsGroup: data,
+		GroupAlertsConfig: data,
 	}
 	resp, _, err := opts.client.AlertConfigurationsApi.UpdateAlertConfigurationWithParams(ctx, params).Execute()
 	if err != nil {

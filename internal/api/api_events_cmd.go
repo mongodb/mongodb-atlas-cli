@@ -220,16 +220,17 @@ func listOrganizationEventsBuilder() *cobra.Command {
 type listProjectEventsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client       *admin.APIClient
-	groupId      string
-	includeCount bool
-	itemsPerPage int
-	pageNum      int
-	clusterNames []string
-	eventType    []string
-	includeRaw   bool
-	maxDate      string
-	minDate      string
+	client            *admin.APIClient
+	groupId           string
+	includeCount      bool
+	itemsPerPage      int
+	pageNum           int
+	clusterNames      []string
+	eventType         []string
+	excludedEventType []string
+	includeRaw        bool
+	maxDate           string
+	minDate           string
 }
 
 func (opts *listProjectEventsOpts) initClient() func() error {
@@ -242,15 +243,16 @@ func (opts *listProjectEventsOpts) initClient() func() error {
 
 func (opts *listProjectEventsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListProjectEventsApiParams{
-		GroupId:      opts.groupId,
-		IncludeCount: &opts.includeCount,
-		ItemsPerPage: &opts.itemsPerPage,
-		PageNum:      &opts.pageNum,
-		ClusterNames: &opts.clusterNames,
-		EventType:    &opts.eventType,
-		IncludeRaw:   &opts.includeRaw,
-		MaxDate:      convertTime(&opts.maxDate),
-		MinDate:      convertTime(&opts.minDate),
+		GroupId:           opts.groupId,
+		IncludeCount:      &opts.includeCount,
+		ItemsPerPage:      &opts.itemsPerPage,
+		PageNum:           &opts.pageNum,
+		ClusterNames:      &opts.clusterNames,
+		EventType:         &opts.eventType,
+		ExcludedEventType: &opts.excludedEventType,
+		IncludeRaw:        &opts.includeRaw,
+		MaxDate:           convertTime(&opts.maxDate),
+		MinDate:           convertTime(&opts.minDate),
 	}
 	resp, _, err := opts.client.EventsApi.ListProjectEventsWithParams(ctx, params).Execute()
 	if err != nil {
@@ -284,6 +286,9 @@ func listProjectEventsBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.eventType, "eventType", nil, `Category of incident recorded at this moment in time.
 
 **IMPORTANT**: The complete list of event type values changes frequently.`)
+	cmd.Flags().StringSliceVar(&opts.excludedEventType, "excludedEventType", nil, `Category of event that you would like to exclude from query results, such as CLUSTER_CREATED
+
+**IMPORTANT**: Event type names change frequently. Verify that you specify the event type correctly by checking the complete list of event types.`)
 	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`)
 	cmd.Flags().StringVar(&opts.maxDate, "maxDate", "", `Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
 	cmd.Flags().StringVar(&opts.minDate, "minDate", "", `Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)

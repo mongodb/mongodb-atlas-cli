@@ -73,7 +73,7 @@ func (opts *createDatabaseUserCertificateOpts) readData() (*admin.UserCert, erro
 	return out, nil
 }
 
-func (opts *createDatabaseUserCertificateOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *createDatabaseUserCertificateOpts) Run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
@@ -84,12 +84,12 @@ func (opts *createDatabaseUserCertificateOpts) Run(ctx context.Context, _ io.Wri
 
 		UserCert: data,
 	}
-	_, err := opts.client.X509AuthenticationApi.CreateDatabaseUserCertificateWithParams(ctx, params).Execute()
+	resp, _, err := opts.client.X509AuthenticationApi.CreateDatabaseUserCertificateWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return nil
+	return jsonwriter.Print(w, resp)
 }
 
 func createDatabaseUserCertificateBuilder() *cobra.Command {

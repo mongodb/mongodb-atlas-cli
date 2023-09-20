@@ -50,8 +50,8 @@ func (opts *addAllTeamsToProjectOpts) initClient() func() error {
 	}
 }
 
-func (opts *addAllTeamsToProjectOpts) readData() ([]*admin.TeamRole, error) {
-	var out []*admin.TeamRole
+func (opts *addAllTeamsToProjectOpts) readData() (*[]admin.TeamRole, error) {
+	var out *[]admin.TeamRole
 
 	var buf []byte
 	var err error
@@ -136,8 +136,8 @@ func (opts *addTeamUserOpts) initClient() func() error {
 	}
 }
 
-func (opts *addTeamUserOpts) readData() ([]*admin.AddUserToTeam, error) {
-	var out []*admin.AddUserToTeam
+func (opts *addTeamUserOpts) readData() (*[]admin.AddUserToTeam, error) {
+	var out *[]admin.AddUserToTeam
 
 	var buf []byte
 	var err error
@@ -653,17 +653,17 @@ func (opts *removeProjectTeamOpts) initClient() func() error {
 	}
 }
 
-func (opts *removeProjectTeamOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *removeProjectTeamOpts) Run(ctx context.Context, _ io.Writer) error {
 	params := &admin.RemoveProjectTeamApiParams{
 		GroupId: opts.groupId,
 		TeamId:  opts.teamId,
 	}
-	resp, _, err := opts.client.TeamsApi.RemoveProjectTeamWithParams(ctx, params).Execute()
+	_, err := opts.client.TeamsApi.RemoveProjectTeamWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	return nil
 }
 
 func removeProjectTeamBuilder() *cobra.Command {

@@ -51,8 +51,8 @@ func (opts *createOnlineArchiveOpts) initClient() func() error {
 	}
 }
 
-func (opts *createOnlineArchiveOpts) readData() (*admin.OnlineArchive, error) {
-	var out *admin.OnlineArchive
+func (opts *createOnlineArchiveOpts) readData() (*admin.BackupOnlineArchiveCreate, error) {
+	var out *admin.BackupOnlineArchiveCreate
 
 	var buf []byte
 	var err error
@@ -82,7 +82,7 @@ func (opts *createOnlineArchiveOpts) Run(ctx context.Context, w io.Writer) error
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
-		OnlineArchive: data,
+		BackupOnlineArchiveCreate: data,
 	}
 	resp, _, err := opts.client.OnlineArchiveApi.CreateOnlineArchiveWithParams(ctx, params).Execute()
 	if err != nil {
@@ -112,6 +112,10 @@ func createOnlineArchiveBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster that contains the collection for which you want to create one online archive.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -413,8 +417,8 @@ func (opts *updateOnlineArchiveOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateOnlineArchiveOpts) readData() (*admin.OnlineArchive, error) {
-	var out *admin.OnlineArchive
+func (opts *updateOnlineArchiveOpts) readData() (*admin.BackupOnlineArchive, error) {
+	var out *admin.BackupOnlineArchive
 
 	var buf []byte
 	var err error
@@ -445,7 +449,7 @@ func (opts *updateOnlineArchiveOpts) Run(ctx context.Context, w io.Writer) error
 		ArchiveId:   opts.archiveId,
 		ClusterName: opts.clusterName,
 
-		OnlineArchive: data,
+		BackupOnlineArchive: data,
 	}
 	resp, _, err := opts.client.OnlineArchiveApi.UpdateOnlineArchiveWithParams(ctx, params).Execute()
 	if err != nil {
@@ -476,6 +480,10 @@ func updateOnlineArchiveBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.archiveId, "archiveId", "", `Unique 24-hexadecimal digit string that identifies the online archive to update.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster that contains the specified collection from which Application created the online archive.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 

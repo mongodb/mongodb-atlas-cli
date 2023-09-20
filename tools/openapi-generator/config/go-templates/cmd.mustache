@@ -38,8 +38,8 @@ func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) initC
 }
 
 {{#bodyParam}}
-func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) readData() ({{#isArray}}[]{{/isArray}}*admin.{{baseType}}, error) {
-	var out {{#isArray}}[]{{/isArray}}*admin.{{baseType}}
+func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) readData() (*{{#isArray}}[]{{/isArray}}admin.{{baseType}}, error) {
+	var out *{{#isArray}}[]{{/isArray}}admin.{{baseType}}
 	
 	var buf []byte
 	var err error

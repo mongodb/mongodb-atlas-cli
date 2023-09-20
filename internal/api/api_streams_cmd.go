@@ -32,19 +32,18 @@ import (
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
-type createPrivateEndpointOpts struct {
+type createStreamConnectionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client            *admin.APIClient
-	groupId           string
-	cloudProvider     string
-	endpointServiceId string
+	client     *admin.APIClient
+	groupId    string
+	tenantName string
 
 	filename string
 	fs       afero.Fs
 }
 
-func (opts *createPrivateEndpointOpts) initClient() func() error {
+func (opts *createStreamConnectionOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = newClientWithAuth()
@@ -52,8 +51,8 @@ func (opts *createPrivateEndpointOpts) initClient() func() error {
 	}
 }
 
-func (opts *createPrivateEndpointOpts) readData() (*admin.CreateEndpointRequest, error) {
-	var out *admin.CreateEndpointRequest
+func (opts *createStreamConnectionOpts) readData() (*admin.StreamsConnection, error) {
+	var out *admin.StreamsConnection
 
 	var buf []byte
 	var err error
@@ -74,19 +73,18 @@ func (opts *createPrivateEndpointOpts) readData() (*admin.CreateEndpointRequest,
 	return out, nil
 }
 
-func (opts *createPrivateEndpointOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createStreamConnectionOpts) Run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
-	params := &admin.CreatePrivateEndpointApiParams{
-		GroupId:           opts.groupId,
-		CloudProvider:     opts.cloudProvider,
-		EndpointServiceId: opts.endpointServiceId,
+	params := &admin.CreateStreamConnectionApiParams{
+		GroupId:    opts.groupId,
+		TenantName: opts.tenantName,
 
-		CreateEndpointRequest: data,
+		StreamsConnection: data,
 	}
-	resp, _, err := opts.client.PrivateEndpointServicesApi.CreatePrivateEndpointWithParams(ctx, params).Execute()
+	resp, _, err := opts.client.StreamsApi.CreateStreamConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -94,13 +92,13 @@ func (opts *createPrivateEndpointOpts) Run(ctx context.Context, w io.Writer) err
 	return jsonwriter.Print(w, resp)
 }
 
-func createPrivateEndpointBuilder() *cobra.Command {
-	opts := createPrivateEndpointOpts{
+func createStreamConnectionBuilder() *cobra.Command {
+	opts := createStreamConnectionOpts{
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:   "createPrivateEndpoint",
-		Short: "Create One Private Endpoint for One Provider",
+		Use:   "createStreamConnection",
+		Short: "Create One Connection",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
@@ -113,8 +111,13 @@ func createPrivateEndpointBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "&quot;AWS&quot;", `Cloud service provider that manages this private endpoint.`)
-	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", "", `Unique 24-hexadecimal digit string that identifies the private endpoint service for which you want to create a private endpoint.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the stream instance.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -130,12 +133,11 @@ func createPrivateEndpointBuilder() *cobra.Command {
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
-	_ = cmd.MarkFlagRequired("cloudProvider")
-	_ = cmd.MarkFlagRequired("endpointServiceId")
+	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
 
-type createPrivateEndpointServiceOpts struct {
+type createStreamInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client  *admin.APIClient
@@ -145,7 +147,7 @@ type createPrivateEndpointServiceOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createPrivateEndpointServiceOpts) initClient() func() error {
+func (opts *createStreamInstanceOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = newClientWithAuth()
@@ -153,8 +155,8 @@ func (opts *createPrivateEndpointServiceOpts) initClient() func() error {
 	}
 }
 
-func (opts *createPrivateEndpointServiceOpts) readData() (*admin.CloudProviderEndpointServiceRequest, error) {
-	var out *admin.CloudProviderEndpointServiceRequest
+func (opts *createStreamInstanceOpts) readData() (*admin.StreamsTenant, error) {
+	var out *admin.StreamsTenant
 
 	var buf []byte
 	var err error
@@ -175,17 +177,17 @@ func (opts *createPrivateEndpointServiceOpts) readData() (*admin.CloudProviderEn
 	return out, nil
 }
 
-func (opts *createPrivateEndpointServiceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createStreamInstanceOpts) Run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
-	params := &admin.CreatePrivateEndpointServiceApiParams{
+	params := &admin.CreateStreamInstanceApiParams{
 		GroupId: opts.groupId,
 
-		CloudProviderEndpointServiceRequest: data,
+		StreamsTenant: data,
 	}
-	resp, _, err := opts.client.PrivateEndpointServicesApi.CreatePrivateEndpointServiceWithParams(ctx, params).Execute()
+	resp, _, err := opts.client.StreamsApi.CreateStreamInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -193,13 +195,13 @@ func (opts *createPrivateEndpointServiceOpts) Run(ctx context.Context, w io.Writ
 	return jsonwriter.Print(w, resp)
 }
 
-func createPrivateEndpointServiceBuilder() *cobra.Command {
-	opts := createPrivateEndpointServiceOpts{
+func createStreamInstanceBuilder() *cobra.Command {
+	opts := createStreamInstanceOpts{
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:   "createPrivateEndpointService",
-		Short: "Create One Private Endpoint Service for One Provider",
+		Use:   "createStreamInstance",
+		Short: "Create One Stream Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
@@ -217,6 +219,16 @@ func createPrivateEndpointServiceBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
@@ -224,17 +236,16 @@ func createPrivateEndpointServiceBuilder() *cobra.Command {
 	return cmd
 }
 
-type deletePrivateEndpointOpts struct {
+type deleteStreamConnectionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client            *admin.APIClient
-	groupId           string
-	cloudProvider     string
-	endpointId        string
-	endpointServiceId string
+	client         *admin.APIClient
+	groupId        string
+	tenantName     string
+	connectionName string
 }
 
-func (opts *deletePrivateEndpointOpts) initClient() func() error {
+func (opts *deleteStreamConnectionOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = newClientWithAuth()
@@ -242,14 +253,13 @@ func (opts *deletePrivateEndpointOpts) initClient() func() error {
 	}
 }
 
-func (opts *deletePrivateEndpointOpts) Run(ctx context.Context, w io.Writer) error {
-	params := &admin.DeletePrivateEndpointApiParams{
-		GroupId:           opts.groupId,
-		CloudProvider:     opts.cloudProvider,
-		EndpointId:        opts.endpointId,
-		EndpointServiceId: opts.endpointServiceId,
+func (opts *deleteStreamConnectionOpts) Run(ctx context.Context, w io.Writer) error {
+	params := &admin.DeleteStreamConnectionApiParams{
+		GroupId:        opts.groupId,
+		TenantName:     opts.tenantName,
+		ConnectionName: opts.connectionName,
 	}
-	resp, _, err := opts.client.PrivateEndpointServicesApi.DeletePrivateEndpointWithParams(ctx, params).Execute()
+	resp, _, err := opts.client.StreamsApi.DeleteStreamConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -257,11 +267,11 @@ func (opts *deletePrivateEndpointOpts) Run(ctx context.Context, w io.Writer) err
 	return jsonwriter.Print(w, resp)
 }
 
-func deletePrivateEndpointBuilder() *cobra.Command {
-	opts := deletePrivateEndpointOpts{}
+func deleteStreamConnectionBuilder() *cobra.Command {
+	opts := deleteStreamConnectionOpts{}
 	cmd := &cobra.Command{
-		Use:   "deletePrivateEndpoint",
-		Short: "Remove One Private Endpoint for One Provider",
+		Use:   "deleteStreamConnection",
+		Short: "Delete One Stream Connection",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
@@ -274,30 +284,27 @@ func deletePrivateEndpointBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "&quot;AWS&quot;", `Cloud service provider that manages this private endpoint.`)
-	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique string that identifies the private endpoint you want to delete. The format of the **endpointId** parameter differs for AWS and Azure. You must URL encode the **endpointId** for Azure private endpoints.`)
-	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", "", `Unique 24-hexadecimal digit string that identifies the private endpoint service from which you want to delete a private endpoint.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the stream instance.`)
+	cmd.Flags().StringVar(&opts.connectionName, "connectionName", "", `Human-readable label that identifies the stream connection.`)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
-	_ = cmd.MarkFlagRequired("cloudProvider")
-	_ = cmd.MarkFlagRequired("endpointId")
-	_ = cmd.MarkFlagRequired("endpointServiceId")
+	_ = cmd.MarkFlagRequired("tenantName")
+	_ = cmd.MarkFlagRequired("connectionName")
 	return cmd
 }
 
-type deletePrivateEndpointServiceOpts struct {
+type deleteStreamInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client            *admin.APIClient
-	groupId           string
-	cloudProvider     string
-	endpointServiceId string
+	client     *admin.APIClient
+	groupId    string
+	tenantName string
 }
 
-func (opts *deletePrivateEndpointServiceOpts) initClient() func() error {
+func (opts *deleteStreamInstanceOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = newClientWithAuth()
@@ -305,13 +312,12 @@ func (opts *deletePrivateEndpointServiceOpts) initClient() func() error {
 	}
 }
 
-func (opts *deletePrivateEndpointServiceOpts) Run(ctx context.Context, w io.Writer) error {
-	params := &admin.DeletePrivateEndpointServiceApiParams{
-		GroupId:           opts.groupId,
-		CloudProvider:     opts.cloudProvider,
-		EndpointServiceId: opts.endpointServiceId,
+func (opts *deleteStreamInstanceOpts) Run(ctx context.Context, w io.Writer) error {
+	params := &admin.DeleteStreamInstanceApiParams{
+		GroupId:    opts.groupId,
+		TenantName: opts.tenantName,
 	}
-	resp, _, err := opts.client.PrivateEndpointServicesApi.DeletePrivateEndpointServiceWithParams(ctx, params).Execute()
+	resp, _, err := opts.client.StreamsApi.DeleteStreamInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -319,11 +325,11 @@ func (opts *deletePrivateEndpointServiceOpts) Run(ctx context.Context, w io.Writ
 	return jsonwriter.Print(w, resp)
 }
 
-func deletePrivateEndpointServiceBuilder() *cobra.Command {
-	opts := deletePrivateEndpointServiceOpts{}
+func deleteStreamInstanceBuilder() *cobra.Command {
+	opts := deleteStreamInstanceOpts{}
 	cmd := &cobra.Command{
-		Use:   "deletePrivateEndpointService",
-		Short: "Remove One Private Endpoint Service for One Provider",
+		Use:   "deleteStreamInstance",
+		Short: "Delete One Stream Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
@@ -336,29 +342,26 @@ func deletePrivateEndpointServiceBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "&quot;AWS&quot;", `Cloud service provider that manages this private endpoint service.`)
-	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", "", `Unique 24-hexadecimal digit string that identifies the private endpoint service that you want to delete.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the stream instance to delete.`)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
-	_ = cmd.MarkFlagRequired("cloudProvider")
-	_ = cmd.MarkFlagRequired("endpointServiceId")
+	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
 
-type getPrivateEndpointOpts struct {
+type getStreamConnectionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client            *admin.APIClient
-	groupId           string
-	cloudProvider     string
-	endpointId        string
-	endpointServiceId string
+	client         *admin.APIClient
+	groupId        string
+	tenantName     string
+	connectionName string
 }
 
-func (opts *getPrivateEndpointOpts) initClient() func() error {
+func (opts *getStreamConnectionOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = newClientWithAuth()
@@ -366,14 +369,13 @@ func (opts *getPrivateEndpointOpts) initClient() func() error {
 	}
 }
 
-func (opts *getPrivateEndpointOpts) Run(ctx context.Context, w io.Writer) error {
-	params := &admin.GetPrivateEndpointApiParams{
-		GroupId:           opts.groupId,
-		CloudProvider:     opts.cloudProvider,
-		EndpointId:        opts.endpointId,
-		EndpointServiceId: opts.endpointServiceId,
+func (opts *getStreamConnectionOpts) Run(ctx context.Context, w io.Writer) error {
+	params := &admin.GetStreamConnectionApiParams{
+		GroupId:        opts.groupId,
+		TenantName:     opts.tenantName,
+		ConnectionName: opts.connectionName,
 	}
-	resp, _, err := opts.client.PrivateEndpointServicesApi.GetPrivateEndpointWithParams(ctx, params).Execute()
+	resp, _, err := opts.client.StreamsApi.GetStreamConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -381,11 +383,11 @@ func (opts *getPrivateEndpointOpts) Run(ctx context.Context, w io.Writer) error 
 	return jsonwriter.Print(w, resp)
 }
 
-func getPrivateEndpointBuilder() *cobra.Command {
-	opts := getPrivateEndpointOpts{}
+func getStreamConnectionBuilder() *cobra.Command {
+	opts := getStreamConnectionOpts{}
 	cmd := &cobra.Command{
-		Use:   "getPrivateEndpoint",
-		Short: "Return One Private Endpoint for One Provider",
+		Use:   "getStreamConnection",
+		Short: "Return One Stream Connection",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
@@ -398,30 +400,28 @@ func getPrivateEndpointBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "&quot;AWS&quot;", `Cloud service provider that manages this private endpoint.`)
-	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique string that identifies the private endpoint you want to return. The format of the **endpointId** parameter differs for AWS and Azure. You must URL encode the **endpointId** for Azure private endpoints.`)
-	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", "", `Unique 24-hexadecimal digit string that identifies the private endpoint service for which you want to return a private endpoint.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the stream instance to return.`)
+	cmd.Flags().StringVar(&opts.connectionName, "connectionName", "", `Human-readable label that identifies the stream connection to return.`)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
-	_ = cmd.MarkFlagRequired("cloudProvider")
-	_ = cmd.MarkFlagRequired("endpointId")
-	_ = cmd.MarkFlagRequired("endpointServiceId")
+	_ = cmd.MarkFlagRequired("tenantName")
+	_ = cmd.MarkFlagRequired("connectionName")
 	return cmd
 }
 
-type getPrivateEndpointServiceOpts struct {
+type getStreamInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client            *admin.APIClient
-	groupId           string
-	cloudProvider     string
-	endpointServiceId string
+	client             *admin.APIClient
+	groupId            string
+	tenantName         string
+	includeConnections bool
 }
 
-func (opts *getPrivateEndpointServiceOpts) initClient() func() error {
+func (opts *getStreamInstanceOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = newClientWithAuth()
@@ -429,13 +429,13 @@ func (opts *getPrivateEndpointServiceOpts) initClient() func() error {
 	}
 }
 
-func (opts *getPrivateEndpointServiceOpts) Run(ctx context.Context, w io.Writer) error {
-	params := &admin.GetPrivateEndpointServiceApiParams{
-		GroupId:           opts.groupId,
-		CloudProvider:     opts.cloudProvider,
-		EndpointServiceId: opts.endpointServiceId,
+func (opts *getStreamInstanceOpts) Run(ctx context.Context, w io.Writer) error {
+	params := &admin.GetStreamInstanceApiParams{
+		GroupId:            opts.groupId,
+		TenantName:         opts.tenantName,
+		IncludeConnections: &opts.includeConnections,
 	}
-	resp, _, err := opts.client.PrivateEndpointServicesApi.GetPrivateEndpointServiceWithParams(ctx, params).Execute()
+	resp, _, err := opts.client.StreamsApi.GetStreamInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -443,11 +443,11 @@ func (opts *getPrivateEndpointServiceOpts) Run(ctx context.Context, w io.Writer)
 	return jsonwriter.Print(w, resp)
 }
 
-func getPrivateEndpointServiceBuilder() *cobra.Command {
-	opts := getPrivateEndpointServiceOpts{}
+func getStreamInstanceBuilder() *cobra.Command {
+	opts := getStreamInstanceOpts{}
 	cmd := &cobra.Command{
-		Use:   "getPrivateEndpointService",
-		Short: "Return One Private Endpoint Service for One Provider",
+		Use:   "getStreamInstance",
+		Short: "Return One Stream Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
@@ -460,26 +460,28 @@ func getPrivateEndpointServiceBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "&quot;AWS&quot;", `Cloud service provider that manages this private endpoint service.`)
-	cmd.Flags().StringVar(&opts.endpointServiceId, "endpointServiceId", "", `Unique 24-hexadecimal digit string that identifies the private endpoint service that you want to return.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the stream instance to return.`)
+	cmd.Flags().BoolVar(&opts.includeConnections, "includeConnections", false, `Flag to indicate whether connections information should be included in the stream instance.`)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
-	_ = cmd.MarkFlagRequired("cloudProvider")
-	_ = cmd.MarkFlagRequired("endpointServiceId")
+	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
 
-type getRegionalizedPrivateEndpointSettingOpts struct {
+type listStreamConnectionsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client  *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
+	tenantName   string
+	itemsPerPage int
+	pageNum      int
 }
 
-func (opts *getRegionalizedPrivateEndpointSettingOpts) initClient() func() error {
+func (opts *listStreamConnectionsOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = newClientWithAuth()
@@ -487,11 +489,14 @@ func (opts *getRegionalizedPrivateEndpointSettingOpts) initClient() func() error
 	}
 }
 
-func (opts *getRegionalizedPrivateEndpointSettingOpts) Run(ctx context.Context, w io.Writer) error {
-	params := &admin.GetRegionalizedPrivateEndpointSettingApiParams{
-		GroupId: opts.groupId,
+func (opts *listStreamConnectionsOpts) Run(ctx context.Context, w io.Writer) error {
+	params := &admin.ListStreamConnectionsApiParams{
+		GroupId:      opts.groupId,
+		TenantName:   opts.tenantName,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum:      &opts.pageNum,
 	}
-	resp, _, err := opts.client.PrivateEndpointServicesApi.GetRegionalizedPrivateEndpointSettingWithParams(ctx, params).Execute()
+	resp, _, err := opts.client.StreamsApi.ListStreamConnectionsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -499,11 +504,11 @@ func (opts *getRegionalizedPrivateEndpointSettingOpts) Run(ctx context.Context, 
 	return jsonwriter.Print(w, resp)
 }
 
-func getRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
-	opts := getRegionalizedPrivateEndpointSettingOpts{}
+func listStreamConnectionsBuilder() *cobra.Command {
+	opts := listStreamConnectionsOpts{}
 	cmd := &cobra.Command{
-		Use:   "getRegionalizedPrivateEndpointSetting",
-		Short: "Return Regionalized Private Endpoint Status",
+		Use:   "listStreamConnections",
+		Short: "Return All Connections Of The Stream Instances",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
@@ -516,23 +521,28 @@ func getRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the stream instance.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
+	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
 
-type listPrivateEndpointServicesOpts struct {
+type listStreamInstancesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client        *admin.APIClient
-	groupId       string
-	cloudProvider string
+	client       *admin.APIClient
+	groupId      string
+	itemsPerPage int
+	pageNum      int
 }
 
-func (opts *listPrivateEndpointServicesOpts) initClient() func() error {
+func (opts *listStreamInstancesOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = newClientWithAuth()
@@ -540,12 +550,13 @@ func (opts *listPrivateEndpointServicesOpts) initClient() func() error {
 	}
 }
 
-func (opts *listPrivateEndpointServicesOpts) Run(ctx context.Context, w io.Writer) error {
-	params := &admin.ListPrivateEndpointServicesApiParams{
-		GroupId:       opts.groupId,
-		CloudProvider: opts.cloudProvider,
+func (opts *listStreamInstancesOpts) Run(ctx context.Context, w io.Writer) error {
+	params := &admin.ListStreamInstancesApiParams{
+		GroupId:      opts.groupId,
+		ItemsPerPage: &opts.itemsPerPage,
+		PageNum:      &opts.pageNum,
 	}
-	resp, _, err := opts.client.PrivateEndpointServicesApi.ListPrivateEndpointServicesWithParams(ctx, params).Execute()
+	resp, _, err := opts.client.StreamsApi.ListStreamInstancesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -553,11 +564,11 @@ func (opts *listPrivateEndpointServicesOpts) Run(ctx context.Context, w io.Write
 	return jsonwriter.Print(w, resp)
 }
 
-func listPrivateEndpointServicesBuilder() *cobra.Command {
-	opts := listPrivateEndpointServicesOpts{}
+func listStreamInstancesBuilder() *cobra.Command {
+	opts := listStreamInstancesOpts{}
 	cmd := &cobra.Command{
-		Use:   "listPrivateEndpointServices",
-		Short: "Return All Private Endpoint Services for One Provider",
+		Use:   "listStreamInstances",
+		Short: "Return All Project Stream Instances",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
@@ -570,27 +581,29 @@ func listPrivateEndpointServicesBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "&quot;AWS&quot;", `Cloud service provider that manages this private endpoint service.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
-	_ = cmd.MarkFlagRequired("cloudProvider")
 	return cmd
 }
 
-type toggleRegionalizedPrivateEndpointSettingOpts struct {
+type updateStreamConnectionOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client  *admin.APIClient
-	groupId string
+	client         *admin.APIClient
+	groupId        string
+	tenantName     string
+	connectionName string
 
 	filename string
 	fs       afero.Fs
 }
 
-func (opts *toggleRegionalizedPrivateEndpointSettingOpts) initClient() func() error {
+func (opts *updateStreamConnectionOpts) initClient() func() error {
 	return func() error {
 		var err error
 		opts.client, err = newClientWithAuth()
@@ -598,8 +611,8 @@ func (opts *toggleRegionalizedPrivateEndpointSettingOpts) initClient() func() er
 	}
 }
 
-func (opts *toggleRegionalizedPrivateEndpointSettingOpts) readData() (*admin.ProjectSettingItem, error) {
-	var out *admin.ProjectSettingItem
+func (opts *updateStreamConnectionOpts) readData() (*admin.StreamsConnection, error) {
+	var out *admin.StreamsConnection
 
 	var buf []byte
 	var err error
@@ -620,17 +633,19 @@ func (opts *toggleRegionalizedPrivateEndpointSettingOpts) readData() (*admin.Pro
 	return out, nil
 }
 
-func (opts *toggleRegionalizedPrivateEndpointSettingOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateStreamConnectionOpts) Run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
-	params := &admin.ToggleRegionalizedPrivateEndpointSettingApiParams{
-		GroupId: opts.groupId,
+	params := &admin.UpdateStreamConnectionApiParams{
+		GroupId:        opts.groupId,
+		TenantName:     opts.tenantName,
+		ConnectionName: opts.connectionName,
 
-		ProjectSettingItem: data,
+		StreamsConnection: data,
 	}
-	resp, _, err := opts.client.PrivateEndpointServicesApi.ToggleRegionalizedPrivateEndpointSettingWithParams(ctx, params).Execute()
+	resp, _, err := opts.client.StreamsApi.UpdateStreamConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
@@ -638,13 +653,13 @@ func (opts *toggleRegionalizedPrivateEndpointSettingOpts) Run(ctx context.Contex
 	return jsonwriter.Print(w, resp)
 }
 
-func toggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
-	opts := toggleRegionalizedPrivateEndpointSettingOpts{
+func updateStreamConnectionBuilder() *cobra.Command {
+	opts := updateStreamConnectionOpts{
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:   "toggleRegionalizedPrivateEndpointSetting",
-		Short: "Toggle Regionalized Private Endpoint Status",
+		Use:   "updateStreamConnection",
+		Short: "Update One Stream Connection",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
@@ -657,6 +672,22 @@ func toggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the stream instance.`)
+	cmd.Flags().StringVar(&opts.connectionName, "connectionName", "", `Human-readable label that identifies the stream connection.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -664,24 +695,122 @@ func toggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
+	_ = cmd.MarkFlagRequired("tenantName")
+	_ = cmd.MarkFlagRequired("connectionName")
 	return cmd
 }
 
-func privateEndpointServicesBuilder() *cobra.Command {
+type updateStreamInstanceOpts struct {
+	cli.GlobalOpts
+	cli.OutputOpts
+	client     *admin.APIClient
+	groupId    string
+	tenantName string
+
+	filename string
+	fs       afero.Fs
+}
+
+func (opts *updateStreamInstanceOpts) initClient() func() error {
+	return func() error {
+		var err error
+		opts.client, err = newClientWithAuth()
+		return err
+	}
+}
+
+func (opts *updateStreamInstanceOpts) readData() (*admin.StreamsDataProcessRegion, error) {
+	var out *admin.StreamsDataProcessRegion
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateStreamInstanceOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
+	params := &admin.UpdateStreamInstanceApiParams{
+		GroupId:    opts.groupId,
+		TenantName: opts.tenantName,
+
+		StreamsDataProcessRegion: data,
+	}
+	resp, _, err := opts.client.StreamsApi.UpdateStreamInstanceWithParams(ctx, params).Execute()
+	if err != nil {
+		return err
+	}
+
+	return jsonwriter.Print(w, resp)
+}
+
+func updateStreamInstanceBuilder() *cobra.Command {
+	opts := updateStreamInstanceOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use:   "privateEndpointServices",
-		Short: `Returns, adds, edits, and removes private endpoint services.`,
+		Use:   "updateStreamInstance",
+		Short: "Update One Stream Instance",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PreRunE(
+				opts.initClient(),
+			)
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the stream instance to update.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	_ = cmd.MarkFlagRequired("groupId")
+	_ = cmd.MarkFlagRequired("tenantName")
+	return cmd
+}
+
+func streamsBuilder() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "streams",
+		Short: `Returns, adds, edits, and removes Streams Instances. This resource requires your project ID.`,
 	}
 	cmd.AddCommand(
-		createPrivateEndpointBuilder(),
-		createPrivateEndpointServiceBuilder(),
-		deletePrivateEndpointBuilder(),
-		deletePrivateEndpointServiceBuilder(),
-		getPrivateEndpointBuilder(),
-		getPrivateEndpointServiceBuilder(),
-		getRegionalizedPrivateEndpointSettingBuilder(),
-		listPrivateEndpointServicesBuilder(),
-		toggleRegionalizedPrivateEndpointSettingBuilder(),
+		createStreamConnectionBuilder(),
+		createStreamInstanceBuilder(),
+		deleteStreamConnectionBuilder(),
+		deleteStreamInstanceBuilder(),
+		getStreamConnectionBuilder(),
+		getStreamInstanceBuilder(),
+		listStreamConnectionsBuilder(),
+		listStreamInstancesBuilder(),
+		updateStreamConnectionBuilder(),
+		updateStreamInstanceBuilder(),
 	)
 	return cmd
 }

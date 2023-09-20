@@ -50,8 +50,8 @@ func (opts *createPipelineOpts) initClient() func() error {
 	}
 }
 
-func (opts *createPipelineOpts) readData() (*admin.IngestionPipeline, error) {
-	var out *admin.IngestionPipeline
+func (opts *createPipelineOpts) readData() (*admin.DataLakeIngestionPipeline, error) {
+	var out *admin.DataLakeIngestionPipeline
 
 	var buf []byte
 	var err error
@@ -80,7 +80,7 @@ func (opts *createPipelineOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.CreatePipelineApiParams{
 		GroupId: opts.groupId,
 
-		IngestionPipeline: data,
+		DataLakeIngestionPipeline: data,
 	}
 	resp, _, err := opts.client.DataLakePipelinesApi.CreatePipelineWithParams(ctx, params).Execute()
 	if err != nil {
@@ -742,8 +742,8 @@ func (opts *triggerSnapshotIngestionOpts) initClient() func() error {
 	}
 }
 
-func (opts *triggerSnapshotIngestionOpts) readData() (*admin.TriggerIngestionRequest, error) {
-	var out *admin.TriggerIngestionRequest
+func (opts *triggerSnapshotIngestionOpts) readData() (*admin.TriggerIngestionPipelineRequest, error) {
+	var out *admin.TriggerIngestionPipelineRequest
 
 	var buf []byte
 	var err error
@@ -773,7 +773,7 @@ func (opts *triggerSnapshotIngestionOpts) Run(ctx context.Context, w io.Writer) 
 		GroupId:      opts.groupId,
 		PipelineName: opts.pipelineName,
 
-		TriggerIngestionRequest: data,
+		TriggerIngestionPipelineRequest: data,
 	}
 	resp, _, err := opts.client.DataLakePipelinesApi.TriggerSnapshotIngestionWithParams(ctx, params).Execute()
 	if err != nil {
@@ -833,8 +833,8 @@ func (opts *updatePipelineOpts) initClient() func() error {
 	}
 }
 
-func (opts *updatePipelineOpts) readData() (*admin.IngestionPipeline, error) {
-	var out *admin.IngestionPipeline
+func (opts *updatePipelineOpts) readData() (*admin.DataLakeIngestionPipeline, error) {
+	var out *admin.DataLakeIngestionPipeline
 
 	var buf []byte
 	var err error
@@ -864,7 +864,7 @@ func (opts *updatePipelineOpts) Run(ctx context.Context, w io.Writer) error {
 		GroupId:      opts.groupId,
 		PipelineName: opts.pipelineName,
 
-		IngestionPipeline: data,
+		DataLakeIngestionPipeline: data,
 	}
 	resp, _, err := opts.client.DataLakePipelinesApi.UpdatePipelineWithParams(ctx, params).Execute()
 	if err != nil {

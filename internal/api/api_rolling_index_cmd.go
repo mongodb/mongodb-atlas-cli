@@ -50,8 +50,8 @@ func (opts *createRollingIndexOpts) initClient() func() error {
 	}
 }
 
-func (opts *createRollingIndexOpts) readData() (*admin.IndexRequest, error) {
-	var out *admin.IndexRequest
+func (opts *createRollingIndexOpts) readData() (*admin.DatabaseRollingIndexRequest, error) {
+	var out *admin.DatabaseRollingIndexRequest
 
 	var buf []byte
 	var err error
@@ -81,7 +81,7 @@ func (opts *createRollingIndexOpts) Run(ctx context.Context, _ io.Writer) error 
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
-		IndexRequest: data,
+		DatabaseRollingIndexRequest: data,
 	}
 	_, err := opts.client.RollingIndexApi.CreateRollingIndexWithParams(ctx, params).Execute()
 	if err != nil {

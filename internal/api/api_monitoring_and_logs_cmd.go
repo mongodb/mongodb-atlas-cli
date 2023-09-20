@@ -335,7 +335,7 @@ func getHostLogsBuilder() *cobra.Command {
 	opts := getHostLogsOpts{}
 	cmd := &cobra.Command{
 		Use:   "getHostLogs",
-		Short: "Download Logs for One Multi-Cloud Cluster Host in One Project",
+		Short: "Download Logs for One Cluster Host in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
@@ -348,8 +348,8 @@ func getHostLogsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	cmd.Flags().StringVar(&opts.hostName, "hostName", "", `Fully qualified domain name or IP address of the MongoDB host that stores the log files that you want to download.`)
-	cmd.Flags().StringVar(&opts.logName, "logName", "", `Human-readable label of the log file that you want to return. You can return audit logs only if you enable Database Auditing for the specified project.`)
+	cmd.Flags().StringVar(&opts.hostName, "hostName", "", `Human-readable label that identifies the host that stores the log files that you want to download.`)
+	cmd.Flags().StringVar(&opts.logName, "logName", "", `Human-readable label that identifies the log file that you want to return. To return audit logs, enable *Database Auditing* for the specified project.`)
 	cmd.Flags().Int64Var(&opts.endDate, "endDate", 0, `Date and time when the period specifies the inclusive ending point for the range of log messages to retrieve. This parameter expresses its value in the number of seconds that have elapsed since the UNIX epoch.`)
 	cmd.Flags().Int64Var(&opts.startDate, "startDate", 0, `Date and time when the period specifies the inclusive starting point for the range of log messages to retrieve. This parameter expresses its value in the number of seconds that have elapsed since the UNIX epoch.`)
 

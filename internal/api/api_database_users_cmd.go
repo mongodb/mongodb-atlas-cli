@@ -50,8 +50,8 @@ func (opts *createDatabaseUserOpts) initClient() func() error {
 	}
 }
 
-func (opts *createDatabaseUserOpts) readData() (*admin.DatabaseUser, error) {
-	var out *admin.DatabaseUser
+func (opts *createDatabaseUserOpts) readData() (*admin.CloudDatabaseUser, error) {
+	var out *admin.CloudDatabaseUser
 
 	var buf []byte
 	var err error
@@ -80,7 +80,7 @@ func (opts *createDatabaseUserOpts) Run(ctx context.Context, w io.Writer) error 
 	params := &admin.CreateDatabaseUserApiParams{
 		GroupId: opts.groupId,
 
-		DatabaseUser: data,
+		CloudDatabaseUser: data,
 	}
 	resp, _, err := opts.client.DatabaseUsersApi.CreateDatabaseUserWithParams(ctx, params).Execute()
 	if err != nil {
@@ -109,6 +109,8 @@ func createDatabaseUserBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -189,7 +191,7 @@ func deleteDatabaseUserBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", `Human-readable label that identifies the database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB. If the user authenticates with AWS IAM, x.509, or LDAP, this value should be &#x60;$external&#x60;. If the user authenticates with SCRAM-SHA, this value should be &#x60;admin&#x60;.`)
+	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", `Human-readable label that identifies the database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB. If the user authenticates with AWS IAM, x.509, or LDAP, this value should be &#x60;$external&#x60;. If the user authenticates with SCRAM-SHA or OIDC, this value should be &#x60;admin&#x60;.`)
 	cmd.Flags().StringVar(&opts.username, "username", "", `Human-readable label that represents the user that authenticates to MongoDB. The format of this label depends on the method of authentication:
 
 | Authentication Method | Parameter Needed | Parameter Value | username Format |
@@ -200,7 +202,8 @@ func deleteDatabaseUserBuilder() *cobra.Command {
 | x.509 | x509Type | MANAGED | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
 | LDAP | ldapAuthType | USER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
 | LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| SCRAM-SHA | awsType, x509Type, ldapAuthType | NONE | Alphanumeric string |
+| OIDC | oidcAuthType | IDP_GROUP | Atlas OIDC IdP ID (found in federation settings), followed by a &#39;/&#39;, followed by the IdP group name |
+| SCRAM-SHA | awsType, x509Type, ldapAuthType, oidcAuthType | NONE | Alphanumeric string |
 `)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
@@ -260,7 +263,7 @@ func getDatabaseUserBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", `Human-readable label that identifies the database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB. If the user authenticates with AWS IAM, x.509, or LDAP, this value should be &#x60;$external&#x60;. If the user authenticates with SCRAM-SHA, this value should be &#x60;admin&#x60;.`)
+	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", `Human-readable label that identifies the database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB. If the user authenticates with AWS IAM, x.509, or LDAP, this value should be &#x60;$external&#x60;. If the user authenticates with SCRAM-SHA or OIDC, this value should be &#x60;admin&#x60;.`)
 	cmd.Flags().StringVar(&opts.username, "username", "", `Human-readable label that represents the user that authenticates to MongoDB. The format of this label depends on the method of authentication:
 
 | Authentication Method | Parameter Needed | Parameter Value | username Format |
@@ -271,7 +274,8 @@ func getDatabaseUserBuilder() *cobra.Command {
 | x.509 | x509Type | MANAGED | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
 | LDAP | ldapAuthType | USER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
 | LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| SCRAM-SHA | awsType, x509Type, ldapAuthType | NONE | Alphanumeric string |
+| OIDC | oidcAuthType | IDP_GROUP | Atlas OIDC IdP ID (found in federation settings), followed by a &#39;/&#39;, followed by the IdP group name |
+| SCRAM-SHA | awsType, x509Type, ldapAuthType, oidcAuthType | NONE | Alphanumeric string |
 `)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
@@ -364,8 +368,8 @@ func (opts *updateDatabaseUserOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateDatabaseUserOpts) readData() (*admin.DatabaseUser, error) {
-	var out *admin.DatabaseUser
+func (opts *updateDatabaseUserOpts) readData() (*admin.CloudDatabaseUser, error) {
+	var out *admin.CloudDatabaseUser
 
 	var buf []byte
 	var err error
@@ -396,7 +400,7 @@ func (opts *updateDatabaseUserOpts) Run(ctx context.Context, w io.Writer) error 
 		DatabaseName: opts.databaseName,
 		Username:     opts.username,
 
-		DatabaseUser: data,
+		CloudDatabaseUser: data,
 	}
 	resp, _, err := opts.client.DatabaseUsersApi.UpdateDatabaseUserWithParams(ctx, params).Execute()
 	if err != nil {
@@ -425,7 +429,7 @@ func updateDatabaseUserBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", `Human-readable label that identifies the database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB. If the user authenticates with AWS IAM, x.509, or LDAP, this value should be &#x60;$external&#x60;. If the user authenticates with SCRAM-SHA, this value should be &#x60;admin&#x60;.`)
+	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", `Human-readable label that identifies the database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB. If the user authenticates with AWS IAM, x.509, or LDAP, this value should be &#x60;$external&#x60;. If the user authenticates with SCRAM-SHA or OIDC, this value should be &#x60;admin&#x60;.`)
 	cmd.Flags().StringVar(&opts.username, "username", "", `Human-readable label that represents the user that authenticates to MongoDB. The format of this label depends on the method of authentication:
 
 | Authentication Method | Parameter Needed | Parameter Value | username Format |
@@ -436,8 +440,11 @@ func updateDatabaseUserBuilder() *cobra.Command {
 | x.509 | x509Type | MANAGED | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
 | LDAP | ldapAuthType | USER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
 | LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| SCRAM-SHA | awsType, x509Type, ldapAuthType | NONE | Alphanumeric string |
+| OIDC | oidcAuthType | IDP_GROUP | Atlas OIDC IdP ID (found in federation settings), followed by a &#39;/&#39;, followed by the IdP group name |
+| SCRAM-SHA | awsType, x509Type, ldapAuthType, oidcAuthType | NONE | Alphanumeric string |
 `)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 

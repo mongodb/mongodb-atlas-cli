@@ -69,7 +69,7 @@ const (
 )
 
 var (
-	errCancel                       = errors.New("the was setup cancelled")
+	errCancel                       = errors.New("the setup was cancelled")
 	errMustBeInt                    = errors.New("you must specify an integer")
 	errPortOutOfRange               = errors.New("you must specify a port within the range 1..65535")
 	errPortNotAvailable             = errors.New("the port is unavailable")

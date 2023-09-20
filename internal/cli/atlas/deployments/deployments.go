@@ -23,8 +23,8 @@ import (
 )
 
 var (
-	errCompassNotInstalled = errors.New("MongoDB Compass not found in your system, to install MongoDB Compass follow these instructions: https://www.mongodb.com/docs/compass/current/install/")
-	errMongoshNotInstalled = errors.New("mongosh not found in your system, to install MongoDB Shell follow these instructions: https://www.mongodb.com/docs/mongodb-shell/install")
+	errCompassNotInstalled = errors.New("did not find MongoDB Compass, install: https://dochub.mongodb.org/core/install-compass")
+	errMongoshNotInstalled = errors.New("did not find mongosh, install: https://dochub.mongodb.org/core/install-mongosh")
 )
 
 func Builder() *cobra.Command {

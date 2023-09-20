@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -40,6 +41,7 @@ func (opts *DeleteOpts) Run(ctx context.Context) error {
 		return err
 	}
 
+	telemetry.AppendOption(telemetry.WithDeploymentType(localCluster)) // always local
 	if opts.DeploymentName != "" {
 		if err := opts.DeploymentOpts.CheckIfDeploymentExists(ctx); err != nil {
 			return err
@@ -72,6 +74,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete [deploymentName]",
 		Short:   "Delete a deployment.",
 		Aliases: []string{"rm"},
+		GroupID: "local",
 		Args:    require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"deploymentNameDesc": "Name of the deployment that you want to delete.",

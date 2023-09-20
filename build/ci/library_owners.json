@@ -55,5 +55,6 @@
 	"sigs.k8s.io/kind": "atlas_kubernetes_team",
 	"golang.org/x/exp": "atlas_kubernetes_team",
 	"github.com/containers/podman/v4": "mongocli",
-	"github.com/shirou/gopsutil/v3": "mongocli"
+	"github.com/shirou/gopsutil/v3": "mongocli",
+	"github.com/denisbrodbeck/machineid": "mongocli"
 }

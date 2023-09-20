@@ -98,20 +98,36 @@ func TestCreate_Run(t *testing.T) {
 		Return(mockDB).
 		Times(1)
 
+	indexID := "6509bc5080b2f007e6a2a0ce"
+	index := &atlasv2.ClusterSearchIndex{
+		Analyzer:       &opts.Analyzer,
+		CollectionName: opts.Collection,
+		Database:       opts.DBName,
+		Mappings: &atlasv2.ApiAtlasFTSMappings{
+			Dynamic: &opts.Dynamic,
+			Fields:  nil,
+		},
+		Name:           opts.Name,
+		SearchAnalyzer: &opts.SearchAnalyzer,
+	}
+
+	indexWithID := &atlasv2.ClusterSearchIndex{
+		Analyzer:       &opts.Analyzer,
+		CollectionName: opts.Collection,
+		Database:       opts.DBName,
+		Mappings: &atlasv2.ApiAtlasFTSMappings{
+			Dynamic: &opts.Dynamic,
+			Fields:  nil,
+		},
+		Name:           opts.Name,
+		SearchAnalyzer: &opts.SearchAnalyzer,
+		IndexID:        &indexID,
+	}
+
 	mockDB.
 		EXPECT().
-		CreateSearchIndex(ctx, expectedCollection, &atlasv2.ClusterSearchIndex{
-			Analyzer:       &opts.Analyzer,
-			CollectionName: opts.Collection,
-			Database:       opts.DBName,
-			Mappings: &atlasv2.ApiAtlasFTSMappings{
-				Dynamic: &opts.Dynamic,
-				Fields:  nil,
-			},
-			Name:           opts.Name,
-			SearchAnalyzer: &opts.SearchAnalyzer,
-		}).
-		Return(nil).
+		CreateSearchIndex(ctx, expectedCollection, index).
+		Return(indexWithID, nil).
 		Times(1)
 
 	if err := opts.Run(ctx); err != nil {
@@ -122,7 +138,7 @@ func TestCreate_Run(t *testing.T) {
 		t.Fatalf("PostRun() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `Search index created
+	assert.Equal(t, `Search index created with ID 6509bc5080b2f007e6a2a0ce
 `, buf.String())
 	t.Log(buf.String())
 }

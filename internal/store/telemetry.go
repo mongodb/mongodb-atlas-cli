@@ -21,19 +21,36 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store EventsSender
-
-const urlPath = "api/private/v1.0/telemetry/events"
+//go:generate mockgen -destination=../mocks/mock_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store EventsSender,UnauthEventsSender
 
 type EventsSender interface {
 	SendEvents(body interface{}) error
+}
+
+type UnauthEventsSender interface {
+	SendUnauthEvents(body interface{}) error
 }
 
 func (s *Store) SendEvents(body interface{}) error {
 	switch s.service {
 	case config.CloudService:
 		client := s.client.(*atlas.Client)
-		request, err := client.NewRequest(s.ctx, http.MethodPost, urlPath, body)
+		request, err := client.NewRequest(s.ctx, http.MethodPost, "api/private/v1.0/telemetry/events", body)
+		if err != nil {
+			return err
+		}
+		_, err = client.Do(s.ctx, request, nil)
+		return err
+	default:
+		return nil
+	}
+}
+
+func (s *Store) SendUnauthEvents(body interface{}) error {
+	switch s.service {
+	case config.CloudService:
+		client := s.client.(*atlas.Client)
+		request, err := client.NewRequest(s.ctx, http.MethodPost, "api/private/unauth/telemetry/events", body)
 		if err != nil {
 			return err
 		}

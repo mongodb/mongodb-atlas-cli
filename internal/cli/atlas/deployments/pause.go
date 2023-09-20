@@ -89,14 +89,14 @@ func (opts *PauseOpts) RunLocal(ctx context.Context) error {
 
 func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.Deployment) error {
 	if deployment.StateName == options.IdleState {
-		if _, err := opts.PodmanClient.PauseContainers(ctx, deployment.MongoDContainer.ID, deployment.MongoTContainer.ID); err != nil {
+		if _, err := opts.PodmanClient.StopContainers(ctx, deployment.MongoTContainer.ID); err != nil {
 			return err
 		}
 
-		return nil
+		return opts.PodmanClient.StopMongoD(ctx, deployment.MongoDContainer.ID)
 	}
 
-	if deployment.StateName == options.PausedState {
+	if deployment.StateName == options.PausedState || deployment.StateName == options.StoppedState {
 		return nil
 	}
 

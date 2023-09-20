@@ -146,7 +146,7 @@ type Client interface {
 	StopContainers(ctx context.Context, ids ...string) ([]byte, error)
 	StartContainers(ctx context.Context, ids ...string) ([]byte, error)
 	UnpauseContainers(ctx context.Context, ids ...string) ([]byte, error)
-	PauseContainers(ctx context.Context, ids ...string) ([]byte, error)
+	StopMongoD(ctx context.Context, id string) error
 	RemoveContainers(ctx context.Context, ids ...string) ([]byte, error)
 	RemoveVolumes(ctx context.Context, names ...string) ([]byte, error)
 	RemoveNetworks(ctx context.Context, names ...string) ([]byte, error)
@@ -381,10 +381,6 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 		arg = append(arg, opts.Cmd)
 	}
 
-	if runtime.GOOS == "linux" {
-		arg = append(arg, "--cgroup-parent=/etc/subuid", "--cgroupns=private")
-	}
-
 	arg = append(arg, opts.Args...)
 
 	return o.runPodman(ctx, arg...)
@@ -404,6 +400,10 @@ func (o *client) StartContainers(ctx context.Context, ids ...string) ([]byte, er
 
 func (o *client) PauseContainers(ctx context.Context, ids ...string) ([]byte, error) {
 	return o.runPodman(ctx, append([]string{"pause"}, ids...)...)
+}
+
+func (o *client) StopMongoD(ctx context.Context, id string) error {
+	return o.Exec(ctx, "-d", id, "mongod", "--shutdown")
 }
 
 func (o *client) UnpauseContainers(ctx context.Context, ids ...string) ([]byte, error) {

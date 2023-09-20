@@ -100,7 +100,13 @@ func TestPause_RunLocal(t *testing.T) {
 
 	mockPodman.
 		EXPECT().
-		PauseContainers(ctx, deploymentName, deploymentName).
+		StopMongoD(ctx, deploymentName).
+		Return(nil).
+		Times(1)
+
+	mockPodman.
+		EXPECT().
+		StopContainers(ctx, deploymentName).
 		Return(nil, nil).
 		Times(1)
 

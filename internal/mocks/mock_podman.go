@@ -188,26 +188,6 @@ func (mr *MockClientMockRecorder) Network(arg0, arg1 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Network", reflect.TypeOf((*MockClient)(nil).Network), arg0, arg1)
 }
 
-// PauseContainers mocks base method.
-func (m *MockClient) PauseContainers(arg0 context.Context, arg1 ...string) ([]byte, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0}
-	for _, a := range arg1 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "PauseContainers", varargs...)
-	ret0, _ := ret[0].([]byte)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// PauseContainers indicates an expected call of PauseContainers.
-func (mr *MockClientMockRecorder) PauseContainers(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0}, arg1...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PauseContainers", reflect.TypeOf((*MockClient)(nil).PauseContainers), varargs...)
-}
-
 // PullImage mocks base method.
 func (m *MockClient) PullImage(arg0 context.Context, arg1 string) ([]byte, error) {
 	m.ctrl.T.Helper()
@@ -350,6 +330,20 @@ func (mr *MockClientMockRecorder) StopContainers(arg0 interface{}, arg1 ...inter
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0}, arg1...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StopContainers", reflect.TypeOf((*MockClient)(nil).StopContainers), varargs...)
+}
+
+// StopMongoD mocks base method.
+func (m *MockClient) StopMongoD(arg0 context.Context, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StopMongoD", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// StopMongoD indicates an expected call of StopMongoD.
+func (mr *MockClientMockRecorder) StopMongoD(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StopMongoD", reflect.TypeOf((*MockClient)(nil).StopMongoD), arg0, arg1)
 }
 
 // UnpauseContainers mocks base method.

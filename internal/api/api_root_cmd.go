@@ -21,16 +21,13 @@ import (
 	"io"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type getSystemStatusOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client *admin.APIClient
 }
 
@@ -66,8 +63,6 @@ func getSystemStatusBuilder() *cobra.Command {
 			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

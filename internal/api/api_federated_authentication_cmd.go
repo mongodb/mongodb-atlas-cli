@@ -24,9 +24,7 @@ import (
 	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -34,7 +32,6 @@ import (
 
 type createRoleMappingOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	orgId                string
@@ -112,8 +109,6 @@ func createRoleMappingBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
@@ -122,7 +117,6 @@ func createRoleMappingBuilder() *cobra.Command {
 
 type deleteFederationAppOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client               *admin.APIClient
 	federationSettingsId string
 }
@@ -162,8 +156,6 @@ func deleteFederationAppBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	return cmd
@@ -171,7 +163,6 @@ func deleteFederationAppBuilder() *cobra.Command {
 
 type deleteRoleMappingOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	id                   string
@@ -217,8 +208,6 @@ func deleteRoleMappingBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the role mapping that you want to remove.`)
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("id")
@@ -228,7 +217,6 @@ func deleteRoleMappingBuilder() *cobra.Command {
 
 type getConnectedOrgConfigOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	orgId                string
@@ -271,8 +259,6 @@ func getConnectedOrgConfigBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the connected organization configuration to return.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
@@ -281,7 +267,6 @@ func getConnectedOrgConfigBuilder() *cobra.Command {
 
 type getFederationSettingsOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client *admin.APIClient
 	orgId  string
 }
@@ -321,8 +306,6 @@ func getFederationSettingsBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
@@ -330,7 +313,6 @@ func getFederationSettingsBuilder() *cobra.Command {
 
 type getIdentityProviderOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	identityProviderId   string
@@ -373,8 +355,6 @@ func getIdentityProviderBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", `Unique 20-hexadecimal digit string that identifies the identity provider.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("identityProviderId")
@@ -383,7 +363,6 @@ func getIdentityProviderBuilder() *cobra.Command {
 
 type getIdentityProviderMetadataOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	identityProviderId   string
@@ -426,8 +405,6 @@ func getIdentityProviderMetadataBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", `Unique 20-hexadecimal digit string that identifies the identity provider.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("identityProviderId")
@@ -436,7 +413,6 @@ func getIdentityProviderMetadataBuilder() *cobra.Command {
 
 type getRoleMappingOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	id                   string
@@ -482,8 +458,6 @@ func getRoleMappingBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the role mapping that you want to return.`)
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("id")
@@ -493,7 +467,6 @@ func getRoleMappingBuilder() *cobra.Command {
 
 type listConnectedOrgConfigsOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client               *admin.APIClient
 	federationSettingsId string
 }
@@ -533,8 +506,6 @@ func listConnectedOrgConfigsBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	return cmd
@@ -542,7 +513,6 @@ func listConnectedOrgConfigsBuilder() *cobra.Command {
 
 type listIdentityProvidersOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client               *admin.APIClient
 	federationSettingsId string
 }
@@ -582,8 +552,6 @@ func listIdentityProvidersBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	return cmd
@@ -591,7 +559,6 @@ func listIdentityProvidersBuilder() *cobra.Command {
 
 type listRoleMappingsOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	orgId                string
@@ -634,8 +601,6 @@ func listRoleMappingsBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
@@ -644,7 +609,6 @@ func listRoleMappingsBuilder() *cobra.Command {
 
 type removeConnectedOrgConfigOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	orgId                string
@@ -687,8 +651,6 @@ func removeConnectedOrgConfigBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the connected organization configuration to remove.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
@@ -697,7 +659,6 @@ func removeConnectedOrgConfigBuilder() *cobra.Command {
 
 type updateConnectedOrgConfigOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	orgId                string
@@ -775,8 +736,6 @@ func updateConnectedOrgConfigBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the connected organization configuration to update.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
@@ -785,7 +744,6 @@ func updateConnectedOrgConfigBuilder() *cobra.Command {
 
 type updateIdentityProviderOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	identityProviderId   string
@@ -863,8 +821,6 @@ func updateIdentityProviderBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", `Unique 20-hexadecimal digit string that identifies the identity provider.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("identityProviderId")
@@ -873,7 +829,6 @@ func updateIdentityProviderBuilder() *cobra.Command {
 
 type updateRoleMappingOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	id                   string
@@ -954,8 +909,6 @@ func updateRoleMappingBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("id")

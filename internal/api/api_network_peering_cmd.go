@@ -24,9 +24,7 @@ import (
 	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -34,7 +32,6 @@ import (
 
 type createPeeringConnectionOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -111,8 +108,6 @@ func createPeeringConnectionBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -120,7 +115,6 @@ func createPeeringConnectionBuilder() *cobra.Command {
 
 type createPeeringContainerOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -197,8 +191,6 @@ func createPeeringContainerBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -206,7 +198,6 @@ func createPeeringContainerBuilder() *cobra.Command {
 
 type deletePeeringConnectionOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
 	peerId  string
@@ -251,8 +242,6 @@ func deletePeeringConnectionBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.peerId, "peerId", "", `Unique 24-hexadecimal digit string that identifies the network peering connection that you want to delete.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("peerId")
@@ -261,7 +250,6 @@ func deletePeeringConnectionBuilder() *cobra.Command {
 
 type deletePeeringContainerOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client      *admin.APIClient
 	groupId     string
 	containerId string
@@ -306,8 +294,6 @@ func deletePeeringContainerBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.containerId, "containerId", "", `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud network container that you want to remove.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("containerId")
@@ -316,7 +302,6 @@ func deletePeeringContainerBuilder() *cobra.Command {
 
 type disablePeeringOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -393,8 +378,6 @@ func disablePeeringBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -402,7 +385,6 @@ func disablePeeringBuilder() *cobra.Command {
 
 type getPeeringConnectionOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
 	peerId  string
@@ -447,8 +429,6 @@ func getPeeringConnectionBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.peerId, "peerId", "", `Unique 24-hexadecimal digit string that identifies the network peering connection that you want to retrieve.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("peerId")
@@ -457,7 +437,6 @@ func getPeeringConnectionBuilder() *cobra.Command {
 
 type getPeeringContainerOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client      *admin.APIClient
 	groupId     string
 	containerId string
@@ -502,8 +481,6 @@ func getPeeringContainerBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.containerId, "containerId", "", `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud network container that you want to remove.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("containerId")
@@ -512,7 +489,6 @@ func getPeeringContainerBuilder() *cobra.Command {
 
 type listPeeringConnectionsOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -566,8 +542,6 @@ func listPeeringConnectionsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 	cmd.Flags().StringVar(&opts.providerName, "providerName", "&quot;AWS&quot;", `Cloud service provider to use for this VPC peering connection.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -575,7 +549,6 @@ func listPeeringConnectionsBuilder() *cobra.Command {
 
 type listPeeringContainerByCloudProviderOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client       *admin.APIClient
 	groupId      string
 	providerName string
@@ -629,8 +602,6 @@ func listPeeringContainerByCloudProviderBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("providerName")
@@ -639,7 +610,6 @@ func listPeeringContainerByCloudProviderBuilder() *cobra.Command {
 
 type listPeeringContainersOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -690,8 +660,6 @@ func listPeeringContainersBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -699,7 +667,6 @@ func listPeeringContainersBuilder() *cobra.Command {
 
 type updatePeeringConnectionOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
 	peerId  string
@@ -779,8 +746,6 @@ func updatePeeringConnectionBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.peerId, "peerId", "", `Unique 24-hexadecimal digit string that identifies the network peering connection that you want to update.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("peerId")
@@ -789,7 +754,6 @@ func updatePeeringConnectionBuilder() *cobra.Command {
 
 type updatePeeringContainerOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client      *admin.APIClient
 	groupId     string
 	containerId string
@@ -869,8 +833,6 @@ func updatePeeringContainerBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.containerId, "containerId", "", `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud network container that you want to remove.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("containerId")
@@ -879,7 +841,6 @@ func updatePeeringContainerBuilder() *cobra.Command {
 
 type verifyConnectViaPeeringOnlyModeForOneProjectOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
 }
@@ -921,8 +882,6 @@ func verifyConnectViaPeeringOnlyModeForOneProjectBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd

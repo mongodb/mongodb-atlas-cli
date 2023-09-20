@@ -24,9 +24,7 @@ import (
 	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -34,7 +32,6 @@ import (
 
 type createAlertConfigurationOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -111,8 +108,6 @@ func createAlertConfigurationBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -120,7 +115,6 @@ func createAlertConfigurationBuilder() *cobra.Command {
 
 type deleteAlertConfigurationOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client        *admin.APIClient
 	groupId       string
 	alertConfigId string
@@ -165,8 +159,6 @@ func deleteAlertConfigurationBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.alertConfigId, "alertConfigId", "", `Unique 24-hexadecimal digit string that identifies the alert configuration. Use the [/alertConfigs](#tag/Alert-Configurations/operation/listAlertConfigurations) endpoint to retrieve all alert configurations to which the authenticated user has access.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("alertConfigId")
@@ -175,7 +167,6 @@ func deleteAlertConfigurationBuilder() *cobra.Command {
 
 type getAlertConfigurationOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client        *admin.APIClient
 	groupId       string
 	alertConfigId string
@@ -220,8 +211,6 @@ func getAlertConfigurationBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.alertConfigId, "alertConfigId", "", `Unique 24-hexadecimal digit string that identifies the alert configuration. Use the [/alertConfigs](#tag/Alert-Configurations/operation/listAlertConfigurations) endpoint to retrieve all alert configurations to which the authenticated user has access.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("alertConfigId")
@@ -230,7 +219,6 @@ func getAlertConfigurationBuilder() *cobra.Command {
 
 type listAlertConfigurationMatchersFieldNamesOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client *admin.APIClient
 }
 
@@ -266,15 +254,12 @@ func listAlertConfigurationMatchersFieldNamesBuilder() *cobra.Command {
 			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }
 
 type listAlertConfigurationsOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -325,8 +310,6 @@ func listAlertConfigurationsBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -334,7 +317,6 @@ func listAlertConfigurationsBuilder() *cobra.Command {
 
 type listAlertConfigurationsByAlertIdOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client       *admin.APIClient
 	groupId      string
 	alertId      string
@@ -388,8 +370,6 @@ func listAlertConfigurationsByAlertIdBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("alertId")
@@ -398,7 +378,6 @@ func listAlertConfigurationsByAlertIdBuilder() *cobra.Command {
 
 type toggleAlertConfigurationOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client        *admin.APIClient
 	groupId       string
 	alertConfigId string
@@ -478,8 +457,6 @@ func toggleAlertConfigurationBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.alertConfigId, "alertConfigId", "", `Unique 24-hexadecimal digit string that identifies the alert configuration that triggered this alert. Use the [/alertConfigs](#tag/Alert-Configurations/operation/listAlertConfigurations) endpoint to retrieve all alert configurations to which the authenticated user has access.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("alertConfigId")
@@ -488,7 +465,6 @@ func toggleAlertConfigurationBuilder() *cobra.Command {
 
 type updateAlertConfigurationOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client        *admin.APIClient
 	groupId       string
 	alertConfigId string
@@ -568,8 +544,6 @@ func updateAlertConfigurationBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.alertConfigId, "alertConfigId", "", `Unique 24-hexadecimal digit string that identifies the alert configuration. Use the [/alertConfigs](#tag/Alert-Configurations/operation/listAlertConfigurations) endpoint to retrieve all alert configurations to which the authenticated user has access.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("alertConfigId")

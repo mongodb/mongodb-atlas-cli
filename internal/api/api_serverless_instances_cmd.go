@@ -24,9 +24,7 @@ import (
 	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -34,7 +32,6 @@ import (
 
 type createServerlessInstanceOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -111,8 +108,6 @@ func createServerlessInstanceBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -120,7 +115,6 @@ func createServerlessInstanceBuilder() *cobra.Command {
 
 type deleteServerlessInstanceOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
 	name    string
@@ -165,8 +159,6 @@ func deleteServerlessInstanceBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the serverless instance.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
@@ -175,7 +167,6 @@ func deleteServerlessInstanceBuilder() *cobra.Command {
 
 type getServerlessInstanceOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
 	name    string
@@ -220,8 +211,6 @@ func getServerlessInstanceBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the serverless instance.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
@@ -230,7 +219,6 @@ func getServerlessInstanceBuilder() *cobra.Command {
 
 type listServerlessInstancesOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -281,8 +269,6 @@ func listServerlessInstancesBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -290,7 +276,6 @@ func listServerlessInstancesBuilder() *cobra.Command {
 
 type updateServerlessInstanceOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
 	name    string
@@ -370,8 +355,6 @@ func updateServerlessInstanceBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the serverless instance.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")

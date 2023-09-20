@@ -24,9 +24,7 @@ import (
 	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -34,7 +32,6 @@ import (
 
 type createCustomZoneMappingOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -114,8 +111,6 @@ func createCustomZoneMappingBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
@@ -124,7 +119,6 @@ func createCustomZoneMappingBuilder() *cobra.Command {
 
 type createManagedNamespaceOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -204,8 +198,6 @@ func createManagedNamespaceBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
@@ -214,7 +206,6 @@ func createManagedNamespaceBuilder() *cobra.Command {
 
 type deleteAllCustomZoneMappingsOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -259,8 +250,6 @@ func deleteAllCustomZoneMappingsBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
@@ -269,7 +258,6 @@ func deleteAllCustomZoneMappingsBuilder() *cobra.Command {
 
 type deleteManagedNamespaceOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client      *admin.APIClient
 	clusterName string
 	groupId     string
@@ -320,8 +308,6 @@ func deleteManagedNamespaceBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.db, "db", "", `Human-readable label that identifies the database that contains the collection.`)
 	cmd.Flags().StringVar(&opts.collection, "collection", "", `Human-readable label that identifies the collection associated with the managed namespace.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("groupId")
@@ -330,7 +316,6 @@ func deleteManagedNamespaceBuilder() *cobra.Command {
 
 type getManagedNamespaceOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -375,8 +360,6 @@ func getManagedNamespaceBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")

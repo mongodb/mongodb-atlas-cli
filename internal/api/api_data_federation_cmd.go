@@ -24,9 +24,7 @@ import (
 	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -34,7 +32,6 @@ import (
 
 type createDataFederationPrivateEndpointOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -111,8 +108,6 @@ func createDataFederationPrivateEndpointBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -120,7 +115,6 @@ func createDataFederationPrivateEndpointBuilder() *cobra.Command {
 
 type createFederatedDatabaseOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -201,8 +195,6 @@ func createFederatedDatabaseBuilder() *cobra.Command {
 
 	cmd.Flags().BoolVar(&opts.skipRoleValidation, "skipRoleValidation", false, `Flag that indicates whether this request should check if the requesting IAM role can read from the S3 bucket. AWS checks if the role can list the objects in the bucket before writing to it. Some IAM roles only need write permissions. This flag allows you to skip that check.`)
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -210,7 +202,6 @@ func createFederatedDatabaseBuilder() *cobra.Command {
 
 type createOneDataFederationQueryLimitOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
@@ -301,8 +292,6 @@ func createOneDataFederationQueryLimitBuilder() *cobra.Command {
 `)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
@@ -312,7 +301,6 @@ func createOneDataFederationQueryLimitBuilder() *cobra.Command {
 
 type deleteDataFederationPrivateEndpointOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client     *admin.APIClient
 	groupId    string
 	endpointId string
@@ -357,8 +345,6 @@ func deleteDataFederationPrivateEndpointBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 22-character alphanumeric string that identifies the private endpoint to remove. Atlas Data Federation supports AWS private endpoints using the AWS PrivateLink feature.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("endpointId")
@@ -367,7 +353,6 @@ func deleteDataFederationPrivateEndpointBuilder() *cobra.Command {
 
 type deleteFederatedDatabaseOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
@@ -412,8 +397,6 @@ func deleteFederatedDatabaseBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance to remove.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
@@ -422,7 +405,6 @@ func deleteFederatedDatabaseBuilder() *cobra.Command {
 
 type deleteOneDataFederationInstanceQueryLimitOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
@@ -478,8 +460,6 @@ func deleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
 | bytesProcessed.weekly | Limit on the number of bytes processed for the data federation instance for the current week | N/A |
 | bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A |
 `)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
@@ -489,7 +469,6 @@ func deleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
 
 type downloadFederatedDatabaseQueryLogsOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
@@ -540,8 +519,6 @@ func downloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance for which you want to download query logs.`)
 	cmd.Flags().Int64Var(&opts.endDate, "endDate", 0, `Timestamp that specifies the end point for the range of log messages to download.  MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`)
 	cmd.Flags().Int64Var(&opts.startDate, "startDate", 0, `Timestamp that specifies the starting point for the range of log messages to download. MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
@@ -550,7 +527,6 @@ func downloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
 
 type getDataFederationPrivateEndpointOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client     *admin.APIClient
 	groupId    string
 	endpointId string
@@ -595,8 +571,6 @@ func getDataFederationPrivateEndpointBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 22-character alphanumeric string that identifies the private endpoint to return. Atlas Data Federation supports AWS private endpoints using the AWS PrivateLink feature.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("endpointId")
@@ -605,7 +579,6 @@ func getDataFederationPrivateEndpointBuilder() *cobra.Command {
 
 type getFederatedDatabaseOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
@@ -650,8 +623,6 @@ func getFederatedDatabaseBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the Federated Database to return.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
@@ -660,7 +631,6 @@ func getFederatedDatabaseBuilder() *cobra.Command {
 
 type listDataFederationPrivateEndpointsOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -711,8 +681,6 @@ func listDataFederationPrivateEndpointsBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -720,7 +688,6 @@ func listDataFederationPrivateEndpointsBuilder() *cobra.Command {
 
 type listFederatedDatabasesOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
 	type_   string
@@ -765,8 +732,6 @@ func listFederatedDatabasesBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.type_, "type_", "&quot;USER&quot;", `Type of Federated Database Instances to return.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -774,7 +739,6 @@ func listFederatedDatabasesBuilder() *cobra.Command {
 
 type returnFederatedDatabaseQueryLimitOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
@@ -830,8 +794,6 @@ func returnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
 | bytesProcessed.weekly | Limit on the number of bytes processed for the data federation instance for the current week | N/A |
 | bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A |
 `)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
@@ -841,7 +803,6 @@ func returnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
 
 type returnFederatedDatabaseQueryLimitsOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
@@ -886,8 +847,6 @@ func returnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance for which you want to retrieve query limits.`)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
@@ -896,7 +855,6 @@ func returnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
 
 type updateFederatedDatabaseOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client             *admin.APIClient
 	groupId            string
 	tenantName         string
@@ -979,8 +937,6 @@ func updateFederatedDatabaseBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.skipRoleValidation, "skipRoleValidation", false, `Flag that indicates whether this request should check if the requesting IAM role can read from the S3 bucket. AWS checks if the role can list the objects in the bucket before writing to it. Some IAM roles only need write permissions. This flag allows you to skip that check.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")

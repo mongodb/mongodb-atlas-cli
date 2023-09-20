@@ -18,7 +18,6 @@ import (
 {{#operation}}
 type {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
 	client *admin.APIClient
 	{{#allParams}}
 	{{^isBodyParam}}{{paramName}} {{{dataType}}}{{/isBodyParam}}
@@ -107,8 +106,6 @@ func {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Builder() *cobra.C
 {{#bodyParam}}
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 {{/bodyParam}}
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 {{#allParams}}{{^isBodyParam}}{{#required}}
 	_ = cmd.MarkFlagRequired("{{paramName}}"){{/required}}{{/isBodyParam}}{{/allParams}}
 	return cmd

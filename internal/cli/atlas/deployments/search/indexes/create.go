@@ -82,7 +82,7 @@ func (opts *CreateOpts) Run(ctx context.Context) error {
 	}
 
 	db := opts.mongodbClient.Database(opts.index.Database)
-	if _, err = db.SearchIndexByName(ctx, opts.index.Name, opts.index.CollectionName); err != mongodbclient.ErrSearchIndexNotFound {
+	if idx, _ := db.SearchIndexByName(ctx, opts.index.Name, opts.index.CollectionName); idx != nil {
 		return ErrSearchIndexDuplicated
 	}
 

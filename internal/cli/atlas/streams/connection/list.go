@@ -86,6 +86,7 @@ atlas streams connection list --instance ExampleInstance
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	cmd.Flags().StringVarP(&opts.streamsInstance, flag.Instance, flag.InstanceShort, "", usage.StreamsInstance)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	_ = cmd.MarkFlagRequired(flag.Instance)
 
 	return cmd
 }

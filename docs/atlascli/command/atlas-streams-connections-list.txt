@@ -43,7 +43,7 @@ Options
      - help for list
    * - -i, --instance
      - string
-     - false
+     - true
      - The name of your Atlas Stream Processing instance.
    * - -o, --output
      - string

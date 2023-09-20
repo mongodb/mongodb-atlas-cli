@@ -49,13 +49,14 @@ Your available CPU cores '%d' is below '%s'. Using default podman CPU settings.
 )
 
 type Diagnostic struct {
-	Installed    bool
-	MachineFound bool
-	MachineState string
-	MachineInfo  *machine.InspectInfo
-	Version      *Version
-	Images       []string
-	Errors       []string
+	Installed       bool
+	MachineRequired bool
+	MachineFound    bool
+	MachineState    string
+	MachineInfo     *machine.InspectInfo
+	Version         *Version
+	Images          []string
+	Errors          []string
 }
 
 const PodmanRunningState = machine.Running
@@ -174,8 +175,9 @@ type client struct {
 
 func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	d := &Diagnostic{
-		Installed:    true,
-		MachineFound: true,
+		Installed:       true,
+		MachineRequired: podmanMachineIsRequired(),
+		MachineFound:    true,
 	}
 
 	err := Installed()
@@ -287,13 +289,17 @@ func Installed() error {
 	return nil
 }
 
+func podmanMachineIsRequired() bool {
+	// macOs and Windows require VMs
+	return runtime.GOOS == "windows" || runtime.GOOS == "darwin"
+}
+
 func (o *client) Ready(ctx context.Context) error {
 	if err := Installed(); err != nil {
 		return err
 	}
 
-	if runtime.GOOS != "windows" && runtime.GOOS != "darwin" {
-		// macOs and Windows require VMs
+	if !podmanMachineIsRequired() {
 		return nil
 	}
 

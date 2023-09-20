@@ -26,6 +26,7 @@ type TrackOptions struct {
 }
 
 var currentTracker *tracker
+var options []EventOpt
 
 func StartedTrackingCommand() bool {
 	return currentTracker != nil
@@ -43,12 +44,16 @@ func StartTrackingCommand(cmd *cobra.Command, args []string) {
 	}
 }
 
+func AppendOption(opt EventOpt) {
+	options = append(options, opt)
+}
+
 func FinishTrackingCommand(opt TrackOptions) {
 	if !config.TelemetryEnabled() || currentTracker == nil {
 		return
 	}
 
-	if err := currentTracker.trackCommand(opt); err != nil {
+	if err := currentTracker.trackCommand(opt, options...); err != nil {
 		_, _ = log.Debugf("telemetry: failed to track command: %v\n", err)
 	}
 }

@@ -781,6 +781,7 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 		return err
 	}
 
+	telemetry.AppendOption(telemetry.WithDeploymentType(opts.DeploymentType))
 	if strings.EqualFold(localCluster, opts.DeploymentType) {
 		return opts.RunLocal(ctx)
 	}
@@ -795,9 +796,10 @@ func SetupBuilder() *cobra.Command {
 		atlasSetup: &setup.Opts{},
 	}
 	cmd := &cobra.Command{
-		Use:   "setup [deploymentName]",
-		Short: "Create a local deployment.",
-		Args:  require.MaximumNArgs(1),
+		Use:     "setup [deploymentName]",
+		Short:   "Create a local deployment.",
+		Args:    require.MaximumNArgs(1),
+		GroupID: "all",
 		Annotations: map[string]string{
 			"deploymentNameDesc": "Name of the deployment that you want to set up.",
 		},

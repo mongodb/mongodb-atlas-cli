@@ -212,9 +212,10 @@ func CreateBuilder() *cobra.Command {
 	}
 
 	cmd := &cobra.Command{
-		Use:   "create [indexName]",
-		Short: "Create a search index for the specified deployment.",
-		Args:  require.MaximumNArgs(1),
+		Use:     "create [indexName]",
+		Short:   "Create a search index for the specified deployment.",
+		Args:    require.MaximumNArgs(1),
+		GroupID: "local",
 		Annotations: map[string]string{
 			"indexNameDesc": "Name of the index.",
 		},

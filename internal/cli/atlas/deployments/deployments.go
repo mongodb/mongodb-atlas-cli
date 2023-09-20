@@ -36,6 +36,9 @@ func Builder() *cobra.Command {
 		Short:   "Manage cloud and local deployments.",
 	}
 
+	cmd.AddGroup(&cobra.Group{ID: "all", Title: "Cloud and local deployments commands:"})
+	cmd.AddGroup(&cobra.Group{ID: "local", Title: "Local deployments commands:"})
+
 	cmd.AddCommand(
 		SetupBuilder(),
 		DeleteBuilder(),

@@ -347,10 +347,6 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 		"--name", opts.Name,
 		"--hostname", opts.Hostname,
 		"--network", opts.Network,
-		// Configure cgroup v2: sets the memory.high limit to 2GB
-		// podman defaults to cgroup v1 which does not support the container pause command in Linux
-		// https://github.com/containers/podman/issues/12782
-		// "--cgroup-conf=memory.high=2147483648",
 	}
 
 	for hostVolume, pathInContainer := range opts.Volumes {

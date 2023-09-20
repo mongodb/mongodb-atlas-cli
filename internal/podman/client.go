@@ -378,7 +378,7 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 	}
 
 	if runtime.GOOS == "linux" {
-		arg = append(arg, "--cgroup-parent=/sys/fs/cgroup")
+		arg = append(arg, "--cgroup-manager=systemd")
 	}
 
 	arg = append(arg, opts.Args...)

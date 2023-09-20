@@ -91,7 +91,7 @@ func CreateBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "create [connectionName]",
-		Short: "Creates a connection for an Atlas streams instance.",
+		Short: "Creates a connection for an Atlas Stream Processing instance.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{

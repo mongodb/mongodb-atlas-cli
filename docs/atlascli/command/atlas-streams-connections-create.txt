@@ -12,7 +12,7 @@ atlas streams connections create
    :depth: 1
    :class: singlecol
 
-Creates a connection for an Atlas streams instance.
+Creates a connection for an Atlas Stream Processing instance.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 

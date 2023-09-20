@@ -72,7 +72,7 @@ func ListBuilder() *cobra.Command {
 		Short: "List all the Atlas Stream Processing instances for your project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all Atlas Stream Processing instances for the project with ID 5e2211c17a3e5a48f5497de3:
-  %s streams list --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+  %s streams instance list --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,
 		Annotations: map[string]string{
 			"output": listTemplate,

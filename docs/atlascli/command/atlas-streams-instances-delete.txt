@@ -101,10 +101,10 @@ Examples
 .. code-block::
 
    # Remove an Atlas Stream Processing instance after prompting for a confirmation:
-   atlas streams delete myProcessorInstance
+   atlas streams instance delete myProcessorInstance
 
    
 .. code-block::
 
    # Remove an Atlas Stream Processing instance named myProcessorInstance without requiring confirmation:
-   atlas streams delete myProcessorInstance --force
+   atlas streams instance delete myProcessorInstance --force

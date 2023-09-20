@@ -99,9 +99,9 @@ Examples
 .. code-block::
 
    # Return an Atlas Stream Processing instance with a specific name:
-   atlas streams describe myProcessor
+   atlas streams instance describe myProcessor
    
 .. code-block::
 
    # Return a JSON-formatted Atlas Stream Processing instance with a specific name:
-   atlas streams describe myProcessor --output json
+   atlas streams instance describe myProcessor --output json

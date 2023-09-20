@@ -76,7 +76,7 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create an Atlas Stream Processing instance for your project",
 		Long:  `To get started quickly, specify a name, a cloud provider, and a region to configure an Atlas Stream Processing instance.` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: fmt.Sprintf(`  # Deploy an Atlas Stream Processing instance called myProcessor for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %[1]s streams create myProcessor --projectId 5e2211c17a3e5a48f5497de3 --provider AWS --region VIRGINIA_USA`, cli.ExampleAtlasEntryPoint()),
+  %[1]s streams instance create myProcessor --projectId 5e2211c17a3e5a48f5497de3 --provider AWS --region VIRGINIA_USA`, cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Name of the Atlas Stream Processing instance. After creation, you can't change the name of the instance. The name can contain ASCII letters, numbers, and hyphens.",

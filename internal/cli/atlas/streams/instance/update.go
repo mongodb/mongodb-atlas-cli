@@ -95,8 +95,8 @@ func UpdateBuilder() *cobra.Command {
 			"nameDesc": "Name of the Atlas Stream Processing instance. After creation, you can't change the name of the instance. The name can contain ASCII letters, numbers, and hyphens.",
 			"output":   updateTemplate,
 		},
-		Example: fmt.Sprintf(`  # Modify the Atlas Stream Processing instance configuration with the ID 5d1113b25a115342cca2d1aa:
-  %s streams instances update 5d1113b25a115342cca2d1aa --provider AWS --provider VIRGINIA_USA`, cli.ExampleAtlasEntryPoint()),
+		Example: fmt.Sprintf(`  # Modify the Atlas Stream Processing instance configuration with the name MyInstance:
+  %s streams instance update MyInstance --provider AWS --provider VIRGINIA_USA`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
 

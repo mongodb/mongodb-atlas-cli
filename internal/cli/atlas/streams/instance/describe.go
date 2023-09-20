@@ -67,9 +67,9 @@ func DescribeBuilder() *cobra.Command {
 		Short: "Describe an Atlas Stream Processing instance for your project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Example: fmt.Sprintf(`  # Return an Atlas Stream Processing instance with a specific name:
-  %s streams describe myProcessor`, cli.ExampleAtlasEntryPoint()) + fmt.Sprintf(`
+  %s streams instance describe myProcessor`, cli.ExampleAtlasEntryPoint()) + fmt.Sprintf(`
   # Return a JSON-formatted Atlas Stream Processing instance with a specific name:
-  %s streams describe myProcessor --output json`, cli.ExampleAtlasEntryPoint()),
+  %s streams instance describe myProcessor --output json`, cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Name of the Atlas Streams processor instance.",

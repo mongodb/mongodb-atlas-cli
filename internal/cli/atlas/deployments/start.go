@@ -133,9 +133,10 @@ func (opts *StartOpts) validateAndPrompt(ctx context.Context) error {
 func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{
-		Use:   "start <deploymentName>",
-		Short: "Start a deployment",
-		Args:  require.MaximumNArgs(1),
+		Use:     "start <deploymentName>",
+		Short:   "Start a deployment",
+		Args:    require.MaximumNArgs(1),
+		GroupID: "all",
 		Annotations: map[string]string{
 			"output": startTemplate,
 		},

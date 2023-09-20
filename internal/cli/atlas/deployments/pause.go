@@ -125,9 +125,10 @@ func (opts *PauseOpts) validateAndPrompt(ctx context.Context) error {
 func PauseBuilder() *cobra.Command {
 	opts := &PauseOpts{}
 	cmd := &cobra.Command{
-		Use:   "pause <deploymentName>",
-		Short: "Pause a deployment",
-		Args:  require.MaximumNArgs(1),
+		Use:     "pause <deploymentName>",
+		Short:   "Pause a deployment",
+		Args:    require.MaximumNArgs(1),
+		GroupID: "all",
 		Annotations: map[string]string{
 			"output": pauseTemplate,
 		},

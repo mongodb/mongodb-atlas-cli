@@ -30,8 +30,7 @@ import (
 )
 
 var listTemplate = `NAME	TYPE	SERVERS{{range .Results}}
-{{.Name}}	{{.Type}}	{{if .ClusterName}}{{.ClusterName}}{{else if .BootstrapServers}}{{.BootstrapServers}}{{else}}nil{{end}}
-{{end}}
+{{.Name}}	{{.Type}}	{{if .ClusterName}}{{.ClusterName}}{{else if .BootstrapServers}}{{.BootstrapServers}}{{else}}nil{{end}}{{end}}
 `
 
 type ListOpts struct {

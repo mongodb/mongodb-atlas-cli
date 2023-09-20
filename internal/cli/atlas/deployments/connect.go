@@ -105,9 +105,10 @@ func (opts *ConnectOpts) Run(ctx context.Context) error {
 func ConnectBuilder() *cobra.Command {
 	opts := &ConnectOpts{}
 	cmd := &cobra.Command{
-		Use:   "connect [deploymentName]",
-		Short: "Connect to a deployment.",
-		Args:  require.MaximumNArgs(1),
+		Use:     "connect [deploymentName]",
+		Short:   "Connect to a deployment.",
+		Args:    require.MaximumNArgs(1),
+		GroupID: "local",
 		Annotations: map[string]string{
 			"deploymentNameDesc": "Name of the deployment that you want to connect to.",
 		},

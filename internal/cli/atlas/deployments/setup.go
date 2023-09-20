@@ -51,8 +51,6 @@ import (
 const (
 	internalMongodPort = 27017
 	internalMongotPort = 27027
-	localCluster       = "local"
-	atlasCluster       = "atlas"
 	mdb6               = "6.0"
 	mdb7               = "7.0"
 	replicaSetName     = "rs-localdev"
@@ -77,7 +75,6 @@ var (
 	errInvalidDeploymentType  = errors.New("the deployment type is invalid")
 	errInvalidMongoDBVersion  = errors.New("the mongodb version is invalid")
 	errUnsupportedConnectWith = errors.New("the --connectWith flag is unsupported")
-	deploymentTypeOptions     = []string{localCluster, atlasCluster}
 	settingOptions            = []string{defaultSettings, customSettings, cancelSettings}
 	settingsDescription       = map[string]string{
 		defaultSettings: "With default settings",
@@ -541,7 +538,7 @@ func (opts *SetupOpts) validateDeploymentTypeFlag() error {
 		return errFlagTypeRequired
 	}
 
-	if opts.DeploymentType != "" && !strings.EqualFold(opts.DeploymentType, atlasCluster) && !strings.EqualFold(opts.DeploymentType, localCluster) {
+	if opts.DeploymentType != "" && !strings.EqualFold(opts.DeploymentType, options.AtlasCluster) && !strings.EqualFold(opts.DeploymentType, options.LocalCluster) {
 		return fmt.Errorf("%w: %s", errInvalidDeploymentType, opts.DeploymentType)
 	}
 
@@ -655,7 +652,7 @@ func (opts *SetupOpts) validateAndPrompt() error {
 	}
 
 	// Defer prompts to Atlas command
-	if opts.DeploymentType == atlasCluster {
+	if opts.DeploymentType == options.AtlasCluster {
 		return nil
 	}
 
@@ -756,7 +753,7 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 	}
 
 	telemetry.AppendOption(telemetry.WithDeploymentType(opts.DeploymentType))
-	if strings.EqualFold(localCluster, opts.DeploymentType) {
+	if strings.EqualFold(options.LocalCluster, opts.DeploymentType) {
 		return opts.RunLocal(ctx)
 	}
 
@@ -817,7 +814,7 @@ func SetupBuilder() *cobra.Command {
 		return mdbVersions, cobra.ShellCompDirectiveDefault
 	})
 	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return deploymentTypeOptions, cobra.ShellCompDirectiveDefault
+		return options.DeploymentTypeOptions, cobra.ShellCompDirectiveDefault
 	})
 	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return connectWithOptions, cobra.ShellCompDirectiveDefault

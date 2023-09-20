@@ -288,7 +288,7 @@ func TestStreams(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("'%s' deleted\n", connectionName)
+		expected := fmt.Sprintf("Atlas Stream Processing connection '%s' deleted\n", connectionName)
 		a.Equal(expected, string(resp))
 	})
 

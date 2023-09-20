@@ -34,6 +34,8 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
+var indexID = "6509bc5080b2f007e6a2a0ce"
+
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockPodman := mocks.NewMockClient(ctrl)
@@ -99,7 +101,6 @@ func TestCreate_Run(t *testing.T) {
 		Return(mockDB).
 		Times(1)
 
-	indexID := "6509bc5080b2f007e6a2a0ce"
 	index := &atlasv2.ClusterSearchIndex{
 		Analyzer:       &opts.Analyzer,
 		CollectionName: opts.Collection,
@@ -215,7 +216,6 @@ func TestCreate_Duplicated(t *testing.T) {
 		Return(mockDB).
 		Times(1)
 
-	indexID := "6509bc5080b2f007e6a2a0ce"
 	index := &atlasv2.ClusterSearchIndex{
 		Analyzer:       &opts.Analyzer,
 		CollectionName: opts.Collection,

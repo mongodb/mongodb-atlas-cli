@@ -42,6 +42,8 @@ func Builder() *cobra.Command {
 		ListBuilder(),
 		ConnectBuilder(),
 		DiagnosticsBuilder(),
+		StartBuilder(),
+		PauseBuilder(),
 		search.Builder(),
 	)
 

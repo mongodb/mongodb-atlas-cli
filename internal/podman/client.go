@@ -143,8 +143,11 @@ type Client interface {
 	CreateVolume(ctx context.Context, name string) ([]byte, error)
 	RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error)
 	CopyFileToContainer(ctx context.Context, localFile string, containerName string, filePathInContainer string) ([]byte, error)
-	StopContainers(ctx context.Context, names ...string) ([]byte, error)
-	RemoveContainers(ctx context.Context, names ...string) ([]byte, error)
+	StopContainers(ctx context.Context, ids ...string) ([]byte, error)
+	StartContainers(ctx context.Context, ids ...string) ([]byte, error)
+	UnpauseContainers(ctx context.Context, ids ...string) ([]byte, error)
+	PauseContainers(ctx context.Context, ids ...string) ([]byte, error)
+	RemoveContainers(ctx context.Context, ids ...string) ([]byte, error)
 	RemoveVolumes(ctx context.Context, names ...string) ([]byte, error)
 	RemoveNetworks(ctx context.Context, names ...string) ([]byte, error)
 	ListContainers(ctx context.Context, nameFilter string) ([]*Container, error)
@@ -383,8 +386,20 @@ func (o *client) CopyFileToContainer(ctx context.Context, localFile string, cont
 	return o.runPodman(ctx, "cp", localFile, containerName+":"+filePathInContainer)
 }
 
-func (o *client) StopContainers(ctx context.Context, names ...string) ([]byte, error) {
-	return o.runPodman(ctx, append([]string{"stop"}, names...)...)
+func (o *client) StopContainers(ctx context.Context, ids ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"stop"}, ids...)...)
+}
+
+func (o *client) StartContainers(ctx context.Context, ids ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"start"}, ids...)...)
+}
+
+func (o *client) PauseContainers(ctx context.Context, ids ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"pause"}, ids...)...)
+}
+
+func (o *client) UnpauseContainers(ctx context.Context, ids ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"unpause"}, ids...)...)
 }
 
 func (o *client) RemoveContainers(ctx context.Context, names ...string) ([]byte, error) {

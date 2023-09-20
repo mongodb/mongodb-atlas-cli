@@ -11,12 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package options
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 
@@ -36,11 +39,28 @@ const (
 	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
 	clusterNamePattern    = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	MongotDockerImageName = "docker.io/mongodb/mongodb-atlas-search:preview"
+	PausedState           = "PAUSED"
+	StoppedState          = "STOPPED"
+	IdleState             = "IDLE"
+	DeletingState         = "DELETING"
+	RestartingState       = "RESTARTING"
 )
 
 var (
 	errInvalidDeploymentName = errors.New("invalid cluster name")
 )
+
+var localStateMap = map[string]string{
+	"running":  IdleState,
+	"removing": DeletingState,
+	// a "created" container is ready to be started but is currently stopped,
+	// which for a local deployment is equivalent to being paused.
+	"created":    PausedState,
+	"paused":     PausedState,
+	"restarting": RestartingState,
+	"exited":     StoppedState,
+	"dead":       StoppedState,
+}
 
 type DeploymentOpts struct {
 	DeploymentName string
@@ -50,6 +70,15 @@ type DeploymentOpts struct {
 	PodmanClient   podman.Client
 	CredStore      store.CredentialsGetter
 	s              *spinner.Spinner
+}
+
+type Deployment struct {
+	Type            string
+	Name            string
+	MongoDBVersion  string
+	StateName       string
+	MongoDContainer *podman.Container
+	MongoTContainer *podman.Container
 }
 
 func (opts *DeploymentOpts) InitStore(podmanClient podman.Client) func() error {
@@ -132,4 +161,59 @@ func (opts *DeploymentOpts) PostRunMessages() error {
 
 func (opts *DeploymentOpts) IsCliAuthenticated() bool {
 	return opts.CredStore.AuthType() != config.NotLoggedIn
+}
+
+func (opts *DeploymentOpts) GetLocalDeployments(ctx context.Context) ([]Deployment, error) {
+	if err := opts.PodmanClient.Ready(ctx); err != nil {
+		return nil, err
+	}
+
+	mdbContainers, err := opts.PodmanClient.ListContainers(ctx, MongodHostnamePrefix)
+	if err != nil {
+		return nil, err
+	}
+	sort.Slice(mdbContainers, func(i, j int) bool {
+		return mdbContainers[i].Names[0] < mdbContainers[j].Names[0]
+	})
+
+	deployments := make([]Deployment, len(mdbContainers))
+	for i, c := range mdbContainers {
+		stateName, found := localStateMap[c.State]
+		if !found {
+			stateName = strings.ToUpper(c.State)
+		}
+
+		name := strings.TrimPrefix(c.Names[0], MongodHostnamePrefix+"-")
+		deployments[i] = Deployment{
+			Type:            "LOCAL",
+			Name:            name,
+			MongoDBVersion:  c.Labels["version"],
+			StateName:       stateName,
+			MongoDContainer: c,
+		}
+	}
+
+	return deployments, nil
+}
+
+func (opts *DeploymentOpts) GetLocalDeploymentsWithContainers(ctx context.Context) ([]Deployment, error) {
+	deployments, err := opts.GetLocalDeployments(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	mdtContainers, err := opts.PodmanClient.ListContainers(ctx, MongotHostnamePrefix)
+	if err != nil {
+		return nil, err
+	}
+
+	sort.Slice(mdtContainers, func(i, j int) bool {
+		return mdtContainers[i].Names[0] < mdtContainers[j].Names[0]
+	})
+
+	for i, c := range mdtContainers {
+		deployments[i].MongoTContainer = c
+	}
+
+	return deployments, nil
 }

@@ -153,8 +153,11 @@ func withCI() EventOpt {
 func withAnonymousID() EventOpt {
 	return func(event Event) {
 		id, err := machineid.ProtectedID(config.ToolName)
-		_, _ = log.Debugf("error generating machine id: %v\n", err)
-		event.Properties["anonymous_id"] = id
+		if err != nil {
+			_, _ = log.Debugf("error generating machine id: %v\n", err)
+		} else {
+			event.Properties["anonymous_id"] = id
+		}
 	}
 }
 

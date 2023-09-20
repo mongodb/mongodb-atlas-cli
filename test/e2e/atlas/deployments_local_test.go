@@ -274,7 +274,7 @@ test   LOCAL   7.0.1     IDLE
 		a := assert.New(t)
 		a.Contains(o.String(), fmt.Sprintf("Index '%s' deleted", indexID))
 	})
-	
+
 	t.Run("Pause Deployment", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,

@@ -69,15 +69,15 @@ const (
 )
 
 var (
-	errCancel                       = errors.New("setup cancelled")
-	errMustBeInt                    = errors.New("input must be an integer")
-	errPortOutOfRange               = errors.New("port must within the range 1..65535")
-	errPortNotAvailable             = errors.New("port not available")
-	errFlagTypeRequired             = errors.New("flag --type is required when --force is set")
-	errInvalidDeploymentType        = errors.New("invalid deployment type")
-	errInvalidMongoDBVersion        = errors.New("invalid mongodb version")
-	errUnsupportedConnectWith       = errors.New("flag --connectWith unsupported")
-	errDeploymentTypeNotImplemented = errors.New("deployment type not implemented")
+	errCancel                       = errors.New("the was setup cancelled")
+	errMustBeInt                    = errors.New("you must specify an integer")
+	errPortOutOfRange               = errors.New("you must specify a port within the range 1..65535")
+	errPortNotAvailable             = errors.New("the port is unavailable")
+	errFlagTypeRequired             = errors.New("the --type flag is required when the --force flag is set")
+	errInvalidDeploymentType        = errors.New("the deployment type is invalid")
+	errInvalidMongoDBVersion        = errors.New("the mongodb version is invalid")
+	errUnsupportedConnectWith       = errors.New("the --connectWith flag is unsupported")
+	errDeploymentTypeNotImplemented = errors.New("the deployment type is not implemented")
 	deploymentTypeOptions           = []string{localCluster, atlasCluster}
 	deploymentTypeDescription       = map[string]string{
 		localCluster: "Local Database",

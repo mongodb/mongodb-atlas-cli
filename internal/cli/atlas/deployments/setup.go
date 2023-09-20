@@ -781,7 +781,7 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	if opts.DeploymentType == localCluster {
+	if strings.EqualFold(localCluster, opts.DeploymentType) {
 		return opts.RunLocal(ctx)
 	}
 

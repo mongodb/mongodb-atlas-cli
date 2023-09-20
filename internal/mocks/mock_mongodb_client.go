@@ -143,11 +143,12 @@ func (mr *MockDatabaseMockRecorder) Collection(arg0 interface{}) *gomock.Call {
 }
 
 // CreateSearchIndex mocks base method.
-func (m *MockDatabase) CreateSearchIndex(arg0 context.Context, arg1 string, arg2 *admin.ClusterSearchIndex) error {
+func (m *MockDatabase) CreateSearchIndex(arg0 context.Context, arg1 string, arg2 *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateSearchIndex", arg0, arg1, arg2)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // CreateSearchIndex indicates an expected call of CreateSearchIndex.
@@ -254,11 +255,12 @@ func (m *MockSearchIndex) EXPECT() *MockSearchIndexMockRecorder {
 }
 
 // CreateSearchIndex mocks base method.
-func (m *MockSearchIndex) CreateSearchIndex(arg0 context.Context, arg1 string, arg2 *admin.ClusterSearchIndex) error {
+func (m *MockSearchIndex) CreateSearchIndex(arg0 context.Context, arg1 string, arg2 *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateSearchIndex", arg0, arg1, arg2)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // CreateSearchIndex indicates an expected call of CreateSearchIndex.

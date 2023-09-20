@@ -153,7 +153,7 @@ func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, current
 		}
 	}
 
-	if mongotImages, err = opts.podmanClient.ListImages(ctx, opts.MongodDockerImageName()); err != nil {
+	if mongotImages, err = opts.podmanClient.ListImages(ctx, options.MongotDockerImageName); err != nil {
 		return err
 	}
 
@@ -440,7 +440,7 @@ func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Con
 
 func (opts *SetupOpts) promptSettings() error {
 	p := &survey.Select{
-		Message: "How do you want to setup your local MongoDB database?",
+		Message: "How do you want to set up your local MongoDB database?",
 		Options: settingOptions,
 		Default: opts.settings,
 		Description: func(value string, index int) string {
@@ -457,7 +457,7 @@ func (opts *SetupOpts) generateDeploymentName() {
 
 func (opts *SetupOpts) promptDeploymentName() error {
 	p := &survey.Input{
-		Message: "Cluster Name [This can't be changed later]",
+		Message: "Deployment Name [This can't be changed later]",
 		Default: opts.DeploymentName,
 	}
 
@@ -472,7 +472,7 @@ func (opts *SetupOpts) promptMdbVersion() error {
 		Message: "Major MongoDB Version",
 		Options: mdbVersions,
 		Default: opts.MdbVersion,
-		Help:    "Major MongoDB Version of the cluster. Will pick the latest minor version available.",
+		Help:    "Major MongoDB Version of the deployment. Will pick the latest minor version available.",
 	}
 
 	return telemetry.TrackAskOne(p, &opts.MdbVersion, nil)
@@ -692,7 +692,7 @@ func (opts *SetupOpts) validateAndPrompt() error {
 	if ok {
 		templatewriter.Print(os.Stderr, `
 [Default Settings]
-Cluster Name	{{.DeploymentName}}
+Deployment Name	{{.DeploymentName}}
 MongoDB Version	{{.MdbVersion}}
 Port	{{.Port}}
 
@@ -732,7 +732,7 @@ func (opts *SetupOpts) RunLocal(ctx context.Context) error {
 
 	cs := fmt.Sprintf("mongodb://localhost:%d/?directConnection=true", opts.Port)
 
-	_, _ = log.Warningln("Cluster created!")
+	_, _ = log.Warningln("Deployment created!")
 	_, _ = fmt.Fprintf(opts.OutWriter, "Connection string: %s\n", cs)
 	_, _ = log.Warningln("")
 

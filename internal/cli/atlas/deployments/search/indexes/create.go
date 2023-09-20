@@ -143,8 +143,8 @@ func (opts *CreateOpts) PostRun(ctx context.Context) error {
 	}); err != nil {
 		return err
 	}
-
-	return opts.Print(createTemplate)
+	defer opts.PostRunMessages()
+	return opts.Print(opts.index)
 }
 
 func (opts *CreateOpts) validateAndPrompt(ctx context.Context) error {
@@ -210,6 +210,7 @@ func CreateBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			w := cmd.OutOrStdout()
 			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
+			opts.WatchOpts.OutWriter = w
 			return opts.PreRunE(
 				opts.InitOutput(w, createTemplate),
 				opts.InitStore(opts.PodmanClient),

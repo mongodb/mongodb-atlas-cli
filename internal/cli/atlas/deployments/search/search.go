@@ -22,8 +22,9 @@ import (
 func Builder() *cobra.Command {
 	const use = "search"
 	cmd := &cobra.Command{
-		Use:   use,
-		Short: "Manage search for Atlas and local deployments.",
+		Use:     use,
+		Short:   "Manage search for Atlas and local deployments.",
+		GroupID: "all",
 	}
 
 	cmd.AddCommand(indexes.Builder())

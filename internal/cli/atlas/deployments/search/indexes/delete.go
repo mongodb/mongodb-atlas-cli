@@ -121,6 +121,7 @@ func DeleteBuilder() *cobra.Command {
 		Aliases: []string{"rm"},
 		Short:   "Delete the specified search index from the specified cluster.",
 		Args:    require.MaximumNArgs(1),
+		GroupID: "all",
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",
 			"output":      opts.SuccessMessage(),

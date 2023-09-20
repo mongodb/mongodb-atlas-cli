@@ -127,6 +127,7 @@ func ListBuilder() *cobra.Command {
 		Short:   "List all Atlas Search indexes for a deployment.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		GroupID: "all",
 		Annotations: map[string]string{
 			"output": listTemplate,
 		},

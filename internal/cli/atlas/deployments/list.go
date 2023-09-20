@@ -179,6 +179,7 @@ func ListBuilder() *cobra.Command {
 		Short:   "Return all deployments.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
+		GroupID: "all",
 		Annotations: map[string]string{
 			"output": listTemplate,
 		},

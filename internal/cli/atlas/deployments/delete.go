@@ -72,6 +72,7 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete [deploymentName]",
 		Short:   "Delete a deployment.",
 		Aliases: []string{"rm"},
+		GroupID: "local",
 		Args:    require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"deploymentNameDesc": "Name of the deployment that you want to delete.",

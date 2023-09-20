@@ -119,9 +119,10 @@ func (opts *DescribeOpts) validateAndPrompt(ctx context.Context) error {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:   "describe [indexId]",
-		Short: "Describe a search index for the specified deployment.",
-		Args:  require.MaximumNArgs(1),
+		Use:     "describe [indexId]",
+		Short:   "Describe a search index for the specified deployment.",
+		Args:    require.MaximumNArgs(1),
+		GroupID: "all",
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",
 			"output":      describeTemplate,

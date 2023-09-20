@@ -42,6 +42,7 @@ archives:
       - README.md
       - atlascli.md
       - LICENSE
+      - LICENSING-NOTES.txt
       - third_party_notices/**/*
     replacements:
       darwin: macos

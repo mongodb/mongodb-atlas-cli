@@ -24,6 +24,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/api"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslogs"
@@ -58,9 +59,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/figautocomplete"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/teams"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/users"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/generated"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/internal/latestrelease"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
@@ -204,62 +206,47 @@ Use the --help flag with any command for more info on that command.`,
 	registerCmd := auth.RegisterBuilder()
 	registerCmd.Hidden = true
 
-	cmdList := append([]*cobra.Command{
+	rootCmd.AddCommand(
 		atlasConfig.Builder(),
 		auth.Builder(),
 		setup.Builder(),
+		projects.Builder(),
+		organizations.Builder(),
+		users.Builder(),
+		teams.Builder(),
+		clusters.Builder(),
+		dbusers.Builder(),
+		customdbroles.Builder(),
+		accesslists.Builder(),
+		datalake.Builder(),
+		datalakepipelines.Builder(),
+		alerts.Builder(),
+		backup.Builder(),
+		events.Builder(),
+		metrics.Builder(),
+		performanceadvisor.Builder(),
+		logs.Builder(),
+		processes.Builder(),
+		privateendpoints.Builder(),
+		networking.Builder(),
+		security.Builder(),
+		integrations.Builder(),
+		maintenance.Builder(),
+		customdns.Builder(),
+		cloudproviders.Builder(),
+		serverless.Builder(),
+		livemigrations.Builder(),
+		accesslogs.Builder(),
 		loginCmd,
 		logoutCmd,
 		whoCmd,
 		registerCmd,
-<<<<<<< HEAD
-	}, generated.Commands()...)
-	rootCmd.AddCommand(
-		cmdList...,
-	/*atlasConfig.Builder(),
-	auth.Builder(),
-	quickstart.Builder(),
-	setup.Builder(),
-	projects.Builder(),
-	organizations.Builder(),
-	users.Builder(),
-	teams.Builder(),
-	clusters.Builder(),
-	dbusers.Builder(),
-	customdbroles.Builder(),
-	accesslists.Builder(),
-	datalake.Builder(),
-	datalakepipelines.Builder(),
-	alerts.Builder(),
-	backup.Builder(),
-	events.Builder(),
-	metrics.Builder(),
-	performanceadvisor.Builder(),
-	logs.Builder(),
-	processes.Builder(),
-	privateendpoints.Builder(),
-	networking.Builder(),
-	security.Builder(),
-	integrations.Builder(),
-	maintenance.Builder(),
-	customdns.Builder(),
-	cloudproviders.Builder(),
-	serverless.Builder(),
-	livemigrations.Builder(),
-	accesslogs.Builder(),
-	loginCmd,
-	logoutCmd,
-	whoCmd,
-	registerCmd,
-	figautocomplete.Builder(),
-	kubernetes.Builder(),*/
-=======
 		figautocomplete.Builder(),
 		kubernetes.Builder(),
 		datafederation.Builder(),
 		auditing.Builder(),
 		deployments.Builder(),
->>>>>>> master
+		api.Builder(),
 	)
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)

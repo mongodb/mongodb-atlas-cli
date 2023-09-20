@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "OpenAPI Generator for MongoDB Atlas CLI",
   "scripts": {
-    "generate:clear": "rm -rf ../../internal/generated",
-    "generate:init": "mkdir -p ../../internal/generated && cp ./config/.openapi-generator-ignore ../../internal/generated/.openapi-generator-ignore",
-    "generate:run": "GO_POST_PROCESS_FILE='goimports -w' openapi-generator-cli generate --enable-post-process-file -c './config/config.yaml' --type-mappings=integer=int --type-mappings=DateTime=string -o ../../internal/generated",
+    "generate:clear": "rm -rf ../../internal/api",
+    "generate:init": "mkdir -p ../../internal/api && cp ./config/.openapi-generator-ignore ../../internal/api/.openapi-generator-ignore",
+    "generate:run": "GO_POST_PROCESS_FILE='goimports -w' openapi-generator-cli generate --enable-post-process-file -c './config/config.yaml' --type-mappings=integer=int --type-mappings=DateTime=string -o ../../internal/api",
     "generate": "npm run generate:clear && npm run generate:init && npm run generate:run"
   },
   "repository": {

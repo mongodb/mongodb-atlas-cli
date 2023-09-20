@@ -38,7 +38,7 @@ import (
 const (
 	namePattern        = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	connectWaitSeconds = 10
-	createTemplate     = "Search index created with ID {{.IndexID}}\n"
+	createTemplate     = "Search index created with ID: {{.IndexID}}\n"
 	notFoundState      = "NOT_FOUND"
 )
 

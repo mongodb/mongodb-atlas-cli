@@ -138,7 +138,7 @@ func TestCreate_Run(t *testing.T) {
 		t.Fatalf("PostRun() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `Search index created with ID 6509bc5080b2f007e6a2a0ce
+	assert.Equal(t, `Search index created with ID: 6509bc5080b2f007e6a2a0ce
 `, buf.String())
 	t.Log(buf.String())
 }

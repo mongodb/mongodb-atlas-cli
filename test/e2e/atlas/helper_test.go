@@ -23,13 +23,14 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -41,15 +42,18 @@ const (
 	searchEntity                 = "search"
 	indexEntity                  = "index"
 	datalakeEntity               = "datalake"
+	datafederationEntity         = "datafederation"
 	datalakePipelineEntity       = "datalakepipeline"
 	alertsEntity                 = "alerts"
 	configEntity                 = "settings"
 	dbusersEntity                = "dbusers"
 	certsEntity                  = "certs"
 	privateEndpointsEntity       = "privateendpoints"
+	queryLimitsEntity            = "querylimits"
 	onlineArchiveEntity          = "onlineArchives"
 	projectEntity                = "project"
 	orgEntity                    = "org"
+	invitationsEntity            = "invitations"
 	maintenanceEntity            = "maintenanceWindows"
 	integrationsEntity           = "integrations"
 	securityEntity               = "security"
@@ -65,6 +69,7 @@ const (
 	regionalModeEntity           = "regionalModes"
 	serverlessEntity             = "serverless"
 	liveMigrationsEntity         = "liveMigrations"
+	auditingEntity               = "auditing"
 	accessLogsEntity             = "accessLogs"
 	accessListEntity             = "accessList"
 	performanceAdvisorEntity     = "performanceAdvisor"
@@ -86,7 +91,11 @@ const (
 	jobsEntity                   = "jobs"
 	snapshotsEntity              = "snapshots"
 	restoresEntity               = "restores"
+	compliancepolicyEntity       = "compliancepolicy"
+	policiesEntity               = "policies"
 	teamsEntity                  = "teams"
+	setupEntity                  = "setup"
+	deploymentEntity             = "deployments"
 )
 
 // AlertConfig constants.
@@ -98,17 +107,12 @@ const (
 )
 
 // Integration constants.
-
 const (
-	datadogEntity        = "DATADOG"
-	opsGenieEntity       = "OPS_GENIE"
-	pagerDutyEntity      = "PAGER_DUTY"
-	victorOpsEntity      = "VICTOR_OPS"
-	webhookEntity        = "WEBHOOK"
-	microsoftTeamsEntity = "MICROSOFT_TEAMS"
-	slackEntity          = "SLACK"
-	prometheusEntity     = "PROMETHEUS"
-	newRelicEntity       = "NEW_RELIC"
+	datadogEntity   = "DATADOG"
+	opsGenieEntity  = "OPS_GENIE"
+	pagerDutyEntity = "PAGER_DUTY"
+	victorOpsEntity = "VICTOR_OPS"
+	webhookEntity   = "WEBHOOK"
 )
 
 // Cluster settings.
@@ -119,6 +123,11 @@ const (
 	e2eClusterProvider   = "AWS" // e2eClusterProvider preferred provider for e2e testing.
 	e2eMDBVer            = "4.4"
 	e2eSharedMDBVer      = "6.0"
+)
+
+// Backup compliance policy constants.
+const (
+	authorizedEmail = "firstname.lastname@example.com"
 )
 
 func deployServerlessInstanceForProject(projectID string) (string, error) {
@@ -299,6 +308,24 @@ func deleteClusterForProject(projectID, clusterName string) error {
 	return nil
 }
 
+func deleteDatalakeForProject(cliPath, projectID, id string) error {
+	args := []string{
+		datalakePipelineEntity,
+		"delete",
+		id,
+		"--force",
+	}
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	deleteCmd := exec.Command(cliPath, args...)
+	deleteCmd.Env = os.Environ()
+	if resp, err := deleteCmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("error deleting datalake %w: %s", err, string(resp))
+	}
+	return nil
+}
+
 var errNoRegions = errors.New("no regions available")
 
 func newAvailableRegion(projectID, tier, provider string) (string, error) {
@@ -328,7 +355,7 @@ func newAvailableRegion(projectID, tier, provider string) (string, error) {
 	var cloudProviders mongodbatlas.CloudProviders
 	err = json.Unmarshal(resp, &cloudProviders)
 	if err != nil {
-		return "", fmt.Errorf("error unmashaling response %w: %s", err, string(resp))
+		return "", fmt.Errorf("error unmarshaling response %w: %s", err, string(resp))
 	}
 
 	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {
@@ -430,29 +457,8 @@ func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedInte
 	return false
 }
 
-func getIntegrationType(val atlasv2.Integration) string {
-	switch {
-	case val.Datadog != nil:
-		return datadogEntity
-	case val.MicrosoftTeams != nil:
-		return microsoftTeamsEntity
-	case val.NewRelic != nil:
-		return newRelicEntity
-	case val.OpsGenie != nil:
-		return opsGenieEntity
-	case val.PagerDuty != nil:
-		return pagerDutyEntity
-	case val.Prometheus != nil:
-		return prometheusEntity
-	case val.Slack != nil:
-		return slackEntity
-	case val.VictorOps != nil:
-		return victorOpsEntity
-	case val.Webhook != nil:
-		return webhookEntity
-	default:
-		return ""
-	}
+func getIntegrationType(val atlasv2.ThridPartyIntegration) string {
+	return val.GetType()
 }
 
 func IsGov() bool {
@@ -596,6 +602,24 @@ func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
 	}
 }
 
+func deleteDatapipelinesForProject(t *testing.T, cliPath, projectID string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		datalakePipelineEntity,
+		"list",
+		"--projectId", projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	t.Log(string(resp))
+	require.NoError(t, err)
+	var pipelines []atlasv2.DataLakeIngestionPipeline
+	require.NoError(t, json.Unmarshal(resp, &pipelines))
+	for _, p := range pipelines {
+		assert.NoError(t, deleteDatalakeForProject(cliPath, projectID, p.GetName()))
+	}
+}
+
 func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,
@@ -632,23 +656,14 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 	}
 }
 
+const sleep = 10 * time.Second
+
 func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string) {
 	t.Helper()
 
 	privateEndpoints := listPrivateEndpointsByProject(t, cliPath, projectID, provider)
 	for _, endpoint := range privateEndpoints {
-		var endpointID string
-
-		switch v := endpoint.GetActualInstance().(type) {
-		case *atlasv2.AWSPrivateLinkConnection:
-			endpointID = v.GetId()
-		case *atlasv2.AzurePrivateLinkConnection:
-			endpointID = v.GetId()
-		case *atlasv2.GCPEndpointService:
-			endpointID = v.GetId()
-		}
-		require.NotEmpty(t, endpointID)
-		deletePrivateEndpoint(t, cliPath, projectID, provider, endpointID)
+		deletePrivateEndpoint(t, cliPath, projectID, provider, endpoint.GetId())
 	}
 
 	clear := false
@@ -659,11 +674,10 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 			clear = true
 			break
 		}
-
-		time.Sleep(10 * time.Second)
+		time.Sleep(sleep)
 	}
 
-	require.True(t, clear)
+	require.True(t, clear, "failed to clean all private endpoints")
 }
 
 func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider string) []atlasv2.EndpointService {
@@ -762,13 +776,61 @@ func createDBUserWithCert(projectID, username string) error {
 	return nil
 }
 
-func ensureCluster(t *testing.T, cluster *mongodbatlas.AdvancedCluster, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
+func createDataFederationForProject(projectID string) (string, error) {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return "", err
+	}
+
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	dataFederationName := fmt.Sprintf("e2e-data-federation-%v", n)
+
+	cmd := exec.Command(cliPath,
+		datafederationEntity,
+		"create",
+		dataFederationName,
+		"--projectId", projectID,
+		"--region", "DUBLIN_IRL")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return dataFederationName, nil
+}
+
+func deleteDataFederationForProject(projectID, dataFedName string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+
+	cmd := exec.Command(cliPath,
+		datafederationEntity,
+		"delete",
+		dataFedName,
+		"--projectId", projectID,
+		"--force")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return nil
+}
+
+func ensureCluster(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)
-	a.Equal(clusterName, cluster.Name)
-	a.Equal(version, cluster.MongoDBMajorVersion)
-	a.Equal(diskSizeGB, *cluster.DiskSizeGB)
-	a.Equal(terminationProtection, *cluster.TerminationProtectionEnabled)
+	a.Equal(clusterName, cluster.GetName())
+	a.Equal(version, cluster.GetMongoDBMajorVersion())
+	a.Equal(diskSizeGB, cluster.GetDiskSizeGB())
+	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
 }
 
 func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, tier string, diskSizeGB float64, terminationProtection bool) {
@@ -793,4 +855,101 @@ func compareStingsWithHiddenPart(expectedSting, actualString string, specialChar
 		}
 	}
 	return true
+}
+
+// createJSONFile creates a new JSON file at the specified path with the specified data
+// and also registers its deletion on test cleanup.
+func createJSONFile(t *testing.T, data interface{}, path string) {
+	t.Helper()
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		t.Errorf("Error marshaling to JSON: %v", err)
+		return
+	}
+
+	err = os.WriteFile(path, jsonData, 0600)
+	if err != nil {
+		t.Errorf("Error writing JSON to file: %v", err)
+		return
+	}
+
+	t.Cleanup(func() {
+		if err := os.Remove(path); err != nil {
+			t.Errorf("Error deleting file: %v", err)
+		}
+	})
+}
+
+func enableCompliancePolicy(projectID string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return fmt.Errorf("%w: invalid bin", err)
+	}
+	cmd := exec.Command(cliPath,
+		backupsEntity,
+		compliancepolicyEntity,
+		"enable",
+		"--projectId",
+		projectID,
+		"--authorizedEmail",
+		authorizedEmail,
+		"-o=json",
+		"--force",
+		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
+	)
+	cmd.Env = os.Environ()
+	output, outputErr := cmd.CombinedOutput()
+	if outputErr != nil {
+		return fmt.Errorf("%w\n %s", outputErr, string(output))
+	}
+	return nil
+}
+
+func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error) {
+	t.Helper()
+	compliancePolicy.SetAuthorizedEmail(authorizedEmail)
+	compliancePolicy.SetProjectId(projectID)
+
+	n, err := e2e.RandInt(255)
+	if err != nil {
+		return nil, fmt.Errorf("could not generate random int for setting up a compliance policy: %w", err)
+	}
+	randomPath := fmt.Sprintf("setup_compliance_policy_%d.json", n)
+	createJSONFile(t, compliancePolicy, randomPath)
+
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return nil, fmt.Errorf("%w: invalid bin", err)
+	}
+	cmd := exec.Command(cliPath,
+		backupsEntity,
+		compliancepolicyEntity,
+		"setup",
+		"--projectId",
+		projectID,
+		"-o=json",
+		"--force",
+		"--file",
+		randomPath,
+		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
+	)
+
+	cmd.Env = os.Environ()
+	resp, outputErr := cmd.CombinedOutput()
+	if outputErr != nil {
+		return nil, fmt.Errorf("%w\n %s", outputErr, string(resp))
+	}
+	trimmedResponse := removeDotsFromWatching(resp)
+
+	var result atlasv2.DataProtectionSettings
+	if err := json.Unmarshal(trimmedResponse, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+// If we watch a command in a testing environment,
+// the output has some dots in the beginning (depending on how long it took to finish) that need to be removed.
+func removeDotsFromWatching(consoleOutput []byte) []byte {
+	return []byte(strings.TrimLeft(string(consoleOutput), "."))
 }

@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type PauseOpts struct {
@@ -48,7 +48,7 @@ func (opts *PauseOpts) initStore(ctx context.Context) func() error {
 var pauseTemplate = "Online archive '{{.Id}}' paused.\n"
 
 func (opts *PauseOpts) Run() error {
-	cluster := &atlasv2.OnlineArchive{
+	cluster := &atlasv2.BackupOnlineArchive{
 		Id:    &opts.id,
 		State: pointer.Get("PAUSING"),
 	}

@@ -18,20 +18,23 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const (
-	datadog = "DATADOG"
-	slack   = "SLACK"
-	victor  = "VICTOR_OPS"
-	email   = "EMAIL"
-	ops     = "OPS_GENIE"
-	pager   = "PAGER_DUTY"
-	sms     = "SMS"
-	group   = "GROUP"
-	user    = "USER"
-	org     = "ORG"
+	datadog        = "DATADOG"
+	slack          = "SLACK"
+	victor         = "VICTOR_OPS"
+	email          = "EMAIL"
+	opsGenie       = "OPS_GENIE"
+	pagerDuty      = "PAGER_DUTY"
+	sms            = "SMS"
+	group          = "GROUP"
+	user           = "USER"
+	org            = "ORG"
+	team           = "TEAM"
+	webhook        = "WEBHOOK"
+	microsoftTeams = "MICROSOFT_TEAMS"
 )
 
 // ConfigOpts contains all the information and functions to manage an alert configuration.
@@ -44,6 +47,7 @@ type ConfigOpts struct {
 	metricThresholdOperator         string
 	metricThresholdUnits            string
 	metricThresholdMode             string
+	notifierID                      string
 	notificationToken               string // notificationsApiToken, notificationsFlowdockApiToken
 	notificationChannelName         string
 	apiKey                          string // notificationsDatadogApiKey, notificationsOpsGenieApiKey, notificationsVictorOpsApiKey
@@ -55,6 +59,9 @@ type ConfigOpts struct {
 	notificationType                string
 	notificationUsername            string
 	notificationVictorOpsRoutingKey string
+	notificationWebhookURL          string
+	notificationWebhookSecret       string
+	notificationRoles               []string
 	notificationDelayMin            int
 	notificationIntervalMin         int
 	notificationSmsEnabled          bool
@@ -63,86 +70,106 @@ type ConfigOpts struct {
 	metricThresholdThreshold        float64
 }
 
-func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *atlas.AlertConfiguration {
-	out := new(atlas.AlertConfiguration)
+func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.GroupAlertsConfig {
+	out := new(admin.GroupAlertsConfig)
 
-	out.GroupID = projectID
-	out.EventTypeName = strings.ToUpper(opts.event)
+	out.GroupId = &projectID
+	eventType := strings.ToUpper(opts.event)
+	out.EventTypeName = &eventType
 	out.Enabled = &opts.enabled
 
 	if opts.matcherFieldName != "" {
-		out.Matchers = []atlas.Matcher{*opts.newMatcher()}
+		out.Matchers = []map[string]interface{}{opts.newMatcher()}
 	}
 
 	if opts.metricThresholdMetricName != "" {
 		out.MetricThreshold = opts.newMetricThreshold()
 	}
 
-	out.Notifications = []atlas.Notification{*opts.newNotification()}
+	notification := opts.newNotification()
+	out.Notifications = []admin.AlertsNotificationRootForGroup{*notification}
 
 	return out
 }
 
-func (opts *ConfigOpts) newNotification() *atlas.Notification {
-	out := new(atlas.Notification)
-	out.TypeName = strings.ToUpper(opts.notificationType)
+func (opts *ConfigOpts) newNotification() *admin.AlertsNotificationRootForGroup {
+	out := new(admin.AlertsNotificationRootForGroup)
+	notificationType := strings.ToUpper(opts.notificationType)
+	out.TypeName = &notificationType
 	out.DelayMin = &opts.notificationDelayMin
-	out.IntervalMin = opts.notificationIntervalMin
-	out.TeamID = opts.notificationTeamID
-	out.Username = opts.notificationUsername
-	out.ChannelName = opts.notificationChannelName
+	out.IntervalMin = &opts.notificationIntervalMin
 
-	switch out.TypeName {
-	case victor:
-		out.VictorOpsAPIKey = opts.apiKey
-		out.VictorOpsRoutingKey = opts.notificationVictorOpsRoutingKey
+	if opts.notifierID != "" {
+		out.NotifierId = &opts.notifierID
+	}
 
-	case slack:
-		out.VictorOpsAPIKey = opts.apiKey
-		out.VictorOpsRoutingKey = opts.notificationVictorOpsRoutingKey
-		out.APIToken = opts.notificationToken
-
+	// write set of functions that contain code from switch cases and return error if required fields are not provided
+	switch out.GetTypeName() {
 	case datadog:
-		out.DatadogAPIKey = opts.apiKey
-		out.DatadogRegion = strings.ToUpper(opts.notificationRegion)
-
+		out.DatadogApiKey = &opts.apiKey
+		region := strings.ToUpper(opts.notificationRegion)
+		out.DatadogRegion = &region
 	case email:
-		out.EmailAddress = opts.notificationEmailAddress
-
-	case sms:
-		out.MobileNumber = opts.notificationMobileNumber
-
-	case group, user, org:
-		out.SMSEnabled = &opts.notificationSmsEnabled
+		out.EmailAddress = &opts.notificationEmailAddress
+	case group, org:
 		out.EmailEnabled = &opts.notificationEmailEnabled
-
-	case ops:
-		out.OpsGenieAPIKey = opts.apiKey
-		out.OpsGenieRegion = opts.notificationRegion
-
-	case pager:
-		out.ServiceKey = opts.notificationServiceKey
+		out.SmsEnabled = &opts.notificationSmsEnabled
+		out.Roles = opts.notificationRoles
+	case microsoftTeams:
+		out.MicrosoftTeamsWebhookUrl = &opts.notificationWebhookURL
+	case opsGenie:
+		out.OpsGenieApiKey = &opts.apiKey
+		region := strings.ToUpper(opts.notificationRegion)
+		out.OpsGenieRegion = &region
+	case pagerDuty:
+		region := strings.ToUpper(opts.notificationRegion)
+		out.Region = &region
+		out.ServiceKey = &opts.notificationServiceKey
+	case slack:
+		out.ApiToken = &opts.notificationToken
+		out.ChannelName = &opts.notificationChannelName
+	case sms:
+		out.MobileNumber = &opts.notificationMobileNumber
+	case team:
+		out.EmailEnabled = &opts.notificationEmailEnabled
+		out.SmsEnabled = &opts.notificationSmsEnabled
+		out.TeamId = &opts.notificationTeamID
+	case user:
+		out.EmailEnabled = &opts.notificationEmailEnabled
+		out.SmsEnabled = &opts.notificationSmsEnabled
+		out.Username = &opts.notificationUsername
+	case victor:
+		out.VictorOpsApiKey = &opts.apiKey
+		out.VictorOpsRoutingKey = &opts.notificationVictorOpsRoutingKey
+	case webhook:
+		out.WebhookUrl = &opts.notificationWebhookURL
+		out.WebhookSecret = &opts.notificationWebhookSecret
 	}
 
 	return out
 }
 
-func (opts *ConfigOpts) newMetricThreshold() *atlas.MetricThreshold {
-	return &atlas.MetricThreshold{
+func (opts *ConfigOpts) newMetricThreshold() *admin.ServerlessMetricThreshold {
+	operator := strings.ToUpper(opts.metricThresholdOperator)
+	mode := strings.ToUpper(opts.metricThresholdMode)
+	units := strings.ToUpper(opts.metricThresholdUnits)
+	result := &admin.ServerlessMetricThreshold{
 		MetricName: strings.ToUpper(opts.metricThresholdMetricName),
-		Operator:   strings.ToUpper(opts.metricThresholdOperator),
-		Threshold:  opts.metricThresholdThreshold,
-		Units:      strings.ToUpper(opts.metricThresholdUnits),
-		Mode:       strings.ToUpper(opts.metricThresholdMode),
+		Operator:   &operator,
+		Threshold:  &opts.metricThresholdThreshold,
+		Units:      &units,
+		Mode:       &mode,
 	}
+
+	return result
 }
 
-func (opts *ConfigOpts) newMatcher() *atlas.Matcher {
-	return &atlas.Matcher{
-		FieldName: strings.ToUpper(opts.matcherFieldName),
-		Operator:  strings.ToUpper(opts.matcherOperator),
-		Value:     strings.ToUpper(opts.matcherValue),
-	}
+func (opts *ConfigOpts) newMatcher() map[string]interface{} {
+	result := make(map[string]interface{})
+	result["FieldName"] = strings.ToUpper(opts.matcherFieldName)
+	result["Operator"] = strings.ToUpper(opts.matcherOperator)
+	result["Value"] = strings.ToUpper(opts.matcherValue)
+	return result
 }
 
 func Builder() *cobra.Command {

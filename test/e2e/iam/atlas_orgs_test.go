@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestAtlasOrgs(t *testing.T) {
@@ -43,11 +43,11 @@ func TestAtlasOrgs(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err2 := cmd.CombinedOutput()
 		require.NoError(t, err2, string(resp))
-		var orgs mongodbatlas.Organizations
+		var orgs admin.PaginatedOrganization
 		err = json.Unmarshal(resp, &orgs)
 		require.NoError(t, err, string(resp))
-		assert.NotEmpty(t, orgs.Results)
-		orgID = orgs.Results[0].ID
+		assert.NotEmpty(t, orgs.GetResults())
+		orgID = orgs.Results[0].GetId()
 	})
 	require.NotEmpty(t, orgID)
 
@@ -74,11 +74,11 @@ func TestAtlasOrgs(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err2 := cmd.CombinedOutput()
 		assert.NoError(t, err2, string(resp))
-		var users mongodbatlas.AtlasUsersResponse
+		var users admin.PaginatedApiAppUser
 		err = json.Unmarshal(resp, &users)
 		require.NoError(t, err, string(resp))
-		assert.NotEmpty(t, users.Results)
-		userID = users.Results[0].ID
+		assert.NotEmpty(t, users.GetResults())
+		userID = users.Results[0].GetId()
 	})
 	require.NotEmpty(t, userID)
 
@@ -105,12 +105,12 @@ func TestAtlasOrgs(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		assert.NoError(t, err, string(resp))
-		var org mongodbatlas.CreateOrganizationResponse
+		var org admin.CreateOrganizationResponse
 		err = json.Unmarshal(resp, &org)
 		require.NoError(t, err, string(resp))
-		orgID = org.Organization.ID
-		publicAPIKey = org.APIKey.PublicKey
-		privateAPIKey = org.APIKey.PrivateKey
+		orgID = org.Organization.GetId()
+		publicAPIKey = org.ApiKey.GetPublicKey()
+		privateAPIKey = org.ApiKey.GetPrivateKey()
 
 		require.NotEmpty(t, publicAPIKey)
 		require.NotEmpty(t, privateAPIKey)

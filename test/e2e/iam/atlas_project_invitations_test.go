@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestAtlasProjectInvitations(t *testing.T) {
@@ -63,12 +63,12 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
-		var invitation mongodbatlas.Invitation
+		var invitation admin.GroupInvitation
 		if err := json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailProject, invitation.Username)
-			require.NotEmpty(t, invitation.ID)
+			a.Equal(emailProject, invitation.GetUsername())
+			require.NotEmpty(t, invitation.GetId())
 		}
-		invitationID = invitation.ID
+		invitationID = invitation.GetId()
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -85,7 +85,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
-		var invitations []mongodbatlas.Invitation
+		var invitations []admin.GroupInvitation
 		if err = json.Unmarshal(resp, &invitations); a.NoError(err) {
 			a.NotEmpty(invitations)
 		}
@@ -106,9 +106,10 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
-		var invitation mongodbatlas.Invitation
+		var invitation admin.GroupInvitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(invitationID, invitation.ID)
+			a.Equal(invitationID, invitation.GetId())
+			a.Equal([]string{"GROUP_READ_ONLY"}, invitation.GetRoles())
 		}
 	})
 
@@ -132,10 +133,10 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
-		var invitation mongodbatlas.Invitation
+		var invitation admin.GroupInvitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailProject, invitation.Username)
-			a.ElementsMatch([]string{roleName1, roleName2}, invitation.Roles)
+			a.Equal(emailProject, invitation.GetUsername())
+			a.ElementsMatch([]string{roleName1, roleName2}, invitation.GetRoles())
 		}
 	})
 
@@ -158,10 +159,10 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
-		var invitation mongodbatlas.Invitation
+		var invitation admin.GroupInvitation
 		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailProject, invitation.Username)
-			a.ElementsMatch([]string{roleName1, roleName2}, invitation.Roles)
+			a.Equal(emailProject, invitation.GetUsername())
+			a.ElementsMatch([]string{roleName1, roleName2}, invitation.GetRoles())
 		}
 	})
 

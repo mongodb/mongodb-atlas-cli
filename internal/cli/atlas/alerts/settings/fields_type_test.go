@@ -20,7 +20,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
 func TestFieldsType_Run(t *testing.T) {
@@ -42,4 +43,5 @@ func TestFieldsType_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, matcherFieldsTemplate, expected)
 }

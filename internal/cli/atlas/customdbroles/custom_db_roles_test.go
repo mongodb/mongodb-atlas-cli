@@ -21,7 +21,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestBuilder(t *testing.T) {
@@ -35,8 +35,8 @@ func TestBuilder(t *testing.T) {
 
 func Test_appendActions(t *testing.T) {
 	type args struct {
-		existingActions []atlasv2.DBAction
-		newActions      []atlasv2.DBAction
+		existingActions []atlasv2.DatabasePrivilegeAction
+		newActions      []atlasv2.DatabasePrivilegeAction
 	}
 
 	test1 := "test1"
@@ -45,23 +45,23 @@ func Test_appendActions(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want []atlasv2.DBAction
+		want []atlasv2.DatabasePrivilegeAction
 	}{
 		{
 			name: "empty",
 			args: args{
-				existingActions: []atlasv2.DBAction{},
-				newActions:      []atlasv2.DBAction{},
+				existingActions: []atlasv2.DatabasePrivilegeAction{},
+				newActions:      []atlasv2.DatabasePrivilegeAction{},
 			},
-			want: []atlasv2.DBAction{},
+			want: []atlasv2.DatabasePrivilegeAction{},
 		},
 		{
 			name: "no new actions",
 			args: args{
-				existingActions: []atlasv2.DBAction{
+				existingActions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "TEST",
-						Resources: []atlasv2.DBResource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
 								Collection: test1,
 								Db:         test1,
@@ -69,12 +69,12 @@ func Test_appendActions(t *testing.T) {
 						},
 					},
 				},
-				newActions: []atlasv2.DBAction{},
+				newActions: []atlasv2.DatabasePrivilegeAction{},
 			},
-			want: []atlasv2.DBAction{
+			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "TEST",
-					Resources: []atlasv2.DBResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Collection: test1,
 							Db:         test1,
@@ -86,10 +86,10 @@ func Test_appendActions(t *testing.T) {
 		{
 			name: "different actions",
 			args: args{
-				existingActions: []atlasv2.DBAction{
+				existingActions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "TEST",
-						Resources: []atlasv2.DBResource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
 								Collection: test1,
 								Db:         test1,
@@ -97,10 +97,10 @@ func Test_appendActions(t *testing.T) {
 						},
 					},
 				},
-				newActions: []atlasv2.DBAction{
+				newActions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "NEW",
-						Resources: []atlasv2.DBResource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
 								Collection: test1,
 								Db:         test1,
@@ -109,10 +109,10 @@ func Test_appendActions(t *testing.T) {
 					},
 				},
 			},
-			want: []atlasv2.DBAction{
+			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "TEST",
-					Resources: []atlasv2.DBResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Collection: test1,
 							Db:         test1,
@@ -121,7 +121,7 @@ func Test_appendActions(t *testing.T) {
 				},
 				{
 					Action: "NEW",
-					Resources: []atlasv2.DBResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Collection: test1,
 							Db:         test1,
@@ -133,10 +133,10 @@ func Test_appendActions(t *testing.T) {
 		{
 			name: "merge",
 			args: args{
-				existingActions: []atlasv2.DBAction{
+				existingActions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "TEST",
-						Resources: []atlasv2.DBResource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
 								Collection: test1,
 								Db:         test2,
@@ -144,10 +144,10 @@ func Test_appendActions(t *testing.T) {
 						},
 					},
 				},
-				newActions: []atlasv2.DBAction{
+				newActions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "TEST",
-						Resources: []atlasv2.DBResource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
 								Collection: test1,
 								Db:         test1,
@@ -156,10 +156,10 @@ func Test_appendActions(t *testing.T) {
 					},
 				},
 			},
-			want: []atlasv2.DBAction{
+			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "TEST",
-					Resources: []atlasv2.DBResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Collection: test1,
 							Db:         test1,
@@ -185,7 +185,7 @@ func Test_appendActions(t *testing.T) {
 
 func Test_joinActions(t *testing.T) {
 	type args struct {
-		newActions []atlasv2.DBAction
+		newActions []atlasv2.DatabasePrivilegeAction
 	}
 
 	test3 := "test3"
@@ -194,22 +194,22 @@ func Test_joinActions(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want []atlasv2.DBAction
+		want []atlasv2.DatabasePrivilegeAction
 	}{
 		{
 			name: "empty",
 			args: args{
-				newActions: []atlasv2.DBAction{},
+				newActions: []atlasv2.DatabasePrivilegeAction{},
 			},
-			want: []atlasv2.DBAction{},
+			want: []atlasv2.DatabasePrivilegeAction{},
 		},
 		{
 			name: "no duplicate",
 			args: args{
-				newActions: []atlasv2.DBAction{
+				newActions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "TEST",
-						Resources: []atlasv2.DBResource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
 								Collection: test3,
 								Db:         test3,
@@ -218,7 +218,7 @@ func Test_joinActions(t *testing.T) {
 					},
 					{
 						Action: "TEST2",
-						Resources: []atlasv2.DBResource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
 								Collection: test3,
 								Db:         test3,
@@ -227,10 +227,10 @@ func Test_joinActions(t *testing.T) {
 					},
 				},
 			},
-			want: []atlasv2.DBAction{
+			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "TEST",
-					Resources: []atlasv2.DBResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Collection: test3,
 							Db:         test3,
@@ -239,7 +239,7 @@ func Test_joinActions(t *testing.T) {
 				},
 				{
 					Action: "TEST2",
-					Resources: []atlasv2.DBResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Collection: test3,
 							Db:         test3,
@@ -251,10 +251,10 @@ func Test_joinActions(t *testing.T) {
 		{
 			name: "duplicates",
 			args: args{
-				newActions: []atlasv2.DBAction{
+				newActions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "TEST",
-						Resources: []atlasv2.DBResource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
 								Collection: test3,
 								Db:         test3,
@@ -263,7 +263,7 @@ func Test_joinActions(t *testing.T) {
 					},
 					{
 						Action: "TEST",
-						Resources: []atlasv2.DBResource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
 								Collection: test3,
 								Db:         test4,
@@ -272,10 +272,10 @@ func Test_joinActions(t *testing.T) {
 					},
 				},
 			},
-			want: []atlasv2.DBAction{
+			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "TEST",
-					Resources: []atlasv2.DBResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Collection: test3,
 							Db:         test4,

@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type WatchOpts struct {
@@ -36,6 +37,7 @@ type WatchOpts struct {
 }
 
 var watchTemplate = "\nRestore completed.\n"
+var result *atlasv2.DiskBackupSnapshotRestoreJob
 
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -46,11 +48,13 @@ func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *WatchOpts) watcher() (bool, error) {
-	result, err := opts.store.RestoreJob(opts.ConfigProjectID(), opts.clusterName, opts.id)
+	var err error
+	result, err = opts.store.RestoreJob(opts.ConfigProjectID(), opts.clusterName, opts.id)
 	if err != nil {
 		return false, err
 	}
-	return result.GetExpired() || result.GetCancelled() || result.GetFailed() || result.GetFinishedAt().String() != "", nil
+
+	return result.GetExpired() || result.GetCancelled() || result.GetFailed() || result.HasFinishedAt(), nil
 }
 
 func (opts *WatchOpts) Run() error {
@@ -58,7 +62,7 @@ func (opts *WatchOpts) Run() error {
 		return err
 	}
 
-	return opts.Print(nil)
+	return opts.Print(result)
 }
 
 // WatchBuilder atlas backup(s) restore(s) job(s) watch <restoreJobId>.
@@ -76,7 +80,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 			"restoreJobIdDesc": "ID of the restore job.",
 			"output":           watchTemplate,
 		},
-		Example: fmt.Sprintf(`  # Watch the continuous backup restore job with the ID 507f1f77bcf86cd799439011 for the cluster named Cluster0 until it becomes available:
+		Example: fmt.Sprintf(`  # Watch the continuous backup restore job with the ID 507f1f77bcf86cd799439011 for the restore source cluster named Cluster0 until it becomes available:
   %s backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

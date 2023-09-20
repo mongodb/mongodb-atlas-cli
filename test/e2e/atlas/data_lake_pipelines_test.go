@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -124,7 +124,7 @@ func TestDataLakePipelines(t *testing.T) {
 		req.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var pipeline *atlasv2.IngestionPipeline
+		var pipeline *atlasv2.DataLakeIngestionPipeline
 		if err = json.Unmarshal(resp, &pipeline); a.NoError(err) {
 			pipelineID = *pipeline.Id
 			a.Equal(pipelineName, *pipeline.Name)
@@ -153,7 +153,7 @@ func TestDataLakePipelines(t *testing.T) {
 		req.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var pipeline atlasv2.IngestionPipeline
+		var pipeline atlasv2.DataLakeIngestionPipeline
 		if err = json.Unmarshal(resp, &pipeline); a.NoError(err) {
 			a.Equal(pipelineName, *pipeline.Name)
 		}
@@ -169,7 +169,7 @@ func TestDataLakePipelines(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var r []atlasv2.IngestionPipeline
+		var r []atlasv2.DataLakeIngestionPipeline
 		a := assert.New(t)
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)
@@ -191,7 +191,7 @@ func TestDataLakePipelines(t *testing.T) {
 		req.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var pipeline *atlasv2.IngestionPipeline
+		var pipeline *atlasv2.DataLakeIngestionPipeline
 		if err = json.Unmarshal(resp, &pipeline); a.NoError(err) {
 			a.Equal(pipelineName, *pipeline.Name)
 		}
@@ -229,7 +229,7 @@ func TestDataLakePipelines(t *testing.T) {
 		req.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var pipeline *atlasv2.IngestionPipeline
+		var pipeline *atlasv2.DataLakeIngestionPipeline
 		if err = json.Unmarshal(resp, &pipeline); a.NoError(err) {
 			a.Equal(pipelineName, *pipeline.Name)
 		}
@@ -247,7 +247,7 @@ func TestDataLakePipelines(t *testing.T) {
 		req.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var pipeline *atlasv2.IngestionPipeline
+		var pipeline *atlasv2.DataLakeIngestionPipeline
 		if err = json.Unmarshal(resp, &pipeline); a.NoError(err) {
 			a.Equal(pipelineName, *pipeline.Name)
 		}
@@ -331,7 +331,7 @@ func TestDataLakePipelines(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var r []atlasv2.PolicyItem
+		var r []atlasv2.DiskBackupApiPolicyItem
 		a := assert.New(t)
 		if err = json.Unmarshal(resp, &r); a.NoError(err) {
 			a.NotEmpty(r)

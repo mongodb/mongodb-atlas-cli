@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -29,15 +29,15 @@ type OnlineArchiveLister interface {
 }
 
 type OnlineArchiveDescriber interface {
-	OnlineArchive(string, string, string) (*atlasv2.OnlineArchive, error)
+	OnlineArchive(string, string, string) (*atlasv2.BackupOnlineArchive, error)
 }
 
 type OnlineArchiveCreator interface {
-	CreateOnlineArchive(string, string, *atlasv2.OnlineArchive) (*atlasv2.OnlineArchive, error)
+	CreateOnlineArchive(string, string, *atlasv2.BackupOnlineArchiveCreate) (*atlasv2.BackupOnlineArchive, error)
 }
 
 type OnlineArchiveUpdater interface {
-	UpdateOnlineArchive(string, string, *atlasv2.OnlineArchive) (*atlasv2.OnlineArchive, error)
+	UpdateOnlineArchive(string, string, *atlasv2.BackupOnlineArchive) (*atlasv2.BackupOnlineArchive, error)
 }
 
 type OnlineArchiveDeleter interface {
@@ -57,7 +57,7 @@ func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.List
 }
 
 // OnlineArchive encapsulate the logic to manage different cloud providers.
-func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlasv2.OnlineArchive, error) {
+func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlasv2.BackupOnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.clientv2.OnlineArchiveApi.GetOnlineArchive(s.ctx, projectID, archiveID, clusterName).Execute()
@@ -68,7 +68,7 @@ func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlasv
 }
 
 // CreateOnlineArchive encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atlasv2.OnlineArchive) (*atlasv2.OnlineArchive, error) {
+func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atlasv2.BackupOnlineArchiveCreate) (*atlasv2.BackupOnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.clientv2.OnlineArchiveApi.CreateOnlineArchive(s.ctx, projectID, clusterName, archive).Execute()
@@ -79,7 +79,7 @@ func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atla
 }
 
 // UpdateOnlineArchive encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atlasv2.OnlineArchive) (*atlasv2.OnlineArchive, error) {
+func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atlasv2.BackupOnlineArchive) (*atlasv2.BackupOnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
 		result, _, err := s.clientv2.OnlineArchiveApi.UpdateOnlineArchive(s.ctx, projectID, archive.GetId(), clusterName, archive).Execute()

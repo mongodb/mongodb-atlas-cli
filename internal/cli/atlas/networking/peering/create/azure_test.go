@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestAzureOpts_Run(t *testing.T) {
@@ -36,10 +36,10 @@ func TestAzureOpts_Run(t *testing.T) {
 		region: "TEST",
 	}
 	t.Run("container exists", func(t *testing.T) {
-		containers := []*atlasv2.AzureCloudProviderContainer{
+		containers := []atlasv2.CloudProviderContainer{
 			{
 				Id:     pointer.Get("containerID"),
-				Region: opts.region,
+				Region: &opts.region,
 			},
 		}
 		mockStore.
@@ -52,7 +52,7 @@ func TestAzureOpts_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			CreatePeeringConnection(opts.ProjectID, request).
-			Return(&atlasv2.AzurePeerNetwork{}, nil).
+			Return(&atlasv2.BaseNetworkPeeringConnectionSettings{}, nil).
 			Times(1)
 		if err := opts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
@@ -68,14 +68,14 @@ func TestAzureOpts_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			CreateContainer(opts.ProjectID, containerRequest).
-			Return(&atlasv2.AzureCloudProviderContainer{Id: pointer.Get("ID")}, nil).
+			Return(&atlasv2.CloudProviderContainer{Id: pointer.Get("ID")}, nil).
 			Times(1)
 
 		request := opts.newPeer("ID")
 		mockStore.
 			EXPECT().
 			CreatePeeringConnection(opts.ProjectID, request).
-			Return(&atlasv2.AzurePeerNetwork{}, nil).
+			Return(&atlasv2.BaseNetworkPeeringConnectionSettings{}, nil).
 			Times(1)
 		if err := opts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)

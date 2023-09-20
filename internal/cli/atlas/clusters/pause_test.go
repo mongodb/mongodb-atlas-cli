@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestPause_Run(t *testing.T) {
@@ -35,7 +35,7 @@ func TestPause_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &mongodbatlas.AdvancedCluster{}
+	expected := &atlasv2.AdvancedClusterDescription{}
 
 	mockStore.
 		EXPECT().

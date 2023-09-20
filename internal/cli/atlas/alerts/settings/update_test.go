@@ -20,15 +20,15 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestUpdates_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationUpdater(ctrl)
 
-	expected := &mongodbatlas.AlertConfiguration{}
+	expected := &atlasv2.GroupAlertsConfig{}
 
 	updateOpts := &UpdateOpts{
 		ConfigOpts: ConfigOpts{
@@ -52,7 +52,8 @@ func TestUpdates_Run(t *testing.T) {
 	}
 
 	alert := updateOpts.NewAlertConfiguration(updateOpts.ConfigProjectID())
-	alert.ID = updateOpts.alertID
+
+	alert.Id = &updateOpts.alertID
 	mockStore.
 		EXPECT().
 		UpdateAlertConfiguration(alert).

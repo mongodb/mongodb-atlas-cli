@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 var inviteTemplate = "The user '{{.Username}}' has been invited.\nInvited users do not have access to the project until they accept the invitation.\n"
@@ -58,13 +58,13 @@ func (opts *InviteOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *InviteOpts) newUserRequest() (*atlasv2.AppUser, error) {
+func (opts *InviteOpts) newUserRequest() (*atlasv2.CloudAppUser, error) {
 	roles, err := opts.createRoles()
 	if err != nil {
 		return nil, err
 	}
 
-	user := atlasv2.AppUser{
+	user := atlasv2.CloudAppUser{
 		Username:     opts.username,
 		Password:     opts.password,
 		FirstName:    opts.firstName,
@@ -94,12 +94,8 @@ func (opts *InviteOpts) Run() error {
 
 const keyParts = 2
 
-func (opts *InviteOpts) createRoles() ([]atlasv2.RoleAssignment, error) {
-	if !config.IsCloud() {
-		return nil, nil
-	}
-
-	atlasRoles := make([]atlasv2.RoleAssignment, len(opts.orgRoles)+len(opts.projectRoles))
+func (opts *InviteOpts) createRoles() ([]atlasv2.CloudAccessRoleAssignment, error) {
+	atlasRoles := make([]atlasv2.CloudAccessRoleAssignment, len(opts.orgRoles)+len(opts.projectRoles))
 
 	i := 0
 	for _, role := range opts.orgRoles {
@@ -147,38 +143,36 @@ func splitRole(role string) ([]string, error) {
 	return value, nil
 }
 
-func newAtlasProjectRole(role string) (atlasv2.RoleAssignment, error) {
+func newAtlasProjectRole(role string) (atlasv2.CloudAccessRoleAssignment, error) {
 	value, err := splitRole(role)
 	if err != nil {
-		return atlasv2.RoleAssignment{}, err
+		return atlasv2.CloudAccessRoleAssignment{}, err
 	}
-	atlasRole := atlasv2.RoleAssignment{
-		GroupId: &value[0],
-		Role:    pointer.Get(strings.ToUpper(value[1])),
+	atlasRole := atlasv2.CloudAccessRoleAssignment{
+		GroupId:  &value[0],
+		RoleName: pointer.Get(strings.ToUpper(value[1])),
 	}
 
 	return atlasRole, nil
 }
 
-func newAtlasOrgRole(role string) (atlasv2.RoleAssignment, error) {
+func newAtlasOrgRole(role string) (atlasv2.CloudAccessRoleAssignment, error) {
 	value, err := splitRole(role)
 	if err != nil {
-		return atlasv2.RoleAssignment{}, err
+		return atlasv2.CloudAccessRoleAssignment{}, err
 	}
-	atlasRole := atlasv2.RoleAssignment{
-		OrgId: &value[0],
-		Role:  pointer.Get(strings.ToUpper(value[1])),
+	atlasRole := atlasv2.CloudAccessRoleAssignment{
+		OrgId:    &value[0],
+		RoleName: pointer.Get(strings.ToUpper(value[1])),
 	}
 	return atlasRole, nil
 }
 
-// mongocli iam users(s) invite --username username --password password --country country --email email
-// --mobile mobile --firstName firstName --lastName lastName --team team1,team2 --orgRoles orgID:ROLE_NAME
-// --projectRoles projectID:ROLE_NAME
-
+// InviteBuilder atlas users(s) invite --username username --password password --country country --email email
+// --mobile mobile --firstName firstName --lastName lastName --team team1,team2 --orgRole orgID:ROLE_NAME
+// --projectRole projectID:ROLE_NAME.
 func InviteBuilder() *cobra.Command {
 	opts := &InviteOpts{}
-	opts.Template = inviteTemplate
 	cmd := &cobra.Command{
 		Use:   "invite",
 		Short: "Create a MongoDB user for your MongoDB application and invite the MongoDB user to your organizations and projects.",
@@ -193,11 +187,10 @@ func InviteBuilder() *cobra.Command {
   # Create the MongoDB user with the username user@example.com and invite them to the project with the ID 5f71e5255afec75a3d0f96dc with GROUP_READ_ONLY access:
   %[1]s users invite --email user@example.com --username user@example.com --projectRole 5f71e5255afec75a3d0f96dc:GROUP_READ_ONLY --firstName Example --lastName User --country US --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if config.Service() != config.OpsManagerService {
-				_ = cmd.MarkFlagRequired(flag.Country)
-			}
-
-			return prerun.ExecuteE(opts.InitOutput(cmd.OutOrStdout(), ""), opts.InitInput(cmd.InOrStdin()), opts.initStore(cmd.Context()))
+			return prerun.ExecuteE(
+				opts.InitOutput(cmd.OutOrStdout(), inviteTemplate),
+				opts.InitInput(cmd.InOrStdin()),
+				opts.initStore(cmd.Context()))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.Prompt(); err != nil {
@@ -223,6 +216,7 @@ func InviteBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.Email)
 	_ = cmd.MarkFlagRequired(flag.FirstName)
 	_ = cmd.MarkFlagRequired(flag.LastName)
+	_ = cmd.MarkFlagRequired(flag.Country)
 
 	return cmd
 }

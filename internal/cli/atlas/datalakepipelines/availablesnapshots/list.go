@@ -27,12 +27,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
+	customTime "github.com/mongodb/mongodb-atlas-cli/internal/time"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
 var listTemplate = `ID	DESCRIPTION	STATUS{{range .Results}}
-{{if .DiskBackupReplicaSet}}{{.DiskBackupReplicaSet.Id}}	{{.DiskBackupReplicaSet.Description}}	{{.DiskBackupReplicaSet.Status}}{{else}}{{.DiskBackupShardedClusterSnapshot.Id}}	{{.DiskBackupShardedClusterSnapshot.Description}}	{{.DiskBackupShardedClusterSnapshot.Status}}{{end}}{{end}}`
+{{.Id}}	{{.Description}}	{{.Status}}{{end}}`
 
 type ListOpts struct {
 	cli.GlobalOpts
@@ -56,14 +57,14 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 
 func convertTime(value string) *time.Time {
 	var result *time.Time
-	if completedAfter, err := time.Parse(time.RFC3339, value); err == nil {
+	if completedAfter, err := customTime.ParseTimestamp(value); err == nil {
 		result = &completedAfter
 	}
 	return result
 }
 
 func (opts *ListOpts) validate() error {
-	if _, err := time.Parse(time.RFC3339, opts.completedAfter); opts.completedAfter != "" && err != nil {
+	if _, err := customTime.ParseTimestamp(opts.completedAfter); opts.completedAfter != "" && err != nil {
 		return fmt.Errorf("%w: expected format 'YYYY-MM-DD' got '%s'", ErrCompletedAfterInvalidFormat, opts.completedAfter)
 	}
 	return nil

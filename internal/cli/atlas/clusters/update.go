@@ -24,11 +24,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const (
@@ -75,25 +76,25 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) cluster() (*atlas.AdvancedCluster, error) {
-	var cluster *atlas.AdvancedCluster
+func (opts *UpdateOpts) cluster() (*atlasv2.AdvancedClusterDescription, error) {
+	var cluster *atlasv2.AdvancedClusterDescription
 	if opts.filename != "" {
 		err := file.Load(opts.fs, opts.filename, &cluster)
 		if err != nil {
 			return nil, err
 		}
 		if opts.name == "" {
-			opts.name = cluster.Name
+			opts.name = cluster.GetName()
 		}
 		return cluster, nil
 	}
 	return opts.store.AtlasCluster(opts.ProjectID, opts.name)
 }
 
-func (opts *UpdateOpts) patchOpts(out *atlas.AdvancedCluster) {
+func (opts *UpdateOpts) patchOpts(out *atlasv2.AdvancedClusterDescription) {
 	RemoveReadOnlyAttributes(out)
 	if opts.mdbVersion != "" {
-		out.MongoDBMajorVersion = opts.mdbVersion
+		out.MongoDBMajorVersion = &opts.mdbVersion
 	}
 	if opts.diskSizeGB > 0 {
 		out.DiskSizeGB = &opts.diskSizeGB
@@ -103,20 +104,29 @@ func (opts *UpdateOpts) patchOpts(out *atlas.AdvancedCluster) {
 	}
 	out.TerminationProtectionEnabled = cli.ReturnValueForSetting(opts.enableTerminationProtection, opts.disableTerminationProtection)
 
+	if len(opts.tag) > 0 {
+		out.Tags = []atlasv2.ResourceTag{}
+	}
+	for k, v := range opts.tag {
+		if k != "" && v != "" {
+			out.Tags = append(out.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+		}
+	}
+
 	AddLabel(out, NewCLILabel())
 }
 
-func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlas.AdvancedCluster) {
+func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasv2.AdvancedClusterDescription) {
 	for _, replicationSpec := range out.ReplicationSpecs {
 		for _, regionConf := range replicationSpec.RegionConfigs {
 			if regionConf.ReadOnlySpecs != nil {
-				regionConf.ReadOnlySpecs.InstanceSize = opts.tier
+				regionConf.ReadOnlySpecs.InstanceSize = &opts.tier
 			}
 			if regionConf.AnalyticsSpecs != nil {
-				regionConf.AnalyticsSpecs.InstanceSize = opts.tier
+				regionConf.AnalyticsSpecs.InstanceSize = &opts.tier
 			}
 			if regionConf.ElectableSpecs != nil {
-				regionConf.ElectableSpecs.InstanceSize = opts.tier
+				regionConf.ElectableSpecs.InstanceSize = &opts.tier
 			}
 		}
 	}

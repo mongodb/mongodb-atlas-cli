@@ -19,49 +19,34 @@ package settings
 import (
 	"bytes"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestConfigList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationLister(ctrl)
 
-	expected := []mongodbatlas.AlertConfiguration{
-		{
-			ID:                     "test",
-			GroupID:                "test",
-			AlertConfigID:          "test",
-			EventTypeName:          "test",
-			Created:                "test",
-			Status:                 "test",
-			AcknowledgedUntil:      "test",
-			AcknowledgementComment: "test",
-			AcknowledgingUsername:  "test",
-			Updated:                "test",
-			Resolved:               "test",
-			LastNotified:           "test",
-			HostnameAndPort:        "test",
-			HostID:                 "test",
-			ReplicaSetName:         "test",
-			MetricName:             "test",
-			Enabled:                pointer.Get(true),
-			ClusterID:              "test",
-			ClusterName:            "test",
-			SourceTypeName:         "test",
-			CurrentValue: &mongodbatlas.CurrentValue{
-				Number: pointer.Get(1.2),
-				Units:  "test",
+	expected := &admin.PaginatedAlertConfig{
+		Results: []admin.GroupAlertsConfig{
+			{
+				Id:              pointer.Get("test"),
+				GroupId:         pointer.Get("test"),
+				Enabled:         pointer.Get(true),
+				EventTypeName:   pointer.Get("test"),
+				Created:         pointer.Get(time.Now()),
+				Matchers:        nil,
+				Notifications:   nil,
+				Updated:         pointer.Get(time.Now()),
+				MetricThreshold: nil,
+				Threshold:       nil,
 			},
-			Matchers:        nil,
-			MetricThreshold: nil,
-			Threshold:       nil,
-			Notifications:   nil,
 		},
 	}
 
@@ -75,9 +60,14 @@ func TestConfigList_Run(t *testing.T) {
 		},
 	}
 
+	params := &admin.ListAlertConfigurationsApiParams{
+		GroupId: listOpts.ProjectID,
+		PageNum: &listOpts.PageNum,
+	}
+
 	mockStore.
 		EXPECT().
-		AlertConfigurations(listOpts.ProjectID, listOpts.NewListOptions()).
+		AlertConfigurations(params).
 		Return(expected, nil).
 		Times(1)
 
@@ -85,8 +75,6 @@ func TestConfigList_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `ID     TYPE   ENABLED
-test   test   true
-`, buf.String())
 	t.Log(buf.String())
+	test.VerifyOutputTemplate(t, settingsListTemplate, expected)
 }

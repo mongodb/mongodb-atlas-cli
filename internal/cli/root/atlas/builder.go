@@ -25,8 +25,36 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslists"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslogs"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/alerts"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/auditing"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/cloudproviders"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters"
 	atlasConfig "github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdbroles"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdns"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datafederation"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalake"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datalakepipelines"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/dbusers"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/events"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/integrations"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/kubernetes"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/livemigrations"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/logs"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/maintenance"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/metrics"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/networking"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/organizations"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/performanceadvisor"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/processes"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/security"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/figautocomplete"
@@ -55,6 +83,18 @@ type Notifier struct {
 	filesystem     afero.Fs
 	writer         io.Writer
 }
+
+type AuthRequirements int64
+
+const (
+	// command does not require authentication.
+	NoAuth AuthRequirements = 0
+	// command requires authentication.
+	RequiredAuth AuthRequirements = 1
+	// command can work with or without authentication,
+	// and if access token token is found, try to refresh it.
+	OptionalAuth AuthRequirements = 2
+)
 
 func handleSignal() {
 	sighandle.Notify(func(sig os.Signal) {
@@ -98,7 +138,7 @@ Use the --help flag with any command for more info on that command.`,
 			"toc": "true",
 		},
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			log.SetOutput(cmd.ErrOrStderr())
+			log.SetWriter(cmd.ErrOrStderr())
 			if debugLevel {
 				log.SetLevel(log.DebugLevel)
 			}
@@ -112,14 +152,19 @@ Use the --help flag with any command for more info on that command.`,
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
 			}
-			if shouldCheckCredentials(cmd) {
-				return prerun.ExecuteE(
+			if authReq := shouldCheckCredentials(cmd); authReq != NoAuth {
+				if err := prerun.ExecuteE(
 					opts.InitFlow(config.Default()),
 					func() error {
 						return opts.RefreshAccessToken(cmd.Context())
 					},
-					validate.Credentials,
-				)
+				); err != nil {
+					return err
+				}
+
+				if authReq == RequiredAuth {
+					return validate.Credentials()
+				}
 			}
 
 			return nil
@@ -162,12 +207,12 @@ Use the --help flag with any command for more info on that command.`,
 	cmdList := append([]*cobra.Command{
 		atlasConfig.Builder(),
 		auth.Builder(),
-		quickstart.Builder(),
 		setup.Builder(),
 		loginCmd,
 		logoutCmd,
 		whoCmd,
 		registerCmd,
+<<<<<<< HEAD
 	}, generated.Commands()...)
 	rootCmd.AddCommand(
 		cmdList...,
@@ -208,6 +253,13 @@ Use the --help flag with any command for more info on that command.`,
 	registerCmd,
 	figautocomplete.Builder(),
 	kubernetes.Builder(),*/
+=======
+		figautocomplete.Builder(),
+		kubernetes.Builder(),
+		datafederation.Builder(),
+		auditing.Builder(),
+		deployments.Builder(),
+>>>>>>> master
 	)
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)
@@ -244,7 +296,7 @@ func shouldSetService(cmd *cobra.Command) bool {
 	return true
 }
 
-func shouldCheckCredentials(cmd *cobra.Command) bool {
+func shouldCheckCredentials(cmd *cobra.Command) AuthRequirements {
 	searchByName := []string{
 		"__complete",
 		"help",
@@ -252,24 +304,25 @@ func shouldCheckCredentials(cmd *cobra.Command) bool {
 	}
 	for _, n := range searchByName {
 		if cmd.Name() == n {
-			return false
+			return NoAuth
 		}
 	}
-	skipFor := []string{
-		fmt.Sprintf("%s %s", atlas, "completion"), // completion commands do not require credentials
-		fmt.Sprintf("%s %s", atlas, "config"),     // user wants to set credentials
-		fmt.Sprintf("%s %s", atlas, "auth"),       // user wants to set credentials
-		fmt.Sprintf("%s %s", atlas, "login"),      // user wants to set credentials
-		fmt.Sprintf("%s %s", atlas, "setup"),      // user wants to set credentials
-		fmt.Sprintf("%s %s", atlas, "register"),   // user wants to set credentials
-		fmt.Sprintf("%s %s", atlas, "quickstart"), // command supports login
+	customRequirements := map[string]AuthRequirements{
+		fmt.Sprintf("%s %s", atlas, "completion"):  NoAuth,       // completion commands do not require credentials
+		fmt.Sprintf("%s %s", atlas, "config"):      NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "auth"):        NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "login"):       NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "setup"):       NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "register"):    NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "quickstart"):  NoAuth,       // command supports login
+		fmt.Sprintf("%s %s", atlas, "deployments"): OptionalAuth, // command supports local and Atlas
 	}
-	for _, p := range skipFor {
+	for p, r := range customRequirements {
 		if strings.HasPrefix(cmd.CommandPath(), p) {
-			return false
+			return r
 		}
 	}
-	return true
+	return RequiredAuth
 }
 
 func formattedVersion() string {

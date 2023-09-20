@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -75,7 +75,7 @@ func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atl
 func (s *Store) ClearMaintenanceWindow(projectID string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, _, err := s.clientv2.MaintenanceWindowsApi.ResetMaintenanceWindow(s.ctx, projectID).Execute()
+		_, err := s.clientv2.MaintenanceWindowsApi.ResetMaintenanceWindow(s.ctx, projectID).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

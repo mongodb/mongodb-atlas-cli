@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -36,10 +36,10 @@ func (m *MockUserCreator) EXPECT() *MockUserCreatorMockRecorder {
 }
 
 // CreateUser mocks base method.
-func (m *MockUserCreator) CreateUser(arg0 *admin.AppUser) (*admin.AppUser, error) {
+func (m *MockUserCreator) CreateUser(arg0 *admin.CloudAppUser) (*admin.CloudAppUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", arg0)
-	ret0, _ := ret[0].(*admin.AppUser)
+	ret0, _ := ret[0].(*admin.CloudAppUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -74,10 +74,10 @@ func (m *MockUserDescriber) EXPECT() *MockUserDescriberMockRecorder {
 }
 
 // UserByID mocks base method.
-func (m *MockUserDescriber) UserByID(arg0 string) (*admin.AppUser, error) {
+func (m *MockUserDescriber) UserByID(arg0 string) (*admin.CloudAppUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserByID", arg0)
-	ret0, _ := ret[0].(*admin.AppUser)
+	ret0, _ := ret[0].(*admin.CloudAppUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -89,10 +89,10 @@ func (mr *MockUserDescriberMockRecorder) UserByID(arg0 interface{}) *gomock.Call
 }
 
 // UserByName mocks base method.
-func (m *MockUserDescriber) UserByName(arg0 string) (*admin.AppUser, error) {
+func (m *MockUserDescriber) UserByName(arg0 string) (*admin.CloudAppUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserByName", arg0)
-	ret0, _ := ret[0].(*admin.AppUser)
+	ret0, _ := ret[0].(*admin.CloudAppUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

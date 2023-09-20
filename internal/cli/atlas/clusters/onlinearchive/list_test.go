@@ -22,8 +22,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestListBuilder(t *testing.T) {
@@ -49,7 +50,13 @@ func TestList_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	var expected *atlasv2.PaginatedOnlineArchive
+	expected := &atlasv2.PaginatedOnlineArchive{
+		Results: []atlasv2.BackupOnlineArchive{
+			{
+				Id: pointer.Get(""),
+			},
+		},
+	}
 
 	mockStore.
 		EXPECT().
@@ -60,4 +67,5 @@ func TestList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }

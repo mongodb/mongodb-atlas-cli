@@ -25,10 +25,10 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
-var createTemplate = `API Key '{{.ID}}' created.
+var createTemplate = `API Key '{{.Id}}' created.
 Public API Key {{.PublicKey}}
 Private API Key {{.PrivateKey}}
 `
@@ -50,8 +50,8 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	apiKeyInput := &atlasv2.CreateApiKey{
-		Desc:  &opts.description,
+	apiKeyInput := &atlasv2.CreateAtlasProjectApiKey{
+		Desc:  opts.description,
 		Roles: opts.roles,
 	}
 
@@ -90,7 +90,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.APIKeyRoles)
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.ProjectAPIKeyRoles)
 	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.APIKeyDescription)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestServerless(t *testing.T) {
@@ -46,6 +46,7 @@ func TestServerless(t *testing.T) {
 			clusterName,
 			"--region=US_EAST_1",
 			"--provider=AWS",
+			"--tag", "env=test",
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -81,6 +82,7 @@ func TestServerless(t *testing.T) {
 			"update",
 			clusterName,
 			"--disableTerminationProtection",
+			"--tag", "env=e2e",
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()

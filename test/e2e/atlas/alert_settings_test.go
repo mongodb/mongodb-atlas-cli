@@ -18,6 +18,7 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"strconv"
@@ -26,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestAlertConfig(t *testing.T) {
@@ -56,15 +57,15 @@ func TestAlertConfig(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var alert mongodbatlas.AlertConfiguration
+			var alert admin.GroupAlertsConfig
 			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
-				a.Equal(eventTypeName, alert.EventTypeName)
+				a.Equal(eventTypeName, alert.GetEventTypeName())
 				a.NotEmpty(alert.Notifications)
-				a.Equal(delayMin, *alert.Notifications[0].DelayMin)
-				a.Equal(group, alert.Notifications[0].TypeName)
-				a.Equal(intervalMin, alert.Notifications[0].IntervalMin)
-				a.False(*alert.Notifications[0].SMSEnabled)
-				alertID = alert.ID
+				a.Equal(delayMin, alert.Notifications[0].GetDelayMin())
+				a.Equal(group, alert.Notifications[0].GetTypeName())
+				a.Equal(intervalMin, alert.Notifications[0].GetIntervalMin())
+				a.False(alert.Notifications[0].GetSmsEnabled())
+				alertID = alert.GetId()
 			}
 		}
 	})
@@ -81,6 +82,28 @@ func TestAlertConfig(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		assert.NoError(t, err, string(resp))
+		a := assert.New(t)
+		var config admin.PaginatedAlertConfig
+		if err := json.Unmarshal(resp, &config); a.NoError(err) {
+			a.NotEmpty(config.Results)
+		}
+	})
+
+	t.Run("List Compact", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			alertsEntity,
+			configEntity,
+			"ls",
+			"-c",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		assert.NoError(t, err, string(resp))
+		a := assert.New(t)
+		var config []admin.GroupAlertsConfig
+		if err := json.Unmarshal(resp, &config); a.NoError(err) {
+			a.NotEmpty(config)
+		}
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -105,12 +128,56 @@ func TestAlertConfig(t *testing.T) {
 
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var alert mongodbatlas.AlertConfiguration
+			var alert admin.GroupAlertsConfig
 			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
-				a.False(*alert.Enabled)
+				a.False(alert.GetEnabled())
 				a.NotEmpty(alert.Notifications)
-				a.True(*alert.Notifications[0].SMSEnabled)
-				a.True(*alert.Notifications[0].EmailEnabled)
+				a.True(alert.Notifications[0].GetSmsEnabled())
+				a.True(alert.Notifications[0].GetEmailEnabled())
+			}
+		}
+	})
+
+	t.Run("Update Setting using file input", func(t *testing.T) {
+		n, err := e2e.RandInt(1000)
+		require.NoError(t, err)
+		fileName := fmt.Sprintf("%d_alerts.json", n.Int64())
+		fileContent := fmt.Sprintf(`{
+			"eventTypeName": %q,
+			"id": "%s",
+			"enabled": false,
+			"notifications": [
+			  {
+				"typeName": "%s",
+				"intervalMin": %d,
+				"delayMin": %d,
+				"emailEnabled": true,
+				"smsEnabled": true
+			  }
+			]
+		}`, eventTypeName, alertID,
+			group, intervalMin, delayMin)
+
+		require.NoError(t, os.WriteFile(fileName, []byte(fileContent), 0600))
+
+		cmd := exec.Command(cliPath,
+			alertsEntity,
+			configEntity,
+			"update",
+			alertID,
+			"--file", fileName,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		if a.NoError(err, string(resp)) {
+			var alert admin.GroupAlertsConfig
+			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
+				a.False(alert.GetEnabled())
+				a.NotEmpty(alert.Notifications)
+				a.True(alert.Notifications[0].GetSmsEnabled())
+				a.True(alert.Notifications[0].GetEmailEnabled())
 			}
 		}
 	})
@@ -131,7 +198,7 @@ func TestAlertConfig(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		require.NoError(t, err, string(resp))
 
 		var fields []string
 		if err := json.Unmarshal(resp, &fields); err != nil {

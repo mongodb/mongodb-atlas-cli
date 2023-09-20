@@ -40,6 +40,7 @@ type tracker struct {
 	fs               afero.Fs
 	maxCacheFileSize int64
 	cacheDir         string
+	unauthStore      store.UnauthEventsSender
 	store            store.EventsSender
 	storeSet         bool
 	cmd              *cobra.Command
@@ -48,6 +49,8 @@ type tracker struct {
 }
 
 func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracker, error) {
+	var err error
+
 	cacheDir, err := os.UserCacheDir()
 	if err != nil {
 		return nil, err
@@ -55,27 +58,34 @@ func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracke
 
 	cacheDir = filepath.Join(cacheDir, config.ToolName)
 
-	storeSet := true
-	telemetryStore, err := store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry())
-	if err != nil {
-		_, _ = log.Debugf("telemetry: failed to set store: %v\n", err)
-		storeSet = false
-	}
-
-	return &tracker{
+	t := &tracker{
 		fs:               afero.NewOsFs(),
 		maxCacheFileSize: defaultMaxCacheFileSize,
 		cacheDir:         cacheDir,
-		store:            telemetryStore,
-		storeSet:         storeSet,
 		cmd:              cmd,
 		args:             args,
 		installer:        readInstaller(),
-	}, nil
+	}
+
+	t.storeSet = true
+	if t.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry()); err != nil {
+		_, _ = log.Debugf("telemetry: failed to set store: %v\n", err)
+		t.storeSet = false
+	}
+
+	if !t.storeSet {
+		options := []store.Option{store.UnauthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry(), store.Service(config.CloudService)}
+
+		if t.unauthStore, err = store.New(options...); err != nil {
+			_, _ = log.Debugf("telemetry: failed to set unauth store: %v\n", err)
+		}
+	}
+
+	return t, nil
 }
 
-func (t *tracker) defaultCommandOptions() []eventOpt {
-	return []eventOpt{
+func (t *tracker) defaultCommandOptions() []EventOpt {
+	return []EventOpt{
 		withCommandPath(t.cmd),
 		withHelpCommand(t.cmd, t.args),
 		withFlags(t.cmd),
@@ -88,10 +98,13 @@ func (t *tracker) defaultCommandOptions() []eventOpt {
 		withOrgID(t.cmd, config.Default()),
 		withTerminal(t.cmd),
 		withInstaller(t.installer),
+		withUserAgent(),
+		withAnonymousID(),
+		withCI(),
 	}
 }
 
-func (t *tracker) trackCommand(data TrackOptions) error {
+func (t *tracker) trackCommand(data TrackOptions, opt ...EventOpt) error {
 	options := append(t.defaultCommandOptions(), withDuration(t.cmd))
 	if data.Signal != "" {
 		options = append(options, withSignal(data.Signal))
@@ -99,17 +112,19 @@ func (t *tracker) trackCommand(data TrackOptions) error {
 	if data.Err != nil {
 		options = append(options, withError(data.Err))
 	}
+	options = append(options, opt...)
 	event := newEvent(options...)
-	if !t.storeSet {
-		return t.save(event)
-	}
 	events, err := t.read()
 	if err != nil {
 		_, _ = log.Debugf("telemetry: failed to read cache: %v\n", err)
 	}
 	events = append(events, event)
 	_, _ = log.Debugf("telemetry: events: %v\n", events)
-	err = t.store.SendEvents(events)
+	if !t.storeSet {
+		err = t.unauthStore.SendUnauthEvents(events)
+	} else {
+		err = t.store.SendEvents(events)
+	}
 	if err != nil {
 		return t.save(event)
 	}

@@ -60,6 +60,14 @@
 | `backup schedule describe`                  | Y         |           |           | Y         |       |       |
 | `backup schedule delete`                    | Y         |           |           | Y         |       |       |
 | `backup schedule update`                    | Y         |           |           | Y         |       |       |
+| `backup compliancepolicy describe`          | Y         |           |           | Y         |       |       |
+| `backup compliancepolicy enable`            | Y         |           |           | Y         |       |       |
+| `backup compliancepolicy copyprotection`    | Y         |           |           | Y         |       |       |
+| `backup compliancepolicy setup`             | Y         |           |           | Y         |       |       |
+| `backup compliancepolicy pointintimerestore enable`     | Y         |           |           | Y         |       |       |
+| `backup compliancepolicy policies describe` | Y         |           |           | Y         |       |       |
+| `backup compliancepolicy encryptionAtRest enable` | N         |           |           | N         |       |       |
+| `backup compliancepolicy encryptionAtRest disable` | N         |           |           | N         |       |       |
 | `cloudProvider aws accessRoles authorize`   | N         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles deauthorize` | N         |           |           | Y         |       |       |
 | `cloudProvider aws accessRoles create`      | Y         |           |           | Y         |       |       |

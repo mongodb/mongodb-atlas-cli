@@ -34,7 +34,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/networking"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/processes"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/quickstart"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/security"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/alerts"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/backup"
@@ -58,7 +57,7 @@ func Builder() *cobra.Command {
 		Short: "MongoDB Atlas operations.",
 		Long:  deprecatedMessage,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			log.SetOutput(cmd.ErrOrStderr())
+			log.SetWriter(cmd.ErrOrStderr())
 
 			_, _ = log.Warning(deprecatedMessage)
 			if err := opts.InitFlow(config.Default())(); err != nil {
@@ -77,7 +76,6 @@ func Builder() *cobra.Command {
 		},
 	}
 	cmd.AddCommand(
-		quickstart.Builder(),
 		clusters.MongoCLIBuilder(),
 		dbusers.Builder(),
 		customdbroles.Builder(),

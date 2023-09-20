@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -30,7 +30,7 @@ type DatabaseUserLister interface {
 }
 
 type DatabaseUserCreator interface {
-	CreateDatabaseUser(*atlasv2.DatabaseUser) (*atlasv2.DatabaseUser, error)
+	CreateDatabaseUser(*atlasv2.CloudDatabaseUser) (*atlasv2.CloudDatabaseUser, error)
 }
 
 type DatabaseUserDeleter interface {
@@ -38,11 +38,11 @@ type DatabaseUserDeleter interface {
 }
 
 type DatabaseUserUpdater interface {
-	UpdateDatabaseUser(*atlas.DatabaseUser, string) (*atlas.DatabaseUser, error)
+	UpdateDatabaseUser(*atlasv2.UpdateDatabaseUserApiParams) (*atlasv2.CloudDatabaseUser, error)
 }
 
 type DatabaseUserDescriber interface {
-	DatabaseUser(string, string, string) (*atlasv2.DatabaseUser, error)
+	DatabaseUser(string, string, string) (*atlasv2.CloudDatabaseUser, error)
 }
 
 type DBUserCertificateLister interface {
@@ -50,11 +50,11 @@ type DBUserCertificateLister interface {
 }
 
 type DBUserCertificateCreator interface {
-	CreateDBUserCertificate(string, string, int) (*atlasv2.UserCert, error)
+	CreateDBUserCertificate(string, string, int) (string, error)
 }
 
 // CreateDatabaseUser encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateDatabaseUser(user *atlasv2.DatabaseUser) (*atlasv2.DatabaseUser, error) {
+func (s *Store) CreateDatabaseUser(user *atlasv2.CloudDatabaseUser) (*atlasv2.CloudDatabaseUser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.DatabaseUsersApi.CreateDatabaseUser(s.ctx, user.GroupId, user).Execute()
@@ -88,18 +88,17 @@ func (s *Store) DatabaseUsers(projectID string, opts *atlas.ListOptions) (*atlas
 	}
 }
 
-func (s *Store) UpdateDatabaseUser(user *atlas.DatabaseUser, currentUsername string) (*atlas.DatabaseUser, error) {
+func (s *Store) UpdateDatabaseUser(params *atlasv2.UpdateDatabaseUserApiParams) (*atlasv2.CloudDatabaseUser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		// to migrate :: requires fix for CLOUDP-176215
-		result, _, err := s.client.(*atlas.Client).DatabaseUsers.Update(s.ctx, user.GroupID, currentUsername, user)
+		result, _, err := s.clientv2.DatabaseUsersApi.UpdateDatabaseUserWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlasv2.DatabaseUser, error) {
+func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlasv2.CloudDatabaseUser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.DatabaseUsersApi.GetDatabaseUser(s.ctx, groupID, authDB, username).Execute()
@@ -125,15 +124,15 @@ func (s *Store) DBUserCertificates(projectID, username string, opts *atlas.ListO
 }
 
 // CreateDBUserCertificate creates a new Atlas managed certificates for a database user.
-func (s *Store) CreateDBUserCertificate(projectID, username string, monthsUntilExpiration int) (*atlasv2.UserCert, error) {
+func (s *Store) CreateDBUserCertificate(projectID, username string, monthsUntilExpiration int) (string, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		userCert := atlasv2.UserCert{
+		userCert := &atlasv2.UserCert{
 			MonthsUntilExpiration: pointer.Get(monthsUntilExpiration),
 		}
-		_, err := s.clientv2.X509AuthenticationApi.CreateDatabaseUserCertificate(s.ctx, projectID, username, &userCert).Execute()
-		return &userCert, err
+		cert, _, err := s.clientv2.X509AuthenticationApi.CreateDatabaseUserCertificate(s.ctx, projectID, username, userCert).Execute()
+		return cert, err
 	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+		return "", fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

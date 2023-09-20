@@ -74,6 +74,10 @@ func DeleteBuilder() *cobra.Command {
 		},
 	}
 
+	if config.ToolName == config.AtlasCLI {
+		cmd.Deprecated = "Please use 'atlas datafederation delete'"
+	}
+
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

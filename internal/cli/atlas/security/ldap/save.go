@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type SaveOpts struct {
@@ -98,12 +98,12 @@ func (opts *SaveOpts) validate() error {
 
 func (opts *SaveOpts) newLDAPConfiguration() *atlasv2.UserSecurity {
 	ldapConfig := &atlasv2.UserSecurity{
-		Ldap: &atlasv2.NDSLDAP{
+		Ldap: &atlasv2.LDAPSecuritySettings{
 			AuthenticationEnabled: &opts.authenticationEnabled,
 			AuthorizationEnabled:  &opts.authorizationEnabled,
 			Hostname:              &opts.hostname,
 			Port:                  &opts.port,
-			UserToDNMapping:       []atlasv2.NDSUserToDNMapping{},
+			UserToDNMapping:       []atlasv2.UserToDNMapping{},
 			BindUsername:          &opts.bindUsername,
 			BindPassword:          &opts.bindPassword,
 			CaCertificate:         &opts.caCertificate,
@@ -111,7 +111,7 @@ func (opts *SaveOpts) newLDAPConfiguration() *atlasv2.UserSecurity {
 		},
 	}
 	if opts.mappingMatch != "" {
-		mapping := atlasv2.NDSUserToDNMapping{Match: opts.mappingMatch}
+		mapping := atlasv2.UserToDNMapping{Match: opts.mappingMatch}
 		if opts.mappingLdapQuery != "" {
 			mapping.LdapQuery = &opts.mappingLdapQuery
 		}

@@ -75,7 +75,7 @@ func CreateBuilder() *cobra.Command {
 			opts.interfaceEndpointID = args[0]
 			return opts.Run()
 		},
-		Deprecated: "Please use mongocli atlas privateEndpoints aws interfaces create <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]",
+		Deprecated: "Please use atlas privateEndpoints aws interfaces create <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID] [--projectId projectId]",
 	}
 	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointID)
 

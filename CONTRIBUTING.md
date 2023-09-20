@@ -13,6 +13,7 @@ this document describes some guidelines necessary to participate in the communit
   - [Code Contribution Guidelines](#code-contribution-guidelines)
   - [Development Setup](#development-setup)
   - [Building and Testing](#building-and-testing)
+  - [Contributing New Command Group](#contributing-new-command-group)
   - [Adding a New Command](#adding-a-new-command)
   - [Third Party Dependencies](#third-party-dependencies)
 - [Maintainer's Guide](#maintainers-guide)
@@ -62,7 +63,7 @@ To make the contribution process as seamless as possible, we ask for the followi
 #### Prerequisite Tools
 
 - [Git](https://git-scm.com/)
-- [Go (at least Go 1.19)](https://golang.org/dl/)
+- [Go (at least Go 1.20)](https://golang.org/dl/)
 
 #### Environment
 
@@ -78,7 +79,7 @@ The following is a short list of commands that can be run in the root of the pro
 - Run `make` see a list of available targets.
 - Run `make test` to run all unit tests.
 - Run `make lint` to validate against our linting rules.
-- Run `E2E_TAGS=e2e,atlas make e2e-test` will run end to end tests against an Atlas instance,
+- Run `E2E_TAGS=e2e,atlas make e2e-test` will run end-to-end tests against an Atlas instance,
   please make sure to have set `MCLI_*` variables pointing to that instance.
 - Run `E2E_TAGS=cloudmanager,remote,generic make e2e-test` will run end-to-end tests against a Cloud Manager instance.<br />
   Please remember to: (a) have a running automation agent, and (b) set MCLI\_\* variables to point to your Cloud Manager instance.
@@ -91,15 +92,25 @@ We provide a git pre-commit hook to format and check the code, to install it run
 We use [mockgen](https://github.com/golang/mock) to handle mocking in our unit tests.
 If you need a new mock please update or add the `//go:generate` instruction to the appropriate file.
 
+#### Compilation in VSCode
+
+Please add the following line to your settings.json file :
+```
+    "go.buildTags": "unit,e2e",
+    "go.testTags": "unit,e2e"
+```
+
+This will enable compilation for unit test and end-to-end tests.
+
 #### Debugging in VSCode
 
-To debut in VSCode you need to create an debug configuration for the command with required arguments.
-Run following commands to 
+To debut in VSCode you need to create a debug configuration for the command with required arguments.
+Run the following commands to 
 
 ```
 touch .vscode/launch.json
 ```
-Then put following configuration into the file.
+Then put the following configuration into the file.
 Review and replace command name and arguments depending on the command you are using.
 
 ```json
@@ -122,16 +133,32 @@ Review and replace command name and arguments depending on the command you are u
 
 ```
 
-### API Interactions
+### Contributing New Command Group
 
-Atlas CLI and MongoDB CLI use [go-client-mongodb-atlas](https://github.com/mongodb/go-client-mongodb-atlas/) 
-and [go-client-mongodb-ops-manager](https://github.com/mongodb/go-client-mongodb-ops-manager/) to interact with Atlas or Ops Manager/Cloud Manager.
-Any new feature should first update the respective client.
+`Atlas CLI` and `MongoDB CLI` are using the [Cobra Framework](https://umarcor.github.io/cobra/).
+
+Depending on the feature you are building you might choose to:
+
+- Add individual commands to existing groups of commands
+- Add a new command group that provides ability to run nested commands under certain prefix
+
+For a command group, we need to create new cobra root command. 
+This command aggregates a number of subcommands that can perform network requests and return results
+
+For example [teams](https://github.com/mongodb/mongodb-atlas-cli/tree/220c6c73f346f5c711a1c772b17f93a6811efc69/internal/cli/atlas/teams) 
+command root provides the main execution point for `atlas teams` with subcommands like `atlas teams list`
+
+Root command links to a number of child commands. Atlas CLI provides a number of patterns for child commands depending on the type of operation performed.
+Each new feature might cover typical commands like `list` and `describe` along with dedicated actions.
+For example [list command](https://github.com/mongodb/mongodb-atlas-cli/blob/220c6c73f346f5c711a1c772b17f93a6811efc69/internal/cli/atlas/teams/list.go).
+It is normal to duplicate existing commands and edit descriptions and methods for your own needs.
+
+Additionally, after adding new command we need to add it to the main CLI root command. 
+For example please edit `./root/atlas/builder.go` to add your command builder method for Atlas CLI
 
 ### Adding a New Command
 
-`atlascli` and `mongocli` use [Cobra](https://github.com/spf13/cobra) as a framework for defining commands,
-in addition to this we have defined a basic structure that should be followed.
+`atlascli` and `mongocli` have defined a basic structure for individual commands that should be followed.
 For a `mongocli scope newCommand` command, a file `internal/cli/scope/new_command.go` should implement:
 
 - A `ScopeNewCommandOpts` struct which handles the different options for the command.
@@ -144,7 +171,22 @@ For that reason, command arguments tend to match the path and query params of th
 with the last param being a required argument and the rest handled via flag options.
 For commands that create or modify complex data structures, the use of configuration files is preferred over flag options.
 
-Note: we are experimenting with a generator, make sure to try it out in [tools/cli-generator](./tools/cli-generator/)
+
+> NOTE: During the development of the commands we recommend setting `Hidden: true` property to make commands invisible to the end users and documentation.
+
+> NOTE: Commands are executing network requests by using `./internal/store` interface that wraps [Atlas Go SDK](https://github.com/mongodb/atlas-sdk-go). 
+Before adding a command please make sure that your api exists in the GO SDK. 
+
+> NOTE: Atlas CLI provides an experimental generator, make sure to try it out in [tools/cli-generator](./tools/cli-generator/)
+
+### API Interactions
+
+Atlas CLI use [atlas-sdk-go](https://github.com/mongodb/atlas-sdk-go) for all backend integration.
+This SDK is updated automatically based on Atlas OpenAPI file.
+
+MongoDB CLI use [go-client-mongodb-atlas](https://github.com/mongodb/go-client-mongodb-atlas/) 
+and [go-client-mongodb-ops-manager](https://github.com/mongodb/go-client-mongodb-ops-manager/) to interact with Atlas or Ops Manager/Cloud Manager.
+Any new feature requires a manual update from the respective client.
 
 #### How to define flags:
 
@@ -184,3 +226,55 @@ Reviewers, please ensure that the CLA has been signed by referring to [the contr
 
 For changes that involve user facing copy please include `docs-cloud-team` as a reviewer.
 
+## SDK integration
+
+Atlas CLI uses [atlas-sdk-go](https://github.com/mongodb/atlas-sdk-go) for API integration.
+Go SDK will be automatically updated for the new versions using dependabot.
+In situations when SDK does new major releases developers need to specify the version explicitly in the go update command. For example:
+
+```
+go get go.mongodb.org/atlas-sdk/v20230501001
+```
+
+Atlas CLI can work with multiple versions of the GO SDK supporting various Resource Versions. 
+
+For more info please refer to the [SDK documentation](https://github.com/mongodb/atlas-sdk-go/blob/main/docs/doc_1_concepts.md#release-strategy-semantic-versioning) and 
+[golang documentation](https://go.dev/doc/modules/version-numbers#major)
+
+### Major Version Updates   
+
+When adding a new major version of the go sdk, the old sdk version dependency will be still present in the go mod files.
+Atlas CLI developers should update all imports to new major versions and remove old dependencies.
+
+To update simply rename all instances of major version across the repository imports and go.mod files.
+
+e.g `v20230201001` => `v20230201002` 
+
+### Update Automation
+
+To update Atlas SDK run:
+
+```bash
+make update-atlas-sdk
+```
+
+> NOTE: Update mechanism is only needed for major releases. Any other releases will be supported by dependabot.
+
+> NOTE: Command can make import changes to +500 files. Please make sure that you perform update on main branch without any uncommited changes.
+
+
+### Stable Methods
+
+Each Go SDK method used in the Atlas CLI should be marked as stable.
+Stable methods are listed in the SDK GO [operations.stable.json](https://github.com/mongodb/atlas-sdk-go/blob/main/tools/transformer/src/operations.stable.json) file.
+
+We have developed automation that lists stable methods.
+Generate list from Atlas CLI run:
+
+```
+go run ./tools/sdk-usage/main.go ./internal/store ./operations.stable.json
+```
+
+After the file is created please create PR directly in the GO SDK containing the updated file.
+
+in order to update `operations.stable.json` file in the Go SDK.

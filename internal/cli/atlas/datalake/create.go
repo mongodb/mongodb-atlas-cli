@@ -97,6 +97,10 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
+	if config.ToolName == config.AtlasCLI {
+		cmd.Deprecated = "Please use 'atlas datafederation create'"
+	}
+
 	cmd.Flags().StringVar(&opts.awsRoleID, flag.Role, "", usage.DataLakeRole)
 	cmd.Flags().StringVar(&opts.testBucket, flag.TestBucket, "", usage.DataLakeTestBucket)
 

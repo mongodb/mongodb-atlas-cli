@@ -17,11 +17,12 @@ package commonerrors
 import (
 	"errors"
 
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 var (
 	errClusterUnsupported = errors.New("atlas supports this command only for M10+ clusters. You can upgrade your cluster by running the 'atlas cluster upgrade' command")
+	errOutsideVPN         = errors.New("forbidden action outside access allow list, if you are a MongoDB employee double check your VPN connection")
 )
 
 func Check(err error) error {
@@ -29,10 +30,13 @@ func Check(err error) error {
 		return nil
 	}
 
-	var atlasErr *atlas.ErrorResponse
-	if errors.As(err, &atlasErr) {
-		if atlasErr.ErrorCode == "TENANT_CLUSTER_UPDATE_UNSUPPORTED" {
+	apiError, ok := admin.AsError(err)
+	if ok {
+		if apiError.GetErrorCode() == "TENANT_CLUSTER_UPDATE_UNSUPPORTED" {
 			return errClusterUnsupported
+		}
+		if apiError.GetErrorCode() == "GLOBAL_USER_OUTSIDE_SUBNET" {
+			return errOutsideVPN
 		}
 	}
 	return err

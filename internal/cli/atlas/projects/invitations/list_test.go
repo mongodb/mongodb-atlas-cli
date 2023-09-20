@@ -22,27 +22,33 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectInvitationLister(ctrl)
 
-	var expected []atlasv2.GroupInvitation
+	expected := []atlasv2.GroupInvitation{
+		{
+			Id: pointer.Get("1"),
+		},
+	}
 
 	listOpts := &ListOpts{store: mockStore}
 
 	mockStore.
 		EXPECT().
-		ProjectInvitations(listOpts.ConfigProjectID(), listOpts.newInvitationOptions()).
+		ProjectInvitations(listOpts.newInvitationOptions()).
 		Return(expected, nil).
 		Times(1)
 
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

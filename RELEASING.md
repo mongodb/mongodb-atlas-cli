@@ -14,9 +14,11 @@ Stable releases are now managed by internal tooling (PCT)
 
 Use the instructions bellow as a fallback.
 
-**Deprecated**
+### Deprecated
+_**Note:** This action will only publish a release for [maintainers of the cli](https://github.com/orgs/mongodb/teams/mongocli)_
 
-To generate a new stable release you can run:
+To manually generate a new stable release you can run:
+
 
 ```bash
 ./scripts/release.sh atlascli/v1.0.0

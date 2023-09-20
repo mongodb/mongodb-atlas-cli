@@ -20,17 +20,22 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	ConfigOpts
-	store store.AlertConfigurationCreator
+	store    store.AlertConfigurationCreator
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -41,10 +46,20 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Alert configuration {{.ID}} created.\n"
+var createTemplate = "Alert configuration {{.Id}} created.\n"
 
 func (opts *CreateOpts) Run() error {
-	alert := opts.NewAlertConfiguration(opts.ConfigProjectID())
+	alert := &atlasv2.GroupAlertsConfig{}
+	// File flag has priority over other flags
+	projectID := opts.ConfigProjectID()
+	if opts.filename != "" {
+		if err := file.Load(opts.fs, opts.filename, alert); err != nil {
+			return err
+		}
+		alert.GroupId = &projectID
+	} else {
+		alert = opts.NewAlertConfiguration(projectID)
+	}
 	r, err := opts.store.CreateAlertConfiguration(alert)
 	if err != nil {
 		return err
@@ -62,7 +77,7 @@ func (opts *CreateOpts) Run() error {
 //	[--notificationEmailAddress email --notificationMobileNumber number --notificationChannelName channel --notificationApiToken --notificationRegion region]
 //	[--projectId projectId].
 func CreateBuilder() *cobra.Command {
-	opts := new(CreateOpts)
+	opts := CreateOpts{fs: afero.NewOsFs()}
 	opts.Template = createTemplate
 	cmd := &cobra.Command{
 		Use:   "create",
@@ -74,11 +89,19 @@ func CreateBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  # Create an alert configuration that notifies a user when they join a group for the project with the ID 5df90590f10fab5e33de2305:
   %s alerts settings create --event JOINED_GROUP --enabled \
   --notificationType USER --notificationEmailEnabled \
-  --notificationUsername john@example.com \
-  --output json --projectId 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
+  --notificationIntervalMin 60 --notificationUsername john@example.com \
+  --output json --projectId 5df90590f10fab5e33de2305
+  # Create alert using json file containing alert configuration
+  %s alerts settings create 5d1113b25a115342acc2d1aa --file alerts.json`, cli.ExampleAtlasEntryPoint(), cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
+				func() error {
+					if opts.filename == "" {
+						return validateConfigOpts(&opts.ConfigOpts)
+					}
+					return nil
+				},
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
@@ -90,14 +113,19 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.event, flag.Event, "", usage.Event)
 	cmd.Flags().BoolVar(&opts.enabled, flag.Enabled, false, usage.Enabled)
+
 	cmd.Flags().StringVar(&opts.matcherFieldName, flag.MatcherFieldName, "", usage.MatcherFieldName)
 	cmd.Flags().StringVar(&opts.matcherOperator, flag.MatcherOperator, "", usage.MatcherOperator)
 	cmd.Flags().StringVar(&opts.matcherValue, flag.MatcherValue, "", usage.MatcherValue)
+	cmd.MarkFlagsRequiredTogether(flag.MatcherOperator, flag.MatcherValue, flag.MatcherFieldName)
+
 	cmd.Flags().StringVar(&opts.metricThresholdMetricName, flag.MetricName, "", usage.MetricName)
 	cmd.Flags().StringVar(&opts.metricThresholdOperator, flag.MetricOperator, "", usage.MetricOperator)
 	cmd.Flags().Float64Var(&opts.metricThresholdThreshold, flag.MetricThreshold, 0, usage.MetricThreshold)
 	cmd.Flags().StringVar(&opts.metricThresholdUnits, flag.MetricUnits, "", usage.MetricUnits)
 	cmd.Flags().StringVar(&opts.metricThresholdMode, flag.MetricMode, "", usage.MetricMode)
+	cmd.MarkFlagsRequiredTogether(flag.MetricOperator, flag.MetricName, flag.MetricUnits, flag.MetricThreshold)
+
 	cmd.Flags().StringVar(&opts.notificationToken, flag.NotificationToken, "", usage.NotificationToken)
 	cmd.Flags().StringVar(&opts.notificationChannelName, flag.NotificationChannelName, "", usage.NotificationsChannelName)
 	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.AlertConfigAPIKey)
@@ -110,9 +138,15 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.notificationServiceKey, flag.NotificationServiceKey, "", usage.NotificationServiceKey)
 	cmd.Flags().BoolVar(&opts.notificationSmsEnabled, flag.NotificationSmsEnabled, false, usage.NotificationSmsEnabled)
 	cmd.Flags().StringVar(&opts.notificationTeamID, flag.NotificationTeamID, "", usage.NotificationTeamID)
-	cmd.Flags().StringVar(&opts.notificationType, flag.NotificationType, "", usage.NotificationType)
+	cmd.Flags().StringVar(&opts.notificationType, flag.NotificationType, "", usage.NotificationTypeAtlas)
 	cmd.Flags().StringVar(&opts.notificationUsername, flag.NotificationUsername, "", usage.NotificationUsername)
 	cmd.Flags().StringVar(&opts.notificationVictorOpsRoutingKey, flag.NotificationVictorOpsRoutingKey, "", usage.NotificationVictorOpsRoutingKey)
+	cmd.Flags().StringVar(&opts.notificationWebhookURL, flag.NotificationWebhookURL, "", usage.NotificationWebhookURL)
+	cmd.Flags().StringVar(&opts.notificationWebhookSecret, flag.NotificationWebhookSecret, "", usage.NotificationWebhookSecret)
+	cmd.Flags().StringSliceVar(&opts.notificationRoles, flag.NotificationRole, []string{}, usage.NotificationRole)
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.AlertConfigFilename)
+
+	_ = cmd.MarkFlagFilename(flag.File)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

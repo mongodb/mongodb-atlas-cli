@@ -73,6 +73,8 @@ Options
      - string
      - false
      - RFC 4515- and RFC 4516-formatted LDAP query template that inserts the LDAP name that the regex matches into an LDAP query URI.
+
+       Mutually exclusive with --mappingSubstitution, --mappingSubstitution.
    * - --mappingMatch
      - string
      - false
@@ -81,10 +83,12 @@ Options
      - string
      - false
      - LDAP distinguished name (DN) template that converts the LDAP username that matches the regex specified in match into an LDAP DN.
+
+       Mutually exclusive with --mappingLdapQuery, --mappingLdapQuery.
    * - -o, --output
      - string
      - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+     - Output format. Valid values are json, json-path, go-template, or go-template-file. To see full output, use the -o json option.
    * - --port
      - int
      - false

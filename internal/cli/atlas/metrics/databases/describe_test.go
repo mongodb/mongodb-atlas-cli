@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestDatabasesDescribeOpts_Run(t *testing.T) {
@@ -42,8 +42,8 @@ func TestDatabasesDescribeOpts_Run(t *testing.T) {
 	}
 
 	params := listOpts.NewDatabaseMeasurementsAPIParams("groupID", "hard-00-00.mongodb.net:27017", listOpts.name)
-	expected := &atlasv2.MeasurementsGeneralViewAtlas{
-		Measurements: []atlasv2.MeasurementViewAtlas{},
+	expected := &atlasv2.ApiMeasurementsGeneralViewAtlas{
+		Measurements: []atlasv2.MetricsMeasurementAtlas{},
 	}
 	mockStore.
 		EXPECT().ProcessDatabaseMeasurements(params).

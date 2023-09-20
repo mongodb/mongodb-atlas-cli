@@ -23,15 +23,22 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserLister(ctrl)
 
-	expected := &atlasv2.PaginatedAppUser{}
+	expected := &atlasv2.PaginatedAppUser{
+		Results: []atlasv2.CloudAppUser{
+			{
+				Id: pointer.Get("123"),
+			},
+		},
+	}
 
 	listOpts := &ListOpts{
 		GlobalOpts: cli.GlobalOpts{
@@ -49,6 +56,7 @@ func TestList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

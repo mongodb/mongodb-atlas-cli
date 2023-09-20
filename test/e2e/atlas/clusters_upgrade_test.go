@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -130,7 +131,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var clusterResponse *mongodbatlas.AdvancedCluster
+		var clusterResponse *atlasv2.AdvancedClusterDescription
 		err = json.Unmarshal(resp, &clusterResponse)
 		req.NoError(err)
 
@@ -149,7 +150,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", clusterName)
+		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})

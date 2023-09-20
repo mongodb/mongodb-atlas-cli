@@ -17,34 +17,49 @@
 package slowquerylogs
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"github.com/stretchr/testify/assert"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestSlowQueryLogsList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPerformanceAdvisorSlowQueriesLister(ctrl)
-
-	var expected *atlasv2.PerformanceAdvisorSlowQueryList
+	buf := new(bytes.Buffer)
+	expected := atlasv2.PerformanceAdvisorSlowQueryList{
+		SlowQueries: []atlasv2.PerformanceAdvisorSlowQuery{{
+			Line:      atlasv2.PtrString("test"),
+			Namespace: atlasv2.PtrString("test"),
+		},
+		},
+	}
 
 	listOpts := &ListOpts{
 		store: mockStore,
+		OutputOpts: cli.OutputOpts{
+			Template:  listTemplate,
+			OutWriter: buf,
+		},
 	}
 
 	mockStore.
 		EXPECT().
 		PerformanceAdvisorSlowQueries(listOpts.newSlowQueryOptions(listOpts.ProjectID, listOpts.ProcessName)).
-		Return(expected, nil).
+		Return(&expected, nil).
 		Times(1)
 
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, listTemplate, expected)
+	assert.Equal(t, "NAMESPACE   LINE\ntest        test\n", buf.String())
 }
 
 func TestListBuilder(t *testing.T) {
@@ -52,6 +67,22 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Duration, flag.Since, flag.HostID, flag.ProcessName, flag.Namespaces, flag.NLog},
+		[]string{
+			flag.ProjectID,
+			flag.Duration,
+			flag.Since,
+			flag.ProcessName,
+			flag.Namespaces,
+			flag.NLog,
+		},
+	)
+}
+
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		1,
+		[]string{},
 	)
 }

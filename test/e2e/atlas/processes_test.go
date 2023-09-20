@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestProcesses(t *testing.T) {
@@ -55,6 +55,27 @@ func TestProcesses(t *testing.T) {
 		}
 	})
 
+	t.Run("list compact", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			processesEntity,
+			"list",
+			"-c",
+			"--projectId", g.projectID,
+			"-o=json")
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+		var hostViewsCompact []atlasv2.ApiHostViewAtlas
+
+		if err := json.Unmarshal(resp, &hostViewsCompact); assert.NoError(t, err) {
+			require.NotEmpty(t, hostViewsCompact)
+		}
+	})
+
 	t.Run("describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			processesEntity,
@@ -70,7 +91,7 @@ func TestProcesses(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var process *atlasv2.HostViewAtlas
+		var process *atlasv2.ApiHostViewAtlas
 		if err := json.Unmarshal(resp, &process); assert.NoError(t, err) {
 			assert.Equal(t, *process.Id, *processes.Results[0].Id)
 		}

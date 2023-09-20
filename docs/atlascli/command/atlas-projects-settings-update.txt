@@ -39,42 +39,62 @@ Options
      - 
      - false
      - Flag that disables the Collect Database Specific Statistics project setting.
+
+       Mutually exclusive with --enableCollectDatabaseSpecificsStatistics.
    * - --disableDataExplorer
      - 
      - false
      - Flag that disables the Data Explorer project setting.
+
+       Mutually exclusive with --enableDataExplorer.
    * - --disablePerformanceAdvisor
      - 
      - false
      - Flag that disables the Performance Advisor project setting.
+
+       Mutually exclusive with --enablePerformanceAdvisor.
    * - --disableRealtimePerformancePanel
      - 
      - false
      - Flag that disables the Real Time Performance Panel project setting.
+
+       Mutually exclusive with --enableRealtimePerformancePanel.
    * - --disableSchemaAdvisor
      - 
      - false
      - Flag that disables the Schema Advisor project setting.
+
+       Mutually exclusive with --enableSchemaAdvisor.
    * - --enableCollectDatabaseSpecificsStatistics
      - 
      - false
      - Flag that enables the Collect Database Specific Statistics project setting.
+
+       Mutually exclusive with --disableCollectDatabaseSpecificsStatistics.
    * - --enableDataExplorer
      - 
      - false
      - Flag that enables the Data Explorer project setting.
+
+       Mutually exclusive with --disableDataExplorer.
    * - --enablePerformanceAdvisor
      - 
      - false
      - Flag that enables the Performance Advisor project setting.
+
+       Mutually exclusive with --disablePerformanceAdvisor.
    * - --enableRealtimePerformancePanel
      - 
      - false
      - Flag that enables the Real Time Performance Panel project setting.
+
+       Mutually exclusive with --disableRealtimePerformancePanel.
    * - --enableSchemaAdvisor
      - 
      - false
      - Flag that enables the Schema Advisor project setting.
+
+       Mutually exclusive with --disableSchemaAdvisor.
    * - -h, --help
      - 
      - false
@@ -82,7 +102,7 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+     - Output format. Valid values are json, json-path, go-template, or go-template-file. To see full output, use the -o json option.
    * - --projectId
      - string
      - false
@@ -120,4 +140,4 @@ Examples
 .. code-block::
 
    # This example uses the profile named "myprofile" for accessing Atlas.
-   atlas projects settings update --disableCollectDatabaseSpecificsStatistics -P myprofile
+   atlas projects settings update --disableCollectDatabaseSpecificsStatistics -P myprofile --projectId 5e2211c17a3e5a48f5497de3

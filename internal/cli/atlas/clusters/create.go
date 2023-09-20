@@ -19,17 +19,20 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/watchers"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const (
@@ -43,7 +46,7 @@ const (
 
 type CreateOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
+	cli.WatchOpts
 	name                        string
 	provider                    string
 	region                      string
@@ -70,7 +73,8 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTmpl = "Deploying cluster '{{.Name}}'.\n"
+var createWatchTmpl = "Cluster '{{.Name}}' created successfully.\n"
+var clusterObj *atlasv2.AdvancedClusterDescription
 
 func (opts *CreateOpts) Run() error {
 	cluster, err := opts.newCluster()
@@ -78,19 +82,49 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	r, err := opts.store.CreateCluster(cluster)
-	var target *atlas.ErrorResponse
-	if errors.As(err, &target) && target.ErrorCode == "INVALID_ATTRIBUTE" && strings.Contains(target.Detail, "regionName") {
-		return cli.ErrNoRegionExistsTryCommand
-	} else if err != nil {
+	clusterObj, err = opts.store.CreateCluster(cluster)
+	apiError, ok := atlasv2.AsError(err)
+	code := apiError.GetErrorCode()
+	if ok {
+		if apiError.GetErrorCode() == "INVALID_ATTRIBUTE" && strings.Contains(apiError.GetDetail(), "regionName") {
+			return cli.ErrNoRegionExistsTryCommand
+		}
+		if ok && code == "DUPLICATE_CLUSTER_NAME" {
+			return cli.ErrNameExists
+		}
+	}
+
+	if err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	return nil
 }
 
-func (opts *CreateOpts) newCluster() (*atlas.AdvancedCluster, error) {
-	cluster := new(atlas.AdvancedCluster)
+func (opts *CreateOpts) PostRun() error {
+	if !opts.EnableWatch {
+		return opts.Print(clusterObj)
+	}
+
+	watcher := watchers.NewWatcher(
+		*watchers.ClusterCreated,
+		watchers.NewAtlasClusterStateDescriber(
+			opts.store.(store.AtlasClusterDescriber),
+			opts.ProjectID,
+			opts.name,
+		),
+	)
+
+	watcher.Timeout = time.Duration(opts.Timeout)
+	if err := opts.WatchWatcher(watcher); err != nil {
+		return err
+	}
+
+	return opts.Print(clusterObj)
+}
+
+func (opts *CreateOpts) newCluster() (*atlasv2.AdvancedClusterDescription, error) {
+	cluster := new(atlasv2.AdvancedClusterDescription)
 	if opts.filename != "" {
 		if err := file.Load(opts.fs, opts.filename, cluster); err != nil {
 			return nil, err
@@ -101,36 +135,41 @@ func (opts *CreateOpts) newCluster() (*atlas.AdvancedCluster, error) {
 	}
 
 	if opts.name != "" {
-		cluster.Name = opts.name
+		cluster.Name = &opts.name
 	}
 
 	AddLabel(cluster, NewCLILabel())
 
-	cluster.GroupID = opts.ConfigProjectID()
+	cluster.GroupId = pointer.Get(opts.ConfigProjectID())
 	return cluster, nil
 }
 
-func (opts *CreateOpts) applyOpts(out *atlas.AdvancedCluster) {
+func (opts *CreateOpts) applyOpts(out *atlasv2.AdvancedClusterDescription) {
 	replicationSpec := opts.newAdvanceReplicationSpec()
 	if opts.backup {
 		out.BackupEnabled = &opts.backup
 		out.PitEnabled = &opts.backup
 	}
 	if opts.biConnector {
-		out.BiConnector = &atlas.BiConnector{Enabled: &opts.biConnector}
+		out.BiConnector = &atlasv2.BiConnector{Enabled: &opts.biConnector}
 	}
 	out.TerminationProtectionEnabled = &opts.enableTerminationProtection
-	out.ClusterType = opts.clusterType
+	out.ClusterType = &opts.clusterType
 
 	if !opts.isTenant() {
 		out.DiskSizeGB = &opts.diskSizeGB
-		out.MongoDBMajorVersion = opts.mdbVersion
+		out.MongoDBMajorVersion = &opts.mdbVersion
 	}
 
-	out.ReplicationSpecs = []*atlas.AdvancedReplicationSpec{replicationSpec}
+	out.ReplicationSpecs = []atlasv2.ReplicationSpec{replicationSpec}
 
+	if len(opts.tag) > 0 {
+		out.Tags = []atlasv2.ResourceTag{}
+	}
 	for k, v := range opts.tag {
-		out.Tags = append(out.Tags, &atlas.Tag{Key: k, Value: v})
+		if k != "" && v != "" {
+			out.Tags = append(out.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+		}
 	}
 }
 
@@ -145,42 +184,42 @@ func (opts *CreateOpts) providerName() string {
 	return opts.provider
 }
 
-func (opts *CreateOpts) newAdvanceReplicationSpec() *atlas.AdvancedReplicationSpec {
-	return &atlas.AdvancedReplicationSpec{
-		NumShards:     opts.shards,
-		ZoneName:      zoneName,
-		RegionConfigs: []*atlas.AdvancedRegionConfig{opts.newAdvancedRegionConfig()},
+func (opts *CreateOpts) newAdvanceReplicationSpec() atlasv2.ReplicationSpec {
+	return atlasv2.ReplicationSpec{
+		NumShards:     &opts.shards,
+		ZoneName:      pointer.Get(zoneName),
+		RegionConfigs: []atlasv2.CloudRegionConfig{opts.newAdvancedRegionConfig()},
 	}
 }
 
-func (opts *CreateOpts) newAdvancedRegionConfig() *atlas.AdvancedRegionConfig {
+func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.CloudRegionConfig {
 	priority := 7
 	readOnlyNode := 0
 	providerName := opts.providerName()
 
-	regionConfig := atlas.AdvancedRegionConfig{
-		RegionName: opts.region,
-		Priority:   &priority,
+	regionConfig := atlasv2.CloudRegionConfig{
+		Priority:     &priority,
+		RegionName:   &opts.region,
+		ProviderName: &providerName,
 	}
 
-	regionConfig.ProviderName = providerName
-	regionConfig.ElectableSpecs = &atlas.Specs{
-		InstanceSize: opts.tier,
+	regionConfig.ElectableSpecs = &atlasv2.HardwareSpec{
+		InstanceSize: &opts.tier,
 	}
 
 	if providerName == tenant {
-		regionConfig.BackingProviderName = opts.provider
+		regionConfig.BackingProviderName = &opts.provider
 	} else {
 		regionConfig.ElectableSpecs.NodeCount = &opts.members
 	}
 
-	readOnlySpec := &atlas.Specs{
-		InstanceSize: opts.tier,
+	readOnlySpec := &atlasv2.DedicatedHardwareSpec{
+		InstanceSize: &opts.tier,
 		NodeCount:    &readOnlyNode,
 	}
 	regionConfig.ReadOnlySpecs = readOnlySpec
 
-	return &regionConfig
+	return regionConfig
 }
 
 // CreateBuilder builds a cobra.Command that can run as:
@@ -229,15 +268,18 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), createTmpl),
+				opts.InitOutput(cmd.OutOrStdout(), createWatchTmpl),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PostRun()
+		},
 		Annotations: map[string]string{
-			"nameDesc": "Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphens.",
-			"output":   createTmpl,
+			"nameDesc": "Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphens. You must specify the cluster name argument if you don't use the --file option.",
+			"output":   createWatchTmpl,
 		},
 	}
 
@@ -248,8 +290,8 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 		defaultDiskSize    = 2
 		defaultShardSize   = 1
 	)
-	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
-	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.Region)
+	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.CreateProvider)
+	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.CreateRegion)
 	cmd.Flags().IntVarP(&opts.members, flag.Members, flag.MembersShort, defaultMembersSize, usage.Members)
 	cmd.Flags().StringVar(&opts.tier, flag.Tier, atlasM2, usage.Tier)
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, defaultDiskSize, usage.DiskSizeGB)
@@ -261,6 +303,9 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 	cmd.Flags().IntVarP(&opts.shards, flag.Shards, flag.ShardsShort, defaultShardSize, usage.Shards)
 	cmd.Flags().BoolVar(&opts.enableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
 	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.Tag)
+
+	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
+	cmd.Flags().UintVar(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

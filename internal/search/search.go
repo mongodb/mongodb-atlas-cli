@@ -15,7 +15,7 @@
 package search
 
 import (
-	"go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 	"go.mongodb.org/ops-manager/search"
@@ -55,9 +55,9 @@ func AtlasClusterExists(clusters []atlas.Cluster, name string) bool {
 }
 
 // DefaultRegion returns the index of the default region.
-func DefaultRegion(regions []admin.AvailableRegion) int {
+func DefaultRegion(regions []atlasv2.AvailableCloudProviderRegion) int {
 	for i, v := range regions {
-		if v.Default != nil && *v.Default {
+		if v.GetDefault() {
 			return i
 		}
 	}

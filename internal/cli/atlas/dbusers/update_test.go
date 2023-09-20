@@ -21,14 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestDBUserUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDatabaseUserUpdater(ctrl)
 
-	expected := &atlas.DatabaseUser{}
+	expected := &admin.CloudDatabaseUser{}
 
 	updateOpts := &UpdateOpts{
 		currentUsername: "test4",
@@ -37,12 +37,19 @@ func TestDBUserUpdate_Run(t *testing.T) {
 		store:           mockStore,
 	}
 
-	dbUser := atlas.DatabaseUser{}
+	dbUser := admin.CloudDatabaseUser{}
 	updateOpts.update(&dbUser)
+
+	params := &admin.UpdateDatabaseUserApiParams{
+		GroupId:           dbUser.GroupId,
+		DatabaseName:      dbUser.DatabaseName,
+		Username:          updateOpts.currentUsername,
+		CloudDatabaseUser: &dbUser,
+	}
 
 	mockStore.
 		EXPECT().
-		UpdateDatabaseUser(&dbUser, updateOpts.currentUsername).
+		UpdateDatabaseUser(params).
 		Return(expected, nil).
 		Times(1)
 

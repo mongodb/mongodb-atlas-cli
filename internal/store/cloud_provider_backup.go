@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -29,11 +29,11 @@ type RestoreJobsLister interface {
 }
 
 type RestoreJobsDescriber interface {
-	RestoreJob(string, string, string) (*atlasv2.DiskBackupRestoreJob, error)
+	RestoreJob(string, string, string) (*atlasv2.DiskBackupSnapshotRestoreJob, error)
 }
 
 type RestoreJobsCreator interface {
-	CreateRestoreJobs(string, string, *atlasv2.DiskBackupRestoreJob) (*atlasv2.DiskBackupRestoreJob, error)
+	CreateRestoreJobs(string, string, *atlasv2.DiskBackupSnapshotRestoreJob) (*atlasv2.DiskBackupSnapshotRestoreJob, error)
 }
 
 type SnapshotsLister interface {
@@ -109,7 +109,7 @@ func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptio
 }
 
 // RestoreJob encapsulates the logic to manage different cloud providers.
-func (s *Store) RestoreJob(projectID, clusterName, jobID string) (*atlasv2.DiskBackupRestoreJob, error) {
+func (s *Store) RestoreJob(projectID, clusterName, jobID string) (*atlasv2.DiskBackupSnapshotRestoreJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.CloudBackupsApi.GetBackupRestoreJob(s.ctx, projectID, clusterName, jobID).Execute()
@@ -120,7 +120,7 @@ func (s *Store) RestoreJob(projectID, clusterName, jobID string) (*atlasv2.DiskB
 }
 
 // CreateRestoreJobs encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlasv2.DiskBackupRestoreJob) (*atlasv2.DiskBackupRestoreJob, error) {
+func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlasv2.DiskBackupSnapshotRestoreJob) (*atlasv2.DiskBackupSnapshotRestoreJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.CloudBackupsApi.CreateBackupRestoreJob(s.ctx, projectID, clusterName, request).Execute()

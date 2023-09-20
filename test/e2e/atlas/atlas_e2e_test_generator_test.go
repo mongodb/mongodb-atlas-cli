@@ -25,7 +25,9 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const (
@@ -44,8 +46,9 @@ type atlasE2ETestGenerator struct {
 	teamUser       string
 	dbUser         string
 	tier           string
+	dataFedName    string
 	enableBackup   bool
-	firstProcess   *atlasv2.HostViewAtlas
+	firstProcess   *atlasv2.ApiHostViewAtlas
 	t              *testing.T
 }
 
@@ -241,9 +244,7 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 		t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, backoff, projectID, e)
 		if strings.Contains(e.Error(), "CANNOT_CLOSE_GROUP_ACTIVE_ATLAS_CLUSTERS") {
 			cliPath, err := e2e.AtlasCLIBin()
-			if err != nil {
-				t.Errorf("%s: invalid bin", err)
-			}
+			require.NoError(t, err)
 			deleteClustersForProject(t, cliPath, projectID)
 		}
 		time.Sleep(time.Duration(backoff) * time.Second)
@@ -252,6 +253,55 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	if !deleted {
 		t.Errorf("we could not delete the project %q", projectID)
 	}
+}
+
+func deleteOrgInvitations(t *testing.T, cliPath string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		orgEntity,
+		invitationsEntity,
+		"ls",
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	t.Logf("%s\n", resp)
+	require.NoError(t, err, string(resp))
+	var invitations []atlasv2.OrganizationInvitation
+	require.NoError(t, json.Unmarshal(resp, &invitations), string(resp))
+	for _, i := range invitations {
+		deleteOrgInvitation(t, cliPath, *i.Id)
+	}
+}
+
+func deleteOrgTeams(t *testing.T, cliPath string) {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		teamsEntity,
+		"ls",
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	t.Logf("%s\n", resp)
+	require.NoError(t, err, string(resp))
+	var teams atlasv2.PaginatedTeam
+	require.NoError(t, json.Unmarshal(resp, &teams), string(resp))
+	for _, team := range teams.Results {
+		assert.NoError(t, deleteTeam(team.GetId()))
+	}
+}
+
+func deleteOrgInvitation(t *testing.T, cliPath string, id string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		orgEntity,
+		invitationsEntity,
+		"delete",
+		id,
+		"--force")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	require.NoError(t, err, string(resp))
 }
 
 func (g *atlasE2ETestGenerator) generateServerlessCluster() {
@@ -311,6 +361,33 @@ func (g *atlasE2ETestGenerator) generateProjectAndCluster(prefix string) {
 	g.generateCluster()
 }
 
+func (g *atlasE2ETestGenerator) generateDataFederation() {
+	var err error
+	g.t.Helper()
+
+	if g.projectID == "" {
+		g.t.Fatal("unexpected error: project must be generated")
+	}
+
+	g.dataFedName, err = createDataFederationForProject(g.projectID)
+	storeName := g.dataFedName
+	if err != nil {
+		g.Logf("projectID=%q, dataFedName=%q", g.projectID, g.dataFedName)
+		g.t.Errorf("unexpected error deploying data federation: %v", err)
+	} else {
+		g.Logf("dataFedName=%q", g.dataFedName)
+	}
+
+	g.t.Cleanup(func() {
+		g.Logf("Data Federation cleanup %q\n", storeName)
+		if e := deleteDataFederationForProject(g.projectID, storeName); e != nil {
+			g.t.Errorf("unexpected error deleting data federation: %v", e)
+		} else {
+			g.Logf("data federation %q successfully deleted", storeName)
+		}
+	})
+}
+
 // newAvailableRegion returns the first region for the provider/tier.
 func (g *atlasE2ETestGenerator) newAvailableRegion(tier, provider string) (string, error) {
 	g.t.Helper()
@@ -349,7 +426,7 @@ func (g *atlasE2ETestGenerator) getHostname() (string, error) {
 }
 
 // getFirstProcess returns the first process of the project.
-func (g *atlasE2ETestGenerator) getFirstProcess() (*atlasv2.HostViewAtlas, error) {
+func (g *atlasE2ETestGenerator) getFirstProcess() (*atlasv2.ApiHostViewAtlas, error) {
 	g.t.Helper()
 
 	if g.firstProcess != nil {
@@ -366,7 +443,7 @@ func (g *atlasE2ETestGenerator) getFirstProcess() (*atlasv2.HostViewAtlas, error
 }
 
 // getHostname returns the list of processes.
-func (g *atlasE2ETestGenerator) getProcesses() ([]atlasv2.HostViewAtlas, error) {
+func (g *atlasE2ETestGenerator) getProcesses() ([]atlasv2.ApiHostViewAtlas, error) {
 	g.t.Helper()
 
 	if g.projectID == "" {

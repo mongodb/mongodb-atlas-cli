@@ -23,7 +23,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/mongodb-forks/digest"
-	"go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 	"go.mongodb.org/atlas/auth"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"

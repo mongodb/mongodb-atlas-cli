@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const listTemplate = `NAMESPACE	TYPE{{range .Namespaces}}
@@ -96,7 +96,6 @@ If you don't set the duration option or the since option, this command returns d
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
-				opts.MarkRequiredFlagsByService(cmd),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -105,13 +104,28 @@ If you don't set the duration option or the since option, this command returns d
 	}
 
 	cmd.Flags().StringVar(&opts.HostID, flag.HostID, "", usage.HostID)
-	cmd.Flags().StringVar(&opts.ProcessName, flag.ProcessName, "", usage.ProcessName)
+	_ = cmd.Flags().MarkDeprecated(flag.HostID, "Flag is invalid for MongoDB Atlas")
+	cmd.Flags().StringVar(&opts.ProcessName, flag.ProcessName, "", usage.ProcessNameAtlasCLI)
+	_ = cmd.MarkFlagRequired(flag.ProcessName)
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	return cmd
+}
+
+func Builder() *cobra.Command {
+	const use = "namespaces"
+	cmd := &cobra.Command{
+		Use:     use,
+		Aliases: cli.GenerateAliases(use),
+		Short:   "Retrieve namespaces for collections experiencing slow queries",
+	}
+	cmd.AddCommand(
+		ListBuilder())
 
 	return cmd
 }

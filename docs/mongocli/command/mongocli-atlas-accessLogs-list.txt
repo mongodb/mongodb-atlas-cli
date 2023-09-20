@@ -68,7 +68,7 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+     - Output format. Valid values are json, json-path, go-template, or go-template-file. To see full output, use the -o json option.
    * - --projectId
      - string
      - false
@@ -94,3 +94,10 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for MongoCLI, see https://dochub.mongodb.org/core/atlas-cli-configuration-file.
 
+Examples
+--------
+
+.. code-block::
+
+   # Return a JSON-formatted list of all authentication requests made against the cluster named Cluster0 for the project with ID 618d48e05277a606ed2496fe:		
+   mongocli atlas accesslogs list --output json --projectId 618d48e05277a606ed2496fe --clusterName Cluster0

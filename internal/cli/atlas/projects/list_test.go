@@ -22,13 +22,12 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectLister(ctrl)
+	mockStore := mocks.NewMockOrgProjectLister(ctrl)
 
 	expected := &atlasv2.PaginatedAtlasGroup{}
 
@@ -47,25 +46,6 @@ func TestList_Run(t *testing.T) {
 		}
 	})
 
-	t.Run("An ConfigOrgID is given for OM", func(t *testing.T) {
-		listOpts := &ListOpts{
-			store: mockStore,
-		}
-		listOpts.OrgID = "1"
-		filter := &mongodbatlas.ProjectsListOptions{ListOptions: *listOpts.NewListOptions()}
-		mockStore.
-			EXPECT().
-			GetOrgProjects("1", filter).
-			Return(expected, nil).
-			Times(1)
-
-		config.SetService(config.OpsManagerService)
-
-		if err := listOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
-
 	t.Run("An ConfigOrgID is given for Atlas", func(t *testing.T) {
 		listOpts := &ListOpts{
 			store: mockStore,
@@ -74,7 +54,7 @@ func TestList_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			Projects(listOpts.NewListOptions()).
+			GetOrgProjects(listOpts.OrgID, listOpts.NewListOptions()).
 			Return(expected, nil).
 			Times(1)
 

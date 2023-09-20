@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestCreateOpts_Run(t *testing.T) {
@@ -34,9 +34,7 @@ func TestCreateOpts_Run(t *testing.T) {
 
 	t.Run("diskBackupReplicaSet run", func(t *testing.T) {
 		expected := &atlasv2.DiskBackupSnapshot{
-			DiskBackupReplicaSet: &atlasv2.DiskBackupReplicaSet{
-				Id: pointer.Get("DiskBackupReplicaSetId"),
-			},
+			Id: pointer.Get("DiskBackupReplicaSetId"),
 		}
 		buf := new(bytes.Buffer)
 
@@ -66,9 +64,7 @@ func TestCreateOpts_Run(t *testing.T) {
 
 	t.Run("diskBackupReplicaSet run", func(t *testing.T) {
 		expected := &atlasv2.DiskBackupSnapshot{
-			DiskBackupShardedClusterSnapshot: &atlasv2.DiskBackupShardedClusterSnapshot{
-				Id: pointer.Get("DiskBackupShardedClusterSnapshotId"),
-			},
+			Id: pointer.Get("DiskBackupShardedClusterSnapshotId"),
 		}
 
 		buf := new(bytes.Buffer)

@@ -25,7 +25,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestAtlasProjectAPIKeys(t *testing.T) {
@@ -51,7 +51,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		if a.NoError(err, string(resp)) {
-			var key atlasv2.ApiUser
+			var key atlasv2.ApiKeyUserDetails
 			if err := json.Unmarshal(resp, &key); err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
@@ -100,6 +100,26 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 		assert.NotEmpty(t, keys.Results)
+	})
+
+	t.Run("List Compact", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			projectsEntity,
+			apiKeysEntity,
+			"ls",
+			"-c",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		}
+		var keys []atlasv2.ApiKeyUserDetails
+		if err := json.Unmarshal(resp, &keys); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		assert.NotEmpty(t, keys)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

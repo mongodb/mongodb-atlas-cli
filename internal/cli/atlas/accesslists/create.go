@@ -18,7 +18,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -26,9 +25,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/time"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const (
@@ -58,7 +58,12 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	entry := opts.newProjectIPAccessList()
+	entry, err := opts.newProjectIPAccessList()
+
+	if err != nil {
+		return err
+	}
+
 	r, err := opts.store.CreateProjectIPAccessList(entry)
 
 	if err != nil {
@@ -68,13 +73,16 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newProjectIPAccessList() []*atlasv2.NetworkPermissionEntry {
+func (opts *CreateOpts) newProjectIPAccessList() ([]*atlasv2.NetworkPermissionEntry, error) {
 	entry := &atlasv2.NetworkPermissionEntry{
 		GroupId: pointer.Get(opts.ConfigProjectID()),
 		Comment: &opts.comment,
 	}
 	if opts.deleteAfter != "" {
-		deleteAfterDate, _ := time.Parse(time.RFC3339, opts.deleteAfter)
+		deleteAfterDate, err := time.ParseTimestamp(opts.deleteAfter)
+		if err != nil {
+			return nil, err
+		}
 		entry.DeleteAfterDate = &deleteAfterDate
 	}
 	switch opts.entryType {
@@ -85,7 +93,7 @@ func (opts *CreateOpts) newProjectIPAccessList() []*atlasv2.NetworkPermissionEnt
 	case awsSecurityGroup:
 		entry.AwsSecurityGroup = &opts.entry
 	}
-	return []*atlasv2.NetworkPermissionEntry{entry}
+	return []*atlasv2.NetworkPermissionEntry{entry}, nil
 }
 
 func IPAddress() (string, error) {

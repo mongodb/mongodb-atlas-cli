@@ -18,10 +18,12 @@ package clusters
 
 import (
 	"testing"
+	"time"
 
 	"github.com/go-test/deep"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestBuilder(t *testing.T) {
@@ -44,8 +46,8 @@ func TestMongoCLIBuilder(t *testing.T) {
 
 func TestAddLabel(t *testing.T) {
 	type args struct {
-		out   *mongodbatlas.AdvancedCluster
-		label mongodbatlas.Label
+		out   *atlasv2.AdvancedClusterDescription
+		label atlasv2.ComponentLabel
 	}
 	tests := []struct {
 		name     string
@@ -55,20 +57,20 @@ func TestAddLabel(t *testing.T) {
 		{
 			name: "adds",
 			args: args{
-				out: &mongodbatlas.AdvancedCluster{
-					Labels: []mongodbatlas.Label{},
+				out: &atlasv2.AdvancedClusterDescription{
+					Labels: []atlasv2.ComponentLabel{},
 				},
-				label: mongodbatlas.Label{Key: "test", Value: "test"},
+				label: atlasv2.ComponentLabel{Key: pointer.Get("test"), Value: pointer.Get("test")},
 			},
 			wantsAdd: true,
 		},
 		{
 			name: "doesn't adds",
 			args: args{
-				out: &mongodbatlas.AdvancedCluster{
-					Labels: []mongodbatlas.Label{{Key: "test", Value: "test"}},
+				out: &atlasv2.AdvancedClusterDescription{
+					Labels: []atlasv2.ComponentLabel{{Key: pointer.Get("test"), Value: pointer.Get("test")}},
 				},
-				label: mongodbatlas.Label{Key: "test", Value: "test"},
+				label: atlasv2.ComponentLabel{Key: pointer.Get("test"), Value: pointer.Get("test")},
 			},
 			wantsAdd: true,
 		},
@@ -88,8 +90,8 @@ func TestAddLabel(t *testing.T) {
 
 func TestLabelExists(t *testing.T) {
 	type args struct {
-		labels []mongodbatlas.Label
-		l      mongodbatlas.Label
+		labels []atlasv2.ComponentLabel
+		l      atlasv2.ComponentLabel
 	}
 	tests := []struct {
 		name string
@@ -99,10 +101,10 @@ func TestLabelExists(t *testing.T) {
 		{
 			name: "label doesn't exist",
 			args: args{
-				labels: []mongodbatlas.Label{},
-				l: mongodbatlas.Label{
-					Key:   "test",
-					Value: "test",
+				labels: []atlasv2.ComponentLabel{},
+				l: atlasv2.ComponentLabel{
+					Key:   pointer.Get("test"),
+					Value: pointer.Get("test"),
 				},
 			},
 			want: false,
@@ -110,15 +112,15 @@ func TestLabelExists(t *testing.T) {
 		{
 			name: "label exist",
 			args: args{
-				labels: []mongodbatlas.Label{
+				labels: []atlasv2.ComponentLabel{
 					{
-						Key:   "test",
-						Value: "test",
+						Key:   pointer.Get("test"),
+						Value: pointer.Get("test"),
 					},
 				},
-				l: mongodbatlas.Label{
-					Key:   "test",
-					Value: "test",
+				l: atlasv2.ComponentLabel{
+					Key:   pointer.Get("test"),
+					Value: pointer.Get("test"),
 				},
 			},
 			want: true,
@@ -137,108 +139,116 @@ func TestLabelExists(t *testing.T) {
 }
 
 func TestRemoveReadOnlyAttributes(t *testing.T) {
+	var (
+		id        = "Test"
+		testVar   = "test"
+		specID    = "22"
+		shards    = 2
+		zone      = "1"
+		timeStamp = time.Now()
+	)
 	tests := []struct {
 		name string
-		args *mongodbatlas.AdvancedCluster
-		want *mongodbatlas.AdvancedCluster
+		args *atlasv2.AdvancedClusterDescription
+		want *atlasv2.AdvancedClusterDescription
 	}{
 		{
 			name: "One AdvancedReplicationSpec",
-			args: &mongodbatlas.AdvancedCluster{
-				ID:             "Test",
-				MongoDBVersion: "test",
-				StateName:      "test",
-				ReplicationSpecs: []*mongodbatlas.AdvancedReplicationSpec{
+			args: &atlasv2.AdvancedClusterDescription{
+				Id:             &id,
+				MongoDBVersion: &testVar,
+				StateName:      &testVar,
+				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
-						ID:        "22",
-						NumShards: 2,
-						ZoneName:  "1",
+						Id:        &specID,
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 				},
-				CreateDate: "test",
+				CreateDate: &timeStamp,
 			},
-			want: &mongodbatlas.AdvancedCluster{
-				ReplicationSpecs: []*mongodbatlas.AdvancedReplicationSpec{
+			want: &atlasv2.AdvancedClusterDescription{
+				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
-						NumShards: 2,
-						ZoneName:  "1",
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 				},
 			},
 		},
 		{
 			name: "More AdvancedReplicationSpecs",
-			args: &mongodbatlas.AdvancedCluster{
-				ID:             "Test",
-				MongoDBVersion: "test",
-				StateName:      "test",
-				ReplicationSpecs: []*mongodbatlas.AdvancedReplicationSpec{
+			args: &atlasv2.AdvancedClusterDescription{
+				Id:             &id,
+				MongoDBVersion: &testVar,
+				StateName:      &testVar,
+				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
-						ID:        "22",
-						NumShards: 2,
-						ZoneName:  "1",
+						Id:        &specID,
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						ID:        "22",
-						NumShards: 2,
-						ZoneName:  "1",
+						Id:        &specID,
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						ID:        "22",
-						NumShards: 2,
-						ZoneName:  "1",
+						Id:        &specID,
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 				},
-				CreateDate: "test",
+				CreateDate: &timeStamp,
 			},
-			want: &mongodbatlas.AdvancedCluster{
-				ReplicationSpecs: []*mongodbatlas.AdvancedReplicationSpec{
+			want: &atlasv2.AdvancedClusterDescription{
+				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
-						NumShards: 2,
-						ZoneName:  "1",
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						NumShards: 2,
-						ZoneName:  "1",
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						NumShards: 2,
-						ZoneName:  "1",
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 				},
 			},
 		},
 		{
 			name: "Nothing to remove",
-			args: &mongodbatlas.AdvancedCluster{
-				ReplicationSpecs: []*mongodbatlas.AdvancedReplicationSpec{
+			args: &atlasv2.AdvancedClusterDescription{
+				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
-						NumShards: 2,
-						ZoneName:  "1",
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						NumShards: 2,
-						ZoneName:  "1",
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						NumShards: 2,
-						ZoneName:  "1",
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 				},
 			},
-			want: &mongodbatlas.AdvancedCluster{
-				ReplicationSpecs: []*mongodbatlas.AdvancedReplicationSpec{
+			want: &atlasv2.AdvancedClusterDescription{
+				ReplicationSpecs: []atlasv2.ReplicationSpec{
 					{
-						NumShards: 2,
-						ZoneName:  "1",
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						NumShards: 2,
-						ZoneName:  "1",
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 					{
-						NumShards: 2,
-						ZoneName:  "1",
+						NumShards: &shards,
+						ZoneName:  &zone,
 					},
 				},
 			},

@@ -3,7 +3,7 @@
 	"github.com/AlecAivazis/survey/v2": "mongocli",
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore": "mongocli",
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity": "mongocli",
-	"github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys": "mongocli",
+	"github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azkeys": "mongocli",
 	"github.com/Masterminds/semver/v3": "mongocli",
 	"github.com/PaesslerAG/jsonpath": "mongocli",
 	"github.com/aws/aws-sdk-go-v2": "mongocli",
@@ -35,7 +35,7 @@
 	"github.com/tangzero/inflector": "mongocli",
 	"github.com/withfig/autocomplete-tools/packages/cobra": "mongocli",
 	"go.mongodb.org/atlas": "mongocli",
-	"go.mongodb.org/atlas-sdk": "mongocli",
+	"go.mongodb.org/atlas-sdk/v20230201008": "mongocli",
 	"go.mongodb.org/mongo-driver": "mongocli",
 	"go.mongodb.org/ops-manager": "mongocli",
 	"golang.org/x/crypto": "mongocli",
@@ -44,6 +44,7 @@
 	"google.golang.org/protobuf": "mongocli",
 	"golang.org/x/mod": "mongocli",
 	"gopkg.in/yaml.v3": "mongocli",
+	"github.com/jba/templatecheck": "mongocli",
 	"github.com/mongodb/mongodb-atlas-kubernetes": "atlas_kubernetes_team",
 	"k8s.io/api": "atlas_kubernetes_team",
 	"k8s.io/apimachinery": "atlas_kubernetes_team",
@@ -52,5 +53,8 @@
 	"sigs.k8s.io/yaml": "atlas_kubernetes_team",
 	"sigs.k8s.io/controller-runtime": "atlas_kubernetes_team",
 	"sigs.k8s.io/kind": "atlas_kubernetes_team",
-	"golang.org/x/exp": "atlas_kubernetes_team"
+	"golang.org/x/exp": "atlas_kubernetes_team",
+	"github.com/containers/podman/v4": "mongocli",
+	"github.com/shirou/gopsutil/v3": "mongocli",
+	"github.com/denisbrodbeck/machineid": "mongocli"
 }

@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestWatchBuilder(t *testing.T) {
@@ -34,19 +34,26 @@ func TestWatchBuilder(t *testing.T) {
 func TestWatchOpts_Run(t *testing.T) {
 	tests := []struct {
 		name     string
-		expected interface{}
+		expected *atlasv2.BaseNetworkPeeringConnectionSettings
 	}{
 		{
-			name:     "AWS",
-			expected: &atlasv2.AWSPeerVpc{StatusName: pointer.Get("PENDING_ACCEPTANCE")},
+			name: "AWS",
+			expected: &atlasv2.BaseNetworkPeeringConnectionSettings{
+				ProviderName: pointer.Get("AWS"),
+				StatusName:   pointer.Get("PENDING_ACCEPTANCE"),
+			},
 		},
 		{
-			name:     "AZURE",
-			expected: &atlasv2.AzurePeerNetwork{Status: pointer.Get("AVAILABLE")},
+			name: "AZURE",
+			expected: &atlasv2.BaseNetworkPeeringConnectionSettings{
+				ProviderName: pointer.Get("AZURE"),
+				Status:       pointer.Get("AVAILABLE")},
 		},
 		{
-			name:     "GCP",
-			expected: &atlasv2.GCPPeerVpc{Status: pointer.Get("WAITING_FOR_USER")},
+			name: "GCP",
+			expected: &atlasv2.BaseNetworkPeeringConnectionSettings{
+				ProviderName: pointer.Get("GCP"),
+				Status:       pointer.Get("WAITING_FOR_USER")},
 		},
 	}
 	for _, tt := range tests {

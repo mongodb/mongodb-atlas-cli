@@ -15,7 +15,7 @@
 package atlas
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -31,7 +31,7 @@ type TeamDescriber interface {
 }
 
 type TeamCreator interface {
-	CreateTeam(string, *atlas.Team) (*atlasv2.Team, error)
+	CreateTeam(string, *atlasv2.Team) (*atlasv2.Team, error)
 }
 
 type TeamDeleter interface {
@@ -72,9 +72,8 @@ func (s *Store) Teams(orgID string, opts *atlas.ListOptions) (*atlasv2.Paginated
 	return result, err
 }
 
-func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlasv2.Team, error) {
-	newTeam := atlasv2.Team{Name: team.Name, Usernames: team.Usernames}
-	result, _, err := s.clientv2.TeamsApi.CreateTeam(s.ctx, orgID, &newTeam).Execute()
+func (s *Store) CreateTeam(orgID string, team *atlasv2.Team) (*atlasv2.Team, error) {
+	result, _, err := s.clientv2.TeamsApi.CreateTeam(s.ctx, orgID, team).Execute()
 	return result, err
 }
 

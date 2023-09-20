@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type WatchOpts struct {
@@ -57,28 +57,28 @@ func (opts *WatchOpts) watcher() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-
-	switch v := result.(type) {
-	case *atlasv2.AWSPeerVpc:
-		return watcherAWS(v), nil
-	case *atlasv2.AzurePeerNetwork:
-		return watcherAzure(v), nil
-	case *atlasv2.GCPPeerVpc:
-		return watcherGCP(v), nil
+	switch v := result.GetProviderName(); v {
+	case "AWS":
+		return watcherAWS(result), nil
+	case "AZURE":
+		return watcherAzure(result), nil
+	case "GCP":
+		return watcherGCP(result), nil
 	}
+	fmt.Print("Network peering changes completed.\n")
 	return false, nil
 }
 
-func watcherGCP(peer *atlasv2.GCPPeerVpc) bool {
-	return *peer.Status == waitingForUser || *peer.Status == failed || *peer.Status == available
+func watcherGCP(peer *atlasv2.BaseNetworkPeeringConnectionSettings) bool {
+	return peer.GetStatus() == waitingForUser || peer.GetStatus() == failed || peer.GetStatus() == available
 }
 
-func watcherAzure(peer *atlasv2.AzurePeerNetwork) bool {
-	return *peer.Status == waitingForUser || *peer.Status == failed || *peer.Status == available
+func watcherAzure(peer *atlasv2.BaseNetworkPeeringConnectionSettings) bool {
+	return peer.GetStatus() == waitingForUser || peer.GetStatus() == failed || peer.GetStatus() == available
 }
 
-func watcherAWS(peer *atlasv2.AWSPeerVpc) bool {
-	return *peer.StatusName == pendingAcceptance || *peer.StatusName == failed || *peer.StatusName == available
+func watcherAWS(peer *atlasv2.BaseNetworkPeeringConnectionSettings) bool {
+	return peer.GetStatusName() == pendingAcceptance || peer.GetStatusName() == failed || peer.GetStatusName() == available
 }
 
 func (opts *WatchOpts) Run() error {

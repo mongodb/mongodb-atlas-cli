@@ -25,7 +25,6 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const listTemplate = `ID	NAME{{range .Results}}
@@ -36,7 +35,7 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.ProjectLister
+	store store.OrgProjectLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -48,12 +47,11 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
+	listOptions := opts.NewListOptions()
 	var r interface{}
 	var err error
-	listOptions := opts.NewListOptions()
-	if opts.ConfigOrgID() != "" && config.Service() == config.OpsManagerService {
-		l := &mongodbatlas.ProjectsListOptions{ListOptions: *listOptions}
-		r, err = opts.store.GetOrgProjects(opts.ConfigOrgID(), l)
+	if opts.OrgID != "" {
+		r, err = opts.store.GetOrgProjects(opts.OrgID, listOptions)
 	} else {
 		r, err = opts.store.Projects(listOptions)
 	}

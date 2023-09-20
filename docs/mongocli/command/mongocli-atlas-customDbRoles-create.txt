@@ -64,7 +64,7 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+     - Output format. Valid values are json, json-path, go-template, or go-template-file. To see full output, use the -o json option.
    * - --privilege
      - strings
      - false
@@ -106,10 +106,16 @@ Examples
 .. code-block::
 
    # Create a custom database role
-   mongocli atlas customDbRoles create customRole --privilege FIND@database,UPDATE@database
+   mongocli atlas customDbRoles create customRole --privilege FIND@databaseName,UPDATE@databaseName.collectionName
+
+   
+.. code-block::
+
+   # Create a customer database role with granted action on the cluster resource
+   mongocli atlas customDbRoles create customRole --privilege GET_CMD_LINE_OPTS
 
    
 .. code-block::
 
    # Use an inherited role
-   mongocli atlas customDbRoles create customRole --inheritedRole read@database
+   mongocli atlas customDbRoles create customRole --inheritedRole read@databaseName

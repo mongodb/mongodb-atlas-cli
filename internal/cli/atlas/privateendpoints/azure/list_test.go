@@ -24,13 +24,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPrivateEndpointLister(ctrl)
 
-	var expected []interface{}
+	var expected []admin.EndpointService
 
 	listOpts := &ListOpts{
 		store: mockStore,

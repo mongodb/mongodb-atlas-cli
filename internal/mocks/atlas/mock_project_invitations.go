@@ -8,8 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/admin"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	admin "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 // MockProjectInvitationLister is a mock of ProjectInvitationLister interface.
@@ -36,18 +35,18 @@ func (m *MockProjectInvitationLister) EXPECT() *MockProjectInvitationListerMockR
 }
 
 // ProjectInvitations mocks base method.
-func (m *MockProjectInvitationLister) ProjectInvitations(arg0 string, arg1 *mongodbatlas.InvitationOptions) ([]admin.GroupInvitation, error) {
+func (m *MockProjectInvitationLister) ProjectInvitations(arg0 *admin.ListProjectInvitationsApiParams) ([]admin.GroupInvitation, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProjectInvitations", arg0, arg1)
+	ret := m.ctrl.Call(m, "ProjectInvitations", arg0)
 	ret0, _ := ret[0].([]admin.GroupInvitation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ProjectInvitations indicates an expected call of ProjectInvitations.
-func (mr *MockProjectInvitationListerMockRecorder) ProjectInvitations(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockProjectInvitationListerMockRecorder) ProjectInvitations(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectInvitations", reflect.TypeOf((*MockProjectInvitationLister)(nil).ProjectInvitations), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectInvitations", reflect.TypeOf((*MockProjectInvitationLister)(nil).ProjectInvitations), arg0)
 }
 
 // MockProjectInvitationDescriber is a mock of ProjectInvitationDescriber interface.
@@ -149,7 +148,7 @@ func (m *MockProjectInviter) EXPECT() *MockProjectInviterMockRecorder {
 }
 
 // InviteUserToProject mocks base method.
-func (m *MockProjectInviter) InviteUserToProject(arg0 string, arg1 *mongodbatlas.Invitation) (*admin.GroupInvitation, error) {
+func (m *MockProjectInviter) InviteUserToProject(arg0 string, arg1 *admin.GroupInvitationRequest) (*admin.GroupInvitation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InviteUserToProject", arg0, arg1)
 	ret0, _ := ret[0].(*admin.GroupInvitation)
@@ -187,7 +186,7 @@ func (m *MockProjectInvitationUpdater) EXPECT() *MockProjectInvitationUpdaterMoc
 }
 
 // UpdateProjectInvitation mocks base method.
-func (m *MockProjectInvitationUpdater) UpdateProjectInvitation(arg0, arg1 string, arg2 *mongodbatlas.Invitation) (*admin.GroupInvitation, error) {
+func (m *MockProjectInvitationUpdater) UpdateProjectInvitation(arg0, arg1 string, arg2 *admin.GroupInvitationRequest) (*admin.GroupInvitation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateProjectInvitation", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.GroupInvitation)

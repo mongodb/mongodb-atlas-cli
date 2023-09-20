@@ -19,16 +19,15 @@ import (
 	"errors"
 	"fmt"
 
-	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
-	corev1 "k8s.io/api/core/v1"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
 	"go.mongodb.org/atlas/mongodbatlas"
+	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 

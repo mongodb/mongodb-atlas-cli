@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestCreateOpts_Run(t *testing.T) {
@@ -49,6 +49,10 @@ func TestCreateOpts_Run(t *testing.T) {
 	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestCreateTemplate(t *testing.T) {
+	test.VerifyOutputTemplate(t, createTemplate, &atlasv2.DiskBackupExportJob{})
 }
 
 func TestCreateBuilder(t *testing.T) {

@@ -22,10 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type UpdateOpts struct {
@@ -36,6 +37,7 @@ type UpdateOpts struct {
 	disableServerlessContinuousBackup bool
 	disableTerminationProtection      bool
 	enableTerminationProtection       bool
+	tag                               map[string]string
 	store                             store.ServerlessInstanceUpdater
 }
 
@@ -64,8 +66,17 @@ func (opts *UpdateOpts) newServerlessUpdateRequestParams() *atlasv2.ServerlessIn
 
 	serverlessContinuousBackupEnabled := cli.ReturnValueForSetting(opts.enableServerlessContinuousBackup, opts.disableServerlessContinuousBackup)
 	if serverlessContinuousBackupEnabled != nil {
-		params.ServerlessBackupOptions = &atlasv2.ServerlessBackupOptions{
+		params.ServerlessBackupOptions = &atlasv2.ClusterServerlessBackupOptions{
 			ServerlessContinuousBackupEnabled: serverlessContinuousBackupEnabled,
+		}
+	}
+
+	if len(opts.tag) > 0 {
+		params.Tags = []atlasv2.ResourceTag{}
+	}
+	for k, v := range opts.tag {
+		if k != "" && v != "" {
+			params.Tags = append(params.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
 		}
 	}
 
@@ -104,6 +115,8 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.enableServerlessContinuousBackup, flag.EnableServerlessContinuousBackup, false, usage.EnableServerlessContinuousBackup)
 	cmd.Flags().BoolVar(&opts.disableServerlessContinuousBackup, flag.DisableServerlessContinuousBackup, false, usage.DisableServerlessContinuousBackup)
 	cmd.MarkFlagsMutuallyExclusive(flag.EnableServerlessContinuousBackup, flag.DisableServerlessContinuousBackup)
+
+	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.ServerlessTag+usage.UpdateWarning)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

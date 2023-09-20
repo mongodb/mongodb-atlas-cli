@@ -17,33 +17,42 @@
 package apikeys
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationAPIKeyCreator(ctrl)
 
-	expected := &atlasv2.ApiUser{
-		Id: new(string),
-	}
-
 	createOpts := &CreateOpts{
 		store: mockStore,
 		roles: []string{"ORG_OWNER"},
 	}
+	buf := new(bytes.Buffer)
+	require.NoError(t, createOpts.InitOutput(buf, createTemplate)())
 
+	expected := &atlasv2.ApiKeyUserDetails{
+		Id:         pointer.Get("id"),
+		PublicKey:  pointer.Get("public"),
+		PrivateKey: pointer.Get("private"),
+	}
 	mockStore.
 		EXPECT().
 		CreateOrganizationAPIKey(createOpts.OrgID, createOpts.newAPIKeyInput()).
 		Return(expected, nil).
 		Times(1)
 
-	if err := createOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, createOpts.Run())
+	assert.Equal(t, `API Key 'id' created.
+Public API Key public
+Private API Key private
+`, buf.String())
 }

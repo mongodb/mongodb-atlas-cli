@@ -46,7 +46,7 @@ Options
    * - --limit
      - int
      - false
-     - Number of items per results page. This value defaults to 100.
+     - Number of items per results page, up to a maximum of 500. If you have more than 500 results, specify the --page option to change the results page. This value defaults to 100.
    * - --orgId
      - string
      - false
@@ -54,7 +54,7 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+     - Output format. Valid values are json, json-path, go-template, or go-template-file. To see full output, use the -o json option.
    * - --page
      - int
      - false

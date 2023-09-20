@@ -43,7 +43,7 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteOrganizationAPIKeyAccessList, opts.ConfigOrgID(), opts.apiKey)
+	return opts.Delete(opts.store.DeleteOrganizationAPIKeyAccessList, opts.ConfigOrgID(), opts.apiKey, opts.Entry)
 }
 
 // DeleteBuilder atlas organizations|orgs apiKey(s)|apikey(s) accesslist delete <IP> [--orgId orgId] [--apiKey apiKey] --force.

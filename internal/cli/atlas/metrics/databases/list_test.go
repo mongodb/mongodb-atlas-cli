@@ -22,15 +22,22 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestDatabasesListsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessDatabaseLister(ctrl)
 
-	expected := &atlasv2.PaginatedDatabase{}
+	expected := &atlasv2.PaginatedDatabase{
+		Results: []atlasv2.MesurementsDatabase{
+			{
+				DatabaseName: pointer.Get("test"),
+			},
+		},
+	}
 
 	listOpts := &ListsOpts{
 		host:  "hard-00-00.mongodb.net",
@@ -47,6 +54,7 @@ func TestDatabasesListsOpts_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, databasesListTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

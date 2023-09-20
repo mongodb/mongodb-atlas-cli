@@ -21,16 +21,16 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationCreator(ctrl)
 
-	expected := &mongodbatlas.AlertConfiguration{}
+	expected := &admin.GroupAlertsConfig{}
 
 	createOpts := &CreateOpts{
 		ConfigOpts: ConfigOpts{
@@ -52,6 +52,7 @@ func TestCreate_Run(t *testing.T) {
 		store: mockStore}
 
 	alert := createOpts.NewAlertConfiguration(createOpts.ConfigProjectID())
+
 	mockStore.
 		EXPECT().
 		CreateAlertConfiguration(alert).

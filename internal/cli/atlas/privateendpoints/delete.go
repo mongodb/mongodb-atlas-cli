@@ -68,7 +68,7 @@ func DeleteBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
-		Deprecated: "Please use mongocli atlas privateEndpoints aws delete <ID> [--projectId projectId]",
+		Deprecated: "Please use atlas privateEndpoints aws delete <ID> [--projectId projectId]",
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)

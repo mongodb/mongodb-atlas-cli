@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -254,7 +254,7 @@ type AuthenticatedConfig interface {
 
 type ServiceGetter interface {
 	Service() string
-	// Name of the config value for custom service URL. Named opsmannager for legacy reasons.
+	// Name of the config value for custom service URL. Named opsmanager for legacy reasons.
 	OpsManagerURL() string
 }
 

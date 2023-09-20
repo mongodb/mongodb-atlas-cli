@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type CreateOpts struct {
@@ -99,14 +99,14 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newDatabaseUser() *atlasv2.DatabaseUser {
+func (opts *CreateOpts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 	authDB := convert.AdminDB
 
 	if opts.isExternal() && opts.ldapType != group {
 		authDB = convert.ExternalAuthDB
 	}
 
-	return &atlasv2.DatabaseUser{
+	return &atlasv2.CloudDatabaseUser{
 		Roles:           convert.BuildAtlasRoles(opts.roles),
 		Scopes:          convert.BuildAtlasScopes(opts.scopes),
 		GroupId:         opts.ConfigProjectID(),
@@ -215,7 +215,7 @@ func CreateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&opts.username, flag.Username, flag.UsernameShort, "", usage.DBUsername)
-	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.Password)
+	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.DBUserPassword)
 	cmd.Flags().StringVar(&opts.deleteAfter, flag.DeleteAfter, "", usage.BDUsersDeleteAfter)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.RolesExtended)
 	cmd.Flags().StringSliceVar(&opts.scopes, flag.Scope, []string{}, usage.Scopes)

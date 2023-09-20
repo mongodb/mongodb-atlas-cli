@@ -16,17 +16,17 @@ package atlas
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_alert_configuration.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas AlertConfigurationLister,AlertConfigurationCreator,AlertConfigurationDeleter,AlertConfigurationUpdater,MatcherFieldsLister,AlertConfigurationEnabler,AlertConfigurationDisabler
 
 type AlertConfigurationLister interface {
-	AlertConfigurations(string, *atlas.ListOptions) ([]atlas.AlertConfiguration, error)
+	AlertConfigurations(*admin.ListAlertConfigurationsApiParams) (*admin.PaginatedAlertConfig, error)
 }
 
 type AlertConfigurationCreator interface {
-	CreateAlertConfiguration(*atlas.AlertConfiguration) (*atlas.AlertConfiguration, error)
+	CreateAlertConfiguration(*admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error)
 }
 
 type AlertConfigurationDeleter interface {
@@ -34,7 +34,7 @@ type AlertConfigurationDeleter interface {
 }
 
 type AlertConfigurationUpdater interface {
-	UpdateAlertConfiguration(*atlas.AlertConfiguration) (*atlas.AlertConfiguration, error)
+	UpdateAlertConfiguration(*admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error)
 }
 
 type MatcherFieldsLister interface {
@@ -42,50 +42,56 @@ type MatcherFieldsLister interface {
 }
 
 type AlertConfigurationEnabler interface {
-	EnableAlertConfiguration(string, string) (*atlas.AlertConfiguration, error)
+	EnableAlertConfiguration(string, string) (*admin.GroupAlertsConfig, error)
 }
 
 type AlertConfigurationDisabler interface {
-	DisableAlertConfiguration(string, string) (*atlas.AlertConfiguration, error)
+	DisableAlertConfiguration(string, string) (*admin.GroupAlertsConfig, error)
 }
 
 // AlertConfigurations encapsulate the logic to manage different cloud providers.
-func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) ([]atlas.AlertConfiguration, error) {
-	result, _, err := s.client.AlertConfigurations.List(s.ctx, projectID, opts)
+func (s *Store) AlertConfigurations(params *admin.ListAlertConfigurationsApiParams) (*admin.PaginatedAlertConfig, error) {
+	result, _, err := s.clientv2.AlertConfigurationsApi.ListAlertConfigurationsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // CreateAlertConfiguration encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
-	result, _, err := s.client.AlertConfigurations.Create(s.ctx, alertConfig.GroupID, alertConfig)
+func (s *Store) CreateAlertConfiguration(alertConfig *admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error) {
+	result, _, err := s.clientv2.AlertConfigurationsApi.CreateAlertConfiguration(s.ctx, alertConfig.GetGroupId(), alertConfig).Execute()
 	return result, err
 }
 
 // DeleteAlertConfiguration encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteAlertConfiguration(projectID, id string) error {
-	_, err := s.client.AlertConfigurations.Delete(s.ctx, projectID, id)
+	_, err := s.clientv2.AlertConfigurationsApi.DeleteAlertConfiguration(s.ctx, projectID, id).Execute()
 	return err
 }
 
 // MatcherFields encapsulate the logic to manage different cloud providers.
 func (s *Store) MatcherFields() ([]string, error) {
-	result, _, err := s.client.AlertConfigurations.ListMatcherFields(s.ctx)
+	result, _, err := s.clientv2.AlertConfigurationsApi.ListAlertConfigurationMatchersFieldNames(s.ctx).Execute()
 	return result, err
 }
 
-func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
-	result, _, err := s.client.AlertConfigurations.Update(s.ctx, alertConfig.GroupID, alertConfig.ID, alertConfig)
+func (s *Store) UpdateAlertConfiguration(alertConfig *admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error) {
+	result, _, err := s.clientv2.AlertConfigurationsApi.UpdateAlertConfiguration(s.ctx, alertConfig.GetGroupId(), alertConfig.GetId(), alertConfig).Execute()
 	return result, err
 }
 
 // EnableAlertConfiguration encapsulate the logic to manage different cloud providers.
-func (s *Store) EnableAlertConfiguration(projectID, id string) (*atlas.AlertConfiguration, error) {
-	result, _, err := s.client.AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(true))
+func (s *Store) EnableAlertConfiguration(projectID, id string) (*admin.GroupAlertsConfig, error) {
+	toggle := admin.AlertsToggle{
+		Enabled: pointer.Get(true),
+	}
+	result, _, err := s.clientv2.AlertConfigurationsApi.ToggleAlertConfiguration(s.ctx, projectID, id, &toggle).Execute()
 	return result, err
 }
 
 // DisableAlertConfiguration encapsulate the logic to manage different cloud providers.
-func (s *Store) DisableAlertConfiguration(projectID, id string) (*atlas.AlertConfiguration, error) {
-	result, _, err := s.client.AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(false))
+func (s *Store) DisableAlertConfiguration(projectID, id string) (*admin.GroupAlertsConfig, error) {
+	toggle := admin.AlertsToggle{
+		Enabled: pointer.Get(false),
+	}
+	result, _, err := s.clientv2.AlertConfigurationsApi.ToggleAlertConfiguration(s.ctx, projectID, id, &toggle).Execute()
 	return result, err
 }

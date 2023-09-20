@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (iam && !om50 && !om60 && atlas)
+//go:build e2e || (iam && !om60 && atlas)
 
 package iam_test
 
@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestAtlasTeamUsers(t *testing.T) {
@@ -92,6 +92,25 @@ func TestAtlasTeamUsers(t *testing.T) {
 		var teams atlasv2.PaginatedApiAppUser
 		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
 			a.NotEmpty(teams.Results)
+		}
+	})
+
+	t.Run("List Compact", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			teamsEntity,
+			usersEntity,
+			"ls",
+			"-c",
+			"--teamId",
+			teamID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+		a := assert.New(t)
+		var teams []atlasv2.CloudAppUser
+		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
+			a.NotEmpty(teams)
 		}
 	})
 

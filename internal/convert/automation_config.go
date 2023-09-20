@@ -31,12 +31,12 @@ func FromAutomationConfig(c *opsmngr.AutomationConfig) []*ClusterConfig {
 		}
 
 		newSC.Config = newRSConfig(c, s.ConfigServerReplica)
-		for j, p := range c.Processes {
+		for j := len(c.Processes) - 1; j >= 0; j-- {
+			p := c.Processes[j]
 			if p.Cluster == s.Name {
 				newSC.Mongos = append(newSC.Mongos, newMongosProcessConfig(p))
 				newSC.addToMongoURI(p)
 				c.Processes = removeProcess(c.Processes, j)
-				break
 			}
 		}
 		out = append(out, newSC)
@@ -44,12 +44,12 @@ func FromAutomationConfig(c *opsmngr.AutomationConfig) []*ClusterConfig {
 	for _, rs := range c.ReplicaSets {
 		newRS := newReplicaSetCluster(rs.ID, len(rs.Members))
 		for j, m := range rs.Members {
-			for k, p := range c.Processes {
+			for k := len(c.Processes) - 1; k >= 0; k-- {
+				p := c.Processes[k]
 				if p.Name == m.Host {
 					newRS.Processes[j] = newReplicaSetProcessConfig(&rs.Members[j], p)
 					newRS.addToMongoURI(p)
 					c.Processes = removeProcess(c.Processes, k)
-					break
 				}
 			}
 		}

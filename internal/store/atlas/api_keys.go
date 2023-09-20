@@ -15,7 +15,7 @@
 package atlas
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -26,7 +26,7 @@ type ProjectAPIKeyLister interface {
 }
 
 type ProjectAPIKeyCreator interface {
-	CreateProjectAPIKey(string, *atlasv2.CreateApiKey) (*atlasv2.ApiUser, error)
+	CreateProjectAPIKey(string, *atlasv2.CreateAtlasProjectApiKey) (*atlasv2.ApiKeyUserDetails, error)
 }
 
 type ProjectAPIKeyDeleter interface {
@@ -34,7 +34,7 @@ type ProjectAPIKeyDeleter interface {
 }
 
 type ProjectAPIKeyAssigner interface {
-	AssignProjectAPIKey(string, string, *atlasv2.CreateApiKey) error
+	AssignProjectAPIKey(string, string, *atlasv2.UpdateAtlasProjectApiKey) error
 }
 
 type OrganizationAPIKeyLister interface {
@@ -42,15 +42,15 @@ type OrganizationAPIKeyLister interface {
 }
 
 type OrganizationAPIKeyDescriber interface {
-	OrganizationAPIKey(string, string) (*atlasv2.ApiUser, error)
+	OrganizationAPIKey(string, string) (*atlasv2.ApiKeyUserDetails, error)
 }
 
 type OrganizationAPIKeyUpdater interface {
-	UpdateOrganizationAPIKey(string, string, *atlasv2.CreateApiKey) (*atlasv2.ApiUser, error)
+	UpdateOrganizationAPIKey(string, string, *atlasv2.UpdateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error)
 }
 
 type OrganizationAPIKeyCreator interface {
-	CreateOrganizationAPIKey(string, *atlasv2.CreateApiKey) (*atlasv2.ApiUser, error)
+	CreateOrganizationAPIKey(string, *atlasv2.CreateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error)
 }
 
 type OrganizationAPIKeyDeleter interface {
@@ -68,19 +68,19 @@ func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) (*atl
 }
 
 // OrganizationAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlasv2.ApiUser, error) {
+func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlasv2.ApiKeyUserDetails, error) {
 	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.GetApiKey(s.ctx, orgID, apiKeyID).Execute()
 	return result, err
 }
 
 // UpdateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlasv2.CreateApiKey) (*atlasv2.ApiUser, error) {
+func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlasv2.UpdateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error) {
 	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKey(s.ctx, orgID, apiKeyID, input).Execute()
 	return result, err
 }
 
 // CreateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlasv2.CreateApiKey) (*atlasv2.ApiUser, error) {
+func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlasv2.CreateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error) {
 	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateApiKey(s.ctx, orgID, input).Execute()
 	return result, err
 }
@@ -102,13 +102,13 @@ func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) (*atla
 }
 
 // CreateProjectAPIKey creates an API Keys for a project.
-func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlasv2.CreateApiKey) (*atlasv2.ApiUser, error) {
+func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlasv2.CreateAtlasProjectApiKey) (*atlasv2.ApiKeyUserDetails, error) {
 	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateProjectApiKey(s.ctx, projectID, apiKeyInput).Execute()
 	return result, err
 }
 
 // AssignProjectAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlasv2.CreateApiKey) error {
+func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlasv2.UpdateAtlasProjectApiKey) error {
 	_, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKeyRoles(s.ctx, projectID, apiKeyID, input).Execute()
 	return err
 }

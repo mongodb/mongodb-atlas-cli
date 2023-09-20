@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -30,7 +30,7 @@ type ClusterLister interface {
 }
 
 type AtlasClusterDescriber interface {
-	AtlasCluster(string, string) (*atlas.AdvancedCluster, error)
+	AtlasCluster(string, string) (*admin.AdvancedClusterDescription, error)
 }
 
 type AtlasClusterConfigurationOptionsDescriber interface {
@@ -50,7 +50,7 @@ type AtlasSharedClusterDescriber interface {
 }
 
 type ClusterCreator interface {
-	CreateCluster(*atlas.AdvancedCluster) (*atlas.AdvancedCluster, error)
+	CreateCluster(v15 *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error)
 }
 
 type ClusterDeleter interface {
@@ -58,15 +58,15 @@ type ClusterDeleter interface {
 }
 
 type ClusterUpdater interface {
-	UpdateCluster(string, string, *atlas.AdvancedCluster) (*atlas.AdvancedCluster, error)
+	UpdateCluster(string, string, *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error)
 }
 
 type ClusterPauser interface {
-	PauseCluster(string, string) (*atlas.AdvancedCluster, error)
+	PauseCluster(string, string) (*admin.AdvancedClusterDescription, error)
 }
 
 type ClusterStarter interface {
-	StartCluster(string, string) (*atlas.AdvancedCluster, error)
+	StartCluster(string, string) (*admin.AdvancedClusterDescription, error)
 }
 
 type ClusterUpgrader interface {
@@ -74,7 +74,7 @@ type ClusterUpgrader interface {
 }
 
 type SampleDataAdder interface {
-	AddSampleData(string, string) (*atlas.SampleDatasetJob, error)
+	AddSampleData(string, string) (*admin.SampleDatasetStatus, error)
 }
 
 type SampleDataStatusDescriber interface {
@@ -108,10 +108,10 @@ type AtlasClusterQuickStarter interface {
 }
 
 // AddSampleData encapsulate the logic to manage different cloud providers.
-func (s *Store) AddSampleData(groupID, clusterName string) (*atlas.SampleDatasetJob, error) {
+func (s *Store) AddSampleData(groupID, clusterName string) (*admin.SampleDatasetStatus, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Clusters.LoadSampleDataset(s.ctx, groupID, clusterName)
+		result, _, err := s.clientv2.ClustersApi.LoadSampleDataset(s.ctx, groupID, clusterName).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -130,10 +130,10 @@ func (s *Store) SampleDataStatus(groupID, id string) (*admin.SampleDatasetStatus
 }
 
 // CreateCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateCluster(cluster *atlas.AdvancedCluster) (*atlas.AdvancedCluster, error) {
+func (s *Store) CreateCluster(cluster *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Create(s.ctx, cluster.GroupID, cluster)
+		result, _, err := s.clientv2.ClustersApi.CreateCluster(s.ctx, cluster.GetGroupId(), cluster).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -141,10 +141,10 @@ func (s *Store) CreateCluster(cluster *atlas.AdvancedCluster) (*atlas.AdvancedCl
 }
 
 // UpdateCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateCluster(projectID, name string, cluster *atlas.AdvancedCluster) (*atlas.AdvancedCluster, error) {
+func (s *Store) UpdateCluster(projectID, name string, cluster *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Update(s.ctx, projectID, name, cluster)
+		result, _, err := s.clientv2.ClustersApi.UpdateCluster(s.ctx, projectID, name, cluster).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -152,18 +152,18 @@ func (s *Store) UpdateCluster(projectID, name string, cluster *atlas.AdvancedClu
 }
 
 // PauseCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) PauseCluster(projectID, name string) (*atlas.AdvancedCluster, error) {
+func (s *Store) PauseCluster(projectID, name string) (*admin.AdvancedClusterDescription, error) {
 	paused := true
-	cluster := &atlas.AdvancedCluster{
+	cluster := &admin.AdvancedClusterDescription{
 		Paused: &paused,
 	}
 	return s.UpdateCluster(projectID, name, cluster)
 }
 
 // StartCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) StartCluster(projectID, name string) (*atlas.AdvancedCluster, error) {
+func (s *Store) StartCluster(projectID, name string) (*admin.AdvancedClusterDescription, error) {
 	paused := false
-	cluster := &atlas.AdvancedCluster{
+	cluster := &admin.AdvancedClusterDescription{
 		Paused: &paused,
 	}
 	return s.UpdateCluster(projectID, name, cluster)
@@ -173,7 +173,7 @@ func (s *Store) StartCluster(projectID, name string) (*atlas.AdvancedCluster, er
 func (s *Store) DeleteCluster(projectID, name string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.MultiCloudClustersApi.DeleteCluster(s.ctx, projectID, name).Execute()
+		_, err := s.clientv2.ClustersApi.DeleteCluster(s.ctx, projectID, name).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -206,7 +206,7 @@ func (s *Store) UpgradeCluster(projectID string, cluster *atlas.Cluster) (*atlas
 func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.MultiCloudClustersApi.ListClusters(s.ctx, projectID)
+		res := s.clientv2.ClustersApi.ListClusters(s.ctx, projectID)
 		if opts != nil {
 			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 		}
@@ -221,10 +221,10 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (inte
 }
 
 // AtlasCluster encapsulates the logic to manage different cloud providers.
-func (s *Store) AtlasCluster(projectID, name string) (*atlas.AdvancedCluster, error) {
+func (s *Store) AtlasCluster(projectID, name string) (*admin.AdvancedClusterDescription, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AdvancedClusters.Get(s.ctx, projectID, name)
+		result, _, err := s.clientv2.ClustersApi.GetCluster(s.ctx, projectID, name).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -278,7 +278,7 @@ func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName st
 func (s *Store) TestClusterFailover(projectID, clusterName string) error {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.MultiCloudClustersApi.TestFailover(s.ctx, projectID, clusterName).Execute()
+		_, err := s.clientv2.ClustersApi.TestFailover(s.ctx, projectID, clusterName).Execute()
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

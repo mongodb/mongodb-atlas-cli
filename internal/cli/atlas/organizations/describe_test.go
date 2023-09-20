@@ -23,15 +23,15 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationDescriber(ctrl)
 	stringVal := "test"
-	expected := &atlasv2.Organization{
+	expected := &atlasv2.AtlasOrganization{
 		Links: nil,
 		Id:    &stringVal,
 		Name:  stringVal,
@@ -56,8 +56,5 @@ func TestDescribe_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	assert.Equal(t, `ID     NAME
-test   test
-`, buf.String())
-	t.Log(buf.String())
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }

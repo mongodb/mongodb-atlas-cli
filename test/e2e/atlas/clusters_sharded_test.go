@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestShardedCluster(t *testing.T) {
@@ -64,7 +64,7 @@ func TestShardedCluster(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var cluster mongodbatlas.AdvancedCluster
+		var cluster atlasv2.AdvancedClusterDescription
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
@@ -77,7 +77,7 @@ func TestShardedCluster(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Cluster '%s' deleted\n", shardedClusterName)
+		expected := fmt.Sprintf("Deleting cluster '%s'", shardedClusterName)
 		a.Equal(expected, string(resp))
 	})
 

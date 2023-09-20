@@ -22,13 +22,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const listTemplate = `IP ADDRESS	CIDR BLOCK	CREATED AT{{range .Results}}
-{{.IPAddress}}	{{.CidrBlock}}	{{.Created}}{{end}}
+{{.IpAddress}}	{{.CidrBlock}}	{{.Created}}{{end}}
 `
 
 type ListOpts struct {
@@ -48,7 +50,14 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	result, err := opts.store.OrganizationAPIKeyAccessLists(opts.ConfigOrgID(), opts.id, opts.NewListOptions())
+	listOpts := opts.NewListOptions()
+	params := &admin.ListApiKeyAccessListsEntriesApiParams{
+		OrgId:        opts.ConfigOrgID(),
+		ApiUserId:    opts.id,
+		PageNum:      pointer.Get(listOpts.PageNum),
+		ItemsPerPage: pointer.Get(listOpts.ItemsPerPage),
+	}
+	result, err := opts.store.OrganizationAPIKeyAccessLists(params)
 	if err != nil {
 		return err
 	}

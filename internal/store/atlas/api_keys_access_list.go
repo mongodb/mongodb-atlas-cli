@@ -15,13 +15,13 @@
 package atlas
 
 import (
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_api_keys_access_list.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
 
 type OrganizationAPIKeyAccessListLister interface {
-	OrganizationAPIKeyAccessLists(string, string, *atlas.ListOptions) (*atlas.AccessListAPIKeys, error)
+	OrganizationAPIKeyAccessLists(*admin.ListApiKeyAccessListsEntriesApiParams) (*admin.PaginatedApiUserAccessList, error)
 }
 
 type OrganizationAPIKeyAccessListDeleter interface {
@@ -29,23 +29,23 @@ type OrganizationAPIKeyAccessListDeleter interface {
 }
 
 type OrganizationAPIKeyAccessListCreator interface {
-	CreateOrganizationAPIKeyAccessList(string, string, []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error)
+	CreateOrganizationAPIKeyAccessList(*admin.CreateApiKeyAccessListApiParams) (*admin.PaginatedApiUserAccessList, error)
 }
 
 // CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error) {
-	result, _, err := s.client.AccessListAPIKeys.Create(s.ctx, orgID, apiKeyID, opts)
+func (s *Store) CreateOrganizationAPIKeyAccessList(params *admin.CreateApiKeyAccessListApiParams) (*admin.PaginatedApiUserAccessList, error) {
+	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateApiKeyAccessListWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // DeleteOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress string) error {
-	_, err := s.client.AccessListAPIKeys.Delete(s.ctx, orgID, apiKeyID, ipAddress)
+	_, _, err := s.clientv2.ProgrammaticAPIKeysApi.DeleteApiKeyAccessListEntry(s.ctx, orgID, apiKeyID, ipAddress).Execute()
 	return err
 }
 
 // OrganizationAPIKeyAccessLists encapsulates the logic to manage different cloud providers.
-func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.AccessListAPIKeys, error) {
-	result, _, err := s.client.AccessListAPIKeys.List(s.ctx, orgID, apiKeyID, opts)
+func (s *Store) OrganizationAPIKeyAccessLists(params *admin.ListApiKeyAccessListsEntriesApiParams) (*admin.PaginatedApiUserAccessList, error) {
+	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.ListApiKeyAccessListsEntriesWithParams(s.ctx, params).Execute()
 	return result, err
 }

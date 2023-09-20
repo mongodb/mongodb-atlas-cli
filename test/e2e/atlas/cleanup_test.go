@@ -18,6 +18,7 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -32,9 +33,13 @@ func TestCleanup(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	req.NoError(err)
 
+	deleteOrgInvitations(t, cliPath)
+	deleteOrgTeams(t, cliPath)
+
 	cmd := exec.Command(cliPath,
 		projectEntity,
 		"list",
+		"--limit=500",
 		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
@@ -42,19 +47,25 @@ func TestCleanup(t *testing.T) {
 
 	var projects mongodbatlas.Projects
 	err = json.Unmarshal(resp, &projects)
-	req.NoError(err)
-	t.Log(projects)
+	req.NoError(err, string(resp))
+	t.Logf("%s\n", resp)
 	for _, project := range projects.Results {
-		if project.ID == os.Getenv("MCLI_PROJECT_ID") {
-			t.Skip("skipping project", project.ID)
+		projectID := project.ID
+		if projectID == os.Getenv("MCLI_PROJECT_ID") {
+			t.Log("skipping project", projectID)
+			continue
 		}
-		deleteAllNetworkPeers(t, cliPath, project.ID, "aws")
-		deleteAllNetworkPeers(t, cliPath, project.ID, "gcp")
-		deleteAllNetworkPeers(t, cliPath, project.ID, "azure")
-		deleteAllPrivateEndpoints(t, cliPath, project.ID, "aws")
-		deleteAllPrivateEndpoints(t, cliPath, project.ID, "gcp")
-		deleteAllPrivateEndpoints(t, cliPath, project.ID, "azure")
-		deleteClustersForProject(t, cliPath, project.ID)
-		deleteProjectWithRetry(t, project.ID)
+		t.Run(fmt.Sprintf("trying to delete project %s\n", project.ID), func(t *testing.T) {
+			t.Parallel()
+			deleteAllNetworkPeers(t, cliPath, projectID, "aws")
+			deleteAllNetworkPeers(t, cliPath, projectID, "gcp")
+			deleteAllNetworkPeers(t, cliPath, projectID, "azure")
+			deleteAllPrivateEndpoints(t, cliPath, projectID, "aws")
+			deleteAllPrivateEndpoints(t, cliPath, projectID, "gcp")
+			deleteAllPrivateEndpoints(t, cliPath, projectID, "azure")
+			deleteClustersForProject(t, cliPath, projectID)
+			deleteDatapipelinesForProject(t, cliPath, projectID)
+			deleteProjectWithRetry(t, projectID)
+		})
 	}
 }

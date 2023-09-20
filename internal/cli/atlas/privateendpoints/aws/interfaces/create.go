@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type CreateOpts struct {
@@ -56,9 +56,9 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newInterfaceEndpointConnection() *atlasv2.CreateEndpointRequest {
-	r := atlasv2.CreateAWSEndpointRequestAsCreateEndpointRequest(&atlasv2.CreateAWSEndpointRequest{
-		Id: opts.privateEndpointID,
-	})
+	r := atlasv2.CreateEndpointRequest{
+		Id: &opts.privateEndpointID,
+	}
 
 	return &r
 }

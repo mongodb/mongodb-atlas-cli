@@ -25,7 +25,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestAtlasTeams(t *testing.T) {
@@ -120,6 +120,24 @@ func TestAtlasTeams(t *testing.T) {
 		var teams atlasv2.PaginatedTeam
 		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
 			a.NotEmpty(t, teams.Results)
+		}
+	})
+
+	t.Run("List Compact", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			teamsEntity,
+			"ls",
+			"-c",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
+		a.NoError(err, string(resp))
+
+		var teams []atlasv2.TeamResponse
+		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
+			a.NotEmpty(t, teams)
 		}
 	})
 

@@ -22,15 +22,22 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestNamespacesList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockPerformanceAdvisorNamespacesLister(ctrl)
 
-	var expected *atlasv2.Namespaces
+	expected := atlasv2.Namespaces{
+		Namespaces: []atlasv2.NamespaceObj{
+			{
+				Namespace: pointer.Get("test"),
+			},
+		},
+	}
 
 	listOpts := &ListOpts{
 		store: mockStore,
@@ -39,12 +46,13 @@ func TestNamespacesList_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		PerformanceAdvisorNamespaces(listOpts.newNamespaceOptions(listOpts.ProjectID, listOpts.ProcessName)).
-		Return(expected, nil).
+		Return(&expected, nil).
 		Times(1)
 
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {
@@ -52,6 +60,20 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Duration, flag.Since, flag.ProcessName, flag.HostID},
+		[]string{
+			flag.ProjectID,
+			flag.Duration,
+			flag.Since,
+			flag.ProcessName,
+		},
+	)
+}
+
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		1,
+		[]string{},
 	)
 }

@@ -17,23 +17,44 @@
 package accessroles
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
+
+func TestListTemplate_Run(t *testing.T) {
+	test.VerifyOutputTemplate(t, listTemplate, atlasv2.CloudProviderAccessRoles{})
+}
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCloudProviderAccessRoleLister(ctrl)
 
-	var expected *atlasv2.CloudProviderAccess
+	expected := &atlasv2.CloudProviderAccessRoles{
+		AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
+			{
+				ProviderName: "AWS",
+				Id:           pointer.Get("123"),
+			},
+		},
+	}
+
+	buf := new(bytes.Buffer)
 
 	listOpts := &ListOpts{
 		store: mockStore,
+		OutputOpts: cli.OutputOpts{
+			Template:  listTemplate,
+			OutWriter: buf,
+		},
 	}
 
 	mockStore.
@@ -42,9 +63,8 @@ func TestList_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	if err := listOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, listOpts.Run())
+	t.Log(buf.String())
 }
 
 func TestListBuilder(t *testing.T) {

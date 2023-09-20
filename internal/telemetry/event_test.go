@@ -136,6 +136,14 @@ func TestWithOS(t *testing.T) {
 	a.Equal(e.Properties["arch"], runtime.GOARCH)
 }
 
+func TestWithUserAgent(t *testing.T) {
+	e := newEvent(withUserAgent())
+
+	a := assert.New(t)
+	a.Equal(e.Properties["UserAgent"], config.UserAgent)
+	a.Equal(e.Properties["HostName"], config.HostName)
+}
+
 func TestWithAuthMethod(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 	t.Run("api key", func(t *testing.T) {
@@ -325,6 +333,20 @@ func TestWithEmpty(t *testing.T) {
 
 	e := newEvent(withEmpty(true))
 	assert.Equal(t, true, e.Properties["empty"])
+}
+
+func TestWithAnonymousID(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
+	e := newEvent(withAnonymousID())
+	assert.NotEmpty(t, e.Properties["anonymous_id"])
+}
+
+func TestWithDeploymentType(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
+	e := newEvent(WithDeploymentType("test"))
+	assert.Equal(t, e.Properties["deployment_type"], "test")
 }
 
 func TestWithSignal(t *testing.T) {

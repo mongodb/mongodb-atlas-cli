@@ -52,6 +52,7 @@ Related Commands
 * :ref:`atlas-accessLists` - Manage the list of IP addresses that can access your Atlas project.
 * :ref:`atlas-accessLogs` - Return the access logs for a cluster.
 * :ref:`atlas-alerts` - Manage alerts for your project.
+* :ref:`atlas-auditing` - Returns database auditing settings for MongoDB Cloud projects.
 * :ref:`atlas-auth` - Manage the CLI's authentication state.
 * :ref:`atlas-backups` - Manage cloud backups for your project.
 * :ref:`atlas-cloudProviders` - Manage cloud provider access in Atlas using AWS IAM roles.
@@ -60,8 +61,8 @@ Related Commands
 * :ref:`atlas-config` - Configure and manage your user profiles.
 * :ref:`atlas-customDbRoles` - Manage custom database roles for your project.
 * :ref:`atlas-customDns` - Manage DNS configuration of Atlas project’s clusters deployed to AWS.
+* :ref:`atlas-dataFederation` - Data federation.
 * :ref:`atlas-dataLakePipelines` - Data Lake pipelines.
-* :ref:`atlas-dataLakes` - Manage Atlas Data Lakes for your project.
 * :ref:`atlas-dbusers` - Manage database users for your project.
 * :ref:`atlas-events` - Manage events for your organization or project.
 * :ref:`atlas-integrations` - Configure third-party integrations for your Atlas project.
@@ -76,7 +77,6 @@ Related Commands
 * :ref:`atlas-privateEndpoints` - Manage Atlas private endpoints.
 * :ref:`atlas-processes` - Manage MongoDB processes for your project.
 * :ref:`atlas-projects` - Manage your Atlas projects.
-* :ref:`atlas-quickstart` - Create, configure, and connect to an Atlas cluster for your project.
 * :ref:`atlas-security` - Manage security configuration for your project.
 * :ref:`atlas-serverless` - Manage serverless instances for your project.
 * :ref:`atlas-setup` - Register, authenticate, create, and access an Atlas cluster.
@@ -90,6 +90,7 @@ Related Commands
    accessLists </command/atlas-accessLists>
    accessLogs </command/atlas-accessLogs>
    alerts </command/atlas-alerts>
+   auditing </command/atlas-auditing>
    auth </command/atlas-auth>
    backups </command/atlas-backups>
    cloudProviders </command/atlas-cloudProviders>
@@ -98,8 +99,8 @@ Related Commands
    config </command/atlas-config>
    customDbRoles </command/atlas-customDbRoles>
    customDns </command/atlas-customDns>
+   dataFederation </command/atlas-dataFederation>
    dataLakePipelines </command/atlas-dataLakePipelines>
-   dataLakes </command/atlas-dataLakes>
    dbusers </command/atlas-dbusers>
    events </command/atlas-events>
    integrations </command/atlas-integrations>
@@ -114,7 +115,6 @@ Related Commands
    privateEndpoints </command/atlas-privateEndpoints>
    processes </command/atlas-processes>
    projects </command/atlas-projects>
-   quickstart </command/atlas-quickstart>
    security </command/atlas-security>
    serverless </command/atlas-serverless>
    setup </command/atlas-setup>

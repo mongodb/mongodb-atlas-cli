@@ -11,29 +11,32 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (iam && atlas)
 
 package iam_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestAtlasUsers(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	var username string
-	var userID string
+	require.NoError(t, err)
+	var (
+		username string
+		userID   string
+		orgID    string
+	)
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -43,22 +46,13 @@ func TestAtlasUsers(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 
 		var users atlasv2.PaginatedApiAppUser
-		if err := json.Unmarshal(resp, &users); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(users.Results) == 0 {
-			t.Fatalf("expected len(users) > 0, got %v", len(users.Results))
-		}
-
-		username = users.Results[0].Username
-		userID = *users.Results[0].Id
+		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
+		require.NotEmpty(t, users.Results)
+		username = users.Results[0].GetUsername()
+		userID = users.Results[0].GetId()
 	})
 
 	t.Run("Describe by username", func(t *testing.T) {
@@ -70,21 +64,21 @@ func TestAtlasUsers(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		var user atlasv2.CloudAppUser
+		require.NoError(t, json.Unmarshal(resp, &user), string(resp))
+		assert.Equal(t, username, user.GetUsername())
+		for i, item := range user.GetRoles() {
+			if item.HasOrgId() {
+				orgID = user.Roles[i].GetOrgId()
+				break
+			}
 		}
-
-		var user mongodbatlas.AtlasUser
-
-		if err := json.Unmarshal(resp, &user); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		assert.Equal(t, username, user.Username)
+		require.NotEmpty(t, orgID)
 	})
 
-	t.Run("Describe by id", func(t *testing.T) {
+	t.Run("Describe by ID", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			usersEntity,
 			"describe",
@@ -93,17 +87,38 @@ func TestAtlasUsers(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
+		var user atlasv2.CloudAppUser
+		require.NoError(t, json.Unmarshal(resp, &user), string(resp))
+		assert.Equal(t, userID, user.GetId())
+	})
+
+	t.Run("Invite", func(t *testing.T) {
+		n, err := e2e.RandInt(10000)
+		require.NoError(t, err)
+		emailUser := fmt.Sprintf("test-%v@moongodb.com", n)
+		t.Log("emailUser", emailUser, "orgID", orgID)
+		cmd := exec.Command(cliPath,
+			usersEntity,
+			"invite",
+			"--username", emailUser,
+			"--password", "passW0rd",
+			"--country", "US",
+			"--email", emailUser,
+			"--firstName", "TestFirstName",
+			"--lastName", "TestLastName",
+			"--orgRole", orgID+":ORG_MEMBER",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+
+		var user atlasv2.CloudAppUser
+		if err := json.Unmarshal(resp, &user); assert.NoError(t, err) {
+			assert.Equal(t, emailUser, user.GetUsername())
+			assert.NotEmpty(t, user.GetId())
+			assert.Empty(t, user.GetRoles()) // This is returned empty until the invite is accepted
 		}
-
-		var user mongodbatlas.AtlasUser
-
-		if err := json.Unmarshal(resp, &user); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		assert.Equal(t, userID, user.ID)
 	})
 }

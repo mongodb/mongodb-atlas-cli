@@ -64,7 +64,6 @@ linters-settings:
 linters:
   disable-all: true
   enable:
-    - depguard # Go linter that checks if package imports are in a list of acceptable packages [fast: true, auto-fix: false]
     - dogsled # Checks assignments with too many blank identifiers (e.g. x, _, _, _, := f()) [fast: true, auto-fix: false]
     - errcheck # Errcheck is a program for checking for unchecked errors in go programs. These unchecked errors can be critical bugs in some cases [fast: false, auto-fix: false]
     - errorlint # Errorlint is a linter that can be used to find code that will cause problems with the error wrapping scheme introduced in Go 1.13.
@@ -100,10 +99,13 @@ linters:
     - unconvert # Remove unnecessary type conversions [fast: false, auto-fix: false]
     - unparam # Reports unused function parameters [fast: false, auto-fix: false]
     - unused # (megacheck) Checks Go code for unused constants, variables, functions and types [fast: false, auto-fix: false]
+    - usestdlibvars # A linter that detect the possibility to use variables/constants from the Go standard library. [fast: true, auto-fix: false]
+    - wastedassign # wastedassign finds wasted assignment statements. [fast: false, auto-fix: false]
     - whitespace # Tool for detection of leading and trailing whitespace [fast: true, auto-fix: true]
 
   # don't enable:
   # - bodyclose # checks whether HTTP response body is closed successfully [fast: false, auto-fix: false]
+  # - depguard # Go linter that checks if package imports are in a list of acceptable packages [fast: true, auto-fix: false]
   # - asasalint # check for pass []any as any in variadic func(...any) [fast: false, auto-fix: false]
   # - asciicheck # Simple linter to check that your code does not contain non-ASCII identifiers [fast: true, auto-fix: false]
   # - bidichk # Checks for dangerous unicode character sequences [fast: true, auto-fix: false]
@@ -159,15 +161,12 @@ linters:
   # - tagliatelle # Checks the struct tags. [fast: true, auto-fix: false]
   # - testpackage # linter that makes you use a separate _test package [fast: true, auto-fix: false]
   # - tparallel # tparallel detects inappropriate usage of t.Parallel() method in your Go test codes [fast: false, auto-fix: false]
-  # - usestdlibvars # A linter that detect the possibility to use variables/constants from the Go standard library. [fast: true, auto-fix: false]
   # - varcheck # [deprecated] Finds unused global variables and constants [fast: false, auto-fix: false]
   # - varnamelen # checks that the length of a variable's name matches its scope [fast: false, auto-fix: false]
-  # - wastedassign # wastedassign finds wasted assignment statements. [fast: false, auto-fix: false]
   # - wrapcheck # Checks that errors returned from external packages are wrapped [fast: false, auto-fix: false]
   # - wsl # Whitespace Linter - Forces you to use empty lines! [fast: true, auto-fix: false]
 
 run:
-  go: '1.19'
   tests: true
   timeout: 10m
   build-tags:

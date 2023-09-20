@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const (
@@ -70,16 +70,16 @@ func (opts *StartOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *StartOpts) newCloudProviderSnapshotRestoreJob() *atlasv2.DiskBackupRestoreJob {
-	request := new(atlasv2.DiskBackupRestoreJob)
+func (opts *StartOpts) newCloudProviderSnapshotRestoreJob() *admin.DiskBackupSnapshotRestoreJob {
+	request := new(admin.DiskBackupSnapshotRestoreJob)
 	request.DeliveryType = opts.method
 
 	if opts.targetProjectID != "" {
-		request.TargetGroupId = opts.targetProjectID
+		request.TargetGroupId = &opts.targetProjectID
 	}
 
 	if opts.targetClusterName != "" {
-		request.TargetClusterName = opts.targetClusterName
+		request.TargetClusterName = &opts.targetClusterName
 	}
 
 	if opts.snapshotID != "" {

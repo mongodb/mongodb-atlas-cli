@@ -17,7 +17,7 @@ package convert
 import (
 	"strings"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const (
@@ -26,8 +26,8 @@ const (
 
 // BuildAtlasInheritedRoles converts the inherited roles inside the array of string in an array of atlas.InheritedRole structs
 // r contains roles in the format roleName@dbName.
-func BuildAtlasInheritedRoles(r []string) []atlasv2.InheritedRole {
-	roles := make([]atlasv2.InheritedRole, len(r))
+func BuildAtlasInheritedRoles(r []string) []atlasv2.DatabaseInheritedRole {
+	roles := make([]atlasv2.DatabaseInheritedRole, len(r))
 	for i, roleP := range r {
 		role := strings.Split(roleP, roleSep)
 		roleName := role[0]
@@ -36,7 +36,7 @@ func BuildAtlasInheritedRoles(r []string) []atlasv2.InheritedRole {
 			databaseName = role[1]
 		}
 
-		roles[i] = atlasv2.InheritedRole{
+		roles[i] = atlasv2.DatabaseInheritedRole{
 			Db:   databaseName,
 			Role: roleName,
 		}
@@ -46,10 +46,10 @@ func BuildAtlasInheritedRoles(r []string) []atlasv2.InheritedRole {
 
 // BuildAtlasActions converts the actions inside the array of string in an array of atlas.Action structs
 // r contains roles in the format action[@dbName.collection].
-func BuildAtlasActions(a []string) []atlasv2.DBAction {
-	actions := make([]atlasv2.DBAction, len(a))
+func BuildAtlasActions(a []string) []atlasv2.DatabasePrivilegeAction {
+	actions := make([]atlasv2.DatabasePrivilegeAction, len(a))
 	for i, actionP := range a {
-		resourceStruct := atlasv2.DBResource{}
+		resourceStruct := atlasv2.DatabasePermittedNamespaceResource{}
 		action := strings.Split(actionP, roleSep)
 		actionName := action[0]
 		if len(action) > 1 {
@@ -62,9 +62,9 @@ func BuildAtlasActions(a []string) []atlasv2.DBAction {
 			resourceStruct.Cluster = true
 		}
 
-		actions[i] = atlasv2.DBAction{
+		actions[i] = atlasv2.DatabasePrivilegeAction{
 			Action:    actionName,
-			Resources: []atlasv2.DBResource{resourceStruct},
+			Resources: []atlasv2.DatabasePermittedNamespaceResource{resourceStruct},
 		}
 	}
 	return actions

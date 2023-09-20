@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -58,43 +58,43 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 
 	var advancedSpec *atlasV1.AdvancedDeploymentSpec
 
-	convertBiConnector := func(biConnector *mongodbatlas.BiConnector) *atlasV1.BiConnectorSpec {
+	convertBiConnector := func(biConnector *atlasv2.BiConnector) *atlasV1.BiConnectorSpec {
 		if biConnector == nil {
 			return nil
 		}
 		return &atlasV1.BiConnectorSpec{
 			Enabled:        biConnector.Enabled,
-			ReadPreference: biConnector.ReadPreference,
+			ReadPreference: biConnector.GetReadPreference(),
 		}
 	}
 
-	convertLabels := func(labels []mongodbatlas.Label) []common.LabelSpec {
+	convertLabels := func(labels []atlasv2.ComponentLabel) []common.LabelSpec {
 		result := make([]common.LabelSpec, 0, len(labels))
 
 		for _, atlasLabel := range labels {
 			result = append(result, common.LabelSpec{
-				Key:   atlasLabel.Key,
-				Value: atlasLabel.Value,
+				Key:   atlasLabel.GetKey(),
+				Value: atlasLabel.GetValue(),
 			})
 		}
 		return result
 	}
 
-	replicationSpec := buildReplicationSpec(deployment.ReplicationSpecs)
+	replicationSpec := buildReplicationSpec(deployment.GetReplicationSpecs())
 
 	// TODO: DiskSizeGB field skipped on purpose. See https://jira.mongodb.org/browse/CLOUDP-146469
 	advancedSpec = &atlasV1.AdvancedDeploymentSpec{
 		BackupEnabled:            deployment.BackupEnabled,
 		BiConnector:              convertBiConnector(deployment.BiConnector),
-		ClusterType:              deployment.ClusterType,
-		EncryptionAtRestProvider: deployment.EncryptionAtRestProvider,
-		Labels:                   convertLabels(deployment.Labels),
-		Name:                     deployment.Name,
+		ClusterType:              deployment.GetClusterType(),
+		EncryptionAtRestProvider: deployment.GetEncryptionAtRestProvider(),
+		Labels:                   convertLabels(deployment.GetLabels()),
+		Name:                     deployment.GetName(),
 		Paused:                   deployment.Paused,
 		PitEnabled:               deployment.PitEnabled,
 		ReplicationSpecs:         replicationSpec,
-		RootCertType:             deployment.RootCertType,
-		VersionReleaseSystem:     deployment.VersionReleaseSystem,
+		RootCertType:             deployment.GetRootCertType(),
+		VersionReleaseSystem:     deployment.GetVersionReleaseSystem(),
 	}
 
 	atlasDeployment := &atlasV1.AtlasDeployment{
@@ -164,7 +164,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStor
 	return deploymentResult, nil
 }
 
-func buildGlobalDeployment(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec, globalDeploymentProvider store.GlobalClusterDescriber, projectID, clusterID string) ([]atlasV1.CustomZoneMapping, []atlasV1.ManagedNamespace, error) {
+func buildGlobalDeployment(atlasRepSpec []atlasv2.ReplicationSpec, globalDeploymentProvider store.GlobalClusterDescriber, projectID, clusterID string) ([]atlasV1.CustomZoneMapping, []atlasV1.ManagedNamespace, error) {
 	globalCluster, err := globalDeploymentProvider.GlobalCluster(projectID, clusterID)
 	if err != nil {
 		return nil, nil, err
@@ -174,7 +174,7 @@ func buildGlobalDeployment(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec,
 		// create map ID -> Name for zones
 		zoneMap := make(map[string]string, len(atlasRepSpec))
 		for _, rc := range atlasRepSpec {
-			zoneMap[rc.ID] = rc.ZoneName
+			zoneMap[rc.GetId()] = rc.GetZoneName()
 		}
 
 		customZoneMapping = make([]atlasV1.CustomZoneMapping, 0, len(globalCluster.GetCustomZoneMapping()))
@@ -186,13 +186,13 @@ func buildGlobalDeployment(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec,
 		}
 	}
 
-	var managedNamespace []atlasV1.ManagedNamespace
 	if globalCluster.ManagedNamespaces == nil {
 		return customZoneMapping, nil, nil
 	}
 
-	for _, ns := range globalCluster.ManagedNamespaces {
-		managedNamespace = append(managedNamespace, atlasV1.ManagedNamespace{
+	managedNamespace := make([]atlasV1.ManagedNamespace, len(globalCluster.ManagedNamespaces))
+	for i, ns := range globalCluster.ManagedNamespaces {
+		managedNamespace[i] = atlasV1.ManagedNamespace{
 			Db:                     ns.Db,
 			Collection:             ns.Collection,
 			CustomShardKey:         ns.CustomShardKey,
@@ -200,7 +200,7 @@ func buildGlobalDeployment(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec,
 			PresplitHashedZones:    ns.PresplitHashedZones,
 			IsCustomShardKeyHashed: ns.IsCustomShardKeyHashed,
 			IsShardKeyUnique:       ns.IsShardKeyUnique,
-		})
+		}
 	}
 
 	return customZoneMapping, managedNamespace, nil
@@ -225,8 +225,8 @@ func buildProcessArgs(configOptsProvider store.AtlasClusterConfigurationOptionsD
 	}, nil
 }
 
-func isAdvancedDeploymentExportable(deployments *mongodbatlas.AdvancedCluster) bool {
-	if deployments.StateName == DeletingState || deployments.StateName == DeletedState {
+func isAdvancedDeploymentExportable(deployments *atlasv2.AdvancedClusterDescription) bool {
+	if deployments.GetStateName() == DeletingState || deployments.GetStateName() == DeletedState {
 		return false
 	}
 	return true
@@ -334,16 +334,12 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectName, projectI
 	return schedule, policies
 }
 
-func buildReplicationSpec(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec) []*atlasV1.AdvancedReplicationSpec {
+func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.AdvancedReplicationSpec {
 	result := make([]*atlasV1.AdvancedReplicationSpec, 0, len(atlasRepSpec))
 	for _, rs := range atlasRepSpec {
-		if rs == nil {
-			continue
-		}
-
 		replicationSpec := &atlasV1.AdvancedReplicationSpec{
-			NumShards:     rs.NumShards,
-			ZoneName:      rs.ZoneName,
+			NumShards:     rs.GetNumShards(),
+			ZoneName:      rs.GetZoneName(),
 			RegionConfigs: nil,
 		}
 
@@ -354,25 +350,21 @@ func buildReplicationSpec(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec) 
 
 		replicationSpec.RegionConfigs = make([]*atlasV1.AdvancedRegionConfig, 0, len(replicationSpec.RegionConfigs))
 		for _, rc := range rs.RegionConfigs {
-			if rc == nil {
-				continue
-			}
-
 			var analyticsSpecs *atlasV1.Specs
 			if rc.AnalyticsSpecs != nil {
 				analyticsSpecs = &atlasV1.Specs{
-					DiskIOPS:      rc.AnalyticsSpecs.DiskIOPS,
-					EbsVolumeType: rc.AnalyticsSpecs.EbsVolumeType,
-					InstanceSize:  rc.AnalyticsSpecs.InstanceSize,
+					DiskIOPS:      pointer.Get(int64(rc.AnalyticsSpecs.GetDiskIOPS())),
+					EbsVolumeType: rc.AnalyticsSpecs.GetEbsVolumeType(),
+					InstanceSize:  rc.AnalyticsSpecs.GetInstanceSize(),
 					NodeCount:     rc.AnalyticsSpecs.NodeCount,
 				}
 			}
 			var electableSpecs *atlasV1.Specs
 			if rc.ElectableSpecs != nil {
 				electableSpecs = &atlasV1.Specs{
-					DiskIOPS:      rc.ElectableSpecs.DiskIOPS,
-					EbsVolumeType: rc.ElectableSpecs.EbsVolumeType,
-					InstanceSize:  rc.ElectableSpecs.InstanceSize,
+					DiskIOPS:      pointer.Get(int64(rc.ElectableSpecs.GetDiskIOPS())),
+					EbsVolumeType: rc.ElectableSpecs.GetEbsVolumeType(),
+					InstanceSize:  rc.ElectableSpecs.GetInstanceSize(),
 					NodeCount:     rc.ElectableSpecs.NodeCount,
 				}
 			}
@@ -380,9 +372,9 @@ func buildReplicationSpec(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec) 
 			var readOnlySpecs *atlasV1.Specs
 			if rc.ReadOnlySpecs != nil {
 				readOnlySpecs = &atlasV1.Specs{
-					DiskIOPS:      rc.ReadOnlySpecs.DiskIOPS,
-					EbsVolumeType: rc.ReadOnlySpecs.EbsVolumeType,
-					InstanceSize:  rc.ReadOnlySpecs.InstanceSize,
+					DiskIOPS:      pointer.Get(int64(rc.ReadOnlySpecs.GetDiskIOPS())),
+					EbsVolumeType: rc.ReadOnlySpecs.GetEbsVolumeType(),
+					InstanceSize:  rc.ReadOnlySpecs.GetInstanceSize(),
 					NodeCount:     rc.ReadOnlySpecs.NodeCount,
 				}
 			}
@@ -394,8 +386,8 @@ func buildReplicationSpec(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec) 
 					compute = &atlasV1.ComputeSpec{
 						Enabled:          rc.AutoScaling.Compute.Enabled,
 						ScaleDownEnabled: rc.AutoScaling.Compute.ScaleDownEnabled,
-						MinInstanceSize:  rc.AutoScaling.Compute.MinInstanceSize,
-						MaxInstanceSize:  rc.AutoScaling.Compute.MaxInstanceSize,
+						MinInstanceSize:  rc.AutoScaling.Compute.GetMinInstanceSize(),
+						MaxInstanceSize:  rc.AutoScaling.Compute.GetMaxInstanceSize(),
 					}
 				}
 
@@ -408,16 +400,15 @@ func buildReplicationSpec(atlasRepSpec []*mongodbatlas.AdvancedReplicationSpec) 
 					Compute: compute,
 				}
 			}
-
 			replicationSpec.RegionConfigs = append(replicationSpec.RegionConfigs, &atlasV1.AdvancedRegionConfig{
 				AnalyticsSpecs:      analyticsSpecs,
 				ElectableSpecs:      electableSpecs,
 				ReadOnlySpecs:       readOnlySpecs,
 				AutoScaling:         autoscalingSpec,
-				BackingProviderName: rc.BackingProviderName,
+				BackingProviderName: rc.GetBackingProviderName(),
 				Priority:            rc.Priority,
-				ProviderName:        rc.ProviderName,
-				RegionName:          rc.RegionName,
+				ProviderName:        rc.GetProviderName(),
+				RegionName:          rc.GetRegionName(),
 			})
 		}
 		result = append(result, replicationSpec)
@@ -524,20 +515,20 @@ func buildServerlessPrivateEndpoints(deploymentStore store.ServerlessPrivateEndp
 	result := make([]atlasV1.ServerlessPrivateEndpoint, 0, len(endpoints))
 
 	for i := range endpoints {
-		endpoint := endpoints[i].GetActualInstance()
+		endpoint := endpoints[i]
 
-		switch v := endpoint.(type) {
-		case *atlasv2.ServerlessAWSTenantEndpoint:
+		switch endpoint.GetProviderName() {
+		case "AWS":
 			result = append(result, atlasV1.ServerlessPrivateEndpoint{
-				Name:                     *v.Comment,
-				CloudProviderEndpointID:  *v.CloudProviderEndpointId,
+				Name:                     endpoint.GetComment(),
+				CloudProviderEndpointID:  endpoint.GetCloudProviderEndpointId(),
 				PrivateEndpointIPAddress: "",
 			})
-		case *atlasv2.ServerlessAzureTenantEndpoint:
+		case "AZURE":
 			result = append(result, atlasV1.ServerlessPrivateEndpoint{
-				Name:                     *v.Comment,
-				CloudProviderEndpointID:  *v.CloudProviderEndpointId,
-				PrivateEndpointIPAddress: *v.PrivateEndpointIpAddress,
+				Name:                     endpoint.GetComment(),
+				CloudProviderEndpointID:  endpoint.GetCloudProviderEndpointId(),
+				PrivateEndpointIPAddress: endpoint.GetPrivateEndpointIpAddress(),
 			})
 		}
 	}

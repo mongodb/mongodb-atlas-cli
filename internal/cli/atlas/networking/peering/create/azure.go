@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type AzureOpts struct {
@@ -64,7 +64,7 @@ func (opts *AzureOpts) Run() error {
 	if container == nil {
 		var err2 error
 		r, err2 := opts.store.CreateContainer(opts.ConfigProjectID(), opts.newContainer())
-		container = r.(*atlasv2.AzureCloudProviderContainer)
+		container = r
 		if err2 != nil {
 			return err2
 		}
@@ -76,47 +76,45 @@ func (opts *AzureOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *AzureOpts) containerExists() (*atlasv2.AzureCloudProviderContainer, error) {
+func (opts *AzureOpts) containerExists() (*atlasv2.CloudProviderContainer, error) {
 	r, err := opts.store.AzureContainers(opts.ConfigProjectID())
 	if err != nil {
 		return nil, err
 	}
 	for i := range r {
-		if r[i].Region == opts.region {
-			return r[i], nil
+		if r[i].GetRegion() == opts.region {
+			return &r[i], nil
 		}
 	}
 	return nil, nil
 }
 
-func (opts *AzureOpts) newAzureContainer() *atlasv2.AzureCloudProviderContainer {
-	c := &atlasv2.AzureCloudProviderContainer{
-		AtlasCidrBlock: opts.atlasCIDRBlock,
+func (opts *AzureOpts) newAzureContainer() *atlasv2.CloudProviderContainer {
+	c := &atlasv2.CloudProviderContainer{
+		AtlasCidrBlock: &opts.atlasCIDRBlock,
 		ProviderName:   pointer.Get("AZURE"),
-		Region:         opts.region,
+		Region:         &opts.region,
 	}
 	return c
 }
 
 func (opts *AzureOpts) newContainer() *atlasv2.CloudProviderContainer {
-	w := atlasv2.AzureCloudProviderContainerAsCloudProviderContainer(opts.newAzureContainer())
-	return &w
+	return opts.newAzureContainer()
 }
 
-func (opts *AzureOpts) newPeer(containerID string) *atlasv2.ContainerPeer {
-	a := atlasv2.AzurePeerNetworkAsContainerPeer(opts.newAzurePeer((containerID)))
-	return &a
+func (opts *AzureOpts) newPeer(containerID string) *atlasv2.BaseNetworkPeeringConnectionSettings {
+	return opts.newAzurePeer((containerID))
 }
 
-func (opts *AzureOpts) newAzurePeer(containerID string) *atlasv2.AzurePeerNetwork {
+func (opts *AzureOpts) newAzurePeer(containerID string) *atlasv2.BaseNetworkPeeringConnectionSettings {
 	provider := "AZURE"
-	return &atlasv2.AzurePeerNetwork{
-		AzureDirectoryId:    opts.directoryID,
-		AzureSubscriptionId: opts.subscriptionID,
+	return &atlasv2.BaseNetworkPeeringConnectionSettings{
+		AzureDirectoryId:    &opts.directoryID,
+		AzureSubscriptionId: &opts.subscriptionID,
 		ContainerId:         containerID,
 		ProviderName:        &provider,
-		ResourceGroupName:   opts.resourceGroup,
-		VnetName:            opts.vNetName,
+		ResourceGroupName:   &opts.resourceGroup,
+		VnetName:            &opts.vNetName,
 	}
 }
 

@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/admin"
+	admin "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -66,10 +66,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) Auditing(arg0 interface{}) 
 }
 
 // CloudProviderAccessRoles mocks base method.
-func (m *MockAtlasOperatorProjectStore) CloudProviderAccessRoles(arg0 string) (*admin.CloudProviderAccess, error) {
+func (m *MockAtlasOperatorProjectStore) CloudProviderAccessRoles(arg0 string) (*admin.CloudProviderAccessRoles, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CloudProviderAccessRoles", arg0)
-	ret0, _ := ret[0].(*admin.CloudProviderAccess)
+	ret0, _ := ret[0].(*admin.CloudProviderAccessRoles)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) CreateProjectAPIKey(arg0, a
 }
 
 // DatabaseRoles mocks base method.
-func (m *MockAtlasOperatorProjectStore) DatabaseRoles(arg0 string) ([]admin.CustomDBRole, error) {
+func (m *MockAtlasOperatorProjectStore) DatabaseRoles(arg0 string) ([]admin.UserCustomDBRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseRoles", arg0)
-	ret0, _ := ret[0].([]admin.CustomDBRole)
+	ret0, _ := ret[0].([]admin.UserCustomDBRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -186,10 +186,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) MaintenanceWindow(arg0 inte
 }
 
 // PeeringConnections mocks base method.
-func (m *MockAtlasOperatorProjectStore) PeeringConnections(arg0 string, arg1 *mongodbatlas.ContainersListOptions) ([]interface{}, error) {
+func (m *MockAtlasOperatorProjectStore) PeeringConnections(arg0 string, arg1 *mongodbatlas.ContainersListOptions) ([]admin.BaseNetworkPeeringConnectionSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PeeringConnections", arg0, arg1)
-	ret0, _ := ret[0].([]interface{})
+	ret0, _ := ret[0].([]admin.BaseNetworkPeeringConnectionSettings)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -201,10 +201,10 @@ func (mr *MockAtlasOperatorProjectStoreMockRecorder) PeeringConnections(arg0, ar
 }
 
 // PrivateEndpoints mocks base method.
-func (m *MockAtlasOperatorProjectStore) PrivateEndpoints(arg0, arg1 string) ([]interface{}, error) {
+func (m *MockAtlasOperatorProjectStore) PrivateEndpoints(arg0, arg1 string) ([]admin.EndpointService, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PrivateEndpoints", arg0, arg1)
-	ret0, _ := ret[0].([]interface{})
+	ret0, _ := ret[0].([]admin.EndpointService)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

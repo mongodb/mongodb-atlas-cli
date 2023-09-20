@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestDisksDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProcessDiskMeasurementsLister(ctrl)
 
-	expected := &atlasv2.MeasurementsGeneralViewAtlas{}
+	expected := &atlasv2.ApiMeasurementsGeneralViewAtlas{}
 
 	listOpts := &DescribeOpts{
 		host:  "hard-00-00.mongodb.net",
@@ -49,6 +49,7 @@ func TestDisksDescribeOpts_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, diskMetricTemplate, expected)
 }
 
 func TestDescribeBuilder(t *testing.T) {

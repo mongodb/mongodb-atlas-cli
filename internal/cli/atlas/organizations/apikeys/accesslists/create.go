@@ -26,7 +26,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const createTemplate = "Created new access list entry(s).\n"
@@ -49,26 +49,24 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *CreateOpts) newAccessListAPIKeysReq() ([]*atlas.AccessListAPIKeysReq, error) {
-	req := make([]*atlas.AccessListAPIKeysReq, 0, len(opts.ips)+len(opts.cidrs))
+func (opts *CreateOpts) newAccessListAPIKeysReq() (*[]admin.UserAccessList, error) {
+	req := make([]admin.UserAccessList, 0, len(opts.ips)+len(opts.cidrs))
 	if len(opts.ips) == 0 && len(opts.cidrs) == 0 {
 		return nil, fmt.Errorf("either --%s, --%s must be set", flag.IP, flag.CIDR)
 	}
-	for _, v := range opts.ips {
-		entry := &atlas.AccessListAPIKeysReq{
-			IPAddress: v,
-		}
-		req = append(req, entry)
+	for i := range opts.ips {
+		req = append(req, admin.UserAccessList{
+			IpAddress: &opts.ips[i],
+		})
 	}
 
-	for _, v := range opts.cidrs {
-		entry := &atlas.AccessListAPIKeysReq{
-			CidrBlock: v,
-		}
-		req = append(req, entry)
+	for i := range opts.cidrs {
+		req = append(req, admin.UserAccessList{
+			CidrBlock: &opts.cidrs[i],
+		})
 	}
 
-	return req, nil
+	return &req, nil
 }
 
 func (opts *CreateOpts) Run() error {
@@ -77,9 +75,13 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	var result *atlas.AccessListAPIKeys
+	params := &admin.CreateApiKeyAccessListApiParams{
+		OrgId:          opts.ConfigOrgID(),
+		ApiUserId:      opts.apyKey,
+		UserAccessList: req,
+	}
 
-	result, err = opts.store.CreateOrganizationAPIKeyAccessList(opts.ConfigOrgID(), opts.apyKey, req)
+	result, err := opts.store.CreateOrganizationAPIKeyAccessList(params)
 	if err != nil {
 		return err
 	}

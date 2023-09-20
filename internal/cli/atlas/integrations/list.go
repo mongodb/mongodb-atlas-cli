@@ -28,7 +28,7 @@ import (
 )
 
 const listTemplate = `TYPE{{range .Results}}
-{{.GetActualInstance.Type}}{{end}}
+{{.Type}}{{end}}
 `
 
 type ListOpts struct {

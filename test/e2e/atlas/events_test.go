@@ -23,7 +23,7 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	"go.mongodb.org/atlas-sdk/admin"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestEvents(t *testing.T) {

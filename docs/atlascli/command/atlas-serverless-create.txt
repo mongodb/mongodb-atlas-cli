@@ -60,7 +60,7 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file.
+     - Output format. Valid values are json, json-path, go-template, or go-template-file. To see full output, use the -o json option.
    * - --projectId
      - string
      - false
@@ -73,6 +73,10 @@ Options
      - string
      - true
      - Human-readable label that identifies the physical location of your MongoDB serverless instance. The region you choose can affect network latency for clients accessing your databases.
+   * - --tag
+     - stringToString
+     - false
+     - List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the serverless instance. This value defaults to [].
 
 Inherited Options
 -----------------
@@ -100,3 +104,10 @@ If the command succeeds, the CLI returns output similar to the following sample.
    Serverless instance <Name> created.
    
 
+Examples
+--------
+
+.. code-block::
+
+   # Deploy a serverlessIntance named myInstance for the project with the ID 5e2211c17a3e5a48f5497de3:
+   atlas serverless create serverless myInstance --provider AWS --region US_EAST_1 --projectId 5e2211c17a3e5a48f5497de3

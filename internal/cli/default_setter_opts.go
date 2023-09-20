@@ -22,12 +22,13 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/briandowns/spinner"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -100,6 +101,7 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 		projects, err = opts.Store.GetOrgProjects(opts.OrgID, list)
 	}
 	if err != nil {
+		err = commonerrors.Check(err)
 		var atlasErr *atlas.ErrorResponse
 		if errors.As(err, &atlasErr) && atlasErr.HTTPCode == 404 {
 			return nil, nil, errNoResults
@@ -142,7 +144,7 @@ func (opts *DefaultSetterOpts) orgs(filter string) (results interface{}, err err
 		if errors.As(err, &atlasErr) && atlasErr.HTTPCode == 404 {
 			return nil, errNoResults
 		}
-		return nil, err
+		return nil, commonerrors.Check(err)
 	}
 	switch r := orgs.(type) {
 	case *atlasv2.PaginatedOrganization:
@@ -283,7 +285,7 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 	}
 
 	switch o := orgs.(type) {
-	case []atlasv2.Organization:
+	case []atlasv2.AtlasOrganization:
 		return opts.selectOrg(o)
 	case []*atlas.Organization:
 		return opts.selectOnPremOrg(o)
@@ -308,7 +310,7 @@ func (opts *DefaultSetterOpts) manualOrgID() error {
 	return nil
 }
 
-func (opts *DefaultSetterOpts) selectOrg(orgs []atlasv2.Organization) error {
+func (opts *DefaultSetterOpts) selectOrg(orgs []atlasv2.AtlasOrganization) error {
 	if len(orgs) == 1 {
 		opts.OrgID = *orgs[0].Id
 		return nil
@@ -383,13 +385,17 @@ func omProjects(projects []*opsmngr.Project) (ids, names []string) {
 }
 
 func (*DefaultSetterOpts) DefaultQuestions() []*survey.Question {
+	defaultOutput := config.Output()
+	if defaultOutput == "" {
+		defaultOutput = plaintextFormat
+	}
 	q := []*survey.Question{
 		{
 			Name: "output",
 			Prompt: &survey.Select{
 				Message: "Default Output Format:",
 				Options: []string{plaintextFormat, jsonFormat},
-				Default: config.Output(),
+				Default: defaultOutput,
 			},
 		},
 	}

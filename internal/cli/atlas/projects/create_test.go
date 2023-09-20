@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestCreate_Run(t *testing.T) {
@@ -38,15 +38,23 @@ func TestCreate_Run(t *testing.T) {
 		name:  "ProjectBar",
 	}
 	createOpts.OrgID = "5a0a1e7e0f2912c554080adc"
+	params := &atlasv2.CreateProjectApiParams{
+		ProjectOwnerId: &opts.projectOwnerID,
+		Group:          createOpts.newCreateProjectGroup(),
+	}
 
 	mockStore.
 		EXPECT().
-		CreateProject(createOpts.newCreateProjectGroup(), opts.newCreateProjectOptions()).Return(expected, nil).
+		CreateProject(params).Return(expected, nil).
 		Times(1)
 
 	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestCreateTemplate(t *testing.T) {
+	test.VerifyOutputTemplate(t, atlasCreateTemplate, atlasv2.Group{})
 }
 
 func TestCreateBuilder(t *testing.T) {

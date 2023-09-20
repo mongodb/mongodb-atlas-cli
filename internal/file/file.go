@@ -35,14 +35,16 @@ const (
 
 var supportedExts = []string{jsonName, yamlName, ymlName}
 
-var ErrUnsupportedFileType = errors.New("unsupported file type")
+var (
+	ErrMissingFileType     = errors.New("missing file type")
+	ErrUnsupportedFileType = errors.New("unsupported file type")
+)
 
 // configType gets the config type from a given file path.
 func configType(filename string, supported []string) (string, error) {
 	ext := filepath.Ext(filename)
-
 	if len(ext) <= 1 {
-		return "", fmt.Errorf("filename: %s requires valid extension", filename)
+		return "", fmt.Errorf("%w: %q", ErrMissingFileType, filename)
 	}
 
 	t := ext[1:]

@@ -16,7 +16,6 @@ package serverless
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -27,8 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const providerName = "SERVERLESS"
@@ -54,8 +52,8 @@ var createTemplate = "Serverless instance {{.Name}} created.\n"
 
 func (opts *CreateOpts) Run() error {
 	r, err := opts.store.CreateServerlessInstance(opts.ConfigProjectID(), opts.newServerlessCreateRequestParams())
-	var target *atlas.ErrorResponse
-	if errors.As(err, &target) && target.ErrorCode == "INVALID_REGION" {
+	target, ok := atlasv2.AsError(err)
+	if ok && target.GetErrorCode() == "INVALID_REGION" {
 		return cli.ErrNoRegionExistsTryCommand
 	} else if err != nil {
 		return err

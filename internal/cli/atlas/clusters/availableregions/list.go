@@ -22,7 +22,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -50,9 +49,9 @@ var listTemplate = `PROVIDER	INSTANCE SIZE	REGIONS{{range .Results}}{{ $provider
 
 func (opts *ListOpts) Run() error {
 	// Set provider if existent
-	var provider *[]string
+	var provider []string
 	if opts.provider != "" {
-		provider = pointer.Get([]string{opts.provider})
+		provider = []string{opts.provider}
 	}
 
 	r, err := opts.store.CloudProviderRegions(opts.ConfigProjectID(), opts.tier, provider)

@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const createTemplate = `API Key '{{.Id}}' created.
@@ -49,9 +49,9 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *CreateOpts) newAPIKeyInput() *atlasv2.CreateApiKey {
-	return &atlasv2.CreateApiKey{
-		Desc:  &opts.desc,
+func (opts *CreateOpts) newAPIKeyInput() *atlasv2.CreateAtlasOrganizationApiKey {
+	return &atlasv2.CreateAtlasOrganizationApiKey{
+		Desc:  opts.desc,
 		Roles: opts.roles,
 	}
 }

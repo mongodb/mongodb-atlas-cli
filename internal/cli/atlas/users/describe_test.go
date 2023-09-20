@@ -20,14 +20,15 @@ import (
 
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestDescribe_Run_ByID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserDescriber(ctrl)
 
-	var expected *atlasv2.AppUser
+	var expected *atlasv2.CloudAppUser
 
 	descOpts := &DescribeOpts{
 		store: mockStore,
@@ -43,13 +44,14 @@ func TestDescribe_Run_ByID(t *testing.T) {
 	if err := descOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }
 
 func TestDescribe_Run_ByName(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserDescriber(ctrl)
 
-	var expected *atlasv2.AppUser
+	var expected *atlasv2.CloudAppUser
 
 	descOpts := &DescribeOpts{
 		store:    mockStore,
@@ -65,4 +67,5 @@ func TestDescribe_Run_ByName(t *testing.T) {
 	if err := descOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }

@@ -8,8 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/admin"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	admin "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 // MockOrganizationLister is a mock of OrganizationLister interface.
@@ -36,7 +35,7 @@ func (m *MockOrganizationLister) EXPECT() *MockOrganizationListerMockRecorder {
 }
 
 // Organizations mocks base method.
-func (m *MockOrganizationLister) Organizations(arg0 *mongodbatlas.OrganizationsListOptions) (*admin.PaginatedOrganization, error) {
+func (m *MockOrganizationLister) Organizations(arg0 *admin.ListOrganizationsApiParams) (*admin.PaginatedOrganization, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organizations", arg0)
 	ret0, _ := ret[0].(*admin.PaginatedOrganization)
@@ -111,10 +110,10 @@ func (m *MockOrganizationDescriber) EXPECT() *MockOrganizationDescriberMockRecor
 }
 
 // Organization mocks base method.
-func (m *MockOrganizationDescriber) Organization(arg0 string) (*admin.Organization, error) {
+func (m *MockOrganizationDescriber) Organization(arg0 string) (*admin.AtlasOrganization, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organization", arg0)
-	ret0, _ := ret[0].(*admin.Organization)
+	ret0, _ := ret[0].(*admin.AtlasOrganization)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

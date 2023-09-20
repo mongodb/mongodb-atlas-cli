@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 var listTemplate = `ID	ENDPOINT PROVIDER	TYPE	COMMENT{{range .Results}}
@@ -89,6 +89,11 @@ func ListBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	if config.ToolName == config.AtlasCLI {
+		cmd.Deprecated = "Please use 'atlas datafederation privateendpoints list'"
+	}
+
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
 

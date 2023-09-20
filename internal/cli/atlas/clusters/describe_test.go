@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
 
-	expected := &mongodbatlas.AdvancedCluster{}
+	expected := &atlasv2.AdvancedClusterDescription{}
 
 	describeOpts := &DescribeOpts{
 		name:  "test",
@@ -46,6 +46,7 @@ func TestDescribe_Run(t *testing.T) {
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }
 
 func TestDescribeBuilder(t *testing.T) {

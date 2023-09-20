@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -49,7 +50,7 @@ var listTemplate = `ID	PROVIDER	REGION	ATLAS CIDR	PROVISIONED{{range .}}
 `
 
 func (opts *ListOpts) Run() error {
-	var r []interface{}
+	var r []atlasv2.CloudProviderContainer
 	var err error
 	if opts.provider == "" {
 		r, err = opts.store.AllContainers(opts.ConfigProjectID(), opts.NewListOptions())

@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestCreateBuilder(t *testing.T) {
@@ -55,7 +55,7 @@ func TestCreateOpts_Run(t *testing.T) {
 
 	request := opts.newOnlineArchive()
 
-	expected := &atlasv2.OnlineArchive{}
+	expected := &atlasv2.BackupOnlineArchive{}
 	mockStore.
 		EXPECT().
 		CreateOnlineArchive(opts.ProjectID, opts.clusterName, request).

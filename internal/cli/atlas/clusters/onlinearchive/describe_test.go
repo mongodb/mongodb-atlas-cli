@@ -22,8 +22,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestDescribeBuilder(t *testing.T) {
@@ -49,7 +50,11 @@ func TestDescribe_Run(t *testing.T) {
 		store:       mockStore,
 	}
 
-	expected := &atlasv2.OnlineArchive{}
+	expected := &atlasv2.BackupOnlineArchive{
+		Id:          pointer.Get("1"),
+		ClusterName: pointer.Get("test"),
+		State:       pointer.Get("ACTIVE"),
+	}
 	mockStore.
 		EXPECT().
 		OnlineArchive(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.archiveID).
@@ -59,4 +64,5 @@ func TestDescribe_Run(t *testing.T) {
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }

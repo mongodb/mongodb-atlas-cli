@@ -15,23 +15,38 @@
 package buckets
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockExportBucketsLister(ctrl)
 
-	expected := &atlasv2.PaginatedBackupSnapshotExportBucket{}
+	expected := &atlasv2.PaginatedBackupSnapshotExportBucket{
+		Results: []atlasv2.DiskBackupSnapshotAWSExportBucket{
+			{
+				Id:            pointer.Get("1"),
+				CloudProvider: pointer.Get("AWS"),
+			},
+		},
+	}
+	buf := new(bytes.Buffer)
 
 	listOpts := &ListOpts{
 		store: mockStore,
+		OutputOpts: cli.OutputOpts{
+			Template:  listTemplate,
+			OutWriter: buf,
+		},
 	}
 
 	mockStore.
@@ -43,6 +58,8 @@ func TestListOpts_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

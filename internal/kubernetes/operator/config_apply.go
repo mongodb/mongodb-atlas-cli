@@ -19,7 +19,6 @@ import (
 	"errors"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	corev1 "k8s.io/api/core/v1"

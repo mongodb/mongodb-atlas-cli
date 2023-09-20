@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const listTemplate = `ID	NAME{{range .Results}}
@@ -57,12 +57,15 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newOrganizationListOptions() *atlas.OrganizationsListOptions {
-	return &atlas.OrganizationsListOptions{
-		Name:               opts.name,
-		IncludeDeletedOrgs: &opts.includeDeletedOrgs,
-		ListOptions:        *opts.NewListOptions(),
+func (opts *ListOpts) newOrganizationListOptions() *atlasv2.ListOrganizationsApiParams {
+	params := &atlasv2.ListOrganizationsApiParams{
+		Name: &opts.name,
 	}
+	if listOpt := opts.NewListOptions(); listOpt != nil {
+		params.PageNum = &listOpt.PageNum
+		params.ItemsPerPage = &listOpt.ItemsPerPage
+	}
+	return params
 }
 
 // atlas organizations(s) list --name --includeDeletedOrgs.

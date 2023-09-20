@@ -18,17 +18,17 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_database_roles.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store DatabaseRoleLister,DatabaseRoleCreator,DatabaseRoleDeleter,DatabaseRoleUpdater,DatabaseRoleDescriber
 
 type DatabaseRoleLister interface {
-	DatabaseRoles(string) ([]atlasv2.CustomDBRole, error)
+	DatabaseRoles(string) ([]atlasv2.UserCustomDBRole, error)
 }
 
 type DatabaseRoleCreator interface {
-	CreateDatabaseRole(string, *atlasv2.CustomDBRole) (*atlasv2.CustomDBRole, error)
+	CreateDatabaseRole(string, *atlasv2.UserCustomDBRole) (*atlasv2.UserCustomDBRole, error)
 }
 
 type DatabaseRoleDeleter interface {
@@ -36,16 +36,16 @@ type DatabaseRoleDeleter interface {
 }
 
 type DatabaseRoleUpdater interface {
-	UpdateDatabaseRole(string, string, *atlasv2.CustomDBRole) (*atlasv2.CustomDBRole, error)
-	DatabaseRole(string, string) (*atlasv2.CustomDBRole, error)
+	UpdateDatabaseRole(string, string, *atlasv2.UserCustomDBRole) (*atlasv2.UserCustomDBRole, error)
+	DatabaseRole(string, string) (*atlasv2.UserCustomDBRole, error)
 }
 
 type DatabaseRoleDescriber interface {
-	DatabaseRole(string, string) (*atlasv2.CustomDBRole, error)
+	DatabaseRole(string, string) (*atlasv2.UserCustomDBRole, error)
 }
 
 // CreateDatabaseRole encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateDatabaseRole(groupID string, role *atlasv2.CustomDBRole) (*atlasv2.CustomDBRole, error) {
+func (s *Store) CreateDatabaseRole(groupID string, role *atlasv2.UserCustomDBRole) (*atlasv2.UserCustomDBRole, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.CustomDatabaseRolesApi.CreateCustomDatabaseRole(s.ctx, groupID, role).Execute()
@@ -67,7 +67,7 @@ func (s *Store) DeleteDatabaseRole(groupID, roleName string) error {
 }
 
 // DatabaseRoles encapsulate the logic to manage different cloud providers.
-func (s *Store) DatabaseRoles(projectID string) ([]atlasv2.CustomDBRole, error) {
+func (s *Store) DatabaseRoles(projectID string) ([]atlasv2.UserCustomDBRole, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.CustomDatabaseRolesApi.ListCustomDatabaseRoles(s.ctx, projectID).Execute()
@@ -78,7 +78,7 @@ func (s *Store) DatabaseRoles(projectID string) ([]atlasv2.CustomDBRole, error) 
 }
 
 // UpdateDatabaseRole encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateDatabaseRole(groupID, roleName string, role *atlasv2.CustomDBRole) (*atlasv2.CustomDBRole, error) {
+func (s *Store) UpdateDatabaseRole(groupID, roleName string, role *atlasv2.UserCustomDBRole) (*atlasv2.UserCustomDBRole, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		dbRole := atlasv2.UpdateCustomDBRole{
@@ -93,7 +93,7 @@ func (s *Store) UpdateDatabaseRole(groupID, roleName string, role *atlasv2.Custo
 }
 
 // DatabaseRole encapsulate the logic to manage different cloud providers.
-func (s *Store) DatabaseRole(groupID, roleName string) (*atlasv2.CustomDBRole, error) {
+func (s *Store) DatabaseRole(groupID, roleName string) (*atlasv2.UserCustomDBRole, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.CustomDatabaseRolesApi.GetCustomDatabaseRole(s.ctx, groupID, roleName).Execute()

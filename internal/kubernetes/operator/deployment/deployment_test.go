@@ -33,7 +33,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -56,75 +56,74 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			firstLocation = "CA"
 		)
 
-		cluster := &mongodbatlas.AdvancedCluster{
+		cluster := &atlasv2.AdvancedClusterDescription{
 			BackupEnabled: pointer.Get(true),
-			BiConnector: &mongodbatlas.BiConnector{
+			BiConnector: &atlasv2.BiConnector{
 				Enabled:        pointer.Get(true),
-				ReadPreference: "TestRef",
+				ReadPreference: pointer.Get("TestRef"),
 			},
-			ClusterType:              "REPLICASET",
+			ClusterType:              pointer.Get("REPLICASET"),
 			ConnectionStrings:        nil,
 			DiskSizeGB:               pointer.Get[float64](20.4),
-			EncryptionAtRestProvider: "TestProvider",
-			GroupID:                  "TestGroupID",
-			ID:                       "TestID",
-			Labels: []mongodbatlas.Label{
+			EncryptionAtRestProvider: pointer.Get("TestProvider"),
+			GroupId:                  pointer.Get("TestGroupID"),
+			Id:                       pointer.Get("TestID"),
+			Labels: []atlasv2.ComponentLabel{
 				{
-					Key:   "TestKey",
-					Value: "TestValue",
+					Key:   pointer.Get("TestKey"),
+					Value: pointer.Get("TestValue"),
 				},
 			},
-			MongoDBMajorVersion: "5.0",
-			MongoDBVersion:      "5.0",
-			Name:                clusterName,
+			MongoDBMajorVersion: pointer.Get("5.0"),
+			MongoDBVersion:      pointer.Get("5.0"),
+			Name:                pointer.Get(clusterName),
 			Paused:              pointer.Get(false),
 			PitEnabled:          pointer.Get(true),
-			StateName:           "RUNNING",
-			ReplicationSpecs: []*mongodbatlas.AdvancedReplicationSpec{
+			StateName:           pointer.Get("RUNNING"),
+			ReplicationSpecs: []atlasv2.ReplicationSpec{
 				{
-					NumShards: 3,
-					ID:        zoneID1,
-					ZoneName:  zoneName1,
-					RegionConfigs: []*mongodbatlas.AdvancedRegionConfig{
+					NumShards: pointer.Get(3),
+					Id:        pointer.Get(zoneID1),
+					ZoneName:  pointer.Get(zoneName1),
+					RegionConfigs: []atlasv2.CloudRegionConfig{
 						{
-							AnalyticsSpecs: &mongodbatlas.Specs{
-								DiskIOPS:      pointer.Get[int64](10),
-								EbsVolumeType: "TestEBSVolume",
-								InstanceSize:  "M20",
+							AnalyticsSpecs: &atlasv2.DedicatedHardwareSpec{
+								DiskIOPS:      pointer.Get(10),
+								EbsVolumeType: pointer.Get("TestEBSVolume"),
+								InstanceSize:  pointer.Get("M20"),
 								NodeCount:     pointer.Get(3),
 							},
-							ElectableSpecs: &mongodbatlas.Specs{
-								DiskIOPS:      pointer.Get[int64](10),
-								EbsVolumeType: "TestEBSVolume",
-								InstanceSize:  "M20",
+							ElectableSpecs: &atlasv2.HardwareSpec{
+								DiskIOPS:      pointer.Get(10),
+								EbsVolumeType: pointer.Get("TestEBSVolume"),
+								InstanceSize:  pointer.Get("M20"),
 								NodeCount:     pointer.Get(3),
 							},
-							ReadOnlySpecs: &mongodbatlas.Specs{
-								DiskIOPS:      pointer.Get[int64](10),
-								EbsVolumeType: "TestEBSVolume",
-								InstanceSize:  "M20",
+							ReadOnlySpecs: &atlasv2.DedicatedHardwareSpec{
+								DiskIOPS:      pointer.Get(10),
+								EbsVolumeType: pointer.Get("TestEBSVolume"),
+								InstanceSize:  pointer.Get("M20"),
 								NodeCount:     pointer.Get(3),
 							},
-							AutoScaling: &mongodbatlas.AdvancedAutoScaling{
-								DiskGB: &mongodbatlas.DiskGB{Enabled: pointer.Get(true)},
-								Compute: &mongodbatlas.Compute{
+							AutoScaling: &atlasv2.AdvancedAutoScalingSettings{
+								DiskGB: &atlasv2.DiskGBAutoScaling{Enabled: pointer.Get(true)},
+								Compute: &atlasv2.AdvancedComputeAutoScaling{
 									Enabled:          pointer.Get(true),
 									ScaleDownEnabled: pointer.Get(true),
-									MinInstanceSize:  "M20",
-									MaxInstanceSize:  "M40",
+									MinInstanceSize:  pointer.Get("M20"),
+									MaxInstanceSize:  pointer.Get("M40"),
 								},
 							},
-							BackingProviderName: "AWS",
-							Priority:            pointer.Get(1),
-							ProviderName:        "AWS",
-							RegionName:          "US_EAST_1",
+							Priority:     pointer.Get(1),
+							ProviderName: pointer.Get("AWS"),
+							RegionName:   pointer.Get("US_EAST_1"),
 						},
 					},
 				},
 			},
-			CreateDate:           "01-01-2022",
-			RootCertType:         "TestRootCertType",
-			VersionReleaseSystem: "TestReleaseSystem",
+			CreateDate:           &time.Time{},
+			RootCertType:         pointer.Get("TestRootCertType"),
+			VersionReleaseSystem: pointer.Get("TestReleaseSystem"),
 		}
 		processArgs := &atlasv2.ClusterDescriptionProcessArgs{
 			DefaultReadConcern:               pointer.Get("TestReadConcern"),
@@ -136,8 +135,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			SampleSizeBIConnector:            pointer.Get[int](10),
 			SampleRefreshIntervalBIConnector: pointer.Get[int](10),
 		}
-		processArgs.OplogSizeMB.Set(pointer.Get(10))
-		processArgs.OplogMinRetentionHours.Set(pointer.Get(float64(10.1)))
+		processArgs.OplogSizeMB = pointer.Get(10)
+		processArgs.OplogMinRetentionHours = pointer.Get(float64(10.1))
 		backupSchedule := &atlasv2.DiskBackupSnapshotSchedule{
 			ClusterId:             pointer.Get("testClusterID"),
 			ClusterName:           pointer.Get(clusterName),
@@ -146,10 +145,10 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			RestoreWindowDays:     pointer.Get[int](5),
 			UpdateSnapshots:       pointer.Get(true),
 			NextSnapshot:          pointer.Get(time.Now()),
-			Policies: []atlasv2.Policy{
+			Policies: []atlasv2.AdvancedDiskBackupSnapshotSchedulePolicy{
 				{
 					Id: pointer.Get("1"),
-					PolicyItems: []atlasv2.PolicyItem{
+					PolicyItems: []atlasv2.DiskBackupApiPolicyItem{
 						{
 							Id:                pointer.Get("1"),
 							FrequencyInterval: 10,
@@ -223,7 +222,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					CustomZoneMapping: []atlasV1.CustomZoneMapping{
 						{
 							Location: firstLocation,
-							Zone:     cluster.ReplicationSpecs[0].ZoneName,
+							Zone:     *cluster.ReplicationSpecs[0].ZoneName,
 						},
 					},
 					ManagedNamespaces: []atlasV1.ManagedNamespace{
@@ -239,14 +238,14 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					},
 					BiConnector: &atlasV1.BiConnectorSpec{
 						Enabled:        cluster.BiConnector.Enabled,
-						ReadPreference: cluster.BiConnector.ReadPreference,
+						ReadPreference: *cluster.BiConnector.ReadPreference,
 					},
-					ClusterType:              cluster.ClusterType,
-					EncryptionAtRestProvider: cluster.EncryptionAtRestProvider,
+					ClusterType:              *cluster.ClusterType,
+					EncryptionAtRestProvider: *cluster.EncryptionAtRestProvider,
 					Labels: []common.LabelSpec{
 						{
-							Key:   cluster.Labels[0].Key,
-							Value: cluster.Labels[0].Value,
+							Key:   *cluster.Labels[0].Key,
+							Value: *cluster.Labels[0].Value,
 						},
 					},
 					Name:       clusterName,
@@ -254,26 +253,26 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					PitEnabled: cluster.PitEnabled,
 					ReplicationSpecs: []*atlasV1.AdvancedReplicationSpec{
 						{
-							NumShards: cluster.ReplicationSpecs[0].NumShards,
-							ZoneName:  cluster.ReplicationSpecs[0].ZoneName,
+							NumShards: *cluster.ReplicationSpecs[0].NumShards,
+							ZoneName:  *cluster.ReplicationSpecs[0].ZoneName,
 							RegionConfigs: []*atlasV1.AdvancedRegionConfig{
 								{
 									AnalyticsSpecs: &atlasV1.Specs{
-										DiskIOPS:      cluster.ReplicationSpecs[0].RegionConfigs[0].AnalyticsSpecs.DiskIOPS,
-										EbsVolumeType: cluster.ReplicationSpecs[0].RegionConfigs[0].AnalyticsSpecs.EbsVolumeType,
-										InstanceSize:  cluster.ReplicationSpecs[0].RegionConfigs[0].AnalyticsSpecs.InstanceSize,
+										DiskIOPS:      pointer.Get(int64(*cluster.ReplicationSpecs[0].RegionConfigs[0].AnalyticsSpecs.DiskIOPS)),
+										EbsVolumeType: *cluster.ReplicationSpecs[0].RegionConfigs[0].AnalyticsSpecs.EbsVolumeType,
+										InstanceSize:  *cluster.ReplicationSpecs[0].RegionConfigs[0].AnalyticsSpecs.InstanceSize,
 										NodeCount:     cluster.ReplicationSpecs[0].RegionConfigs[0].AnalyticsSpecs.NodeCount,
 									},
 									ElectableSpecs: &atlasV1.Specs{
-										DiskIOPS:      cluster.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs.DiskIOPS,
-										EbsVolumeType: cluster.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs.EbsVolumeType,
-										InstanceSize:  cluster.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs.InstanceSize,
+										DiskIOPS:      pointer.Get(int64(*cluster.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs.DiskIOPS)),
+										EbsVolumeType: *cluster.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs.EbsVolumeType,
+										InstanceSize:  *cluster.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs.InstanceSize,
 										NodeCount:     cluster.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs.NodeCount,
 									},
 									ReadOnlySpecs: &atlasV1.Specs{
-										DiskIOPS:      cluster.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs.DiskIOPS,
-										EbsVolumeType: cluster.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs.EbsVolumeType,
-										InstanceSize:  cluster.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs.InstanceSize,
+										DiskIOPS:      pointer.Get(int64(*cluster.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs.DiskIOPS)),
+										EbsVolumeType: *cluster.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs.EbsVolumeType,
+										InstanceSize:  *cluster.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs.InstanceSize,
 										NodeCount:     cluster.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs.NodeCount,
 									},
 									AutoScaling: &atlasV1.AdvancedAutoScalingSpec{
@@ -281,20 +280,19 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 										Compute: &atlasV1.ComputeSpec{
 											Enabled:          cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.Compute.Enabled,
 											ScaleDownEnabled: cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.Compute.ScaleDownEnabled,
-											MinInstanceSize:  cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.Compute.MinInstanceSize,
-											MaxInstanceSize:  cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.Compute.MaxInstanceSize,
+											MinInstanceSize:  *cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.Compute.MinInstanceSize,
+											MaxInstanceSize:  *cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.Compute.MaxInstanceSize,
 										},
 									},
-									BackingProviderName: cluster.ReplicationSpecs[0].RegionConfigs[0].BackingProviderName,
-									Priority:            cluster.ReplicationSpecs[0].RegionConfigs[0].Priority,
-									ProviderName:        cluster.ReplicationSpecs[0].RegionConfigs[0].ProviderName,
-									RegionName:          cluster.ReplicationSpecs[0].RegionConfigs[0].RegionName,
+									Priority:     cluster.ReplicationSpecs[0].RegionConfigs[0].Priority,
+									ProviderName: *cluster.ReplicationSpecs[0].RegionConfigs[0].ProviderName,
+									RegionName:   *cluster.ReplicationSpecs[0].RegionConfigs[0].RegionName,
 								},
 							},
 						},
 					},
-					RootCertType:         cluster.RootCertType,
-					VersionReleaseSystem: cluster.VersionReleaseSystem,
+					RootCertType:         *cluster.RootCertType,
+					VersionReleaseSystem: *cluster.VersionReleaseSystem,
 				},
 				BackupScheduleRef: common.ResourceRefNamespaced{
 					Name:      strings.ToLower(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName)),
@@ -429,14 +427,13 @@ func TestBuildServerlessDeployments(t *testing.T) {
 		spePrivateEndpointIPAddress := ""
 
 		spe := []atlasv2.ServerlessTenantEndpoint{
-			atlasv2.ServerlessAzureTenantEndpointAsServerlessTenantEndpoint(
-				&atlasv2.ServerlessAzureTenantEndpoint{
-					Id:                       &speID,
-					CloudProviderEndpointId:  &speCloudProviderEndpointID,
-					Comment:                  &speComment,
-					PrivateEndpointIpAddress: &spePrivateEndpointIPAddress,
-				},
-			),
+			{
+				Id:                       &speID,
+				CloudProviderEndpointId:  &speCloudProviderEndpointID,
+				Comment:                  &speComment,
+				PrivateEndpointIpAddress: &spePrivateEndpointIPAddress,
+				ProviderName:             pointer.Get("AZURE"),
+			},
 		}
 
 		cluster := &mongodbatlas.Cluster{

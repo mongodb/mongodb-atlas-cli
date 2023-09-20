@@ -34,7 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/project"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -88,7 +88,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		authDate, _ := time.Parse(time.RFC3339, "01-01-2001")
 		createDate, _ := time.Parse(time.RFC3339, "01-02-2001")
 
-		cpas := &atlasv2.CloudProviderAccess{
+		cpas := &atlasv2.CloudProviderAccessRoles{
 			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
 				{
 					AtlasAWSAccountArn:         pointer.Get("TestARN"),
@@ -104,7 +104,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 
 		encryptionAtRest := &atlasv2.EncryptionAtRest{
-			AwsKms:        &atlasv2.AWSKMS{},
+			AwsKms:        &atlasv2.AWSKMSConfiguration{},
 			AzureKeyVault: &atlasv2.AzureKeyVault{},
 			GoogleCloudKms: &atlasv2.GoogleCloudKMS{
 				Enabled:              pointer.Get(true),
@@ -115,14 +115,12 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		thirdPartyIntegrations := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: []atlasv2.Integration{
+			Results: []atlasv2.ThridPartyIntegration{
 				{
-					Prometheus: &atlasv2.Prometheus{
-						Type:             pointer.Get("PROMETHEUS"),
-						Username:         "TestPrometheusUserName",
-						Password:         pointer.Get("TestPrometheusPassword"),
-						ServiceDiscovery: "TestPrometheusServiceDiscovery",
-					},
+					Type:             pointer.Get("PROMETHEUS"),
+					Username:         pointer.Get("TestPrometheusUserName"),
+					Password:         pointer.Get("TestPrometheusPassword"),
+					ServiceDiscovery: pointer.Get("TestPrometheusServiceDiscovery"),
 				},
 			},
 			TotalCount: pointer.Get(1),
@@ -135,24 +133,22 @@ func TestBuildAtlasProject(t *testing.T) {
 			AutoDeferOnceEnabled: pointer.Get(false),
 		}
 
-		peeringConnectionAWS := &atlasv2.AWSPeerVpc{
-			AccepterRegionName:  "TestRegionName",
-			AwsAccountId:        "TestAWSAccountID",
+		peeringConnectionAWS := &atlasv2.BaseNetworkPeeringConnectionSettings{
+			AccepterRegionName:  pointer.Get("TestRegionName"),
+			AwsAccountId:        pointer.Get("TestAWSAccountID"),
 			ConnectionId:        pointer.Get("TestConnID"),
 			ContainerId:         "TestContainerID",
 			ErrorStateName:      pointer.Get("TestErrStateName"),
 			Id:                  pointer.Get("TestID"),
 			ProviderName:        pointer.Get(string(provider.ProviderAWS)),
-			RouteTableCidrBlock: "0.0.0.0/0",
+			RouteTableCidrBlock: pointer.Get("0.0.0.0/0"),
 			StatusName:          pointer.Get("TestStatusName"),
-			VpcId:               "TestVPCID",
+			VpcId:               pointer.Get("TestVPCID"),
 		}
 
-		peeringConnections := []interface{}{
-			peeringConnectionAWS,
-		}
+		peeringConnections := []atlasv2.BaseNetworkPeeringConnectionSettings{*peeringConnectionAWS}
 
-		privateAWSEndpoint := atlasv2.AWSPrivateLinkConnection{
+		privateAWSEndpoint := atlasv2.EndpointService{
 			Id:                  pointer.Get("TestID"),
 			CloudProvider:       string(provider.ProviderAWS),
 			RegionName:          pointer.Get("US_WEST_2"),
@@ -161,7 +157,7 @@ func TestBuildAtlasProject(t *testing.T) {
 			InterfaceEndpoints:  nil,
 			Status:              nil,
 		}
-		privateEndpoints := []interface{}{&privateAWSEndpoint}
+		privateEndpoints := []atlasv2.EndpointService{privateAWSEndpoint}
 
 		alertConfigs := []mongodbatlas.AlertConfiguration{
 			{
@@ -224,12 +220,12 @@ func TestBuildAtlasProject(t *testing.T) {
 			IsSchemaAdvisorEnabled:                      pointer.Get(true),
 		}
 
-		customRoles := []atlasv2.CustomDBRole{
+		customRoles := []atlasv2.UserCustomDBRole{
 			{
-				Actions: []atlasv2.DBAction{
+				Actions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "Action-1",
-						Resources: []atlasv2.DBResource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
 								Collection: "Collection-1",
 								Db:         "DB-1",
@@ -238,7 +234,7 @@ func TestBuildAtlasProject(t *testing.T) {
 						},
 					},
 				},
-				InheritedRoles: []atlasv2.InheritedRole{
+				InheritedRoles: []atlasv2.DatabaseInheritedRole{
 					{
 						Db:   "Inherited-DB",
 						Role: "Inherited-ROLE",
@@ -452,28 +448,28 @@ func TestBuildAtlasProject(t *testing.T) {
 				AlertConfigurationSyncEnabled: false,
 				NetworkPeers: []atlasV1.NetworkPeer{
 					{
-						AccepterRegionName:  peeringConnectionAWS.AccepterRegionName,
+						AccepterRegionName:  peeringConnectionAWS.GetAccepterRegionName(),
 						ContainerRegion:     "",
-						AWSAccountID:        peeringConnectionAWS.AwsAccountId,
+						AWSAccountID:        peeringConnectionAWS.GetAwsAccountId(),
 						ContainerID:         peeringConnectionAWS.ContainerId,
 						ProviderName:        provider.ProviderName(*peeringConnectionAWS.ProviderName),
-						RouteTableCIDRBlock: peeringConnectionAWS.RouteTableCidrBlock,
-						VpcID:               peeringConnectionAWS.VpcId,
+						RouteTableCIDRBlock: peeringConnectionAWS.GetRouteTableCidrBlock(),
+						VpcID:               peeringConnectionAWS.GetVpcId(),
 					},
 				},
 				WithDefaultAlertsSettings: false,
 				X509CertRef:               nil,
 				Integrations: []project.Integration{
 					{
-						Type:     thirdPartyIntegrations.Results[0].Prometheus.GetType(),
-						UserName: thirdPartyIntegrations.Results[0].Prometheus.GetUsername(),
+						Type:     thirdPartyIntegrations.Results[0].GetType(),
+						UserName: thirdPartyIntegrations.Results[0].GetUsername(),
 						PasswordRef: common.ResourceRefNamespaced{
 							Name: fmt.Sprintf("%s-integration-%s",
 								strings.ToLower(projectID),
-								strings.ToLower(thirdPartyIntegrations.Results[0].Prometheus.GetType())),
+								strings.ToLower(thirdPartyIntegrations.Results[0].GetType())),
 							Namespace: targetNamespace,
 						},
-						ServiceDiscovery: thirdPartyIntegrations.Results[0].Prometheus.ServiceDiscovery,
+						ServiceDiscovery: thirdPartyIntegrations.Results[0].GetServiceDiscovery(),
 					},
 				},
 				EncryptionAtRest: &atlasV1.EncryptionAtRest{
@@ -700,7 +696,7 @@ func Test_buildCloudProviderAccessRoles(t *testing.T) {
 
 	cpaProvider := mocks.NewMockCloudProviderAccessRoleLister(ctl)
 	t.Run("Can convert CPA roles", func(t *testing.T) {
-		data := &atlasv2.CloudProviderAccess{
+		data := &atlasv2.CloudProviderAccessRoles{
 			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
 				{
 					AtlasAWSAccountArn:         pointer.Get("TestARN"),
@@ -741,7 +737,7 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 	dataProvider := mocks.NewMockEncryptionAtRestDescriber(ctl)
 	t.Run("Can convert Encryption at REST AWS", func(t *testing.T) {
 		data := &atlasv2.EncryptionAtRest{
-			AwsKms: &atlasv2.AWSKMS{
+			AwsKms: &atlasv2.AWSKMSConfiguration{
 				Enabled:             pointer.Get(true),
 				AccessKeyID:         pointer.Get("TestAccessKey"),
 				SecretAccessKey:     pointer.Get("TestSecretAccessKey"),
@@ -781,7 +777,7 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 	})
 	t.Run("Can convert Encryption at REST GCP", func(t *testing.T) {
 		data := &atlasv2.EncryptionAtRest{
-			AwsKms:        &atlasv2.AWSKMS{},
+			AwsKms:        &atlasv2.AWSKMSConfiguration{},
 			AzureKeyVault: &atlasv2.AzureKeyVault{},
 			GoogleCloudKms: &atlasv2.GoogleCloudKMS{
 				Enabled:              pointer.Get(true),
@@ -812,7 +808,7 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 	})
 	t.Run("Can convert Encryption at REST Azure", func(t *testing.T) {
 		data := atlasv2.EncryptionAtRest{
-			AwsKms: &atlasv2.AWSKMS{},
+			AwsKms: &atlasv2.AWSKMSConfiguration{},
 			AzureKeyVault: &atlasv2.AzureKeyVault{
 				Enabled:           pointer.Get(true),
 				ClientID:          pointer.Get("TestClientID"),
@@ -866,14 +862,12 @@ func Test_buildIntegrations(t *testing.T) {
 		const includeSecrets = true
 		ints := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: []atlasv2.Integration{
+			Results: []atlasv2.ThridPartyIntegration{
 				{
-					Prometheus: &atlasv2.Prometheus{
-						Type:             pointer.Get("PROMETHEUS"),
-						Password:         pointer.Get("PrometheusTestPassword"),
-						Username:         "PrometheusTestUserName",
-						ServiceDiscovery: "TestServiceDiscovery",
-					},
+					Type:             pointer.Get("PROMETHEUS"),
+					Password:         pointer.Get("PrometheusTestPassword"),
+					Username:         pointer.Get("PrometheusTestUserName"),
+					ServiceDiscovery: pointer.Get("TestServiceDiscovery"),
 				},
 			},
 			TotalCount: pointer.Get(0),
@@ -888,13 +882,13 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expected := []project.Integration{
 			{
-				Type:             ints.Results[0].Prometheus.GetType(),
-				ServiceDiscovery: ints.Results[0].Prometheus.ServiceDiscovery,
-				UserName:         ints.Results[0].Prometheus.Username,
+				Type:             ints.Results[0].GetType(),
+				ServiceDiscovery: ints.Results[0].GetServiceDiscovery(),
+				UserName:         ints.Results[0].GetUsername(),
 				PasswordRef: common.ResourceRefNamespaced{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Prometheus.GetType())),
+						strings.ToLower(ints.Results[0].GetType())),
 					Namespace: targetNamespace,
 				},
 			},
@@ -909,14 +903,14 @@ func Test_buildIntegrations(t *testing.T) {
 				ObjectMeta: v1.ObjectMeta{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Prometheus.GetType())),
+						strings.ToLower(ints.Results[0].GetType())),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
 						secrets.TypeLabelKey: secrets.CredLabelVal,
 					},
 				},
 				Data: map[string][]byte{
-					secrets.PasswordField: []byte(ints.Results[0].Prometheus.GetPassword()),
+					secrets.PasswordField: []byte(ints.Results[0].GetPassword()),
 				},
 			},
 		}
@@ -934,14 +928,13 @@ func Test_buildIntegrations(t *testing.T) {
 		const includeSecrets = false
 		ints := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: []atlasv2.Integration{
+			Results: []atlasv2.ThridPartyIntegration{
 				{
-					Prometheus: &atlasv2.Prometheus{
-						Type:             pointer.Get("PROMETHEUS"),
-						Password:         pointer.Get("PrometheusTestPassword"),
-						Username:         "PrometheusTestUserName",
-						ServiceDiscovery: "TestServiceDiscovery",
-					},
+
+					Type:             pointer.Get("PROMETHEUS"),
+					Password:         pointer.Get("PrometheusTestPassword"),
+					Username:         pointer.Get("PrometheusTestUserName"),
+					ServiceDiscovery: pointer.Get("TestServiceDiscovery"),
 				},
 			},
 			TotalCount: pointer.Get(0),
@@ -954,13 +947,13 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expected := []project.Integration{
 			{
-				Type:             ints.Results[0].Prometheus.GetType(),
-				ServiceDiscovery: ints.Results[0].Prometheus.ServiceDiscovery,
-				UserName:         ints.Results[0].Prometheus.Username,
+				Type:             ints.Results[0].GetType(),
+				ServiceDiscovery: ints.Results[0].GetServiceDiscovery(),
+				UserName:         ints.Results[0].GetUsername(),
 				PasswordRef: common.ResourceRefNamespaced{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Prometheus.GetType())),
+						strings.ToLower(ints.Results[0].GetType())),
 					Namespace: targetNamespace,
 				},
 			},
@@ -975,7 +968,7 @@ func Test_buildIntegrations(t *testing.T) {
 				ObjectMeta: v1.ObjectMeta{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].Prometheus.GetType())),
+						strings.ToLower(ints.Results[0].GetType())),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
 						secrets.TypeLabelKey: secrets.CredLabelVal,
@@ -1035,21 +1028,21 @@ func Test_buildNetworkPeering(t *testing.T) {
 
 	peerProvider := mocks.NewMockPeeringConnectionLister(ctl)
 	t.Run("Can convert Peering connections", func(t *testing.T) {
-		peeringConnectionAWS := &atlasv2.AWSPeerVpc{
-			AccepterRegionName:  "TestRegionName",
-			AwsAccountId:        "TestAWSAccountID",
+		peeringConnectionAWS := &atlasv2.BaseNetworkPeeringConnectionSettings{
+			AccepterRegionName:  pointer.Get("TestRegionName"),
+			AwsAccountId:        pointer.Get("TestAWSAccountID"),
 			ConnectionId:        pointer.Get("TestConnID"),
 			ContainerId:         "TestContainerID",
 			ErrorStateName:      pointer.Get("TestErrStateName"),
 			Id:                  pointer.Get("TestID"),
 			ProviderName:        pointer.Get(string(provider.ProviderAWS)),
-			RouteTableCidrBlock: "0.0.0.0/0",
+			RouteTableCidrBlock: pointer.Get("0.0.0.0/0"),
 			StatusName:          pointer.Get("TestStatusName"),
-			VpcId:               "TestVPCID",
+			VpcId:               pointer.Get("TestVPCID"),
 		}
 
-		peeringConnections := []interface{}{
-			peeringConnectionAWS,
+		peeringConnections := []atlasv2.BaseNetworkPeeringConnectionSettings{
+			*peeringConnectionAWS,
 		}
 
 		listOptions := mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
@@ -1068,13 +1061,13 @@ func Test_buildNetworkPeering(t *testing.T) {
 
 		expected := []atlasV1.NetworkPeer{
 			{
-				AccepterRegionName:  peeringConnectionAWS.AccepterRegionName,
+				AccepterRegionName:  peeringConnectionAWS.GetAccepterRegionName(),
 				ContainerRegion:     "",
-				AWSAccountID:        peeringConnectionAWS.AwsAccountId,
+				AWSAccountID:        peeringConnectionAWS.GetAwsAccountId(),
 				ContainerID:         peeringConnectionAWS.ContainerId,
 				ProviderName:        provider.ProviderName(*peeringConnectionAWS.ProviderName),
-				RouteTableCIDRBlock: peeringConnectionAWS.RouteTableCidrBlock,
-				VpcID:               peeringConnectionAWS.VpcId,
+				RouteTableCIDRBlock: peeringConnectionAWS.GetRouteTableCidrBlock(),
+				VpcID:               peeringConnectionAWS.GetVpcId(),
 			},
 		}
 
@@ -1090,7 +1083,7 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 	peProvider := mocks.NewMockPrivateEndpointLister(ctl)
 	t.Run("Can convert PrivateEndpointConnection for AWS", func(t *testing.T) {
 		providerName := provider.ProviderAWS
-		privateEndpoint := atlasv2.AWSPrivateLinkConnection{
+		privateEndpoint := atlasv2.EndpointService{
 			Id:                  pointer.Get("1"),
 			CloudProvider:       string(providerName),
 			RegionName:          pointer.Get("US_EAST_1"),
@@ -1100,7 +1093,7 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 			Status:              nil,
 		}
 
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName)).Return([]interface{}{&privateEndpoint}, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName)).Return([]atlasv2.EndpointService{privateEndpoint}, nil)
 		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAzure)).Return(nil, nil)
 		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP)).Return(nil, nil)
 
@@ -1128,7 +1121,7 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 
 	t.Run("Can convert PrivateEndpointConnection for Azure", func(t *testing.T) {
 		providerName := provider.ProviderAzure
-		privateEndpoint := atlasv2.AzurePrivateLinkConnection{
+		privateEndpoint := atlasv2.EndpointService{
 			Id:                           pointer.Get("1"),
 			CloudProvider:                string(providerName),
 			RegionName:                   pointer.Get("uswest3"),
@@ -1139,7 +1132,7 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 			Status:                       nil,
 		}
 
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName)).Return([]interface{}{&privateEndpoint}, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName)).Return([]atlasv2.EndpointService{privateEndpoint}, nil)
 		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAWS)).Return(nil, nil)
 		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP)).Return(nil, nil)
 
@@ -1202,12 +1195,12 @@ func Test_buildCustomRoles(t *testing.T) {
 
 	rolesProvider := mocks.NewMockDatabaseRoleLister(ctl)
 	t.Run("Can build custom roles", func(t *testing.T) {
-		data := []atlasv2.CustomDBRole{
+		data := []atlasv2.UserCustomDBRole{
 			{
-				Actions: []atlasv2.DBAction{
+				Actions: []atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "TestAction",
-						Resources: []atlasv2.DBResource{
+						Resources: []atlasv2.DatabasePermittedNamespaceResource{
 							{
 								Collection: "TestCollection",
 								Db:         "TestDB",
@@ -1216,7 +1209,7 @@ func Test_buildCustomRoles(t *testing.T) {
 						},
 					},
 				},
-				InheritedRoles: []atlasv2.InheritedRole{
+				InheritedRoles: []atlasv2.DatabaseInheritedRole{
 					{
 						Db:   "TestDBMAIN",
 						Role: "ADMIN",

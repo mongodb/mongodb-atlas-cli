@@ -1,6 +1,6 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
-GOLANGCI_VERSION=v1.50.1
+GOLANGCI_VERSION=v1.53.3
 COVERAGE=coverage.out
 
 MCLI_SOURCE_FILES?=./cmd/mongocli
@@ -29,12 +29,10 @@ UNIT_TAGS?=unit
 INTEGRATION_TAGS?=integration
 E2E_TAGS?=e2e
 E2E_TIMEOUT?=60m
+E2E_PARALLEL?=1
 
 export PATH := $(shell go env GOPATH)/bin:$(PATH)
 export PATH := ./bin:$(PATH)
-ifneq ($(OS),Windows_NT)
-	export SHELL := env PATH=$(PATH) /bin/bash
-endif
 export TERM := linux-m
 export GO111MODULE := on
 export MCLI_E2E_BINARY
@@ -54,6 +52,7 @@ devtools:  ## Install dev tools
 	go install golang.org/x/tools/cmd/goimports@latest
 	go install github.com/google/go-licenses@latest
 	go install mvdan.cc/sh/v3/cmd/shfmt@latest
+	go install github.com/icholy/gomajor@latest
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin $(GOLANGCI_VERSION)
 
 .PHONY: setup
@@ -118,12 +117,12 @@ gen-docs: gen-docs-mongocli gen-docs-atlascli ## Generate docs for commands
 .PHONY: gen-docs-mongocli
 gen-docs-mongocli: ## Generate docs for mongocli commands
 	@echo "==> Generating docs for mongocli"
-	go run ./tools/mongoclidocs/main.go
+	go run -ldflags "$(MCLI_LINKER_FLAGS)" ./tools/mongoclidocs/main.go
 
 .PHONY: gen-docs-atlascli
 gen-docs-atlascli: ## Generate docs for atlascli commands
 	@echo "==> Generating docs for atlascli"
-	go run ./tools/atlasclidocs/main.go
+	go run -ldflags "$(ATLAS_LINKER_FLAGS)" ./tools/atlasclidocs/main.go
 
 .PHONY: build
 build: build-mongocli ## Generate a binary for mongocli
@@ -158,7 +157,7 @@ build-atlascli-debug: ## Generate a binary in ./bin for debugging atlascli
 e2e-test: build-all ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI_* environment variables are exported
-	$(TEST_CMD) -v -p 1 -parallel 1 -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e...
+	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e...
 
 .PHONY: integration-test
 integration-test: ## Run integration tests
@@ -199,6 +198,12 @@ check-library-owners: ## Check that all the dependencies in go.mod has a owner i
 	@echo "==> Check library_owners.json"
 	go run ./tools/libraryowners/main.go
 
+.PHONY: update-atlas-sdk
+update-atlas-sdk: ## Update the atlas-sdk dependency
+	@echo "==> Updating SDK to latest major version"
+	gomajor get go.mongodb.org/atlas-sdk/v20230201001@latest
+	go mod tidy
+	@echo "==> Done, remember to update build/ci/library_owners.json"
 
 .PHONY: help
 .DEFAULT_GOAL := help

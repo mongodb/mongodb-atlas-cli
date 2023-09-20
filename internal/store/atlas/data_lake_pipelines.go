@@ -19,18 +19,18 @@ package atlas
 import (
 	"time"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_data_lake_pipelines.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas PipelinesLister,PipelinesDescriber,PipelinesCreator,PipelinesUpdater,PipelinesDeleter,PipelineAvailableSnapshotsLister,PipelineAvailableSchedulesLister,PipelinesTriggerer,PipelinesPauser,PipelinesResumer
 
 type PipelinesLister interface {
-	Pipelines(string) ([]atlasv2.IngestionPipeline, error)
+	Pipelines(string) ([]atlasv2.DataLakeIngestionPipeline, error)
 }
 
 type PipelinesCreator interface {
-	CreatePipeline(string, atlasv2.IngestionPipeline) (*atlasv2.IngestionPipeline, error)
+	CreatePipeline(string, atlasv2.DataLakeIngestionPipeline) (*atlasv2.DataLakeIngestionPipeline, error)
 }
 
 type PipelinesDeleter interface {
@@ -38,11 +38,11 @@ type PipelinesDeleter interface {
 }
 
 type PipelinesDescriber interface {
-	Pipeline(string, string) (*atlasv2.IngestionPipeline, error)
+	Pipeline(string, string) (*atlasv2.DataLakeIngestionPipeline, error)
 }
 
 type PipelinesUpdater interface {
-	UpdatePipeline(string, string, atlasv2.IngestionPipeline) (*atlasv2.IngestionPipeline, error)
+	UpdatePipeline(string, string, atlasv2.DataLakeIngestionPipeline) (*atlasv2.DataLakeIngestionPipeline, error)
 }
 
 type PipelineAvailableSnapshotsLister interface {
@@ -50,7 +50,7 @@ type PipelineAvailableSnapshotsLister interface {
 }
 
 type PipelineAvailableSchedulesLister interface {
-	PipelineAvailableSchedules(string, string) ([]atlasv2.PolicyItem, error)
+	PipelineAvailableSchedules(string, string) ([]atlasv2.DiskBackupApiPolicyItem, error)
 }
 
 type PipelinesTriggerer interface {
@@ -58,33 +58,33 @@ type PipelinesTriggerer interface {
 }
 
 type PipelinesPauser interface {
-	PipelinePause(string, string) (*atlasv2.IngestionPipeline, error)
+	PipelinePause(string, string) (*atlasv2.DataLakeIngestionPipeline, error)
 }
 
 type PipelinesResumer interface {
-	PipelineResume(string, string) (*atlasv2.IngestionPipeline, error)
+	PipelineResume(string, string) (*atlasv2.DataLakeIngestionPipeline, error)
 }
 
 // Pipelines encapsulates the logic to manage different cloud providers.
-func (s *Store) Pipelines(projectID string) ([]atlasv2.IngestionPipeline, error) {
+func (s *Store) Pipelines(projectID string) ([]atlasv2.DataLakeIngestionPipeline, error) {
 	result, _, err := s.clientv2.DataLakePipelinesApi.ListPipelines(s.ctx, projectID).Execute()
 	return result, err
 }
 
 // Pipeline encapsulates the logic to manage different cloud providers.
-func (s *Store) Pipeline(projectID, id string) (*atlasv2.IngestionPipeline, error) {
+func (s *Store) Pipeline(projectID, id string) (*atlasv2.DataLakeIngestionPipeline, error) {
 	result, _, err := s.clientv2.DataLakePipelinesApi.GetPipeline(s.ctx, projectID, id).Execute()
 	return result, err
 }
 
 // CreatePipeline encapsulates the logic to manage different cloud providers.
-func (s *Store) CreatePipeline(projectID string, opts atlasv2.IngestionPipeline) (*atlasv2.IngestionPipeline, error) {
+func (s *Store) CreatePipeline(projectID string, opts atlasv2.DataLakeIngestionPipeline) (*atlasv2.DataLakeIngestionPipeline, error) {
 	result, _, err := s.clientv2.DataLakePipelinesApi.CreatePipeline(s.ctx, projectID, &opts).Execute()
 	return result, err
 }
 
 // UpdatePipeline encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdatePipeline(projectID, id string, opts atlasv2.IngestionPipeline) (*atlasv2.IngestionPipeline, error) {
+func (s *Store) UpdatePipeline(projectID, id string, opts atlasv2.DataLakeIngestionPipeline) (*atlasv2.DataLakeIngestionPipeline, error) {
 	result, _, err := s.clientv2.DataLakePipelinesApi.UpdatePipeline(s.ctx, projectID, id, &opts).Execute()
 	return result, err
 }
@@ -96,7 +96,7 @@ func (s *Store) DeletePipeline(projectID, id string) error {
 }
 
 // PipelineAvailableSchedules encapsulates the logic to manage different cloud providers.
-func (s *Store) PipelineAvailableSchedules(projectID, pipelineName string) ([]atlasv2.PolicyItem, error) {
+func (s *Store) PipelineAvailableSchedules(projectID, pipelineName string) ([]atlasv2.DiskBackupApiPolicyItem, error) {
 	result, _, err := s.clientv2.DataLakePipelinesApi.ListPipelineSchedules(s.ctx, projectID, pipelineName).Execute()
 	return result, err
 }
@@ -118,18 +118,18 @@ func (s *Store) PipelineAvailableSnapshots(projectID, pipelineName string, compl
 // PipelineTrigger encapsulates the logic to manage different cloud providers.
 func (s *Store) PipelineTrigger(projectID, pipelineName, snapshotID string) (*atlasv2.IngestionPipelineRun, error) {
 	result, _, err := s.clientv2.DataLakePipelinesApi.TriggerSnapshotIngestion(s.ctx, projectID, pipelineName,
-		atlasv2.NewTriggerIngestionRequest(snapshotID)).Execute()
+		atlasv2.NewTriggerIngestionPipelineRequest(snapshotID)).Execute()
 	return result, err
 }
 
 // PipelinePause encapsulates the logic to manage different cloud providers.
-func (s *Store) PipelinePause(projectID, pipelineName string) (*atlasv2.IngestionPipeline, error) {
+func (s *Store) PipelinePause(projectID, pipelineName string) (*atlasv2.DataLakeIngestionPipeline, error) {
 	result, _, err := s.clientv2.DataLakePipelinesApi.PausePipeline(s.ctx, projectID, pipelineName).Execute()
 	return result, err
 }
 
 // PipelineResume encapsulates the logic to manage different cloud providers.
-func (s *Store) PipelineResume(projectID, pipelineName string) (*atlasv2.IngestionPipeline, error) {
+func (s *Store) PipelineResume(projectID, pipelineName string) (*atlasv2.DataLakeIngestionPipeline, error) {
 	result, _, err := s.clientv2.DataLakePipelinesApi.ResumePipeline(s.ctx, projectID, pipelineName).Execute()
 	return result, err
 }

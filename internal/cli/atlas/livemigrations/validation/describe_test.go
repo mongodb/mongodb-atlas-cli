@@ -24,14 +24,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestValidationDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockLiveMigrationValidationsDescriber(ctrl)
 
-	expected := atlasv2.Validation{}
+	expected := atlasv2.LiveImportValidation{}
 
 	describeOpts := &DescribeOpts{
 		GlobalOpts:   cli.GlobalOpts{ProjectID: "2"},
@@ -46,6 +46,7 @@ func TestValidationDescribeOpts_Run(t *testing.T) {
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }
 
 func TestDescribeBuilder(t *testing.T) {

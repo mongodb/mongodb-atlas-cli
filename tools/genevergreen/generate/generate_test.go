@@ -51,7 +51,7 @@ func TestPublishSnapshotTasks(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := tt.args.c
 			PublishSnapshotTasks(c, tt.args.toolName)
-			assert.Len(t, c.Tasks, 30)
+			assert.Len(t, c.Tasks, 26)
 			assert.Len(t, c.Variants, 2)
 		})
 	}
@@ -85,8 +85,8 @@ func TestPublishStableTasks(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := tt.args.c
 			PublishStableTasks(c, tt.args.toolName)
-			assert.Len(t, c.Tasks, 120)
 			assert.Len(t, c.Variants, 4)
+			assert.Len(t, c.Tasks, 104)
 		})
 	}
 }

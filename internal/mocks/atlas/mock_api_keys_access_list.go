@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	admin "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 // MockOrganizationAPIKeyAccessListCreator is a mock of OrganizationAPIKeyAccessListCreator interface.
@@ -35,18 +35,18 @@ func (m *MockOrganizationAPIKeyAccessListCreator) EXPECT() *MockOrganizationAPIK
 }
 
 // CreateOrganizationAPIKeyAccessList mocks base method.
-func (m *MockOrganizationAPIKeyAccessListCreator) CreateOrganizationAPIKeyAccessList(arg0, arg1 string, arg2 []*mongodbatlas.AccessListAPIKeysReq) (*mongodbatlas.AccessListAPIKeys, error) {
+func (m *MockOrganizationAPIKeyAccessListCreator) CreateOrganizationAPIKeyAccessList(arg0 *admin.CreateApiKeyAccessListApiParams) (*admin.PaginatedApiUserAccessList, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateOrganizationAPIKeyAccessList", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.AccessListAPIKeys)
+	ret := m.ctrl.Call(m, "CreateOrganizationAPIKeyAccessList", arg0)
+	ret0, _ := ret[0].(*admin.PaginatedApiUserAccessList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateOrganizationAPIKeyAccessList indicates an expected call of CreateOrganizationAPIKeyAccessList.
-func (mr *MockOrganizationAPIKeyAccessListCreatorMockRecorder) CreateOrganizationAPIKeyAccessList(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockOrganizationAPIKeyAccessListCreatorMockRecorder) CreateOrganizationAPIKeyAccessList(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationAPIKeyAccessList", reflect.TypeOf((*MockOrganizationAPIKeyAccessListCreator)(nil).CreateOrganizationAPIKeyAccessList), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationAPIKeyAccessList", reflect.TypeOf((*MockOrganizationAPIKeyAccessListCreator)(nil).CreateOrganizationAPIKeyAccessList), arg0)
 }
 
 // MockOrganizationAPIKeyAccessListDeleter is a mock of OrganizationAPIKeyAccessListDeleter interface.
@@ -110,16 +110,16 @@ func (m *MockOrganizationAPIKeyAccessListLister) EXPECT() *MockOrganizationAPIKe
 }
 
 // OrganizationAPIKeyAccessLists mocks base method.
-func (m *MockOrganizationAPIKeyAccessListLister) OrganizationAPIKeyAccessLists(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.AccessListAPIKeys, error) {
+func (m *MockOrganizationAPIKeyAccessListLister) OrganizationAPIKeyAccessLists(arg0 *admin.ListApiKeyAccessListsEntriesApiParams) (*admin.PaginatedApiUserAccessList, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OrganizationAPIKeyAccessLists", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.AccessListAPIKeys)
+	ret := m.ctrl.Call(m, "OrganizationAPIKeyAccessLists", arg0)
+	ret0, _ := ret[0].(*admin.PaginatedApiUserAccessList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // OrganizationAPIKeyAccessLists indicates an expected call of OrganizationAPIKeyAccessLists.
-func (mr *MockOrganizationAPIKeyAccessListListerMockRecorder) OrganizationAPIKeyAccessLists(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockOrganizationAPIKeyAccessListListerMockRecorder) OrganizationAPIKeyAccessLists(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrganizationAPIKeyAccessLists", reflect.TypeOf((*MockOrganizationAPIKeyAccessListLister)(nil).OrganizationAPIKeyAccessLists), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrganizationAPIKeyAccessLists", reflect.TypeOf((*MockOrganizationAPIKeyAccessListLister)(nil).OrganizationAPIKeyAccessLists), arg0)
 }

@@ -18,25 +18,25 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_search.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store SearchIndexLister,SearchIndexCreator,SearchIndexDescriber,SearchIndexUpdater,SearchIndexDeleter
 
 type SearchIndexLister interface {
-	SearchIndexes(string, string, string, string) ([]atlasv2.FTSIndex, error)
+	SearchIndexes(string, string, string, string) ([]atlasv2.ClusterSearchIndex, error)
 }
 
 type SearchIndexCreator interface {
-	CreateSearchIndexes(string, string, *atlasv2.FTSIndex) (*atlasv2.FTSIndex, error)
+	CreateSearchIndexes(string, string, *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error)
 }
 
 type SearchIndexDescriber interface {
-	SearchIndex(string, string, string) (*atlasv2.FTSIndex, error)
+	SearchIndex(string, string, string) (*atlasv2.ClusterSearchIndex, error)
 }
 
 type SearchIndexUpdater interface {
-	UpdateSearchIndexes(string, string, string, *atlasv2.FTSIndex) (*atlasv2.FTSIndex, error)
+	UpdateSearchIndexes(string, string, string, *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error)
 }
 
 type SearchIndexDeleter interface {
@@ -44,7 +44,7 @@ type SearchIndexDeleter interface {
 }
 
 // SearchIndexes encapsulate the logic to manage different cloud providers.
-func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string) ([]atlasv2.FTSIndex, error) {
+func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string) ([]atlasv2.ClusterSearchIndex, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.AtlasSearchApi.ListAtlasSearchIndexes(s.ctx, projectID, clusterName, collName, dbName).Execute()
@@ -55,7 +55,7 @@ func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string) (
 }
 
 // CreateSearchIndexes encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlasv2.FTSIndex) (*atlasv2.FTSIndex, error) {
+func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.AtlasSearchApi.CreateAtlasSearchIndex(s.ctx, projectID, clusterName, index).Execute()
@@ -66,7 +66,7 @@ func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlasv
 }
 
 // SearchIndex encapsulate the logic to manage different cloud providers.
-func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlasv2.FTSIndex, error) {
+func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlasv2.ClusterSearchIndex, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		index, _, err := s.clientv2.AtlasSearchApi.GetAtlasSearchIndex(s.ctx, projectID, clusterName, indexID).Execute()
@@ -77,7 +77,7 @@ func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlasv2.FT
 }
 
 // UpdateSearchIndexes encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, index *atlasv2.FTSIndex) (*atlasv2.FTSIndex, error) {
+func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, index *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.AtlasSearchApi.UpdateAtlasSearchIndex(s.ctx, projectID, clusterName, indexID, index).Execute()

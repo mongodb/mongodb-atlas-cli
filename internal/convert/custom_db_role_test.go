@@ -20,19 +20,19 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestBuildAtlasInheritedRoles(t *testing.T) {
 	type test struct {
 		input []string
-		want  []atlasv2.InheritedRole
+		want  []atlasv2.DatabaseInheritedRole
 	}
 
 	tests := []test{
 		{
 			input: []string{"admin"},
-			want: []atlasv2.InheritedRole{
+			want: []atlasv2.DatabaseInheritedRole{
 				{
 					Role: "admin",
 					Db:   "admin",
@@ -41,7 +41,7 @@ func TestBuildAtlasInheritedRoles(t *testing.T) {
 		},
 		{
 			input: []string{"admin@test"},
-			want: []atlasv2.InheritedRole{
+			want: []atlasv2.DatabaseInheritedRole{
 				{
 					Role: "admin",
 					Db:   "test",
@@ -50,7 +50,7 @@ func TestBuildAtlasInheritedRoles(t *testing.T) {
 		},
 		{
 			input: []string{"admin@test", "something"},
-			want: []atlasv2.InheritedRole{
+			want: []atlasv2.DatabaseInheritedRole{
 				{
 					Role: "admin",
 					Db:   "test",
@@ -79,7 +79,7 @@ func TestBuildAtlasInheritedRoles(t *testing.T) {
 func TestBuildAtlasActions(t *testing.T) {
 	type test struct {
 		input []string
-		want  []atlasv2.DBAction
+		want  []atlasv2.DatabasePrivilegeAction
 	}
 
 	cluster := true
@@ -91,10 +91,10 @@ func TestBuildAtlasActions(t *testing.T) {
 	tests := []test{
 		{
 			input: []string{"clusterName"},
-			want: []atlasv2.DBAction{
+			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "clusterName",
-					Resources: []atlasv2.DBResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Cluster: cluster,
 						},
@@ -104,10 +104,10 @@ func TestBuildAtlasActions(t *testing.T) {
 		},
 		{
 			input: []string{"clusterName@testdb.collection"},
-			want: []atlasv2.DBAction{
+			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "clusterName",
-					Resources: []atlasv2.DBResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Db:         testdb,
 							Collection: collection,
@@ -118,10 +118,10 @@ func TestBuildAtlasActions(t *testing.T) {
 		},
 		{
 			input: []string{"clusterName", "name@DATA_LAKE"},
-			want: []atlasv2.DBAction{
+			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "clusterName",
-					Resources: []atlasv2.DBResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Cluster: cluster,
 						},
@@ -129,7 +129,7 @@ func TestBuildAtlasActions(t *testing.T) {
 				},
 				{
 					Action: "name",
-					Resources: []atlasv2.DBResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Db: datalake,
 						},

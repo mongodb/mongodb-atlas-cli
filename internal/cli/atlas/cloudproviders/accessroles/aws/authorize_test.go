@@ -23,8 +23,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
+
+func TestAuthorizeTemplate(t *testing.T) {
+	test.VerifyOutputTemplate(t, authorizeTemplate, atlasv2.CloudProviderAccessRole{})
+}
 
 func TestAuthorizeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -41,10 +46,7 @@ func TestAuthorizeOpts_Run(t *testing.T) {
 		AuthorizeCloudProviderAccessRole(opts.ProjectID, opts.roleID, opts.newCloudProviderAuthorizationRequest()).
 		Return(expected, nil).
 		Times(1)
-
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, opts.Run())
 }
 
 func TestAuthorizeBuilder(t *testing.T) {

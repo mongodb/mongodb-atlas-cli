@@ -22,11 +22,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range .Results}}
@@ -37,7 +36,8 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.ProcessLister
+	CompactResponse bool
+	store           store.ProcessLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -55,24 +55,28 @@ func (opts *ListOpts) Run() error {
 		return err
 	}
 
+	if opts.CompactResponse {
+		return opts.PrintForCompactResultsResponse(r)
+	}
+
 	return opts.Print(r)
 }
 
 func (opts *ListOpts) newProcessesListParams() *atlasv2.ListAtlasProcessesApiParams {
-	listOpts := *opts.NewListOptions()
+	listOpts := opts.NewListOptions()
 	processesList := &atlasv2.ListAtlasProcessesApiParams{
 		GroupId: opts.ConfigProjectID(),
 	}
 	if listOpts.PageNum > 0 {
-		processesList.PageNum = pointer.Get(listOpts.PageNum)
+		processesList.PageNum = &listOpts.PageNum
 	}
 	if listOpts.ItemsPerPage > 0 {
-		processesList.ItemsPerPage = pointer.Get(listOpts.ItemsPerPage)
+		processesList.ItemsPerPage = &listOpts.ItemsPerPage
 	}
 	return processesList
 }
 
-// ListBuilder mongocli atlas process(es) list --projectId projectId [--page N] [--limit N].
+// ListBuilder atlas process(es) list --projectId projectId [--page N] [--limit N].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
@@ -100,6 +104,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().BoolVarP(&opts.CompactResponse, flag.CompactResponse, flag.CompactResponseShort, false, usage.CompactResponse)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd

@@ -76,7 +76,7 @@ func ListBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run()
 		},
-		Deprecated: "Please use mongocli atlas privateEndpoints aws list|ls [--projectId projectId]",
+		Deprecated: "Please use atlas privateEndpoints aws list|ls [--projectId projectId]",
 	}
 
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)

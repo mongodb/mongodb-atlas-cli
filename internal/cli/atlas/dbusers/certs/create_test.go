@@ -21,14 +21,13 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/stretchr/testify/require"
 )
 
 func TestCreateBuilder(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDBUserCertificateCreator(ctrl)
-
-	var expected = &atlasv2.UserCert{}
 
 	username := "to_create"
 	monthsUntilExpiry := 12
@@ -42,10 +41,12 @@ func TestCreateBuilder(t *testing.T) {
 	mockStore.
 		EXPECT().
 		CreateDBUserCertificate(createOpts.ProjectID, username, monthsUntilExpiry).
-		Return(expected, nil).
+		Return("", nil).
 		Times(1)
 
-	if err := createOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, createOpts.Run())
+}
+
+func TestTemplate(t *testing.T) {
+	test.VerifyOutputTemplate(t, createTemplate, "")
 }

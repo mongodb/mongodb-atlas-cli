@@ -132,18 +132,18 @@ func ApplyBuilder() *cobra.Command {
 		Use:     use,
 		Args:    require.NoArgs,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Apply Kubernetes configuration resources to a cluster.",
-		Long:    `This command provides your Kubernetes configuration access to Atlas. You can export and apply Atlas Operator resources for Atlas objects, including Projects, Deployments, and Users into your Kubernetes cluster.`,
+		Short:   "Generate and apply Kubernetes configuration resources for use with Atlas Kubernetes Operator.",
+		Long:    `This command exports configurations for Atlas objects including projects, deployments, and users directly into Kubernetes, allowing you to manage these resources using the Atlas Kubernetes Operator. For more information, see https://www.mongodb.com/docs/atlas/atlas-operator/.`,
 		Example: `# Export and apply all supported resources of a specific project:
   atlas kubernetes config apply --projectId=<projectId>
 
   # Export and apply all supported resources of a specific project and to a specific namespace:
-  atlas kubernetes config apply --projectId=<projectId> --includeSecrets --targetNamespace=<namespace>
+  atlas kubernetes config apply --projectId=<projectId> --targetNamespace=<namespace>
   
   # Export and apply all supported Project resource, and only the described Deployment resources of a specific project to a specific namespace:
-  atlas kubernetes config apply --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --includeSecrets --targetNamespace=<namespace>
+  atlas kubernetes config apply --projectId=<projectId> --clusterName=<cluster-name-1, cluster-name-2> --targetNamespace=<namespace>
 
-  #Export and apply all supported resources of a specific project to a specific namespace restricting the version of the Atlas Kubernetes Operator:
+  # Export and apply all supported resources of a specific project to a specific namespace restricting the version of the Atlas Kubernetes Operator:
   atlas kubernetes config apply --projectId=<projectId> --targetNamespace=<namespace> --operatorVersion=1.5.1`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

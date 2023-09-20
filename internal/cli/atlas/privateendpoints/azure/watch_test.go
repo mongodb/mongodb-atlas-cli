@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestWatch_Run(t *testing.T) {
@@ -36,7 +36,7 @@ func TestWatch_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &atlasv2.AzurePrivateLinkConnection{Status: pointer.Get("AVAILABLE")}
+	expected := &atlasv2.EndpointService{CloudProvider: "AZURE", Status: pointer.Get("AVAILABLE")}
 
 	mockStore.
 		EXPECT().

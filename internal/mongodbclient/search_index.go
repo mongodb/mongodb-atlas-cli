@@ -34,9 +34,10 @@ const (
 var ErrSearchIndexNotFound = errors.New("search Index not found")
 
 type SearchIndex interface {
-	CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) error
+	CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error)
 	SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error)
 	SearchIndexes(ctx context.Context, coll string) ([]*admin.ClusterSearchIndex, error)
+	SearchIndexByName(ctx context.Context, name string, collection string) (*admin.ClusterSearchIndex, error)
 }
 
 type SearchIndexDefinition struct {
@@ -50,9 +51,9 @@ type SearchIndexDefinition struct {
 	Mappings   *admin.ApiAtlasFTSMappings             `bson:"mappings,omitempty"`
 }
 
-func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) error {
+func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
 	// todo: CLOUDP-199915 Use go-driver search index management helpers instead of createSearchIndex command
-	return o.db.RunCommand(ctx, bson.D{
+	index := bson.D{
 		{
 			Key:   "createSearchIndexes",
 			Value: collection,
@@ -78,7 +79,13 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 				},
 			},
 		},
-	}).Err()
+	}
+
+	if result := o.db.RunCommand(ctx, index); result.Err() != nil {
+		return nil, result.Err()
+	}
+
+	return o.SearchIndexByName(ctx, idx.Name, collection)
 }
 
 func (o *database) SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error) {
@@ -109,6 +116,21 @@ func (o *database) SearchIndex(ctx context.Context, id string) (*admin.ClusterSe
 	}
 
 	return nil, fmt.Errorf("index `%s` not found: %w", id, ErrSearchIndexNotFound)
+}
+
+func (o *database) SearchIndexByName(ctx context.Context, name string, collection string) (*admin.ClusterSearchIndex, error) {
+	indexes, err := o.SearchIndexes(ctx, collection)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, index := range indexes {
+		if index.Name == name && index.Database == o.db.Name() {
+			return index, nil
+		}
+	}
+
+	return nil, ErrSearchIndexNotFound
 }
 
 func (o *database) SearchIndexes(ctx context.Context, coll string) ([]*admin.ClusterSearchIndex, error) {

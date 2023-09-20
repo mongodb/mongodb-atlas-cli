@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -58,6 +59,7 @@ func (opts *ConnectOpts) Run(ctx context.Context) error {
 		return err
 	}
 
+	telemetry.AppendOption(telemetry.WithDeploymentType(localCluster)) // always local
 	if opts.DeploymentName != "" {
 		if err := opts.DeploymentOpts.CheckIfDeploymentExists(ctx); err != nil {
 			return err
@@ -105,9 +107,10 @@ func (opts *ConnectOpts) Run(ctx context.Context) error {
 func ConnectBuilder() *cobra.Command {
 	opts := &ConnectOpts{}
 	cmd := &cobra.Command{
-		Use:   "connect [deploymentName]",
-		Short: "Connect to a deployment.",
-		Args:  require.MaximumNArgs(1),
+		Use:     "connect [deploymentName]",
+		Short:   "Connect to a deployment.",
+		Args:    require.MaximumNArgs(1),
+		GroupID: "local",
 		Annotations: map[string]string{
 			"deploymentNameDesc": "Name of the deployment that you want to connect to.",
 		},

@@ -12,7 +12,7 @@ atlas deployments search indexes delete
    :depth: 1
    :class: singlecol
 
-Delete the specified search index from the specified cluster.
+Delete the specified search index from the specified deployment.
 
 Syntax
 ------
@@ -54,7 +54,7 @@ Options
    * - --deploymentName
      - string
      - false
-     - Name of the cluster.
+     - Name of the deployment.
    * - --force
      - 
      - false

@@ -16,6 +16,7 @@ package indexes
 
 import (
 	"context"
+	"errors"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -38,9 +39,11 @@ import (
 const (
 	namePattern        = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	connectWaitSeconds = 10
-	createTemplate     = "Search index created\n"
+	createTemplate     = "Search index created with ID: {{.IndexID}}\n"
 	notFoundState      = "NOT_FOUND"
 )
+
+var ErrSearchIndexDuplicated = errors.New("search index is duplicated")
 
 type CreateOpts struct {
 	cli.WatchOpts
@@ -78,7 +81,16 @@ func (opts *CreateOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.mongodbClient.Database(opts.index.Database).CreateSearchIndex(ctx, opts.index.CollectionName, opts.index)
+	db := opts.mongodbClient.Database(opts.index.Database)
+	if idx, _ := db.SearchIndexByName(ctx, opts.index.Name, opts.index.CollectionName); idx != nil {
+		return ErrSearchIndexDuplicated
+	}
+
+	opts.index, err = db.CreateSearchIndex(ctx, opts.index.CollectionName, opts.index)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (opts *CreateOpts) initMongoDBClient(ctx context.Context) func() error {
@@ -131,7 +143,7 @@ func (opts *CreateOpts) watch(ctx context.Context) (bool, error) {
 
 func (opts *CreateOpts) PostRun(ctx context.Context) error {
 	if !opts.EnableWatch {
-		return opts.Print(nil)
+		return opts.Print(opts.index)
 	}
 
 	if err := opts.Watch(func() (bool, error) {
@@ -140,7 +152,10 @@ func (opts *CreateOpts) PostRun(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(nil)
+	if err := opts.Print(opts.index); err != nil {
+		return err
+	}
+	return opts.PostRunMessages()
 }
 
 func (opts *CreateOpts) validateAndPrompt(ctx context.Context) error {
@@ -197,15 +212,17 @@ func CreateBuilder() *cobra.Command {
 	}
 
 	cmd := &cobra.Command{
-		Use:   "create [indexName]",
-		Short: "Create a search index for the specified deployment.",
-		Args:  require.MaximumNArgs(1),
+		Use:     "create [indexName]",
+		Short:   "Create a search index for the specified deployment.",
+		Args:    require.MaximumNArgs(1),
+		GroupID: "local",
 		Annotations: map[string]string{
 			"indexNameDesc": "Name of the index.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			w := cmd.OutOrStdout()
 			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
+			opts.WatchOpts.OutWriter = w
 			return opts.PreRunE(
 				opts.InitOutput(w, createTemplate),
 				opts.InitStore(opts.PodmanClient),

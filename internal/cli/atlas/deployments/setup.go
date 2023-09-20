@@ -69,15 +69,15 @@ const (
 )
 
 var (
-	errCancel                       = errors.New("setup cancelled")
-	errMustBeInt                    = errors.New("input must be an integer")
-	errPortOutOfRange               = errors.New("port must within the range 1..65535")
-	errPortNotAvailable             = errors.New("port not available")
-	errFlagTypeRequired             = errors.New("flag --type is required when --force is set")
-	errInvalidDeploymentType        = errors.New("invalid deployment type")
-	errInvalidMongoDBVersion        = errors.New("invalid mongodb version")
-	errUnsupportedConnectWith       = errors.New("flag --connectWith unsupported")
-	errDeploymentTypeNotImplemented = errors.New("deployment type not implemented")
+	errCancel                       = errors.New("the setup was cancelled")
+	errMustBeInt                    = errors.New("you must specify an integer")
+	errPortOutOfRange               = errors.New("you must specify a port within the range 1..65535")
+	errPortNotAvailable             = errors.New("the port is unavailable")
+	errFlagTypeRequired             = errors.New("the --type flag is required when the --force flag is set")
+	errInvalidDeploymentType        = errors.New("the deployment type is invalid")
+	errInvalidMongoDBVersion        = errors.New("the mongodb version is invalid")
+	errUnsupportedConnectWith       = errors.New("the --connectWith flag is unsupported")
+	errDeploymentTypeNotImplemented = errors.New("the deployment type is not implemented")
 	deploymentTypeOptions           = []string{localCluster, atlasCluster}
 	deploymentTypeDescription       = map[string]string{
 		localCluster: "Local Database",
@@ -153,7 +153,7 @@ func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, current
 		}
 	}
 
-	if mongotImages, err = opts.podmanClient.ListImages(ctx, opts.MongodDockerImageName()); err != nil {
+	if mongotImages, err = opts.podmanClient.ListImages(ctx, options.MongotDockerImageName); err != nil {
 		return err
 	}
 
@@ -440,7 +440,7 @@ func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Con
 
 func (opts *SetupOpts) promptSettings() error {
 	p := &survey.Select{
-		Message: "How do you want to setup your local MongoDB database?",
+		Message: "How do you want to set up your local MongoDB database?",
 		Options: settingOptions,
 		Default: opts.settings,
 		Description: func(value string, index int) string {
@@ -457,7 +457,7 @@ func (opts *SetupOpts) generateDeploymentName() {
 
 func (opts *SetupOpts) promptDeploymentName() error {
 	p := &survey.Input{
-		Message: "Cluster Name [This can't be changed later]",
+		Message: "Deployment Name [This can't be changed later]",
 		Default: opts.DeploymentName,
 	}
 
@@ -472,7 +472,7 @@ func (opts *SetupOpts) promptMdbVersion() error {
 		Message: "Major MongoDB Version",
 		Options: mdbVersions,
 		Default: opts.MdbVersion,
-		Help:    "Major MongoDB Version of the cluster. Will pick the latest minor version available.",
+		Help:    "Major MongoDB Version of the deployment. Will pick the latest minor version available.",
 	}
 
 	return telemetry.TrackAskOne(p, &opts.MdbVersion, nil)
@@ -692,7 +692,7 @@ func (opts *SetupOpts) validateAndPrompt() error {
 	if ok {
 		templatewriter.Print(os.Stderr, `
 [Default Settings]
-Cluster Name	{{.DeploymentName}}
+Deployment Name	{{.DeploymentName}}
 MongoDB Version	{{.MdbVersion}}
 Port	{{.Port}}
 
@@ -732,7 +732,7 @@ func (opts *SetupOpts) RunLocal(ctx context.Context) error {
 
 	cs := fmt.Sprintf("mongodb://localhost:%d/?directConnection=true", opts.Port)
 
-	_, _ = log.Warningln("Cluster created!")
+	_, _ = log.Warningln("Deployment created!")
 	_, _ = fmt.Fprintf(opts.OutWriter, "Connection string: %s\n", cs)
 	_, _ = log.Warningln("")
 
@@ -781,7 +781,8 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	if opts.DeploymentType == localCluster {
+	telemetry.AppendOption(telemetry.WithDeploymentType(opts.DeploymentType))
+	if strings.EqualFold(localCluster, opts.DeploymentType) {
 		return opts.RunLocal(ctx)
 	}
 
@@ -795,9 +796,10 @@ func SetupBuilder() *cobra.Command {
 		atlasSetup: &setup.Opts{},
 	}
 	cmd := &cobra.Command{
-		Use:   "setup [deploymentName]",
-		Short: "Create a local deployment.",
-		Args:  require.MaximumNArgs(1),
+		Use:     "setup [deploymentName]",
+		Short:   "Create a local deployment.",
+		Args:    require.MaximumNArgs(1),
+		GroupID: "all",
 		Annotations: map[string]string{
 			"deploymentNameDesc": "Name of the deployment that you want to set up.",
 		},
@@ -821,7 +823,7 @@ func SetupBuilder() *cobra.Command {
 
 	// Local and Atlas
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
-	cmd.Flags().StringVar(&opts.MdbVersion, flag.MDBVersion, "", usage.MDBVersion)
+	cmd.Flags().StringVar(&opts.MdbVersion, flag.MDBVersion, "", usage.DeploymentMDBVersion)
 	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWith)
 
 	// Local only
@@ -830,6 +832,10 @@ func SetupBuilder() *cobra.Command {
 	// Atlas only
 	opts.atlasSetup.SetupAtlasFlags(cmd)
 	opts.atlasSetup.SetupFlowFlags(cmd)
+	cmd.Flags().Lookup(flag.Region).Usage = usage.DeploymentRegion
+	cmd.Flags().Lookup(flag.Tag).Usage = usage.DeploymentTag
+	cmd.Flags().Lookup(flag.SkipSampleData).Usage = usage.SkipSampleDataDeployment
+	cmd.Flags().Lookup(flag.Force).Usage = usage.ForceDeploymentsSetup
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.MDBVersion, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return mdbVersions, cobra.ShellCompDirectiveDefault

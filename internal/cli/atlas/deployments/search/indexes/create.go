@@ -16,6 +16,7 @@ package indexes
 
 import (
 	"context"
+	"errors"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -41,6 +42,8 @@ const (
 	createTemplate     = "Search index created with ID: {{.IndexID}}\n"
 	notFoundState      = "NOT_FOUND"
 )
+
+var ErrSearchIndexDuplicated = errors.New("search index is duplicated")
 
 type CreateOpts struct {
 	cli.WatchOpts
@@ -78,7 +81,12 @@ func (opts *CreateOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	opts.index, err = opts.mongodbClient.Database(opts.index.Database).CreateSearchIndex(ctx, opts.index.CollectionName, opts.index)
+	db := opts.mongodbClient.Database(opts.index.Database)
+	if _, err = db.SearchIndexByName(ctx, opts.index.Name, opts.index.CollectionName); err != mongodbclient.ErrSearchIndexNotFound {
+		return ErrSearchIndexDuplicated
+	}
+
+	opts.index, err = db.CreateSearchIndex(ctx, opts.index.CollectionName, opts.index)
 	if err != nil {
 		return err
 	}

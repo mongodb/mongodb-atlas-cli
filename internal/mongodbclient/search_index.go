@@ -37,6 +37,7 @@ type SearchIndex interface {
 	CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error)
 	SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error)
 	SearchIndexes(ctx context.Context, coll string) ([]*admin.ClusterSearchIndex, error)
+	SearchIndexByName(ctx context.Context, name string, collection string) (*admin.ClusterSearchIndex, error)
 }
 
 type SearchIndexDefinition struct {
@@ -84,18 +85,7 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 		return nil, result.Err()
 	}
 
-	indexes, err := o.SearchIndexes(ctx, collection)
-	if err != nil {
-		return nil, err
-	}
-
-	for index := range indexes {
-		if indexes[index].Name == idx.Name && indexes[index].Database == o.db.Name() {
-			return indexes[index], nil
-		}
-	}
-
-	return nil, ErrSearchIndexNotFound
+	return o.SearchIndexByName(ctx, idx.Name, collection)
 }
 
 func (o *database) SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error) {
@@ -126,6 +116,21 @@ func (o *database) SearchIndex(ctx context.Context, id string) (*admin.ClusterSe
 	}
 
 	return nil, fmt.Errorf("index `%s` not found: %w", id, ErrSearchIndexNotFound)
+}
+
+func (o *database) SearchIndexByName(ctx context.Context, name string, collection string) (*admin.ClusterSearchIndex, error) {
+	indexes, err := o.SearchIndexes(ctx, collection)
+	if err != nil {
+		return nil, err
+	}
+
+	for index := range indexes {
+		if indexes[index].Name == name && indexes[index].Database == o.db.Name() {
+			return indexes[index], nil
+		}
+	}
+
+	return nil, ErrSearchIndexNotFound
 }
 
 func (o *database) SearchIndexes(ctx context.Context, coll string) ([]*admin.ClusterSearchIndex, error) {

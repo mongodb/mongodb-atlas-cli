@@ -162,40 +162,6 @@ test   LOCAL   7.0.1     IDLE
 		t.Log(ids)
 	})
 
-	t.Run("Pause Deployment", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			deploymentEntity,
-			"pause",
-			deploymentName,
-			"--debug",
-		)
-
-		cmd.Env = os.Environ()
-
-		r, err := cmd.CombinedOutput()
-		out := string(r)
-		req.NoError(err, out)
-		a := assert.New(t)
-		a.Contains(out, fmt.Sprintf("Pausing deployment '%s'", deploymentName))
-	})
-
-	t.Run("Start Deployment", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			deploymentEntity,
-			"start",
-			deploymentName,
-			"--debug",
-		)
-
-		cmd.Env = os.Environ()
-
-		r, err := cmd.CombinedOutput()
-		out := string(r)
-		req.NoError(err, out)
-		a := assert.New(t)
-		a.Contains(out, fmt.Sprintf("Starting deployment '%s'", deploymentName))
-	})
-	
 	t.Run("Create Search Index", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
@@ -308,5 +274,38 @@ test   LOCAL   7.0.1     IDLE
 		a := assert.New(t)
 		a.Contains(o.String(), fmt.Sprintf("Index '%s' deleted", indexID))
 	})
+	
+	t.Run("Pause Deployment", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			"pause",
+			deploymentName,
+			"--debug",
+		)
 
+		cmd.Env = os.Environ()
+
+		r, err := cmd.CombinedOutput()
+		out := string(r)
+		req.NoError(err, out)
+		a := assert.New(t)
+		a.Contains(out, fmt.Sprintf("Pausing deployment '%s'", deploymentName))
+	})
+
+	t.Run("Start Deployment", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			"start",
+			deploymentName,
+			"--debug",
+		)
+
+		cmd.Env = os.Environ()
+
+		r, err := cmd.CombinedOutput()
+		out := string(r)
+		req.NoError(err, out)
+		a := assert.New(t)
+		a.Contains(out, fmt.Sprintf("Starting deployment '%s'", deploymentName))
+	})
 }

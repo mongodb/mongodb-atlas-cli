@@ -118,7 +118,7 @@ Options
    * - --tier
      - string
      - false
-     - Tier for each data-bearing server in the cluster. To learn more about cluster tiers, see https://dochub.mongodb.org/core/cluster-tier-atlas. This value defaults to "M0".
+     - Tier for each data-bearing server in the deployment. To learn more about cluster tiers, see https://dochub.mongodb.org/core/cluster-tier-atlas. This value defaults to "M0".
    * - --type
      - string
      - false

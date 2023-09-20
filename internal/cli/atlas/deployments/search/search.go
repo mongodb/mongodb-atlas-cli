@@ -23,7 +23,7 @@ func Builder() *cobra.Command {
 	const use = "search"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   "Manage search for Atlas and local deployments.",
+		Short:   "Manage search for cloud and local deployments.",
 		GroupID: "all",
 	}
 

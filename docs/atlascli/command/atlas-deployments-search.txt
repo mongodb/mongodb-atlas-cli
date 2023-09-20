@@ -12,7 +12,7 @@ atlas deployments search
    :depth: 1
    :class: singlecol
 
-Manage search for Atlas and local deployments.
+Manage search for cloud and local deployments.
 
 Options
 -------

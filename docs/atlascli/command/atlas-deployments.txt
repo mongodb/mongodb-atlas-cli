@@ -52,7 +52,7 @@ Related Commands
 * :ref:`atlas-deployments-connect` - Connect to a deployment.
 * :ref:`atlas-deployments-delete` - Delete a deployment.
 * :ref:`atlas-deployments-list` - Return all deployments.
-* :ref:`atlas-deployments-search` - Manage search for Atlas and local deployments.
+* :ref:`atlas-deployments-search` - Manage search for cloud and local deployments.
 * :ref:`atlas-deployments-setup` - Create a local deployment.
 
 

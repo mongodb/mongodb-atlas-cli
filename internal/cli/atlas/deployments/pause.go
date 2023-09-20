@@ -16,7 +16,9 @@ package deployments
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -89,6 +91,8 @@ func (opts *PauseOpts) RunLocal(ctx context.Context) error {
 
 func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.Deployment) error {
 	if deployment.StateName == options.IdleState {
+		res2B, _ := json.Marshal(deployment)
+		fmt.Println(string(res2B))
 		if _, err := opts.PodmanClient.StopContainers(ctx, deployment.MongoTContainer.ID); err != nil {
 			return err
 		}

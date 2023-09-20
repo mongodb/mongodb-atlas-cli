@@ -16,9 +16,7 @@ package deployments
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -74,7 +72,7 @@ func (opts *PauseOpts) RunLocal(ctx context.Context) error {
 	}
 
 	if deployment, ok := localDeployments[opts.DeploymentName]; ok {
-		if err := opts.pauseContainer(ctx, deployment); err != nil {
+		if err = opts.pauseContainer(ctx, deployment); err != nil {
 			return err
 		}
 
@@ -83,26 +81,12 @@ func (opts *PauseOpts) RunLocal(ctx context.Context) error {
 				Name: &opts.DeploymentName,
 			})
 	}
-	//for _, deployment := range localDeployments {
-	//	if deployment.Name == opts.DeploymentName {
-	//		if err := opts.pauseContainer(ctx, deployment); err != nil {
-	//			return err
-	//		}
-	//
-	//		return opts.Print(
-	//			admin.AdvancedClusterDescription{
-	//				Name: &opts.DeploymentName,
-	//			})
-	//	}
-	//}
 
 	return options.ErrDeploymentNotFound
 }
 
 func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.Deployment) error {
 	if deployment.StateName == options.IdleState {
-		res2B, _ := json.Marshal(deployment)
-		fmt.Println(string(res2B))
 		if _, err := opts.PodmanClient.StopContainers(ctx, deployment.MongoTContainer.ID); err != nil {
 			return err
 		}

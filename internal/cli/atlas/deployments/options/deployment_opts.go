@@ -16,7 +16,6 @@ package options
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"regexp"
@@ -248,31 +247,5 @@ func (opts *DeploymentOpts) GetLocalDeploymentsWithContainers(ctx context.Contex
 		}
 	}
 
-	print("\nANDREA\n")
-	res2B, _ := json.Marshal(deployments)
-	fmt.Println(string(res2B))
-	print("\n\n")
 	return deployments, nil
 }
-
-//func (opts *DeploymentOpts) GetLocalDeploymentsWithContainers(ctx context.Context) ([]Deployment, error) {
-//	deployments, err := opts.GetLocalDeployments(ctx)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	mdtContainers, err := opts.PodmanClient.ListContainers(ctx, "")
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	sort.Slice(mdtContainers, func(i, j int) bool {
-//		return mdtContainers[i].Names[0] < mdtContainers[j].Names[0]
-//	})
-//
-//	for i, c := range mdtContainers {
-//		deployments[i].MongoTContainer = c
-//	}
-//
-//	return deployments, nil
-//}

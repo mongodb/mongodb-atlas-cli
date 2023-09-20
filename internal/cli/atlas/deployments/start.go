@@ -71,17 +71,15 @@ func (opts *StartOpts) RunLocal(ctx context.Context) error {
 		return err
 	}
 
-	for _, deployment := range localDeployments {
-		if deployment.Name == opts.DeploymentName {
-			if err := opts.startContainer(ctx, deployment); err != nil {
-				return err
-			}
-
-			return opts.Print(
-				admin.AdvancedClusterDescription{
-					Name: &opts.DeploymentName,
-				})
+	if deployment, ok := localDeployments[opts.DeploymentName]; ok {
+		if err = opts.startContainer(ctx, deployment); err != nil {
+			return err
 		}
+
+		return opts.Print(
+			admin.AdvancedClusterDescription{
+				Name: &opts.DeploymentName,
+			})
 	}
 
 	return options.ErrDeploymentNotFound

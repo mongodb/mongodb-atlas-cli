@@ -167,7 +167,7 @@ func TestPause_RunAtlas(t *testing.T) {
 
 	mockPodman.
 		EXPECT().
-		ListContainers(ctx, options.MongodHostnamePrefix).
+		ListContainers(ctx, options.MongotHostnamePrefix).
 		Return(expectedLocalDeployments, options.ErrDeploymentNotFound).
 		Times(1)
 

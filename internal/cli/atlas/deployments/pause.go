@@ -17,6 +17,7 @@ package deployments
 import (
 	"context"
 	"errors"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -57,12 +58,11 @@ func (opts *PauseOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	err := opts.RunLocal(ctx)
-	if err != nil && errors.Is(err, options.ErrDeploymentNotFound) {
-		return opts.RunAtlas()
+	if strings.ToLower(opts.DeploymentType) == options.LocalCluster {
+		return opts.RunLocal(ctx)
 	}
 
-	return err
+	return opts.RunAtlas()
 }
 
 func (opts *PauseOpts) RunLocal(ctx context.Context) error {
@@ -117,6 +117,12 @@ func (opts *PauseOpts) validateAndPrompt(ctx context.Context) error {
 		}
 	}
 
+	if opts.DeploymentType == "" {
+		if err := opts.PromptDeploymentType(); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -153,6 +159,7 @@ func PauseBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 
 	return cmd
 }

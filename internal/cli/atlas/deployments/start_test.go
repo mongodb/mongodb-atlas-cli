@@ -65,6 +65,7 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 			PodmanClient:   mockPodman,
 			CredStore:      mockCredentialsGetter,
 			DeploymentName: deploymentName,
+			DeploymentType: "LOCAL",
 		},
 		GlobalOpts: cli.GlobalOpts{
 			ProjectID: projectID,
@@ -138,6 +139,7 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 			PodmanClient:   mockPodman,
 			CredStore:      mockCredentialsGetter,
 			DeploymentName: deploymentName,
+			DeploymentType: "LOCAL",
 		},
 		GlobalOpts: cli.GlobalOpts{
 			ProjectID: projectID,
@@ -211,6 +213,7 @@ func TestStart_RunAtlas(t *testing.T) {
 			PodmanClient:   mockPodman,
 			CredStore:      mockCredentialsGetter,
 			DeploymentName: deploymentName,
+			DeploymentType: "ATLAS",
 		},
 		GlobalOpts: cli.GlobalOpts{
 			ProjectID: projectID,
@@ -225,13 +228,13 @@ func TestStart_RunAtlas(t *testing.T) {
 		EXPECT().
 		Ready(ctx).
 		Return(nil).
-		Times(1)
+		Times(0)
 
 	mockPodman.
 		EXPECT().
 		ListContainers(ctx, options.MongotHostnamePrefix).
 		Return(expectedLocalDeployments, options.ErrDeploymentNotFound).
-		Times(1)
+		Times(0)
 
 	mockStore.
 		EXPECT().
@@ -255,6 +258,6 @@ func TestStartBuilder(t *testing.T) {
 		t,
 		StartBuilder(),
 		0,
-		[]string{flag.ProjectID},
+		[]string{flag.ProjectID, flag.TypeFlag},
 	)
 }

@@ -23,12 +23,15 @@ import (
 	"strings"
 	"time"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 )
 
 const (
@@ -44,10 +47,18 @@ const (
 	IdleState             = "IDLE"
 	DeletingState         = "DELETING"
 	RestartingState       = "RESTARTING"
+	LocalCluster          = "local"
+	AtlasCluster          = "atlas"
 )
 
 var (
-	errInvalidDeploymentName = errors.New("invalid cluster name")
+	errInvalidDeploymentName        = errors.New("invalid cluster name")
+	errDeploymentTypeNotImplemented = errors.New("deployment type not implemented")
+	DeploymentTypeOptions           = []string{LocalCluster, AtlasCluster}
+	deploymentTypeDescription       = map[string]string{
+		LocalCluster: "Local Database",
+		AtlasCluster: "Atlas Database",
+	}
 )
 
 var localStateMap = map[string]string{
@@ -248,4 +259,26 @@ func (opts *DeploymentOpts) GetLocalDeploymentsWithContainers(ctx context.Contex
 	}
 
 	return deployments, nil
+}
+
+func (opts *DeploymentOpts) PromptDeploymentType() error {
+	p := &survey.Select{
+		Message: "What would you like to deploy?",
+		Options: DeploymentTypeOptions,
+		Help:    usage.DeploymentType,
+		Description: func(value string, index int) string {
+			return deploymentTypeDescription[value]
+		},
+	}
+
+	err := telemetry.TrackAskOne(p, &opts.DeploymentType, nil)
+	if err != nil {
+		return err
+	}
+
+	if !strings.EqualFold(opts.DeploymentType, AtlasCluster) && !strings.EqualFold(opts.DeploymentType, LocalCluster) {
+		return fmt.Errorf("%w: %s", errDeploymentTypeNotImplemented, deploymentTypeDescription[opts.DeploymentType])
+	}
+
+	return nil
 }

@@ -280,6 +280,7 @@ test   LOCAL   7.0.1     IDLE
 			deploymentEntity,
 			"pause",
 			deploymentName,
+			"--type=LOCAL",
 			"--debug",
 		)
 
@@ -297,6 +298,7 @@ test   LOCAL   7.0.1     IDLE
 			deploymentEntity,
 			"start",
 			deploymentName,
+			"--type=LOCAL",
 			"--debug",
 		)
 

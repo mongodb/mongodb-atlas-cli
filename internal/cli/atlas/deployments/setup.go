@@ -69,22 +69,16 @@ const (
 )
 
 var (
-	errCancel                       = errors.New("setup cancelled")
-	errMustBeInt                    = errors.New("input must be an integer")
-	errPortOutOfRange               = errors.New("port must within the range 1..65535")
-	errPortNotAvailable             = errors.New("port not available")
-	errFlagTypeRequired             = errors.New("flag --type is required when --force is set")
-	errInvalidDeploymentType        = errors.New("invalid deployment type")
-	errInvalidMongoDBVersion        = errors.New("invalid mongodb version")
-	errUnsupportedConnectWith       = errors.New("flag --connectWith unsupported")
-	errDeploymentTypeNotImplemented = errors.New("deployment type not implemented")
-	deploymentTypeOptions           = []string{localCluster, atlasCluster}
-	deploymentTypeDescription       = map[string]string{
-		localCluster: "Local Database",
-		atlasCluster: "Atlas Database",
-	}
-	settingOptions      = []string{defaultSettings, customSettings, cancelSettings}
-	settingsDescription = map[string]string{
+	errCancel                 = errors.New("setup cancelled")
+	errMustBeInt              = errors.New("input must be an integer")
+	errPortOutOfRange         = errors.New("port must within the range 1..65535")
+	errPortNotAvailable       = errors.New("port not available")
+	errFlagTypeRequired       = errors.New("flag --type is required when --force is set")
+	errInvalidDeploymentType  = errors.New("invalid deployment type")
+	errInvalidMongoDBVersion  = errors.New("invalid mongodb version")
+	errUnsupportedConnectWith = errors.New("flag --connectWith unsupported")
+	settingOptions            = []string{defaultSettings, customSettings, cancelSettings}
+	settingsDescription       = map[string]string{
 		defaultSettings: "With default settings",
 		customSettings:  "With custom settings",
 		cancelSettings:  "Cancel set up",
@@ -582,28 +576,6 @@ func (opts *SetupOpts) validateFlags() error {
 	return nil
 }
 
-func (opts *SetupOpts) promptDeploymentType() error {
-	p := &survey.Select{
-		Message: "What would you like to deploy?",
-		Options: deploymentTypeOptions,
-		Help:    usage.DeploymentType,
-		Description: func(value string, index int) string {
-			return deploymentTypeDescription[value]
-		},
-	}
-
-	err := telemetry.TrackAskOne(p, &opts.DeploymentType, nil)
-	if err != nil {
-		return err
-	}
-
-	if !strings.EqualFold(opts.DeploymentType, atlasCluster) && !strings.EqualFold(opts.DeploymentType, localCluster) {
-		return fmt.Errorf("%w: %s", errDeploymentTypeNotImplemented, deploymentTypeDescription[opts.DeploymentType])
-	}
-
-	return nil
-}
-
 func (opts *SetupOpts) setDefaultSettings() (ok bool, err error) {
 	opts.settings = defaultSettings
 
@@ -675,7 +647,7 @@ func (opts *SetupOpts) validateAndPrompt() error {
 	}
 
 	if opts.DeploymentType == "" {
-		if err := opts.promptDeploymentType(); err != nil {
+		if err := opts.PromptDeploymentType(); err != nil {
 			return err
 		}
 	}
@@ -837,7 +809,7 @@ func SetupBuilder() *cobra.Command {
 		return mdbVersions, cobra.ShellCompDirectiveDefault
 	})
 	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return deploymentTypeOptions, cobra.ShellCompDirectiveDefault
+		return options.DeploymentTypeOptions, cobra.ShellCompDirectiveDefault
 	})
 	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return connectWithOptions, cobra.ShellCompDirectiveDefault

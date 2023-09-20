@@ -51,20 +51,25 @@ func (opts *DeleteOpts) Run() error {
 // atlas streams connection delete <connectionName> [--projectId projectId].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("'%s' deleted\n", "Not deleted"),
+		DeleteOpts: cli.NewDeleteOpts("Atlas Stream Processing connection '%s' deleted\n", "Atlas Stream Processing connection not deleted"),
 	}
 	cmd := &cobra.Command{
 		Use:   "delete <connectionName>",
 		Short: "Remove the specified Atlas Stream Processing connection from your project.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Args:  require.ExactArgs(1),
+		Long: `The command prompts you to confirm the operation when you run the command without the --force option.
+
+Before deleting an Atlas Streams Processing connection, you must first stop all processes associated with it. ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"connectionNameDesc": "Name of the connection",
 			"output":             opts.SuccessMessage(),
 		},
-		Example: `# deletes connection 'ExampleConnection' from instance 'ExampleInstance':
-  atlas streams connection delete ExampleConnection --instance ExampleInstance
-`,
+		Example: fmt.Sprintf(`# deletes connection 'ExampleConnection' from instance 'ExampleInstance':
+  %[1]s streams connection delete ExampleConnection --instance ExampleInstance
+
+# deletes connection 'ExampleConnection' from instance 'ExampleInstance' without requiring confirmation:
+  %[1]s streams connection delete ExampleConnection --instance ExampleInstance --force
+`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(
 				opts.ValidateProjectID,

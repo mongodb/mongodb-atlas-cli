@@ -14,7 +14,9 @@ atlas streams connections delete
 
 Remove the specified Atlas Stream Processing connection from your project.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+The command prompts you to confirm the operation when you run the command without the --force option.
+
+Before deleting an Atlas Streams Processing connection, you must first stop all processes associated with it. To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------
@@ -93,7 +95,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   '<Name>' deleted
+   Atlas Stream Processing connection '<Name>' deleted
    
 
 Examples
@@ -103,4 +105,10 @@ Examples
 
    # deletes connection 'ExampleConnection' from instance 'ExampleInstance':
    atlas streams connection delete ExampleConnection --instance ExampleInstance
+
+
+.. code-block::
+
+   # deletes connection 'ExampleConnection' from instance 'ExampleInstance' without requiring confirmation:
+   atlas streams connection delete ExampleConnection --instance ExampleInstance --force
 

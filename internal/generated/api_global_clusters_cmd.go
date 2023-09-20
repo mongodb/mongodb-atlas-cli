@@ -18,21 +18,29 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
 	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type createCustomZoneMappingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createCustomZoneMappingOpts) initClient() func() error {
@@ -43,64 +51,89 @@ func (opts *createCustomZoneMappingOpts) initClient() func() error {
 	}
 }
 
-func (opts *createCustomZoneMappingOpts) Run(ctx context.Context) error {
+func (opts *createCustomZoneMappingOpts) readData() (*admin.GeoSharding, error) {
+	var out *admin.GeoSharding
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createCustomZoneMappingOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateCustomZoneMappingApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		
+
+		GeoSharding: data,
 	}
 	resp, _, err := opts.client.GlobalClustersApi.CreateCustomZoneMappingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createCustomZoneMappingBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createCustomZoneMappingOpts{}
+	opts := createCustomZoneMappingOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "createCustomZoneMapping",
+		Use:   "createCustomZoneMapping",
 		Short: "Add One Entry to One Custom Zone Mapping",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
-	
 
-	cmd.Flags().Map[string]stringVar(&opts.customZoneMapping, "customZoneMapping", , `List that contains comma-separated key value pairs to map zones to geographic regions. These pairs map an ISO 3166-1a2 location code, with an ISO 3166-2 subdivision code when possible, to a unique 24-hexadecimal string that identifies the custom zone.
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-This parameter returns an empty object if no custom zones exist.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.managedNamespaces, "managedNamespaces", nil, `List that contains a namespace for a Global Cluster. MongoDB Cloud manages this cluster.`)
-
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
+
 type createManagedNamespaceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createManagedNamespaceOpts) initClient() func() error {
@@ -111,70 +144,95 @@ func (opts *createManagedNamespaceOpts) initClient() func() error {
 	}
 }
 
-func (opts *createManagedNamespaceOpts) Run(ctx context.Context) error {
+func (opts *createManagedNamespaceOpts) readData() (*admin.ManagedNamespace, error) {
+	var out *admin.ManagedNamespace
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createManagedNamespaceOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateManagedNamespaceApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		
+
+		ManagedNamespace: data,
 	}
 	resp, _, err := opts.client.GlobalClustersApi.CreateManagedNamespaceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createManagedNamespaceBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createManagedNamespaceOpts{}
+	opts := createManagedNamespaceOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "createManagedNamespace",
+		Use:   "createManagedNamespace",
 		Short: "Create One Managed Namespace in One Global Multi-Cloud Cluster",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
-	
 
-	cmd.Flags().StringVar(&opts.collection, "collection", "", `Human-readable label of the collection to manage for this Global Cluster.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.customShardKey, "customShardKey", "", `Database parameter used to divide the *collection* into shards. Global clusters require a compound shard key. This compound shard key combines the location parameter and the user-selected custom key.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.db, "db", "", `Human-readable label of the database to manage for this Global Cluster.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.isCustomShardKeyHashed, "isCustomShardKeyHashed", false, `Flag that indicates whether someone hashed the custom shard key. If this parameter returns &#x60;false&#x60;, this cluster uses ranged sharding.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.isShardKeyUnique, "isShardKeyUnique", false, `Flag that indicates whether the underlying index enforces unique values.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().Int64Var(&opts.numInitialChunks, "numInitialChunks", 00, `Minimum number of chunks to create initially when sharding an empty collection with a hashed shard key.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.presplitHashedZones, "presplitHashedZones", false, `Flag that indicates whether MongoDB Cloud should create and distribute initial chunks for an empty or non-existing collection. MongoDB Cloud distributes data based on the defined zones and zone ranges for the collection.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
+
 type deleteAllCustomZoneMappingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
 }
 
@@ -186,9 +244,9 @@ func (opts *deleteAllCustomZoneMappingsOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteAllCustomZoneMappingsOpts) Run(ctx context.Context) error {
+func (opts *deleteAllCustomZoneMappingsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteAllCustomZoneMappingsApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
 	resp, _, err := opts.client.GlobalClustersApi.DeleteAllCustomZoneMappingsWithParams(ctx, params).Execute()
@@ -196,27 +254,21 @@ func (opts *deleteAllCustomZoneMappingsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteAllCustomZoneMappingsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteAllCustomZoneMappingsOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteAllCustomZoneMappings",
+		Use:   "deleteAllCustomZoneMappings",
 		Short: "Remove All Custom Zone Mappings from One Global Multi-Cloud Cluster",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -224,19 +276,22 @@ func deleteAllCustomZoneMappingsBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
+
 type deleteManagedNamespaceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client      *admin.APIClient
 	clusterName string
-	groupId string
-	db string
-	collection string
+	groupId     string
+	db          string
+	collection  string
 }
 
 func (opts *deleteManagedNamespaceOpts) initClient() func() error {
@@ -247,39 +302,33 @@ func (opts *deleteManagedNamespaceOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteManagedNamespaceOpts) Run(ctx context.Context) error {
+func (opts *deleteManagedNamespaceOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteManagedNamespaceApiParams{
 		ClusterName: opts.clusterName,
-		GroupId: opts.groupId,
-		Db: &opts.db,
-		Collection: &opts.collection,
+		GroupId:     opts.groupId,
+		Db:          &opts.db,
+		Collection:  &opts.collection,
 	}
 	resp, _, err := opts.client.GlobalClustersApi.DeleteManagedNamespaceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteManagedNamespaceBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteManagedNamespaceOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteManagedNamespace",
+		Use:   "deleteManagedNamespace",
 		Short: "Remove One Managed Namespace from One Global Multi-Cloud Cluster",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
@@ -289,16 +338,19 @@ func deleteManagedNamespaceBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.db, "db", "", `Human-readable label that identifies the database that contains the collection.`)
 	cmd.Flags().StringVar(&opts.collection, "collection", "", `Human-readable label that identifies the collection associated with the managed namespace.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
+
 type getManagedNamespaceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
 }
 
@@ -310,9 +362,9 @@ func (opts *getManagedNamespaceOpts) initClient() func() error {
 	}
 }
 
-func (opts *getManagedNamespaceOpts) Run(ctx context.Context) error {
+func (opts *getManagedNamespaceOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetManagedNamespaceApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
 	resp, _, err := opts.client.GlobalClustersApi.GetManagedNamespaceWithParams(ctx, params).Execute()
@@ -320,27 +372,21 @@ func (opts *getManagedNamespaceOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getManagedNamespaceBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getManagedNamespaceOpts{}
 	cmd := &cobra.Command{
-		Use: "getManagedNamespace",
+		Use:   "getManagedNamespace",
 		Short: "Return One Managed Namespace in One Global Multi-Cloud Cluster",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -348,6 +394,8 @@ func getManagedNamespaceBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
@@ -356,8 +404,8 @@ func getManagedNamespaceBuilder() *cobra.Command {
 
 func globalClustersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "globalClusters",
-		Short:   `Returns, adds, and removes Global Cluster managed namespaces and custom zone mappings. Each collection in a Global Cluster is associated with a managed namespace. When you create a managed namespace for a Global Cluster, MongoDB Cloud creates an empty collection for that namespace. Creating a managed namespace doesn&#39;t populate a collection with data. Similarly, deleting a managed namespace doesn&#39;t delete the associated collection.
+		Use: "globalClusters",
+		Short: `Returns, adds, and removes Global Cluster managed namespaces and custom zone mappings. Each collection in a Global Cluster is associated with a managed namespace. When you create a managed namespace for a Global Cluster, MongoDB Cloud creates an empty collection for that namespace. Creating a managed namespace doesn&#39;t populate a collection with data. Similarly, deleting a managed namespace doesn&#39;t delete the associated collection.
 MongoDB Cloud shards the empty collection using the required location field and a custom shard key. For example, if your custom shard key is &#x60;city&#x60;, the compound shard key is &#x60;location, city&#x60;. Each Global Cluster is also associated with one or more Global Writes Zones. When a user creates a Global Cluster, MongoDB Cloud automatically maps each location code to the closest geographical zone. Custom zone mappings allow administrators to override these automatic mappings. For example, a use case might require mapping a location code to a geographically distant zone. Administrators can manage custom zone mappings with the APIs below and the **Global Cluster Configuration** pane when you create or modify your Global Cluster.`,
 	}
 	cmd.AddCommand(
@@ -369,4 +417,3 @@ MongoDB Cloud shards the empty collection using the required location field and 
 	)
 	return cmd
 }
-

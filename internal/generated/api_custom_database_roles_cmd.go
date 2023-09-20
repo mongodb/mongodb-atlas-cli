@@ -18,8 +18,16 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -29,6 +37,9 @@ type createCustomDatabaseRoleOpts struct {
 	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createCustomDatabaseRoleOpts) initClient() func() error {
@@ -39,47 +50,74 @@ func (opts *createCustomDatabaseRoleOpts) initClient() func() error {
 	}
 }
 
-func (opts *createCustomDatabaseRoleOpts) Run(ctx context.Context) error {
+func (opts *createCustomDatabaseRoleOpts) readData() (*admin.CustomDBRole, error) {
+	var out *admin.CustomDBRole
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createCustomDatabaseRoleOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateCustomDatabaseRoleApiParams{
 		GroupId: opts.groupId,
+
+		CustomDBRole: data,
 	}
 	resp, _, err := opts.client.CustomDatabaseRolesApi.CreateCustomDatabaseRoleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createCustomDatabaseRoleBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createCustomDatabaseRoleOpts{}
+	opts := createCustomDatabaseRoleOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "createCustomDatabaseRole",
 		Short: "Create One Custom Role",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
-	cmd.Flags().ArraySliceVar(&opts.actions, "actions", nil, `List of the individual privilege actions that the role grants.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().SetSliceVar(&opts.inheritedRoles, "inheritedRoles", nil, `List of the built-in roles that this custom role inherits.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.roleName, "roleName", "", `Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -101,7 +139,7 @@ func (opts *deleteCustomDatabaseRoleOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteCustomDatabaseRoleOpts) Run(ctx context.Context) error {
+func (opts *deleteCustomDatabaseRoleOpts) Run(ctx context.Context, _ io.Writer) error {
 	params := &admin.DeleteCustomDatabaseRoleApiParams{
 		GroupId:  opts.groupId,
 		RoleName: opts.roleName,
@@ -111,33 +149,30 @@ func (opts *deleteCustomDatabaseRoleOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(nil)
+	return nil
 }
 
 func deleteCustomDatabaseRoleBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteCustomDatabaseRoleOpts{}
 	cmd := &cobra.Command{
 		Use:   "deleteCustomDatabaseRole",
 		Short: "Remove One Custom Role from One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.roleName, "roleName", "", `Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleName")
@@ -160,7 +195,7 @@ func (opts *getCustomDatabaseRoleOpts) initClient() func() error {
 	}
 }
 
-func (opts *getCustomDatabaseRoleOpts) Run(ctx context.Context) error {
+func (opts *getCustomDatabaseRoleOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetCustomDatabaseRoleApiParams{
 		GroupId:  opts.groupId,
 		RoleName: opts.roleName,
@@ -170,33 +205,30 @@ func (opts *getCustomDatabaseRoleOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getCustomDatabaseRoleBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getCustomDatabaseRoleOpts{}
 	cmd := &cobra.Command{
 		Use:   "getCustomDatabaseRole",
 		Short: "Return One Custom Role in One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.roleName, "roleName", "", `Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleName")
@@ -218,7 +250,7 @@ func (opts *listCustomDatabaseRolesOpts) initClient() func() error {
 	}
 }
 
-func (opts *listCustomDatabaseRolesOpts) Run(ctx context.Context) error {
+func (opts *listCustomDatabaseRolesOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListCustomDatabaseRolesApiParams{
 		GroupId: opts.groupId,
 	}
@@ -227,32 +259,29 @@ func (opts *listCustomDatabaseRolesOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listCustomDatabaseRolesBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listCustomDatabaseRolesOpts{}
 	cmd := &cobra.Command{
 		Use:   "listCustomDatabaseRoles",
 		Short: "Return All Custom Roles in One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -264,6 +293,9 @@ type updateCustomDatabaseRoleOpts struct {
 	client   *admin.APIClient
 	groupId  string
 	roleName string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateCustomDatabaseRoleOpts) initClient() func() error {
@@ -274,37 +306,61 @@ func (opts *updateCustomDatabaseRoleOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateCustomDatabaseRoleOpts) Run(ctx context.Context) error {
+func (opts *updateCustomDatabaseRoleOpts) readData() (*admin.UpdateCustomDBRole, error) {
+	var out *admin.UpdateCustomDBRole
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateCustomDatabaseRoleOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateCustomDatabaseRoleApiParams{
 		GroupId:  opts.groupId,
 		RoleName: opts.roleName,
+
+		UpdateCustomDBRole: data,
 	}
 	resp, _, err := opts.client.CustomDatabaseRolesApi.UpdateCustomDatabaseRoleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateCustomDatabaseRoleBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateCustomDatabaseRoleOpts{}
+	opts := updateCustomDatabaseRoleOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "updateCustomDatabaseRole",
 		Short: "Update One Custom Role in One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -312,9 +368,12 @@ func updateCustomDatabaseRoleBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.roleName, "roleName", "", `Human-readable label that identifies the role for the request. This name must beunique for this custom role in this project.`)
 
-	cmd.Flags().ArraySliceVar(&opts.actions, "actions", nil, `List of the individual privilege actions that the role grants.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().SetSliceVar(&opts.inheritedRoles, "inheritedRoles", nil, `List of the built-in roles that this custom role inherits.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleName")

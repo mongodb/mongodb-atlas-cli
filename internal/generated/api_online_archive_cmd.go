@@ -18,21 +18,29 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
 	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type createOnlineArchiveOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createOnlineArchiveOpts) initClient() func() error {
@@ -43,91 +51,104 @@ func (opts *createOnlineArchiveOpts) initClient() func() error {
 	}
 }
 
-func (opts *createOnlineArchiveOpts) Run(ctx context.Context) error {
+func (opts *createOnlineArchiveOpts) readData() (*admin.OnlineArchive, error) {
+	var out *admin.OnlineArchive
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createOnlineArchiveOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateOnlineArchiveApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		
+
+		OnlineArchive: data,
 	}
 	resp, _, err := opts.client.OnlineArchiveApi.CreateOnlineArchiveWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createOnlineArchiveBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createOnlineArchiveOpts{}
+	opts := createOnlineArchiveOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "createOnlineArchive",
+		Use:   "createOnlineArchive",
 		Short: "Create One Online Archive",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster that contains the collection for which you want to create one online archive.`)
-	
 
-	cmd.Flags().StringVar(&opts._id, "_id", "", `Unique 24-hexadecimal digit string that identifies the online archive.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster that contains the collection for which you want to create an online archive.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.collName, "collName", "", `Human-readable label that identifies the collection for which you created the online archive.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.collectionType, "collectionType", "&quot;STANDARD&quot;", `Classification of MongoDB database collection that you want to return.
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-If you set this parameter to &#x60;TIMESERIES&#x60;, set &#x60;&quot;criteria.type&quot; : &quot;date&quot;&#x60; and &#x60;&quot;criteria.dateFormat&quot; : &quot;ISODATE&quot;&#x60;.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().CriteriaVar(&opts.criteria, "criteria", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.dbName, "dbName", "", `Human-readable label of the database that contains the collection that contains the online archive.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies the project that contains the specified cluster. The specified cluster contains the collection for which to create the online archive.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.partitionFields, "partitionFields", nil, `List that contains document parameters to use to logically divide data within a collection. Partitions provide a coarse level of filtering of the underlying collection data. To divide your data, specify up to two parameters that you frequently query. Any queries that don&#39;t use these parameters result in a full collection scan of all archived documents. This takes more time and increase your costs.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.paused, "paused", false, `Flag that indicates whether this online archive exists in the paused state. A request to resume fails if the collection has another active online archive. To pause an active online archive or resume a paused online archive, you must include this parameter. To pause an active archive, set this to **true**. To resume a paused archive, set this to **false**.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().OnlineArchiveScheduleVar(&opts.schedule, "schedule", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.state, "state", "", `Phase of the process to create this online archive when you made this request.
-
-| State       | Indication |
-|-------------|------------|
-| &#x60;PENDING&#x60;   | MongoDB Cloud has queued documents for archive. Archiving hasn&#39;t started. |
-| &#x60;ARCHIVING&#x60; | MongoDB Cloud started archiving documents that meet the archival criteria. |
-| &#x60;IDLE&#x60;      | MongoDB Cloud waits to start the next archival job. |
-| &#x60;PAUSING&#x60;   | Someone chose to stop archiving. MongoDB Cloud finishes the running archival job then changes the state to &#x60;PAUSED&#x60; when that job completes. |
-| &#x60;PAUSED&#x60;    | MongoDB Cloud has stopped archiving. Archived documents can be queried. The specified archiving operation on the active cluster cannot archive additional documents. You can resume archiving for paused archives at any time. |
-| &#x60;ORPHANED&#x60;  | Someone has deleted the collection associated with an active or paused archive. MongoDB Cloud doesn&#39;t delete the archived data. You must manually delete the online archives associated with the deleted collection. |
-| &#x60;DELETED&#x60;   | Someone has deleted the archive was deleted. When someone deletes an online archive, MongoDB Cloud removes all associated archived documents from the cloud object storage. |`)
-
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
+
 type deleteOnlineArchiveOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	archiveId string
+	client      *admin.APIClient
+	groupId     string
+	archiveId   string
 	clusterName string
 }
 
@@ -139,10 +160,10 @@ func (opts *deleteOnlineArchiveOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteOnlineArchiveOpts) Run(ctx context.Context) error {
+func (opts *deleteOnlineArchiveOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteOnlineArchiveApiParams{
-		GroupId: opts.groupId,
-		ArchiveId: opts.archiveId,
+		GroupId:     opts.groupId,
+		ArchiveId:   opts.archiveId,
 		ClusterName: opts.clusterName,
 	}
 	resp, _, err := opts.client.OnlineArchiveApi.DeleteOnlineArchiveWithParams(ctx, params).Execute()
@@ -150,27 +171,21 @@ func (opts *deleteOnlineArchiveOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteOnlineArchiveBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteOnlineArchiveOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteOnlineArchive",
+		Use:   "deleteOnlineArchive",
 		Short: "Remove One Online Archive",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -179,20 +194,23 @@ func deleteOnlineArchiveBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.archiveId, "archiveId", "", `Unique 24-hexadecimal digit string that identifies the online archive to delete.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster that contains the collection from which you want to remove an online archive.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("archiveId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
+
 type downloadOnlineArchiveQueryLogsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	startDate int64
-	endDate int64
+	startDate   int64
+	endDate     int64
 	archiveOnly bool
 }
 
@@ -204,12 +222,12 @@ func (opts *downloadOnlineArchiveQueryLogsOpts) initClient() func() error {
 	}
 }
 
-func (opts *downloadOnlineArchiveQueryLogsOpts) Run(ctx context.Context) error {
+func (opts *downloadOnlineArchiveQueryLogsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DownloadOnlineArchiveQueryLogsApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		StartDate: &opts.startDate,
-		EndDate: &opts.endDate,
+		StartDate:   &opts.startDate,
+		EndDate:     &opts.endDate,
 		ArchiveOnly: &opts.archiveOnly,
 	}
 	resp, _, err := opts.client.OnlineArchiveApi.DownloadOnlineArchiveQueryLogsWithParams(ctx, params).Execute()
@@ -217,27 +235,21 @@ func (opts *downloadOnlineArchiveQueryLogsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func downloadOnlineArchiveQueryLogsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := downloadOnlineArchiveQueryLogsOpts{}
 	cmd := &cobra.Command{
-		Use: "downloadOnlineArchiveQueryLogs",
+		Use:   "downloadOnlineArchiveQueryLogs",
 		Short: "Download Online Archive Query Logs",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -248,17 +260,20 @@ func downloadOnlineArchiveQueryLogsBuilder() *cobra.Command {
 	cmd.Flags().Int64Var(&opts.endDate, "endDate", 0, `Date and time that specifies the end point for the range of log messages to return. This resource expresses this value in the number of seconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).`)
 	cmd.Flags().BoolVar(&opts.archiveOnly, "archiveOnly", false, `Flag that indicates whether to download logs for queries against your online archive only or both your online archive and cluster.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
+
 type getOnlineArchiveOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	archiveId string
+	client      *admin.APIClient
+	groupId     string
+	archiveId   string
 	clusterName string
 }
 
@@ -270,10 +285,10 @@ func (opts *getOnlineArchiveOpts) initClient() func() error {
 	}
 }
 
-func (opts *getOnlineArchiveOpts) Run(ctx context.Context) error {
+func (opts *getOnlineArchiveOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetOnlineArchiveApiParams{
-		GroupId: opts.groupId,
-		ArchiveId: opts.archiveId,
+		GroupId:     opts.groupId,
+		ArchiveId:   opts.archiveId,
 		ClusterName: opts.clusterName,
 	}
 	resp, _, err := opts.client.OnlineArchiveApi.GetOnlineArchiveWithParams(ctx, params).Execute()
@@ -281,27 +296,21 @@ func (opts *getOnlineArchiveOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getOnlineArchiveBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getOnlineArchiveOpts{}
 	cmd := &cobra.Command{
-		Use: "getOnlineArchive",
+		Use:   "getOnlineArchive",
 		Short: "Return One Online Archive",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -310,21 +319,24 @@ func getOnlineArchiveBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.archiveId, "archiveId", "", `Unique 24-hexadecimal digit string that identifies the online archive to return.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster that contains the specified collection from which Application created the online archive.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("archiveId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
+
 type listOnlineArchivesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	clusterName string
+	client       *admin.APIClient
+	groupId      string
+	clusterName  string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
 func (opts *listOnlineArchivesOpts) initClient() func() error {
@@ -335,40 +347,34 @@ func (opts *listOnlineArchivesOpts) initClient() func() error {
 	}
 }
 
-func (opts *listOnlineArchivesOpts) Run(ctx context.Context) error {
+func (opts *listOnlineArchivesOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListOnlineArchivesApiParams{
-		GroupId: opts.groupId,
-		ClusterName: opts.clusterName,
+		GroupId:      opts.groupId,
+		ClusterName:  opts.clusterName,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.OnlineArchiveApi.ListOnlineArchivesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listOnlineArchivesBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listOnlineArchivesOpts{}
 	cmd := &cobra.Command{
-		Use: "listOnlineArchives",
+		Use:   "listOnlineArchives",
 		Short: "Return All Online Archives for One Cluster",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -379,19 +385,24 @@ func listOnlineArchivesBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
+
 type updateOnlineArchiveOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	archiveId string
+	client      *admin.APIClient
+	groupId     string
+	archiveId   string
 	clusterName string
-	
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateOnlineArchiveOpts) initClient() func() error {
@@ -402,39 +413,62 @@ func (opts *updateOnlineArchiveOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateOnlineArchiveOpts) Run(ctx context.Context) error {
+func (opts *updateOnlineArchiveOpts) readData() (*admin.OnlineArchive, error) {
+	var out *admin.OnlineArchive
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateOnlineArchiveOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateOnlineArchiveApiParams{
-		GroupId: opts.groupId,
-		ArchiveId: opts.archiveId,
+		GroupId:     opts.groupId,
+		ArchiveId:   opts.archiveId,
 		ClusterName: opts.clusterName,
-		
+
+		OnlineArchive: data,
 	}
 	resp, _, err := opts.client.OnlineArchiveApi.UpdateOnlineArchiveWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateOnlineArchiveBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateOnlineArchiveOpts{}
+	opts := updateOnlineArchiveOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "updateOnlineArchive",
+		Use:   "updateOnlineArchive",
 		Short: "Update One Online Archive",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -442,42 +476,31 @@ func updateOnlineArchiveBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.archiveId, "archiveId", "", `Unique 24-hexadecimal digit string that identifies the online archive to update.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster that contains the specified collection from which Application created the online archive.`)
-	
 
-	cmd.Flags().StringVar(&opts._id, "_id", "", `Unique 24-hexadecimal digit string that identifies the online archive.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster that contains the collection for which you want to create an online archive.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.collName, "collName", "", `Human-readable label that identifies the collection for which you created the online archive.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.collectionType, "collectionType", "&quot;STANDARD&quot;", `Classification of MongoDB database collection that you want to return.
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-If you set this parameter to &#x60;TIMESERIES&#x60;, set &#x60;&quot;criteria.type&quot; : &quot;date&quot;&#x60; and &#x60;&quot;criteria.dateFormat&quot; : &quot;ISODATE&quot;&#x60;.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().CriteriaVar(&opts.criteria, "criteria", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.dbName, "dbName", "", `Human-readable label of the database that contains the collection that contains the online archive.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies the project that contains the specified cluster. The specified cluster contains the collection for which to create the online archive.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.partitionFields, "partitionFields", nil, `List that contains document parameters to use to logically divide data within a collection. Partitions provide a coarse level of filtering of the underlying collection data. To divide your data, specify up to two parameters that you frequently query. Any queries that don&#39;t use these parameters result in a full collection scan of all archived documents. This takes more time and increase your costs.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.paused, "paused", false, `Flag that indicates whether this online archive exists in the paused state. A request to resume fails if the collection has another active online archive. To pause an active online archive or resume a paused online archive, you must include this parameter. To pause an active archive, set this to **true**. To resume a paused archive, set this to **false**.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().OnlineArchiveScheduleVar(&opts.schedule, "schedule", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.state, "state", "", `Phase of the process to create this online archive when you made this request.
-
-| State       | Indication |
-|-------------|------------|
-| &#x60;PENDING&#x60;   | MongoDB Cloud has queued documents for archive. Archiving hasn&#39;t started. |
-| &#x60;ARCHIVING&#x60; | MongoDB Cloud started archiving documents that meet the archival criteria. |
-| &#x60;IDLE&#x60;      | MongoDB Cloud waits to start the next archival job. |
-| &#x60;PAUSING&#x60;   | Someone chose to stop archiving. MongoDB Cloud finishes the running archival job then changes the state to &#x60;PAUSED&#x60; when that job completes. |
-| &#x60;PAUSED&#x60;    | MongoDB Cloud has stopped archiving. Archived documents can be queried. The specified archiving operation on the active cluster cannot archive additional documents. You can resume archiving for paused archives at any time. |
-| &#x60;ORPHANED&#x60;  | Someone has deleted the collection associated with an active or paused archive. MongoDB Cloud doesn&#39;t delete the archived data. You must manually delete the online archives associated with the deleted collection. |
-| &#x60;DELETED&#x60;   | Someone has deleted the archive was deleted. When someone deletes an online archive, MongoDB Cloud removes all associated archived documents from the cloud object storage. |`)
-
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("archiveId")
@@ -487,8 +510,8 @@ If you set this parameter to &#x60;TIMESERIES&#x60;, set &#x60;&quot;criteria.ty
 
 func onlineArchiveBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "onlineArchive",
-		Short:   `Returns, adds, edits, or removes an online archive.`,
+		Use:   "onlineArchive",
+		Short: `Returns, adds, edits, or removes an online archive.`,
 	}
 	cmd.AddCommand(
 		createOnlineArchiveBuilder(),
@@ -500,4 +523,3 @@ func onlineArchiveBuilder() *cobra.Command {
 	)
 	return cmd
 }
-

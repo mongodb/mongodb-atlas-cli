@@ -18,8 +18,16 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -29,6 +37,9 @@ type createDatabaseUserOpts struct {
 	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createDatabaseUserOpts) initClient() func() error {
@@ -39,81 +50,92 @@ func (opts *createDatabaseUserOpts) initClient() func() error {
 	}
 }
 
-func (opts *createDatabaseUserOpts) Run(ctx context.Context) error {
+func (opts *createDatabaseUserOpts) readData() (*admin.DatabaseUser, error) {
+	var out *admin.DatabaseUser
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createDatabaseUserOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateDatabaseUserApiParams{
 		GroupId: opts.groupId,
+
+		DatabaseUser: data,
 	}
 	resp, _, err := opts.client.DatabaseUsersApi.CreateDatabaseUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createDatabaseUserBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createDatabaseUserOpts{}
+	opts := createDatabaseUserOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "createDatabaseUser",
 		Short: "Create One Database User in One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
-	cmd.Flags().StringVar(&opts.awsIAMType, "awsIAMType", "&quot;NONE&quot;", `Human-readable label that indicates whether the new database user authenticates with the Amazon Web Services (AWS) Identity and Access Management (IAM) credentials associated with the user or the user&#39;s role.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "&quot;admin&quot;", `Database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.deleteAfterDate, "deleteAfterDate", "", `Date and time when MongoDB Cloud deletes the user. This parameter expresses its value in the ISO 8601 timestamp format in UTC and can include the time zone designation. You must specify a future date that falls within one week of making the Application Programming Interface (API) request.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies the project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.labels, "labels", nil, `List that contains the key-value pairs for tagging and categorizing the MongoDB database user. The labels that you define do not appear in the console.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.ldapAuthType, "ldapAuthType", "&quot;NONE&quot;", `Part of the Lightweight Directory Access Protocol (LDAP) record that the database uses to authenticate this database user on the LDAP host.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.password, "password", "", `Alphanumeric string that authenticates this database user against the database specified in &#x60;databaseName&#x60;. To authenticate with SCRAM-SHA, you must specify this parameter. This parameter doesn&#39;t appear in this response.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.roles, "roles", nil, `List that provides the pairings of one role with one applicable database.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.scopes, "scopes", nil, `List that contains clusters and MongoDB Atlas Data Lakes that this database user can access. If omitted, MongoDB Cloud grants the database user access to all the clusters and MongoDB Atlas Data Lakes in the project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.username, "username", "", `Human-readable label that represents the user that authenticates to MongoDB. The format of this label depends on the method of authentication:
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-| Authentication Method | Parameter Needed | Parameter Value | username Format |
-|---|---|---|---|
-| AWS IAM | awsType | ROLE | &lt;abbr title&#x3D;&quot;Amazon Resource Name&quot;&gt;ARN&lt;/abbr&gt; |
-| AWS IAM | awsType | USER | &lt;abbr title&#x3D;&quot;Amazon Resource Name&quot;&gt;ARN&lt;/abbr&gt; |
-| x.509 | x509Type | CUSTOMER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| x.509 | x509Type | MANAGED | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| LDAP | ldapAuthType | USER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| SCRAM-SHA | awsType, x509Type, ldapAuthType | NONE | Alphanumeric string |
-`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.x509Type, "x509Type", "&quot;NONE&quot;", `X.509 method that MongoDB Cloud uses to authenticate the database user.
-
-- For application-managed X.509, specify &#x60;MANAGED&#x60;.
-- For self-managed X.509, specify &#x60;CUSTOMER&#x60;.
-
-Users created with the &#x60;CUSTOMER&#x60; method require a Common Name (CN) in the **username** parameter. You must create externally authenticated users on the &#x60;$external&#x60; database.`)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -136,7 +158,7 @@ func (opts *deleteDatabaseUserOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteDatabaseUserOpts) Run(ctx context.Context) error {
+func (opts *deleteDatabaseUserOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteDatabaseUserApiParams{
 		GroupId:      opts.groupId,
 		DatabaseName: opts.databaseName,
@@ -147,27 +169,21 @@ func (opts *deleteDatabaseUserOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteDatabaseUserBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteDatabaseUserOpts{}
 	cmd := &cobra.Command{
 		Use:   "deleteDatabaseUser",
 		Short: "Remove One Database User from One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -186,6 +202,9 @@ func deleteDatabaseUserBuilder() *cobra.Command {
 | LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
 | SCRAM-SHA | awsType, x509Type, ldapAuthType | NONE | Alphanumeric string |
 `)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("databaseName")
@@ -210,7 +229,7 @@ func (opts *getDatabaseUserOpts) initClient() func() error {
 	}
 }
 
-func (opts *getDatabaseUserOpts) Run(ctx context.Context) error {
+func (opts *getDatabaseUserOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetDatabaseUserApiParams{
 		GroupId:      opts.groupId,
 		DatabaseName: opts.databaseName,
@@ -221,27 +240,21 @@ func (opts *getDatabaseUserOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getDatabaseUserBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getDatabaseUserOpts{}
 	cmd := &cobra.Command{
 		Use:   "getDatabaseUser",
 		Short: "Return One Database User from One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -260,6 +273,9 @@ func getDatabaseUserBuilder() *cobra.Command {
 | LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
 | SCRAM-SHA | awsType, x509Type, ldapAuthType | NONE | Alphanumeric string |
 `)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("databaseName")
@@ -285,7 +301,7 @@ func (opts *listDatabaseUsersOpts) initClient() func() error {
 	}
 }
 
-func (opts *listDatabaseUsersOpts) Run(ctx context.Context) error {
+func (opts *listDatabaseUsersOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListDatabaseUsersApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
@@ -297,27 +313,21 @@ func (opts *listDatabaseUsersOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listDatabaseUsersBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listDatabaseUsersOpts{}
 	cmd := &cobra.Command{
 		Use:   "listDatabaseUsers",
 		Short: "Return All Database Users from One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -326,6 +336,9 @@ func listDatabaseUsersBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -338,6 +351,9 @@ type updateDatabaseUserOpts struct {
 	groupId      string
 	databaseName string
 	username     string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateDatabaseUserOpts) initClient() func() error {
@@ -348,38 +364,62 @@ func (opts *updateDatabaseUserOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateDatabaseUserOpts) Run(ctx context.Context) error {
+func (opts *updateDatabaseUserOpts) readData() (*admin.DatabaseUser, error) {
+	var out *admin.DatabaseUser
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateDatabaseUserOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateDatabaseUserApiParams{
 		GroupId:      opts.groupId,
 		DatabaseName: opts.databaseName,
 		Username:     opts.username,
+
+		DatabaseUser: data,
 	}
 	resp, _, err := opts.client.DatabaseUsersApi.UpdateDatabaseUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateDatabaseUserBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateDatabaseUserOpts{}
+	opts := updateDatabaseUserOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "updateDatabaseUser",
 		Short: "Update One Database User in One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -399,45 +439,32 @@ func updateDatabaseUserBuilder() *cobra.Command {
 | SCRAM-SHA | awsType, x509Type, ldapAuthType | NONE | Alphanumeric string |
 `)
 
-	cmd.Flags().StringVar(&opts.awsIAMType, "awsIAMType", "&quot;NONE&quot;", `Human-readable label that indicates whether the new database user authenticates with the Amazon Web Services (AWS) Identity and Access Management (IAM) credentials associated with the user or the user&#39;s role.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "&quot;admin&quot;", `Database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.deleteAfterDate, "deleteAfterDate", "", `Date and time when MongoDB Cloud deletes the user. This parameter expresses its value in the ISO 8601 timestamp format in UTC and can include the time zone designation. You must specify a future date that falls within one week of making the Application Programming Interface (API) request.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies the project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.labels, "labels", nil, `List that contains the key-value pairs for tagging and categorizing the MongoDB database user. The labels that you define do not appear in the console.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.ldapAuthType, "ldapAuthType", "&quot;NONE&quot;", `Part of the Lightweight Directory Access Protocol (LDAP) record that the database uses to authenticate this database user on the LDAP host.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.password, "password", "", `Alphanumeric string that authenticates this database user against the database specified in &#x60;databaseName&#x60;. To authenticate with SCRAM-SHA, you must specify this parameter. This parameter doesn&#39;t appear in this response.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.roles, "roles", nil, `List that provides the pairings of one role with one applicable database.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.scopes, "scopes", nil, `List that contains clusters and MongoDB Atlas Data Lakes that this database user can access. If omitted, MongoDB Cloud grants the database user access to all the clusters and MongoDB Atlas Data Lakes in the project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.username, "username", "", `Human-readable label that represents the user that authenticates to MongoDB. The format of this label depends on the method of authentication:
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-| Authentication Method | Parameter Needed | Parameter Value | username Format |
-|---|---|---|---|
-| AWS IAM | awsType | ROLE | &lt;abbr title&#x3D;&quot;Amazon Resource Name&quot;&gt;ARN&lt;/abbr&gt; |
-| AWS IAM | awsType | USER | &lt;abbr title&#x3D;&quot;Amazon Resource Name&quot;&gt;ARN&lt;/abbr&gt; |
-| x.509 | x509Type | CUSTOMER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| x.509 | x509Type | MANAGED | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| LDAP | ldapAuthType | USER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| SCRAM-SHA | awsType, x509Type, ldapAuthType | NONE | Alphanumeric string |
-`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.x509Type, "x509Type", "&quot;NONE&quot;", `X.509 method that MongoDB Cloud uses to authenticate the database user.
-
-- For application-managed X.509, specify &#x60;MANAGED&#x60;.
-- For self-managed X.509, specify &#x60;CUSTOMER&#x60;.
-
-Users created with the &#x60;CUSTOMER&#x60; method require a Common Name (CN) in the **username** parameter. You must create externally authenticated users on the &#x60;$external&#x60; database.`)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("databaseName")

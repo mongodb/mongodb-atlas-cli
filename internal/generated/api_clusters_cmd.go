@@ -18,19 +18,25 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
 	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type getClusterAdvancedConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
 }
 
@@ -42,9 +48,9 @@ func (opts *getClusterAdvancedConfigurationOpts) initClient() func() error {
 	}
 }
 
-func (opts *getClusterAdvancedConfigurationOpts) Run(ctx context.Context) error {
+func (opts *getClusterAdvancedConfigurationOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetClusterAdvancedConfigurationApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
 	resp, _, err := opts.client.ClustersApi.GetClusterAdvancedConfigurationWithParams(ctx, params).Execute()
@@ -52,27 +58,21 @@ func (opts *getClusterAdvancedConfigurationOpts) Run(ctx context.Context) error 
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getClusterAdvancedConfigurationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getClusterAdvancedConfigurationOpts{}
 	cmd := &cobra.Command{
-		Use: "getClusterAdvancedConfiguration",
+		Use:   "getClusterAdvancedConfiguration",
 		Short: "Return One Advanced Configuration Options for One Cluster",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -80,16 +80,19 @@ func getClusterAdvancedConfigurationBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
+
 type getClusterStatusOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
 }
 
@@ -101,9 +104,9 @@ func (opts *getClusterStatusOpts) initClient() func() error {
 	}
 }
 
-func (opts *getClusterStatusOpts) Run(ctx context.Context) error {
+func (opts *getClusterStatusOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetClusterStatusApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
 	resp, _, err := opts.client.ClustersApi.GetClusterStatusWithParams(ctx, params).Execute()
@@ -111,27 +114,21 @@ func (opts *getClusterStatusOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getClusterStatusBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getClusterStatusOpts{}
 	cmd := &cobra.Command{
-		Use: "getClusterStatus",
+		Use:   "getClusterStatus",
 		Short: "Return Status of All Cluster Operations",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -139,16 +136,19 @@ func getClusterStatusBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
+
 type getSampleDatasetLoadStatusOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client          *admin.APIClient
+	groupId         string
 	sampleDatasetId string
 }
 
@@ -160,9 +160,9 @@ func (opts *getSampleDatasetLoadStatusOpts) initClient() func() error {
 	}
 }
 
-func (opts *getSampleDatasetLoadStatusOpts) Run(ctx context.Context) error {
+func (opts *getSampleDatasetLoadStatusOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetSampleDatasetLoadStatusApiParams{
-		GroupId: opts.groupId,
+		GroupId:         opts.groupId,
 		SampleDatasetId: opts.sampleDatasetId,
 	}
 	resp, _, err := opts.client.ClustersApi.GetSampleDatasetLoadStatusWithParams(ctx, params).Execute()
@@ -170,27 +170,21 @@ func (opts *getSampleDatasetLoadStatusOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getSampleDatasetLoadStatusBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getSampleDatasetLoadStatusOpts{}
 	cmd := &cobra.Command{
-		Use: "getSampleDatasetLoadStatus",
+		Use:   "getSampleDatasetLoadStatus",
 		Short: "Check Status of Cluster Sample Dataset Request",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -198,21 +192,24 @@ func getSampleDatasetLoadStatusBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.sampleDatasetId, "sampleDatasetId", "", `Unique 24-hexadecimal digit string that identifies the loaded sample dataset.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("sampleDatasetId")
 	return cmd
 }
+
 type listCloudProviderRegionsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
-	providers []string
-	tier string
+	pageNum      int
+	providers    []string
+	tier         string
 }
 
 func (opts *listCloudProviderRegionsOpts) initClient() func() error {
@@ -223,41 +220,35 @@ func (opts *listCloudProviderRegionsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listCloudProviderRegionsOpts) Run(ctx context.Context) error {
+func (opts *listCloudProviderRegionsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListCloudProviderRegionsApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
-		Providers: &opts.providers,
-		Tier: &opts.tier,
+		PageNum:      &opts.pageNum,
+		Providers:    &opts.providers,
+		Tier:         &opts.tier,
 	}
 	resp, _, err := opts.client.ClustersApi.ListCloudProviderRegionsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listCloudProviderRegionsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listCloudProviderRegionsOpts{}
 	cmd := &cobra.Command{
-		Use: "listCloudProviderRegions",
+		Use:   "listCloudProviderRegions",
 		Short: "Return All Cloud Provider Regions",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -269,17 +260,20 @@ func listCloudProviderRegionsBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.providers, "providers", nil, `Cloud providers whose regions to retrieve. When you specify multiple providers, the response can return only tiers and regions that support multi-cloud clusters.`)
 	cmd.Flags().StringVar(&opts.tier, "tier", "", `Cluster tier for which to retrieve the regions.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
+
 type listClustersForAllProjectsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client       *admin.APIClient
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
 func (opts *listClustersForAllProjectsOpts) initClient() func() error {
@@ -290,53 +284,50 @@ func (opts *listClustersForAllProjectsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listClustersForAllProjectsOpts) Run(ctx context.Context) error {
+func (opts *listClustersForAllProjectsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListClustersForAllProjectsApiParams{
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.ClustersApi.ListClustersForAllProjectsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listClustersForAllProjectsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listClustersForAllProjectsOpts{}
 	cmd := &cobra.Command{
-		Use: "listClustersForAllProjects",
+		Use:   "listClustersForAllProjects",
 		Short: "Return All Authorized Clusters in All Projects",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }
+
 type loadSampleDatasetOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	name string
+	name    string
 }
 
 func (opts *loadSampleDatasetOpts) initClient() func() error {
@@ -347,37 +338,31 @@ func (opts *loadSampleDatasetOpts) initClient() func() error {
 	}
 }
 
-func (opts *loadSampleDatasetOpts) Run(ctx context.Context) error {
+func (opts *loadSampleDatasetOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.LoadSampleDatasetApiParams{
 		GroupId: opts.groupId,
-		Name: opts.name,
+		Name:    opts.name,
 	}
 	resp, _, err := opts.client.ClustersApi.LoadSampleDatasetWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func loadSampleDatasetBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := loadSampleDatasetOpts{}
 	cmd := &cobra.Command{
-		Use: "loadSampleDataset",
+		Use:   "loadSampleDataset",
 		Short: "Load Sample Dataset Request into Cluster",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -385,18 +370,23 @@ func loadSampleDatasetBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the cluster into which you load the sample dataset.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
 	return cmd
 }
+
 type updateClusterAdvancedConfigurationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateClusterAdvancedConfigurationOpts) initClient() func() error {
@@ -407,81 +397,104 @@ func (opts *updateClusterAdvancedConfigurationOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateClusterAdvancedConfigurationOpts) Run(ctx context.Context) error {
+func (opts *updateClusterAdvancedConfigurationOpts) readData() (*admin.ClusterDescriptionProcessArgs, error) {
+	var out *admin.ClusterDescriptionProcessArgs
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateClusterAdvancedConfigurationOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateClusterAdvancedConfigurationApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		
+
+		ClusterDescriptionProcessArgs: data,
 	}
 	resp, _, err := opts.client.ClustersApi.UpdateClusterAdvancedConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateClusterAdvancedConfigurationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateClusterAdvancedConfigurationOpts{}
+	opts := updateClusterAdvancedConfigurationOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "updateClusterAdvancedConfiguration",
+		Use:   "updateClusterAdvancedConfiguration",
 		Short: "Update Advanced Configuration Options for One Cluster",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
-	
 
-	cmd.Flags().StringVar(&opts.defaultReadConcern, "defaultReadConcern", "&quot;available&quot;", `[Default level of acknowledgment requested from MongoDB for read operations](https://docs.mongodb.com/manual/reference/read-concern/) set for this cluster.
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-MongoDB 4.4 clusters default to &#x60;available&#x60;. MongoDB 5.0 and later clusters default to &#x60;local&#x60;.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.defaultWriteConcern, "defaultWriteConcern", "&quot;1&quot;", `[Default level of acknowledgment requested from MongoDB for write operations](https://docs.mongodb.com/manual/reference/write-concern/) set for this cluster.
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-MongoDB 4.4 clusters default to &#x60;1&#x60;. MongoDB 5.0 and later clusters default to &#x60;majority&#x60;.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.failIndexKeyTooLong, "failIndexKeyTooLong", true, `Flag that indicates whether you can insert or update documents where all indexed entries don&#39;t exceed 1024 bytes. If you set this to false, [mongod](https://docs.mongodb.com/upcoming/reference/program/mongod/#mongodb-binary-bin.mongod) writes documents that exceed this limit but doesn&#39;t index them.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.javascriptEnabled, "javascriptEnabled", true, `Flag that indicates whether the cluster allows execution of operations that perform server-side executions of JavaScript.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.minimumEnabledTlsProtocol, "minimumEnabledTlsProtocol", "", `Minimum Transport Layer Security (TLS) version that the cluster accepts for incoming connections. Clusters using TLS 1.0 or 1.1 should consider setting TLS 1.2 as the minimum TLS protocol version.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.noTableScan, "noTableScan", false, `Flag that indicates whether the cluster disables executing any query that requires a collection scan to return results.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().Float64Var(&opts.oplogMinRetentionHours, "oplogMinRetentionHours", 00, `Minimum retention window for cluster&#39;s oplog expressed in hours. A value of null indicates that the cluster uses the default minimum oplog window that MongoDB Cloud calculates.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().IntVar(&opts.oplogSizeMB, "oplogSizeMB", 000, `Storage limit of cluster&#39;s oplog expressed in megabytes. A value of null indicates that the cluster uses the default oplog size that MongoDB Cloud calculates.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().IntVar(&opts.sampleRefreshIntervalBIConnector, "sampleRefreshIntervalBIConnector", 0, `Interval in seconds at which the mongosqld process re-samples data to create its relational schema.`)
-
-	cmd.Flags().IntVar(&opts.sampleSizeBIConnector, "sampleSizeBIConnector", 1000, `Number of documents per database to sample when gathering schema information.`)
-
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
+
 type upgradeSharedClusterOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *upgradeSharedClusterOpts) initClient() func() error {
@@ -492,121 +505,145 @@ func (opts *upgradeSharedClusterOpts) initClient() func() error {
 	}
 }
 
-func (opts *upgradeSharedClusterOpts) Run(ctx context.Context) error {
+func (opts *upgradeSharedClusterOpts) readData() (*admin.LegacyClusterDescription, error) {
+	var out *admin.LegacyClusterDescription
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *upgradeSharedClusterOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpgradeSharedClusterApiParams{
 		GroupId: opts.groupId,
-		
+
+		LegacyClusterDescription: data,
 	}
 	resp, _, err := opts.client.ClustersApi.UpgradeSharedClusterWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func upgradeSharedClusterBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := upgradeSharedClusterOpts{}
+	opts := upgradeSharedClusterOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "upgradeSharedCluster",
+		Use:   "upgradeSharedCluster",
 		Short: "Upgrade One Shared-tier Cluster",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	
 
-	cmd.Flags().AutoScalingVar(&opts.autoScaling, "autoScaling", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.backupEnabled, "backupEnabled", false, `Flag that indicates whether the cluster can perform backups. If set to &#x60;true&#x60;, the cluster can perform backups. You must set this value to &#x60;true&#x60; for NVMe clusters. Backup uses Cloud Backups for dedicated clusters and Shared Cluster Backups for tenant clusters. If set to &#x60;false&#x60;, the cluster doesn&#39;t use MongoDB Cloud backups.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BiConnectorVar(&opts.biConnector, "biConnector", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.clusterType, "clusterType", "", `Configuration of nodes that comprise the cluster.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ClusterDescriptionConnectionStringsVar(&opts.connectionStrings, "connectionStrings", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.createDate, "createDate", "", `Date and time when MongoDB Cloud created this serverless instance. MongoDB Cloud represents this timestamp in ISO 8601 format in UTC.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().Float64Var(&opts.diskSizeGB, "diskSizeGB", 00, `Storage capacity that the host&#39;s root volume possesses expressed in gigabytes. Increase this number to add capacity. MongoDB Cloud requires this parameter if you set **replicationSpecs**. If you specify a disk size below the minimum (10 GB), this parameter defaults to the minimum disk size value. Storage charge calculations depend on whether you choose the default value or a custom value.  The maximum value for disk storage cannot exceed 50 times the maximum RAM for the selected cluster. If you require more storage space, consider upgrading your cluster to a higher tier.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.encryptionAtRestProvider, "encryptionAtRestProvider", "", `Cloud service provider that manages your customer keys to provide an additional layer of Encryption at Rest for the cluster.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal character string that identifies the project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the cluster.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.labels, "labels", nil, `Collection of key-value pairs between 1 to 255 characters in length that tag and categorize the cluster. The MongoDB Cloud console doesn&#39;t display your labels.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.mongoDBMajorVersion, "mongoDBMajorVersion", "&quot;6.0&quot;", `Major MongoDB version of the cluster. MongoDB Cloud deploys the cluster with the latest stable release of the specified version.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.mongoDBVersion, "mongoDBVersion", "", `Version of MongoDB that the cluster runs.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.mongoURI, "mongoURI", "", `Base connection string that you can use to connect to the cluster. MongoDB Cloud displays the string only after the cluster starts, not while it builds the cluster.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.mongoURIUpdated, "mongoURIUpdated", "", `Date and time when someone last updated the connection string. MongoDB Cloud represents this timestamp in ISO 8601 format in UTC.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.mongoURIWithOptions, "mongoURIWithOptions", "", `Connection string that you can use to connect to the cluster including the &#x60;replicaSet&#x60;, &#x60;ssl&#x60;, and &#x60;authSource&#x60; query parameters with values appropriate for the cluster. You may need to add MongoDB database users. The response returns this parameter once the cluster can receive requests, not while it builds the cluster.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().IntVar(&opts.numShards, "numShards", 1, `Number of shards up to 50 to deploy for a sharded cluster. The resource returns &#x60;1&#x60; to indicate a replica set and values of &#x60;2&#x60; and higher to indicate a sharded cluster. The returned value equals the number of shards in the cluster.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.paused, "paused", false, `Flag that indicates whether the cluster is paused.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.pitEnabled, "pitEnabled", false, `Flag that indicates whether the cluster uses continuous cloud backups.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.providerBackupEnabled, "providerBackupEnabled", false, `Flag that indicates whether the M10 or higher cluster can perform Cloud Backups. If set to &#x60;true&#x60;, the cluster can perform backups. If this and **backupEnabled** are set to &#x60;false&#x60;, the cluster doesn&#39;t use MongoDB Cloud backups.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ClusterProviderSettingsVar(&opts.providerSettings, "providerSettings", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().IntVar(&opts.replicationFactor, "replicationFactor", 3, `Number of members that belong to the replica set. Each member retains a copy of your databases, providing high availability and data redundancy. Use **replicationSpecs** instead.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().Map[string]RegionSpecVar(&opts.replicationSpec, "replicationSpec", , `Physical location where MongoDB Cloud provisions cluster nodes.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.replicationSpecs, "replicationSpecs", nil, `List of settings that configure your cluster regions.
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-- For Global Clusters, each object in the array represents one zone where MongoDB Cloud deploys your clusters nodes.
-- For non-Global sharded clusters and replica sets, the single object represents where MongoDB Cloud deploys your clusters nodes.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.rootCertType, "rootCertType", "&quot;ISRGROOTX1&quot;", `Root Certificate Authority that MongoDB Atlas clusters uses. MongoDB Cloud supports Internet Security Research Group.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.srvAddress, "srvAddress", "", `Connection string that you can use to connect to the cluster. The &#x60;+srv&#x60; modifier forces the connection to use Transport Layer Security (TLS). The &#x60;mongoURI&#x60; parameter lists additional options.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.stateName, "stateName", "", `Human-readable label that indicates the current operating condition of the cluster.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.tags, "tags", nil, `Collection of key-value pairs between 1 to 255 characters in length that tag and categorize the cluster.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.terminationProtectionEnabled, "terminationProtectionEnabled", false, `Flag that indicates whether termination protection is enabled on the cluster. If set to &#x60;true&#x60;, MongoDB Cloud won&#39;t delete the cluster. If set to &#x60;false&#x60;, MongoDB Cloud will delete the cluster.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.versionReleaseSystem, "versionReleaseSystem", "&quot;LTS&quot;", `Method by which the cluster maintains the MongoDB versions. If value is &#x60;CONTINUOUS&#x60;, you must not specify **mongoDBMajorVersion**.`)
-
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
+
 type upgradeSharedClusterToServerlessOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *upgradeSharedClusterToServerlessOpts) initClient() func() error {
@@ -617,68 +654,92 @@ func (opts *upgradeSharedClusterToServerlessOpts) initClient() func() error {
 	}
 }
 
-func (opts *upgradeSharedClusterToServerlessOpts) Run(ctx context.Context) error {
+func (opts *upgradeSharedClusterToServerlessOpts) readData() (*admin.ServerlessInstanceDescription, error) {
+	var out *admin.ServerlessInstanceDescription
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *upgradeSharedClusterToServerlessOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpgradeSharedClusterToServerlessApiParams{
 		GroupId: opts.groupId,
-		
+
+		ServerlessInstanceDescription: data,
 	}
 	resp, _, err := opts.client.ClustersApi.UpgradeSharedClusterToServerlessWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func upgradeSharedClusterToServerlessBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := upgradeSharedClusterToServerlessOpts{}
+	opts := upgradeSharedClusterToServerlessOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "upgradeSharedClusterToServerless",
+		Use:   "upgradeSharedClusterToServerless",
 		Short: "Upgrades One Shared-Tier Cluster to the Serverless Instance",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	
 
-	cmd.Flags().ServerlessInstanceDescriptionConnectionStringsVar(&opts.connectionStrings, "connectionStrings", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.createDate, "createDate", "", `Date and time when MongoDB Cloud created this serverless instance. MongoDB Cloud represents this timestamp in ISO 8601 format in UTC.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal character string that identifies the project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the serverless instance.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.mongoDBVersion, "mongoDBVersion", "", `Version of MongoDB that the serverless instance runs.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the serverless instance.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ServerlessProviderSettingsVar(&opts.providerSettings, "providerSettings", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ServerlessBackupOptionsVar(&opts.serverlessBackupOptions, "serverlessBackupOptions", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.stateName, "stateName", "", `Human-readable label that indicates the current operating condition of the serverless instance.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.tags, "tags", nil, ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.terminationProtectionEnabled, "terminationProtectionEnabled", false, `Flag that indicates whether termination protection is enabled on the serverless instance. If set to &#x60;true&#x60;, MongoDB Cloud won&#39;t delete the serverless instance. If set to &#x60;false&#x60;, MongoDB Cloud will delete the serverless instance.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -686,8 +747,8 @@ func upgradeSharedClusterToServerlessBuilder() *cobra.Command {
 
 func clustersBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "clusters",
-		Short:   `Returns, adds, edits, and removes database deployments. Changes to cluster configurations can affect costs. This resource requires your Project ID.`,
+		Use:   "clusters",
+		Short: `Returns, adds, edits, and removes database deployments. Changes to cluster configurations can affect costs. This resource requires your Project ID.`,
 	}
 	cmd.AddCommand(
 		getClusterAdvancedConfigurationBuilder(),
@@ -702,4 +763,3 @@ func clustersBuilder() *cobra.Command {
 	)
 	return cmd
 }
-

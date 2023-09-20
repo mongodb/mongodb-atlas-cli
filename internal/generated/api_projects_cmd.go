@@ -18,8 +18,16 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -30,6 +38,8 @@ type createProjectOpts struct {
 	client *admin.APIClient
 
 	projectOwnerId string
+	filename       string
+	fs             afero.Fs
 }
 
 func (opts *createProjectOpts) initClient() func() error {
@@ -40,57 +50,84 @@ func (opts *createProjectOpts) initClient() func() error {
 	}
 }
 
-func (opts *createProjectOpts) Run(ctx context.Context) error {
+func (opts *createProjectOpts) readData() (*admin.Group, error) {
+	var out *admin.Group
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createProjectOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateProjectApiParams{
 
 		ProjectOwnerId: &opts.projectOwnerId,
+
+		Group: data,
 	}
 	resp, _, err := opts.client.ProjectsApi.CreateProjectWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createProjectBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createProjectOpts{}
+	opts := createProjectOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "createProject",
 		Short: "Create One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.projectOwnerId, "projectOwnerId", "", `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud user to whom to grant the Project Owner role on the specified project. If you set this parameter, it overrides the default value of the oldest Organization Owner. `)
 
-	cmd.Flags().Int64Var(&opts.clusterCount, "clusterCount", 00, `Quantity of MongoDB Cloud clusters deployed in this project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.created, "created", "", `Date and time when MongoDB Cloud created this project. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the project included in the MongoDB Cloud organization.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud organization to which the project belongs.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.regionUsageRestrictions, "regionUsageRestrictions", "&quot;NONE&quot;", `Region usage restrictions that designate the project&#39;s AWS region.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.withDefaultAlertsSettings, "withDefaultAlertsSettings", false, `Flag that indicates whether to create the project with default alert settings.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }
@@ -100,6 +137,9 @@ type createProjectInvitationOpts struct {
 	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createProjectInvitationOpts) initClient() func() error {
@@ -110,45 +150,72 @@ func (opts *createProjectInvitationOpts) initClient() func() error {
 	}
 }
 
-func (opts *createProjectInvitationOpts) Run(ctx context.Context) error {
+func (opts *createProjectInvitationOpts) readData() (*admin.GroupInvitationRequest, error) {
+	var out *admin.GroupInvitationRequest
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createProjectInvitationOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateProjectInvitationApiParams{
 		GroupId: opts.groupId,
+
+		GroupInvitationRequest: data,
 	}
 	resp, _, err := opts.client.ProjectsApi.CreateProjectInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createProjectInvitationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createProjectInvitationOpts{}
+	opts := createProjectInvitationOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "createProjectInvitation",
 		Short: "Invite One MongoDB Cloud User to Join One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
-	cmd.Flags().SetSliceVar(&opts.roles, "roles", nil, `One or more organization or project level roles to assign to the MongoDB Cloud user.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.username, "username", "", `Email address of the MongoDB Cloud user invited to the specified project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -169,7 +236,7 @@ func (opts *deleteProjectOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteProjectOpts) Run(ctx context.Context) error {
+func (opts *deleteProjectOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteProjectApiParams{
 		GroupId: opts.groupId,
 	}
@@ -178,32 +245,29 @@ func (opts *deleteProjectOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteProjectBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteProjectOpts{}
 	cmd := &cobra.Command{
 		Use:   "deleteProject",
 		Short: "Remove One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -225,7 +289,7 @@ func (opts *deleteProjectInvitationOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteProjectInvitationOpts) Run(ctx context.Context) error {
+func (opts *deleteProjectInvitationOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteProjectInvitationApiParams{
 		GroupId:      opts.groupId,
 		InvitationId: opts.invitationId,
@@ -235,33 +299,30 @@ func (opts *deleteProjectInvitationOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteProjectInvitationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteProjectInvitationOpts{}
 	cmd := &cobra.Command{
 		Use:   "deleteProjectInvitation",
 		Short: "Cancel One Project Invitation",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", `Unique 24-hexadecimal digit string that identifies the invitation.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("invitationId")
@@ -284,7 +345,7 @@ func (opts *deleteProjectLimitOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteProjectLimitOpts) Run(ctx context.Context) error {
+func (opts *deleteProjectLimitOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteProjectLimitApiParams{
 		LimitName: opts.limitName,
 		GroupId:   opts.groupId,
@@ -294,27 +355,21 @@ func (opts *deleteProjectLimitOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteProjectLimitBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteProjectLimitOpts{}
 	cmd := &cobra.Command{
 		Use:   "deleteProjectLimit",
 		Short: "Remove One Project Limit",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", `Human-readable label that identifies this project limit.
@@ -336,6 +391,9 @@ func deleteProjectLimitBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
 	_ = cmd.MarkFlagRequired("limitName")
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -356,7 +414,7 @@ func (opts *getProjectOpts) initClient() func() error {
 	}
 }
 
-func (opts *getProjectOpts) Run(ctx context.Context) error {
+func (opts *getProjectOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetProjectApiParams{
 		GroupId: opts.groupId,
 	}
@@ -365,32 +423,29 @@ func (opts *getProjectOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getProjectBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getProjectOpts{}
 	cmd := &cobra.Command{
 		Use:   "getProject",
 		Short: "Return One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -411,7 +466,7 @@ func (opts *getProjectByNameOpts) initClient() func() error {
 	}
 }
 
-func (opts *getProjectByNameOpts) Run(ctx context.Context) error {
+func (opts *getProjectByNameOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetProjectByNameApiParams{
 		GroupName: opts.groupName,
 	}
@@ -420,30 +475,27 @@ func (opts *getProjectByNameOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getProjectByNameBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getProjectByNameOpts{}
 	cmd := &cobra.Command{
 		Use:   "getProjectByName",
 		Short: "Return One Project using Its Name",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupName, "groupName", "", `Human-readable label that identifies this project.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupName")
 	return cmd
@@ -465,7 +517,7 @@ func (opts *getProjectInvitationOpts) initClient() func() error {
 	}
 }
 
-func (opts *getProjectInvitationOpts) Run(ctx context.Context) error {
+func (opts *getProjectInvitationOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetProjectInvitationApiParams{
 		GroupId:      opts.groupId,
 		InvitationId: opts.invitationId,
@@ -475,33 +527,30 @@ func (opts *getProjectInvitationOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getProjectInvitationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getProjectInvitationOpts{}
 	cmd := &cobra.Command{
 		Use:   "getProjectInvitation",
 		Short: "Return One Project Invitation",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", `Unique 24-hexadecimal digit string that identifies the invitation.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("invitationId")
@@ -524,7 +573,7 @@ func (opts *getProjectLimitOpts) initClient() func() error {
 	}
 }
 
-func (opts *getProjectLimitOpts) Run(ctx context.Context) error {
+func (opts *getProjectLimitOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetProjectLimitApiParams{
 		LimitName: opts.limitName,
 		GroupId:   opts.groupId,
@@ -534,27 +583,21 @@ func (opts *getProjectLimitOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getProjectLimitBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getProjectLimitOpts{}
 	cmd := &cobra.Command{
 		Use:   "getProjectLimit",
 		Short: "Return One Limit for One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", `Human-readable label that identifies this project limit.
@@ -576,6 +619,9 @@ func getProjectLimitBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
 	_ = cmd.MarkFlagRequired("limitName")
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -596,7 +642,7 @@ func (opts *getProjectSettingsOpts) initClient() func() error {
 	}
 }
 
-func (opts *getProjectSettingsOpts) Run(ctx context.Context) error {
+func (opts *getProjectSettingsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetProjectSettingsApiParams{
 		GroupId: opts.groupId,
 	}
@@ -605,32 +651,29 @@ func (opts *getProjectSettingsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getProjectSettingsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getProjectSettingsOpts{}
 	cmd := &cobra.Command{
 		Use:   "getProjectSettings",
 		Short: "Return One Project Settings",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -652,7 +695,7 @@ func (opts *listProjectInvitationsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listProjectInvitationsOpts) Run(ctx context.Context) error {
+func (opts *listProjectInvitationsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListProjectInvitationsApiParams{
 		GroupId:  opts.groupId,
 		Username: &opts.username,
@@ -662,33 +705,30 @@ func (opts *listProjectInvitationsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listProjectInvitationsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listProjectInvitationsOpts{}
 	cmd := &cobra.Command{
 		Use:   "listProjectInvitations",
 		Short: "Return All Project Invitations",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.username, "username", "", `Email address of the user account invited to this project.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -709,7 +749,7 @@ func (opts *listProjectLimitsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listProjectLimitsOpts) Run(ctx context.Context) error {
+func (opts *listProjectLimitsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListProjectLimitsApiParams{
 		GroupId: opts.groupId,
 	}
@@ -718,32 +758,29 @@ func (opts *listProjectLimitsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listProjectLimitsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listProjectLimitsOpts{}
 	cmd := &cobra.Command{
 		Use:   "listProjectLimits",
 		Short: "Return All Limits for One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -769,7 +806,7 @@ func (opts *listProjectUsersOpts) initClient() func() error {
 	}
 }
 
-func (opts *listProjectUsersOpts) Run(ctx context.Context) error {
+func (opts *listProjectUsersOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListProjectUsersApiParams{
 		GroupId:         opts.groupId,
 		IncludeCount:    &opts.includeCount,
@@ -783,27 +820,21 @@ func (opts *listProjectUsersOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listProjectUsersBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listProjectUsersOpts{}
 	cmd := &cobra.Command{
 		Use:   "listProjectUsers",
 		Short: "Return All Users in One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -814,6 +845,9 @@ func listProjectUsersBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 	cmd.Flags().BoolVar(&opts.flattenTeams, "flattenTeams", false, `Flag that indicates whether the returned list should include users who belong to a team with a role in this project. You might not have assigned the individual users a role in this project. If &#x60;&quot;flattenTeams&quot; : false&#x60;, this resource returns only users with a role in the project.  If &#x60;&quot;flattenTeams&quot; : true&#x60;, this resource returns both users with roles in the project and users who belong to teams with roles in the project.`)
 	cmd.Flags().BoolVar(&opts.includeOrgUsers, "includeOrgUsers", false, `Flag that indicates whether the returned list should include users with implicit access to the project, the Organization Owner or Organization Read Only role. You might not have assigned the individual users a role in this project. If &#x60;&quot;includeOrgUsers&quot;: false&#x60;, this resource returns only users with a role in the project. If &#x60;&quot;includeOrgUsers&quot;: true&#x60;, this resource returns both users with roles in the project and users who have implicit access to the project through their organization role.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -836,7 +870,7 @@ func (opts *listProjectsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listProjectsOpts) Run(ctx context.Context) error {
+func (opts *listProjectsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListProjectsApiParams{
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
@@ -847,32 +881,29 @@ func (opts *listProjectsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listProjectsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listProjectsOpts{}
 	cmd := &cobra.Command{
 		Use:   "listProjects",
 		Short: "Return All Projects",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }
@@ -893,7 +924,7 @@ func (opts *removeProjectUserOpts) initClient() func() error {
 	}
 }
 
-func (opts *removeProjectUserOpts) Run(ctx context.Context) error {
+func (opts *removeProjectUserOpts) Run(ctx context.Context, _ io.Writer) error {
 	params := &admin.RemoveProjectUserApiParams{
 		GroupId: opts.groupId,
 		UserId:  opts.userId,
@@ -903,33 +934,30 @@ func (opts *removeProjectUserOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(nil)
+	return nil
 }
 
 func removeProjectUserBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := removeProjectUserOpts{}
 	cmd := &cobra.Command{
 		Use:   "removeProjectUser",
 		Short: "Remove One User from One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.userId, "userId", "", `Unique 24-hexadecimal string that identifies MongoDB Cloud user you want to remove from the specified project. To return a application user&#39;s ID using their application username, use the Get All application users in One Project endpoint.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("userId")
@@ -942,6 +970,9 @@ type setProjectLimitOpts struct {
 	client    *admin.APIClient
 	limitName string
 	groupId   string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *setProjectLimitOpts) initClient() func() error {
@@ -952,37 +983,61 @@ func (opts *setProjectLimitOpts) initClient() func() error {
 	}
 }
 
-func (opts *setProjectLimitOpts) Run(ctx context.Context) error {
+func (opts *setProjectLimitOpts) readData() (*admin.Limit, error) {
+	var out *admin.Limit
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *setProjectLimitOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.SetProjectLimitApiParams{
 		LimitName: opts.limitName,
 		GroupId:   opts.groupId,
+
+		Limit: data,
 	}
 	resp, _, err := opts.client.ProjectsApi.SetProjectLimitWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func setProjectLimitBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := setProjectLimitOpts{}
+	opts := setProjectLimitOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "setProjectLimit",
 		Short: "Set One Project Limit",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", `Human-readable label that identifies this project limit.
@@ -1004,6 +1059,9 @@ func setProjectLimitBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
 	_ = cmd.MarkFlagRequired("limitName")
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -1014,6 +1072,9 @@ type updateProjectOpts struct {
 	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateProjectOpts) initClient() func() error {
@@ -1024,43 +1085,70 @@ func (opts *updateProjectOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateProjectOpts) Run(ctx context.Context) error {
+func (opts *updateProjectOpts) readData() (*admin.GroupName, error) {
+	var out *admin.GroupName
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateProjectOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateProjectApiParams{
 		GroupId: opts.groupId,
+
+		GroupName: data,
 	}
 	resp, _, err := opts.client.ProjectsApi.UpdateProjectWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateProjectBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateProjectOpts{}
+	opts := updateProjectOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "updateProject",
 		Short: "Update One Project Name",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
-	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the project included in the MongoDB Cloud organization.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -1071,6 +1159,9 @@ type updateProjectInvitationOpts struct {
 	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateProjectInvitationOpts) initClient() func() error {
@@ -1081,45 +1172,72 @@ func (opts *updateProjectInvitationOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateProjectInvitationOpts) Run(ctx context.Context) error {
+func (opts *updateProjectInvitationOpts) readData() (*admin.GroupInvitationRequest, error) {
+	var out *admin.GroupInvitationRequest
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateProjectInvitationOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateProjectInvitationApiParams{
 		GroupId: opts.groupId,
+
+		GroupInvitationRequest: data,
 	}
 	resp, _, err := opts.client.ProjectsApi.UpdateProjectInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateProjectInvitationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateProjectInvitationOpts{}
+	opts := updateProjectInvitationOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "updateProjectInvitation",
 		Short: "Update One Project Invitation",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
-	cmd.Flags().SetSliceVar(&opts.roles, "roles", nil, `One or more organization or project level roles to assign to the MongoDB Cloud user.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.username, "username", "", `Email address of the MongoDB Cloud user invited to the specified project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -1131,6 +1249,9 @@ type updateProjectInvitationByIdOpts struct {
 	client       *admin.APIClient
 	groupId      string
 	invitationId string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateProjectInvitationByIdOpts) initClient() func() error {
@@ -1141,37 +1262,61 @@ func (opts *updateProjectInvitationByIdOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateProjectInvitationByIdOpts) Run(ctx context.Context) error {
+func (opts *updateProjectInvitationByIdOpts) readData() (*admin.GroupInvitationUpdateRequest, error) {
+	var out *admin.GroupInvitationUpdateRequest
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateProjectInvitationByIdOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateProjectInvitationByIdApiParams{
 		GroupId:      opts.groupId,
 		InvitationId: opts.invitationId,
+
+		GroupInvitationUpdateRequest: data,
 	}
 	resp, _, err := opts.client.ProjectsApi.UpdateProjectInvitationByIdWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateProjectInvitationByIdBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateProjectInvitationByIdOpts{}
+	opts := updateProjectInvitationByIdOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "updateProjectInvitationById",
 		Short: "Update One Project Invitation by Invitation ID",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1179,7 +1324,10 @@ func updateProjectInvitationByIdBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", `Unique 24-hexadecimal digit string that identifies the invitation.`)
 
-	cmd.Flags().SetSliceVar(&opts.roles, "roles", nil, `One or more organization or project level roles to assign to the MongoDB Cloud user.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("invitationId")
@@ -1191,6 +1339,9 @@ type updateProjectSettingsOpts struct {
 	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateProjectSettingsOpts) initClient() func() error {
@@ -1201,53 +1352,80 @@ func (opts *updateProjectSettingsOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateProjectSettingsOpts) Run(ctx context.Context) error {
+func (opts *updateProjectSettingsOpts) readData() (*admin.GroupSettings, error) {
+	var out *admin.GroupSettings
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateProjectSettingsOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateProjectSettingsApiParams{
 		GroupId: opts.groupId,
+
+		GroupSettings: data,
 	}
 	resp, _, err := opts.client.ProjectsApi.UpdateProjectSettingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateProjectSettingsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateProjectSettingsOpts{}
+	opts := updateProjectSettingsOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "updateProjectSettings",
 		Short: "Update One Project Settings",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
-	cmd.Flags().BoolVar(&opts.isCollectDatabaseSpecificsStatisticsEnabled, "isCollectDatabaseSpecificsStatisticsEnabled", false, `Flag that indicates whether to collect database-specific metrics  for the specified project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.isDataExplorerEnabled, "isDataExplorerEnabled", false, `Flag that indicates whether to enable the Data Explorer for the specified project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.isExtendedStorageSizesEnabled, "isExtendedStorageSizesEnabled", false, `Flag that indicates whether to enable extended storage sizes  for the specified project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.isPerformanceAdvisorEnabled, "isPerformanceAdvisorEnabled", false, `Flag that indicates whether to enable the Performance Advisor and Profiler  for the specified project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.isRealtimePerformancePanelEnabled, "isRealtimePerformancePanelEnabled", false, `Flag that indicates whether to enable the Real Time Performance Panel for the specified project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.isSchemaAdvisorEnabled, "isSchemaAdvisorEnabled", false, `Flag that indicates whether to enable the Schema Advisor for the specified project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd

@@ -18,8 +18,16 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -30,6 +38,9 @@ type createServerlessPrivateEndpointOpts struct {
 	client       *admin.APIClient
 	groupId      string
 	instanceName string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createServerlessPrivateEndpointOpts) initClient() func() error {
@@ -40,37 +51,61 @@ func (opts *createServerlessPrivateEndpointOpts) initClient() func() error {
 	}
 }
 
-func (opts *createServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
+func (opts *createServerlessPrivateEndpointOpts) readData() (*admin.ServerlessTenantEndpointCreate, error) {
+	var out *admin.ServerlessTenantEndpointCreate
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createServerlessPrivateEndpointOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateServerlessPrivateEndpointApiParams{
 		GroupId:      opts.groupId,
 		InstanceName: opts.instanceName,
+
+		ServerlessTenantEndpointCreate: data,
 	}
 	resp, _, err := opts.client.ServerlessPrivateEndpointsApi.CreateServerlessPrivateEndpointWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createServerlessPrivateEndpointBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createServerlessPrivateEndpointOpts{}
+	opts := createServerlessPrivateEndpointOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "createServerlessPrivateEndpoint",
 		Short: "Create One Private Endpoint for One Serverless Instance",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -78,7 +113,10 @@ func createServerlessPrivateEndpointBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance for which the tenant endpoint will be created.`)
 
-	cmd.Flags().StringVar(&opts.comment, "comment", "", `Human-readable comment associated with the private endpoint.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("instanceName")
@@ -102,7 +140,7 @@ func (opts *deleteServerlessPrivateEndpointOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
+func (opts *deleteServerlessPrivateEndpointOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteServerlessPrivateEndpointApiParams{
 		GroupId:      opts.groupId,
 		InstanceName: opts.instanceName,
@@ -113,27 +151,21 @@ func (opts *deleteServerlessPrivateEndpointOpts) Run(ctx context.Context) error 
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteServerlessPrivateEndpointBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteServerlessPrivateEndpointOpts{}
 	cmd := &cobra.Command{
 		Use:   "deleteServerlessPrivateEndpoint",
 		Short: "Remove One Private Endpoint for One Serverless Instance",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -141,6 +173,9 @@ func deleteServerlessPrivateEndpointBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance from which the tenant endpoint will be removed.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 24-hexadecimal digit string that identifies the tenant endpoint which will be removed.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("instanceName")
@@ -165,7 +200,7 @@ func (opts *getServerlessPrivateEndpointOpts) initClient() func() error {
 	}
 }
 
-func (opts *getServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
+func (opts *getServerlessPrivateEndpointOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetServerlessPrivateEndpointApiParams{
 		GroupId:      opts.groupId,
 		InstanceName: opts.instanceName,
@@ -176,27 +211,21 @@ func (opts *getServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getServerlessPrivateEndpointBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getServerlessPrivateEndpointOpts{}
 	cmd := &cobra.Command{
 		Use:   "getServerlessPrivateEndpoint",
 		Short: "Return One Private Endpoint for One Serverless Instance",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -204,6 +233,9 @@ func getServerlessPrivateEndpointBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance associated with the tenant endpoint.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 24-hexadecimal digit string that identifies the tenant endpoint.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("instanceName")
@@ -227,7 +259,7 @@ func (opts *listServerlessPrivateEndpointsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listServerlessPrivateEndpointsOpts) Run(ctx context.Context) error {
+func (opts *listServerlessPrivateEndpointsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListServerlessPrivateEndpointsApiParams{
 		GroupId:      opts.groupId,
 		InstanceName: opts.instanceName,
@@ -237,33 +269,30 @@ func (opts *listServerlessPrivateEndpointsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listServerlessPrivateEndpointsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listServerlessPrivateEndpointsOpts{}
 	cmd := &cobra.Command{
 		Use:   "listServerlessPrivateEndpoints",
 		Short: "Return All Private Endpoints for One Serverless Instance",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance associated with the tenant endpoint.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("instanceName")
@@ -277,6 +306,9 @@ type updateServerlessPrivateEndpointOpts struct {
 	groupId      string
 	instanceName string
 	endpointId   string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateServerlessPrivateEndpointOpts) initClient() func() error {
@@ -287,38 +319,62 @@ func (opts *updateServerlessPrivateEndpointOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateServerlessPrivateEndpointOpts) Run(ctx context.Context) error {
+func (opts *updateServerlessPrivateEndpointOpts) readData() (*admin.ServerlessTenantEndpointUpdate, error) {
+	var out *admin.ServerlessTenantEndpointUpdate
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateServerlessPrivateEndpointOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateServerlessPrivateEndpointApiParams{
 		GroupId:      opts.groupId,
 		InstanceName: opts.instanceName,
 		EndpointId:   opts.endpointId,
+
+		ServerlessTenantEndpointUpdate: data,
 	}
 	resp, _, err := opts.client.ServerlessPrivateEndpointsApi.UpdateServerlessPrivateEndpointWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateServerlessPrivateEndpointBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateServerlessPrivateEndpointOpts{}
+	opts := updateServerlessPrivateEndpointOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "updateServerlessPrivateEndpoint",
 		Short: "Update One Private Endpoint for One Serverless Instance",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -326,6 +382,9 @@ func updateServerlessPrivateEndpointBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance associated with the tenant endpoint that will be updated.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 24-hexadecimal digit string that identifies the tenant endpoint which will be updated.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("instanceName")

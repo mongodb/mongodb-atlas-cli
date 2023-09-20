@@ -18,8 +18,16 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -39,7 +47,7 @@ func (opts *deferMaintenanceWindowOpts) initClient() func() error {
 	}
 }
 
-func (opts *deferMaintenanceWindowOpts) Run(ctx context.Context) error {
+func (opts *deferMaintenanceWindowOpts) Run(ctx context.Context, _ io.Writer) error {
 	params := &admin.DeferMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
@@ -48,32 +56,29 @@ func (opts *deferMaintenanceWindowOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(nil)
+	return nil
 }
 
 func deferMaintenanceWindowBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deferMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
 		Use:   "deferMaintenanceWindow",
 		Short: "Defer One Maintenance Window for One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -94,7 +99,7 @@ func (opts *getMaintenanceWindowOpts) initClient() func() error {
 	}
 }
 
-func (opts *getMaintenanceWindowOpts) Run(ctx context.Context) error {
+func (opts *getMaintenanceWindowOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
@@ -103,32 +108,29 @@ func (opts *getMaintenanceWindowOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getMaintenanceWindowBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
 		Use:   "getMaintenanceWindow",
 		Short: "Return One Maintenance Window for One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -149,7 +151,7 @@ func (opts *resetMaintenanceWindowOpts) initClient() func() error {
 	}
 }
 
-func (opts *resetMaintenanceWindowOpts) Run(ctx context.Context) error {
+func (opts *resetMaintenanceWindowOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ResetMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
@@ -158,32 +160,29 @@ func (opts *resetMaintenanceWindowOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func resetMaintenanceWindowBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := resetMaintenanceWindowOpts{}
 	cmd := &cobra.Command{
 		Use:   "resetMaintenanceWindow",
 		Short: "Reset One Maintenance Window for One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -204,7 +203,7 @@ func (opts *toggleMaintenanceAutoDeferOpts) initClient() func() error {
 	}
 }
 
-func (opts *toggleMaintenanceAutoDeferOpts) Run(ctx context.Context) error {
+func (opts *toggleMaintenanceAutoDeferOpts) Run(ctx context.Context, _ io.Writer) error {
 	params := &admin.ToggleMaintenanceAutoDeferApiParams{
 		GroupId: opts.groupId,
 	}
@@ -213,32 +212,29 @@ func (opts *toggleMaintenanceAutoDeferOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(nil)
+	return nil
 }
 
 func toggleMaintenanceAutoDeferBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := toggleMaintenanceAutoDeferOpts{}
 	cmd := &cobra.Command{
 		Use:   "toggleMaintenanceAutoDefer",
 		Short: "Toggle Automatic Deferral of Maintenance for One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -249,6 +245,9 @@ type updateMaintenanceWindowOpts struct {
 	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateMaintenanceWindowOpts) initClient() func() error {
@@ -259,60 +258,76 @@ func (opts *updateMaintenanceWindowOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateMaintenanceWindowOpts) Run(ctx context.Context) error {
+func (opts *updateMaintenanceWindowOpts) readData() (*admin.GroupMaintenanceWindow, error) {
+	var out *admin.GroupMaintenanceWindow
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateMaintenanceWindowOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
+
+		GroupMaintenanceWindow: data,
 	}
 	resp, _, err := opts.client.MaintenanceWindowsApi.UpdateMaintenanceWindowWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateMaintenanceWindowBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateMaintenanceWindowOpts{}
+	opts := updateMaintenanceWindowOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "updateMaintenanceWindow",
 		Short: "Update Maintenance Window for One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
-	cmd.Flags().BoolVar(&opts.autoDeferOnceEnabled, "autoDeferOnceEnabled", false, `Flag that indicates whether MongoDB Cloud should defer all maintenance windows for one week after you enable them.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().IntVar(&opts.dayOfWeek, "dayOfWeek", 000, `One-based integer that represents the day of the week that the maintenance window starts.
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-| Value | Day of Week |
-|---|---|
-| &#x60;1&#x60; | Sunday |
-| &#x60;2&#x60; | Monday |
-| &#x60;3&#x60; | Tuesday |
-| &#x60;4&#x60; | Wednesday |
-| &#x60;5&#x60; | Thursday |
-| &#x60;6&#x60; | Friday |
-| &#x60;7&#x60; | Saturday |
-`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().IntVar(&opts.hourOfDay, "hourOfDay", 000, `Zero-based integer that represents the hour of the of the day that the maintenance window starts according to a 24-hour clock. Use &#x60;0&#x60; for midnight and &#x60;12&#x60; for noon.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.startASAP, "startASAP", false, `Flag that indicates whether MongoDB Cloud starts the maintenance window immediately upon receiving this request. To start the maintenance window immediately for your project, MongoDB Cloud must have maintenance scheduled and you must set a maintenance window. This flag resets to &#x60;false&#x60; after MongoDB Cloud completes maintenance.`)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd

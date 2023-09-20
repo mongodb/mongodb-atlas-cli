@@ -18,21 +18,29 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
 	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type acknowledgeAlertOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
 	alertId string
-	
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *acknowledgeAlertOpts) initClient() func() error {
@@ -43,105 +51,122 @@ func (opts *acknowledgeAlertOpts) initClient() func() error {
 	}
 }
 
-func (opts *acknowledgeAlertOpts) Run(ctx context.Context) error {
+func (opts *acknowledgeAlertOpts) readData() (*admin.AlertViewForNdsGroup, error) {
+	var out *admin.AlertViewForNdsGroup
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *acknowledgeAlertOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.AcknowledgeAlertApiParams{
 		GroupId: opts.groupId,
 		AlertId: opts.alertId,
-		
+
+		AlertViewForNdsGroup: data,
 	}
 	resp, _, err := opts.client.AlertsApi.AcknowledgeAlertWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func acknowledgeAlertBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := acknowledgeAlertOpts{}
+	opts := acknowledgeAlertOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "acknowledgeAlert",
+		Use:   "acknowledgeAlert",
 		Short: "Acknowledge One Alert from One Project",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.alertId, "alertId", "", `Unique 24-hexadecimal digit string that identifies the alert. Use the [/alerts](#tag/Alerts/operation/listAlerts) endpoint to retrieve all alerts to which the authenticated user has access.`)
-	
 
-	cmd.Flags().StringVar(&opts.acknowledgedUntil, "acknowledgedUntil", "", `Date and time until which this alert has been acknowledged. This parameter expresses its value in the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC. The resource returns this parameter if a MongoDB User previously acknowledged this alert.
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-- To acknowledge this alert forever, set the parameter value to 100 years in the future.
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-- To unacknowledge a previously acknowledged alert, set the parameter value to a date in the past.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.acknowledgementComment, "acknowledgementComment", "", `Comment that a MongoDB Cloud user submitted when acknowledging the alert.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.acknowledgingUsername, "acknowledgingUsername", "", `MongoDB Cloud username of the person who acknowledged the alert. The response returns this parameter if a MongoDB Cloud user previously acknowledged this alert.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.alertConfigId, "alertConfigId", "", `Unique 24-hexadecimal digit string that identifies the alert configuration that sets this alert.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.created, "created", "", `Date and time when MongoDB Cloud created this alert. This parameter expresses its value in the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.eventTypeName, "eventTypeName", "", `Incident that triggered this alert.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies the project that owns this alert.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies this alert.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.lastNotified, "lastNotified", "", `Date and time that any notifications were last sent for this alert. This parameter expresses its value in the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC. The resource returns this parameter if MongoDB Cloud has sent notifications for this alert.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal character string that identifies the organization that owns the project to which this alert applies.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.resolved, "resolved", "", `Date and time that this alert changed to &#x60;&quot;status&quot; : &quot;CLOSED&quot;&#x60;. This parameter expresses its value in the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC. The resource returns this parameter once &#x60;&quot;status&quot; : &quot;CLOSED&quot;&#x60;.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.status, "status", "", `State of this alert at the time you requested its details.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.updated, "updated", "", `Date and time when someone last updated this alert. This parameter expresses its value in the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster to which this alert applies. This resource returns this parameter for alerts of events impacting backups, replica sets, or sharded clusters.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.hostnameAndPort, "hostnameAndPort", "", `Hostname and port of the host to which this alert applies. The resource returns this parameter for alerts of events impacting hosts or replica sets.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.replicaSetName, "replicaSetName", "", `Name of the replica set to which this alert applies. The response returns this parameter for alerts of events impacting backups, hosts, or replica sets.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().HostMetricValueVar(&opts.currentValue, "currentValue", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.metricName, "metricName", "", `Name of the metric against which Atlas checks the configured &#x60;metricThreshold.threshold&#x60;.
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-To learn more about the available metrics, see &lt;a href&#x3D;&quot;https://www.mongodb.com/docs/atlas/reference/alert-host-metrics/#std-label-measurement-types&quot; target&#x3D;&quot;_blank&quot;&gt;Host Metrics&lt;/a&gt;.
-
-**NOTE**: If you set eventTypeName to OUTSIDE_SERVERLESS_METRIC_THRESHOLD, you can specify only metrics available for serverless. To learn more, see &lt;a href&#x3D;&quot;https://dochub.mongodb.org/core/alert-config-serverless-measurements&quot; target&#x3D;&quot;_blank&quot;&gt;Serverless Measurements&lt;/a&gt;.`)
-
-	cmd.Flags().ArraySliceVar(&opts.nonRunningHostIds, "nonRunningHostIds", nil, ``)
-
-	cmd.Flags().StringVar(&opts.parentClusterId, "parentClusterId", "", `Unique 24-hexadecimal character string that identifies the parent cluster to which this alert applies. The parent cluster contains the sharded nodes. MongoDB Cloud returns this parameter only for alerts of events impacting sharded clusters.`)
-
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("alertId")
 	return cmd
 }
+
 type getAlertOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
 	alertId string
 }
@@ -154,7 +179,7 @@ func (opts *getAlertOpts) initClient() func() error {
 	}
 }
 
-func (opts *getAlertOpts) Run(ctx context.Context) error {
+func (opts *getAlertOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetAlertApiParams{
 		GroupId: opts.groupId,
 		AlertId: opts.alertId,
@@ -164,27 +189,21 @@ func (opts *getAlertOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getAlertBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getAlertOpts{}
 	cmd := &cobra.Command{
-		Use: "getAlert",
+		Use:   "getAlert",
 		Short: "Return One Alert from One Project",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -192,20 +211,23 @@ func getAlertBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.alertId, "alertId", "", `Unique 24-hexadecimal digit string that identifies the alert. Use the [/alerts](#tag/Alerts/operation/listAlerts) endpoint to retrieve all alerts to which the authenticated user has access.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("alertId")
 	return cmd
 }
+
 type listAlertsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
-	status string
+	pageNum      int
+	status       string
 }
 
 func (opts *listAlertsOpts) initClient() func() error {
@@ -216,40 +238,34 @@ func (opts *listAlertsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listAlertsOpts) Run(ctx context.Context) error {
+func (opts *listAlertsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListAlertsApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
-		Status: &opts.status,
+		PageNum:      &opts.pageNum,
+		Status:       &opts.status,
 	}
 	resp, _, err := opts.client.AlertsApi.ListAlertsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listAlertsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listAlertsOpts{}
 	cmd := &cobra.Command{
-		Use: "listAlerts",
+		Use:   "listAlerts",
 		Short: "Return All Alerts from One Project",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -260,19 +276,22 @@ func listAlertsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 	cmd.Flags().StringVar(&opts.status, "status", "", `Status of the alerts to return. Omit to return all alerts in all statuses.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
+
 type listAlertsByAlertConfigurationIdOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client        *admin.APIClient
+	groupId       string
 	alertConfigId string
-	includeCount bool
-	itemsPerPage int
-	pageNum int
+	includeCount  bool
+	itemsPerPage  int
+	pageNum       int
 }
 
 func (opts *listAlertsByAlertConfigurationIdOpts) initClient() func() error {
@@ -283,40 +302,34 @@ func (opts *listAlertsByAlertConfigurationIdOpts) initClient() func() error {
 	}
 }
 
-func (opts *listAlertsByAlertConfigurationIdOpts) Run(ctx context.Context) error {
+func (opts *listAlertsByAlertConfigurationIdOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListAlertsByAlertConfigurationIdApiParams{
-		GroupId: opts.groupId,
+		GroupId:       opts.groupId,
 		AlertConfigId: opts.alertConfigId,
-		IncludeCount: &opts.includeCount,
-		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		IncludeCount:  &opts.includeCount,
+		ItemsPerPage:  &opts.itemsPerPage,
+		PageNum:       &opts.pageNum,
 	}
 	resp, _, err := opts.client.AlertsApi.ListAlertsByAlertConfigurationIdWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listAlertsByAlertConfigurationIdBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listAlertsByAlertConfigurationIdOpts{}
 	cmd := &cobra.Command{
-		Use: "listAlertsByAlertConfigurationId",
+		Use:   "listAlertsByAlertConfigurationId",
 		Short: "Return All Open Alerts for Alert Configuration",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -327,6 +340,8 @@ func listAlertsByAlertConfigurationIdBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("alertConfigId")
@@ -335,8 +350,8 @@ func listAlertsByAlertConfigurationIdBuilder() *cobra.Command {
 
 func alertsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "alerts",
-		Short:   `Returns and acknowledges alerts that MongoDB Cloud triggers based on the alert conditions that you define. This collection remains under revision and may change.`,
+		Use:   "alerts",
+		Short: `Returns and acknowledges alerts that MongoDB Cloud triggers based on the alert conditions that you define. This collection remains under revision and may change.`,
 	}
 	cmd.AddCommand(
 		acknowledgeAlertBuilder(),
@@ -346,4 +361,3 @@ func alertsBuilder() *cobra.Command {
 	)
 	return cmd
 }
-

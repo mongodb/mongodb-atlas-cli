@@ -18,8 +18,16 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -33,6 +41,8 @@ type createProjectIpAccessListOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
+	filename     string
+	fs           afero.Fs
 }
 
 func (opts *createProjectIpAccessListOpts) initClient() func() error {
@@ -43,40 +53,64 @@ func (opts *createProjectIpAccessListOpts) initClient() func() error {
 	}
 }
 
-func (opts *createProjectIpAccessListOpts) Run(ctx context.Context) error {
+func (opts *createProjectIpAccessListOpts) readData() ([]*admin.NetworkPermissionEntry, error) {
+	var out []*admin.NetworkPermissionEntry
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createProjectIpAccessListOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateProjectIpAccessListApiParams{
 		GroupId: opts.groupId,
 
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
+
+		NetworkPermissionEntry: data,
 	}
 	resp, _, err := opts.client.ProjectIPAccessListApi.CreateProjectIpAccessListWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createProjectIpAccessListBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createProjectIpAccessListOpts{}
+	opts := createProjectIpAccessListOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "createProjectIpAccessList",
 		Short: "Add Entries to Project IP Access List",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -86,6 +120,9 @@ func createProjectIpAccessListBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -107,7 +144,7 @@ func (opts *deleteProjectIpAccessListOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteProjectIpAccessListOpts) Run(ctx context.Context) error {
+func (opts *deleteProjectIpAccessListOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteProjectIpAccessListApiParams{
 		GroupId:    opts.groupId,
 		EntryValue: opts.entryValue,
@@ -117,27 +154,21 @@ func (opts *deleteProjectIpAccessListOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteProjectIpAccessListBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteProjectIpAccessListOpts{}
 	cmd := &cobra.Command{
 		Use:   "deleteProjectIpAccessList",
 		Short: "Remove One Entry from One Project IP Access List",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -148,6 +179,9 @@ func deleteProjectIpAccessListBuilder() *cobra.Command {
 - how your application established the connection,
 - how MongoDB Cloud or the driver using the address behaves, and
 - which protocol (like TCP or UDP) the connection uses.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("entryValue")
@@ -170,7 +204,7 @@ func (opts *getProjectIpAccessListStatusOpts) initClient() func() error {
 	}
 }
 
-func (opts *getProjectIpAccessListStatusOpts) Run(ctx context.Context) error {
+func (opts *getProjectIpAccessListStatusOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetProjectIpAccessListStatusApiParams{
 		GroupId:    opts.groupId,
 		EntryValue: opts.entryValue,
@@ -180,33 +214,30 @@ func (opts *getProjectIpAccessListStatusOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getProjectIpAccessListStatusBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getProjectIpAccessListStatusOpts{}
 	cmd := &cobra.Command{
 		Use:   "getProjectIpAccessListStatus",
 		Short: "Return Status of One Project IP Access List Entry",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.entryValue, "entryValue", "", `Network address or cloud provider security construct that identifies which project access list entry to be verified.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("entryValue")
@@ -229,7 +260,7 @@ func (opts *getProjectIpListOpts) initClient() func() error {
 	}
 }
 
-func (opts *getProjectIpListOpts) Run(ctx context.Context) error {
+func (opts *getProjectIpListOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetProjectIpListApiParams{
 		GroupId:    opts.groupId,
 		EntryValue: opts.entryValue,
@@ -239,33 +270,30 @@ func (opts *getProjectIpListOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getProjectIpListBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getProjectIpListOpts{}
 	cmd := &cobra.Command{
 		Use:   "getProjectIpList",
 		Short: "Return One Project IP Access List Entry",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.entryValue, "entryValue", "", `Access list entry that you want to return from the project&#39;s IP access list. This value can use one of the following: one AWS security group ID, one IP address, or one CIDR block of addresses. For CIDR blocks that use a subnet mask, replace the forward slash (&#x60;/&#x60;) with its URL-encoded value (&#x60;%2F&#x60;).`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("entryValue")
@@ -290,7 +318,7 @@ func (opts *listProjectIpAccessListsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listProjectIpAccessListsOpts) Run(ctx context.Context) error {
+func (opts *listProjectIpAccessListsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListProjectIpAccessListsApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
@@ -302,27 +330,21 @@ func (opts *listProjectIpAccessListsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listProjectIpAccessListsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listProjectIpAccessListsOpts{}
 	cmd := &cobra.Command{
 		Use:   "listProjectIpAccessLists",
 		Short: "Return Project IP Access List",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -331,6 +353,9 @@ func listProjectIpAccessListsBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd

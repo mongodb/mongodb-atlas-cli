@@ -18,8 +18,12 @@ package generated
 
 import (
 	"context"
+	"io"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -41,7 +45,7 @@ func (opts *getOrganizationEventOpts) initClient() func() error {
 	}
 }
 
-func (opts *getOrganizationEventOpts) Run(ctx context.Context) error {
+func (opts *getOrganizationEventOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetOrganizationEventApiParams{
 		OrgId:      opts.orgId,
 		EventId:    opts.eventId,
@@ -52,32 +56,29 @@ func (opts *getOrganizationEventOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getOrganizationEventBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getOrganizationEventOpts{}
 	cmd := &cobra.Command{
 		Use:   "getOrganizationEvent",
 		Short: "Return One Event from One Organization",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().StringVar(&opts.eventId, "eventId", "", `Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the [/events](#tag/Events/operation/listOrganizationEvents) endpoint to retrieve all events to which the authenticated user has access.`)
 	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("eventId")
@@ -101,7 +102,7 @@ func (opts *getProjectEventOpts) initClient() func() error {
 	}
 }
 
-func (opts *getProjectEventOpts) Run(ctx context.Context) error {
+func (opts *getProjectEventOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetProjectEventApiParams{
 		GroupId:    opts.groupId,
 		EventId:    opts.eventId,
@@ -112,27 +113,21 @@ func (opts *getProjectEventOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getProjectEventBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getProjectEventOpts{}
 	cmd := &cobra.Command{
 		Use:   "getProjectEvent",
 		Short: "Return One Event from One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -140,6 +135,9 @@ func getProjectEventBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.eventId, "eventId", "", `Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the [/events](#tag/Events/operation/listProjectEvents) endpoint to retrieve all events to which the authenticated user has access.`)
 	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("eventId")
@@ -168,7 +166,7 @@ func (opts *listOrganizationEventsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listOrganizationEventsOpts) Run(ctx context.Context) error {
+func (opts *listOrganizationEventsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListOrganizationEventsApiParams{
 		OrgId:        opts.orgId,
 		IncludeCount: &opts.includeCount,
@@ -184,27 +182,21 @@ func (opts *listOrganizationEventsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listOrganizationEventsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listOrganizationEventsOpts{}
 	cmd := &cobra.Command{
 		Use:   "listOrganizationEvents",
 		Short: "Return All Events from One Organization",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -217,6 +209,9 @@ func listOrganizationEventsBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`)
 	cmd.Flags().StringVar(&opts.maxDate, "maxDate", "", `Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
 	cmd.Flags().StringVar(&opts.minDate, "minDate", "", `Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
@@ -245,7 +240,7 @@ func (opts *listProjectEventsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listProjectEventsOpts) Run(ctx context.Context) error {
+func (opts *listProjectEventsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListProjectEventsApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
@@ -262,27 +257,21 @@ func (opts *listProjectEventsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listProjectEventsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listProjectEventsOpts{}
 	cmd := &cobra.Command{
 		Use:   "listProjectEvents",
 		Short: "Return All Events from One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -298,6 +287,9 @@ func listProjectEventsBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`)
 	cmd.Flags().StringVar(&opts.maxDate, "maxDate", "", `Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
 	cmd.Flags().StringVar(&opts.minDate, "minDate", "", `Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd

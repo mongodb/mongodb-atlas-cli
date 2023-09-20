@@ -18,8 +18,12 @@ package generated
 
 import (
 	"context"
+	"io"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -39,7 +43,7 @@ func (opts *versionedExampleOpts) initClient() func() error {
 	}
 }
 
-func (opts *versionedExampleOpts) Run(ctx context.Context) error {
+func (opts *versionedExampleOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.VersionedExampleApiParams{
 		AdditionalInfo: &opts.additionalInfo,
 	}
@@ -48,30 +52,27 @@ func (opts *versionedExampleOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func versionedExampleBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := versionedExampleOpts{}
 	cmd := &cobra.Command{
 		Use:   "versionedExample",
 		Short: "Example resource info for versioning of the Atlas API",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().BoolVar(&opts.additionalInfo, "additionalInfo", false, ``)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

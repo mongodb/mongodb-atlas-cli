@@ -18,8 +18,12 @@ package generated
 
 import (
 	"context"
+	"io"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -38,36 +42,33 @@ func (opts *getSystemStatusOpts) initClient() func() error {
 	}
 }
 
-func (opts *getSystemStatusOpts) Run(ctx context.Context) error {
+func (opts *getSystemStatusOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetSystemStatusApiParams{}
 	resp, _, err := opts.client.RootApi.GetSystemStatusWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getSystemStatusBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getSystemStatusOpts{}
 	cmd := &cobra.Command{
 		Use:   "getSystemStatus",
 		Short: "Return the status of this MongoDB application",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

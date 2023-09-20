@@ -18,8 +18,12 @@ package generated
 
 import (
 	"context"
+	"io"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -39,7 +43,7 @@ func (opts *disableSlowOperationThresholdingOpts) initClient() func() error {
 	}
 }
 
-func (opts *disableSlowOperationThresholdingOpts) Run(ctx context.Context) error {
+func (opts *disableSlowOperationThresholdingOpts) Run(ctx context.Context, _ io.Writer) error {
 	params := &admin.DisableSlowOperationThresholdingApiParams{
 		GroupId: opts.groupId,
 	}
@@ -48,32 +52,29 @@ func (opts *disableSlowOperationThresholdingOpts) Run(ctx context.Context) error
 		return err
 	}
 
-	return opts.Print(nil)
+	return nil
 }
 
 func disableSlowOperationThresholdingBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := disableSlowOperationThresholdingOpts{}
 	cmd := &cobra.Command{
 		Use:   "disableSlowOperationThresholding",
 		Short: "Disable Managed Slow Operation Threshold",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -94,7 +95,7 @@ func (opts *enableSlowOperationThresholdingOpts) initClient() func() error {
 	}
 }
 
-func (opts *enableSlowOperationThresholdingOpts) Run(ctx context.Context) error {
+func (opts *enableSlowOperationThresholdingOpts) Run(ctx context.Context, _ io.Writer) error {
 	params := &admin.EnableSlowOperationThresholdingApiParams{
 		GroupId: opts.groupId,
 	}
@@ -103,32 +104,29 @@ func (opts *enableSlowOperationThresholdingOpts) Run(ctx context.Context) error 
 		return err
 	}
 
-	return opts.Print(nil)
+	return nil
 }
 
 func enableSlowOperationThresholdingBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := enableSlowOperationThresholdingOpts{}
 	cmd := &cobra.Command{
 		Use:   "enableSlowOperationThresholding",
 		Short: "Enable Managed Slow Operation Threshold",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -154,7 +152,7 @@ func (opts *listSlowQueriesOpts) initClient() func() error {
 	}
 }
 
-func (opts *listSlowQueriesOpts) Run(ctx context.Context) error {
+func (opts *listSlowQueriesOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListSlowQueriesApiParams{
 		GroupId:    opts.groupId,
 		ProcessId:  opts.processId,
@@ -168,27 +166,21 @@ func (opts *listSlowQueriesOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listSlowQueriesBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listSlowQueriesOpts{}
 	cmd := &cobra.Command{
 		Use:   "listSlowQueries",
 		Short: "Return Slow Queries",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -205,6 +197,9 @@ func listSlowQueriesBuilder() *cobra.Command {
 
 - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time.
 - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
@@ -229,7 +224,7 @@ func (opts *listSlowQueryNamespacesOpts) initClient() func() error {
 	}
 }
 
-func (opts *listSlowQueryNamespacesOpts) Run(ctx context.Context) error {
+func (opts *listSlowQueryNamespacesOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListSlowQueryNamespacesApiParams{
 		GroupId:   opts.groupId,
 		ProcessId: opts.processId,
@@ -241,27 +236,21 @@ func (opts *listSlowQueryNamespacesOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listSlowQueryNamespacesBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listSlowQueryNamespacesOpts{}
 	cmd := &cobra.Command{
 		Use:   "listSlowQueryNamespaces",
 		Short: "Return All Namespaces for One Host",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -276,6 +265,9 @@ func listSlowQueryNamespacesBuilder() *cobra.Command {
 
 - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time.
 - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
@@ -306,7 +298,7 @@ func (opts *listSuggestedIndexesOpts) initClient() func() error {
 	}
 }
 
-func (opts *listSuggestedIndexesOpts) Run(ctx context.Context) error {
+func (opts *listSuggestedIndexesOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListSuggestedIndexesApiParams{
 		GroupId:      opts.groupId,
 		ProcessId:    opts.processId,
@@ -324,27 +316,21 @@ func (opts *listSuggestedIndexesOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listSuggestedIndexesBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listSuggestedIndexesOpts{}
 	cmd := &cobra.Command{
 		Use:   "listSuggestedIndexes",
 		Short: "Return Suggested Indexes",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -365,6 +351,9 @@ func listSuggestedIndexesBuilder() *cobra.Command {
 
 - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time.
 - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")

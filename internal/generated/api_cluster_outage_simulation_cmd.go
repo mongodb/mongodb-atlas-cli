@@ -18,8 +18,16 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -40,7 +48,7 @@ func (opts *endOutageSimulationOpts) initClient() func() error {
 	}
 }
 
-func (opts *endOutageSimulationOpts) Run(ctx context.Context) error {
+func (opts *endOutageSimulationOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.EndOutageSimulationApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
@@ -50,33 +58,30 @@ func (opts *endOutageSimulationOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func endOutageSimulationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := endOutageSimulationOpts{}
 	cmd := &cobra.Command{
 		Use:   "endOutageSimulation",
 		Short: "End an Outage Simulation",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster that is undergoing outage simulation.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
@@ -99,7 +104,7 @@ func (opts *getOutageSimulationOpts) initClient() func() error {
 	}
 }
 
-func (opts *getOutageSimulationOpts) Run(ctx context.Context) error {
+func (opts *getOutageSimulationOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetOutageSimulationApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
@@ -109,33 +114,30 @@ func (opts *getOutageSimulationOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getOutageSimulationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getOutageSimulationOpts{}
 	cmd := &cobra.Command{
 		Use:   "getOutageSimulation",
 		Short: "Return One Outage Simulation",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster that is undergoing outage simulation.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
@@ -148,6 +150,9 @@ type startOutageSimulationOpts struct {
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *startOutageSimulationOpts) initClient() func() error {
@@ -158,37 +163,61 @@ func (opts *startOutageSimulationOpts) initClient() func() error {
 	}
 }
 
-func (opts *startOutageSimulationOpts) Run(ctx context.Context) error {
+func (opts *startOutageSimulationOpts) readData() (*admin.ClusterOutageSimulation, error) {
+	var out *admin.ClusterOutageSimulation
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *startOutageSimulationOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.StartOutageSimulationApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
+
+		ClusterOutageSimulation: data,
 	}
 	resp, _, err := opts.client.ClusterOutageSimulationApi.StartOutageSimulationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func startOutageSimulationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := startOutageSimulationOpts{}
+	opts := startOutageSimulationOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "startOutageSimulation",
 		Short: "Start an Outage Simulation",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -196,26 +225,20 @@ func startOutageSimulationBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster to undergo an outage simulation.`)
 
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster that undergoes outage simulation.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal character string that identifies the project that contains the cluster to undergo outage simulation.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal character string that identifies the outage simulation.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.outageFilters, "outageFilters", nil, `List of settings that specify the type of cluster outage simulation.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.startRequestDate, "startRequestDate", "", `Date and time when MongoDB Cloud started the regional outage simulation.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.state, "state", "", `Phase of the outage simulation.
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-| State       | Indication |
-|-------------|------------|
-| &#x60;START_REQUESTED&#x60;    | User has requested cluster outage simulation.|
-| &#x60;STARTING&#x60;           | MongoDB Cloud is starting cluster outage simulation.|
-| &#x60;SIMULATING&#x60;         | MongoDB Cloud is simulating cluster outage.|
-| &#x60;RECOVERY_REQUESTED&#x60; | User has requested recovery from the simulated outage.|
-| &#x60;RECOVERING&#x60;         | MongoDB Cloud is recovering the cluster from the simulated outage.|
-| &#x60;COMPLETE&#x60;           | MongoDB Cloud has completed the cluster outage simulation.|`)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")

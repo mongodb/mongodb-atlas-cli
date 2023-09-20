@@ -18,21 +18,28 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
 	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type createRollingIndexOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createRollingIndexOpts) initClient() func() error {
@@ -43,56 +50,80 @@ func (opts *createRollingIndexOpts) initClient() func() error {
 	}
 }
 
-func (opts *createRollingIndexOpts) Run(ctx context.Context) error {
+func (opts *createRollingIndexOpts) readData() (*admin.IndexRequest, error) {
+	var out *admin.IndexRequest
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createRollingIndexOpts) Run(ctx context.Context, _ io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateRollingIndexApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		
+
+		IndexRequest: data,
 	}
 	_, err := opts.client.RollingIndexApi.CreateRollingIndexWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(nil)
+	return nil
 }
 
 func createRollingIndexBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createRollingIndexOpts{}
+	opts := createRollingIndexOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "createRollingIndex",
+		Use:   "createRollingIndex",
 		Short: "Create One Rolling Index",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster on which MongoDB Cloud creates an index.`)
-	
 
-	cmd.Flags().CollationVar(&opts.collation, "collation", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.collection, "collection", "", `Human-readable label of the collection for which MongoDB Cloud creates an index.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.db, "db", "", `Human-readable label of the database that holds the collection on which MongoDB Cloud creates an index.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.keys, "keys", nil, `List that contains one or more objects that describe the parameters that you want to index.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().IndexOptionsVar(&opts.options, "options", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
@@ -101,12 +132,11 @@ func createRollingIndexBuilder() *cobra.Command {
 
 func rollingIndexBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "rollingIndex",
-		Short:   `Creates one index to a database deployment in a rolling manner. You can&#39;t create a rolling index on an &#x60;M0&#x60; free cluster or &#x60;M2/M5&#x60; shared cluster.`,
+		Use:   "rollingIndex",
+		Short: `Creates one index to a database deployment in a rolling manner. You can&#39;t create a rolling index on an &#x60;M0&#x60; free cluster or &#x60;M2/M5&#x60; shared cluster.`,
 	}
 	cmd.AddCommand(
 		createRollingIndexBuilder(),
 	)
 	return cmd
 }
-

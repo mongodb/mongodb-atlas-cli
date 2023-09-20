@@ -18,8 +18,16 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -30,6 +38,9 @@ type downloadSharedClusterBackupOpts struct {
 	client      *admin.APIClient
 	clusterName string
 	groupId     string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *downloadSharedClusterBackupOpts) initClient() func() error {
@@ -40,37 +51,61 @@ func (opts *downloadSharedClusterBackupOpts) initClient() func() error {
 	}
 }
 
-func (opts *downloadSharedClusterBackupOpts) Run(ctx context.Context) error {
+func (opts *downloadSharedClusterBackupOpts) readData() (*admin.TenantRestore, error) {
+	var out *admin.TenantRestore
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *downloadSharedClusterBackupOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.DownloadSharedClusterBackupApiParams{
 		ClusterName: opts.clusterName,
 		GroupId:     opts.groupId,
+
+		TenantRestore: data,
 	}
 	resp, _, err := opts.client.SharedTierSnapshotsApi.DownloadSharedClusterBackupWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func downloadSharedClusterBackupBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := downloadSharedClusterBackupOpts{}
+	opts := downloadSharedClusterBackupOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "downloadSharedClusterBackup",
 		Short: "Download One M2 or M5 Cluster Snapshot",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
@@ -78,33 +113,36 @@ func downloadSharedClusterBackupBuilder() *cobra.Command {
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the source cluster.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.deliveryType, "deliveryType", "", `Means by which this resource returns the snapshot to the requesting MongoDB Cloud user.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.expirationDate, "expirationDate", "", `Date and time when the download link no longer works. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the restore job.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.projectId, "projectId", "", `Unique 24-hexadecimal digit string that identifies the project from which the restore job originated.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.restoreFinishedDate, "restoreFinishedDate", "", `Date and time when MongoDB Cloud completed writing this snapshot. MongoDB Cloud changes the status of the restore job to &#x60;CLOSED&#x60;. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.restoreScheduledDate, "restoreScheduledDate", "", `Date and time when MongoDB Cloud will restore this snapshot. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.snapshotFinishedDate, "snapshotFinishedDate", "", `Date and time when MongoDB Cloud completed writing this snapshot. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the snapshot to restore.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.snapshotUrl, "snapshotUrl", "", `Internet address from which you can download the compressed snapshot files. The resource returns this parameter when  &#x60;&quot;deliveryType&quot; : &quot;DOWNLOAD&quot;&#x60;.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.status, "status", "", `Phase of the restore workflow for this job at the time this resource made this request.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.targetDeploymentItemName, "targetDeploymentItemName", "", `Human-readable label that identifies the cluster on the target project to which you want to restore the snapshot. You can restore the snapshot to a cluster tier *M2* or greater.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.targetProjectId, "targetProjectId", "", `Unique 24-hexadecimal digit string that identifies the project that contains the cluster to which you want to restore the snapshot.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("groupId")
@@ -128,7 +166,7 @@ func (opts *getSharedClusterBackupOpts) initClient() func() error {
 	}
 }
 
-func (opts *getSharedClusterBackupOpts) Run(ctx context.Context) error {
+func (opts *getSharedClusterBackupOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetSharedClusterBackupApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
@@ -139,27 +177,21 @@ func (opts *getSharedClusterBackupOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getSharedClusterBackupBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getSharedClusterBackupOpts{}
 	cmd := &cobra.Command{
 		Use:   "getSharedClusterBackup",
 		Short: "Return One Snapshot for One M2 or M5 Cluster",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -167,6 +199,9 @@ func getSharedClusterBackupBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
@@ -190,7 +225,7 @@ func (opts *listSharedClusterBackupsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listSharedClusterBackupsOpts) Run(ctx context.Context) error {
+func (opts *listSharedClusterBackupsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListSharedClusterBackupsApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
@@ -200,33 +235,30 @@ func (opts *listSharedClusterBackupsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listSharedClusterBackupsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listSharedClusterBackupsOpts{}
 	cmd := &cobra.Command{
 		Use:   "listSharedClusterBackups",
 		Short: "Return All Snapshots for One M2 or M5 Cluster",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")

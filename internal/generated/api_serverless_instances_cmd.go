@@ -18,20 +18,28 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
 	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type createServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createServerlessInstanceOpts) initClient() func() error {
@@ -42,64 +50,89 @@ func (opts *createServerlessInstanceOpts) initClient() func() error {
 	}
 }
 
-func (opts *createServerlessInstanceOpts) Run(ctx context.Context) error {
+func (opts *createServerlessInstanceOpts) readData() (*admin.ServerlessInstanceDescriptionCreate, error) {
+	var out *admin.ServerlessInstanceDescriptionCreate
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createServerlessInstanceOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateServerlessInstanceApiParams{
 		GroupId: opts.groupId,
-		
+
+		ServerlessInstanceDescriptionCreate: data,
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.CreateServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createServerlessInstanceBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createServerlessInstanceOpts{}
+	opts := createServerlessInstanceOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "createServerlessInstance",
+		Use:   "createServerlessInstance",
 		Short: "Create One Serverless Instance in One Project",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	
 
-	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the serverless instance.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ServerlessProviderSettingsVar(&opts.providerSettings, "providerSettings", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ServerlessBackupOptionsVar(&opts.serverlessBackupOptions, "serverlessBackupOptions", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.stateName, "stateName", "", `Human-readable label that indicates the current operating condition of the serverless instance.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.terminationProtectionEnabled, "terminationProtectionEnabled", false, `Flag that indicates whether termination protection is enabled on the serverless instance. If set to &#x60;true&#x60;, MongoDB Cloud won&#39;t delete the serverless instance. If set to &#x60;false&#x60;, MongoDB Cloud will delete the serverless instance.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
+
 type deleteServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	name string
+	name    string
 }
 
 func (opts *deleteServerlessInstanceOpts) initClient() func() error {
@@ -110,37 +143,31 @@ func (opts *deleteServerlessInstanceOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteServerlessInstanceOpts) Run(ctx context.Context) error {
+func (opts *deleteServerlessInstanceOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteServerlessInstanceApiParams{
 		GroupId: opts.groupId,
-		Name: opts.name,
+		Name:    opts.name,
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.DeleteServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteServerlessInstanceBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteServerlessInstance",
+		Use:   "deleteServerlessInstance",
 		Short: "Remove One Serverless Instance from One Project",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -148,17 +175,20 @@ func deleteServerlessInstanceBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the serverless instance.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
 	return cmd
 }
+
 type getServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	name string
+	name    string
 }
 
 func (opts *getServerlessInstanceOpts) initClient() func() error {
@@ -169,37 +199,31 @@ func (opts *getServerlessInstanceOpts) initClient() func() error {
 	}
 }
 
-func (opts *getServerlessInstanceOpts) Run(ctx context.Context) error {
+func (opts *getServerlessInstanceOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetServerlessInstanceApiParams{
 		GroupId: opts.groupId,
-		Name: opts.name,
+		Name:    opts.name,
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.GetServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getServerlessInstanceBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getServerlessInstanceOpts{}
 	cmd := &cobra.Command{
-		Use: "getServerlessInstance",
+		Use:   "getServerlessInstance",
 		Short: "Return One Serverless Instance from One Project",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -207,19 +231,22 @@ func getServerlessInstanceBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the serverless instance.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
 	return cmd
 }
+
 type listServerlessInstancesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	includeCount bool
 	itemsPerPage int
-	pageNum int
+	pageNum      int
 }
 
 func (opts *listServerlessInstancesOpts) initClient() func() error {
@@ -230,39 +257,33 @@ func (opts *listServerlessInstancesOpts) initClient() func() error {
 	}
 }
 
-func (opts *listServerlessInstancesOpts) Run(ctx context.Context) error {
+func (opts *listServerlessInstancesOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListServerlessInstancesApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
-		PageNum: &opts.pageNum,
+		PageNum:      &opts.pageNum,
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.ListServerlessInstancesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listServerlessInstancesBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listServerlessInstancesOpts{}
 	cmd := &cobra.Command{
-		Use: "listServerlessInstances",
+		Use:   "listServerlessInstances",
 		Short: "Return All Serverless Instances from One Project",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -272,17 +293,22 @@ func listServerlessInstancesBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
+
 type updateServerlessInstanceOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	name string
-	
+	name    string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateServerlessInstanceOpts) initClient() func() error {
@@ -293,50 +319,74 @@ func (opts *updateServerlessInstanceOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateServerlessInstanceOpts) Run(ctx context.Context) error {
+func (opts *updateServerlessInstanceOpts) readData() (*admin.ServerlessInstanceDescriptionUpdate, error) {
+	var out *admin.ServerlessInstanceDescriptionUpdate
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateServerlessInstanceOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateServerlessInstanceApiParams{
 		GroupId: opts.groupId,
-		Name: opts.name,
-		
+		Name:    opts.name,
+
+		ServerlessInstanceDescriptionUpdate: data,
 	}
 	resp, _, err := opts.client.ServerlessInstancesApi.UpdateServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateServerlessInstanceBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateServerlessInstanceOpts{}
+	opts := updateServerlessInstanceOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "updateServerlessInstance",
+		Use:   "updateServerlessInstance",
 		Short: "Update One Serverless Instance in One Project",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the serverless instance.`)
-	
 
-	cmd.Flags().ServerlessBackupOptionsVar(&opts.serverlessBackupOptions, "serverlessBackupOptions", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.terminationProtectionEnabled, "terminationProtectionEnabled", false, `Flag that indicates whether termination protection is enabled on the serverless instance. If set to &#x60;true&#x60;, MongoDB Cloud won&#39;t delete the serverless instance. If set to &#x60;false&#x60;, MongoDB Cloud will delete the serverless instance.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("name")
@@ -345,8 +395,8 @@ func updateServerlessInstanceBuilder() *cobra.Command {
 
 func serverlessInstancesBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "serverlessInstances",
-		Short:   `Returns, adds, edits, and removes serverless instances.`,
+		Use:   "serverlessInstances",
+		Short: `Returns, adds, edits, and removes serverless instances.`,
 	}
 	cmd.AddCommand(
 		createServerlessInstanceBuilder(),
@@ -357,4 +407,3 @@ func serverlessInstancesBuilder() *cobra.Command {
 	)
 	return cmd
 }
-

@@ -18,8 +18,16 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -29,6 +37,9 @@ type addAllTeamsToProjectOpts struct {
 	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *addAllTeamsToProjectOpts) initClient() func() error {
@@ -39,41 +50,68 @@ func (opts *addAllTeamsToProjectOpts) initClient() func() error {
 	}
 }
 
-func (opts *addAllTeamsToProjectOpts) Run(ctx context.Context) error {
+func (opts *addAllTeamsToProjectOpts) readData() ([]*admin.TeamRole, error) {
+	var out []*admin.TeamRole
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *addAllTeamsToProjectOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.AddAllTeamsToProjectApiParams{
 		GroupId: opts.groupId,
+
+		TeamRole: data,
 	}
 	resp, _, err := opts.client.TeamsApi.AddAllTeamsToProjectWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func addAllTeamsToProjectBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := addAllTeamsToProjectOpts{}
+	opts := addAllTeamsToProjectOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "addAllTeamsToProject",
 		Short: "Add One or More Teams to One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -85,6 +123,9 @@ type addTeamUserOpts struct {
 	client *admin.APIClient
 	orgId  string
 	teamId string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *addTeamUserOpts) initClient() func() error {
@@ -95,41 +136,68 @@ func (opts *addTeamUserOpts) initClient() func() error {
 	}
 }
 
-func (opts *addTeamUserOpts) Run(ctx context.Context) error {
+func (opts *addTeamUserOpts) readData() ([]*admin.AddUserToTeam, error) {
+	var out []*admin.AddUserToTeam
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *addTeamUserOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.AddTeamUserApiParams{
 		OrgId:  opts.orgId,
 		TeamId: opts.teamId,
+
+		AddUserToTeam: data,
 	}
 	resp, _, err := opts.client.TeamsApi.AddTeamUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func addTeamUserBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := addTeamUserOpts{}
+	opts := addTeamUserOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "addTeamUser",
 		Short: "Assign MongoDB Cloud Users from One Organization to One Team",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", `Unique 24-hexadecimal character string that identifies the team to which you want to add MongoDB Cloud users.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("teamId")
@@ -141,6 +209,9 @@ type createTeamOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	orgId  string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createTeamOpts) initClient() func() error {
@@ -151,47 +222,74 @@ func (opts *createTeamOpts) initClient() func() error {
 	}
 }
 
-func (opts *createTeamOpts) Run(ctx context.Context) error {
+func (opts *createTeamOpts) readData() (*admin.Team, error) {
+	var out *admin.Team
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createTeamOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateTeamApiParams{
 		OrgId: opts.orgId,
+
+		Team: data,
 	}
 	resp, _, err := opts.client.TeamsApi.CreateTeamWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createTeamBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createTeamOpts{}
+	opts := createTeamOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "createTeam",
 		Short: "Create One Team in One Organization",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
-	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies this team.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the team.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().SetSliceVar(&opts.usernames, "usernames", nil, `List that contains the MongoDB Cloud users in this team.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
@@ -213,7 +311,7 @@ func (opts *deleteTeamOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteTeamOpts) Run(ctx context.Context) error {
+func (opts *deleteTeamOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteTeamApiParams{
 		OrgId:  opts.orgId,
 		TeamId: opts.teamId,
@@ -223,31 +321,28 @@ func (opts *deleteTeamOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteTeamBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteTeamOpts{}
 	cmd := &cobra.Command{
 		Use:   "deleteTeam",
 		Short: "Remove One Team from One Organization",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", `Unique 24-hexadecimal digit string that identifies the team that you want to delete.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("teamId")
@@ -270,7 +365,7 @@ func (opts *getTeamByIdOpts) initClient() func() error {
 	}
 }
 
-func (opts *getTeamByIdOpts) Run(ctx context.Context) error {
+func (opts *getTeamByIdOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetTeamByIdApiParams{
 		OrgId:  opts.orgId,
 		TeamId: opts.teamId,
@@ -280,31 +375,28 @@ func (opts *getTeamByIdOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getTeamByIdBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getTeamByIdOpts{}
 	cmd := &cobra.Command{
 		Use:   "getTeamById",
 		Short: "Return One Team using its ID",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", `Unique 24-hexadecimal digit string that identifies the team whose information you want to return.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("teamId")
@@ -327,7 +419,7 @@ func (opts *getTeamByNameOpts) initClient() func() error {
 	}
 }
 
-func (opts *getTeamByNameOpts) Run(ctx context.Context) error {
+func (opts *getTeamByNameOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetTeamByNameApiParams{
 		OrgId:    opts.orgId,
 		TeamName: opts.teamName,
@@ -337,31 +429,28 @@ func (opts *getTeamByNameOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getTeamByNameBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getTeamByNameOpts{}
 	cmd := &cobra.Command{
 		Use:   "getTeamByName",
 		Short: "Return One Team using its Name",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().StringVar(&opts.teamName, "teamName", "", `Name of the team whose information you want to return.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("teamName")
@@ -386,7 +475,7 @@ func (opts *listOrganizationTeamsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listOrganizationTeamsOpts) Run(ctx context.Context) error {
+func (opts *listOrganizationTeamsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListOrganizationTeamsApiParams{
 		OrgId:        opts.orgId,
 		ItemsPerPage: &opts.itemsPerPage,
@@ -398,33 +487,30 @@ func (opts *listOrganizationTeamsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listOrganizationTeamsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listOrganizationTeamsOpts{}
 	cmd := &cobra.Command{
 		Use:   "listOrganizationTeams",
 		Short: "Return All Teams in One Organization",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
@@ -448,7 +534,7 @@ func (opts *listProjectTeamsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listProjectTeamsOpts) Run(ctx context.Context) error {
+func (opts *listProjectTeamsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListProjectTeamsApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
@@ -460,27 +546,21 @@ func (opts *listProjectTeamsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listProjectTeamsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listProjectTeamsOpts{}
 	cmd := &cobra.Command{
 		Use:   "listProjectTeams",
 		Short: "Return All Teams in One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -489,6 +569,9 @@ func listProjectTeamsBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -512,7 +595,7 @@ func (opts *listTeamUsersOpts) initClient() func() error {
 	}
 }
 
-func (opts *listTeamUsersOpts) Run(ctx context.Context) error {
+func (opts *listTeamUsersOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListTeamUsersApiParams{
 		OrgId:        opts.orgId,
 		TeamId:       opts.teamId,
@@ -524,33 +607,30 @@ func (opts *listTeamUsersOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listTeamUsersBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listTeamUsersOpts{}
 	cmd := &cobra.Command{
 		Use:   "listTeamUsers",
 		Short: "Return All MongoDB Cloud Users Assigned to One Team",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", `Unique 24-hexadecimal digit string that identifies the team whose application users you want to return.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("teamId")
@@ -573,7 +653,7 @@ func (opts *removeProjectTeamOpts) initClient() func() error {
 	}
 }
 
-func (opts *removeProjectTeamOpts) Run(ctx context.Context) error {
+func (opts *removeProjectTeamOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.RemoveProjectTeamApiParams{
 		GroupId: opts.groupId,
 		TeamId:  opts.teamId,
@@ -583,33 +663,30 @@ func (opts *removeProjectTeamOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func removeProjectTeamBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := removeProjectTeamOpts{}
 	cmd := &cobra.Command{
 		Use:   "removeProjectTeam",
 		Short: "Remove One Team from One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", `Unique 24-hexadecimal digit string that identifies the team that you want to remove from the specified project.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("teamId")
@@ -633,7 +710,7 @@ func (opts *removeTeamUserOpts) initClient() func() error {
 	}
 }
 
-func (opts *removeTeamUserOpts) Run(ctx context.Context) error {
+func (opts *removeTeamUserOpts) Run(ctx context.Context, _ io.Writer) error {
 	params := &admin.RemoveTeamUserApiParams{
 		OrgId:  opts.orgId,
 		TeamId: opts.teamId,
@@ -644,32 +721,29 @@ func (opts *removeTeamUserOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(nil)
+	return nil
 }
 
 func removeTeamUserBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := removeTeamUserOpts{}
 	cmd := &cobra.Command{
 		Use:   "removeTeamUser",
 		Short: "Remove One MongoDB Cloud User from One Team",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", `Unique 24-hexadecimal digit string that identifies the team from which you want to remove one database application user.`)
 	cmd.Flags().StringVar(&opts.userId, "userId", "", `Unique 24-hexadecimal digit string that identifies MongoDB Cloud user that you want to remove from the specified team.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("teamId")
@@ -683,6 +757,9 @@ type renameTeamOpts struct {
 	client *admin.APIClient
 	orgId  string
 	teamId string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *renameTeamOpts) initClient() func() error {
@@ -693,49 +770,76 @@ func (opts *renameTeamOpts) initClient() func() error {
 	}
 }
 
-func (opts *renameTeamOpts) Run(ctx context.Context) error {
+func (opts *renameTeamOpts) readData() (*admin.Team, error) {
+	var out *admin.Team
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *renameTeamOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.RenameTeamApiParams{
 		OrgId:  opts.orgId,
 		TeamId: opts.teamId,
+
+		Team: data,
 	}
 	resp, _, err := opts.client.TeamsApi.RenameTeamWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func renameTeamBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := renameTeamOpts{}
+	opts := renameTeamOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "renameTeam",
 		Short: "Rename One Team",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", `Unique 24-hexadecimal digit string that identifies the team that you want to rename.`)
 
-	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies this team.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the team.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().SetSliceVar(&opts.usernames, "usernames", nil, `List that contains the MongoDB Cloud users in this team.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("teamId")
@@ -748,6 +852,9 @@ type updateTeamRolesOpts struct {
 	client  *admin.APIClient
 	groupId string
 	teamId  string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateTeamRolesOpts) initClient() func() error {
@@ -758,37 +865,61 @@ func (opts *updateTeamRolesOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateTeamRolesOpts) Run(ctx context.Context) error {
+func (opts *updateTeamRolesOpts) readData() (*admin.TeamRole, error) {
+	var out *admin.TeamRole
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateTeamRolesOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateTeamRolesApiParams{
 		GroupId: opts.groupId,
 		TeamId:  opts.teamId,
+
+		TeamRole: data,
 	}
 	resp, _, err := opts.client.TeamsApi.UpdateTeamRolesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateTeamRolesBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateTeamRolesOpts{}
+	opts := updateTeamRolesOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "updateTeamRoles",
 		Short: "Update Team Roles in One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -796,11 +927,14 @@ func updateTeamRolesBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", `Unique 24-hexadecimal digit string that identifies the team for which you want to update roles.`)
 
-	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().SetSliceVar(&opts.roleNames, "roleNames", nil, `One or more organization- or project-level roles to assign to the MongoDB Cloud user.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.teamId, "teamId", "", `Unique 24-hexadecimal character string that identifies the team.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("teamId")

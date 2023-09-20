@@ -18,8 +18,16 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -30,6 +38,9 @@ type createDatabaseUserCertificateOpts struct {
 	client   *admin.APIClient
 	groupId  string
 	username string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createDatabaseUserCertificateOpts) initClient() func() error {
@@ -40,37 +51,61 @@ func (opts *createDatabaseUserCertificateOpts) initClient() func() error {
 	}
 }
 
-func (opts *createDatabaseUserCertificateOpts) Run(ctx context.Context) error {
+func (opts *createDatabaseUserCertificateOpts) readData() (*admin.UserCert, error) {
+	var out *admin.UserCert
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createDatabaseUserCertificateOpts) Run(ctx context.Context, _ io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateDatabaseUserCertificateApiParams{
 		GroupId:  opts.groupId,
 		Username: opts.username,
+
+		UserCert: data,
 	}
 	_, err := opts.client.X509AuthenticationApi.CreateDatabaseUserCertificateWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(nil)
+	return nil
 }
 
 func createDatabaseUserCertificateBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createDatabaseUserCertificateOpts{}
+	opts := createDatabaseUserCertificateOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "createDatabaseUserCertificate",
 		Short: "Create One X.509 Certificate for One MongoDB User",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -78,19 +113,22 @@ func createDatabaseUserCertificateBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.username, "username", "", `Human-readable label that represents the MongoDB database user account for whom to create a certificate.`)
 
-	cmd.Flags().Int64Var(&opts._id, "_id", 00, `Unique 24-hexadecimal character string that identifies this certificate.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.createdAt, "createdAt", "", `Date and time when MongoDB Cloud created this certificate. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal character string that identifies the project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.links, "links", nil, `List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().IntVar(&opts.monthsUntilExpiration, "monthsUntilExpiration", 3, `Number of months that the certificate remains valid until it expires.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.notAfter, "notAfter", "", `Date and time when this certificate expires. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.subject, "subject", "", `Subject Alternative Name associated with this certificate. This parameter expresses its value as a distinguished name as defined in [RFC 2253](https://tools.ietf.org/html/2253).`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("username")
@@ -112,7 +150,7 @@ func (opts *disableCustomerManagedX509Opts) initClient() func() error {
 	}
 }
 
-func (opts *disableCustomerManagedX509Opts) Run(ctx context.Context) error {
+func (opts *disableCustomerManagedX509Opts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DisableCustomerManagedX509ApiParams{
 		GroupId: opts.groupId,
 	}
@@ -121,32 +159,29 @@ func (opts *disableCustomerManagedX509Opts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func disableCustomerManagedX509Builder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := disableCustomerManagedX509Opts{}
 	cmd := &cobra.Command{
 		Use:   "disableCustomerManagedX509",
 		Short: "Disable Customer-Managed X.509",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -171,7 +206,7 @@ func (opts *listDatabaseUserCertificatesOpts) initClient() func() error {
 	}
 }
 
-func (opts *listDatabaseUserCertificatesOpts) Run(ctx context.Context) error {
+func (opts *listDatabaseUserCertificatesOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListDatabaseUserCertificatesApiParams{
 		GroupId:      opts.groupId,
 		Username:     opts.username,
@@ -184,27 +219,21 @@ func (opts *listDatabaseUserCertificatesOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listDatabaseUserCertificatesBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listDatabaseUserCertificatesOpts{}
 	cmd := &cobra.Command{
 		Use:   "listDatabaseUserCertificates",
 		Short: "Return All X.509 Certificates Assigned to One MongoDB User",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -214,6 +243,9 @@ func listDatabaseUserCertificatesBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("username")

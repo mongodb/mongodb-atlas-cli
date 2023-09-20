@@ -18,20 +18,28 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
 	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type createLinkTokenOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
-	orgId string
-	
+	orgId  string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createLinkTokenOpts) initClient() func() error {
@@ -42,54 +50,81 @@ func (opts *createLinkTokenOpts) initClient() func() error {
 	}
 }
 
-func (opts *createLinkTokenOpts) Run(ctx context.Context) error {
+func (opts *createLinkTokenOpts) readData() (*admin.TargetOrgRequest, error) {
+	var out *admin.TargetOrgRequest
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createLinkTokenOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateLinkTokenApiParams{
 		OrgId: opts.orgId,
-		
+
+		TargetOrgRequest: data,
 	}
 	resp, _, err := opts.client.CloudMigrationServiceApi.CreateLinkTokenWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createLinkTokenBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createLinkTokenOpts{}
+	opts := createLinkTokenOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "createLinkToken",
+		Use:   "createLinkToken",
 		Short: "Create One Link-Token",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
-	
 
-	cmd.Flags().ArraySliceVar(&opts.accessListIps, "accessListIps", nil, `IP address access list entries associated with the API key.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
+
 type createPushMigrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createPushMigrationOpts) initClient() func() error {
@@ -100,63 +135,88 @@ func (opts *createPushMigrationOpts) initClient() func() error {
 	}
 }
 
-func (opts *createPushMigrationOpts) Run(ctx context.Context) error {
+func (opts *createPushMigrationOpts) readData() (*admin.LiveMigrationRequest, error) {
+	var out *admin.LiveMigrationRequest
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createPushMigrationOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreatePushMigrationApiParams{
 		GroupId: opts.groupId,
-		
+
+		LiveMigrationRequest: data,
 	}
 	resp, _, err := opts.client.CloudMigrationServiceApi.CreatePushMigrationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createPushMigrationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createPushMigrationOpts{}
+	opts := createPushMigrationOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "createPushMigration",
+		Use:   "createPushMigration",
 		Short: "Migrate One Local Managed Cluster to MongoDB Atlas",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	
 
-	cmd.Flags().StringVar(&opts._id, "_id", "", `Unique 24-hexadecimal digit string that identifies the migration request.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().DestinationVar(&opts.destination, "destination", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.dropEnabled, "dropEnabled", false, `Flag that indicates whether the migration process drops all collections from the destination cluster before the migration starts.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.migrationHosts, "migrationHosts", nil, `List of migration hosts used for this migration.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().SourceVar(&opts.source, "source", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
+
 type cutoverMigrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client          *admin.APIClient
+	groupId         string
 	liveMigrationId string
 }
 
@@ -168,9 +228,9 @@ func (opts *cutoverMigrationOpts) initClient() func() error {
 	}
 }
 
-func (opts *cutoverMigrationOpts) Run(ctx context.Context) error {
+func (opts *cutoverMigrationOpts) Run(ctx context.Context, _ io.Writer) error {
 	params := &admin.CutoverMigrationApiParams{
-		GroupId: opts.groupId,
+		GroupId:         opts.groupId,
 		LiveMigrationId: opts.liveMigrationId,
 	}
 	_, err := opts.client.CloudMigrationServiceApi.CutoverMigrationWithParams(ctx, params).Execute()
@@ -178,27 +238,21 @@ func (opts *cutoverMigrationOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(nil)
+	return nil
 }
 
 func cutoverMigrationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := cutoverMigrationOpts{}
 	cmd := &cobra.Command{
-		Use: "cutoverMigration",
+		Use:   "cutoverMigration",
 		Short: "Cut Over the Migrated Cluster",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -206,16 +260,19 @@ func cutoverMigrationBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.liveMigrationId, "liveMigrationId", "", `Unique 24-hexadecimal digit string that identifies the migration.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("liveMigrationId")
 	return cmd
 }
+
 type deleteLinkTokenOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
-	orgId string
+	orgId  string
 }
 
 func (opts *deleteLinkTokenOpts) initClient() func() error {
@@ -226,7 +283,7 @@ func (opts *deleteLinkTokenOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteLinkTokenOpts) Run(ctx context.Context) error {
+func (opts *deleteLinkTokenOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteLinkTokenApiParams{
 		OrgId: opts.orgId,
 	}
@@ -235,40 +292,37 @@ func (opts *deleteLinkTokenOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteLinkTokenBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteLinkTokenOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteLinkToken",
+		Use:   "deleteLinkToken",
 		Short: "Remove One Link-Token",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
+
 type getPushMigrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client          *admin.APIClient
+	groupId         string
 	liveMigrationId string
 }
 
@@ -280,9 +334,9 @@ func (opts *getPushMigrationOpts) initClient() func() error {
 	}
 }
 
-func (opts *getPushMigrationOpts) Run(ctx context.Context) error {
+func (opts *getPushMigrationOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetPushMigrationApiParams{
-		GroupId: opts.groupId,
+		GroupId:         opts.groupId,
 		LiveMigrationId: opts.liveMigrationId,
 	}
 	resp, _, err := opts.client.CloudMigrationServiceApi.GetPushMigrationWithParams(ctx, params).Execute()
@@ -290,27 +344,21 @@ func (opts *getPushMigrationOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getPushMigrationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getPushMigrationOpts{}
 	cmd := &cobra.Command{
-		Use: "getPushMigration",
+		Use:   "getPushMigration",
 		Short: "Return One Migration Job",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -318,16 +366,19 @@ func getPushMigrationBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.liveMigrationId, "liveMigrationId", "", `Unique 24-hexadecimal digit string that identifies the migration.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("liveMigrationId")
 	return cmd
 }
+
 type getValidationStatusOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client       *admin.APIClient
+	groupId      string
 	validationId string
 }
 
@@ -339,9 +390,9 @@ func (opts *getValidationStatusOpts) initClient() func() error {
 	}
 }
 
-func (opts *getValidationStatusOpts) Run(ctx context.Context) error {
+func (opts *getValidationStatusOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetValidationStatusApiParams{
-		GroupId: opts.groupId,
+		GroupId:      opts.groupId,
 		ValidationId: opts.validationId,
 	}
 	resp, _, err := opts.client.CloudMigrationServiceApi.GetValidationStatusWithParams(ctx, params).Execute()
@@ -349,27 +400,21 @@ func (opts *getValidationStatusOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getValidationStatusBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getValidationStatusOpts{}
 	cmd := &cobra.Command{
-		Use: "getValidationStatus",
+		Use:   "getValidationStatus",
 		Short: "Return One Migration Validation Job",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -377,16 +422,19 @@ func getValidationStatusBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.validationId, "validationId", "", `Unique 24-hexadecimal digit string that identifies the validation job.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("validationId")
 	return cmd
 }
+
 type listSourceProjectsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
-	orgId string
+	orgId  string
 }
 
 func (opts *listSourceProjectsOpts) initClient() func() error {
@@ -397,7 +445,7 @@ func (opts *listSourceProjectsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listSourceProjectsOpts) Run(ctx context.Context) error {
+func (opts *listSourceProjectsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListSourceProjectsApiParams{
 		OrgId: opts.orgId,
 	}
@@ -406,41 +454,40 @@ func (opts *listSourceProjectsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listSourceProjectsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listSourceProjectsOpts{}
 	cmd := &cobra.Command{
-		Use: "listSourceProjects",
+		Use:   "listSourceProjects",
 		Short: "Return All Projects Available for Migration",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
+
 type validateMigrationOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client  *admin.APIClient
 	groupId string
-	
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *validateMigrationOpts) initClient() func() error {
@@ -451,54 +498,78 @@ func (opts *validateMigrationOpts) initClient() func() error {
 	}
 }
 
-func (opts *validateMigrationOpts) Run(ctx context.Context) error {
+func (opts *validateMigrationOpts) readData() (*admin.LiveMigrationRequest, error) {
+	var out *admin.LiveMigrationRequest
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *validateMigrationOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.ValidateMigrationApiParams{
 		GroupId: opts.groupId,
-		
+
+		LiveMigrationRequest: data,
 	}
 	resp, _, err := opts.client.CloudMigrationServiceApi.ValidateMigrationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func validateMigrationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := validateMigrationOpts{}
+	opts := validateMigrationOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "validateMigration",
+		Use:   "validateMigration",
 		Short: "Validate One Migration Request",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
-	
 
-	cmd.Flags().StringVar(&opts._id, "_id", "", `Unique 24-hexadecimal digit string that identifies the migration request.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().DestinationVar(&opts.destination, "destination", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.dropEnabled, "dropEnabled", false, `Flag that indicates whether the migration process drops all collections from the destination cluster before the migration starts.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.migrationHosts, "migrationHosts", nil, `List of migration hosts used for this migration.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().SourceVar(&opts.source, "source", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -506,8 +577,8 @@ func validateMigrationBuilder() *cobra.Command {
 
 func cloudMigrationServiceBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "cloudMigrationService",
-		Short:   `Manages the Cloud Migration Service. Source organizations, projects, and MongoDB clusters reside on Cloud Manager or Ops Manager. Destination organizations, projects, and MongoDB clusters reside on MongoDB Cloud. Source databases can&#39;t use any authentication except SCRAM-SHA.`,
+		Use:   "cloudMigrationService",
+		Short: `Manages the Cloud Migration Service. Source organizations, projects, and MongoDB clusters reside on Cloud Manager or Ops Manager. Destination organizations, projects, and MongoDB clusters reside on MongoDB Cloud. Source databases can&#39;t use any authentication except SCRAM-SHA.`,
 	}
 	cmd.AddCommand(
 		createLinkTokenBuilder(),
@@ -521,4 +592,3 @@ func cloudMigrationServiceBuilder() *cobra.Command {
 	)
 	return cmd
 }
-

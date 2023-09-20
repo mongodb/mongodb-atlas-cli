@@ -4,11 +4,14 @@ package {{packageName}}
 import (
 	"context"
 	"os"
+	"io"
 	"time"
 
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 	"{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/internal/cli"
+	"{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/internal/jsonwriter"
 )
 
 {{#operations}}
@@ -20,6 +23,10 @@ type {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts struct {
 	{{#allParams}}
 	{{^isBodyParam}}{{paramName}} {{{dataType}}}{{/isBodyParam}}
 	{{/allParams}}
+	{{#bodyParam}}
+	filename string
+	fs afero.Fs
+	{{/bodyParam}}
 }
 
 func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) initClient() func() error {
@@ -30,46 +37,78 @@ func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) initC
 	}
 }
 
-func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) Run(ctx context.Context) error {
+{{#bodyParam}}
+func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) readData() ({{#isArray}}[]{{/isArray}}*admin.{{baseType}}, error) {
+	var out {{#isArray}}[]{{/isArray}}*admin.{{baseType}}
+	
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+{{/bodyParam}}
+
+func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) Run(ctx context.Context, {{^returnType}}_{{/returnType}}{{#returnType}}w{{/returnType}} io.Writer) error {
+	{{#bodyParam}}
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
+	{{/bodyParam}}
 	params := &admin.{{operationId}}ApiParams{
 		{{#allParams}}
 		{{^isBodyParam}}{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: {{#isDateTime}}convertTime({{/isDateTime}}{{^isPathParam}}&{{/isPathParam}}opts.{{paramName}}{{#isDateTime}}){{/isDateTime}},{{/isBodyParam}}
-		{{/allParams}}
+		{{/allParams}}{{#bodyParam}}
+		{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: data,
+		{{/bodyParam}}
 	}
 	{{#returnType}}resp, {{/returnType}}_, err := opts.client.{{classname}}.{{operationId}}WithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print({{#returnType}}resp{{/returnType}}{{^returnType}}nil{{/returnType}})
+	return {{^returnType}}nil{{/returnType}}{{#returnType}}jsonwriter.Print(w, resp){{/returnType}}
 }
 
 func {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Builder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts{}
+	opts := {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts{
+		{{#bodyParam}}
+		fs: afero.NewOsFs(),
+		{{/bodyParam}}
+	}
 	cmd := &cobra.Command{
 		Use: "{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}",
 		Short: "{{ summary }}",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 {{#allParams}}
 	{{^isBodyParam}}cmd.Flags().{{#isArray}}{{#lambda.titlecase}}{{baseType}}{{/lambda.titlecase}}Slice{{/isArray}}{{^isArray}}{{#lambda.titlecase}}{{dataType}}{{/lambda.titlecase}}{{/isArray}}Var(&opts.{{paramName}}, "{{paramName}}", {{#isDateTime}}""{{/isDateTime}}{{#isString}}"{{/isString}}{{^defaultValue}}{{#isArray}}nil{{/isArray}}{{#isNumeric}}0{{/isNumeric}}{{#isInteger}}0{{/isInteger}}{{#isShort}}0{{/isShort}}{{#isLong}}0{{/isLong}}{{#isUnboundedInteger}}0{{/isUnboundedInteger}}{{#isNumber}}0{{/isNumber}}{{#isFloat}}0{{/isFloat}}{{#isDouble}}0{{/isDouble}}{{#isDecimal}}0{{/isDecimal}}{{#isBoolean}}false{{/isBoolean}}{{/defaultValue}}{{defaultValue}}{{#isString}}"{{/isString}}, `{{unescapedDescription}}`){{/isBodyParam}}
 {{/allParams}}
 {{#bodyParam}}{{#vars}}
-	cmd.Flags().{{#isArray}}{{#lambda.titlecase}}{{baseType}}{{/lambda.titlecase}}Slice{{/isArray}}{{^isArray}}{{#lambda.titlecase}}{{dataType}}{{/lambda.titlecase}}{{/isArray}}Var(&opts.{{baseName}}, "{{baseName}}", {{#isDateTime}}""{{/isDateTime}}{{#isString}}"{{/isString}}{{^defaultValue}}{{#isArray}}nil{{/isArray}}{{#isNumeric}}0{{/isNumeric}}{{#isInteger}}0{{/isInteger}}{{#isShort}}0{{/isShort}}{{#isLong}}0{{/isLong}}{{#isUnboundedInteger}}0{{/isUnboundedInteger}}{{#isNumber}}0{{/isNumber}}{{#isFloat}}0{{/isFloat}}{{#isDouble}}0{{/isDouble}}{{#isDecimal}}0{{/isDecimal}}{{#isBoolean}}false{{/isBoolean}}{{/defaultValue}}{{defaultValue}}{{#isString}}"{{/isString}}, `{{unescapedDescription}}`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 {{/vars}}{{/bodyParam}}
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 {{#allParams}}{{^isBodyParam}}{{#required}}
 	_ = cmd.MarkFlagRequired("{{paramName}}"){{/required}}{{/isBodyParam}}{{/allParams}}
 	return cmd

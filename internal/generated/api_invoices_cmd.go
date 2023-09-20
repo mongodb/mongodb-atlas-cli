@@ -18,8 +18,12 @@ package generated
 
 import (
 	"context"
+	"io"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -40,7 +44,7 @@ func (opts *downloadInvoiceCSVOpts) initClient() func() error {
 	}
 }
 
-func (opts *downloadInvoiceCSVOpts) Run(ctx context.Context) error {
+func (opts *downloadInvoiceCSVOpts) Run(ctx context.Context, _ io.Writer) error {
 	params := &admin.DownloadInvoiceCSVApiParams{
 		OrgId:     opts.orgId,
 		InvoiceId: opts.invoiceId,
@@ -50,31 +54,28 @@ func (opts *downloadInvoiceCSVOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(nil)
+	return nil
 }
 
 func downloadInvoiceCSVBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := downloadInvoiceCSVOpts{}
 	cmd := &cobra.Command{
 		Use:   "downloadInvoiceCSV",
 		Short: "Return One Organization Invoice as CSV",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().StringVar(&opts.invoiceId, "invoiceId", "", `Unique 24-hexadecimal digit string that identifies the invoice submitted to the specified organization. Charges typically post the next day.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("invoiceId")
@@ -97,7 +98,7 @@ func (opts *getInvoiceOpts) initClient() func() error {
 	}
 }
 
-func (opts *getInvoiceOpts) Run(ctx context.Context) error {
+func (opts *getInvoiceOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetInvoiceApiParams{
 		OrgId:     opts.orgId,
 		InvoiceId: opts.invoiceId,
@@ -107,31 +108,28 @@ func (opts *getInvoiceOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getInvoiceBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getInvoiceOpts{}
 	cmd := &cobra.Command{
 		Use:   "getInvoice",
 		Short: "Return One Organization Invoice",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().StringVar(&opts.invoiceId, "invoiceId", "", `Unique 24-hexadecimal digit string that identifies the invoice submitted to the specified organization. Charges typically post the next day.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("invoiceId")
@@ -156,7 +154,7 @@ func (opts *listInvoicesOpts) initClient() func() error {
 	}
 }
 
-func (opts *listInvoicesOpts) Run(ctx context.Context) error {
+func (opts *listInvoicesOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListInvoicesApiParams{
 		OrgId:        opts.orgId,
 		IncludeCount: &opts.includeCount,
@@ -168,33 +166,30 @@ func (opts *listInvoicesOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listInvoicesBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listInvoicesOpts{}
 	cmd := &cobra.Command{
 		Use:   "listInvoices",
 		Short: "Return All Invoices for One Organization",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
@@ -215,7 +210,7 @@ func (opts *listPendingInvoicesOpts) initClient() func() error {
 	}
 }
 
-func (opts *listPendingInvoicesOpts) Run(ctx context.Context) error {
+func (opts *listPendingInvoicesOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListPendingInvoicesApiParams{
 		OrgId: opts.orgId,
 	}
@@ -224,30 +219,27 @@ func (opts *listPendingInvoicesOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listPendingInvoicesBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listPendingInvoicesOpts{}
 	cmd := &cobra.Command{
 		Use:   "listPendingInvoices",
 		Short: "Return All Pending Invoices for One Organization",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd

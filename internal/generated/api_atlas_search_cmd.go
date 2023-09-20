@@ -18,21 +18,29 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
 	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type createAtlasSearchIndexOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createAtlasSearchIndexOpts) initClient() func() error {
@@ -43,96 +51,103 @@ func (opts *createAtlasSearchIndexOpts) initClient() func() error {
 	}
 }
 
-func (opts *createAtlasSearchIndexOpts) Run(ctx context.Context) error {
+func (opts *createAtlasSearchIndexOpts) readData() (*admin.FTSIndex, error) {
+	var out *admin.FTSIndex
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createAtlasSearchIndexOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateAtlasSearchIndexApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		
+
+		FTSIndex: data,
 	}
 	resp, _, err := opts.client.AtlasSearchApi.CreateAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createAtlasSearchIndexBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createAtlasSearchIndexOpts{}
+	opts := createAtlasSearchIndexOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "createAtlasSearchIndex",
+		Use:   "createAtlasSearchIndex",
 		Short: "Create One Atlas Search Index",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Name of the cluster that contains the collection on which to create an Atlas Search index.`)
-	
 
-	cmd.Flags().StringVar(&opts.analyzer, "analyzer", "&quot;lucene.standard&quot;", `Specific pre-defined method chosen to convert database field text into searchable words. This conversion reduces the text of fields into the smallest units of text. These units are called a **term** or **token**. This process, known as tokenization, involves a variety of changes made to the text in fields:
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-- extracting words
-- removing punctuation
-- removing accents
-- changing to lowercase
-- removing common words
-- reducing words to their root form (stemming)
-- changing words to their base form (lemmatization)
- MongoDB Cloud uses the selected process to build the Atlas Search index.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.analyzers, "analyzers", nil, `List of user-defined methods to convert database field text into searchable words.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.collectionName, "collectionName", "", `Human-readable label that identifies the collection that contains one or more Atlas Search indexes.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.database, "database", "", `Human-readable label that identifies the database that contains the collection with one or more Atlas Search indexes.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.indexID, "indexID", "", `Unique 24-hexadecimal digit string that identifies this Atlas Search index.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().FTSMappingsVar(&opts.mappings, "mappings", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies this index. Within each namespace, names of all indexes in the namespace must be unique.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.searchAnalyzer, "searchAnalyzer", "&quot;lucene.standard&quot;", `Method applied to identify words when searching this index.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.status, "status", "", `Condition of the search index when you made this request.
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-| Status | Index Condition |
- |---|---|
- | IN_PROGRESS | Atlas is building or re-building the index after an edit. |
- | STEADY | You can use this search index. |
- | FAILED | Atlas could not build the index. |
- | MIGRATING | Atlas is upgrading the underlying cluster tier and migrating indexes. |
- | PAUSED | The cluster is paused. |
-`)
-
-	cmd.Flags().ArraySliceVar(&opts.synonyms, "synonyms", nil, `Rule sets that map words to their synonyms in this index.`)
-
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
+
 type deleteAtlasSearchIndexOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	indexId string
+	indexId     string
 }
 
 func (opts *deleteAtlasSearchIndexOpts) initClient() func() error {
@@ -143,38 +158,32 @@ func (opts *deleteAtlasSearchIndexOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteAtlasSearchIndexOpts) Run(ctx context.Context) error {
+func (opts *deleteAtlasSearchIndexOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteAtlasSearchIndexApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		IndexId: opts.indexId,
+		IndexId:     opts.indexId,
 	}
 	resp, _, err := opts.client.AtlasSearchApi.DeleteAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteAtlasSearchIndexBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteAtlasSearchIndexOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteAtlasSearchIndex",
+		Use:   "deleteAtlasSearchIndex",
 		Short: "Remove One Atlas Search Index",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -183,19 +192,22 @@ func deleteAtlasSearchIndexBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Name of the cluster that contains the database and collection with one or more Application Search indexes.`)
 	cmd.Flags().StringVar(&opts.indexId, "indexId", "", `Unique 24-hexadecimal digit string that identifies the Atlas Search index. Use the [Get All Atlas Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Atlas Search indexes.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("indexId")
 	return cmd
 }
+
 type getAtlasSearchIndexOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	indexId string
+	indexId     string
 }
 
 func (opts *getAtlasSearchIndexOpts) initClient() func() error {
@@ -206,38 +218,32 @@ func (opts *getAtlasSearchIndexOpts) initClient() func() error {
 	}
 }
 
-func (opts *getAtlasSearchIndexOpts) Run(ctx context.Context) error {
+func (opts *getAtlasSearchIndexOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetAtlasSearchIndexApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		IndexId: opts.indexId,
+		IndexId:     opts.indexId,
 	}
 	resp, _, err := opts.client.AtlasSearchApi.GetAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getAtlasSearchIndexBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getAtlasSearchIndexOpts{}
 	cmd := &cobra.Command{
-		Use: "getAtlasSearchIndex",
+		Use:   "getAtlasSearchIndex",
 		Short: "Return One Atlas Search Index",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -246,20 +252,23 @@ func getAtlasSearchIndexBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Name of the cluster that contains the collection with one or more Atlas Search indexes.`)
 	cmd.Flags().StringVar(&opts.indexId, "indexId", "", `Unique 24-hexadecimal digit string that identifies the Application Search [index](https://docs.atlas.mongodb.com/reference/atlas-search/index-definitions/). Use the [Get All Application Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Application Search indexes.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("indexId")
 	return cmd
 }
+
 type listAtlasSearchIndexesOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
-	clusterName string
+	client         *admin.APIClient
+	groupId        string
+	clusterName    string
 	collectionName string
-	databaseName string
+	databaseName   string
 }
 
 func (opts *listAtlasSearchIndexesOpts) initClient() func() error {
@@ -270,39 +279,33 @@ func (opts *listAtlasSearchIndexesOpts) initClient() func() error {
 	}
 }
 
-func (opts *listAtlasSearchIndexesOpts) Run(ctx context.Context) error {
+func (opts *listAtlasSearchIndexesOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListAtlasSearchIndexesApiParams{
-		GroupId: opts.groupId,
-		ClusterName: opts.clusterName,
+		GroupId:        opts.groupId,
+		ClusterName:    opts.clusterName,
 		CollectionName: opts.collectionName,
-		DatabaseName: opts.databaseName,
+		DatabaseName:   opts.databaseName,
 	}
 	resp, _, err := opts.client.AtlasSearchApi.ListAtlasSearchIndexesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listAtlasSearchIndexesBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listAtlasSearchIndexesOpts{}
 	cmd := &cobra.Command{
-		Use: "listAtlasSearchIndexes",
+		Use:   "listAtlasSearchIndexes",
 		Short: "Return All Atlas Search Indexes for One Collection",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -312,6 +315,8 @@ func listAtlasSearchIndexesBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.collectionName, "collectionName", "", `Name of the collection that contains one or more Atlas Search indexes.`)
 	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", `Human-readable label that identifies the database that contains the collection with one or more Atlas Search indexes.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
@@ -319,14 +324,17 @@ func listAtlasSearchIndexesBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired("databaseName")
 	return cmd
 }
+
 type updateAtlasSearchIndexOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
-	groupId string
+	client      *admin.APIClient
+	groupId     string
 	clusterName string
-	indexId string
-	
+	indexId     string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateAtlasSearchIndexOpts) initClient() func() error {
@@ -337,39 +345,62 @@ func (opts *updateAtlasSearchIndexOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateAtlasSearchIndexOpts) Run(ctx context.Context) error {
+func (opts *updateAtlasSearchIndexOpts) readData() (*admin.FTSIndex, error) {
+	var out *admin.FTSIndex
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateAtlasSearchIndexOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateAtlasSearchIndexApiParams{
-		GroupId: opts.groupId,
+		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
-		IndexId: opts.indexId,
-		
+		IndexId:     opts.indexId,
+
+		FTSIndex: data,
 	}
 	resp, _, err := opts.client.AtlasSearchApi.UpdateAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateAtlasSearchIndexBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateAtlasSearchIndexOpts{}
+	opts := updateAtlasSearchIndexOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "updateAtlasSearchIndex",
+		Use:   "updateAtlasSearchIndex",
 		Short: "Update One Atlas Search Index",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -377,46 +408,29 @@ func updateAtlasSearchIndexBuilder() *cobra.Command {
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Name of the cluster that contains the collection whose Atlas Search index to update.`)
 	cmd.Flags().StringVar(&opts.indexId, "indexId", "", `Unique 24-hexadecimal digit string that identifies the Atlas Search [index](https://docs.atlas.mongodb.com/reference/atlas-search/index-definitions/). Use the [Get All Atlas Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Atlas Search indexes.`)
-	
 
-	cmd.Flags().StringVar(&opts.analyzer, "analyzer", "&quot;lucene.standard&quot;", `Specific pre-defined method chosen to convert database field text into searchable words. This conversion reduces the text of fields into the smallest units of text. These units are called a **term** or **token**. This process, known as tokenization, involves a variety of changes made to the text in fields:
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-- extracting words
-- removing punctuation
-- removing accents
-- changing to lowercase
-- removing common words
-- reducing words to their root form (stemming)
-- changing words to their base form (lemmatization)
- MongoDB Cloud uses the selected process to build the Atlas Search index.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.analyzers, "analyzers", nil, `List of user-defined methods to convert database field text into searchable words.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.collectionName, "collectionName", "", `Human-readable label that identifies the collection that contains one or more Atlas Search indexes.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.database, "database", "", `Human-readable label that identifies the database that contains the collection with one or more Atlas Search indexes.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.indexID, "indexID", "", `Unique 24-hexadecimal digit string that identifies this Atlas Search index.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().FTSMappingsVar(&opts.mappings, "mappings", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies this index. Within each namespace, names of all indexes in the namespace must be unique.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.searchAnalyzer, "searchAnalyzer", "&quot;lucene.standard&quot;", `Method applied to identify words when searching this index.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.status, "status", "", `Condition of the search index when you made this request.
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-| Status | Index Condition |
- |---|---|
- | IN_PROGRESS | Atlas is building or re-building the index after an edit. |
- | STEADY | You can use this search index. |
- | FAILED | Atlas could not build the index. |
- | MIGRATING | Atlas is upgrading the underlying cluster tier and migrating indexes. |
- | PAUSED | The cluster is paused. |
-`)
-
-	cmd.Flags().ArraySliceVar(&opts.synonyms, "synonyms", nil, `Rule sets that map words to their synonyms in this index.`)
-
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
@@ -426,8 +440,8 @@ func updateAtlasSearchIndexBuilder() *cobra.Command {
 
 func atlasSearchBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "atlasSearch",
-		Short:   `Returns, adds, edits, and removes Atlas Search indexes for the specified cluster. Also returns and updates user-defined analyzers for the specified cluster.`,
+		Use:   "atlasSearch",
+		Short: `Returns, adds, edits, and removes Atlas Search indexes for the specified cluster. Also returns and updates user-defined analyzers for the specified cluster.`,
 	}
 	cmd.AddCommand(
 		createAtlasSearchIndexBuilder(),
@@ -438,4 +452,3 @@ func atlasSearchBuilder() *cobra.Command {
 	)
 	return cmd
 }
-

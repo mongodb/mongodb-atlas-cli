@@ -18,8 +18,16 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -30,6 +38,9 @@ type addProjectApiKeyOpts struct {
 	client    *admin.APIClient
 	groupId   string
 	apiUserId string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *addProjectApiKeyOpts) initClient() func() error {
@@ -40,43 +51,70 @@ func (opts *addProjectApiKeyOpts) initClient() func() error {
 	}
 }
 
-func (opts *addProjectApiKeyOpts) Run(ctx context.Context) error {
+func (opts *addProjectApiKeyOpts) readData() ([]*admin.UserRoleAssignment, error) {
+	var out []*admin.UserRoleAssignment
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *addProjectApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.AddProjectApiKeyApiParams{
 		GroupId:   opts.groupId,
 		ApiUserId: opts.apiUserId,
+
+		UserRoleAssignment: data,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.AddProjectApiKeyWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func addProjectApiKeyBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := addProjectApiKeyOpts{}
+	opts := addProjectApiKeyOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "addProjectApiKey",
 		Short: "Assign One Organization API Key to One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key that you want to assign to one project.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("apiUserId")
@@ -88,6 +126,9 @@ type createApiKeyOpts struct {
 	cli.OutputOpts
 	client *admin.APIClient
 	orgId  string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createApiKeyOpts) initClient() func() error {
@@ -98,43 +139,70 @@ func (opts *createApiKeyOpts) initClient() func() error {
 	}
 }
 
-func (opts *createApiKeyOpts) Run(ctx context.Context) error {
+func (opts *createApiKeyOpts) readData() (*admin.CreateApiKey, error) {
+	var out *admin.CreateApiKey
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateApiKeyApiParams{
 		OrgId: opts.orgId,
+
+		CreateApiKey: data,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.CreateApiKeyWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createApiKeyBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createApiKeyOpts{}
+	opts := createApiKeyOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "createApiKey",
 		Short: "Create One Organization API Key",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
-	cmd.Flags().StringVar(&opts.desc, "desc", "", `Purpose or explanation provided when someone created this organization API key.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.roles, "roles", nil, `List of roles to grant this API key. If you provide this list, provide a minimum of one role and ensure each role applies to this organization or project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
@@ -150,6 +218,8 @@ type createApiKeyAccessListOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
+	filename     string
+	fs           afero.Fs
 }
 
 func (opts *createApiKeyAccessListOpts) initClient() func() error {
@@ -160,7 +230,33 @@ func (opts *createApiKeyAccessListOpts) initClient() func() error {
 	}
 }
 
-func (opts *createApiKeyAccessListOpts) Run(ctx context.Context) error {
+func (opts *createApiKeyAccessListOpts) readData() ([]*admin.UserAccessList, error) {
+	var out []*admin.UserAccessList
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createApiKeyAccessListOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateApiKeyAccessListApiParams{
 		OrgId:     opts.orgId,
 		ApiUserId: opts.apiUserId,
@@ -168,33 +264,31 @@ func (opts *createApiKeyAccessListOpts) Run(ctx context.Context) error {
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
+
+		UserAccessList: data,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.CreateApiKeyAccessListWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createApiKeyAccessListBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createApiKeyAccessListOpts{}
+	opts := createApiKeyAccessListOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "createApiKeyAccessList",
 		Short: "Create Access List Entries for One Organization API Key",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -203,6 +297,9 @@ func createApiKeyAccessListBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("apiUserId")
@@ -214,6 +311,9 @@ type createProjectApiKeyOpts struct {
 	cli.OutputOpts
 	client  *admin.APIClient
 	groupId string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createProjectApiKeyOpts) initClient() func() error {
@@ -224,45 +324,72 @@ func (opts *createProjectApiKeyOpts) initClient() func() error {
 	}
 }
 
-func (opts *createProjectApiKeyOpts) Run(ctx context.Context) error {
+func (opts *createProjectApiKeyOpts) readData() (*admin.CreateApiKey, error) {
+	var out *admin.CreateApiKey
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createProjectApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateProjectApiKeyApiParams{
 		GroupId: opts.groupId,
+
+		CreateApiKey: data,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.CreateProjectApiKeyWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createProjectApiKeyBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createProjectApiKeyOpts{}
+	opts := createProjectApiKeyOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "createProjectApiKey",
 		Short: "Create and Assign One Organization API Key to One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 
-	cmd.Flags().StringVar(&opts.desc, "desc", "", `Purpose or explanation provided when someone created this organization API key.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.roles, "roles", nil, `List of roles to grant this API key. If you provide this list, provide a minimum of one role and ensure each role applies to this organization or project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -284,7 +411,7 @@ func (opts *deleteApiKeyOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteApiKeyOpts) Run(ctx context.Context) error {
+func (opts *deleteApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteApiKeyApiParams{
 		OrgId:     opts.orgId,
 		ApiUserId: opts.apiUserId,
@@ -294,31 +421,28 @@ func (opts *deleteApiKeyOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteApiKeyBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteApiKeyOpts{}
 	cmd := &cobra.Command{
 		Use:   "deleteApiKey",
 		Short: "Remove One Organization API Key",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("apiUserId")
@@ -342,7 +466,7 @@ func (opts *deleteApiKeyAccessListEntryOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteApiKeyAccessListEntryOpts) Run(ctx context.Context) error {
+func (opts *deleteApiKeyAccessListEntryOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteApiKeyAccessListEntryApiParams{
 		OrgId:     opts.orgId,
 		ApiUserId: opts.apiUserId,
@@ -353,32 +477,29 @@ func (opts *deleteApiKeyAccessListEntryOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteApiKeyAccessListEntryBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteApiKeyAccessListEntryOpts{}
 	cmd := &cobra.Command{
 		Use:   "deleteApiKeyAccessListEntry",
 		Short: "Remove One Access List Entry for One Organization API Key",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key for which you want to remove access list entries.`)
 	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", `One IP address or multiple IP addresses represented as one CIDR block to limit requests to API resources in the specified organization. When adding a CIDR block with a subnet mask, such as 192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("apiUserId")
@@ -402,7 +523,7 @@ func (opts *getApiKeyOpts) initClient() func() error {
 	}
 }
 
-func (opts *getApiKeyOpts) Run(ctx context.Context) error {
+func (opts *getApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetApiKeyApiParams{
 		OrgId:     opts.orgId,
 		ApiUserId: opts.apiUserId,
@@ -412,31 +533,28 @@ func (opts *getApiKeyOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getApiKeyBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getApiKeyOpts{}
 	cmd := &cobra.Command{
 		Use:   "getApiKey",
 		Short: "Return One Organization API Key",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key that  you want to update.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("apiUserId")
@@ -460,7 +578,7 @@ func (opts *getApiKeyAccessListOpts) initClient() func() error {
 	}
 }
 
-func (opts *getApiKeyAccessListOpts) Run(ctx context.Context) error {
+func (opts *getApiKeyAccessListOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetApiKeyAccessListApiParams{
 		OrgId:     opts.orgId,
 		IpAddress: opts.ipAddress,
@@ -471,32 +589,29 @@ func (opts *getApiKeyAccessListOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getApiKeyAccessListBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getApiKeyAccessListOpts{}
 	cmd := &cobra.Command{
 		Use:   "getApiKeyAccessList",
 		Short: "Return One Access List Entry for One Organization API Key",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", `One IP address or multiple IP addresses represented as one CIDR block to limit  requests to API resources in the specified organization. When adding a CIDR block with a subnet mask, such as  192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key for  which you want to return access list entries.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("ipAddress")
@@ -523,7 +638,7 @@ func (opts *listApiKeyAccessListsEntriesOpts) initClient() func() error {
 	}
 }
 
-func (opts *listApiKeyAccessListsEntriesOpts) Run(ctx context.Context) error {
+func (opts *listApiKeyAccessListsEntriesOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListApiKeyAccessListsEntriesApiParams{
 		OrgId:        opts.orgId,
 		ApiUserId:    opts.apiUserId,
@@ -536,27 +651,21 @@ func (opts *listApiKeyAccessListsEntriesOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listApiKeyAccessListsEntriesBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listApiKeyAccessListsEntriesOpts{}
 	cmd := &cobra.Command{
 		Use:   "listApiKeyAccessListsEntries",
 		Short: "Return All Access List Entries for One Organization API Key",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -564,6 +673,9 @@ func listApiKeyAccessListsEntriesBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("apiUserId")
@@ -588,7 +700,7 @@ func (opts *listApiKeysOpts) initClient() func() error {
 	}
 }
 
-func (opts *listApiKeysOpts) Run(ctx context.Context) error {
+func (opts *listApiKeysOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListApiKeysApiParams{
 		OrgId:        opts.orgId,
 		IncludeCount: &opts.includeCount,
@@ -600,33 +712,30 @@ func (opts *listApiKeysOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listApiKeysBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listApiKeysOpts{}
 	cmd := &cobra.Command{
 		Use:   "listApiKeys",
 		Short: "Return All Organization API Keys",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
@@ -650,7 +759,7 @@ func (opts *listProjectApiKeysOpts) initClient() func() error {
 	}
 }
 
-func (opts *listProjectApiKeysOpts) Run(ctx context.Context) error {
+func (opts *listProjectApiKeysOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListProjectApiKeysApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
@@ -662,27 +771,21 @@ func (opts *listProjectApiKeysOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listProjectApiKeysBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listProjectApiKeysOpts{}
 	cmd := &cobra.Command{
 		Use:   "listProjectApiKeys",
 		Short: "Return All Organization API Keys Assigned to One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -691,6 +794,9 @@ func listProjectApiKeysBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -712,7 +818,7 @@ func (opts *removeProjectApiKeyOpts) initClient() func() error {
 	}
 }
 
-func (opts *removeProjectApiKeyOpts) Run(ctx context.Context) error {
+func (opts *removeProjectApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.RemoveProjectApiKeyApiParams{
 		GroupId:   opts.groupId,
 		ApiUserId: opts.apiUserId,
@@ -722,33 +828,30 @@ func (opts *removeProjectApiKeyOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func removeProjectApiKeyBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := removeProjectApiKeyOpts{}
 	cmd := &cobra.Command{
 		Use:   "removeProjectApiKey",
 		Short: "Unassign One Organization API Key from One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key that you want to unassign from one project.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("apiUserId")
@@ -761,6 +864,9 @@ type updateApiKeyOpts struct {
 	client    *admin.APIClient
 	orgId     string
 	apiUserId string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateApiKeyOpts) initClient() func() error {
@@ -771,45 +877,72 @@ func (opts *updateApiKeyOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateApiKeyOpts) Run(ctx context.Context) error {
+func (opts *updateApiKeyOpts) readData() (*admin.CreateApiKey, error) {
+	var out *admin.CreateApiKey
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateApiKeyApiParams{
 		OrgId:     opts.orgId,
 		ApiUserId: opts.apiUserId,
+
+		CreateApiKey: data,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.UpdateApiKeyWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateApiKeyBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateApiKeyOpts{}
+	opts := updateApiKeyOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "updateApiKey",
 		Short: "Update One Organization API Key",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key you  want to update.`)
 
-	cmd.Flags().StringVar(&opts.desc, "desc", "", `Purpose or explanation provided when someone created this organization API key.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.roles, "roles", nil, `List of roles to grant this API key. If you provide this list, provide a minimum of one role and ensure each role applies to this organization or project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("apiUserId")
@@ -826,6 +959,8 @@ type updateApiKeyRolesOpts struct {
 	pageNum      int
 	itemsPerPage int
 	includeCount bool
+	filename     string
+	fs           afero.Fs
 }
 
 func (opts *updateApiKeyRolesOpts) initClient() func() error {
@@ -836,7 +971,33 @@ func (opts *updateApiKeyRolesOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateApiKeyRolesOpts) Run(ctx context.Context) error {
+func (opts *updateApiKeyRolesOpts) readData() (*admin.CreateApiKey, error) {
+	var out *admin.CreateApiKey
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateApiKeyRolesOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateApiKeyRolesApiParams{
 		GroupId:   opts.groupId,
 		ApiUserId: opts.apiUserId,
@@ -844,33 +1005,31 @@ func (opts *updateApiKeyRolesOpts) Run(ctx context.Context) error {
 		PageNum:      &opts.pageNum,
 		ItemsPerPage: &opts.itemsPerPage,
 		IncludeCount: &opts.includeCount,
+
+		CreateApiKey: data,
 	}
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.UpdateApiKeyRolesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateApiKeyRolesBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateApiKeyRolesOpts{}
+	opts := updateApiKeyRolesOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "updateApiKeyRoles",
 		Short: "Update Roles of One Organization API Key to One Project",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -882,9 +1041,12 @@ func updateApiKeyRolesBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 
-	cmd.Flags().StringVar(&opts.desc, "desc", "", `Purpose or explanation provided when someone created this organization API key.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.roles, "roles", nil, `List of roles to grant this API key. If you provide this list, provide a minimum of one role and ensure each role applies to this organization or project.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("apiUserId")

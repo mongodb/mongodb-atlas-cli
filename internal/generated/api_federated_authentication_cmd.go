@@ -18,21 +18,29 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
 	"os"
-	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 )
 
 type createRoleMappingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client               *admin.APIClient
 	federationSettingsId string
-	orgId string
-	
+	orgId                string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *createRoleMappingOpts) initClient() func() error {
@@ -43,59 +51,84 @@ func (opts *createRoleMappingOpts) initClient() func() error {
 	}
 }
 
-func (opts *createRoleMappingOpts) Run(ctx context.Context) error {
+func (opts *createRoleMappingOpts) readData() (*admin.RoleMapping, error) {
+	var out *admin.RoleMapping
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createRoleMappingOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
-		OrgId: opts.orgId,
-		
+		OrgId:                opts.orgId,
+
+		RoleMapping: data,
 	}
 	resp, _, err := opts.client.FederatedAuthenticationApi.CreateRoleMappingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createRoleMappingBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createRoleMappingOpts{}
+	opts := createRoleMappingOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "createRoleMapping",
+		Use:   "createRoleMapping",
 		Short: "Add One Role Mapping to One Organization",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
-	
 
-	cmd.Flags().StringVar(&opts.externalGroupName, "externalGroupName", "", `Unique human-readable label that identifies the identity provider group to whichthis role mapping applies.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies this role mapping.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().SetSliceVar(&opts.roleAssignments, "roleAssignments", nil, `Atlas roles and the unique identifiers of the groups and organizations associated with each role.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
+
 type deleteFederationAppOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client               *admin.APIClient
 	federationSettingsId string
 }
 
@@ -107,7 +140,7 @@ func (opts *deleteFederationAppOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteFederationAppOpts) Run(ctx context.Context) error {
+func (opts *deleteFederationAppOpts) Run(ctx context.Context, _ io.Writer) error {
 	params := &admin.DeleteFederationAppApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 	}
@@ -116,42 +149,39 @@ func (opts *deleteFederationAppOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(nil)
+	return nil
 }
 
 func deleteFederationAppBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteFederationAppOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteFederationApp",
+		Use:   "deleteFederationApp",
 		Short: "Delete the federation settings instance.",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	return cmd
 }
+
 type deleteRoleMappingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client               *admin.APIClient
 	federationSettingsId string
-	id string
-	orgId string
+	id                   string
+	orgId                string
 }
 
 func (opts *deleteRoleMappingOpts) initClient() func() error {
@@ -162,56 +192,53 @@ func (opts *deleteRoleMappingOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteRoleMappingOpts) Run(ctx context.Context) error {
+func (opts *deleteRoleMappingOpts) Run(ctx context.Context, _ io.Writer) error {
 	params := &admin.DeleteRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
-		Id: opts.id,
-		OrgId: opts.orgId,
+		Id:                   opts.id,
+		OrgId:                opts.orgId,
 	}
 	_, err := opts.client.FederatedAuthenticationApi.DeleteRoleMappingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(nil)
+	return nil
 }
 
 func deleteRoleMappingBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteRoleMappingOpts{}
 	cmd := &cobra.Command{
-		Use: "deleteRoleMapping",
+		Use:   "deleteRoleMapping",
 		Short: "Remove One Role Mapping from One Organization",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the role mapping that you want to remove.`)
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("id")
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
+
 type getConnectedOrgConfigOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client               *admin.APIClient
 	federationSettingsId string
-	orgId string
+	orgId                string
 }
 
 func (opts *getConnectedOrgConfigOpts) initClient() func() error {
@@ -222,52 +249,49 @@ func (opts *getConnectedOrgConfigOpts) initClient() func() error {
 	}
 }
 
-func (opts *getConnectedOrgConfigOpts) Run(ctx context.Context) error {
+func (opts *getConnectedOrgConfigOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetConnectedOrgConfigApiParams{
 		FederationSettingsId: opts.federationSettingsId,
-		OrgId: opts.orgId,
+		OrgId:                opts.orgId,
 	}
 	resp, _, err := opts.client.FederatedAuthenticationApi.GetConnectedOrgConfigWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getConnectedOrgConfigBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getConnectedOrgConfigOpts{}
 	cmd := &cobra.Command{
-		Use: "getConnectedOrgConfig",
+		Use:   "getConnectedOrgConfig",
 		Short: "Return One Org Config Connected to One Federation",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the connected organization configuration to return.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
+
 type getFederationSettingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	client *admin.APIClient
-	orgId string
+	orgId  string
 }
 
 func (opts *getFederationSettingsOpts) initClient() func() error {
@@ -278,7 +302,7 @@ func (opts *getFederationSettingsOpts) initClient() func() error {
 	}
 }
 
-func (opts *getFederationSettingsOpts) Run(ctx context.Context) error {
+func (opts *getFederationSettingsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetFederationSettingsApiParams{
 		OrgId: opts.orgId,
 	}
@@ -287,41 +311,38 @@ func (opts *getFederationSettingsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getFederationSettingsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getFederationSettingsOpts{}
 	cmd := &cobra.Command{
-		Use: "getFederationSettings",
+		Use:   "getFederationSettings",
 		Short: "Return Federation Settings for One Organization",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
+
 type getIdentityProviderOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client               *admin.APIClient
 	federationSettingsId string
-	identityProviderId string
+	identityProviderId   string
 }
 
 func (opts *getIdentityProviderOpts) initClient() func() error {
@@ -332,53 +353,50 @@ func (opts *getIdentityProviderOpts) initClient() func() error {
 	}
 }
 
-func (opts *getIdentityProviderOpts) Run(ctx context.Context) error {
+func (opts *getIdentityProviderOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetIdentityProviderApiParams{
 		FederationSettingsId: opts.federationSettingsId,
-		IdentityProviderId: opts.identityProviderId,
+		IdentityProviderId:   opts.identityProviderId,
 	}
 	resp, _, err := opts.client.FederatedAuthenticationApi.GetIdentityProviderWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getIdentityProviderBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getIdentityProviderOpts{}
 	cmd := &cobra.Command{
-		Use: "getIdentityProvider",
+		Use:   "getIdentityProvider",
 		Short: "Return one identity provider from the specified federation.",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", `Unique 20-hexadecimal digit string that identifies the identity provider.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("identityProviderId")
 	return cmd
 }
+
 type getIdentityProviderMetadataOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client               *admin.APIClient
 	federationSettingsId string
-	identityProviderId string
+	identityProviderId   string
 }
 
 func (opts *getIdentityProviderMetadataOpts) initClient() func() error {
@@ -389,54 +407,51 @@ func (opts *getIdentityProviderMetadataOpts) initClient() func() error {
 	}
 }
 
-func (opts *getIdentityProviderMetadataOpts) Run(ctx context.Context) error {
+func (opts *getIdentityProviderMetadataOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetIdentityProviderMetadataApiParams{
 		FederationSettingsId: opts.federationSettingsId,
-		IdentityProviderId: opts.identityProviderId,
+		IdentityProviderId:   opts.identityProviderId,
 	}
 	resp, _, err := opts.client.FederatedAuthenticationApi.GetIdentityProviderMetadataWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getIdentityProviderMetadataBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getIdentityProviderMetadataOpts{}
 	cmd := &cobra.Command{
-		Use: "getIdentityProviderMetadata",
+		Use:   "getIdentityProviderMetadata",
 		Short: "Return the metadata of one identity provider in the specified federation.",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", `Unique 20-hexadecimal digit string that identifies the identity provider.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("identityProviderId")
 	return cmd
 }
+
 type getRoleMappingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client               *admin.APIClient
 	federationSettingsId string
-	id string
-	orgId string
+	id                   string
+	orgId                string
 }
 
 func (opts *getRoleMappingOpts) initClient() func() error {
@@ -447,54 +462,51 @@ func (opts *getRoleMappingOpts) initClient() func() error {
 	}
 }
 
-func (opts *getRoleMappingOpts) Run(ctx context.Context) error {
+func (opts *getRoleMappingOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
-		Id: opts.id,
-		OrgId: opts.orgId,
+		Id:                   opts.id,
+		OrgId:                opts.orgId,
 	}
 	resp, _, err := opts.client.FederatedAuthenticationApi.GetRoleMappingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getRoleMappingBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getRoleMappingOpts{}
 	cmd := &cobra.Command{
-		Use: "getRoleMapping",
+		Use:   "getRoleMapping",
 		Short: "Return One Role Mapping from One Organization",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the role mapping that you want to return.`)
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("id")
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
+
 type listConnectedOrgConfigsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client               *admin.APIClient
 	federationSettingsId string
 }
 
@@ -506,7 +518,7 @@ func (opts *listConnectedOrgConfigsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listConnectedOrgConfigsOpts) Run(ctx context.Context) error {
+func (opts *listConnectedOrgConfigsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListConnectedOrgConfigsApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 	}
@@ -515,39 +527,36 @@ func (opts *listConnectedOrgConfigsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listConnectedOrgConfigsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listConnectedOrgConfigsOpts{}
 	cmd := &cobra.Command{
-		Use: "listConnectedOrgConfigs",
+		Use:   "listConnectedOrgConfigs",
 		Short: "Return All Connected Org Configs from the Federation",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	return cmd
 }
+
 type listIdentityProvidersOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client               *admin.APIClient
 	federationSettingsId string
 }
 
@@ -559,7 +568,7 @@ func (opts *listIdentityProvidersOpts) initClient() func() error {
 	}
 }
 
-func (opts *listIdentityProvidersOpts) Run(ctx context.Context) error {
+func (opts *listIdentityProvidersOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListIdentityProvidersApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 	}
@@ -568,41 +577,38 @@ func (opts *listIdentityProvidersOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listIdentityProvidersBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listIdentityProvidersOpts{}
 	cmd := &cobra.Command{
-		Use: "listIdentityProviders",
+		Use:   "listIdentityProviders",
 		Short: "Return all identity providers from the specified federation.",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	return cmd
 }
+
 type listRoleMappingsOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client               *admin.APIClient
 	federationSettingsId string
-	orgId string
+	orgId                string
 }
 
 func (opts *listRoleMappingsOpts) initClient() func() error {
@@ -613,53 +619,50 @@ func (opts *listRoleMappingsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listRoleMappingsOpts) Run(ctx context.Context) error {
+func (opts *listRoleMappingsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListRoleMappingsApiParams{
 		FederationSettingsId: opts.federationSettingsId,
-		OrgId: opts.orgId,
+		OrgId:                opts.orgId,
 	}
 	resp, _, err := opts.client.FederatedAuthenticationApi.ListRoleMappingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listRoleMappingsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listRoleMappingsOpts{}
 	cmd := &cobra.Command{
-		Use: "listRoleMappings",
+		Use:   "listRoleMappings",
 		Short: "Return All Role Mappings from One Organization",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
+
 type removeConnectedOrgConfigOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client               *admin.APIClient
 	federationSettingsId string
-	orgId string
+	orgId                string
 }
 
 func (opts *removeConnectedOrgConfigOpts) initClient() func() error {
@@ -670,54 +673,53 @@ func (opts *removeConnectedOrgConfigOpts) initClient() func() error {
 	}
 }
 
-func (opts *removeConnectedOrgConfigOpts) Run(ctx context.Context) error {
+func (opts *removeConnectedOrgConfigOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.RemoveConnectedOrgConfigApiParams{
 		FederationSettingsId: opts.federationSettingsId,
-		OrgId: opts.orgId,
+		OrgId:                opts.orgId,
 	}
 	resp, _, err := opts.client.FederatedAuthenticationApi.RemoveConnectedOrgConfigWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func removeConnectedOrgConfigBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := removeConnectedOrgConfigOpts{}
 	cmd := &cobra.Command{
-		Use: "removeConnectedOrgConfig",
+		Use:   "removeConnectedOrgConfig",
 		Short: "Remove One Org Config Connected to One Federation",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the connected organization configuration to remove.`)
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
+
 type updateConnectedOrgConfigOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client               *admin.APIClient
 	federationSettingsId string
-	orgId string
-	
+	orgId                string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateConnectedOrgConfigOpts) initClient() func() error {
@@ -728,72 +730,99 @@ func (opts *updateConnectedOrgConfigOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateConnectedOrgConfigOpts) Run(ctx context.Context) error {
+func (opts *updateConnectedOrgConfigOpts) readData() (*admin.ConnectedOrgConfig, error) {
+	var out *admin.ConnectedOrgConfig
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateConnectedOrgConfigOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateConnectedOrgConfigApiParams{
 		FederationSettingsId: opts.federationSettingsId,
-		OrgId: opts.orgId,
-		
+		OrgId:                opts.orgId,
+
+		ConnectedOrgConfig: data,
 	}
 	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateConnectedOrgConfigWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateConnectedOrgConfigBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateConnectedOrgConfigOpts{}
+	opts := updateConnectedOrgConfigOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "updateConnectedOrgConfig",
+		Use:   "updateConnectedOrgConfig",
 		Short: "Update One Org Config Connected to One Federation",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the connected organization configuration to update.`)
-	
 
-	cmd.Flags().SetSliceVar(&opts.dataAccessIdentityProviderIds, "dataAccessIdentityProviderIds", nil, `The collection of unique ids of the identity providers for org&#39;s data access.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().SetSliceVar(&opts.domainAllowList, "domainAllowList", nil, `Approved domains that restrict users who can join the organization based on their email address.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.domainRestrictionEnabled, "domainRestrictionEnabled", false, `Value that indicates whether domain restriction is enabled for this connected org.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", `Unique 20-hexadecimal digit string that identifies the identity provider that this connected org config is associated with.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the connected organization configuration.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().SetSliceVar(&opts.postAuthRoleGrants, "postAuthRoleGrants", nil, `Atlas roles that are granted to a user in this organization after authenticating.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().SetSliceVar(&opts.roleMappings, "roleMappings", nil, `Role mappings that are configured in this organization.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().ArraySliceVar(&opts.userConflicts, "userConflicts", nil, `List that contains the users who have an email address that doesn&#39;t match any domain on the allowed list.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
+
 type updateIdentityProviderOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client               *admin.APIClient
 	federationSettingsId string
-	identityProviderId string
-	
+	identityProviderId   string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateIdentityProviderOpts) initClient() func() error {
@@ -804,79 +833,106 @@ func (opts *updateIdentityProviderOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateIdentityProviderOpts) Run(ctx context.Context) error {
+func (opts *updateIdentityProviderOpts) readData() (*admin.SamlIdentityProviderUpdate, error) {
+	var out *admin.SamlIdentityProviderUpdate
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateIdentityProviderOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateIdentityProviderApiParams{
 		FederationSettingsId: opts.federationSettingsId,
-		IdentityProviderId: opts.identityProviderId,
-		
+		IdentityProviderId:   opts.identityProviderId,
+
+		SamlIdentityProviderUpdate: data,
 	}
 	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateIdentityProviderWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateIdentityProviderBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateIdentityProviderOpts{}
+	opts := updateIdentityProviderOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "updateIdentityProvider",
+		Use:   "updateIdentityProvider",
 		Short: "Update the identity provider.",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", `Unique 20-hexadecimal digit string that identifies the identity provider.`)
-	
 
-	cmd.Flags().SetSliceVar(&opts.associatedDomains, "associatedDomains", nil, `List that contains the domains associated with the identity provider.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.description, "description", "", `The description for the identity provider.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.displayName, "displayName", "", `Human-readable label that identifies the identity provider.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.issuerUri, "issuerUri", "", `Unique string that identifies the issuer of the SAML Assertion.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().PemFileInfoVar(&opts.pemFileInfo, "pemFileInfo", , ``)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.protocol, "protocol", "", `The protocol for the identity provider.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.requestBinding, "requestBinding", "", `SAML Authentication Request Protocol HTTP method binding (POST or REDIRECT) that Federated Authentication uses to send the authentication request.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.responseSignatureAlgorithm, "responseSignatureAlgorithm", "", `Signature algorithm that Federated Authentication uses to encrypt the identity provider signature.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().BoolVar(&opts.ssoDebugEnabled, "ssoDebugEnabled", false, `Flag that indicates whether the identity provider has SSO debug enabled.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.ssoUrl, "ssoUrl", "", `Unique string that identifies the intended audience of the SAML assertion.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.status, "status", "", `String enum that indicates whether the identity provider is active.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("identityProviderId")
 	return cmd
 }
+
 type updateRoleMappingOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	client *admin.APIClient
+	client               *admin.APIClient
 	federationSettingsId string
-	id string
-	orgId string
-	
+	id                   string
+	orgId                string
+
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *updateRoleMappingOpts) initClient() func() error {
@@ -887,52 +943,76 @@ func (opts *updateRoleMappingOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateRoleMappingOpts) Run(ctx context.Context) error {
+func (opts *updateRoleMappingOpts) readData() (*admin.RoleMapping, error) {
+	var out *admin.RoleMapping
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateRoleMappingOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
-		Id: opts.id,
-		OrgId: opts.orgId,
-		
+		Id:                   opts.id,
+		OrgId:                opts.orgId,
+
+		RoleMapping: data,
 	}
 	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateRoleMappingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateRoleMappingBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateRoleMappingOpts{}
+	opts := updateRoleMappingOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
-		Use: "updateRoleMapping",
+		Use:   "updateRoleMapping",
 		Short: "Update One Role Mapping in One Organization",
-		Annotations: map[string]string{
-			"output":      template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the role mapping that you want to update.`)
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
-	
 
-	cmd.Flags().StringVar(&opts.externalGroupName, "externalGroupName", "", `Unique human-readable label that identifies the identity provider group to whichthis role mapping applies.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies this role mapping.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	cmd.Flags().SetSliceVar(&opts.roleAssignments, "roleAssignments", nil, `Atlas roles and the unique identifiers of the groups and organizations associated with each role.`)
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("id")
@@ -942,8 +1022,8 @@ func updateRoleMappingBuilder() *cobra.Command {
 
 func federatedAuthenticationBuilder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "federatedAuthentication",
-		Short:   `Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.`,
+		Use:   "federatedAuthentication",
+		Short: `Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.`,
 	}
 	cmd.AddCommand(
 		createRoleMappingBuilder(),
@@ -964,4 +1044,3 @@ func federatedAuthenticationBuilder() *cobra.Command {
 	)
 	return cmd
 }
-

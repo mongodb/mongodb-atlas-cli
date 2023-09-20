@@ -18,8 +18,16 @@ package generated
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -34,6 +42,8 @@ type createThirdPartyIntegrationOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
+	filename     string
+	fs           afero.Fs
 }
 
 func (opts *createThirdPartyIntegrationOpts) initClient() func() error {
@@ -44,7 +54,33 @@ func (opts *createThirdPartyIntegrationOpts) initClient() func() error {
 	}
 }
 
-func (opts *createThirdPartyIntegrationOpts) Run(ctx context.Context) error {
+func (opts *createThirdPartyIntegrationOpts) readData() (*admin.Integration, error) {
+	var out *admin.Integration
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createThirdPartyIntegrationOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.CreateThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
 		GroupId:         opts.groupId,
@@ -52,33 +88,31 @@ func (opts *createThirdPartyIntegrationOpts) Run(ctx context.Context) error {
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
+
+		Integration: data,
 	}
 	resp, _, err := opts.client.ThirdPartyIntegrationsApi.CreateThirdPartyIntegrationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func createThirdPartyIntegrationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := createThirdPartyIntegrationOpts{}
+	opts := createThirdPartyIntegrationOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "createThirdPartyIntegration",
 		Short: "Configure One Third-Party Service Integration",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
@@ -89,6 +123,9 @@ func createThirdPartyIntegrationBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("integrationType")
 	_ = cmd.MarkFlagRequired("groupId")
@@ -111,7 +148,7 @@ func (opts *deleteThirdPartyIntegrationOpts) initClient() func() error {
 	}
 }
 
-func (opts *deleteThirdPartyIntegrationOpts) Run(ctx context.Context) error {
+func (opts *deleteThirdPartyIntegrationOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.DeleteThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
 		GroupId:         opts.groupId,
@@ -121,33 +158,30 @@ func (opts *deleteThirdPartyIntegrationOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func deleteThirdPartyIntegrationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := deleteThirdPartyIntegrationOpts{}
 	cmd := &cobra.Command{
 		Use:   "deleteThirdPartyIntegration",
 		Short: "Remove One Third-Party Service Integration",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("integrationType")
 	_ = cmd.MarkFlagRequired("groupId")
@@ -170,7 +204,7 @@ func (opts *getThirdPartyIntegrationOpts) initClient() func() error {
 	}
 }
 
-func (opts *getThirdPartyIntegrationOpts) Run(ctx context.Context) error {
+func (opts *getThirdPartyIntegrationOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.GetThirdPartyIntegrationApiParams{
 		GroupId:         opts.groupId,
 		IntegrationType: opts.integrationType,
@@ -180,33 +214,30 @@ func (opts *getThirdPartyIntegrationOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func getThirdPartyIntegrationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := getThirdPartyIntegrationOpts{}
 	cmd := &cobra.Command{
 		Use:   "getThirdPartyIntegration",
 		Short: "Return One Third-Party Service Integration",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("integrationType")
@@ -231,7 +262,7 @@ func (opts *listThirdPartyIntegrationsOpts) initClient() func() error {
 	}
 }
 
-func (opts *listThirdPartyIntegrationsOpts) Run(ctx context.Context) error {
+func (opts *listThirdPartyIntegrationsOpts) Run(ctx context.Context, w io.Writer) error {
 	params := &admin.ListThirdPartyIntegrationsApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
@@ -243,27 +274,21 @@ func (opts *listThirdPartyIntegrationsOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func listThirdPartyIntegrationsBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
 	opts := listThirdPartyIntegrationsOpts{}
 	cmd := &cobra.Command{
 		Use:   "listThirdPartyIntegrations",
 		Short: "Return All Active Third-Party Service Integrations",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -272,6 +297,9 @@ func listThirdPartyIntegrationsBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -287,6 +315,8 @@ type updateThirdPartyIntegrationOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
+	filename     string
+	fs           afero.Fs
 }
 
 func (opts *updateThirdPartyIntegrationOpts) initClient() func() error {
@@ -297,7 +327,33 @@ func (opts *updateThirdPartyIntegrationOpts) initClient() func() error {
 	}
 }
 
-func (opts *updateThirdPartyIntegrationOpts) Run(ctx context.Context) error {
+func (opts *updateThirdPartyIntegrationOpts) readData() (*admin.Integration, error) {
+	var out *admin.Integration
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(os.Stdin)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateThirdPartyIntegrationOpts) Run(ctx context.Context, w io.Writer) error {
+	data, errData := opts.readData()
+	if errData != nil {
+		return errData
+	}
 	params := &admin.UpdateThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
 		GroupId:         opts.groupId,
@@ -305,33 +361,31 @@ func (opts *updateThirdPartyIntegrationOpts) Run(ctx context.Context) error {
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
+
+		Integration: data,
 	}
 	resp, _, err := opts.client.ThirdPartyIntegrationsApi.UpdateThirdPartyIntegrationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(resp)
+	return jsonwriter.Print(w, resp)
 }
 
 func updateThirdPartyIntegrationBuilder() *cobra.Command {
-	const template = "<<some template>>"
-
-	opts := updateThirdPartyIntegrationOpts{}
+	opts := updateThirdPartyIntegrationOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "updateThirdPartyIntegration",
 		Short: "Update One Third-Party Service Integration",
-		Annotations: map[string]string{
-			"output": template,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),
-				opts.InitOutput(cmd.OutOrStdout(), template),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return opts.Run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
@@ -342,6 +396,9 @@ func updateThirdPartyIntegrationBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired("integrationType")
 	_ = cmd.MarkFlagRequired("groupId")

@@ -119,7 +119,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <indexId>",
 		Aliases: []string{"rm"},
-		Short:   "Delete the specified search index from the specified cluster.",
+		Short:   "Delete the specified search index from the specified deployment.",
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{
@@ -144,7 +144,7 @@ func DeleteBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

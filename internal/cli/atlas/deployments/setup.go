@@ -823,7 +823,7 @@ func SetupBuilder() *cobra.Command {
 
 	// Local and Atlas
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
-	cmd.Flags().StringVar(&opts.MdbVersion, flag.MDBVersion, "", usage.MDBVersion)
+	cmd.Flags().StringVar(&opts.MdbVersion, flag.MDBVersion, "", usage.DeploymentMDBVersion)
 	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWith)
 
 	// Local only
@@ -832,6 +832,10 @@ func SetupBuilder() *cobra.Command {
 	// Atlas only
 	opts.atlasSetup.SetupAtlasFlags(cmd)
 	opts.atlasSetup.SetupFlowFlags(cmd)
+	cmd.Flags().Lookup(flag.Region).Usage = usage.DeploymentRegion
+	cmd.Flags().Lookup(flag.Tag).Usage = usage.DeploymentTag
+	cmd.Flags().Lookup(flag.SkipSampleData).Usage = usage.SkipSampleDataDeployment
+	cmd.Flags().Lookup(flag.Force).Usage = usage.ForceDeploymentsSetup
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.MDBVersion, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return mdbVersions, cobra.ShellCompDirectiveDefault

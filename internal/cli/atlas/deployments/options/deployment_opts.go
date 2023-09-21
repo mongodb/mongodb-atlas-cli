@@ -261,9 +261,9 @@ func (opts *DeploymentOpts) GetLocalDeploymentsWithContainers(ctx context.Contex
 	return deployments, nil
 }
 
-func (opts *DeploymentOpts) PromptDeploymentType() error {
+func (opts *DeploymentOpts) PromptDeploymentType(message string) error {
 	p := &survey.Select{
-		Message: "What would you like to deploy?",
+		Message: message,
 		Options: DeploymentTypeOptions,
 		Help:    usage.DeploymentType,
 		Description: func(value string, index int) string {

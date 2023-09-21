@@ -118,7 +118,7 @@ func (opts *PauseOpts) validateAndPrompt(ctx context.Context) error {
 	}
 
 	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
+		if err := opts.PromptDeploymentType("What would you like to stop?"); err != nil {
 			return err
 		}
 	}

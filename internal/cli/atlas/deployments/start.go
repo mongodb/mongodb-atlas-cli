@@ -126,7 +126,7 @@ func (opts *StartOpts) validateAndPrompt(ctx context.Context) error {
 	}
 
 	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
+		if err := opts.PromptDeploymentType("What would you like to start?"); err != nil {
 			return err
 		}
 	}

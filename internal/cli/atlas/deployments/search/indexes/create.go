@@ -290,7 +290,7 @@ func CreateBuilder() *cobra.Command {
 	}
 
 	// Atlas and Local
-	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
+	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "local", usage.DeploymentType)
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)

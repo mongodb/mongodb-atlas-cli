@@ -294,6 +294,9 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
 	cmd.Flags().UintVar(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 
+	// Atlas only
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+
 	_ = cmd.MarkFlagFilename(flag.File)
 
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Database)

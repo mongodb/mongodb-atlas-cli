@@ -2,23 +2,23 @@
 
 #### Fields Description
 
-- Command: the MongoDB CLI command without `mongocli atlas|om|cm` 
-- E2E Atlas:    
+- Command: the MongoDB CLI command without `mongocli atlas|om|cm`
+- E2E Atlas:
     -  Possible values: `('Y'|'N')`
     -  Indicates if an e2e test for the command is present `('Y')` or not present `('N')` for Atlas
-- E2E OM:    
+- E2E OM:
     -  Possible values: `('Y'|'N')`
     -  Indicates if an e2e test for the command is present `('Y')` or not present `('N')` for Ops Manager
-- E2E CM:    
+- E2E CM:
     -  Possible values: `('Y'|'N')`
     -  Indicates if an e2e test for the command is present `('Y')` or not present `('N')` for Cloud Manager
- - Atlas:  
+ - Atlas:
      -  Possible values: `('Y'|'N'|' ')`
      -  Indicates if the command supports `('Y')` or not support `('N'|' ')` Atlas
- - OM:    
+ - OM:
      -  Possible values: `('Y'|'N'|' ')`
      -  Indicates if the command supports `('Y')` or not support `('N'|' ')` Ops Manager
- - CM:    
+ - CM:
      -  Possible values: `('Y'|'N'|' ')`
      -  Indicates if the command supports `('Y')` or not support `('N'|' ')` Cloud Manager
 
@@ -188,6 +188,19 @@
 | `security ldap status`                      | Y         |           |           | Y         |       |       |
 | `security ldap verify`                      | Y         |           |           | Y         |       |       |
 | `security ldap watch`                       | Y         |           |           | Y         |       |       |
+| `streams`                                   |           |           |           |           |       |       |
+| `streams connection`                        |           |           |           |           |       |       |
+| `streams connection create`                 | Y         |           |           | Y         |       |       |
+| `streams connection delete`                 | Y         |           |           | Y         |       |       |
+| `streams connection describe`               | Y         |           |           | Y         |       |       |
+| `streams connection list`                   | Y         |           |           | Y         |       |       |
+| `streams connection update`                 | Y         |           |           | Y         |       |       |
+| `streams instance`                          |           |           |           |           |       |       |
+| `streams instance create`                   | Y         |           |           | Y         |       |       |
+| `streams instance delete`                   | Y         |           |           | Y         |       |       |
+| `streams instance describe`                 | Y         |           |           | Y         |       |       |
+| `streams instance list`                     | Y         |           |           | Y         |       |       |
+| `streams instance update`                   | Y         |           |           | Y         |       |       |
 | `config`                                    |           |           |           |           |       |       |
 | `completion`                                | Y         | Y         | Y         | Y         | Y     | Y     |
 | `config delete`                             | Y         | Y         | Y         | Y         | Y     | Y     |

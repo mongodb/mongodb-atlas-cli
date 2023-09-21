@@ -124,6 +124,10 @@ func (opts *PauseOpts) validateAndPrompt(ctx context.Context) error {
 		}
 	}
 
+	if opts.DeploymentType == options.AtlasCluster && opts.DeploymentName == "" {
+		return ErrNoDeploymentName
+	}
+
 	if opts.DeploymentName == "" {
 		if err := opts.DeploymentOpts.Select(ctx); err != nil {
 			return err

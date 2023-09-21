@@ -56,6 +56,7 @@ func TestList_RunLocal(t *testing.T) {
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			DeploymentName: expectedLocalDeployment,
+			DeploymentType: options.LocalCluster,
 		},
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
@@ -143,6 +144,7 @@ func TestList_RunAtlas(t *testing.T) {
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			DeploymentName: expectedLocalDeployment,
+			DeploymentType: options.AtlasCluster,
 		},
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
@@ -169,13 +171,13 @@ func TestList_RunAtlas(t *testing.T) {
 				Labels: map[string]string{"version": "6.0.9"},
 			},
 		}, nil).
-		Times(1)
+		Times(0)
 
 	mockMongodbClient.
 		EXPECT().
 		Connect("mongodb://localhost:0/?directConnection=true", int64(10)).
 		Return(options.ErrDeploymentNotFound).
-		Times(1)
+		Times(0)
 
 	mockStore.
 		EXPECT().
@@ -210,6 +212,6 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.DeploymentName, flag.ProjectID, flag.Database, flag.Collection},
+		[]string{flag.DeploymentName, flag.TypeFlag, flag.ProjectID, flag.Database, flag.Collection},
 	)
 }

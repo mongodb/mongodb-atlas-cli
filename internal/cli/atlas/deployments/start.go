@@ -43,6 +43,7 @@ type StartOpts struct {
 
 var (
 	ErrDeploymentIsDeleting = errors.New("deployment state is DELETING")
+	ErrNoDeploymentName     = errors.New("deployment name is required for Atlas resources")
 	ErrNotAuthenticated     = errors.New("you are not authenticated. Please, run atlas auth  login")
 	startTemplate           = "Starting deployment '{{.Name}}'.\n"
 )
@@ -130,6 +131,10 @@ func (opts *StartOpts) validateAndPrompt(ctx context.Context) error {
 		if err := opts.PromptDeploymentType(); err != nil {
 			return err
 		}
+	}
+
+	if opts.DeploymentType == options.AtlasCluster && opts.DeploymentName == "" {
+		return ErrNoDeploymentName
 	}
 
 	if opts.DeploymentName == "" {

@@ -106,7 +106,8 @@ func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.De
 		}
 
 		err := opts.PodmanClient.Exec(ctx, opts.LocalMongodHostname(), "mongod", "--shutdown")
-		if exitErr, ok := err.(*exec.ExitError); ok && exitErr.ExitCode() == podmanContainerTerminatedExitCode {
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) && exitErr.ExitCode() == podmanContainerTerminatedExitCode {
 			return nil
 		}
 		return err

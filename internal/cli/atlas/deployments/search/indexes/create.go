@@ -42,12 +42,13 @@ import (
 const (
 	namePattern        = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	connectWaitSeconds = 10
-	createTemplate     = "Search index created with ID {{.IndexID}}\n"
+	createTemplate     = "Search index created with ID: {{.IndexID}}\n"
 	notFoundState      = "NOT_FOUND"
 )
 
 var ErrNoDeploymentName = errors.New("deployment name is required for Atlas deployments")
 var ErrNotAuthenticated = errors.New("not authenticated, login first to create Atlas resources")
+var ErrSearchIndexDuplicated = errors.New("search index is duplicated")
 
 type CreateOpts struct {
 	cli.WatchOpts
@@ -104,7 +105,12 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 		return err
 	}
 
-	opts.index, err = opts.mongodbClient.Database(opts.index.Database).CreateSearchIndex(ctx, opts.index.CollectionName, opts.index)
+	db := opts.mongodbClient.Database(opts.index.Database)
+	if idx, _ := db.SearchIndexByName(ctx, opts.index.Name, opts.index.CollectionName); idx != nil {
+		return ErrSearchIndexDuplicated
+	}
+
+	opts.index, err = db.CreateSearchIndex(ctx, opts.index.CollectionName, opts.index)
 	return err
 }
 

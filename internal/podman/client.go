@@ -49,13 +49,14 @@ Your available CPU cores '%d' is below '%s'. Using default podman CPU settings.
 )
 
 type Diagnostic struct {
-	Installed    bool
-	MachineFound bool
-	MachineState string
-	MachineInfo  *machine.InspectInfo
-	Version      *Version
-	Images       []string
-	Errors       []string
+	Installed       bool
+	MachineRequired bool
+	MachineFound    bool
+	MachineState    string
+	MachineInfo     *machine.InspectInfo
+	Version         *Version
+	Images          []string
+	Errors          []string
 }
 
 const PodmanRunningState = machine.Running
@@ -151,7 +152,7 @@ type Client interface {
 	ListImages(ctx context.Context, nameFilter string) ([]*Image, error)
 	PullImage(ctx context.Context, name string) ([]byte, error)
 	Version(ctx context.Context) (*Version, error)
-	Logs(ctx context.Context) ([]interface{}, error)
+	Logs(ctx context.Context) (map[string]interface{}, []error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
 	Network(ctx context.Context, name string) (*Network, error)
 	Exec(ctx context.Context, name string, args ...string) error
@@ -160,11 +161,18 @@ type Client interface {
 type Network struct {
 	ID         string `json:"ID"`
 	Name       string `json:"Name"`
-	DNSEnabled string `json:"DNSEnabled"`
+	DNSEnabled bool   `json:"dns_enabled"`
 	Subnets    []struct {
 		Subnet  string `json:"Subnet"`
 		Gateway string `json:"gateway"`
 	} `json:"Subnets"`
+	IPV6Enabled bool   `json:"ipv6_enabled"`
+	Internal    bool   `json:"internal"`
+	Created     string `json:"created"`
+	Driver      string `json:"driver"`
+	IPAMOptions *struct {
+		Driver string `json:"driver"`
+	} `json:"ipam_options"`
 }
 
 type client struct {
@@ -174,8 +182,9 @@ type client struct {
 
 func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	d := &Diagnostic{
-		Installed:    true,
-		MachineFound: true,
+		Installed:       true,
+		MachineRequired: podmanMachineIsRequired(),
+		MachineFound:    true,
 	}
 
 	err := Installed()
@@ -287,13 +296,17 @@ func Installed() error {
 	return nil
 }
 
+func podmanMachineIsRequired() bool {
+	// macOs and Windows require VMs
+	return runtime.GOOS == "windows" || runtime.GOOS == "darwin"
+}
+
 func (o *client) Ready(ctx context.Context) error {
 	if err := Installed(); err != nil {
 		return err
 	}
 
-	if runtime.GOOS != "windows" && runtime.GOOS != "darwin" {
-		// macOs and Windows require VMs
+	if !podmanMachineIsRequired() {
 		return nil
 	}
 
@@ -451,20 +464,33 @@ func (o *client) Version(ctx context.Context) (version *Version, err error) {
 	return v, err
 }
 
-func (o *client) Logs(ctx context.Context) ([]interface{}, error) {
-	output, err := o.runPodman(ctx, "ps", "--format", "json")
+func (o *client) Logs(ctx context.Context) (map[string]interface{}, []error) {
+	l := map[string]interface{}{}
+	errs := []error{}
+
+	output, err := o.runPodman(ctx, "ps", "--all", "--format", "json", "--filter", "name=mongo")
 	if err != nil {
-		return nil, err
+		errs = append(errs, err)
+	} else {
+		var podmanLogs []interface{}
+		if err = json.Unmarshal(output, &podmanLogs); err != nil {
+			errs = append(errs, err)
+		}
+		l["Containers"] = podmanLogs
 	}
 
-	var podmanLogs []interface{}
-
-	err = json.Unmarshal(output, &podmanLogs)
+	output, err = o.runPodman(ctx, "network", "ls", "--format", "json", "--filter", "name=mdb")
 	if err != nil {
-		return podmanLogs, err
+		errs = append(errs, err)
+	} else {
+		var networks []interface{}
+		if err = json.Unmarshal(output, &networks); err != nil {
+			errs = append(errs, err)
+		}
+		l["Networks"] = networks
 	}
 
-	return podmanLogs, nil
+	return l, errs
 }
 
 func (o *client) ContainerLogs(ctx context.Context, name string) ([]string, error) {

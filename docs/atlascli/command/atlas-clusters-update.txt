@@ -107,7 +107,7 @@ Options
    * - --tier
      - string
      - false
-     - Tier for each data-bearing server in the cluster. To learn more about cluster tiers, see https://www.mongodb.com/docs/atlas/manage-clusters/#select-cluster-tier.
+     - Tier for each data-bearing server in the cluster. To learn more about cluster tiers, see https://dochub.mongodb.org/core/cluster-tier-atlas.
 
        Mutually exclusive with --file.
 

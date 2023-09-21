@@ -28,6 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -36,7 +37,7 @@ import (
 
 var indexID = "6509bc5080b2f007e6a2a0ce"
 
-func TestCreate_RunLocal(t *testing.T) {
+func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockPodman := mocks.NewMockClient(ctrl)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
@@ -129,6 +130,12 @@ func TestCreate_RunLocal(t *testing.T) {
 
 	mockDB.
 		EXPECT().
+		SearchIndexByName(ctx, index.Name, index.CollectionName).
+		Return(nil, mongodbclient.ErrSearchIndexNotFound).
+		Times(1)
+
+	mockDB.
+		EXPECT().
 		CreateSearchIndex(ctx, expectedCollection, index).
 		Return(indexWithID, nil).
 		Times(1)
@@ -141,9 +148,110 @@ func TestCreate_RunLocal(t *testing.T) {
 		t.Fatalf("PostRun() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `Search index created with ID 6509bc5080b2f007e6a2a0ce
+	assert.Equal(t, `Search index created with ID: 6509bc5080b2f007e6a2a0ce
 `, buf.String())
 	t.Log(buf.String())
+}
+
+func TestCreate_Duplicated(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockPodman := mocks.NewMockClient(ctrl)
+	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
+	mockDB := mocks.NewMockDatabase(ctrl)
+	ctx := context.Background()
+
+	const (
+		expectedIndexName       = "idx1"
+		expectedLocalDeployment = "localDeployment1"
+		expectedDB              = "db1"
+		expectedCollection      = "col1"
+	)
+
+	buf := new(bytes.Buffer)
+	opts := &CreateOpts{
+		DeploymentOpts: options.DeploymentOpts{
+			PodmanClient:   mockPodman,
+			DeploymentName: expectedLocalDeployment,
+		},
+		IndexOpts: search.IndexOpts{
+			Name:       expectedIndexName,
+			DBName:     expectedDB,
+			Collection: expectedCollection,
+		},
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
+			Template:  createTemplate,
+		},
+		mongodbClient: mockMongodbClient,
+	}
+
+	mockPodman.
+		EXPECT().
+		ListContainers(ctx, options.MongodHostnamePrefix).
+		Return([]*podman.Container{
+			{
+				Names:  []string{options.MongodHostnamePrefix + "-" + expectedLocalDeployment},
+				State:  "running",
+				Labels: map[string]string{"version": "6.0.9"},
+			},
+		}, nil).
+		Times(2)
+
+	mockPodman.
+		EXPECT().
+		Ready(ctx).
+		Return(nil).
+		Times(1)
+
+	mockMongodbClient.
+		EXPECT().
+		Connect("mongodb://localhost:0/?directConnection=true", int64(10)).
+		Return(nil).
+		Times(1)
+	mockMongodbClient.
+		EXPECT().
+		Disconnect().
+		Times(1)
+	mockMongodbClient.
+		EXPECT().
+		Database(expectedDB).
+		Return(mockDB).
+		Times(1)
+
+	index := &atlasv2.ClusterSearchIndex{
+		Analyzer:       &opts.Analyzer,
+		CollectionName: opts.Collection,
+		Database:       opts.DBName,
+		Mappings: &atlasv2.ApiAtlasFTSMappings{
+			Dynamic: &opts.Dynamic,
+			Fields:  nil,
+		},
+		Name:           opts.Name,
+		SearchAnalyzer: &opts.SearchAnalyzer,
+	}
+
+	indexWithID := &atlasv2.ClusterSearchIndex{
+		Analyzer:       &opts.Analyzer,
+		CollectionName: opts.Collection,
+		Database:       opts.DBName,
+		Mappings: &atlasv2.ApiAtlasFTSMappings{
+			Dynamic: &opts.Dynamic,
+			Fields:  nil,
+		},
+		Name:           opts.Name,
+		SearchAnalyzer: &opts.SearchAnalyzer,
+		IndexID:        &indexID,
+	}
+
+	mockDB.
+		EXPECT().
+		SearchIndexByName(ctx, index.Name, index.CollectionName).
+		Return(indexWithID, nil).
+		Times(1)
+
+	if err := opts.Run(ctx); err == nil || err != ErrSearchIndexDuplicated {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
 }
 
 func TestCreateBuilder(t *testing.T) {

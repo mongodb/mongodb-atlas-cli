@@ -216,6 +216,21 @@ func (mr *MockDatabaseMockRecorder) SearchIndex(arg0, arg1 interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndex", reflect.TypeOf((*MockDatabase)(nil).SearchIndex), arg0, arg1)
 }
 
+// SearchIndexByName mocks base method.
+func (m *MockDatabase) SearchIndexByName(arg0 context.Context, arg1, arg2 string) (*admin.ClusterSearchIndex, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchIndexByName", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchIndexByName indicates an expected call of SearchIndexByName.
+func (mr *MockDatabaseMockRecorder) SearchIndexByName(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndexByName", reflect.TypeOf((*MockDatabase)(nil).SearchIndexByName), arg0, arg1, arg2)
+}
+
 // SearchIndexes mocks base method.
 func (m *MockDatabase) SearchIndexes(arg0 context.Context, arg1 string) ([]*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()
@@ -282,6 +297,21 @@ func (m *MockSearchIndex) SearchIndex(arg0 context.Context, arg1 string) (*admin
 func (mr *MockSearchIndexMockRecorder) SearchIndex(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndex", reflect.TypeOf((*MockSearchIndex)(nil).SearchIndex), arg0, arg1)
+}
+
+// SearchIndexByName mocks base method.
+func (m *MockSearchIndex) SearchIndexByName(arg0 context.Context, arg1, arg2 string) (*admin.ClusterSearchIndex, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchIndexByName", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchIndexByName indicates an expected call of SearchIndexByName.
+func (mr *MockSearchIndexMockRecorder) SearchIndexByName(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndexByName", reflect.TypeOf((*MockSearchIndex)(nil).SearchIndexByName), arg0, arg1, arg2)
 }
 
 // SearchIndexes mocks base method.

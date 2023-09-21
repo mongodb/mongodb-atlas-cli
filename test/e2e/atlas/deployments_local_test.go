@@ -184,7 +184,7 @@ test   LOCAL   7.0.1     IDLE
 		out := string(r)
 		req.NoError(err, out)
 		a := assert.New(t)
-		a.Contains(out, "Search index created")
+		a.Contains(out, "Search index created with ID:")
 	})
 
 	var indexID string

@@ -46,9 +46,10 @@ const (
 	notFoundState      = "NOT_FOUND"
 )
 
-var ErrNoDeploymentName = errors.New("deployment name is required for Atlas deployments")
+var ErrNoDeploymentName = errors.New("deployment name is required for Atlas resources")
 var ErrNotAuthenticated = errors.New("not authenticated, login first to create Atlas resources")
 var ErrSearchIndexDuplicated = errors.New("search index is duplicated")
+var ErrWatchNotAvailable = errors.New("watch is not available for Atlas resources")
 
 type CreateOpts struct {
 	cli.WatchOpts
@@ -265,6 +266,11 @@ func CreateBuilder() *cobra.Command {
 			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
 			opts.WatchOpts.OutWriter = w
 			log.SetWriter(w)
+
+			if opts.DeploymentType == "atlas" && opts.EnableWatch {
+				return ErrWatchNotAvailable
+			}
+
 			return opts.PreRunE(
 				opts.InitOutput(w, createTemplate),
 				opts.InitStore(opts.PodmanClient),

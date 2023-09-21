@@ -64,7 +64,7 @@ func TestPause_RunLocal(t *testing.T) {
 	}
 
 	buf := new(bytes.Buffer)
-	listOpts := &PauseOpts{
+	pauseOpts := &PauseOpts{
 		store:  mockStore,
 		config: mockProfileReader,
 		DeploymentOpts: options.DeploymentOpts{
@@ -96,23 +96,17 @@ func TestPause_RunLocal(t *testing.T) {
 
 	mockPodman.
 		EXPECT().
-		ListContainers(ctx, options.MongotHostnamePrefix).
-		Return(expectedLocalDeployments, nil).
-		Times(1)
-
-	mockPodman.
-		EXPECT().
-		StopMongoD(ctx, deploymentName).
+		Exec(ctx, "-d", pauseOpts.LocalMongodHostname(), "mongod", "--shutdown").
 		Return(nil).
 		Times(1)
 
 	mockPodman.
 		EXPECT().
-		StopContainers(ctx, deploymentName).
+		StopContainers(ctx, pauseOpts.LocalMongotHostname()).
 		Return(nil, nil).
 		Times(1)
 
-	if err := listOpts.Run(ctx); err != nil {
+	if err := pauseOpts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 

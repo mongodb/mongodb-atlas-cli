@@ -69,20 +69,22 @@ func (opts *StartOpts) Run(ctx context.Context) error {
 }
 
 func (opts *StartOpts) RunLocal(ctx context.Context) error {
-	localDeployments, err := opts.GetLocalDeploymentsWithContainers(ctx)
+	localDeployments, err := opts.GetLocalDeployments(ctx)
 	if err != nil {
 		return err
 	}
 
-	if deployment, ok := localDeployments[opts.DeploymentName]; ok {
-		if err = opts.startContainer(ctx, deployment); err != nil {
-			return err
-		}
+	for _, deployment := range localDeployments {
+		if deployment.Name == opts.DeploymentName {
+			if err = opts.startContainer(ctx, deployment); err != nil {
+				return err
+			}
 
-		return opts.Print(
-			admin.AdvancedClusterDescription{
-				Name: &opts.DeploymentName,
-			})
+			return opts.Print(
+				admin.AdvancedClusterDescription{
+					Name: &opts.DeploymentName,
+				})
+		}
 	}
 
 	return options.ErrDeploymentNotFound
@@ -90,7 +92,7 @@ func (opts *StartOpts) RunLocal(ctx context.Context) error {
 
 func (opts *StartOpts) startContainer(ctx context.Context, deployment options.Deployment) error {
 	if deployment.StateName == options.StoppedState {
-		if _, err := opts.PodmanClient.StartContainers(ctx, deployment.MongoDContainer.ID, deployment.MongoTContainer.ID); err != nil {
+		if _, err := opts.PodmanClient.StartContainers(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname()); err != nil {
 			return err
 		}
 
@@ -98,7 +100,7 @@ func (opts *StartOpts) startContainer(ctx context.Context, deployment options.De
 	}
 
 	if deployment.StateName == options.PausedState {
-		if _, err := opts.PodmanClient.UnpauseContainers(ctx, deployment.MongoDContainer.ID, deployment.MongoTContainer.ID); err != nil {
+		if _, err := opts.PodmanClient.UnpauseContainers(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname()); err != nil {
 			return err
 		}
 
@@ -125,14 +127,14 @@ func (opts *StartOpts) RunAtlas() error {
 }
 
 func (opts *StartOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
+	if opts.DeploymentType == "" {
+		if err := opts.PromptDeploymentType("What would you like to start?"); err != nil {
 			return err
 		}
 	}
 
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType("What would you like to start?"); err != nil {
+	if opts.DeploymentName == "" {
+		if err := opts.DeploymentOpts.Select(ctx); err != nil {
 			return err
 		}
 	}

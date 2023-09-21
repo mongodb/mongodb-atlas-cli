@@ -59,7 +59,7 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 	}
 
 	buf := new(bytes.Buffer)
-	listOpts := &StartOpts{
+	startOpts := &StartOpts{
 		store:  mockStore,
 		config: mockProfileReader,
 		DeploymentOpts: options.DeploymentOpts{
@@ -91,17 +91,11 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 
 	mockPodman.
 		EXPECT().
-		ListContainers(ctx, options.MongotHostnamePrefix).
-		Return(expectedLocalDeployments, nil).
-		Times(1)
-
-	mockPodman.
-		EXPECT().
-		UnpauseContainers(ctx, deploymentName, deploymentName).
+		UnpauseContainers(ctx, startOpts.LocalMongodHostname(), startOpts.LocalMongotHostname()).
 		Return(nil, nil).
 		Times(1)
 
-	if err := listOpts.Run(ctx); err != nil {
+	if err := startOpts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
@@ -133,7 +127,7 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 	}
 
 	buf := new(bytes.Buffer)
-	listOpts := &StartOpts{
+	startOpts := &StartOpts{
 		store:  mockStore,
 		config: mockProfileReader,
 		DeploymentOpts: options.DeploymentOpts{
@@ -165,17 +159,11 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 
 	mockPodman.
 		EXPECT().
-		ListContainers(ctx, options.MongotHostnamePrefix).
-		Return(expectedLocalDeployments, nil).
-		Times(1)
-
-	mockPodman.
-		EXPECT().
-		StartContainers(ctx, deploymentName, deploymentName).
+		StartContainers(ctx, startOpts.LocalMongodHostname(), startOpts.LocalMongotHostname()).
 		Return(nil, nil).
 		Times(1)
 
-	if err := listOpts.Run(ctx); err != nil {
+	if err := startOpts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 

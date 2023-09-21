@@ -84,12 +84,10 @@ type DeploymentOpts struct {
 }
 
 type Deployment struct {
-	Type            string
-	Name            string
-	MongoDBVersion  string
-	StateName       string
-	MongoDContainer *podman.Container
-	MongoTContainer *podman.Container
+	Type           string
+	Name           string
+	MongoDBVersion string
+	StateName      string
 }
 
 func (opts *DeploymentOpts) InitStore(podmanClient podman.Client) func() error {
@@ -199,62 +197,10 @@ func (opts *DeploymentOpts) GetLocalDeployments(ctx context.Context) ([]Deployme
 
 		name := strings.TrimPrefix(c.Names[0], MongodHostnamePrefix+"-")
 		deployments[i] = Deployment{
-			Type:            "LOCAL",
-			Name:            name,
-			MongoDBVersion:  c.Labels["version"],
-			StateName:       stateName,
-			MongoDContainer: c,
-		}
-	}
-
-	return deployments, nil
-}
-
-func (opts *DeploymentOpts) GetLocalDeploymentsWithContainers(ctx context.Context) (map[string]Deployment, error) {
-	if err := opts.PodmanClient.Ready(ctx); err != nil {
-		return nil, err
-	}
-
-	mdbContainers, err := opts.PodmanClient.ListContainers(ctx, MongotHostnamePrefix)
-	if err != nil {
-		return nil, err
-	}
-
-	sort.Slice(mdbContainers, func(i, j int) bool {
-		return mdbContainers[i].Names[0] < mdbContainers[j].Names[0]
-	})
-
-	deployments := make(map[string]Deployment)
-	for _, c := range mdbContainers {
-		stateName, found := localStateMap[c.State]
-		if !found {
-			stateName = strings.ToUpper(c.State)
-		}
-
-		name := strings.TrimPrefix(c.Names[0], MongotHostnamePrefix+"-")
-		deployments[name] = Deployment{
-			Type:            "LOCAL",
-			Name:            name,
-			MongoDBVersion:  c.Labels["version"],
-			StateName:       stateName,
-			MongoTContainer: c,
-		}
-	}
-
-	mdbContainers, err = opts.PodmanClient.ListContainers(ctx, MongodHostnamePrefix)
-	if err != nil {
-		return nil, err
-	}
-
-	sort.Slice(mdbContainers, func(i, j int) bool {
-		return mdbContainers[i].Names[0] < mdbContainers[j].Names[0]
-	})
-
-	for _, c := range mdbContainers {
-		name := strings.TrimPrefix(c.Names[0], MongodHostnamePrefix+"-")
-		if v, ok := deployments[name]; ok {
-			v.MongoDContainer = c
-			deployments[name] = v
+			Type:           "LOCAL",
+			Name:           name,
+			MongoDBVersion: c.Labels["version"],
+			StateName:      stateName,
 		}
 	}
 

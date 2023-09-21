@@ -66,20 +66,22 @@ func (opts *PauseOpts) Run(ctx context.Context) error {
 }
 
 func (opts *PauseOpts) RunLocal(ctx context.Context) error {
-	localDeployments, err := opts.GetLocalDeploymentsWithContainers(ctx)
+	localDeployments, err := opts.GetLocalDeployments(ctx)
 	if err != nil {
 		return err
 	}
 
-	if deployment, ok := localDeployments[opts.DeploymentName]; ok {
-		if err = opts.pauseContainer(ctx, deployment); err != nil {
-			return err
-		}
+	for _, deployment := range localDeployments {
+		if deployment.Name == opts.DeploymentName {
+			if err = opts.pauseContainer(ctx, deployment); err != nil {
+				return err
+			}
 
-		return opts.Print(
-			admin.AdvancedClusterDescription{
-				Name: &opts.DeploymentName,
-			})
+			return opts.Print(
+				admin.AdvancedClusterDescription{
+					Name: &opts.DeploymentName,
+				})
+		}
 	}
 
 	return options.ErrDeploymentNotFound
@@ -87,11 +89,11 @@ func (opts *PauseOpts) RunLocal(ctx context.Context) error {
 
 func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.Deployment) error {
 	if deployment.StateName == options.IdleState {
-		if _, err := opts.PodmanClient.StopContainers(ctx, deployment.MongoTContainer.ID); err != nil {
+		if _, err := opts.PodmanClient.StopContainers(ctx, opts.LocalMongotHostname()); err != nil {
 			return err
 		}
 
-		return opts.PodmanClient.StopMongoD(ctx, deployment.MongoDContainer.ID)
+		return opts.StopMongoD(ctx, opts.LocalMongodHostname())
 	}
 
 	if deployment.StateName == options.PausedState || deployment.StateName == options.StoppedState {
@@ -115,19 +117,23 @@ func (opts *PauseOpts) RunAtlas() error {
 }
 
 func (opts *PauseOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
-			return err
-		}
-	}
-
 	if opts.DeploymentType == "" {
 		if err := opts.PromptDeploymentType("What would you like to stop?"); err != nil {
 			return err
 		}
 	}
 
+	if opts.DeploymentName == "" {
+		if err := opts.DeploymentOpts.Select(ctx); err != nil {
+			return err
+		}
+	}
+
 	return nil
+}
+
+func (opts *PauseOpts) StopMongoD(ctx context.Context, names string) error {
+	return opts.PodmanClient.Exec(ctx, "-d", names, "mongod", "--shutdown")
 }
 
 func PauseBuilder() *cobra.Command {

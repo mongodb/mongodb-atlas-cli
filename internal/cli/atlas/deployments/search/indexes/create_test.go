@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
@@ -36,25 +37,27 @@ import (
 
 var indexID = "6509bc5080b2f007e6a2a0ce"
 
-func TestCreate_Run(t *testing.T) {
+const (
+	expectedIndexName       = "idx1"
+	expectedLocalDeployment = "localDeployment1"
+	expectedDB              = "db1"
+	expectedCollection      = "col1"
+	local                   = "local"
+)
+
+func TestCreate_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockPodman := mocks.NewMockClient(ctrl)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockDB := mocks.NewMockDatabase(ctrl)
 	ctx := context.Background()
 
-	const (
-		expectedIndexName       = "idx1"
-		expectedLocalDeployment = "localDeployment1"
-		expectedDB              = "db1"
-		expectedCollection      = "col1"
-	)
-
 	buf := new(bytes.Buffer)
 	opts := &CreateOpts{
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			DeploymentName: expectedLocalDeployment,
+			DeploymentType: local,
 		},
 		IndexOpts: search.IndexOpts{
 			Name:       expectedIndexName,
@@ -158,18 +161,12 @@ func TestCreate_Duplicated(t *testing.T) {
 	mockDB := mocks.NewMockDatabase(ctrl)
 	ctx := context.Background()
 
-	const (
-		expectedIndexName       = "idx1"
-		expectedLocalDeployment = "localDeployment1"
-		expectedDB              = "db1"
-		expectedCollection      = "col1"
-	)
-
 	buf := new(bytes.Buffer)
 	opts := &CreateOpts{
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			DeploymentName: expectedLocalDeployment,
+			DeploymentType: local,
 		},
 		IndexOpts: search.IndexOpts{
 			Name:       expectedIndexName,
@@ -250,6 +247,81 @@ func TestCreate_Duplicated(t *testing.T) {
 	if err := opts.Run(ctx); err == nil || err != ErrSearchIndexDuplicated {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestCreate_RunAtlas(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
+	mockIndexStore := mocks.NewMockSearchIndexCreator(ctrl)
+	ctx := context.Background()
+
+	buf := new(bytes.Buffer)
+	opts := &CreateOpts{
+		DeploymentOpts: options.DeploymentOpts{
+			DeploymentName: expectedLocalDeployment,
+			DeploymentType: "atlas",
+			CredStore:      mockCredentialsGetter,
+		},
+		IndexOpts: search.IndexOpts{
+			Name:       expectedIndexName,
+			DBName:     expectedDB,
+			Collection: expectedCollection,
+		},
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
+			Template:  createTemplate,
+		},
+		store: mockIndexStore,
+	}
+
+	index := &atlasv2.ClusterSearchIndex{
+		Analyzer:       &opts.Analyzer,
+		CollectionName: opts.Collection,
+		Database:       opts.DBName,
+		Mappings: &atlasv2.ApiAtlasFTSMappings{
+			Dynamic: &opts.Dynamic,
+			Fields:  nil,
+		},
+		Name:           opts.Name,
+		SearchAnalyzer: &opts.SearchAnalyzer,
+	}
+
+	indexWithID := &atlasv2.ClusterSearchIndex{
+		Analyzer:       &opts.Analyzer,
+		CollectionName: opts.Collection,
+		Database:       opts.DBName,
+		Mappings: &atlasv2.ApiAtlasFTSMappings{
+			Dynamic: &opts.Dynamic,
+			Fields:  nil,
+		},
+		Name:           opts.Name,
+		SearchAnalyzer: &opts.SearchAnalyzer,
+		IndexID:        &indexID,
+	}
+
+	mockIndexStore.
+		EXPECT().
+		CreateSearchIndexes(opts.ProjectID, opts.DeploymentName, index).
+		Times(1).
+		Return(indexWithID, nil)
+
+	mockCredentialsGetter.
+		EXPECT().
+		AuthType().
+		Return(config.OAuth).
+		Times(1)
+
+	if err := opts.Run(ctx); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+
+	if err := opts.PostRun(ctx); err != nil {
+		t.Fatalf("PostRun() unexpected error: %v", err)
+	}
+
+	assert.Equal(t, `Search index created with ID: 6509bc5080b2f007e6a2a0ce
+`, buf.String())
+	t.Log(buf.String())
 }
 
 func TestCreateBuilder(t *testing.T) {

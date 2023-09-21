@@ -41,7 +41,7 @@ func (opts *DeleteOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithDeploymentType(localCluster)) // always local
+	telemetry.AppendOption(telemetry.WithDeploymentType(options.LocalCluster)) // always local
 	if opts.DeploymentName == "" {
 		if err := opts.DeploymentOpts.Select(ctx); err != nil {
 			return err

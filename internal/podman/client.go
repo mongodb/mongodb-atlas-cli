@@ -147,6 +147,8 @@ type Client interface {
 	CopyFileToContainer(ctx context.Context, localFile string, containerName string, filePathInContainer string) ([]byte, error)
 	ContainerInspect(ctx context.Context, names ...string) ([]*define.InspectContainerData, error)
 	StopContainers(ctx context.Context, names ...string) ([]byte, error)
+	StartContainers(ctx context.Context, names ...string) ([]byte, error)
+	UnpauseContainers(ctx context.Context, names ...string) ([]byte, error)
 	RemoveContainers(ctx context.Context, names ...string) ([]byte, error)
 	RemoveVolumes(ctx context.Context, names ...string) ([]byte, error)
 	RemoveNetworks(ctx context.Context, names ...string) ([]byte, error)
@@ -154,7 +156,7 @@ type Client interface {
 	ListImages(ctx context.Context, nameFilter string) ([]*Image, error)
 	PullImage(ctx context.Context, name string) ([]byte, error)
 	Version(ctx context.Context) (*Version, error)
-	Logs(ctx context.Context) ([]interface{}, error)
+	Logs(ctx context.Context) (map[string]interface{}, []error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
 	Network(ctx context.Context, name string) (*Network, error)
 	Exec(ctx context.Context, name string, args ...string) error
@@ -163,11 +165,18 @@ type Client interface {
 type Network struct {
 	ID         string `json:"ID"`
 	Name       string `json:"Name"`
-	DNSEnabled string `json:"DNSEnabled"`
+	DNSEnabled bool   `json:"dns_enabled"`
 	Subnets    []struct {
 		Subnet  string `json:"Subnet"`
 		Gateway string `json:"gateway"`
 	} `json:"Subnets"`
+	IPV6Enabled bool   `json:"ipv6_enabled"`
+	Internal    bool   `json:"internal"`
+	Created     string `json:"created"`
+	Driver      string `json:"driver"`
+	IPAMOptions *struct {
+		Driver string `json:"driver"`
+	} `json:"ipam_options"`
 }
 
 type client struct {
@@ -407,6 +416,18 @@ func (o *client) StopContainers(ctx context.Context, names ...string) ([]byte, e
 	return o.runPodman(ctx, append([]string{"stop"}, names...)...)
 }
 
+func (o *client) StartContainers(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"start"}, names...)...)
+}
+
+func (o *client) PauseContainers(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"pause"}, names...)...)
+}
+
+func (o *client) UnpauseContainers(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"unpause"}, names...)...)
+}
+
 func (o *client) RemoveContainers(ctx context.Context, names ...string) ([]byte, error) {
 	return o.runPodman(ctx, append([]string{"rm", "-f"}, names...)...)
 }
@@ -471,20 +492,33 @@ func (o *client) Version(ctx context.Context) (version *Version, err error) {
 	return v, err
 }
 
-func (o *client) Logs(ctx context.Context) ([]interface{}, error) {
-	output, err := o.runPodman(ctx, "ps", "--format", "json")
+func (o *client) Logs(ctx context.Context) (map[string]interface{}, []error) {
+	l := map[string]interface{}{}
+	errs := []error{}
+
+	output, err := o.runPodman(ctx, "ps", "--all", "--format", "json", "--filter", "name=mongo")
 	if err != nil {
-		return nil, err
+		errs = append(errs, err)
+	} else {
+		var podmanLogs []interface{}
+		if err = json.Unmarshal(output, &podmanLogs); err != nil {
+			errs = append(errs, err)
+		}
+		l["Containers"] = podmanLogs
 	}
 
-	var podmanLogs []interface{}
-
-	err = json.Unmarshal(output, &podmanLogs)
+	output, err = o.runPodman(ctx, "network", "ls", "--format", "json", "--filter", "name=mdb")
 	if err != nil {
-		return podmanLogs, err
+		errs = append(errs, err)
+	} else {
+		var networks []interface{}
+		if err = json.Unmarshal(output, &networks); err != nil {
+			errs = append(errs, err)
+		}
+		l["Networks"] = networks
 	}
 
-	return podmanLogs, nil
+	return l, errs
 }
 
 func (o *client) ContainerLogs(ctx context.Context, name string) ([]string, error) {

@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && deployments)
+//go:build e2e || (atlas && deployments && local)
 
 package atlas_test
 
@@ -47,7 +47,7 @@ func splitOutput(cmd *exec.Cmd) (string, string, error) {
 	return o.String(), e.String(), err
 }
 
-func TestDeployments(t *testing.T) {
+func TestDeploymentsLocal(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("deployments")
 
@@ -169,6 +169,8 @@ test   LOCAL   7.0.1     IDLE
 			indexEntity,
 			"create",
 			indexName,
+			"--type",
+			"local",
 			"--deploymentName",
 			deploymentName,
 			"--db",
@@ -273,5 +275,41 @@ test   LOCAL   7.0.1     IDLE
 		req.NoError(err, e.String())
 		a := assert.New(t)
 		a.Contains(o.String(), fmt.Sprintf("Index '%s' deleted", indexID))
+	})
+
+	t.Run("Pause Deployment", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			"pause",
+			deploymentName,
+			"--type=LOCAL",
+			"--debug",
+		)
+
+		cmd.Env = os.Environ()
+
+		r, err := cmd.CombinedOutput()
+		out := string(r)
+		req.NoError(err, out)
+		a := assert.New(t)
+		a.Contains(out, fmt.Sprintf("Pausing deployment '%s'", deploymentName))
+	})
+
+	t.Run("Start Deployment", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			"start",
+			deploymentName,
+			"--type=LOCAL",
+			"--debug",
+		)
+
+		cmd.Env = os.Environ()
+
+		r, err := cmd.CombinedOutput()
+		out := string(r)
+		req.NoError(err, out)
+		a := assert.New(t)
+		a.Contains(out, fmt.Sprintf("Starting deployment '%s'", deploymentName))
 	})
 }

@@ -146,6 +146,15 @@ func TestCreate_RunLocal(t *testing.T) {
 	t.Log(buf.String())
 }
 
+func TestCreateBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		CreateBuilder(),
+		0,
+		[]string{flag.DeploymentName, flag.Database, flag.Collection, flag.File},
+	)
+}
+
 func TestCreate_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
@@ -226,13 +235,4 @@ func TestCreate_RunAtlas(t *testing.T) {
 	assert.Equal(t, `Search index created with ID 6509bc5080b2f007e6a2a0ce
 `, buf.String())
 	t.Log(buf.String())
-}
-
-func TestCreateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		CreateBuilder(),
-		0,
-		[]string{flag.DeploymentName, flag.Database, flag.Collection, flag.File},
-	)
 }

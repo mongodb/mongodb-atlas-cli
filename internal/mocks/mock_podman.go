@@ -292,6 +292,26 @@ func (mr *MockClientMockRecorder) RunContainer(arg0, arg1 interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunContainer", reflect.TypeOf((*MockClient)(nil).RunContainer), arg0, arg1)
 }
 
+// StartContainers mocks base method.
+func (m *MockClient) StartContainers(arg0 context.Context, arg1 ...string) ([]byte, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "StartContainers", varargs...)
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// StartContainers indicates an expected call of StartContainers.
+func (mr *MockClientMockRecorder) StartContainers(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartContainers", reflect.TypeOf((*MockClient)(nil).StartContainers), varargs...)
+}
+
 // StopContainers mocks base method.
 func (m *MockClient) StopContainers(arg0 context.Context, arg1 ...string) ([]byte, error) {
 	m.ctrl.T.Helper()
@@ -310,6 +330,26 @@ func (mr *MockClientMockRecorder) StopContainers(arg0 interface{}, arg1 ...inter
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0}, arg1...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StopContainers", reflect.TypeOf((*MockClient)(nil).StopContainers), varargs...)
+}
+
+// UnpauseContainers mocks base method.
+func (m *MockClient) UnpauseContainers(arg0 context.Context, arg1 ...string) ([]byte, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "UnpauseContainers", varargs...)
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UnpauseContainers indicates an expected call of UnpauseContainers.
+func (mr *MockClientMockRecorder) UnpauseContainers(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnpauseContainers", reflect.TypeOf((*MockClient)(nil).UnpauseContainers), varargs...)
 }
 
 // Version mocks base method.

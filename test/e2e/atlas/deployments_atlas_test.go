@@ -47,6 +47,8 @@ func TestDeploymentsAtlas(t *testing.T) {
 			clusterName,
 			"--type",
 			"atlas",
+			"--tier",
+			"M10",
 			"--force",
 			"--skipMongosh",
 			"--skipSampleData",
@@ -64,6 +66,49 @@ func TestDeploymentsAtlas(t *testing.T) {
 
 		connectionString = strings.TrimSpace(o.String())
 		connectionString = strings.Replace(connectionString, "Your connection string: ", "", 1)
+	})
+
+	t.Run("Watch Cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"watch",
+			clusterName,
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+		assert.Contains(t, string(resp), "Cluster available")
+	})
+
+	t.Run("Pause Cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			"pause",
+			clusterName,
+			"--type=ATLAS",
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+		a := assert.New(t)
+		a.Contains(string(resp), fmt.Sprintf("Pausing deployment '%s'", clusterName))
+	})
+
+	t.Run("Start Cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			"start",
+			clusterName,
+			"--type=ATLAS",
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+		a := assert.New(t)
+		a.Contains(string(resp), fmt.Sprintf("Starting deployment '%s'", clusterName))
 	})
 
 	t.Run("Watch Cluster", func(t *testing.T) {
@@ -103,7 +148,6 @@ func TestDeploymentsAtlas(t *testing.T) {
 	})
 
 	// TODO: Update with deployments delete CLOUDP-199629
-
 	t.Run("Delete Cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,

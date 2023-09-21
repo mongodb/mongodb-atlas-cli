@@ -145,6 +145,8 @@ type Client interface {
 	RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error)
 	CopyFileToContainer(ctx context.Context, localFile string, containerName string, filePathInContainer string) ([]byte, error)
 	StopContainers(ctx context.Context, names ...string) ([]byte, error)
+	StartContainers(ctx context.Context, names ...string) ([]byte, error)
+	UnpauseContainers(ctx context.Context, names ...string) ([]byte, error)
 	RemoveContainers(ctx context.Context, names ...string) ([]byte, error)
 	RemoveVolumes(ctx context.Context, names ...string) ([]byte, error)
 	RemoveNetworks(ctx context.Context, names ...string) ([]byte, error)
@@ -398,6 +400,18 @@ func (o *client) CopyFileToContainer(ctx context.Context, localFile string, cont
 
 func (o *client) StopContainers(ctx context.Context, names ...string) ([]byte, error) {
 	return o.runPodman(ctx, append([]string{"stop"}, names...)...)
+}
+
+func (o *client) StartContainers(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"start"}, names...)...)
+}
+
+func (o *client) PauseContainers(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"pause"}, names...)...)
+}
+
+func (o *client) UnpauseContainers(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"unpause"}, names...)...)
 }
 
 func (o *client) RemoveContainers(ctx context.Context, names ...string) ([]byte, error) {

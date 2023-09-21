@@ -156,7 +156,7 @@ func withAnonymousID() EventOpt {
 		if err != nil {
 			_, _ = log.Debugf("error generating machine id: %v\n", err)
 		} else {
-			event.Properties["anonymous_id"] = id
+			event.Properties["device_anonymous_id"] = id
 		}
 	}
 }

@@ -339,7 +339,7 @@ func TestWithAnonymousID(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	e := newEvent(withAnonymousID())
-	assert.NotEmpty(t, e.Properties["anonymous_id"])
+	assert.NotEmpty(t, e.Properties["device_anonymous_id"])
 }
 
 func TestWithDeploymentType(t *testing.T) {

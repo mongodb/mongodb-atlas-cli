@@ -47,7 +47,7 @@ func splitOutput(cmd *exec.Cmd) (string, string, error) {
 	return o.String(), e.String(), err
 }
 
-func TestDeployments(t *testing.T) {
+func TestDeploymentsLocal(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("deployments")
 
@@ -169,6 +169,8 @@ test   LOCAL   7.0.1     IDLE
 			indexEntity,
 			"create",
 			indexName,
+			"--type",
+			"local",
 			"--deploymentName",
 			deploymentName,
 			"--db",

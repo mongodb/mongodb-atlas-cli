@@ -119,7 +119,7 @@ type SetupOpts struct {
 
 func (opts *SetupOpts) initPodmanClient() error {
 	opts.podmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
-	return nil
+	return opts.DeploymentOpts.InitStore(opts.podmanClient)()
 }
 
 func (opts *SetupOpts) initMongoDBClient(ctx context.Context) func() error {

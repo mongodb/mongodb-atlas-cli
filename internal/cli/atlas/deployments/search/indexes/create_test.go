@@ -37,26 +37,27 @@ import (
 
 var indexID = "6509bc5080b2f007e6a2a0ce"
 
-func TestCreate_Run(t *testing.T) {
+const (
+	expectedIndexName       = "idx1"
+	expectedLocalDeployment = "localDeployment1"
+	expectedDB              = "db1"
+	expectedCollection      = "col1"
+	local                   = "local"
+)
+
+func TestCreate_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockPodman := mocks.NewMockClient(ctrl)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockDB := mocks.NewMockDatabase(ctrl)
 	ctx := context.Background()
 
-	const (
-		expectedIndexName       = "idx1"
-		expectedLocalDeployment = "localDeployment1"
-		expectedDB              = "db1"
-		expectedCollection      = "col1"
-	)
-
 	buf := new(bytes.Buffer)
 	opts := &CreateOpts{
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			DeploymentName: expectedLocalDeployment,
-			DeploymentType: "local",
+			DeploymentType: local,
 		},
 		IndexOpts: search.IndexOpts{
 			Name:       expectedIndexName,
@@ -160,18 +161,12 @@ func TestCreate_Duplicated(t *testing.T) {
 	mockDB := mocks.NewMockDatabase(ctrl)
 	ctx := context.Background()
 
-	const (
-		expectedIndexName       = "idx1"
-		expectedLocalDeployment = "localDeployment1"
-		expectedDB              = "db1"
-		expectedCollection      = "col1"
-	)
-
 	buf := new(bytes.Buffer)
 	opts := &CreateOpts{
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			DeploymentName: expectedLocalDeployment,
+			DeploymentType: local,
 		},
 		IndexOpts: search.IndexOpts{
 			Name:       expectedIndexName,
@@ -254,27 +249,11 @@ func TestCreate_Duplicated(t *testing.T) {
 	}
 }
 
-func TestCreateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		CreateBuilder(),
-		0,
-		[]string{flag.DeploymentName, flag.Database, flag.Collection, flag.File},
-	)
-}
-
 func TestCreate_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockIndexStore := mocks.NewMockSearchIndexCreator(ctrl)
 	ctx := context.Background()
-
-	const (
-		expectedIndexName       = "idx1"
-		expectedLocalDeployment = "localDeployment1"
-		expectedDB              = "db1"
-		expectedCollection      = "col1"
-	)
 
 	buf := new(bytes.Buffer)
 	opts := &CreateOpts{
@@ -340,7 +319,16 @@ func TestCreate_RunAtlas(t *testing.T) {
 		t.Fatalf("PostRun() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `Search index created with ID 6509bc5080b2f007e6a2a0ce
+	assert.Equal(t, `Search index created with ID: 6509bc5080b2f007e6a2a0ce
 `, buf.String())
 	t.Log(buf.String())
+}
+
+func TestCreateBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		CreateBuilder(),
+		0,
+		[]string{flag.DeploymentName, flag.Database, flag.Collection, flag.File},
+	)
 }

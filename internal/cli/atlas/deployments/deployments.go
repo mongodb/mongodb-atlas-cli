@@ -30,7 +30,6 @@ var (
 func Builder() *cobra.Command {
 	const use = "deployments"
 	cmd := &cobra.Command{
-		Hidden:  true,
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage cloud and local deployments.",

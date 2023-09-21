@@ -43,7 +43,10 @@ type StartOpts struct {
 
 var startTemplate = "Starting deployment '{{.Name}}'.\n"
 
-var ErrDeploymentIsDeleting = errors.New("deployment state is DELETING")
+var (
+	ErrDeploymentIsDeleting = errors.New("deployment state is DELETING")
+	ErrNotAuthenticated     = errors.New("you are not authenticated. Please, run atlas auth  login")
+)
 
 func (opts *StartOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -58,7 +61,7 @@ func (opts *StartOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	if strings.ToLower(opts.DeploymentType) == options.LocalCluster {
+	if strings.EqualFold(opts.DeploymentType, options.LocalCluster) {
 		return opts.RunLocal(ctx)
 	}
 
@@ -110,6 +113,9 @@ func (opts *StartOpts) startContainer(ctx context.Context, deployment options.De
 }
 
 func (opts *StartOpts) RunAtlas() error {
+	if !opts.IsCliAuthenticated() {
+		return ErrNotAuthenticated
+	}
 	r, err := opts.store.StartCluster(opts.ConfigProjectID(), opts.DeploymentName)
 	if err != nil {
 		return err
@@ -164,6 +170,9 @@ func StartBuilder() *cobra.Command {
 				opts.DeploymentName = args[0]
 			}
 			return opts.Run(cmd.Context())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PostRunMessages()
 		},
 	}
 

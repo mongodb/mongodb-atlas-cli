@@ -58,7 +58,7 @@ func (opts *PauseOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	if strings.ToLower(opts.DeploymentType) == options.LocalCluster {
+	if strings.EqualFold(opts.DeploymentType, options.LocalCluster) {
 		return opts.RunLocal(ctx)
 	}
 
@@ -102,6 +102,10 @@ func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.De
 }
 
 func (opts *PauseOpts) RunAtlas() error {
+	if !opts.IsCliAuthenticated() {
+		return ErrNotAuthenticated
+	}
+
 	r, err := opts.store.PauseCluster(opts.ConfigProjectID(), opts.DeploymentName)
 	if err != nil {
 		return err
@@ -156,6 +160,10 @@ func PauseBuilder() *cobra.Command {
 				opts.DeploymentName = args[0]
 			}
 			return opts.Run(cmd.Context())
+		},
+
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PostRunMessages()
 		},
 	}
 

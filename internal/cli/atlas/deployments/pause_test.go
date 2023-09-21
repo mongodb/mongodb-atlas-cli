@@ -25,6 +25,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
@@ -172,6 +173,12 @@ func TestPause_RunAtlas(t *testing.T) {
 		ListContainers(ctx, options.MongotHostnamePrefix).
 		Return(expectedLocalDeployments, options.ErrDeploymentNotFound).
 		Times(0)
+
+	mockCredentialsGetter.
+		EXPECT().
+		AuthType().
+		Return(config.OAuth).
+		Times(1)
 
 	mockStore.
 		EXPECT().

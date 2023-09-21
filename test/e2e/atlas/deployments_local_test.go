@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && deployments)
+//go:build e2e || (atlas && deployments && local)
 
 package atlas_test
 
@@ -47,7 +47,7 @@ func splitOutput(cmd *exec.Cmd) (string, string, error) {
 	return o.String(), e.String(), err
 }
 
-func TestDeployments(t *testing.T) {
+func TestDeploymentsLocal(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("deployments")
 
@@ -169,12 +169,15 @@ test   LOCAL   7.0.1     IDLE
 			indexEntity,
 			"create",
 			indexName,
+			"--type",
+			"local",
 			"--deploymentName",
 			deploymentName,
 			"--db",
 			databaseName,
 			"--collection",
 			collectionName,
+			"--type=LOCAL",
 			"-w",
 		)
 
@@ -201,6 +204,7 @@ test   LOCAL   7.0.1     IDLE
 			databaseName,
 			"--collection",
 			collectionName,
+			"--type=LOCAL",
 		)
 
 		cmd.Env = os.Environ()
@@ -224,6 +228,7 @@ test   LOCAL   7.0.1     IDLE
 			indexID,
 			"--deploymentName",
 			deploymentName,
+			"--type=LOCAL",
 		)
 
 		cmd.Env = os.Environ()
@@ -261,6 +266,7 @@ test   LOCAL   7.0.1     IDLE
 			"--deploymentName",
 			deploymentName,
 			"--force",
+			"--type=LOCAL",
 			"--debug",
 		)
 

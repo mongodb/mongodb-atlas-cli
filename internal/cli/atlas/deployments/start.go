@@ -43,6 +43,7 @@ type StartOpts struct {
 
 var (
 	ErrDeploymentIsDeleting = errors.New("deployment state is DELETING")
+	ErrNoDeploymentName     = errors.New("deployment name is required for Atlas resources")
 	ErrNotAuthenticated     = errors.New("you are not authenticated. Please, run atlas auth  login")
 	startTemplate           = "Starting deployment '{{.Name}}'.\n"
 )
@@ -90,6 +91,10 @@ func (opts *StartOpts) RunLocal(ctx context.Context) error {
 }
 
 func (opts *StartOpts) startContainer(ctx context.Context, deployment options.Deployment) error {
+	if deployment.StateName == options.IdleState || deployment.StateName == options.RestartingState {
+		return nil
+	}
+
 	if deployment.StateName == options.StoppedState {
 		if _, err := opts.PodmanClient.StartContainers(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname()); err != nil {
 			return err
@@ -103,10 +108,6 @@ func (opts *StartOpts) startContainer(ctx context.Context, deployment options.De
 			return err
 		}
 
-		return nil
-	}
-
-	if deployment.StateName == options.IdleState || deployment.StateName == options.RestartingState {
 		return nil
 	}
 
@@ -130,6 +131,10 @@ func (opts *StartOpts) validateAndPrompt(ctx context.Context) error {
 		if err := opts.PromptDeploymentType(); err != nil {
 			return err
 		}
+	}
+
+	if opts.DeploymentType == options.AtlasCluster && opts.DeploymentName == "" {
+		return ErrNoDeploymentName
 	}
 
 	if opts.DeploymentName == "" {

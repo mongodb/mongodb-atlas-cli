@@ -53,6 +53,7 @@ func TestDescribe_RunLocal(t *testing.T) {
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			DeploymentName: expectedLocalDeployment,
+			DeploymentType: options.LocalCluster,
 		},
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
@@ -127,6 +128,7 @@ func TestDescribe_RunAtlas(t *testing.T) {
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			DeploymentName: expectedLocalDeployment,
+			DeploymentType: options.AtlasCluster,
 		},
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
@@ -147,23 +149,23 @@ func TestDescribe_RunAtlas(t *testing.T) {
 				Labels: map[string]string{"version": "6.0.9"},
 			},
 		}, nil).
-		Times(1)
+		Times(0)
 	mockMongodbClient.
 		EXPECT().
 		Disconnect().
-		Times(1)
+		Times(0)
 
 	mockMongodbClient.
 		EXPECT().
 		Connect("mongodb://localhost:0/?directConnection=true", int64(10)).
 		Return(nil).
-		Times(1)
+		Times(0)
 
 	mockMongodbClient.
 		EXPECT().
 		SearchIndex("test").
 		Return(nil, mongodbclient.ErrSearchIndexNotFound).
-		Times(1)
+		Times(0)
 
 	mockStore.
 		EXPECT().
@@ -194,6 +196,6 @@ func TestDescribeBuilder(t *testing.T) {
 		t,
 		DescribeBuilder(),
 		0,
-		[]string{flag.DeploymentName, flag.ProjectID},
+		[]string{flag.DeploymentName, flag.TypeFlag, flag.ProjectID},
 	)
 }

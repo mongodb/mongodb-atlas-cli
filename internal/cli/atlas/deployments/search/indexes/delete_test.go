@@ -48,6 +48,7 @@ func TestDelete_RunLocal(t *testing.T) {
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			DeploymentName: expectedLocalDeployment,
+			DeploymentType: options.LocalCluster,
 		},
 		DeleteOpts: &cli.DeleteOpts{
 			Entry:   indexID,
@@ -110,6 +111,7 @@ func TestDelete_RunAtlas(t *testing.T) {
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			DeploymentName: expectedLocalDeployment,
+			DeploymentType: options.AtlasCluster,
 		},
 		DeleteOpts: &cli.DeleteOpts{
 			Entry:   indexID,
@@ -132,13 +134,13 @@ func TestDelete_RunAtlas(t *testing.T) {
 				Labels: map[string]string{"version": "6.0.9"},
 			},
 		}, nil).
-		Times(1)
+		Times(0)
 
 	mockMongodbClient.
 		EXPECT().
 		Connect("mongodb://localhost:0/?directConnection=true", int64(10)).
 		Return(options.ErrDeploymentNotFound).
-		Times(1)
+		Times(0)
 
 	mockStore.
 		EXPECT().
@@ -156,6 +158,6 @@ func TestDeleteBuilder(t *testing.T) {
 		t,
 		DeleteBuilder(),
 		0,
-		[]string{flag.DeploymentName, flag.ProjectID, flag.Force},
+		[]string{flag.DeploymentName, flag.ProjectID, flag.Force, flag.TypeFlag},
 	)
 }

@@ -84,7 +84,7 @@ Options
    * - --type
      - string
      - false
-     - Type of the deployment that you want to create. Valid values are ATLAS or LOCAL.
+     - Type of the deployment that you want to create. Valid values are ATLAS or LOCAL. This value defaults to "local".
    * - -w, --watch
      - 
      - false

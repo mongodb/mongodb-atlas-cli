@@ -8,6 +8,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	define "github.com/containers/podman/v4/libpod/define"
 	gomock "github.com/golang/mock/gomock"
 	podman "github.com/mongodb/mongodb-atlas-cli/internal/podman"
 )
@@ -33,6 +34,26 @@ func NewMockClient(ctrl *gomock.Controller) *MockClient {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockClient) EXPECT() *MockClientMockRecorder {
 	return m.recorder
+}
+
+// ContainerInspect mocks base method.
+func (m *MockClient) ContainerInspect(arg0 context.Context, arg1 ...string) ([]*define.InspectContainerData, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ContainerInspect", varargs...)
+	ret0, _ := ret[0].([]*define.InspectContainerData)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ContainerInspect indicates an expected call of ContainerInspect.
+func (mr *MockClientMockRecorder) ContainerInspect(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerInspect", reflect.TypeOf((*MockClient)(nil).ContainerInspect), varargs...)
 }
 
 // ContainerLogs mocks base method.

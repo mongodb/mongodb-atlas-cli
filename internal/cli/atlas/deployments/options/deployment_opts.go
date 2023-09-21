@@ -49,6 +49,7 @@ const (
 	RestartingState       = "RESTARTING"
 	LocalCluster          = "local"
 	AtlasCluster          = "atlas"
+	PromptTypeMessage     = "What type of deployment would you like to work with?"
 )
 
 var (
@@ -207,9 +208,9 @@ func (opts *DeploymentOpts) GetLocalDeployments(ctx context.Context) ([]Deployme
 	return deployments, nil
 }
 
-func (opts *DeploymentOpts) PromptDeploymentType(message string) error {
+func (opts *DeploymentOpts) PromptDeploymentType() error {
 	p := &survey.Select{
-		Message: message,
+		Message: PromptTypeMessage,
 		Options: DeploymentTypeOptions,
 		Help:    usage.DeploymentType,
 		Description: func(value string, index int) string {

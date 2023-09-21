@@ -41,9 +41,10 @@ type PauseOpts struct {
 	config setup.ProfileReader
 }
 
-var pauseTemplate = "Pausing deployment '{{.Name}}'.\n"
-
-var ErrDeploymentIsNotIDLE = errors.New("deployment state is not IDLE")
+var (
+	pauseTemplate          = "Pausing deployment '{{.Name}}'.\n"
+	ErrDeploymentIsNotIDLE = errors.New("deployment state is not IDLE")
+)
 
 func (opts *PauseOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -118,7 +119,7 @@ func (opts *PauseOpts) RunAtlas() error {
 
 func (opts *PauseOpts) validateAndPrompt(ctx context.Context) error {
 	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType("What would you like to stop?"); err != nil {
+		if err := opts.PromptDeploymentType(); err != nil {
 			return err
 		}
 	}

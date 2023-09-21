@@ -646,7 +646,7 @@ func (opts *SetupOpts) validateAndPrompt() error {
 	}
 
 	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType("What would you like to deploy?"); err != nil {
+		if err := opts.PromptDeploymentType(); err != nil {
 			return err
 		}
 	}

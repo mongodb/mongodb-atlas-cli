@@ -41,11 +41,10 @@ type StartOpts struct {
 	config setup.ProfileReader
 }
 
-var startTemplate = "Starting deployment '{{.Name}}'.\n"
-
 var (
 	ErrDeploymentIsDeleting = errors.New("deployment state is DELETING")
 	ErrNotAuthenticated     = errors.New("you are not authenticated. Please, run atlas auth  login")
+	startTemplate           = "Starting deployment '{{.Name}}'.\n"
 )
 
 func (opts *StartOpts) initStore(ctx context.Context) func() error {
@@ -128,7 +127,7 @@ func (opts *StartOpts) RunAtlas() error {
 
 func (opts *StartOpts) validateAndPrompt(ctx context.Context) error {
 	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType("What would you like to start?"); err != nil {
+		if err := opts.PromptDeploymentType(); err != nil {
 			return err
 		}
 	}

@@ -28,6 +28,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	collectionNameAtlas = "myCol"
+	databaseNameAtlas   = "myDB"
+)
+
 func TestDeploymentsAtlas(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("setup")
@@ -136,9 +141,9 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"--projectId", g.projectID,
 			"--deploymentName", clusterName,
 			"--db",
-			databaseName,
+			databaseNameAtlas,
 			"--collection",
-			collectionName,
+			collectionNameAtlas,
 		)
 		cmd.Env = os.Environ()
 

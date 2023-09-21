@@ -72,6 +72,7 @@ Before deleting an Atlas Streams Processing connection, you must first stop all 
 `, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(
+				cmd.ValidateRequiredFlags,
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 			); err != nil {

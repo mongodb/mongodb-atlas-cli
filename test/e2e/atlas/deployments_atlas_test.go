@@ -42,7 +42,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 
 	t.Run("Setup", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			"deployments",
+			deploymentEntity,
 			"setup",
 			clusterName,
 			"--type",
@@ -78,7 +78,32 @@ func TestDeploymentsAtlas(t *testing.T) {
 		req.NoError(err, string(resp))
 		assert.Contains(t, string(resp), "Cluster available")
 	})
+
+	t.Run("Create Index", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
+			"create",
+			"testIndex",
+			"--projectId", g.projectID,
+			"--deploymentName", clusterName,
+			"--db",
+			databaseName,
+			"--collection",
+			collectionName,
+		)
+		cmd.Env = os.Environ()
+
+		r, err := cmd.CombinedOutput()
+		out := string(r)
+		req.NoError(err, out)
+		a := assert.New(t)
+		a.Contains(out, "Search index created")
+	})
+
 	// TODO: Update with deployments delete CLOUDP-199629
+
 	t.Run("Delete Cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,

@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-deployments-search-indexes` - Manage Atlas and local search indexes.
+* :ref:`atlas-deployments-search-indexes` - Manage cloud and local search indexes.
 
 
 .. toctree::

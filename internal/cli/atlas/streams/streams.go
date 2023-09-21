@@ -12,42 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package deployments
+package streams
 
 import (
-	"errors"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/search"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/streams/connection"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/streams/instance"
 	"github.com/spf13/cobra"
 )
 
-var (
-	errCompassNotInstalled = errors.New("did not find MongoDB Compass, install: https://dochub.mongodb.org/core/install-compass")
-	errMongoshNotInstalled = errors.New("did not find mongosh, install: https://dochub.mongodb.org/core/install-mongosh")
-)
-
 func Builder() *cobra.Command {
-	const use = "deployments"
+	const use = "streams"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage cloud and local deployments.",
+		Short:   "Manage streams for your project.",
+		Long:    `The streams command provides access to your Atlas Stream Processing configurations. You can create, edit, and delete streams, as well as change the connection registry.`,
 	}
-
-	cmd.AddGroup(&cobra.Group{ID: "all", Title: "Cloud and local deployments commands:"})
-	cmd.AddGroup(&cobra.Group{ID: "local", Title: "Local deployments commands:"})
-
-	cmd.AddCommand(
-		SetupBuilder(),
-		DeleteBuilder(),
-		ListBuilder(),
-		ConnectBuilder(),
-		DiagnosticsBuilder(),
-		StartBuilder(),
-		PauseBuilder(),
-		search.Builder(),
-	)
+	cmd.AddCommand(instance.Builder(), connection.Builder())
 
 	return cmd
 }

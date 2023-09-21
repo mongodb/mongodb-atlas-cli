@@ -1,0 +1,15 @@
+{
+  "type": "Kafka",
+  "bootstrapServers": "example.com:8080,fraud.example.com:8000",
+  "security": {
+    "protocol": "PLAINTEXT"
+  },
+  "authentication": {
+    "mechanism": "SCRAM-256",
+    "username": "admin",
+    "password": "hunter2"
+  },
+  "config": {
+    "auto.offset.reset": "earliest"
+  }
+}

@@ -56,6 +56,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/security"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/streams"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/teams"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/users"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
@@ -234,6 +235,7 @@ Use the --help flag with any command for more info on that command.`,
 		customdns.Builder(),
 		cloudproviders.Builder(),
 		serverless.Builder(),
+		streams.Builder(),
 		livemigrations.Builder(),
 		accesslogs.Builder(),
 		loginCmd,

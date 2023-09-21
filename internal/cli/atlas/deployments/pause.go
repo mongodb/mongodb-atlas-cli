@@ -89,16 +89,16 @@ func (opts *PauseOpts) RunLocal(ctx context.Context) error {
 }
 
 func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.Deployment) error {
+	if deployment.StateName == options.PausedState || deployment.StateName == options.StoppedState {
+		return nil
+	}
+
 	if deployment.StateName == options.IdleState {
 		if _, err := opts.PodmanClient.StopContainers(ctx, opts.LocalMongotHostname()); err != nil {
 			return err
 		}
 
 		return opts.StopMongoD(ctx, opts.LocalMongodHostname())
-	}
-
-	if deployment.StateName == options.PausedState || deployment.StateName == options.StoppedState {
-		return nil
 	}
 
 	return ErrDeploymentIsNotIDLE

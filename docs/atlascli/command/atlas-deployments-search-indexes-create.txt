@@ -77,6 +77,10 @@ Options
      - 
      - false
      - help for create
+   * - --projectId
+     - string
+     - false
+     - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
    * - --type
      - string
      - false

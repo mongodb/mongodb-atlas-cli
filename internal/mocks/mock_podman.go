@@ -159,11 +159,11 @@ func (mr *MockClientMockRecorder) ListImages(arg0, arg1 interface{}) *gomock.Cal
 }
 
 // Logs mocks base method.
-func (m *MockClient) Logs(arg0 context.Context) ([]interface{}, error) {
+func (m *MockClient) Logs(arg0 context.Context) (map[string]interface{}, []error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Logs", arg0)
-	ret0, _ := ret[0].([]interface{})
-	ret1, _ := ret[1].(error)
+	ret0, _ := ret[0].(map[string]interface{})
+	ret1, _ := ret[1].([]error)
 	return ret0, ret1
 }
 

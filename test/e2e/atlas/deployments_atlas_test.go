@@ -131,6 +131,8 @@ func TestDeploymentsAtlas(t *testing.T) {
 			indexEntity,
 			"create",
 			"testIndex",
+			"--type",
+			"atlas",
 			"--projectId", g.projectID,
 			"--deploymentName", clusterName,
 			"--db",

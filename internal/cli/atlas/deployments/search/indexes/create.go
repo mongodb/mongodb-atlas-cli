@@ -130,6 +130,12 @@ func (opts *CreateOpts) RunAtlas() error {
 }
 
 func (opts *CreateOpts) Run(ctx context.Context) error {
+	if opts.DeploymentType == "" {
+		if err := opts.PromptDeploymentType(); err != nil {
+			return err
+		}
+	}
+
 	if strings.EqualFold(opts.DeploymentType, "local") {
 		return opts.RunLocal(ctx)
 	}
@@ -290,7 +296,7 @@ func CreateBuilder() *cobra.Command {
 	}
 
 	// Atlas and Local
-	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "local", usage.DeploymentType)
+	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)

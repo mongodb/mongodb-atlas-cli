@@ -36,7 +36,7 @@ type diagnosticsOpts struct {
 	podmanClient podman.Client
 	podmanDiag   *podman.Diagnostic
 	machineDiag  *machineDiagnostic
-	podmanLogs   []interface{}
+	podmanLogs   map[string]interface{}
 	mongotLogs   []string
 	mongodLogs   []string
 }
@@ -59,17 +59,22 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 	opts.podmanDiag = opts.podmanClient.Diagnostics(ctx)
 
 	// Podman logs
-	if opts.podmanLogs, err = opts.podmanClient.Logs(ctx); err != nil {
-		opts.podmanDiag.Errors = append(opts.podmanDiag.Errors, fmt.Errorf("failed to get podman logs: %w", err).Error())
+	var errs []error
+	if opts.podmanLogs, errs = opts.podmanClient.Logs(ctx); errs != nil {
+		for _, e := range errs {
+			opts.podmanDiag.Errors = append(opts.podmanDiag.Errors, fmt.Errorf("failed to get podman logs: %w", e).Error())
+		}
 	}
 
 	if opts.DeploymentName != "" {
 		_, _ = log.Warningf("Fetching logs for deployment %s\n", opts.DeploymentName)
 		// ignore error if container does not exist just capture log for that command
-		opts.mongotLogs, err = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongotHostname())
-		opts.podmanDiag.Errors = append(opts.podmanDiag.Errors, fmt.Errorf("failed to get mongot logs: %w", err).Error())
-		opts.mongodLogs, err = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongodHostname())
-		opts.podmanDiag.Errors = append(opts.podmanDiag.Errors, fmt.Errorf("failed to get mongod logs: %w", err).Error())
+		if opts.mongotLogs, err = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongotHostname()); err != nil {
+			opts.podmanDiag.Errors = append(opts.podmanDiag.Errors, fmt.Errorf("failed to get mongot logs: %w", err).Error())
+		}
+		if opts.mongodLogs, err = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongodHostname()); err != nil {
+			opts.podmanDiag.Errors = append(opts.podmanDiag.Errors, fmt.Errorf("failed to get mongod logs: %w", err).Error())
+		}
 	}
 
 	diagnosis := map[string]interface{}{

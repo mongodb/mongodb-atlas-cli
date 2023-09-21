@@ -90,6 +90,10 @@ func (opts *StartOpts) RunLocal(ctx context.Context) error {
 }
 
 func (opts *StartOpts) startContainer(ctx context.Context, deployment options.Deployment) error {
+	if deployment.StateName == options.IdleState || deployment.StateName == options.RestartingState {
+		return nil
+	}
+
 	if deployment.StateName == options.StoppedState {
 		if _, err := opts.PodmanClient.StartContainers(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname()); err != nil {
 			return err
@@ -103,10 +107,6 @@ func (opts *StartOpts) startContainer(ctx context.Context, deployment options.De
 			return err
 		}
 
-		return nil
-	}
-
-	if deployment.StateName == options.IdleState || deployment.StateName == options.RestartingState {
 		return nil
 	}
 

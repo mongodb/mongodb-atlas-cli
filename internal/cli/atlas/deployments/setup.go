@@ -726,8 +726,9 @@ Port	{{.Port}}
 	return nil
 }
 
-func (opts *SetupOpts) RunLocal(ctx context.Context) error {
+func (opts *SetupOpts) runLocal(ctx context.Context) error {
 	if err := opts.createLocalDeployment(ctx); err != nil {
+		_ = opts.Remove(ctx)
 		return err
 	}
 
@@ -740,7 +741,7 @@ func (opts *SetupOpts) RunLocal(ctx context.Context) error {
 	return opts.runConnectWith(cs)
 }
 
-func (opts *SetupOpts) RunAtlas(ctx context.Context) error {
+func (opts *SetupOpts) runAtlas(ctx context.Context) error {
 	s := setup.Builder()
 
 	// remove global flags and unknown flags
@@ -784,10 +785,10 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 
 	telemetry.AppendOption(telemetry.WithDeploymentType(opts.DeploymentType))
 	if strings.EqualFold(localCluster, opts.DeploymentType) {
-		return opts.RunLocal(ctx)
+		return opts.runLocal(ctx)
 	}
 
-	return opts.RunAtlas(ctx)
+	return opts.runAtlas(ctx)
 }
 
 // atlas deployments setup.

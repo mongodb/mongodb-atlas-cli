@@ -17,23 +17,26 @@ package options
 import (
 	"context"
 	"fmt"
+	"strconv"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
+	"github.com/containers/podman/v4/libpod/define"
 )
 
 const deploymentTypeLocal = "local"
 
-func (opts *DeploymentOpts) updateFields(c *podman.Container) {
+func (opts *DeploymentOpts) updateFields(c *define.InspectContainerData) {
 	opts.DeploymentType = deploymentTypeLocal
-	opts.MdbVersion = c.Labels["version"]
-	if len(c.Ports) > 0 {
-		opts.Port = c.Ports[0].HostPort
+	opts.MdbVersion = c.Config.Labels["version"]
+	if len(c.HostConfig.PortBindings) > 0 {
+		for _, port := range c.HostConfig.PortBindings {
+			opts.Port, _ = strconv.Atoi(port[0].HostPort)
+		}
 	}
 }
 
 func (opts *DeploymentOpts) ConnectionString(ctx context.Context) (string, error) {
 	if opts.Port == 0 {
-		c, err := opts.findContainer(ctx)
+		c, err := opts.findMongoDContainer(ctx)
 		if err != nil {
 			return "", err
 		}

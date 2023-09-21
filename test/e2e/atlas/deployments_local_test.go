@@ -177,6 +177,7 @@ test   LOCAL   7.0.1     IDLE
 			databaseName,
 			"--collection",
 			collectionName,
+			"--type=LOCAL",
 			"-w",
 		)
 
@@ -203,6 +204,7 @@ test   LOCAL   7.0.1     IDLE
 			databaseName,
 			"--collection",
 			collectionName,
+			"--type=LOCAL",
 		)
 
 		cmd.Env = os.Environ()
@@ -226,6 +228,7 @@ test   LOCAL   7.0.1     IDLE
 			indexID,
 			"--deploymentName",
 			deploymentName,
+			"--type=LOCAL",
 		)
 
 		cmd.Env = os.Environ()
@@ -263,6 +266,7 @@ test   LOCAL   7.0.1     IDLE
 			"--deploymentName",
 			deploymentName,
 			"--force",
+			"--type=LOCAL",
 			"--debug",
 		)
 

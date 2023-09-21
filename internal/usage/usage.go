@@ -459,7 +459,7 @@ dbName and collection are required only for built-in roles.`
 	DataFederationQueryLimitValue             = "Value given to the query limit."
 	OverrunPolicy                             = "Action to take when the usage limit is exceeded."
 	AuthorizedEmail                           = "Email address of a security or legal representative."
-	DeploymentType                            = "Type of the deployment that you want to create. Valid values are ATLAS or LOCAL."
+	DeploymentType                            = "Type of deployment that you want to create. Valid values are ATLAS or LOCAL."
 	MongodPort                                = "Port that the MongoDB server listens to for client connections."
 	ConnectWith                               = "Method for connecting to the deployment. Valid values are mongosh, compass, and skip."
 	AlertConfigFilename                       = "Path to the JSON configuration file that defines alert configuration settings."

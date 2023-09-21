@@ -17,6 +17,7 @@ package deployments
 import (
 	"context"
 	"errors"
+	"os/exec"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -41,9 +42,13 @@ type PauseOpts struct {
 	config setup.ProfileReader
 }
 
+const (
+	pauseTemplate                     = "Pausing deployment '{{.Name}}'.\n"
+	podmanContainerTerminatedExitCode = 137
+)
+
 var (
-	pauseTemplate          = "Pausing deployment '{{.Name}}'.\n"
-	ErrDeploymentIsNotIDLE = errors.New("deployment state is not IDLE")
+	errDeploymentIsNotIDLE = errors.New("deployment state is not IDLE")
 )
 
 func (opts *PauseOpts) initStore(ctx context.Context) func() error {
@@ -89,19 +94,25 @@ func (opts *PauseOpts) RunLocal(ctx context.Context) error {
 }
 
 func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.Deployment) error {
-	if deployment.StateName == options.IdleState {
-		if _, err := opts.PodmanClient.StopContainers(ctx, opts.LocalMongotHostname()); err != nil {
-			return err
-		}
-
-		return opts.StopMongoD(ctx, opts.LocalMongodHostname())
-	}
-
 	if deployment.StateName == options.PausedState || deployment.StateName == options.StoppedState {
 		return nil
 	}
 
-	return ErrDeploymentIsNotIDLE
+	if deployment.StateName == options.IdleState {
+		// search for a process "java ... mongot", extract the process ID, kill the process with SIGTERM (15)
+		const stopMongot = "grep -l java.*mongot /proc/*/cmdline | awk -F'/' '{print $3; exit}' | while read -r pid; do kill -15 $pid; done"
+		if err := opts.PodmanClient.Exec(ctx, opts.LocalMongotHostname(), "/bin/sh", "-c", stopMongot); err != nil {
+			return err
+		}
+
+		err := opts.PodmanClient.Exec(ctx, opts.LocalMongodHostname(), "mongod", "--shutdown")
+		if exitErr, ok := err.(*exec.ExitError); ok && exitErr.ExitCode() == podmanContainerTerminatedExitCode {
+			return nil
+		}
+		return err
+	}
+
+	return errDeploymentIsNotIDLE
 }
 
 func (opts *PauseOpts) RunAtlas() error {

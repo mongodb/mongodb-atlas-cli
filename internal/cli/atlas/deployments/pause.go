@@ -134,7 +134,8 @@ func PauseBuilder() *cobra.Command {
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{
-			"output": pauseTemplate,
+			"deploymentNameDesc": "Name of the deployment.",
+			"output":             pauseTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.config = config.Default()

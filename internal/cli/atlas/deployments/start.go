@@ -142,7 +142,8 @@ func StartBuilder() *cobra.Command {
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{
-			"output": startTemplate,
+			"deploymentNameDesc": "Name of the deployment.",
+			"output":             startTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.config = config.Default()

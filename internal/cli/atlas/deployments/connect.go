@@ -16,15 +16,18 @@ package deployments
 
 import (
 	"context"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/compass"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -36,36 +39,45 @@ type ConnectOpts struct {
 	options.DeploymentOpts
 	podmanClient podman.Client
 	connectWith  string
+	store        store.AtlasClusterDescriber
 }
 
-func (opts *ConnectOpts) validateFlags() error {
-	if opts.DeploymentName != "" {
-		if err := options.ValidateDeploymentName(opts.DeploymentName); err != nil {
-			return err
-		}
+func (opts *ConnectOpts) initAtlasStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
 	}
-
-	if opts.connectWith != "" {
-		if err := options.ValidateConnectWith(opts.connectWith); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
-func (opts *ConnectOpts) Run(ctx context.Context) error {
-	if err := opts.podmanClient.Ready(ctx); err != nil {
+func (opts *ConnectOpts) validateAndPrompt(ctx context.Context) error {
+	if opts.DeploymentType == "" {
+		if err := opts.PromptDeploymentType(); err != nil {
+			return err
+		}
+	} else if err := options.ValidateDeploymentType(opts.DeploymentType); err != nil {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithDeploymentType(options.LocalCluster)) // always local
-	if opts.DeploymentName != "" {
-		if err := opts.DeploymentOpts.CheckIfDeploymentExists(ctx); err != nil {
+	if strings.EqualFold(opts.DeploymentType, options.AtlasCluster) {
+		if !opts.IsCliAuthenticated() {
+			return ErrNotAuthenticated
+		}
+
+		if err := opts.ValidateProjectID(); err != nil {
 			return err
 		}
+
+		if opts.DeploymentName == "" {
+			return ErrNoDeploymentName
+		}
 	} else {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
+		// deploymentType is local
+		if opts.DeploymentName == "" {
+			if err := opts.DeploymentOpts.Select(ctx); err != nil {
+				return err
+			}
+		} else if err := opts.DeploymentOpts.CheckIfDeploymentExists(ctx); err != nil {
 			return err
 		}
 	}
@@ -75,13 +87,52 @@ func (opts *ConnectOpts) Run(ctx context.Context) error {
 		if opts.connectWith, err = opts.DeploymentOpts.PromptConnectWith(); err != nil {
 			return err
 		}
+	} else {
+		if err := options.ValidateConnectWith(opts.connectWith); err != nil {
+			return err
+		}
 	}
+
+	return nil
+}
+
+func (opts *ConnectOpts) Run(ctx context.Context) error {
+	if err := opts.validateAndPrompt(ctx); err != nil {
+		return err
+	}
+
+	if strings.EqualFold(opts.DeploymentType, options.LocalCluster) {
+		return opts.RunLocal(ctx)
+	}
+
+	return opts.RunAtlas(ctx)
+
+}
+
+func (opts *ConnectOpts) RunLocal(ctx context.Context) error {
+	if err := opts.podmanClient.Ready(ctx); err != nil {
+		return err
+	}
+
+	telemetry.AppendOption(telemetry.WithDeploymentType(options.LocalCluster)) // always local
 
 	connectionString, err := opts.ConnectionString(ctx)
 	if err != nil {
 		return err
 	}
 
+	return opts.Connect(connectionString)
+}
+
+func (opts *ConnectOpts) RunAtlas(ctx context.Context) error {
+	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.DeploymentName)
+	if err != nil {
+		return err
+	}
+	return opts.Connect(*r.ConnectionStrings.Standard)
+}
+
+func (opts *ConnectOpts) Connect(connectionString string) error {
 	switch opts.connectWith {
 	case options.ConnectWithConnectionString:
 		opts.Print(connectionString)
@@ -110,7 +161,7 @@ func ConnectBuilder() *cobra.Command {
 		Use:     "connect [deploymentName]",
 		Short:   "Connect to a deployment.",
 		Args:    require.MaximumNArgs(1),
-		GroupID: "local",
+		GroupID: "all",
 		Annotations: map[string]string{
 			"deploymentNameDesc": "Name of the deployment that you want to connect to.",
 		},
@@ -119,7 +170,11 @@ func ConnectBuilder() *cobra.Command {
 				opts.DeploymentName = args[0]
 			}
 			opts.podmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
-			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), ""), opts.InitStore(opts.podmanClient), opts.validateFlags)
+			return opts.PreRunE(
+				opts.InitOutput(cmd.OutOrStdout(), ""),
+				opts.InitStore(opts.podmanClient),
+				opts.initAtlasStore(cmd.Context()),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
@@ -127,9 +182,14 @@ func ConnectBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWith)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return options.ConnectWithOptions, cobra.ShellCompDirectiveDefault
+	})
+	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return options.DeploymentTypeOptions, cobra.ShellCompDirectiveDefault
 	})
 
 	return cmd

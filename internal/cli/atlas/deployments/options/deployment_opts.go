@@ -222,9 +222,19 @@ func (opts *DeploymentOpts) PromptDeploymentType() error {
 		return err
 	}
 
-	if !strings.EqualFold(opts.DeploymentType, AtlasCluster) && !strings.EqualFold(opts.DeploymentType, LocalCluster) {
-		return fmt.Errorf("%w: %s", errDeploymentTypeNotImplemented, deploymentTypeDescription[opts.DeploymentType])
-	}
+	return ValidateDeploymentType(opts.DeploymentType)
+}
 
+func ValidateDeploymentType(s string) error {
+	found := false
+	for _, option := range DeploymentTypeOptions {
+		if strings.EqualFold(option, s) {
+			found = true
+			break
+		}
+	}
+	if !found {
+		return fmt.Errorf("%w: %s", errDeploymentTypeNotImplemented, s)
+	}
 	return nil
 }

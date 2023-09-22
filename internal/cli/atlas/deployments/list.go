@@ -48,7 +48,7 @@ const listTemplate = `NAME	TYPE	MDB VER	STATE
 {{end}}`
 
 const MaxItemsPerPage = 500
-const errAtlas = "failed to retrieve Atlas deployments with: %v"
+const errAtlas = "failed to retrieve Atlas deployments with: %s"
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {

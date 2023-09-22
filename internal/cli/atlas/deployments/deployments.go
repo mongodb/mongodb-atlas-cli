@@ -44,6 +44,7 @@ func Builder() *cobra.Command {
 		ListBuilder(),
 		ConnectBuilder(),
 		DiagnosticsBuilder(),
+		LogsBuilder(),
 		search.Builder(),
 	)
 

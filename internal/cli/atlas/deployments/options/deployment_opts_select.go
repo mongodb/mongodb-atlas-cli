@@ -55,6 +55,13 @@ func (opts *DeploymentOpts) CheckIfDeploymentExists(ctx context.Context) error {
 	return nil
 }
 
+func (opts *DeploymentOpts) DetectLocalDeploymentName(ctx context.Context) error {
+	if opts.DeploymentName != "" {
+		return opts.CheckIfDeploymentExists(ctx)
+	}
+	return opts.Select(ctx)
+}
+
 func (opts *DeploymentOpts) Select(ctx context.Context) error {
 	containers, err := opts.PodmanClient.ListContainers(ctx, MongodHostnamePrefix)
 	if err != nil {

@@ -17,6 +17,7 @@ package deployments
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -47,6 +48,7 @@ const listTemplate = `NAME	TYPE	MDB VER	STATE
 {{end}}`
 
 const MaxItemsPerPage = 500
+const errAtlas = "failed to retrieve Atlas deployments with: %v"
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -97,19 +99,20 @@ func (opts *ListOpts) getAtlasDeployments() ([]options.Deployment, error) {
 }
 
 func (opts *ListOpts) Run(ctx context.Context) error {
-	atlasClusters, err := opts.getAtlasDeployments()
-	if err != nil {
-		return err
-	}
-
 	mdbContainers, err := opts.GetLocalDeployments(ctx)
 	if err != nil && !errors.Is(err, podman.ErrPodmanNotFound) {
 		return err
 	}
 
+	atlasClusters, atlasErr := opts.getAtlasDeployments()
+
 	err = opts.Print(append(atlasClusters, mdbContainers...))
 	if err != nil {
 		return err
+	}
+
+	if atlasErr != nil {
+		return fmt.Errorf(errAtlas, atlasErr.Error())
 	}
 
 	return nil

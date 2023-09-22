@@ -50,12 +50,14 @@ func TestList_Run(t *testing.T) {
 				Id:             pointer.Get("123"),
 				MongoDBVersion: pointer.Get("7.0.0"),
 				StateName:      pointer.Get("IDLE"),
+				Paused:         pointer.Get(false),
 			},
 			{
 				Name:           pointer.Get("atlasCluster1"),
 				Id:             pointer.Get("123"),
 				MongoDBVersion: pointer.Get("7.0.0"),
 				StateName:      pointer.Get("IDLE"),
+				Paused:         pointer.Get(false),
 			},
 		},
 	}

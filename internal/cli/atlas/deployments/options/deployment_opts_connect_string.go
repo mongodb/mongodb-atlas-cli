@@ -27,10 +27,9 @@ const deploymentTypeLocal = "local"
 func (opts *DeploymentOpts) updateFields(c *define.InspectContainerData) {
 	opts.DeploymentType = deploymentTypeLocal
 	opts.MdbVersion = c.Config.Labels["version"]
-	if len(c.HostConfig.PortBindings) > 0 {
-		for _, port := range c.HostConfig.PortBindings {
-			opts.Port, _ = strconv.Atoi(port[0].HostPort)
-		}
+	portBind, ok := c.HostConfig.PortBindings["27017/tcp"]
+	if ok && len(portBind) > 0 {
+		opts.Port, _ = strconv.Atoi(portBind[0].HostPort)
 	}
 }
 

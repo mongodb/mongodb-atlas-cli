@@ -14,9 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-echo "$KEYFILECONTENTS" > "$KEYFILEPATH"
+echo "$KEY_FILE_CONTENTS" > "$KEY_FILE"
 
 /etc/mongot-localdev/mongot \
-                     --data-dir "$DATADIR" \
-                     --mongodHostAndPort "$MONGODHOST" \
-                     --keyFile "$KEYFILEPATH"
+                     --data-dir "$DATA_DIR" \
+                     --mongodHostAndPort "$MONGOD_HOST_AND_PORT" \
+                     --keyFile "$KEY_FILE"

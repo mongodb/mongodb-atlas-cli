@@ -41,7 +41,7 @@ const (
 	spinnerSpeed         = 100 * time.Millisecond
 	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
 	clusterNamePattern    = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
-	MongotDockerImageName = "docker.io/mongodb/mongodb-atlas-search:preview-20230922T141716Z"
+	MongotDockerImageName = "docker.io/mongodb/mongodb-atlas-search:preview-20230922T155956Z"
 	PausedState           = "PAUSED"
 	StoppedState          = "STOPPED"
 	IdleState             = "IDLE"

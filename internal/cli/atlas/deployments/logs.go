@@ -23,10 +23,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
@@ -66,8 +64,6 @@ func (opts *DownloadOpts) RunLocal(ctx context.Context) error {
 	filepath := path.Join(home, "/", opts.DeploymentName+".log")
 
 	var data []byte = []byte(strings.Join(logs, "\n"))
-	log.Warningln(filepath)
-	// write logs into file path
 	if err := afero.WriteFile(opts.fs, filepath, data, 0644); err != nil {
 		return err
 	}
@@ -99,8 +95,6 @@ func LogsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

@@ -85,11 +85,16 @@ func (opts *ListOpts) getAtlasDeployments() ([]options.Deployment, error) {
 
 	deployments := make([]options.Deployment, len(atlasClusters.Results))
 	for i, c := range atlasClusters.Results {
+		stateName := *c.StateName
+		if *c.Paused {
+			// for paused clusters, Atlas returns stateName IDLE and Paused=true
+			stateName = options.PausedState
+		}
 		deployments[i] = options.Deployment{
 			Type:           "ATLAS",
 			Name:           *c.Name,
 			MongoDBVersion: *c.MongoDBVersion,
-			StateName:      *c.StateName,
+			StateName:      stateName,
 		}
 	}
 

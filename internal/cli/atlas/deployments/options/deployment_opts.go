@@ -65,9 +65,8 @@ var (
 var localStateMap = map[string]string{
 	"running":  IdleState,
 	"removing": DeletingState,
-	// a "created" container is ready to be started but is currently stopped,
-	// which for a local deployment is equivalent to being paused.
-	"created":    PausedState,
+	// a "created" container is ready to be started but is currently stopped
+	"created":    StoppedState,
 	"paused":     PausedState,
 	"restarting": RestartingState,
 	"exited":     StoppedState,

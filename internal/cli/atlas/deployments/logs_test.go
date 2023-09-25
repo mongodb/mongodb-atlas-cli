@@ -17,13 +17,18 @@
 package deployments
 
 import (
+	"bytes"
 	"context"
+	"strings"
 	"testing"
 
+	"github.com/containers/podman/v4/libpod/define"
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/spf13/afero"
 )
 
 func TestLogsBuilder(t *testing.T) {
@@ -40,11 +45,18 @@ func TestRun(t *testing.T) {
 
 	mockPodman := mocks.NewMockClient(ctrl)
 	ctx := context.Background()
+	expectedLocalDeployment := "localDeployment1"
+	buf := new(bytes.Buffer)
 
 	downloadOpts := &DownloadOpts{
 		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient: mockPodman,
+			PodmanClient:   mockPodman,
+			DeploymentName: expectedLocalDeployment,
 		},
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
+		},
+		fs: afero.NewMemMapFs(),
 	}
 
 	mockPodman.
@@ -53,7 +65,48 @@ func TestRun(t *testing.T) {
 		Return(nil).
 		Times(1)
 
+	mockPodman.
+		EXPECT().
+		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
+		Return([]*define.InspectContainerData{
+			{
+				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
+				Config: &define.InspectContainerConfig{
+					Labels: map[string]string{
+						"version": "7.0.1",
+					},
+				},
+				HostConfig: &define.InspectContainerHostConfig{
+					PortBindings: map[string][]define.InspectHostPort{
+						"27017/tcp": {
+							{
+								HostIP:   "127.0.0.1",
+								HostPort: "27017",
+							},
+						},
+					},
+				},
+				Mounts: []define.InspectMount{
+					{
+						Name: downloadOpts.DeploymentOpts.LocalMongodDataVolume(),
+					},
+				},
+			},
+		}, nil).
+		Times(1)
+
+	mockPodman.
+		EXPECT().
+		ContainerLogs(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
+		Return([]string{"log1", "log2"}, nil).
+		Times(1)
+
 	if err := downloadOpts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
+	}
+
+	expectedOutput := "localDeployment1.log"
+	if !strings.Contains(buf.String(), expectedOutput) {
+		t.Fatalf("Run() expected output: %s, got: %s", expectedOutput, buf.String())
 	}
 }

@@ -23,8 +23,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
@@ -36,10 +38,7 @@ type DownloadOpts struct {
 	fs afero.Fs
 }
 
-const (
-	logsTemplate = `{{.}}`
-	fileMode     = 0644
-)
+const fileMode = 0644
 
 func (opts *DownloadOpts) Run(ctx context.Context) error {
 	return opts.RunLocal(ctx)
@@ -87,17 +86,21 @@ func LogsBuilder() *cobra.Command {
 			"output": listTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			log.SetWriter(cmd.OutOrStdout())
+			w := cmd.OutOrStdout()
+			log.SetWriter(w)
 			opts.fs = afero.NewOsFs()
 
 			return opts.PreRunE(
 				opts.InitStore(podman.NewClient(log.IsDebugLevel(), log.Writer())),
-				opts.InitOutput(log.Writer(), logsTemplate))
+				opts.InitOutput(w, ""))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
+
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 
 	return cmd
 }

@@ -163,23 +163,6 @@ type Client interface {
 	Exec(ctx context.Context, name string, args ...string) error
 }
 
-type Network struct {
-	ID         string `json:"ID"`
-	Name       string `json:"Name"`
-	DNSEnabled bool   `json:"dns_enabled"`
-	Subnets    []struct {
-		Subnet  string `json:"Subnet"`
-		Gateway string `json:"gateway"`
-	} `json:"Subnets"`
-	IPV6Enabled bool   `json:"ipv6_enabled"`
-	Internal    bool   `json:"internal"`
-	Created     string `json:"created"`
-	Driver      string `json:"driver"`
-	IPAMOptions *struct {
-		Driver string `json:"driver"`
-	} `json:"ipam_options"`
-}
-
 type client struct {
 	debug     bool
 	outWriter io.Writer

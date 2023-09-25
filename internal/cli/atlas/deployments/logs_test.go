@@ -26,6 +26,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/spf13/afero"
@@ -37,13 +38,13 @@ func TestLogsBuilder(t *testing.T) {
 		LogsBuilder(),
 		0,
 		[]string{
-			"deploymentName",
-			"output",
+			flag.DeploymentName,
+			flag.Output,
 		},
 	)
 }
 
-func TestRun(t *testing.T) {
+func TestLogs_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
 	mockPodman := mocks.NewMockClient(ctrl)

@@ -38,13 +38,10 @@ type DownloadOpts struct {
 	fs afero.Fs
 }
 
-const fileMode = 0644
+// User: read and write, Group: read, Other: read
+const filePermissions = 0644
 
 func (opts *DownloadOpts) Run(ctx context.Context) error {
-	return opts.RunLocal(ctx)
-}
-
-func (opts *DownloadOpts) RunLocal(ctx context.Context) error {
 	if err := opts.PodmanClient.Ready(ctx); err != nil {
 		return err
 	}
@@ -66,7 +63,7 @@ func (opts *DownloadOpts) RunLocal(ctx context.Context) error {
 	filepath := path.Join(home, "/", opts.DeploymentName+".log")
 
 	var data = []byte(strings.Join(logs, "\n"))
-	if err := afero.WriteFile(opts.fs, filepath, data, fileMode); err != nil {
+	if err := afero.WriteFile(opts.fs, filepath, data, filePermissions); err != nil {
 		return err
 	}
 
@@ -82,9 +79,6 @@ func LogsBuilder() *cobra.Command {
 		Aliases: []string{"log"},
 		Args:    require.NoArgs,
 		GroupID: "local",
-		Annotations: map[string]string{
-			"output": listTemplate,
-		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			w := cmd.OutOrStdout()
 			log.SetWriter(w)

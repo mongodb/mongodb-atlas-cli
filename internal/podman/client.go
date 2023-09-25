@@ -332,9 +332,12 @@ func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
 
 	if o.debug {
 		_, _ = o.outWriter.Write(output)
+	}
 
-		var exitErr *exec.ExitError
-		if errors.As(err, &exitErr) {
+	var exitErr *exec.ExitError
+	if errors.As(err, &exitErr) {
+		err = fmt.Errorf("%w: you may rerun with this command with the flag '--debug' to gather more information", err)
+		if o.debug {
 			_, _ = o.outWriter.Write(exitErr.Stderr)
 		}
 	}

@@ -16,7 +16,6 @@ package indexes
 
 import (
 	"context"
-	"errors"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -49,12 +48,11 @@ func (opts *DescribeOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	err := opts.RunLocal(ctx)
-	if err != nil && (errors.Is(err, options.ErrDeploymentNotFound) || errors.Is(err, mongodbclient.ErrSearchIndexNotFound)) {
+	if opts.DeploymentType == options.AtlasCluster {
 		return opts.RunAtlas()
 	}
 
-	return err
+	return opts.RunLocal(ctx)
 }
 
 func (opts *DescribeOpts) RunAtlas() error {
@@ -101,6 +99,16 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DescribeOpts) validateAndPrompt(ctx context.Context) error {
+	if opts.DeploymentType == "" {
+		if err := opts.PromptDeploymentType(); err != nil {
+			return err
+		}
+	}
+
+	if opts.DeploymentType == options.AtlasCluster && opts.DeploymentName == "" {
+		return ErrNoDeploymentName
+	}
+
 	if opts.DeploymentName == "" {
 		if err := opts.DeploymentOpts.Select(ctx); err != nil {
 			return err
@@ -145,6 +153,7 @@ func DescribeBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

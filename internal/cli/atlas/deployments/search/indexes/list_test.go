@@ -22,13 +22,13 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/containers/podman/v4/libpod/define"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -56,6 +56,7 @@ func TestList_RunLocal(t *testing.T) {
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			DeploymentName: expectedLocalDeployment,
+			DeploymentType: options.LocalCluster,
 		},
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
@@ -71,12 +72,30 @@ func TestList_RunLocal(t *testing.T) {
 
 	mockPodman.
 		EXPECT().
-		ListContainers(ctx, options.MongodHostnamePrefix).
-		Return([]*podman.Container{
+		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
+		Return([]*define.InspectContainerData{
 			{
-				Names:  []string{options.MongodHostnamePrefix + "-" + expectedLocalDeployment},
-				State:  "running",
-				Labels: map[string]string{"version": "6.0.9"},
+				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
+				Config: &define.InspectContainerConfig{
+					Labels: map[string]string{
+						"version": "7.0.1",
+					},
+				},
+				HostConfig: &define.InspectContainerHostConfig{
+					PortBindings: map[string][]define.InspectHostPort{
+						"27017/tcp": {
+							{
+								HostIP:   "127.0.0.1",
+								HostPort: "27017",
+							},
+						},
+					},
+				},
+				Mounts: []define.InspectMount{
+					{
+						Name: opts.DeploymentOpts.LocalMongodDataVolume(),
+					},
+				},
 			},
 		}, nil).
 		Times(1)
@@ -87,7 +106,7 @@ func TestList_RunLocal(t *testing.T) {
 
 	mockMongodbClient.
 		EXPECT().
-		Connect("mongodb://localhost:0/?directConnection=true", int64(10)).
+		Connect("mongodb://localhost:27017/?directConnection=true", int64(10)).
 		Return(nil).
 		Times(1)
 
@@ -143,6 +162,7 @@ func TestList_RunAtlas(t *testing.T) {
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			DeploymentName: expectedLocalDeployment,
+			DeploymentType: options.AtlasCluster,
 		},
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
@@ -161,21 +181,39 @@ func TestList_RunAtlas(t *testing.T) {
 
 	mockPodman.
 		EXPECT().
-		ListContainers(ctx, options.MongodHostnamePrefix).
-		Return([]*podman.Container{
+		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
+		Return([]*define.InspectContainerData{
 			{
-				Names:  []string{options.MongodHostnamePrefix + "-" + expectedLocalDeployment},
-				State:  "running",
-				Labels: map[string]string{"version": "6.0.9"},
+				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
+				Config: &define.InspectContainerConfig{
+					Labels: map[string]string{
+						"version": "7.0.1",
+					},
+				},
+				HostConfig: &define.InspectContainerHostConfig{
+					PortBindings: map[string][]define.InspectHostPort{
+						"27017/tcp": {
+							{
+								HostIP:   "127.0.0.1",
+								HostPort: "27017",
+							},
+						},
+					},
+				},
+				Mounts: []define.InspectMount{
+					{
+						Name: opts.DeploymentOpts.LocalMongodDataVolume(),
+					},
+				},
 			},
 		}, nil).
-		Times(1)
+		Times(0)
 
 	mockMongodbClient.
 		EXPECT().
-		Connect("mongodb://localhost:0/?directConnection=true", int64(10)).
+		Connect("mongodb://localhost:27017/?directConnection=true", int64(10)).
 		Return(options.ErrDeploymentNotFound).
-		Times(1)
+		Times(0)
 
 	mockStore.
 		EXPECT().
@@ -210,6 +248,6 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.DeploymentName, flag.ProjectID, flag.Database, flag.Collection},
+		[]string{flag.DeploymentName, flag.TypeFlag, flag.ProjectID, flag.Database, flag.Collection},
 	)
 }

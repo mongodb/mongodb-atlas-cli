@@ -17,8 +17,7 @@ package deployments
 import (
 	"context"
 	"errors"
-	"sort"
-	"strings"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -44,30 +43,12 @@ type ListOpts struct {
 	config        setup.ProfileReader
 }
 
-type Deployment struct {
-	Type           string
-	Name           string
-	MongoDBVersion string
-	StateName      string
-}
-
 const listTemplate = `NAME	TYPE	MDB VER	STATE
 {{range .}}{{.Name}}	{{.Type}}	{{.MongoDBVersion}}	{{.StateName}}
 {{end}}`
 
 const MaxItemsPerPage = 500
-
-var localStateMap = map[string]string{
-	"running":  "IDLE",
-	"removing": "DELETING",
-	// a "created" container is ready to be started but is currently stopped,
-	// which for a local deployment is equivalent to being paused.
-	"created":    "PAUSED",
-	"paused":     "PAUSED",
-	"restarting": "RESTARTING",
-	"exited":     "STOPPED",
-	"dead":       "STOPPED",
-}
+const errAtlas = "failed to retrieve Atlas deployments with: %s"
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -77,7 +58,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *ListOpts) getAtlasDeployments() ([]Deployment, error) {
+func (opts *ListOpts) getAtlasDeployments() ([]options.Deployment, error) {
 	if !opts.IsCliAuthenticated() {
 		return nil, nil
 	}
@@ -104,43 +85,17 @@ func (opts *ListOpts) getAtlasDeployments() ([]Deployment, error) {
 	}
 	atlasClusters := projectClusters.(*admin.PaginatedAdvancedClusterDescription)
 
-	deployments := make([]Deployment, len(atlasClusters.Results))
+	deployments := make([]options.Deployment, len(atlasClusters.Results))
 	for i, c := range atlasClusters.Results {
-		deployments[i] = Deployment{
+		stateName := *c.StateName
+		if *c.Paused {
+			// for paused clusters, Atlas returns stateName IDLE and Paused=true
+			stateName = options.PausedState
+		}
+		deployments[i] = options.Deployment{
 			Type:           "ATLAS",
 			Name:           *c.Name,
 			MongoDBVersion: *c.MongoDBVersion,
-			StateName:      *c.StateName,
-		}
-	}
-
-	return deployments, nil
-}
-
-func (opts *ListOpts) getLocalDeployments(ctx context.Context) ([]Deployment, error) {
-	if err := opts.PodmanClient.Ready(ctx); err != nil {
-		return nil, err
-	}
-
-	mdbContainers, err := opts.PodmanClient.ListContainers(ctx, options.MongodHostnamePrefix)
-	if err != nil {
-		return nil, err
-	}
-	sort.Slice(mdbContainers, func(i, j int) bool {
-		return mdbContainers[i].Names[0] < mdbContainers[j].Names[0]
-	})
-
-	deployments := make([]Deployment, len(mdbContainers))
-	for i, c := range mdbContainers {
-		stateName, found := localStateMap[c.State]
-		if !found {
-			stateName = strings.ToUpper(c.State)
-		}
-		name := strings.TrimPrefix(c.Names[0], options.MongodHostnamePrefix+"-")
-		deployments[i] = Deployment{
-			Type:           "LOCAL",
-			Name:           name,
-			MongoDBVersion: c.Labels["version"],
 			StateName:      stateName,
 		}
 	}
@@ -149,19 +104,20 @@ func (opts *ListOpts) getLocalDeployments(ctx context.Context) ([]Deployment, er
 }
 
 func (opts *ListOpts) Run(ctx context.Context) error {
-	atlasClusters, err := opts.getAtlasDeployments()
-	if err != nil {
-		return err
-	}
-
-	mdbContainers, err := opts.getLocalDeployments(ctx)
+	mdbContainers, err := opts.GetLocalDeployments(ctx)
 	if err != nil && !errors.Is(err, podman.ErrPodmanNotFound) {
 		return err
 	}
 
+	atlasClusters, atlasErr := opts.getAtlasDeployments()
+
 	err = opts.Print(append(atlasClusters, mdbContainers...))
 	if err != nil {
 		return err
+	}
+
+	if atlasErr != nil {
+		return fmt.Errorf(errAtlas, atlasErr.Error())
 	}
 
 	return nil

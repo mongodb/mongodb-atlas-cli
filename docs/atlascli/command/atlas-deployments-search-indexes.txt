@@ -12,7 +12,7 @@ atlas deployments search indexes
    :depth: 1
    :class: singlecol
 
-Manage Atlas and local search indexes.
+Manage cloud and local search indexes.
 
 Options
 -------

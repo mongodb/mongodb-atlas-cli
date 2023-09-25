@@ -25,6 +25,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/containers/podman/v4/libpod/define"
 	"github.com/containers/podman/v4/pkg/machine"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/shirou/gopsutil/v3/mem"
@@ -144,7 +145,10 @@ type Client interface {
 	CreateVolume(ctx context.Context, name string) ([]byte, error)
 	RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error)
 	CopyFileToContainer(ctx context.Context, localFile string, containerName string, filePathInContainer string) ([]byte, error)
+	ContainerInspect(ctx context.Context, names ...string) ([]*define.InspectContainerData, error)
 	StopContainers(ctx context.Context, names ...string) ([]byte, error)
+	StartContainers(ctx context.Context, names ...string) ([]byte, error)
+	UnpauseContainers(ctx context.Context, names ...string) ([]byte, error)
 	RemoveContainers(ctx context.Context, names ...string) ([]byte, error)
 	RemoveVolumes(ctx context.Context, names ...string) ([]byte, error)
 	RemoveNetworks(ctx context.Context, names ...string) ([]byte, error)
@@ -346,6 +350,18 @@ func (o *client) CreateVolume(ctx context.Context, name string) ([]byte, error) 
 	return o.runPodman(ctx, "volume", "create", name)
 }
 
+func (o *client) ContainerInspect(ctx context.Context, names ...string) ([]*define.InspectContainerData, error) {
+	args := append([]string{"container", "inspect"}, names...)
+	buf, err := o.runPodman(ctx, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	var containers []*define.InspectContainerData
+	err = json.Unmarshal(buf, &containers)
+	return containers, err
+}
+
 func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error) {
 	arg := []string{"run",
 		"--name", opts.Name,
@@ -398,6 +414,18 @@ func (o *client) CopyFileToContainer(ctx context.Context, localFile string, cont
 
 func (o *client) StopContainers(ctx context.Context, names ...string) ([]byte, error) {
 	return o.runPodman(ctx, append([]string{"stop"}, names...)...)
+}
+
+func (o *client) StartContainers(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"start"}, names...)...)
+}
+
+func (o *client) PauseContainers(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"pause"}, names...)...)
+}
+
+func (o *client) UnpauseContainers(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"unpause"}, names...)...)
 }
 
 func (o *client) RemoveContainers(ctx context.Context, names ...string) ([]byte, error) {

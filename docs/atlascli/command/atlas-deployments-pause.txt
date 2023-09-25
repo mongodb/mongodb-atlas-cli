@@ -1,8 +1,8 @@
-.. _atlas-deployments-search-indexes-describe:
+.. _atlas-deployments-pause:
 
-=========================================
-atlas deployments search indexes describe
-=========================================
+=======================
+atlas deployments pause
+=======================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,7 @@ atlas deployments search indexes describe
    :depth: 1
    :class: singlecol
 
-Describe a search index for the specified deployment.
+Pause a deployment
 
 Syntax
 ------
@@ -20,7 +20,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas deployments search indexes describe [indexId] [options]
+   atlas deployments pause <deploymentName> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -35,10 +35,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - indexId
+   * - deploymentName
      - string
-     - false
-     - ID of the index.
+     - true
+     - Name of the deployment.
 
 Options
 -------
@@ -51,14 +51,10 @@ Options
      - Type
      - Required
      - Description
-   * - --deploymentName
-     - string
-     - false
-     - Name of the deployment.
    * - -h, --help
      - 
      - false
-     - help for describe
+     - help for pause
    * - --projectId
      - string
      - false
@@ -91,7 +87,6 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   ID          NAME     DATABASE     COLLECTION
-   <IndexID>   <Name>   <Database>   <CollectionName>
+   Pausing deployment '<Name>'.
    
 

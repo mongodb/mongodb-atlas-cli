@@ -36,7 +36,10 @@ type DownloadOpts struct {
 	fs afero.Fs
 }
 
-const logsTemplate = `{{.}}`
+const (
+	logsTemplate = `{{.}}`
+	fileMode     = 0644
+)
 
 func (opts *DownloadOpts) Run(ctx context.Context) error {
 	return opts.RunLocal(ctx)
@@ -63,8 +66,8 @@ func (opts *DownloadOpts) RunLocal(ctx context.Context) error {
 
 	filepath := path.Join(home, "/", opts.DeploymentName+".log")
 
-	var data []byte = []byte(strings.Join(logs, "\n"))
-	if err := afero.WriteFile(opts.fs, filepath, data, 0644); err != nil {
+	var data = []byte(strings.Join(logs, "\n"))
+	if err := afero.WriteFile(opts.fs, filepath, data, fileMode); err != nil {
 		return err
 	}
 

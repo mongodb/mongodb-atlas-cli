@@ -56,5 +56,4 @@ func TestRun(t *testing.T) {
 	if err := downloadOpts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-
 }

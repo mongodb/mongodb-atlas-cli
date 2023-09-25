@@ -183,10 +183,7 @@ func (opts *SetupOpts) internalIPs(ctx context.Context) error {
 		return err
 	}
 
-	_, ipNet, err := net.ParseCIDR(n.Subnets[0].Subnet)
-	if err != nil {
-		return err
-	}
+	ipNet := n[0].Subnets[0].Subnet
 
 	ipNet.IP[3] = 10
 	opts.mongodIP = ipNet.IP.String()

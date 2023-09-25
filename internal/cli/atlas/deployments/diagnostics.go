@@ -16,9 +16,10 @@ package deployments
 
 import (
 	"context"
-	"fmt"
 	"runtime"
 
+	"github.com/containers/common/libnetwork/types"
+	"github.com/containers/podman/v4/libpod/define"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -34,72 +35,63 @@ type diagnosticsOpts struct {
 	cli.GlobalOpts
 	options.DeploymentOpts
 	podmanClient podman.Client
-	podmanDiag   *podman.Diagnostic
-	machineDiag  *machineDiagnostic
-	podmanLogs   map[string]interface{}
-	mongotLogs   []string
-	mongodLogs   []string
 }
 
+type diagnosticLogs struct {
+	MongoD []string
+	MongoT []string
+}
+type diagnostic struct {
+	Machine    machineDiagnostic
+	Diagnostic *podman.Diagnostic
+	Containers []*define.InspectContainerData
+	Logs       diagnosticLogs
+	Network    *types.Network
+	Errors     []error
+}
 type machineDiagnostic struct {
 	OS   string
 	Arch string
 }
 
 func (opts *diagnosticsOpts) Run(ctx context.Context) error {
-	var err error
-
-	// Machine system info
-	opts.machineDiag = &machineDiagnostic{
-		OS:   runtime.GOOS,
-		Arch: runtime.GOARCH,
-	}
-
-	// Podman system info
-	opts.podmanDiag = opts.podmanClient.Diagnostics(ctx)
-
-	// Podman logs
-	var errs []error
-	if opts.podmanLogs, errs = opts.podmanClient.Logs(ctx); errs != nil {
-		for _, e := range errs {
-			opts.podmanDiag.Errors = append(opts.podmanDiag.Errors, fmt.Errorf("failed to get podman logs: %w", e).Error())
-		}
-	}
-
-	if opts.DeploymentName != "" {
-		_, _ = log.Warningf("Fetching logs for deployment %s\n", opts.DeploymentName)
-		// ignore error if container does not exist just capture log for that command
-		if opts.mongotLogs, err = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongotHostname()); err != nil {
-			opts.podmanDiag.Errors = append(opts.podmanDiag.Errors, fmt.Errorf("failed to get mongot logs: %w", err).Error())
-		}
-		if opts.mongodLogs, err = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongodHostname()); err != nil {
-			opts.podmanDiag.Errors = append(opts.podmanDiag.Errors, fmt.Errorf("failed to get mongod logs: %w", err).Error())
-		}
-	}
-
-	diagnosis := map[string]interface{}{
-		"Machine": opts.machineDiag,
-		"Podman":  opts.podmanDiag,
-		"Logs": map[string]interface{}{
-			"Podman": opts.podmanLogs,
-			"Mongot": opts.mongotLogs,
-			"Mongod": opts.mongodLogs,
+	d := &diagnostic{
+		Machine: machineDiagnostic{
+			OS:   runtime.GOOS,
+			Arch: runtime.GOARCH,
 		},
+		Diagnostic: opts.podmanClient.Diagnostics(ctx),
 	}
 
-	return opts.Print(diagnosis)
+	var err error
+	d.Containers, err = opts.podmanClient.ContainerInspect(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname())
+	if err != nil {
+		d.Errors = append(d.Errors, err)
+	}
+
+	n, nErr := opts.podmanClient.Network(ctx, opts.LocalNetworkName())
+	if nErr != nil {
+		d.Errors = append(d.Errors, nErr)
+	}
+	d.Network = n[0]
+
+	if d.Logs.MongoT, err = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongotHostname()); err != nil {
+		d.Errors = append(d.Errors, err)
+	}
+	if d.Logs.MongoD, err = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongodHostname()); err != nil {
+		d.Errors = append(d.Errors, err)
+	}
+
+	return opts.Print(d)
 }
 
 func DiagnosticsBuilder() *cobra.Command {
-	opts := &diagnosticsOpts{
-		podmanDiag:  &podman.Diagnostic{},
-		machineDiag: &machineDiagnostic{},
-	}
+	opts := &diagnosticsOpts{}
 	cmd := &cobra.Command{
 		Use:    "diagnostics [deploymentName]",
 		Short:  "Fetch detailed information about all your deployments and system processes.",
 		Hidden: true, // always hidden
-		Args:   require.MaximumNArgs(1),
+		Args:   require.ExactArgs(1),
 		Annotations: map[string]string{
 			"deploymentNameDesc": "Name of the deployment you want to setup.",
 		},
@@ -121,7 +113,7 @@ func DiagnosticsBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "json", usage.FormatOut)
 
 	return cmd
 }

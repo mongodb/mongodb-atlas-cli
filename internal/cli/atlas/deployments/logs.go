@@ -38,7 +38,7 @@ type DownloadOpts struct {
 	fs afero.Fs
 }
 
-// User: read and write, Group: read, Other: read
+// User: read and write, Group: read, Other: read.
 const filePermissions = 0644
 
 func (opts *DownloadOpts) Run(ctx context.Context) error {

@@ -36,7 +36,10 @@ func TestLogsBuilder(t *testing.T) {
 		t,
 		LogsBuilder(),
 		0,
-		[]string{},
+		[]string{
+			"deploymentName",
+			"output",
+		},
 	)
 }
 

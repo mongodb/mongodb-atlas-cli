@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/containers/podman/v4/libpod/define"
@@ -27,6 +28,7 @@ import (
 
 var errEmptyDeployments = errors.New("currently there are no deployment in your local system")
 var ErrDeploymentNotFound = errors.New("deployment not found")
+var errDeploymentRequiredOnPipe = fmt.Errorf("deployment name is required  when piping the output of the command")
 
 func (opts *DeploymentOpts) findMongoDContainer(ctx context.Context) (*define.InspectContainerData, error) {
 	containers, err := opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname())
@@ -45,6 +47,19 @@ func (opts *DeploymentOpts) CheckIfDeploymentExists(ctx context.Context) error {
 
 	opts.updateFields(c)
 	return nil
+}
+
+func (opts *DeploymentOpts) DetectLocalDeploymentName(ctx context.Context) error {
+	// before asking for deployment name, check if we are piping the output
+	stat, _ := os.Stdout.Stat()
+	if (stat.Mode()&os.ModeCharDevice) == 0 && opts.DeploymentName == "" {
+		return errDeploymentRequiredOnPipe
+	}
+
+	if opts.DeploymentName != "" {
+		return opts.CheckIfDeploymentExists(ctx)
+	}
+	return opts.Select(ctx)
 }
 
 func (opts *DeploymentOpts) Select(ctx context.Context) error {

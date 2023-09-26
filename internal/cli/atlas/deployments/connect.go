@@ -18,6 +18,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -39,6 +40,7 @@ type ConnectOpts struct {
 	options.DeploymentOpts
 	podmanClient podman.Client
 	connectWith  string
+	DBUsername   string
 	store        store.AtlasClusterDescriber
 }
 
@@ -51,37 +53,6 @@ func (opts *ConnectOpts) initAtlasStore(ctx context.Context) func() error {
 }
 
 func (opts *ConnectOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
-			return err
-		}
-	} else if err := options.ValidateDeploymentType(opts.DeploymentType); err != nil {
-		return err
-	}
-
-	if strings.EqualFold(opts.DeploymentType, options.AtlasCluster) {
-		if !opts.IsCliAuthenticated() {
-			return ErrNotAuthenticated
-		}
-
-		if err := opts.ValidateProjectID(); err != nil {
-			return err
-		}
-
-		if opts.DeploymentName == "" {
-			return ErrNoDeploymentName
-		}
-	} else {
-		// deploymentType is local
-		if opts.DeploymentName == "" {
-			if err := opts.DeploymentOpts.Select(ctx); err != nil {
-				return err
-			}
-		} else if err := opts.DeploymentOpts.CheckIfDeploymentExists(ctx); err != nil {
-			return err
-		}
-	}
-
 	if opts.connectWith == "" {
 		var err error
 		if opts.connectWith, err = opts.DeploymentOpts.PromptConnectWith(); err != nil {
@@ -93,7 +64,74 @@ func (opts *ConnectOpts) validateAndPrompt(ctx context.Context) error {
 		}
 	}
 
+	if opts.DeploymentType == "" {
+		if err := opts.PromptDeploymentType(); err != nil {
+			return err
+		}
+	} else if err := options.ValidateDeploymentType(opts.DeploymentType); err != nil {
+		return err
+	}
+
+	if strings.EqualFold(opts.DeploymentType, options.AtlasCluster) {
+		if err := opts.validateAndPromptAtlasOpts(ctx); err != nil {
+			return err
+		}
+	} else if err := opts.validateAndPromptLocalOpts(ctx); err != nil {
+		return err
+	}
+
 	return nil
+}
+
+func (opts *ConnectOpts) validateAndPromptAtlasOpts(ctx context.Context) error {
+	if !opts.IsCliAuthenticated() {
+		return ErrNotAuthenticated
+	}
+
+	if err := opts.ValidateProjectID(); err != nil {
+		return err
+	}
+
+	if opts.DeploymentName == "" {
+		if err := opts.promptDeploymentName(); err != nil {
+			return err
+		}
+	}
+
+	if opts.DBUsername == "" &&
+		(opts.connectWith == mongoshConnect || opts.connectWith == compassConnect) {
+		if err := opts.promptDBUsername(); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (opts *ConnectOpts) validateAndPromptLocalOpts(ctx context.Context) error {
+	if opts.DeploymentName == "" {
+		if err := opts.DeploymentOpts.Select(ctx); err != nil {
+			return err
+		}
+	} else if err := opts.DeploymentOpts.CheckIfDeploymentExists(ctx); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (opts *ConnectOpts) promptDBUsername() error {
+	p := &survey.Input{
+		Message: "Username for authenticating to MongoDB deployment",
+	}
+	return telemetry.TrackAskOne(p, &opts.DBUsername)
+}
+
+func (opts *ConnectOpts) promptDeploymentName() error {
+	p := &survey.Input{
+		Message: "Deployment name",
+	}
+	return telemetry.TrackAskOne(p, &opts.DeploymentName)
 }
 
 func (opts *ConnectOpts) Run(ctx context.Context) error {
@@ -129,7 +167,7 @@ func (opts *ConnectOpts) RunAtlas(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	return opts.Connect(*r.ConnectionStrings.Standard)
+	return opts.Connect(*r.ConnectionStrings.StandardSrv)
 }
 
 func (opts *ConnectOpts) Connect(connectionString string) error {
@@ -148,7 +186,7 @@ func (opts *ConnectOpts) Connect(connectionString string) error {
 		if !mongosh.Detect() {
 			return errMongoshNotInstalled
 		}
-		return mongosh.Run("", "", connectionString)
+		return mongosh.Run(opts.DBUsername, "", connectionString)
 	}
 
 	return nil
@@ -184,6 +222,7 @@ func ConnectBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWith)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
+	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return options.ConnectWithOptions, cobra.ShellCompDirectiveDefault

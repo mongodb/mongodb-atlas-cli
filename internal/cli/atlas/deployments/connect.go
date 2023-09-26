@@ -16,6 +16,8 @@ package deployments
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -34,14 +36,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	connectionStringTypeStandard             = "standard"
+	connectionStringTypePrivate              = "private"
+	connectionStringTypeOptions              = []string{connectionStringTypeStandard, connectionStringTypePrivate}
+	errConnectionStringTypeNotImplemented    = errors.New("connection string type not implemented")
+	errNetworkPeeringConnectionNotConfigured = errors.New("network peering connection is not configured for this deployment")
+	promptConnectionStringType               = "What type of connection string type would you like to use?"
+)
+
 type ConnectOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
 	options.DeploymentOpts
-	podmanClient podman.Client
-	connectWith  string
-	DBUsername   string
-	store        store.AtlasClusterDescriber
+	podmanClient         podman.Client
+	connectWith          string
+	dbUsername           string
+	dbUserPassword       string
+	connectionStringType string
+	store                store.AtlasClusterDescriber
 }
 
 func (opts *ConnectOpts) initAtlasStore(ctx context.Context) func() error {
@@ -73,7 +86,7 @@ func (opts *ConnectOpts) validateAndPrompt(ctx context.Context) error {
 	}
 
 	if strings.EqualFold(opts.DeploymentType, options.AtlasCluster) {
-		if err := opts.validateAndPromptAtlasOpts(ctx); err != nil {
+		if err := opts.validateAndPromptAtlasOpts(); err != nil {
 			return err
 		}
 	} else if err := opts.validateAndPromptLocalOpts(ctx); err != nil {
@@ -83,7 +96,7 @@ func (opts *ConnectOpts) validateAndPrompt(ctx context.Context) error {
 	return nil
 }
 
-func (opts *ConnectOpts) validateAndPromptAtlasOpts(ctx context.Context) error {
+func (opts *ConnectOpts) validateAndPromptAtlasOpts() error {
 	if !opts.IsCliAuthenticated() {
 		return ErrNotAuthenticated
 	}
@@ -98,11 +111,49 @@ func (opts *ConnectOpts) validateAndPromptAtlasOpts(ctx context.Context) error {
 		}
 	}
 
-	if opts.DBUsername == "" &&
-		(opts.connectWith == mongoshConnect || opts.connectWith == compassConnect) {
+	requiresAuth := opts.connectWith == mongoshConnect || opts.connectWith == compassConnect
+	if requiresAuth && opts.dbUsername == "" {
 		if err := opts.promptDBUsername(); err != nil {
 			return err
 		}
+	}
+
+	if requiresAuth && opts.dbUserPassword == "" {
+		if err := opts.promptDBUserPassword(); err != nil {
+			return err
+		}
+	}
+
+	if err := opts.validateAndPromptConnectionStringType(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (opts *ConnectOpts) validateAndPromptConnectionStringType() error {
+	if opts.connectionStringType == "" {
+		p := &survey.Select{
+			Message: promptConnectionStringType,
+			Options: connectionStringTypeOptions,
+			Help:    usage.ConnectionStringType,
+		}
+
+		err := telemetry.TrackAskOne(p, &opts.connectionStringType, nil)
+		if err != nil {
+			return err
+		}
+	}
+
+	found := false
+	for _, option := range connectionStringTypeOptions {
+		if strings.EqualFold(option, opts.connectionStringType) {
+			found = true
+			break
+		}
+	}
+	if !found {
+		return fmt.Errorf("%w: %s", errConnectionStringTypeNotImplemented, opts.connectionStringType)
 	}
 
 	return nil
@@ -124,7 +175,14 @@ func (opts *ConnectOpts) promptDBUsername() error {
 	p := &survey.Input{
 		Message: "Username for authenticating to MongoDB deployment",
 	}
-	return telemetry.TrackAskOne(p, &opts.DBUsername)
+	return telemetry.TrackAskOne(p, &opts.dbUsername)
+}
+
+func (opts *ConnectOpts) promptDBUserPassword() error {
+	p := &survey.Password{
+		Message: "Password for authenticating to MongoDB deployment",
+	}
+	return telemetry.TrackAskOne(p, &opts.dbUserPassword)
 }
 
 func (opts *ConnectOpts) promptDeploymentName() error {
@@ -152,7 +210,7 @@ func (opts *ConnectOpts) RunLocal(ctx context.Context) error {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithDeploymentType(options.LocalCluster)) // always local
+	telemetry.AppendOption(telemetry.WithDeploymentType(options.LocalCluster))
 
 	connectionString, err := opts.ConnectionString(ctx)
 	if err != nil {
@@ -166,6 +224,13 @@ func (opts *ConnectOpts) RunAtlas(ctx context.Context) error {
 	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.DeploymentName)
 	if err != nil {
 		return err
+	}
+
+	if opts.connectionStringType == connectionStringTypePrivate {
+		if r.ConnectionStrings.PrivateSrv == nil {
+			return errNetworkPeeringConnectionNotConfigured
+		}
+		opts.Connect(*r.ConnectionStrings.PrivateSrv)
 	}
 	return opts.Connect(*r.ConnectionStrings.StandardSrv)
 }
@@ -181,12 +246,12 @@ func (opts *ConnectOpts) Connect(connectionString string) error {
 		if _, err := log.Warningln("Launching MongoDB Compass..."); err != nil {
 			return err
 		}
-		return compass.Run("", "", connectionString)
+		return compass.Run(opts.dbUsername, opts.dbUserPassword, connectionString)
 	case mongoshConnect:
 		if !mongosh.Detect() {
 			return errMongoshNotInstalled
 		}
-		return mongosh.Run(opts.DBUsername, "", connectionString)
+		return mongosh.Run(opts.dbUsername, opts.dbUserPassword, connectionString)
 	}
 
 	return nil
@@ -222,7 +287,9 @@ func ConnectBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWith)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
-	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
+	cmd.Flags().StringVar(&opts.dbUsername, flag.Username, "", usage.DBUsername)
+	cmd.Flags().StringVar(&opts.dbUserPassword, flag.Password, "", usage.Password)
+	cmd.Flags().StringVar(&opts.connectionStringType, flag.ConnectionStringType, connectionStringTypeStandard, usage.ConnectionStringType)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return options.ConnectWithOptions, cobra.ShellCompDirectiveDefault

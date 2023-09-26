@@ -23,10 +23,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -86,7 +84,11 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 }
 
 func DiagnosticsBuilder() *cobra.Command {
-	opts := &diagnosticsOpts{}
+	opts := &diagnosticsOpts{
+		OutputOpts: cli.OutputOpts{
+			Output: "json",
+		},
+	}
 	cmd := &cobra.Command{
 		Use:    "diagnostics [deploymentName]",
 		Short:  "Fetch detailed information about all your deployments and system processes.",
@@ -112,8 +114,6 @@ func DiagnosticsBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 	}
-
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "json", usage.FormatOut)
 
 	return cmd
 }

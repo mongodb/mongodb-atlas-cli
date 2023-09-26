@@ -118,7 +118,7 @@ func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.De
 
 func (opts *PauseOpts) RunAtlas() error {
 	if !opts.IsCliAuthenticated() {
-		return ErrNotAuthenticated
+		return options.ErrNotAuthenticated
 	}
 
 	r, err := opts.store.PauseCluster(opts.ConfigProjectID(), opts.DeploymentName)

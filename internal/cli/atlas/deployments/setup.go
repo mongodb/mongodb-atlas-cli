@@ -41,6 +41,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/templatewriter"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -58,8 +59,6 @@ const (
 	defaultSettings    = "default"
 	customSettings     = "custom"
 	cancelSettings     = "cancel"
-	compassConnect     = "compass"
-	mongoshConnect     = "mongosh"
 	skipConnect        = "skip"
 	spinnerSpeed       = 100 * time.Millisecond
 	shortStepCount     = 2
@@ -81,11 +80,11 @@ var (
 		customSettings:  "With custom settings",
 		cancelSettings:  "Cancel set up",
 	}
-	connectWithOptions     = []string{mongoshConnect, compassConnect, skipConnect}
+	connectWithOptions     = []string{options.MongoshConnect, options.CompassConnect, skipConnect}
 	connectWithDescription = map[string]string{
-		mongoshConnect: "MongoDB Shell",
-		compassConnect: "MongoDB Compass",
-		skipConnect:    "Skip Connection",
+		options.MongoshConnect: "MongoDB Shell",
+		options.CompassConnect: "MongoDB Compass",
+		skipConnect:            "Skip Connection",
 	}
 	mdbVersions = []string{mdb7, mdb6}
 	//go:embed scripts/start_mongod.sh
@@ -565,10 +564,7 @@ func (opts *SetupOpts) validateFlags() error {
 		}
 	}
 
-	if opts.connectWith != "" &&
-		!strings.EqualFold(opts.connectWith, compassConnect) &&
-		!strings.EqualFold(opts.connectWith, mongoshConnect) &&
-		!strings.EqualFold(opts.connectWith, skipConnect) {
+	if opts.connectWith != "" && !search.StringInSliceFold(connectWithOptions, opts.connectWith) {
 		return fmt.Errorf("%w: %s", errUnsupportedConnectWith, opts.connectWith)
 	}
 
@@ -622,17 +618,17 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 	switch opts.connectWith {
 	case skipConnect:
 		fmt.Fprintln(os.Stderr, "connection skipped")
-	case compassConnect:
+	case options.CompassConnect:
 		if !compass.Detect() {
-			return errCompassNotInstalled
+			return options.ErrCompassNotInstalled
 		}
 		if _, err := log.Warningln("Launching MongoDB Compass..."); err != nil {
 			return err
 		}
 		return compass.Run("", "", cs)
-	case mongoshConnect:
+	case options.MongoshConnect:
 		if !mongosh.Detect() {
-			return errMongoshNotInstalled
+			return options.ErrMongoshNotInstalled
 		}
 		return mongosh.Run("", "", cs)
 	}

@@ -31,7 +31,7 @@ jobs:
           release_tag=${{ steps.get-latest-tag.outputs.tag }}
           echo "LATEST_VERSION=${release_tag#*/}" >> $GITHUB_ENV
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
         with:
           platforms: ${{ env.PLATFORMS }}
       - name: Set up Docker Buildx

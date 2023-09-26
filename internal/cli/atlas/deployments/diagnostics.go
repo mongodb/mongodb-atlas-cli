@@ -71,7 +71,9 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 	if nErr != nil {
 		d.Errors = append(d.Errors, nErr)
 	}
-	d.Network = n[0]
+	if len(n) > 0 {
+		d.Network = n[0]
+	}
 
 	if d.Logs.MongoT, err = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongotHostname()); err != nil {
 		d.Errors = append(d.Errors, err)

@@ -182,6 +182,9 @@ func (opts *SetupOpts) internalIPs(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	if len(n) < 1 {
+		return podman.ErrNetworkNotFound
+	}
 
 	ipNet := n[0].Subnets[0].Subnet
 

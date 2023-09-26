@@ -29,7 +29,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/spf13/afero"
 )
 
 func TestLogsBuilder(t *testing.T) {
@@ -60,7 +59,6 @@ func TestLogs_Run(t *testing.T) {
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
 		},
-		fs: afero.NewMemMapFs(),
 	}
 
 	mockPodman.
@@ -109,8 +107,9 @@ func TestLogs_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	expectedOutput := "localDeployment1.log"
-	if !strings.Contains(buf.String(), expectedOutput) {
-		t.Fatalf("Run() expected output: %s, got: %s", expectedOutput, buf.String())
+	expectedLogs := "log1\nlog2\n"
+
+	if !strings.Contains(buf.String(), expectedLogs) {
+		t.Fatalf("Run() expected output: %s, got: %s", expectedLogs, buf.String())
 	}
 }

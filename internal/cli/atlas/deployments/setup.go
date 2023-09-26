@@ -384,10 +384,8 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 		Hostname:   opts.LocalMongotHostname(),
 		Entrypoint: "/bin/sh",
 		EnvVars: map[string]string{
-			"MONGODHOST":      opts.internalMongodAddress(),
-			"DATADIR":         "/var/lib/mongot",
-			"KEYFILEPATH":     "/var/lib/mongot/keyfile",
-			"KEYFILECONTENTS": keyFileContents,
+			"MONGOD_HOST_AND_PORT": opts.internalMongodAddress(),
+			"KEY_FILE_CONTENTS":    keyFileContents,
 		},
 		Args: []string{"-c", string(mongotStartScript)},
 		Volumes: map[string]string{

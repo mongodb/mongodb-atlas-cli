@@ -49,6 +49,9 @@ func (opts *DownloadOpts) Run(ctx context.Context) error {
 	}
 
 	// format log entries into lines
+	if opts.IsJSONOutput() {
+		return opts.Print(logs)
+	}
 	return opts.Print(strings.Join(logs, "\n"))
 }
 

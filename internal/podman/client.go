@@ -25,6 +25,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/containers/common/libnetwork/types"
 	"github.com/containers/podman/v4/libpod/define"
 	"github.com/containers/podman/v4/pkg/machine"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
@@ -158,25 +159,8 @@ type Client interface {
 	Version(ctx context.Context) (*Version, error)
 	Logs(ctx context.Context) (map[string]interface{}, []error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
-	Network(ctx context.Context, name string) (*Network, error)
+	Network(ctx context.Context, names ...string) ([]*types.Network, error)
 	Exec(ctx context.Context, name string, args ...string) error
-}
-
-type Network struct {
-	ID         string `json:"ID"`
-	Name       string `json:"Name"`
-	DNSEnabled bool   `json:"dns_enabled"`
-	Subnets    []struct {
-		Subnet  string `json:"Subnet"`
-		Gateway string `json:"gateway"`
-	} `json:"Subnets"`
-	IPV6Enabled bool   `json:"ipv6_enabled"`
-	Internal    bool   `json:"internal"`
-	Created     string `json:"created"`
-	Driver      string `json:"driver"`
-	IPAMOptions *struct {
-		Driver string `json:"driver"`
-	} `json:"ipam_options"`
 }
 
 type client struct {
@@ -534,13 +518,15 @@ func (o *client) ContainerLogs(ctx context.Context, name string) ([]string, erro
 	return logs, nil
 }
 
-func (o *client) Network(ctx context.Context, name string) (*Network, error) {
-	output, err := o.runPodman(ctx, "network", "inspect", name, "--format", "json")
+func (o *client) Network(ctx context.Context, names ...string) ([]*types.Network, error) {
+	args := []string{"network", "inspect", "--format", "json"}
+	args = append(args, names...)
+	output, err := o.runPodman(ctx, args...)
 	if err != nil {
 		return nil, err
 	}
 
-	var n []*Network
+	var n []*types.Network
 	if err = json.Unmarshal(output, &n); err != nil {
 		return nil, err
 	}
@@ -549,7 +535,7 @@ func (o *client) Network(ctx context.Context, name string) (*Network, error) {
 		return nil, ErrNetworkNotFound
 	}
 
-	return n[0], err
+	return n, err
 }
 
 func (o *client) Exec(ctx context.Context, name string, args ...string) error {

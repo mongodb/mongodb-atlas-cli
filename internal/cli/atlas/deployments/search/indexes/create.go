@@ -193,7 +193,7 @@ func (opts *CreateOpts) watch(ctx context.Context) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if state == "STEADY" {
+	if state == "READY" {
 		return true, nil
 	}
 	return false, nil

@@ -182,11 +182,11 @@ func (opts *SetupOpts) internalIPs(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-
-	_, ipNet, err := net.ParseCIDR(n.Subnets[0].Subnet)
-	if err != nil {
-		return err
+	if len(n) < 1 {
+		return podman.ErrNetworkNotFound
 	}
+
+	ipNet := n[0].Subnets[0].Subnet
 
 	ipNet.IP[3] = 10
 	opts.mongodIP = ipNet.IP.String()
@@ -384,10 +384,8 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 		Hostname:   opts.LocalMongotHostname(),
 		Entrypoint: "/bin/sh",
 		EnvVars: map[string]string{
-			"MONGODHOST":      opts.internalMongodAddress(),
-			"DATADIR":         "/var/lib/mongot",
-			"KEYFILEPATH":     "/var/lib/mongot/keyfile",
-			"KEYFILECONTENTS": keyFileContents,
+			"MONGOD_HOST_AND_PORT": opts.internalMongodAddress(),
+			"KEY_FILE_CONTENTS":    keyFileContents,
 		},
 		Args: []string{"-c", string(mongotStartScript)},
 		Volumes: map[string]string{

@@ -52,6 +52,7 @@ Related Commands
 * :ref:`atlas-deployments-connect` - Connect to a deployment.
 * :ref:`atlas-deployments-delete` - Delete a deployment.
 * :ref:`atlas-deployments-list` - Return all deployments.
+* :ref:`atlas-deployments-logs` - Get deployments logs.
 * :ref:`atlas-deployments-pause` - Pause a deployment
 * :ref:`atlas-deployments-search` - Manage search for cloud and local deployments.
 * :ref:`atlas-deployments-setup` - Create a local deployment.
@@ -64,6 +65,7 @@ Related Commands
    connect </command/atlas-deployments-connect>
    delete </command/atlas-deployments-delete>
    list </command/atlas-deployments-list>
+   logs </command/atlas-deployments-logs>
    pause </command/atlas-deployments-pause>
    search </command/atlas-deployments-search>
    setup </command/atlas-deployments-setup>

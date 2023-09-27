@@ -16,7 +16,6 @@ package options
 import (
 	"context"
 	"errors"
-	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -47,11 +46,11 @@ func (opts *ConnectOpts) Connect(ctx context.Context) error {
 		return err
 	}
 
-	if strings.EqualFold(opts.DeploymentType, LocalCluster) {
-		return opts.connectToLocal(ctx)
+	if opts.IsAtlasDeploymentType() {
+		return opts.connectToAtlas()
 	}
 
-	return opts.connectToAtlas()
+	return opts.connectToLocal(ctx)
 }
 
 func (opts *ConnectOpts) validateAndPrompt(ctx context.Context) error {
@@ -66,15 +65,11 @@ func (opts *ConnectOpts) validateAndPrompt(ctx context.Context) error {
 		}
 	}
 
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
-			return err
-		}
-	} else if err := ValidateDeploymentType(opts.DeploymentType); err != nil {
+	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
 		return err
 	}
 
-	if strings.EqualFold(opts.DeploymentType, AtlasCluster) {
+	if opts.IsAtlasDeploymentType() {
 		if err := opts.validateAndPromptAtlasOpts(); err != nil {
 			return err
 		}

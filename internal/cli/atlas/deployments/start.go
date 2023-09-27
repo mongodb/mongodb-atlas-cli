@@ -126,13 +126,11 @@ func (opts *StartOpts) RunAtlas() error {
 }
 
 func (opts *StartOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
-			return err
-		}
+	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
+		return err
 	}
 
-	if opts.DeploymentType == options.AtlasCluster && opts.DeploymentName == "" {
+	if opts.IsAtlasDeploymentType() && opts.DeploymentName == "" {
 		return ErrNoDeploymentName
 	}
 

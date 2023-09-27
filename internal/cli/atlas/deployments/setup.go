@@ -641,14 +641,12 @@ func (opts *SetupOpts) validateAndPrompt() error {
 		return err
 	}
 
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
-			return err
-		}
+	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
+		return err
 	}
 
 	// Defer prompts to Atlas command
-	if opts.DeploymentType == options.AtlasCluster {
+	if opts.IsAtlasDeploymentType() {
 		return nil
 	}
 

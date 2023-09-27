@@ -48,7 +48,7 @@ func (opts *DescribeOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	if opts.DeploymentType == options.AtlasCluster {
+	if opts.IsAtlasDeploymentType() {
 		return opts.RunAtlas()
 	}
 
@@ -99,13 +99,11 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DescribeOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
-			return err
-		}
+	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
+		return err
 	}
 
-	if opts.DeploymentType == options.AtlasCluster && opts.DeploymentName == "" {
+	if opts.IsAtlasDeploymentType() && opts.DeploymentName == "" {
 		return ErrNoDeploymentName
 	}
 

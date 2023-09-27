@@ -213,7 +213,7 @@ func (opts *DeploymentOpts) GetLocalDeployments(ctx context.Context) ([]Deployme
 	return deployments, nil
 }
 
-func (opts *DeploymentOpts) PromptDeploymentType() error {
+func (opts *DeploymentOpts) promptDeploymentType() error {
 	p := &survey.Select{
 		Message: PromptTypeMessage,
 		Options: DeploymentTypeOptions,
@@ -223,17 +223,27 @@ func (opts *DeploymentOpts) PromptDeploymentType() error {
 		},
 	}
 
-	err := telemetry.TrackAskOne(p, &opts.DeploymentType, nil)
-	if err != nil {
-		return err
-	}
-
-	return ValidateDeploymentType(opts.DeploymentType)
+	return telemetry.TrackAskOne(p, &opts.DeploymentType, nil)
 }
 
-func ValidateDeploymentType(s string) error {
+func validateDeploymentType(s string) error {
 	if !search.StringInSliceFold(DeploymentTypeOptions, s) {
 		return fmt.Errorf("%w: %s", errDeploymentTypeNotImplemented, s)
 	}
 	return nil
+}
+
+func (opts *DeploymentOpts) ValidateAndPromptDeploymentType() error {
+	if opts.DeploymentType == "" {
+		if err := opts.promptDeploymentType(); err != nil {
+			return err
+		}
+	} else if err := validateDeploymentType(opts.DeploymentType); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (opts *DeploymentOpts) IsAtlasDeploymentType() bool {
+	return strings.EqualFold(opts.DeploymentType, AtlasCluster)
 }

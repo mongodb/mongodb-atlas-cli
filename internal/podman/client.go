@@ -305,6 +305,15 @@ func (o *client) Ready(ctx context.Context) error {
 	return o.machineStart(ctx)
 }
 
+func extractErrorMessage(exitErr *exec.ExitError) error {
+	stderrLines := strings.Split(string(exitErr.Stderr), "\n")
+	if len(stderrLines) < 2 { //nolint // expected to have at least 2 lines
+		return fmt.Errorf("%w: %s", exitErr, string(exitErr.Stderr))
+	}
+	stderrLastLine := stderrLines[len(stderrLines)-2] // 2nd last line because last line should be empty
+	return fmt.Errorf("%w: %s", exitErr, stderrLastLine)
+}
+
 func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
 	if o.debug {
 		_, _ = o.outWriter.Write([]byte(fmt.Sprintln(append([]string{"podman"}, arg...))))
@@ -316,11 +325,14 @@ func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
 
 	if o.debug {
 		_, _ = o.outWriter.Write(output)
+	}
 
-		var exitErr *exec.ExitError
-		if errors.As(err, &exitErr) {
+	var exitErr *exec.ExitError
+	if errors.As(err, &exitErr) {
+		if o.debug {
 			_, _ = o.outWriter.Write(exitErr.Stderr)
 		}
+		err = extractErrorMessage(exitErr)
 	}
 
 	return output, err

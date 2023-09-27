@@ -305,6 +305,15 @@ func (o *client) Ready(ctx context.Context) error {
 	return o.machineStart(ctx)
 }
 
+func extractErrorMessage(exitErr *exec.ExitError) error {
+	stderrLines := strings.Split(string(exitErr.Stderr), "\n")
+	if len(stderrLines) < 2 {
+		return exitErr
+	}
+	stderrLastLine := stderrLines[len(stderrLines)-2]
+	return fmt.Errorf("%w: %s", exitErr, stderrLastLine)
+}
+
 func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
 	if o.debug {
 		_, _ = o.outWriter.Write([]byte(fmt.Sprintln(append([]string{"podman"}, arg...))))
@@ -320,10 +329,10 @@ func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
 
 	var exitErr *exec.ExitError
 	if errors.As(err, &exitErr) {
-		err = fmt.Errorf("%w: you may rerun with this command with the flag '--debug' to gather more information", err)
 		if o.debug {
 			_, _ = o.outWriter.Write(exitErr.Stderr)
 		}
+		err = extractErrorMessage(exitErr)
 	}
 
 	return output, err

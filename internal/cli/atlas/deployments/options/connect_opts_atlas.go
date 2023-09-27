@@ -70,11 +70,7 @@ func (opts *ConnectOpts) validateAndPromptAtlasOpts() error {
 		}
 	}
 
-	if err := opts.validateAndPromptConnectionStringType(); err != nil {
-		return err
-	}
-
-	return nil
+	return opts.validateAndPromptConnectionStringType()
 }
 
 func (opts *ConnectToAtlasOpts) validateAndPromptConnectionStringType() error {
@@ -112,7 +108,7 @@ func (opts *ConnectToAtlasOpts) promptDBUserPassword() error {
 	return telemetry.TrackAskOne(p, &opts.DBUserPassword)
 }
 
-func (opts *ConnectOpts) connectToAtlas(ctx context.Context) error {
+func (opts *ConnectOpts) connectToAtlas() error {
 	r, err := opts.Store.AtlasCluster(opts.ConfigProjectID(), opts.DeploymentName)
 	if err != nil {
 		return err
@@ -122,7 +118,8 @@ func (opts *ConnectOpts) connectToAtlas(ctx context.Context) error {
 		if r.ConnectionStrings.PrivateSrv == nil {
 			return errNetworkPeeringConnectionNotConfigured
 		}
-		opts.connect(*r.ConnectionStrings.PrivateSrv)
+		return opts.connectToDeployment(*r.ConnectionStrings.PrivateSrv)
 	}
-	return opts.connect(*r.ConnectionStrings.StandardSrv)
+
+	return opts.connectToDeployment(*r.ConnectionStrings.StandardSrv)
 }

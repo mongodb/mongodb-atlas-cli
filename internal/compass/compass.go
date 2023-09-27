@@ -38,17 +38,12 @@ func Detect() bool {
 }
 
 func Run(username, password, mongoURI string) error {
-	args := []string{mongoURI}
-	if username != "" && password != "" {
-		args = append(args, "--username", username, "--password", password)
-	}
-
 	path := binPath()
 	if path != compassBin {
 		path += compassBin
 	}
 
-	cmd := exec.Command(path, args...)
+	cmd := compassCmd(path, username, password, mongoURI)
 	if err := cmd.Start(); err != nil {
 		return err
 	}

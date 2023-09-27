@@ -51,8 +51,7 @@ func (opts *ConnectOpts) Connect(ctx context.Context) error {
 		return opts.connectToLocal(ctx)
 	}
 
-	return opts.connectToAtlas(ctx)
-
+	return opts.connectToAtlas()
 }
 
 func (opts *ConnectOpts) validateAndPrompt(ctx context.Context) error {
@@ -93,7 +92,7 @@ func (opts *ConnectOpts) promptDeploymentName() error {
 	return telemetry.TrackAskOne(p, &opts.DeploymentName)
 }
 
-func (opts *ConnectOpts) connect(connectionString string) error {
+func (opts *ConnectOpts) connectToDeployment(connectionString string) error {
 	switch opts.ConnectWith {
 	case ConnectWithConnectionString:
 		opts.Print(connectionString)

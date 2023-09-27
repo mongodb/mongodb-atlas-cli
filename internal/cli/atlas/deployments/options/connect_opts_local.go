@@ -43,5 +43,5 @@ func (opts *ConnectOpts) connectToLocal(ctx context.Context) error {
 		return err
 	}
 
-	return opts.connect(connectionString)
+	return opts.connectToDeployment(connectionString)
 }

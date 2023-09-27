@@ -102,9 +102,10 @@ func TestDeploymentsAtlas(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"connect",
-			deploymentName,
+			clusterName,
 			"--type", "atlas",
 			"--connectWith", "connectionString",
+			"--projectId", g.projectID,
 		)
 
 		cmd.Env = os.Environ()

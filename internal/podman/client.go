@@ -307,7 +307,7 @@ func (o *client) Ready(ctx context.Context) error {
 
 func extractErrorMessage(exitErr *exec.ExitError) error {
 	stderrLines := strings.Split(string(exitErr.Stderr), "\n")
-	if len(stderrLines) < 2 {
+	if len(stderrLines) < 2 { //nolint // expected to have at least 2 lines
 		return fmt.Errorf("%w: %s", exitErr, string(exitErr.Stderr))
 	}
 	stderrLastLine := stderrLines[len(stderrLines)-2] // 2nd last line because last line should be empty

@@ -130,6 +130,8 @@ test   LOCAL   7.0.1     IDLE
 			deploymentEntity,
 			"connect",
 			deploymentName,
+			"--type",
+			"local",
 			"--connectWith",
 			"connectionString",
 		)

@@ -39,11 +39,8 @@ func Detect() bool {
 
 func Run(username, password, mongoURI string) error {
 	args := []string{mongoURI}
-	if username != "" {
-		args = append(args, "--username", username)
-		if password != "" {
-			args = append(args, "--password", password)
-		}
+	if username != "" && password != "" {
+		args = append(args, "--username", username, "--password", password)
 	}
 
 	path := binPath()

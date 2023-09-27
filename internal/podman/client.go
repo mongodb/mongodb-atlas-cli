@@ -310,7 +310,7 @@ func extractErrorMessage(exitErr *exec.ExitError) error {
 	if len(stderrLines) < 2 {
 		return exitErr
 	}
-	stderrLastLine := stderrLines[len(stderrLines)-2]
+	stderrLastLine := stderrLines[len(stderrLines)-2] // 2nd last line because last line should be empty
 	return fmt.Errorf("%w: %s", exitErr, stderrLastLine)
 }
 

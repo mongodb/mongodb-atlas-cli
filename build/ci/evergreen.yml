@@ -291,7 +291,7 @@ tasks:
       - func: "install snyk"
       - func: "snyk scan"
   - name: config_e2e
-    tags: ["e2e","generic"]
+    tags: ["e2e","required"]
     must_have_test_results: true
     depends_on:
       - name: compile

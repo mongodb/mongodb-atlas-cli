@@ -28,6 +28,7 @@ import (
 
 type ConnectToAtlasOpts struct {
 	cli.GlobalOpts
+	cli.InputOpts
 	DBUsername           string
 	DBUserPassword       string
 	ConnectionStringType string
@@ -102,6 +103,11 @@ func (opts *ConnectToAtlasOpts) promptDBUsername() error {
 }
 
 func (opts *ConnectToAtlasOpts) promptDBUserPassword() error {
+	if !opts.IsTerminalInput() {
+		_, err := fmt.Fscanln(opts.InReader, &opts.DBUserPassword)
+		return err
+	}
+
 	p := &survey.Password{
 		Message: "Password for authenticating to MongoDB deployment",
 	}

@@ -16,6 +16,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.13.38
 	github.com/aws/aws-sdk-go-v2/service/kms v1.24.5
 	github.com/briandowns/spinner v1.23.0
+	github.com/containers/common v0.55.3
 	github.com/containers/podman/v4 v4.6.2
 	github.com/creack/pty v1.1.18
 	github.com/denisbrodbeck/machineid v1.0.1
@@ -90,7 +91,6 @@ require (
 	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/cloudflare/circl v1.3.3 // indirect
 	github.com/container-orchestrated-devices/container-device-interface v0.5.4 // indirect
-	github.com/containers/common v0.55.3 // indirect
 	github.com/containers/image/v5 v5.26.1 // indirect
 	github.com/containers/libtrust v0.0.0-20230121012942-c1716e8a8d01 // indirect
 	github.com/containers/ocicrypt v1.1.7 // indirect

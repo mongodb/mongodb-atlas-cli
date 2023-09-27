@@ -8,6 +8,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	types "github.com/containers/common/libnetwork/types"
 	define "github.com/containers/podman/v4/libpod/define"
 	gomock "github.com/golang/mock/gomock"
 	podman "github.com/mongodb/mongodb-atlas-cli/internal/podman"
@@ -195,18 +196,23 @@ func (mr *MockClientMockRecorder) Logs(arg0 interface{}) *gomock.Call {
 }
 
 // Network mocks base method.
-func (m *MockClient) Network(arg0 context.Context, arg1 string) (*podman.Network, error) {
+func (m *MockClient) Network(arg0 context.Context, arg1 ...string) ([]*types.Network, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Network", arg0, arg1)
-	ret0, _ := ret[0].(*podman.Network)
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "Network", varargs...)
+	ret0, _ := ret[0].([]*types.Network)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Network indicates an expected call of Network.
-func (mr *MockClientMockRecorder) Network(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) Network(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Network", reflect.TypeOf((*MockClient)(nil).Network), arg0, arg1)
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Network", reflect.TypeOf((*MockClient)(nil).Network), varargs...)
 }
 
 // PullImage mocks base method.

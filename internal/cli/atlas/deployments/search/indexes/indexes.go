@@ -23,12 +23,11 @@ func Builder() *cobra.Command {
 	const use = "indexes"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   "Manage Atlas and local search indexes.",
+		Short:   "Manage cloud and local search indexes.",
 		Aliases: cli.GenerateAliases(use),
 	}
 
 	cmd.AddGroup(&cobra.Group{ID: "all", Title: "Cloud and local deployments commands:"})
-	cmd.AddGroup(&cobra.Group{ID: "local", Title: "Local deployments commands:"})
 
 	cmd.AddCommand(
 		CreateBuilder(),

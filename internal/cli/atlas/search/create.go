@@ -126,21 +126,22 @@ func CreateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
+	cmd.Flags().StringVarP(&opts.Filename, flag.File, flag.FileShort, "", usage.SearchFilename)
+
+	_ = cmd.MarkFlagFilename(flag.File)
+	_ = cmd.MarkFlagRequired(flag.ClusterName)
+
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	// deprecated flags
 	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVar(&opts.Analyzer, flag.Analyzer, DefaultAnalyzer, usage.Analyzer)
 	cmd.Flags().StringVar(&opts.SearchAnalyzer, flag.SearchAnalyzer, DefaultAnalyzer, usage.SearchAnalyzer)
 	cmd.Flags().BoolVar(&opts.Dynamic, flag.Dynamic, false, usage.Dynamic)
 	cmd.Flags().StringSliceVar(&opts.fields, flag.Field, nil, usage.SearchFields)
-	cmd.Flags().StringVarP(&opts.Filename, flag.File, flag.FileShort, "", usage.SearchFilename)
-
-	_ = cmd.MarkFlagFilename(flag.File)
-
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
-
-	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
 	_ = cmd.Flags().MarkDeprecated(flag.Database, deprecatedFlagMessage)
 	_ = cmd.Flags().MarkDeprecated(flag.Collection, deprecatedFlagMessage)

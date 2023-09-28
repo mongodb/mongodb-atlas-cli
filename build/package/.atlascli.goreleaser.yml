@@ -95,6 +95,8 @@ nfpms:
   dependencies:
     - mongodb-atlas-cli
     - mongodb-mongosh
+  recommends:
+    - podman
   meta: true
 checksum:
   name_template: checksums.txt

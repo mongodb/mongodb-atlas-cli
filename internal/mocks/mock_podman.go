@@ -8,6 +8,8 @@ import (
 	context "context"
 	reflect "reflect"
 
+	types "github.com/containers/common/libnetwork/types"
+	define "github.com/containers/podman/v4/libpod/define"
 	gomock "github.com/golang/mock/gomock"
 	podman "github.com/mongodb/mongodb-atlas-cli/internal/podman"
 )
@@ -33,6 +35,26 @@ func NewMockClient(ctrl *gomock.Controller) *MockClient {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockClient) EXPECT() *MockClientMockRecorder {
 	return m.recorder
+}
+
+// ContainerInspect mocks base method.
+func (m *MockClient) ContainerInspect(arg0 context.Context, arg1 ...string) ([]*define.InspectContainerData, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ContainerInspect", varargs...)
+	ret0, _ := ret[0].([]*define.InspectContainerData)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ContainerInspect indicates an expected call of ContainerInspect.
+func (mr *MockClientMockRecorder) ContainerInspect(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerInspect", reflect.TypeOf((*MockClient)(nil).ContainerInspect), varargs...)
 }
 
 // ContainerLogs mocks base method.
@@ -159,11 +181,11 @@ func (mr *MockClientMockRecorder) ListImages(arg0, arg1 interface{}) *gomock.Cal
 }
 
 // Logs mocks base method.
-func (m *MockClient) Logs(arg0 context.Context) ([]interface{}, error) {
+func (m *MockClient) Logs(arg0 context.Context) (map[string]interface{}, []error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Logs", arg0)
-	ret0, _ := ret[0].([]interface{})
-	ret1, _ := ret[1].(error)
+	ret0, _ := ret[0].(map[string]interface{})
+	ret1, _ := ret[1].([]error)
 	return ret0, ret1
 }
 
@@ -174,18 +196,23 @@ func (mr *MockClientMockRecorder) Logs(arg0 interface{}) *gomock.Call {
 }
 
 // Network mocks base method.
-func (m *MockClient) Network(arg0 context.Context, arg1 string) (*podman.Network, error) {
+func (m *MockClient) Network(arg0 context.Context, arg1 ...string) ([]*types.Network, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Network", arg0, arg1)
-	ret0, _ := ret[0].(*podman.Network)
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "Network", varargs...)
+	ret0, _ := ret[0].([]*types.Network)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Network indicates an expected call of Network.
-func (mr *MockClientMockRecorder) Network(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) Network(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Network", reflect.TypeOf((*MockClient)(nil).Network), arg0, arg1)
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Network", reflect.TypeOf((*MockClient)(nil).Network), varargs...)
 }
 
 // PullImage mocks base method.
@@ -292,6 +319,26 @@ func (mr *MockClientMockRecorder) RunContainer(arg0, arg1 interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunContainer", reflect.TypeOf((*MockClient)(nil).RunContainer), arg0, arg1)
 }
 
+// StartContainers mocks base method.
+func (m *MockClient) StartContainers(arg0 context.Context, arg1 ...string) ([]byte, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "StartContainers", varargs...)
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// StartContainers indicates an expected call of StartContainers.
+func (mr *MockClientMockRecorder) StartContainers(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartContainers", reflect.TypeOf((*MockClient)(nil).StartContainers), varargs...)
+}
+
 // StopContainers mocks base method.
 func (m *MockClient) StopContainers(arg0 context.Context, arg1 ...string) ([]byte, error) {
 	m.ctrl.T.Helper()
@@ -310,6 +357,26 @@ func (mr *MockClientMockRecorder) StopContainers(arg0 interface{}, arg1 ...inter
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0}, arg1...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StopContainers", reflect.TypeOf((*MockClient)(nil).StopContainers), varargs...)
+}
+
+// UnpauseContainers mocks base method.
+func (m *MockClient) UnpauseContainers(arg0 context.Context, arg1 ...string) ([]byte, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "UnpauseContainers", varargs...)
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UnpauseContainers indicates an expected call of UnpauseContainers.
+func (mr *MockClientMockRecorder) UnpauseContainers(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnpauseContainers", reflect.TypeOf((*MockClient)(nil).UnpauseContainers), varargs...)
 }
 
 // Version mocks base method.

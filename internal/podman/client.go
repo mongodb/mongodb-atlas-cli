@@ -25,6 +25,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/containers/common/libnetwork/types"
+	"github.com/containers/podman/v4/libpod/define"
 	"github.com/containers/podman/v4/pkg/machine"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/shirou/gopsutil/v3/mem"
@@ -49,13 +51,14 @@ Your available CPU cores '%d' is below '%s'. Using default podman CPU settings.
 )
 
 type Diagnostic struct {
-	Installed    bool
-	MachineFound bool
-	MachineState string
-	MachineInfo  *machine.InspectInfo
-	Version      *Version
-	Images       []string
-	Errors       []string
+	Installed       bool
+	MachineRequired bool
+	MachineFound    bool
+	MachineState    string
+	MachineInfo     *machine.InspectInfo
+	Version         *Version
+	Images          []string
+	Errors          []string
 }
 
 const PodmanRunningState = machine.Running
@@ -143,7 +146,10 @@ type Client interface {
 	CreateVolume(ctx context.Context, name string) ([]byte, error)
 	RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error)
 	CopyFileToContainer(ctx context.Context, localFile string, containerName string, filePathInContainer string) ([]byte, error)
+	ContainerInspect(ctx context.Context, names ...string) ([]*define.InspectContainerData, error)
 	StopContainers(ctx context.Context, names ...string) ([]byte, error)
+	StartContainers(ctx context.Context, names ...string) ([]byte, error)
+	UnpauseContainers(ctx context.Context, names ...string) ([]byte, error)
 	RemoveContainers(ctx context.Context, names ...string) ([]byte, error)
 	RemoveVolumes(ctx context.Context, names ...string) ([]byte, error)
 	RemoveNetworks(ctx context.Context, names ...string) ([]byte, error)
@@ -151,20 +157,10 @@ type Client interface {
 	ListImages(ctx context.Context, nameFilter string) ([]*Image, error)
 	PullImage(ctx context.Context, name string) ([]byte, error)
 	Version(ctx context.Context) (*Version, error)
-	Logs(ctx context.Context) ([]interface{}, error)
+	Logs(ctx context.Context) (map[string]interface{}, []error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
-	Network(ctx context.Context, name string) (*Network, error)
+	Network(ctx context.Context, names ...string) ([]*types.Network, error)
 	Exec(ctx context.Context, name string, args ...string) error
-}
-
-type Network struct {
-	ID         string `json:"ID"`
-	Name       string `json:"Name"`
-	DNSEnabled string `json:"DNSEnabled"`
-	Subnets    []struct {
-		Subnet  string `json:"Subnet"`
-		Gateway string `json:"gateway"`
-	} `json:"Subnets"`
 }
 
 type client struct {
@@ -174,8 +170,9 @@ type client struct {
 
 func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	d := &Diagnostic{
-		Installed:    true,
-		MachineFound: true,
+		Installed:       true,
+		MachineRequired: podmanMachineIsRequired(),
+		MachineFound:    true,
 	}
 
 	err := Installed()
@@ -287,13 +284,17 @@ func Installed() error {
 	return nil
 }
 
+func podmanMachineIsRequired() bool {
+	// macOs and Windows require VMs
+	return runtime.GOOS == "windows" || runtime.GOOS == "darwin"
+}
+
 func (o *client) Ready(ctx context.Context) error {
 	if err := Installed(); err != nil {
 		return err
 	}
 
-	if runtime.GOOS != "windows" && runtime.GOOS != "darwin" {
-		// macOs and Windows require VMs
+	if !podmanMachineIsRequired() {
 		return nil
 	}
 
@@ -302,6 +303,15 @@ func (o *client) Ready(ctx context.Context) error {
 	}
 
 	return o.machineStart(ctx)
+}
+
+func extractErrorMessage(exitErr *exec.ExitError) error {
+	stderrLines := strings.Split(string(exitErr.Stderr), "\n")
+	if len(stderrLines) < 2 { //nolint // expected to have at least 2 lines
+		return fmt.Errorf("%w: %s", exitErr, string(exitErr.Stderr))
+	}
+	stderrLastLine := stderrLines[len(stderrLines)-2] // 2nd last line because last line should be empty
+	return fmt.Errorf("%w: %s", exitErr, stderrLastLine)
 }
 
 func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
@@ -315,11 +325,14 @@ func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
 
 	if o.debug {
 		_, _ = o.outWriter.Write(output)
+	}
 
-		var exitErr *exec.ExitError
-		if errors.As(err, &exitErr) {
+	var exitErr *exec.ExitError
+	if errors.As(err, &exitErr) {
+		if o.debug {
 			_, _ = o.outWriter.Write(exitErr.Stderr)
 		}
+		err = extractErrorMessage(exitErr)
 	}
 
 	return output, err
@@ -331,6 +344,18 @@ func (o *client) CreateNetwork(ctx context.Context, name string) ([]byte, error)
 
 func (o *client) CreateVolume(ctx context.Context, name string) ([]byte, error) {
 	return o.runPodman(ctx, "volume", "create", name)
+}
+
+func (o *client) ContainerInspect(ctx context.Context, names ...string) ([]*define.InspectContainerData, error) {
+	args := append([]string{"container", "inspect"}, names...)
+	buf, err := o.runPodman(ctx, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	var containers []*define.InspectContainerData
+	err = json.Unmarshal(buf, &containers)
+	return containers, err
 }
 
 func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error) {
@@ -385,6 +410,18 @@ func (o *client) CopyFileToContainer(ctx context.Context, localFile string, cont
 
 func (o *client) StopContainers(ctx context.Context, names ...string) ([]byte, error) {
 	return o.runPodman(ctx, append([]string{"stop"}, names...)...)
+}
+
+func (o *client) StartContainers(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"start"}, names...)...)
+}
+
+func (o *client) PauseContainers(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"pause"}, names...)...)
+}
+
+func (o *client) UnpauseContainers(ctx context.Context, names ...string) ([]byte, error) {
+	return o.runPodman(ctx, append([]string{"unpause"}, names...)...)
 }
 
 func (o *client) RemoveContainers(ctx context.Context, names ...string) ([]byte, error) {
@@ -451,20 +488,33 @@ func (o *client) Version(ctx context.Context) (version *Version, err error) {
 	return v, err
 }
 
-func (o *client) Logs(ctx context.Context) ([]interface{}, error) {
-	output, err := o.runPodman(ctx, "ps", "--format", "json")
+func (o *client) Logs(ctx context.Context) (map[string]interface{}, []error) {
+	l := map[string]interface{}{}
+	errs := []error{}
+
+	output, err := o.runPodman(ctx, "ps", "--all", "--format", "json", "--filter", "name=mongo")
 	if err != nil {
-		return nil, err
+		errs = append(errs, err)
+	} else {
+		var podmanLogs []interface{}
+		if err = json.Unmarshal(output, &podmanLogs); err != nil {
+			errs = append(errs, err)
+		}
+		l["Containers"] = podmanLogs
 	}
 
-	var podmanLogs []interface{}
-
-	err = json.Unmarshal(output, &podmanLogs)
+	output, err = o.runPodman(ctx, "network", "ls", "--format", "json", "--filter", "name=mdb")
 	if err != nil {
-		return podmanLogs, err
+		errs = append(errs, err)
+	} else {
+		var networks []interface{}
+		if err = json.Unmarshal(output, &networks); err != nil {
+			errs = append(errs, err)
+		}
+		l["Networks"] = networks
 	}
 
-	return podmanLogs, nil
+	return l, errs
 }
 
 func (o *client) ContainerLogs(ctx context.Context, name string) ([]string, error) {
@@ -477,13 +527,15 @@ func (o *client) ContainerLogs(ctx context.Context, name string) ([]string, erro
 	return logs, nil
 }
 
-func (o *client) Network(ctx context.Context, name string) (*Network, error) {
-	output, err := o.runPodman(ctx, "network", "inspect", name, "--format", "json")
+func (o *client) Network(ctx context.Context, names ...string) ([]*types.Network, error) {
+	args := []string{"network", "inspect", "--format", "json"}
+	args = append(args, names...)
+	output, err := o.runPodman(ctx, args...)
 	if err != nil {
 		return nil, err
 	}
 
-	var n []*Network
+	var n []*types.Network
 	if err = json.Unmarshal(output, &n); err != nil {
 		return nil, err
 	}
@@ -492,7 +544,7 @@ func (o *client) Network(ctx context.Context, name string) (*Network, error) {
 		return nil, ErrNetworkNotFound
 	}
 
-	return n[0], err
+	return n, err
 }
 
 func (o *client) Exec(ctx context.Context, name string, args ...string) error {

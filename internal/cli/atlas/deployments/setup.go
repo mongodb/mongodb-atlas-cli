@@ -51,8 +51,6 @@ import (
 const (
 	internalMongodPort = 27017
 	internalMongotPort = 27027
-	localCluster       = "local"
-	atlasCluster       = "atlas"
 	mdb6               = "6.0"
 	mdb7               = "7.0"
 	replicaSetName     = "rs-localdev"
@@ -69,22 +67,16 @@ const (
 )
 
 var (
-	errCancel                       = errors.New("setup cancelled")
-	errMustBeInt                    = errors.New("input must be an integer")
-	errPortOutOfRange               = errors.New("port must within the range 1..65535")
-	errPortNotAvailable             = errors.New("port not available")
-	errFlagTypeRequired             = errors.New("flag --type is required when --force is set")
-	errInvalidDeploymentType        = errors.New("invalid deployment type")
-	errInvalidMongoDBVersion        = errors.New("invalid mongodb version")
-	errUnsupportedConnectWith       = errors.New("flag --connectWith unsupported")
-	errDeploymentTypeNotImplemented = errors.New("deployment type not implemented")
-	deploymentTypeOptions           = []string{localCluster, atlasCluster}
-	deploymentTypeDescription       = map[string]string{
-		localCluster: "Local Database",
-		atlasCluster: "Atlas Database",
-	}
-	settingOptions      = []string{defaultSettings, customSettings, cancelSettings}
-	settingsDescription = map[string]string{
+	errCancel                 = errors.New("the setup was cancelled")
+	errMustBeInt              = errors.New("you must specify an integer")
+	errPortOutOfRange         = errors.New("you must specify a port within the range 1..65535")
+	errPortNotAvailable       = errors.New("the port is unavailable")
+	errFlagTypeRequired       = errors.New("the --type flag is required when the --force flag is set")
+	errInvalidDeploymentType  = errors.New("the deployment type is invalid")
+	errInvalidMongoDBVersion  = errors.New("the mongodb version is invalid")
+	errUnsupportedConnectWith = errors.New("the --connectWith flag is unsupported")
+	settingOptions            = []string{defaultSettings, customSettings, cancelSettings}
+	settingsDescription       = map[string]string{
 		defaultSettings: "With default settings",
 		customSettings:  "With custom settings",
 		cancelSettings:  "Cancel set up",
@@ -119,7 +111,7 @@ type SetupOpts struct {
 
 func (opts *SetupOpts) initPodmanClient() error {
 	opts.podmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
-	return nil
+	return opts.DeploymentOpts.InitStore(opts.podmanClient)()
 }
 
 func (opts *SetupOpts) initMongoDBClient(ctx context.Context) func() error {
@@ -190,11 +182,11 @@ func (opts *SetupOpts) internalIPs(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-
-	_, ipNet, err := net.ParseCIDR(n.Subnets[0].Subnet)
-	if err != nil {
-		return err
+	if len(n) < 1 {
+		return podman.ErrNetworkNotFound
 	}
+
+	ipNet := n[0].Subnets[0].Subnet
 
 	ipNet.IP[3] = 10
 	opts.mongodIP = ipNet.IP.String()
@@ -211,7 +203,8 @@ func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needPodmanSetu
 
 	setupState := opts.podmanClient.Diagnostics(ctx)
 
-	if !setupState.MachineFound || setupState.MachineState != "running" {
+	if setupState.MachineRequired &&
+		(!setupState.MachineFound || setupState.MachineState != "running") {
 		steps++
 		needPodmanSetup = true
 	}
@@ -391,10 +384,8 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 		Hostname:   opts.LocalMongotHostname(),
 		Entrypoint: "/bin/sh",
 		EnvVars: map[string]string{
-			"MONGODHOST":      opts.internalMongodAddress(),
-			"DATADIR":         "/var/lib/mongot",
-			"KEYFILEPATH":     "/var/lib/mongot/keyfile",
-			"KEYFILECONTENTS": keyFileContents,
+			"MONGOD_HOST_AND_PORT": opts.internalMongodAddress(),
+			"KEY_FILE_CONTENTS":    keyFileContents,
 		},
 		Args: []string{"-c", string(mongotStartScript)},
 		Volumes: map[string]string{
@@ -545,7 +536,7 @@ func (opts *SetupOpts) validateDeploymentTypeFlag() error {
 		return errFlagTypeRequired
 	}
 
-	if opts.DeploymentType != "" && !strings.EqualFold(opts.DeploymentType, atlasCluster) && !strings.EqualFold(opts.DeploymentType, localCluster) {
+	if opts.DeploymentType != "" && !strings.EqualFold(opts.DeploymentType, options.AtlasCluster) && !strings.EqualFold(opts.DeploymentType, options.LocalCluster) {
 		return fmt.Errorf("%w: %s", errInvalidDeploymentType, opts.DeploymentType)
 	}
 
@@ -577,28 +568,6 @@ func (opts *SetupOpts) validateFlags() error {
 		!strings.EqualFold(opts.connectWith, mongoshConnect) &&
 		!strings.EqualFold(opts.connectWith, skipConnect) {
 		return fmt.Errorf("%w: %s", errUnsupportedConnectWith, opts.connectWith)
-	}
-
-	return nil
-}
-
-func (opts *SetupOpts) promptDeploymentType() error {
-	p := &survey.Select{
-		Message: "What would you like to deploy?",
-		Options: deploymentTypeOptions,
-		Help:    usage.DeploymentType,
-		Description: func(value string, index int) string {
-			return deploymentTypeDescription[value]
-		},
-	}
-
-	err := telemetry.TrackAskOne(p, &opts.DeploymentType, nil)
-	if err != nil {
-		return err
-	}
-
-	if !strings.EqualFold(opts.DeploymentType, atlasCluster) && !strings.EqualFold(opts.DeploymentType, localCluster) {
-		return fmt.Errorf("%w: %s", errDeploymentTypeNotImplemented, deploymentTypeDescription[opts.DeploymentType])
 	}
 
 	return nil
@@ -675,13 +644,13 @@ func (opts *SetupOpts) validateAndPrompt() error {
 	}
 
 	if opts.DeploymentType == "" {
-		if err := opts.promptDeploymentType(); err != nil {
+		if err := opts.PromptDeploymentType(); err != nil {
 			return err
 		}
 	}
 
 	// Defer prompts to Atlas command
-	if opts.DeploymentType == atlasCluster {
+	if opts.DeploymentType == options.AtlasCluster {
 		return nil
 	}
 
@@ -725,8 +694,9 @@ Port	{{.Port}}
 	return nil
 }
 
-func (opts *SetupOpts) RunLocal(ctx context.Context) error {
+func (opts *SetupOpts) runLocal(ctx context.Context) error {
 	if err := opts.createLocalDeployment(ctx); err != nil {
+		_ = opts.Remove(ctx)
 		return err
 	}
 
@@ -739,7 +709,7 @@ func (opts *SetupOpts) RunLocal(ctx context.Context) error {
 	return opts.runConnectWith(cs)
 }
 
-func (opts *SetupOpts) RunAtlas(ctx context.Context) error {
+func (opts *SetupOpts) runAtlas(ctx context.Context) error {
 	s := setup.Builder()
 
 	// remove global flags and unknown flags
@@ -782,11 +752,11 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 	}
 
 	telemetry.AppendOption(telemetry.WithDeploymentType(opts.DeploymentType))
-	if opts.DeploymentType == localCluster {
-		return opts.RunLocal(ctx)
+	if strings.EqualFold(options.LocalCluster, opts.DeploymentType) {
+		return opts.runLocal(ctx)
 	}
 
-	return opts.RunAtlas(ctx)
+	return opts.runAtlas(ctx)
 }
 
 // atlas deployments setup.
@@ -823,7 +793,7 @@ func SetupBuilder() *cobra.Command {
 
 	// Local and Atlas
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
-	cmd.Flags().StringVar(&opts.MdbVersion, flag.MDBVersion, "", usage.MDBVersion)
+	cmd.Flags().StringVar(&opts.MdbVersion, flag.MDBVersion, "", usage.DeploymentMDBVersion)
 	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWith)
 
 	// Local only
@@ -832,12 +802,18 @@ func SetupBuilder() *cobra.Command {
 	// Atlas only
 	opts.atlasSetup.SetupAtlasFlags(cmd)
 	opts.atlasSetup.SetupFlowFlags(cmd)
+	cmd.Flags().Lookup(flag.Region).Usage = usage.DeploymentRegion
+	cmd.Flags().Lookup(flag.Tag).Usage = usage.DeploymentTag
+	cmd.Flags().Lookup(flag.Tier).Usage = usage.DeploymentTier
+	cmd.Flags().Lookup(flag.EnableTerminationProtection).Usage = usage.EnableTerminationProtectionForDeployment
+	cmd.Flags().Lookup(flag.SkipSampleData).Usage = usage.SkipSampleDataDeployment
+	cmd.Flags().Lookup(flag.Force).Usage = usage.ForceDeploymentsSetup
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.MDBVersion, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return mdbVersions, cobra.ShellCompDirectiveDefault
 	})
 	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return deploymentTypeOptions, cobra.ShellCompDirectiveDefault
+		return options.DeploymentTypeOptions, cobra.ShellCompDirectiveDefault
 	})
 	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return connectWithOptions, cobra.ShellCompDirectiveDefault

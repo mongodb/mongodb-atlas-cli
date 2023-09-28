@@ -16,7 +16,6 @@ package indexes
 
 import (
 	"context"
-	"errors"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -55,12 +54,11 @@ func (opts *DeleteOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	err := opts.RunLocal(ctx)
-	if err != nil && (errors.Is(err, options.ErrDeploymentNotFound)) {
+	if opts.DeploymentType == options.AtlasCluster {
 		return opts.RunAtlas()
 	}
 
-	return err
+	return opts.RunLocal(ctx)
 }
 
 func (opts *DeleteOpts) RunAtlas() error {
@@ -97,6 +95,16 @@ func (opts *DeleteOpts) initMongoDBClient(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) validateAndPrompt(ctx context.Context) error {
+	if opts.DeploymentType == "" {
+		if err := opts.PromptDeploymentType(); err != nil {
+			return err
+		}
+	}
+
+	if opts.DeploymentType == options.AtlasCluster && opts.DeploymentName == "" {
+		return ErrNoDeploymentName
+	}
+
 	if opts.DeploymentName == "" {
 		if err := opts.DeploymentOpts.Select(ctx); err != nil {
 			return err
@@ -119,7 +127,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <indexId>",
 		Aliases: []string{"rm"},
-		Short:   "Delete the specified search index from the specified cluster.",
+		Short:   "Delete the specified search index from the specified deployment.",
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{
@@ -144,8 +152,9 @@ func DeleteBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.ClusterName)
+	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

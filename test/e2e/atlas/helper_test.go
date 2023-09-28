@@ -430,6 +430,17 @@ func RandProjectNameWithPrefix(prefix string) (string, error) {
 	return prefixedName, nil
 }
 
+func RandEntityWithRevision(entity string) (string, error) {
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	if revision, ok := os.LookupEnv("revision"); ok {
+		return fmt.Sprintf("%s-%v-%s", entity, n, revision), nil
+	}
+	return fmt.Sprintf("%s-%v", entity, n), nil
+}
+
 func MongoDBMajorVersion() (string, error) {
 	atlasClient := mongodbatlas.NewClient(nil)
 	atlasURL := os.Getenv("MCLI_OPS_MANAGER_URL")

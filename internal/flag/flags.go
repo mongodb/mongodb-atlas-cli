@@ -364,4 +364,6 @@ const (
 	AuthorizedEmail                           = "authorizedEmail"                           // authorizedEmail flag
 	ConnectWith                               = "connectWith"                               // connectWith flag
 	DeploymentName                            = "deploymentName"                            // deploymentName flag
+	Instance                                  = "instance"                                  // Instance flag
+	InstanceShort                             = "i"                                         // InstanceShort flag
 )

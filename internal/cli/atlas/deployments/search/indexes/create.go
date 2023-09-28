@@ -16,16 +16,20 @@ package indexes
 
 import (
 	"context"
+	"errors"
+	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
@@ -38,9 +42,14 @@ import (
 const (
 	namePattern        = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	connectWaitSeconds = 10
-	createTemplate     = "Search index created with ID {{.IndexID}}\n"
+	createTemplate     = "Search index created with ID: {{.IndexID}}\n"
 	notFoundState      = "NOT_FOUND"
 )
+
+var ErrNoDeploymentName = errors.New("deployment name is required for Atlas resources")
+var ErrNotAuthenticated = errors.New("not authenticated, login first to create Atlas resources")
+var ErrSearchIndexDuplicated = errors.New("search index is duplicated")
+var ErrWatchNotAvailable = errors.New("watch is not available for Atlas resources")
 
 type CreateOpts struct {
 	cli.WatchOpts
@@ -51,15 +60,34 @@ type CreateOpts struct {
 	mongodbClient    mongodbclient.MongoDBClient
 	connectionString string
 	index            *admin.ClusterSearchIndex
+	store            store.SearchIndexCreator
 }
 
-func (opts *CreateOpts) Run(ctx context.Context) error {
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
+}
+
+func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 	var err error
 	if err = opts.PodmanClient.Ready(ctx); err != nil {
 		return err
 	}
 
-	if err = opts.validateAndPrompt(ctx); err != nil {
+	if opts.DeploymentName != "" {
+		if err = opts.DeploymentOpts.CheckIfDeploymentExists(ctx); err != nil {
+			return err
+		}
+	} else {
+		if err = opts.DeploymentOpts.Select(ctx); err != nil {
+			return err
+		}
+	}
+
+	if err = opts.validateAndPrompt(); err != nil {
 		return err
 	}
 
@@ -78,11 +106,49 @@ func (opts *CreateOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	opts.index, err = opts.mongodbClient.Database(opts.index.Database).CreateSearchIndex(ctx, opts.index.CollectionName, opts.index)
+	db := opts.mongodbClient.Database(opts.index.Database)
+	if idx, _ := db.SearchIndexByName(ctx, opts.index.Name, opts.index.CollectionName); idx != nil {
+		return ErrSearchIndexDuplicated
+	}
+
+	opts.index, err = db.CreateSearchIndex(ctx, opts.index.CollectionName, opts.index)
+	return err
+}
+
+func (opts *CreateOpts) RunAtlas() error {
+	if err := opts.validateAndPrompt(); err != nil {
+		return err
+	}
+
+	index, err := opts.NewSearchIndex()
 	if err != nil {
 		return err
 	}
-	return nil
+
+	opts.index, err = opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, index)
+	return err
+}
+
+func (opts *CreateOpts) Run(ctx context.Context) error {
+	if opts.DeploymentType == "" {
+		if err := opts.PromptDeploymentType(); err != nil {
+			return err
+		}
+	}
+
+	if strings.EqualFold(opts.DeploymentType, "local") {
+		return opts.RunLocal(ctx)
+	}
+
+	if !opts.IsCliAuthenticated() {
+		return ErrNotAuthenticated
+	}
+
+	if opts.DeploymentName == "" {
+		return ErrNoDeploymentName
+	}
+
+	return opts.RunAtlas()
 }
 
 func (opts *CreateOpts) initMongoDBClient(ctx context.Context) func() error {
@@ -127,7 +193,7 @@ func (opts *CreateOpts) watch(ctx context.Context) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if state == "STEADY" {
+	if state == "READY" {
 		return true, nil
 	}
 	return false, nil
@@ -150,17 +216,7 @@ func (opts *CreateOpts) PostRun(ctx context.Context) error {
 	return opts.PostRunMessages()
 }
 
-func (opts *CreateOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.DeploymentName != "" {
-		if err := opts.DeploymentOpts.CheckIfDeploymentExists(ctx); err != nil {
-			return err
-		}
-	} else {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
-			return err
-		}
-	}
-
+func (opts *CreateOpts) validateAndPrompt() error {
 	if opts.Filename != "" {
 		return nil
 	}
@@ -207,7 +263,7 @@ func CreateBuilder() *cobra.Command {
 		Use:     "create [indexName]",
 		Short:   "Create a search index for the specified deployment.",
 		Args:    require.MaximumNArgs(1),
-		GroupID: "local",
+		GroupID: "all",
 		Annotations: map[string]string{
 			"indexNameDesc": "Name of the index.",
 		},
@@ -215,9 +271,16 @@ func CreateBuilder() *cobra.Command {
 			w := cmd.OutOrStdout()
 			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
 			opts.WatchOpts.OutWriter = w
+			log.SetWriter(w)
+
+			if opts.DeploymentType == "atlas" && opts.EnableWatch {
+				return ErrWatchNotAvailable
+			}
+
 			return opts.PreRunE(
 				opts.InitOutput(w, createTemplate),
 				opts.InitStore(opts.PodmanClient),
+				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient(cmd.Context()),
 			)
 		},
@@ -232,12 +295,19 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
+	// Atlas and Local
+	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVarP(&opts.Filename, flag.File, flag.FileShort, "", usage.SearchFilename)
+
+	// Local only
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
 	cmd.Flags().UintVar(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
+
+	// Atlas only
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	_ = cmd.MarkFlagFilename(flag.File)
 

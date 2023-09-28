@@ -4,9 +4,11 @@
   "description": "OpenAPI Generator for MongoDB Atlas CLI",
   "scripts": {
     "generate:clear": "rm -rf ../../internal/api",
+    "generate:download": "SDKVERSION=$(cat ../../go.mod | grep go.mongodb.org/atlas-sdk | awk '{print $2}') curl -L -o config/atlas-api.yaml https://github.com/mongodb/atlas-sdk-go/raw/$SDKVERSION/openapi/atlas-api-transformed.yaml",
+    "generate:transform": "node merge.js",
     "generate:init": "mkdir -p ../../internal/api && cp ./config/.openapi-generator-ignore ../../internal/api/.openapi-generator-ignore",
     "generate:run": "GO_POST_PROCESS_FILE='goimports -w' openapi-generator-cli generate --enable-post-process-file -c './config/config.yaml' --type-mappings=integer=int --type-mappings=DateTime=string -o ../../internal/api",
-    "generate": "npm run generate:clear && npm run generate:init && npm run generate:run"
+    "generate": "npm run generate:clear && npm run generate:init && npm run generate:download && npm run generate:transform && npm run generate:run"
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,7 @@
   },
   "homepage": "https://github.com/mongodb/mongodb-atlas-cli#readme",
   "dependencies": {
-    "@openapitools/openapi-generator-cli": "^2.6.0"
+    "@openapitools/openapi-generator-cli": "^2.6.0",
+    "js-yaml": "^4.1.0"
   }
 }

@@ -24,7 +24,7 @@ RUN set -eux; \
 	--output ${entrypoint}.deb \
 	${url}; \
 	apt-get update; \
-	apt-get install --no-install-recommends -y ./${entrypoint}.deb; \
+	apt-get install -y ./${entrypoint}.deb; \
 	rm -rf /var/lib/apt/lists/* ./${entrypoint}.deb
 
 RUN mongosh --version

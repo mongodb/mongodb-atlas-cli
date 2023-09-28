@@ -50,7 +50,6 @@ import (
 
 const (
 	internalMongodPort = 27017
-	internalMongotPort = 27027
 	mdb6               = "6.0"
 	mdb7               = "7.0"
 	replicaSetName     = "rs-localdev"
@@ -63,7 +62,6 @@ const (
 	skipConnect        = "skip"
 	spinnerSpeed       = 100 * time.Millisecond
 	shortStepCount     = 2
-	waitMongotTimeout  = 5 * time.Minute
 )
 
 var (
@@ -298,7 +296,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 				"KEYFILE":         "/data/configdb/keyfile",
 				"MAXCONNS":        maxConns,
 				"REPLSETNAME":     replicaSetName,
-				"MONGOTHOST":      opts.internalMongotAddress(),
+				"MONGOTHOST":      opts.InternalMongotAddress(opts.mongotIP),
 			},
 			Volumes: map[string]string{
 				mongodDataVolume: "/data/db",
@@ -362,10 +360,6 @@ func (opts *SetupOpts) internalMongodAddress() string {
 	return fmt.Sprintf("%s:%d", opts.mongodIP, internalMongodPort)
 }
 
-func (opts *SetupOpts) internalMongotAddress() string {
-	return fmt.Sprintf("%s:%d", opts.mongotIP, internalMongotPort)
-}
-
 func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents string) error {
 	mongotDataVolume := opts.LocalMongotDataVolume()
 	if _, err := opts.podmanClient.CreateVolume(ctx, mongotDataVolume); err != nil {
@@ -398,22 +392,7 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 		return err
 	}
 
-	return opts.waitForMongot(ctx)
-}
-
-func (opts *SetupOpts) waitForMongot(parentCtx context.Context) error {
-	ctx, cancel := context.WithTimeout(parentCtx, waitMongotTimeout)
-	defer cancel()
-	for {
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		default:
-			if err := opts.podmanClient.Exec(ctx, opts.LocalMongodHostname(), "/bin/sh", "-c", fmt.Sprintf("mongosh %s --eval \"db.adminCommand('ping')\"", opts.internalMongotAddress())); err == nil { // ping was successful
-				return nil
-			}
-		}
-	}
+	return opts.WaitForMongot(ctx, opts.mongotIP)
 }
 
 func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Container) error {

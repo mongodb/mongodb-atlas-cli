@@ -91,6 +91,9 @@ func (opts *StartOpts) RunLocal(ctx context.Context) error {
 }
 
 func (opts *StartOpts) startContainer(ctx context.Context, deployment options.Deployment) error {
+	opts.StartSpinner()
+	defer opts.StopSpinner()
+
 	if deployment.StateName == options.IdleState || deployment.StateName == options.RestartingState {
 		return nil
 	}
@@ -118,6 +121,10 @@ func (opts *StartOpts) RunAtlas() error {
 	if !opts.IsCliAuthenticated() {
 		return ErrNotAuthenticated
 	}
+
+	opts.StartSpinner()
+	defer opts.StopSpinner()
+
 	r, err := opts.store.StartCluster(opts.ConfigProjectID(), opts.DeploymentName)
 	if err != nil {
 		return err

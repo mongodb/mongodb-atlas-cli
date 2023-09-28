@@ -99,6 +99,9 @@ func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.De
 	}
 
 	if deployment.StateName == options.IdleState {
+		opts.StartSpinner()
+		defer opts.StopSpinner()
+
 		// search for a process "java ... mongot", extract the process ID, kill the process with SIGTERM (15)
 		const stopMongot = "grep -l java.*mongot /proc/*/cmdline | awk -F'/' '{print $3; exit}' | while read -r pid; do kill -15 $pid; done"
 		if err := opts.PodmanClient.Exec(ctx, opts.LocalMongotHostname(), "/bin/sh", "-c", stopMongot); err != nil {
@@ -120,6 +123,9 @@ func (opts *PauseOpts) RunAtlas() error {
 	if !opts.IsCliAuthenticated() {
 		return ErrNotAuthenticated
 	}
+
+	opts.StartSpinner()
+	defer opts.StopSpinner()
 
 	r, err := opts.store.PauseCluster(opts.ConfigProjectID(), opts.DeploymentName)
 	if err != nil {

@@ -1,3 +1,4 @@
+x-sdk-import: ${SDKIMPORT}/admin
 paths:
   "/api/atlas/v2/groups/{groupId}/clusters":
     post:

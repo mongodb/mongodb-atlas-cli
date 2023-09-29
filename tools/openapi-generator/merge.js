@@ -11,7 +11,12 @@ try {
 }
 
 try {
-  atlasApiChanges = yaml.parse(fs.readFileSync('config/atlas-api-changes.yaml', 'utf8'));
+  let f = fs.readFileSync('config/atlas-api-changes.yaml', 'utf8');
+  Object.entries(process.env).forEach(entry => {
+    const [key, value] = entry;
+    f = f.replaceAll("${" + key + "}", value);
+  });
+  atlasApiChanges = yaml.parse(f);
 } catch (err) {
     console.error(err);
     process.exit(1);

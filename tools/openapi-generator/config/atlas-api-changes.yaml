@@ -7,6 +7,7 @@ components:
     groupId:
       description: Unique 24-hexadecimal digit string that identifies your project.
       x-group-id: true
+      x-flag-name: projectId
     orgId:
       description: Unique 24-hexadecimal digit string that identifies the organization
       x-org-id: true

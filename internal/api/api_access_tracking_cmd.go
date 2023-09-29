@@ -84,7 +84,7 @@ func listAccessLogsByClusterNameBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
+	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 	cmd.Flags().BoolVar(&opts.authResult, "authResult", false, `Flag that indicates whether the response returns the successful authentication attempts only.`)
 	cmd.Flags().Int64Var(&opts.end, "end", 0, `Date and time when to stop retrieving database history. If you specify **end**, you must also specify **start**. This parameter uses UNIX epoch time in milliseconds.`)
@@ -154,7 +154,7 @@ func listAccessLogsByHostnameBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
+	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.hostname, "hostname", "", `Fully qualified domain name or IP address of the MongoDB host that stores the log files that you want to download.`)
 	cmd.Flags().BoolVar(&opts.authResult, "authResult", false, `Flag that indicates whether the response returns the successful authentication attempts only.`)
 	cmd.Flags().Int64Var(&opts.end, "end", 0, `Date and time when to stop retrieving database history. If you specify **end**, you must also specify **start**. This parameter uses UNIX epoch time in milliseconds.`)

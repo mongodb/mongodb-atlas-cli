@@ -14855,6 +14855,7 @@ components:
         maxLength: 24
         minLength: 24
         pattern: ^([a-f0-9]{24})$
+      x-flag-name: projectId
       x-group-id: true
     identityProviderId:
       description: Unique 20-hexadecimal digit string that identifies the identity provider.

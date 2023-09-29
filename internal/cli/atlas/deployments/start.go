@@ -44,7 +44,6 @@ type StartOpts struct {
 var (
 	ErrDeploymentIsDeleting = errors.New("deployment state is DELETING")
 	ErrNoDeploymentName     = errors.New("deployment name is required for Atlas resources")
-	ErrNotAuthenticated     = errors.New("you are not authenticated. Please, run atlas auth  login")
 	startTemplate           = "Starting deployment '{{.Name}}'.\n"
 )
 
@@ -128,7 +127,7 @@ func (opts *StartOpts) startContainer(ctx context.Context, deployment options.De
 
 func (opts *StartOpts) RunAtlas() error {
 	if !opts.IsCliAuthenticated() {
-		return ErrNotAuthenticated
+		return options.ErrNotAuthenticated
 	}
 
 	opts.StartSpinner()
@@ -143,13 +142,11 @@ func (opts *StartOpts) RunAtlas() error {
 }
 
 func (opts *StartOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
-			return err
-		}
+	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
+		return err
 	}
 
-	if opts.DeploymentType == options.AtlasCluster && opts.DeploymentName == "" {
+	if opts.IsAtlasDeploymentType() && opts.DeploymentName == "" {
 		return ErrNoDeploymentName
 	}
 

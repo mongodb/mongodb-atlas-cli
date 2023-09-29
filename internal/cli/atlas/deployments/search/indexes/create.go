@@ -130,10 +130,8 @@ func (opts *CreateOpts) RunAtlas() error {
 }
 
 func (opts *CreateOpts) Run(ctx context.Context) error {
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
-			return err
-		}
+	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
+		return err
 	}
 
 	if strings.EqualFold(opts.DeploymentType, "local") {

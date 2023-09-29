@@ -54,7 +54,7 @@ func (opts *DeleteOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	if opts.DeploymentType == options.AtlasCluster {
+	if opts.IsAtlasDeploymentType() {
 		return opts.RunAtlas()
 	}
 
@@ -95,13 +95,11 @@ func (opts *DeleteOpts) initMongoDBClient(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
-			return err
-		}
+	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
+		return err
 	}
 
-	if opts.DeploymentType == options.AtlasCluster && opts.DeploymentName == "" {
+	if opts.IsAtlasDeploymentType() && opts.DeploymentName == "" {
 		return ErrNoDeploymentName
 	}
 

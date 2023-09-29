@@ -15,16 +15,9 @@
 package deployments
 
 import (
-	"errors"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/search"
 	"github.com/spf13/cobra"
-)
-
-var (
-	errCompassNotInstalled = errors.New("did not find MongoDB Compass, install: https://dochub.mongodb.org/core/install-compass")
-	errMongoshNotInstalled = errors.New("did not find mongosh, install: https://dochub.mongodb.org/core/install-mongosh")
 )
 
 func Builder() *cobra.Command {

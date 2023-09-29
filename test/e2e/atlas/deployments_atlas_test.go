@@ -17,6 +17,7 @@ package atlas_test
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
@@ -26,6 +27,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 const (
@@ -43,7 +46,14 @@ func TestDeploymentsAtlas(t *testing.T) {
 	clusterName, err := RandClusterName()
 	req.NoError(err)
 
+	dbUserUsername, err := RandUsername()
+	req.NoError(err)
+
+	dbUserPassword := dbUserUsername + "~PwD"
+
 	var connectionString string
+	var client *mongo.Client
+	ctx := context.Background()
 
 	t.Run("Setup", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -59,6 +69,8 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"--skipSampleData",
 			"--debug",
 			"--projectId", g.projectID,
+			"--username", dbUserUsername,
+			"--password", dbUserPassword,
 		)
 
 		cmd.Env = os.Environ()
@@ -84,6 +96,39 @@ func TestDeploymentsAtlas(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 		assert.Contains(t, string(resp), "Cluster available")
+	})
+
+	t.Run("Connect to database", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			"connect",
+			clusterName,
+			"--type", "atlas",
+			"--connectWith", "connectionString",
+			"--projectId", g.projectID,
+		)
+
+		cmd.Env = os.Environ()
+
+		r, err := cmd.CombinedOutput()
+		req.NoError(err, string(r))
+
+		connectionString := strings.TrimSpace(string(r))
+		client, err = mongo.Connect(
+			ctx,
+			options.Client().
+				ApplyURI(connectionString).
+				SetAuth(options.Credential{
+					AuthMechanism: "PLAIN",
+					Username:      dbUserUsername,
+					Password:      dbUserPassword,
+				}),
+		)
+		req.NoError(err)
+	})
+
+	t.Cleanup(func() {
+		_ = client.Disconnect(ctx)
 	})
 
 	t.Run("Pause Cluster", func(t *testing.T) {

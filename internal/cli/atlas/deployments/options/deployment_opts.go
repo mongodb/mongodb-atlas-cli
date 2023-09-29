@@ -28,6 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
@@ -49,12 +50,17 @@ const (
 	RestartingState       = "RESTARTING"
 	LocalCluster          = "local"
 	AtlasCluster          = "atlas"
+	CompassConnect        = "compass"
+	MongoshConnect        = "mongosh"
 	PromptTypeMessage     = "What type of deployment would you like to work with?"
 )
 
 var (
 	errInvalidDeploymentName        = errors.New("invalid cluster name")
 	errDeploymentTypeNotImplemented = errors.New("deployment type not implemented")
+	ErrNotAuthenticated             = errors.New("you are not authenticated. Please, run atlas auth login")
+	ErrCompassNotInstalled          = errors.New("did not find MongoDB Compass, install: https://dochub.mongodb.org/core/install-compass")
+	ErrMongoshNotInstalled          = errors.New("did not find mongosh, install: https://dochub.mongodb.org/core/install-mongosh")
 	DeploymentTypeOptions           = []string{LocalCluster, AtlasCluster}
 	deploymentTypeDescription       = map[string]string{
 		LocalCluster: "Local Database",
@@ -207,7 +213,7 @@ func (opts *DeploymentOpts) GetLocalDeployments(ctx context.Context) ([]Deployme
 	return deployments, nil
 }
 
-func (opts *DeploymentOpts) PromptDeploymentType() error {
+func (opts *DeploymentOpts) promptDeploymentType() error {
 	p := &survey.Select{
 		Message: PromptTypeMessage,
 		Options: DeploymentTypeOptions,
@@ -217,14 +223,27 @@ func (opts *DeploymentOpts) PromptDeploymentType() error {
 		},
 	}
 
-	err := telemetry.TrackAskOne(p, &opts.DeploymentType, nil)
-	if err != nil {
+	return telemetry.TrackAskOne(p, &opts.DeploymentType, nil)
+}
+
+func validateDeploymentType(s string) error {
+	if !search.StringInSliceFold(DeploymentTypeOptions, s) {
+		return fmt.Errorf("%w: %s", errDeploymentTypeNotImplemented, s)
+	}
+	return nil
+}
+
+func (opts *DeploymentOpts) ValidateAndPromptDeploymentType() error {
+	if opts.DeploymentType == "" {
+		if err := opts.promptDeploymentType(); err != nil {
+			return err
+		}
+	} else if err := validateDeploymentType(opts.DeploymentType); err != nil {
 		return err
 	}
-
-	if !strings.EqualFold(opts.DeploymentType, AtlasCluster) && !strings.EqualFold(opts.DeploymentType, LocalCluster) {
-		return fmt.Errorf("%w: %s", errDeploymentTypeNotImplemented, deploymentTypeDescription[opts.DeploymentType])
-	}
-
 	return nil
+}
+
+func (opts *DeploymentOpts) IsAtlasDeploymentType() bool {
+	return strings.EqualFold(opts.DeploymentType, AtlasCluster)
 }

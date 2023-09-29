@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createStreamConnectionOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
@@ -40,12 +37,9 @@ type createStreamConnectionOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createStreamConnectionOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createStreamConnectionOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createStreamConnectionOpts) readData() (*admin.StreamsConnection, error) {
@@ -70,23 +64,31 @@ func (opts *createStreamConnectionOpts) readData() (*admin.StreamsConnection, er
 	return out, nil
 }
 
-func (opts *createStreamConnectionOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createStreamConnectionOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateStreamConnectionApiParams{
 		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 
 		StreamsConnection: data,
 	}
+
 	resp, _, err := opts.client.StreamsApi.CreateStreamConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createStreamConnectionBuilder() *cobra.Command {
@@ -97,12 +99,10 @@ func createStreamConnectionBuilder() *cobra.Command {
 		Use:   "createStreamConnection",
 		Short: "Create One Connection",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -118,7 +118,6 @@ func createStreamConnectionBuilder() *cobra.Command {
 }
 
 type createStreamInstanceOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -126,12 +125,9 @@ type createStreamInstanceOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createStreamInstanceOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createStreamInstanceOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createStreamInstanceOpts) readData() (*admin.StreamsTenant, error) {
@@ -156,22 +152,30 @@ func (opts *createStreamInstanceOpts) readData() (*admin.StreamsTenant, error) {
 	return out, nil
 }
 
-func (opts *createStreamInstanceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createStreamInstanceOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateStreamInstanceApiParams{
 		GroupId: opts.groupId,
 
 		StreamsTenant: data,
 	}
+
 	resp, _, err := opts.client.StreamsApi.CreateStreamInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createStreamInstanceBuilder() *cobra.Command {
@@ -182,12 +186,10 @@ func createStreamInstanceBuilder() *cobra.Command {
 		Use:   "createStreamInstance",
 		Short: "Create One Stream Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -201,33 +203,37 @@ func createStreamInstanceBuilder() *cobra.Command {
 }
 
 type deleteStreamConnectionOpts struct {
-	cli.GlobalOpts
 	client         *admin.APIClient
 	groupId        string
 	tenantName     string
 	connectionName string
 }
 
-func (opts *deleteStreamConnectionOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteStreamConnectionOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteStreamConnectionOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteStreamConnectionOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteStreamConnectionApiParams{
 		GroupId:        opts.groupId,
 		TenantName:     opts.tenantName,
 		ConnectionName: opts.connectionName,
 	}
+
 	resp, _, err := opts.client.StreamsApi.DeleteStreamConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteStreamConnectionBuilder() *cobra.Command {
@@ -236,12 +242,10 @@ func deleteStreamConnectionBuilder() *cobra.Command {
 		Use:   "deleteStreamConnection",
 		Short: "Delete One Stream Connection",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -257,31 +261,35 @@ func deleteStreamConnectionBuilder() *cobra.Command {
 }
 
 type deleteStreamInstanceOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
 }
 
-func (opts *deleteStreamInstanceOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteStreamInstanceOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteStreamInstanceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteStreamInstanceOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteStreamInstanceApiParams{
 		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 	}
+
 	resp, _, err := opts.client.StreamsApi.DeleteStreamInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteStreamInstanceBuilder() *cobra.Command {
@@ -290,12 +298,10 @@ func deleteStreamInstanceBuilder() *cobra.Command {
 		Use:   "deleteStreamInstance",
 		Short: "Delete One Stream Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -309,33 +315,37 @@ func deleteStreamInstanceBuilder() *cobra.Command {
 }
 
 type getStreamConnectionOpts struct {
-	cli.GlobalOpts
 	client         *admin.APIClient
 	groupId        string
 	tenantName     string
 	connectionName string
 }
 
-func (opts *getStreamConnectionOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getStreamConnectionOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getStreamConnectionOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getStreamConnectionOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetStreamConnectionApiParams{
 		GroupId:        opts.groupId,
 		TenantName:     opts.tenantName,
 		ConnectionName: opts.connectionName,
 	}
+
 	resp, _, err := opts.client.StreamsApi.GetStreamConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getStreamConnectionBuilder() *cobra.Command {
@@ -344,12 +354,10 @@ func getStreamConnectionBuilder() *cobra.Command {
 		Use:   "getStreamConnection",
 		Short: "Return One Stream Connection",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -365,33 +373,37 @@ func getStreamConnectionBuilder() *cobra.Command {
 }
 
 type getStreamInstanceOpts struct {
-	cli.GlobalOpts
 	client             *admin.APIClient
 	groupId            string
 	tenantName         string
 	includeConnections bool
 }
 
-func (opts *getStreamInstanceOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getStreamInstanceOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getStreamInstanceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getStreamInstanceOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetStreamInstanceApiParams{
 		GroupId:            opts.groupId,
 		TenantName:         opts.tenantName,
 		IncludeConnections: &opts.includeConnections,
 	}
+
 	resp, _, err := opts.client.StreamsApi.GetStreamInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getStreamInstanceBuilder() *cobra.Command {
@@ -400,12 +412,10 @@ func getStreamInstanceBuilder() *cobra.Command {
 		Use:   "getStreamInstance",
 		Short: "Return One Stream Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -420,7 +430,6 @@ func getStreamInstanceBuilder() *cobra.Command {
 }
 
 type listStreamConnectionsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	tenantName   string
@@ -428,27 +437,32 @@ type listStreamConnectionsOpts struct {
 	pageNum      int
 }
 
-func (opts *listStreamConnectionsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listStreamConnectionsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listStreamConnectionsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listStreamConnectionsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListStreamConnectionsApiParams{
 		GroupId:      opts.groupId,
 		TenantName:   opts.tenantName,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.StreamsApi.ListStreamConnectionsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listStreamConnectionsBuilder() *cobra.Command {
@@ -457,12 +471,10 @@ func listStreamConnectionsBuilder() *cobra.Command {
 		Use:   "listStreamConnections",
 		Short: "Return All Connections Of The Stream Instances",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -478,33 +490,37 @@ func listStreamConnectionsBuilder() *cobra.Command {
 }
 
 type listStreamInstancesOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	itemsPerPage int
 	pageNum      int
 }
 
-func (opts *listStreamInstancesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listStreamInstancesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listStreamInstancesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listStreamInstancesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListStreamInstancesApiParams{
 		GroupId:      opts.groupId,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.StreamsApi.ListStreamInstancesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listStreamInstancesBuilder() *cobra.Command {
@@ -513,12 +529,10 @@ func listStreamInstancesBuilder() *cobra.Command {
 		Use:   "listStreamInstances",
 		Short: "Return All Project Stream Instances",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -532,7 +546,6 @@ func listStreamInstancesBuilder() *cobra.Command {
 }
 
 type updateStreamConnectionOpts struct {
-	cli.GlobalOpts
 	client         *admin.APIClient
 	groupId        string
 	tenantName     string
@@ -542,12 +555,9 @@ type updateStreamConnectionOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateStreamConnectionOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateStreamConnectionOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateStreamConnectionOpts) readData() (*admin.StreamsConnection, error) {
@@ -572,11 +582,12 @@ func (opts *updateStreamConnectionOpts) readData() (*admin.StreamsConnection, er
 	return out, nil
 }
 
-func (opts *updateStreamConnectionOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateStreamConnectionOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateStreamConnectionApiParams{
 		GroupId:        opts.groupId,
 		TenantName:     opts.tenantName,
@@ -584,12 +595,19 @@ func (opts *updateStreamConnectionOpts) Run(ctx context.Context, w io.Writer) er
 
 		StreamsConnection: data,
 	}
+
 	resp, _, err := opts.client.StreamsApi.UpdateStreamConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateStreamConnectionBuilder() *cobra.Command {
@@ -600,12 +618,10 @@ func updateStreamConnectionBuilder() *cobra.Command {
 		Use:   "updateStreamConnection",
 		Short: "Update One Stream Connection",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -623,7 +639,6 @@ func updateStreamConnectionBuilder() *cobra.Command {
 }
 
 type updateStreamInstanceOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
@@ -632,12 +647,9 @@ type updateStreamInstanceOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateStreamInstanceOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateStreamInstanceOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateStreamInstanceOpts) readData() (*admin.StreamsDataProcessRegion, error) {
@@ -662,23 +674,31 @@ func (opts *updateStreamInstanceOpts) readData() (*admin.StreamsDataProcessRegio
 	return out, nil
 }
 
-func (opts *updateStreamInstanceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateStreamInstanceOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateStreamInstanceApiParams{
 		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 
 		StreamsDataProcessRegion: data,
 	}
+
 	resp, _, err := opts.client.StreamsApi.UpdateStreamInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateStreamInstanceBuilder() *cobra.Command {
@@ -689,12 +709,10 @@ func updateStreamInstanceBuilder() *cobra.Command {
 		Use:   "updateStreamInstance",
 		Short: "Update One Stream Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

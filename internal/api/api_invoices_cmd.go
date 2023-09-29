@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createCostExplorerQueryProcessOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 
@@ -39,12 +36,9 @@ type createCostExplorerQueryProcessOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createCostExplorerQueryProcessOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createCostExplorerQueryProcessOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createCostExplorerQueryProcessOpts) readData() (*admin.CostExplorerFilterRequestBody, error) {
@@ -69,22 +63,30 @@ func (opts *createCostExplorerQueryProcessOpts) readData() (*admin.CostExplorerF
 	return out, nil
 }
 
-func (opts *createCostExplorerQueryProcessOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createCostExplorerQueryProcessOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateCostExplorerQueryProcessApiParams{
 		OrgId: opts.orgId,
 
 		CostExplorerFilterRequestBody: data,
 	}
+
 	resp, _, err := opts.client.InvoicesApi.CreateCostExplorerQueryProcessWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createCostExplorerQueryProcessBuilder() *cobra.Command {
@@ -95,12 +97,10 @@ func createCostExplorerQueryProcessBuilder() *cobra.Command {
 		Use:   "createCostExplorerQueryProcess",
 		Short: "Create Cost Explorer query process",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -112,31 +112,35 @@ func createCostExplorerQueryProcessBuilder() *cobra.Command {
 }
 
 type createCostExplorerQueryProcess1Opts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 	token  string
 }
 
-func (opts *createCostExplorerQueryProcess1Opts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createCostExplorerQueryProcess1Opts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *createCostExplorerQueryProcess1Opts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createCostExplorerQueryProcess1Opts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.CreateCostExplorerQueryProcess1ApiParams{
 		OrgId: opts.orgId,
 		Token: opts.token,
 	}
+
 	resp, _, err := opts.client.InvoicesApi.CreateCostExplorerQueryProcess1WithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createCostExplorerQueryProcess1Builder() *cobra.Command {
@@ -145,12 +149,10 @@ func createCostExplorerQueryProcess1Builder() *cobra.Command {
 		Use:   "createCostExplorerQueryProcess1",
 		Short: "Return results from a given Cost Explorer query, or notify that the results are not ready yet.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -162,31 +164,35 @@ func createCostExplorerQueryProcess1Builder() *cobra.Command {
 }
 
 type downloadInvoiceCSVOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	orgId     string
 	invoiceId string
 }
 
-func (opts *downloadInvoiceCSVOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *downloadInvoiceCSVOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *downloadInvoiceCSVOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *downloadInvoiceCSVOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DownloadInvoiceCSVApiParams{
 		OrgId:     opts.orgId,
 		InvoiceId: opts.invoiceId,
 	}
+
 	resp, _, err := opts.client.InvoicesApi.DownloadInvoiceCSVWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func downloadInvoiceCSVBuilder() *cobra.Command {
@@ -195,12 +201,10 @@ func downloadInvoiceCSVBuilder() *cobra.Command {
 		Use:   "downloadInvoiceCSV",
 		Short: "Return One Organization Invoice as CSV",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -212,31 +216,35 @@ func downloadInvoiceCSVBuilder() *cobra.Command {
 }
 
 type getInvoiceOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	orgId     string
 	invoiceId string
 }
 
-func (opts *getInvoiceOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getInvoiceOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getInvoiceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getInvoiceOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetInvoiceApiParams{
 		OrgId:     opts.orgId,
 		InvoiceId: opts.invoiceId,
 	}
+
 	resp, _, err := opts.client.InvoicesApi.GetInvoiceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getInvoiceBuilder() *cobra.Command {
@@ -245,12 +253,10 @@ func getInvoiceBuilder() *cobra.Command {
 		Use:   "getInvoice",
 		Short: "Return One Organization Invoice",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -262,7 +268,6 @@ func getInvoiceBuilder() *cobra.Command {
 }
 
 type listInvoicesOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	orgId        string
 	includeCount bool
@@ -270,27 +275,32 @@ type listInvoicesOpts struct {
 	pageNum      int
 }
 
-func (opts *listInvoicesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listInvoicesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listInvoicesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listInvoicesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListInvoicesApiParams{
 		OrgId:        opts.orgId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.InvoicesApi.ListInvoicesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listInvoicesBuilder() *cobra.Command {
@@ -299,12 +309,10 @@ func listInvoicesBuilder() *cobra.Command {
 		Use:   "listInvoices",
 		Short: "Return All Invoices for One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -317,29 +325,33 @@ func listInvoicesBuilder() *cobra.Command {
 }
 
 type listPendingInvoicesOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 }
 
-func (opts *listPendingInvoicesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listPendingInvoicesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listPendingInvoicesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listPendingInvoicesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListPendingInvoicesApiParams{
 		OrgId: opts.orgId,
 	}
+
 	resp, _, err := opts.client.InvoicesApi.ListPendingInvoicesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listPendingInvoicesBuilder() *cobra.Command {
@@ -348,12 +360,10 @@ func listPendingInvoicesBuilder() *cobra.Command {
 		Use:   "listPendingInvoices",
 		Short: "Return All Pending Invoices for One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)

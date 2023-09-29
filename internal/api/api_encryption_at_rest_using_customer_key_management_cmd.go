@@ -23,37 +23,39 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type getEncryptionAtRestOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *getEncryptionAtRestOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getEncryptionAtRestOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getEncryptionAtRestOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getEncryptionAtRestOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetEncryptionAtRestApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.EncryptionAtRestUsingCustomerKeyManagementApi.GetEncryptionAtRestWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getEncryptionAtRestBuilder() *cobra.Command {
@@ -62,12 +64,10 @@ func getEncryptionAtRestBuilder() *cobra.Command {
 		Use:   "getEncryptionAtRest",
 		Short: "Return One Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -79,7 +79,6 @@ func getEncryptionAtRestBuilder() *cobra.Command {
 }
 
 type updateEncryptionAtRestOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -87,12 +86,9 @@ type updateEncryptionAtRestOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateEncryptionAtRestOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateEncryptionAtRestOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateEncryptionAtRestOpts) readData() (*admin.EncryptionAtRest, error) {
@@ -117,22 +113,30 @@ func (opts *updateEncryptionAtRestOpts) readData() (*admin.EncryptionAtRest, err
 	return out, nil
 }
 
-func (opts *updateEncryptionAtRestOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateEncryptionAtRestOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateEncryptionAtRestApiParams{
 		GroupId: opts.groupId,
 
 		EncryptionAtRest: data,
 	}
+
 	resp, _, err := opts.client.EncryptionAtRestUsingCustomerKeyManagementApi.UpdateEncryptionAtRestWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateEncryptionAtRestBuilder() *cobra.Command {
@@ -143,12 +147,10 @@ func updateEncryptionAtRestBuilder() *cobra.Command {
 		Use:   "updateEncryptionAtRest",
 		Short: "Update Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

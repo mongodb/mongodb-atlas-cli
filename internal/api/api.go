@@ -122,18 +122,6 @@ func (tr *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 	return tr.base.RoundTrip(req)
 }
 
-func convertTime(s *string) *time.Time {
-	if s == nil {
-		return nil
-	}
-
-	r, err := time.Parse(time.RFC3339, *s)
-	if err != nil {
-		return nil
-	}
-	return &r
-}
-
 func Builder() *cobra.Command {
 	const use = "api"
 	cmd := &cobra.Command{

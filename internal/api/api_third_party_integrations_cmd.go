@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createThirdPartyIntegrationOpts struct {
-	cli.GlobalOpts
 	client          *admin.APIClient
 	integrationType string
 	groupId         string
@@ -43,12 +40,9 @@ type createThirdPartyIntegrationOpts struct {
 	fs           afero.Fs
 }
 
-func (opts *createThirdPartyIntegrationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createThirdPartyIntegrationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createThirdPartyIntegrationOpts) readData() (*admin.ThridPartyIntegration, error) {
@@ -73,11 +67,12 @@ func (opts *createThirdPartyIntegrationOpts) readData() (*admin.ThridPartyIntegr
 	return out, nil
 }
 
-func (opts *createThirdPartyIntegrationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createThirdPartyIntegrationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
 		GroupId:         opts.groupId,
@@ -88,12 +83,19 @@ func (opts *createThirdPartyIntegrationOpts) Run(ctx context.Context, w io.Write
 
 		ThridPartyIntegration: data,
 	}
+
 	resp, _, err := opts.client.ThirdPartyIntegrationsApi.CreateThirdPartyIntegrationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createThirdPartyIntegrationBuilder() *cobra.Command {
@@ -104,12 +106,10 @@ func createThirdPartyIntegrationBuilder() *cobra.Command {
 		Use:   "createThirdPartyIntegration",
 		Short: "Configure One Third-Party Service Integration",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
@@ -128,31 +128,35 @@ func createThirdPartyIntegrationBuilder() *cobra.Command {
 }
 
 type deleteThirdPartyIntegrationOpts struct {
-	cli.GlobalOpts
 	client          *admin.APIClient
 	integrationType string
 	groupId         string
 }
 
-func (opts *deleteThirdPartyIntegrationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteThirdPartyIntegrationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteThirdPartyIntegrationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteThirdPartyIntegrationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
 		GroupId:         opts.groupId,
 	}
+
 	resp, _, err := opts.client.ThirdPartyIntegrationsApi.DeleteThirdPartyIntegrationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteThirdPartyIntegrationBuilder() *cobra.Command {
@@ -161,12 +165,10 @@ func deleteThirdPartyIntegrationBuilder() *cobra.Command {
 		Use:   "deleteThirdPartyIntegration",
 		Short: "Remove One Third-Party Service Integration",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
@@ -180,31 +182,35 @@ func deleteThirdPartyIntegrationBuilder() *cobra.Command {
 }
 
 type getThirdPartyIntegrationOpts struct {
-	cli.GlobalOpts
 	client          *admin.APIClient
 	groupId         string
 	integrationType string
 }
 
-func (opts *getThirdPartyIntegrationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getThirdPartyIntegrationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getThirdPartyIntegrationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getThirdPartyIntegrationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetThirdPartyIntegrationApiParams{
 		GroupId:         opts.groupId,
 		IntegrationType: opts.integrationType,
 	}
+
 	resp, _, err := opts.client.ThirdPartyIntegrationsApi.GetThirdPartyIntegrationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getThirdPartyIntegrationBuilder() *cobra.Command {
@@ -213,12 +219,10 @@ func getThirdPartyIntegrationBuilder() *cobra.Command {
 		Use:   "getThirdPartyIntegration",
 		Short: "Return One Third-Party Service Integration",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -232,7 +236,6 @@ func getThirdPartyIntegrationBuilder() *cobra.Command {
 }
 
 type listThirdPartyIntegrationsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -240,27 +243,32 @@ type listThirdPartyIntegrationsOpts struct {
 	pageNum      int
 }
 
-func (opts *listThirdPartyIntegrationsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listThirdPartyIntegrationsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listThirdPartyIntegrationsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listThirdPartyIntegrationsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListThirdPartyIntegrationsApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.ThirdPartyIntegrationsApi.ListThirdPartyIntegrationsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listThirdPartyIntegrationsBuilder() *cobra.Command {
@@ -269,12 +277,10 @@ func listThirdPartyIntegrationsBuilder() *cobra.Command {
 		Use:   "listThirdPartyIntegrations",
 		Short: "Return All Active Third-Party Service Integrations",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -289,7 +295,6 @@ func listThirdPartyIntegrationsBuilder() *cobra.Command {
 }
 
 type updateThirdPartyIntegrationOpts struct {
-	cli.GlobalOpts
 	client          *admin.APIClient
 	integrationType string
 	groupId         string
@@ -301,12 +306,9 @@ type updateThirdPartyIntegrationOpts struct {
 	fs           afero.Fs
 }
 
-func (opts *updateThirdPartyIntegrationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateThirdPartyIntegrationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateThirdPartyIntegrationOpts) readData() (*admin.ThridPartyIntegration, error) {
@@ -331,11 +333,12 @@ func (opts *updateThirdPartyIntegrationOpts) readData() (*admin.ThridPartyIntegr
 	return out, nil
 }
 
-func (opts *updateThirdPartyIntegrationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateThirdPartyIntegrationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
 		GroupId:         opts.groupId,
@@ -346,12 +349,19 @@ func (opts *updateThirdPartyIntegrationOpts) Run(ctx context.Context, w io.Write
 
 		ThridPartyIntegration: data,
 	}
+
 	resp, _, err := opts.client.ThirdPartyIntegrationsApi.UpdateThirdPartyIntegrationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateThirdPartyIntegrationBuilder() *cobra.Command {
@@ -362,12 +372,10 @@ func updateThirdPartyIntegrationBuilder() *cobra.Command {
 		Use:   "updateThirdPartyIntegration",
 		Short: "Update One Third-Party Service Integration",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)

@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createLegacyBackupRestoreJobOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -40,12 +37,9 @@ type createLegacyBackupRestoreJobOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createLegacyBackupRestoreJobOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createLegacyBackupRestoreJobOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createLegacyBackupRestoreJobOpts) readData() (*admin.BackupRestoreJob, error) {
@@ -70,23 +64,31 @@ func (opts *createLegacyBackupRestoreJobOpts) readData() (*admin.BackupRestoreJo
 	return out, nil
 }
 
-func (opts *createLegacyBackupRestoreJobOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createLegacyBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateLegacyBackupRestoreJobApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
 		BackupRestoreJob: data,
 	}
+
 	resp, _, err := opts.client.LegacyBackupRestoreJobsApi.CreateLegacyBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createLegacyBackupRestoreJobBuilder() *cobra.Command {
@@ -97,12 +99,10 @@ func createLegacyBackupRestoreJobBuilder() *cobra.Command {
 		Use:   "createLegacyBackupRestoreJob",
 		Short: "Create One Legacy Backup Restore Job",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

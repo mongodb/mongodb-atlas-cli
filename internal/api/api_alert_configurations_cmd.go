@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createAlertConfigurationOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -39,12 +36,9 @@ type createAlertConfigurationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createAlertConfigurationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createAlertConfigurationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createAlertConfigurationOpts) readData() (*admin.GroupAlertsConfig, error) {
@@ -69,22 +63,30 @@ func (opts *createAlertConfigurationOpts) readData() (*admin.GroupAlertsConfig, 
 	return out, nil
 }
 
-func (opts *createAlertConfigurationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createAlertConfigurationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateAlertConfigurationApiParams{
 		GroupId: opts.groupId,
 
 		GroupAlertsConfig: data,
 	}
+
 	resp, _, err := opts.client.AlertConfigurationsApi.CreateAlertConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createAlertConfigurationBuilder() *cobra.Command {
@@ -95,12 +97,10 @@ func createAlertConfigurationBuilder() *cobra.Command {
 		Use:   "createAlertConfiguration",
 		Short: "Create One Alert Configuration in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -114,31 +114,25 @@ func createAlertConfigurationBuilder() *cobra.Command {
 }
 
 type deleteAlertConfigurationOpts struct {
-	cli.GlobalOpts
 	client        *admin.APIClient
 	groupId       string
 	alertConfigId string
 }
 
-func (opts *deleteAlertConfigurationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteAlertConfigurationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteAlertConfigurationOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *deleteAlertConfigurationOpts) run(ctx context.Context, _ io.Writer) error {
+
 	params := &admin.DeleteAlertConfigurationApiParams{
 		GroupId:       opts.groupId,
 		AlertConfigId: opts.alertConfigId,
 	}
-	_, err := opts.client.AlertConfigurationsApi.DeleteAlertConfigurationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.AlertConfigurationsApi.DeleteAlertConfigurationWithParams(ctx, params).Execute()
+	return err
 }
 
 func deleteAlertConfigurationBuilder() *cobra.Command {
@@ -147,12 +141,10 @@ func deleteAlertConfigurationBuilder() *cobra.Command {
 		Use:   "deleteAlertConfiguration",
 		Short: "Remove One Alert Configuration from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -166,31 +158,35 @@ func deleteAlertConfigurationBuilder() *cobra.Command {
 }
 
 type getAlertConfigurationOpts struct {
-	cli.GlobalOpts
 	client        *admin.APIClient
 	groupId       string
 	alertConfigId string
 }
 
-func (opts *getAlertConfigurationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getAlertConfigurationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getAlertConfigurationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getAlertConfigurationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetAlertConfigurationApiParams{
 		GroupId:       opts.groupId,
 		AlertConfigId: opts.alertConfigId,
 	}
+
 	resp, _, err := opts.client.AlertConfigurationsApi.GetAlertConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getAlertConfigurationBuilder() *cobra.Command {
@@ -199,12 +195,10 @@ func getAlertConfigurationBuilder() *cobra.Command {
 		Use:   "getAlertConfiguration",
 		Short: "Return One Alert Configuration from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -218,26 +212,30 @@ func getAlertConfigurationBuilder() *cobra.Command {
 }
 
 type listAlertConfigurationMatchersFieldNamesOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 }
 
-func (opts *listAlertConfigurationMatchersFieldNamesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listAlertConfigurationMatchersFieldNamesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listAlertConfigurationMatchersFieldNamesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listAlertConfigurationMatchersFieldNamesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListAlertConfigurationMatchersFieldNamesApiParams{}
+
 	resp, _, err := opts.client.AlertConfigurationsApi.ListAlertConfigurationMatchersFieldNamesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listAlertConfigurationMatchersFieldNamesBuilder() *cobra.Command {
@@ -246,12 +244,10 @@ func listAlertConfigurationMatchersFieldNamesBuilder() *cobra.Command {
 		Use:   "listAlertConfigurationMatchersFieldNames",
 		Short: "Get All Alert Configuration Matchers Field Names",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 
@@ -259,7 +255,6 @@ func listAlertConfigurationMatchersFieldNamesBuilder() *cobra.Command {
 }
 
 type listAlertConfigurationsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -267,27 +262,32 @@ type listAlertConfigurationsOpts struct {
 	pageNum      int
 }
 
-func (opts *listAlertConfigurationsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listAlertConfigurationsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listAlertConfigurationsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listAlertConfigurationsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListAlertConfigurationsApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.AlertConfigurationsApi.ListAlertConfigurationsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listAlertConfigurationsBuilder() *cobra.Command {
@@ -296,12 +296,10 @@ func listAlertConfigurationsBuilder() *cobra.Command {
 		Use:   "listAlertConfigurations",
 		Short: "Return All Alert Configurations for One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -316,7 +314,6 @@ func listAlertConfigurationsBuilder() *cobra.Command {
 }
 
 type listAlertConfigurationsByAlertIdOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	alertId      string
@@ -325,15 +322,13 @@ type listAlertConfigurationsByAlertIdOpts struct {
 	pageNum      int
 }
 
-func (opts *listAlertConfigurationsByAlertIdOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listAlertConfigurationsByAlertIdOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listAlertConfigurationsByAlertIdOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listAlertConfigurationsByAlertIdOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListAlertConfigurationsByAlertIdApiParams{
 		GroupId:      opts.groupId,
 		AlertId:      opts.alertId,
@@ -341,12 +336,19 @@ func (opts *listAlertConfigurationsByAlertIdOpts) Run(ctx context.Context, w io.
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.AlertConfigurationsApi.ListAlertConfigurationsByAlertIdWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listAlertConfigurationsByAlertIdBuilder() *cobra.Command {
@@ -355,12 +357,10 @@ func listAlertConfigurationsByAlertIdBuilder() *cobra.Command {
 		Use:   "listAlertConfigurationsByAlertId",
 		Short: "Return All Alert Configurations Set for One Alert",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -377,7 +377,6 @@ func listAlertConfigurationsByAlertIdBuilder() *cobra.Command {
 }
 
 type toggleAlertConfigurationOpts struct {
-	cli.GlobalOpts
 	client        *admin.APIClient
 	groupId       string
 	alertConfigId string
@@ -386,12 +385,9 @@ type toggleAlertConfigurationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *toggleAlertConfigurationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *toggleAlertConfigurationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *toggleAlertConfigurationOpts) readData() (*admin.AlertsToggle, error) {
@@ -416,23 +412,31 @@ func (opts *toggleAlertConfigurationOpts) readData() (*admin.AlertsToggle, error
 	return out, nil
 }
 
-func (opts *toggleAlertConfigurationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *toggleAlertConfigurationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.ToggleAlertConfigurationApiParams{
 		GroupId:       opts.groupId,
 		AlertConfigId: opts.alertConfigId,
 
 		AlertsToggle: data,
 	}
+
 	resp, _, err := opts.client.AlertConfigurationsApi.ToggleAlertConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func toggleAlertConfigurationBuilder() *cobra.Command {
@@ -443,12 +447,10 @@ func toggleAlertConfigurationBuilder() *cobra.Command {
 		Use:   "toggleAlertConfiguration",
 		Short: "Toggle One State of One Alert Configuration in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -464,7 +466,6 @@ func toggleAlertConfigurationBuilder() *cobra.Command {
 }
 
 type updateAlertConfigurationOpts struct {
-	cli.GlobalOpts
 	client        *admin.APIClient
 	groupId       string
 	alertConfigId string
@@ -473,12 +474,9 @@ type updateAlertConfigurationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateAlertConfigurationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateAlertConfigurationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateAlertConfigurationOpts) readData() (*admin.GroupAlertsConfig, error) {
@@ -503,23 +501,31 @@ func (opts *updateAlertConfigurationOpts) readData() (*admin.GroupAlertsConfig, 
 	return out, nil
 }
 
-func (opts *updateAlertConfigurationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateAlertConfigurationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateAlertConfigurationApiParams{
 		GroupId:       opts.groupId,
 		AlertConfigId: opts.alertConfigId,
 
 		GroupAlertsConfig: data,
 	}
+
 	resp, _, err := opts.client.AlertConfigurationsApi.UpdateAlertConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateAlertConfigurationBuilder() *cobra.Command {
@@ -530,12 +536,10 @@ func updateAlertConfigurationBuilder() *cobra.Command {
 		Use:   "updateAlertConfiguration",
 		Short: "Update One Alert Configuration for One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

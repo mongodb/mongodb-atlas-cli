@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createPrivateEndpointOpts struct {
-	cli.GlobalOpts
 	client            *admin.APIClient
 	groupId           string
 	cloudProvider     string
@@ -41,12 +38,9 @@ type createPrivateEndpointOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createPrivateEndpointOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createPrivateEndpointOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createPrivateEndpointOpts) readData() (*admin.CreateEndpointRequest, error) {
@@ -71,11 +65,12 @@ func (opts *createPrivateEndpointOpts) readData() (*admin.CreateEndpointRequest,
 	return out, nil
 }
 
-func (opts *createPrivateEndpointOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreatePrivateEndpointApiParams{
 		GroupId:           opts.groupId,
 		CloudProvider:     opts.cloudProvider,
@@ -83,12 +78,19 @@ func (opts *createPrivateEndpointOpts) Run(ctx context.Context, w io.Writer) err
 
 		CreateEndpointRequest: data,
 	}
+
 	resp, _, err := opts.client.PrivateEndpointServicesApi.CreatePrivateEndpointWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createPrivateEndpointBuilder() *cobra.Command {
@@ -99,12 +101,10 @@ func createPrivateEndpointBuilder() *cobra.Command {
 		Use:   "createPrivateEndpoint",
 		Short: "Create One Private Endpoint for One Provider",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -122,7 +122,6 @@ func createPrivateEndpointBuilder() *cobra.Command {
 }
 
 type createPrivateEndpointServiceOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -130,12 +129,9 @@ type createPrivateEndpointServiceOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createPrivateEndpointServiceOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createPrivateEndpointServiceOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createPrivateEndpointServiceOpts) readData() (*admin.CloudProviderEndpointServiceRequest, error) {
@@ -160,22 +156,30 @@ func (opts *createPrivateEndpointServiceOpts) readData() (*admin.CloudProviderEn
 	return out, nil
 }
 
-func (opts *createPrivateEndpointServiceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createPrivateEndpointServiceOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreatePrivateEndpointServiceApiParams{
 		GroupId: opts.groupId,
 
 		CloudProviderEndpointServiceRequest: data,
 	}
+
 	resp, _, err := opts.client.PrivateEndpointServicesApi.CreatePrivateEndpointServiceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createPrivateEndpointServiceBuilder() *cobra.Command {
@@ -186,12 +190,10 @@ func createPrivateEndpointServiceBuilder() *cobra.Command {
 		Use:   "createPrivateEndpointService",
 		Short: "Create One Private Endpoint Service for One Provider",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -205,7 +207,6 @@ func createPrivateEndpointServiceBuilder() *cobra.Command {
 }
 
 type deletePrivateEndpointOpts struct {
-	cli.GlobalOpts
 	client            *admin.APIClient
 	groupId           string
 	cloudProvider     string
@@ -213,27 +214,32 @@ type deletePrivateEndpointOpts struct {
 	endpointServiceId string
 }
 
-func (opts *deletePrivateEndpointOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deletePrivateEndpointOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deletePrivateEndpointOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deletePrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeletePrivateEndpointApiParams{
 		GroupId:           opts.groupId,
 		CloudProvider:     opts.cloudProvider,
 		EndpointId:        opts.endpointId,
 		EndpointServiceId: opts.endpointServiceId,
 	}
+
 	resp, _, err := opts.client.PrivateEndpointServicesApi.DeletePrivateEndpointWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deletePrivateEndpointBuilder() *cobra.Command {
@@ -242,12 +248,10 @@ func deletePrivateEndpointBuilder() *cobra.Command {
 		Use:   "deletePrivateEndpoint",
 		Short: "Remove One Private Endpoint for One Provider",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -265,33 +269,37 @@ func deletePrivateEndpointBuilder() *cobra.Command {
 }
 
 type deletePrivateEndpointServiceOpts struct {
-	cli.GlobalOpts
 	client            *admin.APIClient
 	groupId           string
 	cloudProvider     string
 	endpointServiceId string
 }
 
-func (opts *deletePrivateEndpointServiceOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deletePrivateEndpointServiceOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deletePrivateEndpointServiceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deletePrivateEndpointServiceOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeletePrivateEndpointServiceApiParams{
 		GroupId:           opts.groupId,
 		CloudProvider:     opts.cloudProvider,
 		EndpointServiceId: opts.endpointServiceId,
 	}
+
 	resp, _, err := opts.client.PrivateEndpointServicesApi.DeletePrivateEndpointServiceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deletePrivateEndpointServiceBuilder() *cobra.Command {
@@ -300,12 +308,10 @@ func deletePrivateEndpointServiceBuilder() *cobra.Command {
 		Use:   "deletePrivateEndpointService",
 		Short: "Remove One Private Endpoint Service for One Provider",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -321,7 +327,6 @@ func deletePrivateEndpointServiceBuilder() *cobra.Command {
 }
 
 type getPrivateEndpointOpts struct {
-	cli.GlobalOpts
 	client            *admin.APIClient
 	groupId           string
 	cloudProvider     string
@@ -329,27 +334,32 @@ type getPrivateEndpointOpts struct {
 	endpointServiceId string
 }
 
-func (opts *getPrivateEndpointOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getPrivateEndpointOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getPrivateEndpointOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetPrivateEndpointApiParams{
 		GroupId:           opts.groupId,
 		CloudProvider:     opts.cloudProvider,
 		EndpointId:        opts.endpointId,
 		EndpointServiceId: opts.endpointServiceId,
 	}
+
 	resp, _, err := opts.client.PrivateEndpointServicesApi.GetPrivateEndpointWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getPrivateEndpointBuilder() *cobra.Command {
@@ -358,12 +368,10 @@ func getPrivateEndpointBuilder() *cobra.Command {
 		Use:   "getPrivateEndpoint",
 		Short: "Return One Private Endpoint for One Provider",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -381,33 +389,37 @@ func getPrivateEndpointBuilder() *cobra.Command {
 }
 
 type getPrivateEndpointServiceOpts struct {
-	cli.GlobalOpts
 	client            *admin.APIClient
 	groupId           string
 	cloudProvider     string
 	endpointServiceId string
 }
 
-func (opts *getPrivateEndpointServiceOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getPrivateEndpointServiceOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getPrivateEndpointServiceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getPrivateEndpointServiceOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetPrivateEndpointServiceApiParams{
 		GroupId:           opts.groupId,
 		CloudProvider:     opts.cloudProvider,
 		EndpointServiceId: opts.endpointServiceId,
 	}
+
 	resp, _, err := opts.client.PrivateEndpointServicesApi.GetPrivateEndpointServiceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getPrivateEndpointServiceBuilder() *cobra.Command {
@@ -416,12 +428,10 @@ func getPrivateEndpointServiceBuilder() *cobra.Command {
 		Use:   "getPrivateEndpointService",
 		Short: "Return One Private Endpoint Service for One Provider",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -437,29 +447,33 @@ func getPrivateEndpointServiceBuilder() *cobra.Command {
 }
 
 type getRegionalizedPrivateEndpointSettingOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *getRegionalizedPrivateEndpointSettingOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getRegionalizedPrivateEndpointSettingOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getRegionalizedPrivateEndpointSettingOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getRegionalizedPrivateEndpointSettingOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetRegionalizedPrivateEndpointSettingApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.PrivateEndpointServicesApi.GetRegionalizedPrivateEndpointSettingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
@@ -468,12 +482,10 @@ func getRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 		Use:   "getRegionalizedPrivateEndpointSetting",
 		Short: "Return Regionalized Private Endpoint Status",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -485,31 +497,35 @@ func getRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 }
 
 type listPrivateEndpointServicesOpts struct {
-	cli.GlobalOpts
 	client        *admin.APIClient
 	groupId       string
 	cloudProvider string
 }
 
-func (opts *listPrivateEndpointServicesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listPrivateEndpointServicesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listPrivateEndpointServicesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listPrivateEndpointServicesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListPrivateEndpointServicesApiParams{
 		GroupId:       opts.groupId,
 		CloudProvider: opts.cloudProvider,
 	}
+
 	resp, _, err := opts.client.PrivateEndpointServicesApi.ListPrivateEndpointServicesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listPrivateEndpointServicesBuilder() *cobra.Command {
@@ -518,12 +534,10 @@ func listPrivateEndpointServicesBuilder() *cobra.Command {
 		Use:   "listPrivateEndpointServices",
 		Short: "Return All Private Endpoint Services for One Provider",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -537,7 +551,6 @@ func listPrivateEndpointServicesBuilder() *cobra.Command {
 }
 
 type toggleRegionalizedPrivateEndpointSettingOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -545,12 +558,9 @@ type toggleRegionalizedPrivateEndpointSettingOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *toggleRegionalizedPrivateEndpointSettingOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *toggleRegionalizedPrivateEndpointSettingOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *toggleRegionalizedPrivateEndpointSettingOpts) readData() (*admin.ProjectSettingItem, error) {
@@ -575,22 +585,30 @@ func (opts *toggleRegionalizedPrivateEndpointSettingOpts) readData() (*admin.Pro
 	return out, nil
 }
 
-func (opts *toggleRegionalizedPrivateEndpointSettingOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *toggleRegionalizedPrivateEndpointSettingOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.ToggleRegionalizedPrivateEndpointSettingApiParams{
 		GroupId: opts.groupId,
 
 		ProjectSettingItem: data,
 	}
+
 	resp, _, err := opts.client.PrivateEndpointServicesApi.ToggleRegionalizedPrivateEndpointSettingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func toggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
@@ -601,12 +619,10 @@ func toggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 		Use:   "toggleRegionalizedPrivateEndpointSetting",
 		Short: "Toggle Regionalized Private Endpoint Status",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

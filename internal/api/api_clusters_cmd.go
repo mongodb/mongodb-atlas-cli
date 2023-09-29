@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createClusterOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -39,12 +36,9 @@ type createClusterOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createClusterOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createClusterOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createClusterOpts) readData() (*admin.AdvancedClusterDescription, error) {
@@ -69,22 +63,30 @@ func (opts *createClusterOpts) readData() (*admin.AdvancedClusterDescription, er
 	return out, nil
 }
 
-func (opts *createClusterOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createClusterOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateClusterApiParams{
 		GroupId: opts.groupId,
 
 		AdvancedClusterDescription: data,
 	}
+
 	resp, _, err := opts.client.ClustersApi.CreateClusterWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createClusterBuilder() *cobra.Command {
@@ -95,12 +97,10 @@ func createClusterBuilder() *cobra.Command {
 		Use:   "createCluster",
 		Short: "TEST DESCRIPTION",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -114,33 +114,27 @@ func createClusterBuilder() *cobra.Command {
 }
 
 type deleteClusterOpts struct {
-	cli.GlobalOpts
 	client        *admin.APIClient
 	groupId       string
 	clusterName   string
 	retainBackups bool
 }
 
-func (opts *deleteClusterOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteClusterOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteClusterOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *deleteClusterOpts) run(ctx context.Context, _ io.Writer) error {
+
 	params := &admin.DeleteClusterApiParams{
 		GroupId:       opts.groupId,
 		ClusterName:   opts.clusterName,
 		RetainBackups: &opts.retainBackups,
 	}
-	_, err := opts.client.ClustersApi.DeleteClusterWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.ClustersApi.DeleteClusterWithParams(ctx, params).Execute()
+	return err
 }
 
 func deleteClusterBuilder() *cobra.Command {
@@ -149,12 +143,10 @@ func deleteClusterBuilder() *cobra.Command {
 		Use:   "deleteCluster",
 		Short: "Remove One Multi-Cloud Cluster from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -169,31 +161,35 @@ func deleteClusterBuilder() *cobra.Command {
 }
 
 type getClusterOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 }
 
-func (opts *getClusterOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getClusterOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getClusterOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getClusterOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetClusterApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
+
 	resp, _, err := opts.client.ClustersApi.GetClusterWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getClusterBuilder() *cobra.Command {
@@ -202,12 +198,10 @@ func getClusterBuilder() *cobra.Command {
 		Use:   "getCluster",
 		Short: "Return One Multi-Cloud Cluster from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -221,31 +215,35 @@ func getClusterBuilder() *cobra.Command {
 }
 
 type getClusterAdvancedConfigurationOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 }
 
-func (opts *getClusterAdvancedConfigurationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getClusterAdvancedConfigurationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getClusterAdvancedConfigurationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getClusterAdvancedConfigurationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetClusterAdvancedConfigurationApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
+
 	resp, _, err := opts.client.ClustersApi.GetClusterAdvancedConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getClusterAdvancedConfigurationBuilder() *cobra.Command {
@@ -254,12 +252,10 @@ func getClusterAdvancedConfigurationBuilder() *cobra.Command {
 		Use:   "getClusterAdvancedConfiguration",
 		Short: "Return One Advanced Configuration Options for One Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -273,31 +269,35 @@ func getClusterAdvancedConfigurationBuilder() *cobra.Command {
 }
 
 type getClusterStatusOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 }
 
-func (opts *getClusterStatusOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getClusterStatusOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getClusterStatusOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getClusterStatusOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetClusterStatusApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
+
 	resp, _, err := opts.client.ClustersApi.GetClusterStatusWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getClusterStatusBuilder() *cobra.Command {
@@ -306,12 +306,10 @@ func getClusterStatusBuilder() *cobra.Command {
 		Use:   "getClusterStatus",
 		Short: "Return Status of All Cluster Operations",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -325,31 +323,35 @@ func getClusterStatusBuilder() *cobra.Command {
 }
 
 type getSampleDatasetLoadStatusOpts struct {
-	cli.GlobalOpts
 	client          *admin.APIClient
 	groupId         string
 	sampleDatasetId string
 }
 
-func (opts *getSampleDatasetLoadStatusOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getSampleDatasetLoadStatusOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getSampleDatasetLoadStatusOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getSampleDatasetLoadStatusOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetSampleDatasetLoadStatusApiParams{
 		GroupId:         opts.groupId,
 		SampleDatasetId: opts.sampleDatasetId,
 	}
+
 	resp, _, err := opts.client.ClustersApi.GetSampleDatasetLoadStatusWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getSampleDatasetLoadStatusBuilder() *cobra.Command {
@@ -358,12 +360,10 @@ func getSampleDatasetLoadStatusBuilder() *cobra.Command {
 		Use:   "getSampleDatasetLoadStatus",
 		Short: "Check Status of Cluster Sample Dataset Request",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -377,7 +377,6 @@ func getSampleDatasetLoadStatusBuilder() *cobra.Command {
 }
 
 type listCloudProviderRegionsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -387,15 +386,13 @@ type listCloudProviderRegionsOpts struct {
 	tier         string
 }
 
-func (opts *listCloudProviderRegionsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listCloudProviderRegionsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listCloudProviderRegionsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listCloudProviderRegionsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListCloudProviderRegionsApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
@@ -404,12 +401,19 @@ func (opts *listCloudProviderRegionsOpts) Run(ctx context.Context, w io.Writer) 
 		Providers:    &opts.providers,
 		Tier:         &opts.tier,
 	}
+
 	resp, _, err := opts.client.ClustersApi.ListCloudProviderRegionsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listCloudProviderRegionsBuilder() *cobra.Command {
@@ -418,12 +422,10 @@ func listCloudProviderRegionsBuilder() *cobra.Command {
 		Use:   "listCloudProviderRegions",
 		Short: "Return All Cloud Provider Regions",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -440,7 +442,6 @@ func listCloudProviderRegionsBuilder() *cobra.Command {
 }
 
 type listClustersOpts struct {
-	cli.GlobalOpts
 	client                            *admin.APIClient
 	groupId                           string
 	includeCount                      bool
@@ -449,15 +450,13 @@ type listClustersOpts struct {
 	includeDeletedWithRetainedBackups bool
 }
 
-func (opts *listClustersOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listClustersOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listClustersOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listClustersOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListClustersApiParams{
 		GroupId:                           opts.groupId,
 		IncludeCount:                      &opts.includeCount,
@@ -465,12 +464,19 @@ func (opts *listClustersOpts) Run(ctx context.Context, w io.Writer) error {
 		PageNum:                           &opts.pageNum,
 		IncludeDeletedWithRetainedBackups: &opts.includeDeletedWithRetainedBackups,
 	}
+
 	resp, _, err := opts.client.ClustersApi.ListClustersWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listClustersBuilder() *cobra.Command {
@@ -479,12 +485,10 @@ func listClustersBuilder() *cobra.Command {
 		Use:   "listClusters",
 		Short: "Return All Clusters in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -500,33 +504,37 @@ func listClustersBuilder() *cobra.Command {
 }
 
 type listClustersForAllProjectsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
 }
 
-func (opts *listClustersForAllProjectsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listClustersForAllProjectsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listClustersForAllProjectsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listClustersForAllProjectsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListClustersForAllProjectsApiParams{
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.ClustersApi.ListClustersForAllProjectsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listClustersForAllProjectsBuilder() *cobra.Command {
@@ -535,12 +543,10 @@ func listClustersForAllProjectsBuilder() *cobra.Command {
 		Use:   "listClustersForAllProjects",
 		Short: "Return All Authorized Clusters in All Projects",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
@@ -551,31 +557,35 @@ func listClustersForAllProjectsBuilder() *cobra.Command {
 }
 
 type loadSampleDatasetOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 	name    string
 }
 
-func (opts *loadSampleDatasetOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *loadSampleDatasetOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *loadSampleDatasetOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *loadSampleDatasetOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.LoadSampleDatasetApiParams{
 		GroupId: opts.groupId,
 		Name:    opts.name,
 	}
+
 	resp, _, err := opts.client.ClustersApi.LoadSampleDatasetWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func loadSampleDatasetBuilder() *cobra.Command {
@@ -584,12 +594,10 @@ func loadSampleDatasetBuilder() *cobra.Command {
 		Use:   "loadSampleDataset",
 		Short: "Load Sample Dataset Request into Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -603,31 +611,25 @@ func loadSampleDatasetBuilder() *cobra.Command {
 }
 
 type testFailoverOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 }
 
-func (opts *testFailoverOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *testFailoverOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *testFailoverOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *testFailoverOpts) run(ctx context.Context, _ io.Writer) error {
+
 	params := &admin.TestFailoverApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
-	_, err := opts.client.ClustersApi.TestFailoverWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.ClustersApi.TestFailoverWithParams(ctx, params).Execute()
+	return err
 }
 
 func testFailoverBuilder() *cobra.Command {
@@ -636,12 +638,10 @@ func testFailoverBuilder() *cobra.Command {
 		Use:   "testFailover",
 		Short: "Test Failover for One Multi-Cloud Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -655,7 +655,6 @@ func testFailoverBuilder() *cobra.Command {
 }
 
 type updateClusterOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -664,12 +663,9 @@ type updateClusterOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateClusterOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateClusterOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateClusterOpts) readData() (*admin.AdvancedClusterDescription, error) {
@@ -694,23 +690,31 @@ func (opts *updateClusterOpts) readData() (*admin.AdvancedClusterDescription, er
 	return out, nil
 }
 
-func (opts *updateClusterOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateClusterOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateClusterApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
 		AdvancedClusterDescription: data,
 	}
+
 	resp, _, err := opts.client.ClustersApi.UpdateClusterWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateClusterBuilder() *cobra.Command {
@@ -721,12 +725,10 @@ func updateClusterBuilder() *cobra.Command {
 		Use:   "updateCluster",
 		Short: "Modify One Multi-Cloud Cluster from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -742,7 +744,6 @@ func updateClusterBuilder() *cobra.Command {
 }
 
 type updateClusterAdvancedConfigurationOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -751,12 +752,9 @@ type updateClusterAdvancedConfigurationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateClusterAdvancedConfigurationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateClusterAdvancedConfigurationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateClusterAdvancedConfigurationOpts) readData() (*admin.ClusterDescriptionProcessArgs, error) {
@@ -781,23 +779,31 @@ func (opts *updateClusterAdvancedConfigurationOpts) readData() (*admin.ClusterDe
 	return out, nil
 }
 
-func (opts *updateClusterAdvancedConfigurationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateClusterAdvancedConfigurationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateClusterAdvancedConfigurationApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
 		ClusterDescriptionProcessArgs: data,
 	}
+
 	resp, _, err := opts.client.ClustersApi.UpdateClusterAdvancedConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateClusterAdvancedConfigurationBuilder() *cobra.Command {
@@ -808,12 +814,10 @@ func updateClusterAdvancedConfigurationBuilder() *cobra.Command {
 		Use:   "updateClusterAdvancedConfiguration",
 		Short: "Update Advanced Configuration Options for One Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -829,7 +833,6 @@ func updateClusterAdvancedConfigurationBuilder() *cobra.Command {
 }
 
 type upgradeSharedClusterOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -837,12 +840,9 @@ type upgradeSharedClusterOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *upgradeSharedClusterOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *upgradeSharedClusterOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *upgradeSharedClusterOpts) readData() (*admin.LegacyAtlasCluster, error) {
@@ -867,22 +867,30 @@ func (opts *upgradeSharedClusterOpts) readData() (*admin.LegacyAtlasCluster, err
 	return out, nil
 }
 
-func (opts *upgradeSharedClusterOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *upgradeSharedClusterOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpgradeSharedClusterApiParams{
 		GroupId: opts.groupId,
 
 		LegacyAtlasCluster: data,
 	}
+
 	resp, _, err := opts.client.ClustersApi.UpgradeSharedClusterWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func upgradeSharedClusterBuilder() *cobra.Command {
@@ -893,12 +901,10 @@ func upgradeSharedClusterBuilder() *cobra.Command {
 		Use:   "upgradeSharedCluster",
 		Short: "Upgrade One Shared-tier Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -912,7 +918,6 @@ func upgradeSharedClusterBuilder() *cobra.Command {
 }
 
 type upgradeSharedClusterToServerlessOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -920,12 +925,9 @@ type upgradeSharedClusterToServerlessOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *upgradeSharedClusterToServerlessOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *upgradeSharedClusterToServerlessOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *upgradeSharedClusterToServerlessOpts) readData() (*admin.ServerlessInstanceDescription, error) {
@@ -950,22 +952,30 @@ func (opts *upgradeSharedClusterToServerlessOpts) readData() (*admin.ServerlessI
 	return out, nil
 }
 
-func (opts *upgradeSharedClusterToServerlessOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *upgradeSharedClusterToServerlessOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpgradeSharedClusterToServerlessApiParams{
 		GroupId: opts.groupId,
 
 		ServerlessInstanceDescription: data,
 	}
+
 	resp, _, err := opts.client.ClustersApi.UpgradeSharedClusterToServerlessWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func upgradeSharedClusterToServerlessBuilder() *cobra.Command {
@@ -976,12 +986,10 @@ func upgradeSharedClusterToServerlessBuilder() *cobra.Command {
 		Use:   "upgradeSharedClusterToServerless",
 		Short: "Upgrades One Shared-Tier Cluster to the Serverless Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

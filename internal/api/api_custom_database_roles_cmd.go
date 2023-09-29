@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createCustomDatabaseRoleOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -39,12 +36,9 @@ type createCustomDatabaseRoleOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createCustomDatabaseRoleOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createCustomDatabaseRoleOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createCustomDatabaseRoleOpts) readData() (*admin.UserCustomDBRole, error) {
@@ -69,22 +63,30 @@ func (opts *createCustomDatabaseRoleOpts) readData() (*admin.UserCustomDBRole, e
 	return out, nil
 }
 
-func (opts *createCustomDatabaseRoleOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createCustomDatabaseRoleOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateCustomDatabaseRoleApiParams{
 		GroupId: opts.groupId,
 
 		UserCustomDBRole: data,
 	}
+
 	resp, _, err := opts.client.CustomDatabaseRolesApi.CreateCustomDatabaseRoleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createCustomDatabaseRoleBuilder() *cobra.Command {
@@ -95,12 +97,10 @@ func createCustomDatabaseRoleBuilder() *cobra.Command {
 		Use:   "createCustomDatabaseRole",
 		Short: "Create One Custom Role",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -114,31 +114,25 @@ func createCustomDatabaseRoleBuilder() *cobra.Command {
 }
 
 type deleteCustomDatabaseRoleOpts struct {
-	cli.GlobalOpts
 	client   *admin.APIClient
 	groupId  string
 	roleName string
 }
 
-func (opts *deleteCustomDatabaseRoleOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteCustomDatabaseRoleOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteCustomDatabaseRoleOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *deleteCustomDatabaseRoleOpts) run(ctx context.Context, _ io.Writer) error {
+
 	params := &admin.DeleteCustomDatabaseRoleApiParams{
 		GroupId:  opts.groupId,
 		RoleName: opts.roleName,
 	}
-	_, err := opts.client.CustomDatabaseRolesApi.DeleteCustomDatabaseRoleWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.CustomDatabaseRolesApi.DeleteCustomDatabaseRoleWithParams(ctx, params).Execute()
+	return err
 }
 
 func deleteCustomDatabaseRoleBuilder() *cobra.Command {
@@ -147,12 +141,10 @@ func deleteCustomDatabaseRoleBuilder() *cobra.Command {
 		Use:   "deleteCustomDatabaseRole",
 		Short: "Remove One Custom Role from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -166,31 +158,35 @@ func deleteCustomDatabaseRoleBuilder() *cobra.Command {
 }
 
 type getCustomDatabaseRoleOpts struct {
-	cli.GlobalOpts
 	client   *admin.APIClient
 	groupId  string
 	roleName string
 }
 
-func (opts *getCustomDatabaseRoleOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getCustomDatabaseRoleOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getCustomDatabaseRoleOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getCustomDatabaseRoleOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetCustomDatabaseRoleApiParams{
 		GroupId:  opts.groupId,
 		RoleName: opts.roleName,
 	}
+
 	resp, _, err := opts.client.CustomDatabaseRolesApi.GetCustomDatabaseRoleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getCustomDatabaseRoleBuilder() *cobra.Command {
@@ -199,12 +195,10 @@ func getCustomDatabaseRoleBuilder() *cobra.Command {
 		Use:   "getCustomDatabaseRole",
 		Short: "Return One Custom Role in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -218,29 +212,33 @@ func getCustomDatabaseRoleBuilder() *cobra.Command {
 }
 
 type listCustomDatabaseRolesOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *listCustomDatabaseRolesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listCustomDatabaseRolesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listCustomDatabaseRolesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listCustomDatabaseRolesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListCustomDatabaseRolesApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.CustomDatabaseRolesApi.ListCustomDatabaseRolesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listCustomDatabaseRolesBuilder() *cobra.Command {
@@ -249,12 +247,10 @@ func listCustomDatabaseRolesBuilder() *cobra.Command {
 		Use:   "listCustomDatabaseRoles",
 		Short: "Return All Custom Roles in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -266,7 +262,6 @@ func listCustomDatabaseRolesBuilder() *cobra.Command {
 }
 
 type updateCustomDatabaseRoleOpts struct {
-	cli.GlobalOpts
 	client   *admin.APIClient
 	groupId  string
 	roleName string
@@ -275,12 +270,9 @@ type updateCustomDatabaseRoleOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateCustomDatabaseRoleOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateCustomDatabaseRoleOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateCustomDatabaseRoleOpts) readData() (*admin.UpdateCustomDBRole, error) {
@@ -305,23 +297,31 @@ func (opts *updateCustomDatabaseRoleOpts) readData() (*admin.UpdateCustomDBRole,
 	return out, nil
 }
 
-func (opts *updateCustomDatabaseRoleOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateCustomDatabaseRoleOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateCustomDatabaseRoleApiParams{
 		GroupId:  opts.groupId,
 		RoleName: opts.roleName,
 
 		UpdateCustomDBRole: data,
 	}
+
 	resp, _, err := opts.client.CustomDatabaseRolesApi.UpdateCustomDatabaseRoleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateCustomDatabaseRoleBuilder() *cobra.Command {
@@ -332,12 +332,10 @@ func updateCustomDatabaseRoleBuilder() *cobra.Command {
 		Use:   "updateCustomDatabaseRole",
 		Short: "Update One Custom Role in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

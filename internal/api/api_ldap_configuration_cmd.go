@@ -23,37 +23,39 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type deleteLDAPConfigurationOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *deleteLDAPConfigurationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteLDAPConfigurationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteLDAPConfigurationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteLDAPConfigurationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.LDAPConfigurationApi.DeleteLDAPConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteLDAPConfigurationBuilder() *cobra.Command {
@@ -62,12 +64,10 @@ func deleteLDAPConfigurationBuilder() *cobra.Command {
 		Use:   "deleteLDAPConfiguration",
 		Short: "Remove the Current LDAP User to DN Mapping",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -79,29 +79,33 @@ func deleteLDAPConfigurationBuilder() *cobra.Command {
 }
 
 type getLDAPConfigurationOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *getLDAPConfigurationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getLDAPConfigurationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getLDAPConfigurationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getLDAPConfigurationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.LDAPConfigurationApi.GetLDAPConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getLDAPConfigurationBuilder() *cobra.Command {
@@ -110,12 +114,10 @@ func getLDAPConfigurationBuilder() *cobra.Command {
 		Use:   "getLDAPConfiguration",
 		Short: "Return the Current LDAP or X.509 Configuration",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -127,31 +129,35 @@ func getLDAPConfigurationBuilder() *cobra.Command {
 }
 
 type getLDAPConfigurationStatusOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	groupId   string
 	requestId string
 }
 
-func (opts *getLDAPConfigurationStatusOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getLDAPConfigurationStatusOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getLDAPConfigurationStatusOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getLDAPConfigurationStatusOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetLDAPConfigurationStatusApiParams{
 		GroupId:   opts.groupId,
 		RequestId: opts.requestId,
 	}
+
 	resp, _, err := opts.client.LDAPConfigurationApi.GetLDAPConfigurationStatusWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getLDAPConfigurationStatusBuilder() *cobra.Command {
@@ -160,12 +166,10 @@ func getLDAPConfigurationStatusBuilder() *cobra.Command {
 		Use:   "getLDAPConfigurationStatus",
 		Short: "Return the Status of One Verify LDAP Configuration Request",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -179,7 +183,6 @@ func getLDAPConfigurationStatusBuilder() *cobra.Command {
 }
 
 type saveLDAPConfigurationOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -187,12 +190,9 @@ type saveLDAPConfigurationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *saveLDAPConfigurationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *saveLDAPConfigurationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *saveLDAPConfigurationOpts) readData() (*admin.UserSecurity, error) {
@@ -217,22 +217,30 @@ func (opts *saveLDAPConfigurationOpts) readData() (*admin.UserSecurity, error) {
 	return out, nil
 }
 
-func (opts *saveLDAPConfigurationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *saveLDAPConfigurationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.SaveLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 
 		UserSecurity: data,
 	}
+
 	resp, _, err := opts.client.LDAPConfigurationApi.SaveLDAPConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func saveLDAPConfigurationBuilder() *cobra.Command {
@@ -243,12 +251,10 @@ func saveLDAPConfigurationBuilder() *cobra.Command {
 		Use:   "saveLDAPConfiguration",
 		Short: "Edit the LDAP or X.509 Configuration",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -262,7 +268,6 @@ func saveLDAPConfigurationBuilder() *cobra.Command {
 }
 
 type verifyLDAPConfigurationOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -270,12 +275,9 @@ type verifyLDAPConfigurationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *verifyLDAPConfigurationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *verifyLDAPConfigurationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *verifyLDAPConfigurationOpts) readData() (*admin.LDAPVerifyConnectivityJobRequestParams, error) {
@@ -300,22 +302,30 @@ func (opts *verifyLDAPConfigurationOpts) readData() (*admin.LDAPVerifyConnectivi
 	return out, nil
 }
 
-func (opts *verifyLDAPConfigurationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *verifyLDAPConfigurationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.VerifyLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 
 		LDAPVerifyConnectivityJobRequestParams: data,
 	}
+
 	resp, _, err := opts.client.LDAPConfigurationApi.VerifyLDAPConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func verifyLDAPConfigurationBuilder() *cobra.Command {
@@ -326,12 +336,10 @@ func verifyLDAPConfigurationBuilder() *cobra.Command {
 		Use:   "verifyLDAPConfiguration",
 		Short: "Verify the LDAP Configuration in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

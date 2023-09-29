@@ -23,37 +23,39 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type getAWSCustomDNSOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *getAWSCustomDNSOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getAWSCustomDNSOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getAWSCustomDNSOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getAWSCustomDNSOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetAWSCustomDNSApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.AWSClustersDNSApi.GetAWSCustomDNSWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getAWSCustomDNSBuilder() *cobra.Command {
@@ -62,12 +64,10 @@ func getAWSCustomDNSBuilder() *cobra.Command {
 		Use:   "getAWSCustomDNS",
 		Short: "Return One Custom DNS Configuration for Atlas Clusters on AWS",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -79,7 +79,6 @@ func getAWSCustomDNSBuilder() *cobra.Command {
 }
 
 type toggleAWSCustomDNSOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -87,12 +86,9 @@ type toggleAWSCustomDNSOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *toggleAWSCustomDNSOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *toggleAWSCustomDNSOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *toggleAWSCustomDNSOpts) readData() (*admin.AWSCustomDNSEnabled, error) {
@@ -117,22 +113,30 @@ func (opts *toggleAWSCustomDNSOpts) readData() (*admin.AWSCustomDNSEnabled, erro
 	return out, nil
 }
 
-func (opts *toggleAWSCustomDNSOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *toggleAWSCustomDNSOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.ToggleAWSCustomDNSApiParams{
 		GroupId: opts.groupId,
 
 		AWSCustomDNSEnabled: data,
 	}
+
 	resp, _, err := opts.client.AWSClustersDNSApi.ToggleAWSCustomDNSWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func toggleAWSCustomDNSBuilder() *cobra.Command {
@@ -143,12 +147,10 @@ func toggleAWSCustomDNSBuilder() *cobra.Command {
 		Use:   "toggleAWSCustomDNS",
 		Short: "Toggle State of One Custom DNS Configuration for Atlas Clusters on AWS",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

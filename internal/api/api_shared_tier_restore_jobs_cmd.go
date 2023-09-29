@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createSharedClusterBackupRestoreJobOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	clusterName string
 	groupId     string
@@ -40,12 +37,9 @@ type createSharedClusterBackupRestoreJobOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createSharedClusterBackupRestoreJobOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createSharedClusterBackupRestoreJobOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createSharedClusterBackupRestoreJobOpts) readData() (*admin.TenantRestore, error) {
@@ -70,23 +64,31 @@ func (opts *createSharedClusterBackupRestoreJobOpts) readData() (*admin.TenantRe
 	return out, nil
 }
 
-func (opts *createSharedClusterBackupRestoreJobOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createSharedClusterBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateSharedClusterBackupRestoreJobApiParams{
 		ClusterName: opts.clusterName,
 		GroupId:     opts.groupId,
 
 		TenantRestore: data,
 	}
+
 	resp, _, err := opts.client.SharedTierRestoreJobsApi.CreateSharedClusterBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createSharedClusterBackupRestoreJobBuilder() *cobra.Command {
@@ -97,12 +99,10 @@ func createSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 		Use:   "createSharedClusterBackupRestoreJob",
 		Short: "Create One Restore Job from One M2 or M5 Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
@@ -118,33 +118,37 @@ func createSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 }
 
 type getSharedClusterBackupRestoreJobOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	clusterName string
 	groupId     string
 	restoreId   string
 }
 
-func (opts *getSharedClusterBackupRestoreJobOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getSharedClusterBackupRestoreJobOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getSharedClusterBackupRestoreJobOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getSharedClusterBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetSharedClusterBackupRestoreJobApiParams{
 		ClusterName: opts.clusterName,
 		GroupId:     opts.groupId,
 		RestoreId:   opts.restoreId,
 	}
+
 	resp, _, err := opts.client.SharedTierRestoreJobsApi.GetSharedClusterBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getSharedClusterBackupRestoreJobBuilder() *cobra.Command {
@@ -153,12 +157,10 @@ func getSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 		Use:   "getSharedClusterBackupRestoreJob",
 		Short: "Return One Restore Job for One M2 or M5 Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
@@ -174,31 +176,35 @@ func getSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 }
 
 type listSharedClusterBackupRestoreJobsOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	clusterName string
 	groupId     string
 }
 
-func (opts *listSharedClusterBackupRestoreJobsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listSharedClusterBackupRestoreJobsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listSharedClusterBackupRestoreJobsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listSharedClusterBackupRestoreJobsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListSharedClusterBackupRestoreJobsApiParams{
 		ClusterName: opts.clusterName,
 		GroupId:     opts.groupId,
 	}
+
 	resp, _, err := opts.client.SharedTierRestoreJobsApi.ListSharedClusterBackupRestoreJobsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listSharedClusterBackupRestoreJobsBuilder() *cobra.Command {
@@ -207,12 +213,10 @@ func listSharedClusterBackupRestoreJobsBuilder() *cobra.Command {
 		Use:   "listSharedClusterBackupRestoreJobs",
 		Short: "Return All Restore Jobs for One M2 or M5 Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)

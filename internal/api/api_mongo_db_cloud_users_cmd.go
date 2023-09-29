@@ -23,27 +23,21 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createUserOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 
 	filename string
 	fs       afero.Fs
 }
 
-func (opts *createUserOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createUserOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createUserOpts) readData() (*admin.CloudAppUser, error) {
@@ -68,21 +62,29 @@ func (opts *createUserOpts) readData() (*admin.CloudAppUser, error) {
 	return out, nil
 }
 
-func (opts *createUserOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createUserOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateUserApiParams{
 
 		CloudAppUser: data,
 	}
+
 	resp, _, err := opts.client.MongoDBCloudUsersApi.CreateUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createUserBuilder() *cobra.Command {
@@ -93,12 +95,10 @@ func createUserBuilder() *cobra.Command {
 		Use:   "createUser",
 		Short: "Create One MongoDB Cloud User",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 
@@ -108,29 +108,33 @@ func createUserBuilder() *cobra.Command {
 }
 
 type getUserOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	userId string
 }
 
-func (opts *getUserOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getUserOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getUserOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getUserOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetUserApiParams{
 		UserId: opts.userId,
 	}
+
 	resp, _, err := opts.client.MongoDBCloudUsersApi.GetUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getUserBuilder() *cobra.Command {
@@ -139,12 +143,10 @@ func getUserBuilder() *cobra.Command {
 		Use:   "getUser",
 		Short: "Return One MongoDB Cloud User using Its ID",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.userId, "userId", "", `Unique 24-hexadecimal digit string that identifies this user.`)
@@ -154,29 +156,33 @@ func getUserBuilder() *cobra.Command {
 }
 
 type getUserByUsernameOpts struct {
-	cli.GlobalOpts
 	client   *admin.APIClient
 	userName string
 }
 
-func (opts *getUserByUsernameOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getUserByUsernameOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getUserByUsernameOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getUserByUsernameOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetUserByUsernameApiParams{
 		UserName: opts.userName,
 	}
+
 	resp, _, err := opts.client.MongoDBCloudUsersApi.GetUserByUsernameWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getUserByUsernameBuilder() *cobra.Command {
@@ -185,12 +191,10 @@ func getUserByUsernameBuilder() *cobra.Command {
 		Use:   "getUserByUsername",
 		Short: "Return One MongoDB Cloud User using Their Username",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.userName, "userName", "", `Email address that belongs to the MongoDB Cloud user account. You cannot modify this address after creating the user.`)

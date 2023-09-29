@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createServerlessInstanceOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -39,12 +36,9 @@ type createServerlessInstanceOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createServerlessInstanceOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createServerlessInstanceOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createServerlessInstanceOpts) readData() (*admin.ServerlessInstanceDescriptionCreate, error) {
@@ -69,22 +63,30 @@ func (opts *createServerlessInstanceOpts) readData() (*admin.ServerlessInstanceD
 	return out, nil
 }
 
-func (opts *createServerlessInstanceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createServerlessInstanceOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateServerlessInstanceApiParams{
 		GroupId: opts.groupId,
 
 		ServerlessInstanceDescriptionCreate: data,
 	}
+
 	resp, _, err := opts.client.ServerlessInstancesApi.CreateServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createServerlessInstanceBuilder() *cobra.Command {
@@ -95,12 +97,10 @@ func createServerlessInstanceBuilder() *cobra.Command {
 		Use:   "createServerlessInstance",
 		Short: "Create One Serverless Instance in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -114,31 +114,35 @@ func createServerlessInstanceBuilder() *cobra.Command {
 }
 
 type deleteServerlessInstanceOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 	name    string
 }
 
-func (opts *deleteServerlessInstanceOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteServerlessInstanceOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteServerlessInstanceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteServerlessInstanceOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteServerlessInstanceApiParams{
 		GroupId: opts.groupId,
 		Name:    opts.name,
 	}
+
 	resp, _, err := opts.client.ServerlessInstancesApi.DeleteServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteServerlessInstanceBuilder() *cobra.Command {
@@ -147,12 +151,10 @@ func deleteServerlessInstanceBuilder() *cobra.Command {
 		Use:   "deleteServerlessInstance",
 		Short: "Remove One Serverless Instance from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -166,31 +168,35 @@ func deleteServerlessInstanceBuilder() *cobra.Command {
 }
 
 type getServerlessInstanceOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 	name    string
 }
 
-func (opts *getServerlessInstanceOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getServerlessInstanceOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getServerlessInstanceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getServerlessInstanceOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetServerlessInstanceApiParams{
 		GroupId: opts.groupId,
 		Name:    opts.name,
 	}
+
 	resp, _, err := opts.client.ServerlessInstancesApi.GetServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getServerlessInstanceBuilder() *cobra.Command {
@@ -199,12 +205,10 @@ func getServerlessInstanceBuilder() *cobra.Command {
 		Use:   "getServerlessInstance",
 		Short: "Return One Serverless Instance from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -218,7 +222,6 @@ func getServerlessInstanceBuilder() *cobra.Command {
 }
 
 type listServerlessInstancesOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -226,27 +229,32 @@ type listServerlessInstancesOpts struct {
 	pageNum      int
 }
 
-func (opts *listServerlessInstancesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listServerlessInstancesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listServerlessInstancesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listServerlessInstancesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListServerlessInstancesApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.ServerlessInstancesApi.ListServerlessInstancesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listServerlessInstancesBuilder() *cobra.Command {
@@ -255,12 +263,10 @@ func listServerlessInstancesBuilder() *cobra.Command {
 		Use:   "listServerlessInstances",
 		Short: "Return All Serverless Instances from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -275,7 +281,6 @@ func listServerlessInstancesBuilder() *cobra.Command {
 }
 
 type updateServerlessInstanceOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 	name    string
@@ -284,12 +289,9 @@ type updateServerlessInstanceOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateServerlessInstanceOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateServerlessInstanceOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateServerlessInstanceOpts) readData() (*admin.ServerlessInstanceDescriptionUpdate, error) {
@@ -314,23 +316,31 @@ func (opts *updateServerlessInstanceOpts) readData() (*admin.ServerlessInstanceD
 	return out, nil
 }
 
-func (opts *updateServerlessInstanceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateServerlessInstanceOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateServerlessInstanceApiParams{
 		GroupId: opts.groupId,
 		Name:    opts.name,
 
 		ServerlessInstanceDescriptionUpdate: data,
 	}
+
 	resp, _, err := opts.client.ServerlessInstancesApi.UpdateServerlessInstanceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateServerlessInstanceBuilder() *cobra.Command {
@@ -341,12 +351,10 @@ func updateServerlessInstanceBuilder() *cobra.Command {
 		Use:   "updateServerlessInstance",
 		Short: "Update One Serverless Instance in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

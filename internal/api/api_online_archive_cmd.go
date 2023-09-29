@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createOnlineArchiveOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -40,12 +37,9 @@ type createOnlineArchiveOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createOnlineArchiveOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createOnlineArchiveOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createOnlineArchiveOpts) readData() (*admin.BackupOnlineArchiveCreate, error) {
@@ -70,23 +64,31 @@ func (opts *createOnlineArchiveOpts) readData() (*admin.BackupOnlineArchiveCreat
 	return out, nil
 }
 
-func (opts *createOnlineArchiveOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createOnlineArchiveOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateOnlineArchiveApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
 		BackupOnlineArchiveCreate: data,
 	}
+
 	resp, _, err := opts.client.OnlineArchiveApi.CreateOnlineArchiveWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createOnlineArchiveBuilder() *cobra.Command {
@@ -97,12 +99,10 @@ func createOnlineArchiveBuilder() *cobra.Command {
 		Use:   "createOnlineArchive",
 		Short: "Create One Online Archive",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -118,33 +118,37 @@ func createOnlineArchiveBuilder() *cobra.Command {
 }
 
 type deleteOnlineArchiveOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	archiveId   string
 	clusterName string
 }
 
-func (opts *deleteOnlineArchiveOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteOnlineArchiveOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteOnlineArchiveOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteOnlineArchiveOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteOnlineArchiveApiParams{
 		GroupId:     opts.groupId,
 		ArchiveId:   opts.archiveId,
 		ClusterName: opts.clusterName,
 	}
+
 	resp, _, err := opts.client.OnlineArchiveApi.DeleteOnlineArchiveWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteOnlineArchiveBuilder() *cobra.Command {
@@ -153,12 +157,10 @@ func deleteOnlineArchiveBuilder() *cobra.Command {
 		Use:   "deleteOnlineArchive",
 		Short: "Remove One Online Archive",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -174,7 +176,6 @@ func deleteOnlineArchiveBuilder() *cobra.Command {
 }
 
 type downloadOnlineArchiveQueryLogsOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -183,15 +184,13 @@ type downloadOnlineArchiveQueryLogsOpts struct {
 	archiveOnly bool
 }
 
-func (opts *downloadOnlineArchiveQueryLogsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *downloadOnlineArchiveQueryLogsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *downloadOnlineArchiveQueryLogsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *downloadOnlineArchiveQueryLogsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DownloadOnlineArchiveQueryLogsApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
@@ -199,12 +198,19 @@ func (opts *downloadOnlineArchiveQueryLogsOpts) Run(ctx context.Context, w io.Wr
 		EndDate:     &opts.endDate,
 		ArchiveOnly: &opts.archiveOnly,
 	}
+
 	resp, _, err := opts.client.OnlineArchiveApi.DownloadOnlineArchiveQueryLogsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func downloadOnlineArchiveQueryLogsBuilder() *cobra.Command {
@@ -213,12 +219,10 @@ func downloadOnlineArchiveQueryLogsBuilder() *cobra.Command {
 		Use:   "downloadOnlineArchiveQueryLogs",
 		Short: "Download Online Archive Query Logs",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -235,33 +239,37 @@ func downloadOnlineArchiveQueryLogsBuilder() *cobra.Command {
 }
 
 type getOnlineArchiveOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	archiveId   string
 	clusterName string
 }
 
-func (opts *getOnlineArchiveOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getOnlineArchiveOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getOnlineArchiveOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getOnlineArchiveOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetOnlineArchiveApiParams{
 		GroupId:     opts.groupId,
 		ArchiveId:   opts.archiveId,
 		ClusterName: opts.clusterName,
 	}
+
 	resp, _, err := opts.client.OnlineArchiveApi.GetOnlineArchiveWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getOnlineArchiveBuilder() *cobra.Command {
@@ -270,12 +278,10 @@ func getOnlineArchiveBuilder() *cobra.Command {
 		Use:   "getOnlineArchive",
 		Short: "Return One Online Archive",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -291,7 +297,6 @@ func getOnlineArchiveBuilder() *cobra.Command {
 }
 
 type listOnlineArchivesOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	clusterName  string
@@ -300,15 +305,13 @@ type listOnlineArchivesOpts struct {
 	pageNum      int
 }
 
-func (opts *listOnlineArchivesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listOnlineArchivesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listOnlineArchivesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listOnlineArchivesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListOnlineArchivesApiParams{
 		GroupId:      opts.groupId,
 		ClusterName:  opts.clusterName,
@@ -316,12 +319,19 @@ func (opts *listOnlineArchivesOpts) Run(ctx context.Context, w io.Writer) error 
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.OnlineArchiveApi.ListOnlineArchivesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listOnlineArchivesBuilder() *cobra.Command {
@@ -330,12 +340,10 @@ func listOnlineArchivesBuilder() *cobra.Command {
 		Use:   "listOnlineArchives",
 		Short: "Return All Online Archives for One Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -352,7 +360,6 @@ func listOnlineArchivesBuilder() *cobra.Command {
 }
 
 type updateOnlineArchiveOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	archiveId   string
@@ -362,12 +369,9 @@ type updateOnlineArchiveOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateOnlineArchiveOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateOnlineArchiveOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateOnlineArchiveOpts) readData() (*admin.BackupOnlineArchive, error) {
@@ -392,11 +396,12 @@ func (opts *updateOnlineArchiveOpts) readData() (*admin.BackupOnlineArchive, err
 	return out, nil
 }
 
-func (opts *updateOnlineArchiveOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateOnlineArchiveOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateOnlineArchiveApiParams{
 		GroupId:     opts.groupId,
 		ArchiveId:   opts.archiveId,
@@ -404,12 +409,19 @@ func (opts *updateOnlineArchiveOpts) Run(ctx context.Context, w io.Writer) error
 
 		BackupOnlineArchive: data,
 	}
+
 	resp, _, err := opts.client.OnlineArchiveApi.UpdateOnlineArchiveWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateOnlineArchiveBuilder() *cobra.Command {
@@ -420,12 +432,10 @@ func updateOnlineArchiveBuilder() *cobra.Command {
 		Use:   "updateOnlineArchive",
 		Short: "Update One Online Archive",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

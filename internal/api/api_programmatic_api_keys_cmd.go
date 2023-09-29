@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type addProjectApiKeyOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	groupId   string
 	apiUserId string
@@ -40,12 +37,9 @@ type addProjectApiKeyOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *addProjectApiKeyOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *addProjectApiKeyOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *addProjectApiKeyOpts) readData() (*[]admin.UserAccessRoleAssignment, error) {
@@ -70,23 +64,31 @@ func (opts *addProjectApiKeyOpts) readData() (*[]admin.UserAccessRoleAssignment,
 	return out, nil
 }
 
-func (opts *addProjectApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *addProjectApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.AddProjectApiKeyApiParams{
 		GroupId:   opts.groupId,
 		ApiUserId: opts.apiUserId,
 
 		UserAccessRoleAssignment: data,
 	}
+
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.AddProjectApiKeyWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func addProjectApiKeyBuilder() *cobra.Command {
@@ -97,12 +99,10 @@ func addProjectApiKeyBuilder() *cobra.Command {
 		Use:   "addProjectApiKey",
 		Short: "Assign One Organization API Key to One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -118,7 +118,6 @@ func addProjectApiKeyBuilder() *cobra.Command {
 }
 
 type createApiKeyOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 
@@ -126,12 +125,9 @@ type createApiKeyOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createApiKeyOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createApiKeyOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createApiKeyOpts) readData() (*admin.CreateAtlasOrganizationApiKey, error) {
@@ -156,22 +152,30 @@ func (opts *createApiKeyOpts) readData() (*admin.CreateAtlasOrganizationApiKey, 
 	return out, nil
 }
 
-func (opts *createApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateApiKeyApiParams{
 		OrgId: opts.orgId,
 
 		CreateAtlasOrganizationApiKey: data,
 	}
+
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.CreateApiKeyWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createApiKeyBuilder() *cobra.Command {
@@ -182,12 +186,10 @@ func createApiKeyBuilder() *cobra.Command {
 		Use:   "createApiKey",
 		Short: "Create One Organization API Key",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -199,7 +201,6 @@ func createApiKeyBuilder() *cobra.Command {
 }
 
 type createApiKeyAccessListOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	orgId     string
 	apiUserId string
@@ -211,12 +212,9 @@ type createApiKeyAccessListOpts struct {
 	fs           afero.Fs
 }
 
-func (opts *createApiKeyAccessListOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createApiKeyAccessListOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createApiKeyAccessListOpts) readData() (*[]admin.UserAccessList, error) {
@@ -241,11 +239,12 @@ func (opts *createApiKeyAccessListOpts) readData() (*[]admin.UserAccessList, err
 	return out, nil
 }
 
-func (opts *createApiKeyAccessListOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createApiKeyAccessListOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateApiKeyAccessListApiParams{
 		OrgId:     opts.orgId,
 		ApiUserId: opts.apiUserId,
@@ -256,12 +255,19 @@ func (opts *createApiKeyAccessListOpts) Run(ctx context.Context, w io.Writer) er
 
 		UserAccessList: data,
 	}
+
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.CreateApiKeyAccessListWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createApiKeyAccessListBuilder() *cobra.Command {
@@ -272,12 +278,10 @@ func createApiKeyAccessListBuilder() *cobra.Command {
 		Use:   "createApiKeyAccessList",
 		Short: "Create Access List Entries for One Organization API Key",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -294,7 +298,6 @@ func createApiKeyAccessListBuilder() *cobra.Command {
 }
 
 type createProjectApiKeyOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -302,12 +305,9 @@ type createProjectApiKeyOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createProjectApiKeyOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createProjectApiKeyOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createProjectApiKeyOpts) readData() (*admin.CreateAtlasProjectApiKey, error) {
@@ -332,22 +332,30 @@ func (opts *createProjectApiKeyOpts) readData() (*admin.CreateAtlasProjectApiKey
 	return out, nil
 }
 
-func (opts *createProjectApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createProjectApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateProjectApiKeyApiParams{
 		GroupId: opts.groupId,
 
 		CreateAtlasProjectApiKey: data,
 	}
+
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.CreateProjectApiKeyWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createProjectApiKeyBuilder() *cobra.Command {
@@ -358,12 +366,10 @@ func createProjectApiKeyBuilder() *cobra.Command {
 		Use:   "createProjectApiKey",
 		Short: "Create and Assign One Organization API Key to One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -377,31 +383,35 @@ func createProjectApiKeyBuilder() *cobra.Command {
 }
 
 type deleteApiKeyOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	orgId     string
 	apiUserId string
 }
 
-func (opts *deleteApiKeyOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteApiKeyOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteApiKeyOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteApiKeyApiParams{
 		OrgId:     opts.orgId,
 		ApiUserId: opts.apiUserId,
 	}
+
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.DeleteApiKeyWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteApiKeyBuilder() *cobra.Command {
@@ -410,12 +420,10 @@ func deleteApiKeyBuilder() *cobra.Command {
 		Use:   "deleteApiKey",
 		Short: "Remove One Organization API Key",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -427,33 +435,37 @@ func deleteApiKeyBuilder() *cobra.Command {
 }
 
 type deleteApiKeyAccessListEntryOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	orgId     string
 	apiUserId string
 	ipAddress string
 }
 
-func (opts *deleteApiKeyAccessListEntryOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteApiKeyAccessListEntryOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteApiKeyAccessListEntryOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteApiKeyAccessListEntryOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteApiKeyAccessListEntryApiParams{
 		OrgId:     opts.orgId,
 		ApiUserId: opts.apiUserId,
 		IpAddress: opts.ipAddress,
 	}
+
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.DeleteApiKeyAccessListEntryWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteApiKeyAccessListEntryBuilder() *cobra.Command {
@@ -462,12 +474,10 @@ func deleteApiKeyAccessListEntryBuilder() *cobra.Command {
 		Use:   "deleteApiKeyAccessListEntry",
 		Short: "Remove One Access List Entry for One Organization API Key",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -481,31 +491,35 @@ func deleteApiKeyAccessListEntryBuilder() *cobra.Command {
 }
 
 type getApiKeyOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	orgId     string
 	apiUserId string
 }
 
-func (opts *getApiKeyOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getApiKeyOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getApiKeyOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetApiKeyApiParams{
 		OrgId:     opts.orgId,
 		ApiUserId: opts.apiUserId,
 	}
+
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.GetApiKeyWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getApiKeyBuilder() *cobra.Command {
@@ -514,12 +528,10 @@ func getApiKeyBuilder() *cobra.Command {
 		Use:   "getApiKey",
 		Short: "Return One Organization API Key",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -531,33 +543,37 @@ func getApiKeyBuilder() *cobra.Command {
 }
 
 type getApiKeyAccessListOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	orgId     string
 	ipAddress string
 	apiUserId string
 }
 
-func (opts *getApiKeyAccessListOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getApiKeyAccessListOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getApiKeyAccessListOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getApiKeyAccessListOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetApiKeyAccessListApiParams{
 		OrgId:     opts.orgId,
 		IpAddress: opts.ipAddress,
 		ApiUserId: opts.apiUserId,
 	}
+
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.GetApiKeyAccessListWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getApiKeyAccessListBuilder() *cobra.Command {
@@ -566,12 +582,10 @@ func getApiKeyAccessListBuilder() *cobra.Command {
 		Use:   "getApiKeyAccessList",
 		Short: "Return One Access List Entry for One Organization API Key",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -585,7 +599,6 @@ func getApiKeyAccessListBuilder() *cobra.Command {
 }
 
 type listApiKeyAccessListsEntriesOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	orgId        string
 	apiUserId    string
@@ -594,15 +607,13 @@ type listApiKeyAccessListsEntriesOpts struct {
 	pageNum      int
 }
 
-func (opts *listApiKeyAccessListsEntriesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listApiKeyAccessListsEntriesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listApiKeyAccessListsEntriesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listApiKeyAccessListsEntriesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListApiKeyAccessListsEntriesApiParams{
 		OrgId:        opts.orgId,
 		ApiUserId:    opts.apiUserId,
@@ -610,12 +621,19 @@ func (opts *listApiKeyAccessListsEntriesOpts) Run(ctx context.Context, w io.Writ
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.ListApiKeyAccessListsEntriesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listApiKeyAccessListsEntriesBuilder() *cobra.Command {
@@ -624,12 +642,10 @@ func listApiKeyAccessListsEntriesBuilder() *cobra.Command {
 		Use:   "listApiKeyAccessListsEntries",
 		Short: "Return All Access List Entries for One Organization API Key",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -644,7 +660,6 @@ func listApiKeyAccessListsEntriesBuilder() *cobra.Command {
 }
 
 type listApiKeysOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	orgId        string
 	includeCount bool
@@ -652,27 +667,32 @@ type listApiKeysOpts struct {
 	pageNum      int
 }
 
-func (opts *listApiKeysOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listApiKeysOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listApiKeysOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listApiKeysOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListApiKeysApiParams{
 		OrgId:        opts.orgId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.ListApiKeysWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listApiKeysBuilder() *cobra.Command {
@@ -681,12 +701,10 @@ func listApiKeysBuilder() *cobra.Command {
 		Use:   "listApiKeys",
 		Short: "Return All Organization API Keys",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -699,7 +717,6 @@ func listApiKeysBuilder() *cobra.Command {
 }
 
 type listProjectApiKeysOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -707,27 +724,32 @@ type listProjectApiKeysOpts struct {
 	pageNum      int
 }
 
-func (opts *listProjectApiKeysOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listProjectApiKeysOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listProjectApiKeysOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listProjectApiKeysOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListProjectApiKeysApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.ListProjectApiKeysWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listProjectApiKeysBuilder() *cobra.Command {
@@ -736,12 +758,10 @@ func listProjectApiKeysBuilder() *cobra.Command {
 		Use:   "listProjectApiKeys",
 		Short: "Return All Organization API Keys Assigned to One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -756,31 +776,35 @@ func listProjectApiKeysBuilder() *cobra.Command {
 }
 
 type removeProjectApiKeyOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	groupId   string
 	apiUserId string
 }
 
-func (opts *removeProjectApiKeyOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *removeProjectApiKeyOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *removeProjectApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *removeProjectApiKeyOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.RemoveProjectApiKeyApiParams{
 		GroupId:   opts.groupId,
 		ApiUserId: opts.apiUserId,
 	}
+
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.RemoveProjectApiKeyWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func removeProjectApiKeyBuilder() *cobra.Command {
@@ -789,12 +813,10 @@ func removeProjectApiKeyBuilder() *cobra.Command {
 		Use:   "removeProjectApiKey",
 		Short: "Unassign One Organization API Key from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -808,7 +830,6 @@ func removeProjectApiKeyBuilder() *cobra.Command {
 }
 
 type updateApiKeyOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	orgId     string
 	apiUserId string
@@ -817,12 +838,9 @@ type updateApiKeyOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateApiKeyOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateApiKeyOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateApiKeyOpts) readData() (*admin.UpdateAtlasOrganizationApiKey, error) {
@@ -847,23 +865,31 @@ func (opts *updateApiKeyOpts) readData() (*admin.UpdateAtlasOrganizationApiKey, 
 	return out, nil
 }
 
-func (opts *updateApiKeyOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateApiKeyApiParams{
 		OrgId:     opts.orgId,
 		ApiUserId: opts.apiUserId,
 
 		UpdateAtlasOrganizationApiKey: data,
 	}
+
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.UpdateApiKeyWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateApiKeyBuilder() *cobra.Command {
@@ -874,12 +900,10 @@ func updateApiKeyBuilder() *cobra.Command {
 		Use:   "updateApiKey",
 		Short: "Update One Organization API Key",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -893,7 +917,6 @@ func updateApiKeyBuilder() *cobra.Command {
 }
 
 type updateApiKeyRolesOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	groupId   string
 	apiUserId string
@@ -905,12 +928,9 @@ type updateApiKeyRolesOpts struct {
 	fs           afero.Fs
 }
 
-func (opts *updateApiKeyRolesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateApiKeyRolesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateApiKeyRolesOpts) readData() (*admin.UpdateAtlasProjectApiKey, error) {
@@ -935,11 +955,12 @@ func (opts *updateApiKeyRolesOpts) readData() (*admin.UpdateAtlasProjectApiKey, 
 	return out, nil
 }
 
-func (opts *updateApiKeyRolesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateApiKeyRolesOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateApiKeyRolesApiParams{
 		GroupId:   opts.groupId,
 		ApiUserId: opts.apiUserId,
@@ -950,12 +971,19 @@ func (opts *updateApiKeyRolesOpts) Run(ctx context.Context, w io.Writer) error {
 
 		UpdateAtlasProjectApiKey: data,
 	}
+
 	resp, _, err := opts.client.ProgrammaticAPIKeysApi.UpdateApiKeyRolesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateApiKeyRolesBuilder() *cobra.Command {
@@ -966,12 +994,10 @@ func updateApiKeyRolesBuilder() *cobra.Command {
 		Use:   "updateApiKeyRoles",
 		Short: "Update Roles of One Organization API Key to One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

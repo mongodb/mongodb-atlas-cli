@@ -23,41 +23,43 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type cancelBackupRestoreJobOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	clusterName  string
 	restoreJobId string
 }
 
-func (opts *cancelBackupRestoreJobOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *cancelBackupRestoreJobOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *cancelBackupRestoreJobOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *cancelBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.CancelBackupRestoreJobApiParams{
 		GroupId:      opts.groupId,
 		ClusterName:  opts.clusterName,
 		RestoreJobId: opts.restoreJobId,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.CancelBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func cancelBackupRestoreJobBuilder() *cobra.Command {
@@ -66,12 +68,10 @@ func cancelBackupRestoreJobBuilder() *cobra.Command {
 		Use:   "cancelBackupRestoreJob",
 		Short: "Cancel One Restore Job of One Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -87,7 +87,6 @@ func cancelBackupRestoreJobBuilder() *cobra.Command {
 }
 
 type createBackupExportJobOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -96,12 +95,9 @@ type createBackupExportJobOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createBackupExportJobOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createBackupExportJobOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createBackupExportJobOpts) readData() (*admin.DiskBackupExportJobRequest, error) {
@@ -126,23 +122,31 @@ func (opts *createBackupExportJobOpts) readData() (*admin.DiskBackupExportJobReq
 	return out, nil
 }
 
-func (opts *createBackupExportJobOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createBackupExportJobOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateBackupExportJobApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
 		DiskBackupExportJobRequest: data,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.CreateBackupExportJobWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createBackupExportJobBuilder() *cobra.Command {
@@ -153,12 +157,10 @@ func createBackupExportJobBuilder() *cobra.Command {
 		Use:   "createBackupExportJob",
 		Short: "Create One Cloud Backup Snapshot Export Job",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -174,7 +176,6 @@ func createBackupExportJobBuilder() *cobra.Command {
 }
 
 type createBackupRestoreJobOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -183,12 +184,9 @@ type createBackupRestoreJobOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createBackupRestoreJobOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createBackupRestoreJobOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createBackupRestoreJobOpts) readData() (*admin.DiskBackupSnapshotRestoreJob, error) {
@@ -213,23 +211,31 @@ func (opts *createBackupRestoreJobOpts) readData() (*admin.DiskBackupSnapshotRes
 	return out, nil
 }
 
-func (opts *createBackupRestoreJobOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateBackupRestoreJobApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
 		DiskBackupSnapshotRestoreJob: data,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.CreateBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createBackupRestoreJobBuilder() *cobra.Command {
@@ -240,12 +246,10 @@ func createBackupRestoreJobBuilder() *cobra.Command {
 		Use:   "createBackupRestoreJob",
 		Short: "Restore One Snapshot of One Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -261,7 +265,6 @@ func createBackupRestoreJobBuilder() *cobra.Command {
 }
 
 type createExportBucketOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -269,12 +272,9 @@ type createExportBucketOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createExportBucketOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createExportBucketOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createExportBucketOpts) readData() (*admin.DiskBackupSnapshotAWSExportBucket, error) {
@@ -299,22 +299,30 @@ func (opts *createExportBucketOpts) readData() (*admin.DiskBackupSnapshotAWSExpo
 	return out, nil
 }
 
-func (opts *createExportBucketOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createExportBucketOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateExportBucketApiParams{
 		GroupId: opts.groupId,
 
 		DiskBackupSnapshotAWSExportBucket: data,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.CreateExportBucketWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createExportBucketBuilder() *cobra.Command {
@@ -325,12 +333,10 @@ func createExportBucketBuilder() *cobra.Command {
 		Use:   "createExportBucket",
 		Short: "Grant Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -344,7 +350,6 @@ func createExportBucketBuilder() *cobra.Command {
 }
 
 type createServerlessBackupRestoreJobOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -353,12 +358,9 @@ type createServerlessBackupRestoreJobOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createServerlessBackupRestoreJobOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createServerlessBackupRestoreJobOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createServerlessBackupRestoreJobOpts) readData() (*admin.ServerlessBackupRestoreJob, error) {
@@ -383,23 +385,31 @@ func (opts *createServerlessBackupRestoreJobOpts) readData() (*admin.ServerlessB
 	return out, nil
 }
 
-func (opts *createServerlessBackupRestoreJobOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createServerlessBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateServerlessBackupRestoreJobApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
 		ServerlessBackupRestoreJob: data,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.CreateServerlessBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createServerlessBackupRestoreJobBuilder() *cobra.Command {
@@ -410,12 +420,10 @@ func createServerlessBackupRestoreJobBuilder() *cobra.Command {
 		Use:   "createServerlessBackupRestoreJob",
 		Short: "Restore One Snapshot of One Serverless Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -431,31 +439,35 @@ func createServerlessBackupRestoreJobBuilder() *cobra.Command {
 }
 
 type deleteAllBackupSchedulesOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 }
 
-func (opts *deleteAllBackupSchedulesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteAllBackupSchedulesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteAllBackupSchedulesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteAllBackupSchedulesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteAllBackupSchedulesApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.DeleteAllBackupSchedulesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteAllBackupSchedulesBuilder() *cobra.Command {
@@ -464,12 +476,10 @@ func deleteAllBackupSchedulesBuilder() *cobra.Command {
 		Use:   "deleteAllBackupSchedules",
 		Short: "Remove All Cloud Backup Schedules",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -483,31 +493,35 @@ func deleteAllBackupSchedulesBuilder() *cobra.Command {
 }
 
 type deleteExportBucketOpts struct {
-	cli.GlobalOpts
 	client         *admin.APIClient
 	groupId        string
 	exportBucketId string
 }
 
-func (opts *deleteExportBucketOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteExportBucketOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteExportBucketOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteExportBucketOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteExportBucketApiParams{
 		GroupId:        opts.groupId,
 		ExportBucketId: opts.exportBucketId,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.DeleteExportBucketWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteExportBucketBuilder() *cobra.Command {
@@ -516,12 +530,10 @@ func deleteExportBucketBuilder() *cobra.Command {
 		Use:   "deleteExportBucket",
 		Short: "Revoke Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -535,33 +547,37 @@ func deleteExportBucketBuilder() *cobra.Command {
 }
 
 type deleteReplicaSetBackupOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 	snapshotId  string
 }
 
-func (opts *deleteReplicaSetBackupOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteReplicaSetBackupOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteReplicaSetBackupOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteReplicaSetBackupOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteReplicaSetBackupApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId:  opts.snapshotId,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.DeleteReplicaSetBackupWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteReplicaSetBackupBuilder() *cobra.Command {
@@ -570,12 +586,10 @@ func deleteReplicaSetBackupBuilder() *cobra.Command {
 		Use:   "deleteReplicaSetBackup",
 		Short: "Remove One Replica Set Cloud Backup",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -591,33 +605,37 @@ func deleteReplicaSetBackupBuilder() *cobra.Command {
 }
 
 type deleteShardedClusterBackupOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 	snapshotId  string
 }
 
-func (opts *deleteShardedClusterBackupOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteShardedClusterBackupOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteShardedClusterBackupOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteShardedClusterBackupOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteShardedClusterBackupApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId:  opts.snapshotId,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.DeleteShardedClusterBackupWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteShardedClusterBackupBuilder() *cobra.Command {
@@ -626,12 +644,10 @@ func deleteShardedClusterBackupBuilder() *cobra.Command {
 		Use:   "deleteShardedClusterBackup",
 		Short: "Remove One Sharded Cluster Cloud Backup",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -647,33 +663,37 @@ func deleteShardedClusterBackupBuilder() *cobra.Command {
 }
 
 type getBackupExportJobOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 	exportId    string
 }
 
-func (opts *getBackupExportJobOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getBackupExportJobOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getBackupExportJobOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getBackupExportJobOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetBackupExportJobApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 		ExportId:    opts.exportId,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.GetBackupExportJobWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getBackupExportJobBuilder() *cobra.Command {
@@ -682,12 +702,10 @@ func getBackupExportJobBuilder() *cobra.Command {
 		Use:   "getBackupExportJob",
 		Short: "Return One Cloud Backup Snapshot Export Job",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -703,33 +721,37 @@ func getBackupExportJobBuilder() *cobra.Command {
 }
 
 type getBackupRestoreJobOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	clusterName  string
 	restoreJobId string
 }
 
-func (opts *getBackupRestoreJobOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getBackupRestoreJobOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getBackupRestoreJobOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetBackupRestoreJobApiParams{
 		GroupId:      opts.groupId,
 		ClusterName:  opts.clusterName,
 		RestoreJobId: opts.restoreJobId,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.GetBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getBackupRestoreJobBuilder() *cobra.Command {
@@ -738,12 +760,10 @@ func getBackupRestoreJobBuilder() *cobra.Command {
 		Use:   "getBackupRestoreJob",
 		Short: "Return One Restore Job of One Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -759,31 +779,35 @@ func getBackupRestoreJobBuilder() *cobra.Command {
 }
 
 type getBackupScheduleOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 }
 
-func (opts *getBackupScheduleOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getBackupScheduleOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getBackupScheduleOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getBackupScheduleOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetBackupScheduleApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.GetBackupScheduleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getBackupScheduleBuilder() *cobra.Command {
@@ -792,12 +816,10 @@ func getBackupScheduleBuilder() *cobra.Command {
 		Use:   "getBackupSchedule",
 		Short: "Return One Cloud Backup Schedule",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -811,29 +833,33 @@ func getBackupScheduleBuilder() *cobra.Command {
 }
 
 type getDataProtectionSettingsOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *getDataProtectionSettingsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getDataProtectionSettingsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getDataProtectionSettingsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getDataProtectionSettingsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetDataProtectionSettingsApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.GetDataProtectionSettingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getDataProtectionSettingsBuilder() *cobra.Command {
@@ -842,12 +868,10 @@ func getDataProtectionSettingsBuilder() *cobra.Command {
 		Use:   "getDataProtectionSettings",
 		Short: "Return the Backup Compliance Policy settings",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -859,31 +883,35 @@ func getDataProtectionSettingsBuilder() *cobra.Command {
 }
 
 type getExportBucketOpts struct {
-	cli.GlobalOpts
 	client         *admin.APIClient
 	groupId        string
 	exportBucketId string
 }
 
-func (opts *getExportBucketOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getExportBucketOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getExportBucketOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getExportBucketOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetExportBucketApiParams{
 		GroupId:        opts.groupId,
 		ExportBucketId: opts.exportBucketId,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.GetExportBucketWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getExportBucketBuilder() *cobra.Command {
@@ -892,12 +920,10 @@ func getExportBucketBuilder() *cobra.Command {
 		Use:   "getExportBucket",
 		Short: "Return One AWS S3 Bucket Used for Cloud Backup Snapshot Exports",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -911,33 +937,37 @@ func getExportBucketBuilder() *cobra.Command {
 }
 
 type getReplicaSetBackupOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 	snapshotId  string
 }
 
-func (opts *getReplicaSetBackupOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getReplicaSetBackupOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getReplicaSetBackupOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getReplicaSetBackupOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetReplicaSetBackupApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId:  opts.snapshotId,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.GetReplicaSetBackupWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getReplicaSetBackupBuilder() *cobra.Command {
@@ -946,12 +976,10 @@ func getReplicaSetBackupBuilder() *cobra.Command {
 		Use:   "getReplicaSetBackup",
 		Short: "Return One Replica Set Cloud Backup",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -967,33 +995,37 @@ func getReplicaSetBackupBuilder() *cobra.Command {
 }
 
 type getServerlessBackupOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 	snapshotId  string
 }
 
-func (opts *getServerlessBackupOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getServerlessBackupOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getServerlessBackupOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getServerlessBackupOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetServerlessBackupApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId:  opts.snapshotId,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.GetServerlessBackupWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getServerlessBackupBuilder() *cobra.Command {
@@ -1002,12 +1034,10 @@ func getServerlessBackupBuilder() *cobra.Command {
 		Use:   "getServerlessBackup",
 		Short: "Return One Snapshot of One Serverless Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1023,33 +1053,37 @@ func getServerlessBackupBuilder() *cobra.Command {
 }
 
 type getServerlessBackupRestoreJobOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	clusterName  string
 	restoreJobId string
 }
 
-func (opts *getServerlessBackupRestoreJobOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getServerlessBackupRestoreJobOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getServerlessBackupRestoreJobOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getServerlessBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetServerlessBackupRestoreJobApiParams{
 		GroupId:      opts.groupId,
 		ClusterName:  opts.clusterName,
 		RestoreJobId: opts.restoreJobId,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.GetServerlessBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getServerlessBackupRestoreJobBuilder() *cobra.Command {
@@ -1058,12 +1092,10 @@ func getServerlessBackupRestoreJobBuilder() *cobra.Command {
 		Use:   "getServerlessBackupRestoreJob",
 		Short: "Return One Restore Job for One Serverless Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1079,33 +1111,37 @@ func getServerlessBackupRestoreJobBuilder() *cobra.Command {
 }
 
 type getShardedClusterBackupOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 	snapshotId  string
 }
 
-func (opts *getShardedClusterBackupOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getShardedClusterBackupOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getShardedClusterBackupOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getShardedClusterBackupOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetShardedClusterBackupApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId:  opts.snapshotId,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.GetShardedClusterBackupWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getShardedClusterBackupBuilder() *cobra.Command {
@@ -1114,12 +1150,10 @@ func getShardedClusterBackupBuilder() *cobra.Command {
 		Use:   "getShardedClusterBackup",
 		Short: "Return One Sharded Cluster Cloud Backup",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1135,7 +1169,6 @@ func getShardedClusterBackupBuilder() *cobra.Command {
 }
 
 type listBackupExportJobsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	clusterName  string
@@ -1144,15 +1177,13 @@ type listBackupExportJobsOpts struct {
 	pageNum      int
 }
 
-func (opts *listBackupExportJobsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listBackupExportJobsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listBackupExportJobsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listBackupExportJobsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListBackupExportJobsApiParams{
 		GroupId:      opts.groupId,
 		ClusterName:  opts.clusterName,
@@ -1160,12 +1191,19 @@ func (opts *listBackupExportJobsOpts) Run(ctx context.Context, w io.Writer) erro
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.ListBackupExportJobsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listBackupExportJobsBuilder() *cobra.Command {
@@ -1174,12 +1212,10 @@ func listBackupExportJobsBuilder() *cobra.Command {
 		Use:   "listBackupExportJobs",
 		Short: "Return All Cloud Backup Snapshot Export Jobs",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1196,7 +1232,6 @@ func listBackupExportJobsBuilder() *cobra.Command {
 }
 
 type listBackupRestoreJobsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	clusterName  string
@@ -1205,15 +1240,13 @@ type listBackupRestoreJobsOpts struct {
 	pageNum      int
 }
 
-func (opts *listBackupRestoreJobsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listBackupRestoreJobsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listBackupRestoreJobsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listBackupRestoreJobsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListBackupRestoreJobsApiParams{
 		GroupId:      opts.groupId,
 		ClusterName:  opts.clusterName,
@@ -1221,12 +1254,19 @@ func (opts *listBackupRestoreJobsOpts) Run(ctx context.Context, w io.Writer) err
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.ListBackupRestoreJobsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listBackupRestoreJobsBuilder() *cobra.Command {
@@ -1235,12 +1275,10 @@ func listBackupRestoreJobsBuilder() *cobra.Command {
 		Use:   "listBackupRestoreJobs",
 		Short: "Return All Restore Jobs for One Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1257,7 +1295,6 @@ func listBackupRestoreJobsBuilder() *cobra.Command {
 }
 
 type listExportBucketsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -1265,27 +1302,32 @@ type listExportBucketsOpts struct {
 	pageNum      int
 }
 
-func (opts *listExportBucketsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listExportBucketsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listExportBucketsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listExportBucketsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListExportBucketsApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.ListExportBucketsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listExportBucketsBuilder() *cobra.Command {
@@ -1294,12 +1336,10 @@ func listExportBucketsBuilder() *cobra.Command {
 		Use:   "listExportBuckets",
 		Short: "Return All AWS S3 Buckets Used for Cloud Backup Snapshot Exports",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1314,7 +1354,6 @@ func listExportBucketsBuilder() *cobra.Command {
 }
 
 type listReplicaSetBackupsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	clusterName  string
@@ -1323,15 +1362,13 @@ type listReplicaSetBackupsOpts struct {
 	pageNum      int
 }
 
-func (opts *listReplicaSetBackupsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listReplicaSetBackupsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listReplicaSetBackupsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listReplicaSetBackupsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListReplicaSetBackupsApiParams{
 		GroupId:      opts.groupId,
 		ClusterName:  opts.clusterName,
@@ -1339,12 +1376,19 @@ func (opts *listReplicaSetBackupsOpts) Run(ctx context.Context, w io.Writer) err
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.ListReplicaSetBackupsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listReplicaSetBackupsBuilder() *cobra.Command {
@@ -1353,12 +1397,10 @@ func listReplicaSetBackupsBuilder() *cobra.Command {
 		Use:   "listReplicaSetBackups",
 		Short: "Return All Replica Set Cloud Backups",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1375,7 +1417,6 @@ func listReplicaSetBackupsBuilder() *cobra.Command {
 }
 
 type listServerlessBackupRestoreJobsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	clusterName  string
@@ -1384,15 +1425,13 @@ type listServerlessBackupRestoreJobsOpts struct {
 	pageNum      int
 }
 
-func (opts *listServerlessBackupRestoreJobsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listServerlessBackupRestoreJobsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listServerlessBackupRestoreJobsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listServerlessBackupRestoreJobsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListServerlessBackupRestoreJobsApiParams{
 		GroupId:      opts.groupId,
 		ClusterName:  opts.clusterName,
@@ -1400,12 +1439,19 @@ func (opts *listServerlessBackupRestoreJobsOpts) Run(ctx context.Context, w io.W
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.ListServerlessBackupRestoreJobsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listServerlessBackupRestoreJobsBuilder() *cobra.Command {
@@ -1414,12 +1460,10 @@ func listServerlessBackupRestoreJobsBuilder() *cobra.Command {
 		Use:   "listServerlessBackupRestoreJobs",
 		Short: "Return All Restore Jobs for One Serverless Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1436,7 +1480,6 @@ func listServerlessBackupRestoreJobsBuilder() *cobra.Command {
 }
 
 type listServerlessBackupsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	clusterName  string
@@ -1445,15 +1488,13 @@ type listServerlessBackupsOpts struct {
 	pageNum      int
 }
 
-func (opts *listServerlessBackupsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listServerlessBackupsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listServerlessBackupsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listServerlessBackupsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListServerlessBackupsApiParams{
 		GroupId:      opts.groupId,
 		ClusterName:  opts.clusterName,
@@ -1461,12 +1502,19 @@ func (opts *listServerlessBackupsOpts) Run(ctx context.Context, w io.Writer) err
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.ListServerlessBackupsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listServerlessBackupsBuilder() *cobra.Command {
@@ -1475,12 +1523,10 @@ func listServerlessBackupsBuilder() *cobra.Command {
 		Use:   "listServerlessBackups",
 		Short: "Return All Snapshots of One Serverless Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1497,31 +1543,35 @@ func listServerlessBackupsBuilder() *cobra.Command {
 }
 
 type listShardedClusterBackupsOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 }
 
-func (opts *listShardedClusterBackupsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listShardedClusterBackupsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listShardedClusterBackupsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listShardedClusterBackupsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListShardedClusterBackupsApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.ListShardedClusterBackupsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listShardedClusterBackupsBuilder() *cobra.Command {
@@ -1530,12 +1580,10 @@ func listShardedClusterBackupsBuilder() *cobra.Command {
 		Use:   "listShardedClusterBackups",
 		Short: "Return All Sharded Cluster Cloud Backups",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1549,7 +1597,6 @@ func listShardedClusterBackupsBuilder() *cobra.Command {
 }
 
 type takeSnapshotOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -1558,12 +1605,9 @@ type takeSnapshotOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *takeSnapshotOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *takeSnapshotOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *takeSnapshotOpts) readData() (*admin.DiskBackupOnDemandSnapshotRequest, error) {
@@ -1588,23 +1632,31 @@ func (opts *takeSnapshotOpts) readData() (*admin.DiskBackupOnDemandSnapshotReque
 	return out, nil
 }
 
-func (opts *takeSnapshotOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *takeSnapshotOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.TakeSnapshotApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
 		DiskBackupOnDemandSnapshotRequest: data,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.TakeSnapshotWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func takeSnapshotBuilder() *cobra.Command {
@@ -1615,12 +1667,10 @@ func takeSnapshotBuilder() *cobra.Command {
 		Use:   "takeSnapshot",
 		Short: "Take One On-Demand Snapshot",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1636,7 +1686,6 @@ func takeSnapshotBuilder() *cobra.Command {
 }
 
 type updateBackupScheduleOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -1645,12 +1694,9 @@ type updateBackupScheduleOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateBackupScheduleOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateBackupScheduleOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateBackupScheduleOpts) readData() (*admin.DiskBackupSnapshotSchedule, error) {
@@ -1675,23 +1721,31 @@ func (opts *updateBackupScheduleOpts) readData() (*admin.DiskBackupSnapshotSched
 	return out, nil
 }
 
-func (opts *updateBackupScheduleOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateBackupScheduleOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateBackupScheduleApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
 		DiskBackupSnapshotSchedule: data,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.UpdateBackupScheduleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateBackupScheduleBuilder() *cobra.Command {
@@ -1702,12 +1756,10 @@ func updateBackupScheduleBuilder() *cobra.Command {
 		Use:   "updateBackupSchedule",
 		Short: "Update Cloud Backup Schedule for One Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1723,7 +1775,6 @@ func updateBackupScheduleBuilder() *cobra.Command {
 }
 
 type updateDataProtectionSettingsOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -1731,12 +1782,9 @@ type updateDataProtectionSettingsOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateDataProtectionSettingsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateDataProtectionSettingsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateDataProtectionSettingsOpts) readData() (*admin.DataProtectionSettings, error) {
@@ -1761,22 +1809,30 @@ func (opts *updateDataProtectionSettingsOpts) readData() (*admin.DataProtectionS
 	return out, nil
 }
 
-func (opts *updateDataProtectionSettingsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateDataProtectionSettingsOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateDataProtectionSettingsApiParams{
 		GroupId: opts.groupId,
 
 		DataProtectionSettings: data,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.UpdateDataProtectionSettingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateDataProtectionSettingsBuilder() *cobra.Command {
@@ -1787,12 +1843,10 @@ func updateDataProtectionSettingsBuilder() *cobra.Command {
 		Use:   "updateDataProtectionSettings",
 		Short: "Update or enable the Backup Compliance Policy settings",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1806,7 +1860,6 @@ func updateDataProtectionSettingsBuilder() *cobra.Command {
 }
 
 type updateSnapshotRetentionOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -1816,12 +1869,9 @@ type updateSnapshotRetentionOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateSnapshotRetentionOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateSnapshotRetentionOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateSnapshotRetentionOpts) readData() (*admin.BackupSnapshotRetention, error) {
@@ -1846,11 +1896,12 @@ func (opts *updateSnapshotRetentionOpts) readData() (*admin.BackupSnapshotRetent
 	return out, nil
 }
 
-func (opts *updateSnapshotRetentionOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateSnapshotRetentionOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateSnapshotRetentionApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
@@ -1858,12 +1909,19 @@ func (opts *updateSnapshotRetentionOpts) Run(ctx context.Context, w io.Writer) e
 
 		BackupSnapshotRetention: data,
 	}
+
 	resp, _, err := opts.client.CloudBackupsApi.UpdateSnapshotRetentionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateSnapshotRetentionBuilder() *cobra.Command {
@@ -1874,12 +1932,10 @@ func updateSnapshotRetentionBuilder() *cobra.Command {
 		Use:   "updateSnapshotRetention",
 		Short: "Change Expiration Date for One Cloud Backup",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

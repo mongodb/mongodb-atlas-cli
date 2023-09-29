@@ -18,42 +18,47 @@ package api
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"io"
+	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type getOrganizationEventOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	orgId      string
 	eventId    string
 	includeRaw bool
 }
 
-func (opts *getOrganizationEventOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getOrganizationEventOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getOrganizationEventOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getOrganizationEventOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetOrganizationEventApiParams{
 		OrgId:      opts.orgId,
 		EventId:    opts.eventId,
 		IncludeRaw: &opts.includeRaw,
 	}
+
 	resp, _, err := opts.client.EventsApi.GetOrganizationEventWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getOrganizationEventBuilder() *cobra.Command {
@@ -62,12 +67,10 @@ func getOrganizationEventBuilder() *cobra.Command {
 		Use:   "getOrganizationEvent",
 		Short: "Return One Event from One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -80,33 +83,37 @@ func getOrganizationEventBuilder() *cobra.Command {
 }
 
 type getProjectEventOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	eventId    string
 	includeRaw bool
 }
 
-func (opts *getProjectEventOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getProjectEventOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getProjectEventOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getProjectEventOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetProjectEventApiParams{
 		GroupId:    opts.groupId,
 		EventId:    opts.eventId,
 		IncludeRaw: &opts.includeRaw,
 	}
+
 	resp, _, err := opts.client.EventsApi.GetProjectEventWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getProjectEventBuilder() *cobra.Command {
@@ -115,12 +122,10 @@ func getProjectEventBuilder() *cobra.Command {
 		Use:   "getProjectEvent",
 		Short: "Return One Event from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -135,7 +140,6 @@ func getProjectEventBuilder() *cobra.Command {
 }
 
 type listOrganizationEventsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	orgId        string
 	includeCount bool
@@ -147,15 +151,31 @@ type listOrganizationEventsOpts struct {
 	minDate      string
 }
 
-func (opts *listOrganizationEventsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listOrganizationEventsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listOrganizationEventsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listOrganizationEventsOpts) run(ctx context.Context, w io.Writer) error {
+
+	var maxDate *time.Time
+	var errMaxDate error
+	if opts.maxDate != "" {
+		*maxDate, errMaxDate = time.Parse(time.RFC3339, opts.maxDate)
+		if errMaxDate != nil {
+			return errMaxDate
+		}
+	}
+
+	var minDate *time.Time
+	var errMinDate error
+	if opts.minDate != "" {
+		*minDate, errMinDate = time.Parse(time.RFC3339, opts.minDate)
+		if errMinDate != nil {
+			return errMinDate
+		}
+	}
+
 	params := &admin.ListOrganizationEventsApiParams{
 		OrgId:        opts.orgId,
 		IncludeCount: &opts.includeCount,
@@ -163,15 +183,22 @@ func (opts *listOrganizationEventsOpts) Run(ctx context.Context, w io.Writer) er
 		PageNum:      &opts.pageNum,
 		EventType:    &opts.eventType,
 		IncludeRaw:   &opts.includeRaw,
-		MaxDate:      convertTime(&opts.maxDate),
-		MinDate:      convertTime(&opts.minDate),
+		MaxDate:      maxDate,
+		MinDate:      minDate,
 	}
+
 	resp, _, err := opts.client.EventsApi.ListOrganizationEventsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listOrganizationEventsBuilder() *cobra.Command {
@@ -180,12 +207,10 @@ func listOrganizationEventsBuilder() *cobra.Command {
 		Use:   "listOrganizationEvents",
 		Short: "Return All Events from One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -204,7 +229,6 @@ func listOrganizationEventsBuilder() *cobra.Command {
 }
 
 type listProjectEventsOpts struct {
-	cli.GlobalOpts
 	client            *admin.APIClient
 	groupId           string
 	includeCount      bool
@@ -218,15 +242,31 @@ type listProjectEventsOpts struct {
 	minDate           string
 }
 
-func (opts *listProjectEventsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listProjectEventsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listProjectEventsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listProjectEventsOpts) run(ctx context.Context, w io.Writer) error {
+
+	var maxDate *time.Time
+	var errMaxDate error
+	if opts.maxDate != "" {
+		*maxDate, errMaxDate = time.Parse(time.RFC3339, opts.maxDate)
+		if errMaxDate != nil {
+			return errMaxDate
+		}
+	}
+
+	var minDate *time.Time
+	var errMinDate error
+	if opts.minDate != "" {
+		*minDate, errMinDate = time.Parse(time.RFC3339, opts.minDate)
+		if errMinDate != nil {
+			return errMinDate
+		}
+	}
+
 	params := &admin.ListProjectEventsApiParams{
 		GroupId:           opts.groupId,
 		IncludeCount:      &opts.includeCount,
@@ -236,15 +276,22 @@ func (opts *listProjectEventsOpts) Run(ctx context.Context, w io.Writer) error {
 		EventType:         &opts.eventType,
 		ExcludedEventType: &opts.excludedEventType,
 		IncludeRaw:        &opts.includeRaw,
-		MaxDate:           convertTime(&opts.maxDate),
-		MinDate:           convertTime(&opts.minDate),
+		MaxDate:           maxDate,
+		MinDate:           minDate,
 	}
+
 	resp, _, err := opts.client.EventsApi.ListProjectEventsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listProjectEventsBuilder() *cobra.Command {
@@ -253,12 +300,10 @@ func listProjectEventsBuilder() *cobra.Command {
 		Use:   "listProjectEvents",
 		Short: "Return All Events from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

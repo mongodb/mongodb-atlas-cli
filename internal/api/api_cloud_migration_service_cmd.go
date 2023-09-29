@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createLinkTokenOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 
@@ -39,12 +36,9 @@ type createLinkTokenOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createLinkTokenOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createLinkTokenOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createLinkTokenOpts) readData() (*admin.TargetOrgRequest, error) {
@@ -69,22 +63,30 @@ func (opts *createLinkTokenOpts) readData() (*admin.TargetOrgRequest, error) {
 	return out, nil
 }
 
-func (opts *createLinkTokenOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createLinkTokenOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateLinkTokenApiParams{
 		OrgId: opts.orgId,
 
 		TargetOrgRequest: data,
 	}
+
 	resp, _, err := opts.client.CloudMigrationServiceApi.CreateLinkTokenWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createLinkTokenBuilder() *cobra.Command {
@@ -95,12 +97,10 @@ func createLinkTokenBuilder() *cobra.Command {
 		Use:   "createLinkToken",
 		Short: "Create One Link-Token",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -112,7 +112,6 @@ func createLinkTokenBuilder() *cobra.Command {
 }
 
 type createPushMigrationOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -120,12 +119,9 @@ type createPushMigrationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createPushMigrationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createPushMigrationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createPushMigrationOpts) readData() (*admin.LiveMigrationRequest, error) {
@@ -150,22 +146,30 @@ func (opts *createPushMigrationOpts) readData() (*admin.LiveMigrationRequest, er
 	return out, nil
 }
 
-func (opts *createPushMigrationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createPushMigrationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreatePushMigrationApiParams{
 		GroupId: opts.groupId,
 
 		LiveMigrationRequest: data,
 	}
+
 	resp, _, err := opts.client.CloudMigrationServiceApi.CreatePushMigrationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createPushMigrationBuilder() *cobra.Command {
@@ -176,12 +180,10 @@ func createPushMigrationBuilder() *cobra.Command {
 		Use:   "createPushMigration",
 		Short: "Migrate One Local Managed Cluster to MongoDB Atlas",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -195,31 +197,25 @@ func createPushMigrationBuilder() *cobra.Command {
 }
 
 type cutoverMigrationOpts struct {
-	cli.GlobalOpts
 	client          *admin.APIClient
 	groupId         string
 	liveMigrationId string
 }
 
-func (opts *cutoverMigrationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *cutoverMigrationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *cutoverMigrationOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *cutoverMigrationOpts) run(ctx context.Context, _ io.Writer) error {
+
 	params := &admin.CutoverMigrationApiParams{
 		GroupId:         opts.groupId,
 		LiveMigrationId: opts.liveMigrationId,
 	}
-	_, err := opts.client.CloudMigrationServiceApi.CutoverMigrationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.CloudMigrationServiceApi.CutoverMigrationWithParams(ctx, params).Execute()
+	return err
 }
 
 func cutoverMigrationBuilder() *cobra.Command {
@@ -228,12 +224,10 @@ func cutoverMigrationBuilder() *cobra.Command {
 		Use:   "cutoverMigration",
 		Short: "Cut Over the Migrated Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -247,29 +241,33 @@ func cutoverMigrationBuilder() *cobra.Command {
 }
 
 type deleteLinkTokenOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 }
 
-func (opts *deleteLinkTokenOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteLinkTokenOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteLinkTokenOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteLinkTokenOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteLinkTokenApiParams{
 		OrgId: opts.orgId,
 	}
+
 	resp, _, err := opts.client.CloudMigrationServiceApi.DeleteLinkTokenWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteLinkTokenBuilder() *cobra.Command {
@@ -278,12 +276,10 @@ func deleteLinkTokenBuilder() *cobra.Command {
 		Use:   "deleteLinkToken",
 		Short: "Remove One Link-Token",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -293,31 +289,35 @@ func deleteLinkTokenBuilder() *cobra.Command {
 }
 
 type getPushMigrationOpts struct {
-	cli.GlobalOpts
 	client          *admin.APIClient
 	groupId         string
 	liveMigrationId string
 }
 
-func (opts *getPushMigrationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getPushMigrationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getPushMigrationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getPushMigrationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetPushMigrationApiParams{
 		GroupId:         opts.groupId,
 		LiveMigrationId: opts.liveMigrationId,
 	}
+
 	resp, _, err := opts.client.CloudMigrationServiceApi.GetPushMigrationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getPushMigrationBuilder() *cobra.Command {
@@ -326,12 +326,10 @@ func getPushMigrationBuilder() *cobra.Command {
 		Use:   "getPushMigration",
 		Short: "Return One Migration Job",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -345,31 +343,35 @@ func getPushMigrationBuilder() *cobra.Command {
 }
 
 type getValidationStatusOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	validationId string
 }
 
-func (opts *getValidationStatusOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getValidationStatusOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getValidationStatusOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getValidationStatusOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetValidationStatusApiParams{
 		GroupId:      opts.groupId,
 		ValidationId: opts.validationId,
 	}
+
 	resp, _, err := opts.client.CloudMigrationServiceApi.GetValidationStatusWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getValidationStatusBuilder() *cobra.Command {
@@ -378,12 +380,10 @@ func getValidationStatusBuilder() *cobra.Command {
 		Use:   "getValidationStatus",
 		Short: "Return One Migration Validation Job",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -397,29 +397,33 @@ func getValidationStatusBuilder() *cobra.Command {
 }
 
 type listSourceProjectsOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 }
 
-func (opts *listSourceProjectsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listSourceProjectsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listSourceProjectsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listSourceProjectsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListSourceProjectsApiParams{
 		OrgId: opts.orgId,
 	}
+
 	resp, _, err := opts.client.CloudMigrationServiceApi.ListSourceProjectsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listSourceProjectsBuilder() *cobra.Command {
@@ -428,12 +432,10 @@ func listSourceProjectsBuilder() *cobra.Command {
 		Use:   "listSourceProjects",
 		Short: "Return All Projects Available for Migration",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -443,7 +445,6 @@ func listSourceProjectsBuilder() *cobra.Command {
 }
 
 type validateMigrationOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -451,12 +452,9 @@ type validateMigrationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *validateMigrationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *validateMigrationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *validateMigrationOpts) readData() (*admin.LiveMigrationRequest, error) {
@@ -481,22 +479,30 @@ func (opts *validateMigrationOpts) readData() (*admin.LiveMigrationRequest, erro
 	return out, nil
 }
 
-func (opts *validateMigrationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *validateMigrationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.ValidateMigrationApiParams{
 		GroupId: opts.groupId,
 
 		LiveMigrationRequest: data,
 	}
+
 	resp, _, err := opts.client.CloudMigrationServiceApi.ValidateMigrationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func validateMigrationBuilder() *cobra.Command {
@@ -507,12 +513,10 @@ func validateMigrationBuilder() *cobra.Command {
 		Use:   "validateMigration",
 		Short: "Validate One Migration Request",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

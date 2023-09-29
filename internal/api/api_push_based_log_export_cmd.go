@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createPushBasedLogConfigurationOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -39,12 +36,9 @@ type createPushBasedLogConfigurationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createPushBasedLogConfigurationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createPushBasedLogConfigurationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createPushBasedLogConfigurationOpts) readData() (*admin.PushBasedLogExportProject, error) {
@@ -69,22 +63,20 @@ func (opts *createPushBasedLogConfigurationOpts) readData() (*admin.PushBasedLog
 	return out, nil
 }
 
-func (opts *createPushBasedLogConfigurationOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *createPushBasedLogConfigurationOpts) run(ctx context.Context, _ io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreatePushBasedLogConfigurationApiParams{
 		GroupId: opts.groupId,
 
 		PushBasedLogExportProject: data,
 	}
-	_, err := opts.client.PushBasedLogExportApi.CreatePushBasedLogConfigurationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.PushBasedLogExportApi.CreatePushBasedLogConfigurationWithParams(ctx, params).Execute()
+	return err
 }
 
 func createPushBasedLogConfigurationBuilder() *cobra.Command {
@@ -95,12 +87,10 @@ func createPushBasedLogConfigurationBuilder() *cobra.Command {
 		Use:   "createPushBasedLogConfiguration",
 		Short: "Enable the push-based log export feature for a project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -114,29 +104,23 @@ func createPushBasedLogConfigurationBuilder() *cobra.Command {
 }
 
 type deletePushBasedLogConfigurationOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *deletePushBasedLogConfigurationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deletePushBasedLogConfigurationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deletePushBasedLogConfigurationOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *deletePushBasedLogConfigurationOpts) run(ctx context.Context, _ io.Writer) error {
+
 	params := &admin.DeletePushBasedLogConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.client.PushBasedLogExportApi.DeletePushBasedLogConfigurationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.PushBasedLogExportApi.DeletePushBasedLogConfigurationWithParams(ctx, params).Execute()
+	return err
 }
 
 func deletePushBasedLogConfigurationBuilder() *cobra.Command {
@@ -145,12 +129,10 @@ func deletePushBasedLogConfigurationBuilder() *cobra.Command {
 		Use:   "deletePushBasedLogConfiguration",
 		Short: "Disable the push-based log export feature for a project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -162,29 +144,33 @@ func deletePushBasedLogConfigurationBuilder() *cobra.Command {
 }
 
 type getPushBasedLogConfigurationOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *getPushBasedLogConfigurationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getPushBasedLogConfigurationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getPushBasedLogConfigurationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getPushBasedLogConfigurationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetPushBasedLogConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.PushBasedLogExportApi.GetPushBasedLogConfigurationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getPushBasedLogConfigurationBuilder() *cobra.Command {
@@ -193,12 +179,10 @@ func getPushBasedLogConfigurationBuilder() *cobra.Command {
 		Use:   "getPushBasedLogConfiguration",
 		Short: "Get the push-based log export configuration for a project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -210,7 +194,6 @@ func getPushBasedLogConfigurationBuilder() *cobra.Command {
 }
 
 type updatePushBasedLogConfigurationOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -218,12 +201,9 @@ type updatePushBasedLogConfigurationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updatePushBasedLogConfigurationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updatePushBasedLogConfigurationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updatePushBasedLogConfigurationOpts) readData() (*admin.PushBasedLogExportProject, error) {
@@ -248,22 +228,20 @@ func (opts *updatePushBasedLogConfigurationOpts) readData() (*admin.PushBasedLog
 	return out, nil
 }
 
-func (opts *updatePushBasedLogConfigurationOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *updatePushBasedLogConfigurationOpts) run(ctx context.Context, _ io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdatePushBasedLogConfigurationApiParams{
 		GroupId: opts.groupId,
 
 		PushBasedLogExportProject: data,
 	}
-	_, err := opts.client.PushBasedLogExportApi.UpdatePushBasedLogConfigurationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.PushBasedLogExportApi.UpdatePushBasedLogConfigurationWithParams(ctx, params).Execute()
+	return err
 }
 
 func updatePushBasedLogConfigurationBuilder() *cobra.Command {
@@ -274,12 +252,10 @@ func updatePushBasedLogConfigurationBuilder() *cobra.Command {
 		Use:   "updatePushBasedLogConfiguration",
 		Short: "Update the push-based log export feature for a project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

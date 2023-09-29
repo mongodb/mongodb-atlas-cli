@@ -23,37 +23,29 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type deferMaintenanceWindowOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *deferMaintenanceWindowOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deferMaintenanceWindowOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deferMaintenanceWindowOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *deferMaintenanceWindowOpts) run(ctx context.Context, _ io.Writer) error {
+
 	params := &admin.DeferMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.client.MaintenanceWindowsApi.DeferMaintenanceWindowWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.MaintenanceWindowsApi.DeferMaintenanceWindowWithParams(ctx, params).Execute()
+	return err
 }
 
 func deferMaintenanceWindowBuilder() *cobra.Command {
@@ -62,12 +54,10 @@ func deferMaintenanceWindowBuilder() *cobra.Command {
 		Use:   "deferMaintenanceWindow",
 		Short: "Defer One Maintenance Window for One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -79,29 +69,33 @@ func deferMaintenanceWindowBuilder() *cobra.Command {
 }
 
 type getMaintenanceWindowOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *getMaintenanceWindowOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getMaintenanceWindowOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getMaintenanceWindowOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getMaintenanceWindowOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.MaintenanceWindowsApi.GetMaintenanceWindowWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getMaintenanceWindowBuilder() *cobra.Command {
@@ -110,12 +104,10 @@ func getMaintenanceWindowBuilder() *cobra.Command {
 		Use:   "getMaintenanceWindow",
 		Short: "Return One Maintenance Window for One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -127,29 +119,23 @@ func getMaintenanceWindowBuilder() *cobra.Command {
 }
 
 type resetMaintenanceWindowOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *resetMaintenanceWindowOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *resetMaintenanceWindowOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *resetMaintenanceWindowOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *resetMaintenanceWindowOpts) run(ctx context.Context, _ io.Writer) error {
+
 	params := &admin.ResetMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.client.MaintenanceWindowsApi.ResetMaintenanceWindowWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.MaintenanceWindowsApi.ResetMaintenanceWindowWithParams(ctx, params).Execute()
+	return err
 }
 
 func resetMaintenanceWindowBuilder() *cobra.Command {
@@ -158,12 +144,10 @@ func resetMaintenanceWindowBuilder() *cobra.Command {
 		Use:   "resetMaintenanceWindow",
 		Short: "Reset One Maintenance Window for One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -175,29 +159,23 @@ func resetMaintenanceWindowBuilder() *cobra.Command {
 }
 
 type toggleMaintenanceAutoDeferOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *toggleMaintenanceAutoDeferOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *toggleMaintenanceAutoDeferOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *toggleMaintenanceAutoDeferOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *toggleMaintenanceAutoDeferOpts) run(ctx context.Context, _ io.Writer) error {
+
 	params := &admin.ToggleMaintenanceAutoDeferApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.client.MaintenanceWindowsApi.ToggleMaintenanceAutoDeferWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.MaintenanceWindowsApi.ToggleMaintenanceAutoDeferWithParams(ctx, params).Execute()
+	return err
 }
 
 func toggleMaintenanceAutoDeferBuilder() *cobra.Command {
@@ -206,12 +184,10 @@ func toggleMaintenanceAutoDeferBuilder() *cobra.Command {
 		Use:   "toggleMaintenanceAutoDefer",
 		Short: "Toggle Automatic Deferral of Maintenance for One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -223,7 +199,6 @@ func toggleMaintenanceAutoDeferBuilder() *cobra.Command {
 }
 
 type updateMaintenanceWindowOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -231,12 +206,9 @@ type updateMaintenanceWindowOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateMaintenanceWindowOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateMaintenanceWindowOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateMaintenanceWindowOpts) readData() (*admin.GroupMaintenanceWindow, error) {
@@ -261,22 +233,30 @@ func (opts *updateMaintenanceWindowOpts) readData() (*admin.GroupMaintenanceWind
 	return out, nil
 }
 
-func (opts *updateMaintenanceWindowOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateMaintenanceWindowOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateMaintenanceWindowApiParams{
 		GroupId: opts.groupId,
 
 		GroupMaintenanceWindow: data,
 	}
+
 	resp, _, err := opts.client.MaintenanceWindowsApi.UpdateMaintenanceWindowWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateMaintenanceWindowBuilder() *cobra.Command {
@@ -287,12 +267,10 @@ func updateMaintenanceWindowBuilder() *cobra.Command {
 		Use:   "updateMaintenanceWindow",
 		Short: "Update Maintenance Window for One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

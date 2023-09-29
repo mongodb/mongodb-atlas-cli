@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createProjectOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 
 	projectOwnerId string
@@ -39,12 +36,9 @@ type createProjectOpts struct {
 	fs             afero.Fs
 }
 
-func (opts *createProjectOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createProjectOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createProjectOpts) readData() (*admin.Group, error) {
@@ -69,23 +63,31 @@ func (opts *createProjectOpts) readData() (*admin.Group, error) {
 	return out, nil
 }
 
-func (opts *createProjectOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createProjectOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateProjectApiParams{
 
 		ProjectOwnerId: &opts.projectOwnerId,
 
 		Group: data,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.CreateProjectWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createProjectBuilder() *cobra.Command {
@@ -96,12 +98,10 @@ func createProjectBuilder() *cobra.Command {
 		Use:   "createProject",
 		Short: "Create One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 
@@ -112,7 +112,6 @@ func createProjectBuilder() *cobra.Command {
 }
 
 type createProjectInvitationOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -120,12 +119,9 @@ type createProjectInvitationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createProjectInvitationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createProjectInvitationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createProjectInvitationOpts) readData() (*admin.GroupInvitationRequest, error) {
@@ -150,22 +146,30 @@ func (opts *createProjectInvitationOpts) readData() (*admin.GroupInvitationReque
 	return out, nil
 }
 
-func (opts *createProjectInvitationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createProjectInvitationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateProjectInvitationApiParams{
 		GroupId: opts.groupId,
 
 		GroupInvitationRequest: data,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.CreateProjectInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createProjectInvitationBuilder() *cobra.Command {
@@ -176,12 +180,10 @@ func createProjectInvitationBuilder() *cobra.Command {
 		Use:   "createProjectInvitation",
 		Short: "Invite One MongoDB Cloud User to Join One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -195,29 +197,33 @@ func createProjectInvitationBuilder() *cobra.Command {
 }
 
 type deleteProjectOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *deleteProjectOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteProjectOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteProjectOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteProjectOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteProjectApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.DeleteProjectWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteProjectBuilder() *cobra.Command {
@@ -226,12 +232,10 @@ func deleteProjectBuilder() *cobra.Command {
 		Use:   "deleteProject",
 		Short: "Remove One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -243,31 +247,35 @@ func deleteProjectBuilder() *cobra.Command {
 }
 
 type deleteProjectInvitationOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	invitationId string
 }
 
-func (opts *deleteProjectInvitationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteProjectInvitationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteProjectInvitationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteProjectInvitationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteProjectInvitationApiParams{
 		GroupId:      opts.groupId,
 		InvitationId: opts.invitationId,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.DeleteProjectInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteProjectInvitationBuilder() *cobra.Command {
@@ -276,12 +284,10 @@ func deleteProjectInvitationBuilder() *cobra.Command {
 		Use:   "deleteProjectInvitation",
 		Short: "Cancel One Project Invitation",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -295,31 +301,35 @@ func deleteProjectInvitationBuilder() *cobra.Command {
 }
 
 type deleteProjectLimitOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	limitName string
 	groupId   string
 }
 
-func (opts *deleteProjectLimitOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteProjectLimitOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteProjectLimitOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteProjectLimitOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteProjectLimitApiParams{
 		LimitName: opts.limitName,
 		GroupId:   opts.groupId,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.DeleteProjectLimitWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteProjectLimitBuilder() *cobra.Command {
@@ -328,12 +338,10 @@ func deleteProjectLimitBuilder() *cobra.Command {
 		Use:   "deleteProjectLimit",
 		Short: "Remove One Project Limit",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", `Human-readable label that identifies this project limit.
@@ -363,29 +371,33 @@ func deleteProjectLimitBuilder() *cobra.Command {
 }
 
 type getProjectOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *getProjectOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getProjectOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getProjectOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getProjectOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetProjectApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.GetProjectWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getProjectBuilder() *cobra.Command {
@@ -394,12 +406,10 @@ func getProjectBuilder() *cobra.Command {
 		Use:   "getProject",
 		Short: "Return One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -411,29 +421,33 @@ func getProjectBuilder() *cobra.Command {
 }
 
 type getProjectByNameOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	groupName string
 }
 
-func (opts *getProjectByNameOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getProjectByNameOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getProjectByNameOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getProjectByNameOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetProjectByNameApiParams{
 		GroupName: opts.groupName,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.GetProjectByNameWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getProjectByNameBuilder() *cobra.Command {
@@ -442,12 +456,10 @@ func getProjectByNameBuilder() *cobra.Command {
 		Use:   "getProjectByName",
 		Short: "Return One Project using Its Name",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupName, "groupName", "", `Human-readable label that identifies this project.`)
@@ -457,31 +469,35 @@ func getProjectByNameBuilder() *cobra.Command {
 }
 
 type getProjectInvitationOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	invitationId string
 }
 
-func (opts *getProjectInvitationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getProjectInvitationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getProjectInvitationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getProjectInvitationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetProjectInvitationApiParams{
 		GroupId:      opts.groupId,
 		InvitationId: opts.invitationId,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.GetProjectInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getProjectInvitationBuilder() *cobra.Command {
@@ -490,12 +506,10 @@ func getProjectInvitationBuilder() *cobra.Command {
 		Use:   "getProjectInvitation",
 		Short: "Return One Project Invitation",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -509,31 +523,35 @@ func getProjectInvitationBuilder() *cobra.Command {
 }
 
 type getProjectLimitOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	limitName string
 	groupId   string
 }
 
-func (opts *getProjectLimitOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getProjectLimitOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getProjectLimitOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getProjectLimitOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetProjectLimitApiParams{
 		LimitName: opts.limitName,
 		GroupId:   opts.groupId,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.GetProjectLimitWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getProjectLimitBuilder() *cobra.Command {
@@ -542,12 +560,10 @@ func getProjectLimitBuilder() *cobra.Command {
 		Use:   "getProjectLimit",
 		Short: "Return One Limit for One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", `Human-readable label that identifies this project limit.
@@ -577,29 +593,33 @@ func getProjectLimitBuilder() *cobra.Command {
 }
 
 type getProjectSettingsOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *getProjectSettingsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getProjectSettingsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getProjectSettingsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getProjectSettingsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetProjectSettingsApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.GetProjectSettingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getProjectSettingsBuilder() *cobra.Command {
@@ -608,12 +628,10 @@ func getProjectSettingsBuilder() *cobra.Command {
 		Use:   "getProjectSettings",
 		Short: "Return One Project Settings",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -625,31 +643,35 @@ func getProjectSettingsBuilder() *cobra.Command {
 }
 
 type listProjectInvitationsOpts struct {
-	cli.GlobalOpts
 	client   *admin.APIClient
 	groupId  string
 	username string
 }
 
-func (opts *listProjectInvitationsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listProjectInvitationsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listProjectInvitationsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listProjectInvitationsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListProjectInvitationsApiParams{
 		GroupId:  opts.groupId,
 		Username: &opts.username,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.ListProjectInvitationsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listProjectInvitationsBuilder() *cobra.Command {
@@ -658,12 +680,10 @@ func listProjectInvitationsBuilder() *cobra.Command {
 		Use:   "listProjectInvitations",
 		Short: "Return All Project Invitations",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -676,29 +696,33 @@ func listProjectInvitationsBuilder() *cobra.Command {
 }
 
 type listProjectLimitsOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *listProjectLimitsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listProjectLimitsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listProjectLimitsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listProjectLimitsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListProjectLimitsApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.ListProjectLimitsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listProjectLimitsBuilder() *cobra.Command {
@@ -707,12 +731,10 @@ func listProjectLimitsBuilder() *cobra.Command {
 		Use:   "listProjectLimits",
 		Short: "Return All Limits for One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -724,7 +746,6 @@ func listProjectLimitsBuilder() *cobra.Command {
 }
 
 type listProjectUsersOpts struct {
-	cli.GlobalOpts
 	client          *admin.APIClient
 	groupId         string
 	includeCount    bool
@@ -734,15 +755,13 @@ type listProjectUsersOpts struct {
 	includeOrgUsers bool
 }
 
-func (opts *listProjectUsersOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listProjectUsersOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listProjectUsersOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listProjectUsersOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListProjectUsersApiParams{
 		GroupId:         opts.groupId,
 		IncludeCount:    &opts.includeCount,
@@ -751,12 +770,19 @@ func (opts *listProjectUsersOpts) Run(ctx context.Context, w io.Writer) error {
 		FlattenTeams:    &opts.flattenTeams,
 		IncludeOrgUsers: &opts.includeOrgUsers,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.ListProjectUsersWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listProjectUsersBuilder() *cobra.Command {
@@ -765,12 +791,10 @@ func listProjectUsersBuilder() *cobra.Command {
 		Use:   "listProjectUsers",
 		Short: "Return All Users in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -787,33 +811,37 @@ func listProjectUsersBuilder() *cobra.Command {
 }
 
 type listProjectsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
 }
 
-func (opts *listProjectsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listProjectsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listProjectsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listProjectsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListProjectsApiParams{
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.ListProjectsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listProjectsBuilder() *cobra.Command {
@@ -822,12 +850,10 @@ func listProjectsBuilder() *cobra.Command {
 		Use:   "listProjects",
 		Short: "Return All Projects",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
@@ -838,31 +864,25 @@ func listProjectsBuilder() *cobra.Command {
 }
 
 type removeProjectUserOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 	userId  string
 }
 
-func (opts *removeProjectUserOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *removeProjectUserOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *removeProjectUserOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *removeProjectUserOpts) run(ctx context.Context, _ io.Writer) error {
+
 	params := &admin.RemoveProjectUserApiParams{
 		GroupId: opts.groupId,
 		UserId:  opts.userId,
 	}
-	_, err := opts.client.ProjectsApi.RemoveProjectUserWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.ProjectsApi.RemoveProjectUserWithParams(ctx, params).Execute()
+	return err
 }
 
 func removeProjectUserBuilder() *cobra.Command {
@@ -871,12 +891,10 @@ func removeProjectUserBuilder() *cobra.Command {
 		Use:   "removeProjectUser",
 		Short: "Remove One User from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -890,7 +908,6 @@ func removeProjectUserBuilder() *cobra.Command {
 }
 
 type setProjectLimitOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	limitName string
 	groupId   string
@@ -899,12 +916,9 @@ type setProjectLimitOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *setProjectLimitOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *setProjectLimitOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *setProjectLimitOpts) readData() (*admin.DataFederationLimit, error) {
@@ -929,23 +943,31 @@ func (opts *setProjectLimitOpts) readData() (*admin.DataFederationLimit, error) 
 	return out, nil
 }
 
-func (opts *setProjectLimitOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *setProjectLimitOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.SetProjectLimitApiParams{
 		LimitName: opts.limitName,
 		GroupId:   opts.groupId,
 
 		DataFederationLimit: data,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.SetProjectLimitWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func setProjectLimitBuilder() *cobra.Command {
@@ -956,12 +978,10 @@ func setProjectLimitBuilder() *cobra.Command {
 		Use:   "setProjectLimit",
 		Short: "Set One Project Limit",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", `Human-readable label that identifies this project limit.
@@ -993,7 +1013,6 @@ func setProjectLimitBuilder() *cobra.Command {
 }
 
 type updateProjectOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -1001,12 +1020,9 @@ type updateProjectOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateProjectOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateProjectOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateProjectOpts) readData() (*admin.GroupName, error) {
@@ -1031,22 +1047,30 @@ func (opts *updateProjectOpts) readData() (*admin.GroupName, error) {
 	return out, nil
 }
 
-func (opts *updateProjectOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateProjectOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateProjectApiParams{
 		GroupId: opts.groupId,
 
 		GroupName: data,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.UpdateProjectWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateProjectBuilder() *cobra.Command {
@@ -1057,12 +1081,10 @@ func updateProjectBuilder() *cobra.Command {
 		Use:   "updateProject",
 		Short: "Update One Project Name",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1076,7 +1098,6 @@ func updateProjectBuilder() *cobra.Command {
 }
 
 type updateProjectInvitationOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -1084,12 +1105,9 @@ type updateProjectInvitationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateProjectInvitationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateProjectInvitationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateProjectInvitationOpts) readData() (*admin.GroupInvitationRequest, error) {
@@ -1114,22 +1132,30 @@ func (opts *updateProjectInvitationOpts) readData() (*admin.GroupInvitationReque
 	return out, nil
 }
 
-func (opts *updateProjectInvitationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateProjectInvitationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateProjectInvitationApiParams{
 		GroupId: opts.groupId,
 
 		GroupInvitationRequest: data,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.UpdateProjectInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateProjectInvitationBuilder() *cobra.Command {
@@ -1140,12 +1166,10 @@ func updateProjectInvitationBuilder() *cobra.Command {
 		Use:   "updateProjectInvitation",
 		Short: "Update One Project Invitation",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1159,7 +1183,6 @@ func updateProjectInvitationBuilder() *cobra.Command {
 }
 
 type updateProjectInvitationByIdOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	invitationId string
@@ -1168,12 +1191,9 @@ type updateProjectInvitationByIdOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateProjectInvitationByIdOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateProjectInvitationByIdOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateProjectInvitationByIdOpts) readData() (*admin.GroupInvitationUpdateRequest, error) {
@@ -1198,23 +1218,31 @@ func (opts *updateProjectInvitationByIdOpts) readData() (*admin.GroupInvitationU
 	return out, nil
 }
 
-func (opts *updateProjectInvitationByIdOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateProjectInvitationByIdOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateProjectInvitationByIdApiParams{
 		GroupId:      opts.groupId,
 		InvitationId: opts.invitationId,
 
 		GroupInvitationUpdateRequest: data,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.UpdateProjectInvitationByIdWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateProjectInvitationByIdBuilder() *cobra.Command {
@@ -1225,12 +1253,10 @@ func updateProjectInvitationByIdBuilder() *cobra.Command {
 		Use:   "updateProjectInvitationById",
 		Short: "Update One Project Invitation by Invitation ID",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1246,7 +1272,6 @@ func updateProjectInvitationByIdBuilder() *cobra.Command {
 }
 
 type updateProjectRolesOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 	userId  string
@@ -1255,12 +1280,9 @@ type updateProjectRolesOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateProjectRolesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateProjectRolesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateProjectRolesOpts) readData() (*admin.UpdateGroupRolesForUser, error) {
@@ -1285,23 +1307,31 @@ func (opts *updateProjectRolesOpts) readData() (*admin.UpdateGroupRolesForUser, 
 	return out, nil
 }
 
-func (opts *updateProjectRolesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateProjectRolesOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateProjectRolesApiParams{
 		GroupId: opts.groupId,
 		UserId:  opts.userId,
 
 		UpdateGroupRolesForUser: data,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.UpdateProjectRolesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateProjectRolesBuilder() *cobra.Command {
@@ -1312,12 +1342,10 @@ func updateProjectRolesBuilder() *cobra.Command {
 		Use:   "updateProjectRoles",
 		Short: "Update Project Roles for One MongoDB Cloud User",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -1333,7 +1361,6 @@ func updateProjectRolesBuilder() *cobra.Command {
 }
 
 type updateProjectSettingsOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -1341,12 +1368,9 @@ type updateProjectSettingsOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateProjectSettingsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateProjectSettingsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateProjectSettingsOpts) readData() (*admin.GroupSettings, error) {
@@ -1371,22 +1395,30 @@ func (opts *updateProjectSettingsOpts) readData() (*admin.GroupSettings, error) 
 	return out, nil
 }
 
-func (opts *updateProjectSettingsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateProjectSettingsOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateProjectSettingsApiParams{
 		GroupId: opts.groupId,
 
 		GroupSettings: data,
 	}
+
 	resp, _, err := opts.client.ProjectsApi.UpdateProjectSettingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateProjectSettingsBuilder() *cobra.Command {
@@ -1397,12 +1429,10 @@ func updateProjectSettingsBuilder() *cobra.Command {
 		Use:   "updateProjectSettings",
 		Short: "Update One Project Settings",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

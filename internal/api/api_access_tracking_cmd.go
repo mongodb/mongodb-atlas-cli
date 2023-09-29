@@ -18,16 +18,15 @@ package api
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"io"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type listAccessLogsByClusterNameOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -38,15 +37,13 @@ type listAccessLogsByClusterNameOpts struct {
 	start       int64
 }
 
-func (opts *listAccessLogsByClusterNameOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listAccessLogsByClusterNameOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listAccessLogsByClusterNameOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listAccessLogsByClusterNameOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListAccessLogsByClusterNameApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
@@ -56,12 +53,19 @@ func (opts *listAccessLogsByClusterNameOpts) Run(ctx context.Context, w io.Write
 		NLogs:       &opts.nLogs,
 		Start:       &opts.start,
 	}
+
 	resp, _, err := opts.client.AccessTrackingApi.ListAccessLogsByClusterNameWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listAccessLogsByClusterNameBuilder() *cobra.Command {
@@ -70,12 +74,10 @@ func listAccessLogsByClusterNameBuilder() *cobra.Command {
 		Use:   "listAccessLogsByClusterName",
 		Short: "Return Database Access History for One Cluster using Its Cluster Name",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -94,7 +96,6 @@ func listAccessLogsByClusterNameBuilder() *cobra.Command {
 }
 
 type listAccessLogsByHostnameOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	hostname   string
@@ -105,15 +106,13 @@ type listAccessLogsByHostnameOpts struct {
 	start      int64
 }
 
-func (opts *listAccessLogsByHostnameOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listAccessLogsByHostnameOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listAccessLogsByHostnameOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listAccessLogsByHostnameOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListAccessLogsByHostnameApiParams{
 		GroupId:    opts.groupId,
 		Hostname:   opts.hostname,
@@ -123,12 +122,19 @@ func (opts *listAccessLogsByHostnameOpts) Run(ctx context.Context, w io.Writer) 
 		NLogs:      &opts.nLogs,
 		Start:      &opts.start,
 	}
+
 	resp, _, err := opts.client.AccessTrackingApi.ListAccessLogsByHostnameWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listAccessLogsByHostnameBuilder() *cobra.Command {
@@ -137,12 +143,10 @@ func listAccessLogsByHostnameBuilder() *cobra.Command {
 		Use:   "listAccessLogsByHostname",
 		Short: "Return Database Access History for One Cluster using Its Hostname",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

@@ -18,38 +18,32 @@ package api
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"io"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type disableSlowOperationThresholdingOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *disableSlowOperationThresholdingOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *disableSlowOperationThresholdingOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *disableSlowOperationThresholdingOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *disableSlowOperationThresholdingOpts) run(ctx context.Context, _ io.Writer) error {
+
 	params := &admin.DisableSlowOperationThresholdingApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.client.PerformanceAdvisorApi.DisableSlowOperationThresholdingWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.PerformanceAdvisorApi.DisableSlowOperationThresholdingWithParams(ctx, params).Execute()
+	return err
 }
 
 func disableSlowOperationThresholdingBuilder() *cobra.Command {
@@ -58,12 +52,10 @@ func disableSlowOperationThresholdingBuilder() *cobra.Command {
 		Use:   "disableSlowOperationThresholding",
 		Short: "Disable Managed Slow Operation Threshold",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -75,29 +67,23 @@ func disableSlowOperationThresholdingBuilder() *cobra.Command {
 }
 
 type enableSlowOperationThresholdingOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *enableSlowOperationThresholdingOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *enableSlowOperationThresholdingOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *enableSlowOperationThresholdingOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *enableSlowOperationThresholdingOpts) run(ctx context.Context, _ io.Writer) error {
+
 	params := &admin.EnableSlowOperationThresholdingApiParams{
 		GroupId: opts.groupId,
 	}
-	_, err := opts.client.PerformanceAdvisorApi.EnableSlowOperationThresholdingWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.PerformanceAdvisorApi.EnableSlowOperationThresholdingWithParams(ctx, params).Execute()
+	return err
 }
 
 func enableSlowOperationThresholdingBuilder() *cobra.Command {
@@ -106,12 +92,10 @@ func enableSlowOperationThresholdingBuilder() *cobra.Command {
 		Use:   "enableSlowOperationThresholding",
 		Short: "Enable Managed Slow Operation Threshold",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -123,7 +107,6 @@ func enableSlowOperationThresholdingBuilder() *cobra.Command {
 }
 
 type listSlowQueriesOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	processId  string
@@ -133,15 +116,13 @@ type listSlowQueriesOpts struct {
 	since      int64
 }
 
-func (opts *listSlowQueriesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listSlowQueriesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listSlowQueriesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listSlowQueriesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListSlowQueriesApiParams{
 		GroupId:    opts.groupId,
 		ProcessId:  opts.processId,
@@ -150,12 +131,19 @@ func (opts *listSlowQueriesOpts) Run(ctx context.Context, w io.Writer) error {
 		NLogs:      &opts.nLogs,
 		Since:      &opts.since,
 	}
+
 	resp, _, err := opts.client.PerformanceAdvisorApi.ListSlowQueriesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listSlowQueriesBuilder() *cobra.Command {
@@ -164,12 +152,10 @@ func listSlowQueriesBuilder() *cobra.Command {
 		Use:   "listSlowQueries",
 		Short: "Return Slow Queries",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -193,7 +179,6 @@ func listSlowQueriesBuilder() *cobra.Command {
 }
 
 type listSlowQueryNamespacesOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	groupId   string
 	processId string
@@ -201,27 +186,32 @@ type listSlowQueryNamespacesOpts struct {
 	since     int64
 }
 
-func (opts *listSlowQueryNamespacesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listSlowQueryNamespacesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listSlowQueryNamespacesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listSlowQueryNamespacesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListSlowQueryNamespacesApiParams{
 		GroupId:   opts.groupId,
 		ProcessId: opts.processId,
 		Duration:  &opts.duration,
 		Since:     &opts.since,
 	}
+
 	resp, _, err := opts.client.PerformanceAdvisorApi.ListSlowQueryNamespacesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listSlowQueryNamespacesBuilder() *cobra.Command {
@@ -230,12 +220,10 @@ func listSlowQueryNamespacesBuilder() *cobra.Command {
 		Use:   "listSlowQueryNamespaces",
 		Short: "Return All Namespaces for One Host",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -257,7 +245,6 @@ func listSlowQueryNamespacesBuilder() *cobra.Command {
 }
 
 type listSuggestedIndexesOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	processId    string
@@ -271,15 +258,13 @@ type listSuggestedIndexesOpts struct {
 	since        int64
 }
 
-func (opts *listSuggestedIndexesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listSuggestedIndexesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listSuggestedIndexesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listSuggestedIndexesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListSuggestedIndexesApiParams{
 		GroupId:      opts.groupId,
 		ProcessId:    opts.processId,
@@ -292,12 +277,19 @@ func (opts *listSuggestedIndexesOpts) Run(ctx context.Context, w io.Writer) erro
 		NIndexes:     &opts.nIndexes,
 		Since:        &opts.since,
 	}
+
 	resp, _, err := opts.client.PerformanceAdvisorApi.ListSuggestedIndexesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listSuggestedIndexesBuilder() *cobra.Command {
@@ -306,12 +298,10 @@ func listSuggestedIndexesBuilder() *cobra.Command {
 		Use:   "listSuggestedIndexes",
 		Short: "Return Suggested Indexes",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

@@ -23,41 +23,43 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type deleteLegacySnapshotOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 	snapshotId  string
 }
 
-func (opts *deleteLegacySnapshotOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteLegacySnapshotOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteLegacySnapshotOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteLegacySnapshotOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteLegacySnapshotApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId:  opts.snapshotId,
 	}
+
 	resp, _, err := opts.client.LegacyBackupApi.DeleteLegacySnapshotWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteLegacySnapshotBuilder() *cobra.Command {
@@ -66,12 +68,10 @@ func deleteLegacySnapshotBuilder() *cobra.Command {
 		Use:   "deleteLegacySnapshot",
 		Short: "Remove One Legacy Backup Snapshot",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -87,33 +87,37 @@ func deleteLegacySnapshotBuilder() *cobra.Command {
 }
 
 type getLegacyBackupCheckpointOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	checkpointId string
 	clusterName  string
 }
 
-func (opts *getLegacyBackupCheckpointOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getLegacyBackupCheckpointOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getLegacyBackupCheckpointOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getLegacyBackupCheckpointOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetLegacyBackupCheckpointApiParams{
 		GroupId:      opts.groupId,
 		CheckpointId: opts.checkpointId,
 		ClusterName:  opts.clusterName,
 	}
+
 	resp, _, err := opts.client.LegacyBackupApi.GetLegacyBackupCheckpointWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getLegacyBackupCheckpointBuilder() *cobra.Command {
@@ -122,12 +126,10 @@ func getLegacyBackupCheckpointBuilder() *cobra.Command {
 		Use:   "getLegacyBackupCheckpoint",
 		Short: "Return One Legacy Backup Checkpoint",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -143,33 +145,37 @@ func getLegacyBackupCheckpointBuilder() *cobra.Command {
 }
 
 type getLegacyBackupRestoreJobOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 	jobId       string
 }
 
-func (opts *getLegacyBackupRestoreJobOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getLegacyBackupRestoreJobOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getLegacyBackupRestoreJobOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getLegacyBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetLegacyBackupRestoreJobApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 		JobId:       opts.jobId,
 	}
+
 	resp, _, err := opts.client.LegacyBackupApi.GetLegacyBackupRestoreJobWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getLegacyBackupRestoreJobBuilder() *cobra.Command {
@@ -178,12 +184,10 @@ func getLegacyBackupRestoreJobBuilder() *cobra.Command {
 		Use:   "getLegacyBackupRestoreJob",
 		Short: "Return One Legacy Backup Restore Job",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -199,33 +203,37 @@ func getLegacyBackupRestoreJobBuilder() *cobra.Command {
 }
 
 type getLegacySnapshotOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 	snapshotId  string
 }
 
-func (opts *getLegacySnapshotOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getLegacySnapshotOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getLegacySnapshotOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getLegacySnapshotOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetLegacySnapshotApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId:  opts.snapshotId,
 	}
+
 	resp, _, err := opts.client.LegacyBackupApi.GetLegacySnapshotWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getLegacySnapshotBuilder() *cobra.Command {
@@ -234,12 +242,10 @@ func getLegacySnapshotBuilder() *cobra.Command {
 		Use:   "getLegacySnapshot",
 		Short: "Return One Legacy Backup Snapshot",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -255,31 +261,35 @@ func getLegacySnapshotBuilder() *cobra.Command {
 }
 
 type getLegacySnapshotScheduleOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 }
 
-func (opts *getLegacySnapshotScheduleOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getLegacySnapshotScheduleOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getLegacySnapshotScheduleOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getLegacySnapshotScheduleOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetLegacySnapshotScheduleApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
+
 	resp, _, err := opts.client.LegacyBackupApi.GetLegacySnapshotScheduleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getLegacySnapshotScheduleBuilder() *cobra.Command {
@@ -288,12 +298,10 @@ func getLegacySnapshotScheduleBuilder() *cobra.Command {
 		Use:   "getLegacySnapshotSchedule",
 		Short: "Return One Snapshot Schedule",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -307,7 +315,6 @@ func getLegacySnapshotScheduleBuilder() *cobra.Command {
 }
 
 type listLegacyBackupCheckpointsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	clusterName  string
@@ -316,15 +323,13 @@ type listLegacyBackupCheckpointsOpts struct {
 	pageNum      int
 }
 
-func (opts *listLegacyBackupCheckpointsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listLegacyBackupCheckpointsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listLegacyBackupCheckpointsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listLegacyBackupCheckpointsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListLegacyBackupCheckpointsApiParams{
 		GroupId:      opts.groupId,
 		ClusterName:  opts.clusterName,
@@ -332,12 +337,19 @@ func (opts *listLegacyBackupCheckpointsOpts) Run(ctx context.Context, w io.Write
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.LegacyBackupApi.ListLegacyBackupCheckpointsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listLegacyBackupCheckpointsBuilder() *cobra.Command {
@@ -346,12 +358,10 @@ func listLegacyBackupCheckpointsBuilder() *cobra.Command {
 		Use:   "listLegacyBackupCheckpoints",
 		Short: "Return All Legacy Backup Checkpoints",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -368,7 +378,6 @@ func listLegacyBackupCheckpointsBuilder() *cobra.Command {
 }
 
 type listLegacyBackupRestoreJobsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	clusterName  string
@@ -378,15 +387,13 @@ type listLegacyBackupRestoreJobsOpts struct {
 	batchId      string
 }
 
-func (opts *listLegacyBackupRestoreJobsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listLegacyBackupRestoreJobsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listLegacyBackupRestoreJobsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listLegacyBackupRestoreJobsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListLegacyBackupRestoreJobsApiParams{
 		GroupId:      opts.groupId,
 		ClusterName:  opts.clusterName,
@@ -395,12 +402,19 @@ func (opts *listLegacyBackupRestoreJobsOpts) Run(ctx context.Context, w io.Write
 		PageNum:      &opts.pageNum,
 		BatchId:      &opts.batchId,
 	}
+
 	resp, _, err := opts.client.LegacyBackupApi.ListLegacyBackupRestoreJobsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listLegacyBackupRestoreJobsBuilder() *cobra.Command {
@@ -409,12 +423,10 @@ func listLegacyBackupRestoreJobsBuilder() *cobra.Command {
 		Use:   "listLegacyBackupRestoreJobs",
 		Short: "Return All Legacy Backup Restore Jobs",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -432,7 +444,6 @@ func listLegacyBackupRestoreJobsBuilder() *cobra.Command {
 }
 
 type listLegacySnapshotsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	clusterName  string
@@ -442,15 +453,13 @@ type listLegacySnapshotsOpts struct {
 	completed    string
 }
 
-func (opts *listLegacySnapshotsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listLegacySnapshotsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listLegacySnapshotsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listLegacySnapshotsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListLegacySnapshotsApiParams{
 		GroupId:      opts.groupId,
 		ClusterName:  opts.clusterName,
@@ -459,12 +468,19 @@ func (opts *listLegacySnapshotsOpts) Run(ctx context.Context, w io.Writer) error
 		PageNum:      &opts.pageNum,
 		Completed:    &opts.completed,
 	}
+
 	resp, _, err := opts.client.LegacyBackupApi.ListLegacySnapshotsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listLegacySnapshotsBuilder() *cobra.Command {
@@ -473,12 +489,10 @@ func listLegacySnapshotsBuilder() *cobra.Command {
 		Use:   "listLegacySnapshots",
 		Short: "Return All Legacy Backup Snapshots",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -496,7 +510,6 @@ func listLegacySnapshotsBuilder() *cobra.Command {
 }
 
 type updateLegacySnapshotRetentionOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -506,12 +519,9 @@ type updateLegacySnapshotRetentionOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateLegacySnapshotRetentionOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateLegacySnapshotRetentionOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateLegacySnapshotRetentionOpts) readData() (*admin.BackupSnapshot, error) {
@@ -536,11 +546,12 @@ func (opts *updateLegacySnapshotRetentionOpts) readData() (*admin.BackupSnapshot
 	return out, nil
 }
 
-func (opts *updateLegacySnapshotRetentionOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateLegacySnapshotRetentionOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateLegacySnapshotRetentionApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
@@ -548,12 +559,19 @@ func (opts *updateLegacySnapshotRetentionOpts) Run(ctx context.Context, w io.Wri
 
 		BackupSnapshot: data,
 	}
+
 	resp, _, err := opts.client.LegacyBackupApi.UpdateLegacySnapshotRetentionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateLegacySnapshotRetentionBuilder() *cobra.Command {
@@ -564,12 +582,10 @@ func updateLegacySnapshotRetentionBuilder() *cobra.Command {
 		Use:   "updateLegacySnapshotRetention",
 		Short: "Change One Legacy Backup Snapshot Expiration",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -587,7 +603,6 @@ func updateLegacySnapshotRetentionBuilder() *cobra.Command {
 }
 
 type updateLegacySnapshotScheduleOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -596,12 +611,9 @@ type updateLegacySnapshotScheduleOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateLegacySnapshotScheduleOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateLegacySnapshotScheduleOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateLegacySnapshotScheduleOpts) readData() (*admin.ApiAtlasSnapshotSchedule, error) {
@@ -626,23 +638,31 @@ func (opts *updateLegacySnapshotScheduleOpts) readData() (*admin.ApiAtlasSnapsho
 	return out, nil
 }
 
-func (opts *updateLegacySnapshotScheduleOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateLegacySnapshotScheduleOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateLegacySnapshotScheduleApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
 		ApiAtlasSnapshotSchedule: data,
 	}
+
 	resp, _, err := opts.client.LegacyBackupApi.UpdateLegacySnapshotScheduleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateLegacySnapshotScheduleBuilder() *cobra.Command {
@@ -653,12 +673,10 @@ func updateLegacySnapshotScheduleBuilder() *cobra.Command {
 		Use:   "updateLegacySnapshotSchedule",
 		Short: "Update Snapshot Schedule for One Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

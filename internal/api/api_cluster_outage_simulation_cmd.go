@@ -23,39 +23,41 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type endOutageSimulationOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 }
 
-func (opts *endOutageSimulationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *endOutageSimulationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *endOutageSimulationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *endOutageSimulationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.EndOutageSimulationApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
+
 	resp, _, err := opts.client.ClusterOutageSimulationApi.EndOutageSimulationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func endOutageSimulationBuilder() *cobra.Command {
@@ -64,12 +66,10 @@ func endOutageSimulationBuilder() *cobra.Command {
 		Use:   "endOutageSimulation",
 		Short: "End an Outage Simulation",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -83,31 +83,35 @@ func endOutageSimulationBuilder() *cobra.Command {
 }
 
 type getOutageSimulationOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 }
 
-func (opts *getOutageSimulationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getOutageSimulationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getOutageSimulationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getOutageSimulationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetOutageSimulationApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
+
 	resp, _, err := opts.client.ClusterOutageSimulationApi.GetOutageSimulationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getOutageSimulationBuilder() *cobra.Command {
@@ -116,12 +120,10 @@ func getOutageSimulationBuilder() *cobra.Command {
 		Use:   "getOutageSimulation",
 		Short: "Return One Outage Simulation",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -135,7 +137,6 @@ func getOutageSimulationBuilder() *cobra.Command {
 }
 
 type startOutageSimulationOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -144,12 +145,9 @@ type startOutageSimulationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *startOutageSimulationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *startOutageSimulationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *startOutageSimulationOpts) readData() (*admin.ClusterOutageSimulation, error) {
@@ -174,23 +172,31 @@ func (opts *startOutageSimulationOpts) readData() (*admin.ClusterOutageSimulatio
 	return out, nil
 }
 
-func (opts *startOutageSimulationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *startOutageSimulationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.StartOutageSimulationApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
 		ClusterOutageSimulation: data,
 	}
+
 	resp, _, err := opts.client.ClusterOutageSimulationApi.StartOutageSimulationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func startOutageSimulationBuilder() *cobra.Command {
@@ -201,12 +207,10 @@ func startOutageSimulationBuilder() *cobra.Command {
 		Use:   "startOutageSimulation",
 		Short: "Start an Outage Simulation",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

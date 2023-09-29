@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createAtlasSearchIndexOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -40,12 +37,9 @@ type createAtlasSearchIndexOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createAtlasSearchIndexOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createAtlasSearchIndexOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createAtlasSearchIndexOpts) readData() (*admin.ClusterSearchIndex, error) {
@@ -70,23 +64,31 @@ func (opts *createAtlasSearchIndexOpts) readData() (*admin.ClusterSearchIndex, e
 	return out, nil
 }
 
-func (opts *createAtlasSearchIndexOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateAtlasSearchIndexApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
 		ClusterSearchIndex: data,
 	}
+
 	resp, _, err := opts.client.AtlasSearchApi.CreateAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createAtlasSearchIndexBuilder() *cobra.Command {
@@ -97,12 +99,10 @@ func createAtlasSearchIndexBuilder() *cobra.Command {
 		Use:   "createAtlasSearchIndex",
 		Short: "Create One Atlas Search Index",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -118,33 +118,37 @@ func createAtlasSearchIndexBuilder() *cobra.Command {
 }
 
 type deleteAtlasSearchIndexOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 	indexId     string
 }
 
-func (opts *deleteAtlasSearchIndexOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteAtlasSearchIndexOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteAtlasSearchIndexOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteAtlasSearchIndexApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 		IndexId:     opts.indexId,
 	}
+
 	resp, _, err := opts.client.AtlasSearchApi.DeleteAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteAtlasSearchIndexBuilder() *cobra.Command {
@@ -153,12 +157,10 @@ func deleteAtlasSearchIndexBuilder() *cobra.Command {
 		Use:   "deleteAtlasSearchIndex",
 		Short: "Remove One Atlas Search Index",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -174,33 +176,37 @@ func deleteAtlasSearchIndexBuilder() *cobra.Command {
 }
 
 type getAtlasSearchIndexOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 	indexId     string
 }
 
-func (opts *getAtlasSearchIndexOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getAtlasSearchIndexOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getAtlasSearchIndexOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetAtlasSearchIndexApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 		IndexId:     opts.indexId,
 	}
+
 	resp, _, err := opts.client.AtlasSearchApi.GetAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getAtlasSearchIndexBuilder() *cobra.Command {
@@ -209,12 +215,10 @@ func getAtlasSearchIndexBuilder() *cobra.Command {
 		Use:   "getAtlasSearchIndex",
 		Short: "Return One Atlas Search Index",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -230,7 +234,6 @@ func getAtlasSearchIndexBuilder() *cobra.Command {
 }
 
 type listAtlasSearchIndexesOpts struct {
-	cli.GlobalOpts
 	client         *admin.APIClient
 	groupId        string
 	clusterName    string
@@ -238,27 +241,32 @@ type listAtlasSearchIndexesOpts struct {
 	databaseName   string
 }
 
-func (opts *listAtlasSearchIndexesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listAtlasSearchIndexesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listAtlasSearchIndexesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listAtlasSearchIndexesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListAtlasSearchIndexesApiParams{
 		GroupId:        opts.groupId,
 		ClusterName:    opts.clusterName,
 		CollectionName: opts.collectionName,
 		DatabaseName:   opts.databaseName,
 	}
+
 	resp, _, err := opts.client.AtlasSearchApi.ListAtlasSearchIndexesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listAtlasSearchIndexesBuilder() *cobra.Command {
@@ -267,12 +275,10 @@ func listAtlasSearchIndexesBuilder() *cobra.Command {
 		Use:   "listAtlasSearchIndexes",
 		Short: "Return All Atlas Search Indexes for One Collection",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -290,7 +296,6 @@ func listAtlasSearchIndexesBuilder() *cobra.Command {
 }
 
 type updateAtlasSearchIndexOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -300,12 +305,9 @@ type updateAtlasSearchIndexOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateAtlasSearchIndexOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateAtlasSearchIndexOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateAtlasSearchIndexOpts) readData() (*admin.ClusterSearchIndex, error) {
@@ -330,11 +332,12 @@ func (opts *updateAtlasSearchIndexOpts) readData() (*admin.ClusterSearchIndex, e
 	return out, nil
 }
 
-func (opts *updateAtlasSearchIndexOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateAtlasSearchIndexApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
@@ -342,12 +345,19 @@ func (opts *updateAtlasSearchIndexOpts) Run(ctx context.Context, w io.Writer) er
 
 		ClusterSearchIndex: data,
 	}
+
 	resp, _, err := opts.client.AtlasSearchApi.UpdateAtlasSearchIndexWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateAtlasSearchIndexBuilder() *cobra.Command {
@@ -358,12 +368,10 @@ func updateAtlasSearchIndexBuilder() *cobra.Command {
 		Use:   "updateAtlasSearchIndex",
 		Short: "Update One Atlas Search Index",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

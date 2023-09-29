@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createDataFederationPrivateEndpointOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -39,12 +36,9 @@ type createDataFederationPrivateEndpointOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createDataFederationPrivateEndpointOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createDataFederationPrivateEndpointOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createDataFederationPrivateEndpointOpts) readData() (*admin.PrivateNetworkEndpointIdEntry, error) {
@@ -69,22 +63,30 @@ func (opts *createDataFederationPrivateEndpointOpts) readData() (*admin.PrivateN
 	return out, nil
 }
 
-func (opts *createDataFederationPrivateEndpointOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createDataFederationPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateDataFederationPrivateEndpointApiParams{
 		GroupId: opts.groupId,
 
 		PrivateNetworkEndpointIdEntry: data,
 	}
+
 	resp, _, err := opts.client.DataFederationApi.CreateDataFederationPrivateEndpointWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createDataFederationPrivateEndpointBuilder() *cobra.Command {
@@ -95,12 +97,10 @@ func createDataFederationPrivateEndpointBuilder() *cobra.Command {
 		Use:   "createDataFederationPrivateEndpoint",
 		Short: "Create One Federated Database Instance and Online Archive Private Endpoint for One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -114,7 +114,6 @@ func createDataFederationPrivateEndpointBuilder() *cobra.Command {
 }
 
 type createFederatedDatabaseOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -123,12 +122,9 @@ type createFederatedDatabaseOpts struct {
 	fs                 afero.Fs
 }
 
-func (opts *createFederatedDatabaseOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createFederatedDatabaseOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createFederatedDatabaseOpts) readData() (*admin.DataLakeTenant, error) {
@@ -153,11 +149,12 @@ func (opts *createFederatedDatabaseOpts) readData() (*admin.DataLakeTenant, erro
 	return out, nil
 }
 
-func (opts *createFederatedDatabaseOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateFederatedDatabaseApiParams{
 		GroupId: opts.groupId,
 
@@ -165,12 +162,19 @@ func (opts *createFederatedDatabaseOpts) Run(ctx context.Context, w io.Writer) e
 
 		DataLakeTenant: data,
 	}
+
 	resp, _, err := opts.client.DataFederationApi.CreateFederatedDatabaseWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createFederatedDatabaseBuilder() *cobra.Command {
@@ -181,12 +185,10 @@ func createFederatedDatabaseBuilder() *cobra.Command {
 		Use:   "createFederatedDatabase",
 		Short: "Create One Federated Database Instance in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -201,7 +203,6 @@ func createFederatedDatabaseBuilder() *cobra.Command {
 }
 
 type createOneDataFederationQueryLimitOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
@@ -211,12 +212,9 @@ type createOneDataFederationQueryLimitOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createOneDataFederationQueryLimitOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createOneDataFederationQueryLimitOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createOneDataFederationQueryLimitOpts) readData() (*admin.DataFederationTenantQueryLimit, error) {
@@ -241,11 +239,12 @@ func (opts *createOneDataFederationQueryLimitOpts) readData() (*admin.DataFedera
 	return out, nil
 }
 
-func (opts *createOneDataFederationQueryLimitOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createOneDataFederationQueryLimitOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateOneDataFederationQueryLimitApiParams{
 		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
@@ -253,12 +252,19 @@ func (opts *createOneDataFederationQueryLimitOpts) Run(ctx context.Context, w io
 
 		DataFederationTenantQueryLimit: data,
 	}
+
 	resp, _, err := opts.client.DataFederationApi.CreateOneDataFederationQueryLimitWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createOneDataFederationQueryLimitBuilder() *cobra.Command {
@@ -269,12 +275,10 @@ func createOneDataFederationQueryLimitBuilder() *cobra.Command {
 		Use:   "createOneDataFederationQueryLimit",
 		Short: "Configure One Query Limit for One Federated Database Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -300,31 +304,35 @@ func createOneDataFederationQueryLimitBuilder() *cobra.Command {
 }
 
 type deleteDataFederationPrivateEndpointOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	endpointId string
 }
 
-func (opts *deleteDataFederationPrivateEndpointOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteDataFederationPrivateEndpointOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteDataFederationPrivateEndpointOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteDataFederationPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteDataFederationPrivateEndpointApiParams{
 		GroupId:    opts.groupId,
 		EndpointId: opts.endpointId,
 	}
+
 	resp, _, err := opts.client.DataFederationApi.DeleteDataFederationPrivateEndpointWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteDataFederationPrivateEndpointBuilder() *cobra.Command {
@@ -333,12 +341,10 @@ func deleteDataFederationPrivateEndpointBuilder() *cobra.Command {
 		Use:   "deleteDataFederationPrivateEndpoint",
 		Short: "Remove One Federated Database Instance and Online Archive Private Endpoint from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -352,31 +358,35 @@ func deleteDataFederationPrivateEndpointBuilder() *cobra.Command {
 }
 
 type deleteFederatedDatabaseOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
 }
 
-func (opts *deleteFederatedDatabaseOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteFederatedDatabaseOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteFederatedDatabaseOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteFederatedDatabaseApiParams{
 		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 	}
+
 	resp, _, err := opts.client.DataFederationApi.DeleteFederatedDatabaseWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteFederatedDatabaseBuilder() *cobra.Command {
@@ -385,12 +395,10 @@ func deleteFederatedDatabaseBuilder() *cobra.Command {
 		Use:   "deleteFederatedDatabase",
 		Short: "Remove One Federated Database Instance from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -404,33 +412,37 @@ func deleteFederatedDatabaseBuilder() *cobra.Command {
 }
 
 type deleteOneDataFederationInstanceQueryLimitOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
 	limitName  string
 }
 
-func (opts *deleteOneDataFederationInstanceQueryLimitOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteOneDataFederationInstanceQueryLimitOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteOneDataFederationInstanceQueryLimitOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteOneDataFederationInstanceQueryLimitOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteOneDataFederationInstanceQueryLimitApiParams{
 		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 		LimitName:  opts.limitName,
 	}
+
 	resp, _, err := opts.client.DataFederationApi.DeleteOneDataFederationInstanceQueryLimitWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
@@ -439,12 +451,10 @@ func deleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
 		Use:   "deleteOneDataFederationInstanceQueryLimit",
 		Short: "Delete One Query Limit For One Federated Database Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -468,7 +478,6 @@ func deleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
 }
 
 type downloadFederatedDatabaseQueryLogsOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
@@ -476,27 +485,32 @@ type downloadFederatedDatabaseQueryLogsOpts struct {
 	startDate  int64
 }
 
-func (opts *downloadFederatedDatabaseQueryLogsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *downloadFederatedDatabaseQueryLogsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *downloadFederatedDatabaseQueryLogsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *downloadFederatedDatabaseQueryLogsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DownloadFederatedDatabaseQueryLogsApiParams{
 		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 		EndDate:    &opts.endDate,
 		StartDate:  &opts.startDate,
 	}
+
 	resp, _, err := opts.client.DataFederationApi.DownloadFederatedDatabaseQueryLogsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func downloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
@@ -505,12 +519,10 @@ func downloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
 		Use:   "downloadFederatedDatabaseQueryLogs",
 		Short: "Download Query Logs for One Federated Database Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -526,31 +538,35 @@ func downloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
 }
 
 type getDataFederationPrivateEndpointOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	endpointId string
 }
 
-func (opts *getDataFederationPrivateEndpointOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getDataFederationPrivateEndpointOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getDataFederationPrivateEndpointOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getDataFederationPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetDataFederationPrivateEndpointApiParams{
 		GroupId:    opts.groupId,
 		EndpointId: opts.endpointId,
 	}
+
 	resp, _, err := opts.client.DataFederationApi.GetDataFederationPrivateEndpointWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getDataFederationPrivateEndpointBuilder() *cobra.Command {
@@ -559,12 +575,10 @@ func getDataFederationPrivateEndpointBuilder() *cobra.Command {
 		Use:   "getDataFederationPrivateEndpoint",
 		Short: "Return One Federated Database Instance and Online Archive Private Endpoint in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -578,31 +592,35 @@ func getDataFederationPrivateEndpointBuilder() *cobra.Command {
 }
 
 type getFederatedDatabaseOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
 }
 
-func (opts *getFederatedDatabaseOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getFederatedDatabaseOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getFederatedDatabaseOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetFederatedDatabaseApiParams{
 		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 	}
+
 	resp, _, err := opts.client.DataFederationApi.GetFederatedDatabaseWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getFederatedDatabaseBuilder() *cobra.Command {
@@ -611,12 +629,10 @@ func getFederatedDatabaseBuilder() *cobra.Command {
 		Use:   "getFederatedDatabase",
 		Short: "Return One Federated Database Instance in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -630,7 +646,6 @@ func getFederatedDatabaseBuilder() *cobra.Command {
 }
 
 type listDataFederationPrivateEndpointsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -638,27 +653,32 @@ type listDataFederationPrivateEndpointsOpts struct {
 	pageNum      int
 }
 
-func (opts *listDataFederationPrivateEndpointsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listDataFederationPrivateEndpointsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listDataFederationPrivateEndpointsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listDataFederationPrivateEndpointsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListDataFederationPrivateEndpointsApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.DataFederationApi.ListDataFederationPrivateEndpointsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listDataFederationPrivateEndpointsBuilder() *cobra.Command {
@@ -667,12 +687,10 @@ func listDataFederationPrivateEndpointsBuilder() *cobra.Command {
 		Use:   "listDataFederationPrivateEndpoints",
 		Short: "Return All Federated Database Instance and Online Archive Private Endpoints in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -687,31 +705,35 @@ func listDataFederationPrivateEndpointsBuilder() *cobra.Command {
 }
 
 type listFederatedDatabasesOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 	type_   string
 }
 
-func (opts *listFederatedDatabasesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listFederatedDatabasesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listFederatedDatabasesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listFederatedDatabasesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListFederatedDatabasesApiParams{
 		GroupId: opts.groupId,
 		Type_:   &opts.type_,
 	}
+
 	resp, _, err := opts.client.DataFederationApi.ListFederatedDatabasesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listFederatedDatabasesBuilder() *cobra.Command {
@@ -720,12 +742,10 @@ func listFederatedDatabasesBuilder() *cobra.Command {
 		Use:   "listFederatedDatabases",
 		Short: "Return All Federated Database Instances in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -738,33 +758,37 @@ func listFederatedDatabasesBuilder() *cobra.Command {
 }
 
 type returnFederatedDatabaseQueryLimitOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
 	limitName  string
 }
 
-func (opts *returnFederatedDatabaseQueryLimitOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *returnFederatedDatabaseQueryLimitOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *returnFederatedDatabaseQueryLimitOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *returnFederatedDatabaseQueryLimitOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ReturnFederatedDatabaseQueryLimitApiParams{
 		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 		LimitName:  opts.limitName,
 	}
+
 	resp, _, err := opts.client.DataFederationApi.ReturnFederatedDatabaseQueryLimitWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func returnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
@@ -773,12 +797,10 @@ func returnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
 		Use:   "returnFederatedDatabaseQueryLimit",
 		Short: "Return One Federated Database Instance Query Limit for One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -802,31 +824,35 @@ func returnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
 }
 
 type returnFederatedDatabaseQueryLimitsOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
 }
 
-func (opts *returnFederatedDatabaseQueryLimitsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *returnFederatedDatabaseQueryLimitsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *returnFederatedDatabaseQueryLimitsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *returnFederatedDatabaseQueryLimitsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ReturnFederatedDatabaseQueryLimitsApiParams{
 		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 	}
+
 	resp, _, err := opts.client.DataFederationApi.ReturnFederatedDatabaseQueryLimitsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func returnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
@@ -835,12 +861,10 @@ func returnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
 		Use:   "returnFederatedDatabaseQueryLimits",
 		Short: "Return All Query Limits for One Federated Database Instance",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -854,7 +878,6 @@ func returnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
 }
 
 type updateFederatedDatabaseOpts struct {
-	cli.GlobalOpts
 	client             *admin.APIClient
 	groupId            string
 	tenantName         string
@@ -864,12 +887,9 @@ type updateFederatedDatabaseOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateFederatedDatabaseOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateFederatedDatabaseOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateFederatedDatabaseOpts) readData() (*admin.DataLakeTenant, error) {
@@ -894,11 +914,12 @@ func (opts *updateFederatedDatabaseOpts) readData() (*admin.DataLakeTenant, erro
 	return out, nil
 }
 
-func (opts *updateFederatedDatabaseOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateFederatedDatabaseApiParams{
 		GroupId:            opts.groupId,
 		TenantName:         opts.tenantName,
@@ -906,12 +927,19 @@ func (opts *updateFederatedDatabaseOpts) Run(ctx context.Context, w io.Writer) e
 
 		DataLakeTenant: data,
 	}
+
 	resp, _, err := opts.client.DataFederationApi.UpdateFederatedDatabaseWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateFederatedDatabaseBuilder() *cobra.Command {
@@ -922,12 +950,10 @@ func updateFederatedDatabaseBuilder() *cobra.Command {
 		Use:   "updateFederatedDatabase",
 		Short: "Update One Federated Database Instance in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

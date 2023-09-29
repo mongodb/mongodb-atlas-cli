@@ -18,35 +18,39 @@ package api
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"io"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type getSystemStatusOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 }
 
-func (opts *getSystemStatusOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getSystemStatusOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getSystemStatusOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getSystemStatusOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetSystemStatusApiParams{}
+
 	resp, _, err := opts.client.RootApi.GetSystemStatusWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getSystemStatusBuilder() *cobra.Command {
@@ -55,12 +59,10 @@ func getSystemStatusBuilder() *cobra.Command {
 		Use:   "getSystemStatus",
 		Short: "Return the status of this MongoDB application",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 

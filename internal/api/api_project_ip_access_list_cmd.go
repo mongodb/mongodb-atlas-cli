@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createProjectIpAccessListOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -42,12 +39,9 @@ type createProjectIpAccessListOpts struct {
 	fs           afero.Fs
 }
 
-func (opts *createProjectIpAccessListOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createProjectIpAccessListOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createProjectIpAccessListOpts) readData() (*[]admin.NetworkPermissionEntry, error) {
@@ -72,11 +66,12 @@ func (opts *createProjectIpAccessListOpts) readData() (*[]admin.NetworkPermissio
 	return out, nil
 }
 
-func (opts *createProjectIpAccessListOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createProjectIpAccessListOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateProjectIpAccessListApiParams{
 		GroupId: opts.groupId,
 
@@ -86,12 +81,19 @@ func (opts *createProjectIpAccessListOpts) Run(ctx context.Context, w io.Writer)
 
 		NetworkPermissionEntry: data,
 	}
+
 	resp, _, err := opts.client.ProjectIPAccessListApi.CreateProjectIpAccessListWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createProjectIpAccessListBuilder() *cobra.Command {
@@ -102,12 +104,10 @@ func createProjectIpAccessListBuilder() *cobra.Command {
 		Use:   "createProjectIpAccessList",
 		Short: "Add Entries to Project IP Access List",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -124,31 +124,35 @@ func createProjectIpAccessListBuilder() *cobra.Command {
 }
 
 type deleteProjectIpAccessListOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	entryValue string
 }
 
-func (opts *deleteProjectIpAccessListOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteProjectIpAccessListOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteProjectIpAccessListOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteProjectIpAccessListOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteProjectIpAccessListApiParams{
 		GroupId:    opts.groupId,
 		EntryValue: opts.entryValue,
 	}
+
 	resp, _, err := opts.client.ProjectIPAccessListApi.DeleteProjectIpAccessListWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteProjectIpAccessListBuilder() *cobra.Command {
@@ -157,12 +161,10 @@ func deleteProjectIpAccessListBuilder() *cobra.Command {
 		Use:   "deleteProjectIpAccessList",
 		Short: "Remove One Entry from One Project IP Access List",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -180,31 +182,35 @@ func deleteProjectIpAccessListBuilder() *cobra.Command {
 }
 
 type getProjectIpAccessListStatusOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	entryValue string
 }
 
-func (opts *getProjectIpAccessListStatusOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getProjectIpAccessListStatusOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getProjectIpAccessListStatusOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getProjectIpAccessListStatusOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetProjectIpAccessListStatusApiParams{
 		GroupId:    opts.groupId,
 		EntryValue: opts.entryValue,
 	}
+
 	resp, _, err := opts.client.ProjectIPAccessListApi.GetProjectIpAccessListStatusWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getProjectIpAccessListStatusBuilder() *cobra.Command {
@@ -213,12 +219,10 @@ func getProjectIpAccessListStatusBuilder() *cobra.Command {
 		Use:   "getProjectIpAccessListStatus",
 		Short: "Return Status of One Project IP Access List Entry",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -232,31 +236,35 @@ func getProjectIpAccessListStatusBuilder() *cobra.Command {
 }
 
 type getProjectIpListOpts struct {
-	cli.GlobalOpts
 	client     *admin.APIClient
 	groupId    string
 	entryValue string
 }
 
-func (opts *getProjectIpListOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getProjectIpListOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getProjectIpListOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getProjectIpListOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetProjectIpListApiParams{
 		GroupId:    opts.groupId,
 		EntryValue: opts.entryValue,
 	}
+
 	resp, _, err := opts.client.ProjectIPAccessListApi.GetProjectIpListWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getProjectIpListBuilder() *cobra.Command {
@@ -265,12 +273,10 @@ func getProjectIpListBuilder() *cobra.Command {
 		Use:   "getProjectIpList",
 		Short: "Return One Project IP Access List Entry",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -284,7 +290,6 @@ func getProjectIpListBuilder() *cobra.Command {
 }
 
 type listProjectIpAccessListsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -292,27 +297,32 @@ type listProjectIpAccessListsOpts struct {
 	pageNum      int
 }
 
-func (opts *listProjectIpAccessListsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listProjectIpAccessListsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listProjectIpAccessListsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listProjectIpAccessListsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListProjectIpAccessListsApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.ProjectIPAccessListApi.ListProjectIpAccessListsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listProjectIpAccessListsBuilder() *cobra.Command {
@@ -321,12 +331,10 @@ func listProjectIpAccessListsBuilder() *cobra.Command {
 		Use:   "listProjectIpAccessLists",
 		Short: "Return Project IP Access List",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

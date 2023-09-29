@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createPeeringConnectionOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -39,12 +36,9 @@ type createPeeringConnectionOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createPeeringConnectionOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createPeeringConnectionOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createPeeringConnectionOpts) readData() (*admin.BaseNetworkPeeringConnectionSettings, error) {
@@ -69,22 +63,30 @@ func (opts *createPeeringConnectionOpts) readData() (*admin.BaseNetworkPeeringCo
 	return out, nil
 }
 
-func (opts *createPeeringConnectionOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createPeeringConnectionOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreatePeeringConnectionApiParams{
 		GroupId: opts.groupId,
 
 		BaseNetworkPeeringConnectionSettings: data,
 	}
+
 	resp, _, err := opts.client.NetworkPeeringApi.CreatePeeringConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createPeeringConnectionBuilder() *cobra.Command {
@@ -95,12 +97,10 @@ func createPeeringConnectionBuilder() *cobra.Command {
 		Use:   "createPeeringConnection",
 		Short: "Create One New Network Peering Connection",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -114,7 +114,6 @@ func createPeeringConnectionBuilder() *cobra.Command {
 }
 
 type createPeeringContainerOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -122,12 +121,9 @@ type createPeeringContainerOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createPeeringContainerOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createPeeringContainerOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createPeeringContainerOpts) readData() (*admin.CloudProviderContainer, error) {
@@ -152,22 +148,30 @@ func (opts *createPeeringContainerOpts) readData() (*admin.CloudProviderContaine
 	return out, nil
 }
 
-func (opts *createPeeringContainerOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createPeeringContainerOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreatePeeringContainerApiParams{
 		GroupId: opts.groupId,
 
 		CloudProviderContainer: data,
 	}
+
 	resp, _, err := opts.client.NetworkPeeringApi.CreatePeeringContainerWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createPeeringContainerBuilder() *cobra.Command {
@@ -178,12 +182,10 @@ func createPeeringContainerBuilder() *cobra.Command {
 		Use:   "createPeeringContainer",
 		Short: "Create One New Network Peering Container",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -197,31 +199,35 @@ func createPeeringContainerBuilder() *cobra.Command {
 }
 
 type deletePeeringConnectionOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 	peerId  string
 }
 
-func (opts *deletePeeringConnectionOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deletePeeringConnectionOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deletePeeringConnectionOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deletePeeringConnectionOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeletePeeringConnectionApiParams{
 		GroupId: opts.groupId,
 		PeerId:  opts.peerId,
 	}
+
 	resp, _, err := opts.client.NetworkPeeringApi.DeletePeeringConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deletePeeringConnectionBuilder() *cobra.Command {
@@ -230,12 +236,10 @@ func deletePeeringConnectionBuilder() *cobra.Command {
 		Use:   "deletePeeringConnection",
 		Short: "Remove One Existing Network Peering Connection",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -249,31 +253,35 @@ func deletePeeringConnectionBuilder() *cobra.Command {
 }
 
 type deletePeeringContainerOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	containerId string
 }
 
-func (opts *deletePeeringContainerOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deletePeeringContainerOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deletePeeringContainerOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deletePeeringContainerOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeletePeeringContainerApiParams{
 		GroupId:     opts.groupId,
 		ContainerId: opts.containerId,
 	}
+
 	resp, _, err := opts.client.NetworkPeeringApi.DeletePeeringContainerWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deletePeeringContainerBuilder() *cobra.Command {
@@ -282,12 +290,10 @@ func deletePeeringContainerBuilder() *cobra.Command {
 		Use:   "deletePeeringContainer",
 		Short: "Remove One Network Peering Container",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -301,7 +307,6 @@ func deletePeeringContainerBuilder() *cobra.Command {
 }
 
 type disablePeeringOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -309,12 +314,9 @@ type disablePeeringOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *disablePeeringOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *disablePeeringOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *disablePeeringOpts) readData() (*admin.PrivateIPMode, error) {
@@ -339,22 +341,30 @@ func (opts *disablePeeringOpts) readData() (*admin.PrivateIPMode, error) {
 	return out, nil
 }
 
-func (opts *disablePeeringOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *disablePeeringOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.DisablePeeringApiParams{
 		GroupId: opts.groupId,
 
 		PrivateIPMode: data,
 	}
+
 	resp, _, err := opts.client.NetworkPeeringApi.DisablePeeringWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func disablePeeringBuilder() *cobra.Command {
@@ -365,12 +375,10 @@ func disablePeeringBuilder() *cobra.Command {
 		Use:   "disablePeering",
 		Short: "Disable Connect via Peering Only Mode for One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -384,31 +392,35 @@ func disablePeeringBuilder() *cobra.Command {
 }
 
 type getPeeringConnectionOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 	peerId  string
 }
 
-func (opts *getPeeringConnectionOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getPeeringConnectionOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getPeeringConnectionOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getPeeringConnectionOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetPeeringConnectionApiParams{
 		GroupId: opts.groupId,
 		PeerId:  opts.peerId,
 	}
+
 	resp, _, err := opts.client.NetworkPeeringApi.GetPeeringConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getPeeringConnectionBuilder() *cobra.Command {
@@ -417,12 +429,10 @@ func getPeeringConnectionBuilder() *cobra.Command {
 		Use:   "getPeeringConnection",
 		Short: "Return One Network Peering Connection in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -436,31 +446,35 @@ func getPeeringConnectionBuilder() *cobra.Command {
 }
 
 type getPeeringContainerOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	containerId string
 }
 
-func (opts *getPeeringContainerOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getPeeringContainerOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getPeeringContainerOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getPeeringContainerOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetPeeringContainerApiParams{
 		GroupId:     opts.groupId,
 		ContainerId: opts.containerId,
 	}
+
 	resp, _, err := opts.client.NetworkPeeringApi.GetPeeringContainerWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getPeeringContainerBuilder() *cobra.Command {
@@ -469,12 +483,10 @@ func getPeeringContainerBuilder() *cobra.Command {
 		Use:   "getPeeringContainer",
 		Short: "Return One Network Peering Container",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -488,7 +500,6 @@ func getPeeringContainerBuilder() *cobra.Command {
 }
 
 type listPeeringConnectionsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -497,15 +508,13 @@ type listPeeringConnectionsOpts struct {
 	providerName string
 }
 
-func (opts *listPeeringConnectionsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listPeeringConnectionsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listPeeringConnectionsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listPeeringConnectionsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListPeeringConnectionsApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
@@ -513,12 +522,19 @@ func (opts *listPeeringConnectionsOpts) Run(ctx context.Context, w io.Writer) er
 		PageNum:      &opts.pageNum,
 		ProviderName: &opts.providerName,
 	}
+
 	resp, _, err := opts.client.NetworkPeeringApi.ListPeeringConnectionsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listPeeringConnectionsBuilder() *cobra.Command {
@@ -527,12 +543,10 @@ func listPeeringConnectionsBuilder() *cobra.Command {
 		Use:   "listPeeringConnections",
 		Short: "Return All Network Peering Connections in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -548,7 +562,6 @@ func listPeeringConnectionsBuilder() *cobra.Command {
 }
 
 type listPeeringContainerByCloudProviderOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	providerName string
@@ -557,15 +570,13 @@ type listPeeringContainerByCloudProviderOpts struct {
 	pageNum      int
 }
 
-func (opts *listPeeringContainerByCloudProviderOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listPeeringContainerByCloudProviderOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listPeeringContainerByCloudProviderOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listPeeringContainerByCloudProviderOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListPeeringContainerByCloudProviderApiParams{
 		GroupId:      opts.groupId,
 		ProviderName: &opts.providerName,
@@ -573,12 +584,19 @@ func (opts *listPeeringContainerByCloudProviderOpts) Run(ctx context.Context, w 
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.NetworkPeeringApi.ListPeeringContainerByCloudProviderWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listPeeringContainerByCloudProviderBuilder() *cobra.Command {
@@ -587,12 +605,10 @@ func listPeeringContainerByCloudProviderBuilder() *cobra.Command {
 		Use:   "listPeeringContainerByCloudProvider",
 		Short: "Return All Network Peering Containers in One Project for One Cloud Provider",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -609,7 +625,6 @@ func listPeeringContainerByCloudProviderBuilder() *cobra.Command {
 }
 
 type listPeeringContainersOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -617,27 +632,32 @@ type listPeeringContainersOpts struct {
 	pageNum      int
 }
 
-func (opts *listPeeringContainersOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listPeeringContainersOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listPeeringContainersOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listPeeringContainersOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListPeeringContainersApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.NetworkPeeringApi.ListPeeringContainersWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listPeeringContainersBuilder() *cobra.Command {
@@ -646,12 +666,10 @@ func listPeeringContainersBuilder() *cobra.Command {
 		Use:   "listPeeringContainers",
 		Short: "Return All Network Peering Containers in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -666,7 +684,6 @@ func listPeeringContainersBuilder() *cobra.Command {
 }
 
 type updatePeeringConnectionOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 	peerId  string
@@ -675,12 +692,9 @@ type updatePeeringConnectionOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updatePeeringConnectionOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updatePeeringConnectionOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updatePeeringConnectionOpts) readData() (*admin.BaseNetworkPeeringConnectionSettings, error) {
@@ -705,23 +719,31 @@ func (opts *updatePeeringConnectionOpts) readData() (*admin.BaseNetworkPeeringCo
 	return out, nil
 }
 
-func (opts *updatePeeringConnectionOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updatePeeringConnectionOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdatePeeringConnectionApiParams{
 		GroupId: opts.groupId,
 		PeerId:  opts.peerId,
 
 		BaseNetworkPeeringConnectionSettings: data,
 	}
+
 	resp, _, err := opts.client.NetworkPeeringApi.UpdatePeeringConnectionWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updatePeeringConnectionBuilder() *cobra.Command {
@@ -732,12 +754,10 @@ func updatePeeringConnectionBuilder() *cobra.Command {
 		Use:   "updatePeeringConnection",
 		Short: "Update One New Network Peering Connection",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -753,7 +773,6 @@ func updatePeeringConnectionBuilder() *cobra.Command {
 }
 
 type updatePeeringContainerOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	containerId string
@@ -762,12 +781,9 @@ type updatePeeringContainerOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updatePeeringContainerOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updatePeeringContainerOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updatePeeringContainerOpts) readData() (*admin.CloudProviderContainer, error) {
@@ -792,23 +808,31 @@ func (opts *updatePeeringContainerOpts) readData() (*admin.CloudProviderContaine
 	return out, nil
 }
 
-func (opts *updatePeeringContainerOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updatePeeringContainerOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdatePeeringContainerApiParams{
 		GroupId:     opts.groupId,
 		ContainerId: opts.containerId,
 
 		CloudProviderContainer: data,
 	}
+
 	resp, _, err := opts.client.NetworkPeeringApi.UpdatePeeringContainerWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updatePeeringContainerBuilder() *cobra.Command {
@@ -819,12 +843,10 @@ func updatePeeringContainerBuilder() *cobra.Command {
 		Use:   "updatePeeringContainer",
 		Short: "Update One Network Peering Container",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -840,29 +862,33 @@ func updatePeeringContainerBuilder() *cobra.Command {
 }
 
 type verifyConnectViaPeeringOnlyModeForOneProjectOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *verifyConnectViaPeeringOnlyModeForOneProjectOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *verifyConnectViaPeeringOnlyModeForOneProjectOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *verifyConnectViaPeeringOnlyModeForOneProjectOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *verifyConnectViaPeeringOnlyModeForOneProjectOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.VerifyConnectViaPeeringOnlyModeForOneProjectApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.NetworkPeeringApi.VerifyConnectViaPeeringOnlyModeForOneProjectWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func verifyConnectViaPeeringOnlyModeForOneProjectBuilder() *cobra.Command {
@@ -871,12 +897,10 @@ func verifyConnectViaPeeringOnlyModeForOneProjectBuilder() *cobra.Command {
 		Use:   "verifyConnectViaPeeringOnlyModeForOneProject",
 		Short: "Verify Connect via Peering Only Mode for One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

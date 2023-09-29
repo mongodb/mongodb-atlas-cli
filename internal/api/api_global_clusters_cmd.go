@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createCustomZoneMappingOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -40,12 +37,9 @@ type createCustomZoneMappingOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createCustomZoneMappingOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createCustomZoneMappingOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createCustomZoneMappingOpts) readData() (*admin.GeoSharding, error) {
@@ -70,23 +64,31 @@ func (opts *createCustomZoneMappingOpts) readData() (*admin.GeoSharding, error) 
 	return out, nil
 }
 
-func (opts *createCustomZoneMappingOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createCustomZoneMappingOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateCustomZoneMappingApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
 		GeoSharding: data,
 	}
+
 	resp, _, err := opts.client.GlobalClustersApi.CreateCustomZoneMappingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createCustomZoneMappingBuilder() *cobra.Command {
@@ -97,12 +99,10 @@ func createCustomZoneMappingBuilder() *cobra.Command {
 		Use:   "createCustomZoneMapping",
 		Short: "Add One Entry to One Custom Zone Mapping",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -118,7 +118,6 @@ func createCustomZoneMappingBuilder() *cobra.Command {
 }
 
 type createManagedNamespaceOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
@@ -127,12 +126,9 @@ type createManagedNamespaceOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createManagedNamespaceOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createManagedNamespaceOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createManagedNamespaceOpts) readData() (*admin.ManagedNamespace, error) {
@@ -157,23 +153,31 @@ func (opts *createManagedNamespaceOpts) readData() (*admin.ManagedNamespace, err
 	return out, nil
 }
 
-func (opts *createManagedNamespaceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createManagedNamespaceOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateManagedNamespaceApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
 		ManagedNamespace: data,
 	}
+
 	resp, _, err := opts.client.GlobalClustersApi.CreateManagedNamespaceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createManagedNamespaceBuilder() *cobra.Command {
@@ -184,12 +188,10 @@ func createManagedNamespaceBuilder() *cobra.Command {
 		Use:   "createManagedNamespace",
 		Short: "Create One Managed Namespace in One Global Multi-Cloud Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -205,31 +207,35 @@ func createManagedNamespaceBuilder() *cobra.Command {
 }
 
 type deleteAllCustomZoneMappingsOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 }
 
-func (opts *deleteAllCustomZoneMappingsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteAllCustomZoneMappingsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteAllCustomZoneMappingsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteAllCustomZoneMappingsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteAllCustomZoneMappingsApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
+
 	resp, _, err := opts.client.GlobalClustersApi.DeleteAllCustomZoneMappingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteAllCustomZoneMappingsBuilder() *cobra.Command {
@@ -238,12 +244,10 @@ func deleteAllCustomZoneMappingsBuilder() *cobra.Command {
 		Use:   "deleteAllCustomZoneMappings",
 		Short: "Remove All Custom Zone Mappings from One Global Multi-Cloud Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -257,7 +261,6 @@ func deleteAllCustomZoneMappingsBuilder() *cobra.Command {
 }
 
 type deleteManagedNamespaceOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	clusterName string
 	groupId     string
@@ -265,27 +268,32 @@ type deleteManagedNamespaceOpts struct {
 	collection  string
 }
 
-func (opts *deleteManagedNamespaceOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteManagedNamespaceOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteManagedNamespaceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteManagedNamespaceOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteManagedNamespaceApiParams{
 		ClusterName: opts.clusterName,
 		GroupId:     opts.groupId,
 		Db:          &opts.db,
 		Collection:  &opts.collection,
 	}
+
 	resp, _, err := opts.client.GlobalClustersApi.DeleteManagedNamespaceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteManagedNamespaceBuilder() *cobra.Command {
@@ -294,12 +302,10 @@ func deleteManagedNamespaceBuilder() *cobra.Command {
 		Use:   "deleteManagedNamespace",
 		Short: "Remove One Managed Namespace from One Global Multi-Cloud Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
@@ -315,31 +321,35 @@ func deleteManagedNamespaceBuilder() *cobra.Command {
 }
 
 type getManagedNamespaceOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 }
 
-func (opts *getManagedNamespaceOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getManagedNamespaceOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getManagedNamespaceOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getManagedNamespaceOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetManagedNamespaceApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
+
 	resp, _, err := opts.client.GlobalClustersApi.GetManagedNamespaceWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getManagedNamespaceBuilder() *cobra.Command {
@@ -348,12 +358,10 @@ func getManagedNamespaceBuilder() *cobra.Command {
 		Use:   "getManagedNamespace",
 		Short: "Return One Managed Namespace in One Global Multi-Cloud Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

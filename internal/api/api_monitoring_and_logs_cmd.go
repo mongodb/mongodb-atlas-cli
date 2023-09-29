@@ -18,40 +18,45 @@ package api
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"io"
+	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type getAtlasProcessOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	groupId   string
 	processId string
 }
 
-func (opts *getAtlasProcessOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getAtlasProcessOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getAtlasProcessOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getAtlasProcessOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetAtlasProcessApiParams{
 		GroupId:   opts.groupId,
 		ProcessId: opts.processId,
 	}
+
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetAtlasProcessWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getAtlasProcessBuilder() *cobra.Command {
@@ -60,12 +65,10 @@ func getAtlasProcessBuilder() *cobra.Command {
 		Use:   "getAtlasProcess",
 		Short: "Return One MongoDB Process by ID",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -79,33 +82,37 @@ func getAtlasProcessBuilder() *cobra.Command {
 }
 
 type getDatabaseOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	databaseName string
 	processId    string
 }
 
-func (opts *getDatabaseOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getDatabaseOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getDatabaseOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getDatabaseOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetDatabaseApiParams{
 		GroupId:      opts.groupId,
 		DatabaseName: opts.databaseName,
 		ProcessId:    opts.processId,
 	}
+
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetDatabaseWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getDatabaseBuilder() *cobra.Command {
@@ -114,12 +121,10 @@ func getDatabaseBuilder() *cobra.Command {
 		Use:   "getDatabase",
 		Short: "Return One Database for a MongoDB Process",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -135,7 +140,6 @@ func getDatabaseBuilder() *cobra.Command {
 }
 
 type getDatabaseMeasurementsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	databaseName string
@@ -147,15 +151,31 @@ type getDatabaseMeasurementsOpts struct {
 	end          string
 }
 
-func (opts *getDatabaseMeasurementsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getDatabaseMeasurementsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getDatabaseMeasurementsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getDatabaseMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
+
+	var start *time.Time
+	var errStart error
+	if opts.start != "" {
+		*start, errStart = time.Parse(time.RFC3339, opts.start)
+		if errStart != nil {
+			return errStart
+		}
+	}
+
+	var end *time.Time
+	var errEnd error
+	if opts.end != "" {
+		*end, errEnd = time.Parse(time.RFC3339, opts.end)
+		if errEnd != nil {
+			return errEnd
+		}
+	}
+
 	params := &admin.GetDatabaseMeasurementsApiParams{
 		GroupId:      opts.groupId,
 		DatabaseName: opts.databaseName,
@@ -163,15 +183,22 @@ func (opts *getDatabaseMeasurementsOpts) Run(ctx context.Context, w io.Writer) e
 		Granularity:  &opts.granularity,
 		M:            &opts.m,
 		Period:       &opts.period,
-		Start:        convertTime(&opts.start),
-		End:          convertTime(&opts.end),
+		Start:        start,
+		End:          end,
 	}
+
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetDatabaseMeasurementsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getDatabaseMeasurementsBuilder() *cobra.Command {
@@ -180,12 +207,10 @@ func getDatabaseMeasurementsBuilder() *cobra.Command {
 		Use:   "getDatabaseMeasurements",
 		Short: "Return Measurements of One Database for One MongoDB Process",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -207,7 +232,6 @@ func getDatabaseMeasurementsBuilder() *cobra.Command {
 }
 
 type getDiskMeasurementsOpts struct {
-	cli.GlobalOpts
 	client        *admin.APIClient
 	groupId       string
 	partitionName string
@@ -219,15 +243,31 @@ type getDiskMeasurementsOpts struct {
 	end           string
 }
 
-func (opts *getDiskMeasurementsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getDiskMeasurementsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getDiskMeasurementsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getDiskMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
+
+	var start *time.Time
+	var errStart error
+	if opts.start != "" {
+		*start, errStart = time.Parse(time.RFC3339, opts.start)
+		if errStart != nil {
+			return errStart
+		}
+	}
+
+	var end *time.Time
+	var errEnd error
+	if opts.end != "" {
+		*end, errEnd = time.Parse(time.RFC3339, opts.end)
+		if errEnd != nil {
+			return errEnd
+		}
+	}
+
 	params := &admin.GetDiskMeasurementsApiParams{
 		GroupId:       opts.groupId,
 		PartitionName: opts.partitionName,
@@ -235,15 +275,22 @@ func (opts *getDiskMeasurementsOpts) Run(ctx context.Context, w io.Writer) error
 		Granularity:   &opts.granularity,
 		M:             &opts.m,
 		Period:        &opts.period,
-		Start:         convertTime(&opts.start),
-		End:           convertTime(&opts.end),
+		Start:         start,
+		End:           end,
 	}
+
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetDiskMeasurementsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getDiskMeasurementsBuilder() *cobra.Command {
@@ -252,12 +299,10 @@ func getDiskMeasurementsBuilder() *cobra.Command {
 		Use:   "getDiskMeasurements",
 		Short: "Return Measurements of One Disk for One MongoDB Process",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -279,7 +324,6 @@ func getDiskMeasurementsBuilder() *cobra.Command {
 }
 
 type getHostLogsOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	groupId   string
 	hostName  string
@@ -288,15 +332,13 @@ type getHostLogsOpts struct {
 	startDate int64
 }
 
-func (opts *getHostLogsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getHostLogsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getHostLogsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getHostLogsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetHostLogsApiParams{
 		GroupId:   opts.groupId,
 		HostName:  opts.hostName,
@@ -304,12 +346,19 @@ func (opts *getHostLogsOpts) Run(ctx context.Context, w io.Writer) error {
 		EndDate:   &opts.endDate,
 		StartDate: &opts.startDate,
 	}
+
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetHostLogsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getHostLogsBuilder() *cobra.Command {
@@ -318,12 +367,10 @@ func getHostLogsBuilder() *cobra.Command {
 		Use:   "getHostLogs",
 		Short: "Download Logs for One Cluster Host in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -341,7 +388,6 @@ func getHostLogsBuilder() *cobra.Command {
 }
 
 type getHostMeasurementsOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	processId   string
@@ -352,30 +398,53 @@ type getHostMeasurementsOpts struct {
 	end         string
 }
 
-func (opts *getHostMeasurementsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getHostMeasurementsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getHostMeasurementsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getHostMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
+
+	var start *time.Time
+	var errStart error
+	if opts.start != "" {
+		*start, errStart = time.Parse(time.RFC3339, opts.start)
+		if errStart != nil {
+			return errStart
+		}
+	}
+
+	var end *time.Time
+	var errEnd error
+	if opts.end != "" {
+		*end, errEnd = time.Parse(time.RFC3339, opts.end)
+		if errEnd != nil {
+			return errEnd
+		}
+	}
+
 	params := &admin.GetHostMeasurementsApiParams{
 		GroupId:     opts.groupId,
 		ProcessId:   opts.processId,
 		Granularity: &opts.granularity,
 		M:           &opts.m,
 		Period:      &opts.period,
-		Start:       convertTime(&opts.start),
-		End:         convertTime(&opts.end),
+		Start:       start,
+		End:         end,
 	}
+
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetHostMeasurementsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getHostMeasurementsBuilder() *cobra.Command {
@@ -384,12 +453,10 @@ func getHostMeasurementsBuilder() *cobra.Command {
 		Use:   "getHostMeasurements",
 		Short: "Return Measurements for One MongoDB Process",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -409,7 +476,6 @@ func getHostMeasurementsBuilder() *cobra.Command {
 }
 
 type getIndexMetricsOpts struct {
-	cli.GlobalOpts
 	client         *admin.APIClient
 	processId      string
 	indexName      string
@@ -423,15 +489,31 @@ type getIndexMetricsOpts struct {
 	end            string
 }
 
-func (opts *getIndexMetricsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getIndexMetricsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getIndexMetricsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getIndexMetricsOpts) run(ctx context.Context, w io.Writer) error {
+
+	var start *time.Time
+	var errStart error
+	if opts.start != "" {
+		*start, errStart = time.Parse(time.RFC3339, opts.start)
+		if errStart != nil {
+			return errStart
+		}
+	}
+
+	var end *time.Time
+	var errEnd error
+	if opts.end != "" {
+		*end, errEnd = time.Parse(time.RFC3339, opts.end)
+		if errEnd != nil {
+			return errEnd
+		}
+	}
+
 	params := &admin.GetIndexMetricsApiParams{
 		ProcessId:      opts.processId,
 		IndexName:      opts.indexName,
@@ -441,15 +523,22 @@ func (opts *getIndexMetricsOpts) Run(ctx context.Context, w io.Writer) error {
 		Granularity:    &opts.granularity,
 		Metrics:        &opts.metrics,
 		Period:         &opts.period,
-		Start:          convertTime(&opts.start),
-		End:            convertTime(&opts.end),
+		Start:          start,
+		End:            end,
 	}
+
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetIndexMetricsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getIndexMetricsBuilder() *cobra.Command {
@@ -458,12 +547,10 @@ func getIndexMetricsBuilder() *cobra.Command {
 		Use:   "getIndexMetrics",
 		Short: "Return Atlas Search Metrics for One Index in One Specified Namespace",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`)
@@ -490,7 +577,6 @@ func getIndexMetricsBuilder() *cobra.Command {
 }
 
 type getMeasurementsOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	processId   string
 	groupId     string
@@ -501,30 +587,53 @@ type getMeasurementsOpts struct {
 	end         string
 }
 
-func (opts *getMeasurementsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getMeasurementsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getMeasurementsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
+
+	var start *time.Time
+	var errStart error
+	if opts.start != "" {
+		*start, errStart = time.Parse(time.RFC3339, opts.start)
+		if errStart != nil {
+			return errStart
+		}
+	}
+
+	var end *time.Time
+	var errEnd error
+	if opts.end != "" {
+		*end, errEnd = time.Parse(time.RFC3339, opts.end)
+		if errEnd != nil {
+			return errEnd
+		}
+	}
+
 	params := &admin.GetMeasurementsApiParams{
 		ProcessId:   opts.processId,
 		GroupId:     opts.groupId,
 		Granularity: &opts.granularity,
 		Metrics:     &opts.metrics,
 		Period:      &opts.period,
-		Start:       convertTime(&opts.start),
-		End:         convertTime(&opts.end),
+		Start:       start,
+		End:         end,
 	}
+
 	resp, _, err := opts.client.MonitoringAndLogsApi.GetMeasurementsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getMeasurementsBuilder() *cobra.Command {
@@ -533,12 +642,10 @@ func getMeasurementsBuilder() *cobra.Command {
 		Use:   "getMeasurements",
 		Short: "Return Atlas Search Hardware and Status Metrics",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`)
@@ -559,7 +666,6 @@ func getMeasurementsBuilder() *cobra.Command {
 }
 
 type listAtlasProcessesOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -567,27 +673,32 @@ type listAtlasProcessesOpts struct {
 	pageNum      int
 }
 
-func (opts *listAtlasProcessesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listAtlasProcessesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listAtlasProcessesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listAtlasProcessesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListAtlasProcessesApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.MonitoringAndLogsApi.ListAtlasProcessesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listAtlasProcessesBuilder() *cobra.Command {
@@ -596,12 +707,10 @@ func listAtlasProcessesBuilder() *cobra.Command {
 		Use:   "listAtlasProcesses",
 		Short: "Return All MongoDB Processes in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -616,7 +725,6 @@ func listAtlasProcessesBuilder() *cobra.Command {
 }
 
 type listDatabasesOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	processId    string
@@ -625,15 +733,13 @@ type listDatabasesOpts struct {
 	pageNum      int
 }
 
-func (opts *listDatabasesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listDatabasesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listDatabasesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listDatabasesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListDatabasesApiParams{
 		GroupId:      opts.groupId,
 		ProcessId:    opts.processId,
@@ -641,12 +747,19 @@ func (opts *listDatabasesOpts) Run(ctx context.Context, w io.Writer) error {
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.MonitoringAndLogsApi.ListDatabasesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listDatabasesBuilder() *cobra.Command {
@@ -655,12 +768,10 @@ func listDatabasesBuilder() *cobra.Command {
 		Use:   "listDatabases",
 		Short: "Return Available Databases for One MongoDB Process",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -677,33 +788,37 @@ func listDatabasesBuilder() *cobra.Command {
 }
 
 type listDiskMeasurementsOpts struct {
-	cli.GlobalOpts
 	client        *admin.APIClient
 	partitionName string
 	groupId       string
 	processId     string
 }
 
-func (opts *listDiskMeasurementsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listDiskMeasurementsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listDiskMeasurementsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listDiskMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListDiskMeasurementsApiParams{
 		PartitionName: opts.partitionName,
 		GroupId:       opts.groupId,
 		ProcessId:     opts.processId,
 	}
+
 	resp, _, err := opts.client.MonitoringAndLogsApi.ListDiskMeasurementsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listDiskMeasurementsBuilder() *cobra.Command {
@@ -712,12 +827,10 @@ func listDiskMeasurementsBuilder() *cobra.Command {
 		Use:   "listDiskMeasurements",
 		Short: "Return Measurements of One Disk",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.partitionName, "partitionName", "", `Human-readable label of the disk or partition to which the measurements apply.`)
@@ -733,7 +846,6 @@ func listDiskMeasurementsBuilder() *cobra.Command {
 }
 
 type listDiskPartitionsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	processId    string
@@ -742,15 +854,13 @@ type listDiskPartitionsOpts struct {
 	pageNum      int
 }
 
-func (opts *listDiskPartitionsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listDiskPartitionsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listDiskPartitionsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listDiskPartitionsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListDiskPartitionsApiParams{
 		GroupId:      opts.groupId,
 		ProcessId:    opts.processId,
@@ -758,12 +868,19 @@ func (opts *listDiskPartitionsOpts) Run(ctx context.Context, w io.Writer) error 
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.MonitoringAndLogsApi.ListDiskPartitionsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listDiskPartitionsBuilder() *cobra.Command {
@@ -772,12 +889,10 @@ func listDiskPartitionsBuilder() *cobra.Command {
 		Use:   "listDiskPartitions",
 		Short: "Return Available Disks for One MongoDB Process",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -794,7 +909,6 @@ func listDiskPartitionsBuilder() *cobra.Command {
 }
 
 type listIndexMetricsOpts struct {
-	cli.GlobalOpts
 	client         *admin.APIClient
 	processId      string
 	databaseName   string
@@ -807,15 +921,31 @@ type listIndexMetricsOpts struct {
 	end            string
 }
 
-func (opts *listIndexMetricsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listIndexMetricsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listIndexMetricsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listIndexMetricsOpts) run(ctx context.Context, w io.Writer) error {
+
+	var start *time.Time
+	var errStart error
+	if opts.start != "" {
+		*start, errStart = time.Parse(time.RFC3339, opts.start)
+		if errStart != nil {
+			return errStart
+		}
+	}
+
+	var end *time.Time
+	var errEnd error
+	if opts.end != "" {
+		*end, errEnd = time.Parse(time.RFC3339, opts.end)
+		if errEnd != nil {
+			return errEnd
+		}
+	}
+
 	params := &admin.ListIndexMetricsApiParams{
 		ProcessId:      opts.processId,
 		DatabaseName:   opts.databaseName,
@@ -824,15 +954,22 @@ func (opts *listIndexMetricsOpts) Run(ctx context.Context, w io.Writer) error {
 		Granularity:    &opts.granularity,
 		Metrics:        &opts.metrics,
 		Period:         &opts.period,
-		Start:          convertTime(&opts.start),
-		End:            convertTime(&opts.end),
+		Start:          start,
+		End:            end,
 	}
+
 	resp, _, err := opts.client.MonitoringAndLogsApi.ListIndexMetricsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listIndexMetricsBuilder() *cobra.Command {
@@ -841,12 +978,10 @@ func listIndexMetricsBuilder() *cobra.Command {
 		Use:   "listIndexMetrics",
 		Short: "Return All Atlas Search Index Metrics for One Namespace",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`)
@@ -871,31 +1006,35 @@ func listIndexMetricsBuilder() *cobra.Command {
 }
 
 type listMetricTypesOpts struct {
-	cli.GlobalOpts
 	client    *admin.APIClient
 	processId string
 	groupId   string
 }
 
-func (opts *listMetricTypesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listMetricTypesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listMetricTypesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listMetricTypesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListMetricTypesApiParams{
 		ProcessId: opts.processId,
 		GroupId:   opts.groupId,
 	}
+
 	resp, _, err := opts.client.MonitoringAndLogsApi.ListMetricTypesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listMetricTypesBuilder() *cobra.Command {
@@ -904,12 +1043,10 @@ func listMetricTypesBuilder() *cobra.Command {
 		Use:   "listMetricTypes",
 		Short: "Return All Atlas Search Metric Types for One Process",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`)

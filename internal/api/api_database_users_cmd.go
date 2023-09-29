@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createDatabaseUserOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -39,12 +36,9 @@ type createDatabaseUserOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createDatabaseUserOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createDatabaseUserOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createDatabaseUserOpts) readData() (*admin.CloudDatabaseUser, error) {
@@ -69,22 +63,30 @@ func (opts *createDatabaseUserOpts) readData() (*admin.CloudDatabaseUser, error)
 	return out, nil
 }
 
-func (opts *createDatabaseUserOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createDatabaseUserOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateDatabaseUserApiParams{
 		GroupId: opts.groupId,
 
 		CloudDatabaseUser: data,
 	}
+
 	resp, _, err := opts.client.DatabaseUsersApi.CreateDatabaseUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createDatabaseUserBuilder() *cobra.Command {
@@ -95,12 +97,10 @@ func createDatabaseUserBuilder() *cobra.Command {
 		Use:   "createDatabaseUser",
 		Short: "Create One Database User in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -114,33 +114,37 @@ func createDatabaseUserBuilder() *cobra.Command {
 }
 
 type deleteDatabaseUserOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	databaseName string
 	username     string
 }
 
-func (opts *deleteDatabaseUserOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteDatabaseUserOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteDatabaseUserOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteDatabaseUserOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteDatabaseUserApiParams{
 		GroupId:      opts.groupId,
 		DatabaseName: opts.databaseName,
 		Username:     opts.username,
 	}
+
 	resp, _, err := opts.client.DatabaseUsersApi.DeleteDatabaseUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteDatabaseUserBuilder() *cobra.Command {
@@ -149,12 +153,10 @@ func deleteDatabaseUserBuilder() *cobra.Command {
 		Use:   "deleteDatabaseUser",
 		Short: "Remove One Database User from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -182,33 +184,37 @@ func deleteDatabaseUserBuilder() *cobra.Command {
 }
 
 type getDatabaseUserOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	databaseName string
 	username     string
 }
 
-func (opts *getDatabaseUserOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getDatabaseUserOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getDatabaseUserOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getDatabaseUserOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetDatabaseUserApiParams{
 		GroupId:      opts.groupId,
 		DatabaseName: opts.databaseName,
 		Username:     opts.username,
 	}
+
 	resp, _, err := opts.client.DatabaseUsersApi.GetDatabaseUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getDatabaseUserBuilder() *cobra.Command {
@@ -217,12 +223,10 @@ func getDatabaseUserBuilder() *cobra.Command {
 		Use:   "getDatabaseUser",
 		Short: "Return One Database User from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -250,7 +254,6 @@ func getDatabaseUserBuilder() *cobra.Command {
 }
 
 type listDatabaseUsersOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	includeCount bool
@@ -258,27 +261,32 @@ type listDatabaseUsersOpts struct {
 	pageNum      int
 }
 
-func (opts *listDatabaseUsersOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listDatabaseUsersOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listDatabaseUsersOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listDatabaseUsersOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListDatabaseUsersApiParams{
 		GroupId:      opts.groupId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.DatabaseUsersApi.ListDatabaseUsersWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listDatabaseUsersBuilder() *cobra.Command {
@@ -287,12 +295,10 @@ func listDatabaseUsersBuilder() *cobra.Command {
 		Use:   "listDatabaseUsers",
 		Short: "Return All Database Users from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -307,7 +313,6 @@ func listDatabaseUsersBuilder() *cobra.Command {
 }
 
 type updateDatabaseUserOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	databaseName string
@@ -317,12 +322,9 @@ type updateDatabaseUserOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateDatabaseUserOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateDatabaseUserOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateDatabaseUserOpts) readData() (*admin.CloudDatabaseUser, error) {
@@ -347,11 +349,12 @@ func (opts *updateDatabaseUserOpts) readData() (*admin.CloudDatabaseUser, error)
 	return out, nil
 }
 
-func (opts *updateDatabaseUserOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateDatabaseUserOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateDatabaseUserApiParams{
 		GroupId:      opts.groupId,
 		DatabaseName: opts.databaseName,
@@ -359,12 +362,19 @@ func (opts *updateDatabaseUserOpts) Run(ctx context.Context, w io.Writer) error 
 
 		CloudDatabaseUser: data,
 	}
+
 	resp, _, err := opts.client.DatabaseUsersApi.UpdateDatabaseUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateDatabaseUserBuilder() *cobra.Command {
@@ -375,12 +385,10 @@ func updateDatabaseUserBuilder() *cobra.Command {
 		Use:   "updateDatabaseUser",
 		Short: "Update One Database User in One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

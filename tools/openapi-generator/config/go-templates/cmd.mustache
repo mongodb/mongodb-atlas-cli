@@ -6,18 +6,17 @@ import (
 	"os"
 	"io"
 	"time"
+	"encoding/json"
+	"fmt"
 
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/internal/cli"
-	"{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/internal/jsonwriter"
 )
 
 {{#operations}}
 {{#operation}}
 type {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	{{#allParams}}
 	{{^isBodyParam}}{{paramName}} {{{dataType}}}{{/isBodyParam}}
@@ -28,12 +27,9 @@ type {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts struct {
 	{{/bodyParam}}
 }
 
-func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 {{#bodyParam}}
@@ -60,26 +56,45 @@ func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) readD
 }
 {{/bodyParam}}
 
-func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) Run(ctx context.Context, {{^returnType}}_{{/returnType}}{{#returnType}}w{{/returnType}} io.Writer) error {
+func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) run(ctx context.Context, {{^returnType}}_{{/returnType}}{{#returnType}}w{{/returnType}} io.Writer) error {
 	{{#bodyParam}}
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
 	{{/bodyParam}}
+	{{#allParams}}{{#isDateTime}}
+	var {{paramName}} *time.Time
+	var err{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}} error
+	if opts.{{paramName}} != "" {
+		*{{paramName}}, err{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}} = time.Parse(time.RFC3339, opts.{{paramName}})
+		if err{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}} != nil {
+			return err{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}
+		}
+	}
+	{{/isDateTime}}{{/allParams}}
 	params := &admin.{{operationId}}ApiParams{
 		{{#allParams}}
-		{{^isBodyParam}}{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: {{#isDateTime}}convertTime({{/isDateTime}}{{^isPathParam}}&{{/isPathParam}}opts.{{paramName}}{{#isDateTime}}){{/isDateTime}},{{/isBodyParam}}
+		{{^isBodyParam}}{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: {{^isPathParam}}{{^isDateTime}}&{{/isDateTime}}{{/isPathParam}}{{^isDateTime}}opts.{{/isDateTime}}{{paramName}},{{/isBodyParam}}
 		{{/allParams}}{{#bodyParam}}
 		{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: data,
 		{{/bodyParam}}
 	}
+
 	{{#returnType}}resp, {{/returnType}}_, err := opts.client.{{classname}}.{{operationId}}WithParams(ctx, params).Execute()
+	{{#returnType}}
 	if err != nil {
 		return err
 	}
 
-	return {{^returnType}}nil{{/returnType}}{{#returnType}}jsonwriter.Print(w, resp){{/returnType}}
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	{{/returnType}}
+	return err
 }
 
 func {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Builder() *cobra.Command {
@@ -92,12 +107,10 @@ func {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Builder() *cobra.C
 		Use: "{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}",
 		Short: "{{ summary }}",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 {{#allParams}}

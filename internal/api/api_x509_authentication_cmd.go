@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createDatabaseUserCertificateOpts struct {
-	cli.GlobalOpts
 	client   *admin.APIClient
 	groupId  string
 	username string
@@ -40,12 +37,9 @@ type createDatabaseUserCertificateOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createDatabaseUserCertificateOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createDatabaseUserCertificateOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createDatabaseUserCertificateOpts) readData() (*admin.UserCert, error) {
@@ -70,23 +64,31 @@ func (opts *createDatabaseUserCertificateOpts) readData() (*admin.UserCert, erro
 	return out, nil
 }
 
-func (opts *createDatabaseUserCertificateOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createDatabaseUserCertificateOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateDatabaseUserCertificateApiParams{
 		GroupId:  opts.groupId,
 		Username: opts.username,
 
 		UserCert: data,
 	}
+
 	resp, _, err := opts.client.X509AuthenticationApi.CreateDatabaseUserCertificateWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createDatabaseUserCertificateBuilder() *cobra.Command {
@@ -97,12 +99,10 @@ func createDatabaseUserCertificateBuilder() *cobra.Command {
 		Use:   "createDatabaseUserCertificate",
 		Short: "Create One X.509 Certificate for One MongoDB User",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -118,29 +118,33 @@ func createDatabaseUserCertificateBuilder() *cobra.Command {
 }
 
 type disableCustomerManagedX509Opts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *disableCustomerManagedX509Opts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *disableCustomerManagedX509Opts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *disableCustomerManagedX509Opts) Run(ctx context.Context, w io.Writer) error {
+func (opts *disableCustomerManagedX509Opts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DisableCustomerManagedX509ApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.X509AuthenticationApi.DisableCustomerManagedX509WithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func disableCustomerManagedX509Builder() *cobra.Command {
@@ -149,12 +153,10 @@ func disableCustomerManagedX509Builder() *cobra.Command {
 		Use:   "disableCustomerManagedX509",
 		Short: "Disable Customer-Managed X.509",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -166,7 +168,6 @@ func disableCustomerManagedX509Builder() *cobra.Command {
 }
 
 type listDatabaseUserCertificatesOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	groupId      string
 	username     string
@@ -175,15 +176,13 @@ type listDatabaseUserCertificatesOpts struct {
 	pageNum      int
 }
 
-func (opts *listDatabaseUserCertificatesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listDatabaseUserCertificatesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listDatabaseUserCertificatesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listDatabaseUserCertificatesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListDatabaseUserCertificatesApiParams{
 		GroupId:      opts.groupId,
 		Username:     opts.username,
@@ -191,12 +190,19 @@ func (opts *listDatabaseUserCertificatesOpts) Run(ctx context.Context, w io.Writ
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.X509AuthenticationApi.ListDatabaseUserCertificatesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listDatabaseUserCertificatesBuilder() *cobra.Command {
@@ -205,12 +211,10 @@ func listDatabaseUserCertificatesBuilder() *cobra.Command {
 		Use:   "listDatabaseUserCertificates",
 		Short: "Return All X.509 Certificates Assigned to One MongoDB User",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type authorizeCloudProviderAccessRoleOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 	roleId  string
@@ -40,12 +37,9 @@ type authorizeCloudProviderAccessRoleOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *authorizeCloudProviderAccessRoleOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *authorizeCloudProviderAccessRoleOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *authorizeCloudProviderAccessRoleOpts) readData() (*admin.CloudProviderAccessRole, error) {
@@ -70,23 +64,31 @@ func (opts *authorizeCloudProviderAccessRoleOpts) readData() (*admin.CloudProvid
 	return out, nil
 }
 
-func (opts *authorizeCloudProviderAccessRoleOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *authorizeCloudProviderAccessRoleOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.AuthorizeCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
 		RoleId:  opts.roleId,
 
 		CloudProviderAccessRole: data,
 	}
+
 	resp, _, err := opts.client.CloudProviderAccessApi.AuthorizeCloudProviderAccessRoleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func authorizeCloudProviderAccessRoleBuilder() *cobra.Command {
@@ -97,12 +99,10 @@ func authorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 		Use:   "authorizeCloudProviderAccessRole",
 		Short: "Authorize One Cloud Provider Access Role",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -118,7 +118,6 @@ func authorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 }
 
 type createCloudProviderAccessRoleOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 
@@ -126,12 +125,9 @@ type createCloudProviderAccessRoleOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createCloudProviderAccessRoleOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createCloudProviderAccessRoleOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createCloudProviderAccessRoleOpts) readData() (*admin.CloudProviderAccessRole, error) {
@@ -156,22 +152,30 @@ func (opts *createCloudProviderAccessRoleOpts) readData() (*admin.CloudProviderA
 	return out, nil
 }
 
-func (opts *createCloudProviderAccessRoleOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createCloudProviderAccessRoleOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
 
 		CloudProviderAccessRole: data,
 	}
+
 	resp, _, err := opts.client.CloudProviderAccessApi.CreateCloudProviderAccessRoleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createCloudProviderAccessRoleBuilder() *cobra.Command {
@@ -182,12 +186,10 @@ func createCloudProviderAccessRoleBuilder() *cobra.Command {
 		Use:   "createCloudProviderAccessRole",
 		Short: "Create One Cloud Provider Access Role",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -201,33 +203,27 @@ func createCloudProviderAccessRoleBuilder() *cobra.Command {
 }
 
 type deauthorizeCloudProviderAccessRoleOpts struct {
-	cli.GlobalOpts
 	client        *admin.APIClient
 	groupId       string
 	cloudProvider string
 	roleId        string
 }
 
-func (opts *deauthorizeCloudProviderAccessRoleOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deauthorizeCloudProviderAccessRoleOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deauthorizeCloudProviderAccessRoleOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *deauthorizeCloudProviderAccessRoleOpts) run(ctx context.Context, _ io.Writer) error {
+
 	params := &admin.DeauthorizeCloudProviderAccessRoleApiParams{
 		GroupId:       opts.groupId,
 		CloudProvider: opts.cloudProvider,
 		RoleId:        opts.roleId,
 	}
-	_, err := opts.client.CloudProviderAccessApi.DeauthorizeCloudProviderAccessRoleWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.CloudProviderAccessApi.DeauthorizeCloudProviderAccessRoleWithParams(ctx, params).Execute()
+	return err
 }
 
 func deauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
@@ -236,12 +232,10 @@ func deauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 		Use:   "deauthorizeCloudProviderAccessRole",
 		Short: "Deauthorize One Cloud Provider Access Role",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -257,31 +251,35 @@ func deauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 }
 
 type getCloudProviderAccessRoleOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 	roleId  string
 }
 
-func (opts *getCloudProviderAccessRoleOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getCloudProviderAccessRoleOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getCloudProviderAccessRoleOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getCloudProviderAccessRoleOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
 		RoleId:  opts.roleId,
 	}
+
 	resp, _, err := opts.client.CloudProviderAccessApi.GetCloudProviderAccessRoleWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getCloudProviderAccessRoleBuilder() *cobra.Command {
@@ -290,12 +288,10 @@ func getCloudProviderAccessRoleBuilder() *cobra.Command {
 		Use:   "getCloudProviderAccessRole",
 		Short: "Return specified Cloud Provider Access Role",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -309,29 +305,33 @@ func getCloudProviderAccessRoleBuilder() *cobra.Command {
 }
 
 type listCloudProviderAccessRolesOpts struct {
-	cli.GlobalOpts
 	client  *admin.APIClient
 	groupId string
 }
 
-func (opts *listCloudProviderAccessRolesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listCloudProviderAccessRolesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listCloudProviderAccessRolesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listCloudProviderAccessRolesOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListCloudProviderAccessRolesApiParams{
 		GroupId: opts.groupId,
 	}
+
 	resp, _, err := opts.client.CloudProviderAccessApi.ListCloudProviderAccessRolesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listCloudProviderAccessRolesBuilder() *cobra.Command {
@@ -340,12 +340,10 @@ func listCloudProviderAccessRolesBuilder() *cobra.Command {
 		Use:   "listCloudProviderAccessRoles",
 		Short: "Return All Cloud Provider Access Roles",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

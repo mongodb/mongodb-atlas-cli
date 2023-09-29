@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createRoleMappingOpts struct {
-	cli.GlobalOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	orgId                string
@@ -40,12 +37,9 @@ type createRoleMappingOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createRoleMappingOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createRoleMappingOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createRoleMappingOpts) readData() (*admin.AuthFederationRoleMapping, error) {
@@ -70,23 +64,31 @@ func (opts *createRoleMappingOpts) readData() (*admin.AuthFederationRoleMapping,
 	return out, nil
 }
 
-func (opts *createRoleMappingOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createRoleMappingOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId:                opts.orgId,
 
 		AuthFederationRoleMapping: data,
 	}
+
 	resp, _, err := opts.client.FederatedAuthenticationApi.CreateRoleMappingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createRoleMappingBuilder() *cobra.Command {
@@ -97,12 +99,10 @@ func createRoleMappingBuilder() *cobra.Command {
 		Use:   "createRoleMapping",
 		Short: "Add One Role Mapping to One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -116,29 +116,23 @@ func createRoleMappingBuilder() *cobra.Command {
 }
 
 type deleteFederationAppOpts struct {
-	cli.GlobalOpts
 	client               *admin.APIClient
 	federationSettingsId string
 }
 
-func (opts *deleteFederationAppOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteFederationAppOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteFederationAppOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *deleteFederationAppOpts) run(ctx context.Context, _ io.Writer) error {
+
 	params := &admin.DeleteFederationAppApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 	}
-	_, err := opts.client.FederatedAuthenticationApi.DeleteFederationAppWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.FederatedAuthenticationApi.DeleteFederationAppWithParams(ctx, params).Execute()
+	return err
 }
 
 func deleteFederationAppBuilder() *cobra.Command {
@@ -147,12 +141,10 @@ func deleteFederationAppBuilder() *cobra.Command {
 		Use:   "deleteFederationApp",
 		Short: "Delete the federation settings instance.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -162,33 +154,27 @@ func deleteFederationAppBuilder() *cobra.Command {
 }
 
 type deleteRoleMappingOpts struct {
-	cli.GlobalOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	id                   string
 	orgId                string
 }
 
-func (opts *deleteRoleMappingOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteRoleMappingOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteRoleMappingOpts) Run(ctx context.Context, _ io.Writer) error {
+func (opts *deleteRoleMappingOpts) run(ctx context.Context, _ io.Writer) error {
+
 	params := &admin.DeleteRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		Id:                   opts.id,
 		OrgId:                opts.orgId,
 	}
-	_, err := opts.client.FederatedAuthenticationApi.DeleteRoleMappingWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	_, err := opts.client.FederatedAuthenticationApi.DeleteRoleMappingWithParams(ctx, params).Execute()
+	return err
 }
 
 func deleteRoleMappingBuilder() *cobra.Command {
@@ -197,12 +183,10 @@ func deleteRoleMappingBuilder() *cobra.Command {
 		Use:   "deleteRoleMapping",
 		Short: "Remove One Role Mapping from One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -216,31 +200,35 @@ func deleteRoleMappingBuilder() *cobra.Command {
 }
 
 type getConnectedOrgConfigOpts struct {
-	cli.GlobalOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	orgId                string
 }
 
-func (opts *getConnectedOrgConfigOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getConnectedOrgConfigOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getConnectedOrgConfigOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getConnectedOrgConfigOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetConnectedOrgConfigApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId:                opts.orgId,
 	}
+
 	resp, _, err := opts.client.FederatedAuthenticationApi.GetConnectedOrgConfigWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getConnectedOrgConfigBuilder() *cobra.Command {
@@ -249,12 +237,10 @@ func getConnectedOrgConfigBuilder() *cobra.Command {
 		Use:   "getConnectedOrgConfig",
 		Short: "Return One Org Config Connected to One Federation",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -266,29 +252,33 @@ func getConnectedOrgConfigBuilder() *cobra.Command {
 }
 
 type getFederationSettingsOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 }
 
-func (opts *getFederationSettingsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getFederationSettingsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getFederationSettingsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getFederationSettingsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetFederationSettingsApiParams{
 		OrgId: opts.orgId,
 	}
+
 	resp, _, err := opts.client.FederatedAuthenticationApi.GetFederationSettingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getFederationSettingsBuilder() *cobra.Command {
@@ -297,12 +287,10 @@ func getFederationSettingsBuilder() *cobra.Command {
 		Use:   "getFederationSettings",
 		Short: "Return Federation Settings for One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -312,31 +300,35 @@ func getFederationSettingsBuilder() *cobra.Command {
 }
 
 type getIdentityProviderOpts struct {
-	cli.GlobalOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	identityProviderId   string
 }
 
-func (opts *getIdentityProviderOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getIdentityProviderOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getIdentityProviderOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getIdentityProviderOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetIdentityProviderApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		IdentityProviderId:   opts.identityProviderId,
 	}
+
 	resp, _, err := opts.client.FederatedAuthenticationApi.GetIdentityProviderWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getIdentityProviderBuilder() *cobra.Command {
@@ -345,12 +337,10 @@ func getIdentityProviderBuilder() *cobra.Command {
 		Use:   "getIdentityProvider",
 		Short: "Return one identity provider from the specified federation.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -362,31 +352,35 @@ func getIdentityProviderBuilder() *cobra.Command {
 }
 
 type getIdentityProviderMetadataOpts struct {
-	cli.GlobalOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	identityProviderId   string
 }
 
-func (opts *getIdentityProviderMetadataOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getIdentityProviderMetadataOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getIdentityProviderMetadataOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getIdentityProviderMetadataOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetIdentityProviderMetadataApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		IdentityProviderId:   opts.identityProviderId,
 	}
+
 	resp, _, err := opts.client.FederatedAuthenticationApi.GetIdentityProviderMetadataWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getIdentityProviderMetadataBuilder() *cobra.Command {
@@ -395,12 +389,10 @@ func getIdentityProviderMetadataBuilder() *cobra.Command {
 		Use:   "getIdentityProviderMetadata",
 		Short: "Return the metadata of one identity provider in the specified federation.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -412,33 +404,37 @@ func getIdentityProviderMetadataBuilder() *cobra.Command {
 }
 
 type getRoleMappingOpts struct {
-	cli.GlobalOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	id                   string
 	orgId                string
 }
 
-func (opts *getRoleMappingOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getRoleMappingOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getRoleMappingOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getRoleMappingOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		Id:                   opts.id,
 		OrgId:                opts.orgId,
 	}
+
 	resp, _, err := opts.client.FederatedAuthenticationApi.GetRoleMappingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getRoleMappingBuilder() *cobra.Command {
@@ -447,12 +443,10 @@ func getRoleMappingBuilder() *cobra.Command {
 		Use:   "getRoleMapping",
 		Short: "Return One Role Mapping from One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -466,29 +460,33 @@ func getRoleMappingBuilder() *cobra.Command {
 }
 
 type listConnectedOrgConfigsOpts struct {
-	cli.GlobalOpts
 	client               *admin.APIClient
 	federationSettingsId string
 }
 
-func (opts *listConnectedOrgConfigsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listConnectedOrgConfigsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listConnectedOrgConfigsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listConnectedOrgConfigsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListConnectedOrgConfigsApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 	}
+
 	resp, _, err := opts.client.FederatedAuthenticationApi.ListConnectedOrgConfigsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listConnectedOrgConfigsBuilder() *cobra.Command {
@@ -497,12 +495,10 @@ func listConnectedOrgConfigsBuilder() *cobra.Command {
 		Use:   "listConnectedOrgConfigs",
 		Short: "Return All Connected Org Configs from the Federation",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -512,29 +508,33 @@ func listConnectedOrgConfigsBuilder() *cobra.Command {
 }
 
 type listIdentityProvidersOpts struct {
-	cli.GlobalOpts
 	client               *admin.APIClient
 	federationSettingsId string
 }
 
-func (opts *listIdentityProvidersOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listIdentityProvidersOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listIdentityProvidersOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listIdentityProvidersOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListIdentityProvidersApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 	}
+
 	resp, _, err := opts.client.FederatedAuthenticationApi.ListIdentityProvidersWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listIdentityProvidersBuilder() *cobra.Command {
@@ -543,12 +543,10 @@ func listIdentityProvidersBuilder() *cobra.Command {
 		Use:   "listIdentityProviders",
 		Short: "Return all identity providers from the specified federation.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -558,31 +556,35 @@ func listIdentityProvidersBuilder() *cobra.Command {
 }
 
 type listRoleMappingsOpts struct {
-	cli.GlobalOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	orgId                string
 }
 
-func (opts *listRoleMappingsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listRoleMappingsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listRoleMappingsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listRoleMappingsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListRoleMappingsApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId:                opts.orgId,
 	}
+
 	resp, _, err := opts.client.FederatedAuthenticationApi.ListRoleMappingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listRoleMappingsBuilder() *cobra.Command {
@@ -591,12 +593,10 @@ func listRoleMappingsBuilder() *cobra.Command {
 		Use:   "listRoleMappings",
 		Short: "Return All Role Mappings from One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -608,31 +608,35 @@ func listRoleMappingsBuilder() *cobra.Command {
 }
 
 type removeConnectedOrgConfigOpts struct {
-	cli.GlobalOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	orgId                string
 }
 
-func (opts *removeConnectedOrgConfigOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *removeConnectedOrgConfigOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *removeConnectedOrgConfigOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *removeConnectedOrgConfigOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.RemoveConnectedOrgConfigApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId:                opts.orgId,
 	}
+
 	resp, _, err := opts.client.FederatedAuthenticationApi.RemoveConnectedOrgConfigWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func removeConnectedOrgConfigBuilder() *cobra.Command {
@@ -641,12 +645,10 @@ func removeConnectedOrgConfigBuilder() *cobra.Command {
 		Use:   "removeConnectedOrgConfig",
 		Short: "Remove One Org Config Connected to One Federation",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -658,7 +660,6 @@ func removeConnectedOrgConfigBuilder() *cobra.Command {
 }
 
 type updateConnectedOrgConfigOpts struct {
-	cli.GlobalOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	orgId                string
@@ -667,12 +668,9 @@ type updateConnectedOrgConfigOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateConnectedOrgConfigOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateConnectedOrgConfigOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateConnectedOrgConfigOpts) readData() (*admin.ConnectedOrgConfig, error) {
@@ -697,23 +695,31 @@ func (opts *updateConnectedOrgConfigOpts) readData() (*admin.ConnectedOrgConfig,
 	return out, nil
 }
 
-func (opts *updateConnectedOrgConfigOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateConnectedOrgConfigOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateConnectedOrgConfigApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId:                opts.orgId,
 
 		ConnectedOrgConfig: data,
 	}
+
 	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateConnectedOrgConfigWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateConnectedOrgConfigBuilder() *cobra.Command {
@@ -724,12 +730,10 @@ func updateConnectedOrgConfigBuilder() *cobra.Command {
 		Use:   "updateConnectedOrgConfig",
 		Short: "Update One Org Config Connected to One Federation",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -743,7 +747,6 @@ func updateConnectedOrgConfigBuilder() *cobra.Command {
 }
 
 type updateIdentityProviderOpts struct {
-	cli.GlobalOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	identityProviderId   string
@@ -752,12 +755,9 @@ type updateIdentityProviderOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateIdentityProviderOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateIdentityProviderOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateIdentityProviderOpts) readData() (*admin.SamlIdentityProviderUpdate, error) {
@@ -782,23 +782,31 @@ func (opts *updateIdentityProviderOpts) readData() (*admin.SamlIdentityProviderU
 	return out, nil
 }
 
-func (opts *updateIdentityProviderOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateIdentityProviderOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateIdentityProviderApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		IdentityProviderId:   opts.identityProviderId,
 
 		SamlIdentityProviderUpdate: data,
 	}
+
 	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateIdentityProviderWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateIdentityProviderBuilder() *cobra.Command {
@@ -809,12 +817,10 @@ func updateIdentityProviderBuilder() *cobra.Command {
 		Use:   "updateIdentityProvider",
 		Short: "Update the identity provider.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -828,7 +834,6 @@ func updateIdentityProviderBuilder() *cobra.Command {
 }
 
 type updateRoleMappingOpts struct {
-	cli.GlobalOpts
 	client               *admin.APIClient
 	federationSettingsId string
 	id                   string
@@ -838,12 +843,9 @@ type updateRoleMappingOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateRoleMappingOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateRoleMappingOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateRoleMappingOpts) readData() (*admin.AuthFederationRoleMapping, error) {
@@ -868,11 +870,12 @@ func (opts *updateRoleMappingOpts) readData() (*admin.AuthFederationRoleMapping,
 	return out, nil
 }
 
-func (opts *updateRoleMappingOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateRoleMappingOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		Id:                   opts.id,
@@ -880,12 +883,19 @@ func (opts *updateRoleMappingOpts) Run(ctx context.Context, w io.Writer) error {
 
 		AuthFederationRoleMapping: data,
 	}
+
 	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateRoleMappingWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateRoleMappingBuilder() *cobra.Command {
@@ -896,12 +906,10 @@ func updateRoleMappingBuilder() *cobra.Command {
 		Use:   "updateRoleMapping",
 		Short: "Update One Role Mapping in One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)

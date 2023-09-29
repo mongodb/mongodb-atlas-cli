@@ -23,27 +23,21 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type createOrganizationOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 
 	filename string
 	fs       afero.Fs
 }
 
-func (opts *createOrganizationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createOrganizationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createOrganizationOpts) readData() (*admin.CreateOrganizationRequest, error) {
@@ -68,21 +62,29 @@ func (opts *createOrganizationOpts) readData() (*admin.CreateOrganizationRequest
 	return out, nil
 }
 
-func (opts *createOrganizationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createOrganizationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateOrganizationApiParams{
 
 		CreateOrganizationRequest: data,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.CreateOrganizationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createOrganizationBuilder() *cobra.Command {
@@ -93,12 +95,10 @@ func createOrganizationBuilder() *cobra.Command {
 		Use:   "createOrganization",
 		Short: "Create One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 
@@ -108,7 +108,6 @@ func createOrganizationBuilder() *cobra.Command {
 }
 
 type createOrganizationInvitationOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 
@@ -116,12 +115,9 @@ type createOrganizationInvitationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *createOrganizationInvitationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *createOrganizationInvitationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *createOrganizationInvitationOpts) readData() (*admin.OrganizationInvitationRequest, error) {
@@ -146,22 +142,30 @@ func (opts *createOrganizationInvitationOpts) readData() (*admin.OrganizationInv
 	return out, nil
 }
 
-func (opts *createOrganizationInvitationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *createOrganizationInvitationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.CreateOrganizationInvitationApiParams{
 		OrgId: opts.orgId,
 
 		OrganizationInvitationRequest: data,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.CreateOrganizationInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func createOrganizationInvitationBuilder() *cobra.Command {
@@ -172,12 +176,10 @@ func createOrganizationInvitationBuilder() *cobra.Command {
 		Use:   "createOrganizationInvitation",
 		Short: "Invite One MongoDB Cloud User to Join One Atlas Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -189,29 +191,33 @@ func createOrganizationInvitationBuilder() *cobra.Command {
 }
 
 type deleteOrganizationOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 }
 
-func (opts *deleteOrganizationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteOrganizationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteOrganizationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteOrganizationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteOrganizationApiParams{
 		OrgId: opts.orgId,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.DeleteOrganizationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteOrganizationBuilder() *cobra.Command {
@@ -220,12 +226,10 @@ func deleteOrganizationBuilder() *cobra.Command {
 		Use:   "deleteOrganization",
 		Short: "Remove One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -235,31 +239,35 @@ func deleteOrganizationBuilder() *cobra.Command {
 }
 
 type deleteOrganizationInvitationOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	orgId        string
 	invitationId string
 }
 
-func (opts *deleteOrganizationInvitationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *deleteOrganizationInvitationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *deleteOrganizationInvitationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *deleteOrganizationInvitationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.DeleteOrganizationInvitationApiParams{
 		OrgId:        opts.orgId,
 		InvitationId: opts.invitationId,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.DeleteOrganizationInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func deleteOrganizationInvitationBuilder() *cobra.Command {
@@ -268,12 +276,10 @@ func deleteOrganizationInvitationBuilder() *cobra.Command {
 		Use:   "deleteOrganizationInvitation",
 		Short: "Cancel One Organization Invitation",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -285,29 +291,33 @@ func deleteOrganizationInvitationBuilder() *cobra.Command {
 }
 
 type getOrganizationOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 }
 
-func (opts *getOrganizationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getOrganizationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getOrganizationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getOrganizationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetOrganizationApiParams{
 		OrgId: opts.orgId,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.GetOrganizationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getOrganizationBuilder() *cobra.Command {
@@ -316,12 +326,10 @@ func getOrganizationBuilder() *cobra.Command {
 		Use:   "getOrganization",
 		Short: "Return One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -331,31 +339,35 @@ func getOrganizationBuilder() *cobra.Command {
 }
 
 type getOrganizationInvitationOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	orgId        string
 	invitationId string
 }
 
-func (opts *getOrganizationInvitationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getOrganizationInvitationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getOrganizationInvitationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getOrganizationInvitationOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetOrganizationInvitationApiParams{
 		OrgId:        opts.orgId,
 		InvitationId: opts.invitationId,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.GetOrganizationInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getOrganizationInvitationBuilder() *cobra.Command {
@@ -364,12 +376,10 @@ func getOrganizationInvitationBuilder() *cobra.Command {
 		Use:   "getOrganizationInvitation",
 		Short: "Return One Organization Invitation",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -381,29 +391,33 @@ func getOrganizationInvitationBuilder() *cobra.Command {
 }
 
 type getOrganizationSettingsOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 }
 
-func (opts *getOrganizationSettingsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getOrganizationSettingsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getOrganizationSettingsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getOrganizationSettingsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetOrganizationSettingsApiParams{
 		OrgId: opts.orgId,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.GetOrganizationSettingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getOrganizationSettingsBuilder() *cobra.Command {
@@ -412,12 +426,10 @@ func getOrganizationSettingsBuilder() *cobra.Command {
 		Use:   "getOrganizationSettings",
 		Short: "Return Settings for One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -427,31 +439,35 @@ func getOrganizationSettingsBuilder() *cobra.Command {
 }
 
 type listOrganizationInvitationsOpts struct {
-	cli.GlobalOpts
 	client   *admin.APIClient
 	orgId    string
 	username string
 }
 
-func (opts *listOrganizationInvitationsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listOrganizationInvitationsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listOrganizationInvitationsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listOrganizationInvitationsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListOrganizationInvitationsApiParams{
 		OrgId:    opts.orgId,
 		Username: &opts.username,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.ListOrganizationInvitationsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listOrganizationInvitationsBuilder() *cobra.Command {
@@ -460,12 +476,10 @@ func listOrganizationInvitationsBuilder() *cobra.Command {
 		Use:   "listOrganizationInvitations",
 		Short: "Return All Organization Invitations",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -476,7 +490,6 @@ func listOrganizationInvitationsBuilder() *cobra.Command {
 }
 
 type listOrganizationProjectsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	orgId        string
 	includeCount bool
@@ -485,15 +498,13 @@ type listOrganizationProjectsOpts struct {
 	name         string
 }
 
-func (opts *listOrganizationProjectsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listOrganizationProjectsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listOrganizationProjectsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listOrganizationProjectsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListOrganizationProjectsApiParams{
 		OrgId:        opts.orgId,
 		IncludeCount: &opts.includeCount,
@@ -501,12 +512,19 @@ func (opts *listOrganizationProjectsOpts) Run(ctx context.Context, w io.Writer) 
 		PageNum:      &opts.pageNum,
 		Name:         &opts.name,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.ListOrganizationProjectsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listOrganizationProjectsBuilder() *cobra.Command {
@@ -515,12 +533,10 @@ func listOrganizationProjectsBuilder() *cobra.Command {
 		Use:   "listOrganizationProjects",
 		Short: "Return One or More Projects in One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -534,7 +550,6 @@ func listOrganizationProjectsBuilder() *cobra.Command {
 }
 
 type listOrganizationUsersOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	orgId        string
 	includeCount bool
@@ -542,27 +557,32 @@ type listOrganizationUsersOpts struct {
 	pageNum      int
 }
 
-func (opts *listOrganizationUsersOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listOrganizationUsersOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listOrganizationUsersOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listOrganizationUsersOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListOrganizationUsersApiParams{
 		OrgId:        opts.orgId,
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.ListOrganizationUsersWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listOrganizationUsersBuilder() *cobra.Command {
@@ -571,12 +591,10 @@ func listOrganizationUsersBuilder() *cobra.Command {
 		Use:   "listOrganizationUsers",
 		Short: "Return All MongoDB Cloud Users in One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -589,7 +607,6 @@ func listOrganizationUsersBuilder() *cobra.Command {
 }
 
 type listOrganizationsOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	includeCount bool
 	itemsPerPage int
@@ -597,27 +614,32 @@ type listOrganizationsOpts struct {
 	name         string
 }
 
-func (opts *listOrganizationsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listOrganizationsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listOrganizationsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listOrganizationsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListOrganizationsApiParams{
 		IncludeCount: &opts.includeCount,
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 		Name:         &opts.name,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.ListOrganizationsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listOrganizationsBuilder() *cobra.Command {
@@ -626,12 +648,10 @@ func listOrganizationsBuilder() *cobra.Command {
 		Use:   "listOrganizations",
 		Short: "Return All Organizations",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
@@ -643,31 +663,35 @@ func listOrganizationsBuilder() *cobra.Command {
 }
 
 type removeOrganizationUserOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 	userId string
 }
 
-func (opts *removeOrganizationUserOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *removeOrganizationUserOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *removeOrganizationUserOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *removeOrganizationUserOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.RemoveOrganizationUserApiParams{
 		OrgId:  opts.orgId,
 		UserId: opts.userId,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.RemoveOrganizationUserWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func removeOrganizationUserBuilder() *cobra.Command {
@@ -676,12 +700,10 @@ func removeOrganizationUserBuilder() *cobra.Command {
 		Use:   "removeOrganizationUser",
 		Short: "Remove One MongoDB Cloud User from One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -693,7 +715,6 @@ func removeOrganizationUserBuilder() *cobra.Command {
 }
 
 type renameOrganizationOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 
@@ -701,12 +722,9 @@ type renameOrganizationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *renameOrganizationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *renameOrganizationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *renameOrganizationOpts) readData() (*admin.AtlasOrganization, error) {
@@ -731,22 +749,30 @@ func (opts *renameOrganizationOpts) readData() (*admin.AtlasOrganization, error)
 	return out, nil
 }
 
-func (opts *renameOrganizationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *renameOrganizationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.RenameOrganizationApiParams{
 		OrgId: opts.orgId,
 
 		AtlasOrganization: data,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.RenameOrganizationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func renameOrganizationBuilder() *cobra.Command {
@@ -757,12 +783,10 @@ func renameOrganizationBuilder() *cobra.Command {
 		Use:   "renameOrganization",
 		Short: "Rename One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -774,7 +798,6 @@ func renameOrganizationBuilder() *cobra.Command {
 }
 
 type updateOrganizationInvitationOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 
@@ -782,12 +805,9 @@ type updateOrganizationInvitationOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateOrganizationInvitationOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateOrganizationInvitationOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateOrganizationInvitationOpts) readData() (*admin.OrganizationInvitationRequest, error) {
@@ -812,22 +832,30 @@ func (opts *updateOrganizationInvitationOpts) readData() (*admin.OrganizationInv
 	return out, nil
 }
 
-func (opts *updateOrganizationInvitationOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateOrganizationInvitationOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateOrganizationInvitationApiParams{
 		OrgId: opts.orgId,
 
 		OrganizationInvitationRequest: data,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationInvitationWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateOrganizationInvitationBuilder() *cobra.Command {
@@ -838,12 +866,10 @@ func updateOrganizationInvitationBuilder() *cobra.Command {
 		Use:   "updateOrganizationInvitation",
 		Short: "Update One Organization Invitation",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -855,7 +881,6 @@ func updateOrganizationInvitationBuilder() *cobra.Command {
 }
 
 type updateOrganizationInvitationByIdOpts struct {
-	cli.GlobalOpts
 	client       *admin.APIClient
 	orgId        string
 	invitationId string
@@ -864,12 +889,9 @@ type updateOrganizationInvitationByIdOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateOrganizationInvitationByIdOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateOrganizationInvitationByIdOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateOrganizationInvitationByIdOpts) readData() (*admin.OrganizationInvitationUpdateRequest, error) {
@@ -894,23 +916,31 @@ func (opts *updateOrganizationInvitationByIdOpts) readData() (*admin.Organizatio
 	return out, nil
 }
 
-func (opts *updateOrganizationInvitationByIdOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateOrganizationInvitationByIdOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateOrganizationInvitationByIdApiParams{
 		OrgId:        opts.orgId,
 		InvitationId: opts.invitationId,
 
 		OrganizationInvitationUpdateRequest: data,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationInvitationByIdWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateOrganizationInvitationByIdBuilder() *cobra.Command {
@@ -921,12 +951,10 @@ func updateOrganizationInvitationByIdBuilder() *cobra.Command {
 		Use:   "updateOrganizationInvitationById",
 		Short: "Update One Organization Invitation by Invitation ID",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -940,7 +968,6 @@ func updateOrganizationInvitationByIdBuilder() *cobra.Command {
 }
 
 type updateOrganizationRolesOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 	userId string
@@ -949,12 +976,9 @@ type updateOrganizationRolesOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateOrganizationRolesOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateOrganizationRolesOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateOrganizationRolesOpts) readData() (*admin.UpdateOrgRolesForUser, error) {
@@ -979,23 +1003,31 @@ func (opts *updateOrganizationRolesOpts) readData() (*admin.UpdateOrgRolesForUse
 	return out, nil
 }
 
-func (opts *updateOrganizationRolesOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateOrganizationRolesOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateOrganizationRolesApiParams{
 		OrgId:  opts.orgId,
 		UserId: opts.userId,
 
 		UpdateOrgRolesForUser: data,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationRolesWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateOrganizationRolesBuilder() *cobra.Command {
@@ -1006,12 +1038,10 @@ func updateOrganizationRolesBuilder() *cobra.Command {
 		Use:   "updateOrganizationRoles",
 		Short: "Update Organization Roles for One MongoDB Cloud User",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
@@ -1025,7 +1055,6 @@ func updateOrganizationRolesBuilder() *cobra.Command {
 }
 
 type updateOrganizationSettingsOpts struct {
-	cli.GlobalOpts
 	client *admin.APIClient
 	orgId  string
 
@@ -1033,12 +1062,9 @@ type updateOrganizationSettingsOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *updateOrganizationSettingsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *updateOrganizationSettingsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *updateOrganizationSettingsOpts) readData() (*admin.OrganizationSettings, error) {
@@ -1063,22 +1089,30 @@ func (opts *updateOrganizationSettingsOpts) readData() (*admin.OrganizationSetti
 	return out, nil
 }
 
-func (opts *updateOrganizationSettingsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *updateOrganizationSettingsOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.UpdateOrganizationSettingsApiParams{
 		OrgId: opts.orgId,
 
 		OrganizationSettings: data,
 	}
+
 	resp, _, err := opts.client.OrganizationsApi.UpdateOrganizationSettingsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func updateOrganizationSettingsBuilder() *cobra.Command {
@@ -1089,12 +1123,10 @@ func updateOrganizationSettingsBuilder() *cobra.Command {
 		Use:   "updateOrganizationSettings",
 		Short: "Update Settings for One Organization",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)

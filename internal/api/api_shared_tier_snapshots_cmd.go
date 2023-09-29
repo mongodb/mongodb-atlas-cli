@@ -23,15 +23,12 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 type downloadSharedClusterBackupOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	clusterName string
 	groupId     string
@@ -40,12 +37,9 @@ type downloadSharedClusterBackupOpts struct {
 	fs       afero.Fs
 }
 
-func (opts *downloadSharedClusterBackupOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *downloadSharedClusterBackupOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
 func (opts *downloadSharedClusterBackupOpts) readData() (*admin.TenantRestore, error) {
@@ -70,23 +64,31 @@ func (opts *downloadSharedClusterBackupOpts) readData() (*admin.TenantRestore, e
 	return out, nil
 }
 
-func (opts *downloadSharedClusterBackupOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *downloadSharedClusterBackupOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
 	}
+
 	params := &admin.DownloadSharedClusterBackupApiParams{
 		ClusterName: opts.clusterName,
 		GroupId:     opts.groupId,
 
 		TenantRestore: data,
 	}
+
 	resp, _, err := opts.client.SharedTierSnapshotsApi.DownloadSharedClusterBackupWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func downloadSharedClusterBackupBuilder() *cobra.Command {
@@ -97,12 +99,10 @@ func downloadSharedClusterBackupBuilder() *cobra.Command {
 		Use:   "downloadSharedClusterBackup",
 		Short: "Download One M2 or M5 Cluster Snapshot",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
@@ -118,33 +118,37 @@ func downloadSharedClusterBackupBuilder() *cobra.Command {
 }
 
 type getSharedClusterBackupOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 	snapshotId  string
 }
 
-func (opts *getSharedClusterBackupOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *getSharedClusterBackupOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *getSharedClusterBackupOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *getSharedClusterBackupOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.GetSharedClusterBackupApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 		SnapshotId:  opts.snapshotId,
 	}
+
 	resp, _, err := opts.client.SharedTierSnapshotsApi.GetSharedClusterBackupWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func getSharedClusterBackupBuilder() *cobra.Command {
@@ -153,12 +157,10 @@ func getSharedClusterBackupBuilder() *cobra.Command {
 		Use:   "getSharedClusterBackup",
 		Short: "Return One Snapshot for One M2 or M5 Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -174,31 +176,35 @@ func getSharedClusterBackupBuilder() *cobra.Command {
 }
 
 type listSharedClusterBackupsOpts struct {
-	cli.GlobalOpts
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
 }
 
-func (opts *listSharedClusterBackupsOpts) initClient() func() error {
-	return func() error {
-		var err error
-		opts.client, err = newClientWithAuth()
-		return err
-	}
+func (opts *listSharedClusterBackupsOpts) preRun() (err error) {
+	opts.client, err = newClientWithAuth()
+	return err
 }
 
-func (opts *listSharedClusterBackupsOpts) Run(ctx context.Context, w io.Writer) error {
+func (opts *listSharedClusterBackupsOpts) run(ctx context.Context, w io.Writer) error {
+
 	params := &admin.ListSharedClusterBackupsApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
+
 	resp, _, err := opts.client.SharedTierSnapshotsApi.ListSharedClusterBackupsWithParams(ctx, params).Execute()
 	if err != nil {
 		return err
 	}
 
-	return jsonwriter.Print(w, resp)
+	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	_, err = fmt.Fprintln(w, string(prettyJSON))
+	return err
 }
 
 func listSharedClusterBackupsBuilder() *cobra.Command {
@@ -207,12 +213,10 @@ func listSharedClusterBackupsBuilder() *cobra.Command {
 		Use:   "listSharedClusterBackups",
 		Short: "Return All Snapshots for One M2 or M5 Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PreRunE(
-				opts.initClient(),
-			)
+			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.

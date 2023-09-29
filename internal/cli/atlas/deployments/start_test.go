@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/containers/podman/v4/libpod/define"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -91,6 +92,30 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 
 	mockPodman.
 		EXPECT().
+		ContainerInspect(ctx, startOpts.LocalMongotHostname()).
+		Return([]*define.InspectContainerData{
+			{
+				NetworkSettings: &define.InspectNetworkSettings{
+					Networks: map[string]*define.InspectAdditionalNetwork{
+						startOpts.LocalNetworkName(): {
+							InspectBasicNetworkConfig: define.InspectBasicNetworkConfig{
+								IPAddress: "1.2.3.4",
+							},
+						},
+					},
+				},
+			},
+		}, nil).
+		Times(1)
+
+	mockPodman.
+		EXPECT().
+		Exec(gomock.Any(), startOpts.LocalMongodHostname(), "/bin/sh", "-c", gomock.Any()).
+		Return(nil).
+		Times(1)
+
+	mockPodman.
+		EXPECT().
 		UnpauseContainers(ctx, startOpts.LocalMongodHostname(), startOpts.LocalMongotHostname()).
 		Return(nil, nil).
 		Times(1)
@@ -155,6 +180,30 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 		EXPECT().
 		ListContainers(ctx, options.MongodHostnamePrefix).
 		Return(expectedLocalDeployments, nil).
+		Times(1)
+
+	mockPodman.
+		EXPECT().
+		ContainerInspect(ctx, startOpts.LocalMongotHostname()).
+		Return([]*define.InspectContainerData{
+			{
+				NetworkSettings: &define.InspectNetworkSettings{
+					Networks: map[string]*define.InspectAdditionalNetwork{
+						startOpts.LocalNetworkName(): {
+							InspectBasicNetworkConfig: define.InspectBasicNetworkConfig{
+								IPAddress: "1.2.3.4",
+							},
+						},
+					},
+				},
+			},
+		}, nil).
+		Times(1)
+
+	mockPodman.
+		EXPECT().
+		Exec(gomock.Any(), startOpts.LocalMongodHostname(), "/bin/sh", "-c", gomock.Any()).
+		Return(nil).
 		Times(1)
 
 	mockPodman.

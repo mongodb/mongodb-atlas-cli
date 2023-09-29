@@ -22,6 +22,6 @@
   "homepage": "https://github.com/mongodb/mongodb-atlas-cli#readme",
   "dependencies": {
     "@openapitools/openapi-generator-cli": "^2.6.0",
-    "js-yaml": "^4.1.0"
+    "yaml": "^2.3.2"
   }
 }

@@ -93,7 +93,7 @@ func createClusterBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "createCluster",
-		Short: "Create One Multi-Cloud Cluster from One Project",
+		Short: "TEST DESCRIPTION",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.initClient(),

@@ -1,4 +1,4 @@
 paths:
   "/api/atlas/v2/groups/{groupId}/clusters":
     post:
-      description: TEST DESCRIPTION
+      summary: TEST DESCRIPTION

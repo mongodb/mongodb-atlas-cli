@@ -1,17 +1,17 @@
 const fs = require('fs');
-const yaml = require('js-yaml');
+const yaml = require('yaml');
 
 var atlasApi, atlasApiChanges;
 
 try {
-  atlasApi = yaml.load(fs.readFileSync('config/atlas-api.yaml', 'utf8'));
+  atlasApi = yaml.parse(fs.readFileSync('config/atlas-api.yaml', 'utf8'));
 } catch (err) {
     console.error(err);
     process.exit(1);
 }
 
 try {
-  atlasApiChanges = yaml.load(fs.readFileSync('config/atlas-api-changes.yaml', 'utf8'));
+  atlasApiChanges = yaml.parse(fs.readFileSync('config/atlas-api-changes.yaml', 'utf8'));
 } catch (err) {
     console.error(err);
     process.exit(1);
@@ -49,7 +49,7 @@ visit(atlasApiChanges, function (k, v) {
 });
 
 try {
-  fs.writeFileSync('config/atlas-api-transformed.yaml', yaml.dump(atlasApi), 'utf8')
+  fs.writeFileSync('config/atlas-api-transformed.yaml', yaml.stringify(atlasApi), 'utf8')
 } catch (err) {
     console.error(err);
     process.exit(1);

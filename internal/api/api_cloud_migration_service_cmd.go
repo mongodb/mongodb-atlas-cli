@@ -23,6 +23,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -68,6 +69,9 @@ func (opts *createLinkTokenOpts) run(ctx context.Context, w io.Writer) error {
 	if errData != nil {
 		return errData
 	}
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.CreateLinkTokenApiParams{
 		OrgId: opts.orgId,
@@ -103,7 +107,7 @@ func createLinkTokenBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -151,6 +155,9 @@ func (opts *createPushMigrationOpts) run(ctx context.Context, w io.Writer) error
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.CreatePushMigrationApiParams{
 		GroupId: opts.groupId,
@@ -186,9 +193,7 @@ func createPushMigrationBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -208,6 +213,9 @@ func (opts *cutoverMigrationOpts) preRun() (err error) {
 }
 
 func (opts *cutoverMigrationOpts) run(ctx context.Context, _ io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.CutoverMigrationApiParams{
 		GroupId:         opts.groupId,
@@ -230,9 +238,7 @@ func cutoverMigrationBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.liveMigrationId, "liveMigrationId", "", `Unique 24-hexadecimal digit string that identifies the migration.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -251,6 +257,9 @@ func (opts *deleteLinkTokenOpts) preRun() (err error) {
 }
 
 func (opts *deleteLinkTokenOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.DeleteLinkTokenApiParams{
 		OrgId: opts.orgId,
@@ -282,7 +291,7 @@ func deleteLinkTokenBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
@@ -300,6 +309,9 @@ func (opts *getPushMigrationOpts) preRun() (err error) {
 }
 
 func (opts *getPushMigrationOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.GetPushMigrationApiParams{
 		GroupId:         opts.groupId,
@@ -332,9 +344,7 @@ func getPushMigrationBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.liveMigrationId, "liveMigrationId", "", `Unique 24-hexadecimal digit string that identifies the migration.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -354,6 +364,9 @@ func (opts *getValidationStatusOpts) preRun() (err error) {
 }
 
 func (opts *getValidationStatusOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.GetValidationStatusApiParams{
 		GroupId:      opts.groupId,
@@ -386,9 +399,7 @@ func getValidationStatusBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.validationId, "validationId", "", `Unique 24-hexadecimal digit string that identifies the validation job.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -407,6 +418,9 @@ func (opts *listSourceProjectsOpts) preRun() (err error) {
 }
 
 func (opts *listSourceProjectsOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.ListSourceProjectsApiParams{
 		OrgId: opts.orgId,
@@ -438,7 +452,7 @@ func listSourceProjectsBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
@@ -484,6 +498,9 @@ func (opts *validateMigrationOpts) run(ctx context.Context, w io.Writer) error {
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.ValidateMigrationApiParams{
 		GroupId: opts.groupId,
@@ -519,9 +536,7 @@ func validateMigrationBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 

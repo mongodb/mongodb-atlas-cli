@@ -24,6 +24,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -69,6 +70,9 @@ func (opts *createPipelineOpts) run(ctx context.Context, w io.Writer) error {
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.CreatePipelineApiParams{
 		GroupId: opts.groupId,
@@ -104,9 +108,7 @@ func createPipelineBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -126,6 +128,9 @@ func (opts *deletePipelineOpts) preRun() (err error) {
 }
 
 func (opts *deletePipelineOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.DeletePipelineApiParams{
 		GroupId:      opts.groupId,
@@ -158,9 +163,7 @@ func deletePipelineBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -181,6 +184,9 @@ func (opts *deletePipelineRunDatasetOpts) preRun() (err error) {
 }
 
 func (opts *deletePipelineRunDatasetOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.DeletePipelineRunDatasetApiParams{
 		GroupId:       opts.groupId,
@@ -214,9 +220,7 @@ func deletePipelineRunDatasetBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 	cmd.Flags().StringVar(&opts.pipelineRunId, "pipelineRunId", "", `Unique 24-hexadecimal character string that identifies a Data Lake Pipeline run.`)
 
@@ -238,6 +242,9 @@ func (opts *getPipelineOpts) preRun() (err error) {
 }
 
 func (opts *getPipelineOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.GetPipelineApiParams{
 		GroupId:      opts.groupId,
@@ -270,9 +277,7 @@ func getPipelineBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -293,6 +298,9 @@ func (opts *getPipelineRunOpts) preRun() (err error) {
 }
 
 func (opts *getPipelineRunOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.GetPipelineRunApiParams{
 		GroupId:       opts.groupId,
@@ -326,9 +334,7 @@ func getPipelineRunBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 	cmd.Flags().StringVar(&opts.pipelineRunId, "pipelineRunId", "", `Unique 24-hexadecimal character string that identifies a Data Lake Pipeline run.`)
 
@@ -354,6 +360,9 @@ func (opts *listPipelineRunsOpts) preRun() (err error) {
 }
 
 func (opts *listPipelineRunsOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	var createdBefore *time.Time
 	var errCreatedBefore error
@@ -399,9 +408,7 @@ func listPipelineRunsBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
@@ -425,6 +432,9 @@ func (opts *listPipelineSchedulesOpts) preRun() (err error) {
 }
 
 func (opts *listPipelineSchedulesOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.ListPipelineSchedulesApiParams{
 		GroupId:      opts.groupId,
@@ -457,9 +467,7 @@ func listPipelineSchedulesBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -483,6 +491,9 @@ func (opts *listPipelineSnapshotsOpts) preRun() (err error) {
 }
 
 func (opts *listPipelineSnapshotsOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	var completedAfter *time.Time
 	var errCompletedAfter error
@@ -528,9 +539,7 @@ func listPipelineSnapshotsBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
@@ -553,6 +562,9 @@ func (opts *listPipelinesOpts) preRun() (err error) {
 }
 
 func (opts *listPipelinesOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.ListPipelinesApiParams{
 		GroupId: opts.groupId,
@@ -584,9 +596,7 @@ func listPipelinesBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
@@ -604,6 +614,9 @@ func (opts *pausePipelineOpts) preRun() (err error) {
 }
 
 func (opts *pausePipelineOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.PausePipelineApiParams{
 		GroupId:      opts.groupId,
@@ -636,9 +649,7 @@ func pausePipelineBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -658,6 +669,9 @@ func (opts *resumePipelineOpts) preRun() (err error) {
 }
 
 func (opts *resumePipelineOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.ResumePipelineApiParams{
 		GroupId:      opts.groupId,
@@ -690,9 +704,7 @@ func resumePipelineBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -741,6 +753,9 @@ func (opts *triggerSnapshotIngestionOpts) run(ctx context.Context, w io.Writer) 
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.TriggerSnapshotIngestionApiParams{
 		GroupId:      opts.groupId,
@@ -777,9 +792,7 @@ func triggerSnapshotIngestionBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
@@ -830,6 +843,9 @@ func (opts *updatePipelineOpts) run(ctx context.Context, w io.Writer) error {
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.UpdatePipelineApiParams{
 		GroupId:      opts.groupId,
@@ -866,9 +882,7 @@ func updatePipelineBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")

@@ -23,6 +23,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -69,6 +70,9 @@ func (opts *authorizeCloudProviderAccessRoleOpts) run(ctx context.Context, w io.
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.AuthorizeCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
@@ -105,9 +109,7 @@ func authorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.roleId, "roleId", "", `Unique 24-hexadecimal digit string that identifies the role.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
@@ -157,6 +159,9 @@ func (opts *createCloudProviderAccessRoleOpts) run(ctx context.Context, w io.Wri
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.CreateCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
@@ -192,9 +197,7 @@ func createCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -215,6 +218,9 @@ func (opts *deauthorizeCloudProviderAccessRoleOpts) preRun() (err error) {
 }
 
 func (opts *deauthorizeCloudProviderAccessRoleOpts) run(ctx context.Context, _ io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.DeauthorizeCloudProviderAccessRoleApiParams{
 		GroupId:       opts.groupId,
@@ -238,9 +244,7 @@ func deauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "", `Human-readable label that identifies the cloud provider of the role to deauthorize.`)
 	cmd.Flags().StringVar(&opts.roleId, "roleId", "", `Unique 24-hexadecimal digit string that identifies the role.`)
 
@@ -262,6 +266,9 @@ func (opts *getCloudProviderAccessRoleOpts) preRun() (err error) {
 }
 
 func (opts *getCloudProviderAccessRoleOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.GetCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
@@ -294,9 +301,7 @@ func getCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.roleId, "roleId", "", `Unique 24-hexadecimal digit string that identifies the role.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -315,6 +320,9 @@ func (opts *listCloudProviderAccessRolesOpts) preRun() (err error) {
 }
 
 func (opts *listCloudProviderAccessRolesOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.ListCloudProviderAccessRolesApiParams{
 		GroupId: opts.groupId,
@@ -346,9 +354,7 @@ func listCloudProviderAccessRolesBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
 	return cmd

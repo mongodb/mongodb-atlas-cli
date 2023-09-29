@@ -23,6 +23,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -69,6 +70,9 @@ func (opts *addProjectApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.AddProjectApiKeyApiParams{
 		GroupId:   opts.groupId,
@@ -105,9 +109,7 @@ func addProjectApiKeyBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key that you want to assign to one project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
@@ -157,6 +159,9 @@ func (opts *createApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 	if errData != nil {
 		return errData
 	}
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.CreateApiKeyApiParams{
 		OrgId: opts.orgId,
@@ -192,7 +197,7 @@ func createApiKeyBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -244,6 +249,9 @@ func (opts *createApiKeyAccessListOpts) run(ctx context.Context, w io.Writer) er
 	if errData != nil {
 		return errData
 	}
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.CreateApiKeyAccessListApiParams{
 		OrgId:     opts.orgId,
@@ -284,7 +292,7 @@ func createApiKeyAccessListBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key for which you want to create a new access list entry.`)
 
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
@@ -337,6 +345,9 @@ func (opts *createProjectApiKeyOpts) run(ctx context.Context, w io.Writer) error
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.CreateProjectApiKeyApiParams{
 		GroupId: opts.groupId,
@@ -372,9 +383,7 @@ func createProjectApiKeyBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -394,6 +403,9 @@ func (opts *deleteApiKeyOpts) preRun() (err error) {
 }
 
 func (opts *deleteApiKeyOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.DeleteApiKeyApiParams{
 		OrgId:     opts.orgId,
@@ -426,7 +438,7 @@ func deleteApiKeyBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
@@ -447,6 +459,9 @@ func (opts *deleteApiKeyAccessListEntryOpts) preRun() (err error) {
 }
 
 func (opts *deleteApiKeyAccessListEntryOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.DeleteApiKeyAccessListEntryApiParams{
 		OrgId:     opts.orgId,
@@ -480,7 +495,7 @@ func deleteApiKeyAccessListEntryBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key for which you want to remove access list entries.`)
 	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", `One IP address or multiple IP addresses represented as one CIDR block to limit requests to API resources in the specified organization. When adding a CIDR block with a subnet mask, such as 192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.`)
 
@@ -502,6 +517,9 @@ func (opts *getApiKeyOpts) preRun() (err error) {
 }
 
 func (opts *getApiKeyOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.GetApiKeyApiParams{
 		OrgId:     opts.orgId,
@@ -534,7 +552,7 @@ func getApiKeyBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key that  you want to update.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
@@ -555,6 +573,9 @@ func (opts *getApiKeyAccessListOpts) preRun() (err error) {
 }
 
 func (opts *getApiKeyAccessListOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.GetApiKeyAccessListApiParams{
 		OrgId:     opts.orgId,
@@ -588,7 +609,7 @@ func getApiKeyAccessListBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", `One IP address or multiple IP addresses represented as one CIDR block to limit  requests to API resources in the specified organization. When adding a CIDR block with a subnet mask, such as  192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key for  which you want to return access list entries.`)
 
@@ -613,6 +634,9 @@ func (opts *listApiKeyAccessListsEntriesOpts) preRun() (err error) {
 }
 
 func (opts *listApiKeyAccessListsEntriesOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.ListApiKeyAccessListsEntriesApiParams{
 		OrgId:        opts.orgId,
@@ -648,7 +672,7 @@ func listApiKeyAccessListsEntriesBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key for which you want to return access list entries.`)
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
@@ -673,6 +697,9 @@ func (opts *listApiKeysOpts) preRun() (err error) {
 }
 
 func (opts *listApiKeysOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.ListApiKeysApiParams{
 		OrgId:        opts.orgId,
@@ -707,7 +734,7 @@ func listApiKeysBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
@@ -730,6 +757,9 @@ func (opts *listProjectApiKeysOpts) preRun() (err error) {
 }
 
 func (opts *listProjectApiKeysOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.ListProjectApiKeysApiParams{
 		GroupId:      opts.groupId,
@@ -764,9 +794,7 @@ func listProjectApiKeysBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
@@ -787,6 +815,9 @@ func (opts *removeProjectApiKeyOpts) preRun() (err error) {
 }
 
 func (opts *removeProjectApiKeyOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.RemoveProjectApiKeyApiParams{
 		GroupId:   opts.groupId,
@@ -819,9 +850,7 @@ func removeProjectApiKeyBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key that you want to unassign from one project.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -870,6 +899,9 @@ func (opts *updateApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 	if errData != nil {
 		return errData
 	}
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.UpdateApiKeyApiParams{
 		OrgId:     opts.orgId,
@@ -906,7 +938,7 @@ func updateApiKeyBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key you  want to update.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
@@ -960,6 +992,9 @@ func (opts *updateApiKeyRolesOpts) run(ctx context.Context, w io.Writer) error {
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.UpdateApiKeyRolesApiParams{
 		GroupId:   opts.groupId,
@@ -1000,9 +1035,7 @@ func updateApiKeyRolesBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key that you want to unassign from one project.`)
 
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)

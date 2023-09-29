@@ -23,6 +23,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -68,6 +69,9 @@ func (opts *createDataFederationPrivateEndpointOpts) run(ctx context.Context, w 
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.CreateDataFederationPrivateEndpointApiParams{
 		GroupId: opts.groupId,
@@ -103,9 +107,7 @@ func createDataFederationPrivateEndpointBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -154,6 +156,9 @@ func (opts *createFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) e
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.CreateFederatedDatabaseApiParams{
 		GroupId: opts.groupId,
@@ -191,9 +196,7 @@ func createFederatedDatabaseBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().BoolVar(&opts.skipRoleValidation, "skipRoleValidation", false, `Flag that indicates whether this request should check if the requesting IAM role can read from the S3 bucket. AWS checks if the role can list the objects in the bucket before writing to it. Some IAM roles only need write permissions. This flag allows you to skip that check.`)
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
@@ -244,6 +247,9 @@ func (opts *createOneDataFederationQueryLimitOpts) run(ctx context.Context, w io
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.CreateOneDataFederationQueryLimitApiParams{
 		GroupId:    opts.groupId,
@@ -281,9 +287,7 @@ func createOneDataFederationQueryLimitBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance to which the query limit applies.`)
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", `Human-readable label that identifies this data federation instance limit.
 
@@ -315,6 +319,9 @@ func (opts *deleteDataFederationPrivateEndpointOpts) preRun() (err error) {
 }
 
 func (opts *deleteDataFederationPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.DeleteDataFederationPrivateEndpointApiParams{
 		GroupId:    opts.groupId,
@@ -347,9 +354,7 @@ func deleteDataFederationPrivateEndpointBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 22-character alphanumeric string that identifies the private endpoint to remove. Atlas Data Federation supports AWS private endpoints using the AWS PrivateLink feature.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -369,6 +374,9 @@ func (opts *deleteFederatedDatabaseOpts) preRun() (err error) {
 }
 
 func (opts *deleteFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.DeleteFederatedDatabaseApiParams{
 		GroupId:    opts.groupId,
@@ -401,9 +409,7 @@ func deleteFederatedDatabaseBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance to remove.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -424,6 +430,9 @@ func (opts *deleteOneDataFederationInstanceQueryLimitOpts) preRun() (err error) 
 }
 
 func (opts *deleteOneDataFederationInstanceQueryLimitOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.DeleteOneDataFederationInstanceQueryLimitApiParams{
 		GroupId:    opts.groupId,
@@ -457,9 +466,7 @@ func deleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance to which the query limit applies.`)
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", `Human-readable label that identifies this data federation instance limit.
 
@@ -491,6 +498,9 @@ func (opts *downloadFederatedDatabaseQueryLogsOpts) preRun() (err error) {
 }
 
 func (opts *downloadFederatedDatabaseQueryLogsOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.DownloadFederatedDatabaseQueryLogsApiParams{
 		GroupId:    opts.groupId,
@@ -525,9 +535,7 @@ func downloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance for which you want to download query logs.`)
 	cmd.Flags().Int64Var(&opts.endDate, "endDate", 0, `Timestamp that specifies the end point for the range of log messages to download.  MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`)
 	cmd.Flags().Int64Var(&opts.startDate, "startDate", 0, `Timestamp that specifies the starting point for the range of log messages to download. MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`)
@@ -549,6 +557,9 @@ func (opts *getDataFederationPrivateEndpointOpts) preRun() (err error) {
 }
 
 func (opts *getDataFederationPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.GetDataFederationPrivateEndpointApiParams{
 		GroupId:    opts.groupId,
@@ -581,9 +592,7 @@ func getDataFederationPrivateEndpointBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 22-character alphanumeric string that identifies the private endpoint to return. Atlas Data Federation supports AWS private endpoints using the AWS PrivateLink feature.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -603,6 +612,9 @@ func (opts *getFederatedDatabaseOpts) preRun() (err error) {
 }
 
 func (opts *getFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.GetFederatedDatabaseApiParams{
 		GroupId:    opts.groupId,
@@ -635,9 +647,7 @@ func getFederatedDatabaseBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the Federated Database to return.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -659,6 +669,9 @@ func (opts *listDataFederationPrivateEndpointsOpts) preRun() (err error) {
 }
 
 func (opts *listDataFederationPrivateEndpointsOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.ListDataFederationPrivateEndpointsApiParams{
 		GroupId:      opts.groupId,
@@ -693,9 +706,7 @@ func listDataFederationPrivateEndpointsBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
@@ -716,6 +727,9 @@ func (opts *listFederatedDatabasesOpts) preRun() (err error) {
 }
 
 func (opts *listFederatedDatabasesOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.ListFederatedDatabasesApiParams{
 		GroupId: opts.groupId,
@@ -748,9 +762,7 @@ func listFederatedDatabasesBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.type_, "type_", "&quot;USER&quot;", `Type of Federated Database Instances to return.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -770,6 +782,9 @@ func (opts *returnFederatedDatabaseQueryLimitOpts) preRun() (err error) {
 }
 
 func (opts *returnFederatedDatabaseQueryLimitOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.ReturnFederatedDatabaseQueryLimitApiParams{
 		GroupId:    opts.groupId,
@@ -803,9 +818,7 @@ func returnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance to which the query limit applies.`)
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", `Human-readable label that identifies this data federation instance limit.
 
@@ -835,6 +848,9 @@ func (opts *returnFederatedDatabaseQueryLimitsOpts) preRun() (err error) {
 }
 
 func (opts *returnFederatedDatabaseQueryLimitsOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.ReturnFederatedDatabaseQueryLimitsApiParams{
 		GroupId:    opts.groupId,
@@ -867,9 +883,7 @@ func returnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance for which you want to retrieve query limits.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -919,6 +933,9 @@ func (opts *updateFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) e
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.UpdateFederatedDatabaseApiParams{
 		GroupId:            opts.groupId,
@@ -956,9 +973,7 @@ func updateFederatedDatabaseBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance to update.`)
 	cmd.Flags().BoolVar(&opts.skipRoleValidation, "skipRoleValidation", false, `Flag that indicates whether this request should check if the requesting IAM role can read from the S3 bucket. AWS checks if the role can list the objects in the bucket before writing to it. Some IAM roles only need write permissions. This flag allows you to skip that check.`)
 

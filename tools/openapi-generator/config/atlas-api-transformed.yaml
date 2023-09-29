@@ -14845,13 +14845,7 @@ components:
         type: string
         example: PT1M
     groupId:
-      description: >-
-        Unique 24-hexadecimal digit string that identifies your project. Use the
-        [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all
-        projects to which the authenticated user has access.
-
-
-        **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.
+      description: Unique 24-hexadecimal digit string that identifies your project.
       in: path
       name: groupId
       required: true
@@ -14861,6 +14855,7 @@ components:
         maxLength: 24
         minLength: 24
         pattern: ^([a-f0-9]{24})$
+      x-group-id: true
     identityProviderId:
       description: Unique 20-hexadecimal digit string that identifies the identity provider.
       in: path
@@ -14914,9 +14909,6 @@ components:
         pattern: ^([a-f0-9]{24})$
     orgId:
       description: Unique 24-hexadecimal digit string that identifies the organization
-        that contains your projects. Use the
-        [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to
-        retrieve all organizations to which the authenticated user has access.
       in: path
       name: orgId
       required: true
@@ -14926,6 +14918,7 @@ components:
         maxLength: 24
         minLength: 24
         pattern: ^([a-f0-9]{24})$
+      x-org-id: true
     pageNum:
       description: Number of the page that displays the current set of the total
         objects that the response returns.

@@ -23,6 +23,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -72,6 +73,9 @@ func (opts *createThirdPartyIntegrationOpts) run(ctx context.Context, w io.Write
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.CreateThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
@@ -113,9 +117,7 @@ func createThirdPartyIntegrationBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
@@ -139,6 +141,9 @@ func (opts *deleteThirdPartyIntegrationOpts) preRun() (err error) {
 }
 
 func (opts *deleteThirdPartyIntegrationOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.DeleteThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
@@ -172,9 +177,7 @@ func deleteThirdPartyIntegrationBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	_ = cmd.MarkFlagRequired("integrationType")
 	_ = cmd.MarkFlagRequired("groupId")
@@ -193,6 +196,9 @@ func (opts *getThirdPartyIntegrationOpts) preRun() (err error) {
 }
 
 func (opts *getThirdPartyIntegrationOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.GetThirdPartyIntegrationApiParams{
 		GroupId:         opts.groupId,
@@ -225,9 +231,7 @@ func getThirdPartyIntegrationBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -249,6 +253,9 @@ func (opts *listThirdPartyIntegrationsOpts) preRun() (err error) {
 }
 
 func (opts *listThirdPartyIntegrationsOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.ListThirdPartyIntegrationsApiParams{
 		GroupId:      opts.groupId,
@@ -283,9 +290,7 @@ func listThirdPartyIntegrationsBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
@@ -338,6 +343,9 @@ func (opts *updateThirdPartyIntegrationOpts) run(ctx context.Context, w io.Write
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.UpdateThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
@@ -379,9 +387,7 @@ func updateThirdPartyIntegrationBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)

@@ -21,6 +21,9 @@ function visit(o, fn) {
   let toVisit = [{path: null, value: o}];
   while (toVisit.length > 0) {
     const {path, value} = toVisit.pop()
+    if (value == null) {
+      continue;
+    } 
     if (typeof value !== 'object') {
       fn(path, value);
       continue;

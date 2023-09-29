@@ -23,6 +23,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -147,6 +148,9 @@ func (opts *createOrganizationInvitationOpts) run(ctx context.Context, w io.Writ
 	if errData != nil {
 		return errData
 	}
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.CreateOrganizationInvitationApiParams{
 		OrgId: opts.orgId,
@@ -182,7 +186,7 @@ func createOrganizationInvitationBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -201,6 +205,9 @@ func (opts *deleteOrganizationOpts) preRun() (err error) {
 }
 
 func (opts *deleteOrganizationOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.DeleteOrganizationApiParams{
 		OrgId: opts.orgId,
@@ -232,7 +239,7 @@ func deleteOrganizationBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
@@ -250,6 +257,9 @@ func (opts *deleteOrganizationInvitationOpts) preRun() (err error) {
 }
 
 func (opts *deleteOrganizationInvitationOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.DeleteOrganizationInvitationApiParams{
 		OrgId:        opts.orgId,
@@ -282,7 +292,7 @@ func deleteOrganizationInvitationBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", `Unique 24-hexadecimal digit string that identifies the invitation.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
@@ -301,6 +311,9 @@ func (opts *getOrganizationOpts) preRun() (err error) {
 }
 
 func (opts *getOrganizationOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.GetOrganizationApiParams{
 		OrgId: opts.orgId,
@@ -332,7 +345,7 @@ func getOrganizationBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
@@ -350,6 +363,9 @@ func (opts *getOrganizationInvitationOpts) preRun() (err error) {
 }
 
 func (opts *getOrganizationInvitationOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.GetOrganizationInvitationApiParams{
 		OrgId:        opts.orgId,
@@ -382,7 +398,7 @@ func getOrganizationInvitationBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", `Unique 24-hexadecimal digit string that identifies the invitation.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
@@ -401,6 +417,9 @@ func (opts *getOrganizationSettingsOpts) preRun() (err error) {
 }
 
 func (opts *getOrganizationSettingsOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.GetOrganizationSettingsApiParams{
 		OrgId: opts.orgId,
@@ -432,7 +451,7 @@ func getOrganizationSettingsBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
@@ -450,6 +469,9 @@ func (opts *listOrganizationInvitationsOpts) preRun() (err error) {
 }
 
 func (opts *listOrganizationInvitationsOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.ListOrganizationInvitationsApiParams{
 		OrgId:    opts.orgId,
@@ -482,7 +504,7 @@ func listOrganizationInvitationsBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.username, "username", "", `Email address of the user account invited to this organization. If you exclude this parameter, this resource returns all pending invitations.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
@@ -504,6 +526,9 @@ func (opts *listOrganizationProjectsOpts) preRun() (err error) {
 }
 
 func (opts *listOrganizationProjectsOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.ListOrganizationProjectsApiParams{
 		OrgId:        opts.orgId,
@@ -539,7 +564,7 @@ func listOrganizationProjectsBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
@@ -563,6 +588,9 @@ func (opts *listOrganizationUsersOpts) preRun() (err error) {
 }
 
 func (opts *listOrganizationUsersOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.ListOrganizationUsersApiParams{
 		OrgId:        opts.orgId,
@@ -597,7 +625,7 @@ func listOrganizationUsersBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
@@ -674,6 +702,9 @@ func (opts *removeOrganizationUserOpts) preRun() (err error) {
 }
 
 func (opts *removeOrganizationUserOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.RemoveOrganizationUserApiParams{
 		OrgId:  opts.orgId,
@@ -706,7 +737,7 @@ func removeOrganizationUserBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.userId, "userId", "", `Unique 24-hexadecimal digit string that identifies the user to be deleted.`)
 
 	_ = cmd.MarkFlagRequired("orgId")
@@ -754,6 +785,9 @@ func (opts *renameOrganizationOpts) run(ctx context.Context, w io.Writer) error 
 	if errData != nil {
 		return errData
 	}
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.RenameOrganizationApiParams{
 		OrgId: opts.orgId,
@@ -789,7 +823,7 @@ func renameOrganizationBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -837,6 +871,9 @@ func (opts *updateOrganizationInvitationOpts) run(ctx context.Context, w io.Writ
 	if errData != nil {
 		return errData
 	}
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.UpdateOrganizationInvitationApiParams{
 		OrgId: opts.orgId,
@@ -872,7 +909,7 @@ func updateOrganizationInvitationBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -921,6 +958,9 @@ func (opts *updateOrganizationInvitationByIdOpts) run(ctx context.Context, w io.
 	if errData != nil {
 		return errData
 	}
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.UpdateOrganizationInvitationByIdApiParams{
 		OrgId:        opts.orgId,
@@ -957,7 +997,7 @@ func updateOrganizationInvitationByIdBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", `Unique 24-hexadecimal digit string that identifies the invitation.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
@@ -1008,6 +1048,9 @@ func (opts *updateOrganizationRolesOpts) run(ctx context.Context, w io.Writer) e
 	if errData != nil {
 		return errData
 	}
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.UpdateOrganizationRolesApiParams{
 		OrgId:  opts.orgId,
@@ -1044,7 +1087,7 @@ func updateOrganizationRolesBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.userId, "userId", "", `Unique 24-hexadecimal digit string that identifies the user to modify.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
@@ -1094,6 +1137,9 @@ func (opts *updateOrganizationSettingsOpts) run(ctx context.Context, w io.Writer
 	if errData != nil {
 		return errData
 	}
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.UpdateOrganizationSettingsApiParams{
 		OrgId: opts.orgId,
@@ -1129,7 +1175,7 @@ func updateOrganizationSettingsBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 

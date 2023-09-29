@@ -23,6 +23,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -69,6 +70,9 @@ func (opts *createRoleMappingOpts) run(ctx context.Context, w io.Writer) error {
 	if errData != nil {
 		return errData
 	}
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.CreateRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
@@ -106,7 +110,7 @@ func createRoleMappingBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -166,6 +170,9 @@ func (opts *deleteRoleMappingOpts) preRun() (err error) {
 }
 
 func (opts *deleteRoleMappingOpts) run(ctx context.Context, _ io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.DeleteRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
@@ -191,7 +198,7 @@ func deleteRoleMappingBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the role mapping that you want to remove.`)
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("id")
@@ -262,6 +269,9 @@ func (opts *getFederationSettingsOpts) preRun() (err error) {
 }
 
 func (opts *getFederationSettingsOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.GetFederationSettingsApiParams{
 		OrgId: opts.orgId,
@@ -293,7 +303,7 @@ func getFederationSettingsBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
@@ -416,6 +426,9 @@ func (opts *getRoleMappingOpts) preRun() (err error) {
 }
 
 func (opts *getRoleMappingOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.GetRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
@@ -451,7 +464,7 @@ func getRoleMappingBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the role mapping that you want to return.`)
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("id")
@@ -567,6 +580,9 @@ func (opts *listRoleMappingsOpts) preRun() (err error) {
 }
 
 func (opts *listRoleMappingsOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.ListRoleMappingsApiParams{
 		FederationSettingsId: opts.federationSettingsId,
@@ -600,7 +616,7 @@ func listRoleMappingsBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("orgId")
@@ -875,6 +891,9 @@ func (opts *updateRoleMappingOpts) run(ctx context.Context, w io.Writer) error {
 	if errData != nil {
 		return errData
 	}
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
 
 	params := &admin.UpdateRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
@@ -914,7 +933,7 @@ func updateRoleMappingBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 	cmd.Flags().StringVar(&opts.id, "id", "", `Unique 24-hexadecimal digit string that identifies the role mapping that you want to update.`)
-	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`)
+	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 

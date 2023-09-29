@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -43,6 +44,9 @@ func (opts *listAccessLogsByClusterNameOpts) preRun() (err error) {
 }
 
 func (opts *listAccessLogsByClusterNameOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.ListAccessLogsByClusterNameApiParams{
 		GroupId:     opts.groupId,
@@ -80,9 +84,7 @@ func listAccessLogsByClusterNameBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 	cmd.Flags().BoolVar(&opts.authResult, "authResult", false, `Flag that indicates whether the response returns the successful authentication attempts only.`)
 	cmd.Flags().Int64Var(&opts.end, "end", 0, `Date and time when to stop retrieving database history. If you specify **end**, you must also specify **start**. This parameter uses UNIX epoch time in milliseconds.`)
@@ -112,6 +114,9 @@ func (opts *listAccessLogsByHostnameOpts) preRun() (err error) {
 }
 
 func (opts *listAccessLogsByHostnameOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.ListAccessLogsByHostnameApiParams{
 		GroupId:    opts.groupId,
@@ -149,9 +154,7 @@ func listAccessLogsByHostnameBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.hostname, "hostname", "", `Fully qualified domain name or IP address of the MongoDB host that stores the log files that you want to download.`)
 	cmd.Flags().BoolVar(&opts.authResult, "authResult", false, `Flag that indicates whether the response returns the successful authentication attempts only.`)
 	cmd.Flags().Int64Var(&opts.end, "end", 0, `Date and time when to stop retrieving database history. If you specify **end**, you must also specify **start**. This parameter uses UNIX epoch time in milliseconds.`)

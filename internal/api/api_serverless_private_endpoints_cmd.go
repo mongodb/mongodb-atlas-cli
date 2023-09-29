@@ -23,6 +23,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -69,6 +70,9 @@ func (opts *createServerlessPrivateEndpointOpts) run(ctx context.Context, w io.W
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.CreateServerlessPrivateEndpointApiParams{
 		GroupId:      opts.groupId,
@@ -105,9 +109,7 @@ func createServerlessPrivateEndpointBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance for which the tenant endpoint will be created.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
@@ -130,6 +132,9 @@ func (opts *deleteServerlessPrivateEndpointOpts) preRun() (err error) {
 }
 
 func (opts *deleteServerlessPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.DeleteServerlessPrivateEndpointApiParams{
 		GroupId:      opts.groupId,
@@ -163,9 +168,7 @@ func deleteServerlessPrivateEndpointBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance from which the tenant endpoint will be removed.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 24-hexadecimal digit string that identifies the tenant endpoint which will be removed.`)
 
@@ -188,6 +191,9 @@ func (opts *getServerlessPrivateEndpointOpts) preRun() (err error) {
 }
 
 func (opts *getServerlessPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.GetServerlessPrivateEndpointApiParams{
 		GroupId:      opts.groupId,
@@ -221,9 +227,7 @@ func getServerlessPrivateEndpointBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance associated with the tenant endpoint.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 24-hexadecimal digit string that identifies the tenant endpoint.`)
 
@@ -245,6 +249,9 @@ func (opts *listServerlessPrivateEndpointsOpts) preRun() (err error) {
 }
 
 func (opts *listServerlessPrivateEndpointsOpts) run(ctx context.Context, w io.Writer) error {
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.ListServerlessPrivateEndpointsApiParams{
 		GroupId:      opts.groupId,
@@ -277,9 +284,7 @@ func listServerlessPrivateEndpointsBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance associated with the tenant endpoint.`)
 
 	_ = cmd.MarkFlagRequired("groupId")
@@ -329,6 +334,9 @@ func (opts *updateServerlessPrivateEndpointOpts) run(ctx context.Context, w io.W
 	if errData != nil {
 		return errData
 	}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
 
 	params := &admin.UpdateServerlessPrivateEndpointApiParams{
 		GroupId:      opts.groupId,
@@ -366,9 +374,7 @@ func updateServerlessPrivateEndpointBuilder() *cobra.Command {
 			return opts.run(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`)
+	cmd.Flags().StringVar(&opts.groupId, "groupId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.instanceName, "instanceName", "", `Human-readable label that identifies the serverless instance associated with the tenant endpoint that will be updated.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 24-hexadecimal digit string that identifies the tenant endpoint which will be updated.`)
 

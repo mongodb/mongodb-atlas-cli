@@ -2,3 +2,11 @@ paths:
   "/api/atlas/v2/groups/{groupId}/clusters":
     post:
       summary: TEST DESCRIPTION
+components:
+  parameters:
+    groupId:
+      description: Unique 24-hexadecimal digit string that identifies your project.
+      x-group-id: true
+    orgId:
+      description: Unique 24-hexadecimal digit string that identifies the organization
+      x-org-id: true

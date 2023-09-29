@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/internal/config"
 )
 
 {{#operations}}
@@ -72,7 +73,17 @@ func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) run(c
 			return err{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}
 		}
 	}
-	{{/isDateTime}}{{/allParams}}
+	{{/isDateTime}}
+	{{#vendorExtensions.x-group-id}}
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	{{/vendorExtensions.x-group-id}}
+	{{#vendorExtensions.x-org-id}}
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	{{/vendorExtensions.x-org-id}}{{/allParams}}
 	params := &admin.{{operationId}}ApiParams{
 		{{#allParams}}
 		{{^isBodyParam}}{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: {{^isPathParam}}{{^isDateTime}}&{{/isDateTime}}{{/isPathParam}}{{^isDateTime}}opts.{{/isDateTime}}{{paramName}},{{/isBodyParam}}
@@ -142,4 +153,3 @@ func {{#lambda.camelcase}}{{baseName}}{{/lambda.camelcase}}Builder() *cobra.Comm
 	)
 	return cmd
 }
-

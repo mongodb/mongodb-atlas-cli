@@ -69,6 +69,9 @@ func (opts *StartOpts) Run(ctx context.Context) error {
 }
 
 func (opts *StartOpts) RunLocal(ctx context.Context) error {
+	opts.StartSpinner()
+	defer opts.StopSpinner()
+
 	localDeployments, err := opts.GetLocalDeployments(ctx)
 	if err != nil {
 		return err
@@ -77,6 +80,15 @@ func (opts *StartOpts) RunLocal(ctx context.Context) error {
 	for _, deployment := range localDeployments {
 		if deployment.Name == opts.DeploymentName {
 			if err = opts.startContainer(ctx, deployment); err != nil {
+				return err
+			}
+
+			mongotIPAddress, errIP := opts.MongotIP(ctx)
+			if errIP != nil {
+				return errIP
+			}
+
+			if err = opts.WaitForMongot(ctx, mongotIPAddress); err != nil {
 				return err
 			}
 
@@ -118,6 +130,10 @@ func (opts *StartOpts) RunAtlas() error {
 	if !opts.IsCliAuthenticated() {
 		return ErrNotAuthenticated
 	}
+
+	opts.StartSpinner()
+	defer opts.StopSpinner()
+
 	r, err := opts.store.StartCluster(opts.ConfigProjectID(), opts.DeploymentName)
 	if err != nil {
 		return err

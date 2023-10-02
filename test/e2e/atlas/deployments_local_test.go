@@ -92,7 +92,9 @@ func TestDeploymentsLocal(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"delete",
-			"test",
+			deploymentName,
+			"--type",
+			"local",
 			"--force",
 		)
 

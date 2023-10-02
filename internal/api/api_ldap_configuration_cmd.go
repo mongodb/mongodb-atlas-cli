@@ -40,7 +40,7 @@ type deleteLDAPConfigurationOpts struct {
 }
 
 func (opts *deleteLDAPConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -118,7 +118,7 @@ type getLDAPConfigurationOpts struct {
 }
 
 func (opts *getLDAPConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -197,7 +197,7 @@ type getLDAPConfigurationStatusOpts struct {
 }
 
 func (opts *getLDAPConfigurationStatusOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -281,7 +281,7 @@ type saveLDAPConfigurationOpts struct {
 }
 
 func (opts *saveLDAPConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -394,7 +394,7 @@ type verifyLDAPConfigurationOpts struct {
 }
 
 func (opts *verifyLDAPConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

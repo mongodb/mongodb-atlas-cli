@@ -40,7 +40,7 @@ type createRollingIndexOpts struct {
 }
 
 func (opts *createRollingIndexOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

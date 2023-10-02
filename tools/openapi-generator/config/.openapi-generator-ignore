@@ -2,3 +2,4 @@
 *.*
 !*_cmd.go
 !api.go
+!client.go

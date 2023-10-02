@@ -43,7 +43,7 @@ type createServerlessInstanceOpts struct {
 }
 
 func (opts *createServerlessInstanceOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -154,7 +154,7 @@ type deleteServerlessInstanceOpts struct {
 }
 
 func (opts *deleteServerlessInstanceOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -236,7 +236,7 @@ type getServerlessInstanceOpts struct {
 }
 
 func (opts *getServerlessInstanceOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -320,7 +320,7 @@ type listServerlessInstancesOpts struct {
 }
 
 func (opts *listServerlessInstancesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -408,7 +408,7 @@ type updateServerlessInstanceOpts struct {
 }
 
 func (opts *updateServerlessInstanceOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

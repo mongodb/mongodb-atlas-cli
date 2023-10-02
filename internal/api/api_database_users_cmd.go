@@ -43,7 +43,7 @@ type createDatabaseUserOpts struct {
 }
 
 func (opts *createDatabaseUserOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -155,7 +155,7 @@ type deleteDatabaseUserOpts struct {
 }
 
 func (opts *deleteDatabaseUserOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -253,7 +253,7 @@ type getDatabaseUserOpts struct {
 }
 
 func (opts *getDatabaseUserOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -352,7 +352,7 @@ type listDatabaseUsersOpts struct {
 }
 
 func (opts *listDatabaseUsersOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -441,7 +441,7 @@ type updateDatabaseUserOpts struct {
 }
 
 func (opts *updateDatabaseUserOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

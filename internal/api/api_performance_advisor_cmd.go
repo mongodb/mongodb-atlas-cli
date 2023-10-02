@@ -37,7 +37,7 @@ type disableSlowOperationThresholdingOpts struct {
 }
 
 func (opts *disableSlowOperationThresholdingOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -88,7 +88,7 @@ type enableSlowOperationThresholdingOpts struct {
 }
 
 func (opts *enableSlowOperationThresholdingOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -146,7 +146,7 @@ type listSlowQueriesOpts struct {
 }
 
 func (opts *listSlowQueriesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -244,7 +244,7 @@ type listSlowQueryNamespacesOpts struct {
 }
 
 func (opts *listSlowQueryNamespacesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -344,7 +344,7 @@ type listSuggestedIndexesOpts struct {
 }
 
 func (opts *listSuggestedIndexesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

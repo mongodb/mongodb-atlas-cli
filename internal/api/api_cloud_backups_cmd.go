@@ -42,7 +42,7 @@ type cancelBackupRestoreJobOpts struct {
 }
 
 func (opts *cancelBackupRestoreJobOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -130,7 +130,7 @@ type createBackupExportJobOpts struct {
 }
 
 func (opts *createBackupExportJobOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -247,7 +247,7 @@ type createBackupRestoreJobOpts struct {
 }
 
 func (opts *createBackupRestoreJobOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -363,7 +363,7 @@ type createExportBucketOpts struct {
 }
 
 func (opts *createExportBucketOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -477,7 +477,7 @@ type createServerlessBackupRestoreJobOpts struct {
 }
 
 func (opts *createServerlessBackupRestoreJobOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -591,7 +591,7 @@ type deleteAllBackupSchedulesOpts struct {
 }
 
 func (opts *deleteAllBackupSchedulesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -673,7 +673,7 @@ type deleteExportBucketOpts struct {
 }
 
 func (opts *deleteExportBucketOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -756,7 +756,7 @@ type deleteReplicaSetBackupOpts struct {
 }
 
 func (opts *deleteReplicaSetBackupOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -842,7 +842,7 @@ type deleteShardedClusterBackupOpts struct {
 }
 
 func (opts *deleteShardedClusterBackupOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -928,7 +928,7 @@ type getBackupExportJobOpts struct {
 }
 
 func (opts *getBackupExportJobOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1014,7 +1014,7 @@ type getBackupRestoreJobOpts struct {
 }
 
 func (opts *getBackupRestoreJobOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1099,7 +1099,7 @@ type getBackupScheduleOpts struct {
 }
 
 func (opts *getBackupScheduleOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1180,7 +1180,7 @@ type getDataProtectionSettingsOpts struct {
 }
 
 func (opts *getDataProtectionSettingsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1259,7 +1259,7 @@ type getExportBucketOpts struct {
 }
 
 func (opts *getExportBucketOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1342,7 +1342,7 @@ type getReplicaSetBackupOpts struct {
 }
 
 func (opts *getReplicaSetBackupOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1428,7 +1428,7 @@ type getServerlessBackupOpts struct {
 }
 
 func (opts *getServerlessBackupOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1514,7 +1514,7 @@ type getServerlessBackupRestoreJobOpts struct {
 }
 
 func (opts *getServerlessBackupRestoreJobOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1600,7 +1600,7 @@ type getShardedClusterBackupOpts struct {
 }
 
 func (opts *getShardedClusterBackupOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1688,7 +1688,7 @@ type listBackupExportJobsOpts struct {
 }
 
 func (opts *listBackupExportJobsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1779,7 +1779,7 @@ type listBackupRestoreJobsOpts struct {
 }
 
 func (opts *listBackupRestoreJobsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1869,7 +1869,7 @@ type listExportBucketsOpts struct {
 }
 
 func (opts *listExportBucketsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1957,7 +1957,7 @@ type listReplicaSetBackupsOpts struct {
 }
 
 func (opts *listReplicaSetBackupsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -2048,7 +2048,7 @@ type listServerlessBackupRestoreJobsOpts struct {
 }
 
 func (opts *listServerlessBackupRestoreJobsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -2139,7 +2139,7 @@ type listServerlessBackupsOpts struct {
 }
 
 func (opts *listServerlessBackupsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -2227,7 +2227,7 @@ type listShardedClusterBackupsOpts struct {
 }
 
 func (opts *listShardedClusterBackupsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -2312,7 +2312,7 @@ type takeSnapshotOpts struct {
 }
 
 func (opts *takeSnapshotOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -2429,7 +2429,7 @@ type updateBackupScheduleOpts struct {
 }
 
 func (opts *updateBackupScheduleOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -2545,7 +2545,7 @@ type updateDataProtectionSettingsOpts struct {
 }
 
 func (opts *updateDataProtectionSettingsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -2660,7 +2660,7 @@ type updateSnapshotRetentionOpts struct {
 }
 
 func (opts *updateSnapshotRetentionOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

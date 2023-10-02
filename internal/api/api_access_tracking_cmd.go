@@ -45,7 +45,7 @@ type listAccessLogsByClusterNameOpts struct {
 }
 
 func (opts *listAccessLogsByClusterNameOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -142,7 +142,7 @@ type listAccessLogsByHostnameOpts struct {
 }
 
 func (opts *listAccessLogsByHostnameOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

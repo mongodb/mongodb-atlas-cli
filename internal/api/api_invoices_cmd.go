@@ -43,7 +43,7 @@ type createCostExplorerQueryProcessOpts struct {
 }
 
 func (opts *createCostExplorerQueryProcessOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -154,7 +154,7 @@ type createCostExplorerQueryProcess1Opts struct {
 }
 
 func (opts *createCostExplorerQueryProcess1Opts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -236,7 +236,7 @@ type downloadInvoiceCSVOpts struct {
 }
 
 func (opts *downloadInvoiceCSVOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -318,7 +318,7 @@ type getInvoiceOpts struct {
 }
 
 func (opts *getInvoiceOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -402,7 +402,7 @@ type listInvoicesOpts struct {
 }
 
 func (opts *listInvoicesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -486,7 +486,7 @@ type listPendingInvoicesOpts struct {
 }
 
 func (opts *listPendingInvoicesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

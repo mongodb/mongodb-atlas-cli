@@ -42,7 +42,7 @@ type getOrganizationEventOpts struct {
 }
 
 func (opts *getOrganizationEventOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -127,7 +127,7 @@ type getProjectEventOpts struct {
 }
 
 func (opts *getProjectEventOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -217,7 +217,7 @@ type listOrganizationEventsOpts struct {
 }
 
 func (opts *listOrganizationEventsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -338,7 +338,7 @@ type listProjectEventsOpts struct {
 }
 
 func (opts *listProjectEventsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

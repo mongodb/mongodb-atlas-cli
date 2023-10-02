@@ -44,7 +44,7 @@ type createOnlineArchiveOpts struct {
 }
 
 func (opts *createOnlineArchiveOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -159,7 +159,7 @@ type deleteOnlineArchiveOpts struct {
 }
 
 func (opts *deleteOnlineArchiveOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -247,7 +247,7 @@ type downloadOnlineArchiveQueryLogsOpts struct {
 }
 
 func (opts *downloadOnlineArchiveQueryLogsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -336,7 +336,7 @@ type getOnlineArchiveOpts struct {
 }
 
 func (opts *getOnlineArchiveOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -424,7 +424,7 @@ type listOnlineArchivesOpts struct {
 }
 
 func (opts *listOnlineArchivesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -516,7 +516,7 @@ type updateOnlineArchiveOpts struct {
 }
 
 func (opts *updateOnlineArchiveOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

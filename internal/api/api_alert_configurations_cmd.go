@@ -43,7 +43,7 @@ type createAlertConfigurationOpts struct {
 }
 
 func (opts *createAlertConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -152,7 +152,7 @@ type deleteAlertConfigurationOpts struct {
 }
 
 func (opts *deleteAlertConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -209,7 +209,7 @@ type getAlertConfigurationOpts struct {
 }
 
 func (opts *getAlertConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -289,7 +289,7 @@ type listAlertConfigurationMatchersFieldNamesOpts struct {
 }
 
 func (opts *listAlertConfigurationMatchersFieldNamesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -356,7 +356,7 @@ type listAlertConfigurationsOpts struct {
 }
 
 func (opts *listAlertConfigurationsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -444,7 +444,7 @@ type listAlertConfigurationsByAlertIdOpts struct {
 }
 
 func (opts *listAlertConfigurationsByAlertIdOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -535,7 +535,7 @@ type toggleAlertConfigurationOpts struct {
 }
 
 func (opts *toggleAlertConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -652,7 +652,7 @@ type updateAlertConfigurationOpts struct {
 }
 
 func (opts *updateAlertConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

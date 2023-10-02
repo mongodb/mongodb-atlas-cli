@@ -44,7 +44,7 @@ type createSharedClusterBackupRestoreJobOpts struct {
 }
 
 func (opts *createSharedClusterBackupRestoreJobOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -159,7 +159,7 @@ type getSharedClusterBackupRestoreJobOpts struct {
 }
 
 func (opts *getSharedClusterBackupRestoreJobOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -244,7 +244,7 @@ type listSharedClusterBackupRestoreJobsOpts struct {
 }
 
 func (opts *listSharedClusterBackupRestoreJobsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

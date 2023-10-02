@@ -43,7 +43,7 @@ type createPeeringConnectionOpts struct {
 }
 
 func (opts *createPeeringConnectionOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -156,7 +156,7 @@ type createPeeringContainerOpts struct {
 }
 
 func (opts *createPeeringContainerOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -267,7 +267,7 @@ type deletePeeringConnectionOpts struct {
 }
 
 func (opts *deletePeeringConnectionOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -349,7 +349,7 @@ type deletePeeringContainerOpts struct {
 }
 
 func (opts *deletePeeringContainerOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -433,7 +433,7 @@ type disablePeeringOpts struct {
 }
 
 func (opts *disablePeeringOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -544,7 +544,7 @@ type getPeeringConnectionOpts struct {
 }
 
 func (opts *getPeeringConnectionOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -626,7 +626,7 @@ type getPeeringContainerOpts struct {
 }
 
 func (opts *getPeeringContainerOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -711,7 +711,7 @@ type listPeeringConnectionsOpts struct {
 }
 
 func (opts *listPeeringConnectionsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -801,7 +801,7 @@ type listPeeringContainerByCloudProviderOpts struct {
 }
 
 func (opts *listPeeringContainerByCloudProviderOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -891,7 +891,7 @@ type listPeeringContainersOpts struct {
 }
 
 func (opts *listPeeringContainersOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -979,7 +979,7 @@ type updatePeeringConnectionOpts struct {
 }
 
 func (opts *updatePeeringConnectionOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1096,7 +1096,7 @@ type updatePeeringContainerOpts struct {
 }
 
 func (opts *updatePeeringContainerOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1209,7 +1209,7 @@ type verifyConnectViaPeeringOnlyModeForOneProjectOpts struct {
 }
 
 func (opts *verifyConnectViaPeeringOnlyModeForOneProjectOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

@@ -44,7 +44,7 @@ type addProjectApiKeyOpts struct {
 }
 
 func (opts *addProjectApiKeyOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -160,7 +160,7 @@ type createApiKeyOpts struct {
 }
 
 func (opts *createApiKeyOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -277,7 +277,7 @@ type createApiKeyAccessListOpts struct {
 }
 
 func (opts *createApiKeyAccessListOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -400,7 +400,7 @@ type createProjectApiKeyOpts struct {
 }
 
 func (opts *createProjectApiKeyOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -511,7 +511,7 @@ type deleteApiKeyOpts struct {
 }
 
 func (opts *deleteApiKeyOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -594,7 +594,7 @@ type deleteApiKeyAccessListEntryOpts struct {
 }
 
 func (opts *deleteApiKeyAccessListEntryOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -679,7 +679,7 @@ type getApiKeyOpts struct {
 }
 
 func (opts *getApiKeyOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -762,7 +762,7 @@ type getApiKeyAccessListOpts struct {
 }
 
 func (opts *getApiKeyAccessListOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -850,7 +850,7 @@ type listApiKeyAccessListsEntriesOpts struct {
 }
 
 func (opts *listApiKeyAccessListsEntriesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -940,7 +940,7 @@ type listApiKeysOpts struct {
 }
 
 func (opts *listApiKeysOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1027,7 +1027,7 @@ type listProjectApiKeysOpts struct {
 }
 
 func (opts *listProjectApiKeysOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1112,7 +1112,7 @@ type removeProjectApiKeyOpts struct {
 }
 
 func (opts *removeProjectApiKeyOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1197,7 +1197,7 @@ type updateApiKeyOpts struct {
 }
 
 func (opts *updateApiKeyOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1317,7 +1317,7 @@ type updateApiKeyRolesOpts struct {
 }
 
 func (opts *updateApiKeyRolesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

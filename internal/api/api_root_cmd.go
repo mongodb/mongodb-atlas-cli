@@ -24,6 +24,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -35,7 +36,7 @@ type getSystemStatusOpts struct {
 }
 
 func (opts *getSystemStatusOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

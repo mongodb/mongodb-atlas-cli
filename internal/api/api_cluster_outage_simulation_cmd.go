@@ -41,7 +41,7 @@ type endOutageSimulationOpts struct {
 }
 
 func (opts *endOutageSimulationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -123,7 +123,7 @@ type getOutageSimulationOpts struct {
 }
 
 func (opts *getOutageSimulationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -208,7 +208,7 @@ type startOutageSimulationOpts struct {
 }
 
 func (opts *startOutageSimulationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

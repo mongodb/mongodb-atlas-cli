@@ -44,7 +44,7 @@ type createCustomZoneMappingOpts struct {
 }
 
 func (opts *createCustomZoneMappingOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -161,7 +161,7 @@ type createManagedNamespaceOpts struct {
 }
 
 func (opts *createManagedNamespaceOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -275,7 +275,7 @@ type deleteAllCustomZoneMappingsOpts struct {
 }
 
 func (opts *deleteAllCustomZoneMappingsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -359,7 +359,7 @@ type deleteManagedNamespaceOpts struct {
 }
 
 func (opts *deleteManagedNamespaceOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -445,7 +445,7 @@ type getManagedNamespaceOpts struct {
 }
 
 func (opts *getManagedNamespaceOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

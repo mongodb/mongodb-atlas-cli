@@ -44,7 +44,7 @@ type createAtlasSearchIndexOpts struct {
 }
 
 func (opts *createAtlasSearchIndexOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -159,7 +159,7 @@ type deleteAtlasSearchIndexOpts struct {
 }
 
 func (opts *deleteAtlasSearchIndexOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -245,7 +245,7 @@ type getAtlasSearchIndexOpts struct {
 }
 
 func (opts *getAtlasSearchIndexOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -332,7 +332,7 @@ type listAtlasSearchIndexesOpts struct {
 }
 
 func (opts *listAtlasSearchIndexesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -424,7 +424,7 @@ type updateAtlasSearchIndexOpts struct {
 }
 
 func (opts *updateAtlasSearchIndexOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

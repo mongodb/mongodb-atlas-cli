@@ -40,7 +40,7 @@ type getEncryptionAtRestOpts struct {
 }
 
 func (opts *getEncryptionAtRestOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -121,7 +121,7 @@ type updateEncryptionAtRestOpts struct {
 }
 
 func (opts *updateEncryptionAtRestOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

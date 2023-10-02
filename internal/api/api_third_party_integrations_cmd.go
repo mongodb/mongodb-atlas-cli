@@ -47,7 +47,7 @@ type createThirdPartyIntegrationOpts struct {
 }
 
 func (opts *createThirdPartyIntegrationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -168,7 +168,7 @@ type deleteThirdPartyIntegrationOpts struct {
 }
 
 func (opts *deleteThirdPartyIntegrationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -250,7 +250,7 @@ type getThirdPartyIntegrationOpts struct {
 }
 
 func (opts *getThirdPartyIntegrationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -334,7 +334,7 @@ type listThirdPartyIntegrationsOpts struct {
 }
 
 func (opts *listThirdPartyIntegrationsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -425,7 +425,7 @@ type updateThirdPartyIntegrationOpts struct {
 }
 
 func (opts *updateThirdPartyIntegrationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

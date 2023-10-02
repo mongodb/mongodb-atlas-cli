@@ -43,7 +43,7 @@ type createCustomDatabaseRoleOpts struct {
 }
 
 func (opts *createCustomDatabaseRoleOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -152,7 +152,7 @@ type deleteCustomDatabaseRoleOpts struct {
 }
 
 func (opts *deleteCustomDatabaseRoleOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -209,7 +209,7 @@ type getCustomDatabaseRoleOpts struct {
 }
 
 func (opts *getCustomDatabaseRoleOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -290,7 +290,7 @@ type listCustomDatabaseRolesOpts struct {
 }
 
 func (opts *listCustomDatabaseRolesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -372,7 +372,7 @@ type updateCustomDatabaseRoleOpts struct {
 }
 
 func (opts *updateCustomDatabaseRoleOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

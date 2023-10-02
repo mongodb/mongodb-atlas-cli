@@ -43,7 +43,7 @@ type createLinkTokenOpts struct {
 }
 
 func (opts *createLinkTokenOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -156,7 +156,7 @@ type createPushMigrationOpts struct {
 }
 
 func (opts *createPushMigrationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -265,7 +265,7 @@ type cutoverMigrationOpts struct {
 }
 
 func (opts *cutoverMigrationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -321,7 +321,7 @@ type deleteLinkTokenOpts struct {
 }
 
 func (opts *deleteLinkTokenOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -400,7 +400,7 @@ type getPushMigrationOpts struct {
 }
 
 func (opts *getPushMigrationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -482,7 +482,7 @@ type getValidationStatusOpts struct {
 }
 
 func (opts *getValidationStatusOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -563,7 +563,7 @@ type listSourceProjectsOpts struct {
 }
 
 func (opts *listSourceProjectsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -644,7 +644,7 @@ type validateMigrationOpts struct {
 }
 
 func (opts *validateMigrationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

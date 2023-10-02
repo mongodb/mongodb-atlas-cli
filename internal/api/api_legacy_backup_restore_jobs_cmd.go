@@ -44,7 +44,7 @@ type createLegacyBackupRestoreJobOpts struct {
 }
 
 func (opts *createLegacyBackupRestoreJobOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

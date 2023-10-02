@@ -43,7 +43,7 @@ type createClusterOpts struct {
 }
 
 func (opts *createClusterOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -153,7 +153,7 @@ type deleteClusterOpts struct {
 }
 
 func (opts *deleteClusterOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -212,7 +212,7 @@ type getClusterOpts struct {
 }
 
 func (opts *getClusterOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -294,7 +294,7 @@ type getClusterAdvancedConfigurationOpts struct {
 }
 
 func (opts *getClusterAdvancedConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -376,7 +376,7 @@ type getClusterStatusOpts struct {
 }
 
 func (opts *getClusterStatusOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -458,7 +458,7 @@ type getSampleDatasetLoadStatusOpts struct {
 }
 
 func (opts *getSampleDatasetLoadStatusOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -544,7 +544,7 @@ type listCloudProviderRegionsOpts struct {
 }
 
 func (opts *listCloudProviderRegionsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -636,7 +636,7 @@ type listClustersOpts struct {
 }
 
 func (opts *listClustersOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -724,7 +724,7 @@ type listClustersForAllProjectsOpts struct {
 }
 
 func (opts *listClustersForAllProjectsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -796,7 +796,7 @@ type loadSampleDatasetOpts struct {
 }
 
 func (opts *loadSampleDatasetOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -876,7 +876,7 @@ type testFailoverOpts struct {
 }
 
 func (opts *testFailoverOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -936,7 +936,7 @@ type updateClusterOpts struct {
 }
 
 func (opts *updateClusterOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1053,7 +1053,7 @@ type updateClusterAdvancedConfigurationOpts struct {
 }
 
 func (opts *updateClusterAdvancedConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1169,7 +1169,7 @@ type upgradeSharedClusterOpts struct {
 }
 
 func (opts *upgradeSharedClusterOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1282,7 +1282,7 @@ type upgradeSharedClusterToServerlessOpts struct {
 }
 
 func (opts *upgradeSharedClusterToServerlessOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

@@ -46,7 +46,7 @@ type createProjectIpAccessListOpts struct {
 }
 
 func (opts *createProjectIpAccessListOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -164,7 +164,7 @@ type deleteProjectIpAccessListOpts struct {
 }
 
 func (opts *deleteProjectIpAccessListOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -250,7 +250,7 @@ type getProjectIpAccessListStatusOpts struct {
 }
 
 func (opts *getProjectIpAccessListStatusOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -332,7 +332,7 @@ type getProjectIpListOpts struct {
 }
 
 func (opts *getProjectIpListOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -416,7 +416,7 @@ type listProjectIpAccessListsOpts struct {
 }
 
 func (opts *listProjectIpAccessListsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

@@ -43,7 +43,7 @@ type createDataFederationPrivateEndpointOpts struct {
 }
 
 func (opts *createDataFederationPrivateEndpointOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -157,7 +157,7 @@ type createFederatedDatabaseOpts struct {
 }
 
 func (opts *createFederatedDatabaseOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -275,7 +275,7 @@ type createOneDataFederationQueryLimitOpts struct {
 }
 
 func (opts *createOneDataFederationQueryLimitOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -400,7 +400,7 @@ type deleteDataFederationPrivateEndpointOpts struct {
 }
 
 func (opts *deleteDataFederationPrivateEndpointOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -482,7 +482,7 @@ type deleteFederatedDatabaseOpts struct {
 }
 
 func (opts *deleteFederatedDatabaseOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -565,7 +565,7 @@ type deleteOneDataFederationInstanceQueryLimitOpts struct {
 }
 
 func (opts *deleteOneDataFederationInstanceQueryLimitOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -660,7 +660,7 @@ type downloadFederatedDatabaseQueryLogsOpts struct {
 }
 
 func (opts *downloadFederatedDatabaseQueryLogsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -746,7 +746,7 @@ type getDataFederationPrivateEndpointOpts struct {
 }
 
 func (opts *getDataFederationPrivateEndpointOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -828,7 +828,7 @@ type getFederatedDatabaseOpts struct {
 }
 
 func (opts *getFederatedDatabaseOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -912,7 +912,7 @@ type listDataFederationPrivateEndpointsOpts struct {
 }
 
 func (opts *listDataFederationPrivateEndpointsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -997,7 +997,7 @@ type listFederatedDatabasesOpts struct {
 }
 
 func (opts *listFederatedDatabasesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1079,7 +1079,7 @@ type returnFederatedDatabaseQueryLimitOpts struct {
 }
 
 func (opts *returnFederatedDatabaseQueryLimitOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1172,7 +1172,7 @@ type returnFederatedDatabaseQueryLimitsOpts struct {
 }
 
 func (opts *returnFederatedDatabaseQueryLimitsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1258,7 +1258,7 @@ type updateFederatedDatabaseOpts struct {
 }
 
 func (opts *updateFederatedDatabaseOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

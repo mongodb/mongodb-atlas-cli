@@ -44,7 +44,7 @@ type createServerlessPrivateEndpointOpts struct {
 }
 
 func (opts *createServerlessPrivateEndpointOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -159,7 +159,7 @@ type deleteServerlessPrivateEndpointOpts struct {
 }
 
 func (opts *deleteServerlessPrivateEndpointOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -245,7 +245,7 @@ type getServerlessPrivateEndpointOpts struct {
 }
 
 func (opts *getServerlessPrivateEndpointOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -330,7 +330,7 @@ type listServerlessPrivateEndpointsOpts struct {
 }
 
 func (opts *listServerlessPrivateEndpointsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -416,7 +416,7 @@ type updateServerlessPrivateEndpointOpts struct {
 }
 
 func (opts *updateServerlessPrivateEndpointOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

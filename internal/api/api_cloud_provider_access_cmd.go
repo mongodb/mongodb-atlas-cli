@@ -44,7 +44,7 @@ type authorizeCloudProviderAccessRoleOpts struct {
 }
 
 func (opts *authorizeCloudProviderAccessRoleOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -160,7 +160,7 @@ type createCloudProviderAccessRoleOpts struct {
 }
 
 func (opts *createCloudProviderAccessRoleOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -270,7 +270,7 @@ type deauthorizeCloudProviderAccessRoleOpts struct {
 }
 
 func (opts *deauthorizeCloudProviderAccessRoleOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -330,7 +330,7 @@ type getCloudProviderAccessRoleOpts struct {
 }
 
 func (opts *getCloudProviderAccessRoleOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -411,7 +411,7 @@ type listCloudProviderAccessRolesOpts struct {
 }
 
 func (opts *listCloudProviderAccessRolesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

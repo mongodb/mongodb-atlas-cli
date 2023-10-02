@@ -40,7 +40,7 @@ type getAuditingConfigurationOpts struct {
 }
 
 func (opts *getAuditingConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -121,7 +121,7 @@ type updateAuditingConfigurationOpts struct {
 }
 
 func (opts *updateAuditingConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

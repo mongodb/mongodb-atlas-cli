@@ -1,0 +1,113 @@
+{{>partial_header}}
+package {{packageName}}
+
+import (
+	"time"
+	"net"
+	"net/http"
+
+	"github.com/mongodb-forks/digest"
+	"{{#apiInfo}}{{#apis.0}}{{vendorExtensions.x-sdk-import}}{{/apis.0}}{{/apiInfo}}"
+	"go.mongodb.org/atlas/auth"
+	"{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/internal/log"
+)
+
+const (
+	cloudGovServiceURL    = "https://cloud.mongodbgov.com/"
+	cloudGovService       = "cloudgov"
+	timeout               = 5 * time.Second
+	keepAlive             = 30 * time.Second
+	maxIdleConns          = 5
+	maxIdleConnsPerHost   = 4
+	idleConnTimeout       = 30 * time.Second
+	expectContinueTimeout = 1 * time.Second
+)
+
+type profileReader interface {
+	PublicAPIKey() string
+	PrivateAPIKey() string
+	Token() (*auth.Token, error)
+	OpsManagerURL() string
+	Service() string
+}
+
+func httpClient(username, password string, accessToken *auth.Token) (*http.Client, error) {
+	httpTransport := &http.Transport{
+		DialContext: (&net.Dialer{
+			Timeout:   timeout,
+			KeepAlive: keepAlive,
+		}).DialContext,
+		MaxIdleConns:          maxIdleConns,
+		MaxIdleConnsPerHost:   maxIdleConnsPerHost,
+		Proxy:                 http.ProxyFromEnvironment,
+		IdleConnTimeout:       idleConnTimeout,
+		ExpectContinueTimeout: expectContinueTimeout,
+	}
+
+	if username == "" && password == "" && accessToken == nil {
+		return &http.Client{Transport: httpTransport}, nil
+	}
+	if username != "" && password != "" {
+		t := &digest.Transport{
+			Username: username,
+			Password: password,
+		}
+		t.Transport = httpTransport
+		return t.Client()
+	}
+	tr := &transport{
+		token: accessToken,
+		base:  httpTransport,
+	}
+
+	return &http.Client{Transport: tr}, nil
+}
+
+func newClientWithAuth(userAgent string, profile profileReader) (*admin.APIClient, error) {
+	var authToken *auth.Token
+
+	username := profile.PublicAPIKey()
+	password := profile.PrivateAPIKey()
+
+	if username == "" && password == "" {
+		var err error
+		authToken, err = profile.Token()
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	baseURL := profile.OpsManagerURL()
+	if baseURL == "" && profile.Service() == cloudGovService {
+		baseURL = cloudGovServiceURL
+	}
+
+	client, err := httpClient(username, password, authToken)
+	if err != nil {
+		return nil, err
+	}
+
+	opts := []admin.ClientModifier{
+		admin.UseHTTPClient(client),
+		admin.UseUserAgent(userAgent),
+		admin.UseDebug(log.IsDebugLevel())}
+
+	if baseURL != "" {
+		opts = append(opts, admin.UseBaseURL(baseURL))
+	}
+	c, err := admin.NewClient(opts...)
+	if err != nil {
+		return nil, err
+	}
+	return c, nil
+}
+
+type transport struct {
+	token *auth.Token
+	base  http.RoundTripper
+}
+
+func (tr *transport) RoundTrip(req *http.Request) (*http.Response, error) {
+	tr.token.SetAuthHeader(req)
+	return tr.base.RoundTrip(req)
+}

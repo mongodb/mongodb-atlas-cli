@@ -42,7 +42,7 @@ type deleteLegacySnapshotOpts struct {
 }
 
 func (opts *deleteLegacySnapshotOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -128,7 +128,7 @@ type getLegacyBackupCheckpointOpts struct {
 }
 
 func (opts *getLegacyBackupCheckpointOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -214,7 +214,7 @@ type getLegacyBackupRestoreJobOpts struct {
 }
 
 func (opts *getLegacyBackupRestoreJobOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -300,7 +300,7 @@ type getLegacySnapshotOpts struct {
 }
 
 func (opts *getLegacySnapshotOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -385,7 +385,7 @@ type getLegacySnapshotScheduleOpts struct {
 }
 
 func (opts *getLegacySnapshotScheduleOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -470,7 +470,7 @@ type listLegacyBackupCheckpointsOpts struct {
 }
 
 func (opts *listLegacyBackupCheckpointsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -562,7 +562,7 @@ type listLegacyBackupRestoreJobsOpts struct {
 }
 
 func (opts *listLegacyBackupRestoreJobsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -656,7 +656,7 @@ type listLegacySnapshotsOpts struct {
 }
 
 func (opts *listLegacySnapshotsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -750,7 +750,7 @@ type updateLegacySnapshotRetentionOpts struct {
 }
 
 func (opts *updateLegacySnapshotRetentionOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -870,7 +870,7 @@ type updateLegacySnapshotScheduleOpts struct {
 }
 
 func (opts *updateLegacySnapshotScheduleOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

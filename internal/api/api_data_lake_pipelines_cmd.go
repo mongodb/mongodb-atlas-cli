@@ -44,7 +44,7 @@ type createPipelineOpts struct {
 }
 
 func (opts *createPipelineOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -155,7 +155,7 @@ type deletePipelineOpts struct {
 }
 
 func (opts *deletePipelineOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -238,7 +238,7 @@ type deletePipelineRunDatasetOpts struct {
 }
 
 func (opts *deletePipelineRunDatasetOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -323,7 +323,7 @@ type getPipelineOpts struct {
 }
 
 func (opts *getPipelineOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -406,7 +406,7 @@ type getPipelineRunOpts struct {
 }
 
 func (opts *getPipelineRunOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -495,7 +495,7 @@ type listPipelineRunsOpts struct {
 }
 
 func (opts *listPipelineRunsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -594,7 +594,7 @@ type listPipelineSchedulesOpts struct {
 }
 
 func (opts *listPipelineSchedulesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -680,7 +680,7 @@ type listPipelineSnapshotsOpts struct {
 }
 
 func (opts *listPipelineSnapshotsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -778,7 +778,7 @@ type listPipelinesOpts struct {
 }
 
 func (opts *listPipelinesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -857,7 +857,7 @@ type pausePipelineOpts struct {
 }
 
 func (opts *pausePipelineOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -939,7 +939,7 @@ type resumePipelineOpts struct {
 }
 
 func (opts *resumePipelineOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1024,7 +1024,7 @@ type triggerSnapshotIngestionOpts struct {
 }
 
 func (opts *triggerSnapshotIngestionOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1141,7 +1141,7 @@ type updatePipelineOpts struct {
 }
 
 func (opts *updatePipelineOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

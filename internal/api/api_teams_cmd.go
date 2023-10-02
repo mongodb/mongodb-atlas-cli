@@ -43,7 +43,7 @@ type addAllTeamsToProjectOpts struct {
 }
 
 func (opts *addAllTeamsToProjectOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -157,7 +157,7 @@ type addTeamUserOpts struct {
 }
 
 func (opts *addTeamUserOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -273,7 +273,7 @@ type createTeamOpts struct {
 }
 
 func (opts *createTeamOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -384,7 +384,7 @@ type deleteTeamOpts struct {
 }
 
 func (opts *deleteTeamOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -466,7 +466,7 @@ type getTeamByIdOpts struct {
 }
 
 func (opts *getTeamByIdOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -548,7 +548,7 @@ type getTeamByNameOpts struct {
 }
 
 func (opts *getTeamByNameOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -632,7 +632,7 @@ type listOrganizationTeamsOpts struct {
 }
 
 func (opts *listOrganizationTeamsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -719,7 +719,7 @@ type listProjectTeamsOpts struct {
 }
 
 func (opts *listProjectTeamsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -806,7 +806,7 @@ type listTeamUsersOpts struct {
 }
 
 func (opts *listTeamUsersOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -890,7 +890,7 @@ type removeProjectTeamOpts struct {
 }
 
 func (opts *removeProjectTeamOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -946,7 +946,7 @@ type removeTeamUserOpts struct {
 }
 
 func (opts *removeTeamUserOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1009,7 +1009,7 @@ type renameTeamOpts struct {
 }
 
 func (opts *renameTeamOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1126,7 +1126,7 @@ type updateTeamRolesOpts struct {
 }
 
 func (opts *updateTeamRolesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

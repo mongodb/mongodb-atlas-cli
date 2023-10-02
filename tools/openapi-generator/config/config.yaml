@@ -13,3 +13,6 @@ files:
   api.mustache:
     destinationFilename: api.go
     templateType: SupportingFiles
+  client.mustache:
+    destinationFilename: client.go
+    templateType: SupportingFiles

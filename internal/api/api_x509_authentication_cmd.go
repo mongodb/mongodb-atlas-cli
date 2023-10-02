@@ -44,7 +44,7 @@ type createDatabaseUserCertificateOpts struct {
 }
 
 func (opts *createDatabaseUserCertificateOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -157,7 +157,7 @@ type disableCustomerManagedX509Opts struct {
 }
 
 func (opts *disableCustomerManagedX509Opts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -239,7 +239,7 @@ type listDatabaseUserCertificatesOpts struct {
 }
 
 func (opts *listDatabaseUserCertificatesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

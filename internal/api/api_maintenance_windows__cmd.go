@@ -38,7 +38,7 @@ type deferMaintenanceWindowOpts struct {
 }
 
 func (opts *deferMaintenanceWindowOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -91,7 +91,7 @@ type getMaintenanceWindowOpts struct {
 }
 
 func (opts *getMaintenanceWindowOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -167,7 +167,7 @@ type resetMaintenanceWindowOpts struct {
 }
 
 func (opts *resetMaintenanceWindowOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -218,7 +218,7 @@ type toggleMaintenanceAutoDeferOpts struct {
 }
 
 func (opts *toggleMaintenanceAutoDeferOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -274,7 +274,7 @@ type updateMaintenanceWindowOpts struct {
 }
 
 func (opts *updateMaintenanceWindowOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

@@ -41,7 +41,7 @@ type createPushBasedLogConfigurationOpts struct {
 }
 
 func (opts *createPushBasedLogConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -124,7 +124,7 @@ type deletePushBasedLogConfigurationOpts struct {
 }
 
 func (opts *deletePushBasedLogConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -177,7 +177,7 @@ type getPushBasedLogConfigurationOpts struct {
 }
 
 func (opts *getPushBasedLogConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -256,7 +256,7 @@ type updatePushBasedLogConfigurationOpts struct {
 }
 
 func (opts *updatePushBasedLogConfigurationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

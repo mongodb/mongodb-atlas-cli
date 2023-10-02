@@ -44,7 +44,7 @@ type downloadSharedClusterBackupOpts struct {
 }
 
 func (opts *downloadSharedClusterBackupOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -159,7 +159,7 @@ type getSharedClusterBackupOpts struct {
 }
 
 func (opts *getSharedClusterBackupOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -244,7 +244,7 @@ type listSharedClusterBackupsOpts struct {
 }
 
 func (opts *listSharedClusterBackupsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

@@ -37,7 +37,7 @@ type {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts struct {
 }
 
 func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

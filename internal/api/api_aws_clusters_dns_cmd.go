@@ -40,7 +40,7 @@ type getAWSCustomDNSOpts struct {
 }
 
 func (opts *getAWSCustomDNSOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -121,7 +121,7 @@ type toggleAWSCustomDNSOpts struct {
 }
 
 func (opts *toggleAWSCustomDNSOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

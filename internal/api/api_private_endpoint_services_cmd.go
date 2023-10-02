@@ -45,7 +45,7 @@ type createPrivateEndpointOpts struct {
 }
 
 func (opts *createPrivateEndpointOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -164,7 +164,7 @@ type createPrivateEndpointServiceOpts struct {
 }
 
 func (opts *createPrivateEndpointServiceOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -277,7 +277,7 @@ type deletePrivateEndpointOpts struct {
 }
 
 func (opts *deletePrivateEndpointOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -366,7 +366,7 @@ type deletePrivateEndpointServiceOpts struct {
 }
 
 func (opts *deletePrivateEndpointServiceOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -453,7 +453,7 @@ type getPrivateEndpointOpts struct {
 }
 
 func (opts *getPrivateEndpointOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -542,7 +542,7 @@ type getPrivateEndpointServiceOpts struct {
 }
 
 func (opts *getPrivateEndpointServiceOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -626,7 +626,7 @@ type getRegionalizedPrivateEndpointSettingOpts struct {
 }
 
 func (opts *getRegionalizedPrivateEndpointSettingOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -705,7 +705,7 @@ type listPrivateEndpointServicesOpts struct {
 }
 
 func (opts *listPrivateEndpointServicesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -789,7 +789,7 @@ type toggleRegionalizedPrivateEndpointSettingOpts struct {
 }
 
 func (opts *toggleRegionalizedPrivateEndpointSettingOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

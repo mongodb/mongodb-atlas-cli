@@ -43,7 +43,7 @@ type createProjectOpts struct {
 }
 
 func (opts *createProjectOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -146,7 +146,7 @@ type createProjectInvitationOpts struct {
 }
 
 func (opts *createProjectInvitationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -256,7 +256,7 @@ type deleteProjectOpts struct {
 }
 
 func (opts *deleteProjectOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -335,7 +335,7 @@ type deleteProjectInvitationOpts struct {
 }
 
 func (opts *deleteProjectInvitationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -417,7 +417,7 @@ type deleteProjectLimitOpts struct {
 }
 
 func (opts *deleteProjectLimitOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -514,7 +514,7 @@ type getProjectOpts struct {
 }
 
 func (opts *getProjectOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -592,7 +592,7 @@ type getProjectByNameOpts struct {
 }
 
 func (opts *getProjectByNameOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -661,7 +661,7 @@ type getProjectInvitationOpts struct {
 }
 
 func (opts *getProjectInvitationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -743,7 +743,7 @@ type getProjectLimitOpts struct {
 }
 
 func (opts *getProjectLimitOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -840,7 +840,7 @@ type getProjectSettingsOpts struct {
 }
 
 func (opts *getProjectSettingsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -919,7 +919,7 @@ type listProjectInvitationsOpts struct {
 }
 
 func (opts *listProjectInvitationsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -999,7 +999,7 @@ type listProjectLimitsOpts struct {
 }
 
 func (opts *listProjectLimitsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1082,7 +1082,7 @@ type listProjectUsersOpts struct {
 }
 
 func (opts *listProjectUsersOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1172,7 +1172,7 @@ type listProjectsOpts struct {
 }
 
 func (opts *listProjectsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1242,7 +1242,7 @@ type removeProjectUserOpts struct {
 }
 
 func (opts *removeProjectUserOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1302,7 +1302,7 @@ type setProjectLimitOpts struct {
 }
 
 func (opts *setProjectLimitOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1434,7 +1434,7 @@ type updateProjectOpts struct {
 }
 
 func (opts *updateProjectOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1547,7 +1547,7 @@ type updateProjectInvitationOpts struct {
 }
 
 func (opts *updateProjectInvitationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1661,7 +1661,7 @@ type updateProjectInvitationByIdOpts struct {
 }
 
 func (opts *updateProjectInvitationByIdOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1778,7 +1778,7 @@ type updateProjectRolesOpts struct {
 }
 
 func (opts *updateProjectRolesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1894,7 +1894,7 @@ type updateProjectSettingsOpts struct {
 }
 
 func (opts *updateProjectSettingsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

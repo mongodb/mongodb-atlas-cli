@@ -44,7 +44,7 @@ type createRoleMappingOpts struct {
 }
 
 func (opts *createRoleMappingOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -155,7 +155,7 @@ type deleteFederationAppOpts struct {
 }
 
 func (opts *deleteFederationAppOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -198,7 +198,7 @@ type deleteRoleMappingOpts struct {
 }
 
 func (opts *deleteRoleMappingOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -258,7 +258,7 @@ type getConnectedOrgConfigOpts struct {
 }
 
 func (opts *getConnectedOrgConfigOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -329,7 +329,7 @@ type getFederationSettingsOpts struct {
 }
 
 func (opts *getFederationSettingsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -408,7 +408,7 @@ type getIdentityProviderOpts struct {
 }
 
 func (opts *getIdentityProviderOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -480,7 +480,7 @@ type getIdentityProviderMetadataOpts struct {
 }
 
 func (opts *getIdentityProviderMetadataOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -553,7 +553,7 @@ type getRoleMappingOpts struct {
 }
 
 func (opts *getRoleMappingOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -637,7 +637,7 @@ type listConnectedOrgConfigsOpts struct {
 }
 
 func (opts *listConnectedOrgConfigsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -705,7 +705,7 @@ type listIdentityProvidersOpts struct {
 }
 
 func (opts *listIdentityProvidersOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -774,7 +774,7 @@ type listRoleMappingsOpts struct {
 }
 
 func (opts *listRoleMappingsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -856,7 +856,7 @@ type removeConnectedOrgConfigOpts struct {
 }
 
 func (opts *removeConnectedOrgConfigOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -931,7 +931,7 @@ type updateConnectedOrgConfigOpts struct {
 }
 
 func (opts *updateConnectedOrgConfigOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1038,7 +1038,7 @@ type updateIdentityProviderOpts struct {
 }
 
 func (opts *updateIdentityProviderOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1146,7 +1146,7 @@ type updateRoleMappingOpts struct {
 }
 
 func (opts *updateRoleMappingOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

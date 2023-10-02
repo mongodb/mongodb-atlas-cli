@@ -42,7 +42,7 @@ type createOrganizationOpts struct {
 }
 
 func (opts *createOrganizationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -142,7 +142,7 @@ type createOrganizationInvitationOpts struct {
 }
 
 func (opts *createOrganizationInvitationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -252,7 +252,7 @@ type deleteOrganizationOpts struct {
 }
 
 func (opts *deleteOrganizationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -331,7 +331,7 @@ type deleteOrganizationInvitationOpts struct {
 }
 
 func (opts *deleteOrganizationInvitationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -412,7 +412,7 @@ type getOrganizationOpts struct {
 }
 
 func (opts *getOrganizationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -491,7 +491,7 @@ type getOrganizationInvitationOpts struct {
 }
 
 func (opts *getOrganizationInvitationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -572,7 +572,7 @@ type getOrganizationSettingsOpts struct {
 }
 
 func (opts *getOrganizationSettingsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -651,7 +651,7 @@ type listOrganizationInvitationsOpts struct {
 }
 
 func (opts *listOrganizationInvitationsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -735,7 +735,7 @@ type listOrganizationProjectsOpts struct {
 }
 
 func (opts *listOrganizationProjectsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -824,7 +824,7 @@ type listOrganizationUsersOpts struct {
 }
 
 func (opts *listOrganizationUsersOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -911,7 +911,7 @@ type listOrganizationsOpts struct {
 }
 
 func (opts *listOrganizationsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -985,7 +985,7 @@ type removeOrganizationUserOpts struct {
 }
 
 func (opts *removeOrganizationUserOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1069,7 +1069,7 @@ type renameOrganizationOpts struct {
 }
 
 func (opts *renameOrganizationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1182,7 +1182,7 @@ type updateOrganizationInvitationOpts struct {
 }
 
 func (opts *updateOrganizationInvitationOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1296,7 +1296,7 @@ type updateOrganizationInvitationByIdOpts struct {
 }
 
 func (opts *updateOrganizationInvitationByIdOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1413,7 +1413,7 @@ type updateOrganizationRolesOpts struct {
 }
 
 func (opts *updateOrganizationRolesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1529,7 +1529,7 @@ type updateOrganizationSettingsOpts struct {
 }
 
 func (opts *updateOrganizationSettingsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

@@ -44,7 +44,7 @@ type createStreamConnectionOpts struct {
 }
 
 func (opts *createStreamConnectionOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -160,7 +160,7 @@ type createStreamInstanceOpts struct {
 }
 
 func (opts *createStreamInstanceOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -272,7 +272,7 @@ type deleteStreamConnectionOpts struct {
 }
 
 func (opts *deleteStreamConnectionOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -357,7 +357,7 @@ type deleteStreamInstanceOpts struct {
 }
 
 func (opts *deleteStreamInstanceOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -440,7 +440,7 @@ type getStreamConnectionOpts struct {
 }
 
 func (opts *getStreamConnectionOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -526,7 +526,7 @@ type getStreamInstanceOpts struct {
 }
 
 func (opts *getStreamInstanceOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -612,7 +612,7 @@ type listStreamConnectionsOpts struct {
 }
 
 func (opts *listStreamConnectionsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -699,7 +699,7 @@ type listStreamInstancesOpts struct {
 }
 
 func (opts *listStreamInstancesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -786,7 +786,7 @@ type updateStreamConnectionOpts struct {
 }
 
 func (opts *updateStreamConnectionOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -906,7 +906,7 @@ type updateStreamInstanceOpts struct {
 }
 
 func (opts *updateStreamInstanceOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

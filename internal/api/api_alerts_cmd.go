@@ -44,7 +44,7 @@ type acknowledgeAlertOpts struct {
 }
 
 func (opts *acknowledgeAlertOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -158,7 +158,7 @@ type getAlertOpts struct {
 }
 
 func (opts *getAlertOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -243,7 +243,7 @@ type listAlertsOpts struct {
 }
 
 func (opts *listAlertsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -333,7 +333,7 @@ type listAlertsByAlertConfigurationIdOpts struct {
 }
 
 func (opts *listAlertsByAlertConfigurationIdOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

@@ -41,7 +41,7 @@ type getAtlasProcessOpts struct {
 }
 
 func (opts *getAtlasProcessOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -124,7 +124,7 @@ type getDatabaseOpts struct {
 }
 
 func (opts *getDatabaseOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -215,7 +215,7 @@ type getDatabaseMeasurementsOpts struct {
 }
 
 func (opts *getDatabaseMeasurementsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -335,7 +335,7 @@ type getDiskMeasurementsOpts struct {
 }
 
 func (opts *getDiskMeasurementsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -452,7 +452,7 @@ type getHostLogsOpts struct {
 }
 
 func (opts *getHostLogsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -546,7 +546,7 @@ type getHostMeasurementsOpts struct {
 }
 
 func (opts *getHostMeasurementsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -665,7 +665,7 @@ type getIndexMetricsOpts struct {
 }
 
 func (opts *getIndexMetricsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -791,7 +791,7 @@ type getMeasurementsOpts struct {
 }
 
 func (opts *getMeasurementsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -905,7 +905,7 @@ type listAtlasProcessesOpts struct {
 }
 
 func (opts *listAtlasProcessesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -993,7 +993,7 @@ type listDatabasesOpts struct {
 }
 
 func (opts *listDatabasesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1082,7 +1082,7 @@ type listDiskMeasurementsOpts struct {
 }
 
 func (opts *listDiskMeasurementsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1170,7 +1170,7 @@ type listDiskPartitionsOpts struct {
 }
 
 func (opts *listDiskPartitionsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1265,7 +1265,7 @@ type listIndexMetricsOpts struct {
 }
 
 func (opts *listIndexMetricsOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 
@@ -1383,7 +1383,7 @@ type listMetricTypesOpts struct {
 }
 
 func (opts *listMetricTypesOpts) preRun() (err error) {
-	if opts.client, err = newClientWithAuth(); err != nil {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
 		return err
 	}
 

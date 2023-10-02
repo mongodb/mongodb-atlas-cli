@@ -44,3 +44,4 @@ api_streams_cmd.go
 api_teams_cmd.go
 api_third_party_integrations_cmd.go
 api_x509_authentication_cmd.go
+client.go

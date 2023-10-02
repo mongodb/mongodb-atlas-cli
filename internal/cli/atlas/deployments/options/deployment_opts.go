@@ -251,7 +251,7 @@ func (opts *DeploymentOpts) IsAtlasDeploymentType() bool {
 }
 
 func LocalDeploymentPreRun() error {
-	if localDeploymentSupportedByOs() {
+	if !localDeploymentSupportedByOs() {
 		_, _ = log.Warningln("Local deployment is not supported on this OS")
 	}
 

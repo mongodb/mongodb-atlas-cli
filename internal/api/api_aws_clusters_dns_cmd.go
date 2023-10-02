@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -34,6 +35,8 @@ import (
 type getAWSCustomDNSOpts struct {
 	client  *admin.APIClient
 	groupId string
+	format  string
+	tmpl    *template.Template
 }
 
 func (opts *getAWSCustomDNSOpts) preRun() (err error) {
@@ -52,10 +55,14 @@ func (opts *getAWSCustomDNSOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getAWSCustomDNSOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getAWSCustomDNSOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetAWSCustomDNSApiParams{
 		GroupId: opts.groupId,
@@ -71,7 +78,17 @@ func (opts *getAWSCustomDNSOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -84,11 +101,12 @@ func getAWSCustomDNSBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -98,6 +116,8 @@ type toggleAWSCustomDNSOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *toggleAWSCustomDNSOpts) preRun() (err error) {
@@ -116,16 +136,20 @@ func (opts *toggleAWSCustomDNSOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *toggleAWSCustomDNSOpts) readData() (*admin.AWSCustomDNSEnabled, error) {
+func (opts *toggleAWSCustomDNSOpts) readData(r io.Reader) (*admin.AWSCustomDNSEnabled, error) {
 	var out *admin.AWSCustomDNSEnabled
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -141,8 +165,8 @@ func (opts *toggleAWSCustomDNSOpts) readData() (*admin.AWSCustomDNSEnabled, erro
 	return out, nil
 }
 
-func (opts *toggleAWSCustomDNSOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *toggleAWSCustomDNSOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -163,7 +187,17 @@ func (opts *toggleAWSCustomDNSOpts) run(ctx context.Context, w io.Writer) error 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -178,13 +212,14 @@ func toggleAWSCustomDNSBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

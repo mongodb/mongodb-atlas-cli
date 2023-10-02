@@ -23,6 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"strings"
+	"text/template"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -34,6 +36,8 @@ type getAtlasProcessOpts struct {
 	client    *admin.APIClient
 	groupId   string
 	processId string
+	format    string
+	tmpl      *template.Template
 }
 
 func (opts *getAtlasProcessOpts) preRun() (err error) {
@@ -52,10 +56,14 @@ func (opts *getAtlasProcessOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getAtlasProcessOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getAtlasProcessOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetAtlasProcessApiParams{
 		GroupId:   opts.groupId,
@@ -72,7 +80,17 @@ func (opts *getAtlasProcessOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -85,13 +103,14 @@ func getAtlasProcessBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.`)
 
 	_ = cmd.MarkFlagRequired("processId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -100,6 +119,8 @@ type getDatabaseOpts struct {
 	groupId      string
 	databaseName string
 	processId    string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *getDatabaseOpts) preRun() (err error) {
@@ -118,10 +139,14 @@ func (opts *getDatabaseOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getDatabaseOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getDatabaseOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetDatabaseApiParams{
 		GroupId:      opts.groupId,
@@ -139,7 +164,17 @@ func (opts *getDatabaseOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -152,7 +187,7 @@ func getDatabaseBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -161,6 +196,7 @@ func getDatabaseBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("processId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -174,6 +210,8 @@ type getDatabaseMeasurementsOpts struct {
 	period       string
 	start        string
 	end          string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *getDatabaseMeasurementsOpts) preRun() (err error) {
@@ -192,10 +230,14 @@ func (opts *getDatabaseMeasurementsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getDatabaseMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getDatabaseMeasurementsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	var start *time.Time
 	var errStart error
@@ -236,7 +278,17 @@ func (opts *getDatabaseMeasurementsOpts) run(ctx context.Context, w io.Writer) e
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -249,7 +301,7 @@ func getDatabaseMeasurementsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -264,6 +316,7 @@ func getDatabaseMeasurementsBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("processId")
 	_ = cmd.MarkFlagRequired("granularity")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -277,6 +330,8 @@ type getDiskMeasurementsOpts struct {
 	period        string
 	start         string
 	end           string
+	format        string
+	tmpl          *template.Template
 }
 
 func (opts *getDiskMeasurementsOpts) preRun() (err error) {
@@ -295,10 +350,14 @@ func (opts *getDiskMeasurementsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getDiskMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getDiskMeasurementsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	var start *time.Time
 	var errStart error
@@ -339,7 +398,17 @@ func (opts *getDiskMeasurementsOpts) run(ctx context.Context, w io.Writer) error
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -352,7 +421,7 @@ func getDiskMeasurementsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -367,6 +436,7 @@ func getDiskMeasurementsBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired("partitionName")
 	_ = cmd.MarkFlagRequired("processId")
 	_ = cmd.MarkFlagRequired("granularity")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -377,6 +447,8 @@ type getHostLogsOpts struct {
 	logName   string
 	endDate   int64
 	startDate int64
+	format    string
+	tmpl      *template.Template
 }
 
 func (opts *getHostLogsOpts) preRun() (err error) {
@@ -395,10 +467,14 @@ func (opts *getHostLogsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getHostLogsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getHostLogsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetHostLogsApiParams{
 		GroupId:   opts.groupId,
@@ -418,7 +494,17 @@ func (opts *getHostLogsOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -431,7 +517,7 @@ func getHostLogsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -442,6 +528,7 @@ func getHostLogsBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("hostName")
 	_ = cmd.MarkFlagRequired("logName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -454,6 +541,8 @@ type getHostMeasurementsOpts struct {
 	period      string
 	start       string
 	end         string
+	format      string
+	tmpl        *template.Template
 }
 
 func (opts *getHostMeasurementsOpts) preRun() (err error) {
@@ -472,10 +561,14 @@ func (opts *getHostMeasurementsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getHostMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getHostMeasurementsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	var start *time.Time
 	var errStart error
@@ -515,7 +608,17 @@ func (opts *getHostMeasurementsOpts) run(ctx context.Context, w io.Writer) error
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -528,7 +631,7 @@ func getHostMeasurementsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -541,6 +644,7 @@ func getHostMeasurementsBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("processId")
 	_ = cmd.MarkFlagRequired("granularity")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -556,6 +660,8 @@ type getIndexMetricsOpts struct {
 	period         string
 	start          string
 	end            string
+	format         string
+	tmpl           *template.Template
 }
 
 func (opts *getIndexMetricsOpts) preRun() (err error) {
@@ -574,10 +680,14 @@ func (opts *getIndexMetricsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getIndexMetricsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getIndexMetricsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	var start *time.Time
 	var errStart error
@@ -620,7 +730,17 @@ func (opts *getIndexMetricsOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -633,7 +753,7 @@ func getIndexMetricsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`)
@@ -653,6 +773,7 @@ func getIndexMetricsBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired("collectionName")
 	_ = cmd.MarkFlagRequired("granularity")
 	_ = cmd.MarkFlagRequired("metrics")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -665,6 +786,8 @@ type getMeasurementsOpts struct {
 	period      string
 	start       string
 	end         string
+	format      string
+	tmpl        *template.Template
 }
 
 func (opts *getMeasurementsOpts) preRun() (err error) {
@@ -683,10 +806,14 @@ func (opts *getMeasurementsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getMeasurementsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	var start *time.Time
 	var errStart error
@@ -726,7 +853,17 @@ func (opts *getMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -739,7 +876,7 @@ func getMeasurementsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`)
@@ -753,6 +890,7 @@ func getMeasurementsBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired("processId")
 	_ = cmd.MarkFlagRequired("granularity")
 	_ = cmd.MarkFlagRequired("metrics")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -762,6 +900,8 @@ type listAtlasProcessesOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listAtlasProcessesOpts) preRun() (err error) {
@@ -780,10 +920,14 @@ func (opts *listAtlasProcessesOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listAtlasProcessesOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listAtlasProcessesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListAtlasProcessesApiParams{
 		GroupId:      opts.groupId,
@@ -802,7 +946,17 @@ func (opts *listAtlasProcessesOpts) run(ctx context.Context, w io.Writer) error 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -815,7 +969,7 @@ func listAtlasProcessesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -823,6 +977,7 @@ func listAtlasProcessesBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -833,6 +988,8 @@ type listDatabasesOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listDatabasesOpts) preRun() (err error) {
@@ -851,10 +1008,14 @@ func (opts *listDatabasesOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listDatabasesOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listDatabasesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListDatabasesApiParams{
 		GroupId:      opts.groupId,
@@ -874,7 +1035,17 @@ func (opts *listDatabasesOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -887,7 +1058,7 @@ func listDatabasesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -897,6 +1068,7 @@ func listDatabasesBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("processId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -905,6 +1077,8 @@ type listDiskMeasurementsOpts struct {
 	partitionName string
 	groupId       string
 	processId     string
+	format        string
+	tmpl          *template.Template
 }
 
 func (opts *listDiskMeasurementsOpts) preRun() (err error) {
@@ -923,10 +1097,14 @@ func (opts *listDiskMeasurementsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listDiskMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listDiskMeasurementsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListDiskMeasurementsApiParams{
 		PartitionName: opts.partitionName,
@@ -944,7 +1122,17 @@ func (opts *listDiskMeasurementsOpts) run(ctx context.Context, w io.Writer) erro
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -957,7 +1145,7 @@ func listDiskMeasurementsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.partitionName, "partitionName", "", `Human-readable label of the disk or partition to which the measurements apply.`)
@@ -966,6 +1154,7 @@ func listDiskMeasurementsBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("partitionName")
 	_ = cmd.MarkFlagRequired("processId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -976,6 +1165,8 @@ type listDiskPartitionsOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listDiskPartitionsOpts) preRun() (err error) {
@@ -994,10 +1185,14 @@ func (opts *listDiskPartitionsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listDiskPartitionsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listDiskPartitionsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListDiskPartitionsApiParams{
 		GroupId:      opts.groupId,
@@ -1017,7 +1212,17 @@ func (opts *listDiskPartitionsOpts) run(ctx context.Context, w io.Writer) error 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -1030,7 +1235,7 @@ func listDiskPartitionsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1040,6 +1245,7 @@ func listDiskPartitionsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("processId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -1054,6 +1260,8 @@ type listIndexMetricsOpts struct {
 	period         string
 	start          string
 	end            string
+	format         string
+	tmpl           *template.Template
 }
 
 func (opts *listIndexMetricsOpts) preRun() (err error) {
@@ -1072,10 +1280,14 @@ func (opts *listIndexMetricsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listIndexMetricsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listIndexMetricsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	var start *time.Time
 	var errStart error
@@ -1117,7 +1329,17 @@ func (opts *listIndexMetricsOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -1130,7 +1352,7 @@ func listIndexMetricsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`)
@@ -1148,6 +1370,7 @@ func listIndexMetricsBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired("collectionName")
 	_ = cmd.MarkFlagRequired("granularity")
 	_ = cmd.MarkFlagRequired("metrics")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -1155,6 +1378,8 @@ type listMetricTypesOpts struct {
 	client    *admin.APIClient
 	processId string
 	groupId   string
+	format    string
+	tmpl      *template.Template
 }
 
 func (opts *listMetricTypesOpts) preRun() (err error) {
@@ -1173,10 +1398,14 @@ func (opts *listMetricTypesOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listMetricTypesOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listMetricTypesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListMetricTypesApiParams{
 		ProcessId: opts.processId,
@@ -1193,7 +1422,17 @@ func (opts *listMetricTypesOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -1206,13 +1445,14 @@ func listMetricTypesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`)
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	_ = cmd.MarkFlagRequired("processId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

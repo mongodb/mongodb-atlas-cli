@@ -23,6 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
@@ -50,10 +52,10 @@ func (opts *disableSlowOperationThresholdingOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	return err
 }
 
-func (opts *disableSlowOperationThresholdingOpts) run(ctx context.Context, _ io.Writer) error {
+func (opts *disableSlowOperationThresholdingOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
 
 	params := &admin.DisableSlowOperationThresholdingApiParams{
 		GroupId: opts.groupId,
@@ -72,7 +74,7 @@ func disableSlowOperationThresholdingBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -101,10 +103,10 @@ func (opts *enableSlowOperationThresholdingOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	return err
 }
 
-func (opts *enableSlowOperationThresholdingOpts) run(ctx context.Context, _ io.Writer) error {
+func (opts *enableSlowOperationThresholdingOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
 
 	params := &admin.EnableSlowOperationThresholdingApiParams{
 		GroupId: opts.groupId,
@@ -123,7 +125,7 @@ func enableSlowOperationThresholdingBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -139,6 +141,8 @@ type listSlowQueriesOpts struct {
 	namespaces []string
 	nLogs      int64
 	since      int64
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *listSlowQueriesOpts) preRun() (err error) {
@@ -157,10 +161,14 @@ func (opts *listSlowQueriesOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listSlowQueriesOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listSlowQueriesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListSlowQueriesApiParams{
 		GroupId:    opts.groupId,
@@ -181,7 +189,17 @@ func (opts *listSlowQueriesOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -194,7 +212,7 @@ func listSlowQueriesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -211,6 +229,7 @@ func listSlowQueriesBuilder() *cobra.Command {
 - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.`)
 
 	_ = cmd.MarkFlagRequired("processId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -220,6 +239,8 @@ type listSlowQueryNamespacesOpts struct {
 	processId string
 	duration  int64
 	since     int64
+	format    string
+	tmpl      *template.Template
 }
 
 func (opts *listSlowQueryNamespacesOpts) preRun() (err error) {
@@ -238,10 +259,14 @@ func (opts *listSlowQueryNamespacesOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listSlowQueryNamespacesOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listSlowQueryNamespacesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListSlowQueryNamespacesApiParams{
 		GroupId:   opts.groupId,
@@ -260,7 +285,17 @@ func (opts *listSlowQueryNamespacesOpts) run(ctx context.Context, w io.Writer) e
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -273,7 +308,7 @@ func listSlowQueryNamespacesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -288,6 +323,7 @@ func listSlowQueryNamespacesBuilder() *cobra.Command {
 - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.`)
 
 	_ = cmd.MarkFlagRequired("processId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -303,6 +339,8 @@ type listSuggestedIndexesOpts struct {
 	nExamples    int64
 	nIndexes     int64
 	since        int64
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listSuggestedIndexesOpts) preRun() (err error) {
@@ -321,10 +359,14 @@ func (opts *listSuggestedIndexesOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listSuggestedIndexesOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listSuggestedIndexesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListSuggestedIndexesApiParams{
 		GroupId:      opts.groupId,
@@ -349,7 +391,17 @@ func (opts *listSuggestedIndexesOpts) run(ctx context.Context, w io.Writer) erro
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -362,7 +414,7 @@ func listSuggestedIndexesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -383,6 +435,7 @@ func listSuggestedIndexesBuilder() *cobra.Command {
 - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.`)
 
 	_ = cmd.MarkFlagRequired("processId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

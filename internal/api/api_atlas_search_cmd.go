@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -38,6 +39,8 @@ type createAtlasSearchIndexOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createAtlasSearchIndexOpts) preRun() (err error) {
@@ -56,16 +59,20 @@ func (opts *createAtlasSearchIndexOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createAtlasSearchIndexOpts) readData() (*admin.ClusterSearchIndex, error) {
+func (opts *createAtlasSearchIndexOpts) readData(r io.Reader) (*admin.ClusterSearchIndex, error) {
 	var out *admin.ClusterSearchIndex
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -81,8 +88,8 @@ func (opts *createAtlasSearchIndexOpts) readData() (*admin.ClusterSearchIndex, e
 	return out, nil
 }
 
-func (opts *createAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createAtlasSearchIndexOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -104,7 +111,17 @@ func (opts *createAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) er
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -119,7 +136,7 @@ func createAtlasSearchIndexBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -128,6 +145,7 @@ func createAtlasSearchIndexBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -136,6 +154,8 @@ type deleteAtlasSearchIndexOpts struct {
 	groupId     string
 	clusterName string
 	indexId     string
+	format      string
+	tmpl        *template.Template
 }
 
 func (opts *deleteAtlasSearchIndexOpts) preRun() (err error) {
@@ -154,10 +174,14 @@ func (opts *deleteAtlasSearchIndexOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deleteAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deleteAtlasSearchIndexOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeleteAtlasSearchIndexApiParams{
 		GroupId:     opts.groupId,
@@ -175,7 +199,17 @@ func (opts *deleteAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) er
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -188,7 +222,7 @@ func deleteAtlasSearchIndexBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -197,6 +231,7 @@ func deleteAtlasSearchIndexBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("indexId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -205,6 +240,8 @@ type getAtlasSearchIndexOpts struct {
 	groupId     string
 	clusterName string
 	indexId     string
+	format      string
+	tmpl        *template.Template
 }
 
 func (opts *getAtlasSearchIndexOpts) preRun() (err error) {
@@ -223,10 +260,14 @@ func (opts *getAtlasSearchIndexOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getAtlasSearchIndexOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetAtlasSearchIndexApiParams{
 		GroupId:     opts.groupId,
@@ -244,7 +285,17 @@ func (opts *getAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) error
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -257,7 +308,7 @@ func getAtlasSearchIndexBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -266,6 +317,7 @@ func getAtlasSearchIndexBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("indexId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -275,6 +327,8 @@ type listAtlasSearchIndexesOpts struct {
 	clusterName    string
 	collectionName string
 	databaseName   string
+	format         string
+	tmpl           *template.Template
 }
 
 func (opts *listAtlasSearchIndexesOpts) preRun() (err error) {
@@ -293,10 +347,14 @@ func (opts *listAtlasSearchIndexesOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listAtlasSearchIndexesOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listAtlasSearchIndexesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListAtlasSearchIndexesApiParams{
 		GroupId:        opts.groupId,
@@ -315,7 +373,17 @@ func (opts *listAtlasSearchIndexesOpts) run(ctx context.Context, w io.Writer) er
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -328,7 +396,7 @@ func listAtlasSearchIndexesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -339,6 +407,7 @@ func listAtlasSearchIndexesBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("collectionName")
 	_ = cmd.MarkFlagRequired("databaseName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -350,6 +419,8 @@ type updateAtlasSearchIndexOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *updateAtlasSearchIndexOpts) preRun() (err error) {
@@ -368,16 +439,20 @@ func (opts *updateAtlasSearchIndexOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updateAtlasSearchIndexOpts) readData() (*admin.ClusterSearchIndex, error) {
+func (opts *updateAtlasSearchIndexOpts) readData(r io.Reader) (*admin.ClusterSearchIndex, error) {
 	var out *admin.ClusterSearchIndex
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -393,8 +468,8 @@ func (opts *updateAtlasSearchIndexOpts) readData() (*admin.ClusterSearchIndex, e
 	return out, nil
 }
 
-func (opts *updateAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updateAtlasSearchIndexOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -417,7 +492,17 @@ func (opts *updateAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) er
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -432,7 +517,7 @@ func updateAtlasSearchIndexBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -443,6 +528,7 @@ func updateAtlasSearchIndexBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("indexId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

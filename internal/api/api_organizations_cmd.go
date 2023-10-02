@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -36,6 +37,8 @@ type createOrganizationOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createOrganizationOpts) preRun() (err error) {
@@ -43,16 +46,20 @@ func (opts *createOrganizationOpts) preRun() (err error) {
 		return err
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createOrganizationOpts) readData() (*admin.CreateOrganizationRequest, error) {
+func (opts *createOrganizationOpts) readData(r io.Reader) (*admin.CreateOrganizationRequest, error) {
 	var out *admin.CreateOrganizationRequest
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -68,8 +75,8 @@ func (opts *createOrganizationOpts) readData() (*admin.CreateOrganizationRequest
 	return out, nil
 }
 
-func (opts *createOrganizationOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createOrganizationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -89,7 +96,17 @@ func (opts *createOrganizationOpts) run(ctx context.Context, w io.Writer) error 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -104,12 +121,13 @@ func createOrganizationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -119,6 +137,8 @@ type createOrganizationInvitationOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createOrganizationInvitationOpts) preRun() (err error) {
@@ -137,16 +157,20 @@ func (opts *createOrganizationInvitationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createOrganizationInvitationOpts) readData() (*admin.OrganizationInvitationRequest, error) {
+func (opts *createOrganizationInvitationOpts) readData(r io.Reader) (*admin.OrganizationInvitationRequest, error) {
 	var out *admin.OrganizationInvitationRequest
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -162,8 +186,8 @@ func (opts *createOrganizationInvitationOpts) readData() (*admin.OrganizationInv
 	return out, nil
 }
 
-func (opts *createOrganizationInvitationOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createOrganizationInvitationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -184,7 +208,17 @@ func (opts *createOrganizationInvitationOpts) run(ctx context.Context, w io.Writ
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -199,19 +233,22 @@ func createOrganizationInvitationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
 type deleteOrganizationOpts struct {
 	client *admin.APIClient
 	orgId  string
+	format string
+	tmpl   *template.Template
 }
 
 func (opts *deleteOrganizationOpts) preRun() (err error) {
@@ -230,10 +267,14 @@ func (opts *deleteOrganizationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deleteOrganizationOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deleteOrganizationOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeleteOrganizationApiParams{
 		OrgId: opts.orgId,
@@ -249,7 +290,17 @@ func (opts *deleteOrganizationOpts) run(ctx context.Context, w io.Writer) error 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -262,11 +313,12 @@ func deleteOrganizationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -274,6 +326,8 @@ type deleteOrganizationInvitationOpts struct {
 	client       *admin.APIClient
 	orgId        string
 	invitationId string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *deleteOrganizationInvitationOpts) preRun() (err error) {
@@ -292,10 +346,14 @@ func (opts *deleteOrganizationInvitationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deleteOrganizationInvitationOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deleteOrganizationInvitationOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeleteOrganizationInvitationApiParams{
 		OrgId:        opts.orgId,
@@ -312,7 +370,17 @@ func (opts *deleteOrganizationInvitationOpts) run(ctx context.Context, w io.Writ
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -325,19 +393,22 @@ func deleteOrganizationInvitationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", `Unique 24-hexadecimal digit string that identifies the invitation.`)
 
 	_ = cmd.MarkFlagRequired("invitationId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
 type getOrganizationOpts struct {
 	client *admin.APIClient
 	orgId  string
+	format string
+	tmpl   *template.Template
 }
 
 func (opts *getOrganizationOpts) preRun() (err error) {
@@ -356,10 +427,14 @@ func (opts *getOrganizationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getOrganizationOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getOrganizationOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetOrganizationApiParams{
 		OrgId: opts.orgId,
@@ -375,7 +450,17 @@ func (opts *getOrganizationOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -388,11 +473,12 @@ func getOrganizationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -400,6 +486,8 @@ type getOrganizationInvitationOpts struct {
 	client       *admin.APIClient
 	orgId        string
 	invitationId string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *getOrganizationInvitationOpts) preRun() (err error) {
@@ -418,10 +506,14 @@ func (opts *getOrganizationInvitationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getOrganizationInvitationOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getOrganizationInvitationOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetOrganizationInvitationApiParams{
 		OrgId:        opts.orgId,
@@ -438,7 +530,17 @@ func (opts *getOrganizationInvitationOpts) run(ctx context.Context, w io.Writer)
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -451,19 +553,22 @@ func getOrganizationInvitationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", `Unique 24-hexadecimal digit string that identifies the invitation.`)
 
 	_ = cmd.MarkFlagRequired("invitationId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
 type getOrganizationSettingsOpts struct {
 	client *admin.APIClient
 	orgId  string
+	format string
+	tmpl   *template.Template
 }
 
 func (opts *getOrganizationSettingsOpts) preRun() (err error) {
@@ -482,10 +587,14 @@ func (opts *getOrganizationSettingsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getOrganizationSettingsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getOrganizationSettingsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetOrganizationSettingsApiParams{
 		OrgId: opts.orgId,
@@ -501,7 +610,17 @@ func (opts *getOrganizationSettingsOpts) run(ctx context.Context, w io.Writer) e
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -514,11 +633,12 @@ func getOrganizationSettingsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -526,6 +646,8 @@ type listOrganizationInvitationsOpts struct {
 	client   *admin.APIClient
 	orgId    string
 	username string
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *listOrganizationInvitationsOpts) preRun() (err error) {
@@ -544,10 +666,14 @@ func (opts *listOrganizationInvitationsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listOrganizationInvitationsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listOrganizationInvitationsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListOrganizationInvitationsApiParams{
 		OrgId:    opts.orgId,
@@ -564,7 +690,17 @@ func (opts *listOrganizationInvitationsOpts) run(ctx context.Context, w io.Write
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -577,12 +713,13 @@ func listOrganizationInvitationsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.username, "username", "", `Email address of the user account invited to this organization. If you exclude this parameter, this resource returns all pending invitations.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -593,6 +730,8 @@ type listOrganizationProjectsOpts struct {
 	itemsPerPage int
 	pageNum      int
 	name         string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listOrganizationProjectsOpts) preRun() (err error) {
@@ -611,10 +750,14 @@ func (opts *listOrganizationProjectsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listOrganizationProjectsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listOrganizationProjectsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListOrganizationProjectsApiParams{
 		OrgId:        opts.orgId,
@@ -634,7 +777,17 @@ func (opts *listOrganizationProjectsOpts) run(ctx context.Context, w io.Writer) 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -647,7 +800,7 @@ func listOrganizationProjectsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -656,6 +809,7 @@ func listOrganizationProjectsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label of the project to use to filter the returned list. Performs a case-insensitive search for a project within the organization which is prefixed by the specified name.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -665,6 +819,8 @@ type listOrganizationUsersOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listOrganizationUsersOpts) preRun() (err error) {
@@ -683,10 +839,14 @@ func (opts *listOrganizationUsersOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listOrganizationUsersOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listOrganizationUsersOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListOrganizationUsersApiParams{
 		OrgId:        opts.orgId,
@@ -705,7 +865,17 @@ func (opts *listOrganizationUsersOpts) run(ctx context.Context, w io.Writer) err
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -718,7 +888,7 @@ func listOrganizationUsersBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -726,6 +896,7 @@ func listOrganizationUsersBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -735,6 +906,8 @@ type listOrganizationsOpts struct {
 	itemsPerPage int
 	pageNum      int
 	name         string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listOrganizationsOpts) preRun() (err error) {
@@ -742,10 +915,14 @@ func (opts *listOrganizationsOpts) preRun() (err error) {
 		return err
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listOrganizationsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listOrganizationsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListOrganizationsApiParams{
 		IncludeCount: &opts.includeCount,
@@ -764,7 +941,17 @@ func (opts *listOrganizationsOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -777,7 +964,7 @@ func listOrganizationsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
@@ -785,6 +972,7 @@ func listOrganizationsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label of the organization to use to filter the returned list. Performs a case-insensitive search for an organization that starts with the specified name.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -792,6 +980,8 @@ type removeOrganizationUserOpts struct {
 	client *admin.APIClient
 	orgId  string
 	userId string
+	format string
+	tmpl   *template.Template
 }
 
 func (opts *removeOrganizationUserOpts) preRun() (err error) {
@@ -810,10 +1000,14 @@ func (opts *removeOrganizationUserOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *removeOrganizationUserOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *removeOrganizationUserOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.RemoveOrganizationUserApiParams{
 		OrgId:  opts.orgId,
@@ -830,7 +1024,17 @@ func (opts *removeOrganizationUserOpts) run(ctx context.Context, w io.Writer) er
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -843,13 +1047,14 @@ func removeOrganizationUserBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.userId, "userId", "", `Unique 24-hexadecimal digit string that identifies the user to be deleted.`)
 
 	_ = cmd.MarkFlagRequired("userId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -859,6 +1064,8 @@ type renameOrganizationOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *renameOrganizationOpts) preRun() (err error) {
@@ -877,16 +1084,20 @@ func (opts *renameOrganizationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *renameOrganizationOpts) readData() (*admin.AtlasOrganization, error) {
+func (opts *renameOrganizationOpts) readData(r io.Reader) (*admin.AtlasOrganization, error) {
 	var out *admin.AtlasOrganization
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -902,8 +1113,8 @@ func (opts *renameOrganizationOpts) readData() (*admin.AtlasOrganization, error)
 	return out, nil
 }
 
-func (opts *renameOrganizationOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *renameOrganizationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -924,7 +1135,17 @@ func (opts *renameOrganizationOpts) run(ctx context.Context, w io.Writer) error 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -939,13 +1160,14 @@ func renameOrganizationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -955,6 +1177,8 @@ type updateOrganizationInvitationOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *updateOrganizationInvitationOpts) preRun() (err error) {
@@ -973,16 +1197,20 @@ func (opts *updateOrganizationInvitationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updateOrganizationInvitationOpts) readData() (*admin.OrganizationInvitationRequest, error) {
+func (opts *updateOrganizationInvitationOpts) readData(r io.Reader) (*admin.OrganizationInvitationRequest, error) {
 	var out *admin.OrganizationInvitationRequest
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -998,8 +1226,8 @@ func (opts *updateOrganizationInvitationOpts) readData() (*admin.OrganizationInv
 	return out, nil
 }
 
-func (opts *updateOrganizationInvitationOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updateOrganizationInvitationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -1020,7 +1248,17 @@ func (opts *updateOrganizationInvitationOpts) run(ctx context.Context, w io.Writ
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -1035,13 +1273,14 @@ func updateOrganizationInvitationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -1052,6 +1291,8 @@ type updateOrganizationInvitationByIdOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *updateOrganizationInvitationByIdOpts) preRun() (err error) {
@@ -1070,16 +1311,20 @@ func (opts *updateOrganizationInvitationByIdOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updateOrganizationInvitationByIdOpts) readData() (*admin.OrganizationInvitationUpdateRequest, error) {
+func (opts *updateOrganizationInvitationByIdOpts) readData(r io.Reader) (*admin.OrganizationInvitationUpdateRequest, error) {
 	var out *admin.OrganizationInvitationUpdateRequest
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -1095,8 +1340,8 @@ func (opts *updateOrganizationInvitationByIdOpts) readData() (*admin.Organizatio
 	return out, nil
 }
 
-func (opts *updateOrganizationInvitationByIdOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updateOrganizationInvitationByIdOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -1118,7 +1363,17 @@ func (opts *updateOrganizationInvitationByIdOpts) run(ctx context.Context, w io.
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -1133,7 +1388,7 @@ func updateOrganizationInvitationByIdBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -1142,6 +1397,7 @@ func updateOrganizationInvitationByIdBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("invitationId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -1152,6 +1408,8 @@ type updateOrganizationRolesOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *updateOrganizationRolesOpts) preRun() (err error) {
@@ -1170,16 +1428,20 @@ func (opts *updateOrganizationRolesOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updateOrganizationRolesOpts) readData() (*admin.UpdateOrgRolesForUser, error) {
+func (opts *updateOrganizationRolesOpts) readData(r io.Reader) (*admin.UpdateOrgRolesForUser, error) {
 	var out *admin.UpdateOrgRolesForUser
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -1195,8 +1457,8 @@ func (opts *updateOrganizationRolesOpts) readData() (*admin.UpdateOrgRolesForUse
 	return out, nil
 }
 
-func (opts *updateOrganizationRolesOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updateOrganizationRolesOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -1218,7 +1480,17 @@ func (opts *updateOrganizationRolesOpts) run(ctx context.Context, w io.Writer) e
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -1233,7 +1505,7 @@ func updateOrganizationRolesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -1242,6 +1514,7 @@ func updateOrganizationRolesBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("userId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -1251,6 +1524,8 @@ type updateOrganizationSettingsOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *updateOrganizationSettingsOpts) preRun() (err error) {
@@ -1269,16 +1544,20 @@ func (opts *updateOrganizationSettingsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updateOrganizationSettingsOpts) readData() (*admin.OrganizationSettings, error) {
+func (opts *updateOrganizationSettingsOpts) readData(r io.Reader) (*admin.OrganizationSettings, error) {
 	var out *admin.OrganizationSettings
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -1294,8 +1573,8 @@ func (opts *updateOrganizationSettingsOpts) readData() (*admin.OrganizationSetti
 	return out, nil
 }
 
-func (opts *updateOrganizationSettingsOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updateOrganizationSettingsOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -1316,7 +1595,17 @@ func (opts *updateOrganizationSettingsOpts) run(ctx context.Context, w io.Writer
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -1331,13 +1620,14 @@ func updateOrganizationSettingsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

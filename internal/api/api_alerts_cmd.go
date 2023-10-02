@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -38,6 +39,8 @@ type acknowledgeAlertOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *acknowledgeAlertOpts) preRun() (err error) {
@@ -56,16 +59,20 @@ func (opts *acknowledgeAlertOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *acknowledgeAlertOpts) readData() (*admin.AlertViewForNdsGroup, error) {
+func (opts *acknowledgeAlertOpts) readData(r io.Reader) (*admin.AlertViewForNdsGroup, error) {
 	var out *admin.AlertViewForNdsGroup
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -81,8 +88,8 @@ func (opts *acknowledgeAlertOpts) readData() (*admin.AlertViewForNdsGroup, error
 	return out, nil
 }
 
-func (opts *acknowledgeAlertOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *acknowledgeAlertOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -104,7 +111,17 @@ func (opts *acknowledgeAlertOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -119,7 +136,7 @@ func acknowledgeAlertBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -128,6 +145,7 @@ func acknowledgeAlertBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("alertId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -135,6 +153,8 @@ type getAlertOpts struct {
 	client  *admin.APIClient
 	groupId string
 	alertId string
+	format  string
+	tmpl    *template.Template
 }
 
 func (opts *getAlertOpts) preRun() (err error) {
@@ -153,10 +173,14 @@ func (opts *getAlertOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getAlertOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getAlertOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetAlertApiParams{
 		GroupId: opts.groupId,
@@ -173,7 +197,17 @@ func (opts *getAlertOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -186,13 +220,14 @@ func getAlertBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.alertId, "alertId", "", `Unique 24-hexadecimal digit string that identifies the alert. Use the [/alerts](#tag/Alerts/operation/listAlerts) endpoint to retrieve all alerts to which the authenticated user has access.`)
 
 	_ = cmd.MarkFlagRequired("alertId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -203,6 +238,8 @@ type listAlertsOpts struct {
 	itemsPerPage int
 	pageNum      int
 	status       string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listAlertsOpts) preRun() (err error) {
@@ -221,10 +258,14 @@ func (opts *listAlertsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listAlertsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listAlertsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListAlertsApiParams{
 		GroupId:      opts.groupId,
@@ -244,7 +285,17 @@ func (opts *listAlertsOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -257,7 +308,7 @@ func listAlertsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -266,6 +317,7 @@ func listAlertsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 	cmd.Flags().StringVar(&opts.status, "status", "", `Status of the alerts to return. Omit to return all alerts in all statuses.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -276,6 +328,8 @@ type listAlertsByAlertConfigurationIdOpts struct {
 	includeCount  bool
 	itemsPerPage  int
 	pageNum       int
+	format        string
+	tmpl          *template.Template
 }
 
 func (opts *listAlertsByAlertConfigurationIdOpts) preRun() (err error) {
@@ -294,10 +348,14 @@ func (opts *listAlertsByAlertConfigurationIdOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listAlertsByAlertConfigurationIdOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listAlertsByAlertConfigurationIdOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListAlertsByAlertConfigurationIdApiParams{
 		GroupId:       opts.groupId,
@@ -317,7 +375,17 @@ func (opts *listAlertsByAlertConfigurationIdOpts) run(ctx context.Context, w io.
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -330,7 +398,7 @@ func listAlertsByAlertConfigurationIdBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -340,6 +408,7 @@ func listAlertsByAlertConfigurationIdBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("alertConfigId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

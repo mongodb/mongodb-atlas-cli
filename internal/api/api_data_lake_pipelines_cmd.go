@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -38,6 +39,8 @@ type createPipelineOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createPipelineOpts) preRun() (err error) {
@@ -56,16 +59,20 @@ func (opts *createPipelineOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createPipelineOpts) readData() (*admin.DataLakeIngestionPipeline, error) {
+func (opts *createPipelineOpts) readData(r io.Reader) (*admin.DataLakeIngestionPipeline, error) {
 	var out *admin.DataLakeIngestionPipeline
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -81,8 +88,8 @@ func (opts *createPipelineOpts) readData() (*admin.DataLakeIngestionPipeline, er
 	return out, nil
 }
 
-func (opts *createPipelineOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createPipelineOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -103,7 +110,17 @@ func (opts *createPipelineOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -118,13 +135,14 @@ func createPipelineBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -132,6 +150,8 @@ type deletePipelineOpts struct {
 	client       *admin.APIClient
 	groupId      string
 	pipelineName string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *deletePipelineOpts) preRun() (err error) {
@@ -150,10 +170,14 @@ func (opts *deletePipelineOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deletePipelineOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deletePipelineOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeletePipelineApiParams{
 		GroupId:      opts.groupId,
@@ -170,7 +194,17 @@ func (opts *deletePipelineOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -183,13 +217,14 @@ func deletePipelineBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 
 	_ = cmd.MarkFlagRequired("pipelineName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -198,6 +233,8 @@ type deletePipelineRunDatasetOpts struct {
 	groupId       string
 	pipelineName  string
 	pipelineRunId string
+	format        string
+	tmpl          *template.Template
 }
 
 func (opts *deletePipelineRunDatasetOpts) preRun() (err error) {
@@ -216,10 +253,14 @@ func (opts *deletePipelineRunDatasetOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deletePipelineRunDatasetOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deletePipelineRunDatasetOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeletePipelineRunDatasetApiParams{
 		GroupId:       opts.groupId,
@@ -237,7 +278,17 @@ func (opts *deletePipelineRunDatasetOpts) run(ctx context.Context, w io.Writer) 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -250,7 +301,7 @@ func deletePipelineRunDatasetBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -259,6 +310,7 @@ func deletePipelineRunDatasetBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("pipelineName")
 	_ = cmd.MarkFlagRequired("pipelineRunId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -266,6 +318,8 @@ type getPipelineOpts struct {
 	client       *admin.APIClient
 	groupId      string
 	pipelineName string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *getPipelineOpts) preRun() (err error) {
@@ -284,10 +338,14 @@ func (opts *getPipelineOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getPipelineOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getPipelineOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetPipelineApiParams{
 		GroupId:      opts.groupId,
@@ -304,7 +362,17 @@ func (opts *getPipelineOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -317,13 +385,14 @@ func getPipelineBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 
 	_ = cmd.MarkFlagRequired("pipelineName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -332,6 +401,8 @@ type getPipelineRunOpts struct {
 	groupId       string
 	pipelineName  string
 	pipelineRunId string
+	format        string
+	tmpl          *template.Template
 }
 
 func (opts *getPipelineRunOpts) preRun() (err error) {
@@ -350,10 +421,14 @@ func (opts *getPipelineRunOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getPipelineRunOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getPipelineRunOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetPipelineRunApiParams{
 		GroupId:       opts.groupId,
@@ -371,7 +446,17 @@ func (opts *getPipelineRunOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -384,7 +469,7 @@ func getPipelineRunBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -393,6 +478,7 @@ func getPipelineRunBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("pipelineName")
 	_ = cmd.MarkFlagRequired("pipelineRunId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -404,6 +490,8 @@ type listPipelineRunsOpts struct {
 	itemsPerPage  int
 	pageNum       int
 	createdBefore string
+	format        string
+	tmpl          *template.Template
 }
 
 func (opts *listPipelineRunsOpts) preRun() (err error) {
@@ -422,10 +510,14 @@ func (opts *listPipelineRunsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listPipelineRunsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listPipelineRunsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	var createdBefore *time.Time
 	var errCreatedBefore error
@@ -455,7 +547,17 @@ func (opts *listPipelineRunsOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -468,7 +570,7 @@ func listPipelineRunsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -479,6 +581,7 @@ func listPipelineRunsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.createdBefore, "createdBefore", "", `If specified, Atlas returns only Data Lake Pipeline runs initiated before this time and date.`)
 
 	_ = cmd.MarkFlagRequired("pipelineName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -486,6 +589,8 @@ type listPipelineSchedulesOpts struct {
 	client       *admin.APIClient
 	groupId      string
 	pipelineName string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listPipelineSchedulesOpts) preRun() (err error) {
@@ -504,10 +609,14 @@ func (opts *listPipelineSchedulesOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listPipelineSchedulesOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listPipelineSchedulesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListPipelineSchedulesApiParams{
 		GroupId:      opts.groupId,
@@ -524,7 +633,17 @@ func (opts *listPipelineSchedulesOpts) run(ctx context.Context, w io.Writer) err
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -537,13 +656,14 @@ func listPipelineSchedulesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 
 	_ = cmd.MarkFlagRequired("pipelineName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -555,6 +675,8 @@ type listPipelineSnapshotsOpts struct {
 	itemsPerPage   int
 	pageNum        int
 	completedAfter string
+	format         string
+	tmpl           *template.Template
 }
 
 func (opts *listPipelineSnapshotsOpts) preRun() (err error) {
@@ -573,10 +695,14 @@ func (opts *listPipelineSnapshotsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listPipelineSnapshotsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listPipelineSnapshotsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	var completedAfter *time.Time
 	var errCompletedAfter error
@@ -606,7 +732,17 @@ func (opts *listPipelineSnapshotsOpts) run(ctx context.Context, w io.Writer) err
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -619,7 +755,7 @@ func listPipelineSnapshotsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -630,12 +766,15 @@ func listPipelineSnapshotsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.completedAfter, "completedAfter", "", `Date and time after which MongoDB Cloud created the snapshot. If specified, MongoDB Cloud returns available backup snapshots created after this time and date only. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`)
 
 	_ = cmd.MarkFlagRequired("pipelineName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
 type listPipelinesOpts struct {
 	client  *admin.APIClient
 	groupId string
+	format  string
+	tmpl    *template.Template
 }
 
 func (opts *listPipelinesOpts) preRun() (err error) {
@@ -654,10 +793,14 @@ func (opts *listPipelinesOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listPipelinesOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listPipelinesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListPipelinesApiParams{
 		GroupId: opts.groupId,
@@ -673,7 +816,17 @@ func (opts *listPipelinesOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -686,11 +839,12 @@ func listPipelinesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -698,6 +852,8 @@ type pausePipelineOpts struct {
 	client       *admin.APIClient
 	groupId      string
 	pipelineName string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *pausePipelineOpts) preRun() (err error) {
@@ -716,10 +872,14 @@ func (opts *pausePipelineOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *pausePipelineOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *pausePipelineOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.PausePipelineApiParams{
 		GroupId:      opts.groupId,
@@ -736,7 +896,17 @@ func (opts *pausePipelineOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -749,13 +919,14 @@ func pausePipelineBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 
 	_ = cmd.MarkFlagRequired("pipelineName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -763,6 +934,8 @@ type resumePipelineOpts struct {
 	client       *admin.APIClient
 	groupId      string
 	pipelineName string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *resumePipelineOpts) preRun() (err error) {
@@ -781,10 +954,14 @@ func (opts *resumePipelineOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *resumePipelineOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *resumePipelineOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ResumePipelineApiParams{
 		GroupId:      opts.groupId,
@@ -801,7 +978,17 @@ func (opts *resumePipelineOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -814,13 +1001,14 @@ func resumePipelineBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.pipelineName, "pipelineName", "", `Human-readable label that identifies the Data Lake Pipeline.`)
 
 	_ = cmd.MarkFlagRequired("pipelineName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -831,6 +1019,8 @@ type triggerSnapshotIngestionOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *triggerSnapshotIngestionOpts) preRun() (err error) {
@@ -849,16 +1039,20 @@ func (opts *triggerSnapshotIngestionOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *triggerSnapshotIngestionOpts) readData() (*admin.TriggerIngestionPipelineRequest, error) {
+func (opts *triggerSnapshotIngestionOpts) readData(r io.Reader) (*admin.TriggerIngestionPipelineRequest, error) {
 	var out *admin.TriggerIngestionPipelineRequest
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -874,8 +1068,8 @@ func (opts *triggerSnapshotIngestionOpts) readData() (*admin.TriggerIngestionPip
 	return out, nil
 }
 
-func (opts *triggerSnapshotIngestionOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *triggerSnapshotIngestionOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -897,7 +1091,17 @@ func (opts *triggerSnapshotIngestionOpts) run(ctx context.Context, w io.Writer) 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -912,7 +1116,7 @@ func triggerSnapshotIngestionBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -921,6 +1125,7 @@ func triggerSnapshotIngestionBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("pipelineName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -931,6 +1136,8 @@ type updatePipelineOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *updatePipelineOpts) preRun() (err error) {
@@ -949,16 +1156,20 @@ func (opts *updatePipelineOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updatePipelineOpts) readData() (*admin.DataLakeIngestionPipeline, error) {
+func (opts *updatePipelineOpts) readData(r io.Reader) (*admin.DataLakeIngestionPipeline, error) {
 	var out *admin.DataLakeIngestionPipeline
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -974,8 +1185,8 @@ func (opts *updatePipelineOpts) readData() (*admin.DataLakeIngestionPipeline, er
 	return out, nil
 }
 
-func (opts *updatePipelineOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updatePipelineOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -997,7 +1208,17 @@ func (opts *updatePipelineOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -1012,7 +1233,7 @@ func updatePipelineBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1021,6 +1242,7 @@ func updatePipelineBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("pipelineName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

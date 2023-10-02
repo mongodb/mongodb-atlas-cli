@@ -7,8 +7,10 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"io"
 	"os"
+	"text/template"
 	"time"
 
 	"github.com/spf13/afero"
@@ -28,6 +30,10 @@ type {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts struct {
 	filename string
 	fs afero.Fs
 	{{/bodyParam}}
+	{{#returnType}}
+	format string
+	tmpl *template.Template
+	{{/returnType}}
 }
 
 func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) preRun() (err error) {
@@ -59,17 +65,23 @@ func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) preRu
 	}
 	{{/vendorExtensions.x-org-id}}{{/allParams}}
 
-	return nil
+	{{#returnType}}
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+	{{/returnType}}
+
+	return err
 }
 
 {{#bodyParam}}
-func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) readData() (*{{#isArray}}[]{{/isArray}}admin.{{baseType}}, error) {
+func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) readData(r io.Reader) (*{{#isArray}}[]{{/isArray}}admin.{{baseType}}, error) {
 	var out *{{#isArray}}[]{{/isArray}}admin.{{baseType}}
 	
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -86,9 +98,9 @@ func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) readD
 }
 {{/bodyParam}}
 
-func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) run(ctx context.Context, {{^returnType}}_{{/returnType}}{{#returnType}}w{{/returnType}} io.Writer) error {
+func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) run(ctx context.Context, {{^bodyParam}}_{{/bodyParam}}{{#bodyParam}}r{{/bodyParam}} io.Reader, {{^returnType}}_{{/returnType}}{{#returnType}}w{{/returnType}} io.Writer) error {
 	{{#bodyParam}}
-	data, errData := opts.readData()
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -122,7 +134,17 @@ func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) run(c
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	{{/returnType}}
 	return err
 }
@@ -140,7 +162,7 @@ func {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Builder() *cobra.C
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 {{#allParams}}
@@ -151,6 +173,9 @@ func {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Builder() *cobra.C
 {{/bodyParam}}
 {{#allParams}}{{^isBodyParam}}{{^vendorExtensions.x-org-id}}{{^vendorExtensions.x-group-id}}{{#required}}
 	_ = cmd.MarkFlagRequired("{{#vendorExtensions.x-flag-name}}{{.}}{{/vendorExtensions.x-flag-name}}{{^vendorExtensions.x-flag-name}}{{paramName}}{{/vendorExtensions.x-flag-name}}"){{/required}}{{/vendorExtensions.x-group-id}}{{/vendorExtensions.x-org-id}}{{/isBodyParam}}{{/allParams}}
+	{{#returnType}}
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
+	{{/returnType}}
 	return cmd
 }
 {{/operation}}

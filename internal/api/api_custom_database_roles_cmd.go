@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -37,6 +38,8 @@ type createCustomDatabaseRoleOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createCustomDatabaseRoleOpts) preRun() (err error) {
@@ -55,16 +58,20 @@ func (opts *createCustomDatabaseRoleOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createCustomDatabaseRoleOpts) readData() (*admin.UserCustomDBRole, error) {
+func (opts *createCustomDatabaseRoleOpts) readData(r io.Reader) (*admin.UserCustomDBRole, error) {
 	var out *admin.UserCustomDBRole
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -80,8 +87,8 @@ func (opts *createCustomDatabaseRoleOpts) readData() (*admin.UserCustomDBRole, e
 	return out, nil
 }
 
-func (opts *createCustomDatabaseRoleOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createCustomDatabaseRoleOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -102,7 +109,17 @@ func (opts *createCustomDatabaseRoleOpts) run(ctx context.Context, w io.Writer) 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -117,13 +134,14 @@ func createCustomDatabaseRoleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -149,10 +167,10 @@ func (opts *deleteCustomDatabaseRoleOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	return err
 }
 
-func (opts *deleteCustomDatabaseRoleOpts) run(ctx context.Context, _ io.Writer) error {
+func (opts *deleteCustomDatabaseRoleOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
 
 	params := &admin.DeleteCustomDatabaseRoleApiParams{
 		GroupId:  opts.groupId,
@@ -172,7 +190,7 @@ func deleteCustomDatabaseRoleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -186,6 +204,8 @@ type getCustomDatabaseRoleOpts struct {
 	client   *admin.APIClient
 	groupId  string
 	roleName string
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *getCustomDatabaseRoleOpts) preRun() (err error) {
@@ -204,10 +224,14 @@ func (opts *getCustomDatabaseRoleOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getCustomDatabaseRoleOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getCustomDatabaseRoleOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetCustomDatabaseRoleApiParams{
 		GroupId:  opts.groupId,
@@ -224,7 +248,17 @@ func (opts *getCustomDatabaseRoleOpts) run(ctx context.Context, w io.Writer) err
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -237,19 +271,22 @@ func getCustomDatabaseRoleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.roleName, "roleName", "", `Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.`)
 
 	_ = cmd.MarkFlagRequired("roleName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
 type listCustomDatabaseRolesOpts struct {
 	client  *admin.APIClient
 	groupId string
+	format  string
+	tmpl    *template.Template
 }
 
 func (opts *listCustomDatabaseRolesOpts) preRun() (err error) {
@@ -268,10 +305,14 @@ func (opts *listCustomDatabaseRolesOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listCustomDatabaseRolesOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listCustomDatabaseRolesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListCustomDatabaseRolesApiParams{
 		GroupId: opts.groupId,
@@ -287,7 +328,17 @@ func (opts *listCustomDatabaseRolesOpts) run(ctx context.Context, w io.Writer) e
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -300,11 +351,12 @@ func listCustomDatabaseRolesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -315,6 +367,8 @@ type updateCustomDatabaseRoleOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *updateCustomDatabaseRoleOpts) preRun() (err error) {
@@ -333,16 +387,20 @@ func (opts *updateCustomDatabaseRoleOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updateCustomDatabaseRoleOpts) readData() (*admin.UpdateCustomDBRole, error) {
+func (opts *updateCustomDatabaseRoleOpts) readData(r io.Reader) (*admin.UpdateCustomDBRole, error) {
 	var out *admin.UpdateCustomDBRole
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -358,8 +416,8 @@ func (opts *updateCustomDatabaseRoleOpts) readData() (*admin.UpdateCustomDBRole,
 	return out, nil
 }
 
-func (opts *updateCustomDatabaseRoleOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updateCustomDatabaseRoleOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -381,7 +439,17 @@ func (opts *updateCustomDatabaseRoleOpts) run(ctx context.Context, w io.Writer) 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -396,7 +464,7 @@ func updateCustomDatabaseRoleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -405,6 +473,7 @@ func updateCustomDatabaseRoleBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("roleName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

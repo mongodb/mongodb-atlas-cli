@@ -23,6 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
@@ -38,6 +40,8 @@ type listAccessLogsByClusterNameOpts struct {
 	ipAddress   string
 	nLogs       int
 	start       int64
+	format      string
+	tmpl        *template.Template
 }
 
 func (opts *listAccessLogsByClusterNameOpts) preRun() (err error) {
@@ -56,10 +60,14 @@ func (opts *listAccessLogsByClusterNameOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listAccessLogsByClusterNameOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listAccessLogsByClusterNameOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListAccessLogsByClusterNameApiParams{
 		GroupId:     opts.groupId,
@@ -81,7 +89,17 @@ func (opts *listAccessLogsByClusterNameOpts) run(ctx context.Context, w io.Write
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -94,7 +112,7 @@ func listAccessLogsByClusterNameBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -106,6 +124,7 @@ func listAccessLogsByClusterNameBuilder() *cobra.Command {
 	cmd.Flags().Int64Var(&opts.start, "start", 0, `Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -118,6 +137,8 @@ type listAccessLogsByHostnameOpts struct {
 	ipAddress  string
 	nLogs      int
 	start      int64
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *listAccessLogsByHostnameOpts) preRun() (err error) {
@@ -136,10 +157,14 @@ func (opts *listAccessLogsByHostnameOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listAccessLogsByHostnameOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listAccessLogsByHostnameOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListAccessLogsByHostnameApiParams{
 		GroupId:    opts.groupId,
@@ -161,7 +186,17 @@ func (opts *listAccessLogsByHostnameOpts) run(ctx context.Context, w io.Writer) 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -174,7 +209,7 @@ func listAccessLogsByHostnameBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -186,6 +221,7 @@ func listAccessLogsByHostnameBuilder() *cobra.Command {
 	cmd.Flags().Int64Var(&opts.start, "start", 0, `Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.`)
 
 	_ = cmd.MarkFlagRequired("hostname")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

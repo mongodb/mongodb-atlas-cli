@@ -21,7 +21,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -33,6 +34,8 @@ type createUserOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createUserOpts) preRun() (err error) {
@@ -40,16 +43,20 @@ func (opts *createUserOpts) preRun() (err error) {
 		return err
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createUserOpts) readData() (*admin.CloudAppUser, error) {
+func (opts *createUserOpts) readData(r io.Reader) (*admin.CloudAppUser, error) {
 	var out *admin.CloudAppUser
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -65,8 +72,8 @@ func (opts *createUserOpts) readData() (*admin.CloudAppUser, error) {
 	return out, nil
 }
 
-func (opts *createUserOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createUserOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -86,7 +93,17 @@ func (opts *createUserOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -101,18 +118,21 @@ func createUserBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
 type getUserOpts struct {
 	client *admin.APIClient
 	userId string
+	format string
+	tmpl   *template.Template
 }
 
 func (opts *getUserOpts) preRun() (err error) {
@@ -120,10 +140,14 @@ func (opts *getUserOpts) preRun() (err error) {
 		return err
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getUserOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getUserOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetUserApiParams{
 		UserId: opts.userId,
@@ -139,7 +163,17 @@ func (opts *getUserOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -152,18 +186,21 @@ func getUserBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.userId, "userId", "", `Unique 24-hexadecimal digit string that identifies this user.`)
 
 	_ = cmd.MarkFlagRequired("userId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
 type getUserByUsernameOpts struct {
 	client   *admin.APIClient
 	userName string
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *getUserByUsernameOpts) preRun() (err error) {
@@ -171,10 +208,14 @@ func (opts *getUserByUsernameOpts) preRun() (err error) {
 		return err
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getUserByUsernameOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getUserByUsernameOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetUserByUsernameApiParams{
 		UserName: opts.userName,
@@ -190,7 +231,17 @@ func (opts *getUserByUsernameOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -203,12 +254,13 @@ func getUserByUsernameBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.userName, "userName", "", `Email address that belongs to the MongoDB Cloud user account. You cannot modify this address after creating the user.`)
 
 	_ = cmd.MarkFlagRequired("userName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -38,6 +39,8 @@ type createStreamConnectionOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createStreamConnectionOpts) preRun() (err error) {
@@ -56,16 +59,20 @@ func (opts *createStreamConnectionOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createStreamConnectionOpts) readData() (*admin.StreamsConnection, error) {
+func (opts *createStreamConnectionOpts) readData(r io.Reader) (*admin.StreamsConnection, error) {
 	var out *admin.StreamsConnection
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -81,8 +88,8 @@ func (opts *createStreamConnectionOpts) readData() (*admin.StreamsConnection, er
 	return out, nil
 }
 
-func (opts *createStreamConnectionOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createStreamConnectionOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -104,7 +111,17 @@ func (opts *createStreamConnectionOpts) run(ctx context.Context, w io.Writer) er
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -119,7 +136,7 @@ func createStreamConnectionBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -128,6 +145,7 @@ func createStreamConnectionBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("tenantName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -137,6 +155,8 @@ type createStreamInstanceOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createStreamInstanceOpts) preRun() (err error) {
@@ -155,16 +175,20 @@ func (opts *createStreamInstanceOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createStreamInstanceOpts) readData() (*admin.StreamsTenant, error) {
+func (opts *createStreamInstanceOpts) readData(r io.Reader) (*admin.StreamsTenant, error) {
 	var out *admin.StreamsTenant
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -180,8 +204,8 @@ func (opts *createStreamInstanceOpts) readData() (*admin.StreamsTenant, error) {
 	return out, nil
 }
 
-func (opts *createStreamInstanceOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createStreamInstanceOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -202,7 +226,17 @@ func (opts *createStreamInstanceOpts) run(ctx context.Context, w io.Writer) erro
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -217,13 +251,14 @@ func createStreamInstanceBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -232,6 +267,8 @@ type deleteStreamConnectionOpts struct {
 	groupId        string
 	tenantName     string
 	connectionName string
+	format         string
+	tmpl           *template.Template
 }
 
 func (opts *deleteStreamConnectionOpts) preRun() (err error) {
@@ -250,10 +287,14 @@ func (opts *deleteStreamConnectionOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deleteStreamConnectionOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deleteStreamConnectionOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeleteStreamConnectionApiParams{
 		GroupId:        opts.groupId,
@@ -271,7 +312,17 @@ func (opts *deleteStreamConnectionOpts) run(ctx context.Context, w io.Writer) er
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -284,7 +335,7 @@ func deleteStreamConnectionBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -293,6 +344,7 @@ func deleteStreamConnectionBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("connectionName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -300,6 +352,8 @@ type deleteStreamInstanceOpts struct {
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *deleteStreamInstanceOpts) preRun() (err error) {
@@ -318,10 +372,14 @@ func (opts *deleteStreamInstanceOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deleteStreamInstanceOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deleteStreamInstanceOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeleteStreamInstanceApiParams{
 		GroupId:    opts.groupId,
@@ -338,7 +396,17 @@ func (opts *deleteStreamInstanceOpts) run(ctx context.Context, w io.Writer) erro
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -351,13 +419,14 @@ func deleteStreamInstanceBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the stream instance to delete.`)
 
 	_ = cmd.MarkFlagRequired("tenantName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -366,6 +435,8 @@ type getStreamConnectionOpts struct {
 	groupId        string
 	tenantName     string
 	connectionName string
+	format         string
+	tmpl           *template.Template
 }
 
 func (opts *getStreamConnectionOpts) preRun() (err error) {
@@ -384,10 +455,14 @@ func (opts *getStreamConnectionOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getStreamConnectionOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getStreamConnectionOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetStreamConnectionApiParams{
 		GroupId:        opts.groupId,
@@ -405,7 +480,17 @@ func (opts *getStreamConnectionOpts) run(ctx context.Context, w io.Writer) error
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -418,7 +503,7 @@ func getStreamConnectionBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -427,6 +512,7 @@ func getStreamConnectionBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("connectionName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -435,6 +521,8 @@ type getStreamInstanceOpts struct {
 	groupId            string
 	tenantName         string
 	includeConnections bool
+	format             string
+	tmpl               *template.Template
 }
 
 func (opts *getStreamInstanceOpts) preRun() (err error) {
@@ -453,10 +541,14 @@ func (opts *getStreamInstanceOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getStreamInstanceOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getStreamInstanceOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetStreamInstanceApiParams{
 		GroupId:            opts.groupId,
@@ -474,7 +566,17 @@ func (opts *getStreamInstanceOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -487,7 +589,7 @@ func getStreamInstanceBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -495,6 +597,7 @@ func getStreamInstanceBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeConnections, "includeConnections", false, `Flag to indicate whether connections information should be included in the stream instance.`)
 
 	_ = cmd.MarkFlagRequired("tenantName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -504,6 +607,8 @@ type listStreamConnectionsOpts struct {
 	tenantName   string
 	itemsPerPage int
 	pageNum      int
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listStreamConnectionsOpts) preRun() (err error) {
@@ -522,10 +627,14 @@ func (opts *listStreamConnectionsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listStreamConnectionsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listStreamConnectionsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListStreamConnectionsApiParams{
 		GroupId:      opts.groupId,
@@ -544,7 +653,17 @@ func (opts *listStreamConnectionsOpts) run(ctx context.Context, w io.Writer) err
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -557,7 +676,7 @@ func listStreamConnectionsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -566,6 +685,7 @@ func listStreamConnectionsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("tenantName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -574,6 +694,8 @@ type listStreamInstancesOpts struct {
 	groupId      string
 	itemsPerPage int
 	pageNum      int
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listStreamInstancesOpts) preRun() (err error) {
@@ -592,10 +714,14 @@ func (opts *listStreamInstancesOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listStreamInstancesOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listStreamInstancesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListStreamInstancesApiParams{
 		GroupId:      opts.groupId,
@@ -613,7 +739,17 @@ func (opts *listStreamInstancesOpts) run(ctx context.Context, w io.Writer) error
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -626,13 +762,14 @@ func listStreamInstancesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -644,6 +781,8 @@ type updateStreamConnectionOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *updateStreamConnectionOpts) preRun() (err error) {
@@ -662,16 +801,20 @@ func (opts *updateStreamConnectionOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updateStreamConnectionOpts) readData() (*admin.StreamsConnection, error) {
+func (opts *updateStreamConnectionOpts) readData(r io.Reader) (*admin.StreamsConnection, error) {
 	var out *admin.StreamsConnection
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -687,8 +830,8 @@ func (opts *updateStreamConnectionOpts) readData() (*admin.StreamsConnection, er
 	return out, nil
 }
 
-func (opts *updateStreamConnectionOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updateStreamConnectionOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -711,7 +854,17 @@ func (opts *updateStreamConnectionOpts) run(ctx context.Context, w io.Writer) er
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -726,7 +879,7 @@ func updateStreamConnectionBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -737,6 +890,7 @@ func updateStreamConnectionBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("connectionName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -747,6 +901,8 @@ type updateStreamInstanceOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *updateStreamInstanceOpts) preRun() (err error) {
@@ -765,16 +921,20 @@ func (opts *updateStreamInstanceOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updateStreamInstanceOpts) readData() (*admin.StreamsDataProcessRegion, error) {
+func (opts *updateStreamInstanceOpts) readData(r io.Reader) (*admin.StreamsDataProcessRegion, error) {
 	var out *admin.StreamsDataProcessRegion
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -790,8 +950,8 @@ func (opts *updateStreamInstanceOpts) readData() (*admin.StreamsDataProcessRegio
 	return out, nil
 }
 
-func (opts *updateStreamInstanceOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updateStreamInstanceOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -813,7 +973,17 @@ func (opts *updateStreamInstanceOpts) run(ctx context.Context, w io.Writer) erro
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -828,7 +998,7 @@ func updateStreamInstanceBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -837,6 +1007,7 @@ func updateStreamInstanceBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("tenantName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

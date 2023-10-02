@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -37,6 +38,8 @@ type createDatabaseUserOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createDatabaseUserOpts) preRun() (err error) {
@@ -55,16 +58,20 @@ func (opts *createDatabaseUserOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createDatabaseUserOpts) readData() (*admin.CloudDatabaseUser, error) {
+func (opts *createDatabaseUserOpts) readData(r io.Reader) (*admin.CloudDatabaseUser, error) {
 	var out *admin.CloudDatabaseUser
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -80,8 +87,8 @@ func (opts *createDatabaseUserOpts) readData() (*admin.CloudDatabaseUser, error)
 	return out, nil
 }
 
-func (opts *createDatabaseUserOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createDatabaseUserOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -102,7 +109,17 @@ func (opts *createDatabaseUserOpts) run(ctx context.Context, w io.Writer) error 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -117,13 +134,14 @@ func createDatabaseUserBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -132,6 +150,8 @@ type deleteDatabaseUserOpts struct {
 	groupId      string
 	databaseName string
 	username     string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *deleteDatabaseUserOpts) preRun() (err error) {
@@ -150,10 +170,14 @@ func (opts *deleteDatabaseUserOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deleteDatabaseUserOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deleteDatabaseUserOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeleteDatabaseUserApiParams{
 		GroupId:      opts.groupId,
@@ -171,7 +195,17 @@ func (opts *deleteDatabaseUserOpts) run(ctx context.Context, w io.Writer) error 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -184,7 +218,7 @@ func deleteDatabaseUserBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -205,6 +239,7 @@ func deleteDatabaseUserBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("username")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -213,6 +248,8 @@ type getDatabaseUserOpts struct {
 	groupId      string
 	databaseName string
 	username     string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *getDatabaseUserOpts) preRun() (err error) {
@@ -231,10 +268,14 @@ func (opts *getDatabaseUserOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getDatabaseUserOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getDatabaseUserOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetDatabaseUserApiParams{
 		GroupId:      opts.groupId,
@@ -252,7 +293,17 @@ func (opts *getDatabaseUserOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -265,7 +316,7 @@ func getDatabaseUserBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -286,6 +337,7 @@ func getDatabaseUserBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("username")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -295,6 +347,8 @@ type listDatabaseUsersOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listDatabaseUsersOpts) preRun() (err error) {
@@ -313,10 +367,14 @@ func (opts *listDatabaseUsersOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listDatabaseUsersOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listDatabaseUsersOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListDatabaseUsersApiParams{
 		GroupId:      opts.groupId,
@@ -335,7 +393,17 @@ func (opts *listDatabaseUsersOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -348,7 +416,7 @@ func listDatabaseUsersBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -356,6 +424,7 @@ func listDatabaseUsersBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -367,6 +436,8 @@ type updateDatabaseUserOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *updateDatabaseUserOpts) preRun() (err error) {
@@ -385,16 +456,20 @@ func (opts *updateDatabaseUserOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updateDatabaseUserOpts) readData() (*admin.CloudDatabaseUser, error) {
+func (opts *updateDatabaseUserOpts) readData(r io.Reader) (*admin.CloudDatabaseUser, error) {
 	var out *admin.CloudDatabaseUser
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -410,8 +485,8 @@ func (opts *updateDatabaseUserOpts) readData() (*admin.CloudDatabaseUser, error)
 	return out, nil
 }
 
-func (opts *updateDatabaseUserOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updateDatabaseUserOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -434,7 +509,17 @@ func (opts *updateDatabaseUserOpts) run(ctx context.Context, w io.Writer) error 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -449,7 +534,7 @@ func updateDatabaseUserBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -472,6 +557,7 @@ func updateDatabaseUserBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("username")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

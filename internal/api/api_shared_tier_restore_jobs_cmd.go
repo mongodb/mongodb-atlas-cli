@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -38,6 +39,8 @@ type createSharedClusterBackupRestoreJobOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createSharedClusterBackupRestoreJobOpts) preRun() (err error) {
@@ -56,16 +59,20 @@ func (opts *createSharedClusterBackupRestoreJobOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createSharedClusterBackupRestoreJobOpts) readData() (*admin.TenantRestore, error) {
+func (opts *createSharedClusterBackupRestoreJobOpts) readData(r io.Reader) (*admin.TenantRestore, error) {
 	var out *admin.TenantRestore
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -81,8 +88,8 @@ func (opts *createSharedClusterBackupRestoreJobOpts) readData() (*admin.TenantRe
 	return out, nil
 }
 
-func (opts *createSharedClusterBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createSharedClusterBackupRestoreJobOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -104,7 +111,17 @@ func (opts *createSharedClusterBackupRestoreJobOpts) run(ctx context.Context, w 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -119,7 +136,7 @@ func createSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
@@ -128,6 +145,7 @@ func createSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -136,6 +154,8 @@ type getSharedClusterBackupRestoreJobOpts struct {
 	clusterName string
 	groupId     string
 	restoreId   string
+	format      string
+	tmpl        *template.Template
 }
 
 func (opts *getSharedClusterBackupRestoreJobOpts) preRun() (err error) {
@@ -154,10 +174,14 @@ func (opts *getSharedClusterBackupRestoreJobOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getSharedClusterBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getSharedClusterBackupRestoreJobOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetSharedClusterBackupRestoreJobApiParams{
 		ClusterName: opts.clusterName,
@@ -175,7 +199,17 @@ func (opts *getSharedClusterBackupRestoreJobOpts) run(ctx context.Context, w io.
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -188,7 +222,7 @@ func getSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
@@ -197,6 +231,7 @@ func getSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("restoreId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -204,6 +239,8 @@ type listSharedClusterBackupRestoreJobsOpts struct {
 	client      *admin.APIClient
 	clusterName string
 	groupId     string
+	format      string
+	tmpl        *template.Template
 }
 
 func (opts *listSharedClusterBackupRestoreJobsOpts) preRun() (err error) {
@@ -222,10 +259,14 @@ func (opts *listSharedClusterBackupRestoreJobsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listSharedClusterBackupRestoreJobsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listSharedClusterBackupRestoreJobsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListSharedClusterBackupRestoreJobsApiParams{
 		ClusterName: opts.clusterName,
@@ -242,7 +283,17 @@ func (opts *listSharedClusterBackupRestoreJobsOpts) run(ctx context.Context, w i
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -255,13 +306,14 @@ func listSharedClusterBackupRestoreJobsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

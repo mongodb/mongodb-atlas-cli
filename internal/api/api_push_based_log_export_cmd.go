@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -55,16 +56,16 @@ func (opts *createPushBasedLogConfigurationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	return err
 }
 
-func (opts *createPushBasedLogConfigurationOpts) readData() (*admin.PushBasedLogExportProject, error) {
+func (opts *createPushBasedLogConfigurationOpts) readData(r io.Reader) (*admin.PushBasedLogExportProject, error) {
 	var out *admin.PushBasedLogExportProject
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -80,8 +81,8 @@ func (opts *createPushBasedLogConfigurationOpts) readData() (*admin.PushBasedLog
 	return out, nil
 }
 
-func (opts *createPushBasedLogConfigurationOpts) run(ctx context.Context, _ io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createPushBasedLogConfigurationOpts) run(ctx context.Context, r io.Reader, _ io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -107,7 +108,7 @@ func createPushBasedLogConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -138,10 +139,10 @@ func (opts *deletePushBasedLogConfigurationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	return err
 }
 
-func (opts *deletePushBasedLogConfigurationOpts) run(ctx context.Context, _ io.Writer) error {
+func (opts *deletePushBasedLogConfigurationOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
 
 	params := &admin.DeletePushBasedLogConfigurationApiParams{
 		GroupId: opts.groupId,
@@ -160,7 +161,7 @@ func deletePushBasedLogConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -171,6 +172,8 @@ func deletePushBasedLogConfigurationBuilder() *cobra.Command {
 type getPushBasedLogConfigurationOpts struct {
 	client  *admin.APIClient
 	groupId string
+	format  string
+	tmpl    *template.Template
 }
 
 func (opts *getPushBasedLogConfigurationOpts) preRun() (err error) {
@@ -189,10 +192,14 @@ func (opts *getPushBasedLogConfigurationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getPushBasedLogConfigurationOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getPushBasedLogConfigurationOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetPushBasedLogConfigurationApiParams{
 		GroupId: opts.groupId,
@@ -208,7 +215,17 @@ func (opts *getPushBasedLogConfigurationOpts) run(ctx context.Context, w io.Writ
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -221,11 +238,12 @@ func getPushBasedLogConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -253,16 +271,16 @@ func (opts *updatePushBasedLogConfigurationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	return err
 }
 
-func (opts *updatePushBasedLogConfigurationOpts) readData() (*admin.PushBasedLogExportProject, error) {
+func (opts *updatePushBasedLogConfigurationOpts) readData(r io.Reader) (*admin.PushBasedLogExportProject, error) {
 	var out *admin.PushBasedLogExportProject
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -278,8 +296,8 @@ func (opts *updatePushBasedLogConfigurationOpts) readData() (*admin.PushBasedLog
 	return out, nil
 }
 
-func (opts *updatePushBasedLogConfigurationOpts) run(ctx context.Context, _ io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updatePushBasedLogConfigurationOpts) run(ctx context.Context, r io.Reader, _ io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -305,7 +323,7 @@ func updatePushBasedLogConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

@@ -21,6 +21,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"strings"
+	"text/template"
 
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
@@ -28,6 +30,8 @@ import (
 
 type getSystemStatusOpts struct {
 	client *admin.APIClient
+	format string
+	tmpl   *template.Template
 }
 
 func (opts *getSystemStatusOpts) preRun() (err error) {
@@ -35,10 +39,14 @@ func (opts *getSystemStatusOpts) preRun() (err error) {
 		return err
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getSystemStatusOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getSystemStatusOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetSystemStatusApiParams{}
 
@@ -52,7 +60,17 @@ func (opts *getSystemStatusOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -65,10 +83,11 @@ func getSystemStatusBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

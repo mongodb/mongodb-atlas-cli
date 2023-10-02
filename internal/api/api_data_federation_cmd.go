@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -37,6 +38,8 @@ type createDataFederationPrivateEndpointOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createDataFederationPrivateEndpointOpts) preRun() (err error) {
@@ -55,16 +58,20 @@ func (opts *createDataFederationPrivateEndpointOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createDataFederationPrivateEndpointOpts) readData() (*admin.PrivateNetworkEndpointIdEntry, error) {
+func (opts *createDataFederationPrivateEndpointOpts) readData(r io.Reader) (*admin.PrivateNetworkEndpointIdEntry, error) {
 	var out *admin.PrivateNetworkEndpointIdEntry
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -80,8 +87,8 @@ func (opts *createDataFederationPrivateEndpointOpts) readData() (*admin.PrivateN
 	return out, nil
 }
 
-func (opts *createDataFederationPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createDataFederationPrivateEndpointOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -102,7 +109,17 @@ func (opts *createDataFederationPrivateEndpointOpts) run(ctx context.Context, w 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -117,13 +134,14 @@ func createDataFederationPrivateEndpointBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -134,6 +152,8 @@ type createFederatedDatabaseOpts struct {
 	skipRoleValidation bool
 	filename           string
 	fs                 afero.Fs
+	format             string
+	tmpl               *template.Template
 }
 
 func (opts *createFederatedDatabaseOpts) preRun() (err error) {
@@ -152,16 +172,20 @@ func (opts *createFederatedDatabaseOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createFederatedDatabaseOpts) readData() (*admin.DataLakeTenant, error) {
+func (opts *createFederatedDatabaseOpts) readData(r io.Reader) (*admin.DataLakeTenant, error) {
 	var out *admin.DataLakeTenant
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -177,8 +201,8 @@ func (opts *createFederatedDatabaseOpts) readData() (*admin.DataLakeTenant, erro
 	return out, nil
 }
 
-func (opts *createFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createFederatedDatabaseOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -201,7 +225,17 @@ func (opts *createFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) e
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -216,7 +250,7 @@ func createFederatedDatabaseBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -224,6 +258,7 @@ func createFederatedDatabaseBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.skipRoleValidation, "skipRoleValidation", false, `Flag that indicates whether this request should check if the requesting IAM role can read from the S3 bucket. AWS checks if the role can list the objects in the bucket before writing to it. Some IAM roles only need write permissions. This flag allows you to skip that check.`)
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -235,6 +270,8 @@ type createOneDataFederationQueryLimitOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createOneDataFederationQueryLimitOpts) preRun() (err error) {
@@ -253,16 +290,20 @@ func (opts *createOneDataFederationQueryLimitOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createOneDataFederationQueryLimitOpts) readData() (*admin.DataFederationTenantQueryLimit, error) {
+func (opts *createOneDataFederationQueryLimitOpts) readData(r io.Reader) (*admin.DataFederationTenantQueryLimit, error) {
 	var out *admin.DataFederationTenantQueryLimit
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -278,8 +319,8 @@ func (opts *createOneDataFederationQueryLimitOpts) readData() (*admin.DataFedera
 	return out, nil
 }
 
-func (opts *createOneDataFederationQueryLimitOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createOneDataFederationQueryLimitOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -302,7 +343,17 @@ func (opts *createOneDataFederationQueryLimitOpts) run(ctx context.Context, w io
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -317,7 +368,7 @@ func createOneDataFederationQueryLimitBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -336,6 +387,7 @@ func createOneDataFederationQueryLimitBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("limitName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -343,6 +395,8 @@ type deleteDataFederationPrivateEndpointOpts struct {
 	client     *admin.APIClient
 	groupId    string
 	endpointId string
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *deleteDataFederationPrivateEndpointOpts) preRun() (err error) {
@@ -361,10 +415,14 @@ func (opts *deleteDataFederationPrivateEndpointOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deleteDataFederationPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deleteDataFederationPrivateEndpointOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeleteDataFederationPrivateEndpointApiParams{
 		GroupId:    opts.groupId,
@@ -381,7 +439,17 @@ func (opts *deleteDataFederationPrivateEndpointOpts) run(ctx context.Context, w 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -394,13 +462,14 @@ func deleteDataFederationPrivateEndpointBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 22-character alphanumeric string that identifies the private endpoint to remove. Atlas Data Federation supports AWS private endpoints using the AWS PrivateLink feature.`)
 
 	_ = cmd.MarkFlagRequired("endpointId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -408,6 +477,8 @@ type deleteFederatedDatabaseOpts struct {
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *deleteFederatedDatabaseOpts) preRun() (err error) {
@@ -426,10 +497,14 @@ func (opts *deleteFederatedDatabaseOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deleteFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deleteFederatedDatabaseOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeleteFederatedDatabaseApiParams{
 		GroupId:    opts.groupId,
@@ -446,7 +521,17 @@ func (opts *deleteFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) e
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -459,13 +544,14 @@ func deleteFederatedDatabaseBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance to remove.`)
 
 	_ = cmd.MarkFlagRequired("tenantName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -474,6 +560,8 @@ type deleteOneDataFederationInstanceQueryLimitOpts struct {
 	groupId    string
 	tenantName string
 	limitName  string
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *deleteOneDataFederationInstanceQueryLimitOpts) preRun() (err error) {
@@ -492,10 +580,14 @@ func (opts *deleteOneDataFederationInstanceQueryLimitOpts) preRun() (err error) 
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deleteOneDataFederationInstanceQueryLimitOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deleteOneDataFederationInstanceQueryLimitOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeleteOneDataFederationInstanceQueryLimitApiParams{
 		GroupId:    opts.groupId,
@@ -513,7 +605,17 @@ func (opts *deleteOneDataFederationInstanceQueryLimitOpts) run(ctx context.Conte
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -526,7 +628,7 @@ func deleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -543,6 +645,7 @@ func deleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("limitName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -552,6 +655,8 @@ type downloadFederatedDatabaseQueryLogsOpts struct {
 	tenantName string
 	endDate    int64
 	startDate  int64
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *downloadFederatedDatabaseQueryLogsOpts) preRun() (err error) {
@@ -570,10 +675,14 @@ func (opts *downloadFederatedDatabaseQueryLogsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *downloadFederatedDatabaseQueryLogsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *downloadFederatedDatabaseQueryLogsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DownloadFederatedDatabaseQueryLogsApiParams{
 		GroupId:    opts.groupId,
@@ -592,7 +701,17 @@ func (opts *downloadFederatedDatabaseQueryLogsOpts) run(ctx context.Context, w i
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -605,7 +724,7 @@ func downloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -614,6 +733,7 @@ func downloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
 	cmd.Flags().Int64Var(&opts.startDate, "startDate", 0, `Timestamp that specifies the starting point for the range of log messages to download. MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`)
 
 	_ = cmd.MarkFlagRequired("tenantName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -621,6 +741,8 @@ type getDataFederationPrivateEndpointOpts struct {
 	client     *admin.APIClient
 	groupId    string
 	endpointId string
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *getDataFederationPrivateEndpointOpts) preRun() (err error) {
@@ -639,10 +761,14 @@ func (opts *getDataFederationPrivateEndpointOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getDataFederationPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getDataFederationPrivateEndpointOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetDataFederationPrivateEndpointApiParams{
 		GroupId:    opts.groupId,
@@ -659,7 +785,17 @@ func (opts *getDataFederationPrivateEndpointOpts) run(ctx context.Context, w io.
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -672,13 +808,14 @@ func getDataFederationPrivateEndpointBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 22-character alphanumeric string that identifies the private endpoint to return. Atlas Data Federation supports AWS private endpoints using the AWS PrivateLink feature.`)
 
 	_ = cmd.MarkFlagRequired("endpointId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -686,6 +823,8 @@ type getFederatedDatabaseOpts struct {
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *getFederatedDatabaseOpts) preRun() (err error) {
@@ -704,10 +843,14 @@ func (opts *getFederatedDatabaseOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getFederatedDatabaseOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetFederatedDatabaseApiParams{
 		GroupId:    opts.groupId,
@@ -724,7 +867,17 @@ func (opts *getFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) erro
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -737,13 +890,14 @@ func getFederatedDatabaseBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the Federated Database to return.`)
 
 	_ = cmd.MarkFlagRequired("tenantName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -753,6 +907,8 @@ type listDataFederationPrivateEndpointsOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listDataFederationPrivateEndpointsOpts) preRun() (err error) {
@@ -771,10 +927,14 @@ func (opts *listDataFederationPrivateEndpointsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listDataFederationPrivateEndpointsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listDataFederationPrivateEndpointsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListDataFederationPrivateEndpointsApiParams{
 		GroupId:      opts.groupId,
@@ -793,7 +953,17 @@ func (opts *listDataFederationPrivateEndpointsOpts) run(ctx context.Context, w i
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -806,7 +976,7 @@ func listDataFederationPrivateEndpointsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -814,6 +984,7 @@ func listDataFederationPrivateEndpointsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -821,6 +992,8 @@ type listFederatedDatabasesOpts struct {
 	client  *admin.APIClient
 	groupId string
 	type_   string
+	format  string
+	tmpl    *template.Template
 }
 
 func (opts *listFederatedDatabasesOpts) preRun() (err error) {
@@ -839,10 +1012,14 @@ func (opts *listFederatedDatabasesOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listFederatedDatabasesOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listFederatedDatabasesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListFederatedDatabasesApiParams{
 		GroupId: opts.groupId,
@@ -859,7 +1036,17 @@ func (opts *listFederatedDatabasesOpts) run(ctx context.Context, w io.Writer) er
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -872,12 +1059,13 @@ func listFederatedDatabasesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.type_, "type_", "&quot;USER&quot;", `Type of Federated Database Instances to return.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -886,6 +1074,8 @@ type returnFederatedDatabaseQueryLimitOpts struct {
 	groupId    string
 	tenantName string
 	limitName  string
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *returnFederatedDatabaseQueryLimitOpts) preRun() (err error) {
@@ -904,10 +1094,14 @@ func (opts *returnFederatedDatabaseQueryLimitOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *returnFederatedDatabaseQueryLimitOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *returnFederatedDatabaseQueryLimitOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ReturnFederatedDatabaseQueryLimitApiParams{
 		GroupId:    opts.groupId,
@@ -925,7 +1119,17 @@ func (opts *returnFederatedDatabaseQueryLimitOpts) run(ctx context.Context, w io
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -938,7 +1142,7 @@ func returnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -955,6 +1159,7 @@ func returnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("limitName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -962,6 +1167,8 @@ type returnFederatedDatabaseQueryLimitsOpts struct {
 	client     *admin.APIClient
 	groupId    string
 	tenantName string
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *returnFederatedDatabaseQueryLimitsOpts) preRun() (err error) {
@@ -980,10 +1187,14 @@ func (opts *returnFederatedDatabaseQueryLimitsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *returnFederatedDatabaseQueryLimitsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *returnFederatedDatabaseQueryLimitsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ReturnFederatedDatabaseQueryLimitsApiParams{
 		GroupId:    opts.groupId,
@@ -1000,7 +1211,17 @@ func (opts *returnFederatedDatabaseQueryLimitsOpts) run(ctx context.Context, w i
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -1013,13 +1234,14 @@ func returnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance for which you want to retrieve query limits.`)
 
 	_ = cmd.MarkFlagRequired("tenantName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -1031,6 +1253,8 @@ type updateFederatedDatabaseOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *updateFederatedDatabaseOpts) preRun() (err error) {
@@ -1049,16 +1273,20 @@ func (opts *updateFederatedDatabaseOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updateFederatedDatabaseOpts) readData() (*admin.DataLakeTenant, error) {
+func (opts *updateFederatedDatabaseOpts) readData(r io.Reader) (*admin.DataLakeTenant, error) {
 	var out *admin.DataLakeTenant
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -1074,8 +1302,8 @@ func (opts *updateFederatedDatabaseOpts) readData() (*admin.DataLakeTenant, erro
 	return out, nil
 }
 
-func (opts *updateFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updateFederatedDatabaseOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -1098,7 +1326,17 @@ func (opts *updateFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) e
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -1113,7 +1351,7 @@ func updateFederatedDatabaseBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1124,6 +1362,7 @@ func updateFederatedDatabaseBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("skipRoleValidation")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -37,6 +38,8 @@ type createClusterOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createClusterOpts) preRun() (err error) {
@@ -55,16 +58,20 @@ func (opts *createClusterOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createClusterOpts) readData() (*admin.AdvancedClusterDescription, error) {
+func (opts *createClusterOpts) readData(r io.Reader) (*admin.AdvancedClusterDescription, error) {
 	var out *admin.AdvancedClusterDescription
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -80,8 +87,8 @@ func (opts *createClusterOpts) readData() (*admin.AdvancedClusterDescription, er
 	return out, nil
 }
 
-func (opts *createClusterOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createClusterOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -102,7 +109,17 @@ func (opts *createClusterOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -117,13 +134,14 @@ func createClusterBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -150,10 +168,10 @@ func (opts *deleteClusterOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	return err
 }
 
-func (opts *deleteClusterOpts) run(ctx context.Context, _ io.Writer) error {
+func (opts *deleteClusterOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
 
 	params := &admin.DeleteClusterApiParams{
 		GroupId:       opts.groupId,
@@ -174,7 +192,7 @@ func deleteClusterBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -189,6 +207,8 @@ type getClusterOpts struct {
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
+	format      string
+	tmpl        *template.Template
 }
 
 func (opts *getClusterOpts) preRun() (err error) {
@@ -207,10 +227,14 @@ func (opts *getClusterOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getClusterOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getClusterOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetClusterApiParams{
 		GroupId:     opts.groupId,
@@ -227,7 +251,17 @@ func (opts *getClusterOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -240,13 +274,14 @@ func getClusterBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -254,6 +289,8 @@ type getClusterAdvancedConfigurationOpts struct {
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
+	format      string
+	tmpl        *template.Template
 }
 
 func (opts *getClusterAdvancedConfigurationOpts) preRun() (err error) {
@@ -272,10 +309,14 @@ func (opts *getClusterAdvancedConfigurationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getClusterAdvancedConfigurationOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getClusterAdvancedConfigurationOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetClusterAdvancedConfigurationApiParams{
 		GroupId:     opts.groupId,
@@ -292,7 +333,17 @@ func (opts *getClusterAdvancedConfigurationOpts) run(ctx context.Context, w io.W
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -305,13 +356,14 @@ func getClusterAdvancedConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -319,6 +371,8 @@ type getClusterStatusOpts struct {
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
+	format      string
+	tmpl        *template.Template
 }
 
 func (opts *getClusterStatusOpts) preRun() (err error) {
@@ -337,10 +391,14 @@ func (opts *getClusterStatusOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getClusterStatusOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getClusterStatusOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetClusterStatusApiParams{
 		GroupId:     opts.groupId,
@@ -357,7 +415,17 @@ func (opts *getClusterStatusOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -370,13 +438,14 @@ func getClusterStatusBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -384,6 +453,8 @@ type getSampleDatasetLoadStatusOpts struct {
 	client          *admin.APIClient
 	groupId         string
 	sampleDatasetId string
+	format          string
+	tmpl            *template.Template
 }
 
 func (opts *getSampleDatasetLoadStatusOpts) preRun() (err error) {
@@ -402,10 +473,14 @@ func (opts *getSampleDatasetLoadStatusOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getSampleDatasetLoadStatusOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getSampleDatasetLoadStatusOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetSampleDatasetLoadStatusApiParams{
 		GroupId:         opts.groupId,
@@ -422,7 +497,17 @@ func (opts *getSampleDatasetLoadStatusOpts) run(ctx context.Context, w io.Writer
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -435,13 +520,14 @@ func getSampleDatasetLoadStatusBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.sampleDatasetId, "sampleDatasetId", "", `Unique 24-hexadecimal digit string that identifies the loaded sample dataset.`)
 
 	_ = cmd.MarkFlagRequired("sampleDatasetId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -453,6 +539,8 @@ type listCloudProviderRegionsOpts struct {
 	pageNum      int
 	providers    []string
 	tier         string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listCloudProviderRegionsOpts) preRun() (err error) {
@@ -471,10 +559,14 @@ func (opts *listCloudProviderRegionsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listCloudProviderRegionsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listCloudProviderRegionsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListCloudProviderRegionsApiParams{
 		GroupId:      opts.groupId,
@@ -495,7 +587,17 @@ func (opts *listCloudProviderRegionsOpts) run(ctx context.Context, w io.Writer) 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -508,7 +610,7 @@ func listCloudProviderRegionsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -518,6 +620,7 @@ func listCloudProviderRegionsBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.providers, "providers", nil, `Cloud providers whose regions to retrieve. When you specify multiple providers, the response can return only tiers and regions that support multi-cloud clusters.`)
 	cmd.Flags().StringVar(&opts.tier, "tier", "", `Cluster tier for which to retrieve the regions.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -528,6 +631,8 @@ type listClustersOpts struct {
 	itemsPerPage                      int
 	pageNum                           int
 	includeDeletedWithRetainedBackups bool
+	format                            string
+	tmpl                              *template.Template
 }
 
 func (opts *listClustersOpts) preRun() (err error) {
@@ -546,10 +651,14 @@ func (opts *listClustersOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listClustersOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listClustersOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListClustersApiParams{
 		GroupId:                           opts.groupId,
@@ -569,7 +678,17 @@ func (opts *listClustersOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -582,7 +701,7 @@ func listClustersBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -591,6 +710,7 @@ func listClustersBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 	cmd.Flags().BoolVar(&opts.includeDeletedWithRetainedBackups, "includeDeletedWithRetainedBackups", false, `Flag that indicates whether to return Clusters with retain backups.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -599,6 +719,8 @@ type listClustersForAllProjectsOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listClustersForAllProjectsOpts) preRun() (err error) {
@@ -606,10 +728,14 @@ func (opts *listClustersForAllProjectsOpts) preRun() (err error) {
 		return err
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listClustersForAllProjectsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listClustersForAllProjectsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListClustersForAllProjectsApiParams{
 		IncludeCount: &opts.includeCount,
@@ -627,7 +753,17 @@ func (opts *listClustersForAllProjectsOpts) run(ctx context.Context, w io.Writer
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -640,13 +776,14 @@ func listClustersForAllProjectsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -654,6 +791,8 @@ type loadSampleDatasetOpts struct {
 	client  *admin.APIClient
 	groupId string
 	name    string
+	format  string
+	tmpl    *template.Template
 }
 
 func (opts *loadSampleDatasetOpts) preRun() (err error) {
@@ -672,10 +811,14 @@ func (opts *loadSampleDatasetOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *loadSampleDatasetOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *loadSampleDatasetOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.LoadSampleDatasetApiParams{
 		GroupId: opts.groupId,
@@ -692,7 +835,17 @@ func (opts *loadSampleDatasetOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -705,13 +858,14 @@ func loadSampleDatasetBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label that identifies the cluster into which you load the sample dataset.`)
 
 	_ = cmd.MarkFlagRequired("name")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -737,10 +891,10 @@ func (opts *testFailoverOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	return err
 }
 
-func (opts *testFailoverOpts) run(ctx context.Context, _ io.Writer) error {
+func (opts *testFailoverOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
 
 	params := &admin.TestFailoverApiParams{
 		GroupId:     opts.groupId,
@@ -760,7 +914,7 @@ func testFailoverBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -777,6 +931,8 @@ type updateClusterOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *updateClusterOpts) preRun() (err error) {
@@ -795,16 +951,20 @@ func (opts *updateClusterOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updateClusterOpts) readData() (*admin.AdvancedClusterDescription, error) {
+func (opts *updateClusterOpts) readData(r io.Reader) (*admin.AdvancedClusterDescription, error) {
 	var out *admin.AdvancedClusterDescription
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -820,8 +980,8 @@ func (opts *updateClusterOpts) readData() (*admin.AdvancedClusterDescription, er
 	return out, nil
 }
 
-func (opts *updateClusterOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updateClusterOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -843,7 +1003,17 @@ func (opts *updateClusterOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -858,7 +1028,7 @@ func updateClusterBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -867,6 +1037,7 @@ func updateClusterBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -877,6 +1048,8 @@ type updateClusterAdvancedConfigurationOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *updateClusterAdvancedConfigurationOpts) preRun() (err error) {
@@ -895,16 +1068,20 @@ func (opts *updateClusterAdvancedConfigurationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updateClusterAdvancedConfigurationOpts) readData() (*admin.ClusterDescriptionProcessArgs, error) {
+func (opts *updateClusterAdvancedConfigurationOpts) readData(r io.Reader) (*admin.ClusterDescriptionProcessArgs, error) {
 	var out *admin.ClusterDescriptionProcessArgs
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -920,8 +1097,8 @@ func (opts *updateClusterAdvancedConfigurationOpts) readData() (*admin.ClusterDe
 	return out, nil
 }
 
-func (opts *updateClusterAdvancedConfigurationOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updateClusterAdvancedConfigurationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -943,7 +1120,17 @@ func (opts *updateClusterAdvancedConfigurationOpts) run(ctx context.Context, w i
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -958,7 +1145,7 @@ func updateClusterAdvancedConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -967,6 +1154,7 @@ func updateClusterAdvancedConfigurationBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -976,6 +1164,8 @@ type upgradeSharedClusterOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *upgradeSharedClusterOpts) preRun() (err error) {
@@ -994,16 +1184,20 @@ func (opts *upgradeSharedClusterOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *upgradeSharedClusterOpts) readData() (*admin.LegacyAtlasCluster, error) {
+func (opts *upgradeSharedClusterOpts) readData(r io.Reader) (*admin.LegacyAtlasCluster, error) {
 	var out *admin.LegacyAtlasCluster
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -1019,8 +1213,8 @@ func (opts *upgradeSharedClusterOpts) readData() (*admin.LegacyAtlasCluster, err
 	return out, nil
 }
 
-func (opts *upgradeSharedClusterOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *upgradeSharedClusterOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -1041,7 +1235,17 @@ func (opts *upgradeSharedClusterOpts) run(ctx context.Context, w io.Writer) erro
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -1056,13 +1260,14 @@ func upgradeSharedClusterBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -1072,6 +1277,8 @@ type upgradeSharedClusterToServerlessOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *upgradeSharedClusterToServerlessOpts) preRun() (err error) {
@@ -1090,16 +1297,20 @@ func (opts *upgradeSharedClusterToServerlessOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *upgradeSharedClusterToServerlessOpts) readData() (*admin.ServerlessInstanceDescription, error) {
+func (opts *upgradeSharedClusterToServerlessOpts) readData(r io.Reader) (*admin.ServerlessInstanceDescription, error) {
 	var out *admin.ServerlessInstanceDescription
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -1115,8 +1326,8 @@ func (opts *upgradeSharedClusterToServerlessOpts) readData() (*admin.ServerlessI
 	return out, nil
 }
 
-func (opts *upgradeSharedClusterToServerlessOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *upgradeSharedClusterToServerlessOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -1137,7 +1348,17 @@ func (opts *upgradeSharedClusterToServerlessOpts) run(ctx context.Context, w io.
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -1152,13 +1373,14 @@ func upgradeSharedClusterToServerlessBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

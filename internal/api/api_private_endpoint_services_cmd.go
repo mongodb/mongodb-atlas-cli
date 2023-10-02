@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -39,6 +40,8 @@ type createPrivateEndpointOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createPrivateEndpointOpts) preRun() (err error) {
@@ -57,16 +60,20 @@ func (opts *createPrivateEndpointOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createPrivateEndpointOpts) readData() (*admin.CreateEndpointRequest, error) {
+func (opts *createPrivateEndpointOpts) readData(r io.Reader) (*admin.CreateEndpointRequest, error) {
 	var out *admin.CreateEndpointRequest
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -82,8 +89,8 @@ func (opts *createPrivateEndpointOpts) readData() (*admin.CreateEndpointRequest,
 	return out, nil
 }
 
-func (opts *createPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createPrivateEndpointOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -106,7 +113,17 @@ func (opts *createPrivateEndpointOpts) run(ctx context.Context, w io.Writer) err
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -121,7 +138,7 @@ func createPrivateEndpointBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -132,6 +149,7 @@ func createPrivateEndpointBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("cloudProvider")
 	_ = cmd.MarkFlagRequired("endpointServiceId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -141,6 +159,8 @@ type createPrivateEndpointServiceOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createPrivateEndpointServiceOpts) preRun() (err error) {
@@ -159,16 +179,20 @@ func (opts *createPrivateEndpointServiceOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createPrivateEndpointServiceOpts) readData() (*admin.CloudProviderEndpointServiceRequest, error) {
+func (opts *createPrivateEndpointServiceOpts) readData(r io.Reader) (*admin.CloudProviderEndpointServiceRequest, error) {
 	var out *admin.CloudProviderEndpointServiceRequest
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -184,8 +208,8 @@ func (opts *createPrivateEndpointServiceOpts) readData() (*admin.CloudProviderEn
 	return out, nil
 }
 
-func (opts *createPrivateEndpointServiceOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createPrivateEndpointServiceOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -206,7 +230,17 @@ func (opts *createPrivateEndpointServiceOpts) run(ctx context.Context, w io.Writ
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -221,13 +255,14 @@ func createPrivateEndpointServiceBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -237,6 +272,8 @@ type deletePrivateEndpointOpts struct {
 	cloudProvider     string
 	endpointId        string
 	endpointServiceId string
+	format            string
+	tmpl              *template.Template
 }
 
 func (opts *deletePrivateEndpointOpts) preRun() (err error) {
@@ -255,10 +292,14 @@ func (opts *deletePrivateEndpointOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deletePrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deletePrivateEndpointOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeletePrivateEndpointApiParams{
 		GroupId:           opts.groupId,
@@ -277,7 +318,17 @@ func (opts *deletePrivateEndpointOpts) run(ctx context.Context, w io.Writer) err
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -290,7 +341,7 @@ func deletePrivateEndpointBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -301,6 +352,7 @@ func deletePrivateEndpointBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired("cloudProvider")
 	_ = cmd.MarkFlagRequired("endpointId")
 	_ = cmd.MarkFlagRequired("endpointServiceId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -309,6 +361,8 @@ type deletePrivateEndpointServiceOpts struct {
 	groupId           string
 	cloudProvider     string
 	endpointServiceId string
+	format            string
+	tmpl              *template.Template
 }
 
 func (opts *deletePrivateEndpointServiceOpts) preRun() (err error) {
@@ -327,10 +381,14 @@ func (opts *deletePrivateEndpointServiceOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deletePrivateEndpointServiceOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deletePrivateEndpointServiceOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeletePrivateEndpointServiceApiParams{
 		GroupId:           opts.groupId,
@@ -348,7 +406,17 @@ func (opts *deletePrivateEndpointServiceOpts) run(ctx context.Context, w io.Writ
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -361,7 +429,7 @@ func deletePrivateEndpointServiceBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -370,6 +438,7 @@ func deletePrivateEndpointServiceBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("cloudProvider")
 	_ = cmd.MarkFlagRequired("endpointServiceId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -379,6 +448,8 @@ type getPrivateEndpointOpts struct {
 	cloudProvider     string
 	endpointId        string
 	endpointServiceId string
+	format            string
+	tmpl              *template.Template
 }
 
 func (opts *getPrivateEndpointOpts) preRun() (err error) {
@@ -397,10 +468,14 @@ func (opts *getPrivateEndpointOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getPrivateEndpointOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetPrivateEndpointApiParams{
 		GroupId:           opts.groupId,
@@ -419,7 +494,17 @@ func (opts *getPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -432,7 +517,7 @@ func getPrivateEndpointBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -443,6 +528,7 @@ func getPrivateEndpointBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired("cloudProvider")
 	_ = cmd.MarkFlagRequired("endpointId")
 	_ = cmd.MarkFlagRequired("endpointServiceId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -451,6 +537,8 @@ type getPrivateEndpointServiceOpts struct {
 	groupId           string
 	cloudProvider     string
 	endpointServiceId string
+	format            string
+	tmpl              *template.Template
 }
 
 func (opts *getPrivateEndpointServiceOpts) preRun() (err error) {
@@ -469,10 +557,14 @@ func (opts *getPrivateEndpointServiceOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getPrivateEndpointServiceOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getPrivateEndpointServiceOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetPrivateEndpointServiceApiParams{
 		GroupId:           opts.groupId,
@@ -490,7 +582,17 @@ func (opts *getPrivateEndpointServiceOpts) run(ctx context.Context, w io.Writer)
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -503,7 +605,7 @@ func getPrivateEndpointServiceBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -512,12 +614,15 @@ func getPrivateEndpointServiceBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("cloudProvider")
 	_ = cmd.MarkFlagRequired("endpointServiceId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
 type getRegionalizedPrivateEndpointSettingOpts struct {
 	client  *admin.APIClient
 	groupId string
+	format  string
+	tmpl    *template.Template
 }
 
 func (opts *getRegionalizedPrivateEndpointSettingOpts) preRun() (err error) {
@@ -536,10 +641,14 @@ func (opts *getRegionalizedPrivateEndpointSettingOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getRegionalizedPrivateEndpointSettingOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getRegionalizedPrivateEndpointSettingOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetRegionalizedPrivateEndpointSettingApiParams{
 		GroupId: opts.groupId,
@@ -555,7 +664,17 @@ func (opts *getRegionalizedPrivateEndpointSettingOpts) run(ctx context.Context, 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -568,11 +687,12 @@ func getRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -580,6 +700,8 @@ type listPrivateEndpointServicesOpts struct {
 	client        *admin.APIClient
 	groupId       string
 	cloudProvider string
+	format        string
+	tmpl          *template.Template
 }
 
 func (opts *listPrivateEndpointServicesOpts) preRun() (err error) {
@@ -598,10 +720,14 @@ func (opts *listPrivateEndpointServicesOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listPrivateEndpointServicesOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listPrivateEndpointServicesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListPrivateEndpointServicesApiParams{
 		GroupId:       opts.groupId,
@@ -618,7 +744,17 @@ func (opts *listPrivateEndpointServicesOpts) run(ctx context.Context, w io.Write
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -631,13 +767,14 @@ func listPrivateEndpointServicesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.cloudProvider, "cloudProvider", "&quot;AWS&quot;", `Cloud service provider that manages this private endpoint service.`)
 
 	_ = cmd.MarkFlagRequired("cloudProvider")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -647,6 +784,8 @@ type toggleRegionalizedPrivateEndpointSettingOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *toggleRegionalizedPrivateEndpointSettingOpts) preRun() (err error) {
@@ -665,16 +804,20 @@ func (opts *toggleRegionalizedPrivateEndpointSettingOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *toggleRegionalizedPrivateEndpointSettingOpts) readData() (*admin.ProjectSettingItem, error) {
+func (opts *toggleRegionalizedPrivateEndpointSettingOpts) readData(r io.Reader) (*admin.ProjectSettingItem, error) {
 	var out *admin.ProjectSettingItem
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -690,8 +833,8 @@ func (opts *toggleRegionalizedPrivateEndpointSettingOpts) readData() (*admin.Pro
 	return out, nil
 }
 
-func (opts *toggleRegionalizedPrivateEndpointSettingOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *toggleRegionalizedPrivateEndpointSettingOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -712,7 +855,17 @@ func (opts *toggleRegionalizedPrivateEndpointSettingOpts) run(ctx context.Contex
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -727,13 +880,14 @@ func toggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

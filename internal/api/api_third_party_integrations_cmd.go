@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -41,6 +42,8 @@ type createThirdPartyIntegrationOpts struct {
 	pageNum      int
 	filename     string
 	fs           afero.Fs
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *createThirdPartyIntegrationOpts) preRun() (err error) {
@@ -59,16 +62,20 @@ func (opts *createThirdPartyIntegrationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createThirdPartyIntegrationOpts) readData() (*admin.ThridPartyIntegration, error) {
+func (opts *createThirdPartyIntegrationOpts) readData(r io.Reader) (*admin.ThridPartyIntegration, error) {
 	var out *admin.ThridPartyIntegration
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -84,8 +91,8 @@ func (opts *createThirdPartyIntegrationOpts) readData() (*admin.ThridPartyIntegr
 	return out, nil
 }
 
-func (opts *createThirdPartyIntegrationOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createThirdPartyIntegrationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -111,7 +118,17 @@ func (opts *createThirdPartyIntegrationOpts) run(ctx context.Context, w io.Write
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -126,7 +143,7 @@ func createThirdPartyIntegrationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
@@ -138,6 +155,7 @@ func createThirdPartyIntegrationBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("integrationType")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -145,6 +163,8 @@ type deleteThirdPartyIntegrationOpts struct {
 	client          *admin.APIClient
 	integrationType string
 	groupId         string
+	format          string
+	tmpl            *template.Template
 }
 
 func (opts *deleteThirdPartyIntegrationOpts) preRun() (err error) {
@@ -163,10 +183,14 @@ func (opts *deleteThirdPartyIntegrationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deleteThirdPartyIntegrationOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deleteThirdPartyIntegrationOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeleteThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
@@ -183,7 +207,17 @@ func (opts *deleteThirdPartyIntegrationOpts) run(ctx context.Context, w io.Write
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -196,13 +230,14 @@ func deleteThirdPartyIntegrationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	_ = cmd.MarkFlagRequired("integrationType")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -210,6 +245,8 @@ type getThirdPartyIntegrationOpts struct {
 	client          *admin.APIClient
 	groupId         string
 	integrationType string
+	format          string
+	tmpl            *template.Template
 }
 
 func (opts *getThirdPartyIntegrationOpts) preRun() (err error) {
@@ -228,10 +265,14 @@ func (opts *getThirdPartyIntegrationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getThirdPartyIntegrationOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getThirdPartyIntegrationOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetThirdPartyIntegrationApiParams{
 		GroupId:         opts.groupId,
@@ -248,7 +289,17 @@ func (opts *getThirdPartyIntegrationOpts) run(ctx context.Context, w io.Writer) 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -261,13 +312,14 @@ func getThirdPartyIntegrationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
 
 	_ = cmd.MarkFlagRequired("integrationType")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -277,6 +329,8 @@ type listThirdPartyIntegrationsOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listThirdPartyIntegrationsOpts) preRun() (err error) {
@@ -295,10 +349,14 @@ func (opts *listThirdPartyIntegrationsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listThirdPartyIntegrationsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listThirdPartyIntegrationsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListThirdPartyIntegrationsApiParams{
 		GroupId:      opts.groupId,
@@ -317,7 +375,17 @@ func (opts *listThirdPartyIntegrationsOpts) run(ctx context.Context, w io.Writer
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -330,7 +398,7 @@ func listThirdPartyIntegrationsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -338,6 +406,7 @@ func listThirdPartyIntegrationsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -351,6 +420,8 @@ type updateThirdPartyIntegrationOpts struct {
 	pageNum      int
 	filename     string
 	fs           afero.Fs
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *updateThirdPartyIntegrationOpts) preRun() (err error) {
@@ -369,16 +440,20 @@ func (opts *updateThirdPartyIntegrationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updateThirdPartyIntegrationOpts) readData() (*admin.ThridPartyIntegration, error) {
+func (opts *updateThirdPartyIntegrationOpts) readData(r io.Reader) (*admin.ThridPartyIntegration, error) {
 	var out *admin.ThridPartyIntegration
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -394,8 +469,8 @@ func (opts *updateThirdPartyIntegrationOpts) readData() (*admin.ThridPartyIntegr
 	return out, nil
 }
 
-func (opts *updateThirdPartyIntegrationOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updateThirdPartyIntegrationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -421,7 +496,17 @@ func (opts *updateThirdPartyIntegrationOpts) run(ctx context.Context, w io.Write
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -436,7 +521,7 @@ func updateThirdPartyIntegrationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
@@ -448,6 +533,7 @@ func updateThirdPartyIntegrationBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("integrationType")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

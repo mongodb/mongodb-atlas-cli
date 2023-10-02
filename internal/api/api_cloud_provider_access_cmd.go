@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -38,6 +39,8 @@ type authorizeCloudProviderAccessRoleOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *authorizeCloudProviderAccessRoleOpts) preRun() (err error) {
@@ -56,16 +59,20 @@ func (opts *authorizeCloudProviderAccessRoleOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *authorizeCloudProviderAccessRoleOpts) readData() (*admin.CloudProviderAccessRole, error) {
+func (opts *authorizeCloudProviderAccessRoleOpts) readData(r io.Reader) (*admin.CloudProviderAccessRole, error) {
 	var out *admin.CloudProviderAccessRole
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -81,8 +88,8 @@ func (opts *authorizeCloudProviderAccessRoleOpts) readData() (*admin.CloudProvid
 	return out, nil
 }
 
-func (opts *authorizeCloudProviderAccessRoleOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *authorizeCloudProviderAccessRoleOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -104,7 +111,17 @@ func (opts *authorizeCloudProviderAccessRoleOpts) run(ctx context.Context, w io.
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -119,7 +136,7 @@ func authorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -128,6 +145,7 @@ func authorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("roleId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -137,6 +155,8 @@ type createCloudProviderAccessRoleOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *createCloudProviderAccessRoleOpts) preRun() (err error) {
@@ -155,16 +175,20 @@ func (opts *createCloudProviderAccessRoleOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createCloudProviderAccessRoleOpts) readData() (*admin.CloudProviderAccessRole, error) {
+func (opts *createCloudProviderAccessRoleOpts) readData(r io.Reader) (*admin.CloudProviderAccessRole, error) {
 	var out *admin.CloudProviderAccessRole
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -180,8 +204,8 @@ func (opts *createCloudProviderAccessRoleOpts) readData() (*admin.CloudProviderA
 	return out, nil
 }
 
-func (opts *createCloudProviderAccessRoleOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createCloudProviderAccessRoleOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -202,7 +226,17 @@ func (opts *createCloudProviderAccessRoleOpts) run(ctx context.Context, w io.Wri
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -217,13 +251,14 @@ func createCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -250,10 +285,10 @@ func (opts *deauthorizeCloudProviderAccessRoleOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	return err
 }
 
-func (opts *deauthorizeCloudProviderAccessRoleOpts) run(ctx context.Context, _ io.Writer) error {
+func (opts *deauthorizeCloudProviderAccessRoleOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
 
 	params := &admin.DeauthorizeCloudProviderAccessRoleApiParams{
 		GroupId:       opts.groupId,
@@ -274,7 +309,7 @@ func deauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -290,6 +325,8 @@ type getCloudProviderAccessRoleOpts struct {
 	client  *admin.APIClient
 	groupId string
 	roleId  string
+	format  string
+	tmpl    *template.Template
 }
 
 func (opts *getCloudProviderAccessRoleOpts) preRun() (err error) {
@@ -308,10 +345,14 @@ func (opts *getCloudProviderAccessRoleOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getCloudProviderAccessRoleOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getCloudProviderAccessRoleOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
@@ -328,7 +369,17 @@ func (opts *getCloudProviderAccessRoleOpts) run(ctx context.Context, w io.Writer
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -341,19 +392,22 @@ func getCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.roleId, "roleId", "", `Unique 24-hexadecimal digit string that identifies the role.`)
 
 	_ = cmd.MarkFlagRequired("roleId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
 type listCloudProviderAccessRolesOpts struct {
 	client  *admin.APIClient
 	groupId string
+	format  string
+	tmpl    *template.Template
 }
 
 func (opts *listCloudProviderAccessRolesOpts) preRun() (err error) {
@@ -372,10 +426,14 @@ func (opts *listCloudProviderAccessRolesOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listCloudProviderAccessRolesOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listCloudProviderAccessRolesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListCloudProviderAccessRolesApiParams{
 		GroupId: opts.groupId,
@@ -391,7 +449,17 @@ func (opts *listCloudProviderAccessRolesOpts) run(ctx context.Context, w io.Writ
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -404,11 +472,12 @@ func listCloudProviderAccessRolesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

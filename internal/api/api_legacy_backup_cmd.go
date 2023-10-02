@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -36,6 +37,8 @@ type deleteLegacySnapshotOpts struct {
 	groupId     string
 	clusterName string
 	snapshotId  string
+	format      string
+	tmpl        *template.Template
 }
 
 func (opts *deleteLegacySnapshotOpts) preRun() (err error) {
@@ -54,10 +57,14 @@ func (opts *deleteLegacySnapshotOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deleteLegacySnapshotOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deleteLegacySnapshotOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeleteLegacySnapshotApiParams{
 		GroupId:     opts.groupId,
@@ -75,7 +82,17 @@ func (opts *deleteLegacySnapshotOpts) run(ctx context.Context, w io.Writer) erro
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -88,7 +105,7 @@ func deleteLegacySnapshotBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -97,6 +114,7 @@ func deleteLegacySnapshotBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -105,6 +123,8 @@ type getLegacyBackupCheckpointOpts struct {
 	groupId      string
 	checkpointId string
 	clusterName  string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *getLegacyBackupCheckpointOpts) preRun() (err error) {
@@ -123,10 +143,14 @@ func (opts *getLegacyBackupCheckpointOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getLegacyBackupCheckpointOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getLegacyBackupCheckpointOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetLegacyBackupCheckpointApiParams{
 		GroupId:      opts.groupId,
@@ -144,7 +168,17 @@ func (opts *getLegacyBackupCheckpointOpts) run(ctx context.Context, w io.Writer)
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -157,7 +191,7 @@ func getLegacyBackupCheckpointBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -166,6 +200,7 @@ func getLegacyBackupCheckpointBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("checkpointId")
 	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -174,6 +209,8 @@ type getLegacyBackupRestoreJobOpts struct {
 	groupId     string
 	clusterName string
 	jobId       string
+	format      string
+	tmpl        *template.Template
 }
 
 func (opts *getLegacyBackupRestoreJobOpts) preRun() (err error) {
@@ -192,10 +229,14 @@ func (opts *getLegacyBackupRestoreJobOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getLegacyBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getLegacyBackupRestoreJobOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetLegacyBackupRestoreJobApiParams{
 		GroupId:     opts.groupId,
@@ -213,7 +254,17 @@ func (opts *getLegacyBackupRestoreJobOpts) run(ctx context.Context, w io.Writer)
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -226,7 +277,7 @@ func getLegacyBackupRestoreJobBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -235,6 +286,7 @@ func getLegacyBackupRestoreJobBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("jobId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -243,6 +295,8 @@ type getLegacySnapshotOpts struct {
 	groupId     string
 	clusterName string
 	snapshotId  string
+	format      string
+	tmpl        *template.Template
 }
 
 func (opts *getLegacySnapshotOpts) preRun() (err error) {
@@ -261,10 +315,14 @@ func (opts *getLegacySnapshotOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getLegacySnapshotOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getLegacySnapshotOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetLegacySnapshotApiParams{
 		GroupId:     opts.groupId,
@@ -282,7 +340,17 @@ func (opts *getLegacySnapshotOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -295,7 +363,7 @@ func getLegacySnapshotBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -304,6 +372,7 @@ func getLegacySnapshotBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -311,6 +380,8 @@ type getLegacySnapshotScheduleOpts struct {
 	client      *admin.APIClient
 	groupId     string
 	clusterName string
+	format      string
+	tmpl        *template.Template
 }
 
 func (opts *getLegacySnapshotScheduleOpts) preRun() (err error) {
@@ -329,10 +400,14 @@ func (opts *getLegacySnapshotScheduleOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getLegacySnapshotScheduleOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getLegacySnapshotScheduleOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetLegacySnapshotScheduleApiParams{
 		GroupId:     opts.groupId,
@@ -349,7 +424,17 @@ func (opts *getLegacySnapshotScheduleOpts) run(ctx context.Context, w io.Writer)
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -362,13 +447,14 @@ func getLegacySnapshotScheduleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster with the snapshot you want to return.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -379,6 +465,8 @@ type listLegacyBackupCheckpointsOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listLegacyBackupCheckpointsOpts) preRun() (err error) {
@@ -397,10 +485,14 @@ func (opts *listLegacyBackupCheckpointsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listLegacyBackupCheckpointsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listLegacyBackupCheckpointsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListLegacyBackupCheckpointsApiParams{
 		GroupId:      opts.groupId,
@@ -420,7 +512,17 @@ func (opts *listLegacyBackupCheckpointsOpts) run(ctx context.Context, w io.Write
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -433,7 +535,7 @@ func listLegacyBackupCheckpointsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -443,6 +545,7 @@ func listLegacyBackupCheckpointsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -454,6 +557,8 @@ type listLegacyBackupRestoreJobsOpts struct {
 	itemsPerPage int
 	pageNum      int
 	batchId      string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listLegacyBackupRestoreJobsOpts) preRun() (err error) {
@@ -472,10 +577,14 @@ func (opts *listLegacyBackupRestoreJobsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listLegacyBackupRestoreJobsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listLegacyBackupRestoreJobsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListLegacyBackupRestoreJobsApiParams{
 		GroupId:      opts.groupId,
@@ -496,7 +605,17 @@ func (opts *listLegacyBackupRestoreJobsOpts) run(ctx context.Context, w io.Write
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -509,7 +628,7 @@ func listLegacyBackupRestoreJobsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -520,6 +639,7 @@ func listLegacyBackupRestoreJobsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.batchId, "batchId", "", `Unique 24-hexadecimal digit string that identifies the batch of restore jobs to return. Timestamp in ISO 8601 date and time format in UTC when creating a restore job for a sharded cluster, Application creates a separate job for each shard, plus another for the config host. Each of these jobs comprise one batch. A restore job for a replica set can&#39;t be part of a batch.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -531,6 +651,8 @@ type listLegacySnapshotsOpts struct {
 	itemsPerPage int
 	pageNum      int
 	completed    string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listLegacySnapshotsOpts) preRun() (err error) {
@@ -549,10 +671,14 @@ func (opts *listLegacySnapshotsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listLegacySnapshotsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listLegacySnapshotsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListLegacySnapshotsApiParams{
 		GroupId:      opts.groupId,
@@ -573,7 +699,17 @@ func (opts *listLegacySnapshotsOpts) run(ctx context.Context, w io.Writer) error
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -586,7 +722,7 @@ func listLegacySnapshotsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -597,6 +733,7 @@ func listLegacySnapshotsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.completed, "completed", "&quot;true&quot;", `Human-readable label that specifies whether to return only completed, incomplete, or all snapshots. By default, MongoDB Cloud only returns completed snapshots.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -608,6 +745,8 @@ type updateLegacySnapshotRetentionOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *updateLegacySnapshotRetentionOpts) preRun() (err error) {
@@ -626,16 +765,20 @@ func (opts *updateLegacySnapshotRetentionOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updateLegacySnapshotRetentionOpts) readData() (*admin.BackupSnapshot, error) {
+func (opts *updateLegacySnapshotRetentionOpts) readData(r io.Reader) (*admin.BackupSnapshot, error) {
 	var out *admin.BackupSnapshot
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -651,8 +794,8 @@ func (opts *updateLegacySnapshotRetentionOpts) readData() (*admin.BackupSnapshot
 	return out, nil
 }
 
-func (opts *updateLegacySnapshotRetentionOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updateLegacySnapshotRetentionOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -675,7 +818,17 @@ func (opts *updateLegacySnapshotRetentionOpts) run(ctx context.Context, w io.Wri
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -690,7 +843,7 @@ func updateLegacySnapshotRetentionBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -701,6 +854,7 @@ func updateLegacySnapshotRetentionBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -711,6 +865,8 @@ type updateLegacySnapshotScheduleOpts struct {
 
 	filename string
 	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
 }
 
 func (opts *updateLegacySnapshotScheduleOpts) preRun() (err error) {
@@ -729,16 +885,20 @@ func (opts *updateLegacySnapshotScheduleOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *updateLegacySnapshotScheduleOpts) readData() (*admin.ApiAtlasSnapshotSchedule, error) {
+func (opts *updateLegacySnapshotScheduleOpts) readData(r io.Reader) (*admin.ApiAtlasSnapshotSchedule, error) {
 	var out *admin.ApiAtlasSnapshotSchedule
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -754,8 +914,8 @@ func (opts *updateLegacySnapshotScheduleOpts) readData() (*admin.ApiAtlasSnapsho
 	return out, nil
 }
 
-func (opts *updateLegacySnapshotScheduleOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *updateLegacySnapshotScheduleOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -777,7 +937,17 @@ func (opts *updateLegacySnapshotScheduleOpts) run(ctx context.Context, w io.Writ
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -792,7 +962,7 @@ func updateLegacySnapshotScheduleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -801,6 +971,7 @@ func updateLegacySnapshotScheduleBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

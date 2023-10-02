@@ -23,7 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
+	"strings"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -40,6 +41,8 @@ type createProjectIpAccessListOpts struct {
 	pageNum      int
 	filename     string
 	fs           afero.Fs
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *createProjectIpAccessListOpts) preRun() (err error) {
@@ -58,16 +61,20 @@ func (opts *createProjectIpAccessListOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *createProjectIpAccessListOpts) readData() (*[]admin.NetworkPermissionEntry, error) {
+func (opts *createProjectIpAccessListOpts) readData(r io.Reader) (*[]admin.NetworkPermissionEntry, error) {
 	var out *[]admin.NetworkPermissionEntry
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -83,8 +90,8 @@ func (opts *createProjectIpAccessListOpts) readData() (*[]admin.NetworkPermissio
 	return out, nil
 }
 
-func (opts *createProjectIpAccessListOpts) run(ctx context.Context, w io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createProjectIpAccessListOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -109,7 +116,17 @@ func (opts *createProjectIpAccessListOpts) run(ctx context.Context, w io.Writer)
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -124,7 +141,7 @@ func createProjectIpAccessListBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -134,6 +151,7 @@ func createProjectIpAccessListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -141,6 +159,8 @@ type deleteProjectIpAccessListOpts struct {
 	client     *admin.APIClient
 	groupId    string
 	entryValue string
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *deleteProjectIpAccessListOpts) preRun() (err error) {
@@ -159,10 +179,14 @@ func (opts *deleteProjectIpAccessListOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *deleteProjectIpAccessListOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *deleteProjectIpAccessListOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.DeleteProjectIpAccessListApiParams{
 		GroupId:    opts.groupId,
@@ -179,7 +203,17 @@ func (opts *deleteProjectIpAccessListOpts) run(ctx context.Context, w io.Writer)
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -192,7 +226,7 @@ func deleteProjectIpAccessListBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -203,6 +237,7 @@ func deleteProjectIpAccessListBuilder() *cobra.Command {
 - which protocol (like TCP or UDP) the connection uses.`)
 
 	_ = cmd.MarkFlagRequired("entryValue")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -210,6 +245,8 @@ type getProjectIpAccessListStatusOpts struct {
 	client     *admin.APIClient
 	groupId    string
 	entryValue string
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *getProjectIpAccessListStatusOpts) preRun() (err error) {
@@ -228,10 +265,14 @@ func (opts *getProjectIpAccessListStatusOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getProjectIpAccessListStatusOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getProjectIpAccessListStatusOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetProjectIpAccessListStatusApiParams{
 		GroupId:    opts.groupId,
@@ -248,7 +289,17 @@ func (opts *getProjectIpAccessListStatusOpts) run(ctx context.Context, w io.Writ
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -261,13 +312,14 @@ func getProjectIpAccessListStatusBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.entryValue, "entryValue", "", `Network address or cloud provider security construct that identifies which project access list entry to be verified.`)
 
 	_ = cmd.MarkFlagRequired("entryValue")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -275,6 +327,8 @@ type getProjectIpListOpts struct {
 	client     *admin.APIClient
 	groupId    string
 	entryValue string
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *getProjectIpListOpts) preRun() (err error) {
@@ -293,10 +347,14 @@ func (opts *getProjectIpListOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getProjectIpListOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getProjectIpListOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetProjectIpListApiParams{
 		GroupId:    opts.groupId,
@@ -313,7 +371,17 @@ func (opts *getProjectIpListOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -326,13 +394,14 @@ func getProjectIpListBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.entryValue, "entryValue", "", `Access list entry that you want to return from the project&#39;s IP access list. This value can use one of the following: one AWS security group ID, one IP address, or one CIDR block of addresses. For CIDR blocks that use a subnet mask, replace the forward slash (&#x60;/&#x60;) with its URL-encoded value (&#x60;%2F&#x60;).`)
 
 	_ = cmd.MarkFlagRequired("entryValue")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -342,6 +411,8 @@ type listProjectIpAccessListsOpts struct {
 	includeCount bool
 	itemsPerPage int
 	pageNum      int
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listProjectIpAccessListsOpts) preRun() (err error) {
@@ -360,10 +431,14 @@ func (opts *listProjectIpAccessListsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listProjectIpAccessListsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listProjectIpAccessListsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.ListProjectIpAccessListsApiParams{
 		GroupId:      opts.groupId,
@@ -382,7 +457,17 @@ func (opts *listProjectIpAccessListsOpts) run(ctx context.Context, w io.Writer) 
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -395,7 +480,7 @@ func listProjectIpAccessListsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -403,6 +488,7 @@ func listProjectIpAccessListsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

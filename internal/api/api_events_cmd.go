@@ -23,6 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"strings"
+	"text/template"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -35,6 +37,8 @@ type getOrganizationEventOpts struct {
 	orgId      string
 	eventId    string
 	includeRaw bool
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *getOrganizationEventOpts) preRun() (err error) {
@@ -53,10 +57,14 @@ func (opts *getOrganizationEventOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getOrganizationEventOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getOrganizationEventOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetOrganizationEventApiParams{
 		OrgId:      opts.orgId,
@@ -74,7 +82,17 @@ func (opts *getOrganizationEventOpts) run(ctx context.Context, w io.Writer) erro
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -87,7 +105,7 @@ func getOrganizationEventBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -95,6 +113,7 @@ func getOrganizationEventBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`)
 
 	_ = cmd.MarkFlagRequired("eventId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -103,6 +122,8 @@ type getProjectEventOpts struct {
 	groupId    string
 	eventId    string
 	includeRaw bool
+	format     string
+	tmpl       *template.Template
 }
 
 func (opts *getProjectEventOpts) preRun() (err error) {
@@ -121,10 +142,14 @@ func (opts *getProjectEventOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *getProjectEventOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *getProjectEventOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	params := &admin.GetProjectEventApiParams{
 		GroupId:    opts.groupId,
@@ -142,7 +167,17 @@ func (opts *getProjectEventOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -155,7 +190,7 @@ func getProjectEventBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -163,6 +198,7 @@ func getProjectEventBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`)
 
 	_ = cmd.MarkFlagRequired("eventId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -176,6 +212,8 @@ type listOrganizationEventsOpts struct {
 	includeRaw   bool
 	maxDate      string
 	minDate      string
+	format       string
+	tmpl         *template.Template
 }
 
 func (opts *listOrganizationEventsOpts) preRun() (err error) {
@@ -194,10 +232,14 @@ func (opts *listOrganizationEventsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listOrganizationEventsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listOrganizationEventsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	var maxDate *time.Time
 	var errMaxDate error
@@ -238,7 +280,17 @@ func (opts *listOrganizationEventsOpts) run(ctx context.Context, w io.Writer) er
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -251,7 +303,7 @@ func listOrganizationEventsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -265,6 +317,7 @@ func listOrganizationEventsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.maxDate, "maxDate", "", `Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
 	cmd.Flags().StringVar(&opts.minDate, "minDate", "", `Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 
@@ -280,6 +333,8 @@ type listProjectEventsOpts struct {
 	includeRaw        bool
 	maxDate           string
 	minDate           string
+	format            string
+	tmpl              *template.Template
 }
 
 func (opts *listProjectEventsOpts) preRun() (err error) {
@@ -298,10 +353,14 @@ func (opts *listProjectEventsOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	if opts.format != "" {
+		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+	}
+
+	return err
 }
 
-func (opts *listProjectEventsOpts) run(ctx context.Context, w io.Writer) error {
+func (opts *listProjectEventsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
 
 	var maxDate *time.Time
 	var errMaxDate error
@@ -344,7 +403,17 @@ func (opts *listProjectEventsOpts) run(ctx context.Context, w io.Writer) error {
 		return errJson
 	}
 
-	_, err = fmt.Fprintln(w, string(prettyJSON))
+	if opts.format == "" {
+		_, err = fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	err = opts.tmpl.Execute(w, parsedJSON)
 	return err
 }
 
@@ -357,7 +426,7 @@ func listProjectEventsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -375,6 +444,7 @@ func listProjectEventsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.maxDate, "maxDate", "", `Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
 	cmd.Flags().StringVar(&opts.minDate, "minDate", "", `Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
 
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
 

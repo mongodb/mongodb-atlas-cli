@@ -23,7 +23,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/afero"
@@ -56,16 +55,16 @@ func (opts *createRollingIndexOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return nil
+	return err
 }
 
-func (opts *createRollingIndexOpts) readData() (*admin.DatabaseRollingIndexRequest, error) {
+func (opts *createRollingIndexOpts) readData(r io.Reader) (*admin.DatabaseRollingIndexRequest, error) {
 	var out *admin.DatabaseRollingIndexRequest
 
 	var buf []byte
 	var err error
 	if opts.filename == "" {
-		buf, err = io.ReadAll(os.Stdin)
+		buf, err = io.ReadAll(r)
 	} else {
 		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
 			return nil, fmt.Errorf("file not found: %s", opts.filename)
@@ -81,8 +80,8 @@ func (opts *createRollingIndexOpts) readData() (*admin.DatabaseRollingIndexReque
 	return out, nil
 }
 
-func (opts *createRollingIndexOpts) run(ctx context.Context, _ io.Writer) error {
-	data, errData := opts.readData()
+func (opts *createRollingIndexOpts) run(ctx context.Context, r io.Reader, _ io.Writer) error {
+	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
 	}
@@ -109,7 +108,7 @@ func createRollingIndexBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

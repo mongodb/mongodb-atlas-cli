@@ -16,43 +16,100 @@ package deployments
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/watchers"
 	"github.com/spf13/cobra"
+)
+
+const (
+	deleteSuccessMessage = "Deployment '%s' deleted\n"
+	deleteFailMessage    = "Deployment not deleted"
 )
 
 type DeleteOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
 	*cli.DeleteOpts
+	cli.WatchOpts
 	options.DeploymentOpts
-	podmanClient podman.Client
+	atlasStore store.ClusterDeleter
+}
+
+func (opts *DeleteOpts) initAtlasStore(ctx context.Context) func() error {
+	return func() error {
+		var err error
+		opts.atlasStore, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		return err
+	}
 }
 
 func (opts *DeleteOpts) Run(ctx context.Context) error {
-	if err := opts.podmanClient.Ready(ctx); err != nil {
+	if err := opts.validateAndPrompt(ctx); err != nil {
+		return err
+	}
+	opts.Entry = opts.DeploymentName
+
+	if err := opts.Prompt(); err != nil {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithDeploymentType(options.LocalCluster)) // always local
+	if opts.IsAtlasDeploymentType() {
+		return opts.runAtlas()
+	}
+	return opts.runLocal(ctx)
+}
+
+func (opts *DeleteOpts) validateAndPrompt(ctx context.Context) error {
+	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
+		return err
+	}
+	telemetry.AppendOption(telemetry.WithDeploymentType(options.LocalCluster))
+
+	if opts.IsAtlasDeploymentType() {
+		return opts.validateAndPromptAtlas()
+	}
+	return opts.validateAndPromptLocal(ctx)
+}
+
+func (opts *DeleteOpts) validateAndPromptAtlas() error {
+	if opts.DeploymentName == "" {
+		return ErrNoDeploymentName
+	}
+
+	return opts.ValidateProjectID()
+}
+
+func (opts *DeleteOpts) validateAndPromptLocal(ctx context.Context) error {
+	if err := opts.PodmanClient.Ready(ctx); err != nil {
+		return err
+	}
+
 	if opts.DeploymentName == "" {
 		if err := opts.DeploymentOpts.Select(ctx); err != nil {
 			return err
 		}
 	}
 
-	opts.Entry = opts.DeploymentName
-	if err := opts.Prompt(); err != nil {
-		return err
-	}
+	return nil
+}
 
+func (opts *DeleteOpts) runAtlas() error {
+	return opts.Delete(opts.atlasStore.DeleteCluster, opts.ConfigProjectID())
+}
+
+func (opts *DeleteOpts) runLocal(ctx context.Context) error {
 	return opts.Delete(func() error {
 		_, _ = log.Warningln("deleting deployment...")
 		opts.StartSpinner()
@@ -61,16 +118,52 @@ func (opts *DeleteOpts) Run(ctx context.Context) error {
 	})
 }
 
+func (opts *DeleteOpts) PostRun() error {
+	if !opts.EnableWatch || !opts.IsAtlasDeploymentType() {
+		return nil
+	}
+
+	watcher := watchers.NewWatcher(
+		*watchers.ClusterDeleted,
+		watchers.NewAtlasClusterStateDescriber(
+			opts.atlasStore.(store.AtlasClusterDescriber),
+			opts.ProjectID,
+			opts.Entry,
+		),
+	)
+
+	watcher.Timeout = time.Duration(opts.Timeout)
+	if err := opts.WatchWatcher(watcher); err != nil {
+		return err
+	}
+
+	return opts.Print(nil)
+}
+
 // atlas deployments delete <clusterName>.
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("Deployment '%s' deleted\n", "Deployment not deleted"),
+		DeleteOpts: cli.NewDeleteOpts(deleteSuccessMessage, deleteFailMessage),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete [deploymentName]",
-		Short:   "Delete a deployment.",
+		Use:   "delete [deploymentName]",
+		Short: "Delete a deployment.",
+		Long: `The command prompts you to confirm the operation when you run the command without the --force option. 
+		
+Deleting an Atlas deployment also deletes any backup snapshots for that cluster.
+Deleting a Local deployment also deletes any local data volumes.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Example: fmt.Sprintf(`  # Remove an Atlas deployment named myDeployment after prompting for a confirmation:
+  %[1]s deployments delete myDeployment --type ATLAS
+  
+  # Remove an Atlas deployment named myDeployment without requiring confirmation:
+  %[1]s deployments delete myDeployment --type ATLAS --force
+
+  # Remove an Local deployment named myDeployment without requiring confirmation:
+  %[1]s deployments delete myDeployment --type LOCAL --force`, cli.ExampleAtlasEntryPoint()),
 		Aliases: []string{"rm"},
-		GroupID: "local",
+		GroupID: "all",
 		Args:    require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"deploymentNameDesc": "Name of the deployment that you want to delete.",
@@ -80,15 +173,27 @@ func DeleteBuilder() *cobra.Command {
 			if len(args) == 1 {
 				opts.DeploymentName = args[0]
 			}
-			opts.podmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
-			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), ""), opts.InitStore(opts.podmanClient))
+			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
+			return opts.PreRunE(
+				opts.initAtlasStore(cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), ""),
+				opts.InitStore(opts.PodmanClient),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())
 		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.PostRun()
+		},
 	}
 
+	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
+	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
+	cmd.Flags().UintVar(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
+
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
 	return cmd
 }

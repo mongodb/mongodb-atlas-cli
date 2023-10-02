@@ -199,13 +199,16 @@ func TestDeploymentsAtlas(t *testing.T) {
 		a.Contains(out, "Search index created")
 	})
 
-	// TODO: Update with deployments delete CLOUDP-199629
 	t.Run("Delete Cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			clustersEntity,
+			deploymentEntity,
 			"delete",
 			clusterName,
+			"--type",
+			"ATLAS",
 			"--force",
+			"--watch",
+			"--watchTimeout", "300",
 			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
@@ -229,5 +232,4 @@ func TestDeploymentsAtlas(t *testing.T) {
 		resp, _ := cmd.CombinedOutput()
 		t.Log(string(resp))
 	})
-	// TODO: Add support for connect CLOUDP-199422
 }

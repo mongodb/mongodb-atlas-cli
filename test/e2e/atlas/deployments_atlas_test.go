@@ -215,7 +215,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
+		expected := fmt.Sprintf("Deployment '" + clusterName + "' deleted")
 		assert.Equal(t, expected, string(resp))
 	})
 

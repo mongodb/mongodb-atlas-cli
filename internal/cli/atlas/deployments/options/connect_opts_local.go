@@ -32,6 +32,10 @@ func (opts *ConnectOpts) validateAndPromptLocalOpts(ctx context.Context) error {
 }
 
 func (opts *ConnectOpts) connectToLocal(ctx context.Context) error {
+	if err := LocalDeploymentPreRun(); err != nil {
+		return err
+	}
+
 	if err := opts.PodmanClient.Ready(ctx); err != nil {
 		return err
 	}

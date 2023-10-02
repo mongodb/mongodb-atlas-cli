@@ -37,6 +37,10 @@ type DeleteOpts struct {
 }
 
 func (opts *DeleteOpts) Run(ctx context.Context) error {
+	if err := options.LocalDeploymentPreRun(); err != nil {
+		return err
+	}
+
 	if err := opts.podmanClient.Ready(ctx); err != nil {
 		return err
 	}

@@ -104,6 +104,10 @@ func (opts *ListOpts) getAtlasDeployments() ([]options.Deployment, error) {
 }
 
 func (opts *ListOpts) Run(ctx context.Context) error {
+	if err := options.LocalDeploymentPreRun(); err != nil {
+		return err
+	}
+
 	mdbContainers, err := opts.GetLocalDeployments(ctx)
 	if err != nil && !errors.Is(err, podman.ErrPodmanNotFound) {
 		return err

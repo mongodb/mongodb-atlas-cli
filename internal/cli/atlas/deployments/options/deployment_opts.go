@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"runtime"
 	"sort"
 	"strings"
 	"time"
@@ -33,6 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/zcalusic/sysinfo"
 )
 
 const (
@@ -246,4 +248,49 @@ func (opts *DeploymentOpts) ValidateAndPromptDeploymentType() error {
 
 func (opts *DeploymentOpts) IsAtlasDeploymentType() bool {
 	return strings.EqualFold(opts.DeploymentType, AtlasCluster)
+}
+
+func LocalDeploymentPreRun() error {
+	if localDeploymentSupportedByOs() {
+		_, _ = log.Warningln("Local deployment is not supported on this OS")
+	}
+
+	return podman.Installed()
+}
+
+func localDeploymentSupportedByOs() bool {
+	os := runtime.GOOS
+	switch os {
+	case "darwin":
+		// MacOS Intel and M1 are supported
+		return true
+	case "windows":
+		// Windows is not supported
+		return false
+	case "linux":
+		// Depends on distro
+		support, err := isLinuxDistroSupported()
+		if err != nil {
+			// If something went wrong in finding OS distro, then assume support
+			_, _ = log.Debugln(err)
+			return true
+		}
+		return support
+	default:
+		// Other unknown OS are not supported
+		return false
+	}
+}
+
+func isLinuxDistroSupported() (bool, error) {
+	var si sysinfo.SysInfo
+
+	si.GetSysInfo()
+	vendor := si.OS.Vendor
+	if vendor == "" {
+		return false, errors.New("unable to find OS vendor")
+	}
+
+	support := vendor == "centos" || vendor == "rhel"
+	return support, nil
 }

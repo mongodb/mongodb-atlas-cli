@@ -68,6 +68,10 @@ func (opts *StartOpts) Run(ctx context.Context) error {
 }
 
 func (opts *StartOpts) RunLocal(ctx context.Context) error {
+	if err := options.LocalDeploymentPreRun(); err != nil {
+		return err
+	}
+
 	opts.StartSpinner()
 	defer opts.StopSpinner()
 

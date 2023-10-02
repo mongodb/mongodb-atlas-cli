@@ -221,6 +221,9 @@ func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needPodmanSetu
 }
 
 func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
+	if err := opts.LocalDeploymentChecks(); err != nil {
+		return err
+	}
 	if err := podman.Installed(); err != nil {
 		return err
 	}
@@ -668,6 +671,7 @@ Port	{{.Port}}
 }
 
 func (opts *SetupOpts) runLocal(ctx context.Context) error {
+
 	if err := opts.createLocalDeployment(ctx); err != nil {
 		_ = opts.Remove(ctx)
 		return err

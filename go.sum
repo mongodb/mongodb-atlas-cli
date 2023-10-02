@@ -539,6 +539,8 @@ github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 github.com/yusufpapurcu/wmi v1.2.3 h1:E1ctvB7uKFMOJw3fdOW32DwGE9I7t++CRUEMKvFoFiw=
 github.com/yusufpapurcu/wmi v1.2.3/go.mod h1:SBZ9tNy3G9/m5Oi98Zks0QjeHVDvuK0qfxQmPyzfmi0=
+github.com/zcalusic/sysinfo v1.0.1 h1:cVh8q3codjh43AGRTa54dJ2Zq+qPejv8n2VWpxKViwc=
+github.com/zcalusic/sysinfo v1.0.1/go.mod h1:LxwKwtQdbTIQc65drhjQzYzt0o7jfB80LrrZm7SWn8o=
 go.mongodb.org/atlas v0.31.0 h1:NgLqsNYm6wDYeDUO90etw1sl8T1U2DUKu36eUdnrFSI=
 go.mongodb.org/atlas v0.31.0/go.mod h1:L4BKwVx/OeEhOVjCSdgo90KJm4469iv7ZLzQms/EPTg=
 go.mongodb.org/atlas-sdk/v20230201008 v20230201008.0.0 h1:KTu5+Q4M93vnxyrUUY+KKdU6tK4ANbJNA/pP5/AaD3Q=

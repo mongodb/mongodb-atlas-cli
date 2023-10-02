@@ -16,14 +16,17 @@ package options
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
+	"os/user"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/containers/podman/v4/libpod/define"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/zcalusic/sysinfo"
 )
 
 var errEmptyDeployments = errors.New("currently there are no deployment in your local system")
@@ -91,4 +94,29 @@ func (opts *DeploymentOpts) Select(ctx context.Context) error {
 			return deploymentTypeLocal
 		},
 	}, &opts.DeploymentName, survey.WithValidator(survey.Required))
+}
+
+func (opts *DeploymentOpts) LocalDeploymentChecks() error {
+	opts.LocalDeploymentSupportedByOs()
+	return nil
+}
+
+func (opts *DeploymentOpts) LocalDeploymentSupportedByOs() {
+	current, err := user.Current()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	if current.Uid != "0" {
+		fmt.Println("no rootuser")
+	}
+
+	var si sysinfo.SysInfo
+
+	si.GetSysInfo()
+	data, err := json.MarshalIndent(&si, "", "  ")
+	if err != nil {
+		return
+	}
+	fmt.Println(string(data))
 }

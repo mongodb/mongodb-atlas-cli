@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -39,8 +41,22 @@ type createRoleMappingOpts struct {
 }
 
 func (opts *createRoleMappingOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
 }
 
 func (opts *createRoleMappingOpts) readData() (*admin.AuthFederationRoleMapping, error) {
@@ -69,9 +85,6 @@ func (opts *createRoleMappingOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
 	}
 
 	params := &admin.CreateRoleMappingApiParams{
@@ -115,7 +128,6 @@ func createRoleMappingBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -125,8 +137,11 @@ type deleteFederationAppOpts struct {
 }
 
 func (opts *deleteFederationAppOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (opts *deleteFederationAppOpts) run(ctx context.Context, _ io.Writer) error {
@@ -165,14 +180,25 @@ type deleteRoleMappingOpts struct {
 }
 
 func (opts *deleteRoleMappingOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteRoleMappingOpts) run(ctx context.Context, _ io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *deleteRoleMappingOpts) run(ctx context.Context, _ io.Writer) error {
 
 	params := &admin.DeleteRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
@@ -202,7 +228,6 @@ func deleteRoleMappingBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("id")
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -213,8 +238,11 @@ type getConnectedOrgConfigOpts struct {
 }
 
 func (opts *getConnectedOrgConfigOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (opts *getConnectedOrgConfigOpts) run(ctx context.Context, w io.Writer) error {
@@ -264,14 +292,25 @@ type getFederationSettingsOpts struct {
 }
 
 func (opts *getFederationSettingsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getFederationSettingsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *getFederationSettingsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetFederationSettingsApiParams{
 		OrgId: opts.orgId,
@@ -305,7 +344,6 @@ func getFederationSettingsBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -316,8 +354,11 @@ type getIdentityProviderOpts struct {
 }
 
 func (opts *getIdentityProviderOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (opts *getIdentityProviderOpts) run(ctx context.Context, w io.Writer) error {
@@ -368,8 +409,11 @@ type getIdentityProviderMetadataOpts struct {
 }
 
 func (opts *getIdentityProviderMetadataOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (opts *getIdentityProviderMetadataOpts) run(ctx context.Context, w io.Writer) error {
@@ -421,14 +465,25 @@ type getRoleMappingOpts struct {
 }
 
 func (opts *getRoleMappingOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getRoleMappingOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *getRoleMappingOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
@@ -468,7 +523,6 @@ func getRoleMappingBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("id")
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -478,8 +532,11 @@ type listConnectedOrgConfigsOpts struct {
 }
 
 func (opts *listConnectedOrgConfigsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (opts *listConnectedOrgConfigsOpts) run(ctx context.Context, w io.Writer) error {
@@ -526,8 +583,11 @@ type listIdentityProvidersOpts struct {
 }
 
 func (opts *listIdentityProvidersOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (opts *listIdentityProvidersOpts) run(ctx context.Context, w io.Writer) error {
@@ -575,14 +635,25 @@ type listRoleMappingsOpts struct {
 }
 
 func (opts *listRoleMappingsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listRoleMappingsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *listRoleMappingsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListRoleMappingsApiParams{
 		FederationSettingsId: opts.federationSettingsId,
@@ -619,7 +690,6 @@ func listRoleMappingsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -630,8 +700,11 @@ type removeConnectedOrgConfigOpts struct {
 }
 
 func (opts *removeConnectedOrgConfigOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (opts *removeConnectedOrgConfigOpts) run(ctx context.Context, w io.Writer) error {
@@ -685,8 +758,11 @@ type updateConnectedOrgConfigOpts struct {
 }
 
 func (opts *updateConnectedOrgConfigOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (opts *updateConnectedOrgConfigOpts) readData() (*admin.ConnectedOrgConfig, error) {
@@ -772,8 +848,11 @@ type updateIdentityProviderOpts struct {
 }
 
 func (opts *updateIdentityProviderOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (opts *updateIdentityProviderOpts) readData() (*admin.SamlIdentityProviderUpdate, error) {
@@ -860,8 +939,22 @@ type updateRoleMappingOpts struct {
 }
 
 func (opts *updateRoleMappingOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
 }
 
 func (opts *updateRoleMappingOpts) readData() (*admin.AuthFederationRoleMapping, error) {
@@ -890,9 +983,6 @@ func (opts *updateRoleMappingOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
 	}
 
 	params := &admin.UpdateRoleMappingApiParams{
@@ -939,7 +1029,6 @@ func updateRoleMappingBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("id")
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 

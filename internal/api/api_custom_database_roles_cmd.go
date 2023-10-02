@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -38,8 +40,22 @@ type createCustomDatabaseRoleOpts struct {
 }
 
 func (opts *createCustomDatabaseRoleOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *createCustomDatabaseRoleOpts) readData() (*admin.UserCustomDBRole, error) {
@@ -68,9 +84,6 @@ func (opts *createCustomDatabaseRoleOpts) run(ctx context.Context, w io.Writer) 
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.CreateCustomDatabaseRoleApiParams{
@@ -111,7 +124,6 @@ func createCustomDatabaseRoleBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -122,14 +134,25 @@ type deleteCustomDatabaseRoleOpts struct {
 }
 
 func (opts *deleteCustomDatabaseRoleOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteCustomDatabaseRoleOpts) run(ctx context.Context, _ io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *deleteCustomDatabaseRoleOpts) run(ctx context.Context, _ io.Writer) error {
 
 	params := &admin.DeleteCustomDatabaseRoleApiParams{
 		GroupId:  opts.groupId,
@@ -155,7 +178,6 @@ func deleteCustomDatabaseRoleBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.roleName, "roleName", "", `Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleName")
 	return cmd
 }
@@ -167,14 +189,25 @@ type getCustomDatabaseRoleOpts struct {
 }
 
 func (opts *getCustomDatabaseRoleOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getCustomDatabaseRoleOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getCustomDatabaseRoleOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetCustomDatabaseRoleApiParams{
 		GroupId:  opts.groupId,
@@ -210,7 +243,6 @@ func getCustomDatabaseRoleBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.roleName, "roleName", "", `Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleName")
 	return cmd
 }
@@ -221,14 +253,25 @@ type listCustomDatabaseRolesOpts struct {
 }
 
 func (opts *listCustomDatabaseRolesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listCustomDatabaseRolesOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listCustomDatabaseRolesOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListCustomDatabaseRolesApiParams{
 		GroupId: opts.groupId,
@@ -262,7 +305,6 @@ func listCustomDatabaseRolesBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -276,8 +318,22 @@ type updateCustomDatabaseRoleOpts struct {
 }
 
 func (opts *updateCustomDatabaseRoleOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *updateCustomDatabaseRoleOpts) readData() (*admin.UpdateCustomDBRole, error) {
@@ -306,9 +362,6 @@ func (opts *updateCustomDatabaseRoleOpts) run(ctx context.Context, w io.Writer) 
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.UpdateCustomDatabaseRoleApiParams{
@@ -351,7 +404,6 @@ func updateCustomDatabaseRoleBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("roleName")
 	return cmd
 }

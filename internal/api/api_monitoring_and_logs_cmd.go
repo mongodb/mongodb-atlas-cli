@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"time"
@@ -35,14 +37,25 @@ type getAtlasProcessOpts struct {
 }
 
 func (opts *getAtlasProcessOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getAtlasProcessOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getAtlasProcessOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetAtlasProcessApiParams{
 		GroupId:   opts.groupId,
@@ -78,7 +91,6 @@ func getAtlasProcessBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
 	return cmd
 }
@@ -91,14 +103,25 @@ type getDatabaseOpts struct {
 }
 
 func (opts *getDatabaseOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getDatabaseOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getDatabaseOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetDatabaseApiParams{
 		GroupId:      opts.groupId,
@@ -136,7 +159,6 @@ func getDatabaseBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", `Human-readable label that identifies the database that the specified MongoDB process serves.`)
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("processId")
 	return cmd
@@ -155,14 +177,25 @@ type getDatabaseMeasurementsOpts struct {
 }
 
 func (opts *getDatabaseMeasurementsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getDatabaseMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getDatabaseMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
 
 	var start *time.Time
 	var errStart error
@@ -228,7 +261,6 @@ func getDatabaseMeasurementsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.start, "start", "", `Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.`)
 	cmd.Flags().StringVar(&opts.end, "end", "", `Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("processId")
 	_ = cmd.MarkFlagRequired("granularity")
@@ -248,14 +280,25 @@ type getDiskMeasurementsOpts struct {
 }
 
 func (opts *getDiskMeasurementsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getDiskMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getDiskMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
 
 	var start *time.Time
 	var errStart error
@@ -321,7 +364,6 @@ func getDiskMeasurementsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.start, "start", "", `Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.`)
 	cmd.Flags().StringVar(&opts.end, "end", "", `Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("partitionName")
 	_ = cmd.MarkFlagRequired("processId")
 	_ = cmd.MarkFlagRequired("granularity")
@@ -338,14 +380,25 @@ type getHostLogsOpts struct {
 }
 
 func (opts *getHostLogsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getHostLogsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getHostLogsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetHostLogsApiParams{
 		GroupId:   opts.groupId,
@@ -387,7 +440,6 @@ func getHostLogsBuilder() *cobra.Command {
 	cmd.Flags().Int64Var(&opts.endDate, "endDate", 0, `Date and time when the period specifies the inclusive ending point for the range of log messages to retrieve. This parameter expresses its value in the number of seconds that have elapsed since the UNIX epoch.`)
 	cmd.Flags().Int64Var(&opts.startDate, "startDate", 0, `Date and time when the period specifies the inclusive starting point for the range of log messages to retrieve. This parameter expresses its value in the number of seconds that have elapsed since the UNIX epoch.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("hostName")
 	_ = cmd.MarkFlagRequired("logName")
 	return cmd
@@ -405,14 +457,25 @@ type getHostMeasurementsOpts struct {
 }
 
 func (opts *getHostMeasurementsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getHostMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getHostMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
 
 	var start *time.Time
 	var errStart error
@@ -476,7 +539,6 @@ func getHostMeasurementsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.start, "start", "", `Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.`)
 	cmd.Flags().StringVar(&opts.end, "end", "", `Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
 	_ = cmd.MarkFlagRequired("granularity")
 	return cmd
@@ -497,14 +559,25 @@ type getIndexMetricsOpts struct {
 }
 
 func (opts *getIndexMetricsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getIndexMetricsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getIndexMetricsOpts) run(ctx context.Context, w io.Writer) error {
 
 	var start *time.Time
 	var errStart error
@@ -578,7 +651,6 @@ func getIndexMetricsBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired("indexName")
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("collectionName")
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("granularity")
 	_ = cmd.MarkFlagRequired("metrics")
 	return cmd
@@ -596,14 +668,25 @@ type getMeasurementsOpts struct {
 }
 
 func (opts *getMeasurementsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
 
 	var start *time.Time
 	var errStart error
@@ -668,7 +751,6 @@ func getMeasurementsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.end, "end", "", `Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.`)
 
 	_ = cmd.MarkFlagRequired("processId")
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("granularity")
 	_ = cmd.MarkFlagRequired("metrics")
 	return cmd
@@ -683,14 +765,25 @@ type listAtlasProcessesOpts struct {
 }
 
 func (opts *listAtlasProcessesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listAtlasProcessesOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listAtlasProcessesOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListAtlasProcessesApiParams{
 		GroupId:      opts.groupId,
@@ -730,7 +823,6 @@ func listAtlasProcessesBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -744,14 +836,25 @@ type listDatabasesOpts struct {
 }
 
 func (opts *listDatabasesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listDatabasesOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listDatabasesOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListDatabasesApiParams{
 		GroupId:      opts.groupId,
@@ -793,7 +896,6 @@ func listDatabasesBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
 	return cmd
 }
@@ -806,14 +908,25 @@ type listDiskMeasurementsOpts struct {
 }
 
 func (opts *listDiskMeasurementsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listDiskMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listDiskMeasurementsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListDiskMeasurementsApiParams{
 		PartitionName: opts.partitionName,
@@ -852,7 +965,6 @@ func listDiskMeasurementsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.`)
 
 	_ = cmd.MarkFlagRequired("partitionName")
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
 	return cmd
 }
@@ -867,14 +979,25 @@ type listDiskPartitionsOpts struct {
 }
 
 func (opts *listDiskPartitionsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listDiskPartitionsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listDiskPartitionsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListDiskPartitionsApiParams{
 		GroupId:      opts.groupId,
@@ -916,7 +1039,6 @@ func listDiskPartitionsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
 	return cmd
 }
@@ -935,14 +1057,25 @@ type listIndexMetricsOpts struct {
 }
 
 func (opts *listIndexMetricsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listIndexMetricsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listIndexMetricsOpts) run(ctx context.Context, w io.Writer) error {
 
 	var start *time.Time
 	var errStart error
@@ -1013,7 +1146,6 @@ func listIndexMetricsBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired("processId")
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("collectionName")
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("granularity")
 	_ = cmd.MarkFlagRequired("metrics")
 	return cmd
@@ -1026,14 +1158,25 @@ type listMetricTypesOpts struct {
 }
 
 func (opts *listMetricTypesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listMetricTypesOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listMetricTypesOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListMetricTypesApiParams{
 		ProcessId: opts.processId,
@@ -1070,7 +1213,6 @@ func listMetricTypesBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	_ = cmd.MarkFlagRequired("processId")
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 

@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -38,8 +40,22 @@ type createDatabaseUserOpts struct {
 }
 
 func (opts *createDatabaseUserOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *createDatabaseUserOpts) readData() (*admin.CloudDatabaseUser, error) {
@@ -68,9 +84,6 @@ func (opts *createDatabaseUserOpts) run(ctx context.Context, w io.Writer) error 
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.CreateDatabaseUserApiParams{
@@ -111,7 +124,6 @@ func createDatabaseUserBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -123,14 +135,25 @@ type deleteDatabaseUserOpts struct {
 }
 
 func (opts *deleteDatabaseUserOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteDatabaseUserOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *deleteDatabaseUserOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteDatabaseUserApiParams{
 		GroupId:      opts.groupId,
@@ -180,7 +203,6 @@ func deleteDatabaseUserBuilder() *cobra.Command {
 | SCRAM-SHA | awsType, x509Type, ldapAuthType, oidcAuthType | NONE | Alphanumeric string |
 `)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("username")
 	return cmd
@@ -194,14 +216,25 @@ type getDatabaseUserOpts struct {
 }
 
 func (opts *getDatabaseUserOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getDatabaseUserOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getDatabaseUserOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetDatabaseUserApiParams{
 		GroupId:      opts.groupId,
@@ -251,7 +284,6 @@ func getDatabaseUserBuilder() *cobra.Command {
 | SCRAM-SHA | awsType, x509Type, ldapAuthType, oidcAuthType | NONE | Alphanumeric string |
 `)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("username")
 	return cmd
@@ -266,14 +298,25 @@ type listDatabaseUsersOpts struct {
 }
 
 func (opts *listDatabaseUsersOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listDatabaseUsersOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listDatabaseUsersOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListDatabaseUsersApiParams{
 		GroupId:      opts.groupId,
@@ -313,7 +356,6 @@ func listDatabaseUsersBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -328,8 +370,22 @@ type updateDatabaseUserOpts struct {
 }
 
 func (opts *updateDatabaseUserOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *updateDatabaseUserOpts) readData() (*admin.CloudDatabaseUser, error) {
@@ -358,9 +414,6 @@ func (opts *updateDatabaseUserOpts) run(ctx context.Context, w io.Writer) error 
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.UpdateDatabaseUserApiParams{
@@ -417,7 +470,6 @@ func updateDatabaseUserBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("databaseName")
 	_ = cmd.MarkFlagRequired("username")
 	return cmd

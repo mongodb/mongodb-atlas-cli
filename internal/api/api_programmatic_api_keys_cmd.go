@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -39,8 +41,22 @@ type addProjectApiKeyOpts struct {
 }
 
 func (opts *addProjectApiKeyOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *addProjectApiKeyOpts) readData() (*[]admin.UserAccessRoleAssignment, error) {
@@ -69,9 +85,6 @@ func (opts *addProjectApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.AddProjectApiKeyApiParams{
@@ -114,7 +127,6 @@ func addProjectApiKeyBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("apiUserId")
 	return cmd
 }
@@ -128,8 +140,22 @@ type createApiKeyOpts struct {
 }
 
 func (opts *createApiKeyOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
 }
 
 func (opts *createApiKeyOpts) readData() (*admin.CreateAtlasOrganizationApiKey, error) {
@@ -158,9 +184,6 @@ func (opts *createApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
 	}
 
 	params := &admin.CreateApiKeyApiParams{
@@ -201,7 +224,6 @@ func createApiKeyBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -218,8 +240,22 @@ type createApiKeyAccessListOpts struct {
 }
 
 func (opts *createApiKeyAccessListOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
 }
 
 func (opts *createApiKeyAccessListOpts) readData() (*[]admin.UserAccessList, error) {
@@ -248,9 +284,6 @@ func (opts *createApiKeyAccessListOpts) run(ctx context.Context, w io.Writer) er
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
 	}
 
 	params := &admin.CreateApiKeyAccessListApiParams{
@@ -300,7 +333,6 @@ func createApiKeyAccessListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("apiUserId")
 	return cmd
 }
@@ -314,8 +346,22 @@ type createProjectApiKeyOpts struct {
 }
 
 func (opts *createProjectApiKeyOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *createProjectApiKeyOpts) readData() (*admin.CreateAtlasProjectApiKey, error) {
@@ -344,9 +390,6 @@ func (opts *createProjectApiKeyOpts) run(ctx context.Context, w io.Writer) error
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.CreateProjectApiKeyApiParams{
@@ -387,7 +430,6 @@ func createProjectApiKeyBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -398,14 +440,25 @@ type deleteApiKeyOpts struct {
 }
 
 func (opts *deleteApiKeyOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *deleteApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteApiKeyApiParams{
 		OrgId:     opts.orgId,
@@ -441,7 +494,6 @@ func deleteApiKeyBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("apiUserId")
 	return cmd
 }
@@ -454,14 +506,25 @@ type deleteApiKeyAccessListEntryOpts struct {
 }
 
 func (opts *deleteApiKeyAccessListEntryOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteApiKeyAccessListEntryOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *deleteApiKeyAccessListEntryOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteApiKeyAccessListEntryApiParams{
 		OrgId:     opts.orgId,
@@ -499,7 +562,6 @@ func deleteApiKeyAccessListEntryBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key for which you want to remove access list entries.`)
 	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", `One IP address or multiple IP addresses represented as one CIDR block to limit requests to API resources in the specified organization. When adding a CIDR block with a subnet mask, such as 192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("apiUserId")
 	_ = cmd.MarkFlagRequired("ipAddress")
 	return cmd
@@ -512,14 +574,25 @@ type getApiKeyOpts struct {
 }
 
 func (opts *getApiKeyOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *getApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetApiKeyApiParams{
 		OrgId:     opts.orgId,
@@ -555,7 +628,6 @@ func getApiKeyBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key that  you want to update.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("apiUserId")
 	return cmd
 }
@@ -568,14 +640,25 @@ type getApiKeyAccessListOpts struct {
 }
 
 func (opts *getApiKeyAccessListOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getApiKeyAccessListOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *getApiKeyAccessListOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetApiKeyAccessListApiParams{
 		OrgId:     opts.orgId,
@@ -613,7 +696,6 @@ func getApiKeyAccessListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ipAddress, "ipAddress", "", `One IP address or multiple IP addresses represented as one CIDR block to limit  requests to API resources in the specified organization. When adding a CIDR block with a subnet mask, such as  192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key for  which you want to return access list entries.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("ipAddress")
 	_ = cmd.MarkFlagRequired("apiUserId")
 	return cmd
@@ -629,14 +711,25 @@ type listApiKeyAccessListsEntriesOpts struct {
 }
 
 func (opts *listApiKeyAccessListsEntriesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listApiKeyAccessListsEntriesOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *listApiKeyAccessListsEntriesOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListApiKeyAccessListsEntriesApiParams{
 		OrgId:        opts.orgId,
@@ -678,7 +771,6 @@ func listApiKeyAccessListsEntriesBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("apiUserId")
 	return cmd
 }
@@ -692,14 +784,25 @@ type listApiKeysOpts struct {
 }
 
 func (opts *listApiKeysOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listApiKeysOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *listApiKeysOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListApiKeysApiParams{
 		OrgId:        opts.orgId,
@@ -739,7 +842,6 @@ func listApiKeysBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -752,14 +854,25 @@ type listProjectApiKeysOpts struct {
 }
 
 func (opts *listProjectApiKeysOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listProjectApiKeysOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listProjectApiKeysOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListProjectApiKeysApiParams{
 		GroupId:      opts.groupId,
@@ -799,7 +912,6 @@ func listProjectApiKeysBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -810,14 +922,25 @@ type removeProjectApiKeyOpts struct {
 }
 
 func (opts *removeProjectApiKeyOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *removeProjectApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *removeProjectApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.RemoveProjectApiKeyApiParams{
 		GroupId:   opts.groupId,
@@ -853,7 +976,6 @@ func removeProjectApiKeyBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.apiUserId, "apiUserId", "", `Unique 24-hexadecimal digit string that identifies this organization API key that you want to unassign from one project.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("apiUserId")
 	return cmd
 }
@@ -868,8 +990,22 @@ type updateApiKeyOpts struct {
 }
 
 func (opts *updateApiKeyOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
 }
 
 func (opts *updateApiKeyOpts) readData() (*admin.UpdateAtlasOrganizationApiKey, error) {
@@ -898,9 +1034,6 @@ func (opts *updateApiKeyOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
 	}
 
 	params := &admin.UpdateApiKeyApiParams{
@@ -943,7 +1076,6 @@ func updateApiKeyBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("apiUserId")
 	return cmd
 }
@@ -961,8 +1093,22 @@ type updateApiKeyRolesOpts struct {
 }
 
 func (opts *updateApiKeyRolesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *updateApiKeyRolesOpts) readData() (*admin.UpdateAtlasProjectApiKey, error) {
@@ -991,9 +1137,6 @@ func (opts *updateApiKeyRolesOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.UpdateApiKeyRolesApiParams{
@@ -1043,7 +1186,6 @@ func updateApiKeyRolesBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("apiUserId")
 	return cmd
 }

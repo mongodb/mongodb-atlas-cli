@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -42,8 +44,22 @@ type createThirdPartyIntegrationOpts struct {
 }
 
 func (opts *createThirdPartyIntegrationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *createThirdPartyIntegrationOpts) readData() (*admin.ThridPartyIntegration, error) {
@@ -72,9 +88,6 @@ func (opts *createThirdPartyIntegrationOpts) run(ctx context.Context, w io.Write
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.CreateThirdPartyIntegrationApiParams{
@@ -125,7 +138,6 @@ func createThirdPartyIntegrationBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("integrationType")
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -136,14 +148,25 @@ type deleteThirdPartyIntegrationOpts struct {
 }
 
 func (opts *deleteThirdPartyIntegrationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteThirdPartyIntegrationOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *deleteThirdPartyIntegrationOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteThirdPartyIntegrationApiParams{
 		IntegrationType: opts.integrationType,
@@ -180,7 +203,6 @@ func deleteThirdPartyIntegrationBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
 	_ = cmd.MarkFlagRequired("integrationType")
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -191,14 +213,25 @@ type getThirdPartyIntegrationOpts struct {
 }
 
 func (opts *getThirdPartyIntegrationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getThirdPartyIntegrationOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getThirdPartyIntegrationOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetThirdPartyIntegrationApiParams{
 		GroupId:         opts.groupId,
@@ -234,7 +267,6 @@ func getThirdPartyIntegrationBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.integrationType, "integrationType", "", `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("integrationType")
 	return cmd
 }
@@ -248,14 +280,25 @@ type listThirdPartyIntegrationsOpts struct {
 }
 
 func (opts *listThirdPartyIntegrationsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listThirdPartyIntegrationsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listThirdPartyIntegrationsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListThirdPartyIntegrationsApiParams{
 		GroupId:      opts.groupId,
@@ -295,7 +338,6 @@ func listThirdPartyIntegrationsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -312,8 +354,22 @@ type updateThirdPartyIntegrationOpts struct {
 }
 
 func (opts *updateThirdPartyIntegrationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *updateThirdPartyIntegrationOpts) readData() (*admin.ThridPartyIntegration, error) {
@@ -342,9 +398,6 @@ func (opts *updateThirdPartyIntegrationOpts) run(ctx context.Context, w io.Write
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.UpdateThirdPartyIntegrationApiParams{
@@ -395,7 +448,6 @@ func updateThirdPartyIntegrationBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	_ = cmd.MarkFlagRequired("integrationType")
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 

@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -37,14 +39,25 @@ type cancelBackupRestoreJobOpts struct {
 }
 
 func (opts *cancelBackupRestoreJobOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *cancelBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *cancelBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.CancelBackupRestoreJobApiParams{
 		GroupId:      opts.groupId,
@@ -82,7 +95,6 @@ func cancelBackupRestoreJobBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 	cmd.Flags().StringVar(&opts.restoreJobId, "restoreJobId", "", `Unique 24-hexadecimal digit string that identifies the restore job to remove.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("restoreJobId")
 	return cmd
@@ -98,8 +110,22 @@ type createBackupExportJobOpts struct {
 }
 
 func (opts *createBackupExportJobOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *createBackupExportJobOpts) readData() (*admin.DiskBackupExportJobRequest, error) {
@@ -128,9 +154,6 @@ func (opts *createBackupExportJobOpts) run(ctx context.Context, w io.Writer) err
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.CreateBackupExportJobApiParams{
@@ -173,7 +196,6 @@ func createBackupExportJobBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
@@ -188,8 +210,22 @@ type createBackupRestoreJobOpts struct {
 }
 
 func (opts *createBackupRestoreJobOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *createBackupRestoreJobOpts) readData() (*admin.DiskBackupSnapshotRestoreJob, error) {
@@ -218,9 +254,6 @@ func (opts *createBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) er
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.CreateBackupRestoreJobApiParams{
@@ -263,7 +296,6 @@ func createBackupRestoreJobBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
@@ -277,8 +309,22 @@ type createExportBucketOpts struct {
 }
 
 func (opts *createExportBucketOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *createExportBucketOpts) readData() (*admin.DiskBackupSnapshotAWSExportBucket, error) {
@@ -307,9 +353,6 @@ func (opts *createExportBucketOpts) run(ctx context.Context, w io.Writer) error 
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.CreateExportBucketApiParams{
@@ -350,7 +393,6 @@ func createExportBucketBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -364,8 +406,22 @@ type createServerlessBackupRestoreJobOpts struct {
 }
 
 func (opts *createServerlessBackupRestoreJobOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *createServerlessBackupRestoreJobOpts) readData() (*admin.ServerlessBackupRestoreJob, error) {
@@ -394,9 +450,6 @@ func (opts *createServerlessBackupRestoreJobOpts) run(ctx context.Context, w io.
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.CreateServerlessBackupRestoreJobApiParams{
@@ -439,7 +492,6 @@ func createServerlessBackupRestoreJobBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
@@ -451,14 +503,25 @@ type deleteAllBackupSchedulesOpts struct {
 }
 
 func (opts *deleteAllBackupSchedulesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteAllBackupSchedulesOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *deleteAllBackupSchedulesOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteAllBackupSchedulesApiParams{
 		GroupId:     opts.groupId,
@@ -494,7 +557,6 @@ func deleteAllBackupSchedulesBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
@@ -506,14 +568,25 @@ type deleteExportBucketOpts struct {
 }
 
 func (opts *deleteExportBucketOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteExportBucketOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *deleteExportBucketOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteExportBucketApiParams{
 		GroupId:        opts.groupId,
@@ -549,7 +622,6 @@ func deleteExportBucketBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.exportBucketId, "exportBucketId", "", `Unique string that identifies the AWS S3 bucket to which you export your snapshots.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("exportBucketId")
 	return cmd
 }
@@ -562,14 +634,25 @@ type deleteReplicaSetBackupOpts struct {
 }
 
 func (opts *deleteReplicaSetBackupOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteReplicaSetBackupOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *deleteReplicaSetBackupOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteReplicaSetBackupApiParams{
 		GroupId:     opts.groupId,
@@ -607,7 +690,6 @@ func deleteReplicaSetBackupBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
 	return cmd
@@ -621,14 +703,25 @@ type deleteShardedClusterBackupOpts struct {
 }
 
 func (opts *deleteShardedClusterBackupOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteShardedClusterBackupOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *deleteShardedClusterBackupOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteShardedClusterBackupApiParams{
 		GroupId:     opts.groupId,
@@ -666,7 +759,6 @@ func deleteShardedClusterBackupBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
 	return cmd
@@ -680,14 +772,25 @@ type getBackupExportJobOpts struct {
 }
 
 func (opts *getBackupExportJobOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getBackupExportJobOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getBackupExportJobOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetBackupExportJobApiParams{
 		GroupId:     opts.groupId,
@@ -725,7 +828,6 @@ func getBackupExportJobBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 	cmd.Flags().StringVar(&opts.exportId, "exportId", "", `Unique string that identifies the AWS S3 bucket to which you export your snapshots.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("exportId")
 	return cmd
@@ -739,14 +841,25 @@ type getBackupRestoreJobOpts struct {
 }
 
 func (opts *getBackupRestoreJobOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetBackupRestoreJobApiParams{
 		GroupId:      opts.groupId,
@@ -784,7 +897,6 @@ func getBackupRestoreJobBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster with the restore jobs you want to return.`)
 	cmd.Flags().StringVar(&opts.restoreJobId, "restoreJobId", "", `Unique 24-hexadecimal digit string that identifies the restore job to return.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("restoreJobId")
 	return cmd
@@ -797,14 +909,25 @@ type getBackupScheduleOpts struct {
 }
 
 func (opts *getBackupScheduleOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getBackupScheduleOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getBackupScheduleOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetBackupScheduleApiParams{
 		GroupId:     opts.groupId,
@@ -840,7 +963,6 @@ func getBackupScheduleBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
@@ -851,14 +973,25 @@ type getDataProtectionSettingsOpts struct {
 }
 
 func (opts *getDataProtectionSettingsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getDataProtectionSettingsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getDataProtectionSettingsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetDataProtectionSettingsApiParams{
 		GroupId: opts.groupId,
@@ -892,7 +1025,6 @@ func getDataProtectionSettingsBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -903,14 +1035,25 @@ type getExportBucketOpts struct {
 }
 
 func (opts *getExportBucketOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getExportBucketOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getExportBucketOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetExportBucketApiParams{
 		GroupId:        opts.groupId,
@@ -946,7 +1089,6 @@ func getExportBucketBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.exportBucketId, "exportBucketId", "", `Unique string that identifies the AWS S3 bucket to which you export your snapshots.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("exportBucketId")
 	return cmd
 }
@@ -959,14 +1101,25 @@ type getReplicaSetBackupOpts struct {
 }
 
 func (opts *getReplicaSetBackupOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getReplicaSetBackupOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getReplicaSetBackupOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetReplicaSetBackupApiParams{
 		GroupId:     opts.groupId,
@@ -1004,7 +1157,6 @@ func getReplicaSetBackupBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
 	return cmd
@@ -1018,14 +1170,25 @@ type getServerlessBackupOpts struct {
 }
 
 func (opts *getServerlessBackupOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getServerlessBackupOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getServerlessBackupOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetServerlessBackupApiParams{
 		GroupId:     opts.groupId,
@@ -1063,7 +1226,6 @@ func getServerlessBackupBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the serverless instance.`)
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
 	return cmd
@@ -1077,14 +1239,25 @@ type getServerlessBackupRestoreJobOpts struct {
 }
 
 func (opts *getServerlessBackupRestoreJobOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getServerlessBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getServerlessBackupRestoreJobOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetServerlessBackupRestoreJobApiParams{
 		GroupId:      opts.groupId,
@@ -1122,7 +1295,6 @@ func getServerlessBackupRestoreJobBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the serverless instance.`)
 	cmd.Flags().StringVar(&opts.restoreJobId, "restoreJobId", "", `Unique 24-hexadecimal digit string that identifies the restore job to return.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("restoreJobId")
 	return cmd
@@ -1136,14 +1308,25 @@ type getShardedClusterBackupOpts struct {
 }
 
 func (opts *getShardedClusterBackupOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getShardedClusterBackupOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getShardedClusterBackupOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetShardedClusterBackupApiParams{
 		GroupId:     opts.groupId,
@@ -1181,7 +1364,6 @@ func getShardedClusterBackupBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 	cmd.Flags().StringVar(&opts.snapshotId, "snapshotId", "", `Unique 24-hexadecimal digit string that identifies the desired snapshot.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
 	return cmd
@@ -1197,14 +1379,25 @@ type listBackupExportJobsOpts struct {
 }
 
 func (opts *listBackupExportJobsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listBackupExportJobsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listBackupExportJobsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListBackupExportJobsApiParams{
 		GroupId:      opts.groupId,
@@ -1246,7 +1439,6 @@ func listBackupExportJobsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
@@ -1261,14 +1453,25 @@ type listBackupRestoreJobsOpts struct {
 }
 
 func (opts *listBackupRestoreJobsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listBackupRestoreJobsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listBackupRestoreJobsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListBackupRestoreJobsApiParams{
 		GroupId:      opts.groupId,
@@ -1310,7 +1513,6 @@ func listBackupRestoreJobsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
@@ -1324,14 +1526,25 @@ type listExportBucketsOpts struct {
 }
 
 func (opts *listExportBucketsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listExportBucketsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listExportBucketsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListExportBucketsApiParams{
 		GroupId:      opts.groupId,
@@ -1371,7 +1584,6 @@ func listExportBucketsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -1385,14 +1597,25 @@ type listReplicaSetBackupsOpts struct {
 }
 
 func (opts *listReplicaSetBackupsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listReplicaSetBackupsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listReplicaSetBackupsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListReplicaSetBackupsApiParams{
 		GroupId:      opts.groupId,
@@ -1434,7 +1657,6 @@ func listReplicaSetBackupsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
@@ -1449,14 +1671,25 @@ type listServerlessBackupRestoreJobsOpts struct {
 }
 
 func (opts *listServerlessBackupRestoreJobsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listServerlessBackupRestoreJobsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listServerlessBackupRestoreJobsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListServerlessBackupRestoreJobsApiParams{
 		GroupId:      opts.groupId,
@@ -1498,7 +1731,6 @@ func listServerlessBackupRestoreJobsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
@@ -1513,14 +1745,25 @@ type listServerlessBackupsOpts struct {
 }
 
 func (opts *listServerlessBackupsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listServerlessBackupsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listServerlessBackupsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListServerlessBackupsApiParams{
 		GroupId:      opts.groupId,
@@ -1562,7 +1805,6 @@ func listServerlessBackupsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
@@ -1574,14 +1816,25 @@ type listShardedClusterBackupsOpts struct {
 }
 
 func (opts *listShardedClusterBackupsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listShardedClusterBackupsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listShardedClusterBackupsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListShardedClusterBackupsApiParams{
 		GroupId:     opts.groupId,
@@ -1617,7 +1870,6 @@ func listShardedClusterBackupsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
@@ -1632,8 +1884,22 @@ type takeSnapshotOpts struct {
 }
 
 func (opts *takeSnapshotOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *takeSnapshotOpts) readData() (*admin.DiskBackupOnDemandSnapshotRequest, error) {
@@ -1662,9 +1928,6 @@ func (opts *takeSnapshotOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.TakeSnapshotApiParams{
@@ -1707,7 +1970,6 @@ func takeSnapshotBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
@@ -1722,8 +1984,22 @@ type updateBackupScheduleOpts struct {
 }
 
 func (opts *updateBackupScheduleOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *updateBackupScheduleOpts) readData() (*admin.DiskBackupSnapshotSchedule, error) {
@@ -1752,9 +2028,6 @@ func (opts *updateBackupScheduleOpts) run(ctx context.Context, w io.Writer) erro
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.UpdateBackupScheduleApiParams{
@@ -1797,7 +2070,6 @@ func updateBackupScheduleBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
@@ -1811,8 +2083,22 @@ type updateDataProtectionSettingsOpts struct {
 }
 
 func (opts *updateDataProtectionSettingsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *updateDataProtectionSettingsOpts) readData() (*admin.DataProtectionSettings, error) {
@@ -1841,9 +2127,6 @@ func (opts *updateDataProtectionSettingsOpts) run(ctx context.Context, w io.Writ
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.UpdateDataProtectionSettingsApiParams{
@@ -1884,7 +2167,6 @@ func updateDataProtectionSettingsBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -1899,8 +2181,22 @@ type updateSnapshotRetentionOpts struct {
 }
 
 func (opts *updateSnapshotRetentionOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *updateSnapshotRetentionOpts) readData() (*admin.BackupSnapshotRetention, error) {
@@ -1929,9 +2225,6 @@ func (opts *updateSnapshotRetentionOpts) run(ctx context.Context, w io.Writer) e
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.UpdateSnapshotRetentionApiParams{
@@ -1976,7 +2269,6 @@ func updateSnapshotRetentionBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("snapshotId")
 	return cmd

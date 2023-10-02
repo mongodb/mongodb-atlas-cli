@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"time"
@@ -36,14 +38,25 @@ type getOrganizationEventOpts struct {
 }
 
 func (opts *getOrganizationEventOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getOrganizationEventOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *getOrganizationEventOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetOrganizationEventApiParams{
 		OrgId:      opts.orgId,
@@ -81,7 +94,6 @@ func getOrganizationEventBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.eventId, "eventId", "", `Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the [/events](#tag/Events/operation/listOrganizationEvents) endpoint to retrieve all events to which the authenticated user has access.`)
 	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("eventId")
 	return cmd
 }
@@ -94,14 +106,25 @@ type getProjectEventOpts struct {
 }
 
 func (opts *getProjectEventOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getProjectEventOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getProjectEventOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetProjectEventApiParams{
 		GroupId:    opts.groupId,
@@ -139,7 +162,6 @@ func getProjectEventBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.eventId, "eventId", "", `Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the [/events](#tag/Events/operation/listProjectEvents) endpoint to retrieve all events to which the authenticated user has access.`)
 	cmd.Flags().BoolVar(&opts.includeRaw, "includeRaw", false, `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("eventId")
 	return cmd
 }
@@ -157,14 +179,25 @@ type listOrganizationEventsOpts struct {
 }
 
 func (opts *listOrganizationEventsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listOrganizationEventsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *listOrganizationEventsOpts) run(ctx context.Context, w io.Writer) error {
 
 	var maxDate *time.Time
 	var errMaxDate error
@@ -232,7 +265,6 @@ func listOrganizationEventsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.maxDate, "maxDate", "", `Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
 	cmd.Flags().StringVar(&opts.minDate, "minDate", "", `Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -251,14 +283,25 @@ type listProjectEventsOpts struct {
 }
 
 func (opts *listProjectEventsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listProjectEventsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listProjectEventsOpts) run(ctx context.Context, w io.Writer) error {
 
 	var maxDate *time.Time
 	var errMaxDate error
@@ -332,7 +375,6 @@ func listProjectEventsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.maxDate, "maxDate", "", `Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
 	cmd.Flags().StringVar(&opts.minDate, "minDate", "", `Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 

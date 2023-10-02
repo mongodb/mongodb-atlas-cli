@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -39,8 +41,22 @@ type createStreamConnectionOpts struct {
 }
 
 func (opts *createStreamConnectionOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *createStreamConnectionOpts) readData() (*admin.StreamsConnection, error) {
@@ -69,9 +85,6 @@ func (opts *createStreamConnectionOpts) run(ctx context.Context, w io.Writer) er
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.CreateStreamConnectionApiParams{
@@ -114,7 +127,6 @@ func createStreamConnectionBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
@@ -128,8 +140,22 @@ type createStreamInstanceOpts struct {
 }
 
 func (opts *createStreamInstanceOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *createStreamInstanceOpts) readData() (*admin.StreamsTenant, error) {
@@ -158,9 +184,6 @@ func (opts *createStreamInstanceOpts) run(ctx context.Context, w io.Writer) erro
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.CreateStreamInstanceApiParams{
@@ -201,7 +224,6 @@ func createStreamInstanceBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -213,14 +235,25 @@ type deleteStreamConnectionOpts struct {
 }
 
 func (opts *deleteStreamConnectionOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteStreamConnectionOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *deleteStreamConnectionOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteStreamConnectionApiParams{
 		GroupId:        opts.groupId,
@@ -258,7 +291,6 @@ func deleteStreamConnectionBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the stream instance.`)
 	cmd.Flags().StringVar(&opts.connectionName, "connectionName", "", `Human-readable label that identifies the stream connection.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("connectionName")
 	return cmd
@@ -271,14 +303,25 @@ type deleteStreamInstanceOpts struct {
 }
 
 func (opts *deleteStreamInstanceOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteStreamInstanceOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *deleteStreamInstanceOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteStreamInstanceApiParams{
 		GroupId:    opts.groupId,
@@ -314,7 +357,6 @@ func deleteStreamInstanceBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the stream instance to delete.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
@@ -327,14 +369,25 @@ type getStreamConnectionOpts struct {
 }
 
 func (opts *getStreamConnectionOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getStreamConnectionOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getStreamConnectionOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetStreamConnectionApiParams{
 		GroupId:        opts.groupId,
@@ -372,7 +425,6 @@ func getStreamConnectionBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the stream instance to return.`)
 	cmd.Flags().StringVar(&opts.connectionName, "connectionName", "", `Human-readable label that identifies the stream connection to return.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("connectionName")
 	return cmd
@@ -386,14 +438,25 @@ type getStreamInstanceOpts struct {
 }
 
 func (opts *getStreamInstanceOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getStreamInstanceOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getStreamInstanceOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetStreamInstanceApiParams{
 		GroupId:            opts.groupId,
@@ -431,7 +494,6 @@ func getStreamInstanceBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the stream instance to return.`)
 	cmd.Flags().BoolVar(&opts.includeConnections, "includeConnections", false, `Flag to indicate whether connections information should be included in the stream instance.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
@@ -445,14 +507,25 @@ type listStreamConnectionsOpts struct {
 }
 
 func (opts *listStreamConnectionsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listStreamConnectionsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listStreamConnectionsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListStreamConnectionsApiParams{
 		GroupId:      opts.groupId,
@@ -492,7 +565,6 @@ func listStreamConnectionsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
@@ -505,14 +577,25 @@ type listStreamInstancesOpts struct {
 }
 
 func (opts *listStreamInstancesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listStreamInstancesOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listStreamInstancesOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListStreamInstancesApiParams{
 		GroupId:      opts.groupId,
@@ -550,7 +633,6 @@ func listStreamInstancesBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -565,8 +647,22 @@ type updateStreamConnectionOpts struct {
 }
 
 func (opts *updateStreamConnectionOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *updateStreamConnectionOpts) readData() (*admin.StreamsConnection, error) {
@@ -595,9 +691,6 @@ func (opts *updateStreamConnectionOpts) run(ctx context.Context, w io.Writer) er
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.UpdateStreamConnectionApiParams{
@@ -642,7 +735,6 @@ func updateStreamConnectionBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("connectionName")
 	return cmd
@@ -658,8 +750,22 @@ type updateStreamInstanceOpts struct {
 }
 
 func (opts *updateStreamInstanceOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *updateStreamInstanceOpts) readData() (*admin.StreamsDataProcessRegion, error) {
@@ -688,9 +794,6 @@ func (opts *updateStreamInstanceOpts) run(ctx context.Context, w io.Writer) erro
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.UpdateStreamInstanceApiParams{
@@ -733,7 +836,6 @@ func updateStreamInstanceBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }

@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -38,8 +40,22 @@ type createCostExplorerQueryProcessOpts struct {
 }
 
 func (opts *createCostExplorerQueryProcessOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
 }
 
 func (opts *createCostExplorerQueryProcessOpts) readData() (*admin.CostExplorerFilterRequestBody, error) {
@@ -68,9 +84,6 @@ func (opts *createCostExplorerQueryProcessOpts) run(ctx context.Context, w io.Wr
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
 	}
 
 	params := &admin.CreateCostExplorerQueryProcessApiParams{
@@ -111,7 +124,6 @@ func createCostExplorerQueryProcessBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -122,14 +134,25 @@ type createCostExplorerQueryProcess1Opts struct {
 }
 
 func (opts *createCostExplorerQueryProcess1Opts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *createCostExplorerQueryProcess1Opts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *createCostExplorerQueryProcess1Opts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.CreateCostExplorerQueryProcess1ApiParams{
 		OrgId: opts.orgId,
@@ -165,7 +188,6 @@ func createCostExplorerQueryProcess1Builder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.token, "token", "", `Unique 64 digit string that identifies the Cost Explorer query.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("token")
 	return cmd
 }
@@ -177,14 +199,25 @@ type downloadInvoiceCSVOpts struct {
 }
 
 func (opts *downloadInvoiceCSVOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *downloadInvoiceCSVOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *downloadInvoiceCSVOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DownloadInvoiceCSVApiParams{
 		OrgId:     opts.orgId,
@@ -220,7 +253,6 @@ func downloadInvoiceCSVBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.invoiceId, "invoiceId", "", `Unique 24-hexadecimal digit string that identifies the invoice submitted to the specified organization. Charges typically post the next day.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("invoiceId")
 	return cmd
 }
@@ -232,14 +264,25 @@ type getInvoiceOpts struct {
 }
 
 func (opts *getInvoiceOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getInvoiceOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *getInvoiceOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetInvoiceApiParams{
 		OrgId:     opts.orgId,
@@ -275,7 +318,6 @@ func getInvoiceBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.invoiceId, "invoiceId", "", `Unique 24-hexadecimal digit string that identifies the invoice submitted to the specified organization. Charges typically post the next day.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("invoiceId")
 	return cmd
 }
@@ -289,14 +331,25 @@ type listInvoicesOpts struct {
 }
 
 func (opts *listInvoicesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listInvoicesOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *listInvoicesOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListInvoicesApiParams{
 		OrgId:        opts.orgId,
@@ -336,7 +389,6 @@ func listInvoicesBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -346,14 +398,25 @@ type listPendingInvoicesOpts struct {
 }
 
 func (opts *listPendingInvoicesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listPendingInvoicesOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *listPendingInvoicesOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListPendingInvoicesApiParams{
 		OrgId: opts.orgId,
@@ -387,7 +450,6 @@ func listPendingInvoicesBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 

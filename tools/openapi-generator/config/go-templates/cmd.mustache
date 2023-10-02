@@ -3,11 +3,13 @@ package {{packageName}}
 
 import (
 	"context"
-	"os"
-	"io"
-	"time"
+	"errors"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io"
+	"os"
+	"time"
 
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -29,8 +31,35 @@ type {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts struct {
 }
 
 func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	{{#allParams}}{{#vendorExtensions.x-group-id}}
+	if opts.{{paramName}} == "" {
+		opts.{{paramName}} = config.ProjectID()
+	}
+	if opts.{{paramName}} == "" {
+		return errors.New(`required flag(s) "{{#vendorExtensions.x-flag-name}}{{.}}{{/vendorExtensions.x-flag-name}}{{^vendorExtensions.x-flag-name}}{{paramName}}{{/vendorExtensions.x-flag-name}}" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.{{paramName}})
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.{{paramName}})
+	}
+	{{/vendorExtensions.x-group-id}}{{#vendorExtensions.x-org-id}}
+	if opts.{{paramName}} == "" {
+		opts.{{paramName}} = config.OrgID()
+	}
+	if opts.{{paramName}} == "" {
+		return errors.New(`required flag(s) "{{#vendorExtensions.x-flag-name}}{{.}}{{/vendorExtensions.x-flag-name}}{{^vendorExtensions.x-flag-name}}{{paramName}}{{/vendorExtensions.x-flag-name}}" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.{{paramName}})
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.{{paramName}})
+	}
+	{{/vendorExtensions.x-org-id}}{{/allParams}}
+
+	return nil
 }
 
 {{#bodyParam}}
@@ -73,17 +102,7 @@ func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) run(c
 			return err{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}
 		}
 	}
-	{{/isDateTime}}
-	{{#vendorExtensions.x-group-id}}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
-	}
-	{{/vendorExtensions.x-group-id}}
-	{{#vendorExtensions.x-org-id}}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
-	}
-	{{/vendorExtensions.x-org-id}}{{/allParams}}
+	{{/isDateTime}}{{/allParams}}
 	params := &admin.{{operationId}}ApiParams{
 		{{#allParams}}
 		{{^isBodyParam}}{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}: {{^isPathParam}}{{^isDateTime}}&{{/isDateTime}}{{/isPathParam}}{{^isDateTime}}opts.{{/isDateTime}}{{paramName}},{{/isBodyParam}}
@@ -130,8 +149,8 @@ func {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Builder() *cobra.C
 {{#bodyParam}}
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 {{/bodyParam}}
-{{#allParams}}{{^isBodyParam}}{{#required}}
-	_ = cmd.MarkFlagRequired("{{paramName}}"){{/required}}{{/isBodyParam}}{{/allParams}}
+{{#allParams}}{{^isBodyParam}}{{^vendorExtensions.x-org-id}}{{^vendorExtensions.x-group-id}}{{#required}}
+	_ = cmd.MarkFlagRequired("{{#vendorExtensions.x-flag-name}}{{.}}{{/vendorExtensions.x-flag-name}}{{^vendorExtensions.x-flag-name}}{{paramName}}{{/vendorExtensions.x-flag-name}}"){{/required}}{{/vendorExtensions.x-group-id}}{{/vendorExtensions.x-org-id}}{{/isBodyParam}}{{/allParams}}
 	return cmd
 }
 {{/operation}}

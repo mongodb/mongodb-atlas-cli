@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 
@@ -39,14 +41,25 @@ type listAccessLogsByClusterNameOpts struct {
 }
 
 func (opts *listAccessLogsByClusterNameOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listAccessLogsByClusterNameOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listAccessLogsByClusterNameOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListAccessLogsByClusterNameApiParams{
 		GroupId:     opts.groupId,
@@ -92,7 +105,6 @@ func listAccessLogsByClusterNameBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.nLogs, "nLogs", 20000, `Maximum number of lines from the log to return.`)
 	cmd.Flags().Int64Var(&opts.start, "start", 0, `Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
@@ -109,14 +121,25 @@ type listAccessLogsByHostnameOpts struct {
 }
 
 func (opts *listAccessLogsByHostnameOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listAccessLogsByHostnameOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listAccessLogsByHostnameOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListAccessLogsByHostnameApiParams{
 		GroupId:    opts.groupId,
@@ -162,7 +185,6 @@ func listAccessLogsByHostnameBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.nLogs, "nLogs", 20000, `Maximum number of lines from the log to return.`)
 	cmd.Flags().Int64Var(&opts.start, "start", 0, `Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("hostname")
 	return cmd
 }

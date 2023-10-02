@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -38,8 +40,22 @@ type createDataFederationPrivateEndpointOpts struct {
 }
 
 func (opts *createDataFederationPrivateEndpointOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *createDataFederationPrivateEndpointOpts) readData() (*admin.PrivateNetworkEndpointIdEntry, error) {
@@ -68,9 +84,6 @@ func (opts *createDataFederationPrivateEndpointOpts) run(ctx context.Context, w 
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.CreateDataFederationPrivateEndpointApiParams{
@@ -111,7 +124,6 @@ func createDataFederationPrivateEndpointBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -125,8 +137,22 @@ type createFederatedDatabaseOpts struct {
 }
 
 func (opts *createFederatedDatabaseOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *createFederatedDatabaseOpts) readData() (*admin.DataLakeTenant, error) {
@@ -155,9 +181,6 @@ func (opts *createFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) e
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.CreateFederatedDatabaseApiParams{
@@ -201,7 +224,6 @@ func createFederatedDatabaseBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.skipRoleValidation, "skipRoleValidation", false, `Flag that indicates whether this request should check if the requesting IAM role can read from the S3 bucket. AWS checks if the role can list the objects in the bucket before writing to it. Some IAM roles only need write permissions. This flag allows you to skip that check.`)
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -216,8 +238,22 @@ type createOneDataFederationQueryLimitOpts struct {
 }
 
 func (opts *createOneDataFederationQueryLimitOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *createOneDataFederationQueryLimitOpts) readData() (*admin.DataFederationTenantQueryLimit, error) {
@@ -246,9 +282,6 @@ func (opts *createOneDataFederationQueryLimitOpts) run(ctx context.Context, w io
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.CreateOneDataFederationQueryLimitApiParams{
@@ -301,7 +334,6 @@ func createOneDataFederationQueryLimitBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("limitName")
 	return cmd
@@ -314,14 +346,25 @@ type deleteDataFederationPrivateEndpointOpts struct {
 }
 
 func (opts *deleteDataFederationPrivateEndpointOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteDataFederationPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *deleteDataFederationPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteDataFederationPrivateEndpointApiParams{
 		GroupId:    opts.groupId,
@@ -357,7 +400,6 @@ func deleteDataFederationPrivateEndpointBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 22-character alphanumeric string that identifies the private endpoint to remove. Atlas Data Federation supports AWS private endpoints using the AWS PrivateLink feature.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("endpointId")
 	return cmd
 }
@@ -369,14 +411,25 @@ type deleteFederatedDatabaseOpts struct {
 }
 
 func (opts *deleteFederatedDatabaseOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *deleteFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteFederatedDatabaseApiParams{
 		GroupId:    opts.groupId,
@@ -412,7 +465,6 @@ func deleteFederatedDatabaseBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance to remove.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
@@ -425,14 +477,25 @@ type deleteOneDataFederationInstanceQueryLimitOpts struct {
 }
 
 func (opts *deleteOneDataFederationInstanceQueryLimitOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteOneDataFederationInstanceQueryLimitOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *deleteOneDataFederationInstanceQueryLimitOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteOneDataFederationInstanceQueryLimitApiParams{
 		GroupId:    opts.groupId,
@@ -478,7 +541,6 @@ func deleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
 | bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A |
 `)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("limitName")
 	return cmd
@@ -493,14 +555,25 @@ type downloadFederatedDatabaseQueryLogsOpts struct {
 }
 
 func (opts *downloadFederatedDatabaseQueryLogsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *downloadFederatedDatabaseQueryLogsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *downloadFederatedDatabaseQueryLogsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DownloadFederatedDatabaseQueryLogsApiParams{
 		GroupId:    opts.groupId,
@@ -540,7 +613,6 @@ func downloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
 	cmd.Flags().Int64Var(&opts.endDate, "endDate", 0, `Timestamp that specifies the end point for the range of log messages to download.  MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`)
 	cmd.Flags().Int64Var(&opts.startDate, "startDate", 0, `Timestamp that specifies the starting point for the range of log messages to download. MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
@@ -552,14 +624,25 @@ type getDataFederationPrivateEndpointOpts struct {
 }
 
 func (opts *getDataFederationPrivateEndpointOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getDataFederationPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getDataFederationPrivateEndpointOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetDataFederationPrivateEndpointApiParams{
 		GroupId:    opts.groupId,
@@ -595,7 +678,6 @@ func getDataFederationPrivateEndpointBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.endpointId, "endpointId", "", `Unique 22-character alphanumeric string that identifies the private endpoint to return. Atlas Data Federation supports AWS private endpoints using the AWS PrivateLink feature.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("endpointId")
 	return cmd
 }
@@ -607,14 +689,25 @@ type getFederatedDatabaseOpts struct {
 }
 
 func (opts *getFederatedDatabaseOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetFederatedDatabaseApiParams{
 		GroupId:    opts.groupId,
@@ -650,7 +743,6 @@ func getFederatedDatabaseBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the Federated Database to return.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
@@ -664,14 +756,25 @@ type listDataFederationPrivateEndpointsOpts struct {
 }
 
 func (opts *listDataFederationPrivateEndpointsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listDataFederationPrivateEndpointsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listDataFederationPrivateEndpointsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListDataFederationPrivateEndpointsApiParams{
 		GroupId:      opts.groupId,
@@ -711,7 +814,6 @@ func listDataFederationPrivateEndpointsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -722,14 +824,25 @@ type listFederatedDatabasesOpts struct {
 }
 
 func (opts *listFederatedDatabasesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listFederatedDatabasesOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listFederatedDatabasesOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListFederatedDatabasesApiParams{
 		GroupId: opts.groupId,
@@ -765,7 +878,6 @@ func listFederatedDatabasesBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.type_, "type_", "&quot;USER&quot;", `Type of Federated Database Instances to return.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -777,14 +889,25 @@ type returnFederatedDatabaseQueryLimitOpts struct {
 }
 
 func (opts *returnFederatedDatabaseQueryLimitOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *returnFederatedDatabaseQueryLimitOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *returnFederatedDatabaseQueryLimitOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ReturnFederatedDatabaseQueryLimitApiParams{
 		GroupId:    opts.groupId,
@@ -830,7 +953,6 @@ func returnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
 | bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A |
 `)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("limitName")
 	return cmd
@@ -843,14 +965,25 @@ type returnFederatedDatabaseQueryLimitsOpts struct {
 }
 
 func (opts *returnFederatedDatabaseQueryLimitsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *returnFederatedDatabaseQueryLimitsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *returnFederatedDatabaseQueryLimitsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ReturnFederatedDatabaseQueryLimitsApiParams{
 		GroupId:    opts.groupId,
@@ -886,7 +1019,6 @@ func returnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the federated database instance for which you want to retrieve query limits.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	return cmd
 }
@@ -902,8 +1034,22 @@ type updateFederatedDatabaseOpts struct {
 }
 
 func (opts *updateFederatedDatabaseOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *updateFederatedDatabaseOpts) readData() (*admin.DataLakeTenant, error) {
@@ -932,9 +1078,6 @@ func (opts *updateFederatedDatabaseOpts) run(ctx context.Context, w io.Writer) e
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.UpdateFederatedDatabaseApiParams{
@@ -979,7 +1122,6 @@ func updateFederatedDatabaseBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("tenantName")
 	_ = cmd.MarkFlagRequired("skipRoleValidation")
 	return cmd

@@ -31,8 +31,11 @@ type getSystemStatusOpts struct {
 }
 
 func (opts *getSystemStatusOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (opts *getSystemStatusOpts) run(ctx context.Context, w io.Writer) error {

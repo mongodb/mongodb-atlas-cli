@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -39,8 +41,22 @@ type createAtlasSearchIndexOpts struct {
 }
 
 func (opts *createAtlasSearchIndexOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *createAtlasSearchIndexOpts) readData() (*admin.ClusterSearchIndex, error) {
@@ -69,9 +85,6 @@ func (opts *createAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) er
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.CreateAtlasSearchIndexApiParams{
@@ -114,7 +127,6 @@ func createAtlasSearchIndexBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	return cmd
 }
@@ -127,14 +139,25 @@ type deleteAtlasSearchIndexOpts struct {
 }
 
 func (opts *deleteAtlasSearchIndexOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *deleteAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteAtlasSearchIndexApiParams{
 		GroupId:     opts.groupId,
@@ -172,7 +195,6 @@ func deleteAtlasSearchIndexBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Name of the cluster that contains the database and collection with one or more Application Search indexes.`)
 	cmd.Flags().StringVar(&opts.indexId, "indexId", "", `Unique 24-hexadecimal digit string that identifies the Atlas Search index. Use the [Get All Atlas Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Atlas Search indexes.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("indexId")
 	return cmd
@@ -186,14 +208,25 @@ type getAtlasSearchIndexOpts struct {
 }
 
 func (opts *getAtlasSearchIndexOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetAtlasSearchIndexApiParams{
 		GroupId:     opts.groupId,
@@ -231,7 +264,6 @@ func getAtlasSearchIndexBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Name of the cluster that contains the collection with one or more Atlas Search indexes.`)
 	cmd.Flags().StringVar(&opts.indexId, "indexId", "", `Unique 24-hexadecimal digit string that identifies the Application Search [index](https://docs.atlas.mongodb.com/reference/atlas-search/index-definitions/). Use the [Get All Application Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Application Search indexes.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("indexId")
 	return cmd
@@ -246,14 +278,25 @@ type listAtlasSearchIndexesOpts struct {
 }
 
 func (opts *listAtlasSearchIndexesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listAtlasSearchIndexesOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listAtlasSearchIndexesOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListAtlasSearchIndexesApiParams{
 		GroupId:        opts.groupId,
@@ -293,7 +336,6 @@ func listAtlasSearchIndexesBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.collectionName, "collectionName", "", `Name of the collection that contains one or more Atlas Search indexes.`)
 	cmd.Flags().StringVar(&opts.databaseName, "databaseName", "", `Human-readable label that identifies the database that contains the collection with one or more Atlas Search indexes.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("collectionName")
 	_ = cmd.MarkFlagRequired("databaseName")
@@ -311,8 +353,22 @@ type updateAtlasSearchIndexOpts struct {
 }
 
 func (opts *updateAtlasSearchIndexOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *updateAtlasSearchIndexOpts) readData() (*admin.ClusterSearchIndex, error) {
@@ -341,9 +397,6 @@ func (opts *updateAtlasSearchIndexOpts) run(ctx context.Context, w io.Writer) er
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.UpdateAtlasSearchIndexApiParams{
@@ -388,7 +441,6 @@ func updateAtlasSearchIndexBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("indexId")
 	return cmd

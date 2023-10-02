@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -37,8 +39,11 @@ type createOrganizationOpts struct {
 }
 
 func (opts *createOrganizationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (opts *createOrganizationOpts) readData() (*admin.CreateOrganizationRequest, error) {
@@ -117,8 +122,22 @@ type createOrganizationInvitationOpts struct {
 }
 
 func (opts *createOrganizationInvitationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
 }
 
 func (opts *createOrganizationInvitationOpts) readData() (*admin.OrganizationInvitationRequest, error) {
@@ -147,9 +166,6 @@ func (opts *createOrganizationInvitationOpts) run(ctx context.Context, w io.Writ
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
 	}
 
 	params := &admin.CreateOrganizationInvitationApiParams{
@@ -190,7 +206,6 @@ func createOrganizationInvitationBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -200,14 +215,25 @@ type deleteOrganizationOpts struct {
 }
 
 func (opts *deleteOrganizationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteOrganizationOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *deleteOrganizationOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteOrganizationApiParams{
 		OrgId: opts.orgId,
@@ -241,7 +267,6 @@ func deleteOrganizationBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -252,14 +277,25 @@ type deleteOrganizationInvitationOpts struct {
 }
 
 func (opts *deleteOrganizationInvitationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteOrganizationInvitationOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *deleteOrganizationInvitationOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteOrganizationInvitationApiParams{
 		OrgId:        opts.orgId,
@@ -295,7 +331,6 @@ func deleteOrganizationInvitationBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", `Unique 24-hexadecimal digit string that identifies the invitation.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("invitationId")
 	return cmd
 }
@@ -306,14 +341,25 @@ type getOrganizationOpts struct {
 }
 
 func (opts *getOrganizationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getOrganizationOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *getOrganizationOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetOrganizationApiParams{
 		OrgId: opts.orgId,
@@ -347,7 +393,6 @@ func getOrganizationBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -358,14 +403,25 @@ type getOrganizationInvitationOpts struct {
 }
 
 func (opts *getOrganizationInvitationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getOrganizationInvitationOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *getOrganizationInvitationOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetOrganizationInvitationApiParams{
 		OrgId:        opts.orgId,
@@ -401,7 +457,6 @@ func getOrganizationInvitationBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.invitationId, "invitationId", "", `Unique 24-hexadecimal digit string that identifies the invitation.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("invitationId")
 	return cmd
 }
@@ -412,14 +467,25 @@ type getOrganizationSettingsOpts struct {
 }
 
 func (opts *getOrganizationSettingsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getOrganizationSettingsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *getOrganizationSettingsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetOrganizationSettingsApiParams{
 		OrgId: opts.orgId,
@@ -453,7 +519,6 @@ func getOrganizationSettingsBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -464,14 +529,25 @@ type listOrganizationInvitationsOpts struct {
 }
 
 func (opts *listOrganizationInvitationsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listOrganizationInvitationsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *listOrganizationInvitationsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListOrganizationInvitationsApiParams{
 		OrgId:    opts.orgId,
@@ -507,7 +583,6 @@ func listOrganizationInvitationsBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.username, "username", "", `Email address of the user account invited to this organization. If you exclude this parameter, this resource returns all pending invitations.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -521,14 +596,25 @@ type listOrganizationProjectsOpts struct {
 }
 
 func (opts *listOrganizationProjectsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listOrganizationProjectsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *listOrganizationProjectsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListOrganizationProjectsApiParams{
 		OrgId:        opts.orgId,
@@ -570,7 +656,6 @@ func listOrganizationProjectsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 	cmd.Flags().StringVar(&opts.name, "name", "", `Human-readable label of the project to use to filter the returned list. Performs a case-insensitive search for a project within the organization which is prefixed by the specified name.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -583,14 +668,25 @@ type listOrganizationUsersOpts struct {
 }
 
 func (opts *listOrganizationUsersOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listOrganizationUsersOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *listOrganizationUsersOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListOrganizationUsersApiParams{
 		OrgId:        opts.orgId,
@@ -630,7 +726,6 @@ func listOrganizationUsersBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -643,8 +738,11 @@ type listOrganizationsOpts struct {
 }
 
 func (opts *listOrganizationsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (opts *listOrganizationsOpts) run(ctx context.Context, w io.Writer) error {
@@ -697,14 +795,25 @@ type removeOrganizationUserOpts struct {
 }
 
 func (opts *removeOrganizationUserOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *removeOrganizationUserOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *removeOrganizationUserOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.RemoveOrganizationUserApiParams{
 		OrgId:  opts.orgId,
@@ -740,7 +849,6 @@ func removeOrganizationUserBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.userId, "userId", "", `Unique 24-hexadecimal digit string that identifies the user to be deleted.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("userId")
 	return cmd
 }
@@ -754,8 +862,22 @@ type renameOrganizationOpts struct {
 }
 
 func (opts *renameOrganizationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
 }
 
 func (opts *renameOrganizationOpts) readData() (*admin.AtlasOrganization, error) {
@@ -784,9 +906,6 @@ func (opts *renameOrganizationOpts) run(ctx context.Context, w io.Writer) error 
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
 	}
 
 	params := &admin.RenameOrganizationApiParams{
@@ -827,7 +946,6 @@ func renameOrganizationBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -840,8 +958,22 @@ type updateOrganizationInvitationOpts struct {
 }
 
 func (opts *updateOrganizationInvitationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
 }
 
 func (opts *updateOrganizationInvitationOpts) readData() (*admin.OrganizationInvitationRequest, error) {
@@ -870,9 +1002,6 @@ func (opts *updateOrganizationInvitationOpts) run(ctx context.Context, w io.Writ
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
 	}
 
 	params := &admin.UpdateOrganizationInvitationApiParams{
@@ -913,7 +1042,6 @@ func updateOrganizationInvitationBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -927,8 +1055,22 @@ type updateOrganizationInvitationByIdOpts struct {
 }
 
 func (opts *updateOrganizationInvitationByIdOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
 }
 
 func (opts *updateOrganizationInvitationByIdOpts) readData() (*admin.OrganizationInvitationUpdateRequest, error) {
@@ -957,9 +1099,6 @@ func (opts *updateOrganizationInvitationByIdOpts) run(ctx context.Context, w io.
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
 	}
 
 	params := &admin.UpdateOrganizationInvitationByIdApiParams{
@@ -1002,7 +1141,6 @@ func updateOrganizationInvitationByIdBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("invitationId")
 	return cmd
 }
@@ -1017,8 +1155,22 @@ type updateOrganizationRolesOpts struct {
 }
 
 func (opts *updateOrganizationRolesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
 }
 
 func (opts *updateOrganizationRolesOpts) readData() (*admin.UpdateOrgRolesForUser, error) {
@@ -1047,9 +1199,6 @@ func (opts *updateOrganizationRolesOpts) run(ctx context.Context, w io.Writer) e
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
 	}
 
 	params := &admin.UpdateOrganizationRolesApiParams{
@@ -1092,7 +1241,6 @@ func updateOrganizationRolesBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("userId")
 	return cmd
 }
@@ -1106,8 +1254,22 @@ type updateOrganizationSettingsOpts struct {
 }
 
 func (opts *updateOrganizationSettingsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
 }
 
 func (opts *updateOrganizationSettingsOpts) readData() (*admin.OrganizationSettings, error) {
@@ -1136,9 +1298,6 @@ func (opts *updateOrganizationSettingsOpts) run(ctx context.Context, w io.Writer
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
 	}
 
 	params := &admin.UpdateOrganizationSettingsApiParams{
@@ -1179,7 +1338,6 @@ func updateOrganizationSettingsBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 

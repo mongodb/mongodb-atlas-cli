@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -38,8 +40,22 @@ type addAllTeamsToProjectOpts struct {
 }
 
 func (opts *addAllTeamsToProjectOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *addAllTeamsToProjectOpts) readData() (*[]admin.TeamRole, error) {
@@ -68,9 +84,6 @@ func (opts *addAllTeamsToProjectOpts) run(ctx context.Context, w io.Writer) erro
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.AddAllTeamsToProjectApiParams{
@@ -111,7 +124,6 @@ func addAllTeamsToProjectBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -125,8 +137,22 @@ type addTeamUserOpts struct {
 }
 
 func (opts *addTeamUserOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
 }
 
 func (opts *addTeamUserOpts) readData() (*[]admin.AddUserToTeam, error) {
@@ -155,9 +181,6 @@ func (opts *addTeamUserOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
 	}
 
 	params := &admin.AddTeamUserApiParams{
@@ -200,7 +223,6 @@ func addTeamUserBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("teamId")
 	return cmd
 }
@@ -214,8 +236,22 @@ type createTeamOpts struct {
 }
 
 func (opts *createTeamOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
 }
 
 func (opts *createTeamOpts) readData() (*admin.Team, error) {
@@ -244,9 +280,6 @@ func (opts *createTeamOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
 	}
 
 	params := &admin.CreateTeamApiParams{
@@ -287,7 +320,6 @@ func createTeamBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -298,14 +330,25 @@ type deleteTeamOpts struct {
 }
 
 func (opts *deleteTeamOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteTeamOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *deleteTeamOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteTeamApiParams{
 		OrgId:  opts.orgId,
@@ -341,7 +384,6 @@ func deleteTeamBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", `Unique 24-hexadecimal digit string that identifies the team that you want to delete.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("teamId")
 	return cmd
 }
@@ -353,14 +395,25 @@ type getTeamByIdOpts struct {
 }
 
 func (opts *getTeamByIdOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getTeamByIdOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *getTeamByIdOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetTeamByIdApiParams{
 		OrgId:  opts.orgId,
@@ -396,7 +449,6 @@ func getTeamByIdBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", `Unique 24-hexadecimal digit string that identifies the team whose information you want to return.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("teamId")
 	return cmd
 }
@@ -408,14 +460,25 @@ type getTeamByNameOpts struct {
 }
 
 func (opts *getTeamByNameOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getTeamByNameOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *getTeamByNameOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetTeamByNameApiParams{
 		OrgId:    opts.orgId,
@@ -451,7 +514,6 @@ func getTeamByNameBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
 	cmd.Flags().StringVar(&opts.teamName, "teamName", "", `Name of the team whose information you want to return.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("teamName")
 	return cmd
 }
@@ -465,14 +527,25 @@ type listOrganizationTeamsOpts struct {
 }
 
 func (opts *listOrganizationTeamsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listOrganizationTeamsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *listOrganizationTeamsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListOrganizationTeamsApiParams{
 		OrgId:        opts.orgId,
@@ -512,7 +585,6 @@ func listOrganizationTeamsBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	return cmd
 }
 
@@ -525,14 +597,25 @@ type listProjectTeamsOpts struct {
 }
 
 func (opts *listProjectTeamsOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listProjectTeamsOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listProjectTeamsOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListProjectTeamsApiParams{
 		GroupId:      opts.groupId,
@@ -572,7 +655,6 @@ func listProjectTeamsBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -585,14 +667,25 @@ type listTeamUsersOpts struct {
 }
 
 func (opts *listTeamUsersOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listTeamUsersOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *listTeamUsersOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListTeamUsersApiParams{
 		OrgId:        opts.orgId,
@@ -632,7 +725,6 @@ func listTeamUsersBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
 	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("teamId")
 	return cmd
 }
@@ -644,14 +736,25 @@ type removeProjectTeamOpts struct {
 }
 
 func (opts *removeProjectTeamOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *removeProjectTeamOpts) run(ctx context.Context, _ io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *removeProjectTeamOpts) run(ctx context.Context, _ io.Writer) error {
 
 	params := &admin.RemoveProjectTeamApiParams{
 		GroupId: opts.groupId,
@@ -677,7 +780,6 @@ func removeProjectTeamBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", `Unique 24-hexadecimal digit string that identifies the team that you want to remove from the specified project.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("teamId")
 	return cmd
 }
@@ -690,14 +792,25 @@ type removeTeamUserOpts struct {
 }
 
 func (opts *removeTeamUserOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *removeTeamUserOpts) run(ctx context.Context, _ io.Writer) error {
 	if opts.orgId == "" {
 		opts.orgId = config.OrgID()
 	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
+}
+
+func (opts *removeTeamUserOpts) run(ctx context.Context, _ io.Writer) error {
 
 	params := &admin.RemoveTeamUserApiParams{
 		OrgId:  opts.orgId,
@@ -725,7 +838,6 @@ func removeTeamUserBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.teamId, "teamId", "", `Unique 24-hexadecimal digit string that identifies the team from which you want to remove one database application user.`)
 	cmd.Flags().StringVar(&opts.userId, "userId", "", `Unique 24-hexadecimal digit string that identifies MongoDB Cloud user that you want to remove from the specified team.`)
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("teamId")
 	_ = cmd.MarkFlagRequired("userId")
 	return cmd
@@ -741,8 +853,22 @@ type renameTeamOpts struct {
 }
 
 func (opts *renameTeamOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.orgId == "" {
+		opts.orgId = config.OrgID()
+	}
+	if opts.orgId == "" {
+		return errors.New(`required flag(s) "orgId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.orgId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
+	}
+
+	return nil
 }
 
 func (opts *renameTeamOpts) readData() (*admin.Team, error) {
@@ -771,9 +897,6 @@ func (opts *renameTeamOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.orgId == "" {
-		opts.orgId = config.OrgID()
 	}
 
 	params := &admin.RenameTeamApiParams{
@@ -816,7 +939,6 @@ func renameTeamBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("orgId")
 	_ = cmd.MarkFlagRequired("teamId")
 	return cmd
 }
@@ -831,8 +953,22 @@ type updateTeamRolesOpts struct {
 }
 
 func (opts *updateTeamRolesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *updateTeamRolesOpts) readData() (*admin.TeamRole, error) {
@@ -861,9 +997,6 @@ func (opts *updateTeamRolesOpts) run(ctx context.Context, w io.Writer) error {
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.UpdateTeamRolesApiParams{
@@ -906,7 +1039,6 @@ func updateTeamRolesBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("teamId")
 	return cmd
 }

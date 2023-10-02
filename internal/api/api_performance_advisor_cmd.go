@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 
@@ -33,14 +35,25 @@ type disableSlowOperationThresholdingOpts struct {
 }
 
 func (opts *disableSlowOperationThresholdingOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *disableSlowOperationThresholdingOpts) run(ctx context.Context, _ io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *disableSlowOperationThresholdingOpts) run(ctx context.Context, _ io.Writer) error {
 
 	params := &admin.DisableSlowOperationThresholdingApiParams{
 		GroupId: opts.groupId,
@@ -64,7 +77,6 @@ func disableSlowOperationThresholdingBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -74,14 +86,25 @@ type enableSlowOperationThresholdingOpts struct {
 }
 
 func (opts *enableSlowOperationThresholdingOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *enableSlowOperationThresholdingOpts) run(ctx context.Context, _ io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *enableSlowOperationThresholdingOpts) run(ctx context.Context, _ io.Writer) error {
 
 	params := &admin.EnableSlowOperationThresholdingApiParams{
 		GroupId: opts.groupId,
@@ -105,7 +128,6 @@ func enableSlowOperationThresholdingBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -120,14 +142,25 @@ type listSlowQueriesOpts struct {
 }
 
 func (opts *listSlowQueriesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listSlowQueriesOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listSlowQueriesOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListSlowQueriesApiParams{
 		GroupId:    opts.groupId,
@@ -177,7 +210,6 @@ func listSlowQueriesBuilder() *cobra.Command {
 - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time.
 - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
 	return cmd
 }
@@ -191,14 +223,25 @@ type listSlowQueryNamespacesOpts struct {
 }
 
 func (opts *listSlowQueryNamespacesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listSlowQueryNamespacesOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listSlowQueryNamespacesOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListSlowQueryNamespacesApiParams{
 		GroupId:   opts.groupId,
@@ -244,7 +287,6 @@ func listSlowQueryNamespacesBuilder() *cobra.Command {
 - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time.
 - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
 	return cmd
 }
@@ -264,14 +306,25 @@ type listSuggestedIndexesOpts struct {
 }
 
 func (opts *listSuggestedIndexesOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *listSuggestedIndexesOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *listSuggestedIndexesOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.ListSuggestedIndexesApiParams{
 		GroupId:      opts.groupId,
@@ -329,7 +382,6 @@ func listSuggestedIndexesBuilder() *cobra.Command {
 - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time.
 - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("processId")
 	return cmd
 }

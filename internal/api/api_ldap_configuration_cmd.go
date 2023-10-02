@@ -18,7 +18,9 @@ package api
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -35,14 +37,25 @@ type deleteLDAPConfigurationOpts struct {
 }
 
 func (opts *deleteLDAPConfigurationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *deleteLDAPConfigurationOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *deleteLDAPConfigurationOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.DeleteLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
@@ -76,7 +89,6 @@ func deleteLDAPConfigurationBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -86,14 +98,25 @@ type getLDAPConfigurationOpts struct {
 }
 
 func (opts *getLDAPConfigurationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getLDAPConfigurationOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getLDAPConfigurationOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
@@ -127,7 +150,6 @@ func getLDAPConfigurationBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -138,14 +160,25 @@ type getLDAPConfigurationStatusOpts struct {
 }
 
 func (opts *getLDAPConfigurationStatusOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
-}
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
 
-func (opts *getLDAPConfigurationStatusOpts) run(ctx context.Context, w io.Writer) error {
 	if opts.groupId == "" {
 		opts.groupId = config.ProjectID()
 	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *getLDAPConfigurationStatusOpts) run(ctx context.Context, w io.Writer) error {
 
 	params := &admin.GetLDAPConfigurationStatusApiParams{
 		GroupId:   opts.groupId,
@@ -181,7 +214,6 @@ func getLDAPConfigurationStatusBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.requestId, "requestId", "", `Unique string that identifies the request to verify an &lt;abbr title&#x3D;&quot;Lightweight Directory Access Protocol&quot;&gt;LDAP&lt;/abbr&gt; configuration.`)
 
-	_ = cmd.MarkFlagRequired("groupId")
 	_ = cmd.MarkFlagRequired("requestId")
 	return cmd
 }
@@ -195,8 +227,22 @@ type saveLDAPConfigurationOpts struct {
 }
 
 func (opts *saveLDAPConfigurationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *saveLDAPConfigurationOpts) readData() (*admin.UserSecurity, error) {
@@ -225,9 +271,6 @@ func (opts *saveLDAPConfigurationOpts) run(ctx context.Context, w io.Writer) err
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.SaveLDAPConfigurationApiParams{
@@ -268,7 +311,6 @@ func saveLDAPConfigurationBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 
@@ -281,8 +323,22 @@ type verifyLDAPConfigurationOpts struct {
 }
 
 func (opts *verifyLDAPConfigurationOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
 }
 
 func (opts *verifyLDAPConfigurationOpts) readData() (*admin.LDAPVerifyConnectivityJobRequestParams, error) {
@@ -311,9 +367,6 @@ func (opts *verifyLDAPConfigurationOpts) run(ctx context.Context, w io.Writer) e
 	data, errData := opts.readData()
 	if errData != nil {
 		return errData
-	}
-	if opts.groupId == "" {
-		opts.groupId = config.ProjectID()
 	}
 
 	params := &admin.VerifyLDAPConfigurationApiParams{
@@ -354,7 +407,6 @@ func verifyLDAPConfigurationBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
-	_ = cmd.MarkFlagRequired("groupId")
 	return cmd
 }
 

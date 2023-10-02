@@ -36,8 +36,11 @@ type createUserOpts struct {
 }
 
 func (opts *createUserOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (opts *createUserOpts) readData() (*admin.CloudAppUser, error) {
@@ -113,8 +116,11 @@ type getUserOpts struct {
 }
 
 func (opts *getUserOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (opts *getUserOpts) run(ctx context.Context, w io.Writer) error {
@@ -161,8 +167,11 @@ type getUserByUsernameOpts struct {
 }
 
 func (opts *getUserByUsernameOpts) preRun() (err error) {
-	opts.client, err = newClientWithAuth()
-	return err
+	if opts.client, err = newClientWithAuth(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (opts *getUserByUsernameOpts) run(ctx context.Context, w io.Writer) error {

@@ -203,8 +203,8 @@ github.com/fsnotify/fsnotify v1.6.0 h1:n+5WquG0fcWoWp6xPWfHdbskMCQaFnG6PfBrh1Ky4
 github.com/fsnotify/fsnotify v1.6.0/go.mod h1:sl3t1tCWJFWoRz9R8WJCbQihKKwmorjAbSClcnxKAGw=
 github.com/gemalto/flume v0.13.0 h1:EEeQvAxyFys3BH8IxEU7ZpM6Kr1sYn20HuZq6dgyMR8=
 github.com/gemalto/flume v0.13.0/go.mod h1:3iOEZiK/HD8SnFTqHCQoOHQKaHlBY0b6z55P8SLaOzk=
-github.com/gemalto/kmip-go v0.0.9 h1:PMm0j3k5l7H6BIp13+V6aq0mvp0O3YlKVHkDweLkzik=
-github.com/gemalto/kmip-go v0.0.9/go.mod h1:YBUgKtkYpGCL+xA1oClQrMYTWDvHN/A2wSh2LmT5+JY=
+github.com/gemalto/kmip-go v0.0.10 h1:jAAZejUdRrspKigLoA62MTmIj0T7DDDOzdxHi1cDjoU=
+github.com/gemalto/kmip-go v0.0.10/go.mod h1:7XtwjeX7tNQt/FoDZDWXjYOkyV26ZQF1fKFBeR3mCwY=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/go-errors/errors v1.0.1/go.mod h1:f4zRHt4oKfwPJE5k8C9vpYG+aDHdBFUsgrm6/TyX73Q=
 github.com/go-errors/errors v1.1.1 h1:ljK/pL5ltg3qoN+OtN6yCv9HWSfMwxSx90GJCZQxYNg=

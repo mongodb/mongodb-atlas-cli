@@ -290,5 +290,5 @@ func isLinuxDistroSupported() (bool, error) {
 	}
 
 	_, _ = log.Debugln("Detected linux distro: ", distro)
-	return strings.Contains(distro, "centos") || strings.Contains(distro, "rhel"), nil
+	return strings.Contains(distro, "centos") || strings.Contains(distro, "redhat") || strings.Contains(distro, "rhel"), nil
 }

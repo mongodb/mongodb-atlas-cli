@@ -57,5 +57,6 @@
 	"github.com/containers/podman/v4": "mongocli",
 	"github.com/shirou/gopsutil/v3": "mongocli",
 	"github.com/denisbrodbeck/machineid": "mongocli",
-	"github.com/containers/common": "mongocli"
+	"github.com/containers/common": "mongocli",
+	"github.com/zcalusic/sysinfo": "mongocli"
 }

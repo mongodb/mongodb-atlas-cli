@@ -65,7 +65,7 @@ func (opts *DescribeOpts) RunAtlas() error {
 }
 
 func (opts *DescribeOpts) RunLocal(ctx context.Context) error {
-	if err := options.LocalDeploymentPreRun(); err != nil {
+	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
 		return err
 	}
 

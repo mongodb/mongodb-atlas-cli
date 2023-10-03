@@ -35,11 +35,7 @@ type DownloadOpts struct {
 }
 
 func (opts *DownloadOpts) Run(ctx context.Context) error {
-	if err := options.LocalDeploymentPreRun(); err != nil {
-		return err
-	}
-
-	if err := opts.PodmanClient.Ready(ctx); err != nil {
+	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
 		return err
 	}
 

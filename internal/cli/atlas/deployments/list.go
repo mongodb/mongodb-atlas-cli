@@ -104,7 +104,7 @@ func (opts *ListOpts) getAtlasDeployments() ([]options.Deployment, error) {
 }
 
 func (opts *ListOpts) Run(ctx context.Context) error {
-	if err := options.LocalDeploymentPreRun(); err != nil {
+	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
 		return err
 	}
 

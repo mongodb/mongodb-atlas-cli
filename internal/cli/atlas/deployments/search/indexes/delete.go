@@ -46,10 +46,6 @@ type DeleteOpts struct {
 }
 
 func (opts *DeleteOpts) Run(ctx context.Context) error {
-	if err := options.LocalDeploymentPreRun(); err != nil {
-		return err
-	}
-
 	if err := opts.validateAndPrompt(ctx); err != nil {
 		return err
 	}
@@ -70,6 +66,10 @@ func (opts *DeleteOpts) RunAtlas() error {
 }
 
 func (opts *DeleteOpts) RunLocal(ctx context.Context) error {
+	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
+		return err
+	}
+
 	connectionString, err := opts.ConnectionString(ctx)
 	if err != nil {
 		return err

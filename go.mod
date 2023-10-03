@@ -44,6 +44,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
+	github.com/zcalusic/sysinfo v1.0.1
 	go.mongodb.org/atlas v0.31.0
 	go.mongodb.org/atlas-sdk/v20230201008 v20230201008.0.0
 	go.mongodb.org/mongo-driver v1.12.1
@@ -170,7 +171,6 @@ require (
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	github.com/yusufpapurcu/wmi v1.2.3 // indirect
-	github.com/zcalusic/sysinfo v1.0.1 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect

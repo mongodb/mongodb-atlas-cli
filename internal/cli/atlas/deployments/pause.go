@@ -72,7 +72,7 @@ func (opts *PauseOpts) Run(ctx context.Context) error {
 }
 
 func (opts *PauseOpts) RunLocal(ctx context.Context) error {
-	if err := options.LocalDeploymentPreRun(); err != nil {
+	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
 		return err
 	}
 

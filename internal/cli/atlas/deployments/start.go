@@ -68,7 +68,7 @@ func (opts *StartOpts) Run(ctx context.Context) error {
 }
 
 func (opts *StartOpts) RunLocal(ctx context.Context) error {
-	if err := options.LocalDeploymentPreRun(); err != nil {
+	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
 		return err
 	}
 

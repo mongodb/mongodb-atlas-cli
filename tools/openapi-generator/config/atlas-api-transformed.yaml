@@ -28869,4 +28869,3 @@ components:
     DigestAuth:
       scheme: digest
       type: http
-x-sdk-import: go.mongodb.org/atlas-sdk/v20230201008/admin

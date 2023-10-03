@@ -2,13 +2,13 @@
   "name": "openapi-generator",
   "version": "1.0.0",
   "description": "OpenAPI Generator for MongoDB Atlas CLI",
+  "private": true,
   "scripts": {
-    "generate:clear": "rm -rf ../../internal/api",
+    "generate:clear": "rm -rf ../../internal/api && mkdir -p ../../internal/api && cp config/.openapi-generator-ignore ../../internal/api",
     "generate:download": "export SDKVERSION=$(cat ../../go.mod | grep go.mongodb.org/atlas-sdk | awk '{print $2}'); curl -L -o config/atlas-api.yaml \"https://raw.githubusercontent.com/mongodb/atlas-sdk-go/$SDKVERSION/openapi/atlas-api-transformed.yaml\"",
     "generate:transform": "export SDKVERSION=$(cat ../../go.mod | grep go.mongodb.org/atlas-sdk | awk '{print $2}'); export SDKIMPORT=$(cat ../../go.mod | grep go.mongodb.org/atlas-sdk | awk '{print $1}'); node merge.js",
-    "generate:init": "mkdir -p ../../internal/api && cp ./config/.openapi-generator-ignore ../../internal/api/.openapi-generator-ignore",
-    "generate:run": "GO_POST_PROCESS_FILE='goimports -w' openapi-generator-cli generate --enable-post-process-file -c './config/config.yaml' --type-mappings=integer=int --type-mappings=DateTime=string -o ../../internal/api",
-    "generate": "npm run generate:clear && npm run generate:init && npm run generate:download && npm run generate:transform && npm run generate:run"
+    "generate:run": "export SDKVERSION=$(cat ../../go.mod | grep go.mongodb.org/atlas-sdk | awk '{print $2}'); export SDKIMPORT=$(cat ../../go.mod | grep go.mongodb.org/atlas-sdk | awk '{print $1}'); export GO_POST_PROCESS_FILE='goimports -w'; openapi-generator-cli generate --enable-post-process-file -c './config/config.yaml' --type-mappings=integer=int --type-mappings=DateTime=string -o ../../internal/api --additional-properties=\"sdkImport=$SDKIMPORT,sdkVersion=$SDKVERSION\"",
+    "generate": "npm run generate:clear && npm run generate:download && npm run generate:transform && npm run generate:run"
   },
   "repository": {
     "type": "git",

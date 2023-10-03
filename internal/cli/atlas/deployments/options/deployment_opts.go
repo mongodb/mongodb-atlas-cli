@@ -34,7 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	"github.com/zcalusic/sysinfo"
+	"github.com/shirou/gopsutil/v3/host"
 )
 
 const (
@@ -279,14 +279,16 @@ func localDeploymentSupportedByOs() bool {
 }
 
 func isLinuxDistroSupported() (bool, error) {
-	var si sysinfo.SysInfo
-
-	si.GetSysInfo()
-	vendor := si.OS.Vendor
-	if vendor == "" {
-		return false, errors.New("unable to find OS vendor")
+	hostInfo, err := host.Info()
+	if err != nil {
+		return false, err
 	}
 
-	support := vendor == "centos" || vendor == "rhel"
-	return support, nil
+	distro := strings.ToLower(hostInfo.Platform)
+	if distro == "" {
+		return false, errors.New("unable to find OS distro")
+	}
+
+	_, _ = log.Debugln("Detected linux distro: ", distro)
+	return strings.Contains(distro, "centos") || strings.Contains(distro, "rhel"), nil
 }

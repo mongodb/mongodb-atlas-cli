@@ -132,9 +132,6 @@ func customCATransport(ca []byte) *http.Transport {
 }
 
 func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error) {
-	if s.username == "" && s.password == "" && s.accessToken == nil {
-		return &http.Client{Transport: httpTransport}, nil
-	}
 	if s.username != "" && s.password != "" {
 		t := &digest.Transport{
 			Username: s.username,
@@ -143,12 +140,16 @@ func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error
 		t.Transport = httpTransport
 		return t.Client()
 	}
-	tr := &Transport{
-		token: s.accessToken,
-		base:  httpTransport,
+	if s.accessToken != nil {
+		tr := &Transport{
+			token: s.accessToken,
+			base:  httpTransport,
+		}
+
+		return &http.Client{Transport: tr}, nil
 	}
 
-	return &http.Client{Transport: tr}, nil
+	return &http.Client{Transport: httpTransport}, nil
 }
 
 type Transport struct {

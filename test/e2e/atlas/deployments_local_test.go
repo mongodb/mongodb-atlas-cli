@@ -62,8 +62,6 @@ func TestDeploymentsLocal(t *testing.T) {
 				deploymentEntity,
 				"diagnostics",
 				deploymentName,
-				"-o",
-				"json",
 			)
 
 			cmd.Env = os.Environ()

@@ -37,6 +37,7 @@ type deleteLDAPConfigurationOpts struct {
 	groupId string
 	format  string
 	tmpl    *template.Template
+	resp    *admin.UserSecurity
 }
 
 func (opts *deleteLDAPConfigurationOpts) preRun() (err error) {
@@ -56,40 +57,43 @@ func (opts *deleteLDAPConfigurationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteLDAPConfigurationOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteLDAPConfigurationOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
 
-	resp, _, err := opts.client.LDAPConfigurationApi.DeleteLDAPConfigurationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.LDAPConfigurationApi.DeleteLDAPConfigurationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteLDAPConfigurationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteLDAPConfigurationBuilder() *cobra.Command {
@@ -101,7 +105,10 @@ func deleteLDAPConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -115,6 +122,7 @@ type getLDAPConfigurationOpts struct {
 	groupId string
 	format  string
 	tmpl    *template.Template
+	resp    *admin.UserSecurity
 }
 
 func (opts *getLDAPConfigurationOpts) preRun() (err error) {
@@ -134,40 +142,43 @@ func (opts *getLDAPConfigurationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getLDAPConfigurationOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getLDAPConfigurationOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetLDAPConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
 
-	resp, _, err := opts.client.LDAPConfigurationApi.GetLDAPConfigurationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.LDAPConfigurationApi.GetLDAPConfigurationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getLDAPConfigurationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getLDAPConfigurationBuilder() *cobra.Command {
@@ -179,7 +190,10 @@ func getLDAPConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -194,6 +208,7 @@ type getLDAPConfigurationStatusOpts struct {
 	requestId string
 	format    string
 	tmpl      *template.Template
+	resp      *admin.LDAPVerifyConnectivityJobRequest
 }
 
 func (opts *getLDAPConfigurationStatusOpts) preRun() (err error) {
@@ -213,41 +228,44 @@ func (opts *getLDAPConfigurationStatusOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getLDAPConfigurationStatusOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getLDAPConfigurationStatusOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetLDAPConfigurationStatusApiParams{
 		GroupId:   opts.groupId,
 		RequestId: opts.requestId,
 	}
 
-	resp, _, err := opts.client.LDAPConfigurationApi.GetLDAPConfigurationStatusWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.LDAPConfigurationApi.GetLDAPConfigurationStatusWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getLDAPConfigurationStatusOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getLDAPConfigurationStatusBuilder() *cobra.Command {
@@ -259,7 +277,10 @@ func getLDAPConfigurationStatusBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -278,6 +299,7 @@ type saveLDAPConfigurationOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.UserSecurity
 }
 
 func (opts *saveLDAPConfigurationOpts) preRun() (err error) {
@@ -297,10 +319,12 @@ func (opts *saveLDAPConfigurationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *saveLDAPConfigurationOpts) readData(r io.Reader) (*admin.UserSecurity, error) {
@@ -325,7 +349,7 @@ func (opts *saveLDAPConfigurationOpts) readData(r io.Reader) (*admin.UserSecurit
 	return out, nil
 }
 
-func (opts *saveLDAPConfigurationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *saveLDAPConfigurationOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -337,28 +361,29 @@ func (opts *saveLDAPConfigurationOpts) run(ctx context.Context, r io.Reader, w i
 		UserSecurity: data,
 	}
 
-	resp, _, err := opts.client.LDAPConfigurationApi.SaveLDAPConfigurationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.LDAPConfigurationApi.SaveLDAPConfigurationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *saveLDAPConfigurationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func saveLDAPConfigurationBuilder() *cobra.Command {
@@ -372,7 +397,10 @@ func saveLDAPConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -391,6 +419,7 @@ type verifyLDAPConfigurationOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.LDAPVerifyConnectivityJobRequest
 }
 
 func (opts *verifyLDAPConfigurationOpts) preRun() (err error) {
@@ -410,10 +439,12 @@ func (opts *verifyLDAPConfigurationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *verifyLDAPConfigurationOpts) readData(r io.Reader) (*admin.LDAPVerifyConnectivityJobRequestParams, error) {
@@ -438,7 +469,7 @@ func (opts *verifyLDAPConfigurationOpts) readData(r io.Reader) (*admin.LDAPVerif
 	return out, nil
 }
 
-func (opts *verifyLDAPConfigurationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *verifyLDAPConfigurationOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -450,28 +481,29 @@ func (opts *verifyLDAPConfigurationOpts) run(ctx context.Context, r io.Reader, w
 		LDAPVerifyConnectivityJobRequestParams: data,
 	}
 
-	resp, _, err := opts.client.LDAPConfigurationApi.VerifyLDAPConfigurationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.LDAPConfigurationApi.VerifyLDAPConfigurationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *verifyLDAPConfigurationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func verifyLDAPConfigurationBuilder() *cobra.Command {
@@ -485,7 +517,10 @@ func verifyLDAPConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

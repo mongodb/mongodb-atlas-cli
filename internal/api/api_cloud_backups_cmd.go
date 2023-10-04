@@ -39,6 +39,7 @@ type cancelBackupRestoreJobOpts struct {
 	restoreJobId string
 	format       string
 	tmpl         *template.Template
+	resp         map[string]interface{}
 }
 
 func (opts *cancelBackupRestoreJobOpts) preRun() (err error) {
@@ -58,13 +59,15 @@ func (opts *cancelBackupRestoreJobOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *cancelBackupRestoreJobOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *cancelBackupRestoreJobOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.CancelBackupRestoreJobApiParams{
 		GroupId:      opts.groupId,
@@ -72,28 +75,29 @@ func (opts *cancelBackupRestoreJobOpts) run(ctx context.Context, _ io.Reader, w 
 		RestoreJobId: opts.restoreJobId,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.CancelBackupRestoreJobWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.CancelBackupRestoreJobWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *cancelBackupRestoreJobOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func cancelBackupRestoreJobBuilder() *cobra.Command {
@@ -105,7 +109,10 @@ func cancelBackupRestoreJobBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -127,6 +134,7 @@ type createBackupExportJobOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.DiskBackupExportJob
 }
 
 func (opts *createBackupExportJobOpts) preRun() (err error) {
@@ -146,10 +154,12 @@ func (opts *createBackupExportJobOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createBackupExportJobOpts) readData(r io.Reader) (*admin.DiskBackupExportJobRequest, error) {
@@ -174,7 +184,7 @@ func (opts *createBackupExportJobOpts) readData(r io.Reader) (*admin.DiskBackupE
 	return out, nil
 }
 
-func (opts *createBackupExportJobOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createBackupExportJobOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -187,28 +197,29 @@ func (opts *createBackupExportJobOpts) run(ctx context.Context, r io.Reader, w i
 		DiskBackupExportJobRequest: data,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.CreateBackupExportJobWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.CreateBackupExportJobWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createBackupExportJobOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createBackupExportJobBuilder() *cobra.Command {
@@ -222,7 +233,10 @@ func createBackupExportJobBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -244,6 +258,7 @@ type createBackupRestoreJobOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.DiskBackupSnapshotRestoreJob
 }
 
 func (opts *createBackupRestoreJobOpts) preRun() (err error) {
@@ -263,10 +278,12 @@ func (opts *createBackupRestoreJobOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createBackupRestoreJobOpts) readData(r io.Reader) (*admin.DiskBackupSnapshotRestoreJob, error) {
@@ -291,7 +308,7 @@ func (opts *createBackupRestoreJobOpts) readData(r io.Reader) (*admin.DiskBackup
 	return out, nil
 }
 
-func (opts *createBackupRestoreJobOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createBackupRestoreJobOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -304,28 +321,29 @@ func (opts *createBackupRestoreJobOpts) run(ctx context.Context, r io.Reader, w 
 		DiskBackupSnapshotRestoreJob: data,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.CreateBackupRestoreJobWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.CreateBackupRestoreJobWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createBackupRestoreJobOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createBackupRestoreJobBuilder() *cobra.Command {
@@ -339,7 +357,10 @@ func createBackupRestoreJobBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -360,6 +381,7 @@ type createExportBucketOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.DiskBackupSnapshotAWSExportBucket
 }
 
 func (opts *createExportBucketOpts) preRun() (err error) {
@@ -379,10 +401,12 @@ func (opts *createExportBucketOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createExportBucketOpts) readData(r io.Reader) (*admin.DiskBackupSnapshotAWSExportBucket, error) {
@@ -407,7 +431,7 @@ func (opts *createExportBucketOpts) readData(r io.Reader) (*admin.DiskBackupSnap
 	return out, nil
 }
 
-func (opts *createExportBucketOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createExportBucketOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -419,28 +443,29 @@ func (opts *createExportBucketOpts) run(ctx context.Context, r io.Reader, w io.W
 		DiskBackupSnapshotAWSExportBucket: data,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.CreateExportBucketWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.CreateExportBucketWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createExportBucketOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createExportBucketBuilder() *cobra.Command {
@@ -454,7 +479,10 @@ func createExportBucketBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -474,6 +502,7 @@ type createServerlessBackupRestoreJobOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.ServerlessBackupRestoreJob
 }
 
 func (opts *createServerlessBackupRestoreJobOpts) preRun() (err error) {
@@ -493,10 +522,12 @@ func (opts *createServerlessBackupRestoreJobOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createServerlessBackupRestoreJobOpts) readData(r io.Reader) (*admin.ServerlessBackupRestoreJob, error) {
@@ -521,7 +552,7 @@ func (opts *createServerlessBackupRestoreJobOpts) readData(r io.Reader) (*admin.
 	return out, nil
 }
 
-func (opts *createServerlessBackupRestoreJobOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createServerlessBackupRestoreJobOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -534,28 +565,29 @@ func (opts *createServerlessBackupRestoreJobOpts) run(ctx context.Context, r io.
 		ServerlessBackupRestoreJob: data,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.CreateServerlessBackupRestoreJobWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.CreateServerlessBackupRestoreJobWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createServerlessBackupRestoreJobOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createServerlessBackupRestoreJobBuilder() *cobra.Command {
@@ -569,7 +601,10 @@ func createServerlessBackupRestoreJobBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -588,6 +623,7 @@ type deleteAllBackupSchedulesOpts struct {
 	clusterName string
 	format      string
 	tmpl        *template.Template
+	resp        *admin.DiskBackupSnapshotSchedule
 }
 
 func (opts *deleteAllBackupSchedulesOpts) preRun() (err error) {
@@ -607,41 +643,44 @@ func (opts *deleteAllBackupSchedulesOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteAllBackupSchedulesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteAllBackupSchedulesOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteAllBackupSchedulesApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.DeleteAllBackupSchedulesWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.DeleteAllBackupSchedulesWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteAllBackupSchedulesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteAllBackupSchedulesBuilder() *cobra.Command {
@@ -653,7 +692,10 @@ func deleteAllBackupSchedulesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -670,6 +712,7 @@ type deleteExportBucketOpts struct {
 	exportBucketId string
 	format         string
 	tmpl           *template.Template
+	resp           map[string]interface{}
 }
 
 func (opts *deleteExportBucketOpts) preRun() (err error) {
@@ -689,41 +732,44 @@ func (opts *deleteExportBucketOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteExportBucketOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteExportBucketOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteExportBucketApiParams{
 		GroupId:        opts.groupId,
 		ExportBucketId: opts.exportBucketId,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.DeleteExportBucketWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.DeleteExportBucketWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteExportBucketOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteExportBucketBuilder() *cobra.Command {
@@ -735,7 +781,10 @@ func deleteExportBucketBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -753,6 +802,7 @@ type deleteReplicaSetBackupOpts struct {
 	snapshotId  string
 	format      string
 	tmpl        *template.Template
+	resp        map[string]interface{}
 }
 
 func (opts *deleteReplicaSetBackupOpts) preRun() (err error) {
@@ -772,13 +822,15 @@ func (opts *deleteReplicaSetBackupOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteReplicaSetBackupOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteReplicaSetBackupOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteReplicaSetBackupApiParams{
 		GroupId:     opts.groupId,
@@ -786,28 +838,29 @@ func (opts *deleteReplicaSetBackupOpts) run(ctx context.Context, _ io.Reader, w 
 		SnapshotId:  opts.snapshotId,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.DeleteReplicaSetBackupWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.DeleteReplicaSetBackupWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteReplicaSetBackupOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteReplicaSetBackupBuilder() *cobra.Command {
@@ -819,7 +872,10 @@ func deleteReplicaSetBackupBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -839,6 +895,7 @@ type deleteShardedClusterBackupOpts struct {
 	snapshotId  string
 	format      string
 	tmpl        *template.Template
+	resp        map[string]interface{}
 }
 
 func (opts *deleteShardedClusterBackupOpts) preRun() (err error) {
@@ -858,13 +915,15 @@ func (opts *deleteShardedClusterBackupOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteShardedClusterBackupOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteShardedClusterBackupOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteShardedClusterBackupApiParams{
 		GroupId:     opts.groupId,
@@ -872,28 +931,29 @@ func (opts *deleteShardedClusterBackupOpts) run(ctx context.Context, _ io.Reader
 		SnapshotId:  opts.snapshotId,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.DeleteShardedClusterBackupWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.DeleteShardedClusterBackupWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteShardedClusterBackupOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteShardedClusterBackupBuilder() *cobra.Command {
@@ -905,7 +965,10 @@ func deleteShardedClusterBackupBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -925,6 +988,7 @@ type getBackupExportJobOpts struct {
 	exportId    string
 	format      string
 	tmpl        *template.Template
+	resp        *admin.DiskBackupExportJob
 }
 
 func (opts *getBackupExportJobOpts) preRun() (err error) {
@@ -944,13 +1008,15 @@ func (opts *getBackupExportJobOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getBackupExportJobOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getBackupExportJobOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetBackupExportJobApiParams{
 		GroupId:     opts.groupId,
@@ -958,28 +1024,29 @@ func (opts *getBackupExportJobOpts) run(ctx context.Context, _ io.Reader, w io.W
 		ExportId:    opts.exportId,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.GetBackupExportJobWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.GetBackupExportJobWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getBackupExportJobOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getBackupExportJobBuilder() *cobra.Command {
@@ -991,7 +1058,10 @@ func getBackupExportJobBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1011,6 +1081,7 @@ type getBackupRestoreJobOpts struct {
 	restoreJobId string
 	format       string
 	tmpl         *template.Template
+	resp         *admin.DiskBackupSnapshotRestoreJob
 }
 
 func (opts *getBackupRestoreJobOpts) preRun() (err error) {
@@ -1030,13 +1101,15 @@ func (opts *getBackupRestoreJobOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getBackupRestoreJobOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getBackupRestoreJobOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetBackupRestoreJobApiParams{
 		GroupId:      opts.groupId,
@@ -1044,28 +1117,29 @@ func (opts *getBackupRestoreJobOpts) run(ctx context.Context, _ io.Reader, w io.
 		RestoreJobId: opts.restoreJobId,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.GetBackupRestoreJobWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.GetBackupRestoreJobWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getBackupRestoreJobOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getBackupRestoreJobBuilder() *cobra.Command {
@@ -1077,7 +1151,10 @@ func getBackupRestoreJobBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1096,6 +1173,7 @@ type getBackupScheduleOpts struct {
 	clusterName string
 	format      string
 	tmpl        *template.Template
+	resp        *admin.DiskBackupSnapshotSchedule
 }
 
 func (opts *getBackupScheduleOpts) preRun() (err error) {
@@ -1115,41 +1193,44 @@ func (opts *getBackupScheduleOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getBackupScheduleOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getBackupScheduleOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetBackupScheduleApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.GetBackupScheduleWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.GetBackupScheduleWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getBackupScheduleOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getBackupScheduleBuilder() *cobra.Command {
@@ -1161,7 +1242,10 @@ func getBackupScheduleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1177,6 +1261,7 @@ type getDataProtectionSettingsOpts struct {
 	groupId string
 	format  string
 	tmpl    *template.Template
+	resp    *admin.DataProtectionSettings
 }
 
 func (opts *getDataProtectionSettingsOpts) preRun() (err error) {
@@ -1196,40 +1281,43 @@ func (opts *getDataProtectionSettingsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getDataProtectionSettingsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getDataProtectionSettingsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetDataProtectionSettingsApiParams{
 		GroupId: opts.groupId,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.GetDataProtectionSettingsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.GetDataProtectionSettingsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getDataProtectionSettingsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getDataProtectionSettingsBuilder() *cobra.Command {
@@ -1241,7 +1329,10 @@ func getDataProtectionSettingsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1256,6 +1347,7 @@ type getExportBucketOpts struct {
 	exportBucketId string
 	format         string
 	tmpl           *template.Template
+	resp           *admin.DiskBackupSnapshotAWSExportBucket
 }
 
 func (opts *getExportBucketOpts) preRun() (err error) {
@@ -1275,41 +1367,44 @@ func (opts *getExportBucketOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getExportBucketOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getExportBucketOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetExportBucketApiParams{
 		GroupId:        opts.groupId,
 		ExportBucketId: opts.exportBucketId,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.GetExportBucketWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.GetExportBucketWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getExportBucketOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getExportBucketBuilder() *cobra.Command {
@@ -1321,7 +1416,10 @@ func getExportBucketBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1339,6 +1437,7 @@ type getReplicaSetBackupOpts struct {
 	snapshotId  string
 	format      string
 	tmpl        *template.Template
+	resp        *admin.DiskBackupReplicaSet
 }
 
 func (opts *getReplicaSetBackupOpts) preRun() (err error) {
@@ -1358,13 +1457,15 @@ func (opts *getReplicaSetBackupOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getReplicaSetBackupOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getReplicaSetBackupOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetReplicaSetBackupApiParams{
 		GroupId:     opts.groupId,
@@ -1372,28 +1473,29 @@ func (opts *getReplicaSetBackupOpts) run(ctx context.Context, _ io.Reader, w io.
 		SnapshotId:  opts.snapshotId,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.GetReplicaSetBackupWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.GetReplicaSetBackupWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getReplicaSetBackupOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getReplicaSetBackupBuilder() *cobra.Command {
@@ -1405,7 +1507,10 @@ func getReplicaSetBackupBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1425,6 +1530,7 @@ type getServerlessBackupOpts struct {
 	snapshotId  string
 	format      string
 	tmpl        *template.Template
+	resp        *admin.ServerlessBackupSnapshot
 }
 
 func (opts *getServerlessBackupOpts) preRun() (err error) {
@@ -1444,13 +1550,15 @@ func (opts *getServerlessBackupOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getServerlessBackupOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getServerlessBackupOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetServerlessBackupApiParams{
 		GroupId:     opts.groupId,
@@ -1458,28 +1566,29 @@ func (opts *getServerlessBackupOpts) run(ctx context.Context, _ io.Reader, w io.
 		SnapshotId:  opts.snapshotId,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.GetServerlessBackupWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.GetServerlessBackupWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getServerlessBackupOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getServerlessBackupBuilder() *cobra.Command {
@@ -1491,7 +1600,10 @@ func getServerlessBackupBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1511,6 +1623,7 @@ type getServerlessBackupRestoreJobOpts struct {
 	restoreJobId string
 	format       string
 	tmpl         *template.Template
+	resp         *admin.ServerlessBackupRestoreJob
 }
 
 func (opts *getServerlessBackupRestoreJobOpts) preRun() (err error) {
@@ -1530,13 +1643,15 @@ func (opts *getServerlessBackupRestoreJobOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getServerlessBackupRestoreJobOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getServerlessBackupRestoreJobOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetServerlessBackupRestoreJobApiParams{
 		GroupId:      opts.groupId,
@@ -1544,28 +1659,29 @@ func (opts *getServerlessBackupRestoreJobOpts) run(ctx context.Context, _ io.Rea
 		RestoreJobId: opts.restoreJobId,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.GetServerlessBackupRestoreJobWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.GetServerlessBackupRestoreJobWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getServerlessBackupRestoreJobOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getServerlessBackupRestoreJobBuilder() *cobra.Command {
@@ -1577,7 +1693,10 @@ func getServerlessBackupRestoreJobBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1597,6 +1716,7 @@ type getShardedClusterBackupOpts struct {
 	snapshotId  string
 	format      string
 	tmpl        *template.Template
+	resp        *admin.DiskBackupShardedClusterSnapshot
 }
 
 func (opts *getShardedClusterBackupOpts) preRun() (err error) {
@@ -1616,13 +1736,15 @@ func (opts *getShardedClusterBackupOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getShardedClusterBackupOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getShardedClusterBackupOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetShardedClusterBackupApiParams{
 		GroupId:     opts.groupId,
@@ -1630,28 +1752,29 @@ func (opts *getShardedClusterBackupOpts) run(ctx context.Context, _ io.Reader, w
 		SnapshotId:  opts.snapshotId,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.GetShardedClusterBackupWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.GetShardedClusterBackupWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getShardedClusterBackupOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getShardedClusterBackupBuilder() *cobra.Command {
@@ -1663,7 +1786,10 @@ func getShardedClusterBackupBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1685,6 +1811,7 @@ type listBackupExportJobsOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedApiAtlasDiskBackupExportJob
 }
 
 func (opts *listBackupExportJobsOpts) preRun() (err error) {
@@ -1704,13 +1831,15 @@ func (opts *listBackupExportJobsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listBackupExportJobsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listBackupExportJobsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListBackupExportJobsApiParams{
 		GroupId:      opts.groupId,
@@ -1720,28 +1849,29 @@ func (opts *listBackupExportJobsOpts) run(ctx context.Context, _ io.Reader, w io
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.ListBackupExportJobsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.ListBackupExportJobsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listBackupExportJobsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listBackupExportJobsBuilder() *cobra.Command {
@@ -1753,7 +1883,10 @@ func listBackupExportJobsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1776,6 +1909,7 @@ type listBackupRestoreJobsOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedCloudBackupRestoreJob
 }
 
 func (opts *listBackupRestoreJobsOpts) preRun() (err error) {
@@ -1795,13 +1929,15 @@ func (opts *listBackupRestoreJobsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listBackupRestoreJobsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listBackupRestoreJobsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListBackupRestoreJobsApiParams{
 		GroupId:      opts.groupId,
@@ -1811,28 +1947,29 @@ func (opts *listBackupRestoreJobsOpts) run(ctx context.Context, _ io.Reader, w i
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.ListBackupRestoreJobsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.ListBackupRestoreJobsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listBackupRestoreJobsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listBackupRestoreJobsBuilder() *cobra.Command {
@@ -1844,7 +1981,10 @@ func listBackupRestoreJobsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1866,6 +2006,7 @@ type listExportBucketsOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedBackupSnapshotExportBucket
 }
 
 func (opts *listExportBucketsOpts) preRun() (err error) {
@@ -1885,13 +2026,15 @@ func (opts *listExportBucketsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listExportBucketsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listExportBucketsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListExportBucketsApiParams{
 		GroupId:      opts.groupId,
@@ -1900,28 +2043,29 @@ func (opts *listExportBucketsOpts) run(ctx context.Context, _ io.Reader, w io.Wr
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.ListExportBucketsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.ListExportBucketsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listExportBucketsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listExportBucketsBuilder() *cobra.Command {
@@ -1933,7 +2077,10 @@ func listExportBucketsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1954,6 +2101,7 @@ type listReplicaSetBackupsOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedCloudBackupReplicaSet
 }
 
 func (opts *listReplicaSetBackupsOpts) preRun() (err error) {
@@ -1973,13 +2121,15 @@ func (opts *listReplicaSetBackupsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listReplicaSetBackupsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listReplicaSetBackupsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListReplicaSetBackupsApiParams{
 		GroupId:      opts.groupId,
@@ -1989,28 +2139,29 @@ func (opts *listReplicaSetBackupsOpts) run(ctx context.Context, _ io.Reader, w i
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.ListReplicaSetBackupsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.ListReplicaSetBackupsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listReplicaSetBackupsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listReplicaSetBackupsBuilder() *cobra.Command {
@@ -2022,7 +2173,10 @@ func listReplicaSetBackupsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -2045,6 +2199,7 @@ type listServerlessBackupRestoreJobsOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedApiAtlasServerlessBackupRestoreJob
 }
 
 func (opts *listServerlessBackupRestoreJobsOpts) preRun() (err error) {
@@ -2064,13 +2219,15 @@ func (opts *listServerlessBackupRestoreJobsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listServerlessBackupRestoreJobsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listServerlessBackupRestoreJobsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListServerlessBackupRestoreJobsApiParams{
 		GroupId:      opts.groupId,
@@ -2080,28 +2237,29 @@ func (opts *listServerlessBackupRestoreJobsOpts) run(ctx context.Context, _ io.R
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.ListServerlessBackupRestoreJobsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.ListServerlessBackupRestoreJobsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listServerlessBackupRestoreJobsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listServerlessBackupRestoreJobsBuilder() *cobra.Command {
@@ -2113,7 +2271,10 @@ func listServerlessBackupRestoreJobsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -2136,6 +2297,7 @@ type listServerlessBackupsOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedApiAtlasServerlessBackupSnapshot
 }
 
 func (opts *listServerlessBackupsOpts) preRun() (err error) {
@@ -2155,13 +2317,15 @@ func (opts *listServerlessBackupsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listServerlessBackupsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listServerlessBackupsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListServerlessBackupsApiParams{
 		GroupId:      opts.groupId,
@@ -2171,28 +2335,29 @@ func (opts *listServerlessBackupsOpts) run(ctx context.Context, _ io.Reader, w i
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.ListServerlessBackupsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.ListServerlessBackupsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listServerlessBackupsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listServerlessBackupsBuilder() *cobra.Command {
@@ -2204,7 +2369,10 @@ func listServerlessBackupsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -2224,6 +2392,7 @@ type listShardedClusterBackupsOpts struct {
 	clusterName string
 	format      string
 	tmpl        *template.Template
+	resp        *admin.PaginatedCloudBackupShardedClusterSnapshot
 }
 
 func (opts *listShardedClusterBackupsOpts) preRun() (err error) {
@@ -2243,41 +2412,44 @@ func (opts *listShardedClusterBackupsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listShardedClusterBackupsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listShardedClusterBackupsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListShardedClusterBackupsApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.ListShardedClusterBackupsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.ListShardedClusterBackupsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listShardedClusterBackupsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listShardedClusterBackupsBuilder() *cobra.Command {
@@ -2289,7 +2461,10 @@ func listShardedClusterBackupsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -2309,6 +2484,7 @@ type takeSnapshotOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.DiskBackupSnapshot
 }
 
 func (opts *takeSnapshotOpts) preRun() (err error) {
@@ -2328,10 +2504,12 @@ func (opts *takeSnapshotOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *takeSnapshotOpts) readData(r io.Reader) (*admin.DiskBackupOnDemandSnapshotRequest, error) {
@@ -2356,7 +2534,7 @@ func (opts *takeSnapshotOpts) readData(r io.Reader) (*admin.DiskBackupOnDemandSn
 	return out, nil
 }
 
-func (opts *takeSnapshotOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *takeSnapshotOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -2369,28 +2547,29 @@ func (opts *takeSnapshotOpts) run(ctx context.Context, r io.Reader, w io.Writer)
 		DiskBackupOnDemandSnapshotRequest: data,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.TakeSnapshotWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.TakeSnapshotWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *takeSnapshotOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func takeSnapshotBuilder() *cobra.Command {
@@ -2404,7 +2583,10 @@ func takeSnapshotBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -2426,6 +2608,7 @@ type updateBackupScheduleOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.DiskBackupSnapshotSchedule
 }
 
 func (opts *updateBackupScheduleOpts) preRun() (err error) {
@@ -2445,10 +2628,12 @@ func (opts *updateBackupScheduleOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateBackupScheduleOpts) readData(r io.Reader) (*admin.DiskBackupSnapshotSchedule, error) {
@@ -2473,7 +2658,7 @@ func (opts *updateBackupScheduleOpts) readData(r io.Reader) (*admin.DiskBackupSn
 	return out, nil
 }
 
-func (opts *updateBackupScheduleOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateBackupScheduleOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -2486,28 +2671,29 @@ func (opts *updateBackupScheduleOpts) run(ctx context.Context, r io.Reader, w io
 		DiskBackupSnapshotSchedule: data,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.UpdateBackupScheduleWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.UpdateBackupScheduleWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateBackupScheduleOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateBackupScheduleBuilder() *cobra.Command {
@@ -2521,7 +2707,10 @@ func updateBackupScheduleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -2542,6 +2731,7 @@ type updateDataProtectionSettingsOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.DataProtectionSettings
 }
 
 func (opts *updateDataProtectionSettingsOpts) preRun() (err error) {
@@ -2561,10 +2751,12 @@ func (opts *updateDataProtectionSettingsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateDataProtectionSettingsOpts) readData(r io.Reader) (*admin.DataProtectionSettings, error) {
@@ -2589,7 +2781,7 @@ func (opts *updateDataProtectionSettingsOpts) readData(r io.Reader) (*admin.Data
 	return out, nil
 }
 
-func (opts *updateDataProtectionSettingsOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateDataProtectionSettingsOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -2601,28 +2793,29 @@ func (opts *updateDataProtectionSettingsOpts) run(ctx context.Context, r io.Read
 		DataProtectionSettings: data,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.UpdateDataProtectionSettingsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.UpdateDataProtectionSettingsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateDataProtectionSettingsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateDataProtectionSettingsBuilder() *cobra.Command {
@@ -2636,7 +2829,10 @@ func updateDataProtectionSettingsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -2657,6 +2853,7 @@ type updateSnapshotRetentionOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.DiskBackupReplicaSet
 }
 
 func (opts *updateSnapshotRetentionOpts) preRun() (err error) {
@@ -2676,10 +2873,12 @@ func (opts *updateSnapshotRetentionOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateSnapshotRetentionOpts) readData(r io.Reader) (*admin.BackupSnapshotRetention, error) {
@@ -2704,7 +2903,7 @@ func (opts *updateSnapshotRetentionOpts) readData(r io.Reader) (*admin.BackupSna
 	return out, nil
 }
 
-func (opts *updateSnapshotRetentionOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateSnapshotRetentionOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -2718,28 +2917,29 @@ func (opts *updateSnapshotRetentionOpts) run(ctx context.Context, r io.Reader, w
 		BackupSnapshotRetention: data,
 	}
 
-	resp, _, err := opts.client.CloudBackupsApi.UpdateSnapshotRetentionWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudBackupsApi.UpdateSnapshotRetentionWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateSnapshotRetentionOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateSnapshotRetentionBuilder() *cobra.Command {
@@ -2753,7 +2953,10 @@ func updateSnapshotRetentionBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

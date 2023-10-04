@@ -13,6 +13,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"{{sdkImport}}/admin"
@@ -33,8 +34,17 @@ type {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts struct {
 	{{#returnType}}
 	format string
 	tmpl *template.Template
+	{{#returnProperty}}
+	resp {{#isFile}}{{dataType}}{{/isFile}}{{#isPrimitiveType}}{{dataType}}{{/isPrimitiveType}}{{^isFile}}{{^isPrimitiveType}}{{#isArray}}[]{{/isArray}}{{^isArray}}*{{/isArray}}admin.{{complexType}}{{/isPrimitiveType}}{{/isFile}}
+	{{/returnProperty}}
 	{{/returnType}}
+	{{#vendorExtensions.x-watcher-operation}}
+	watchEnabled bool
+	watchTimeout string
+	wt time.Duration
+	{{/vendorExtensions.x-watcher-operation}}
 }
+
 
 func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) preRun() (err error) {
 	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
@@ -67,11 +77,18 @@ func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) preRu
 
 	{{#returnType}}
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 	{{/returnType}}
+	{{#vendorExtensions.x-watcher-operation}}
+	if opts.wt, err = time.ParseDuration(opts.watchTimeout); err != nil {
+		return err
+	}
+	{{/vendorExtensions.x-watcher-operation}}
 
-	return err
+	return nil
 }
 
 {{#bodyParam}}
@@ -98,7 +115,7 @@ func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) readD
 }
 {{/bodyParam}}
 
-func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) run(ctx context.Context, {{^bodyParam}}_{{/bodyParam}}{{#bodyParam}}r{{/bodyParam}} io.Reader, {{^returnType}}_{{/returnType}}{{#returnType}}w{{/returnType}} io.Writer) error {
+func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) run(ctx context.Context, {{^bodyParam}}_{{/bodyParam}}{{#bodyParam}}r{{/bodyParam}} io.Reader) error {
 	{{#bodyParam}}
 	data, errData := opts.readData(r)
 	if errData != nil {
@@ -123,30 +140,79 @@ func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) run(c
 		{{/bodyParam}}
 	}
 
-	{{#returnType}}resp, {{/returnType}}_, err := opts.client.{{classname}}.{{operationId}}WithParams(ctx, params).Execute()
-	{{#returnType}}
-	if err != nil {
-		return err
+	var err error
+	{{#returnType}}opts.resp, {{/returnType}}_, err = opts.client.{{classname}}.{{operationId}}WithParams(ctx, params).Execute()
+	return err
+}
+
+{{#vendorExtensions.x-watcher-operation}}
+func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) watch(ctx context.Context) error {
+	if !opts.watchEnabled {
+		return nil
 	}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+	spin := spinner.New(spinner.CharSets[9], 100 * time.Millisecond)
+	spin.Start()
+	defer spin.Stop()
+	
+	watchCtx, cancel := context.WithTimeout(ctx, opts.wt)
+	defer cancel()
+	for {
+		select {
+			case <-watchCtx.Done():
+				return watchCtx.Err()
+			default:
+				params := &admin.{{#lambda.titlecase}}{{.}}{{/lambda.titlecase}}ApiParams{
+					{{#vendorExtensions.x-watcher-params.0}}
+					{{key}}: *opts.resp.{{value}},
+					{{/vendorExtensions.x-watcher-params.0}}
+					{{#vendorExtensions.x-watcher-params.1}}
+					{{key}}: *opts.resp.{{value}},
+					{{/vendorExtensions.x-watcher-params.1}}
+					{{#vendorExtensions.x-watcher-params.2}}
+					{{key}}: *opts.resp.{{value}},
+					{{/vendorExtensions.x-watcher-params.2}}
+				}
+				resp, _, err := opts.client.{{classname}}.{{#lambda.titlecase}}{{.}}{{/lambda.titlecase}}WithParams(ctx, params).Execute()
+				if err != nil {
+					return err
+				}
+				if resp.{{vendorExtensions.x-watcher-return-property}} != nil && *resp.{{vendorExtensions.x-watcher-return-property}} == "{{vendorExtensions.x-watcher-state}}" {
+					return nil
+				}
+		}
+	}
+}
+{{/vendorExtensions.x-watcher-operation}}
+
+func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) postRun({{#vendorExtensions.x-watcher-operation}}ctx{{/vendorExtensions.x-watcher-operation}}{{^vendorExtensions.x-watcher-operation}}_{{/vendorExtensions.x-watcher-operation}} context.Context, {{^returnType}}_{{/returnType}}{{#returnType}}w{{/returnType}} io.Writer) error {
+	{{#vendorExtensions.x-watcher-operation}}
+	if err := opts.watch(ctx); err != nil {
+		return err
+	}
+	{{/vendorExtensions.x-watcher-operation}}
+	
+	{{^returnType}}
+	return nil
+	{{/returnType}}
+	{{#returnType}}
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
+	return opts.tmpl.Execute(w, parsedJSON)
 	{{/returnType}}
-	return err
 }
 
 func {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Builder() *cobra.Command {
@@ -162,7 +228,10 @@ func {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Builder() *cobra.C
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 {{#allParams}}
@@ -176,6 +245,10 @@ func {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Builder() *cobra.C
 	{{#returnType}}
 	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	{{/returnType}}
+	{{#vendorExtensions.x-watcher-operation}}
+	cmd.Flags().BoolVarP(&opts.watchEnabled, "watch", "w", false, "{{vendorExtensions.x-watcher-description}}")
+	cmd.Flags().StringVar(&opts.watchTimeout, "timeout", "5m", "{{vendorExtensions.x-watcher-timeout-description}}")
+	{{/vendorExtensions.x-watcher-operation}}
 	return cmd
 }
 {{/operation}}

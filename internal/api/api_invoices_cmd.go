@@ -40,6 +40,7 @@ type createCostExplorerQueryProcessOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.CostExplorerFilterResponse
 }
 
 func (opts *createCostExplorerQueryProcessOpts) preRun() (err error) {
@@ -59,10 +60,12 @@ func (opts *createCostExplorerQueryProcessOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createCostExplorerQueryProcessOpts) readData(r io.Reader) (*admin.CostExplorerFilterRequestBody, error) {
@@ -87,7 +90,7 @@ func (opts *createCostExplorerQueryProcessOpts) readData(r io.Reader) (*admin.Co
 	return out, nil
 }
 
-func (opts *createCostExplorerQueryProcessOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createCostExplorerQueryProcessOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -99,28 +102,29 @@ func (opts *createCostExplorerQueryProcessOpts) run(ctx context.Context, r io.Re
 		CostExplorerFilterRequestBody: data,
 	}
 
-	resp, _, err := opts.client.InvoicesApi.CreateCostExplorerQueryProcessWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.InvoicesApi.CreateCostExplorerQueryProcessWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createCostExplorerQueryProcessOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createCostExplorerQueryProcessBuilder() *cobra.Command {
@@ -134,7 +138,10 @@ func createCostExplorerQueryProcessBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -151,6 +158,7 @@ type createCostExplorerQueryProcess1Opts struct {
 	token  string
 	format string
 	tmpl   *template.Template
+	resp   string
 }
 
 func (opts *createCostExplorerQueryProcess1Opts) preRun() (err error) {
@@ -170,41 +178,44 @@ func (opts *createCostExplorerQueryProcess1Opts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *createCostExplorerQueryProcess1Opts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *createCostExplorerQueryProcess1Opts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.CreateCostExplorerQueryProcess1ApiParams{
 		OrgId: opts.orgId,
 		Token: opts.token,
 	}
 
-	resp, _, err := opts.client.InvoicesApi.CreateCostExplorerQueryProcess1WithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.InvoicesApi.CreateCostExplorerQueryProcess1WithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createCostExplorerQueryProcess1Opts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createCostExplorerQueryProcess1Builder() *cobra.Command {
@@ -216,7 +227,10 @@ func createCostExplorerQueryProcess1Builder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -233,6 +247,7 @@ type downloadInvoiceCSVOpts struct {
 	invoiceId string
 	format    string
 	tmpl      *template.Template
+	resp      string
 }
 
 func (opts *downloadInvoiceCSVOpts) preRun() (err error) {
@@ -252,41 +267,44 @@ func (opts *downloadInvoiceCSVOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *downloadInvoiceCSVOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *downloadInvoiceCSVOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DownloadInvoiceCSVApiParams{
 		OrgId:     opts.orgId,
 		InvoiceId: opts.invoiceId,
 	}
 
-	resp, _, err := opts.client.InvoicesApi.DownloadInvoiceCSVWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.InvoicesApi.DownloadInvoiceCSVWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *downloadInvoiceCSVOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func downloadInvoiceCSVBuilder() *cobra.Command {
@@ -298,7 +316,10 @@ func downloadInvoiceCSVBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -315,6 +336,7 @@ type getInvoiceOpts struct {
 	invoiceId string
 	format    string
 	tmpl      *template.Template
+	resp      string
 }
 
 func (opts *getInvoiceOpts) preRun() (err error) {
@@ -334,41 +356,44 @@ func (opts *getInvoiceOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getInvoiceOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getInvoiceOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetInvoiceApiParams{
 		OrgId:     opts.orgId,
 		InvoiceId: opts.invoiceId,
 	}
 
-	resp, _, err := opts.client.InvoicesApi.GetInvoiceWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.InvoicesApi.GetInvoiceWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getInvoiceOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getInvoiceBuilder() *cobra.Command {
@@ -380,7 +405,10 @@ func getInvoiceBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -399,6 +427,7 @@ type listInvoicesOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedApiInvoice
 }
 
 func (opts *listInvoicesOpts) preRun() (err error) {
@@ -418,13 +447,15 @@ func (opts *listInvoicesOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listInvoicesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listInvoicesOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListInvoicesApiParams{
 		OrgId:        opts.orgId,
@@ -433,28 +464,29 @@ func (opts *listInvoicesOpts) run(ctx context.Context, _ io.Reader, w io.Writer)
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.InvoicesApi.ListInvoicesWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.InvoicesApi.ListInvoicesWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listInvoicesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listInvoicesBuilder() *cobra.Command {
@@ -466,7 +498,10 @@ func listInvoicesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -483,6 +518,7 @@ type listPendingInvoicesOpts struct {
 	orgId  string
 	format string
 	tmpl   *template.Template
+	resp   *admin.PaginatedApiInvoice
 }
 
 func (opts *listPendingInvoicesOpts) preRun() (err error) {
@@ -502,40 +538,43 @@ func (opts *listPendingInvoicesOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listPendingInvoicesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listPendingInvoicesOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListPendingInvoicesApiParams{
 		OrgId: opts.orgId,
 	}
 
-	resp, _, err := opts.client.InvoicesApi.ListPendingInvoicesWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.InvoicesApi.ListPendingInvoicesWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listPendingInvoicesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listPendingInvoicesBuilder() *cobra.Command {
@@ -547,7 +586,10 @@ func listPendingInvoicesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)

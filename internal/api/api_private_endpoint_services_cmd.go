@@ -42,6 +42,7 @@ type createPrivateEndpointOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.PrivateLinkEndpoint
 }
 
 func (opts *createPrivateEndpointOpts) preRun() (err error) {
@@ -61,10 +62,12 @@ func (opts *createPrivateEndpointOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createPrivateEndpointOpts) readData(r io.Reader) (*admin.CreateEndpointRequest, error) {
@@ -89,7 +92,7 @@ func (opts *createPrivateEndpointOpts) readData(r io.Reader) (*admin.CreateEndpo
 	return out, nil
 }
 
-func (opts *createPrivateEndpointOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createPrivateEndpointOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -103,28 +106,29 @@ func (opts *createPrivateEndpointOpts) run(ctx context.Context, r io.Reader, w i
 		CreateEndpointRequest: data,
 	}
 
-	resp, _, err := opts.client.PrivateEndpointServicesApi.CreatePrivateEndpointWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.PrivateEndpointServicesApi.CreatePrivateEndpointWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createPrivateEndpointOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createPrivateEndpointBuilder() *cobra.Command {
@@ -138,7 +142,10 @@ func createPrivateEndpointBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -161,6 +168,7 @@ type createPrivateEndpointServiceOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.EndpointService
 }
 
 func (opts *createPrivateEndpointServiceOpts) preRun() (err error) {
@@ -180,10 +188,12 @@ func (opts *createPrivateEndpointServiceOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createPrivateEndpointServiceOpts) readData(r io.Reader) (*admin.CloudProviderEndpointServiceRequest, error) {
@@ -208,7 +218,7 @@ func (opts *createPrivateEndpointServiceOpts) readData(r io.Reader) (*admin.Clou
 	return out, nil
 }
 
-func (opts *createPrivateEndpointServiceOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createPrivateEndpointServiceOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -220,28 +230,29 @@ func (opts *createPrivateEndpointServiceOpts) run(ctx context.Context, r io.Read
 		CloudProviderEndpointServiceRequest: data,
 	}
 
-	resp, _, err := opts.client.PrivateEndpointServicesApi.CreatePrivateEndpointServiceWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.PrivateEndpointServicesApi.CreatePrivateEndpointServiceWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createPrivateEndpointServiceOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createPrivateEndpointServiceBuilder() *cobra.Command {
@@ -255,7 +266,10 @@ func createPrivateEndpointServiceBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -274,6 +288,7 @@ type deletePrivateEndpointOpts struct {
 	endpointServiceId string
 	format            string
 	tmpl              *template.Template
+	resp              map[string]interface{}
 }
 
 func (opts *deletePrivateEndpointOpts) preRun() (err error) {
@@ -293,13 +308,15 @@ func (opts *deletePrivateEndpointOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deletePrivateEndpointOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deletePrivateEndpointOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeletePrivateEndpointApiParams{
 		GroupId:           opts.groupId,
@@ -308,28 +325,29 @@ func (opts *deletePrivateEndpointOpts) run(ctx context.Context, _ io.Reader, w i
 		EndpointServiceId: opts.endpointServiceId,
 	}
 
-	resp, _, err := opts.client.PrivateEndpointServicesApi.DeletePrivateEndpointWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.PrivateEndpointServicesApi.DeletePrivateEndpointWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deletePrivateEndpointOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deletePrivateEndpointBuilder() *cobra.Command {
@@ -341,7 +359,10 @@ func deletePrivateEndpointBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -363,6 +384,7 @@ type deletePrivateEndpointServiceOpts struct {
 	endpointServiceId string
 	format            string
 	tmpl              *template.Template
+	resp              map[string]interface{}
 }
 
 func (opts *deletePrivateEndpointServiceOpts) preRun() (err error) {
@@ -382,13 +404,15 @@ func (opts *deletePrivateEndpointServiceOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deletePrivateEndpointServiceOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deletePrivateEndpointServiceOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeletePrivateEndpointServiceApiParams{
 		GroupId:           opts.groupId,
@@ -396,28 +420,29 @@ func (opts *deletePrivateEndpointServiceOpts) run(ctx context.Context, _ io.Read
 		EndpointServiceId: opts.endpointServiceId,
 	}
 
-	resp, _, err := opts.client.PrivateEndpointServicesApi.DeletePrivateEndpointServiceWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.PrivateEndpointServicesApi.DeletePrivateEndpointServiceWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deletePrivateEndpointServiceOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deletePrivateEndpointServiceBuilder() *cobra.Command {
@@ -429,7 +454,10 @@ func deletePrivateEndpointServiceBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -450,6 +478,7 @@ type getPrivateEndpointOpts struct {
 	endpointServiceId string
 	format            string
 	tmpl              *template.Template
+	resp              *admin.PrivateLinkEndpoint
 }
 
 func (opts *getPrivateEndpointOpts) preRun() (err error) {
@@ -469,13 +498,15 @@ func (opts *getPrivateEndpointOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getPrivateEndpointOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getPrivateEndpointOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetPrivateEndpointApiParams{
 		GroupId:           opts.groupId,
@@ -484,28 +515,29 @@ func (opts *getPrivateEndpointOpts) run(ctx context.Context, _ io.Reader, w io.W
 		EndpointServiceId: opts.endpointServiceId,
 	}
 
-	resp, _, err := opts.client.PrivateEndpointServicesApi.GetPrivateEndpointWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.PrivateEndpointServicesApi.GetPrivateEndpointWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getPrivateEndpointOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getPrivateEndpointBuilder() *cobra.Command {
@@ -517,7 +549,10 @@ func getPrivateEndpointBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -539,6 +574,7 @@ type getPrivateEndpointServiceOpts struct {
 	endpointServiceId string
 	format            string
 	tmpl              *template.Template
+	resp              *admin.EndpointService
 }
 
 func (opts *getPrivateEndpointServiceOpts) preRun() (err error) {
@@ -558,13 +594,15 @@ func (opts *getPrivateEndpointServiceOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getPrivateEndpointServiceOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getPrivateEndpointServiceOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetPrivateEndpointServiceApiParams{
 		GroupId:           opts.groupId,
@@ -572,28 +610,29 @@ func (opts *getPrivateEndpointServiceOpts) run(ctx context.Context, _ io.Reader,
 		EndpointServiceId: opts.endpointServiceId,
 	}
 
-	resp, _, err := opts.client.PrivateEndpointServicesApi.GetPrivateEndpointServiceWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.PrivateEndpointServicesApi.GetPrivateEndpointServiceWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getPrivateEndpointServiceOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getPrivateEndpointServiceBuilder() *cobra.Command {
@@ -605,7 +644,10 @@ func getPrivateEndpointServiceBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -623,6 +665,7 @@ type getRegionalizedPrivateEndpointSettingOpts struct {
 	groupId string
 	format  string
 	tmpl    *template.Template
+	resp    *admin.ProjectSettingItem
 }
 
 func (opts *getRegionalizedPrivateEndpointSettingOpts) preRun() (err error) {
@@ -642,40 +685,43 @@ func (opts *getRegionalizedPrivateEndpointSettingOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getRegionalizedPrivateEndpointSettingOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getRegionalizedPrivateEndpointSettingOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetRegionalizedPrivateEndpointSettingApiParams{
 		GroupId: opts.groupId,
 	}
 
-	resp, _, err := opts.client.PrivateEndpointServicesApi.GetRegionalizedPrivateEndpointSettingWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.PrivateEndpointServicesApi.GetRegionalizedPrivateEndpointSettingWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getRegionalizedPrivateEndpointSettingOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
@@ -687,7 +733,10 @@ func getRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -702,6 +751,7 @@ type listPrivateEndpointServicesOpts struct {
 	cloudProvider string
 	format        string
 	tmpl          *template.Template
+	resp          []admin.EndpointService
 }
 
 func (opts *listPrivateEndpointServicesOpts) preRun() (err error) {
@@ -721,41 +771,44 @@ func (opts *listPrivateEndpointServicesOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listPrivateEndpointServicesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listPrivateEndpointServicesOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListPrivateEndpointServicesApiParams{
 		GroupId:       opts.groupId,
 		CloudProvider: opts.cloudProvider,
 	}
 
-	resp, _, err := opts.client.PrivateEndpointServicesApi.ListPrivateEndpointServicesWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.PrivateEndpointServicesApi.ListPrivateEndpointServicesWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listPrivateEndpointServicesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listPrivateEndpointServicesBuilder() *cobra.Command {
@@ -767,7 +820,10 @@ func listPrivateEndpointServicesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -786,6 +842,7 @@ type toggleRegionalizedPrivateEndpointSettingOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.ProjectSettingItem
 }
 
 func (opts *toggleRegionalizedPrivateEndpointSettingOpts) preRun() (err error) {
@@ -805,10 +862,12 @@ func (opts *toggleRegionalizedPrivateEndpointSettingOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *toggleRegionalizedPrivateEndpointSettingOpts) readData(r io.Reader) (*admin.ProjectSettingItem, error) {
@@ -833,7 +892,7 @@ func (opts *toggleRegionalizedPrivateEndpointSettingOpts) readData(r io.Reader) 
 	return out, nil
 }
 
-func (opts *toggleRegionalizedPrivateEndpointSettingOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *toggleRegionalizedPrivateEndpointSettingOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -845,28 +904,29 @@ func (opts *toggleRegionalizedPrivateEndpointSettingOpts) run(ctx context.Contex
 		ProjectSettingItem: data,
 	}
 
-	resp, _, err := opts.client.PrivateEndpointServicesApi.ToggleRegionalizedPrivateEndpointSettingWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.PrivateEndpointServicesApi.ToggleRegionalizedPrivateEndpointSettingWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *toggleRegionalizedPrivateEndpointSettingOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func toggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
@@ -880,7 +940,10 @@ func toggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

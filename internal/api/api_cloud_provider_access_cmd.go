@@ -41,6 +41,7 @@ type authorizeCloudProviderAccessRoleOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.CloudProviderAccessRole
 }
 
 func (opts *authorizeCloudProviderAccessRoleOpts) preRun() (err error) {
@@ -60,10 +61,12 @@ func (opts *authorizeCloudProviderAccessRoleOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *authorizeCloudProviderAccessRoleOpts) readData(r io.Reader) (*admin.CloudProviderAccessRole, error) {
@@ -88,7 +91,7 @@ func (opts *authorizeCloudProviderAccessRoleOpts) readData(r io.Reader) (*admin.
 	return out, nil
 }
 
-func (opts *authorizeCloudProviderAccessRoleOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *authorizeCloudProviderAccessRoleOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -101,28 +104,29 @@ func (opts *authorizeCloudProviderAccessRoleOpts) run(ctx context.Context, r io.
 		CloudProviderAccessRole: data,
 	}
 
-	resp, _, err := opts.client.CloudProviderAccessApi.AuthorizeCloudProviderAccessRoleWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudProviderAccessApi.AuthorizeCloudProviderAccessRoleWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *authorizeCloudProviderAccessRoleOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func authorizeCloudProviderAccessRoleBuilder() *cobra.Command {
@@ -136,7 +140,10 @@ func authorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -157,6 +164,7 @@ type createCloudProviderAccessRoleOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.CloudProviderAccessRole
 }
 
 func (opts *createCloudProviderAccessRoleOpts) preRun() (err error) {
@@ -176,10 +184,12 @@ func (opts *createCloudProviderAccessRoleOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createCloudProviderAccessRoleOpts) readData(r io.Reader) (*admin.CloudProviderAccessRole, error) {
@@ -204,7 +214,7 @@ func (opts *createCloudProviderAccessRoleOpts) readData(r io.Reader) (*admin.Clo
 	return out, nil
 }
 
-func (opts *createCloudProviderAccessRoleOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createCloudProviderAccessRoleOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -216,28 +226,29 @@ func (opts *createCloudProviderAccessRoleOpts) run(ctx context.Context, r io.Rea
 		CloudProviderAccessRole: data,
 	}
 
-	resp, _, err := opts.client.CloudProviderAccessApi.CreateCloudProviderAccessRoleWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudProviderAccessApi.CreateCloudProviderAccessRoleWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createCloudProviderAccessRoleOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createCloudProviderAccessRoleBuilder() *cobra.Command {
@@ -251,7 +262,10 @@ func createCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -285,10 +299,10 @@ func (opts *deauthorizeCloudProviderAccessRoleOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deauthorizeCloudProviderAccessRoleOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
+func (opts *deauthorizeCloudProviderAccessRoleOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeauthorizeCloudProviderAccessRoleApiParams{
 		GroupId:       opts.groupId,
@@ -296,8 +310,14 @@ func (opts *deauthorizeCloudProviderAccessRoleOpts) run(ctx context.Context, _ i
 		RoleId:        opts.roleId,
 	}
 
-	_, err := opts.client.CloudProviderAccessApi.DeauthorizeCloudProviderAccessRoleWithParams(ctx, params).Execute()
+	var err error
+	_, err = opts.client.CloudProviderAccessApi.DeauthorizeCloudProviderAccessRoleWithParams(ctx, params).Execute()
 	return err
+}
+
+func (opts *deauthorizeCloudProviderAccessRoleOpts) postRun(_ context.Context, _ io.Writer) error {
+
+	return nil
 }
 
 func deauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
@@ -309,7 +329,10 @@ func deauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -327,6 +350,7 @@ type getCloudProviderAccessRoleOpts struct {
 	roleId  string
 	format  string
 	tmpl    *template.Template
+	resp    *admin.CloudProviderAccessRole
 }
 
 func (opts *getCloudProviderAccessRoleOpts) preRun() (err error) {
@@ -346,41 +370,44 @@ func (opts *getCloudProviderAccessRoleOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getCloudProviderAccessRoleOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getCloudProviderAccessRoleOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetCloudProviderAccessRoleApiParams{
 		GroupId: opts.groupId,
 		RoleId:  opts.roleId,
 	}
 
-	resp, _, err := opts.client.CloudProviderAccessApi.GetCloudProviderAccessRoleWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudProviderAccessApi.GetCloudProviderAccessRoleWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getCloudProviderAccessRoleOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getCloudProviderAccessRoleBuilder() *cobra.Command {
@@ -392,7 +419,10 @@ func getCloudProviderAccessRoleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -408,6 +438,7 @@ type listCloudProviderAccessRolesOpts struct {
 	groupId string
 	format  string
 	tmpl    *template.Template
+	resp    *admin.CloudProviderAccessRoles
 }
 
 func (opts *listCloudProviderAccessRolesOpts) preRun() (err error) {
@@ -427,40 +458,43 @@ func (opts *listCloudProviderAccessRolesOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listCloudProviderAccessRolesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listCloudProviderAccessRolesOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListCloudProviderAccessRolesApiParams{
 		GroupId: opts.groupId,
 	}
 
-	resp, _, err := opts.client.CloudProviderAccessApi.ListCloudProviderAccessRolesWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudProviderAccessApi.ListCloudProviderAccessRolesWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listCloudProviderAccessRolesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listCloudProviderAccessRolesBuilder() *cobra.Command {
@@ -472,7 +506,10 @@ func listCloudProviderAccessRolesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

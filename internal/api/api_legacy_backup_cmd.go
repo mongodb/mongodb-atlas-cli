@@ -39,6 +39,7 @@ type deleteLegacySnapshotOpts struct {
 	snapshotId  string
 	format      string
 	tmpl        *template.Template
+	resp        map[string]interface{}
 }
 
 func (opts *deleteLegacySnapshotOpts) preRun() (err error) {
@@ -58,13 +59,15 @@ func (opts *deleteLegacySnapshotOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteLegacySnapshotOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteLegacySnapshotOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteLegacySnapshotApiParams{
 		GroupId:     opts.groupId,
@@ -72,28 +75,29 @@ func (opts *deleteLegacySnapshotOpts) run(ctx context.Context, _ io.Reader, w io
 		SnapshotId:  opts.snapshotId,
 	}
 
-	resp, _, err := opts.client.LegacyBackupApi.DeleteLegacySnapshotWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.LegacyBackupApi.DeleteLegacySnapshotWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteLegacySnapshotOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteLegacySnapshotBuilder() *cobra.Command {
@@ -105,7 +109,10 @@ func deleteLegacySnapshotBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -125,6 +132,7 @@ type getLegacyBackupCheckpointOpts struct {
 	clusterName  string
 	format       string
 	tmpl         *template.Template
+	resp         *admin.ApiAtlasCheckpoint
 }
 
 func (opts *getLegacyBackupCheckpointOpts) preRun() (err error) {
@@ -144,13 +152,15 @@ func (opts *getLegacyBackupCheckpointOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getLegacyBackupCheckpointOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getLegacyBackupCheckpointOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetLegacyBackupCheckpointApiParams{
 		GroupId:      opts.groupId,
@@ -158,28 +168,29 @@ func (opts *getLegacyBackupCheckpointOpts) run(ctx context.Context, _ io.Reader,
 		ClusterName:  opts.clusterName,
 	}
 
-	resp, _, err := opts.client.LegacyBackupApi.GetLegacyBackupCheckpointWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.LegacyBackupApi.GetLegacyBackupCheckpointWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getLegacyBackupCheckpointOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getLegacyBackupCheckpointBuilder() *cobra.Command {
@@ -191,7 +202,10 @@ func getLegacyBackupCheckpointBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -211,6 +225,7 @@ type getLegacyBackupRestoreJobOpts struct {
 	jobId       string
 	format      string
 	tmpl        *template.Template
+	resp        *admin.BackupRestoreJob
 }
 
 func (opts *getLegacyBackupRestoreJobOpts) preRun() (err error) {
@@ -230,13 +245,15 @@ func (opts *getLegacyBackupRestoreJobOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getLegacyBackupRestoreJobOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getLegacyBackupRestoreJobOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetLegacyBackupRestoreJobApiParams{
 		GroupId:     opts.groupId,
@@ -244,28 +261,29 @@ func (opts *getLegacyBackupRestoreJobOpts) run(ctx context.Context, _ io.Reader,
 		JobId:       opts.jobId,
 	}
 
-	resp, _, err := opts.client.LegacyBackupApi.GetLegacyBackupRestoreJobWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.LegacyBackupApi.GetLegacyBackupRestoreJobWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getLegacyBackupRestoreJobOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getLegacyBackupRestoreJobBuilder() *cobra.Command {
@@ -277,7 +295,10 @@ func getLegacyBackupRestoreJobBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -297,6 +318,7 @@ type getLegacySnapshotOpts struct {
 	snapshotId  string
 	format      string
 	tmpl        *template.Template
+	resp        *admin.BackupSnapshot
 }
 
 func (opts *getLegacySnapshotOpts) preRun() (err error) {
@@ -316,13 +338,15 @@ func (opts *getLegacySnapshotOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getLegacySnapshotOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getLegacySnapshotOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetLegacySnapshotApiParams{
 		GroupId:     opts.groupId,
@@ -330,28 +354,29 @@ func (opts *getLegacySnapshotOpts) run(ctx context.Context, _ io.Reader, w io.Wr
 		SnapshotId:  opts.snapshotId,
 	}
 
-	resp, _, err := opts.client.LegacyBackupApi.GetLegacySnapshotWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.LegacyBackupApi.GetLegacySnapshotWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getLegacySnapshotOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getLegacySnapshotBuilder() *cobra.Command {
@@ -363,7 +388,10 @@ func getLegacySnapshotBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -382,6 +410,7 @@ type getLegacySnapshotScheduleOpts struct {
 	clusterName string
 	format      string
 	tmpl        *template.Template
+	resp        *admin.ApiAtlasSnapshotSchedule
 }
 
 func (opts *getLegacySnapshotScheduleOpts) preRun() (err error) {
@@ -401,41 +430,44 @@ func (opts *getLegacySnapshotScheduleOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getLegacySnapshotScheduleOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getLegacySnapshotScheduleOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetLegacySnapshotScheduleApiParams{
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 	}
 
-	resp, _, err := opts.client.LegacyBackupApi.GetLegacySnapshotScheduleWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.LegacyBackupApi.GetLegacySnapshotScheduleWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getLegacySnapshotScheduleOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getLegacySnapshotScheduleBuilder() *cobra.Command {
@@ -447,7 +479,10 @@ func getLegacySnapshotScheduleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -467,6 +502,7 @@ type listLegacyBackupCheckpointsOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedApiAtlasCheckpoint
 }
 
 func (opts *listLegacyBackupCheckpointsOpts) preRun() (err error) {
@@ -486,13 +522,15 @@ func (opts *listLegacyBackupCheckpointsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listLegacyBackupCheckpointsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listLegacyBackupCheckpointsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListLegacyBackupCheckpointsApiParams{
 		GroupId:      opts.groupId,
@@ -502,28 +540,29 @@ func (opts *listLegacyBackupCheckpointsOpts) run(ctx context.Context, _ io.Reade
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.LegacyBackupApi.ListLegacyBackupCheckpointsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.LegacyBackupApi.ListLegacyBackupCheckpointsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listLegacyBackupCheckpointsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listLegacyBackupCheckpointsBuilder() *cobra.Command {
@@ -535,7 +574,10 @@ func listLegacyBackupCheckpointsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -559,6 +601,7 @@ type listLegacyBackupRestoreJobsOpts struct {
 	batchId      string
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedRestoreJob
 }
 
 func (opts *listLegacyBackupRestoreJobsOpts) preRun() (err error) {
@@ -578,13 +621,15 @@ func (opts *listLegacyBackupRestoreJobsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listLegacyBackupRestoreJobsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listLegacyBackupRestoreJobsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListLegacyBackupRestoreJobsApiParams{
 		GroupId:      opts.groupId,
@@ -595,28 +640,29 @@ func (opts *listLegacyBackupRestoreJobsOpts) run(ctx context.Context, _ io.Reade
 		BatchId:      &opts.batchId,
 	}
 
-	resp, _, err := opts.client.LegacyBackupApi.ListLegacyBackupRestoreJobsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.LegacyBackupApi.ListLegacyBackupRestoreJobsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listLegacyBackupRestoreJobsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listLegacyBackupRestoreJobsBuilder() *cobra.Command {
@@ -628,7 +674,10 @@ func listLegacyBackupRestoreJobsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -653,6 +702,7 @@ type listLegacySnapshotsOpts struct {
 	completed    string
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedSnapshot
 }
 
 func (opts *listLegacySnapshotsOpts) preRun() (err error) {
@@ -672,13 +722,15 @@ func (opts *listLegacySnapshotsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listLegacySnapshotsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listLegacySnapshotsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListLegacySnapshotsApiParams{
 		GroupId:      opts.groupId,
@@ -689,28 +741,29 @@ func (opts *listLegacySnapshotsOpts) run(ctx context.Context, _ io.Reader, w io.
 		Completed:    &opts.completed,
 	}
 
-	resp, _, err := opts.client.LegacyBackupApi.ListLegacySnapshotsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.LegacyBackupApi.ListLegacySnapshotsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listLegacySnapshotsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listLegacySnapshotsBuilder() *cobra.Command {
@@ -722,7 +775,10 @@ func listLegacySnapshotsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -747,6 +803,7 @@ type updateLegacySnapshotRetentionOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.BackupSnapshot
 }
 
 func (opts *updateLegacySnapshotRetentionOpts) preRun() (err error) {
@@ -766,10 +823,12 @@ func (opts *updateLegacySnapshotRetentionOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateLegacySnapshotRetentionOpts) readData(r io.Reader) (*admin.BackupSnapshot, error) {
@@ -794,7 +853,7 @@ func (opts *updateLegacySnapshotRetentionOpts) readData(r io.Reader) (*admin.Bac
 	return out, nil
 }
 
-func (opts *updateLegacySnapshotRetentionOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateLegacySnapshotRetentionOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -808,28 +867,29 @@ func (opts *updateLegacySnapshotRetentionOpts) run(ctx context.Context, r io.Rea
 		BackupSnapshot: data,
 	}
 
-	resp, _, err := opts.client.LegacyBackupApi.UpdateLegacySnapshotRetentionWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.LegacyBackupApi.UpdateLegacySnapshotRetentionWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateLegacySnapshotRetentionOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateLegacySnapshotRetentionBuilder() *cobra.Command {
@@ -843,7 +903,10 @@ func updateLegacySnapshotRetentionBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -867,6 +930,7 @@ type updateLegacySnapshotScheduleOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.ApiAtlasSnapshotSchedule
 }
 
 func (opts *updateLegacySnapshotScheduleOpts) preRun() (err error) {
@@ -886,10 +950,12 @@ func (opts *updateLegacySnapshotScheduleOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateLegacySnapshotScheduleOpts) readData(r io.Reader) (*admin.ApiAtlasSnapshotSchedule, error) {
@@ -914,7 +980,7 @@ func (opts *updateLegacySnapshotScheduleOpts) readData(r io.Reader) (*admin.ApiA
 	return out, nil
 }
 
-func (opts *updateLegacySnapshotScheduleOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateLegacySnapshotScheduleOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -927,28 +993,29 @@ func (opts *updateLegacySnapshotScheduleOpts) run(ctx context.Context, r io.Read
 		ApiAtlasSnapshotSchedule: data,
 	}
 
-	resp, _, err := opts.client.LegacyBackupApi.UpdateLegacySnapshotScheduleWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.LegacyBackupApi.UpdateLegacySnapshotScheduleWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateLegacySnapshotScheduleOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateLegacySnapshotScheduleBuilder() *cobra.Command {
@@ -962,7 +1029,10 @@ func updateLegacySnapshotScheduleBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

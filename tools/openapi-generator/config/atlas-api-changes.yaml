@@ -2,6 +2,16 @@ paths:
   "/api/atlas/v2/groups/{groupId}/clusters":
     post:
       summary: TEST DESCRIPTION
+      x-watcher-state: IDLE
+      x-watcher-operation: getCluster
+      x-watcher-description: WATCH DESCRIPTION
+      x-watcher-timeout-description: WATCH TIMEOUT DESCRIPTION
+      x-watcher-return-property: StateName
+      x-watcher-params:
+        - key: GroupId
+          value: GroupId
+        - key: ClusterName
+          value: Name
 components:
   parameters:
     groupId:

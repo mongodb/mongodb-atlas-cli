@@ -23,6 +23,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 	"text/template"
 
@@ -40,6 +41,7 @@ type createDataFederationPrivateEndpointOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.PaginatedPrivateNetworkEndpointIdEntry
 }
 
 func (opts *createDataFederationPrivateEndpointOpts) preRun() (err error) {
@@ -59,10 +61,12 @@ func (opts *createDataFederationPrivateEndpointOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createDataFederationPrivateEndpointOpts) readData(r io.Reader) (*admin.PrivateNetworkEndpointIdEntry, error) {
@@ -87,7 +91,7 @@ func (opts *createDataFederationPrivateEndpointOpts) readData(r io.Reader) (*adm
 	return out, nil
 }
 
-func (opts *createDataFederationPrivateEndpointOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createDataFederationPrivateEndpointOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -99,28 +103,29 @@ func (opts *createDataFederationPrivateEndpointOpts) run(ctx context.Context, r 
 		PrivateNetworkEndpointIdEntry: data,
 	}
 
-	resp, _, err := opts.client.DataFederationApi.CreateDataFederationPrivateEndpointWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.DataFederationApi.CreateDataFederationPrivateEndpointWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createDataFederationPrivateEndpointOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createDataFederationPrivateEndpointBuilder() *cobra.Command {
@@ -134,7 +139,10 @@ func createDataFederationPrivateEndpointBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -154,6 +162,7 @@ type createFederatedDatabaseOpts struct {
 	fs                 afero.Fs
 	format             string
 	tmpl               *template.Template
+	resp               *admin.DataLakeTenant
 }
 
 func (opts *createFederatedDatabaseOpts) preRun() (err error) {
@@ -173,10 +182,12 @@ func (opts *createFederatedDatabaseOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createFederatedDatabaseOpts) readData(r io.Reader) (*admin.DataLakeTenant, error) {
@@ -201,7 +212,7 @@ func (opts *createFederatedDatabaseOpts) readData(r io.Reader) (*admin.DataLakeT
 	return out, nil
 }
 
-func (opts *createFederatedDatabaseOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createFederatedDatabaseOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -215,28 +226,29 @@ func (opts *createFederatedDatabaseOpts) run(ctx context.Context, r io.Reader, w
 		DataLakeTenant: data,
 	}
 
-	resp, _, err := opts.client.DataFederationApi.CreateFederatedDatabaseWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.DataFederationApi.CreateFederatedDatabaseWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createFederatedDatabaseOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createFederatedDatabaseBuilder() *cobra.Command {
@@ -250,7 +262,10 @@ func createFederatedDatabaseBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -272,6 +287,7 @@ type createOneDataFederationQueryLimitOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.DataFederationTenantQueryLimit
 }
 
 func (opts *createOneDataFederationQueryLimitOpts) preRun() (err error) {
@@ -291,10 +307,12 @@ func (opts *createOneDataFederationQueryLimitOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createOneDataFederationQueryLimitOpts) readData(r io.Reader) (*admin.DataFederationTenantQueryLimit, error) {
@@ -319,7 +337,7 @@ func (opts *createOneDataFederationQueryLimitOpts) readData(r io.Reader) (*admin
 	return out, nil
 }
 
-func (opts *createOneDataFederationQueryLimitOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createOneDataFederationQueryLimitOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -333,28 +351,29 @@ func (opts *createOneDataFederationQueryLimitOpts) run(ctx context.Context, r io
 		DataFederationTenantQueryLimit: data,
 	}
 
-	resp, _, err := opts.client.DataFederationApi.CreateOneDataFederationQueryLimitWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.DataFederationApi.CreateOneDataFederationQueryLimitWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createOneDataFederationQueryLimitOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createOneDataFederationQueryLimitBuilder() *cobra.Command {
@@ -368,7 +387,10 @@ func createOneDataFederationQueryLimitBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -397,6 +419,7 @@ type deleteDataFederationPrivateEndpointOpts struct {
 	endpointId string
 	format     string
 	tmpl       *template.Template
+	resp       map[string]interface{}
 }
 
 func (opts *deleteDataFederationPrivateEndpointOpts) preRun() (err error) {
@@ -416,41 +439,44 @@ func (opts *deleteDataFederationPrivateEndpointOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteDataFederationPrivateEndpointOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteDataFederationPrivateEndpointOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteDataFederationPrivateEndpointApiParams{
 		GroupId:    opts.groupId,
 		EndpointId: opts.endpointId,
 	}
 
-	resp, _, err := opts.client.DataFederationApi.DeleteDataFederationPrivateEndpointWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.DataFederationApi.DeleteDataFederationPrivateEndpointWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteDataFederationPrivateEndpointOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteDataFederationPrivateEndpointBuilder() *cobra.Command {
@@ -462,7 +488,10 @@ func deleteDataFederationPrivateEndpointBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -479,6 +508,7 @@ type deleteFederatedDatabaseOpts struct {
 	tenantName string
 	format     string
 	tmpl       *template.Template
+	resp       map[string]interface{}
 }
 
 func (opts *deleteFederatedDatabaseOpts) preRun() (err error) {
@@ -498,41 +528,44 @@ func (opts *deleteFederatedDatabaseOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteFederatedDatabaseOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteFederatedDatabaseOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteFederatedDatabaseApiParams{
 		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 	}
 
-	resp, _, err := opts.client.DataFederationApi.DeleteFederatedDatabaseWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.DataFederationApi.DeleteFederatedDatabaseWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteFederatedDatabaseOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteFederatedDatabaseBuilder() *cobra.Command {
@@ -544,7 +577,10 @@ func deleteFederatedDatabaseBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -562,6 +598,7 @@ type deleteOneDataFederationInstanceQueryLimitOpts struct {
 	limitName  string
 	format     string
 	tmpl       *template.Template
+	resp       map[string]interface{}
 }
 
 func (opts *deleteOneDataFederationInstanceQueryLimitOpts) preRun() (err error) {
@@ -581,13 +618,15 @@ func (opts *deleteOneDataFederationInstanceQueryLimitOpts) preRun() (err error) 
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteOneDataFederationInstanceQueryLimitOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteOneDataFederationInstanceQueryLimitOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteOneDataFederationInstanceQueryLimitApiParams{
 		GroupId:    opts.groupId,
@@ -595,28 +634,29 @@ func (opts *deleteOneDataFederationInstanceQueryLimitOpts) run(ctx context.Conte
 		LimitName:  opts.limitName,
 	}
 
-	resp, _, err := opts.client.DataFederationApi.DeleteOneDataFederationInstanceQueryLimitWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.DataFederationApi.DeleteOneDataFederationInstanceQueryLimitWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteOneDataFederationInstanceQueryLimitOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
@@ -628,7 +668,10 @@ func deleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -657,6 +700,7 @@ type downloadFederatedDatabaseQueryLogsOpts struct {
 	startDate  int64
 	format     string
 	tmpl       *template.Template
+	resp       *os.File
 }
 
 func (opts *downloadFederatedDatabaseQueryLogsOpts) preRun() (err error) {
@@ -676,13 +720,15 @@ func (opts *downloadFederatedDatabaseQueryLogsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *downloadFederatedDatabaseQueryLogsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *downloadFederatedDatabaseQueryLogsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DownloadFederatedDatabaseQueryLogsApiParams{
 		GroupId:    opts.groupId,
@@ -691,28 +737,29 @@ func (opts *downloadFederatedDatabaseQueryLogsOpts) run(ctx context.Context, _ i
 		StartDate:  &opts.startDate,
 	}
 
-	resp, _, err := opts.client.DataFederationApi.DownloadFederatedDatabaseQueryLogsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.DataFederationApi.DownloadFederatedDatabaseQueryLogsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *downloadFederatedDatabaseQueryLogsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func downloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
@@ -724,7 +771,10 @@ func downloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -743,6 +793,7 @@ type getDataFederationPrivateEndpointOpts struct {
 	endpointId string
 	format     string
 	tmpl       *template.Template
+	resp       *admin.PrivateNetworkEndpointIdEntry
 }
 
 func (opts *getDataFederationPrivateEndpointOpts) preRun() (err error) {
@@ -762,41 +813,44 @@ func (opts *getDataFederationPrivateEndpointOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getDataFederationPrivateEndpointOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getDataFederationPrivateEndpointOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetDataFederationPrivateEndpointApiParams{
 		GroupId:    opts.groupId,
 		EndpointId: opts.endpointId,
 	}
 
-	resp, _, err := opts.client.DataFederationApi.GetDataFederationPrivateEndpointWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.DataFederationApi.GetDataFederationPrivateEndpointWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getDataFederationPrivateEndpointOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getDataFederationPrivateEndpointBuilder() *cobra.Command {
@@ -808,7 +862,10 @@ func getDataFederationPrivateEndpointBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -825,6 +882,7 @@ type getFederatedDatabaseOpts struct {
 	tenantName string
 	format     string
 	tmpl       *template.Template
+	resp       *admin.DataLakeTenant
 }
 
 func (opts *getFederatedDatabaseOpts) preRun() (err error) {
@@ -844,41 +902,44 @@ func (opts *getFederatedDatabaseOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getFederatedDatabaseOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getFederatedDatabaseOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetFederatedDatabaseApiParams{
 		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 	}
 
-	resp, _, err := opts.client.DataFederationApi.GetFederatedDatabaseWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.DataFederationApi.GetFederatedDatabaseWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getFederatedDatabaseOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getFederatedDatabaseBuilder() *cobra.Command {
@@ -890,7 +951,10 @@ func getFederatedDatabaseBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -909,6 +973,7 @@ type listDataFederationPrivateEndpointsOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedPrivateNetworkEndpointIdEntry
 }
 
 func (opts *listDataFederationPrivateEndpointsOpts) preRun() (err error) {
@@ -928,13 +993,15 @@ func (opts *listDataFederationPrivateEndpointsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listDataFederationPrivateEndpointsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listDataFederationPrivateEndpointsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListDataFederationPrivateEndpointsApiParams{
 		GroupId:      opts.groupId,
@@ -943,28 +1010,29 @@ func (opts *listDataFederationPrivateEndpointsOpts) run(ctx context.Context, _ i
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.DataFederationApi.ListDataFederationPrivateEndpointsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.DataFederationApi.ListDataFederationPrivateEndpointsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listDataFederationPrivateEndpointsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listDataFederationPrivateEndpointsBuilder() *cobra.Command {
@@ -976,7 +1044,10 @@ func listDataFederationPrivateEndpointsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -994,6 +1065,7 @@ type listFederatedDatabasesOpts struct {
 	type_   string
 	format  string
 	tmpl    *template.Template
+	resp    []admin.DataLakeTenant
 }
 
 func (opts *listFederatedDatabasesOpts) preRun() (err error) {
@@ -1013,41 +1085,44 @@ func (opts *listFederatedDatabasesOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listFederatedDatabasesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listFederatedDatabasesOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListFederatedDatabasesApiParams{
 		GroupId: opts.groupId,
 		Type_:   &opts.type_,
 	}
 
-	resp, _, err := opts.client.DataFederationApi.ListFederatedDatabasesWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.DataFederationApi.ListFederatedDatabasesWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listFederatedDatabasesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listFederatedDatabasesBuilder() *cobra.Command {
@@ -1059,7 +1134,10 @@ func listFederatedDatabasesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1076,6 +1154,7 @@ type returnFederatedDatabaseQueryLimitOpts struct {
 	limitName  string
 	format     string
 	tmpl       *template.Template
+	resp       *admin.DataFederationTenantQueryLimit
 }
 
 func (opts *returnFederatedDatabaseQueryLimitOpts) preRun() (err error) {
@@ -1095,13 +1174,15 @@ func (opts *returnFederatedDatabaseQueryLimitOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *returnFederatedDatabaseQueryLimitOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *returnFederatedDatabaseQueryLimitOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ReturnFederatedDatabaseQueryLimitApiParams{
 		GroupId:    opts.groupId,
@@ -1109,28 +1190,29 @@ func (opts *returnFederatedDatabaseQueryLimitOpts) run(ctx context.Context, _ io
 		LimitName:  opts.limitName,
 	}
 
-	resp, _, err := opts.client.DataFederationApi.ReturnFederatedDatabaseQueryLimitWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.DataFederationApi.ReturnFederatedDatabaseQueryLimitWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *returnFederatedDatabaseQueryLimitOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func returnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
@@ -1142,7 +1224,10 @@ func returnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1169,6 +1254,7 @@ type returnFederatedDatabaseQueryLimitsOpts struct {
 	tenantName string
 	format     string
 	tmpl       *template.Template
+	resp       []admin.DataFederationTenantQueryLimit
 }
 
 func (opts *returnFederatedDatabaseQueryLimitsOpts) preRun() (err error) {
@@ -1188,41 +1274,44 @@ func (opts *returnFederatedDatabaseQueryLimitsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *returnFederatedDatabaseQueryLimitsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *returnFederatedDatabaseQueryLimitsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ReturnFederatedDatabaseQueryLimitsApiParams{
 		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 	}
 
-	resp, _, err := opts.client.DataFederationApi.ReturnFederatedDatabaseQueryLimitsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.DataFederationApi.ReturnFederatedDatabaseQueryLimitsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *returnFederatedDatabaseQueryLimitsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func returnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
@@ -1234,7 +1323,10 @@ func returnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1255,6 +1347,7 @@ type updateFederatedDatabaseOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.DataLakeTenant
 }
 
 func (opts *updateFederatedDatabaseOpts) preRun() (err error) {
@@ -1274,10 +1367,12 @@ func (opts *updateFederatedDatabaseOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateFederatedDatabaseOpts) readData(r io.Reader) (*admin.DataLakeTenant, error) {
@@ -1302,7 +1397,7 @@ func (opts *updateFederatedDatabaseOpts) readData(r io.Reader) (*admin.DataLakeT
 	return out, nil
 }
 
-func (opts *updateFederatedDatabaseOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateFederatedDatabaseOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -1316,28 +1411,29 @@ func (opts *updateFederatedDatabaseOpts) run(ctx context.Context, r io.Reader, w
 		DataLakeTenant: data,
 	}
 
-	resp, _, err := opts.client.DataFederationApi.UpdateFederatedDatabaseWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.DataFederationApi.UpdateFederatedDatabaseWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateFederatedDatabaseOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateFederatedDatabaseBuilder() *cobra.Command {
@@ -1351,7 +1447,10 @@ func updateFederatedDatabaseBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

@@ -23,6 +23,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 	"text/template"
 	"time"
@@ -38,6 +39,7 @@ type getAtlasProcessOpts struct {
 	processId string
 	format    string
 	tmpl      *template.Template
+	resp      *admin.ApiHostViewAtlas
 }
 
 func (opts *getAtlasProcessOpts) preRun() (err error) {
@@ -57,41 +59,44 @@ func (opts *getAtlasProcessOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getAtlasProcessOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getAtlasProcessOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetAtlasProcessApiParams{
 		GroupId:   opts.groupId,
 		ProcessId: opts.processId,
 	}
 
-	resp, _, err := opts.client.MonitoringAndLogsApi.GetAtlasProcessWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.MonitoringAndLogsApi.GetAtlasProcessWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getAtlasProcessOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getAtlasProcessBuilder() *cobra.Command {
@@ -103,7 +108,10 @@ func getAtlasProcessBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -121,6 +129,7 @@ type getDatabaseOpts struct {
 	processId    string
 	format       string
 	tmpl         *template.Template
+	resp         *admin.MesurementsDatabase
 }
 
 func (opts *getDatabaseOpts) preRun() (err error) {
@@ -140,13 +149,15 @@ func (opts *getDatabaseOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getDatabaseOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getDatabaseOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetDatabaseApiParams{
 		GroupId:      opts.groupId,
@@ -154,28 +165,29 @@ func (opts *getDatabaseOpts) run(ctx context.Context, _ io.Reader, w io.Writer) 
 		ProcessId:    opts.processId,
 	}
 
-	resp, _, err := opts.client.MonitoringAndLogsApi.GetDatabaseWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.MonitoringAndLogsApi.GetDatabaseWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getDatabaseOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getDatabaseBuilder() *cobra.Command {
@@ -187,7 +199,10 @@ func getDatabaseBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -212,6 +227,7 @@ type getDatabaseMeasurementsOpts struct {
 	end          string
 	format       string
 	tmpl         *template.Template
+	resp         *admin.ApiMeasurementsGeneralViewAtlas
 }
 
 func (opts *getDatabaseMeasurementsOpts) preRun() (err error) {
@@ -231,13 +247,15 @@ func (opts *getDatabaseMeasurementsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getDatabaseMeasurementsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getDatabaseMeasurementsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	var start *time.Time
 	var errStart error
@@ -268,28 +286,29 @@ func (opts *getDatabaseMeasurementsOpts) run(ctx context.Context, _ io.Reader, w
 		End:          end,
 	}
 
-	resp, _, err := opts.client.MonitoringAndLogsApi.GetDatabaseMeasurementsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.MonitoringAndLogsApi.GetDatabaseMeasurementsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getDatabaseMeasurementsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getDatabaseMeasurementsBuilder() *cobra.Command {
@@ -301,7 +320,10 @@ func getDatabaseMeasurementsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -332,6 +354,7 @@ type getDiskMeasurementsOpts struct {
 	end           string
 	format        string
 	tmpl          *template.Template
+	resp          *admin.ApiMeasurementsGeneralViewAtlas
 }
 
 func (opts *getDiskMeasurementsOpts) preRun() (err error) {
@@ -351,13 +374,15 @@ func (opts *getDiskMeasurementsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getDiskMeasurementsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getDiskMeasurementsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	var start *time.Time
 	var errStart error
@@ -388,28 +413,29 @@ func (opts *getDiskMeasurementsOpts) run(ctx context.Context, _ io.Reader, w io.
 		End:           end,
 	}
 
-	resp, _, err := opts.client.MonitoringAndLogsApi.GetDiskMeasurementsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.MonitoringAndLogsApi.GetDiskMeasurementsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getDiskMeasurementsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getDiskMeasurementsBuilder() *cobra.Command {
@@ -421,7 +447,10 @@ func getDiskMeasurementsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -449,6 +478,7 @@ type getHostLogsOpts struct {
 	startDate int64
 	format    string
 	tmpl      *template.Template
+	resp      *os.File
 }
 
 func (opts *getHostLogsOpts) preRun() (err error) {
@@ -468,13 +498,15 @@ func (opts *getHostLogsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getHostLogsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getHostLogsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetHostLogsApiParams{
 		GroupId:   opts.groupId,
@@ -484,28 +516,29 @@ func (opts *getHostLogsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) 
 		StartDate: &opts.startDate,
 	}
 
-	resp, _, err := opts.client.MonitoringAndLogsApi.GetHostLogsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.MonitoringAndLogsApi.GetHostLogsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getHostLogsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getHostLogsBuilder() *cobra.Command {
@@ -517,7 +550,10 @@ func getHostLogsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -543,6 +579,7 @@ type getHostMeasurementsOpts struct {
 	end         string
 	format      string
 	tmpl        *template.Template
+	resp        *admin.ApiMeasurementsGeneralViewAtlas
 }
 
 func (opts *getHostMeasurementsOpts) preRun() (err error) {
@@ -562,13 +599,15 @@ func (opts *getHostMeasurementsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getHostMeasurementsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getHostMeasurementsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	var start *time.Time
 	var errStart error
@@ -598,28 +637,29 @@ func (opts *getHostMeasurementsOpts) run(ctx context.Context, _ io.Reader, w io.
 		End:         end,
 	}
 
-	resp, _, err := opts.client.MonitoringAndLogsApi.GetHostMeasurementsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.MonitoringAndLogsApi.GetHostMeasurementsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getHostMeasurementsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getHostMeasurementsBuilder() *cobra.Command {
@@ -631,7 +671,10 @@ func getHostMeasurementsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -662,6 +705,7 @@ type getIndexMetricsOpts struct {
 	end            string
 	format         string
 	tmpl           *template.Template
+	resp           *admin.MeasurementsIndexes
 }
 
 func (opts *getIndexMetricsOpts) preRun() (err error) {
@@ -681,13 +725,15 @@ func (opts *getIndexMetricsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getIndexMetricsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getIndexMetricsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	var start *time.Time
 	var errStart error
@@ -720,28 +766,29 @@ func (opts *getIndexMetricsOpts) run(ctx context.Context, _ io.Reader, w io.Writ
 		End:            end,
 	}
 
-	resp, _, err := opts.client.MonitoringAndLogsApi.GetIndexMetricsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.MonitoringAndLogsApi.GetIndexMetricsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getIndexMetricsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getIndexMetricsBuilder() *cobra.Command {
@@ -753,7 +800,10 @@ func getIndexMetricsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`)
@@ -788,6 +838,7 @@ type getMeasurementsOpts struct {
 	end         string
 	format      string
 	tmpl        *template.Template
+	resp        *admin.MeasurementsNonIndex
 }
 
 func (opts *getMeasurementsOpts) preRun() (err error) {
@@ -807,13 +858,15 @@ func (opts *getMeasurementsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getMeasurementsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getMeasurementsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	var start *time.Time
 	var errStart error
@@ -843,28 +896,29 @@ func (opts *getMeasurementsOpts) run(ctx context.Context, _ io.Reader, w io.Writ
 		End:         end,
 	}
 
-	resp, _, err := opts.client.MonitoringAndLogsApi.GetMeasurementsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.MonitoringAndLogsApi.GetMeasurementsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getMeasurementsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getMeasurementsBuilder() *cobra.Command {
@@ -876,7 +930,10 @@ func getMeasurementsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`)
@@ -902,6 +959,7 @@ type listAtlasProcessesOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedHostViewAtlas
 }
 
 func (opts *listAtlasProcessesOpts) preRun() (err error) {
@@ -921,13 +979,15 @@ func (opts *listAtlasProcessesOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listAtlasProcessesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listAtlasProcessesOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListAtlasProcessesApiParams{
 		GroupId:      opts.groupId,
@@ -936,28 +996,29 @@ func (opts *listAtlasProcessesOpts) run(ctx context.Context, _ io.Reader, w io.W
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.MonitoringAndLogsApi.ListAtlasProcessesWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.MonitoringAndLogsApi.ListAtlasProcessesWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listAtlasProcessesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listAtlasProcessesBuilder() *cobra.Command {
@@ -969,7 +1030,10 @@ func listAtlasProcessesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -990,6 +1054,7 @@ type listDatabasesOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedDatabase
 }
 
 func (opts *listDatabasesOpts) preRun() (err error) {
@@ -1009,13 +1074,15 @@ func (opts *listDatabasesOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listDatabasesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listDatabasesOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListDatabasesApiParams{
 		GroupId:      opts.groupId,
@@ -1025,28 +1092,29 @@ func (opts *listDatabasesOpts) run(ctx context.Context, _ io.Reader, w io.Writer
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.MonitoringAndLogsApi.ListDatabasesWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.MonitoringAndLogsApi.ListDatabasesWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listDatabasesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listDatabasesBuilder() *cobra.Command {
@@ -1058,7 +1126,10 @@ func listDatabasesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1079,6 +1150,7 @@ type listDiskMeasurementsOpts struct {
 	processId     string
 	format        string
 	tmpl          *template.Template
+	resp          *admin.MeasurementDiskPartition
 }
 
 func (opts *listDiskMeasurementsOpts) preRun() (err error) {
@@ -1098,13 +1170,15 @@ func (opts *listDiskMeasurementsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listDiskMeasurementsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listDiskMeasurementsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListDiskMeasurementsApiParams{
 		PartitionName: opts.partitionName,
@@ -1112,28 +1186,29 @@ func (opts *listDiskMeasurementsOpts) run(ctx context.Context, _ io.Reader, w io
 		ProcessId:     opts.processId,
 	}
 
-	resp, _, err := opts.client.MonitoringAndLogsApi.ListDiskMeasurementsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.MonitoringAndLogsApi.ListDiskMeasurementsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listDiskMeasurementsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listDiskMeasurementsBuilder() *cobra.Command {
@@ -1145,7 +1220,10 @@ func listDiskMeasurementsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.partitionName, "partitionName", "", `Human-readable label of the disk or partition to which the measurements apply.`)
@@ -1167,6 +1245,7 @@ type listDiskPartitionsOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedDiskPartition
 }
 
 func (opts *listDiskPartitionsOpts) preRun() (err error) {
@@ -1186,13 +1265,15 @@ func (opts *listDiskPartitionsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listDiskPartitionsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listDiskPartitionsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListDiskPartitionsApiParams{
 		GroupId:      opts.groupId,
@@ -1202,28 +1283,29 @@ func (opts *listDiskPartitionsOpts) run(ctx context.Context, _ io.Reader, w io.W
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.MonitoringAndLogsApi.ListDiskPartitionsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.MonitoringAndLogsApi.ListDiskPartitionsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listDiskPartitionsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listDiskPartitionsBuilder() *cobra.Command {
@@ -1235,7 +1317,10 @@ func listDiskPartitionsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1262,6 +1347,7 @@ type listIndexMetricsOpts struct {
 	end            string
 	format         string
 	tmpl           *template.Template
+	resp           *admin.MeasurementsIndexes
 }
 
 func (opts *listIndexMetricsOpts) preRun() (err error) {
@@ -1281,13 +1367,15 @@ func (opts *listIndexMetricsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listIndexMetricsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listIndexMetricsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	var start *time.Time
 	var errStart error
@@ -1319,28 +1407,29 @@ func (opts *listIndexMetricsOpts) run(ctx context.Context, _ io.Reader, w io.Wri
 		End:            end,
 	}
 
-	resp, _, err := opts.client.MonitoringAndLogsApi.ListIndexMetricsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.MonitoringAndLogsApi.ListIndexMetricsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listIndexMetricsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listIndexMetricsBuilder() *cobra.Command {
@@ -1352,7 +1441,10 @@ func listIndexMetricsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`)
@@ -1380,6 +1472,7 @@ type listMetricTypesOpts struct {
 	groupId   string
 	format    string
 	tmpl      *template.Template
+	resp      *admin.CloudSearchMetrics
 }
 
 func (opts *listMetricTypesOpts) preRun() (err error) {
@@ -1399,41 +1492,44 @@ func (opts *listMetricTypesOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listMetricTypesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listMetricTypesOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListMetricTypesApiParams{
 		ProcessId: opts.processId,
 		GroupId:   opts.groupId,
 	}
 
-	resp, _, err := opts.client.MonitoringAndLogsApi.ListMetricTypesWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.MonitoringAndLogsApi.ListMetricTypesWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listMetricTypesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listMetricTypesBuilder() *cobra.Command {
@@ -1445,7 +1541,10 @@ func listMetricTypesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.processId, "processId", "", `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`)

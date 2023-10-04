@@ -41,6 +41,7 @@ type acknowledgeAlertOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.AlertViewForNdsGroup
 }
 
 func (opts *acknowledgeAlertOpts) preRun() (err error) {
@@ -60,10 +61,12 @@ func (opts *acknowledgeAlertOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *acknowledgeAlertOpts) readData(r io.Reader) (*admin.AlertViewForNdsGroup, error) {
@@ -88,7 +91,7 @@ func (opts *acknowledgeAlertOpts) readData(r io.Reader) (*admin.AlertViewForNdsG
 	return out, nil
 }
 
-func (opts *acknowledgeAlertOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *acknowledgeAlertOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -101,28 +104,29 @@ func (opts *acknowledgeAlertOpts) run(ctx context.Context, r io.Reader, w io.Wri
 		AlertViewForNdsGroup: data,
 	}
 
-	resp, _, err := opts.client.AlertsApi.AcknowledgeAlertWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.AlertsApi.AcknowledgeAlertWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *acknowledgeAlertOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func acknowledgeAlertBuilder() *cobra.Command {
@@ -136,7 +140,10 @@ func acknowledgeAlertBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -155,6 +162,7 @@ type getAlertOpts struct {
 	alertId string
 	format  string
 	tmpl    *template.Template
+	resp    *admin.AlertViewForNdsGroup
 }
 
 func (opts *getAlertOpts) preRun() (err error) {
@@ -174,41 +182,44 @@ func (opts *getAlertOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getAlertOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getAlertOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetAlertApiParams{
 		GroupId: opts.groupId,
 		AlertId: opts.alertId,
 	}
 
-	resp, _, err := opts.client.AlertsApi.GetAlertWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.AlertsApi.GetAlertWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getAlertOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getAlertBuilder() *cobra.Command {
@@ -220,7 +231,10 @@ func getAlertBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -240,6 +254,7 @@ type listAlertsOpts struct {
 	status       string
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedAlert
 }
 
 func (opts *listAlertsOpts) preRun() (err error) {
@@ -259,13 +274,15 @@ func (opts *listAlertsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listAlertsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listAlertsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListAlertsApiParams{
 		GroupId:      opts.groupId,
@@ -275,28 +292,29 @@ func (opts *listAlertsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) e
 		Status:       &opts.status,
 	}
 
-	resp, _, err := opts.client.AlertsApi.ListAlertsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.AlertsApi.ListAlertsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listAlertsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listAlertsBuilder() *cobra.Command {
@@ -308,7 +326,10 @@ func listAlertsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -330,6 +351,7 @@ type listAlertsByAlertConfigurationIdOpts struct {
 	pageNum       int
 	format        string
 	tmpl          *template.Template
+	resp          *admin.PaginatedAlert
 }
 
 func (opts *listAlertsByAlertConfigurationIdOpts) preRun() (err error) {
@@ -349,13 +371,15 @@ func (opts *listAlertsByAlertConfigurationIdOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listAlertsByAlertConfigurationIdOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listAlertsByAlertConfigurationIdOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListAlertsByAlertConfigurationIdApiParams{
 		GroupId:       opts.groupId,
@@ -365,28 +389,29 @@ func (opts *listAlertsByAlertConfigurationIdOpts) run(ctx context.Context, _ io.
 		PageNum:       &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.AlertsApi.ListAlertsByAlertConfigurationIdWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.AlertsApi.ListAlertsByAlertConfigurationIdWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listAlertsByAlertConfigurationIdOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listAlertsByAlertConfigurationIdBuilder() *cobra.Command {
@@ -398,7 +423,10 @@ func listAlertsByAlertConfigurationIdBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

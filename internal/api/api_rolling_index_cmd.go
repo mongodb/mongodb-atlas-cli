@@ -55,7 +55,7 @@ func (opts *createRollingIndexOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createRollingIndexOpts) readData(r io.Reader) (*admin.DatabaseRollingIndexRequest, error) {
@@ -80,7 +80,7 @@ func (opts *createRollingIndexOpts) readData(r io.Reader) (*admin.DatabaseRollin
 	return out, nil
 }
 
-func (opts *createRollingIndexOpts) run(ctx context.Context, r io.Reader, _ io.Writer) error {
+func (opts *createRollingIndexOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -93,8 +93,14 @@ func (opts *createRollingIndexOpts) run(ctx context.Context, r io.Reader, _ io.W
 		DatabaseRollingIndexRequest: data,
 	}
 
-	_, err := opts.client.RollingIndexApi.CreateRollingIndexWithParams(ctx, params).Execute()
+	var err error
+	_, err = opts.client.RollingIndexApi.CreateRollingIndexWithParams(ctx, params).Execute()
 	return err
+}
+
+func (opts *createRollingIndexOpts) postRun(_ context.Context, _ io.Writer) error {
+
+	return nil
 }
 
 func createRollingIndexBuilder() *cobra.Command {
@@ -108,7 +114,10 @@ func createRollingIndexBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

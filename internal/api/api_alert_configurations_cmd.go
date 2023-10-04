@@ -40,6 +40,7 @@ type createAlertConfigurationOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.GroupAlertsConfig
 }
 
 func (opts *createAlertConfigurationOpts) preRun() (err error) {
@@ -59,10 +60,12 @@ func (opts *createAlertConfigurationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createAlertConfigurationOpts) readData(r io.Reader) (*admin.GroupAlertsConfig, error) {
@@ -87,7 +90,7 @@ func (opts *createAlertConfigurationOpts) readData(r io.Reader) (*admin.GroupAle
 	return out, nil
 }
 
-func (opts *createAlertConfigurationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createAlertConfigurationOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -99,28 +102,29 @@ func (opts *createAlertConfigurationOpts) run(ctx context.Context, r io.Reader, 
 		GroupAlertsConfig: data,
 	}
 
-	resp, _, err := opts.client.AlertConfigurationsApi.CreateAlertConfigurationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.AlertConfigurationsApi.CreateAlertConfigurationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createAlertConfigurationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createAlertConfigurationBuilder() *cobra.Command {
@@ -134,7 +138,10 @@ func createAlertConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -167,18 +174,24 @@ func (opts *deleteAlertConfigurationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteAlertConfigurationOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
+func (opts *deleteAlertConfigurationOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteAlertConfigurationApiParams{
 		GroupId:       opts.groupId,
 		AlertConfigId: opts.alertConfigId,
 	}
 
-	_, err := opts.client.AlertConfigurationsApi.DeleteAlertConfigurationWithParams(ctx, params).Execute()
+	var err error
+	_, err = opts.client.AlertConfigurationsApi.DeleteAlertConfigurationWithParams(ctx, params).Execute()
 	return err
+}
+
+func (opts *deleteAlertConfigurationOpts) postRun(_ context.Context, _ io.Writer) error {
+
+	return nil
 }
 
 func deleteAlertConfigurationBuilder() *cobra.Command {
@@ -190,7 +203,10 @@ func deleteAlertConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -206,6 +222,7 @@ type getAlertConfigurationOpts struct {
 	alertConfigId string
 	format        string
 	tmpl          *template.Template
+	resp          *admin.GroupAlertsConfig
 }
 
 func (opts *getAlertConfigurationOpts) preRun() (err error) {
@@ -225,41 +242,44 @@ func (opts *getAlertConfigurationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getAlertConfigurationOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getAlertConfigurationOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetAlertConfigurationApiParams{
 		GroupId:       opts.groupId,
 		AlertConfigId: opts.alertConfigId,
 	}
 
-	resp, _, err := opts.client.AlertConfigurationsApi.GetAlertConfigurationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.AlertConfigurationsApi.GetAlertConfigurationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getAlertConfigurationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getAlertConfigurationBuilder() *cobra.Command {
@@ -271,7 +291,10 @@ func getAlertConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -286,6 +309,7 @@ type listAlertConfigurationMatchersFieldNamesOpts struct {
 	client *admin.APIClient
 	format string
 	tmpl   *template.Template
+	resp   []string
 }
 
 func (opts *listAlertConfigurationMatchersFieldNamesOpts) preRun() (err error) {
@@ -294,38 +318,41 @@ func (opts *listAlertConfigurationMatchersFieldNamesOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listAlertConfigurationMatchersFieldNamesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listAlertConfigurationMatchersFieldNamesOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListAlertConfigurationMatchersFieldNamesApiParams{}
 
-	resp, _, err := opts.client.AlertConfigurationsApi.ListAlertConfigurationMatchersFieldNamesWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.AlertConfigurationsApi.ListAlertConfigurationMatchersFieldNamesWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listAlertConfigurationMatchersFieldNamesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listAlertConfigurationMatchersFieldNamesBuilder() *cobra.Command {
@@ -337,7 +364,10 @@ func listAlertConfigurationMatchersFieldNamesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 
@@ -353,6 +383,7 @@ type listAlertConfigurationsOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedAlertConfig
 }
 
 func (opts *listAlertConfigurationsOpts) preRun() (err error) {
@@ -372,13 +403,15 @@ func (opts *listAlertConfigurationsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listAlertConfigurationsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listAlertConfigurationsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListAlertConfigurationsApiParams{
 		GroupId:      opts.groupId,
@@ -387,28 +420,29 @@ func (opts *listAlertConfigurationsOpts) run(ctx context.Context, _ io.Reader, w
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.AlertConfigurationsApi.ListAlertConfigurationsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.AlertConfigurationsApi.ListAlertConfigurationsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listAlertConfigurationsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listAlertConfigurationsBuilder() *cobra.Command {
@@ -420,7 +454,10 @@ func listAlertConfigurationsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -441,6 +478,7 @@ type listAlertConfigurationsByAlertIdOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedAlertConfig
 }
 
 func (opts *listAlertConfigurationsByAlertIdOpts) preRun() (err error) {
@@ -460,13 +498,15 @@ func (opts *listAlertConfigurationsByAlertIdOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listAlertConfigurationsByAlertIdOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listAlertConfigurationsByAlertIdOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListAlertConfigurationsByAlertIdApiParams{
 		GroupId:      opts.groupId,
@@ -476,28 +516,29 @@ func (opts *listAlertConfigurationsByAlertIdOpts) run(ctx context.Context, _ io.
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.AlertConfigurationsApi.ListAlertConfigurationsByAlertIdWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.AlertConfigurationsApi.ListAlertConfigurationsByAlertIdWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listAlertConfigurationsByAlertIdOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listAlertConfigurationsByAlertIdBuilder() *cobra.Command {
@@ -509,7 +550,10 @@ func listAlertConfigurationsByAlertIdBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -532,6 +576,7 @@ type toggleAlertConfigurationOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.GroupAlertsConfig
 }
 
 func (opts *toggleAlertConfigurationOpts) preRun() (err error) {
@@ -551,10 +596,12 @@ func (opts *toggleAlertConfigurationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *toggleAlertConfigurationOpts) readData(r io.Reader) (*admin.AlertsToggle, error) {
@@ -579,7 +626,7 @@ func (opts *toggleAlertConfigurationOpts) readData(r io.Reader) (*admin.AlertsTo
 	return out, nil
 }
 
-func (opts *toggleAlertConfigurationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *toggleAlertConfigurationOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -592,28 +639,29 @@ func (opts *toggleAlertConfigurationOpts) run(ctx context.Context, r io.Reader, 
 		AlertsToggle: data,
 	}
 
-	resp, _, err := opts.client.AlertConfigurationsApi.ToggleAlertConfigurationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.AlertConfigurationsApi.ToggleAlertConfigurationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *toggleAlertConfigurationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func toggleAlertConfigurationBuilder() *cobra.Command {
@@ -627,7 +675,10 @@ func toggleAlertConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -649,6 +700,7 @@ type updateAlertConfigurationOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.GroupAlertsConfig
 }
 
 func (opts *updateAlertConfigurationOpts) preRun() (err error) {
@@ -668,10 +720,12 @@ func (opts *updateAlertConfigurationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateAlertConfigurationOpts) readData(r io.Reader) (*admin.GroupAlertsConfig, error) {
@@ -696,7 +750,7 @@ func (opts *updateAlertConfigurationOpts) readData(r io.Reader) (*admin.GroupAle
 	return out, nil
 }
 
-func (opts *updateAlertConfigurationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateAlertConfigurationOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -709,28 +763,29 @@ func (opts *updateAlertConfigurationOpts) run(ctx context.Context, r io.Reader, 
 		GroupAlertsConfig: data,
 	}
 
-	resp, _, err := opts.client.AlertConfigurationsApi.UpdateAlertConfigurationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.AlertConfigurationsApi.UpdateAlertConfigurationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateAlertConfigurationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateAlertConfigurationBuilder() *cobra.Command {
@@ -744,7 +799,10 @@ func updateAlertConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

@@ -41,6 +41,7 @@ type createStreamConnectionOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.StreamsConnection
 }
 
 func (opts *createStreamConnectionOpts) preRun() (err error) {
@@ -60,10 +61,12 @@ func (opts *createStreamConnectionOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createStreamConnectionOpts) readData(r io.Reader) (*admin.StreamsConnection, error) {
@@ -88,7 +91,7 @@ func (opts *createStreamConnectionOpts) readData(r io.Reader) (*admin.StreamsCon
 	return out, nil
 }
 
-func (opts *createStreamConnectionOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createStreamConnectionOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -101,28 +104,29 @@ func (opts *createStreamConnectionOpts) run(ctx context.Context, r io.Reader, w 
 		StreamsConnection: data,
 	}
 
-	resp, _, err := opts.client.StreamsApi.CreateStreamConnectionWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.StreamsApi.CreateStreamConnectionWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createStreamConnectionOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createStreamConnectionBuilder() *cobra.Command {
@@ -136,7 +140,10 @@ func createStreamConnectionBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -157,6 +164,7 @@ type createStreamInstanceOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.StreamsTenant
 }
 
 func (opts *createStreamInstanceOpts) preRun() (err error) {
@@ -176,10 +184,12 @@ func (opts *createStreamInstanceOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createStreamInstanceOpts) readData(r io.Reader) (*admin.StreamsTenant, error) {
@@ -204,7 +214,7 @@ func (opts *createStreamInstanceOpts) readData(r io.Reader) (*admin.StreamsTenan
 	return out, nil
 }
 
-func (opts *createStreamInstanceOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createStreamInstanceOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -216,28 +226,29 @@ func (opts *createStreamInstanceOpts) run(ctx context.Context, r io.Reader, w io
 		StreamsTenant: data,
 	}
 
-	resp, _, err := opts.client.StreamsApi.CreateStreamInstanceWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.StreamsApi.CreateStreamInstanceWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createStreamInstanceOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createStreamInstanceBuilder() *cobra.Command {
@@ -251,7 +262,10 @@ func createStreamInstanceBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -269,6 +283,7 @@ type deleteStreamConnectionOpts struct {
 	connectionName string
 	format         string
 	tmpl           *template.Template
+	resp           map[string]interface{}
 }
 
 func (opts *deleteStreamConnectionOpts) preRun() (err error) {
@@ -288,13 +303,15 @@ func (opts *deleteStreamConnectionOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteStreamConnectionOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteStreamConnectionOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteStreamConnectionApiParams{
 		GroupId:        opts.groupId,
@@ -302,28 +319,29 @@ func (opts *deleteStreamConnectionOpts) run(ctx context.Context, _ io.Reader, w 
 		ConnectionName: opts.connectionName,
 	}
 
-	resp, _, err := opts.client.StreamsApi.DeleteStreamConnectionWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.StreamsApi.DeleteStreamConnectionWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteStreamConnectionOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteStreamConnectionBuilder() *cobra.Command {
@@ -335,7 +353,10 @@ func deleteStreamConnectionBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -354,6 +375,7 @@ type deleteStreamInstanceOpts struct {
 	tenantName string
 	format     string
 	tmpl       *template.Template
+	resp       map[string]interface{}
 }
 
 func (opts *deleteStreamInstanceOpts) preRun() (err error) {
@@ -373,41 +395,44 @@ func (opts *deleteStreamInstanceOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteStreamInstanceOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteStreamInstanceOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteStreamInstanceApiParams{
 		GroupId:    opts.groupId,
 		TenantName: opts.tenantName,
 	}
 
-	resp, _, err := opts.client.StreamsApi.DeleteStreamInstanceWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.StreamsApi.DeleteStreamInstanceWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteStreamInstanceOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteStreamInstanceBuilder() *cobra.Command {
@@ -419,7 +444,10 @@ func deleteStreamInstanceBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -437,6 +465,7 @@ type getStreamConnectionOpts struct {
 	connectionName string
 	format         string
 	tmpl           *template.Template
+	resp           *admin.StreamsConnection
 }
 
 func (opts *getStreamConnectionOpts) preRun() (err error) {
@@ -456,13 +485,15 @@ func (opts *getStreamConnectionOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getStreamConnectionOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getStreamConnectionOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetStreamConnectionApiParams{
 		GroupId:        opts.groupId,
@@ -470,28 +501,29 @@ func (opts *getStreamConnectionOpts) run(ctx context.Context, _ io.Reader, w io.
 		ConnectionName: opts.connectionName,
 	}
 
-	resp, _, err := opts.client.StreamsApi.GetStreamConnectionWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.StreamsApi.GetStreamConnectionWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getStreamConnectionOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getStreamConnectionBuilder() *cobra.Command {
@@ -503,7 +535,10 @@ func getStreamConnectionBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -523,6 +558,7 @@ type getStreamInstanceOpts struct {
 	includeConnections bool
 	format             string
 	tmpl               *template.Template
+	resp               *admin.StreamsTenant
 }
 
 func (opts *getStreamInstanceOpts) preRun() (err error) {
@@ -542,13 +578,15 @@ func (opts *getStreamInstanceOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getStreamInstanceOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getStreamInstanceOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetStreamInstanceApiParams{
 		GroupId:            opts.groupId,
@@ -556,28 +594,29 @@ func (opts *getStreamInstanceOpts) run(ctx context.Context, _ io.Reader, w io.Wr
 		IncludeConnections: &opts.includeConnections,
 	}
 
-	resp, _, err := opts.client.StreamsApi.GetStreamInstanceWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.StreamsApi.GetStreamInstanceWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getStreamInstanceOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getStreamInstanceBuilder() *cobra.Command {
@@ -589,7 +628,10 @@ func getStreamInstanceBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -609,6 +651,7 @@ type listStreamConnectionsOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedApiStreamsConnection
 }
 
 func (opts *listStreamConnectionsOpts) preRun() (err error) {
@@ -628,13 +671,15 @@ func (opts *listStreamConnectionsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listStreamConnectionsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listStreamConnectionsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListStreamConnectionsApiParams{
 		GroupId:      opts.groupId,
@@ -643,28 +688,29 @@ func (opts *listStreamConnectionsOpts) run(ctx context.Context, _ io.Reader, w i
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.StreamsApi.ListStreamConnectionsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.StreamsApi.ListStreamConnectionsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listStreamConnectionsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listStreamConnectionsBuilder() *cobra.Command {
@@ -676,7 +722,10 @@ func listStreamConnectionsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -696,6 +745,7 @@ type listStreamInstancesOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedApiStreamsTenant
 }
 
 func (opts *listStreamInstancesOpts) preRun() (err error) {
@@ -715,13 +765,15 @@ func (opts *listStreamInstancesOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listStreamInstancesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listStreamInstancesOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListStreamInstancesApiParams{
 		GroupId:      opts.groupId,
@@ -729,28 +781,29 @@ func (opts *listStreamInstancesOpts) run(ctx context.Context, _ io.Reader, w io.
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.StreamsApi.ListStreamInstancesWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.StreamsApi.ListStreamInstancesWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listStreamInstancesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listStreamInstancesBuilder() *cobra.Command {
@@ -762,7 +815,10 @@ func listStreamInstancesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -783,6 +839,7 @@ type updateStreamConnectionOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.StreamsConnection
 }
 
 func (opts *updateStreamConnectionOpts) preRun() (err error) {
@@ -802,10 +859,12 @@ func (opts *updateStreamConnectionOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateStreamConnectionOpts) readData(r io.Reader) (*admin.StreamsConnection, error) {
@@ -830,7 +889,7 @@ func (opts *updateStreamConnectionOpts) readData(r io.Reader) (*admin.StreamsCon
 	return out, nil
 }
 
-func (opts *updateStreamConnectionOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateStreamConnectionOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -844,28 +903,29 @@ func (opts *updateStreamConnectionOpts) run(ctx context.Context, r io.Reader, w 
 		StreamsConnection: data,
 	}
 
-	resp, _, err := opts.client.StreamsApi.UpdateStreamConnectionWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.StreamsApi.UpdateStreamConnectionWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateStreamConnectionOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateStreamConnectionBuilder() *cobra.Command {
@@ -879,7 +939,10 @@ func updateStreamConnectionBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -903,6 +966,7 @@ type updateStreamInstanceOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.StreamsTenant
 }
 
 func (opts *updateStreamInstanceOpts) preRun() (err error) {
@@ -922,10 +986,12 @@ func (opts *updateStreamInstanceOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateStreamInstanceOpts) readData(r io.Reader) (*admin.StreamsDataProcessRegion, error) {
@@ -950,7 +1016,7 @@ func (opts *updateStreamInstanceOpts) readData(r io.Reader) (*admin.StreamsDataP
 	return out, nil
 }
 
-func (opts *updateStreamInstanceOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateStreamInstanceOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -963,28 +1029,29 @@ func (opts *updateStreamInstanceOpts) run(ctx context.Context, r io.Reader, w io
 		StreamsDataProcessRegion: data,
 	}
 
-	resp, _, err := opts.client.StreamsApi.UpdateStreamInstanceWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.StreamsApi.UpdateStreamInstanceWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateStreamInstanceOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateStreamInstanceBuilder() *cobra.Command {
@@ -998,7 +1065,10 @@ func updateStreamInstanceBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

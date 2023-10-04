@@ -56,7 +56,7 @@ func (opts *createPushBasedLogConfigurationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createPushBasedLogConfigurationOpts) readData(r io.Reader) (*admin.PushBasedLogExportProject, error) {
@@ -81,7 +81,7 @@ func (opts *createPushBasedLogConfigurationOpts) readData(r io.Reader) (*admin.P
 	return out, nil
 }
 
-func (opts *createPushBasedLogConfigurationOpts) run(ctx context.Context, r io.Reader, _ io.Writer) error {
+func (opts *createPushBasedLogConfigurationOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -93,8 +93,14 @@ func (opts *createPushBasedLogConfigurationOpts) run(ctx context.Context, r io.R
 		PushBasedLogExportProject: data,
 	}
 
-	_, err := opts.client.PushBasedLogExportApi.CreatePushBasedLogConfigurationWithParams(ctx, params).Execute()
+	var err error
+	_, err = opts.client.PushBasedLogExportApi.CreatePushBasedLogConfigurationWithParams(ctx, params).Execute()
 	return err
+}
+
+func (opts *createPushBasedLogConfigurationOpts) postRun(_ context.Context, _ io.Writer) error {
+
+	return nil
 }
 
 func createPushBasedLogConfigurationBuilder() *cobra.Command {
@@ -108,7 +114,10 @@ func createPushBasedLogConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -139,17 +148,23 @@ func (opts *deletePushBasedLogConfigurationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deletePushBasedLogConfigurationOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
+func (opts *deletePushBasedLogConfigurationOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeletePushBasedLogConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
 
-	_, err := opts.client.PushBasedLogExportApi.DeletePushBasedLogConfigurationWithParams(ctx, params).Execute()
+	var err error
+	_, err = opts.client.PushBasedLogExportApi.DeletePushBasedLogConfigurationWithParams(ctx, params).Execute()
 	return err
+}
+
+func (opts *deletePushBasedLogConfigurationOpts) postRun(_ context.Context, _ io.Writer) error {
+
+	return nil
 }
 
 func deletePushBasedLogConfigurationBuilder() *cobra.Command {
@@ -161,7 +176,10 @@ func deletePushBasedLogConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -174,6 +192,7 @@ type getPushBasedLogConfigurationOpts struct {
 	groupId string
 	format  string
 	tmpl    *template.Template
+	resp    *admin.PushBasedLogExportProject
 }
 
 func (opts *getPushBasedLogConfigurationOpts) preRun() (err error) {
@@ -193,40 +212,43 @@ func (opts *getPushBasedLogConfigurationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getPushBasedLogConfigurationOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getPushBasedLogConfigurationOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetPushBasedLogConfigurationApiParams{
 		GroupId: opts.groupId,
 	}
 
-	resp, _, err := opts.client.PushBasedLogExportApi.GetPushBasedLogConfigurationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.PushBasedLogExportApi.GetPushBasedLogConfigurationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getPushBasedLogConfigurationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getPushBasedLogConfigurationBuilder() *cobra.Command {
@@ -238,7 +260,10 @@ func getPushBasedLogConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -271,7 +296,7 @@ func (opts *updatePushBasedLogConfigurationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updatePushBasedLogConfigurationOpts) readData(r io.Reader) (*admin.PushBasedLogExportProject, error) {
@@ -296,7 +321,7 @@ func (opts *updatePushBasedLogConfigurationOpts) readData(r io.Reader) (*admin.P
 	return out, nil
 }
 
-func (opts *updatePushBasedLogConfigurationOpts) run(ctx context.Context, r io.Reader, _ io.Writer) error {
+func (opts *updatePushBasedLogConfigurationOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -308,8 +333,14 @@ func (opts *updatePushBasedLogConfigurationOpts) run(ctx context.Context, r io.R
 		PushBasedLogExportProject: data,
 	}
 
-	_, err := opts.client.PushBasedLogExportApi.UpdatePushBasedLogConfigurationWithParams(ctx, params).Execute()
+	var err error
+	_, err = opts.client.PushBasedLogExportApi.UpdatePushBasedLogConfigurationWithParams(ctx, params).Execute()
 	return err
+}
+
+func (opts *updatePushBasedLogConfigurationOpts) postRun(_ context.Context, _ io.Writer) error {
+
+	return nil
 }
 
 func updatePushBasedLogConfigurationBuilder() *cobra.Command {
@@ -323,7 +354,10 @@ func updatePushBasedLogConfigurationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

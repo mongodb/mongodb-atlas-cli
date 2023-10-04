@@ -39,6 +39,7 @@ type getOrganizationEventOpts struct {
 	includeRaw bool
 	format     string
 	tmpl       *template.Template
+	resp       *admin.EventViewForOrg
 }
 
 func (opts *getOrganizationEventOpts) preRun() (err error) {
@@ -58,13 +59,15 @@ func (opts *getOrganizationEventOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getOrganizationEventOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getOrganizationEventOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetOrganizationEventApiParams{
 		OrgId:      opts.orgId,
@@ -72,28 +75,29 @@ func (opts *getOrganizationEventOpts) run(ctx context.Context, _ io.Reader, w io
 		IncludeRaw: &opts.includeRaw,
 	}
 
-	resp, _, err := opts.client.EventsApi.GetOrganizationEventWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.EventsApi.GetOrganizationEventWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getOrganizationEventOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getOrganizationEventBuilder() *cobra.Command {
@@ -105,7 +109,10 @@ func getOrganizationEventBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -124,6 +131,7 @@ type getProjectEventOpts struct {
 	includeRaw bool
 	format     string
 	tmpl       *template.Template
+	resp       *admin.EventViewForNdsGroup
 }
 
 func (opts *getProjectEventOpts) preRun() (err error) {
@@ -143,13 +151,15 @@ func (opts *getProjectEventOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getProjectEventOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getProjectEventOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetProjectEventApiParams{
 		GroupId:    opts.groupId,
@@ -157,28 +167,29 @@ func (opts *getProjectEventOpts) run(ctx context.Context, _ io.Reader, w io.Writ
 		IncludeRaw: &opts.includeRaw,
 	}
 
-	resp, _, err := opts.client.EventsApi.GetProjectEventWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.EventsApi.GetProjectEventWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getProjectEventOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getProjectEventBuilder() *cobra.Command {
@@ -190,7 +201,10 @@ func getProjectEventBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -214,6 +228,7 @@ type listOrganizationEventsOpts struct {
 	minDate      string
 	format       string
 	tmpl         *template.Template
+	resp         *admin.OrgPaginatedEvent
 }
 
 func (opts *listOrganizationEventsOpts) preRun() (err error) {
@@ -233,13 +248,15 @@ func (opts *listOrganizationEventsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listOrganizationEventsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listOrganizationEventsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	var maxDate *time.Time
 	var errMaxDate error
@@ -270,28 +287,29 @@ func (opts *listOrganizationEventsOpts) run(ctx context.Context, _ io.Reader, w 
 		MinDate:      minDate,
 	}
 
-	resp, _, err := opts.client.EventsApi.ListOrganizationEventsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.EventsApi.ListOrganizationEventsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listOrganizationEventsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listOrganizationEventsBuilder() *cobra.Command {
@@ -303,7 +321,10 @@ func listOrganizationEventsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -335,6 +356,7 @@ type listProjectEventsOpts struct {
 	minDate           string
 	format            string
 	tmpl              *template.Template
+	resp              *admin.GroupPaginatedEvent
 }
 
 func (opts *listProjectEventsOpts) preRun() (err error) {
@@ -354,13 +376,15 @@ func (opts *listProjectEventsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listProjectEventsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listProjectEventsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	var maxDate *time.Time
 	var errMaxDate error
@@ -393,28 +417,29 @@ func (opts *listProjectEventsOpts) run(ctx context.Context, _ io.Reader, w io.Wr
 		MinDate:           minDate,
 	}
 
-	resp, _, err := opts.client.EventsApi.ListProjectEventsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.EventsApi.ListProjectEventsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listProjectEventsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listProjectEventsBuilder() *cobra.Command {
@@ -426,7 +451,10 @@ func listProjectEventsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

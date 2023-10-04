@@ -40,6 +40,7 @@ type addAllTeamsToProjectOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.PaginatedTeamRole
 }
 
 func (opts *addAllTeamsToProjectOpts) preRun() (err error) {
@@ -59,10 +60,12 @@ func (opts *addAllTeamsToProjectOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *addAllTeamsToProjectOpts) readData(r io.Reader) (*[]admin.TeamRole, error) {
@@ -87,7 +90,7 @@ func (opts *addAllTeamsToProjectOpts) readData(r io.Reader) (*[]admin.TeamRole, 
 	return out, nil
 }
 
-func (opts *addAllTeamsToProjectOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *addAllTeamsToProjectOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -99,28 +102,29 @@ func (opts *addAllTeamsToProjectOpts) run(ctx context.Context, r io.Reader, w io
 		TeamRole: data,
 	}
 
-	resp, _, err := opts.client.TeamsApi.AddAllTeamsToProjectWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.TeamsApi.AddAllTeamsToProjectWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *addAllTeamsToProjectOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func addAllTeamsToProjectBuilder() *cobra.Command {
@@ -134,7 +138,10 @@ func addAllTeamsToProjectBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -154,6 +161,7 @@ type addTeamUserOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.PaginatedApiAppUser
 }
 
 func (opts *addTeamUserOpts) preRun() (err error) {
@@ -173,10 +181,12 @@ func (opts *addTeamUserOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *addTeamUserOpts) readData(r io.Reader) (*[]admin.AddUserToTeam, error) {
@@ -201,7 +211,7 @@ func (opts *addTeamUserOpts) readData(r io.Reader) (*[]admin.AddUserToTeam, erro
 	return out, nil
 }
 
-func (opts *addTeamUserOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *addTeamUserOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -214,28 +224,29 @@ func (opts *addTeamUserOpts) run(ctx context.Context, r io.Reader, w io.Writer) 
 		AddUserToTeam: data,
 	}
 
-	resp, _, err := opts.client.TeamsApi.AddTeamUserWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.TeamsApi.AddTeamUserWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *addTeamUserOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func addTeamUserBuilder() *cobra.Command {
@@ -249,7 +260,10 @@ func addTeamUserBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -270,6 +284,7 @@ type createTeamOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.Team
 }
 
 func (opts *createTeamOpts) preRun() (err error) {
@@ -289,10 +304,12 @@ func (opts *createTeamOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createTeamOpts) readData(r io.Reader) (*admin.Team, error) {
@@ -317,7 +334,7 @@ func (opts *createTeamOpts) readData(r io.Reader) (*admin.Team, error) {
 	return out, nil
 }
 
-func (opts *createTeamOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createTeamOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -329,28 +346,29 @@ func (opts *createTeamOpts) run(ctx context.Context, r io.Reader, w io.Writer) e
 		Team: data,
 	}
 
-	resp, _, err := opts.client.TeamsApi.CreateTeamWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.TeamsApi.CreateTeamWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createTeamOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createTeamBuilder() *cobra.Command {
@@ -364,7 +382,10 @@ func createTeamBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -381,6 +402,7 @@ type deleteTeamOpts struct {
 	teamId string
 	format string
 	tmpl   *template.Template
+	resp   map[string]interface{}
 }
 
 func (opts *deleteTeamOpts) preRun() (err error) {
@@ -400,41 +422,44 @@ func (opts *deleteTeamOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteTeamOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteTeamOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteTeamApiParams{
 		OrgId:  opts.orgId,
 		TeamId: opts.teamId,
 	}
 
-	resp, _, err := opts.client.TeamsApi.DeleteTeamWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.TeamsApi.DeleteTeamWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteTeamOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteTeamBuilder() *cobra.Command {
@@ -446,7 +471,10 @@ func deleteTeamBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -463,6 +491,7 @@ type getTeamByIdOpts struct {
 	teamId string
 	format string
 	tmpl   *template.Template
+	resp   *admin.TeamResponse
 }
 
 func (opts *getTeamByIdOpts) preRun() (err error) {
@@ -482,41 +511,44 @@ func (opts *getTeamByIdOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getTeamByIdOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getTeamByIdOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetTeamByIdApiParams{
 		OrgId:  opts.orgId,
 		TeamId: opts.teamId,
 	}
 
-	resp, _, err := opts.client.TeamsApi.GetTeamByIdWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.TeamsApi.GetTeamByIdWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getTeamByIdOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getTeamByIdBuilder() *cobra.Command {
@@ -528,7 +560,10 @@ func getTeamByIdBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -545,6 +580,7 @@ type getTeamByNameOpts struct {
 	teamName string
 	format   string
 	tmpl     *template.Template
+	resp     *admin.TeamResponse
 }
 
 func (opts *getTeamByNameOpts) preRun() (err error) {
@@ -564,41 +600,44 @@ func (opts *getTeamByNameOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getTeamByNameOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getTeamByNameOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetTeamByNameApiParams{
 		OrgId:    opts.orgId,
 		TeamName: opts.teamName,
 	}
 
-	resp, _, err := opts.client.TeamsApi.GetTeamByNameWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.TeamsApi.GetTeamByNameWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getTeamByNameOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getTeamByNameBuilder() *cobra.Command {
@@ -610,7 +649,10 @@ func getTeamByNameBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -629,6 +671,7 @@ type listOrganizationTeamsOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedTeam
 }
 
 func (opts *listOrganizationTeamsOpts) preRun() (err error) {
@@ -648,13 +691,15 @@ func (opts *listOrganizationTeamsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listOrganizationTeamsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listOrganizationTeamsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListOrganizationTeamsApiParams{
 		OrgId:        opts.orgId,
@@ -663,28 +708,29 @@ func (opts *listOrganizationTeamsOpts) run(ctx context.Context, _ io.Reader, w i
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.TeamsApi.ListOrganizationTeamsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.TeamsApi.ListOrganizationTeamsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listOrganizationTeamsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listOrganizationTeamsBuilder() *cobra.Command {
@@ -696,7 +742,10 @@ func listOrganizationTeamsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -716,6 +765,7 @@ type listProjectTeamsOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedTeamRole
 }
 
 func (opts *listProjectTeamsOpts) preRun() (err error) {
@@ -735,13 +785,15 @@ func (opts *listProjectTeamsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listProjectTeamsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listProjectTeamsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListProjectTeamsApiParams{
 		GroupId:      opts.groupId,
@@ -750,28 +802,29 @@ func (opts *listProjectTeamsOpts) run(ctx context.Context, _ io.Reader, w io.Wri
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.TeamsApi.ListProjectTeamsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.TeamsApi.ListProjectTeamsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listProjectTeamsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listProjectTeamsBuilder() *cobra.Command {
@@ -783,7 +836,10 @@ func listProjectTeamsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -803,6 +859,7 @@ type listTeamUsersOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedApiAppUser
 }
 
 func (opts *listTeamUsersOpts) preRun() (err error) {
@@ -822,13 +879,15 @@ func (opts *listTeamUsersOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listTeamUsersOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listTeamUsersOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListTeamUsersApiParams{
 		OrgId:        opts.orgId,
@@ -837,28 +896,29 @@ func (opts *listTeamUsersOpts) run(ctx context.Context, _ io.Reader, w io.Writer
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.TeamsApi.ListTeamUsersWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.TeamsApi.ListTeamUsersWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listTeamUsersOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listTeamUsersBuilder() *cobra.Command {
@@ -870,7 +930,10 @@ func listTeamUsersBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -905,18 +968,24 @@ func (opts *removeProjectTeamOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return err
+	return nil
 }
 
-func (opts *removeProjectTeamOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
+func (opts *removeProjectTeamOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.RemoveProjectTeamApiParams{
 		GroupId: opts.groupId,
 		TeamId:  opts.teamId,
 	}
 
-	_, err := opts.client.TeamsApi.RemoveProjectTeamWithParams(ctx, params).Execute()
+	var err error
+	_, err = opts.client.TeamsApi.RemoveProjectTeamWithParams(ctx, params).Execute()
 	return err
+}
+
+func (opts *removeProjectTeamOpts) postRun(_ context.Context, _ io.Writer) error {
+
+	return nil
 }
 
 func removeProjectTeamBuilder() *cobra.Command {
@@ -928,7 +997,10 @@ func removeProjectTeamBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -961,10 +1033,10 @@ func (opts *removeTeamUserOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return err
+	return nil
 }
 
-func (opts *removeTeamUserOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
+func (opts *removeTeamUserOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.RemoveTeamUserApiParams{
 		OrgId:  opts.orgId,
@@ -972,8 +1044,14 @@ func (opts *removeTeamUserOpts) run(ctx context.Context, _ io.Reader, _ io.Write
 		UserId: opts.userId,
 	}
 
-	_, err := opts.client.TeamsApi.RemoveTeamUserWithParams(ctx, params).Execute()
+	var err error
+	_, err = opts.client.TeamsApi.RemoveTeamUserWithParams(ctx, params).Execute()
 	return err
+}
+
+func (opts *removeTeamUserOpts) postRun(_ context.Context, _ io.Writer) error {
+
+	return nil
 }
 
 func removeTeamUserBuilder() *cobra.Command {
@@ -985,7 +1063,10 @@ func removeTeamUserBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -1006,6 +1087,7 @@ type renameTeamOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.TeamResponse
 }
 
 func (opts *renameTeamOpts) preRun() (err error) {
@@ -1025,10 +1107,12 @@ func (opts *renameTeamOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *renameTeamOpts) readData(r io.Reader) (*admin.Team, error) {
@@ -1053,7 +1137,7 @@ func (opts *renameTeamOpts) readData(r io.Reader) (*admin.Team, error) {
 	return out, nil
 }
 
-func (opts *renameTeamOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *renameTeamOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -1066,28 +1150,29 @@ func (opts *renameTeamOpts) run(ctx context.Context, r io.Reader, w io.Writer) e
 		Team: data,
 	}
 
-	resp, _, err := opts.client.TeamsApi.RenameTeamWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.TeamsApi.RenameTeamWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *renameTeamOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func renameTeamBuilder() *cobra.Command {
@@ -1101,7 +1186,10 @@ func renameTeamBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -1123,6 +1211,7 @@ type updateTeamRolesOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.PaginatedTeamRole
 }
 
 func (opts *updateTeamRolesOpts) preRun() (err error) {
@@ -1142,10 +1231,12 @@ func (opts *updateTeamRolesOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateTeamRolesOpts) readData(r io.Reader) (*admin.TeamRole, error) {
@@ -1170,7 +1261,7 @@ func (opts *updateTeamRolesOpts) readData(r io.Reader) (*admin.TeamRole, error) 
 	return out, nil
 }
 
-func (opts *updateTeamRolesOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateTeamRolesOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -1183,28 +1274,29 @@ func (opts *updateTeamRolesOpts) run(ctx context.Context, r io.Reader, w io.Writ
 		TeamRole: data,
 	}
 
-	resp, _, err := opts.client.TeamsApi.UpdateTeamRolesWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.TeamsApi.UpdateTeamRolesWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateTeamRolesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateTeamRolesBuilder() *cobra.Command {
@@ -1218,7 +1310,10 @@ func updateTeamRolesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

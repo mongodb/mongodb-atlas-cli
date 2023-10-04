@@ -40,6 +40,7 @@ type createProjectOpts struct {
 	fs             afero.Fs
 	format         string
 	tmpl           *template.Template
+	resp           *admin.Group
 }
 
 func (opts *createProjectOpts) preRun() (err error) {
@@ -48,10 +49,12 @@ func (opts *createProjectOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createProjectOpts) readData(r io.Reader) (*admin.Group, error) {
@@ -76,7 +79,7 @@ func (opts *createProjectOpts) readData(r io.Reader) (*admin.Group, error) {
 	return out, nil
 }
 
-func (opts *createProjectOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createProjectOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -89,28 +92,29 @@ func (opts *createProjectOpts) run(ctx context.Context, r io.Reader, w io.Writer
 		Group: data,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.CreateProjectWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.CreateProjectWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createProjectOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createProjectBuilder() *cobra.Command {
@@ -124,7 +128,10 @@ func createProjectBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 
@@ -143,6 +150,7 @@ type createProjectInvitationOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.GroupInvitation
 }
 
 func (opts *createProjectInvitationOpts) preRun() (err error) {
@@ -162,10 +170,12 @@ func (opts *createProjectInvitationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createProjectInvitationOpts) readData(r io.Reader) (*admin.GroupInvitationRequest, error) {
@@ -190,7 +200,7 @@ func (opts *createProjectInvitationOpts) readData(r io.Reader) (*admin.GroupInvi
 	return out, nil
 }
 
-func (opts *createProjectInvitationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createProjectInvitationOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -202,28 +212,29 @@ func (opts *createProjectInvitationOpts) run(ctx context.Context, r io.Reader, w
 		GroupInvitationRequest: data,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.CreateProjectInvitationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.CreateProjectInvitationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createProjectInvitationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createProjectInvitationBuilder() *cobra.Command {
@@ -237,7 +248,10 @@ func createProjectInvitationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -253,6 +267,7 @@ type deleteProjectOpts struct {
 	groupId string
 	format  string
 	tmpl    *template.Template
+	resp    map[string]interface{}
 }
 
 func (opts *deleteProjectOpts) preRun() (err error) {
@@ -272,40 +287,43 @@ func (opts *deleteProjectOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteProjectOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteProjectOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteProjectApiParams{
 		GroupId: opts.groupId,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.DeleteProjectWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.DeleteProjectWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteProjectOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteProjectBuilder() *cobra.Command {
@@ -317,7 +335,10 @@ func deleteProjectBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -332,6 +353,7 @@ type deleteProjectInvitationOpts struct {
 	invitationId string
 	format       string
 	tmpl         *template.Template
+	resp         map[string]interface{}
 }
 
 func (opts *deleteProjectInvitationOpts) preRun() (err error) {
@@ -351,41 +373,44 @@ func (opts *deleteProjectInvitationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteProjectInvitationOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteProjectInvitationOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteProjectInvitationApiParams{
 		GroupId:      opts.groupId,
 		InvitationId: opts.invitationId,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.DeleteProjectInvitationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.DeleteProjectInvitationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteProjectInvitationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteProjectInvitationBuilder() *cobra.Command {
@@ -397,7 +422,10 @@ func deleteProjectInvitationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -414,6 +442,7 @@ type deleteProjectLimitOpts struct {
 	groupId   string
 	format    string
 	tmpl      *template.Template
+	resp      map[string]interface{}
 }
 
 func (opts *deleteProjectLimitOpts) preRun() (err error) {
@@ -433,41 +462,44 @@ func (opts *deleteProjectLimitOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteProjectLimitOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteProjectLimitOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteProjectLimitApiParams{
 		LimitName: opts.limitName,
 		GroupId:   opts.groupId,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.DeleteProjectLimitWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.DeleteProjectLimitWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteProjectLimitOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteProjectLimitBuilder() *cobra.Command {
@@ -479,7 +511,10 @@ func deleteProjectLimitBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", `Human-readable label that identifies this project limit.
@@ -511,6 +546,7 @@ type getProjectOpts struct {
 	groupId string
 	format  string
 	tmpl    *template.Template
+	resp    *admin.Group
 }
 
 func (opts *getProjectOpts) preRun() (err error) {
@@ -530,40 +566,43 @@ func (opts *getProjectOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getProjectOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getProjectOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetProjectApiParams{
 		GroupId: opts.groupId,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.GetProjectWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.GetProjectWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getProjectOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getProjectBuilder() *cobra.Command {
@@ -575,7 +614,10 @@ func getProjectBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -589,6 +631,7 @@ type getProjectByNameOpts struct {
 	groupName string
 	format    string
 	tmpl      *template.Template
+	resp      *admin.Group
 }
 
 func (opts *getProjectByNameOpts) preRun() (err error) {
@@ -597,40 +640,43 @@ func (opts *getProjectByNameOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getProjectByNameOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getProjectByNameOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetProjectByNameApiParams{
 		GroupName: opts.groupName,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.GetProjectByNameWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.GetProjectByNameWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getProjectByNameOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getProjectByNameBuilder() *cobra.Command {
@@ -642,7 +688,10 @@ func getProjectByNameBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupName, "groupName", "", `Human-readable label that identifies this project.`)
@@ -658,6 +707,7 @@ type getProjectInvitationOpts struct {
 	invitationId string
 	format       string
 	tmpl         *template.Template
+	resp         *admin.GroupInvitation
 }
 
 func (opts *getProjectInvitationOpts) preRun() (err error) {
@@ -677,41 +727,44 @@ func (opts *getProjectInvitationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getProjectInvitationOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getProjectInvitationOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetProjectInvitationApiParams{
 		GroupId:      opts.groupId,
 		InvitationId: opts.invitationId,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.GetProjectInvitationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.GetProjectInvitationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getProjectInvitationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getProjectInvitationBuilder() *cobra.Command {
@@ -723,7 +776,10 @@ func getProjectInvitationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -740,6 +796,7 @@ type getProjectLimitOpts struct {
 	groupId   string
 	format    string
 	tmpl      *template.Template
+	resp      *admin.DataFederationLimit
 }
 
 func (opts *getProjectLimitOpts) preRun() (err error) {
@@ -759,41 +816,44 @@ func (opts *getProjectLimitOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getProjectLimitOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getProjectLimitOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetProjectLimitApiParams{
 		LimitName: opts.limitName,
 		GroupId:   opts.groupId,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.GetProjectLimitWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.GetProjectLimitWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getProjectLimitOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getProjectLimitBuilder() *cobra.Command {
@@ -805,7 +865,10 @@ func getProjectLimitBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", `Human-readable label that identifies this project limit.
@@ -837,6 +900,7 @@ type getProjectSettingsOpts struct {
 	groupId string
 	format  string
 	tmpl    *template.Template
+	resp    *admin.GroupSettings
 }
 
 func (opts *getProjectSettingsOpts) preRun() (err error) {
@@ -856,40 +920,43 @@ func (opts *getProjectSettingsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getProjectSettingsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getProjectSettingsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetProjectSettingsApiParams{
 		GroupId: opts.groupId,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.GetProjectSettingsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.GetProjectSettingsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getProjectSettingsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getProjectSettingsBuilder() *cobra.Command {
@@ -901,7 +968,10 @@ func getProjectSettingsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -916,6 +986,7 @@ type listProjectInvitationsOpts struct {
 	username string
 	format   string
 	tmpl     *template.Template
+	resp     []admin.GroupInvitation
 }
 
 func (opts *listProjectInvitationsOpts) preRun() (err error) {
@@ -935,41 +1006,44 @@ func (opts *listProjectInvitationsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listProjectInvitationsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listProjectInvitationsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListProjectInvitationsApiParams{
 		GroupId:  opts.groupId,
 		Username: &opts.username,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.ListProjectInvitationsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.ListProjectInvitationsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listProjectInvitationsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listProjectInvitationsBuilder() *cobra.Command {
@@ -981,7 +1055,10 @@ func listProjectInvitationsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -996,6 +1073,7 @@ type listProjectLimitsOpts struct {
 	groupId string
 	format  string
 	tmpl    *template.Template
+	resp    []admin.DataFederationLimit
 }
 
 func (opts *listProjectLimitsOpts) preRun() (err error) {
@@ -1015,40 +1093,43 @@ func (opts *listProjectLimitsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listProjectLimitsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listProjectLimitsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListProjectLimitsApiParams{
 		GroupId: opts.groupId,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.ListProjectLimitsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.ListProjectLimitsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listProjectLimitsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listProjectLimitsBuilder() *cobra.Command {
@@ -1060,7 +1141,10 @@ func listProjectLimitsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1079,6 +1163,7 @@ type listProjectUsersOpts struct {
 	includeOrgUsers bool
 	format          string
 	tmpl            *template.Template
+	resp            *admin.PaginatedAppUser
 }
 
 func (opts *listProjectUsersOpts) preRun() (err error) {
@@ -1098,13 +1183,15 @@ func (opts *listProjectUsersOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listProjectUsersOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listProjectUsersOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListProjectUsersApiParams{
 		GroupId:         opts.groupId,
@@ -1115,28 +1202,29 @@ func (opts *listProjectUsersOpts) run(ctx context.Context, _ io.Reader, w io.Wri
 		IncludeOrgUsers: &opts.includeOrgUsers,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.ListProjectUsersWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.ListProjectUsersWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listProjectUsersOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listProjectUsersBuilder() *cobra.Command {
@@ -1148,7 +1236,10 @@ func listProjectUsersBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1169,6 +1260,7 @@ type listProjectsOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedAtlasGroup
 }
 
 func (opts *listProjectsOpts) preRun() (err error) {
@@ -1177,13 +1269,15 @@ func (opts *listProjectsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listProjectsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listProjectsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListProjectsApiParams{
 		IncludeCount: &opts.includeCount,
@@ -1191,28 +1285,29 @@ func (opts *listProjectsOpts) run(ctx context.Context, _ io.Reader, w io.Writer)
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.ListProjectsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.ListProjectsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listProjectsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listProjectsBuilder() *cobra.Command {
@@ -1224,7 +1319,10 @@ func listProjectsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().BoolVar(&opts.includeCount, "includeCount", true, `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`)
@@ -1257,18 +1355,24 @@ func (opts *removeProjectUserOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return err
+	return nil
 }
 
-func (opts *removeProjectUserOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
+func (opts *removeProjectUserOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.RemoveProjectUserApiParams{
 		GroupId: opts.groupId,
 		UserId:  opts.userId,
 	}
 
-	_, err := opts.client.ProjectsApi.RemoveProjectUserWithParams(ctx, params).Execute()
+	var err error
+	_, err = opts.client.ProjectsApi.RemoveProjectUserWithParams(ctx, params).Execute()
 	return err
+}
+
+func (opts *removeProjectUserOpts) postRun(_ context.Context, _ io.Writer) error {
+
+	return nil
 }
 
 func removeProjectUserBuilder() *cobra.Command {
@@ -1280,7 +1384,10 @@ func removeProjectUserBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1299,6 +1406,7 @@ type setProjectLimitOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.DataFederationLimit
 }
 
 func (opts *setProjectLimitOpts) preRun() (err error) {
@@ -1318,10 +1426,12 @@ func (opts *setProjectLimitOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *setProjectLimitOpts) readData(r io.Reader) (*admin.DataFederationLimit, error) {
@@ -1346,7 +1456,7 @@ func (opts *setProjectLimitOpts) readData(r io.Reader) (*admin.DataFederationLim
 	return out, nil
 }
 
-func (opts *setProjectLimitOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *setProjectLimitOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -1359,28 +1469,29 @@ func (opts *setProjectLimitOpts) run(ctx context.Context, r io.Reader, w io.Writ
 		DataFederationLimit: data,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.SetProjectLimitWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.SetProjectLimitWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *setProjectLimitOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func setProjectLimitBuilder() *cobra.Command {
@@ -1394,7 +1505,10 @@ func setProjectLimitBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.limitName, "limitName", "", `Human-readable label that identifies this project limit.
@@ -1431,6 +1545,7 @@ type updateProjectOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.Group
 }
 
 func (opts *updateProjectOpts) preRun() (err error) {
@@ -1450,10 +1565,12 @@ func (opts *updateProjectOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateProjectOpts) readData(r io.Reader) (*admin.GroupName, error) {
@@ -1478,7 +1595,7 @@ func (opts *updateProjectOpts) readData(r io.Reader) (*admin.GroupName, error) {
 	return out, nil
 }
 
-func (opts *updateProjectOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateProjectOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -1490,28 +1607,29 @@ func (opts *updateProjectOpts) run(ctx context.Context, r io.Reader, w io.Writer
 		GroupName: data,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.UpdateProjectWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.UpdateProjectWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateProjectOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateProjectBuilder() *cobra.Command {
@@ -1525,7 +1643,10 @@ func updateProjectBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1544,6 +1665,7 @@ type updateProjectInvitationOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.GroupInvitation
 }
 
 func (opts *updateProjectInvitationOpts) preRun() (err error) {
@@ -1563,10 +1685,12 @@ func (opts *updateProjectInvitationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateProjectInvitationOpts) readData(r io.Reader) (*admin.GroupInvitationRequest, error) {
@@ -1591,7 +1715,7 @@ func (opts *updateProjectInvitationOpts) readData(r io.Reader) (*admin.GroupInvi
 	return out, nil
 }
 
-func (opts *updateProjectInvitationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateProjectInvitationOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -1603,28 +1727,29 @@ func (opts *updateProjectInvitationOpts) run(ctx context.Context, r io.Reader, w
 		GroupInvitationRequest: data,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.UpdateProjectInvitationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.UpdateProjectInvitationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateProjectInvitationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateProjectInvitationBuilder() *cobra.Command {
@@ -1638,7 +1763,10 @@ func updateProjectInvitationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1658,6 +1786,7 @@ type updateProjectInvitationByIdOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.GroupInvitation
 }
 
 func (opts *updateProjectInvitationByIdOpts) preRun() (err error) {
@@ -1677,10 +1806,12 @@ func (opts *updateProjectInvitationByIdOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateProjectInvitationByIdOpts) readData(r io.Reader) (*admin.GroupInvitationUpdateRequest, error) {
@@ -1705,7 +1836,7 @@ func (opts *updateProjectInvitationByIdOpts) readData(r io.Reader) (*admin.Group
 	return out, nil
 }
 
-func (opts *updateProjectInvitationByIdOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateProjectInvitationByIdOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -1718,28 +1849,29 @@ func (opts *updateProjectInvitationByIdOpts) run(ctx context.Context, r io.Reade
 		GroupInvitationUpdateRequest: data,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.UpdateProjectInvitationByIdWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.UpdateProjectInvitationByIdWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateProjectInvitationByIdOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateProjectInvitationByIdBuilder() *cobra.Command {
@@ -1753,7 +1885,10 @@ func updateProjectInvitationByIdBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1775,6 +1910,7 @@ type updateProjectRolesOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.UpdateGroupRolesForUser
 }
 
 func (opts *updateProjectRolesOpts) preRun() (err error) {
@@ -1794,10 +1930,12 @@ func (opts *updateProjectRolesOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateProjectRolesOpts) readData(r io.Reader) (*admin.UpdateGroupRolesForUser, error) {
@@ -1822,7 +1960,7 @@ func (opts *updateProjectRolesOpts) readData(r io.Reader) (*admin.UpdateGroupRol
 	return out, nil
 }
 
-func (opts *updateProjectRolesOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateProjectRolesOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -1835,28 +1973,29 @@ func (opts *updateProjectRolesOpts) run(ctx context.Context, r io.Reader, w io.W
 		UpdateGroupRolesForUser: data,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.UpdateProjectRolesWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.UpdateProjectRolesWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateProjectRolesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateProjectRolesBuilder() *cobra.Command {
@@ -1870,7 +2009,10 @@ func updateProjectRolesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -1891,6 +2033,7 @@ type updateProjectSettingsOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.GroupSettings
 }
 
 func (opts *updateProjectSettingsOpts) preRun() (err error) {
@@ -1910,10 +2053,12 @@ func (opts *updateProjectSettingsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateProjectSettingsOpts) readData(r io.Reader) (*admin.GroupSettings, error) {
@@ -1938,7 +2083,7 @@ func (opts *updateProjectSettingsOpts) readData(r io.Reader) (*admin.GroupSettin
 	return out, nil
 }
 
-func (opts *updateProjectSettingsOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateProjectSettingsOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -1950,28 +2095,29 @@ func (opts *updateProjectSettingsOpts) run(ctx context.Context, r io.Reader, w i
 		GroupSettings: data,
 	}
 
-	resp, _, err := opts.client.ProjectsApi.UpdateProjectSettingsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.UpdateProjectSettingsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateProjectSettingsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateProjectSettingsBuilder() *cobra.Command {
@@ -1985,7 +2131,10 @@ func updateProjectSettingsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

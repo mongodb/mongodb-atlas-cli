@@ -41,6 +41,7 @@ type createRoleMappingOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.AuthFederationRoleMapping
 }
 
 func (opts *createRoleMappingOpts) preRun() (err error) {
@@ -60,10 +61,12 @@ func (opts *createRoleMappingOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createRoleMappingOpts) readData(r io.Reader) (*admin.AuthFederationRoleMapping, error) {
@@ -88,7 +91,7 @@ func (opts *createRoleMappingOpts) readData(r io.Reader) (*admin.AuthFederationR
 	return out, nil
 }
 
-func (opts *createRoleMappingOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createRoleMappingOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -101,28 +104,29 @@ func (opts *createRoleMappingOpts) run(ctx context.Context, r io.Reader, w io.Wr
 		AuthFederationRoleMapping: data,
 	}
 
-	resp, _, err := opts.client.FederatedAuthenticationApi.CreateRoleMappingWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.FederatedAuthenticationApi.CreateRoleMappingWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createRoleMappingOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createRoleMappingBuilder() *cobra.Command {
@@ -136,7 +140,10 @@ func createRoleMappingBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -159,17 +166,23 @@ func (opts *deleteFederationAppOpts) preRun() (err error) {
 		return err
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteFederationAppOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
+func (opts *deleteFederationAppOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteFederationAppApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 	}
 
-	_, err := opts.client.FederatedAuthenticationApi.DeleteFederationAppWithParams(ctx, params).Execute()
+	var err error
+	_, err = opts.client.FederatedAuthenticationApi.DeleteFederationAppWithParams(ctx, params).Execute()
 	return err
+}
+
+func (opts *deleteFederationAppOpts) postRun(_ context.Context, _ io.Writer) error {
+
+	return nil
 }
 
 func deleteFederationAppBuilder() *cobra.Command {
@@ -181,7 +194,10 @@ func deleteFederationAppBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -213,10 +229,10 @@ func (opts *deleteRoleMappingOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.orgId)
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteRoleMappingOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
+func (opts *deleteRoleMappingOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
@@ -224,8 +240,14 @@ func (opts *deleteRoleMappingOpts) run(ctx context.Context, _ io.Reader, _ io.Wr
 		OrgId:                opts.orgId,
 	}
 
-	_, err := opts.client.FederatedAuthenticationApi.DeleteRoleMappingWithParams(ctx, params).Execute()
+	var err error
+	_, err = opts.client.FederatedAuthenticationApi.DeleteRoleMappingWithParams(ctx, params).Execute()
 	return err
+}
+
+func (opts *deleteRoleMappingOpts) postRun(_ context.Context, _ io.Writer) error {
+
+	return nil
 }
 
 func deleteRoleMappingBuilder() *cobra.Command {
@@ -237,7 +259,10 @@ func deleteRoleMappingBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -255,6 +280,7 @@ type getConnectedOrgConfigOpts struct {
 	orgId                string
 	format               string
 	tmpl                 *template.Template
+	resp                 *admin.ConnectedOrgConfig
 }
 
 func (opts *getConnectedOrgConfigOpts) preRun() (err error) {
@@ -263,41 +289,44 @@ func (opts *getConnectedOrgConfigOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getConnectedOrgConfigOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getConnectedOrgConfigOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetConnectedOrgConfigApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId:                opts.orgId,
 	}
 
-	resp, _, err := opts.client.FederatedAuthenticationApi.GetConnectedOrgConfigWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.FederatedAuthenticationApi.GetConnectedOrgConfigWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getConnectedOrgConfigOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getConnectedOrgConfigBuilder() *cobra.Command {
@@ -309,7 +338,10 @@ func getConnectedOrgConfigBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -326,6 +358,7 @@ type getFederationSettingsOpts struct {
 	orgId  string
 	format string
 	tmpl   *template.Template
+	resp   *admin.OrgFederationSettings
 }
 
 func (opts *getFederationSettingsOpts) preRun() (err error) {
@@ -345,40 +378,43 @@ func (opts *getFederationSettingsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getFederationSettingsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getFederationSettingsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetFederationSettingsApiParams{
 		OrgId: opts.orgId,
 	}
 
-	resp, _, err := opts.client.FederatedAuthenticationApi.GetFederationSettingsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.FederatedAuthenticationApi.GetFederationSettingsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getFederationSettingsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getFederationSettingsBuilder() *cobra.Command {
@@ -390,7 +426,10 @@ func getFederationSettingsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -405,6 +444,7 @@ type getIdentityProviderOpts struct {
 	identityProviderId   string
 	format               string
 	tmpl                 *template.Template
+	resp                 *admin.FederationIdentityProvider
 }
 
 func (opts *getIdentityProviderOpts) preRun() (err error) {
@@ -413,41 +453,44 @@ func (opts *getIdentityProviderOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getIdentityProviderOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getIdentityProviderOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetIdentityProviderApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		IdentityProviderId:   opts.identityProviderId,
 	}
 
-	resp, _, err := opts.client.FederatedAuthenticationApi.GetIdentityProviderWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.FederatedAuthenticationApi.GetIdentityProviderWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getIdentityProviderOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getIdentityProviderBuilder() *cobra.Command {
@@ -459,7 +502,10 @@ func getIdentityProviderBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -477,6 +523,7 @@ type getIdentityProviderMetadataOpts struct {
 	identityProviderId   string
 	format               string
 	tmpl                 *template.Template
+	resp                 string
 }
 
 func (opts *getIdentityProviderMetadataOpts) preRun() (err error) {
@@ -485,41 +532,44 @@ func (opts *getIdentityProviderMetadataOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getIdentityProviderMetadataOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getIdentityProviderMetadataOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetIdentityProviderMetadataApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		IdentityProviderId:   opts.identityProviderId,
 	}
 
-	resp, _, err := opts.client.FederatedAuthenticationApi.GetIdentityProviderMetadataWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.FederatedAuthenticationApi.GetIdentityProviderMetadataWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getIdentityProviderMetadataOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getIdentityProviderMetadataBuilder() *cobra.Command {
@@ -531,7 +581,10 @@ func getIdentityProviderMetadataBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -550,6 +603,7 @@ type getRoleMappingOpts struct {
 	orgId                string
 	format               string
 	tmpl                 *template.Template
+	resp                 *admin.AuthFederationRoleMapping
 }
 
 func (opts *getRoleMappingOpts) preRun() (err error) {
@@ -569,13 +623,15 @@ func (opts *getRoleMappingOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getRoleMappingOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getRoleMappingOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetRoleMappingApiParams{
 		FederationSettingsId: opts.federationSettingsId,
@@ -583,28 +639,29 @@ func (opts *getRoleMappingOpts) run(ctx context.Context, _ io.Reader, w io.Write
 		OrgId:                opts.orgId,
 	}
 
-	resp, _, err := opts.client.FederatedAuthenticationApi.GetRoleMappingWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.FederatedAuthenticationApi.GetRoleMappingWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getRoleMappingOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getRoleMappingBuilder() *cobra.Command {
@@ -616,7 +673,10 @@ func getRoleMappingBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -634,6 +694,7 @@ type listConnectedOrgConfigsOpts struct {
 	federationSettingsId string
 	format               string
 	tmpl                 *template.Template
+	resp                 []admin.ConnectedOrgConfig
 }
 
 func (opts *listConnectedOrgConfigsOpts) preRun() (err error) {
@@ -642,40 +703,43 @@ func (opts *listConnectedOrgConfigsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listConnectedOrgConfigsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listConnectedOrgConfigsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListConnectedOrgConfigsApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 	}
 
-	resp, _, err := opts.client.FederatedAuthenticationApi.ListConnectedOrgConfigsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.FederatedAuthenticationApi.ListConnectedOrgConfigsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listConnectedOrgConfigsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listConnectedOrgConfigsBuilder() *cobra.Command {
@@ -687,7 +751,10 @@ func listConnectedOrgConfigsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -702,6 +769,7 @@ type listIdentityProvidersOpts struct {
 	federationSettingsId string
 	format               string
 	tmpl                 *template.Template
+	resp                 []admin.FederationIdentityProvider
 }
 
 func (opts *listIdentityProvidersOpts) preRun() (err error) {
@@ -710,40 +778,43 @@ func (opts *listIdentityProvidersOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listIdentityProvidersOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listIdentityProvidersOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListIdentityProvidersApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 	}
 
-	resp, _, err := opts.client.FederatedAuthenticationApi.ListIdentityProvidersWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.FederatedAuthenticationApi.ListIdentityProvidersWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listIdentityProvidersOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listIdentityProvidersBuilder() *cobra.Command {
@@ -755,7 +826,10 @@ func listIdentityProvidersBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -771,6 +845,7 @@ type listRoleMappingsOpts struct {
 	orgId                string
 	format               string
 	tmpl                 *template.Template
+	resp                 []admin.AuthFederationRoleMapping
 }
 
 func (opts *listRoleMappingsOpts) preRun() (err error) {
@@ -790,41 +865,44 @@ func (opts *listRoleMappingsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listRoleMappingsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listRoleMappingsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListRoleMappingsApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId:                opts.orgId,
 	}
 
-	resp, _, err := opts.client.FederatedAuthenticationApi.ListRoleMappingsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.FederatedAuthenticationApi.ListRoleMappingsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listRoleMappingsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listRoleMappingsBuilder() *cobra.Command {
@@ -836,7 +914,10 @@ func listRoleMappingsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -853,6 +934,7 @@ type removeConnectedOrgConfigOpts struct {
 	orgId                string
 	format               string
 	tmpl                 *template.Template
+	resp                 map[string]interface{}
 }
 
 func (opts *removeConnectedOrgConfigOpts) preRun() (err error) {
@@ -861,41 +943,44 @@ func (opts *removeConnectedOrgConfigOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *removeConnectedOrgConfigOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *removeConnectedOrgConfigOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.RemoveConnectedOrgConfigApiParams{
 		FederationSettingsId: opts.federationSettingsId,
 		OrgId:                opts.orgId,
 	}
 
-	resp, _, err := opts.client.FederatedAuthenticationApi.RemoveConnectedOrgConfigWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.FederatedAuthenticationApi.RemoveConnectedOrgConfigWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *removeConnectedOrgConfigOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func removeConnectedOrgConfigBuilder() *cobra.Command {
@@ -907,7 +992,10 @@ func removeConnectedOrgConfigBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -928,6 +1016,7 @@ type updateConnectedOrgConfigOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.ConnectedOrgConfig
 }
 
 func (opts *updateConnectedOrgConfigOpts) preRun() (err error) {
@@ -936,10 +1025,12 @@ func (opts *updateConnectedOrgConfigOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateConnectedOrgConfigOpts) readData(r io.Reader) (*admin.ConnectedOrgConfig, error) {
@@ -964,7 +1055,7 @@ func (opts *updateConnectedOrgConfigOpts) readData(r io.Reader) (*admin.Connecte
 	return out, nil
 }
 
-func (opts *updateConnectedOrgConfigOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateConnectedOrgConfigOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -977,28 +1068,29 @@ func (opts *updateConnectedOrgConfigOpts) run(ctx context.Context, r io.Reader, 
 		ConnectedOrgConfig: data,
 	}
 
-	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateConnectedOrgConfigWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.FederatedAuthenticationApi.UpdateConnectedOrgConfigWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateConnectedOrgConfigOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateConnectedOrgConfigBuilder() *cobra.Command {
@@ -1012,7 +1104,10 @@ func updateConnectedOrgConfigBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -1035,6 +1130,7 @@ type updateIdentityProviderOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.FederationIdentityProvider
 }
 
 func (opts *updateIdentityProviderOpts) preRun() (err error) {
@@ -1043,10 +1139,12 @@ func (opts *updateIdentityProviderOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateIdentityProviderOpts) readData(r io.Reader) (*admin.SamlIdentityProviderUpdate, error) {
@@ -1071,7 +1169,7 @@ func (opts *updateIdentityProviderOpts) readData(r io.Reader) (*admin.SamlIdenti
 	return out, nil
 }
 
-func (opts *updateIdentityProviderOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateIdentityProviderOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -1084,28 +1182,29 @@ func (opts *updateIdentityProviderOpts) run(ctx context.Context, r io.Reader, w 
 		SamlIdentityProviderUpdate: data,
 	}
 
-	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateIdentityProviderWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.FederatedAuthenticationApi.UpdateIdentityProviderWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateIdentityProviderOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateIdentityProviderBuilder() *cobra.Command {
@@ -1119,7 +1218,10 @@ func updateIdentityProviderBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
@@ -1143,6 +1245,7 @@ type updateRoleMappingOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.AuthFederationRoleMapping
 }
 
 func (opts *updateRoleMappingOpts) preRun() (err error) {
@@ -1162,10 +1265,12 @@ func (opts *updateRoleMappingOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateRoleMappingOpts) readData(r io.Reader) (*admin.AuthFederationRoleMapping, error) {
@@ -1190,7 +1295,7 @@ func (opts *updateRoleMappingOpts) readData(r io.Reader) (*admin.AuthFederationR
 	return out, nil
 }
 
-func (opts *updateRoleMappingOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateRoleMappingOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -1204,28 +1309,29 @@ func (opts *updateRoleMappingOpts) run(ctx context.Context, r io.Reader, w io.Wr
 		AuthFederationRoleMapping: data,
 	}
 
-	resp, _, err := opts.client.FederatedAuthenticationApi.UpdateRoleMappingWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.FederatedAuthenticationApi.UpdateRoleMappingWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateRoleMappingOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateRoleMappingBuilder() *cobra.Command {
@@ -1239,7 +1345,10 @@ func updateRoleMappingBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)

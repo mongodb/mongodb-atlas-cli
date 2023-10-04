@@ -23,6 +23,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 	"text/template"
 
@@ -41,6 +42,7 @@ type createOnlineArchiveOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.BackupOnlineArchive
 }
 
 func (opts *createOnlineArchiveOpts) preRun() (err error) {
@@ -60,10 +62,12 @@ func (opts *createOnlineArchiveOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createOnlineArchiveOpts) readData(r io.Reader) (*admin.BackupOnlineArchiveCreate, error) {
@@ -88,7 +92,7 @@ func (opts *createOnlineArchiveOpts) readData(r io.Reader) (*admin.BackupOnlineA
 	return out, nil
 }
 
-func (opts *createOnlineArchiveOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createOnlineArchiveOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -101,28 +105,29 @@ func (opts *createOnlineArchiveOpts) run(ctx context.Context, r io.Reader, w io.
 		BackupOnlineArchiveCreate: data,
 	}
 
-	resp, _, err := opts.client.OnlineArchiveApi.CreateOnlineArchiveWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.OnlineArchiveApi.CreateOnlineArchiveWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createOnlineArchiveOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createOnlineArchiveBuilder() *cobra.Command {
@@ -136,7 +141,10 @@ func createOnlineArchiveBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -156,6 +164,7 @@ type deleteOnlineArchiveOpts struct {
 	clusterName string
 	format      string
 	tmpl        *template.Template
+	resp        map[string]interface{}
 }
 
 func (opts *deleteOnlineArchiveOpts) preRun() (err error) {
@@ -175,13 +184,15 @@ func (opts *deleteOnlineArchiveOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteOnlineArchiveOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteOnlineArchiveOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteOnlineArchiveApiParams{
 		GroupId:     opts.groupId,
@@ -189,28 +200,29 @@ func (opts *deleteOnlineArchiveOpts) run(ctx context.Context, _ io.Reader, w io.
 		ClusterName: opts.clusterName,
 	}
 
-	resp, _, err := opts.client.OnlineArchiveApi.DeleteOnlineArchiveWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.OnlineArchiveApi.DeleteOnlineArchiveWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteOnlineArchiveOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteOnlineArchiveBuilder() *cobra.Command {
@@ -222,7 +234,10 @@ func deleteOnlineArchiveBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -244,6 +259,7 @@ type downloadOnlineArchiveQueryLogsOpts struct {
 	archiveOnly bool
 	format      string
 	tmpl        *template.Template
+	resp        *os.File
 }
 
 func (opts *downloadOnlineArchiveQueryLogsOpts) preRun() (err error) {
@@ -263,13 +279,15 @@ func (opts *downloadOnlineArchiveQueryLogsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *downloadOnlineArchiveQueryLogsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *downloadOnlineArchiveQueryLogsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DownloadOnlineArchiveQueryLogsApiParams{
 		GroupId:     opts.groupId,
@@ -279,28 +297,29 @@ func (opts *downloadOnlineArchiveQueryLogsOpts) run(ctx context.Context, _ io.Re
 		ArchiveOnly: &opts.archiveOnly,
 	}
 
-	resp, _, err := opts.client.OnlineArchiveApi.DownloadOnlineArchiveQueryLogsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.OnlineArchiveApi.DownloadOnlineArchiveQueryLogsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *downloadOnlineArchiveQueryLogsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func downloadOnlineArchiveQueryLogsBuilder() *cobra.Command {
@@ -312,7 +331,10 @@ func downloadOnlineArchiveQueryLogsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -333,6 +355,7 @@ type getOnlineArchiveOpts struct {
 	clusterName string
 	format      string
 	tmpl        *template.Template
+	resp        *admin.BackupOnlineArchive
 }
 
 func (opts *getOnlineArchiveOpts) preRun() (err error) {
@@ -352,13 +375,15 @@ func (opts *getOnlineArchiveOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getOnlineArchiveOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getOnlineArchiveOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetOnlineArchiveApiParams{
 		GroupId:     opts.groupId,
@@ -366,28 +391,29 @@ func (opts *getOnlineArchiveOpts) run(ctx context.Context, _ io.Reader, w io.Wri
 		ClusterName: opts.clusterName,
 	}
 
-	resp, _, err := opts.client.OnlineArchiveApi.GetOnlineArchiveWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.OnlineArchiveApi.GetOnlineArchiveWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getOnlineArchiveOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getOnlineArchiveBuilder() *cobra.Command {
@@ -399,7 +425,10 @@ func getOnlineArchiveBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -421,6 +450,7 @@ type listOnlineArchivesOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedOnlineArchive
 }
 
 func (opts *listOnlineArchivesOpts) preRun() (err error) {
@@ -440,13 +470,15 @@ func (opts *listOnlineArchivesOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listOnlineArchivesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listOnlineArchivesOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListOnlineArchivesApiParams{
 		GroupId:      opts.groupId,
@@ -456,28 +488,29 @@ func (opts *listOnlineArchivesOpts) run(ctx context.Context, _ io.Reader, w io.W
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.OnlineArchiveApi.ListOnlineArchivesWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.OnlineArchiveApi.ListOnlineArchivesWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listOnlineArchivesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listOnlineArchivesBuilder() *cobra.Command {
@@ -489,7 +522,10 @@ func listOnlineArchivesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -513,6 +549,7 @@ type updateOnlineArchiveOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.BackupOnlineArchive
 }
 
 func (opts *updateOnlineArchiveOpts) preRun() (err error) {
@@ -532,10 +569,12 @@ func (opts *updateOnlineArchiveOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *updateOnlineArchiveOpts) readData(r io.Reader) (*admin.BackupOnlineArchive, error) {
@@ -560,7 +599,7 @@ func (opts *updateOnlineArchiveOpts) readData(r io.Reader) (*admin.BackupOnlineA
 	return out, nil
 }
 
-func (opts *updateOnlineArchiveOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *updateOnlineArchiveOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -574,28 +613,29 @@ func (opts *updateOnlineArchiveOpts) run(ctx context.Context, r io.Reader, w io.
 		BackupOnlineArchive: data,
 	}
 
-	resp, _, err := opts.client.OnlineArchiveApi.UpdateOnlineArchiveWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.OnlineArchiveApi.UpdateOnlineArchiveWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *updateOnlineArchiveOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func updateOnlineArchiveBuilder() *cobra.Command {
@@ -609,7 +649,10 @@ func updateOnlineArchiveBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

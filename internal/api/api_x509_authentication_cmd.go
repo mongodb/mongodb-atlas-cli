@@ -41,6 +41,7 @@ type createDatabaseUserCertificateOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     string
 }
 
 func (opts *createDatabaseUserCertificateOpts) preRun() (err error) {
@@ -60,10 +61,12 @@ func (opts *createDatabaseUserCertificateOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createDatabaseUserCertificateOpts) readData(r io.Reader) (*admin.UserCert, error) {
@@ -88,7 +91,7 @@ func (opts *createDatabaseUserCertificateOpts) readData(r io.Reader) (*admin.Use
 	return out, nil
 }
 
-func (opts *createDatabaseUserCertificateOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createDatabaseUserCertificateOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -101,28 +104,29 @@ func (opts *createDatabaseUserCertificateOpts) run(ctx context.Context, r io.Rea
 		UserCert: data,
 	}
 
-	resp, _, err := opts.client.X509AuthenticationApi.CreateDatabaseUserCertificateWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.X509AuthenticationApi.CreateDatabaseUserCertificateWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createDatabaseUserCertificateOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createDatabaseUserCertificateBuilder() *cobra.Command {
@@ -136,7 +140,10 @@ func createDatabaseUserCertificateBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -154,6 +161,7 @@ type disableCustomerManagedX509Opts struct {
 	groupId string
 	format  string
 	tmpl    *template.Template
+	resp    *admin.UserSecurity
 }
 
 func (opts *disableCustomerManagedX509Opts) preRun() (err error) {
@@ -173,40 +181,43 @@ func (opts *disableCustomerManagedX509Opts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *disableCustomerManagedX509Opts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *disableCustomerManagedX509Opts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DisableCustomerManagedX509ApiParams{
 		GroupId: opts.groupId,
 	}
 
-	resp, _, err := opts.client.X509AuthenticationApi.DisableCustomerManagedX509WithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.X509AuthenticationApi.DisableCustomerManagedX509WithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *disableCustomerManagedX509Opts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func disableCustomerManagedX509Builder() *cobra.Command {
@@ -218,7 +229,10 @@ func disableCustomerManagedX509Builder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -236,6 +250,7 @@ type listDatabaseUserCertificatesOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
+	resp         *admin.PaginatedUserCert
 }
 
 func (opts *listDatabaseUserCertificatesOpts) preRun() (err error) {
@@ -255,13 +270,15 @@ func (opts *listDatabaseUserCertificatesOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listDatabaseUserCertificatesOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listDatabaseUserCertificatesOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListDatabaseUserCertificatesApiParams{
 		GroupId:      opts.groupId,
@@ -271,28 +288,29 @@ func (opts *listDatabaseUserCertificatesOpts) run(ctx context.Context, _ io.Read
 		PageNum:      &opts.pageNum,
 	}
 
-	resp, _, err := opts.client.X509AuthenticationApi.ListDatabaseUserCertificatesWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.X509AuthenticationApi.ListDatabaseUserCertificatesWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listDatabaseUserCertificatesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listDatabaseUserCertificatesBuilder() *cobra.Command {
@@ -304,7 +322,10 @@ func listDatabaseUserCertificatesBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

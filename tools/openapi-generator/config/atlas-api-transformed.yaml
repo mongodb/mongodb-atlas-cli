@@ -2676,6 +2676,18 @@ paths:
       summary: TEST DESCRIPTION
       tags:
         - Clusters
+      x-watcher-params:
+        "0":
+          value: GroupId
+          key: GroupId
+        "1":
+          value: Name
+          key: ClusterName
+      x-watcher-return-property: StateName
+      x-watcher-timeout-description: WATCH TIMEOUT DESCRIPTION
+      x-watcher-description: WATCH DESCRIPTION
+      x-watcher-operation: getCluster
+      x-watcher-state: IDLE
   /api/atlas/v2/groups/{groupId}/clusters/provider/regions:
     get:
       description: Returns the list of regions available for the specified cloud

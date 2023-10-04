@@ -40,6 +40,7 @@ type createLinkTokenOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.TargetOrg
 }
 
 func (opts *createLinkTokenOpts) preRun() (err error) {
@@ -59,10 +60,12 @@ func (opts *createLinkTokenOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createLinkTokenOpts) readData(r io.Reader) (*admin.TargetOrgRequest, error) {
@@ -87,7 +90,7 @@ func (opts *createLinkTokenOpts) readData(r io.Reader) (*admin.TargetOrgRequest,
 	return out, nil
 }
 
-func (opts *createLinkTokenOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createLinkTokenOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -99,28 +102,29 @@ func (opts *createLinkTokenOpts) run(ctx context.Context, r io.Reader, w io.Writ
 		TargetOrgRequest: data,
 	}
 
-	resp, _, err := opts.client.CloudMigrationServiceApi.CreateLinkTokenWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudMigrationServiceApi.CreateLinkTokenWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createLinkTokenOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createLinkTokenBuilder() *cobra.Command {
@@ -134,7 +138,10 @@ func createLinkTokenBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -153,6 +160,7 @@ type createPushMigrationOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.LiveMigrationResponse
 }
 
 func (opts *createPushMigrationOpts) preRun() (err error) {
@@ -172,10 +180,12 @@ func (opts *createPushMigrationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *createPushMigrationOpts) readData(r io.Reader) (*admin.LiveMigrationRequest, error) {
@@ -200,7 +210,7 @@ func (opts *createPushMigrationOpts) readData(r io.Reader) (*admin.LiveMigration
 	return out, nil
 }
 
-func (opts *createPushMigrationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *createPushMigrationOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -212,28 +222,29 @@ func (opts *createPushMigrationOpts) run(ctx context.Context, r io.Reader, w io.
 		LiveMigrationRequest: data,
 	}
 
-	resp, _, err := opts.client.CloudMigrationServiceApi.CreatePushMigrationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudMigrationServiceApi.CreatePushMigrationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *createPushMigrationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func createPushMigrationBuilder() *cobra.Command {
@@ -247,7 +258,10 @@ func createPushMigrationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -280,18 +294,24 @@ func (opts *cutoverMigrationOpts) preRun() (err error) {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
 	}
 
-	return err
+	return nil
 }
 
-func (opts *cutoverMigrationOpts) run(ctx context.Context, _ io.Reader, _ io.Writer) error {
+func (opts *cutoverMigrationOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.CutoverMigrationApiParams{
 		GroupId:         opts.groupId,
 		LiveMigrationId: opts.liveMigrationId,
 	}
 
-	_, err := opts.client.CloudMigrationServiceApi.CutoverMigrationWithParams(ctx, params).Execute()
+	var err error
+	_, err = opts.client.CloudMigrationServiceApi.CutoverMigrationWithParams(ctx, params).Execute()
 	return err
+}
+
+func (opts *cutoverMigrationOpts) postRun(_ context.Context, _ io.Writer) error {
+
+	return nil
 }
 
 func cutoverMigrationBuilder() *cobra.Command {
@@ -303,7 +323,10 @@ func cutoverMigrationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -318,6 +341,7 @@ type deleteLinkTokenOpts struct {
 	orgId  string
 	format string
 	tmpl   *template.Template
+	resp   map[string]interface{}
 }
 
 func (opts *deleteLinkTokenOpts) preRun() (err error) {
@@ -337,40 +361,43 @@ func (opts *deleteLinkTokenOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *deleteLinkTokenOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *deleteLinkTokenOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.DeleteLinkTokenApiParams{
 		OrgId: opts.orgId,
 	}
 
-	resp, _, err := opts.client.CloudMigrationServiceApi.DeleteLinkTokenWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudMigrationServiceApi.DeleteLinkTokenWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *deleteLinkTokenOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func deleteLinkTokenBuilder() *cobra.Command {
@@ -382,7 +409,10 @@ func deleteLinkTokenBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -397,6 +427,7 @@ type getPushMigrationOpts struct {
 	liveMigrationId string
 	format          string
 	tmpl            *template.Template
+	resp            *admin.LiveMigrationResponse
 }
 
 func (opts *getPushMigrationOpts) preRun() (err error) {
@@ -416,41 +447,44 @@ func (opts *getPushMigrationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getPushMigrationOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getPushMigrationOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetPushMigrationApiParams{
 		GroupId:         opts.groupId,
 		LiveMigrationId: opts.liveMigrationId,
 	}
 
-	resp, _, err := opts.client.CloudMigrationServiceApi.GetPushMigrationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudMigrationServiceApi.GetPushMigrationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getPushMigrationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getPushMigrationBuilder() *cobra.Command {
@@ -462,7 +496,10 @@ func getPushMigrationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -479,6 +516,7 @@ type getValidationStatusOpts struct {
 	validationId string
 	format       string
 	tmpl         *template.Template
+	resp         *admin.LiveImportValidation
 }
 
 func (opts *getValidationStatusOpts) preRun() (err error) {
@@ -498,41 +536,44 @@ func (opts *getValidationStatusOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *getValidationStatusOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *getValidationStatusOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.GetValidationStatusApiParams{
 		GroupId:      opts.groupId,
 		ValidationId: opts.validationId,
 	}
 
-	resp, _, err := opts.client.CloudMigrationServiceApi.GetValidationStatusWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudMigrationServiceApi.GetValidationStatusWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *getValidationStatusOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func getValidationStatusBuilder() *cobra.Command {
@@ -544,7 +585,10 @@ func getValidationStatusBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
@@ -560,6 +604,7 @@ type listSourceProjectsOpts struct {
 	orgId  string
 	format string
 	tmpl   *template.Template
+	resp   []admin.LiveImportAvailableProject
 }
 
 func (opts *listSourceProjectsOpts) preRun() (err error) {
@@ -579,40 +624,43 @@ func (opts *listSourceProjectsOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
-func (opts *listSourceProjectsOpts) run(ctx context.Context, _ io.Reader, w io.Writer) error {
+func (opts *listSourceProjectsOpts) run(ctx context.Context, _ io.Reader) error {
 
 	params := &admin.ListSourceProjectsApiParams{
 		OrgId: opts.orgId,
 	}
 
-	resp, _, err := opts.client.CloudMigrationServiceApi.ListSourceProjectsWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudMigrationServiceApi.ListSourceProjectsWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *listSourceProjectsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func listSourceProjectsBuilder() *cobra.Command {
@@ -624,7 +672,10 @@ func listSourceProjectsBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.orgId, "orgId", "", `Unique 24-hexadecimal digit string that identifies the organization`)
@@ -641,6 +692,7 @@ type validateMigrationOpts struct {
 	fs       afero.Fs
 	format   string
 	tmpl     *template.Template
+	resp     *admin.LiveImportValidation
 }
 
 func (opts *validateMigrationOpts) preRun() (err error) {
@@ -660,10 +712,12 @@ func (opts *validateMigrationOpts) preRun() (err error) {
 	}
 
 	if opts.format != "" {
-		opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n")
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (opts *validateMigrationOpts) readData(r io.Reader) (*admin.LiveMigrationRequest, error) {
@@ -688,7 +742,7 @@ func (opts *validateMigrationOpts) readData(r io.Reader) (*admin.LiveMigrationRe
 	return out, nil
 }
 
-func (opts *validateMigrationOpts) run(ctx context.Context, r io.Reader, w io.Writer) error {
+func (opts *validateMigrationOpts) run(ctx context.Context, r io.Reader) error {
 	data, errData := opts.readData(r)
 	if errData != nil {
 		return errData
@@ -700,28 +754,29 @@ func (opts *validateMigrationOpts) run(ctx context.Context, r io.Reader, w io.Wr
 		LiveMigrationRequest: data,
 	}
 
-	resp, _, err := opts.client.CloudMigrationServiceApi.ValidateMigrationWithParams(ctx, params).Execute()
-	if err != nil {
-		return err
-	}
+	var err error
+	opts.resp, _, err = opts.client.CloudMigrationServiceApi.ValidateMigrationWithParams(ctx, params).Execute()
+	return err
+}
 
-	prettyJSON, errJson := json.MarshalIndent(resp, "", " ")
+func (opts *validateMigrationOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
 	if errJson != nil {
 		return errJson
 	}
 
 	if opts.format == "" {
-		_, err = fmt.Fprintln(w, string(prettyJSON))
+		_, err := fmt.Fprintln(w, string(prettyJSON))
 		return err
 	}
 
 	var parsedJSON interface{}
-	if err = json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
 		return err
 	}
 
-	err = opts.tmpl.Execute(w, parsedJSON)
-	return err
+	return opts.tmpl.Execute(w, parsedJSON)
 }
 
 func validateMigrationBuilder() *cobra.Command {
@@ -735,7 +790,10 @@ func validateMigrationBuilder() *cobra.Command {
 			return opts.preRun()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.run(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)

@@ -62,8 +62,6 @@ func TestDeploymentsLocal(t *testing.T) {
 				deploymentEntity,
 				"diagnostics",
 				deploymentName,
-				"-o",
-				"json",
 			)
 
 			cmd.Env = os.Environ()
@@ -92,7 +90,9 @@ func TestDeploymentsLocal(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"delete",
-			"test",
+			deploymentName,
+			"--type",
+			"local",
 			"--force",
 		)
 

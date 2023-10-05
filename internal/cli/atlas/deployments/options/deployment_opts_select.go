@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/containers/podman/v4/libpod/define"
@@ -26,7 +27,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 )
 
-var errEmptyDeployments = errors.New("currently there are no deployment in your local system")
+var errEmptyLocalDeployments = errors.New("currently there are no deployment in your local system")
+var errNoDeployments = errors.New("currently there are no deployments")
 var ErrDeploymentNotFound = errors.New("deployment not found")
 var errDeploymentRequiredOnPipe = fmt.Errorf("deployment name is required  when piping the output of the command")
 
@@ -69,7 +71,7 @@ func (opts *DeploymentOpts) SelectLocal(ctx context.Context) error {
 	}
 
 	if len(containers) == 0 {
-		return errEmptyDeployments
+		return errEmptyLocalDeployments
 	}
 
 	if len(containers) == 1 {
@@ -91,4 +93,42 @@ func (opts *DeploymentOpts) SelectLocal(ctx context.Context) error {
 			return deploymentTypeLocal
 		},
 	}, &opts.DeploymentName, survey.WithValidator(survey.Required))
+}
+
+func (opts *DeploymentOpts) Select(deployments []Deployment) error {
+	displayNames := make([]string, 0, len(deployments))
+	types := map[string]string{}
+	names := map[string]string{}
+
+	if len(deployments) == 0 {
+		return errNoDeployments
+	}
+
+	if len(deployments) == 1 {
+		opts.DeploymentName = deployments[0].Name
+		opts.DeploymentType = deployments[0].Type
+		return nil
+	}
+
+	for _, d := range deployments {
+		displayType := strings.ToUpper(d.Type[:1]) + strings.ToLower(d.Type[1:])
+		displayName := fmt.Sprintf("%s (%s)", d.Name, displayType)
+		displayNames = append(displayNames, displayName)
+		types[displayName] = d.Type
+		names[displayName] = d.Name
+	}
+
+	var name string
+	err := telemetry.TrackAskOne(&survey.Select{
+		Message: "Select a deployment",
+		Options: displayNames,
+		Help:    usage.ClusterName,
+	}, &name, survey.WithValidator(survey.Required))
+	if err != nil {
+		return err
+	}
+
+	opts.DeploymentName = names[name]
+	opts.DeploymentType = types[name]
+	return nil
 }

@@ -66,6 +66,10 @@ func (opts *DeleteOpts) RunAtlas() error {
 }
 
 func (opts *DeleteOpts) RunLocal(ctx context.Context) error {
+	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
+		return err
+	}
+
 	connectionString, err := opts.ConnectionString(ctx)
 	if err != nil {
 		return err

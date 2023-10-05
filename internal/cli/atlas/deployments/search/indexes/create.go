@@ -73,7 +73,8 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 
 func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 	var err error
-	if err = opts.PodmanClient.Ready(ctx); err != nil {
+
+	if err = opts.LocalDeploymentPreRun(ctx); err != nil {
 		return err
 	}
 

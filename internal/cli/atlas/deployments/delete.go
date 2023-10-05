@@ -110,6 +110,10 @@ func (opts *DeleteOpts) runAtlas() error {
 }
 
 func (opts *DeleteOpts) runLocal(ctx context.Context) error {
+	err := opts.LocalDeploymentPreRun(ctx)
+	if err != nil {
+		return err
+	}
 	return opts.Delete(func() error {
 		_, _ = log.Warningln("deleting deployment...")
 		opts.StartSpinner()

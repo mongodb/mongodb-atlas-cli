@@ -69,7 +69,7 @@ func LogsBuilder() *cobra.Command {
 			log.SetWriter(w)
 
 			return opts.PreRunE(
-				opts.InitStore(podman.NewClient(log.IsDebugLevel(), log.Writer())),
+				opts.InitStore(podman.NewClient(log.IsDebugLevel(), log.Writer()), cmd.Context()),
 				opts.InitOutput(w, ""))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

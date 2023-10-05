@@ -109,7 +109,7 @@ func DiagnosticsBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.InitOutput(w, ""),
-				opts.InitStore(opts.podmanClient),
+				opts.InitStore(opts.podmanClient, cmd.Context()),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

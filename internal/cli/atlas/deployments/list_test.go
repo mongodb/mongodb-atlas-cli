@@ -97,7 +97,7 @@ func TestList_Run(t *testing.T) {
 		ProjectClusters(listOpts.ProjectID,
 			&mongodbatlas.ListOptions{
 				PageNum:      cli.DefaultPage,
-				ItemsPerPage: MaxItemsPerPage,
+				ItemsPerPage: options.MaxItemsPerPage,
 			},
 		).
 		Return(expectedAtlasClusters, nil).

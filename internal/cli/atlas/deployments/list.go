@@ -30,14 +30,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 type ListOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
 	options.DeploymentOpts
+	options.ListOpts
 	defaultSetter cli.DefaultSetterOpts
 	store         store.ClusterLister
 	config        setup.ProfileReader
@@ -47,7 +46,6 @@ const listTemplate = `NAME	TYPE	MDB VER	STATE
 {{range .}}{{.Name}}	{{.Type}}	{{.MongoDBVersion}}	{{.StateName}}
 {{end}}`
 
-const MaxItemsPerPage = 500
 const errAtlas = "failed to retrieve Atlas deployments with: %s"
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -62,45 +60,7 @@ func (opts *ListOpts) getAtlasDeployments() ([]options.Deployment, error) {
 	if !opts.IsCliAuthenticated() {
 		return nil, nil
 	}
-
-	if opts.ProjectID == "" {
-		opts.ProjectID = opts.config.ProjectID()
-	}
-
-	if opts.ProjectID == "" {
-		if err := opts.defaultSetter.AskProject(); err != nil {
-			return nil, err
-		}
-		opts.ProjectID = opts.defaultSetter.ProjectID
-	}
-
-	listOpts := &mongodbatlas.ListOptions{
-		PageNum:      cli.DefaultPage,
-		ItemsPerPage: MaxItemsPerPage,
-	}
-
-	projectClusters, err := opts.store.ProjectClusters(opts.ConfigProjectID(), listOpts)
-	if err != nil {
-		return nil, err
-	}
-	atlasClusters := projectClusters.(*admin.PaginatedAdvancedClusterDescription)
-
-	deployments := make([]options.Deployment, len(atlasClusters.Results))
-	for i, c := range atlasClusters.Results {
-		stateName := *c.StateName
-		if *c.Paused {
-			// for paused clusters, Atlas returns stateName IDLE and Paused=true
-			stateName = options.PausedState
-		}
-		deployments[i] = options.Deployment{
-			Type:           "ATLAS",
-			Name:           *c.Name,
-			MongoDBVersion: *c.MongoDBVersion,
-			StateName:      stateName,
-		}
-	}
-
-	return deployments, nil
+	return opts.GetAtlasDeployments()
 }
 
 func (opts *ListOpts) Run(ctx context.Context) error {

@@ -106,11 +106,6 @@ type SetupOpts struct {
 	atlasSetup    *setup.Opts
 }
 
-func (opts *SetupOpts) initPodmanClient() error {
-	opts.podmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
-	return opts.DeploymentOpts.InitStore(opts.podmanClient)()
-}
-
 func (opts *SetupOpts) initMongoDBClient(ctx context.Context) func() error {
 	return func() error {
 		opts.mongodbClient = mongodbclient.NewClientWithContext(ctx)
@@ -752,10 +747,11 @@ func SetupBuilder() *cobra.Command {
 			}
 
 			opts.force = opts.atlasSetup.Confirm
+			opts.podmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
 
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
-				opts.initPodmanClient,
+				opts.InitStore(opts.podmanClient, cmd.Context()),
 				opts.initMongoDBClient(cmd.Context()),
 			)
 		},

@@ -1,25 +1,15 @@
 const fs = require('fs');
 const yaml = require('yaml');
 
-var atlasApi, atlasApiChanges;
+const args = process.argv.splice(2);
 
-try {
-  atlasApi = yaml.parse(fs.readFileSync('config/atlas-api.yaml', 'utf8'));
-} catch (err) {
+function loadYaml(p) {
+  try {
+    return yaml.parse(fs.readFileSync(p, 'utf8'));
+  } catch (err) {
     console.error(err);
     process.exit(1);
-}
-
-try {
-  let f = fs.readFileSync('config/atlas-api-changes.yaml', 'utf8');
-  Object.entries(process.env).forEach(entry => {
-    const [key, value] = entry;
-    f = f.replaceAll("${" + key + "}", value);
-  });
-  atlasApiChanges = yaml.parse(f);
-} catch (err) {
-    console.error(err);
-    process.exit(1);
+  }
 }
 
 function visit(o, fn) {
@@ -45,20 +35,19 @@ function visit(o, fn) {
   }
 }
 
-visit(atlasApiChanges, function (k, v) {
-  let path = atlasApi;
-  k.forEach((key, i) => {
-    path[key] ||= {};
-    if (i == (k.length - 1)) {
-      path[key] = v;
-    }
-    path = path[key];
+let actual = loadYaml(args[0]);
+for (let i = 1; i < args.length; i++) {
+  let toMerge = loadYaml(args[i]);
+  visit(toMerge, function (k, v) {
+    let path = actual;
+    k.forEach((key, i) => {
+      path[key] ||= {};
+      if (i == (k.length - 1)) {
+        path[key] = v;
+      }
+      path = path[key];
+    });
   });
-});
-
-try {
-  fs.writeFileSync('config/atlas-api-transformed.yaml', yaml.stringify(atlasApi), 'utf8')
-} catch (err) {
-    console.error(err);
-    process.exit(1);
 }
+
+process.stdout.write(yaml.stringify(actual));

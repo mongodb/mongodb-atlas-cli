@@ -142,6 +142,7 @@ func (opts *createClusterOpts) watch(ctx context.Context) error {
 			if resp.StateName != nil && *resp.StateName == "IDLE" {
 				return nil
 			}
+			time.Sleep(4 * time.Second)
 		}
 	}
 }

@@ -180,6 +180,7 @@ func (opts *{{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts) watch
 				if resp.{{vendorExtensions.x-watcher-return-property}} != nil && *resp.{{vendorExtensions.x-watcher-return-property}} == "{{vendorExtensions.x-watcher-state}}" {
 					return nil
 				}
+				time.Sleep(4 * time.Second)
 		}
 	}
 }

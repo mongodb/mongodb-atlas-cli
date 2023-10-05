@@ -77,11 +77,11 @@ func TestList_Run(t *testing.T) {
 
 	buf := new(bytes.Buffer)
 	listOpts := &ListOpts{
-		store:  mockStore,
-		config: mockProfileReader,
 		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient: mockPodman,
-			CredStore:    mockCredentialsGetter,
+			PodmanClient:          mockPodman,
+			CredStore:             mockCredentialsGetter,
+			AtlasClusterListStore: mockStore,
+			Config:                mockProfileReader,
 		},
 		GlobalOpts: cli.GlobalOpts{
 			ProjectID: "64f670f0bf789926667dad1a",

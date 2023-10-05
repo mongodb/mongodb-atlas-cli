@@ -21,13 +21,10 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -36,10 +33,6 @@ type ListOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
 	options.DeploymentOpts
-	options.ListOpts
-	defaultSetter cli.DefaultSetterOpts
-	store         store.ClusterLister
-	config        setup.ProfileReader
 }
 
 const listTemplate = `NAME	TYPE	MDB VER	STATE
@@ -48,28 +41,17 @@ const listTemplate = `NAME	TYPE	MDB VER	STATE
 
 const errAtlas = "failed to retrieve Atlas deployments with: %s"
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
-	return func() error {
-		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
-		return err
-	}
-}
-
-func (opts *ListOpts) getAtlasDeployments() ([]options.Deployment, error) {
-	if !opts.IsCliAuthenticated() {
-		return nil, nil
-	}
-	return opts.GetAtlasDeployments()
-}
-
 func (opts *ListOpts) Run(ctx context.Context) error {
 	mdbContainers, err := opts.GetLocalDeployments(ctx)
 	if err != nil && !errors.Is(err, podman.ErrPodmanNotFound) {
 		return err
 	}
 
-	atlasClusters, atlasErr := opts.getAtlasDeployments()
+	var atlasClusters []options.Deployment
+	var atlasErr error
+	if opts.IsCliAuthenticated() {
+		atlasClusters, atlasErr = opts.GetAtlasDeployments(opts.ProjectID)
+	}
 
 	err = opts.Print(append(atlasClusters, mdbContainers...))
 	if err != nil {
@@ -100,20 +82,16 @@ func ListBuilder() *cobra.Command {
 			"output": listTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.config = config.Default()
-			opts.CredStore = config.Default()
-			log.SetWriter(cmd.OutOrStdout())
+			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
 
 			if err := opts.PreRunE(
-				opts.initStore(cmd.Context()),
-				func() error { return opts.defaultSetter.InitStore(cmd.Context()) },
-				opts.InitOutput(log.Writer(), listTemplate)); err != nil {
+				func() error { return opts.DefaultSetter.InitStore(cmd.Context()) },
+				opts.InitStore(opts.PodmanClient, cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate)); err != nil {
 				return err
 			}
 
-			opts.defaultSetter.OutWriter = cmd.OutOrStdout()
-
-			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
+			opts.DefaultSetter.OutWriter = cmd.OutOrStdout()
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

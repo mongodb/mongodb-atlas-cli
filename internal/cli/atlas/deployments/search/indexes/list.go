@@ -106,7 +106,7 @@ func (opts *ListOpts) validateAndPrompt(ctx context.Context) error {
 	}
 
 	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
+		if err := opts.DeploymentOpts.SelectLocal(ctx); err != nil {
 			return err
 		}
 	}

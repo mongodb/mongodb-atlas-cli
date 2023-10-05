@@ -82,7 +82,7 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 			return err
 		}
 	} else {
-		if err = opts.DeploymentOpts.Select(ctx); err != nil {
+		if err = opts.DeploymentOpts.SelectLocal(ctx); err != nil {
 			return err
 		}
 	}

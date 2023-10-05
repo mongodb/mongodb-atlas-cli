@@ -276,6 +276,10 @@ func CreateBuilder() *cobra.Command {
 				return ErrWatchNotAvailable
 			}
 
+			if opts.Filename != "" && (opts.DBName != "" || opts.Collection != "") {
+				return errors.New("the '-file' flag cannot be used in conjunction with the 'db' and 'collection' flags, please choose either 'file' or 'db' and '-collection', but not both")
+			}
+
 			return opts.PreRunE(
 				opts.InitOutput(w, createTemplate),
 				opts.InitStore(opts.PodmanClient),
@@ -308,10 +312,9 @@ func CreateBuilder() *cobra.Command {
 	// Atlas only
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
+	cmd.MarkFlagsMutuallyExclusive(flag.Database, flag.File)
+	cmd.MarkFlagsMutuallyExclusive(flag.Collection, flag.File)
 	_ = cmd.MarkFlagFilename(flag.File)
-
-	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Database)
-	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Collection)
 
 	return cmd
 }

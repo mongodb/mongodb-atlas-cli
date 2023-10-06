@@ -61,9 +61,9 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 
 	buf := new(bytes.Buffer)
 	startOpts := &StartOpts{
-		store:  mockStore,
-		config: mockProfileReader,
+		store: mockStore,
 		DeploymentOpts: options.DeploymentOpts{
+			Config:         mockProfileReader,
 			PodmanClient:   mockPodman,
 			CredStore:      mockCredentialsGetter,
 			DeploymentName: deploymentName,
@@ -82,13 +82,13 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 		EXPECT().
 		Ready(ctx).
 		Return(nil).
-		Times(1)
+		Times(2)
 
 	mockPodman.
 		EXPECT().
 		ListContainers(ctx, options.MongodHostnamePrefix).
 		Return(expectedLocalDeployments, nil).
-		Times(1)
+		Times(2)
 
 	mockPodman.
 		EXPECT().
@@ -153,11 +153,11 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 
 	buf := new(bytes.Buffer)
 	startOpts := &StartOpts{
-		store:  mockStore,
-		config: mockProfileReader,
+		store: mockStore,
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			CredStore:      mockCredentialsGetter,
+			Config:         mockProfileReader,
 			DeploymentName: deploymentName,
 			DeploymentType: "LOCAL",
 		},
@@ -174,13 +174,13 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 		EXPECT().
 		Ready(ctx).
 		Return(nil).
-		Times(1)
+		Times(2)
 
 	mockPodman.
 		EXPECT().
 		ListContainers(ctx, options.MongodHostnamePrefix).
 		Return(expectedLocalDeployments, nil).
-		Times(1)
+		Times(2)
 
 	mockPodman.
 		EXPECT().
@@ -245,11 +245,11 @@ func TestStart_RunAtlas(t *testing.T) {
 
 	buf := new(bytes.Buffer)
 	listOpts := &StartOpts{
-		store:  mockStore,
-		config: mockProfileReader,
+		store: mockStore,
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			CredStore:      mockCredentialsGetter,
+			Config:         mockProfileReader,
 			DeploymentName: deploymentName,
 			DeploymentType: "ATLAS",
 		},

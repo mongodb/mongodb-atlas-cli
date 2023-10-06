@@ -21,7 +21,6 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -37,8 +36,7 @@ type StartOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
 	options.DeploymentOpts
-	store  store.ClusterStarter
-	config setup.ProfileReader
+	store store.ClusterStarter
 }
 
 var (
@@ -56,7 +54,7 @@ func (opts *StartOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *StartOpts) Run(ctx context.Context) error {
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	if err := opts.SelectDeployments(ctx); err != nil {
 		return err
 	}
 
@@ -68,10 +66,6 @@ func (opts *StartOpts) Run(ctx context.Context) error {
 }
 
 func (opts *StartOpts) RunLocal(ctx context.Context) error {
-	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
-		return err
-	}
-
 	opts.StartSpinner()
 	defer opts.StopSpinner()
 
@@ -145,24 +139,6 @@ func (opts *StartOpts) RunAtlas() error {
 	return opts.Print(r)
 }
 
-func (opts *StartOpts) validateAndPrompt(ctx context.Context) error {
-	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
-		return err
-	}
-
-	if opts.IsAtlasDeploymentType() && opts.DeploymentName == "" {
-		return ErrNoDeploymentName
-	}
-
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.SelectLocal(ctx); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{
@@ -175,17 +151,15 @@ func StartBuilder() *cobra.Command {
 			"output":             startTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.config = config.Default()
-			opts.CredStore = config.Default()
-			log.SetWriter(cmd.OutOrStdout())
+			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), cmd.OutOrStdout())
 
 			if err := opts.PreRunE(
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(log.Writer(), startTemplate)); err != nil {
+				opts.InitStore(opts.PodmanClient, cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), startTemplate)); err != nil {
 				return err
 			}
 
-			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -216,10 +216,6 @@ func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needPodmanSetu
 }
 
 func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
-	if err := podman.Installed(); err != nil {
-		return err
-	}
-
 	steps, needPodmanSetup, needToPullImages := opts.planSteps(ctx)
 	currentStep := 1
 	longWaitWarning := ""
@@ -663,6 +659,10 @@ Port	{{.Port}}
 }
 
 func (opts *SetupOpts) runLocal(ctx context.Context) error {
+	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
+		return err
+	}
+
 	if err := opts.createLocalDeployment(ctx); err != nil {
 		_ = opts.Remove(ctx)
 		return err

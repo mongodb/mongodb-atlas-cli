@@ -60,6 +60,12 @@ func TestDelete_RunLocal(t *testing.T) {
 
 	mockPodman.
 		EXPECT().
+		Ready(ctx).
+		Return(nil).
+		Times(1)
+
+	mockPodman.
+		EXPECT().
 		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
 		Return([]*define.InspectContainerData{
 			{

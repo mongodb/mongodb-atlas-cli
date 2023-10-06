@@ -94,7 +94,7 @@ func TestDelete_Run_Local(t *testing.T) {
 		EXPECT().
 		Ready(ctx).
 		Return(nil).
-		Times(1)
+		Times(2)
 
 	mockPodman.
 		EXPECT().

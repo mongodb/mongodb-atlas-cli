@@ -42,6 +42,10 @@ const listTemplate = `NAME	TYPE	MDB VER	STATE
 const errAtlas = "failed to retrieve Atlas deployments with: %s"
 
 func (opts *ListOpts) Run(ctx context.Context) error {
+	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
+		return err
+	}
+
 	mdbContainers, err := opts.GetLocalDeployments(ctx)
 	if err != nil && !errors.Is(err, podman.ErrPodmanNotFound) {
 		return err

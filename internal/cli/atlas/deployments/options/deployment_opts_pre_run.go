@@ -28,13 +28,13 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectId string) error {
+func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID string) error {
 	if opts.IsLocalDeploymentType() {
 		return opts.displayLocalDeployments(ctx)
 	}
 
 	if opts.IsAtlasDeploymentType() {
-		return opts.displayAtlasDeployments(ctx, projectId)
+		return opts.displayAtlasDeployments(ctx, projectID)
 	}
 
 	if !opts.IsCliAuthenticated() {
@@ -43,9 +43,13 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectId str
 
 	var atlasDeployments []Deployment
 	var atlasErr error
-	if atlasDeployments, atlasErr = opts.GetAtlasDeployments(projectId); atlasErr != nil {
-		defer log.Warningf("Failed to retrieve Atlas deployments with: %s", atlasErr.Error())
-		return opts.displayLocalDeployments(ctx)
+	if atlasDeployments, atlasErr = opts.GetAtlasDeployments(projectID); atlasErr != nil {
+		if err := opts.displayLocalDeployments(ctx); err != nil {
+			return err
+		}
+
+		_, _ = log.Warningf("Failed to retrieve Atlas deployments with: %s", atlasErr.Error())
+		return nil
 	}
 
 	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
@@ -112,8 +116,7 @@ func (opts *DeploymentOpts) displayAtlasDeployments(ctx context.Context, project
 	var atlasDeployments []Deployment
 	var atlasErr error
 	if atlasDeployments, atlasErr = opts.GetAtlasDeployments(projectID); atlasErr != nil {
-		log.Warningf("Displaying only local deployments, failed to retrieve Atlas deployments with: %s\n", atlasErr.Error())
-		return opts.displayLocalDeployments(ctx)
+		return atlasErr
 	}
 
 	if opts.DeploymentName != "" {

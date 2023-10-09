@@ -20,8 +20,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -48,7 +46,7 @@ func ConnectBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 				opts.InitInput(cmd.InOrStdin()),
-				opts.InitStore(podman.NewClient(log.IsDebugLevel(), log.Writer())),
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.InitAtlasStore(cmd.Context()),
 			)
 		},

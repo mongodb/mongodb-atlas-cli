@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -97,7 +96,7 @@ func (opts *DeleteOpts) validateAndPromptLocal(ctx context.Context) error {
 	}
 
 	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
+		if err := opts.DeploymentOpts.SelectLocal(ctx); err != nil {
 			return err
 		}
 	}
@@ -177,11 +176,10 @@ Deleting a Local deployment also deletes any local data volumes.
 			if len(args) == 1 {
 				opts.DeploymentName = args[0]
 			}
-			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
 			return opts.PreRunE(
 				opts.initAtlasStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ""),
-				opts.InitStore(opts.PodmanClient),
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

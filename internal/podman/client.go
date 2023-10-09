@@ -19,7 +19,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"os/exec"
 	"runtime"
 	"strconv"
@@ -163,10 +162,7 @@ type Client interface {
 	Exec(ctx context.Context, name string, args ...string) error
 }
 
-type client struct {
-	debug     bool
-	outWriter io.Writer
-}
+type client struct{}
 
 func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	d := &Diagnostic{
@@ -314,24 +310,18 @@ func extractErrorMessage(exitErr *exec.ExitError) error {
 	return fmt.Errorf("%w: %s", exitErr, stderrLastLine)
 }
 
-func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
-	if o.debug {
-		_, _ = o.outWriter.Write([]byte(fmt.Sprintln(append([]string{"podman"}, arg...))))
-	}
+func (*client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
+	_, _ = log.Debug(fmt.Sprintln(append([]string{"podman"}, arg...)))
 
 	cmd := exec.CommandContext(ctx, "podman", arg...)
 
 	output, err := cmd.Output() // ignore stderr
 
-	if o.debug {
-		_, _ = o.outWriter.Write(output)
-	}
+	_, _ = log.Debug(string(output))
 
 	var exitErr *exec.ExitError
 	if errors.As(err, &exitErr) {
-		if o.debug {
-			_, _ = o.outWriter.Write(exitErr.Stderr)
-		}
+		_, _ = log.Debug(string(exitErr.Stderr))
 		err = extractErrorMessage(exitErr)
 	}
 
@@ -552,9 +542,6 @@ func (o *client) Exec(ctx context.Context, name string, args ...string) error {
 	return err
 }
 
-func NewClient(debug bool, outWriter io.Writer) Client {
-	return &client{
-		debug:     debug,
-		outWriter: outWriter,
-	}
+func NewClient() Client {
+	return &client{}
 }

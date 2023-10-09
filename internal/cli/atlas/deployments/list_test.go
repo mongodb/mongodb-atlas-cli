@@ -77,11 +77,11 @@ func TestList_Run(t *testing.T) {
 
 	buf := new(bytes.Buffer)
 	listOpts := &ListOpts{
-		store:  mockStore,
-		config: mockProfileReader,
 		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient: mockPodman,
-			CredStore:    mockCredentialsGetter,
+			PodmanClient:          mockPodman,
+			CredStore:             mockCredentialsGetter,
+			AtlasClusterListStore: mockStore,
+			Config:                mockProfileReader,
 		},
 		GlobalOpts: cli.GlobalOpts{
 			ProjectID: "64f670f0bf789926667dad1a",
@@ -97,7 +97,7 @@ func TestList_Run(t *testing.T) {
 		ProjectClusters(listOpts.ProjectID,
 			&mongodbatlas.ListOptions{
 				PageNum:      cli.DefaultPage,
-				ItemsPerPage: MaxItemsPerPage,
+				ItemsPerPage: options.MaxItemsPerPage,
 			},
 		).
 		Return(expectedAtlasClusters, nil).
@@ -107,7 +107,7 @@ func TestList_Run(t *testing.T) {
 		EXPECT().
 		AuthType().
 		Return(config.OAuth).
-		Times(1)
+		Times(2)
 
 	mockPodman.
 		EXPECT().

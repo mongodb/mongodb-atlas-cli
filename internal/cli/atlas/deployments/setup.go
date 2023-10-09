@@ -95,7 +95,6 @@ type SetupOpts struct {
 	options.DeploymentOpts
 	cli.OutputOpts
 	cli.GlobalOpts
-	podmanClient  podman.Client
 	mongodbClient mongodbclient.MongoDBClient
 	settings      string
 	connectWith   string
@@ -104,11 +103,6 @@ type SetupOpts struct {
 	mongotIP      string
 	s             *spinner.Spinner
 	atlasSetup    *setup.Opts
-}
-
-func (opts *SetupOpts) initPodmanClient() error {
-	opts.podmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
-	return opts.DeploymentOpts.InitStore(opts.podmanClient)()
 }
 
 func (opts *SetupOpts) initMongoDBClient(ctx context.Context) func() error {
@@ -132,22 +126,22 @@ func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, current
 	var mongotImages []*podman.Image
 	var err error
 
-	if mongodImages, err = opts.podmanClient.ListImages(ctx, opts.MongodDockerImageName()); err != nil {
+	if mongodImages, err = opts.PodmanClient.ListImages(ctx, opts.MongodDockerImageName()); err != nil {
 		return err
 	}
 
 	if len(mongodImages) == 0 {
-		if _, err = opts.podmanClient.PullImage(ctx, opts.MongodDockerImageName()); err != nil {
+		if _, err = opts.PodmanClient.PullImage(ctx, opts.MongodDockerImageName()); err != nil {
 			return err
 		}
 	}
 
-	if mongotImages, err = opts.podmanClient.ListImages(ctx, options.MongotDockerImageName); err != nil {
+	if mongotImages, err = opts.PodmanClient.ListImages(ctx, options.MongotDockerImageName); err != nil {
 		return err
 	}
 
 	if len(mongotImages) == 0 {
-		if _, err := opts.podmanClient.PullImage(ctx, options.MongotDockerImageName); err != nil {
+		if _, err := opts.PodmanClient.PullImage(ctx, options.MongotDockerImageName); err != nil {
 			return err
 		}
 	}
@@ -159,14 +153,14 @@ func (opts *SetupOpts) setupPodman(ctx context.Context, currentStep int, steps i
 	opts.logStepStarted("Downloading and completing configuration...", currentStep, steps)
 	defer opts.stop()
 
-	return opts.podmanClient.Ready(ctx)
+	return opts.PodmanClient.Ready(ctx)
 }
 
 func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, steps int) error {
 	opts.logStepStarted("Starting your local environment...", currentStep, steps)
 	defer opts.stop()
 
-	containers, errList := opts.podmanClient.ListContainers(ctx, options.MongodHostnamePrefix)
+	containers, errList := opts.PodmanClient.ListContainers(ctx, options.MongodHostnamePrefix)
 	if errList != nil {
 		return errList
 	}
@@ -175,7 +169,7 @@ func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, st
 }
 
 func (opts *SetupOpts) internalIPs(ctx context.Context) error {
-	n, err := opts.podmanClient.Network(ctx, opts.LocalNetworkName())
+	n, err := opts.PodmanClient.Network(ctx, opts.LocalNetworkName())
 	if err != nil {
 		return err
 	}
@@ -198,7 +192,7 @@ func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needPodmanSetu
 	needPodmanSetup = false
 	needToPullImages = false
 
-	setupState := opts.podmanClient.Diagnostics(ctx)
+	setupState := opts.PodmanClient.Diagnostics(ctx)
 
 	if setupState.MachineRequired &&
 		(!setupState.MachineFound || setupState.MachineState != "running") {
@@ -256,7 +250,7 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	opts.logStepStarted(fmt.Sprintf("Creating your cluster %s...", opts.DeploymentName), currentStep, steps)
 	defer opts.stop()
 
-	if _, err := opts.podmanClient.CreateNetwork(ctx, opts.LocalNetworkName()); err != nil {
+	if _, err := opts.PodmanClient.CreateNetwork(ctx, opts.LocalNetworkName()); err != nil {
 		return err
 	}
 
@@ -275,11 +269,11 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 
 func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents string) error {
 	mongodDataVolume := opts.LocalMongodDataVolume()
-	if _, err := opts.podmanClient.CreateVolume(ctx, mongodDataVolume); err != nil {
+	if _, err := opts.PodmanClient.CreateVolume(ctx, mongodDataVolume); err != nil {
 		return err
 	}
 
-	if _, err := opts.podmanClient.RunContainer(ctx,
+	if _, err := opts.PodmanClient.RunContainer(ctx,
 		podman.RunContainerOpts{
 			Detach:   true,
 			Image:    opts.MongodDockerImageName(),
@@ -357,16 +351,16 @@ func (opts *SetupOpts) internalMongodAddress() string {
 
 func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents string) error {
 	mongotDataVolume := opts.LocalMongotDataVolume()
-	if _, err := opts.podmanClient.CreateVolume(ctx, mongotDataVolume); err != nil {
+	if _, err := opts.PodmanClient.CreateVolume(ctx, mongotDataVolume); err != nil {
 		return err
 	}
 
 	mongotMetricsVolume := opts.LocalMongoMetricsVolume()
-	if _, err := opts.podmanClient.CreateVolume(ctx, mongotMetricsVolume); err != nil {
+	if _, err := opts.PodmanClient.CreateVolume(ctx, mongotMetricsVolume); err != nil {
 		return err
 	}
 
-	if _, err := opts.podmanClient.RunContainer(ctx, podman.RunContainerOpts{
+	if _, err := opts.PodmanClient.RunContainer(ctx, podman.RunContainerOpts{
 		Detach:     true,
 		Image:      options.MongotDockerImageName,
 		Name:       opts.LocalMongotHostname(),
@@ -755,7 +749,7 @@ func SetupBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
-				opts.initPodmanClient,
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initMongoDBClient(cmd.Context()),
 			)
 		},

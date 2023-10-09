@@ -18,14 +18,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"regexp"
-	"runtime"
 	"sort"
 	"strings"
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/briandowns/spinner"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
@@ -34,7 +36,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	"github.com/shirou/gopsutil/v3/host"
 )
 
 const (
@@ -55,6 +56,7 @@ const (
 	CompassConnect        = "compass"
 	MongoshConnect        = "mongosh"
 	PromptTypeMessage     = "What type of deployment would you like to work with?"
+	MaxItemsPerPage       = 500
 )
 
 var (
@@ -82,13 +84,16 @@ var localStateMap = map[string]string{
 }
 
 type DeploymentOpts struct {
-	DeploymentName string
-	DeploymentType string
-	MdbVersion     string
-	Port           int
-	PodmanClient   podman.Client
-	CredStore      store.CredentialsGetter
-	s              *spinner.Spinner
+	DeploymentName        string
+	DeploymentType        string
+	MdbVersion            string
+	Port                  int
+	PodmanClient          podman.Client
+	CredStore             store.CredentialsGetter
+	s                     *spinner.Spinner
+	DefaultSetter         cli.DefaultSetterOpts
+	AtlasClusterListStore store.ClusterLister
+	Config                setup.ProfileReader
 }
 
 type Deployment struct {
@@ -98,10 +103,17 @@ type Deployment struct {
 	StateName      string
 }
 
-func (opts *DeploymentOpts) InitStore(podmanClient podman.Client) func() error {
+func (opts *DeploymentOpts) InitStore(ctx context.Context, writer io.Writer) func() error {
 	return func() error {
-		opts.PodmanClient = podmanClient
-		return nil
+		var err error
+		opts.PodmanClient = podman.NewClient()
+		opts.Config = config.Default()
+		opts.CredStore = config.Default()
+		if opts.AtlasClusterListStore, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx)); err != nil {
+			return err
+		}
+		opts.DefaultSetter.OutWriter = writer
+		return opts.DefaultSetter.InitStore(ctx)
 	}
 }
 
@@ -246,49 +258,10 @@ func (opts *DeploymentOpts) IsAtlasDeploymentType() bool {
 	return strings.EqualFold(opts.DeploymentType, AtlasCluster)
 }
 
-func (opts *DeploymentOpts) LocalDeploymentPreRun(ctx context.Context) error {
-	if !localDeploymentSupportedByOs() {
-		_, _ = log.Warningln("Local deployments are not supported on this OS, to see local deployments requirements visit https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-deploy-local/.")
-	}
-
-	return opts.PodmanClient.Ready(ctx)
+func (opts *DeploymentOpts) IsLocalDeploymentType() bool {
+	return strings.EqualFold(opts.DeploymentType, LocalCluster)
 }
 
-func localDeploymentSupportedByOs() bool {
-	os := runtime.GOOS
-	switch os {
-	case "darwin":
-		// MacOS Intel and M1 are supported
-		return true
-	case "windows":
-		// Windows is not supported
-		return false
-	case "linux":
-		// Depends on distro
-		support, err := isLinuxDistroSupported()
-		if err != nil {
-			// If something went wrong in finding OS distro, then assume support
-			_, _ = log.Debugln(err)
-			return true
-		}
-		return support
-	default:
-		// Other unknown OS are not supported
-		return false
-	}
-}
-
-func isLinuxDistroSupported() (bool, error) {
-	hostInfo, err := host.Info()
-	if err != nil {
-		return false, err
-	}
-
-	distro := strings.ToLower(hostInfo.Platform)
-	if distro == "" {
-		return false, errors.New("unable to find OS distro")
-	}
-
-	_, _ = log.Debugln("Detected linux distro: ", distro)
-	return strings.Contains(distro, "centos") || strings.Contains(distro, "redhat") || strings.Contains(distro, "rhel"), nil
+func (opts *DeploymentOpts) NoDeploymentTypeSet() bool {
+	return strings.EqualFold(opts.DeploymentType, "")
 }

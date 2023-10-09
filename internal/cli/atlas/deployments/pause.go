@@ -27,7 +27,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -149,7 +148,7 @@ func (opts *PauseOpts) validateAndPrompt(ctx context.Context) error {
 	}
 
 	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
+		if err := opts.DeploymentOpts.SelectLocal(ctx); err != nil {
 			return err
 		}
 	}
@@ -175,16 +174,11 @@ func PauseBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.config = config.Default()
 			opts.CredStore = config.Default()
-			log.SetWriter(cmd.OutOrStdout())
 
-			if err := opts.PreRunE(
+			return opts.PreRunE(
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(log.Writer(), pauseTemplate)); err != nil {
-				return err
-			}
-
-			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
-			return nil
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.InitOutput(log.Writer(), pauseTemplate))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {

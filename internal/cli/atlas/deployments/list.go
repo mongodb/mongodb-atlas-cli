@@ -21,87 +21,24 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 type ListOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
 	options.DeploymentOpts
-	defaultSetter cli.DefaultSetterOpts
-	store         store.ClusterLister
-	config        setup.ProfileReader
 }
 
 const listTemplate = `NAME	TYPE	MDB VER	STATE
 {{range .}}{{.Name}}	{{.Type}}	{{.MongoDBVersion}}	{{.StateName}}
 {{end}}`
 
-const MaxItemsPerPage = 500
 const errAtlas = "failed to retrieve Atlas deployments with: %s"
-
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
-	return func() error {
-		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
-		return err
-	}
-}
-
-func (opts *ListOpts) getAtlasDeployments() ([]options.Deployment, error) {
-	if !opts.IsCliAuthenticated() {
-		return nil, nil
-	}
-
-	if opts.ProjectID == "" {
-		opts.ProjectID = opts.config.ProjectID()
-	}
-
-	if opts.ProjectID == "" {
-		if err := opts.defaultSetter.AskProject(); err != nil {
-			return nil, err
-		}
-		opts.ProjectID = opts.defaultSetter.ProjectID
-	}
-
-	listOpts := &mongodbatlas.ListOptions{
-		PageNum:      cli.DefaultPage,
-		ItemsPerPage: MaxItemsPerPage,
-	}
-
-	projectClusters, err := opts.store.ProjectClusters(opts.ConfigProjectID(), listOpts)
-	if err != nil {
-		return nil, err
-	}
-	atlasClusters := projectClusters.(*admin.PaginatedAdvancedClusterDescription)
-
-	deployments := make([]options.Deployment, len(atlasClusters.Results))
-	for i, c := range atlasClusters.Results {
-		stateName := *c.StateName
-		if *c.Paused {
-			// for paused clusters, Atlas returns stateName IDLE and Paused=true
-			stateName = options.PausedState
-		}
-		deployments[i] = options.Deployment{
-			Type:           "ATLAS",
-			Name:           *c.Name,
-			MongoDBVersion: *c.MongoDBVersion,
-			StateName:      stateName,
-		}
-	}
-
-	return deployments, nil
-}
 
 func (opts *ListOpts) Run(ctx context.Context) error {
 	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
@@ -113,7 +50,11 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	atlasClusters, atlasErr := opts.getAtlasDeployments()
+	var atlasClusters []options.Deployment
+	var atlasErr error
+	if opts.IsCliAuthenticated() {
+		atlasClusters, atlasErr = opts.AtlasDeployments(opts.ProjectID)
+	}
 
 	err = opts.Print(append(atlasClusters, mdbContainers...))
 	if err != nil {
@@ -144,21 +85,9 @@ func ListBuilder() *cobra.Command {
 			"output": listTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.config = config.Default()
-			opts.CredStore = config.Default()
-			log.SetWriter(cmd.OutOrStdout())
-
-			if err := opts.PreRunE(
-				opts.initStore(cmd.Context()),
-				func() error { return opts.defaultSetter.InitStore(cmd.Context()) },
-				opts.InitOutput(log.Writer(), listTemplate)); err != nil {
-				return err
-			}
-
-			opts.defaultSetter.OutWriter = cmd.OutOrStdout()
-
-			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
-			return nil
+			return opts.PreRunE(
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())

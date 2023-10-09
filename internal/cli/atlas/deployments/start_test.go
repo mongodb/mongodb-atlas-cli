@@ -61,9 +61,9 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 
 	buf := new(bytes.Buffer)
 	startOpts := &StartOpts{
-		store:  mockStore,
-		config: mockProfileReader,
+		store: mockStore,
 		DeploymentOpts: options.DeploymentOpts{
+			Config:         mockProfileReader,
 			PodmanClient:   mockPodman,
 			CredStore:      mockCredentialsGetter,
 			DeploymentName: deploymentName,
@@ -153,11 +153,11 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 
 	buf := new(bytes.Buffer)
 	startOpts := &StartOpts{
-		store:  mockStore,
-		config: mockProfileReader,
+		store: mockStore,
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:   mockPodman,
 			CredStore:      mockCredentialsGetter,
+			Config:         mockProfileReader,
 			DeploymentName: deploymentName,
 			DeploymentType: "LOCAL",
 		},
@@ -226,32 +226,32 @@ func TestStart_RunAtlas(t *testing.T) {
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockProfileReader := mocks.NewMockProfileReader(ctrl)
 	mockPodman := mocks.NewMockClient(ctrl)
+	mockAtlasListStore := mocks.NewMockClusterLister(ctrl)
 	ctx := context.Background()
+	deploymentName := "atlasCluster1"
 
-	expectedLocalDeployments := []*podman.Container{
-		{
-			Names:  []string{"localTest2"},
-			State:  "running",
-			Labels: map[string]string{"version": "6.0.9"},
-			ID:     deploymentName,
-		},
-		{
-			Names:  []string{"localTest1"},
-			State:  "running",
-			Labels: map[string]string{"version": "7.0.0"},
-			ID:     deploymentName,
+	expectedAtlasClusters := &admin.PaginatedAdvancedClusterDescription{
+		Results: []admin.AdvancedClusterDescription{
+			{
+				Name:           pointer.Get(deploymentName),
+				Id:             pointer.Get("123"),
+				MongoDBVersion: pointer.Get("7.0.0"),
+				StateName:      pointer.Get("IDLE"),
+				Paused:         pointer.Get(false),
+			},
 		},
 	}
 
 	buf := new(bytes.Buffer)
 	listOpts := &StartOpts{
-		store:  mockStore,
-		config: mockProfileReader,
+		store: mockStore,
 		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:   mockPodman,
-			CredStore:      mockCredentialsGetter,
-			DeploymentName: deploymentName,
-			DeploymentType: "ATLAS",
+			PodmanClient:          mockPodman,
+			CredStore:             mockCredentialsGetter,
+			Config:                mockProfileReader,
+			DeploymentName:        deploymentName,
+			DeploymentType:        "ATLAS",
+			AtlasClusterListStore: mockAtlasListStore,
 		},
 		GlobalOpts: cli.GlobalOpts{
 			ProjectID: projectID,
@@ -268,16 +268,16 @@ func TestStart_RunAtlas(t *testing.T) {
 		Return(nil).
 		Times(0)
 
-	mockPodman.
-		EXPECT().
-		ListContainers(ctx, options.MongotHostnamePrefix).
-		Return(expectedLocalDeployments, options.ErrDeploymentNotFound).
-		Times(0)
-
 	mockCredentialsGetter.
 		EXPECT().
 		AuthType().
 		Return(config.OAuth).
+		Times(2)
+
+	mockAtlasListStore.
+		EXPECT().
+		ProjectClusters(listOpts.ProjectID, gomock.Any()).
+		Return(expectedAtlasClusters, nil).
 		Times(1)
 
 	mockStore.

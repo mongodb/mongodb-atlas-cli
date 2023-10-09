@@ -149,12 +149,10 @@ func StartBuilder() *cobra.Command {
 			"output":             startTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			err := opts.PreRunE(
+			return opts.PreRunE(
 				opts.initStore(cmd.Context()),
 				opts.InitStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), startTemplate))
-
-			return err
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {

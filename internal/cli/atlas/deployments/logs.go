@@ -68,7 +68,7 @@ func LogsBuilder() *cobra.Command {
 			log.SetWriter(w)
 
 			return opts.PreRunE(
-				opts.InitStore(cmd.Context()),
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.InitOutput(w, ""))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

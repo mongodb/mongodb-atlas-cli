@@ -139,7 +139,7 @@ func DescribeBuilder() *cobra.Command {
 			w := cmd.OutOrStdout()
 			return opts.PreRunE(
 				opts.InitOutput(w, describeTemplate),
-				opts.InitStore(cmd.Context()),
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient(cmd.Context()),
 			)

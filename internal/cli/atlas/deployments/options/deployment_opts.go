@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"regexp"
 	"sort"
 	"strings"
@@ -102,7 +103,7 @@ type Deployment struct {
 	StateName      string
 }
 
-func (opts *DeploymentOpts) InitStore(ctx context.Context) func() error {
+func (opts *DeploymentOpts) InitStore(ctx context.Context, writer io.Writer) func() error {
 	return func() error {
 		var err error
 		opts.PodmanClient = podman.NewClient()
@@ -111,6 +112,7 @@ func (opts *DeploymentOpts) InitStore(ctx context.Context) func() error {
 		if opts.AtlasClusterListStore, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx)); err != nil {
 			return err
 		}
+		opts.DefaultSetter.OutWriter = writer
 		return opts.DefaultSetter.InitStore(ctx)
 	}
 }

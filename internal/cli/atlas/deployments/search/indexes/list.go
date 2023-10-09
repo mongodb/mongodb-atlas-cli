@@ -145,7 +145,7 @@ func ListBuilder() *cobra.Command {
 			opts.PodmanClient = podman.NewClient()
 			return opts.PreRunE(
 				opts.InitOutput(w, listTemplate),
-				opts.InitStore(cmd.Context()),
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient,
 			)

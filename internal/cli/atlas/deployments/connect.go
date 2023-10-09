@@ -46,7 +46,7 @@ func ConnectBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 				opts.InitInput(cmd.InOrStdin()),
-				opts.InitStore(cmd.Context()),
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.InitAtlasStore(cmd.Context()),
 			)
 		},

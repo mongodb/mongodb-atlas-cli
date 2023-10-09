@@ -749,7 +749,7 @@ func SetupBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
-				opts.InitStore(cmd.Context()),
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initMongoDBClient(cmd.Context()),
 			)
 		},

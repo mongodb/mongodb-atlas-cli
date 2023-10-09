@@ -179,7 +179,7 @@ Deleting a Local deployment also deletes any local data volumes.
 			return opts.PreRunE(
 				opts.initAtlasStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ""),
-				opts.InitStore(cmd.Context()),
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -107,7 +107,7 @@ func DiagnosticsBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.InitOutput(w, ""),
-				opts.InitStore(cmd.Context()),
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

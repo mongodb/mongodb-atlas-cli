@@ -28,7 +28,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -268,7 +267,6 @@ func CreateBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			w := cmd.OutOrStdout()
-			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
 			opts.WatchOpts.OutWriter = w
 			log.SetWriter(w)
 
@@ -282,7 +280,7 @@ func CreateBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.InitOutput(w, createTemplate),
-				opts.InitStore(cmd.Context(), opts.PodmanClient),
+				opts.InitStore(cmd.Context()),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient(cmd.Context()),
 			)

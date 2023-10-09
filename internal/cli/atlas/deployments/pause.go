@@ -183,7 +183,7 @@ func PauseBuilder() *cobra.Command {
 				return err
 			}
 
-			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
+			opts.PodmanClient = podman.NewClient()
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

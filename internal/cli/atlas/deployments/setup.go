@@ -747,11 +747,10 @@ func SetupBuilder() *cobra.Command {
 			}
 
 			opts.force = opts.atlasSetup.Confirm
-			opts.podmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
 
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
-				opts.InitStore(cmd.Context(), opts.podmanClient),
+				opts.InitStore(cmd.Context()),
 				opts.initMongoDBClient(cmd.Context()),
 			)
 		},

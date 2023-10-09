@@ -23,7 +23,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
@@ -143,10 +142,10 @@ func ListBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			w := cmd.OutOrStdout()
-			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
+			opts.PodmanClient = podman.NewClient()
 			return opts.PreRunE(
 				opts.InitOutput(w, listTemplate),
-				opts.InitStore(cmd.Context(), opts.PodmanClient),
+				opts.InitStore(cmd.Context()),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient,
 			)

@@ -23,7 +23,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/spf13/cobra"
 )
@@ -108,7 +107,7 @@ func DiagnosticsBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.InitOutput(w, ""),
-				opts.InitStore(cmd.Context(), podman.NewClient(log.IsDebugLevel(), w)),
+				opts.InitStore(cmd.Context()),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -28,32 +28,37 @@ import (
 )
 
 func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID string) (Deployment, error) {
-	if opts.IsLocalDeploymentType() {
-		return opts.selecOnlyLocalDeployments(ctx)
+	var atlasDeployments, localDeployments []Deployment
+	var atlasErr, localErr error
+
+	if opts.IsAtlasDeploymentType() || opts.NoDeploymentTypeSet() {
+		if atlasDeployments, atlasErr = opts.AtlasDeployments(projectID); atlasErr != nil {
+			if opts.IsAtlasDeploymentType() {
+				return Deployment{}, atlasErr
+			}
+			_, _ = log.Warningf("Failed to retrieve Atlas deployments with: %s", atlasErr.Error())
+		}
 	}
 
-	if opts.IsAtlasDeploymentType() {
-		return opts.selectOnlyAtlasDeployments(projectID)
+	if opts.IsLocalDeploymentType() || opts.NoDeploymentTypeSet() {
+		if localErr = opts.LocalDeploymentPreRun(ctx); localErr != nil {
+			if opts.IsLocalDeploymentType() {
+				return Deployment{}, localErr
+			}
+			_, _ = log.Warningf("Failed to retrieve local deployments with: %s\n", localErr.Error())
+		}
+
+		localDeployments, localErr = opts.GetLocalDeployments(ctx)
+		if localErr != nil {
+			if opts.IsLocalDeploymentType() {
+				return Deployment{}, localErr
+			}
+			_, _ = log.Warningf("Failed to retrieve local deployments with: %s\n", localErr.Error())
+		}
 	}
 
-	if !opts.IsCliAuthenticated() {
-		return opts.selecOnlyLocalDeployments(ctx)
-	}
-
-	var atlasDeployments []Deployment
-	var atlasErr error
-	if atlasDeployments, atlasErr = opts.AtlasDeployments(projectID); atlasErr != nil {
-		_, _ = log.Warningf("Failed to retrieve Atlas deployments with: %s", atlasErr.Error())
-		return opts.selecOnlyLocalDeployments(ctx)
-	}
-
-	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
-		return Deployment{}, err
-	}
-
-	localDeployments, err := opts.GetLocalDeployments(ctx)
-	if err != nil {
-		return Deployment{}, err
+	if atlasErr != nil && localErr != nil {
+		return Deployment{}, errors.New("failed to retrieve deployments")
 	}
 
 	if opts.DeploymentName == "" {
@@ -80,54 +85,11 @@ func (opts *DeploymentOpts) findDeploymentByName(localDeployments []Deployment, 
 	return opts.Select(deployments)
 }
 
-func (opts *DeploymentOpts) selecOnlyLocalDeployments(ctx context.Context) (Deployment, error) {
-	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
-		return Deployment{}, err
-	}
-
-	localDeployments, err := opts.GetLocalDeployments(ctx)
-	if err != nil {
-		return Deployment{}, err
-	}
-
-	if opts.DeploymentName != "" {
-		for _, d := range localDeployments {
-			if d.Name == opts.DeploymentName {
-				opts.DeploymentType = LocalCluster
-				opts.DeploymentName = d.Name
-				return d, nil
-			}
-		}
-	}
-
-	return opts.Select(localDeployments)
-}
-
-func (opts *DeploymentOpts) selectOnlyAtlasDeployments(projectID string) (Deployment, error) {
-	if !opts.IsCliAuthenticated() {
-		return Deployment{}, ErrNotAuthenticated
-	}
-
-	var atlasDeployments []Deployment
-	var atlasErr error
-	if atlasDeployments, atlasErr = opts.AtlasDeployments(projectID); atlasErr != nil {
-		return Deployment{}, atlasErr
-	}
-
-	if opts.DeploymentName != "" {
-		for _, d := range atlasDeployments {
-			if d.Name == opts.DeploymentName {
-				opts.DeploymentType = AtlasCluster
-				opts.DeploymentName = d.Name
-				return d, nil
-			}
-		}
-	}
-
-	return opts.Select(atlasDeployments)
-}
-
 func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, error) {
+	if !opts.IsCliAuthenticated() {
+		return nil, ErrNotAuthenticated
+	}
+
 	if projectID == "" {
 		projectID = opts.Config.ProjectID()
 	}

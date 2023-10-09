@@ -175,14 +175,10 @@ func PauseBuilder() *cobra.Command {
 			opts.config = config.Default()
 			opts.CredStore = config.Default()
 
-			if err := opts.PreRunE(
+			return opts.PreRunE(
 				opts.initStore(cmd.Context()),
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
-				opts.InitOutput(log.Writer(), pauseTemplate)); err != nil {
-				return err
-			}
-
-			return nil
+				opts.InitOutput(log.Writer(), pauseTemplate))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {

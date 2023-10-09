@@ -261,3 +261,7 @@ func (opts *DeploymentOpts) IsAtlasDeploymentType() bool {
 func (opts *DeploymentOpts) IsLocalDeploymentType() bool {
 	return strings.EqualFold(opts.DeploymentType, LocalCluster)
 }
+
+func (opts *DeploymentOpts) NoDeploymentTypeSet() bool {
+	return strings.EqualFold(opts.DeploymentType, "")
+}

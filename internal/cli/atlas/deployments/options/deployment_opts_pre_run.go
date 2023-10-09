@@ -43,7 +43,7 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 
 	var atlasDeployments []Deployment
 	var atlasErr error
-	if atlasDeployments, atlasErr = opts.GetAtlasDeployments(projectID); atlasErr != nil {
+	if atlasDeployments, atlasErr = opts.AtlasDeployments(projectID); atlasErr != nil {
 		if err := opts.displayLocalDeployments(ctx); err != nil {
 			return err
 		}
@@ -115,7 +115,7 @@ func (opts *DeploymentOpts) displayAtlasDeployments(projectID string) error {
 
 	var atlasDeployments []Deployment
 	var atlasErr error
-	if atlasDeployments, atlasErr = opts.GetAtlasDeployments(projectID); atlasErr != nil {
+	if atlasDeployments, atlasErr = opts.AtlasDeployments(projectID); atlasErr != nil {
 		return atlasErr
 	}
 
@@ -132,7 +132,7 @@ func (opts *DeploymentOpts) displayAtlasDeployments(projectID string) error {
 	return opts.Select(atlasDeployments)
 }
 
-func (opts *DeploymentOpts) GetAtlasDeployments(projectID string) ([]Deployment, error) {
+func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, error) {
 	if projectID == "" {
 		projectID = opts.Config.ProjectID()
 	}

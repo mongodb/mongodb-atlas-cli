@@ -22,53 +22,48 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/shirou/gopsutil/v3/host"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID string) error {
+func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID string) (Deployment, error) {
 	if opts.IsLocalDeploymentType() {
-		return opts.displayLocalDeployments(ctx)
+		return opts.selecOnlyLocalDeployments(ctx)
 	}
 
 	if opts.IsAtlasDeploymentType() {
-		return opts.displayAtlasDeployments(projectID)
+		return opts.selectOnlyAtlasDeployments(projectID)
 	}
 
 	if !opts.IsCliAuthenticated() {
-		return opts.displayLocalDeployments(ctx)
+		return opts.selecOnlyLocalDeployments(ctx)
 	}
 
 	var atlasDeployments []Deployment
 	var atlasErr error
 	if atlasDeployments, atlasErr = opts.AtlasDeployments(projectID); atlasErr != nil {
-		if err := opts.displayLocalDeployments(ctx); err != nil {
-			return err
-		}
-
 		_, _ = log.Warningf("Failed to retrieve Atlas deployments with: %s", atlasErr.Error())
-		return nil
+		return opts.selecOnlyLocalDeployments(ctx)
 	}
 
 	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
-		return err
+		return Deployment{}, err
 	}
 
 	localDeployments, err := opts.GetLocalDeployments(ctx)
-	if err != nil && !errors.Is(err, podman.ErrPodmanNotFound) {
-		return err
+	if err != nil {
+		return Deployment{}, err
 	}
 
 	if opts.DeploymentName == "" {
 		return opts.Select(append(localDeployments, atlasDeployments...))
 	}
 
-	return opts.findDeployment(localDeployments, atlasDeployments)
+	return opts.findDeploymentByName(localDeployments, atlasDeployments)
 }
 
-func (opts *DeploymentOpts) findDeployment(localDeployments []Deployment, atlasDeployments []Deployment) error {
+func (opts *DeploymentOpts) findDeploymentByName(localDeployments []Deployment, atlasDeployments []Deployment) (Deployment, error) {
 	deployments := make([]Deployment, 0)
 	for _, d := range localDeployments {
 		if d.Name == opts.DeploymentName {
@@ -85,14 +80,14 @@ func (opts *DeploymentOpts) findDeployment(localDeployments []Deployment, atlasD
 	return opts.Select(deployments)
 }
 
-func (opts *DeploymentOpts) displayLocalDeployments(ctx context.Context) error {
+func (opts *DeploymentOpts) selecOnlyLocalDeployments(ctx context.Context) (Deployment, error) {
 	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
-		return err
+		return Deployment{}, err
 	}
 
 	localDeployments, err := opts.GetLocalDeployments(ctx)
-	if err != nil && !errors.Is(err, podman.ErrPodmanNotFound) {
-		return err
+	if err != nil {
+		return Deployment{}, err
 	}
 
 	if opts.DeploymentName != "" {
@@ -100,7 +95,7 @@ func (opts *DeploymentOpts) displayLocalDeployments(ctx context.Context) error {
 			if d.Name == opts.DeploymentName {
 				opts.DeploymentType = LocalCluster
 				opts.DeploymentName = d.Name
-				return nil
+				return d, nil
 			}
 		}
 	}
@@ -108,15 +103,15 @@ func (opts *DeploymentOpts) displayLocalDeployments(ctx context.Context) error {
 	return opts.Select(localDeployments)
 }
 
-func (opts *DeploymentOpts) displayAtlasDeployments(projectID string) error {
+func (opts *DeploymentOpts) selectOnlyAtlasDeployments(projectID string) (Deployment, error) {
 	if !opts.IsCliAuthenticated() {
-		return ErrNotAuthenticated
+		return Deployment{}, ErrNotAuthenticated
 	}
 
 	var atlasDeployments []Deployment
 	var atlasErr error
 	if atlasDeployments, atlasErr = opts.AtlasDeployments(projectID); atlasErr != nil {
-		return atlasErr
+		return Deployment{}, atlasErr
 	}
 
 	if opts.DeploymentName != "" {
@@ -124,7 +119,7 @@ func (opts *DeploymentOpts) displayAtlasDeployments(projectID string) error {
 			if d.Name == opts.DeploymentName {
 				opts.DeploymentType = AtlasCluster
 				opts.DeploymentName = d.Name
-				return nil
+				return d, nil
 			}
 		}
 	}

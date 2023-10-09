@@ -95,40 +95,39 @@ func (opts *DeploymentOpts) SelectLocal(ctx context.Context) error {
 	}, &opts.DeploymentName, survey.WithValidator(survey.Required))
 }
 
-func (opts *DeploymentOpts) Select(deployments []Deployment) error {
-	displayNames := make([]string, 0, len(deployments))
-	types := map[string]string{}
-	names := map[string]string{}
-
+func (opts *DeploymentOpts) Select(deployments []Deployment) (Deployment, error) {
 	if len(deployments) == 0 {
-		return errNoDeployments
+		return Deployment{}, errNoDeployments
 	}
 
 	if len(deployments) == 1 {
 		opts.DeploymentName = deployments[0].Name
 		opts.DeploymentType = deployments[0].Type
-		return nil
+		return deployments[0], nil
 	}
+
+	displayNames := make([]string, 0, len(deployments))
+	deploymentsByDisplayName := map[string]Deployment{}
 
 	for _, d := range deployments {
 		displayType := strings.ToUpper(d.Type[:1]) + strings.ToLower(d.Type[1:])
 		displayName := fmt.Sprintf("%s (%s)", d.Name, displayType)
 		displayNames = append(displayNames, displayName)
-		types[displayName] = d.Type
-		names[displayName] = d.Name
+		deploymentsByDisplayName[displayName] = d
 	}
 
-	var name string
+	var displayName string
 	err := telemetry.TrackAskOne(&survey.Select{
 		Message: "Select a deployment",
 		Options: displayNames,
 		Help:    usage.ClusterName,
-	}, &name, survey.WithValidator(survey.Required))
+	}, &displayName, survey.WithValidator(survey.Required))
 	if err != nil {
-		return err
+		return Deployment{}, err
 	}
 
-	opts.DeploymentName = names[name]
-	opts.DeploymentType = types[name]
-	return nil
+	deployment := deploymentsByDisplayName[displayName]
+	opts.DeploymentName = deployment.Name
+	opts.DeploymentType = deployment.Type
+	return deployment, nil
 }

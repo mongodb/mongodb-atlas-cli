@@ -17,7 +17,6 @@ package deployments
 import (
 	"context"
 	"errors"
-	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -52,49 +51,39 @@ func (opts *StartOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *StartOpts) Run(ctx context.Context) error {
-	if err := opts.SelectDeployments(ctx, opts.ProjectID); err != nil {
+	deployment, err := opts.SelectDeployments(ctx, opts.ProjectID)
+	if err != nil {
 		return err
 	}
 
-	if strings.EqualFold(opts.DeploymentType, options.LocalCluster) {
-		return opts.RunLocal(ctx)
+	if opts.IsLocalDeploymentType() {
+		return opts.RunLocal(ctx, deployment)
 	}
 
 	return opts.RunAtlas()
 }
 
-func (opts *StartOpts) RunLocal(ctx context.Context) error {
+func (opts *StartOpts) RunLocal(ctx context.Context, deployment options.Deployment) error {
 	opts.StartSpinner()
 	defer opts.StopSpinner()
 
-	localDeployments, err := opts.GetLocalDeployments(ctx)
-	if err != nil {
+	if err := opts.startContainer(ctx, deployment); err != nil {
 		return err
 	}
 
-	for _, deployment := range localDeployments {
-		if deployment.Name == opts.DeploymentName {
-			if err = opts.startContainer(ctx, deployment); err != nil {
-				return err
-			}
-
-			mongotIPAddress, errIP := opts.MongotIP(ctx)
-			if errIP != nil {
-				return errIP
-			}
-
-			if err = opts.WaitForMongot(ctx, mongotIPAddress); err != nil {
-				return err
-			}
-
-			return opts.Print(
-				admin.AdvancedClusterDescription{
-					Name: &opts.DeploymentName,
-				})
-		}
+	mongotIPAddress, errIP := opts.MongotIP(ctx)
+	if errIP != nil {
+		return errIP
 	}
 
-	return options.ErrDeploymentNotFound
+	if err := opts.WaitForMongot(ctx, mongotIPAddress); err != nil {
+		return err
+	}
+
+	return opts.Print(
+		admin.AdvancedClusterDescription{
+			Name: &opts.DeploymentName,
+		})
 }
 
 func (opts *StartOpts) startContainer(ctx context.Context, deployment options.Deployment) error {

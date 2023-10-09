@@ -86,7 +86,6 @@ func ListBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(
-				func() error { return opts.DefaultSetter.InitStore(cmd.Context()) },
 				opts.InitStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate)); err != nil {
 				return err

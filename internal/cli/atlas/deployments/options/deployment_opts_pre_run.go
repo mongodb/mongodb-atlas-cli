@@ -34,7 +34,7 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 	}
 
 	if opts.IsAtlasDeploymentType() {
-		return opts.displayAtlasDeployments(ctx, projectID)
+		return opts.displayAtlasDeployments(projectID)
 	}
 
 	if !opts.IsCliAuthenticated() {
@@ -108,7 +108,7 @@ func (opts *DeploymentOpts) displayLocalDeployments(ctx context.Context) error {
 	return opts.Select(localDeployments)
 }
 
-func (opts *DeploymentOpts) displayAtlasDeployments(ctx context.Context, projectID string) error {
+func (opts *DeploymentOpts) displayAtlasDeployments(projectID string) error {
 	if !opts.IsCliAuthenticated() {
 		return ErrNotAuthenticated
 	}

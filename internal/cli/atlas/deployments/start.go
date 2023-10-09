@@ -54,7 +54,7 @@ func (opts *StartOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *StartOpts) Run(ctx context.Context) error {
-	if err := opts.SelectDeployments(ctx); err != nil {
+	if err := opts.SelectDeployments(ctx, opts.ProjectID); err != nil {
 		return err
 	}
 
@@ -153,14 +153,12 @@ func StartBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), cmd.OutOrStdout())
 
-			if err := opts.PreRunE(
+			err := opts.PreRunE(
 				opts.initStore(cmd.Context()),
-				opts.InitStore(opts.PodmanClient, cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), startTemplate)); err != nil {
-				return err
-			}
+				opts.InitStore(cmd.Context(), opts.PodmanClient),
+				opts.InitOutput(cmd.OutOrStdout(), startTemplate))
 
-			return nil
+			return err
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {

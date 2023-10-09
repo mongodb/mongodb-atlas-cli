@@ -48,7 +48,7 @@ func ConnectBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 				opts.InitInput(cmd.InOrStdin()),
-				opts.InitStore(podman.NewClient(log.IsDebugLevel(), log.Writer()), cmd.Context()),
+				opts.InitStore(cmd.Context(), podman.NewClient(log.IsDebugLevel(), cmd.OutOrStdout())),
 				opts.InitAtlasStore(cmd.Context()),
 			)
 		},

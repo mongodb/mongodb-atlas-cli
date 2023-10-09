@@ -82,7 +82,7 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 		EXPECT().
 		Ready(ctx).
 		Return(nil).
-		Times(2)
+		Times(1)
 
 	mockPodman.
 		EXPECT().
@@ -174,7 +174,7 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 		EXPECT().
 		Ready(ctx).
 		Return(nil).
-		Times(2)
+		Times(1)
 
 	mockPodman.
 		EXPECT().
@@ -226,20 +226,19 @@ func TestStart_RunAtlas(t *testing.T) {
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockProfileReader := mocks.NewMockProfileReader(ctrl)
 	mockPodman := mocks.NewMockClient(ctrl)
+	mockAtlasListStore := mocks.NewMockClusterLister(ctrl)
 	ctx := context.Background()
+	deploymentName := "atlasCluster1"
 
-	expectedLocalDeployments := []*podman.Container{
-		{
-			Names:  []string{"localTest2"},
-			State:  "running",
-			Labels: map[string]string{"version": "6.0.9"},
-			ID:     deploymentName,
-		},
-		{
-			Names:  []string{"localTest1"},
-			State:  "running",
-			Labels: map[string]string{"version": "7.0.0"},
-			ID:     deploymentName,
+	expectedAtlasClusters := &admin.PaginatedAdvancedClusterDescription{
+		Results: []admin.AdvancedClusterDescription{
+			{
+				Name:           pointer.Get(deploymentName),
+				Id:             pointer.Get("123"),
+				MongoDBVersion: pointer.Get("7.0.0"),
+				StateName:      pointer.Get("IDLE"),
+				Paused:         pointer.Get(false),
+			},
 		},
 	}
 
@@ -247,11 +246,12 @@ func TestStart_RunAtlas(t *testing.T) {
 	listOpts := &StartOpts{
 		store: mockStore,
 		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:   mockPodman,
-			CredStore:      mockCredentialsGetter,
-			Config:         mockProfileReader,
-			DeploymentName: deploymentName,
-			DeploymentType: "ATLAS",
+			PodmanClient:          mockPodman,
+			CredStore:             mockCredentialsGetter,
+			Config:                mockProfileReader,
+			DeploymentName:        deploymentName,
+			DeploymentType:        "ATLAS",
+			AtlasClusterListStore: mockAtlasListStore,
 		},
 		GlobalOpts: cli.GlobalOpts{
 			ProjectID: projectID,
@@ -268,16 +268,16 @@ func TestStart_RunAtlas(t *testing.T) {
 		Return(nil).
 		Times(0)
 
-	mockPodman.
-		EXPECT().
-		ListContainers(ctx, options.MongotHostnamePrefix).
-		Return(expectedLocalDeployments, options.ErrDeploymentNotFound).
-		Times(0)
-
 	mockCredentialsGetter.
 		EXPECT().
 		AuthType().
 		Return(config.OAuth).
+		Times(2)
+
+	mockAtlasListStore.
+		EXPECT().
+		ProjectClusters(listOpts.ProjectID, gomock.Any()).
+		Return(expectedAtlasClusters, nil).
 		Times(1)
 
 	mockStore.

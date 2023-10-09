@@ -142,7 +142,7 @@ func DescribeBuilder() *cobra.Command {
 			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
 			return opts.PreRunE(
 				opts.InitOutput(w, describeTemplate),
-				opts.InitStore(opts.PodmanClient, cmd.Context()),
+				opts.InitStore(cmd.Context(), opts.PodmanClient),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient(cmd.Context()),
 			)

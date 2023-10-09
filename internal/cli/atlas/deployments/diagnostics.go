@@ -105,11 +105,10 @@ func DiagnosticsBuilder() *cobra.Command {
 			}
 
 			w := cmd.OutOrStdout()
-			opts.podmanClient = podman.NewClient(log.IsDebugLevel(), w)
 
 			return opts.PreRunE(
 				opts.InitOutput(w, ""),
-				opts.InitStore(opts.podmanClient, cmd.Context()),
+				opts.InitStore(cmd.Context(), podman.NewClient(log.IsDebugLevel(), w)),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

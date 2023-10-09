@@ -282,7 +282,7 @@ func CreateBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.InitOutput(w, createTemplate),
-				opts.InitStore(opts.PodmanClient, cmd.Context()),
+				opts.InitStore(cmd.Context(), opts.PodmanClient),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient(cmd.Context()),
 			)

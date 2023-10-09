@@ -90,7 +90,7 @@ func ListBuilder() *cobra.Command {
 
 			if err := opts.PreRunE(
 				func() error { return opts.DefaultSetter.InitStore(cmd.Context()) },
-				opts.InitStore(opts.PodmanClient, cmd.Context()),
+				opts.InitStore(cmd.Context(), opts.PodmanClient),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate)); err != nil {
 				return err
 			}

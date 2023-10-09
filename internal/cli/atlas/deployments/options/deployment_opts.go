@@ -102,16 +102,16 @@ type Deployment struct {
 	StateName      string
 }
 
-func (opts *DeploymentOpts) InitStore(podmanClient podman.Client, ctx context.Context) func() error {
+func (opts *DeploymentOpts) InitStore(ctx context.Context, podmanClient podman.Client) func() error {
 	return func() error {
 		var err error
 		opts.PodmanClient = podmanClient
-		opts.DefaultSetter.InitStore(ctx)
-
 		opts.Config = config.Default()
 		opts.CredStore = config.Default()
-		opts.AtlasClusterListStore, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
-		return err
+		if opts.AtlasClusterListStore, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx)); err != nil {
+			return err
+		}
+		return opts.DefaultSetter.InitStore(ctx)
 	}
 }
 
@@ -194,10 +194,6 @@ func (opts *DeploymentOpts) IsCliAuthenticated() bool {
 }
 
 func (opts *DeploymentOpts) GetLocalDeployments(ctx context.Context) ([]Deployment, error) {
-	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
-		return nil, err
-	}
-
 	mdbContainers, err := opts.PodmanClient.ListContainers(ctx, MongodHostnamePrefix)
 	if err != nil {
 		return nil, err

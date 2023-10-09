@@ -140,7 +140,7 @@ func DeleteBuilder() *cobra.Command {
 			w := cmd.OutOrStdout()
 			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
 			return opts.PreRunE(
-				opts.InitStore(opts.PodmanClient, cmd.Context()),
+				opts.InitStore(cmd.Context(), opts.PodmanClient),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient(cmd.Context()),
 			)

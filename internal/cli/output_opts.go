@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonpathwriter"
 	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/templatewriter"
 	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
 	"github.com/spf13/cobra"
@@ -53,7 +52,6 @@ func (opts *OutputOpts) InitOutput(w io.Writer, t string) func() error {
 	return func() error {
 		opts.Template = t
 		opts.OutWriter = w
-		log.SetWriter(w)
 		return nil
 	}
 }

@@ -751,7 +751,7 @@ func SetupBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
-				opts.InitStore(opts.podmanClient, cmd.Context()),
+				opts.InitStore(cmd.Context(), opts.podmanClient),
 				opts.initMongoDBClient(cmd.Context()),
 			)
 		},

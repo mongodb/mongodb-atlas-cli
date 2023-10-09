@@ -310,7 +310,7 @@ func extractErrorMessage(exitErr *exec.ExitError) error {
 	return fmt.Errorf("%w: %s", exitErr, stderrLastLine)
 }
 
-func (o *client) runPodman(ctx context.Context, arg ...string) ([]byte, error) { //nolint:revive // we need to keep this format for testing
+func (*client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
 	_, _ = log.Debug(fmt.Sprintln(append([]string{"podman"}, arg...)))
 
 	cmd := exec.CommandContext(ctx, "podman", arg...)

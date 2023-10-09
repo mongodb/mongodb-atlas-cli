@@ -27,7 +27,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -178,11 +177,11 @@ func PauseBuilder() *cobra.Command {
 
 			if err := opts.PreRunE(
 				opts.initStore(cmd.Context()),
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.InitOutput(log.Writer(), pauseTemplate)); err != nil {
 				return err
 			}
 
-			opts.PodmanClient = podman.NewClient()
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

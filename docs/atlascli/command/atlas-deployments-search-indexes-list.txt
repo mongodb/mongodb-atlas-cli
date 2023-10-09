@@ -51,6 +51,10 @@ Options
      - 
      - false
      - help for list
+   * - -o, --output
+     - string
+     - false
+     - Output format. Valid values are json, json-path, go-template, or go-template-file. To see full output, use the -o json option.
    * - --projectId
      - string
      - false

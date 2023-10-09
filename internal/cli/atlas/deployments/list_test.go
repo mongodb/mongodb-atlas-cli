@@ -107,7 +107,7 @@ func TestList_Run(t *testing.T) {
 		EXPECT().
 		AuthType().
 		Return(config.OAuth).
-		Times(1)
+		Times(2)
 
 	mockPodman.
 		EXPECT().

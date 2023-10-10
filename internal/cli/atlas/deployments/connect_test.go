@@ -34,11 +34,15 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
+const (
+	expectedLocalDeployment = "localDeployment1"
+	expectedAtlasDeployment = "atlasCluster1"
+)
+
 func TestRun_ConnectLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 	mockPodman := mocks.NewMockClient(ctrl)
-	expectedLocalDeployment := "localDeployment1"
 	buf := new(bytes.Buffer)
 
 	connectOpts := &options.ConnectOpts{
@@ -58,7 +62,7 @@ func TestRun_ConnectLocal(t *testing.T) {
 			Names:  []string{expectedLocalDeployment},
 			State:  "running",
 			Labels: map[string]string{"version": "6.0.9"},
-			ID:     "localDeployment",
+			ID:     expectedLocalDeployment,
 		},
 	}
 
@@ -115,7 +119,6 @@ func TestRun_ConnectLocal(t *testing.T) {
 func TestRun_ConnectAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
-	expectedAtlasDeployment := "atlasCluster1"
 	buf := new(bytes.Buffer)
 
 	mockAtlasClusterListStore := mocks.NewMockClusterLister(ctrl)
@@ -186,7 +189,6 @@ func TestRun_ConnectAtlas(t *testing.T) {
 
 	assert.Equal(t, `mongodb://localhost:27017/?directConnection=true
 `, buf.String())
-
 }
 
 func TestConnectBuilder(t *testing.T) {

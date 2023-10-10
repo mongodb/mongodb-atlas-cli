@@ -40,7 +40,7 @@ type ConnectOpts struct {
 }
 
 func (opts *ConnectOpts) Connect(ctx context.Context) error {
-	if err := opts.askConnectWith(ctx); err != nil {
+	if err := opts.askConnectWith(); err != nil {
 		return err
 	}
 
@@ -60,7 +60,7 @@ func (opts *ConnectOpts) Connect(ctx context.Context) error {
 	return opts.connectToLocal(ctx)
 }
 
-func (opts *ConnectOpts) askConnectWith(ctx context.Context) error {
+func (opts *ConnectOpts) askConnectWith() error {
 	if opts.ConnectWith == "" {
 		var err error
 		if opts.ConnectWith, err = opts.DeploymentOpts.PromptConnectWith(); err != nil {

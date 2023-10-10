@@ -28,8 +28,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `ID	NAME	DATABASE	COLLECTION
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}
+var describeTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}
 `
 
 type DescribeOpts struct {
@@ -155,6 +155,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

@@ -35,6 +35,7 @@ const (
 )
 
 type DeleteOpts struct {
+	cli.OutputOpts
 	cli.GlobalOpts
 	*cli.DeleteOpts
 	options.DeploymentOpts
@@ -153,6 +154,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

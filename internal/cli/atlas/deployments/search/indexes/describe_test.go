@@ -46,6 +46,7 @@ func TestDescribe_RunLocal(t *testing.T) {
 		expectedLocalDeployment = "localDeployment1"
 		expectedDB              = "db1"
 		expectedCollection      = "col1"
+		expectedStatus          = "STEADY"
 	)
 
 	buf := new(bytes.Buffer)
@@ -115,6 +116,7 @@ func TestDescribe_RunLocal(t *testing.T) {
 		IndexID:        pointer.GetStringPointerIfNotEmpty("test"),
 		CollectionName: "coll",
 		Database:       "db",
+		Status:         pointer.GetStringPointerIfNotEmpty(expectedStatus),
 	}
 
 	mockMongodbClient.
@@ -127,8 +129,8 @@ func TestDescribe_RunLocal(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, `ID     NAME   DATABASE   COLLECTION
-test   name   db         coll
+	assert.Equal(t, `ID     NAME   DATABASE   COLLECTION   STATUS
+test   name   db         coll         STEADY
 `, buf.String())
 	t.Log(buf.String())
 }

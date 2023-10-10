@@ -29,8 +29,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	NAME	DATABASE	COLLECTION{{range .}}
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}{{end}}
+var listTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS{{range .}}
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}{{end}}
 `
 
 type ListOpts struct {
@@ -158,6 +158,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

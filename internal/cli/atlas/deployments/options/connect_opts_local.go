@@ -19,23 +19,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 )
 
-func (opts *ConnectOpts) validateAndPromptLocalOpts(ctx context.Context) error {
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.SelectLocal(ctx); err != nil {
-			return err
-		}
-	} else if err := opts.DeploymentOpts.CheckIfDeploymentExists(ctx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (opts *ConnectOpts) connectToLocal(ctx context.Context) error {
-	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
-		return err
-	}
-
 	telemetry.AppendOption(telemetry.WithDeploymentType(LocalCluster))
 
 	connectionString, err := opts.ConnectionString(ctx)

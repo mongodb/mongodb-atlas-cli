@@ -30,8 +30,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `ID	NAME	DATABASE	COLLECTION
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}
+var describeTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}
 `
 
 type DescribeOpts struct {

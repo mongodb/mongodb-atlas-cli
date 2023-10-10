@@ -31,8 +31,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	NAME	DATABASE	COLLECTION{{range .}}
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}{{end}}
+var listTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS{{range .}}
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}{{end}}
 `
 
 type ListOpts struct {

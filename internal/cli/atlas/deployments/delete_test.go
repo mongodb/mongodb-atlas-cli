@@ -28,22 +28,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
 )
 
 func TestDelete_Run_Atlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockAtlasStore := mocks.NewMockClusterDeleter(ctrl)
-	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	ctx := context.Background()
+
+	deploymentsTest := fixture.NewMockAtlasDeploymentOpts(ctrl, "atlasDeployment")
 
 	buf := new(bytes.Buffer)
 	opts := &DeleteOpts{
-		atlasStore: mockAtlasStore,
-		DeploymentOpts: options.DeploymentOpts{
-			CredStore:      mockCredentialsGetter,
-			DeploymentName: "testDeployment",
-			DeploymentType: "atlas",
-		},
+		atlasStore:     mockAtlasStore,
+		DeploymentOpts: *deploymentsTest.Opts,
 		GlobalOpts: cli.GlobalOpts{
 			ProjectID: "64f670f0bf789926667dad1a",
 		},
@@ -53,6 +51,8 @@ func TestDelete_Run_Atlas(t *testing.T) {
 		DeleteOpts: cli.NewDeleteOpts(deleteSuccessMessage, deleteFailMessage),
 	}
 	opts.Confirm = true
+
+	deploymentsTest.CommonAtlasMocks(opts.ProjectID)
 
 	mockAtlasStore.
 		EXPECT().
@@ -69,17 +69,13 @@ func TestDelete_Run_Atlas(t *testing.T) {
 
 func TestDelete_Run_Local(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockPodman := mocks.NewMockClient(ctrl)
 	ctx := context.Background()
 	buf := new(bytes.Buffer)
 
-	expectedLocalDeployment := "testDeployment"
+	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, "testDeployment")
+
 	opts := &DeleteOpts{
-		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:   mockPodman,
-			DeploymentName: expectedLocalDeployment,
-			DeploymentType: "local",
-		},
+		DeploymentOpts: *deploymentsTest.Opts,
 		GlobalOpts: cli.GlobalOpts{
 			ProjectID: "64f670f0bf789926667dad1a",
 		},
@@ -90,40 +86,40 @@ func TestDelete_Run_Local(t *testing.T) {
 	}
 	opts.Confirm = true
 
-	mockPodman.
-		EXPECT().
-		Ready(ctx).
-		Return(nil).
-		Times(2)
+	deploymentsTest.LocalMockFlow(ctx)
 
-	mockPodman.
+	deploymentsTest.
+		MockPodman.
 		EXPECT().
-		RemoveContainers(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
+		RemoveContainers(ctx, options.MongodHostnamePrefix+"-"+opts.DeploymentName).
 		Return(nil, nil).
 		Times(1)
 
-	mockPodman.
+	deploymentsTest.
+		MockPodman.
 		EXPECT().
-		RemoveNetworks(ctx, "mdb-local-"+expectedLocalDeployment).
+		RemoveNetworks(ctx, "mdb-local-"+opts.DeploymentName).
 		Return(nil, nil).
 		Times(1)
 
-	mockPodman.
+	deploymentsTest.
+		MockPodman.
 		EXPECT().
 		RemoveVolumes(ctx,
-			"mongod-local-data-"+expectedLocalDeployment,
-			"mongot-local-data-"+expectedLocalDeployment,
-			"mongot-local-metrics-"+expectedLocalDeployment,
+			"mongod-local-data-"+opts.DeploymentName,
+			"mongot-local-data-"+opts.DeploymentName,
+			"mongot-local-metrics-"+opts.DeploymentName,
 		).
 		Return(nil, nil).
 		Times(1)
 
-	mockPodman.
+	deploymentsTest.
+		MockPodman.
 		EXPECT().
-		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
+		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+opts.DeploymentName).
 		Return([]*define.InspectContainerData{
 			{
-				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
+				Name: options.MongodHostnamePrefix + "-" + opts.DeploymentName,
 				Config: &define.InspectContainerConfig{
 					Labels: map[string]string{
 						"version": "7.0.1",
@@ -141,7 +137,7 @@ func TestDelete_Run_Local(t *testing.T) {
 				},
 				Mounts: []define.InspectMount{
 					{
-						Name: "mongod-local-data-" + expectedLocalDeployment,
+						Name: "mongod-local-data-" + opts.DeploymentName,
 					},
 				},
 			},

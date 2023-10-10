@@ -29,6 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
 )
 
 func TestDelete_Run_Atlas(t *testing.T) {

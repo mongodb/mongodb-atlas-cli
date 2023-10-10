@@ -105,7 +105,6 @@ func (opts *DeploymentOpts) Select(deployments []Deployment) (Deployment, error)
 		opts.DeploymentType = deployments[0].Type //nolint:gosec
 
 		telemetry.AppendOption(telemetry.WithDeploymentType(opts.DeploymentType))
-
 		return deployments[0], nil //nolint:gosec
 	}
 

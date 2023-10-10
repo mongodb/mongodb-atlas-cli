@@ -103,6 +103,7 @@ func (opts *DeploymentOpts) Select(deployments []Deployment) (Deployment, error)
 	if len(deployments) == 1 {
 		opts.DeploymentName = deployments[0].Name
 		opts.DeploymentType = deployments[0].Type
+		telemetry.AppendOption(telemetry.WithDeploymentType(opts.DeploymentType))
 		return deployments[0], nil
 	}
 
@@ -129,5 +130,6 @@ func (opts *DeploymentOpts) Select(deployments []Deployment) (Deployment, error)
 	deployment := deploymentsByDisplayName[displayName]
 	opts.DeploymentName = deployment.Name
 	opts.DeploymentType = deployment.Type
+	telemetry.AppendOption(telemetry.WithDeploymentType(opts.DeploymentType))
 	return deployment, nil
 }

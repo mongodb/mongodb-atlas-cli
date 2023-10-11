@@ -245,7 +245,17 @@ functions:
       include_expansions_in_env:
         - workdir
       binary: ./build/ci/setup_operator.sh
-
+  "generate evergreen":
+    - command: subprocess.exec
+      type: test
+      params:
+        <<: *go_options
+        include_expansions_in_env:
+          - go_base_path
+          - workdir
+          - tool_name
+          - task_type
+        binary: build/ci/evergreen-generate-tasks.sh
 pre:
   - func: "clone"
 post:
@@ -1325,7 +1335,14 @@ tasks:
           E2E_TAGS: atlas,cleanup
           E2E_PARALLEL: 16
   - name: atlas_deployments_local_e2e
-    tags: ["e2e","deployments","local"]
+    tags: ["e2e","deployments","local","generate"]
+    commands:
+      - func: "generate evergreen"
+        vars:
+          tool_name: mongocli
+          task_type: snapshot
+  - name: atlas_deployments_local_e2e
+    tags: ["e2e","deployments","local","run"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
@@ -1387,6 +1404,8 @@ buildvariants:
     display_name: "E2E Tests Required"
     run_on:
       - rhel80-small
+    expansions:
+      <<: *go_linux_version
     tasks:
       - name: ".e2e .required"
   - name: e2e_interactive
@@ -1513,26 +1532,10 @@ buildvariants:
   - name: e2e_local_deployments
     display_name: "E2E Local Deployments Tests"
     run_on:
-      - rhel62-small
-      - rhel70-small
-      - rhel76-small
-      - rhel7.9-small
       - rhel80-small
-      - rhel84-small
-      - rhel8.7-small
-      - rhel8.8-small
-      - rhel90-small
-      - rhel91-small
-      - debian10-small
-      - debian11-small
-      - debian12-small
-      - ubuntu2004-small
-      - ubuntu2204-small
-      - macos-1100
-      - macos-1300-arm64
     expansions:
       <<: *go_linux_version
     tasks:
-      - name: ".e2e .deployments .local"
+      - name: ".e2e .deployments .local .generate"
 include:
   - filename: build/ci/release.yml

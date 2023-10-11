@@ -257,17 +257,6 @@ functions:
           - tool_name
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/
         binary: Powershell -File ./build/package/powershell/windows_post_package_test.ps1
-  "generate evergreen":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        include_expansions_in_env:
-          - go_base_path
-          - workdir
-          - tool_name
-          - task_type
-        binary: build/ci/evergreen-generate-tasks.sh
     - command: s3.put
       params:
         aws_key: ${aws_key}

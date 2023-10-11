@@ -271,7 +271,7 @@ functions:
       params:
         files:
           - tasks.json
-  "update podman":
+  "install podman":
     - command: shell.exec
       type: setup
       params:
@@ -285,6 +285,8 @@ functions:
             yum install -y podman
           elif [ -n "$(which apt 2>/dev/null)" ]; then
             apt install -y podman
+          elif [ -n "$(which brew 2>/dev/null)" ]; then
+            brew install -y podman
           fi
 pre:
   - func: "clone"
@@ -1381,7 +1383,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "update podman"
+      - func: "install podman"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:

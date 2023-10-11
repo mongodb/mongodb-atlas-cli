@@ -197,6 +197,23 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
+  "install podman":
+    - command: shell.exec
+      type: setup
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        shell: bash
+        script: |
+          set -Eeou pipefail
+          export PATH="$ADD_PATH:$PATH"
+          if [ -n "$(which yum 2>/dev/null)" ]; then
+            sudo yum install -y podman
+          elif [ -n "$(which apt 2>/dev/null)" ]; then
+            sudo apt install -y podman
+          elif [ -n "$(which brew 2>/dev/null)" ]; then
+            brew install -y podman
+          fi
   "install snyk":
     - command: shell.exec
       type: setup
@@ -271,23 +288,7 @@ functions:
       params:
         files:
           - tasks.json
-  "install podman":
-    - command: shell.exec
-      type: setup
-      params:
-        <<: *go_options
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
-        shell: bash
-        script: |
-          set -Eeou pipefail
-          export PATH="$ADD_PATH:$PATH"
-          if [ -n "$(which yum 2>/dev/null)" ]; then
-            yum install -y podman
-          elif [ -n "$(which apt 2>/dev/null)" ]; then
-            apt install -y podman
-          elif [ -n "$(which brew 2>/dev/null)" ]; then
-            brew install -y podman
-          fi
+
 pre:
   - func: "clone"
 post:

@@ -1334,7 +1334,7 @@ tasks:
           MCLI_SERVICE: cloudgov
           E2E_TAGS: atlas,cleanup
           E2E_PARALLEL: 16
-  - name: atlas_deployments_local_e2e
+  - name: atlas_deployments_local_generate_e2e
     tags: ["e2e","deployments","local","generate"]
     commands:
       - func: "generate evergreen"

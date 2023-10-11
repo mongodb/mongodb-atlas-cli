@@ -257,21 +257,6 @@ functions:
           - tool_name
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/
         binary: Powershell -File ./build/package/powershell/windows_post_package_test.ps1
-    - command: s3.put
-      params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-          - src/github.com/mongodb/mongodb-atlas-cli/tasks.json
-        remote_file: ${project}/dist/${revision}_${created_at}/${tool_name}/${task_type}/
-        bucket: mongodb-mongocli-build
-        permissions: public-read
-        content_type: ${content_type|application/json}
-        display_name: internal-bucket
-    - command: generate.tasks
-      params:
-        files:
-          - tasks.json
   "docker build repo":
     - command: subprocess.exec
       type: test

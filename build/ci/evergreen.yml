@@ -271,6 +271,21 @@ functions:
       params:
         files:
           - tasks.json
+  "update podman":
+    - command: shell.exec
+      type: setup
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        shell: bash
+        script: |
+          set -Eeou pipefail
+          export PATH="$ADD_PATH:$PATH"
+          if [ -n "$(which yum 2>/dev/null)" ]; then
+            yum install -y podman
+          elif [ -n "$(which apt 2>/dev/null)" ]; then
+            apt install -y podman
+          fi
 pre:
   - func: "clone"
 post:
@@ -1366,6 +1381,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
+      - func: "update podman"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:

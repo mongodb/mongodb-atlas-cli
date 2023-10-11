@@ -37,7 +37,8 @@ import (
 
 const (
 	deploymentName = "localTest2"
-	projectID      = "64f670f0bf789926667dad1a"
+	//nolint:gosec
+	projectID = "64f670f0bf789926667dad1a"
 )
 
 func TestPause_RunLocal(t *testing.T) {

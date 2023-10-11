@@ -24,13 +24,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	operatorProject "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/project"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
+	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -74,13 +75,13 @@ type AtlasProjectResult struct {
 	Teams   []*atlasV1.AtlasTeam
 }
 
-func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, validator features.FeatureValidator, orgID, projectID, targetNamespace string, includeSecret bool, dictionary map[string]string, version string) (*AtlasProjectResult, error) {
+func BuildAtlasProject(projectStore atlas.OperatorProjectStore, validator features.FeatureValidator, orgID, projectID, targetNamespace string, includeSecret bool, dictionary map[string]string, version string) (*AtlasProjectResult, error) {
 	data, err := projectStore.Project(projectID)
 	if err != nil {
 		return nil, err
 	}
 
-	project, ok := data.(*atlas.Project)
+	project, ok := data.(*atlasv2.Group)
 	if !ok {
 		return nil, ErrAtlasProject
 	}
@@ -114,7 +115,7 @@ func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, validator f
 			Settings:                      nil,
 			CustomRoles:                   nil,
 			Teams:                         nil,
-			RegionUsageRestrictions:       project.RegionUsageRestrictions,
+			RegionUsageRestrictions:       atlas.StringOrEmpty(project.RegionUsageRestrictions),
 		},
 		Status: status.AtlasProjectStatus{
 			Common: status.Common{
@@ -303,7 +304,7 @@ func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]
 	return result, nil
 }
 
-func buildAccessLists(accessListProvider store.ProjectIPAccessListLister, projectID string) ([]operatorProject.IPAccessList, error) {
+func buildAccessLists(accessListProvider atlas.ProjectIPAccessListLister, projectID string) ([]operatorProject.IPAccessList, error) {
 	// pagination not required, max 200 entries can be configured via API
 	accessLists, err := accessListProvider.ProjectIPAccessLists(projectID, &atlas.ListOptions{ItemsPerPage: MaxItems})
 	if err != nil {
@@ -469,7 +470,7 @@ func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID str
 	return result, nil
 }
 
-func buildNetworkPeering(npProvider store.PeeringConnectionLister, projectID string) ([]atlasV1.NetworkPeer, error) {
+func buildNetworkPeering(npProvider atlas.PeeringConnectionLister, projectID string) ([]atlasV1.NetworkPeer, error) {
 	// pagination not required, max 25 entries per provider can be configured via API
 	npListAWS, err := npProvider.PeeringConnections(projectID, &atlas.ContainersListOptions{
 		ListOptions: atlas.ListOptions{
@@ -649,88 +650,84 @@ func buildAuditing(auditingProvider store.AuditingDescriber, projectID string) (
 	}, nil
 }
 
-func buildAlertConfigurations(acProvider store.AlertConfigurationLister, projectID string) ([]atlasV1.AlertConfiguration, error) {
-	data, err := acProvider.AlertConfigurations(projectID, &atlas.ListOptions{
-		ItemsPerPage: MaxItems,
+func buildAlertConfigurations(acProvider atlas.AlertConfigurationLister, projectID string) ([]atlasV1.AlertConfiguration, error) {
+	data, err := acProvider.AlertConfigurations(&atlasv2.ListAlertConfigurationsApiParams{
+		GroupId:      projectID,
+		ItemsPerPage: toptr.MakePtr(MaxItems),
 	})
 	if err != nil {
 		return nil, err
 	}
 	var result []atlasV1.AlertConfiguration
 
-	convertMatchers := func(atlasMatcher []atlas.Matcher) []atlasV1.Matcher {
+	convertMatchers := func(atlasMatcher []map[string]interface{}) []atlasV1.Matcher {
 		var res []atlasV1.Matcher
 		for _, m := range atlasMatcher {
 			res = append(res, atlasV1.Matcher{
-				FieldName: m.FieldName,
-				Operator:  m.Operator,
-				Value:     m.Value,
+				FieldName: (m["FieldName"]).(string),
+				Operator:  (m["Operator"]).(string),
+				Value:     (m["Value"]).(string),
 			})
 		}
 		return res
 	}
 
-	convertMetricThreshold := func(atlasMT *atlas.MetricThreshold) *atlasV1.MetricThreshold {
+	convertMetricThreshold := func(atlasMT *atlasv2.ServerlessMetricThreshold) *atlasV1.MetricThreshold {
 		if atlasMT == nil {
 			return &atlasV1.MetricThreshold{}
 		}
 		return &atlasV1.MetricThreshold{
 			MetricName: atlasMT.MetricName,
-			Operator:   atlasMT.Operator,
-			Threshold:  fmt.Sprintf("%f", atlasMT.Threshold),
-			Units:      atlasMT.Units,
-			Mode:       atlasMT.Mode,
+			Operator:   atlas.StringOrEmpty(atlasMT.Operator),
+			Threshold:  fmt.Sprintf("%f", pointer.GetOrDefault(atlasMT.Threshold, 0.0)),
+			Units:      atlas.StringOrEmpty(atlasMT.Units),
+			Mode:       atlas.StringOrEmpty(atlasMT.Mode),
 		}
 	}
 
-	convertThreshold := func(atlasT *atlas.Threshold) *atlasV1.Threshold {
+	convertThreshold := func(atlasT *atlasv2.GreaterThanRawThreshold) *atlasV1.Threshold {
 		if atlasT == nil {
 			return &atlasV1.Threshold{}
 		}
 		return &atlasV1.Threshold{
-			Operator:  atlasT.Operator,
-			Units:     atlasT.Units,
-			Threshold: fmt.Sprintf("%f", atlasT.Threshold),
+			Operator:  atlas.StringOrEmpty(atlasT.Operator),
+			Units:     atlas.StringOrEmpty(atlasT.Units),
+			Threshold: fmt.Sprintf("%d", pointer.GetOrDefault(atlasT.Threshold, 0)),
 		}
 	}
 
-	convertNotifications := func(atlasN []atlas.Notification) []atlasV1.Notification {
+	convertNotifications := func(atlasN []atlasv2.AlertsNotificationRootForGroup) []atlasV1.Notification {
 		var res []atlasV1.Notification
-		for i := range atlasN {
-			n := &atlasN[i]
+		for _, n := range atlasN {
 			res = append(res, atlasV1.Notification{
-				APIToken:            n.APIToken,
-				ChannelName:         n.ChannelName,
-				DatadogAPIKey:       n.DatadogAPIKey,
-				DatadogRegion:       n.DatadogRegion,
+				APIToken:            atlas.StringOrEmpty(n.ApiToken),
+				ChannelName:         atlas.StringOrEmpty(n.ChannelName),
+				DatadogAPIKey:       atlas.StringOrEmpty(n.DatadogApiKey),
+				DatadogRegion:       atlas.StringOrEmpty(n.DatadogRegion),
 				DelayMin:            n.DelayMin,
-				EmailAddress:        n.EmailAddress,
+				EmailAddress:        atlas.StringOrEmpty(n.EmailAddress),
 				EmailEnabled:        n.EmailEnabled,
-				FlowdockAPIToken:    n.FlowdockAPIToken,
-				FlowName:            n.FlowName,
-				IntervalMin:         n.IntervalMin,
-				MobileNumber:        n.MobileNumber,
-				OpsGenieAPIKey:      n.OpsGenieAPIKey,
-				OpsGenieRegion:      n.OpsGenieRegion,
-				OrgName:             n.OrgName,
-				ServiceKey:          n.ServiceKey,
-				SMSEnabled:          n.SMSEnabled,
-				TeamID:              n.TeamID,
-				TeamName:            n.TeamName,
-				TypeName:            n.TypeName,
-				Username:            n.Username,
-				VictorOpsAPIKey:     n.VictorOpsAPIKey,
-				VictorOpsRoutingKey: n.VictorOpsRoutingKey,
+				IntervalMin:         pointer.GetOrDefault(n.IntervalMin, 0),
+				MobileNumber:        atlas.StringOrEmpty(n.MobileNumber),
+				OpsGenieAPIKey:      atlas.StringOrEmpty(n.OpsGenieApiKey),
+				OpsGenieRegion:      atlas.StringOrEmpty(n.OpsGenieRegion),
+				ServiceKey:          atlas.StringOrEmpty(n.ServiceKey),
+				SMSEnabled:          n.SmsEnabled,
+				TeamID:              atlas.StringOrEmpty(n.TeamId),
+				TeamName:            atlas.StringOrEmpty(n.TeamName),
+				TypeName:            atlas.StringOrEmpty(n.TypeName),
+				Username:            atlas.StringOrEmpty(n.Username),
+				VictorOpsAPIKey:     atlas.StringOrEmpty(n.VictorOpsApiKey),
+				VictorOpsRoutingKey: atlas.StringOrEmpty(n.VictorOpsRoutingKey),
 				Roles:               n.Roles,
 			})
 		}
 		return res
 	}
 
-	for i := range data {
-		alertConfig := &data[i]
+	for _, alertConfig := range data.Results {
 		result = append(result, atlasV1.AlertConfiguration{
-			EventTypeName:   alertConfig.EventTypeName,
+			EventTypeName:   atlas.StringOrEmpty(alertConfig.EventTypeName),
 			Enabled:         pointer.GetOrDefault(alertConfig.Enabled, false),
 			Matchers:        convertMatchers(alertConfig.Matchers),
 			MetricThreshold: convertMetricThreshold(alertConfig.MetricThreshold),
@@ -742,29 +739,20 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 	return result, nil
 }
 
-func buildTeams(teamsProvider store.AtlasOperatorTeamsStore, orgID, projectID, projectName, targetNamespace, version string, dictionary map[string]string) ([]atlasV1.Team, []*atlasV1.AtlasTeam, error) {
-	pt, err := teamsProvider.ProjectTeams(projectID)
+func buildTeams(teamsProvider atlas.OperatorTeamsStore, orgID, projectID, projectName, targetNamespace, version string, dictionary map[string]string) ([]atlasV1.Team, []*atlasV1.AtlasTeam, error) {
+	projectTeams, err := teamsProvider.ProjectTeams(projectID)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	projectTeams, ok := pt.(*atlas.TeamsAssigned)
-	if !ok {
-		return nil, nil, ErrTeamsAssigned
-	}
-
 	fetchUsers := func(teamID string) ([]string, error) {
-		assignedUsers, err := teamsProvider.TeamUsers(orgID, teamID)
+		users, err := teamsProvider.TeamUsers(orgID, teamID)
 		if err != nil {
 			return nil, err
 		}
-		users, ok := assignedUsers.([]atlas.AtlasUser)
-		if !ok {
-			return nil, ErrTeamUsers
-		}
-		result := make([]string, 0, len(users))
-		for i := range users {
-			result = append(result, users[i].Username)
+		result := make([]string, 0, len(users.Results))
+		for _, user := range users.Results {
+			result = append(result, user.Username)
 		}
 		return result, nil
 	}
@@ -797,18 +785,16 @@ func buildTeams(teamsProvider store.AtlasOperatorTeamsStore, orgID, projectID, p
 
 	for i := range projectTeams.Results {
 		teamRef := projectTeams.Results[i]
+		teamID := atlas.StringOrEmpty(teamRef.TeamId)
 
-		if teamRef == nil {
-			continue
-		}
-
-		team, err := teamsProvider.TeamByID(orgID, teamRef.TeamID)
+		team, err := teamsProvider.TeamByID(orgID, teamID)
 		if err != nil {
 			return nil, nil, fmt.Errorf("team id: %s is assigned to project %s (id: %s) but not found. %w",
-				teamRef.TeamID, projectName, projectID, err)
+				teamID, projectName, projectID, err)
 		}
 
-		crName := resources.NormalizeAtlasName(fmt.Sprintf("%s-team-%s", projectName, team.Name), dictionary)
+		teamName := atlas.StringOrEmpty(team.Name)
+		crName := resources.NormalizeAtlasName(fmt.Sprintf("%s-team-%s", projectName, teamName), dictionary)
 		teamsRefs = append(teamsRefs, atlasV1.Team{
 			TeamRef: common.ResourceRefNamespaced{
 				Name:      crName,
@@ -817,7 +803,7 @@ func buildTeams(teamsProvider store.AtlasOperatorTeamsStore, orgID, projectID, p
 			Roles: convertRoleNames(teamRef.RoleNames),
 		})
 
-		users, err := fetchUsers(team.ID)
+		users, err := fetchUsers(atlas.StringOrEmpty(team.Id))
 		if err != nil {
 			return nil, nil, err
 		}
@@ -835,7 +821,7 @@ func buildTeams(teamsProvider store.AtlasOperatorTeamsStore, orgID, projectID, p
 				},
 			},
 			Spec: atlasV1.TeamSpec{
-				Name:      team.Name,
+				Name:      atlas.StringOrEmpty(team.Name),
 				Usernames: convertUserNames(users),
 			},
 			Status: status.TeamStatus{

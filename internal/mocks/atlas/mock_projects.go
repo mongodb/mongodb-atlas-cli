@@ -8,8 +8,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	atlas "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	admin "go.mongodb.org/atlas-sdk/v20230201008/admin"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 // MockProjectLister is a mock of ProjectLister interface.
@@ -36,7 +36,7 @@ func (m *MockProjectLister) EXPECT() *MockProjectListerMockRecorder {
 }
 
 // Projects mocks base method.
-func (m *MockProjectLister) Projects(arg0 *mongodbatlas.ListOptions) (*admin.PaginatedAtlasGroup, error) {
+func (m *MockProjectLister) Projects(arg0 *atlas.ListOptions) (*admin.PaginatedAtlasGroup, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Projects", arg0)
 	ret0, _ := ret[0].(*admin.PaginatedAtlasGroup)
@@ -74,7 +74,7 @@ func (m *MockOrgProjectLister) EXPECT() *MockOrgProjectListerMockRecorder {
 }
 
 // GetOrgProjects mocks base method.
-func (m *MockOrgProjectLister) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedAtlasGroup, error) {
+func (m *MockOrgProjectLister) GetOrgProjects(arg0 string, arg1 *atlas.ListOptions) (*admin.PaginatedAtlasGroup, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrgProjects", arg0, arg1)
 	ret0, _ := ret[0].(*admin.PaginatedAtlasGroup)
@@ -89,7 +89,7 @@ func (mr *MockOrgProjectListerMockRecorder) GetOrgProjects(arg0, arg1 interface{
 }
 
 // Projects mocks base method.
-func (m *MockOrgProjectLister) Projects(arg0 *mongodbatlas.ListOptions) (*admin.PaginatedAtlasGroup, error) {
+func (m *MockOrgProjectLister) Projects(arg0 *atlas.ListOptions) (*admin.PaginatedAtlasGroup, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Projects", arg0)
 	ret0, _ := ret[0].(*admin.PaginatedAtlasGroup)
@@ -255,7 +255,7 @@ func (m *MockProjectUsersLister) EXPECT() *MockProjectUsersListerMockRecorder {
 }
 
 // ProjectUsers mocks base method.
-func (m *MockProjectUsersLister) ProjectUsers(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedAppUser, error) {
+func (m *MockProjectUsersLister) ProjectUsers(arg0 string, arg1 *atlas.ListOptions) (*admin.PaginatedAppUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectUsers", arg0, arg1)
 	ret0, _ := ret[0].(*admin.PaginatedAppUser)

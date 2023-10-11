@@ -191,7 +191,7 @@ func (ir *InstallResources) addServiceAccount(ctx context.Context, config map[st
 
 	err = ir.kubeCtl.Create(ctx, obj)
 	if err != nil {
-		return fmt.Errorf("failed to add ServiceAcount into cluster: %w", err)
+		return fmt.Errorf("failed to add ServiceAccount into cluster: %w", err)
 	}
 
 	return nil
@@ -235,7 +235,7 @@ func (ir *InstallResources) addClusterRole(ctx context.Context, config map[strin
 
 	err = ir.kubeCtl.Create(ctx, obj)
 	if err != nil {
-		return fmt.Errorf("failed to add CluserRole into cluster: %w", err)
+		return fmt.Errorf("failed to add ClusterRole into cluster: %w", err)
 	}
 
 	return nil
@@ -262,7 +262,7 @@ func (ir *InstallResources) addRoleBindings(ctx context.Context, config map[stri
 
 		err = ir.kubeCtl.Create(ctx, obj)
 		if err != nil {
-			return fmt.Errorf("failed to add RoleBindig into cluster: %w", err)
+			return fmt.Errorf("failed to add RoleBinding into cluster: %w", err)
 		}
 	}
 
@@ -281,7 +281,7 @@ func (ir *InstallResources) addClusterRoleBinding(ctx context.Context, config ma
 
 	err = ir.kubeCtl.Create(ctx, obj)
 	if err != nil {
-		return fmt.Errorf("failed to add CluserRoleBinding into cluster: %w", err)
+		return fmt.Errorf("failed to add ClusterRoleBinding into cluster: %w", err)
 	}
 
 	return nil

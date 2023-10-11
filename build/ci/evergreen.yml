@@ -1339,8 +1339,8 @@ tasks:
     commands:
       - func: "generate evergreen"
         vars:
-          tool_name: mongocli
-          task_type: snapshot
+          tool_name: atlascli
+          task_type: local
   - name: atlas_deployments_local_e2e
     tags: ["e2e","deployments","local","run"]
     must_have_test_results: true

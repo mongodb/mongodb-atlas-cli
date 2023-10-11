@@ -1357,7 +1357,7 @@ tasks:
           tool_name: atlascli
           task_type: local
   - name: atlas_deployments_local_e2e
-    tags: ["e2e","deployments","local","run"]
+    tags: ["e2e","required","deployments","local","run"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:

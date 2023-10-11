@@ -197,19 +197,6 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
-  "update podman":
-    - command: shell.exec
-      type: setup
-      params:
-        <<: *go_options
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
-        shell: bash
-        script: |
-          set -Eeou pipefail
-          export PATH="$ADD_PATH:$PATH"
-          sudo yum update -y podman
-          sudo yum install -y netavark
-          sudo /bin/sh -c "cat /usr/share/containers/containers.conf | sed 's|network_backend = \"cni\"|network_backend = \"netavark\"|' > /usr/share/containers/containers2.conf && mv /usr/share/containers/containers2.conf /usr/share/containers/containers.conf"
   "install snyk":
     - command: shell.exec
       type: setup
@@ -1338,7 +1325,7 @@ tasks:
           E2E_TAGS: atlas,cleanup
           E2E_PARALLEL: 16
   - name: atlas_deployments_local_e2e
-    tags: ["e2e","required"]
+    tags: ["e2e","deployments","local"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
@@ -1347,7 +1334,6 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "update podman"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1402,10 +1388,6 @@ buildvariants:
     display_name: "E2E Tests Required"
     run_on:
       - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .required"
   - name: e2e_interactive
     display_name: "E2E Interactive Commands"
     run_on:
@@ -1527,5 +1509,29 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .atlas"
+  - name: e2e_local_deployments
+    display_name: "E2E Local Deployments Tests"
+    run_on:
+      - rhel62-small
+      - rhel70-small
+      - rhel76-small
+      - rhel7.9-small
+      - rhel80-small
+      - rhel84-small
+      - rhel8.7-small
+      - rhel8.8-small
+      - rhel90-small
+      - rhel91-small
+      - debian10-small
+      - debian11-small
+      - debian12-small
+      - ubuntu2004-small
+      - ubuntu2204-small
+      - macos-1100
+      - macos-1300-arm64
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
 include:
   - filename: build/ci/release.yml

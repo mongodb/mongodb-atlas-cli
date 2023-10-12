@@ -18,7 +18,6 @@ import (
 	"context"
 	"errors"
 	"os/exec"
-	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -59,41 +58,27 @@ func (opts *PauseOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *PauseOpts) Run(ctx context.Context) error {
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	deployment, err := opts.SelectDeployments(ctx, opts.ProjectID)
+	if err != nil {
 		return err
 	}
 
-	if strings.EqualFold(opts.DeploymentType, options.LocalCluster) {
-		return opts.RunLocal(ctx)
+	if opts.IsLocalDeploymentType() {
+		return opts.RunLocal(ctx, deployment)
 	}
 
 	return opts.RunAtlas()
 }
 
-func (opts *PauseOpts) RunLocal(ctx context.Context) error {
-	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
+func (opts *PauseOpts) RunLocal(ctx context.Context, deployment options.Deployment) error {
+	if err := opts.pauseContainer(ctx, deployment); err != nil {
 		return err
 	}
 
-	localDeployments, err := opts.GetLocalDeployments(ctx)
-	if err != nil {
-		return err
-	}
-
-	for _, deployment := range localDeployments {
-		if deployment.Name == opts.DeploymentName {
-			if err = opts.pauseContainer(ctx, deployment); err != nil {
-				return err
-			}
-
-			return opts.Print(
-				admin.AdvancedClusterDescription{
-					Name: &opts.DeploymentName,
-				})
-		}
-	}
-
-	return options.ErrDeploymentNotFound
+	return opts.Print(
+		admin.AdvancedClusterDescription{
+			Name: &opts.DeploymentName,
+		})
 }
 
 func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.Deployment) error {
@@ -123,10 +108,6 @@ func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.De
 }
 
 func (opts *PauseOpts) RunAtlas() error {
-	if !opts.IsCliAuthenticated() {
-		return options.ErrNotAuthenticated
-	}
-
 	opts.StartSpinner()
 	defer opts.StopSpinner()
 
@@ -136,24 +117,6 @@ func (opts *PauseOpts) RunAtlas() error {
 	}
 
 	return opts.Print(r)
-}
-
-func (opts *PauseOpts) validateAndPrompt(ctx context.Context) error {
-	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
-		return err
-	}
-
-	if opts.IsAtlasDeploymentType() && opts.DeploymentName == "" {
-		return ErrNoDeploymentName
-	}
-
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.SelectLocal(ctx); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
 func (opts *PauseOpts) StopMongoD(ctx context.Context, names string) error {

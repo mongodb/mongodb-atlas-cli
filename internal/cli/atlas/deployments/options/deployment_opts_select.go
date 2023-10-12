@@ -104,6 +104,8 @@ func (opts *DeploymentOpts) Select(deployments []Deployment) (Deployment, error)
 		opts.DeploymentName = deployments[0].Name //nolint:gosec
 		opts.DeploymentType = deployments[0].Type //nolint:gosec
 
+		telemetry.AppendOption(telemetry.WithDeploymentType(opts.DeploymentType))
+
 		return deployments[0], nil //nolint:gosec
 	}
 
@@ -130,5 +132,6 @@ func (opts *DeploymentOpts) Select(deployments []Deployment) (Deployment, error)
 	deployment := deploymentsByDisplayName[displayName]
 	opts.DeploymentName = deployment.Name
 	opts.DeploymentType = deployment.Type
+	telemetry.AppendOption(telemetry.WithDeploymentType(opts.DeploymentType))
 	return deployment, nil
 }

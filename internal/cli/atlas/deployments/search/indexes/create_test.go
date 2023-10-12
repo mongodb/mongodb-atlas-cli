@@ -35,7 +35,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
-var indexID = "6509bc5080b2f007e6a2a0ce"
+var indexID = "6509bc5080b2f007e6a2a0ce" //nolint:gosec
 
 const (
 	expectedIndexName       = "idx1"

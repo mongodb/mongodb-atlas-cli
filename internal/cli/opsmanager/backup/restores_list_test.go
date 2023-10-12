@@ -29,8 +29,7 @@ func TestRestoresListOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockContinuousJobLister(ctrl)
 
 	expected := &mongodbatlas.ContinuousJobs{}
-	//nolint:gosec
-	clusterID := "5ec2ac941271767f21cbaeff"
+	clusterID := "5ec2ac941271767f21cbaeff" //nolint:gosec
 
 	listOpts := &RestoresListOpts{
 		store:     mockStore,

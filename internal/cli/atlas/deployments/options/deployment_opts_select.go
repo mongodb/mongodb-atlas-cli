@@ -101,12 +101,10 @@ func (opts *DeploymentOpts) Select(deployments []Deployment) (Deployment, error)
 	}
 
 	if len(deployments) == 1 {
-		//nolint:gosec
-		opts.DeploymentName = deployments[0].Name
-		//nolint:gosec
-		opts.DeploymentType = deployments[0].Type
-		//nolint:gosec
-		return deployments[0], nil
+		opts.DeploymentName = deployments[0].Name //nolint:gosec
+		opts.DeploymentType = deployments[0].Type //nolint:gosec
+
+		return deployments[0], nil //nolint:gosec
 	}
 
 	displayNames := make([]string, 0, len(deployments))

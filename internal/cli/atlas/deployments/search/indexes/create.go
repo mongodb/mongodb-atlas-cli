@@ -17,7 +17,6 @@ package indexes
 import (
 	"context"
 	"errors"
-	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -72,20 +71,6 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 	var err error
 
-	if err = opts.LocalDeploymentPreRun(ctx); err != nil {
-		return err
-	}
-
-	if opts.DeploymentName != "" {
-		if err = opts.DeploymentOpts.CheckIfDeploymentExists(ctx); err != nil {
-			return err
-		}
-	} else {
-		if err = opts.DeploymentOpts.SelectLocal(ctx); err != nil {
-			return err
-		}
-	}
-
 	if err = opts.validateAndPrompt(); err != nil {
 		return err
 	}
@@ -129,20 +114,13 @@ func (opts *CreateOpts) RunAtlas() error {
 }
 
 func (opts *CreateOpts) Run(ctx context.Context) error {
-	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
+	_, err := opts.SelectDeployments(ctx, opts.ProjectID)
+	if err != nil {
 		return err
 	}
 
-	if strings.EqualFold(opts.DeploymentType, "local") {
+	if opts.IsLocalDeploymentType() {
 		return opts.RunLocal(ctx)
-	}
-
-	if !opts.IsCliAuthenticated() {
-		return ErrNotAuthenticated
-	}
-
-	if opts.DeploymentName == "" {
-		return ErrNoDeploymentName
 	}
 
 	return opts.RunAtlas()

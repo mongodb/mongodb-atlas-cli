@@ -114,7 +114,7 @@ func (opts *CreateOpts) RunAtlas() error {
 }
 
 func (opts *CreateOpts) Run(ctx context.Context) error {
-	_, err := opts.SelectDeployments(ctx, opts.ProjectID)
+	_, err := opts.SelectDeployments(ctx, opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}

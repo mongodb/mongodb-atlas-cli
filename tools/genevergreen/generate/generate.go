@@ -233,21 +233,16 @@ func LocalDeploymentTasks(c *shrub.Configuration, toolName string) {
 	}
 
 	for _, runOn := range []string{
-		"rhel62-small",
-		"rhel70-small",
-		"rhel76-small",
-		"rhel7.9-small",
 		"rhel80-small",
 		"rhel84-small",
 		"rhel8.7-small",
 		"rhel8.8-small",
 		"rhel90-small",
 		"rhel91-small",
-		"debian10-small",
 		"debian11-small",
 		"debian12-small",
-		"ubuntu2004-small",
 		"ubuntu2204-small",
+		"suse15-small",
 		"macos-1100",
 		"macos-1300-arm64",
 	} {
@@ -266,8 +261,8 @@ func LocalDeploymentTasks(c *shrub.Configuration, toolName string) {
 
 func expansions() map[string]interface{} {
 	return map[string]interface{}{
-		"go_root":      "/opt/golang/go1.20",
-		"go_bin":       "/opt/golang/go1.20/bin",
+		"go_root":      "/opt/golang/go1.21",
+		"go_bin":       "/opt/golang/go1.21/bin",
 		"go_base_path": "",
 	}
 }

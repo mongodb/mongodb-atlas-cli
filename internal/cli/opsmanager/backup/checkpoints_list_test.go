@@ -29,7 +29,7 @@ func TestCheckpointsList_Run(t *testing.T) {
 	mockStore := mocks.NewMockCheckpointsLister(ctrl)
 
 	expected := &mongodbatlas.Checkpoints{}
-	clusterID := "5ec2ac941271767f21cbaefd"
+	clusterID := "5ec2ac941271767f21cbaefd" //nolint:gosec
 
 	listOpts := &CheckpointsListOpts{
 		store:     mockStore,

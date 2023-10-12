@@ -37,7 +37,7 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 				return Deployment{}, atlasErr
 			}
 			if atlasErr != ErrNotAuthenticated {
-				_, _ = log.Warningf("Failed to retrieve Atlas deployments with: %s\n", atlasErr.Error())
+				_, _ = log.Warningf("Warning: failed to retrieve Atlas deployments because \"%s\"\n", atlasErr.Error())
 			}
 		}
 	}
@@ -47,7 +47,7 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 			if opts.IsLocalDeploymentType() {
 				return Deployment{}, localErr
 			}
-			_, _ = log.Warningf("Failed to retrieve local deployments with: %s\n", localErr.Error())
+			_, _ = log.Warningf("Warning: failed to retrieve Local deployments because \"%s\"\n", localErr.Error())
 		}
 
 		localDeployments, localErr = opts.GetLocalDeployments(ctx)
@@ -55,12 +55,12 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 			if opts.IsLocalDeploymentType() {
 				return Deployment{}, localErr
 			}
-			_, _ = log.Warningf("Failed to retrieve local deployments with: %s\n", localErr.Error())
+			_, _ = log.Warningf("Warning: failed to retrieve Local deployments because \"%s\"\n", localErr.Error())
 		}
 	}
 
 	if atlasErr != nil && localErr != nil {
-		return Deployment{}, errors.New("failed to retrieve deployments")
+		return Deployment{}, errors.New("failed to retrieve atlas and local deployments")
 	}
 
 	if opts.DeploymentName == "" {

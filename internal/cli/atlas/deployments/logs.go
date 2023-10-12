@@ -16,6 +16,7 @@ package deployments
 
 import (
 	"context"
+	"errors"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -33,13 +34,15 @@ type DownloadOpts struct {
 	options.DeploymentOpts
 }
 
+var ErrAtlasNotSupported = errors.New("atlas deployments are not supported")
+
 func (opts *DownloadOpts) Run(ctx context.Context) error {
-	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
+	if _, err := opts.SelectDeployments(ctx, opts.ProjectID); err != nil {
 		return err
 	}
 
-	if err := opts.DetectLocalDeploymentName(ctx); err != nil {
-		return err
+	if opts.IsAtlasDeploymentType() {
+		return ErrAtlasNotSupported
 	}
 
 	logs, err := opts.PodmanClient.ContainerLogs(ctx, opts.LocalMongodHostname())

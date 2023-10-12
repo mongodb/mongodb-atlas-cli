@@ -47,7 +47,7 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	if err := opts.validateAndPrompt(); err != nil {
 		return err
 	}
 
@@ -98,7 +98,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *ListOpts) validateAndPrompt(ctx context.Context) error {
+func (opts *ListOpts) validateAndPrompt() error {
 	if opts.DBName == "" {
 		if err := promptRequiredName("Database", &opts.DBName); err != nil {
 			return err
@@ -106,9 +106,7 @@ func (opts *ListOpts) validateAndPrompt(ctx context.Context) error {
 	}
 
 	if opts.Collection == "" {
-		if err := promptRequiredName("Collection", &opts.Collection); err != nil {
-			return err
-		}
+		return promptRequiredName("Collection", &opts.Collection)
 	}
 
 	return nil

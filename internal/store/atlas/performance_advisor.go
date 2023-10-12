@@ -76,6 +76,9 @@ func (s *Store) PerformanceAdvisorSlowQueries(opts *atlasv2.ListSlowQueriesApiPa
 func (s *Store) PerformanceAdvisorIndexes(opts *atlasv2.ListSuggestedIndexesApiParams) (*atlasv2.PerformanceAdvisorResponse, error) {
 	request := s.clientv2.PerformanceAdvisorApi.
 		ListSuggestedIndexes(s.ctx, opts.GroupId, opts.ProcessId)
+	if opts.Namespaces != nil {
+		request = request.Namespaces(*opts.Namespaces)
+	}
 	if opts.Duration != nil {
 		request = request.Duration(*opts.Duration)
 	}

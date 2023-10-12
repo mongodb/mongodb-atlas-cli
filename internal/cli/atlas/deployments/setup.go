@@ -176,9 +176,13 @@ func (opts *SetupOpts) internalIPs(ctx context.Context) error {
 	if len(n) < 1 {
 		return podman.ErrNetworkNotFound
 	}
-
+	if len(n[0].Subnets) < 1 {
+		return podman.ErrNetworkNotFound
+	}
 	ipNet := n[0].Subnets[0].Subnet
-
+	if len(ipNet.IP) < 4 {
+		return podman.ErrNetworkNotFound
+	}
 	ipNet.IP[3] = 10
 	opts.mongodIP = ipNet.IP.String()
 	ipNet.IP[3] = 11

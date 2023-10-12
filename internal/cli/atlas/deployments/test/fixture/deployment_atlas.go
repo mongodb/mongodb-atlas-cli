@@ -52,9 +52,4 @@ func (m *MockDeploymentOpts) CommonAtlasMocks(projectID string) {
 		ProjectClusters(projectID, gomock.Any()).
 		Return(m.MockPaginatedAdvancedClusterDescription(), nil).
 		Times(1)
-
-}
-
-func (m *MockDeploymentOpts) localMockFlow(projectID string) {
-	return
 }

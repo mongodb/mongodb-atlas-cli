@@ -33,7 +33,6 @@ func (m *MockDeploymentOpts) LocalMockFlow(ctx context.Context) {
 		ListContainers(ctx, options.MongodHostnamePrefix).
 		Return(m.MockContainer(), nil).
 		Times(1)
-
 }
 
 func (m *MockDeploymentOpts) MockContainer() []*podman.Container {

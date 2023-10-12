@@ -111,10 +111,6 @@ func (opts *StartOpts) startContainer(ctx context.Context, deployment options.De
 }
 
 func (opts *StartOpts) RunAtlas() error {
-	if !opts.IsCliAuthenticated() {
-		return options.ErrNotAuthenticated
-	}
-
 	opts.StartSpinner()
 	defer opts.StopSpinner()
 

@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
@@ -46,7 +47,7 @@ func TestLogs_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 	buf := new(bytes.Buffer)
-	expectedLocalDeployment := "localDeployment1"
+	expectedLocalDeployment := "localDeployment"
 	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
 	mockPodman := deploymentTest.MockPodman
 
@@ -73,5 +74,37 @@ func TestLogs_RunLocal(t *testing.T) {
 
 	if !strings.Contains(buf.String(), expectedLogs) {
 		t.Fatalf("Run() expected output: %s, got: %s", expectedLogs, buf.String())
+	}
+}
+
+func TestLogs_RunAtlas(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	ctx := context.Background()
+	buf := new(bytes.Buffer)
+	atlasDeployment := "localDeployment1"
+	mockStore := mocks.NewMockLogsDownloader(ctrl)
+	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, atlasDeployment)
+
+	downloadOpts := &DownloadOpts{
+		DeploymentOpts: *deploymentTest.Opts,
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
+		},
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: "ProjectID",
+		},
+		downloadStore: mockStore,
+	}
+
+	deploymentTest.CommonAtlasMocks(downloadOpts.ProjectID)
+
+	mockStore.
+		EXPECT().
+		DownloadLog(gomock.Any(), downloadOpts.newHostLogsParams()).
+		Return(nil).
+		Times(1)
+
+	if err := downloadOpts.Run(ctx); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

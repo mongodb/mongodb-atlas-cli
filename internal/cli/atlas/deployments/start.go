@@ -126,7 +126,7 @@ func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{
 		Use:     "start <deploymentName>",
-		Short:   "Start a deployment",
+		Short:   "Start a deployment after you stop a machine, it goes into sleep mode, or restarts.",
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{

@@ -180,7 +180,7 @@ func (opts *SetupOpts) internalIPs(ctx context.Context) error {
 		return podman.ErrNetworkNotFound
 	}
 	ipNet := n[0].Subnets[0].Subnet
-	if len(ipNet.IP) < 4 { //nolint:mnd // ip ranges are meant to have 4 segments (e.g. 127.0.0.1)
+	if len(ipNet.IP) < 4 { //nolint:gomnd // ip ranges are meant to have 4 segments (e.g. 127.0.0.1)
 		return podman.ErrNetworkNotFound
 	}
 	ipNet.IP[3] = 10

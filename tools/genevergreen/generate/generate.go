@@ -254,8 +254,8 @@ func LocalDeploymentTasks(c *shrub.Configuration, toolName string) {
 
 func expansions() map[string]interface{} {
 	return map[string]interface{}{
-		"go_root":      "/opt/golang/go1.21",
-		"go_bin":       "/opt/golang/go1.21/bin",
+		"go_root":      "/opt/golang/go1.21.3",
+		"go_bin":       "/opt/golang/go1.21.3/bin",
 		"go_base_path": "",
 	}
 }

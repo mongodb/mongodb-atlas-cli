@@ -31,7 +31,6 @@ type diagnosticsOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
 	options.DeploymentOpts
-	podmanClient podman.Client
 }
 
 type diagnosticLogs struct {
@@ -57,16 +56,16 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 			OS:   runtime.GOOS,
 			Arch: runtime.GOARCH,
 		},
-		Diagnostic: opts.podmanClient.Diagnostics(ctx),
+		Diagnostic: opts.PodmanClient.Diagnostics(ctx),
 	}
 
 	var err error
-	d.Containers, err = opts.podmanClient.ContainerInspect(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname())
+	d.Containers, err = opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname())
 	if err != nil {
 		d.Errors = append(d.Errors, err)
 	}
 
-	n, nErr := opts.podmanClient.Network(ctx, opts.LocalNetworkName())
+	n, nErr := opts.PodmanClient.Network(ctx, opts.LocalNetworkName())
 	if nErr != nil {
 		d.Errors = append(d.Errors, nErr)
 	}
@@ -74,10 +73,10 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 		d.Network = n[0]
 	}
 
-	if d.Logs.MongoT, err = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongotHostname()); err != nil {
+	if d.Logs.MongoT, err = opts.PodmanClient.ContainerLogs(ctx, opts.LocalMongotHostname()); err != nil {
 		d.Errors = append(d.Errors, err)
 	}
-	if d.Logs.MongoD, err = opts.podmanClient.ContainerLogs(ctx, opts.LocalMongodHostname()); err != nil {
+	if d.Logs.MongoD, err = opts.PodmanClient.ContainerLogs(ctx, opts.LocalMongodHostname()); err != nil {
 		d.Errors = append(d.Errors, err)
 	}
 

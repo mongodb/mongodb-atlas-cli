@@ -66,6 +66,8 @@ func run() error {
 		generate.PublishSnapshotTasks(c, toolName)
 	case "publish":
 		generate.PublishStableTasks(c, toolName)
+	case "local":
+		generate.LocalDeploymentTasks(c, toolName)
 	default:
 		return errors.New("-tasks is invalid")
 	}

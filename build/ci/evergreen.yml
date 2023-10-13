@@ -197,7 +197,7 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
-  "update podman":
+  "install podman":
     - command: shell.exec
       type: setup
       params:
@@ -207,9 +207,16 @@ functions:
         script: |
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
-          sudo yum update -y podman
-          sudo yum install -y netavark
-          sudo /bin/sh -c "cat /usr/share/containers/containers.conf | sed 's|network_backend = \"cni\"|network_backend = \"netavark\"|' > /usr/share/containers/containers2.conf && mv /usr/share/containers/containers2.conf /usr/share/containers/containers.conf"
+          if [ -n "$(which yum 2>/dev/null)" ]; then
+            sudo yum install -y podman
+          elif [ -n "$(which apt-get 2>/dev/null)" ]; then
+            sudo apt-get update
+            sudo apt-get install -y podman
+          elif [ -n "$(which zypper 2>/dev/null)" ]; then
+            sudo zypper install -y podman
+          elif [ -n "$(which brew 2>/dev/null)" ]; then
+            sudo brew install podman
+          fi
   "install snyk":
     - command: shell.exec
       type: setup
@@ -258,6 +265,32 @@ functions:
       include_expansions_in_env:
         - workdir
       binary: ./build/ci/setup_operator.sh
+  "generate evergreen":
+    - command: subprocess.exec
+      type: test
+      params:
+        <<: *go_options
+        include_expansions_in_env:
+          - go_base_path
+          - workdir
+          - tool_name
+          - task_type
+        binary: build/ci/evergreen-generate-tasks.sh
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+          - src/github.com/mongodb/mongodb-atlas-cli/tasks.json
+        remote_file: ${project}/dist/${revision}_${created_at}/${tool_name}/${task_type}/
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/json}
+        display_name: internal-bucket
+    - command: generate.tasks
+      params:
+        files:
+          - tasks.json
 
 pre:
   - func: "clone"
@@ -1337,8 +1370,15 @@ tasks:
           MCLI_SERVICE: cloudgov
           E2E_TAGS: atlas,cleanup
           E2E_PARALLEL: 16
+  - name: atlas_deployments_local_generate_e2e
+    tags: ["e2e","deployments","local","generate"]
+    commands:
+      - func: "generate evergreen"
+        vars:
+          tool_name: atlascli
+          task_type: local
   - name: atlas_deployments_local_e2e
-    tags: ["e2e","required"]
+    tags: ["e2e","required","deployments","local","run"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
@@ -1347,7 +1387,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "update podman"
+      - func: "install podman"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1360,7 +1400,7 @@ tasks:
           E2E_TAGS: atlas,deployments,local
           E2E_TIMEOUT: 3h
   - name: atlas_deployments_atlas_clusters_e2e
-    tags: ["e2e","deployments","atlas", "local"]
+    tags: ["e2e","deployments","atlas"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
@@ -1369,7 +1409,6 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "update podman"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1527,5 +1566,13 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .atlas"
+  - name: e2e_local_deployments
+    display_name: "E2E Local Deployments Tests"
+    run_on:
+      - rhel80-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local .generate"
 include:
   - filename: build/ci/release.yml

@@ -25,11 +25,9 @@ import (
 	"github.com/containers/podman/v4/libpod/define"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -38,37 +36,14 @@ import (
 
 func TestStart_RunLocal_PausedContainers(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterStarter(ctrl)
-	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
-	mockProfileReader := mocks.NewMockProfileReader(ctrl)
-	mockPodman := mocks.NewMockClient(ctrl)
 	ctx := context.Background()
 
-	expectedLocalDeployments := []*podman.Container{
-		{
-			Names:  []string{"localTest2"},
-			State:  "paused",
-			Labels: map[string]string{"version": "6.0.9"},
-			ID:     deploymentName,
-		},
-		{
-			Names:  []string{"localTest1"},
-			State:  "paused",
-			Labels: map[string]string{"version": "7.0.0"},
-			ID:     deploymentName,
-		},
-	}
+	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
+	mockPodman := deploymentsTest.MockPodman
 
 	buf := new(bytes.Buffer)
 	startOpts := &StartOpts{
-		store: mockStore,
-		DeploymentOpts: options.DeploymentOpts{
-			Config:         mockProfileReader,
-			PodmanClient:   mockPodman,
-			CredStore:      mockCredentialsGetter,
-			DeploymentName: deploymentName,
-			DeploymentType: "LOCAL",
-		},
+		DeploymentOpts: *deploymentsTest.Opts,
 		GlobalOpts: cli.GlobalOpts{
 			ProjectID: projectID,
 		},
@@ -78,17 +53,8 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 		},
 	}
 
-	mockPodman.
-		EXPECT().
-		Ready(ctx).
-		Return(nil).
-		Times(1)
-
-	mockPodman.
-		EXPECT().
-		ListContainers(ctx, options.MongodHostnamePrefix).
-		Return(expectedLocalDeployments, nil).
-		Times(1)
+	expectedLocalDeployment := deploymentsTest.MockContainerWithState("paused")
+	deploymentsTest.LocalMockFlowWithMockContainer(ctx, expectedLocalDeployment)
 
 	mockPodman.
 		EXPECT().
@@ -130,37 +96,14 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 
 func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterStarter(ctrl)
-	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
-	mockProfileReader := mocks.NewMockProfileReader(ctrl)
-	mockPodman := mocks.NewMockClient(ctrl)
 	ctx := context.Background()
 
-	expectedLocalDeployments := []*podman.Container{
-		{
-			Names:  []string{"localTest2"},
-			State:  "exited",
-			Labels: map[string]string{"version": "6.0.9"},
-			ID:     deploymentName,
-		},
-		{
-			Names:  []string{"localTest1"},
-			State:  "exited",
-			Labels: map[string]string{"version": "7.0.0"},
-			ID:     deploymentName,
-		},
-	}
+	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
+	mockPodman := deploymentsTest.MockPodman
 
 	buf := new(bytes.Buffer)
 	startOpts := &StartOpts{
-		store: mockStore,
-		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:   mockPodman,
-			CredStore:      mockCredentialsGetter,
-			Config:         mockProfileReader,
-			DeploymentName: deploymentName,
-			DeploymentType: "LOCAL",
-		},
+		DeploymentOpts: *deploymentsTest.Opts,
 		GlobalOpts: cli.GlobalOpts{
 			ProjectID: projectID,
 		},
@@ -170,17 +113,8 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 		},
 	}
 
-	mockPodman.
-		EXPECT().
-		Ready(ctx).
-		Return(nil).
-		Times(1)
-
-	mockPodman.
-		EXPECT().
-		ListContainers(ctx, options.MongodHostnamePrefix).
-		Return(expectedLocalDeployments, nil).
-		Times(1)
+	expectedLocalDeployment := deploymentsTest.MockContainerWithState("exited")
+	deploymentsTest.LocalMockFlowWithMockContainer(ctx, expectedLocalDeployment)
 
 	mockPodman.
 		EXPECT().
@@ -223,36 +157,15 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 func TestStart_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterStarter(ctrl)
-	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
-	mockProfileReader := mocks.NewMockProfileReader(ctrl)
-	mockPodman := mocks.NewMockClient(ctrl)
-	mockAtlasListStore := mocks.NewMockClusterLister(ctrl)
 	ctx := context.Background()
 	deploymentName := "atlasCluster1"
 
-	expectedAtlasClusters := &admin.PaginatedAdvancedClusterDescription{
-		Results: []admin.AdvancedClusterDescription{
-			{
-				Name:           pointer.Get(deploymentName),
-				Id:             pointer.Get("123"),
-				MongoDBVersion: pointer.Get("7.0.0"),
-				StateName:      pointer.Get("IDLE"),
-				Paused:         pointer.Get(false),
-			},
-		},
-	}
+	deploymentsTest := fixture.NewMockAtlasDeploymentOpts(ctrl, deploymentName)
 
 	buf := new(bytes.Buffer)
 	listOpts := &StartOpts{
-		store: mockStore,
-		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:          mockPodman,
-			CredStore:             mockCredentialsGetter,
-			Config:                mockProfileReader,
-			DeploymentName:        deploymentName,
-			DeploymentType:        "ATLAS",
-			AtlasClusterListStore: mockAtlasListStore,
-		},
+		store:          mockStore,
+		DeploymentOpts: *deploymentsTest.Opts,
 		GlobalOpts: cli.GlobalOpts{
 			ProjectID: projectID,
 		},
@@ -262,23 +175,7 @@ func TestStart_RunAtlas(t *testing.T) {
 		},
 	}
 
-	mockPodman.
-		EXPECT().
-		Ready(ctx).
-		Return(nil).
-		Times(0)
-
-	mockCredentialsGetter.
-		EXPECT().
-		AuthType().
-		Return(config.OAuth).
-		Times(2)
-
-	mockAtlasListStore.
-		EXPECT().
-		ProjectClusters(listOpts.ProjectID, gomock.Any()).
-		Return(expectedAtlasClusters, nil).
-		Times(1)
+	deploymentsTest.CommonAtlasMocks(projectID)
 
 	mockStore.
 		EXPECT().

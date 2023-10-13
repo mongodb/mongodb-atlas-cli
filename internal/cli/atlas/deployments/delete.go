@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/watchers"
 	"github.com/spf13/cobra"
@@ -55,7 +54,7 @@ func (opts *DeleteOpts) initAtlasStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run(ctx context.Context) error {
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	if _, err := opts.SelectDeployments(ctx, opts.ConfigProjectID()); err != nil {
 		return err
 	}
 	opts.Entry = opts.DeploymentName
@@ -70,54 +69,16 @@ func (opts *DeleteOpts) Run(ctx context.Context) error {
 	return opts.runLocal(ctx)
 }
 
-func (opts *DeleteOpts) validateAndPrompt(ctx context.Context) error {
-	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
-		return err
-	}
-	telemetry.AppendOption(telemetry.WithDeploymentType(options.LocalCluster))
-
-	if opts.IsAtlasDeploymentType() {
-		return opts.validateAndPromptAtlas()
-	}
-	return opts.validateAndPromptLocal(ctx)
-}
-
-func (opts *DeleteOpts) validateAndPromptAtlas() error {
-	if opts.DeploymentName == "" {
-		return ErrNoDeploymentName
-	}
-
-	return opts.ValidateProjectID()
-}
-
-func (opts *DeleteOpts) validateAndPromptLocal(ctx context.Context) error {
-	if err := opts.PodmanClient.Ready(ctx); err != nil {
-		return err
-	}
-
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.SelectLocal(ctx); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 func (opts *DeleteOpts) runAtlas() error {
 	return opts.Delete(opts.atlasStore.DeleteCluster, opts.ConfigProjectID())
 }
 
 func (opts *DeleteOpts) runLocal(ctx context.Context) error {
-	err := opts.LocalDeploymentPreRun(ctx)
-	if err != nil {
-		return err
-	}
 	return opts.Delete(func() error {
 		_, _ = log.Warningln("deleting deployment...")
 		opts.StartSpinner()
 		defer opts.StopSpinner()
-		return opts.DeploymentOpts.Remove(ctx)
+		return opts.DeploymentOpts.RemoveLocal(ctx)
 	})
 }
 

@@ -44,7 +44,7 @@ func (opts *ConnectOpts) Connect(ctx context.Context) error {
 		return err
 	}
 
-	_, err := opts.SelectDeployments(ctx, opts.ProjectID)
+	_, err := opts.SelectDeployments(ctx, opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}

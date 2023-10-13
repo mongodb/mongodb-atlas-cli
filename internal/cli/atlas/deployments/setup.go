@@ -667,7 +667,7 @@ func (opts *SetupOpts) runLocal(ctx context.Context) error {
 	}
 
 	if err := opts.createLocalDeployment(ctx); err != nil {
-		_ = opts.Remove(ctx)
+		_ = opts.RemoveLocal(ctx)
 		return err
 	}
 

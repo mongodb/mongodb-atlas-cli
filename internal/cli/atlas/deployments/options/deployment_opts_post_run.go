@@ -11,21 +11,27 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package options
 
 import (
-	"context"
+	"errors"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 )
 
-func (opts *ConnectOpts) connectToLocal(ctx context.Context) error {
-	telemetry.AppendOption(telemetry.WithDeploymentType(LocalCluster))
-
-	connectionString, err := opts.ConnectionString(ctx)
-	if err != nil {
-		return err
+func (opts *DeploymentOpts) PostRunMessages() error {
+	if !opts.IsCliAuthenticated() {
+		if _, err := log.Warningln("\nTo list both local and cloud Atlas deployments, authenticate to your Atlas account using the \"atlas login\" command."); err != nil {
+			return err
+		}
 	}
 
-	return opts.connectToDeployment(connectionString)
+	if err := podman.Installed(); errors.Is(err, podman.ErrPodmanNotFound) {
+		if _, err = log.Warningln("\nTo get output for both local and Atlas deployments, install Podman."); err != nil {
+			return err
+		}
+	}
+	return nil
 }

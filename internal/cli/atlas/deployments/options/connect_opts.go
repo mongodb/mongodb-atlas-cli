@@ -17,12 +17,10 @@ import (
 	"context"
 	"errors"
 
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/compass"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 )
 
 var (
@@ -42,30 +40,12 @@ type ConnectOpts struct {
 }
 
 func (opts *ConnectOpts) Connect(ctx context.Context) error {
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	if err := opts.askConnectWith(); err != nil {
 		return err
 	}
 
-	if opts.IsAtlasDeploymentType() {
-		return opts.connectToAtlas()
-	}
-
-	return opts.connectToLocal(ctx)
-}
-
-func (opts *ConnectOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.ConnectWith == "" {
-		var err error
-		if opts.ConnectWith, err = opts.DeploymentOpts.PromptConnectWith(); err != nil {
-			return err
-		}
-	} else {
-		if err := ValidateConnectWith(opts.ConnectWith); err != nil {
-			return err
-		}
-	}
-
-	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
+	_, err := opts.SelectDeployments(ctx, opts.ConfigProjectID())
+	if err != nil {
 		return err
 	}
 
@@ -73,18 +53,22 @@ func (opts *ConnectOpts) validateAndPrompt(ctx context.Context) error {
 		if err := opts.validateAndPromptAtlasOpts(); err != nil {
 			return err
 		}
-	} else if err := opts.validateAndPromptLocalOpts(ctx); err != nil {
-		return err
+
+		return opts.connectToAtlas()
 	}
 
-	return nil
+	return opts.connectToLocal(ctx)
 }
 
-func (opts *ConnectOpts) promptDeploymentName() error {
-	p := &survey.Input{
-		Message: "Deployment name",
+func (opts *ConnectOpts) askConnectWith() error {
+	if opts.ConnectWith == "" {
+		var err error
+		if opts.ConnectWith, err = opts.DeploymentOpts.PromptConnectWith(); err != nil {
+			return err
+		}
 	}
-	return telemetry.TrackAskOne(p, &opts.DeploymentName)
+
+	return ValidateConnectWith(opts.ConnectWith)
 }
 
 func (opts *ConnectOpts) connectToDeployment(connectionString string) error {

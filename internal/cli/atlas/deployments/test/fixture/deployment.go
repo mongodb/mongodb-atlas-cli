@@ -11,21 +11,18 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package options
+package fixture
 
 import (
-	"context"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
+	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 )
 
-func (opts *ConnectOpts) connectToLocal(ctx context.Context) error {
-	telemetry.AppendOption(telemetry.WithDeploymentType(LocalCluster))
-
-	connectionString, err := opts.ConnectionString(ctx)
-	if err != nil {
-		return err
-	}
-
-	return opts.connectToDeployment(connectionString)
+type MockDeploymentOpts struct {
+	ctrl                      *gomock.Controller
+	MockCredentialsGetter     *mocks.MockCredentialsGetter
+	MockAtlasClusterListStore *mocks.MockClusterLister
+	MockPodman                *mocks.MockClient
+	Opts                      *options.DeploymentOpts
 }

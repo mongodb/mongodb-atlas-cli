@@ -44,20 +44,6 @@ func (opts *ConnectToAtlasOpts) InitAtlasStore(ctx context.Context) func() error
 }
 
 func (opts *ConnectOpts) validateAndPromptAtlasOpts() error {
-	if !opts.IsCliAuthenticated() {
-		return ErrNotAuthenticated
-	}
-
-	if err := opts.ValidateProjectID(); err != nil {
-		return err
-	}
-
-	if opts.DeploymentName == "" {
-		if err := opts.promptDeploymentName(); err != nil {
-			return err
-		}
-	}
-
 	requiresAuth := opts.ConnectWith == MongoshConnect || opts.ConnectWith == CompassConnect
 	if requiresAuth && opts.DBUsername == "" {
 		if err := opts.promptDBUsername(); err != nil {

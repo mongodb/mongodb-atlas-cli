@@ -49,6 +49,7 @@ type SearchIndexDefinition struct {
 	Analyzers  []admin.ApiAtlasFTSAnalyzers           `bson:"analyzers,omitempty"`
 	Synonyms   []admin.SearchSynonymMappingDefinition `bson:"synonyms,omitempty"`
 	Mappings   *admin.ApiAtlasFTSMappings             `bson:"mappings,omitempty"`
+	Status     *string                                `bson:"status,omitempty"`
 }
 
 func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
@@ -110,6 +111,7 @@ func (o *database) SearchIndex(ctx context.Context, id string) (*admin.ClusterSe
 				Name:       results[0].Name,
 				Collection: coll,
 				Database:   o.db.Name(),
+				Status:     results[0].Status,
 			}
 			return newClusterSearchIndex(searchIndexDef), nil
 		}
@@ -189,6 +191,7 @@ func newClusterSearchIndex(index *SearchIndexDefinition) *admin.ClusterSearchInd
 		IndexID:        &index.ID,
 		CollectionName: index.Collection,
 		Database:       index.Database,
+		Status:         index.Status,
 	}
 }
 

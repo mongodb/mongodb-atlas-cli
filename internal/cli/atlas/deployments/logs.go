@@ -34,13 +34,19 @@ type DownloadOpts struct {
 	options.DeploymentOpts
 }
 
+var ErrAtlasNotSupported = errors.New("atlas deployments are not supported")
+
 func (opts *DownloadOpts) Run(ctx context.Context) error {
-	if _, err := opts.SelectDeployments(ctx, opts.ProjectID); err != nil {
+	if _, err := opts.SelectDeployments(ctx, opts.ConfigProjectID()); err != nil {
 		return err
 	}
 
 	if opts.IsLocalDeploymentType() {
 		return opts.RunLocal(ctx)
+	}
+
+	if opts.IsAtlasDeploymentType() {
+		return ErrAtlasNotSupported
 	}
 
 	return errors.New("atlas deployments are not supported")

@@ -25,8 +25,8 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
@@ -35,7 +35,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
-var indexID = "6509bc5080b2f007e6a2a0ce"
+var indexID = "6509bc5080b2f007e6a2a0ce" //nolint:gosec
 
 const (
 	expectedIndexName       = "idx1"
@@ -47,18 +47,16 @@ const (
 
 func TestCreate_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockPodman := mocks.NewMockClient(ctrl)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockDB := mocks.NewMockDatabase(ctrl)
 	ctx := context.Background()
 
+	testDeployments := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
+	mockPodman := testDeployments.MockPodman
+
 	buf := new(bytes.Buffer)
 	opts := &CreateOpts{
-		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:   mockPodman,
-			DeploymentName: expectedLocalDeployment,
-			DeploymentType: local,
-		},
+		DeploymentOpts: *testDeployments.Opts,
 		IndexOpts: search.IndexOpts{
 			Name:       expectedIndexName,
 			DBName:     expectedDB,
@@ -70,6 +68,8 @@ func TestCreate_RunLocal(t *testing.T) {
 		},
 		mongodbClient: mockMongodbClient,
 	}
+
+	testDeployments.LocalMockFlow(ctx)
 
 	mockPodman.
 		EXPECT().
@@ -99,12 +99,6 @@ func TestCreate_RunLocal(t *testing.T) {
 				},
 			},
 		}, nil).
-		Times(1)
-
-	mockPodman.
-		EXPECT().
-		Ready(ctx).
-		Return(nil).
 		Times(1)
 
 	mockMongodbClient.
@@ -174,18 +168,16 @@ func TestCreate_RunLocal(t *testing.T) {
 
 func TestCreate_Duplicated(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockPodman := mocks.NewMockClient(ctrl)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockDB := mocks.NewMockDatabase(ctrl)
 	ctx := context.Background()
 
+	testDeployments := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
+	mockPodman := testDeployments.MockPodman
+
 	buf := new(bytes.Buffer)
 	opts := &CreateOpts{
-		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:   mockPodman,
-			DeploymentName: expectedLocalDeployment,
-			DeploymentType: local,
-		},
+		DeploymentOpts: *testDeployments.Opts,
 		IndexOpts: search.IndexOpts{
 			Name:       expectedIndexName,
 			DBName:     expectedDB,
@@ -197,6 +189,8 @@ func TestCreate_Duplicated(t *testing.T) {
 		},
 		mongodbClient: mockMongodbClient,
 	}
+
+	testDeployments.LocalMockFlow(ctx)
 
 	mockPodman.
 		EXPECT().
@@ -226,12 +220,6 @@ func TestCreate_Duplicated(t *testing.T) {
 				},
 			},
 		}, nil).
-		Times(1)
-
-	mockPodman.
-		EXPECT().
-		Ready(ctx).
-		Return(nil).
 		Times(1)
 
 	mockMongodbClient.
@@ -287,17 +275,14 @@ func TestCreate_Duplicated(t *testing.T) {
 
 func TestCreate_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockIndexStore := mocks.NewMockSearchIndexCreator(ctrl)
 	ctx := context.Background()
-
 	buf := new(bytes.Buffer)
+
+	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, expectedLocalDeployment)
+
 	opts := &CreateOpts{
-		DeploymentOpts: options.DeploymentOpts{
-			DeploymentName: expectedLocalDeployment,
-			DeploymentType: "atlas",
-			CredStore:      mockCredentialsGetter,
-		},
+		DeploymentOpts: *deploymentTest.Opts,
 		IndexOpts: search.IndexOpts{
 			Name:       expectedIndexName,
 			DBName:     expectedDB,
@@ -306,6 +291,9 @@ func TestCreate_RunAtlas(t *testing.T) {
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
 			Template:  createTemplate,
+		},
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: "projectID",
 		},
 		store: mockIndexStore,
 	}
@@ -335,17 +323,13 @@ func TestCreate_RunAtlas(t *testing.T) {
 		IndexID:        &indexID,
 	}
 
+	deploymentTest.CommonAtlasMocks(opts.ProjectID)
+
 	mockIndexStore.
 		EXPECT().
 		CreateSearchIndexes(opts.ProjectID, opts.DeploymentName, index).
 		Times(1).
 		Return(indexWithID, nil)
-
-	mockCredentialsGetter.
-		EXPECT().
-		AuthType().
-		Return(config.OAuth).
-		Times(1)
 
 	if err := opts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

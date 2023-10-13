@@ -29,8 +29,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	NAME	DATABASE	COLLECTION{{range .}}
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}{{end}}
+var listTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS{{range .}}
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}{{end}}
 `
 
 type ListOpts struct {
@@ -43,7 +43,11 @@ type ListOpts struct {
 }
 
 func (opts *ListOpts) Run(ctx context.Context) error {
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	if _, err := opts.SelectDeployments(ctx, opts.ConfigProjectID()); err != nil {
+		return err
+	}
+
+	if err := opts.validateAndPrompt(); err != nil {
 		return err
 	}
 
@@ -63,10 +67,6 @@ func (opts *ListOpts) RunAtlas() error {
 }
 
 func (opts *ListOpts) RunLocal(ctx context.Context) error {
-	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
-		return err
-	}
-
 	connectionString, err := opts.ConnectionString(ctx)
 	if err != nil {
 		return err
@@ -98,21 +98,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *ListOpts) validateAndPrompt(ctx context.Context) error {
-	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
-		return err
-	}
-
-	if opts.IsAtlasDeploymentType() && opts.DeploymentName == "" {
-		return ErrNoDeploymentName
-	}
-
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.SelectLocal(ctx); err != nil {
-			return err
-		}
-	}
-
+func (opts *ListOpts) validateAndPrompt() error {
 	if opts.DBName == "" {
 		if err := promptRequiredName("Database", &opts.DBName); err != nil {
 			return err
@@ -120,9 +106,7 @@ func (opts *ListOpts) validateAndPrompt(ctx context.Context) error {
 	}
 
 	if opts.Collection == "" {
-		if err := promptRequiredName("Collection", &opts.Collection); err != nil {
-			return err
-		}
+		return promptRequiredName("Collection", &opts.Collection)
 	}
 
 	return nil
@@ -158,6 +142,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

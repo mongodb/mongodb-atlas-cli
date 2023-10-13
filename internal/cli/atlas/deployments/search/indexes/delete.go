@@ -35,6 +35,7 @@ const (
 )
 
 type DeleteOpts struct {
+	cli.OutputOpts
 	cli.GlobalOpts
 	*cli.DeleteOpts
 	options.DeploymentOpts
@@ -44,8 +45,14 @@ type DeleteOpts struct {
 }
 
 func (opts *DeleteOpts) Run(ctx context.Context) error {
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	if _, err := opts.SelectDeployments(ctx, opts.ConfigProjectID()); err != nil {
 		return err
+	}
+
+	if opts.Entry == "" {
+		if err := promptRequiredName("Search Index ID", &opts.Entry); err != nil {
+			return err
+		}
 	}
 
 	if err := opts.Prompt(); err != nil {
@@ -64,10 +71,6 @@ func (opts *DeleteOpts) RunAtlas() error {
 }
 
 func (opts *DeleteOpts) RunLocal(ctx context.Context) error {
-	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
-		return err
-	}
-
 	connectionString, err := opts.ConnectionString(ctx)
 	if err != nil {
 		return err
@@ -94,30 +97,6 @@ func (opts *DeleteOpts) initMongoDBClient(ctx context.Context) func() error {
 		opts.mongodbClient = mongodbclient.NewClientWithContext(ctx)
 		return nil
 	}
-}
-
-func (opts *DeleteOpts) validateAndPrompt(ctx context.Context) error {
-	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
-		return err
-	}
-
-	if opts.IsAtlasDeploymentType() && opts.DeploymentName == "" {
-		return ErrNoDeploymentName
-	}
-
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.SelectLocal(ctx); err != nil {
-			return err
-		}
-	}
-
-	if opts.Entry == "" {
-		if err := promptRequiredName("Search Index ID", &opts.Entry); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
 func DeleteBuilder() *cobra.Command {
@@ -153,6 +132,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

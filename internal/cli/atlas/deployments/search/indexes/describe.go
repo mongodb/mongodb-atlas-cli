@@ -28,8 +28,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `ID	NAME	DATABASE	COLLECTION
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}
+var describeTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}
 `
 
 type DescribeOpts struct {
@@ -42,10 +42,16 @@ type DescribeOpts struct {
 }
 
 func (opts *DescribeOpts) Run(ctx context.Context) error {
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	_, err := opts.SelectDeployments(ctx, opts.ConfigProjectID())
+	if err != nil {
 		return err
 	}
 
+	if opts.indexID == "" {
+		if err := promptRequiredName("Search Index ID", &opts.indexID); err != nil {
+			return err
+		}
+	}
 	if opts.IsAtlasDeploymentType() {
 		return opts.RunAtlas()
 	}
@@ -63,10 +69,6 @@ func (opts *DescribeOpts) RunAtlas() error {
 }
 
 func (opts *DescribeOpts) RunLocal(ctx context.Context) error {
-	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
-		return err
-	}
-
 	connectionString, err := opts.ConnectionString(ctx)
 	if err != nil {
 		return err
@@ -100,30 +102,6 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DescribeOpts) validateAndPrompt(ctx context.Context) error {
-	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
-		return err
-	}
-
-	if opts.IsAtlasDeploymentType() && opts.DeploymentName == "" {
-		return ErrNoDeploymentName
-	}
-
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.SelectLocal(ctx); err != nil {
-			return err
-		}
-	}
-
-	if opts.indexID == "" {
-		if err := promptRequiredName("Search Index ID", &opts.indexID); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
@@ -155,6 +133,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

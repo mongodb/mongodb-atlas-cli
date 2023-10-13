@@ -58,7 +58,7 @@ func (opts *PauseOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *PauseOpts) Run(ctx context.Context) error {
-	deployment, err := opts.SelectDeployments(ctx, opts.ProjectID)
+	deployment, err := opts.SelectDeployments(ctx, opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}

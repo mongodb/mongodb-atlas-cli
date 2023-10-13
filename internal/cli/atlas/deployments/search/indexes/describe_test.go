@@ -25,9 +25,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -36,7 +36,6 @@ import (
 
 func TestDescribe_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockPodman := mocks.NewMockClient(ctrl)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockStore := mocks.NewMockSearchIndexDescriber(ctrl)
 	ctx := context.Background()
@@ -49,13 +48,12 @@ func TestDescribe_RunLocal(t *testing.T) {
 		expectedStatus          = "STEADY"
 	)
 
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
+	mockPodman := deploymentTest.MockPodman
+
 	buf := new(bytes.Buffer)
 	opts := &DescribeOpts{
-		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:   mockPodman,
-			DeploymentName: expectedLocalDeployment,
-			DeploymentType: options.LocalCluster,
-		},
+		DeploymentOpts: *deploymentTest.Opts,
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
 			Template:  describeTemplate,
@@ -65,11 +63,7 @@ func TestDescribe_RunLocal(t *testing.T) {
 		store:         mockStore,
 	}
 
-	mockPodman.
-		EXPECT().
-		Ready(ctx).
-		Return(nil).
-		Times(1)
+	deploymentTest.LocalMockFlow(ctx)
 
 	mockPodman.
 		EXPECT().
@@ -137,7 +131,6 @@ test   name   db         coll         STEADY
 
 func TestDescribe_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockPodman := mocks.NewMockClient(ctrl)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockStore := mocks.NewMockSearchIndexDescriber(ctrl)
 	ctx := context.Background()
@@ -149,67 +142,24 @@ func TestDescribe_RunAtlas(t *testing.T) {
 		expectedCollection      = "col1"
 	)
 
+	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, expectedLocalDeployment)
+
 	buf := new(bytes.Buffer)
 	opts := &DescribeOpts{
-		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:   mockPodman,
-			DeploymentName: expectedLocalDeployment,
-			DeploymentType: options.AtlasCluster,
-		},
+		DeploymentOpts: *deploymentTest.Opts,
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
 			Template:  describeTemplate,
+		},
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: "ProjectID",
 		},
 		mongodbClient: mockMongodbClient,
 		indexID:       "test",
 		store:         mockStore,
 	}
 
-	mockPodman.
-		EXPECT().
-		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
-		Return([]*define.InspectContainerData{
-			{
-				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
-				Config: &define.InspectContainerConfig{
-					Labels: map[string]string{
-						"version": "7.0.1",
-					},
-				},
-				HostConfig: &define.InspectContainerHostConfig{
-					PortBindings: map[string][]define.InspectHostPort{
-						"27017/tcp": {
-							{
-								HostIP:   "127.0.0.1",
-								HostPort: "27017",
-							},
-						},
-					},
-				},
-				Mounts: []define.InspectMount{
-					{
-						Name: opts.DeploymentOpts.LocalMongodDataVolume(),
-					},
-				},
-			},
-		}, nil).
-		Times(0)
-	mockMongodbClient.
-		EXPECT().
-		Disconnect().
-		Times(0)
-
-	mockMongodbClient.
-		EXPECT().
-		Connect("mongodb://localhost:27017/?directConnection=true", int64(10)).
-		Return(nil).
-		Times(0)
-
-	mockMongodbClient.
-		EXPECT().
-		SearchIndex("test").
-		Return(nil, mongodbclient.ErrSearchIndexNotFound).
-		Times(0)
+	deploymentTest.CommonAtlasMocks(opts.ProjectID)
 
 	mockStore.
 		EXPECT().

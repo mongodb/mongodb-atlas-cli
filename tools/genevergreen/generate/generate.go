@@ -234,17 +234,10 @@ func LocalDeploymentTasks(c *shrub.Configuration, toolName string) {
 
 	for _, runOn := range []string{
 		"rhel80-small",
-		"rhel84-small",
 		"rhel8.7-small",
 		"rhel8.8-small",
 		"rhel90-small",
 		"rhel91-small",
-		"debian11-small",
-		"debian12-small",
-		"ubuntu2204-small",
-		"suse15-small",
-		"macos-1100",
-		"macos-1300-arm64",
 	} {
 		v := &shrub.Variant{
 			BuildName:        fmt.Sprintf("e2e_generated_local_deployments_%v", strings.ReplaceAll(runOn, ".", "_")),

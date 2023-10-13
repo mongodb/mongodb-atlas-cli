@@ -68,13 +68,13 @@ func (opts *DownloadOpts) Run(ctx context.Context) error {
 	}
 
 	if opts.IsAtlasDeploymentType() {
-		return opts.RunAtlas(ctx)
+		return opts.RunAtlas()
 	}
 
 	return errors.New("atlas deployments are not supported")
 }
 
-func (opts *DownloadOpts) RunAtlas(ctx context.Context) error {
+func (opts *DownloadOpts) RunAtlas() error {
 	r := opts.newHostLogsParams()
 	if err := opts.downloadStore.DownloadLog(opts.OutWriter, r); err != nil {
 		return err

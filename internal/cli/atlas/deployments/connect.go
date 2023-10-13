@@ -33,7 +33,7 @@ func ConnectBuilder() *cobra.Command {
 	opts := &options.ConnectOpts{}
 	cmd := &cobra.Command{
 		Use:     "connect [deploymentName]",
-		Short:   "Connect to a deployment.",
+		Short:   "Connect to a deployment that is running locally or in Atlas. If the deployment is paused, make sure to run atlas deployments start first.",
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{

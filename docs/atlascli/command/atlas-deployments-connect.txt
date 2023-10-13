@@ -12,7 +12,7 @@ atlas deployments connect
    :depth: 1
    :class: singlecol
 
-Connect to a deployment.
+Connect to a deployment that is running locally or in Atlas. If the deployment is paused, make sure to run atlas deployments start first.
 
 Syntax
 ------

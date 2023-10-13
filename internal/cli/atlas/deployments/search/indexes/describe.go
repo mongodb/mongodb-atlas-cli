@@ -42,10 +42,16 @@ type DescribeOpts struct {
 }
 
 func (opts *DescribeOpts) Run(ctx context.Context) error {
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	_, err := opts.SelectDeployments(ctx, opts.ConfigProjectID())
+	if err != nil {
 		return err
 	}
 
+	if opts.indexID == "" {
+		if err := promptRequiredName("Search Index ID", &opts.indexID); err != nil {
+			return err
+		}
+	}
 	if opts.IsAtlasDeploymentType() {
 		return opts.RunAtlas()
 	}
@@ -63,10 +69,6 @@ func (opts *DescribeOpts) RunAtlas() error {
 }
 
 func (opts *DescribeOpts) RunLocal(ctx context.Context) error {
-	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
-		return err
-	}
-
 	connectionString, err := opts.ConnectionString(ctx)
 	if err != nil {
 		return err
@@ -98,30 +100,6 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 		return err
 	}
-}
-
-func (opts *DescribeOpts) validateAndPrompt(ctx context.Context) error {
-	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
-		return err
-	}
-
-	if opts.IsAtlasDeploymentType() && opts.DeploymentName == "" {
-		return ErrNoDeploymentName
-	}
-
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.SelectLocal(ctx); err != nil {
-			return err
-		}
-	}
-
-	if opts.indexID == "" {
-		if err := promptRequiredName("Search Index ID", &opts.indexID); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
 func DescribeBuilder() *cobra.Command {

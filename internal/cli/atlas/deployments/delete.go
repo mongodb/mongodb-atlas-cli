@@ -54,7 +54,7 @@ func (opts *DeleteOpts) initAtlasStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run(ctx context.Context) error {
-	if _, err := opts.SelectDeployments(ctx, opts.ProjectID); err != nil {
+	if _, err := opts.SelectDeployments(ctx, opts.ConfigProjectID()); err != nil {
 		return err
 	}
 	opts.Entry = opts.DeploymentName

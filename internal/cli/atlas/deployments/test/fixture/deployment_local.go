@@ -34,7 +34,8 @@ func NewMockLocalDeploymentOpts(ctrl *gomock.Controller, deploymentName string) 
 		},
 	}
 }
-func (m *MockDeploymentOpts) LocalMockFlow(ctx context.Context) {
+
+func (m *MockDeploymentOpts) LocalMockFlowWithMockContainer(ctx context.Context, mockContainer []*podman.Container) {
 	m.MockPodman.
 		EXPECT().
 		Ready(ctx).
@@ -44,8 +45,12 @@ func (m *MockDeploymentOpts) LocalMockFlow(ctx context.Context) {
 	m.MockPodman.
 		EXPECT().
 		ListContainers(ctx, options.MongodHostnamePrefix).
-		Return(m.MockContainer(), nil).
+		Return(mockContainer, nil).
 		Times(1)
+}
+
+func (m *MockDeploymentOpts) LocalMockFlow(ctx context.Context) {
+	m.LocalMockFlowWithMockContainer(ctx, m.MockContainer())
 }
 
 func (m *MockDeploymentOpts) MockContainer() []*podman.Container {

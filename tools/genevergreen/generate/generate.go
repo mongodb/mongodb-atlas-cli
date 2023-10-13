@@ -233,7 +233,6 @@ func LocalDeploymentTasks(c *shrub.Configuration, toolName string) {
 	}
 
 	for _, runOn := range []string{
-		"rhel80-small",
 		"rhel8.7-small",
 		"rhel8.8-small",
 		"rhel90-small",

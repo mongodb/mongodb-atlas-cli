@@ -74,7 +74,7 @@ func (m *MockCloudProviderAccessRoleAuthorizer) EXPECT() *MockCloudProviderAcces
 }
 
 // AuthorizeCloudProviderAccessRole mocks base method.
-func (m *MockCloudProviderAccessRoleAuthorizer) AuthorizeCloudProviderAccessRole(arg0, arg1 string, arg2 *mongodbatlas.CloudProviderAuthorizationRequest) (*admin.CloudProviderAccessRole, error) {
+func (m *MockCloudProviderAccessRoleAuthorizer) AuthorizeCloudProviderAccessRole(arg0, arg1 string, arg2 *mongodbatlas.CloudProviderAccessRoleRequest) (*admin.CloudProviderAccessRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AuthorizeCloudProviderAccessRole", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.CloudProviderAccessRole)

@@ -54,10 +54,10 @@ func (opts *AuthorizeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *AuthorizeOpts) newCloudProviderAuthorizationRequest() *atlas.CloudProviderAuthorizationRequest {
-	return &atlas.CloudProviderAuthorizationRequest{
+func (opts *AuthorizeOpts) newCloudProviderAuthorizationRequest() *atlas.CloudProviderAccessRoleRequest {
+	return &atlas.CloudProviderAccessRoleRequest{
 		ProviderName:      provider,
-		IAMAssumedRoleARN: opts.IAMAssumedRoleARN,
+		IAMAssumedRoleARN: &opts.IAMAssumedRoleARN,
 	}
 }
 

@@ -482,9 +482,9 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 				},
 				Auditing: &atlasV1.Auditing{
-					AuditAuthorizationSuccess: &auditing.AuditAuthorizationSuccess,
+					AuditAuthorizationSuccess: auditing.AuditAuthorizationSuccess,
 					AuditFilter:               auditing.AuditFilter,
-					Enabled:                   &auditing.Enabled,
+					Enabled:                   auditing.Enabled,
 				},
 				Settings: &atlasV1.ProjectSettings{
 					IsCollectDatabaseSpecificsStatisticsEnabled: projectSettings.IsCollectDatabaseSpecificsStatisticsEnabled,
@@ -680,9 +680,9 @@ func Test_buildAuditing(t *testing.T) {
 		}
 
 		expected := &atlasV1.Auditing{
-			AuditAuthorizationSuccess: &data.AuditAuthorizationSuccess,
+			AuditAuthorizationSuccess: data.AuditAuthorizationSuccess,
 			AuditFilter:               data.AuditFilter,
-			Enabled:                   &data.Enabled,
+			Enabled:                   data.Enabled,
 		}
 
 		if !reflect.DeepEqual(expected, got) {

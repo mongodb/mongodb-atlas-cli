@@ -266,6 +266,7 @@ func referenceExportedProject(projectName, teamName string) *akov1.AtlasProject 
 					},
 				},
 			},
+			RegionUsageRestrictions: "NONE",
 		},
 	}
 }

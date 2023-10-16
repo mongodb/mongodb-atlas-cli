@@ -38,7 +38,7 @@ type CloudProviderAccessRoleDeauthorizer interface {
 
 // CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 type CloudProviderAccessRoleAuthorizer interface {
-	AuthorizeCloudProviderAccessRole(string, string, *atlas.CloudProviderAuthorizationRequest) (*atlasv2.CloudProviderAccessRole, error)
+	AuthorizeCloudProviderAccessRole(string, string, *atlas.CloudProviderAccessRoleRequest) (*atlasv2.CloudProviderAccessRole, error)
 }
 
 // CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
@@ -78,12 +78,12 @@ func (s *Store) DeauthorizeCloudProviderAccessRoles(req *atlas.CloudProviderDeau
 }
 
 // AuthorizeCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
-func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *atlas.CloudProviderAuthorizationRequest) (*atlasv2.CloudProviderAccessRole, error) {
+func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *atlas.CloudProviderAccessRoleRequest) (*atlasv2.CloudProviderAccessRole, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		role := atlasv2.CloudProviderAccessRole{
 			ProviderName:      req.ProviderName,
-			IamAssumedRoleArn: &req.IAMAssumedRoleARN,
+			IamAssumedRoleArn: req.IAMAssumedRoleARN,
 		}
 		result, _, err := s.clientv2.CloudProviderAccessApi.AuthorizeCloudProviderAccessRole(s.ctx, groupID, roleID, &role).Execute()
 		return result, err

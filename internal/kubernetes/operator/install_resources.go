@@ -45,7 +45,7 @@ const (
 
 type Installer interface {
 	InstallCRDs(ctx context.Context, version string, namespaced bool) error
-	InstallConfiguration(ctx context.Context, version, namespace string, watch []string) error
+	InstallConfiguration(ctx context.Context, version, namespace string, watch []string, atlasGov bool) error
 	InstallCredentials(ctx context.Context, namespace, orgID, publicKey, privateKey string, projectName string) error
 }
 
@@ -93,7 +93,7 @@ func (ir *InstallResources) InstallCRDs(ctx context.Context, version string, nam
 	return nil
 }
 
-func (ir *InstallResources) InstallConfiguration(ctx context.Context, version, namespace string, watch []string) error {
+func (ir *InstallResources) InstallConfiguration(ctx context.Context, version, namespace string, watch []string, atlasGov bool) error {
 	target := installationTargetClusterWide
 
 	if len(watch) > 0 {
@@ -138,7 +138,7 @@ func (ir *InstallResources) InstallConfiguration(ctx context.Context, version, n
 				return err
 			}
 		case "Deployment":
-			err = ir.addDeployment(ctx, config, namespace, watch)
+			err = ir.addDeployment(ctx, config, namespace, watch, atlasGov)
 			if err != nil {
 				return err
 			}
@@ -287,7 +287,7 @@ func (ir *InstallResources) addClusterRoleBinding(ctx context.Context, config ma
 	return nil
 }
 
-func (ir *InstallResources) addDeployment(ctx context.Context, config map[string]interface{}, namespace string, watch []string) error {
+func (ir *InstallResources) addDeployment(ctx context.Context, config map[string]interface{}, namespace string, watch []string, atlasGov bool) error {
 	obj := &appsv1.Deployment{}
 	err := ir.objConverter.FromUnstructured(config, obj)
 	if err != nil {
@@ -300,6 +300,9 @@ func (ir *InstallResources) addDeployment(ctx context.Context, config map[string
 		atlasDomain := os.Getenv("MCLI_OPS_MANAGER_URL")
 		if atlasDomain == "" {
 			atlasDomain = "https://cloud.mongodb.com/"
+			if atlasGov {
+				atlasDomain = "https://cloud.mongodbgov.com/"
+			}
 		}
 		for i := range obj.Spec.Template.Spec.Containers[0].Args {
 			arg := obj.Spec.Template.Spec.Containers[0].Args[i]

@@ -33,7 +33,7 @@ require (
 	github.com/mattn/go-isatty v0.0.19
 	github.com/mongodb-forks/digest v1.0.5
 	github.com/mongodb-labs/cobra2snooty v0.16.0
-	github.com/mongodb/mongodb-atlas-kubernetes v1.8.0
+	github.com/mongodb/mongodb-atlas-kubernetes v1.9.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
 	github.com/shirou/gopsutil/v3 v3.23.9
@@ -44,7 +44,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/tangzero/inflector v1.0.0
 	github.com/withfig/autocomplete-tools/packages/cobra v1.2.0
-	go.mongodb.org/atlas v0.31.0
+	go.mongodb.org/atlas v0.33.0
 	go.mongodb.org/atlas-sdk/v20230201008 v20230201008.0.0
 	go.mongodb.org/mongo-driver v1.12.1
 	go.mongodb.org/ops-manager v0.53.0
@@ -175,9 +175,8 @@ require (
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	github.com/yusufpapurcu/wmi v1.2.3 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	go.uber.org/atomic v1.9.0 // indirect
-	go.uber.org/multierr v1.9.0 // indirect
-	go.uber.org/zap v1.24.0 // indirect
+	go.uber.org/multierr v1.10.0 // indirect
+	go.uber.org/zap v1.26.0 // indirect
 	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/oauth2 v0.12.0 // indirect
 	golang.org/x/sync v0.4.0 // indirect

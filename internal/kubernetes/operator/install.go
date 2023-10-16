@@ -50,6 +50,7 @@ type Install struct {
 	watch           []string
 	projectName     string
 	importResources bool
+	atlasGov        bool
 }
 
 func (i *Install) WithNamespace(namespace string) *Install {
@@ -76,6 +77,12 @@ func (i *Install) WithImportResources(flag bool) *Install {
 	return i
 }
 
+func (i *Install) WithAtlasGov(flag bool) *Install {
+	i.atlasGov = flag
+
+	return i
+}
+
 func (i *Install) Run(ctx context.Context, orgID string) error {
 	keys, err := i.generateKeys(orgID)
 	if err != nil {
@@ -86,7 +93,7 @@ func (i *Install) Run(ctx context.Context, orgID string) error {
 		return err
 	}
 
-	if err = i.installResources.InstallConfiguration(ctx, i.version, i.namespace, i.watch); err != nil {
+	if err = i.installResources.InstallConfiguration(ctx, i.version, i.namespace, i.watch, i.atlasGov); err != nil {
 		return err
 	}
 

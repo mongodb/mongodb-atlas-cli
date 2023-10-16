@@ -10,20 +10,23 @@ updates:
       - "mongodb/mongocli"
     groups:
       golang:
-          patterns:
-            - "golang.org*" 
+        patterns:
+          - "golang.org*"
       kubernetes:
-          patterns:
-            - "*k8s.io*"
+        patterns:
+          - "*k8s.io*"
       google:
-          patterns:
-            - "*google.golang.org*"
+        patterns:
+          - "*google.golang.org*"
       aws:
-          patterns:
-            - "github.com/aws*"
+        patterns:
+          - "github.com/aws*"
       azure:
-          patterns:
-            - "github.com/Azure*"
+        patterns:
+          - "github.com/Azure*"
+      containers:
+        patterns:
+          - "github.com/containers*"
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
@@ -31,3 +34,7 @@ updates:
       day: tuesday
     reviewers:
       - "mongodb/mongocli"
+    groups:
+      docker:
+        patterns:
+          - "docker*"

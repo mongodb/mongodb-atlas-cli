@@ -3,7 +3,7 @@ module github.com/mongodb/mongodb-atlas-cli
 go 1.21
 
 require (
-	cloud.google.com/go/kms v1.15.2
+	cloud.google.com/go/kms v1.15.3
 	github.com/AlecAivazis/survey/v2 v2.3.7
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.8.0
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.4.0

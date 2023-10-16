@@ -114,6 +114,7 @@ func BuildAtlasProject(projectStore store.AtlasOperatorProjectStore, validator f
 			Settings:                      nil,
 			CustomRoles:                   nil,
 			Teams:                         nil,
+			RegionUsageRestrictions:       project.RegionUsageRestrictions,
 		},
 		Status: status.AtlasProjectStatus{
 			Common: status.Common{

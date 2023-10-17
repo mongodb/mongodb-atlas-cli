@@ -30,7 +30,7 @@ require (
 	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02
 	github.com/jba/templatecheck v0.7.0
 	github.com/klauspost/compress v1.17.1
-	github.com/mattn/go-isatty v0.0.19
+	github.com/mattn/go-isatty v0.0.20
 	github.com/mongodb-forks/digest v1.0.5
 	github.com/mongodb-labs/cobra2snooty v0.16.0
 	github.com/mongodb/mongodb-atlas-kubernetes v1.9.0

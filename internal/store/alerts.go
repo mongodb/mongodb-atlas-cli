@@ -25,23 +25,20 @@ import (
 //go:generate mockgen -destination=../mocks/mock_alerts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AlertDescriber,AlertLister,AlertAcknowledger
 
 type AlertDescriber interface {
-	Alert(string, string) (*atlas.Alert, error)
+	Alert(string, string) (*opsmngr.Alert, error)
 }
 
 type AlertLister interface {
-	Alerts(string, *atlas.AlertsListOptions) (*atlas.AlertsResponse, error)
+	Alerts(string, *opsmngr.AlertsListOptions) (*atlas.AlertsResponse, error)
 }
 
 type AlertAcknowledger interface {
-	AcknowledgeAlert(string, string, *atlas.AcknowledgeRequest) (*atlas.Alert, error)
+	AcknowledgeAlert(string, string, *opsmngr.AcknowledgeRequest) (*atlas.Alert, error)
 }
 
 // Alert encapsulate the logic to manage different cloud providers.
 func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Alerts.Get(s.ctx, projectID, alertID)
-		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Alerts.Get(s.ctx, projectID, alertID)
 		return result, err
@@ -51,11 +48,8 @@ func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 }
 
 // Alerts encapsulate the logic to manage different cloud providers.
-func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.AlertsResponse, error) {
+func (s *Store) Alerts(projectID string, opts *opsmngr.AlertsListOptions) (*opsmngr.AlertsResponse, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Alerts.List(s.ctx, projectID, opts)
-		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Alerts.List(s.ctx, projectID, opts)
 		return result, err
@@ -65,11 +59,8 @@ func (s *Store) Alerts(projectID string, opts *atlas.AlertsListOptions) (*atlas.
 }
 
 // Acknowledge encapsulate the logic to manage different cloud providers.
-func (s *Store) AcknowledgeAlert(projectID, alertID string, body *atlas.AcknowledgeRequest) (*atlas.Alert, error) {
+func (s *Store) AcknowledgeAlert(projectID, alertID string, body *opsmngr.AcknowledgeRequest) (*atlas.Alert, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Alerts.Acknowledge(s.ctx, projectID, alertID, body)
-		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Alerts.Acknowledge(s.ctx, projectID, alertID, body)
 		return result, err

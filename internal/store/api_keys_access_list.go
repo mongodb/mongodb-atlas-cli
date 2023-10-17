@@ -25,7 +25,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
 
 type OrganizationAPIKeyAccessListLister interface {
-	OrganizationAPIKeyAccessLists(string, string, *atlas.ListOptions) (*atlas.AccessListAPIKeys, error)
+	OrganizationAPIKeyAccessLists(string, string, *opsmngr.ListOptions) (*atlas.AccessListAPIKeys, error)
 }
 
 type OrganizationAPIKeyAccessListDeleter interface {

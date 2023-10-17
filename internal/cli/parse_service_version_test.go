@@ -19,43 +19,43 @@ package cli
 import (
 	"testing"
 
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestParseServiceVersion(t *testing.T) {
 	tests := []struct {
 		name           string
-		serviceVersion *mongodbatlas.ServiceVersion
+		serviceVersion *opsmngr.ServiceVersion
 		expected       string
 		wantErr        bool
 	}{
 		{
 			name:           "OM 5.0",
-			serviceVersion: &mongodbatlas.ServiceVersion{Version: "5.0.0.100.20210101T0000Z"},
+			serviceVersion: &opsmngr.ServiceVersion{Version: "5.0.0.100.20210101T0000Z"},
 			expected:       "5.0.0",
 			wantErr:        false,
 		},
 		{
 			name:           "OM 5.0-rc1",
-			serviceVersion: &mongodbatlas.ServiceVersion{Version: "5.0.0-rc1.100.20210101T0000Z"},
+			serviceVersion: &opsmngr.ServiceVersion{Version: "5.0.0-rc1.100.20210101T0000Z"},
 			expected:       "5.0.0",
 			wantErr:        false,
 		},
 		{
 			name:           "OM 5.0.1",
-			serviceVersion: &mongodbatlas.ServiceVersion{Version: "5.0.1.100.20210101T0000Z"},
+			serviceVersion: &opsmngr.ServiceVersion{Version: "5.0.1.100.20210101T0000Z"},
 			expected:       "5.0.0",
 			wantErr:        false,
 		},
 		{
 			name:           "master",
-			serviceVersion: &mongodbatlas.ServiceVersion{Version: "master"},
+			serviceVersion: &opsmngr.ServiceVersion{Version: "master"},
 			expected:       "",
 			wantErr:        true,
 		},
 		{
 			name:           "v20210101",
-			serviceVersion: &mongodbatlas.ServiceVersion{Version: "v20210101"},
+			serviceVersion: &opsmngr.ServiceVersion{Version: "v20210101"},
 			expected:       "20210101.0.0",
 			wantErr:        false,
 		},

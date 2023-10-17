@@ -21,7 +21,7 @@ import (
 
 	"github.com/go-test/deep"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -30,7 +30,7 @@ const projectID = "TestProjectID"
 
 func Test_fetchDataFederationNames(t *testing.T) {
 	ctl := gomock.NewController(t)
-	atlasOperatorGenericStore := mocks.NewMockAtlasOperatorGenericStore(ctl)
+	atlasOperatorGenericStore := mocks.NewMockOperatorGenericStore(ctl)
 
 	t.Run("Can fetch Data Federation Instance names", func(t *testing.T) {
 		dataFederations := []admin.DataLakeTenant{

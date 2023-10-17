@@ -53,7 +53,7 @@ func TestListOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DataFederationList(listOpts.ProjectID, listOpts.typeFlag).
+		DataFederationList(listOpts.ProjectID).
 		Return(expected, nil).
 		Times(1)
 

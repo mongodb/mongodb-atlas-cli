@@ -37,7 +37,7 @@ func TestList_Run(t *testing.T) {
 		}
 		mockStore.
 			EXPECT().
-			Projects(listOpts.NewListOptions()).
+			Projects(listOpts.NewAtlasListOptions()).
 			Return(expected, nil).
 			Times(1)
 
@@ -54,7 +54,7 @@ func TestList_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			GetOrgProjects(listOpts.OrgID, listOpts.NewListOptions()).
+			GetOrgProjects(listOpts.OrgID, listOpts.NewAtlasListOptions()).
 			Return(expected, nil).
 			Times(1)
 

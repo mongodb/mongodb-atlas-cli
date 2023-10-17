@@ -27,14 +27,16 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	atlasmocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
+	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -42,7 +44,7 @@ const resourceVersion = "x.y.z"
 
 func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 	ctl := gomock.NewController(t)
-	clusterStore := mocks.NewMockAtlasOperatorClusterStore(ctl)
+	clusterStore := atlasmocks.NewMockOperatorClusterStore(ctl)
 	dictionary := resources.AtlasNameToKubernetesName()
 	featureValidator := mocks.NewMockFeatureValidator(ctl)
 
@@ -415,7 +417,7 @@ func TestBuildServerlessDeployments(t *testing.T) {
 	const targetNamespace = "test-namespace-2"
 
 	ctl := gomock.NewController(t)
-	clusterStore := mocks.NewMockAtlasOperatorClusterStore(ctl)
+	clusterStore := atlasmocks.NewMockOperatorClusterStore(ctl)
 	dictionary := resources.AtlasNameToKubernetesName()
 
 	featureValidator := mocks.NewMockFeatureValidator(ctl)
@@ -436,71 +438,24 @@ func TestBuildServerlessDeployments(t *testing.T) {
 			},
 		}
 
-		cluster := &mongodbatlas.Cluster{
-			AutoScaling: &mongodbatlas.AutoScaling{
-				AutoIndexingEnabled: pointer.Get(true),
-				Compute: &mongodbatlas.Compute{
-					Enabled:          pointer.Get(true),
-					ScaleDownEnabled: pointer.Get(true),
-					MinInstanceSize:  "M20",
-					MaxInstanceSize:  "M40",
-				},
-				DiskGBEnabled: pointer.Get(true),
-			},
-			BackupEnabled: nil,
-			BiConnector: &mongodbatlas.BiConnector{
-				Enabled:        pointer.Get(true),
-				ReadPreference: "TestRef",
-			},
-			ClusterType:              "SERVERLESS",
-			DiskSizeGB:               pointer.Get[float64](20),
-			EncryptionAtRestProvider: "TestProvider",
-			Labels:                   nil,
-			ID:                       "TestClusterID",
-			GroupID:                  "TestGroupID",
-			MongoDBVersion:           "5.0",
-			MongoDBMajorVersion:      "5.0",
-			MongoURI:                 "",
-			MongoURIUpdated:          "",
-			MongoURIWithOptions:      "",
-			Name:                     clusterName,
-			CreateDate:               "01-01-2021",
-			NumShards:                nil,
-			Paused:                   nil,
-			PitEnabled:               nil,
-			ProviderBackupEnabled:    nil,
-			ProviderSettings: &mongodbatlas.ProviderSettings{
+		cluster := &atlasv2.ServerlessInstanceDescription{
+			Id:             toptr.MakePtr("TestClusterID"),
+			GroupId:        toptr.MakePtr("TestGroupID"),
+			MongoDBVersion: toptr.MakePtr("5.0"),
+			Name:           toptr.MakePtr(clusterName),
+			CreateDate:     toptr.MakePtr(time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC)),
+			ProviderSettings: atlasv2.ServerlessProviderSettings{
 				BackingProviderName: "AWS",
-				DiskIOPS:            nil,
-				DiskTypeName:        "TestDiskName",
-				EncryptEBSVolume:    nil,
-				InstanceSizeName:    "M20",
-				ProviderName:        "AWS",
+				ProviderName:        toptr.MakePtr("AWS"),
 				RegionName:          "US_EAST_1",
-				VolumeType:          "",
-				AutoScaling: &mongodbatlas.AutoScaling{
-					AutoIndexingEnabled: pointer.Get(true),
-					Compute: &mongodbatlas.Compute{
-						Enabled:          pointer.Get(true),
-						ScaleDownEnabled: pointer.Get(true),
-						MinInstanceSize:  "M20",
-						MaxInstanceSize:  "M40",
-					},
-					DiskGBEnabled: pointer.Get(true),
-				},
 			},
-			ReplicationFactor:       nil,
-			ReplicationSpec:         nil,
-			ReplicationSpecs:        nil,
-			SrvAddress:              "",
-			StateName:               "",
+			StateName:               toptr.MakePtr(""),
 			ServerlessBackupOptions: nil,
 			ConnectionStrings:       nil,
 			Links:                   nil,
-			VersionReleaseSystem:    "",
 		}
 
-		clusterStore.EXPECT().ServerlessInstance(projectName, clusterName).Return(cluster, nil)
+		clusterStore.EXPECT().GetServerlessInstance(projectName, clusterName).Return(cluster, nil)
 		clusterStore.EXPECT().ServerlessPrivateEndpoints(projectName, clusterName).Return(spe, nil)
 
 		expected := &atlasV1.AtlasDeployment{
@@ -522,26 +477,11 @@ func TestBuildServerlessDeployments(t *testing.T) {
 				},
 				BackupScheduleRef: common.ResourceRefNamespaced{},
 				ServerlessSpec: &atlasV1.ServerlessSpec{
-					Name: cluster.Name,
+					Name: atlas.StringOrEmpty(cluster.Name),
 					ProviderSettings: &atlasV1.ProviderSettingsSpec{
 						BackingProviderName: cluster.ProviderSettings.BackingProviderName,
-						DiskIOPS:            cluster.ProviderSettings.DiskIOPS,
-						DiskTypeName:        cluster.ProviderSettings.DiskTypeName,
-						EncryptEBSVolume:    cluster.ProviderSettings.EncryptEBSVolume,
-						InstanceSizeName:    cluster.ProviderSettings.InstanceSizeName,
-						ProviderName:        provider.ProviderName(cluster.ProviderSettings.ProviderName),
+						ProviderName:        provider.ProviderName(atlas.StringOrEmpty(cluster.ProviderSettings.ProviderName)),
 						RegionName:          cluster.ProviderSettings.RegionName,
-						VolumeType:          cluster.ProviderSettings.VolumeType,
-						AutoScaling: &atlasV1.AutoScalingSpec{
-							AutoIndexingEnabled: cluster.ProviderSettings.AutoScaling.AutoIndexingEnabled,
-							DiskGBEnabled:       cluster.ProviderSettings.AutoScaling.DiskGBEnabled,
-							Compute: &atlasV1.ComputeSpec{
-								Enabled:          cluster.ProviderSettings.AutoScaling.Compute.Enabled,
-								ScaleDownEnabled: cluster.ProviderSettings.AutoScaling.Compute.ScaleDownEnabled,
-								MinInstanceSize:  cluster.ProviderSettings.AutoScaling.Compute.MinInstanceSize,
-								MaxInstanceSize:  cluster.ProviderSettings.AutoScaling.Compute.MaxInstanceSize,
-							},
-						},
 					},
 					PrivateEndpoints: []atlasV1.ServerlessPrivateEndpoint{
 						{

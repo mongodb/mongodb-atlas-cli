@@ -47,7 +47,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	listOptions := opts.NewListOptions()
+	listOptions := opts.NewAtlasListOptions()
 	var r interface{}
 	var err error
 	if opts.OrgID != "" {

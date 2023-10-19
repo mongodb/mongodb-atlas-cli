@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
@@ -55,5 +56,52 @@ func TestDBUserUpdate_Run(t *testing.T) {
 
 	if err := updateOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestDBUserUpdate_validateAuthDB(t *testing.T) {
+	type fields struct {
+		authDB string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		wantErr bool
+	}{
+		{
+			name: "invalid authDB",
+			fields: fields{
+				authDB: "fakeAuthDB",
+			},
+			wantErr: true,
+		},
+		{
+			name: "valid adminDB",
+			fields: fields{
+				authDB: convert.AdminDB,
+			},
+			wantErr: false,
+		},
+		{
+			name: "valid externalAuthDB",
+			fields: fields{
+				authDB: convert.ExternalAuthDB,
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		fields := tt.fields
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			updateOpts := &UpdateOpts{
+				authDB: fields.authDB,
+			}
+
+			if err := updateOpts.validateAuthDB(); (err != nil) != wantErr {
+				t.Errorf("validate() error = %v, wantErr %v", err, wantErr)
+			}
+		})
 	}
 }

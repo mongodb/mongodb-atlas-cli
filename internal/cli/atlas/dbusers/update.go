@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201004/admin"
 )
@@ -38,6 +39,7 @@ type UpdateOpts struct {
 	username        string
 	currentUsername string
 	password        string
+	authDB          string
 	roles           []string
 	scopes          []string
 	store           store.DatabaseUserUpdater
@@ -79,13 +81,23 @@ func (opts *UpdateOpts) update(out *admin.CloudDatabaseUser) {
 	if opts.password != "" {
 		out.Password = pointer.GetStringPointerIfNotEmpty(opts.password)
 	}
-
 	out.Scopes = convert.BuildAtlasScopes(opts.scopes)
 	out.Roles = convert.BuildAtlasRoles(opts.roles)
-	out.DatabaseName = convert.GetAuthDB(out)
+	out.DatabaseName = opts.authDB
+	if opts.authDB == "" {
+		out.DatabaseName = convert.GetAuthDB(out)
+	}
 }
 
-// atlas dbuser(s) update <username> [--password password] [--role roleName@dbName] [--projectId projectId].
+func (opts *UpdateOpts) validateAuthDB() error {
+	if opts.authDB == "" {
+		return nil
+	}
+	validAuthDBs := []string{convert.AdminDB, convert.ExternalAuthDB}
+	return validate.FlagInSlice(opts.authDB, flag.AuthDB, validAuthDBs)
+}
+
+// atlas dbuser(s) update <username> [--password password] [--role roleName@dbName] [--projectId projectId] [--authDB authDB].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
@@ -106,6 +118,7 @@ func UpdateBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
+				opts.validateAuthDB,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
@@ -118,6 +131,7 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.username, flag.Username, flag.UsernameShort, "", usage.DBUsername)
 	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.DBUserPassword)
+	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, "", usage.AtlasAuthDB)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles+usage.UpdateWarning)
 	cmd.Flags().StringSliceVar(&opts.scopes, flag.Scope, []string{}, usage.Scopes+usage.UpdateWarning)
 

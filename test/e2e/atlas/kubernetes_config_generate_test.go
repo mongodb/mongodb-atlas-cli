@@ -889,8 +889,8 @@ func referenceProject(name, namespace string, labels map[string]string) *atlasV1
 				IsSchemaAdvisorEnabled:                      pointer.Get(true),
 			},
 			Auditing: &atlasV1.Auditing{
-				AuditAuthorizationSuccess: pointer.Get(false),
-				Enabled:                   pointer.Get(false),
+				AuditAuthorizationSuccess: false,
+				Enabled:                   false,
 			},
 			EncryptionAtRest: &atlasV1.EncryptionAtRest{
 				AwsKms: atlasV1.AwsKms{

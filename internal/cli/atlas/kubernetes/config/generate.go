@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/crds"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	"k8s.io/apimachinery/pkg/util/validation"
@@ -41,7 +42,7 @@ type GenerateOpts struct {
 	includeSecrets     bool
 	targetNamespace    string
 	operatorVersion    string
-	store              store.AtlasOperatorGenericStore
+	store              atlas.OperatorGenericStore
 	credsStore         store.CredentialsGetter
 	crdsProvider       crds.AtlasOperatorCRDProvider
 }
@@ -65,7 +66,7 @@ func (opts *GenerateOpts) initStores(ctx context.Context) func() error {
 		var err error
 
 		profile := config.Default()
-		opts.store, err = store.New(store.AuthenticatedPreset(profile), store.WithContext(ctx))
+		opts.store, err = atlas.New(atlas.AuthenticatedPreset(profile), atlas.WithContext(ctx))
 		if err != nil {
 			return err
 		}

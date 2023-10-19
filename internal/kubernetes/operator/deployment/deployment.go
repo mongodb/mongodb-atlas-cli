@@ -21,12 +21,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -46,7 +46,7 @@ type AtlasDeploymentResult struct {
 	BackupPolicies []*atlasV1.AtlasBackupPolicy
 }
 
-func BuildAtlasAdvancedDeployment(deploymentStore store.AtlasOperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*AtlasDeploymentResult, error) {
+func BuildAtlasAdvancedDeployment(deploymentStore atlas.OperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*AtlasDeploymentResult, error) {
 	deployment, err := deploymentStore.AtlasCluster(projectID, clusterID)
 	if err != nil {
 		return nil, err
@@ -232,8 +232,9 @@ func isAdvancedDeploymentExportable(deployments *atlasv2.AdvancedClusterDescript
 	return true
 }
 
-func isServerlessExportable(deployment *mongodbatlas.Cluster) bool {
-	if deployment.StateName == DeletingState || deployment.StateName == DeletedState {
+func isServerlessExportable(deployment *atlasv2.ServerlessInstanceDescription) bool {
+	stateName := atlas.StringOrEmpty(deployment.StateName)
+	if stateName == DeletingState || stateName == DeletedState {
 		return false
 	}
 	return true
@@ -416,8 +417,8 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*atlasV1.Adv
 	return result
 }
 
-func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*atlasV1.AtlasDeployment, error) {
-	deployment, err := deploymentStore.ServerlessInstance(projectID, clusterID)
+func BuildServerlessDeployments(deploymentStore atlas.OperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*atlasV1.AtlasDeployment, error) {
+	deployment, err := deploymentStore.GetServerlessInstance(projectID, clusterID)
 	if err != nil {
 		return nil, err
 	}
@@ -426,54 +427,25 @@ func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore,
 		return nil, nil
 	}
 
-	var providerSettings *atlasV1.ProviderSettingsSpec
-
-	if deployment.ProviderSettings != nil {
-		var autoscalingSpec *atlasV1.AutoScalingSpec
-
-		if deployment.AutoScaling != nil {
-			var computeSpec *atlasV1.ComputeSpec
-
-			if deployment.AutoScaling.Compute != nil {
-				computeSpec = &atlasV1.ComputeSpec{
-					Enabled:          deployment.AutoScaling.Compute.Enabled,
-					ScaleDownEnabled: deployment.AutoScaling.Compute.ScaleDownEnabled,
-					MinInstanceSize:  deployment.AutoScaling.Compute.MinInstanceSize,
-					MaxInstanceSize:  deployment.AutoScaling.Compute.MaxInstanceSize,
-				}
-			}
-			autoscalingSpec = &atlasV1.AutoScalingSpec{
-				AutoIndexingEnabled: deployment.AutoScaling.AutoIndexingEnabled,
-				DiskGBEnabled:       deployment.AutoScaling.DiskGBEnabled,
-				Compute:             computeSpec,
-			}
-		}
-
-		providerSettings = &atlasV1.ProviderSettingsSpec{
-			BackingProviderName: deployment.ProviderSettings.BackingProviderName,
-			DiskIOPS:            deployment.ProviderSettings.DiskIOPS,
-			DiskTypeName:        deployment.ProviderSettings.DiskTypeName,
-			EncryptEBSVolume:    deployment.ProviderSettings.EncryptEBSVolume,
-			InstanceSizeName:    deployment.ProviderSettings.InstanceSizeName,
-			ProviderName:        provider.ProviderName(deployment.ProviderSettings.ProviderName),
-			RegionName:          deployment.ProviderSettings.RegionName,
-			VolumeType:          deployment.ProviderSettings.VolumeType,
-			AutoScaling:         autoscalingSpec,
-		}
+	providerSettings := &atlasV1.ProviderSettingsSpec{
+		BackingProviderName: deployment.ProviderSettings.BackingProviderName,
+		ProviderName:        provider.ProviderName(atlas.StringOrEmpty(deployment.ProviderSettings.ProviderName)),
+		RegionName:          deployment.ProviderSettings.RegionName,
 	}
 
 	serverlessSpec := &atlasV1.ServerlessSpec{
-		Name:             deployment.Name,
+		Name:             atlas.StringOrEmpty(deployment.Name),
 		ProviderSettings: providerSettings,
 	}
 
+	atlasName := fmt.Sprintf("%s-%s", projectName, atlas.StringOrEmpty(deployment.Name))
 	atlasDeployment := &atlasV1.AtlasDeployment{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AtlasDeployment",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, deployment.Name), dictionary),
+			Name:      resources.NormalizeAtlasName(atlasName, dictionary),
 			Namespace: targetNamespace,
 			Labels: map[string]string{
 				features.ResourceVersion: version,
@@ -496,7 +468,7 @@ func BuildServerlessDeployments(deploymentStore store.AtlasOperatorClusterStore,
 	}
 
 	if validator.FeatureExist(features.ResourceAtlasDeployment, featureServerlessPrivateEndpoints) {
-		privateEndpoints, err := buildServerlessPrivateEndpoints(deploymentStore, projectID, deployment.Name)
+		privateEndpoints, err := buildServerlessPrivateEndpoints(deploymentStore, projectID, atlas.StringOrEmpty(deployment.Name))
 		if err != nil {
 			return nil, err
 		}

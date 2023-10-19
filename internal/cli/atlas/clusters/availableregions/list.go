@@ -62,7 +62,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas cluster(s) availableRegions list --provider provider --tier tier --projectId projectId.
+// ListBuilder atlas cluster(s) availableRegions list --provider provider --tier tier --projectId projectId.
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
@@ -71,10 +71,10 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: `  # List available regions for a given cloud provider and tier:
-  atlas cluster availableRegions --provider AWS --tier M50
+  atlas cluster availableRegions list --provider AWS --tier M50
 
   # List available regions by tier for a given provider:
-  atlas cluster availableRegions --provider GCP`,
+  atlas cluster availableRegions list --provider GCP`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.tier != "" && opts.provider == "" {
 				return fmt.Errorf("tier search also requires a %s flag", flag.Provider)

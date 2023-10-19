@@ -23,10 +23,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -40,7 +41,7 @@ const (
 
 type Install struct {
 	installResources Installer
-	atlasStore       store.AtlasOperatorGenericStore
+	atlasStore       atlas.OperatorGenericStore
 	credStore        store.CredentialsGetter
 	featureValidator features.FeatureValidator
 	kubectl          *kubernetes.KubeCtl
@@ -50,6 +51,7 @@ type Install struct {
 	watch           []string
 	projectName     string
 	importResources bool
+	atlasGov        bool
 }
 
 func (i *Install) WithNamespace(namespace string) *Install {
@@ -76,6 +78,12 @@ func (i *Install) WithImportResources(flag bool) *Install {
 	return i
 }
 
+func (i *Install) WithAtlasGov(flag bool) *Install {
+	i.atlasGov = flag
+
+	return i
+}
+
 func (i *Install) Run(ctx context.Context, orgID string) error {
 	keys, err := i.generateKeys(orgID)
 	if err != nil {
@@ -86,16 +94,22 @@ func (i *Install) Run(ctx context.Context, orgID string) error {
 		return err
 	}
 
-	if err = i.installResources.InstallConfiguration(ctx, i.version, i.namespace, i.watch); err != nil {
+	if err = i.installResources.InstallConfiguration(ctx, i.version, i.namespace, i.watch, i.atlasGov); err != nil {
 		return err
 	}
 
-	if err = i.installResources.InstallCredentials(ctx, i.namespace, orgID, keys.PublicKey, keys.PrivateKey, i.projectName); err != nil {
+	if err = i.installResources.InstallCredentials(
+		ctx,
+		i.namespace,
+		orgID,
+		atlas.StringOrEmpty(keys.PublicKey),
+		atlas.StringOrEmpty(keys.PrivateKey),
+		i.projectName); err != nil {
 		return err
 	}
 
 	if i.importResources {
-		if err = i.importAtlasResources(orgID, keys.ID); err != nil {
+		if err = i.importAtlasResources(orgID, atlas.StringOrEmpty(keys.Id)); err != nil {
 			return err
 		}
 
@@ -107,10 +121,10 @@ func (i *Install) Run(ctx context.Context, orgID string) error {
 	return nil
 }
 
-func (i *Install) ensureProject(orgID, projectName string) (*mongodbatlas.Project, error) {
+func (i *Install) ensureProject(orgID, projectName string) (*admin.Group, error) {
 	data, err := i.atlasStore.ProjectByName(projectName)
 	if err == nil {
-		project, ok := data.(*mongodbatlas.Project)
+		project, ok := data.(*admin.Group)
 		if !ok {
 			return nil, fmt.Errorf("failed to decode project: %w", err)
 		}
@@ -118,25 +132,23 @@ func (i *Install) ensureProject(orgID, projectName string) (*mongodbatlas.Projec
 		return project, nil
 	}
 
-	var apiError *mongodbatlas.ErrorResponse
-	errors.As(err, &apiError)
-
-	if apiError.ErrorCode != atlasErrorProjectNotFound && apiError.ErrorCode != atlasErrorNotInGroup {
+	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve project: %w", err)
 	}
 
-	data, err = i.atlasStore.CreateProject(
-		projectName,
-		orgID,
-		"",
-		toptr.MakePtr(true),
-		&mongodbatlas.CreateProjectOptions{},
-	)
+	data, err = i.atlasStore.CreateProject(&admin.CreateProjectApiParams{
+		Group: &admin.Group{
+			Name:                      projectName,
+			OrgId:                     orgID,
+			RegionUsageRestrictions:   toptr.MakePtr(""),
+			WithDefaultAlertsSettings: toptr.MakePtr(true),
+		},
+	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to create project: %w", err)
 	}
 
-	project, ok := data.(*mongodbatlas.Project)
+	project, ok := data.(*admin.Group)
 	if !ok {
 		return nil, fmt.Errorf("failed to decode created project: %w", err)
 	}
@@ -144,9 +156,9 @@ func (i *Install) ensureProject(orgID, projectName string) (*mongodbatlas.Projec
 	return project, nil
 }
 
-func (i *Install) generateKeys(orgID string) (*mongodbatlas.APIKey, error) {
+func (i *Install) generateKeys(orgID string) (*admin.ApiKeyUserDetails, error) {
 	if i.projectName == "" {
-		input := &mongodbatlas.APIKeyInput{
+		input := &admin.CreateAtlasOrganizationApiKey{
 			Desc: credentialsGlobalName,
 			Roles: []string{
 				roleOrgGroupCreator,
@@ -165,13 +177,13 @@ func (i *Install) generateKeys(orgID string) (*mongodbatlas.APIKey, error) {
 		return nil, err
 	}
 
-	input := &mongodbatlas.APIKeyInput{
+	input := &admin.CreateAtlasProjectApiKey{
 		Desc: fmt.Sprintf(credentialsProjectScopedName, resources.NormalizeAtlasName(i.projectName, resources.AtlasNameToKubernetesName())),
 		Roles: []string{
 			roleProjectOwner,
 		},
 	}
-	keys, err := i.atlasStore.CreateProjectAPIKey(project.ID, input)
+	keys, err := i.atlasStore.CreateProjectAPIKey(atlas.StringOrEmpty(project.Id), input)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate project keys: %w", err)
 	}
@@ -188,20 +200,15 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 			return err
 		}
 
-		projectsIDs = append(projectsIDs, project.ID)
+		projectsIDs = append(projectsIDs, atlas.StringOrEmpty(project.Id))
 	} else {
-		projectsData, err := i.atlasStore.GetOrgProjects(orgID, &mongodbatlas.ProjectsListOptions{})
+		projectsData, err := i.atlasStore.GetOrgProjects(orgID, &atlas.ListOptions{})
 		if err != nil {
 			return fmt.Errorf("unable to retrieve list of projects: %w", err)
 		}
 
-		projects, ok := projectsData.(*mongodbatlas.Projects)
-		if !ok {
-			return fmt.Errorf("unable to decode list of projects")
-		}
-
-		for _, project := range projects.Results {
-			projectsIDs = append(projectsIDs, project.ID)
+		for _, project := range projectsData.Results {
+			projectsIDs = append(projectsIDs, atlas.StringOrEmpty(project.Id))
 		}
 	}
 
@@ -214,7 +221,7 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 		err = i.atlasStore.AssignProjectAPIKey(
 			projectID,
 			apiKeyID,
-			&mongodbatlas.AssignAPIKey{
+			&admin.UpdateAtlasProjectApiKey{
 				Roles: []string{roleProjectOwner},
 			},
 		)
@@ -293,7 +300,7 @@ func (i *Install) deleteSecret(ctx context.Context, key client.ObjectKey) error 
 
 func NewInstall(
 	installer Installer,
-	atlasStore store.AtlasOperatorGenericStore,
+	atlasStore atlas.OperatorGenericStore,
 	credStore store.CredentialsGetter,
 	featureValidator features.FeatureValidator,
 	kubectl *kubernetes.KubeCtl,
@@ -307,4 +314,11 @@ func NewInstall(
 		kubectl:          kubectl,
 		version:          version,
 	}
+}
+
+func StringOrEmpty(s *string) string {
+	if s != nil {
+		return *s
+	}
+	return ""
 }

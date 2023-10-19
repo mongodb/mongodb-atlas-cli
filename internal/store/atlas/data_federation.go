@@ -22,10 +22,15 @@ import (
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_data_federation.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas DataFederationLister,DataFederationDescriber,DataFederationCreator,DataFederationUpdater,DataFederationDeleter,DataFederationLogDownloader
+//go:generate mockgen -destination=../../mocks/atlas/mock_data_federation.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas DataFederationLister,DataFederationDescriber,DataFederationStore,DataFederationCreator,DataFederationUpdater,DataFederationDeleter,DataFederationLogDownloader
+
+type DataFederationStore interface {
+	DataFederationLister
+	DataFederationDescriber
+}
 
 type DataFederationLister interface {
-	DataFederationList(string, string) ([]admin.DataLakeTenant, error)
+	DataFederationList(string) ([]admin.DataLakeTenant, error)
 }
 
 type DataFederationCreator interface {
@@ -49,11 +54,8 @@ type DataFederationLogDownloader interface {
 }
 
 // DataFederationList encapsulates the logic to manage different cloud providers.
-func (s *Store) DataFederationList(projectID string, typeFlag string) ([]admin.DataLakeTenant, error) {
+func (s *Store) DataFederationList(projectID string) ([]admin.DataLakeTenant, error) {
 	req := s.clientv2.DataFederationApi.ListFederatedDatabases(s.ctx, projectID)
-	if typeFlag != "" {
-		req = req.Type_(typeFlag)
-	}
 	result, _, err := req.Execute()
 	return result, err
 }

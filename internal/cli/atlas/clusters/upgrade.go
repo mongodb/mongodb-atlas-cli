@@ -106,14 +106,16 @@ func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {
 	}
 	out.TerminationProtectionEnabled = cli.ReturnValueForSetting(opts.enableTerminationProtection, opts.disableTerminationProtection)
 
+	var tags []*atlas.Tag
 	if len(opts.tag) > 0 {
-		out.Tags = []*atlas.Tag{}
+		tags = make([]*atlas.Tag, 0, len(opts.tag))
 	}
 	for k, v := range opts.tag {
 		if k != "" && v != "" {
-			out.Tags = append(out.Tags, &atlas.Tag{Key: k, Value: v})
+			tags = append(tags, &atlas.Tag{Key: k, Value: v})
 		}
 	}
+	out.Tags = &tags
 
 	AddLabelSharedCluster(out, NewCLILabel())
 }

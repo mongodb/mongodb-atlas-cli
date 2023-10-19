@@ -422,6 +422,7 @@ dbName and collection are required only for built-in roles.`
 	OperatorWatchNamespace                    = "List of namespaces which the operator will be listen to."
 	OperatorProjectName                       = "Name of the project to create or use with the installed operator."
 	OperatorImport                            = "Flag to import existing Atlas resources into the cluster to be managed by the operator."
+	OperatorAtlasGov                          = "Flag to configure Atlas for Government as target of the operator."
 	KubernetesClusterConfig                   = "Path to the kubeconfig file to use for CLI requests."
 	KubernetesClusterContext                  = "The name of the kubeconfig context to use."
 	ExportID                                  = "Unique string that identifies the AWS S3 bucket to which you export your snapshots."

@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -29,7 +28,7 @@ type BackupConfigGetter interface {
 }
 
 type BackupConfigLister interface {
-	ListBackupConfigs(string, *atlas.ListOptions) (*opsmngr.BackupConfigs, error)
+	ListBackupConfigs(string, *opsmngr.ListOptions) (*opsmngr.BackupConfigs, error)
 }
 
 type BackupConfigUpdater interface {
@@ -48,7 +47,7 @@ func (s *Store) GetBackupConfig(projectID, clusterID string) (*opsmngr.BackupCon
 }
 
 // ListBackupConfigs encapsulates the logic to manage different cloud providers.
-func (s *Store) ListBackupConfigs(projectID string, options *atlas.ListOptions) (*opsmngr.BackupConfigs, error) {
+func (s *Store) ListBackupConfigs(projectID string, options *opsmngr.ListOptions) (*opsmngr.BackupConfigs, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).BackupConfigs.List(s.ctx, projectID, options)

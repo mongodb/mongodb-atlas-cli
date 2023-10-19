@@ -18,14 +18,13 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_agents.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AgentLister,AgentUpgrader,AgentAPIKeyLister,AgentAPIKeyCreator,AgentAPIKeyDeleter,AgentGlobalVersionsLister,AgentProjectVersionsLister
 
 type AgentLister interface {
-	Agents(string, string, *atlas.ListOptions) (*opsmngr.Agents, error)
+	Agents(string, string, *opsmngr.ListOptions) (*opsmngr.Agents, error)
 }
 
 type AgentGlobalVersionsLister interface {
@@ -53,7 +52,7 @@ type AgentAPIKeyDeleter interface {
 }
 
 // Agents encapsulates the logic to manage different cloud providers.
-func (s *Store) Agents(projectID, agentType string, opts *atlas.ListOptions) (*opsmngr.Agents, error) {
+func (s *Store) Agents(projectID, agentType string, opts *opsmngr.ListOptions) (*opsmngr.Agents, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Agents.ListAgentsByType(s.ctx, projectID, agentType, opts)
@@ -107,7 +106,7 @@ func (s *Store) DeleteAgentAPIKey(projectID, keyID string) error {
 	}
 }
 
-// Agents encapsulates the logic to manage different cloud providers.
+// AgentGlobalVersions encapsulates the logic to manage different cloud providers.
 func (s *Store) AgentGlobalVersions() (*opsmngr.SoftwareVersions, error) {
 	switch s.service {
 	case config.OpsManagerService:
@@ -118,7 +117,7 @@ func (s *Store) AgentGlobalVersions() (*opsmngr.SoftwareVersions, error) {
 	}
 }
 
-// Agents encapsulates the logic to manage different cloud providers.
+// AgentProjectVersions encapsulates the logic to manage different cloud providers.
 func (s *Store) AgentProjectVersions(projectID string) (*opsmngr.AgentVersions, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:

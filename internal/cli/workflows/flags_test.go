@@ -11,11 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package workflows
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/go-test/deep"
 )
 
 func TestRemoveGlobalFlagsAndArgs(t *testing.T) {
@@ -28,13 +30,11 @@ func TestRemoveGlobalFlagsAndArgs(t *testing.T) {
 	expectedNewArgs := []string{"arg1"} // "--debug" and "value1" should be removed
 
 	newArgs, err := RemoveFlagsAndArgs(flagsToBeRemoved, argsToBeRemoved, args)
-
-	if !reflect.DeepEqual(newArgs, expectedNewArgs) {
-		t.Errorf("Expected newArgs %v, but got %v", expectedNewArgs, newArgs)
-	}
-
 	if err != nil {
-		t.Errorf("Expected error %v, but got error %v", nil, err)
+		t.Fatalf("unexpected error:  %v\n", err)
+	}
+	if diff := deep.Equal(newArgs, expectedNewArgs); diff != nil {
+		t.Error(diff)
 	}
 }
 
@@ -48,13 +48,11 @@ func TestRemoveArgs(t *testing.T) {
 	expectedNewArgs := []string{"arg2", "arg3"} // "arg1" should be removed
 
 	newArgs, err := RemoveFlagsAndArgs(flagsToBeRemoved, argsToBeRemoved, args)
-
-	if !reflect.DeepEqual(newArgs, expectedNewArgs) {
-		t.Errorf("Expected newArgs %v, but got %v", expectedNewArgs, newArgs)
-	}
-
 	if err != nil {
-		t.Errorf("Expected error %v, but got error %v", nil, err)
+		t.Fatalf("unexpected error:  %v\n", err)
+	}
+	if diff := deep.Equal(newArgs, expectedNewArgs); diff != nil {
+		t.Error(diff)
 	}
 }
 
@@ -70,12 +68,10 @@ func TestNoRemoval(t *testing.T) {
 	expectedNewArgs := []string{"--verbose", "arg2"} // No removal
 
 	newArgs, err := RemoveFlagsAndArgs(flagsToBeRemoved, argsToBeRemoved, args)
-
-	if !reflect.DeepEqual(newArgs, expectedNewArgs) {
-		t.Errorf("Expected newArgs %v, but got %v", expectedNewArgs, newArgs)
-	}
-
 	if err != nil {
-		t.Errorf("Expected error %v, but got error %v", nil, err)
+		t.Fatalf("unexpected error:  %v\n", err)
+	}
+	if diff := deep.Equal(newArgs, expectedNewArgs); diff != nil {
+		t.Error(diff)
 	}
 }

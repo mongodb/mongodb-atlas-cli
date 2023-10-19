@@ -319,6 +319,7 @@ const (
 	OperatorVersion                           = "operatorVersion"                           // OperatorVersion flag
 	OperatorProjectName                       = "projectName"                               // OperatorProjectName flag
 	OperatorImport                            = "import"                                    // OperatorImport flag
+	OperatorAtlasGov                          = "atlasGov"                                  // OperatorAtlasGov flag
 	KubernetesClusterConfig                   = "kubeconfig"                                // Kubeconfig flag
 	KubernetesClusterContext                  = "kubeContext"                               // KubeContext flag
 	ExportID                                  = "exportId"                                  // ExportID flag

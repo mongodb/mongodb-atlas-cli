@@ -91,15 +91,13 @@ func TestLogs_RunAtlas(t *testing.T) {
 	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, atlasDeployment)
 
 	downloadOpts := &DownloadOpts{
+		OutputOpts:     cli.OutputOpts{OutWriter: buf},
+		GlobalOpts:     cli.GlobalOpts{ProjectID: "ProjectID"},
+		DownloaderOpts: cli.DownloaderOpts{},
 		DeploymentOpts: *deploymentTest.Opts,
-		OutputOpts: cli.OutputOpts{
-			OutWriter: buf,
-		},
-		GlobalOpts: cli.GlobalOpts{
-			ProjectID: "ProjectID",
-		},
-		downloadStore: mockStore,
-		name:          "mongodb.gz",
+		downloadStore:  mockStore,
+		host:           "test",
+		name:           "mongodb.gz",
 	}
 
 	downloadOpts.Fs = afero.NewMemMapFs()

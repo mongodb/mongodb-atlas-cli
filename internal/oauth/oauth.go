@@ -47,6 +47,12 @@ var defaultTransport = &http.Transport{
 	ExpectContinueTimeout: expectContinueTimeout,
 }
 
+var validHostnames = map[string]bool{
+	config.NativeHostName:    true,
+	config.ContainerHostName: true,
+	config.ActionsHostName:   true,
+}
+
 type ServiceGetter interface {
 	Service() string
 	OpsManagerURL() string
@@ -58,10 +64,16 @@ const (
 	GovClientID = "0oabtyfelbTBdoucy297" // GovClientID for production
 )
 
-func changeHostNameToContainer() {
-	if !strings.Contains(config.UserAgent, config.ContainerHostName) {
-		config.UserAgent = strings.ReplaceAll(config.UserAgent, config.HostName, config.ContainerHostName)
-		config.HostName = config.ContainerHostName
+func patchConfigHostname() {
+	hostnameEnvVal := os.Getenv(config.HostnameEnv)
+
+	if hostnameEnvVal == "" && (os.Getenv("MONGODB_ATLAS_IS_CONTAINERIZED") == "true") {
+		hostnameEnvVal = config.ContainerHostName
+	}
+
+	if validHostnames[hostnameEnvVal] && !strings.Contains(config.UserAgent, hostnameEnvVal) {
+		config.UserAgent = strings.ReplaceAll(config.UserAgent, config.HostName, hostnameEnvVal)
+		config.HostName = hostnameEnvVal
 	}
 }
 
@@ -75,10 +87,7 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	if c.ClientID() != "" {
 		id = c.ClientID()
 	}
-	runningFromContainer, runningFromContainerIsSet := os.LookupEnv("MONGODB_ATLAS_IS_CONTAINERIZED")
-	if runningFromContainerIsSet && runningFromContainer == "true" {
-		changeHostNameToContainer()
-	}
+	patchConfigHostname()
 
 	authOpts := []auth.ConfigOpt{
 		auth.SetUserAgent(config.UserAgent),

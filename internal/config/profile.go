@@ -69,8 +69,10 @@ const (
 	TelemetryEnabledProperty     = "telemetry_enabled"
 	MongoCLI                     = "mongocli"
 	AtlasCLI                     = "atlascli"
+	HostnameEnv                  = "MONGODB_ATLAS_HOSTNAME"
 	NativeHostName               = "native"
 	ContainerHostName            = "container"
+	ActionsHostName              = "actions"
 )
 
 var (

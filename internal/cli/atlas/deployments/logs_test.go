@@ -18,7 +18,10 @@ package deployments
 
 import (
 	"bytes"
+	"compress/gzip"
 	"context"
+	"io"
+	"os"
 	"strings"
 	"testing"
 
@@ -29,6 +32,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/spf13/afero"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestLogsBuilder(t *testing.T) {
@@ -94,15 +99,33 @@ func TestLogs_RunAtlas(t *testing.T) {
 			ProjectID: "ProjectID",
 		},
 		downloadStore: mockStore,
+		name:          "mongodb.gz",
 	}
 
+	downloadOpts.Fs = afero.NewMemMapFs()
+	downloadOpts.Out = downloadOpts.name
 	deploymentTest.CommonAtlasMocks(downloadOpts.ProjectID)
 
 	mockStore.
 		EXPECT().
 		DownloadLog(gomock.Any(), downloadOpts.newHostLogsParams()).
-		Return(nil).
-		Times(1)
+		Times(1).
+		DoAndReturn(func(_ io.Writer, _ *admin.GetHostLogsApiParams) error {
+			f, err := downloadOpts.Fs.OpenFile(downloadOpts.Out, os.O_WRONLY|os.O_CREATE, 0644)
+			if err != nil {
+				return err
+			}
+
+			zw := gzip.NewWriter(f)
+			defer zw.Close()
+			zw.Name = downloadOpts.Out
+
+			if _, err = zw.Write([]byte("log\nlog\n")); err != nil {
+				return err
+			}
+
+			return nil
+		})
 
 	if err := downloadOpts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

@@ -57,6 +57,7 @@ func (opts *DownloadOpts) Run() error {
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 
 	r := opts.newHostLogsParams()
 	if err := opts.store.DownloadLog(f, r); err != nil {
@@ -66,7 +67,8 @@ func (opts *DownloadOpts) Run() error {
 	if !opts.ShouldDownloadToStdout() {
 		fmt.Printf(downloadMessage, opts.Out)
 	}
-	return f.Close()
+
+	return nil
 }
 
 func (opts *DownloadOpts) initDefaultOut() error {

@@ -15,9 +15,12 @@
 package deployments
 
 import (
+	"compress/gzip"
 	"context"
 	"errors"
 	"fmt"
+	"io"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -26,10 +29,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
@@ -46,9 +49,9 @@ type DownloadOpts struct {
 	end           int64
 }
 
-var downloadMessage = "Download of %s completed.\n"
-
 var ErrAtlasNotSupported = errors.New("atlas deployments are not supported")
+
+const filePermission = 0644
 
 func (opts *DownloadOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -68,6 +71,9 @@ func (opts *DownloadOpts) Run(ctx context.Context) error {
 	}
 
 	if opts.IsAtlasDeploymentType() {
+		if err := opts.validateAtlasFlags(); err != nil {
+			return err
+		}
 		return opts.RunAtlas()
 	}
 
@@ -75,14 +81,52 @@ func (opts *DownloadOpts) Run(ctx context.Context) error {
 }
 
 func (opts *DownloadOpts) RunAtlas() error {
-	r := opts.newHostLogsParams()
-	if err := opts.downloadStore.DownloadLog(opts.OutWriter, r); err != nil {
+	if err := opts.downloadLogFile(); err != nil {
 		return err
 	}
-	if !opts.ShouldDownloadToStdout() {
-		fmt.Printf(downloadMessage, opts.Out)
+	defer opts.Fs.Remove(opts.Out) //nolint:errcheck
+
+	output, err := opts.unzipFile()
+	if err != nil {
+		return err
 	}
-	return opts.Print(r)
+
+	return opts.Print(output)
+}
+
+func (opts *DownloadOpts) downloadLogFile() error {
+	f, err := opts.NewWriteCloser()
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	r := opts.newHostLogsParams()
+	if err = opts.downloadStore.DownloadLog(f, r); err != nil {
+		_ = opts.OnError(f)
+	}
+	return err
+}
+
+func (opts *DownloadOpts) unzipFile() (string, error) {
+	gzippedFile, err := opts.Fs.OpenFile(opts.Out, os.O_RDONLY, filePermission)
+	if err != nil {
+		return "", err
+	}
+	defer gzippedFile.Close()
+
+	gzReader, err := gzip.NewReader(gzippedFile)
+	if err != nil {
+		return "", err
+	}
+	defer gzReader.Close()
+
+	s, err := io.ReadAll(gzReader)
+	if err != nil {
+		return "", err
+	}
+
+	return string(s), nil
 }
 
 func (opts *DownloadOpts) newHostLogsParams() *admin.GetHostLogsApiParams {
@@ -139,13 +183,8 @@ func LogsBuilder() *cobra.Command {
 		GroupID: "local",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			w := cmd.OutOrStdout()
-			log.SetWriter(w)
-
-			if opts.IsAtlasDeploymentType() {
-				if err := opts.validateAtlasFlags(); err != nil {
-					return err
-				}
-			}
+			opts.Fs = afero.NewOsFs()
+			opts.Out = opts.name
 
 			return opts.PreRunE(
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),

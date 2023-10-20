@@ -94,7 +94,7 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 		},
 	}
 
-	log.Debugln("Creating search index with definition: ", index)
+	_, _ = log.Debugln("Creating search index with definition: ", index)
 	if result := o.db.RunCommand(ctx, indexCommand); result.Err() != nil {
 		return nil, result.Err()
 	}

@@ -16,6 +16,7 @@ package mongodbclient
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -54,7 +55,19 @@ type SearchIndexDefinition struct {
 
 func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
 	// todo: CLOUDP-199915 Use go-driver search index management helpers instead of createSearchIndex command
-	index := bson.D{
+	jsonIndex, err := json.Marshal(idx)
+	if err != nil {
+		return nil, err
+	}
+	// fmt.Println("to bson bytes")
+
+	var index bson.D
+	err = bson.UnmarshalExtJSON(jsonIndex, false, &index)
+	if err != nil {
+		return nil, err
+	}
+
+	indexCommand := bson.D{
 		{
 			Key:   "createSearchIndexes",
 			Value: collection,
@@ -68,25 +81,50 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 						Value: idx.Name,
 					},
 					{
-						Key: "definition",
-						Value: &SearchIndexDefinition{
-							Name:      idx.Name,
-							Analyzer:  idx.Analyzer,
-							Analyzers: idx.Analyzers,
-							Mappings:  idx.Mappings,
-							Synonyms:  idx.Synonyms,
-						},
+						Key:   "definition",
+						Value: index,
 					},
 				},
 			},
 		},
 	}
 
-	if result := o.db.RunCommand(ctx, index); result.Err() != nil {
+	indexCommand, err = RemoveNilFields(indexCommand)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println(index)
+	fmt.Println(indexCommand)
+
+	if result := o.db.RunCommand(ctx, indexCommand); result.Err() != nil {
 		return nil, result.Err()
 	}
 
 	return o.SearchIndexByName(ctx, idx.Name, collection)
+}
+
+func RemoveNilFields(doc bson.D) (bson.D, error) {
+	cleanedDoc := bson.D{}
+
+	for _, elem := range doc {
+		if elem.Value == nil {
+			continue
+		}
+
+		if nestedDoc, ok := elem.Value.(bson.D); ok {
+			// Recursively remove nil fields from nested document
+			cleanedNestedDoc, err := RemoveNilFields(nestedDoc)
+			if err != nil {
+				return nil, err
+			}
+			elem.Value = cleanedNestedDoc
+		}
+
+		cleanedDoc = append(cleanedDoc, elem)
+	}
+
+	return cleanedDoc, nil
 }
 
 func (o *database) SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error) {

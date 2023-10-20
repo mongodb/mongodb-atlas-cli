@@ -16,9 +16,11 @@ package mongodbclient
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -52,9 +54,24 @@ type SearchIndexDefinition struct {
 	Status     *string                                `bson:"status,omitempty"`
 }
 
+// todo: CLOUDP-199915 Use go-driver search index management helpers instead of createSearchIndex command
 func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
-	// todo: CLOUDP-199915 Use go-driver search index management helpers instead of createSearchIndex command
-	index := bson.D{
+	// To maintain formatting of the SDK, marshal object into JSON and then unmarshal into BSON
+	jsonIndex, err := json.Marshal(idx)
+	if err != nil {
+		return nil, err
+	}
+
+	var index bson.D
+	err = bson.UnmarshalExtJSON(jsonIndex, true, &index)
+	if err != nil {
+		return nil, err
+	}
+
+	// Empty these fields so that they are not included into the index definition for the MongoDB command
+	index = removeFields(index, "id", "collectionName", "database")
+
+	indexCommand := bson.D{
 		{
 			Key:   "createSearchIndexes",
 			Value: collection,
@@ -68,25 +85,33 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 						Value: idx.Name,
 					},
 					{
-						Key: "definition",
-						Value: &SearchIndexDefinition{
-							Name:      idx.Name,
-							Analyzer:  idx.Analyzer,
-							Analyzers: idx.Analyzers,
-							Mappings:  idx.Mappings,
-							Synonyms:  idx.Synonyms,
-						},
+						Key:   "definition",
+						Value: index,
 					},
 				},
 			},
 		},
 	}
 
-	if result := o.db.RunCommand(ctx, index); result.Err() != nil {
+	if result := o.db.RunCommand(ctx, indexCommand); result.Err() != nil {
 		return nil, result.Err()
 	}
 
 	return o.SearchIndexByName(ctx, idx.Name, collection)
+}
+
+func removeFields(doc bson.D, fields ...string) bson.D {
+	cleanedDoc := bson.D{}
+
+	for _, elem := range doc {
+		if search.StringInSlice(fields, elem.Key) {
+			continue
+		}
+
+		cleanedDoc = append(cleanedDoc, elem)
+	}
+
+	return cleanedDoc
 }
 
 func (o *database) SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error) {

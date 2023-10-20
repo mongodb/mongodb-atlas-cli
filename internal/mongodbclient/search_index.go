@@ -20,6 +20,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -93,6 +94,7 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 		},
 	}
 
+	log.Debugln("Creating search index with definition: ", index)
 	if result := o.db.RunCommand(ctx, indexCommand); result.Err() != nil {
 		return nil, result.Err()
 	}

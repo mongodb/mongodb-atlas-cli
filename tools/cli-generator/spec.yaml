@@ -331,6 +331,75 @@ commands:
             example: |
               # create data federation query limit:
                 atlas dataFederation queryLimit create bytesProcessed.query --value 1000 --dataFederation DataFederation1
+  - command_path: atlas serviceaccount
+    package_name: serviceaccount
+    description: Service account
+    template: parent
+    sub_commands:
+      - command_path: atlas serviceaccount list
+        package_name: serviceaccount
+        store_name: ServiceAccountLister
+        store_method: ServiceAccountList
+        description: Returns all service accounts for your organization.
+        template: list
+        output_template: |
+          NAME	ID{{range .}}
+          {{.Name}}	{{.Id}}
+          {{end}}
+        example: |
+            # list all service accounts 
+            atlas serviceaccount list
+      - command_path: atlas serviceaccount describe
+        package_name: serviceaccount
+        store_name: ServiceAccountDescriber
+        store_method: ServiceAccount
+        description: Return the details for the specified service account
+        template: describe
+        id_name: id
+        id_description: service account client id
+        output_template: |
+          NAME	ID
+          {{.Name}}	{{.Id}}
+        example: |
+            # retrieves 'mdb_sa_id_6531741bcdb9a314321681e2':
+            atlas serviceaccount describe mdb_sa_id_6531741bcdb9a314321681e2
+      - command_path: atlas serviceaccount delete
+        package_name: serviceaccount
+        store_name: ServiceAccountDeleter
+        store_method: DeleteServiceAccount
+        template: delete
+        description: Remove the specified service.
+        id_name: id
+        id_description: service account client id
+        example: |
+            # deletes'mdb_sa_id_6531741bcdb9a314321681e2':
+            atlas serviceaccount delete mdb_sa_id_6531741bcdb9a314321681e2
+      - command_path: atlas serviceaccount create
+        package_name: serviceaccount
+        store_name: ServiceAccountCreator
+        store_method: CreateServiceAccount
+        template: create
+        description: Create new service account
+        id_name: id
+        id_description: service account client id
+        output_template: Service account {{.Name}} created.
+        request_type: 'admin.Organizations'
+        example: |
+            # create service account:
+            atlas serviceaccount create ServiceAccount1
+      - command_path: atlas serviceaccount update
+        package_name: serviceaccount
+        store_name: ServiceAccountUpdater
+        store_method: UpdateServiceAccount
+        template: update
+        description: Modify the details of the specified service account in the organization.
+        id_name: id
+        id_description: service account client id
+        output_template: Service account {{.Name}} updated.
+        request_type: 'admin.Organizations'
+        example: |
+          # update service account:
+          atlas serviceaccount update ServiceAccount1
 stores:
   - base_file_name: data_lake_pipelines
     template: store

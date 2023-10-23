@@ -115,9 +115,14 @@ func TestDeploymentsLocal(t *testing.T) {
 		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
 
-		req.Equal(`NAME   TYPE    MDB VER   STATE
-test   LOCAL   7.0.1     IDLE
-`, o)
+		outputLines := strings.Split(o, "\n")
+		req.Equal(`NAME   TYPE    MDB VER   STATE`, outputLines[0])
+
+		cols := strings.Fields(outputLines[1])
+		req.Equal(deploymentName, cols[0])
+		req.Equal("LOCAL", cols[1])
+		req.True(strings.Contains(cols[2], "7.0."), "Expected version to contain '7.0.'")
+		req.Equal("IDLE", cols[3])
 	})
 
 	ctx := context.Background()

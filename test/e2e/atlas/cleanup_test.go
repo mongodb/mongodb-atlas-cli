@@ -65,6 +65,7 @@ func TestCleanup(t *testing.T) {
 			deleteAllPrivateEndpoints(t, cliPath, projectID, "azure")
 			deleteClustersForProject(t, cliPath, projectID)
 			deleteDatapipelinesForProject(t, cliPath, projectID)
+			deleteAllDataFederations(t, cliPath, projectID)
 			deleteProjectWithRetry(t, projectID)
 		})
 	}

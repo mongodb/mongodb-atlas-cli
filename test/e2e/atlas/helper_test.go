@@ -824,8 +824,9 @@ func listDataFederationsByProject(t *testing.T, cliPath, projectID string) []atl
 		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	t.Log(string(resp))
+	t.Log("available datafederations", string(resp))
 	require.NoError(t, err)
+
 	var dataFederations []atlasv2.DataLakeTenant
 	err = json.Unmarshal(resp, &dataFederations)
 	require.NoError(t, err)
@@ -837,9 +838,13 @@ func deleteAllDataFederations(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
 	dataFederations := listDataFederationsByProject(t, cliPath, projectID)
+
 	for _, federation := range dataFederations {
-		deleteDataFederationForProject(projectID, federation.GetName())
+		err := deleteDataFederationForProject(projectID, federation.GetName())
+		require.NoError(t, err)
 	}
+
+	t.Log("all datafederations successfully deleted")
 }
 
 func deleteDataFederationForProject(projectID, dataFedName string) error {

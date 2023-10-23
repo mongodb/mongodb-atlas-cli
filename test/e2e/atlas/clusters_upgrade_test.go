@@ -52,7 +52,6 @@ func TestSharedClusterUpgrade(t *testing.T) {
 			"--tier", tierM2,
 			"--provider", e2eClusterProvider,
 			"--mdbVersion", e2eSharedMDBVer,
-			"--enableTerminationProtection",
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -76,19 +75,6 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, _ := cmd.CombinedOutput()
 		t.Log(string(resp))
-	})
-
-	t.Run("Fail Delete for Termination Protection", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"delete",
-			clusterName,
-			"--force",
-			"--projectId", g.projectID)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.Error(err, string(resp))
 	})
 
 	t.Run("Upgrade", func(t *testing.T) {

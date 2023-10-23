@@ -115,10 +115,9 @@ func TestAtlasUsers(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var user atlasv2.CloudAppUser
-		if err := json.Unmarshal(resp, &user); assert.NoError(t, err) {
-			assert.Equal(t, emailUser, user.GetUsername())
-			assert.NotEmpty(t, user.GetId())
-			assert.Empty(t, user.GetRoles()) // This is returned empty until the invite is accepted
-		}
+		require.NoError(t, json.Unmarshal(resp, &user))
+		assert.Equal(t, emailUser, user.GetUsername())
+		assert.NotEmpty(t, user.GetId())
+		assert.Empty(t, user.GetRoles()) // This is returned empty until the invite is accepted
 	})
 }

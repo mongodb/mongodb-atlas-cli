@@ -111,7 +111,7 @@ func (opts *AWSOpts) newPeer(containerID string) *atlasv2.BaseNetworkPeeringConn
 	}
 }
 
-// mongocli atlas networking peering create aws
+// AwsBuilder mongocli atlas networking peering create aws
 // --accepterRegionName accepterRegionName: Specifies the region where the peer VPC resides.
 // --awsAccountId awsAccountId: Account ID of the owner of the peer VPC.
 // --containerId containerId: Unique identifier of the Atlas VPC container for the region.
@@ -126,11 +126,7 @@ func AwsBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "aws",
 		Short: "Create a network peering connection between the Atlas VPC and your AWS VPC.",
-		Long: `The network peering create command checks if a VPC exists in the region you specify for your Atlas project. If one exists, this command creates the peering connection between that VPC and your VPC. If an Atlas VPC doesn't exist, this command creates one and creates a connection between it and your VPC.
-		
-To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.
-
-` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Long:  longDesc + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"output": createTemplate,
 		},

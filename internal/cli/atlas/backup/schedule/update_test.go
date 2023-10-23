@@ -28,6 +28,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -64,7 +65,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 		Times(1)
 
 	err := opts.Run(cmd)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestUpdateOpts_RunWithFile(t *testing.T) {
@@ -88,7 +89,7 @@ func TestUpdateOpts_RunWithFile(t *testing.T) {
 }`
 
 	fileName := "test.json"
-	assert.NoError(t, afero.WriteFile(fs, fileName, []byte(fileContents), 0600))
+	require.NoError(t, afero.WriteFile(fs, fileName, []byte(fileContents), 0600))
 
 	opts := &UpdateOpts{
 		store:       mockStore,
@@ -107,7 +108,7 @@ func TestUpdateOpts_RunWithFile(t *testing.T) {
 		Times(1)
 
 	err := opts.Run(cmd)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestUpdateBuilder(t *testing.T) {

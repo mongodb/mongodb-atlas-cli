@@ -68,9 +68,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update",
 		Short: "Modify the maintenance window for your project.",
-		Long: `To learn more about maintenance windows, see https://www.mongodb.com/docs/atlas/tutorial/cluster-maintenance-window/.
-
-` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Long:  longDesc + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"output": updateTemplate,
 		},

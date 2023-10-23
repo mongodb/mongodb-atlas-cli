@@ -81,10 +81,10 @@ func TestProjectSettings(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 		a := assert.New(t)
-		a.Equal(false, *settings.IsCollectDatabaseSpecificsStatisticsEnabled)
-		a.Equal(true, *settings.IsSchemaAdvisorEnabled)
-		a.Equal(true, *settings.IsPerformanceAdvisorEnabled)
-		a.Equal(true, *settings.IsRealtimePerformancePanelEnabled)
-		a.Equal(true, *settings.IsDataExplorerEnabled)
+		a.False(*settings.IsCollectDatabaseSpecificsStatisticsEnabled)
+		a.True(*settings.IsSchemaAdvisorEnabled)
+		a.True(*settings.IsPerformanceAdvisorEnabled)
+		a.True(*settings.IsRealtimePerformancePanelEnabled)
+		a.True(*settings.IsDataExplorerEnabled)
 	})
 }

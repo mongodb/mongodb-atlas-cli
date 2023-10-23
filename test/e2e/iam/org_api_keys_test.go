@@ -24,6 +24,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -49,14 +50,11 @@ func TestOrgAPIKeys(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var key mongodbatlas.APIKey
-			if err := json.Unmarshal(resp, &key); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			a.Equal(desc, key.Desc)
-			ID = key.ID
-		}
+		require.NoError(t, err, string(resp))
+		var key mongodbatlas.APIKey
+		require.NoError(t, json.Unmarshal(resp, &key))
+		a.Equal(desc, key.Desc)
+		ID = key.ID
 	})
 	if ID == "" {
 		assert.FailNow(t, "Failed to create API key")
@@ -96,13 +94,10 @@ func TestOrgAPIKeys(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var key mongodbatlas.APIKey
-			if err := json.Unmarshal(resp, &key); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			a.Equal(newDesc, key.Desc)
-		}
+		require.NoError(t, err, string(resp))
+		var key mongodbatlas.APIKey
+		require.NoError(t, json.Unmarshal(resp, &key))
+		a.Equal(newDesc, key.Desc)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -117,13 +112,10 @@ func TestOrgAPIKeys(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var key mongodbatlas.APIKey
-			if err := json.Unmarshal(resp, &key); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			a.Equal(ID, key.ID)
-		}
+		require.NoError(t, err, string(resp))
+		var key mongodbatlas.APIKey
+		require.NoError(t, json.Unmarshal(resp, &key))
+		a.Equal(ID, key.ID)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -138,9 +130,8 @@ func TestOrgAPIKeys(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
-			a.Equal(expected, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
+		a.Equal(expected, string(resp))
 	})
 }

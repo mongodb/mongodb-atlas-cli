@@ -66,19 +66,18 @@ func TestProjectTeams(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var teams mongodbatlas.TeamsAssigned
-		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
-			found := false
-			for _, team := range teams.Results {
-				if team.TeamID == teamID {
-					found = true
-					break
-				}
+		require.NoError(t, json.Unmarshal(resp, &teams))
+		found := false
+		for _, team := range teams.Results {
+			if team.TeamID == teamID {
+				found = true
+				break
 			}
-			a.True(found)
 		}
+		a.True(found)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -100,17 +99,16 @@ func TestProjectTeams(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var roles []mongodbatlas.TeamRoles
-		if err = json.Unmarshal(resp, &roles); a.NoError(err) {
-			a.Len(roles, 1)
+		require.NoError(t, json.Unmarshal(resp, &roles))
+		a.Len(roles, 1)
 
-			role := roles[0]
-			a.Equal(teamID, role.TeamID)
-			a.Len(role.RoleNames, 2)
-			a.ElementsMatch([]string{roleName1, roleName2}, role.RoleNames)
-		}
+		role := roles[0]
+		a.Equal(teamID, role.TeamID)
+		a.Len(role.RoleNames, 2)
+		a.ElementsMatch([]string{roleName1, roleName2}, role.RoleNames)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -125,12 +123,11 @@ func TestProjectTeams(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var teams mongodbatlas.TeamsAssigned
-		if err = json.Unmarshal(resp, &teams); a.NoError(err) {
-			a.NotEmpty(teams.Results)
-		}
+		require.NoError(t, json.Unmarshal(resp, &teams))
+		a.NotEmpty(teams.Results)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -146,9 +143,8 @@ func TestProjectTeams(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("Team '%s' deleted\n", teamID)
-			a.Equal(expected, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		expected := fmt.Sprintf("Team '%s' deleted\n", teamID)
+		a.Equal(expected, string(resp))
 	})
 }

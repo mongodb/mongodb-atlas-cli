@@ -53,5 +53,5 @@ func TestBackupCompliancePolicyEnable(t *testing.T) {
 	var result atlasv2.DataProtectionSettings
 	r.NoError(json.Unmarshal(resp, &result), string(resp))
 
-	assert.Equal(t, result.GetAuthorizedEmail(), authorizedEmail)
+	assert.Equal(t, authorizedEmail, result.GetAuthorizedEmail())
 }

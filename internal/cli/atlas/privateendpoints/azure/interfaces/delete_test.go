@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestDelete_Run(t *testing.T) {
@@ -46,7 +46,7 @@ func TestDelete_Run(t *testing.T) {
 		Times(1)
 
 	err := deleteOpts.Run()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestDeleteBuilder(t *testing.T) {

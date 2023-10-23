@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -57,5 +57,5 @@ func TestDisableOpts_Run(t *testing.T) {
 		DisableAlertConfiguration(opts.ProjectID, opts.alertID).
 		Return(expected, nil).
 		Times(1)
-	assert.NoError(t, opts.Run())
+	require.NoError(t, opts.Run())
 }

@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -93,7 +93,7 @@ func TestAcknowledgeOpts_Run(t *testing.T) {
 					AcknowledgeAlert(opts.ProjectID, opts.alertID, ackReq).
 					Return(nil, errors.New("fake")).
 					Times(1)
-				assert.Error(t, opts.Run())
+				require.Error(t, opts.Run())
 			} else {
 				expected := &mongodbatlas.Alert{}
 				mockStore.
@@ -101,7 +101,7 @@ func TestAcknowledgeOpts_Run(t *testing.T) {
 					AcknowledgeAlert(opts.ProjectID, opts.alertID, ackReq).
 					Return(expected, nil).
 					Times(1)
-				assert.NoError(t, opts.Run())
+				require.NoError(t, opts.Run())
 			}
 		})
 	}

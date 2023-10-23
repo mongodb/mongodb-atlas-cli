@@ -27,6 +27,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const storeErrMsg = "store error: "
+
 type autoCompleteOpts struct {
 	cli.GlobalOpts
 	providers []string
@@ -46,13 +48,13 @@ func (opts *autoCompleteOpts) autocompleteTier() cli.AutoFunc {
 			return nil, cobra.ShellCompDirectiveError
 		}
 		if err := opts.initStore(cmd.Context()); err != nil {
-			cobra.CompErrorln("store error: " + err.Error())
+			cobra.CompErrorln(storeErrMsg + err.Error())
 			return nil, cobra.ShellCompDirectiveError
 		}
 
 		suggestions, err := opts.tierSuggestions(toComplete)
 		if err != nil {
-			cobra.CompErrorln("error fetching: " + err.Error())
+			cobra.CompErrorln("error fetching tier: " + err.Error())
 			return nil, cobra.ShellCompDirectiveError
 		}
 		return suggestions, cobra.ShellCompDirectiveDefault
@@ -94,12 +96,12 @@ func (opts *autoCompleteOpts) autocompleteRegion() cli.AutoFunc {
 			return nil, cobra.ShellCompDirectiveError
 		}
 		if err := opts.initStore(cmd.Context()); err != nil {
-			cobra.CompErrorln("store error: " + err.Error())
+			cobra.CompErrorln(storeErrMsg + err.Error())
 			return nil, cobra.ShellCompDirectiveError
 		}
 		suggestions, err := opts.regionSuggestions(toComplete)
 		if err != nil {
-			cobra.CompErrorln("error fetching: " + err.Error())
+			cobra.CompErrorln("error fetching regions: " + err.Error())
 			return nil, cobra.ShellCompDirectiveError
 		}
 		return suggestions, cobra.ShellCompDirectiveDefault

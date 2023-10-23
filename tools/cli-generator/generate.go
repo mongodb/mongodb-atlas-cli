@@ -76,12 +76,18 @@ type Command struct {
 	SubCommands    []Command `yaml:"sub_commands,omitempty"`
 }
 
+const (
+	gotmplExt     = ".gotmpl"
+	gotmplTestExt = "_test" + gotmplExt
+	goExt         = ".go"
+)
+
 func (c *Command) TemplateFile() string {
-	return c.Template + ".gotmpl"
+	return c.Template + gotmplExt
 }
 
 func (c *Command) TemplateUnitTestFile() string {
-	return c.Template + "_test.gotmpl"
+	return c.Template + gotmplTestExt
 }
 
 type Store struct {
@@ -95,7 +101,7 @@ type Store struct {
 }
 
 func (s *Store) TemplateFile() string {
-	return s.Template + ".gotmpl"
+	return s.Template + gotmplExt
 }
 
 func (s *Store) InterfaceNames() string {
@@ -148,11 +154,11 @@ func (c *Command) baseFileName(basePath string) string {
 }
 
 func (c *Command) FileName(basePath string) string {
-	return c.baseFileName(basePath) + ".go"
+	return c.baseFileName(basePath) + goExt
 }
 
 func (c *Command) UnitTestFileName(basePath string) string {
-	return c.baseFileName(basePath) + "_test.go"
+	return c.baseFileName(basePath) + gotmplTestExt
 }
 
 func fileExists(f string) bool {
@@ -161,7 +167,7 @@ func fileExists(f string) bool {
 }
 
 func (cli *CLI) generateStore(store *Store) error {
-	storeFile := filepath.Join(cli.basePath, "internal", "store", "atlas", store.BaseFileName+".go")
+	storeFile := filepath.Join(cli.basePath, "internal", "store", "atlas", store.BaseFileName+goExt)
 
 	fileCreated, err := cli.generateFile(storeFile, store.TemplateFile(), store)
 	if err != nil {
@@ -175,12 +181,10 @@ func (cli *CLI) generateStore(store *Store) error {
 
 func (cli *CLI) generateFile(file string, templateFile string, data any) (bool, error) {
 	if !cli.overwrite && fileExists(file) {
-		fmt.Fprintf(os.Stderr, "File %q already present in disk, skipping\n", file)
+		_, _ = fmt.Fprintf(os.Stderr, "File %q already present in disk, skipping\n", file)
 		return false, nil
 	}
-
-	err := os.MkdirAll(filepath.Dir(file), os.ModePerm)
-	if err != nil {
+	if err := os.MkdirAll(filepath.Dir(file), os.ModePerm); err != nil {
 		return false, err
 	}
 

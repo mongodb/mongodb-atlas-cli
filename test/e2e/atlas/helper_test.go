@@ -609,7 +609,7 @@ func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
 		if cluster.StateName == "DELETING" {
 			continue
 		}
-		assert.NoError(t, deleteClusterForProject(projectID, cluster.Name))
+		assert.NoError(t, deleteClusterForProject(projectID, cluster.Name)) //nolint: testifylint // we want to check all instead of failing early
 	}
 }
 
@@ -627,7 +627,7 @@ func deleteDatapipelinesForProject(t *testing.T, cliPath, projectID string) {
 	var pipelines []atlasv2.DataLakeIngestionPipeline
 	require.NoError(t, json.Unmarshal(resp, &pipelines))
 	for _, p := range pipelines {
-		assert.NoError(t, deleteDatalakeForProject(cliPath, projectID, p.GetName()))
+		assert.NoError(t, deleteDatalakeForProject(cliPath, projectID, p.GetName())) //nolint: testifylint // we want to check all instead of failing early
 	}
 }
 
@@ -663,7 +663,7 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 		)
 		cmd.Env = os.Environ()
 		resp, err = cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		assert.NoError(t, err, string(resp)) //nolint: testifylint // we want to check all instead of failing early
 	}
 }
 
@@ -726,7 +726,7 @@ func deletePrivateEndpoint(t *testing.T, cliPath, projectID, provider, endpointI
 	)
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	assert.NoError(t, err, string(resp))
+	require.NoError(t, err, string(resp))
 }
 
 func deleteTeam(teamID string) error {
@@ -840,7 +840,7 @@ func ensureCluster(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, cl
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.GetName())
 	a.Equal(version, cluster.GetMongoDBMajorVersion())
-	a.Equal(diskSizeGB, cluster.GetDiskSizeGB())
+	a.InDelta(diskSizeGB, cluster.GetDiskSizeGB(), 0.01)
 	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
 }
 
@@ -852,7 +852,7 @@ func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterNam
 	if cluster.ProviderSettings != nil {
 		a.Equal(tier, cluster.ProviderSettings.InstanceSizeName)
 	}
-	a.Equal(diskSizeGB, *cluster.DiskSizeGB)
+	a.InDelta(diskSizeGB, *cluster.DiskSizeGB, 0.01)
 	a.Equal(terminationProtection, *cluster.TerminationProtectionEnabled)
 }
 

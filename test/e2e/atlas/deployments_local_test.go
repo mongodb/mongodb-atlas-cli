@@ -260,7 +260,7 @@ func TestDeploymentsLocal(t *testing.T) {
 		var results []bson.M
 		err = c.All(ctx, &results)
 		req.NoError(err)
-		req.Equal(1, len(results))
+		req.Len(results, 1)
 	})
 
 	t.Run("Delete Index", func(t *testing.T) {

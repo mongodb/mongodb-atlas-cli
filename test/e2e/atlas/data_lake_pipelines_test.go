@@ -125,10 +125,9 @@ func TestDataLakePipelines(t *testing.T) {
 
 		a := assert.New(t)
 		var pipeline *atlasv2.DataLakeIngestionPipeline
-		if err = json.Unmarshal(resp, &pipeline); a.NoError(err) {
-			pipelineID = *pipeline.Id
-			a.Equal(pipelineName, *pipeline.Name)
-		}
+		req.NoError(json.Unmarshal(resp, &pipeline))
+		pipelineID = *pipeline.Id
+		a.Equal(pipelineName, *pipeline.Name)
 	})
 
 	t.Run("Watch", func(t *testing.T) {
@@ -154,9 +153,8 @@ func TestDataLakePipelines(t *testing.T) {
 
 		a := assert.New(t)
 		var pipeline atlasv2.DataLakeIngestionPipeline
-		if err = json.Unmarshal(resp, &pipeline); a.NoError(err) {
-			a.Equal(pipelineName, *pipeline.Name)
-		}
+		req.NoError(json.Unmarshal(resp, &pipeline))
+		a.Equal(pipelineName, *pipeline.Name)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -171,9 +169,8 @@ func TestDataLakePipelines(t *testing.T) {
 
 		var r []atlasv2.DataLakeIngestionPipeline
 		a := assert.New(t)
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.NotEmpty(r)
-		}
+		req.NoError(json.Unmarshal(resp, &r))
+		a.NotEmpty(r)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -192,9 +189,8 @@ func TestDataLakePipelines(t *testing.T) {
 
 		a := assert.New(t)
 		var pipeline *atlasv2.DataLakeIngestionPipeline
-		if err = json.Unmarshal(resp, &pipeline); a.NoError(err) {
-			a.Equal(pipelineName, *pipeline.Name)
-		}
+		req.NoError(json.Unmarshal(resp, &pipeline))
+		a.Equal(pipelineName, *pipeline.Name)
 	})
 
 	t.Run("Trigger", func(t *testing.T) {
@@ -211,10 +207,9 @@ func TestDataLakePipelines(t *testing.T) {
 
 		a := assert.New(t)
 		var run *atlasv2.IngestionPipelineRun
-		if err = json.Unmarshal(resp, &run); a.NoError(err) {
-			pipelineRunID = *run.Id
-			a.Equal(pipelineID, *run.PipelineId)
-		}
+		req.NoError(json.Unmarshal(resp, &run))
+		pipelineRunID = *run.Id
+		a.Equal(pipelineID, *run.PipelineId)
 	})
 
 	t.Run("Pause", func(t *testing.T) {
@@ -230,9 +225,8 @@ func TestDataLakePipelines(t *testing.T) {
 
 		a := assert.New(t)
 		var pipeline *atlasv2.DataLakeIngestionPipeline
-		if err = json.Unmarshal(resp, &pipeline); a.NoError(err) {
-			a.Equal(pipelineName, *pipeline.Name)
-		}
+		req.NoError(json.Unmarshal(resp, &pipeline))
+		a.Equal(pipelineName, *pipeline.Name)
 	})
 
 	t.Run("Start", func(t *testing.T) {
@@ -248,9 +242,8 @@ func TestDataLakePipelines(t *testing.T) {
 
 		a := assert.New(t)
 		var pipeline *atlasv2.DataLakeIngestionPipeline
-		if err = json.Unmarshal(resp, &pipeline); a.NoError(err) {
-			a.Equal(pipelineName, *pipeline.Name)
-		}
+		req.NoError(json.Unmarshal(resp, &pipeline))
+		a.Equal(pipelineName, *pipeline.Name)
 	})
 
 	t.Run("Runs List", func(t *testing.T) {
@@ -267,9 +260,8 @@ func TestDataLakePipelines(t *testing.T) {
 
 		var r *atlasv2.PaginatedPipelineRun
 		a := assert.New(t)
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.NotEmpty(r)
-		}
+		req.NoError(json.Unmarshal(resp, &r))
+		a.NotEmpty(r)
 	})
 
 	t.Run("Runs Describe", func(t *testing.T) {
@@ -286,10 +278,9 @@ func TestDataLakePipelines(t *testing.T) {
 
 		a := assert.New(t)
 		var run *atlasv2.IngestionPipelineRun
-		if err = json.Unmarshal(resp, &run); a.NoError(err) {
-			pipelineRunID = *run.Id
-			a.Equal(pipelineID, *run.PipelineId)
-		}
+		req.NoError(json.Unmarshal(resp, &run))
+		pipelineRunID = *run.Id
+		a.Equal(pipelineID, *run.PipelineId)
 	})
 
 	t.Run("Runs Watch", func(t *testing.T) {
@@ -333,9 +324,8 @@ func TestDataLakePipelines(t *testing.T) {
 
 		var r []atlasv2.DiskBackupApiPolicyItem
 		a := assert.New(t)
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.NotEmpty(r)
-		}
+		req.NoError(json.Unmarshal(resp, &r))
+		a.NotEmpty(r)
 	})
 
 	t.Run("AvailableSnapshots List", func(t *testing.T) {
@@ -352,9 +342,8 @@ func TestDataLakePipelines(t *testing.T) {
 
 		var r *atlasv2.PaginatedBackupSnapshot
 		a := assert.New(t)
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.NotEmpty(r)
-		}
+		req.NoError(json.Unmarshal(resp, &r))
+		a.NotEmpty(r)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

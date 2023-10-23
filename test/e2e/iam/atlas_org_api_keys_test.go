@@ -49,15 +49,11 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var key atlasv2.ApiKeyUserDetails
-			if err := json.Unmarshal(resp, &key); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			a.Equal(desc, *key.Desc)
-			ID = *key.Id
-		}
+		require.NoError(t, err, string(resp))
+		var key atlasv2.ApiKeyUserDetails
+		require.NoError(t, json.Unmarshal(resp, &key))
+		assert.Equal(t, desc, *key.Desc)
+		ID = *key.Id
 	})
 	require.NotEmpty(t, ID)
 
@@ -70,11 +66,8 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-
 		var keys atlasv2.PaginatedApiApiUser
-		if err := json.Unmarshal(resp, &keys); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		require.NoError(t, json.Unmarshal(resp, &keys))
 		assert.NotEmpty(t, keys.Results)
 	})
 
@@ -90,9 +83,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var keys []atlasv2.ApiKeyUserDetails
-		if err := json.Unmarshal(resp, &keys); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		require.NoError(t, json.Unmarshal(resp, &keys))
 		assert.NotEmpty(t, keys)
 	})
 
@@ -109,14 +100,10 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var key atlasv2.ApiKeyUserDetails
-			if err := json.Unmarshal(resp, &key); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			a.Equal(newDesc, *key.Desc)
-		}
+		require.NoError(t, err, string(resp))
+		var key atlasv2.ApiKeyUserDetails
+		require.NoError(t, json.Unmarshal(resp, &key))
+		assert.Equal(t, newDesc, *key.Desc)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -128,15 +115,10 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var key atlasv2.ApiKeyUserDetails
-			if err := json.Unmarshal(resp, &key); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			a.Equal(ID, *key.Id)
-		}
+		require.NoError(t, err, string(resp))
+		var key atlasv2.ApiKeyUserDetails
+		require.NoError(t, json.Unmarshal(resp, &key))
+		assert.Equal(t, ID, *key.Id)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -148,11 +130,8 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
-			a.Equal(expected, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
+		assert.Equal(t, expected, string(resp))
 	})
 }

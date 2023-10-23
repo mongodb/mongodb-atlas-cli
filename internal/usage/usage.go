@@ -193,10 +193,10 @@ dbName and collection are required only for built-in roles.`
 	SSEEnabled                                = "Flag indicating whether this Amazon S3 blockstore enables server-side encryption."
 	PathStyleAccessEnabled                    = "Flag indicating the style of this endpoint."
 	APIKeyDescription                         = "Description of the API key."
-	AtlasAPIKeyDescription                    = APIKeyDescription + " Required when creating organizations authenticated with API Keys."
+	AtlasAPIKeyDescription                    = APIKeyDescription + requiredForAtlas
 	APIKeyRoles                               = "Role or roles that you want to assign to the API key. To assign more than one role, specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. To learn which values the CLI accepts, see the Items Enum for roles in the Atlas API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Programmatic-API-Keys/operation/createApiKey/."        //nolint:gosec // This is just a message not a credential
 	ProjectAPIKeyRoles                        = "Role or roles that you want to assign to the API key. To assign more than one role, specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. To learn which values the CLI accepts, see the Items Enum for roles in the Atlas API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Programmatic-API-Keys/operation/createProjectApiKey/." //nolint:gosec // This is just a message not a credential
-	AtlasAPIKeyRoles                          = APIKeyRoles + " Required when creating organizations authenticated with API Keys."
+	AtlasAPIKeyRoles                          = APIKeyRoles + requiredForAtlas
 	GlobalAPIKeyRoles                         = "Role or roles that you want to assign to the API key. To assign more than one role, you can specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. Valid values are GLOBAL_AUTOMATION_ADMIN, GLOBAL_BACKUP_ADMIN GLOBAL_MONITORING_ADMIN, GLOBAL_OWNER, GLOBAL_READ_ONLY,GLOBAL_USER_ADMIN." //nolint:gosec // This is just a message not a credential
 	NotificationRegion                        = "Region that indicates which API URL to use."
 	NotificationDelayMin                      = "Number of minutes to wait after an alert condition is detected before sending out the first notification."
@@ -467,4 +467,5 @@ dbName and collection are required only for built-in roles.`
 	DeploymentName                            = "Name of the deployment."
 	LogName                                   = "Name of the log file (e.g. mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gz)."
 	LogHostName                               = "Name of the host that stores the log files that you want to download."
+	requiredForAtlas                          = " Required when creating organizations authenticated with API Keys."
 )

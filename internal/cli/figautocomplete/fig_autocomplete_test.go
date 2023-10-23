@@ -25,7 +25,7 @@ import (
 func TestBuilder(t *testing.T) {
 	got := Builder()
 	a := assert.New(t)
-	a.Equal(got.Use, "fig-autocomplete")
-	a.Len(got.Commands(), 0)
+	a.Equal("fig-autocomplete", got.Use)
+	a.Empty(got.Commands())
 	a.True(got.HasAvailableFlags())
 }

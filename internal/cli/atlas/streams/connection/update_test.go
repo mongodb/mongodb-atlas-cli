@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/spf13/afero"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -52,7 +52,7 @@ func TestUpdate_Run(t *testing.T) {
 `
 
 	fileName := "connection.json"
-	assert.NoError(t, afero.WriteFile(fs, fileName, []byte(fileContents), 0600))
+	require.NoError(t, afero.WriteFile(fs, fileName, []byte(fileContents), 0600))
 
 	buf := new(bytes.Buffer)
 	updateOpts := &UpdateOpts{

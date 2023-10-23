@@ -193,10 +193,10 @@ func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	a := assert.New(t)
 	a.Equal(username, user.Username)
 	if a.Len(user.Scopes, 2) {
-		a.Equal(user.Scopes[0].Name, clusterName0)
-		a.Equal(user.Scopes[0].Type, clusterType)
-		a.Equal(user.Scopes[1].Name, clusterName1)
-		a.Equal(user.Scopes[1].Type, clusterType)
+		a.Equal(clusterName0, user.Scopes[0].Name)
+		a.Equal(clusterType, user.Scopes[0].Type)
+		a.Equal(clusterName1, user.Scopes[1].Name)
+		a.Equal(clusterType, user.Scopes[1].Type)
 	}
 }
 
@@ -237,8 +237,8 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	}
 
 	a.Len(user.Scopes, 1)
-	a.Equal(user.Scopes[0].Name, clusterName0)
-	a.Equal(user.Scopes[0].Type, clusterType)
+	a.Equal(clusterName0, user.Scopes[0].Name)
+	a.Equal(clusterType, user.Scopes[0].Type)
 }
 
 func testDeleteUser(t *testing.T, cliPath, dbusersEntity, username string) {

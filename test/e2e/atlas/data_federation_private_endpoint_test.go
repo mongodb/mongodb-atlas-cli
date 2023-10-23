@@ -53,13 +53,12 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 		cmd.Env = os.Environ()
 
 		a := assert.New(t)
-		if resp, err := cmd.CombinedOutput(); a.NoError(err, string(resp)) {
-			var r atlasv2.PaginatedPrivateNetworkEndpointIdEntry
-			if err = json.Unmarshal(resp, &r); a.NoError(err) {
-				a.NotEmpty(r.Results)
-				a.Equal(r.Results[0].GetEndpointId(), vpcID)
-			}
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+		var r atlasv2.PaginatedPrivateNetworkEndpointIdEntry
+		require.NoError(t, json.Unmarshal(resp, &r))
+		a.NotEmpty(r.Results)
+		a.Equal(r.Results[0].GetEndpointId(), vpcID)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -76,9 +75,8 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 		var r atlasv2.PrivateNetworkEndpointIdEntry
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.Equal(vpcID, r.GetEndpointId())
-		}
+		require.NoError(t, json.Unmarshal(resp, &r))
+		a.Equal(vpcID, r.GetEndpointId())
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -93,11 +91,10 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 		var r atlasv2.PaginatedPrivateNetworkEndpointIdEntry
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.NotEmpty(r)
-		}
+		require.NoError(t, json.Unmarshal(resp, &r))
+		a.NotEmpty(r)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -113,7 +110,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("'%s' deleted\n", vpcID)
 		a.Equal(expected, string(resp))
 	})

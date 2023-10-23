@@ -52,21 +52,16 @@ func TestSearch(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		err := cmd.Run()
-		r.NoError(err)
+		require.NoError(t, cmd.Run())
 	})
 
 	t.Run("Create via file", func(t *testing.T) {
 		fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
 
 		file, err := os.Create(fileName)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		require.NoError(t, err)
 		defer func() {
-			if e := os.Remove(fileName); e != nil {
-				t.Errorf("error deleting file '%v': %v", fileName, e)
-			}
+			require.NoError(t, os.Remove(fileName))
 		}()
 
 		tpl := template.Must(template.New("").Parse(`
@@ -78,13 +73,10 @@ func TestSearch(t *testing.T) {
 		"dynamic": true
 	}
 }`))
-		err = tpl.Execute(file, map[string]string{
+		require.NoError(t, tpl.Execute(file, map[string]string{
 			"collectionName": collectionName,
 			"indexName":      indexName,
-		})
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		}))
 
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -99,15 +91,11 @@ func TestSearch(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
-		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
-			assert.Equal(t, index.GetName(), indexName)
-			indexID = index.GetIndexID()
-		}
+		require.NoError(t, json.Unmarshal(resp, &index))
+		assert.Equal(t, index.GetName(), indexName)
+		indexID = index.GetIndexID()
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -122,15 +110,10 @@ func TestSearch(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
+		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
-		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
-			assert.Equal(t, indexID, index.GetIndexID())
-		}
+		require.NoError(t, json.Unmarshal(resp, &index))
+		assert.Equal(t, indexID, index.GetIndexID())
 	})
 
 	t.Run("Update via file", func(t *testing.T) {
@@ -138,9 +121,7 @@ func TestSearch(t *testing.T) {
 		fileName := fmt.Sprintf("update_index_search_test-%v.json", n)
 
 		file, err := os.Create(fileName)
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		require.NoError(t, err)
 		defer func() {
 			if e := os.Remove(fileName); e != nil {
 				t.Errorf("error deleting file '%v': %v", fileName, e)
@@ -157,14 +138,11 @@ func TestSearch(t *testing.T) {
 		"dynamic": true
 	}
 }`))
-		err = tpl.Execute(file, map[string]string{
+		require.NoError(t, tpl.Execute(file, map[string]string{
 			"collectionName": collectionName,
 			"indexName":      indexName,
 			"analyzer":       analyzer,
-		})
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		}))
 
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -180,16 +158,12 @@ func TestSearch(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
-		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
-			a := assert.New(t)
-			a.Equal(indexID, index.GetIndexID())
-			a.Equal(analyzer, index.GetAnalyzer())
-		}
+		require.NoError(t, json.Unmarshal(resp, &index))
+		a := assert.New(t)
+		a.Equal(indexID, index.GetIndexID())
+		a.Equal(analyzer, index.GetAnalyzer())
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -204,13 +178,9 @@ func TestSearch(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
+		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Index '%s' deleted\n", indexID)
-		assert.Equal(t, string(resp), expected)
+		assert.Equal(t, expected, string(resp))
 	})
 
 	t.Run("Create combinedMapping", func(t *testing.T) {
@@ -256,12 +226,9 @@ func TestSearch(t *testing.T) {
     }
   }
 }`))
-		err = tpl.Execute(file, map[string]string{
+		require.NoError(t, tpl.Execute(file, map[string]string{
 			"indexName": indexName,
-		})
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		}))
 
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -276,14 +243,10 @@ func TestSearch(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
-		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
-			assert.Equal(t, index.Name, indexName)
-		}
+		require.NoError(t, json.Unmarshal(resp, &index))
+		assert.Equal(t, indexName, index.Name)
 	})
 
 	t.Run("Create staticMapping", func(t *testing.T) {
@@ -368,12 +331,9 @@ func TestSearch(t *testing.T) {
       }
    ]
 }`))
-		err = tpl.Execute(file, map[string]string{
+		require.NoError(t, tpl.Execute(file, map[string]string{
 			"indexName": indexName,
-		})
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		}))
 
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -388,14 +348,10 @@ func TestSearch(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
-		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
-			assert.Equal(t, index.Name, indexName)
-		}
+		require.NoError(t, json.Unmarshal(resp, &index))
+		assert.Equal(t, indexName, index.Name)
 	})
 
 	t.Run("Create array mapping", func(t *testing.T) {
@@ -433,12 +389,9 @@ func TestSearch(t *testing.T) {
     }
   }
 }`))
-		err = tpl.Execute(file, map[string]string{
+		require.NoError(t, tpl.Execute(file, map[string]string{
 			"indexName": indexName,
-		})
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		}))
 
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -453,14 +406,10 @@ func TestSearch(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
-		if err := json.Unmarshal(resp, &index); assert.NoError(t, err) {
-			assert.Equal(t, index.Name, indexName)
-		}
+		require.NoError(t, json.Unmarshal(resp, &index))
+		assert.Equal(t, indexName, index.Name)
 	})
 
 	t.Run("list", func(t *testing.T) {
@@ -477,14 +426,10 @@ func TestSearch(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 
 		var indexes []atlasv2.ClusterSearchIndex
-		if err := json.Unmarshal(resp, &indexes); assert.NoError(t, err) {
-			assert.NotEmpty(t, indexes)
-		}
+		require.NoError(t, json.Unmarshal(resp, &indexes))
+		assert.NotEmpty(t, indexes)
 	})
 }

@@ -73,5 +73,5 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 
 	a := assert.New(t)
 	a.Len(result.GetScheduledPolicyItems(), 1)
-	a.Equal(result.GetAuthorizedEmail(), authorizedEmail)
+	a.Equal(authorizedEmail, result.GetAuthorizedEmail())
 }

@@ -28,6 +28,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const longDesc = `To learn more about maintenance windows, see https://www.mongodb.com/docs/atlas/tutorial/cluster-maintenance-window/.
+
+`
+
 type ClearOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
@@ -68,11 +72,9 @@ func (opts *ClearOpts) Prompt() error {
 func ClearBuilder() *cobra.Command {
 	opts := &ClearOpts{}
 	cmd := &cobra.Command{
-		Use:   "clear",
-		Short: "Clear the current maintenance window setting for your project.",
-		Long: `To learn more about maintenance windows, see https://www.mongodb.com/docs/atlas/tutorial/cluster-maintenance-window/.
-
-` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Use:     "clear",
+		Short:   "Clear the current maintenance window setting for your project.",
+		Long:    longDesc + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Aliases: []string{"rm", "delete"},
 		Annotations: map[string]string{
 			"output": clearTemplate,

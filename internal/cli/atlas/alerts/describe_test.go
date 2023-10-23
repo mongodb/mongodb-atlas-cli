@@ -28,6 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -101,14 +102,14 @@ func TestDescribeOpts_Run(t *testing.T) {
 					Alert(params).
 					Return(nil, errors.New("fake")).
 					Times(1)
-				assert.Error(t, cmd.Run())
+				require.Error(t, cmd.Run())
 			} else {
 				mockStore.
 					EXPECT().
 					Alert(params).
 					Return(expected, nil).
 					Times(1)
-				assert.NoError(t, cmd.Run())
+				require.NoError(t, cmd.Run())
 				assert.Equal(t, `ID     TYPE         METRIC   STATUS
 test   NO_PRIMARY   test     test
 `, buf.String())

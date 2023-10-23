@@ -18,6 +18,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const longDesc = `The network peering create command checks if a VPC exists in the region you specify for your Atlas project. If one exists, this command creates the peering connection between that VPC and your VPC. If an Atlas VPC doesn't exist, this command creates one and creates a connection between it and your VPC.
+		
+To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.
+
+`
+
 func Builder() *cobra.Command {
 	const use = "create"
 	cmd := &cobra.Command{

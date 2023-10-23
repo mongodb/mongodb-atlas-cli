@@ -101,11 +101,11 @@ func (opts *DeploymentOpts) Select(deployments []Deployment) (Deployment, error)
 	}
 
 	if len(deployments) == 1 {
-		opts.DeploymentName = deployments[0].Name //nolint:gosec
-		opts.DeploymentType = deployments[0].Type //nolint:gosec
+		opts.DeploymentName = deployments[0].Name
+		opts.DeploymentType = deployments[0].Type
 
 		telemetry.AppendOption(telemetry.WithDeploymentType(opts.DeploymentType))
-		return deployments[0], nil //nolint:gosec
+		return deployments[0], nil
 	}
 
 	displayNames := make([]string, 0, len(deployments))

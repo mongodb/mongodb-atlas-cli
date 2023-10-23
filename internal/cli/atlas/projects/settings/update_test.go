@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -56,7 +57,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 		Times(1)
 
 	err := opts.Run()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestUpdateBuilder(t *testing.T) {

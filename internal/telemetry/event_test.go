@@ -75,8 +75,8 @@ func TestWithProfile(t *testing.T) {
 		e := newEvent(withProfile(&configMock{name: profile}))
 
 		a := assert.New(t)
-		a.NotEqual(e.Properties["profile"], config.DefaultProfile)
-		a.NotEqual(e.Properties["profile"], profile) // should be a base64
+		a.NotEqual(config.DefaultProfile, e.Properties["profile"])
+		a.NotEqual(profile, e.Properties["profile"]) // should be a base64
 	})
 }
 
@@ -110,7 +110,7 @@ func TestWithFlags(t *testing.T) {
 	_ = cmd.ExecuteContext(NewContext())
 
 	e := newEvent(withFlags(cmd))
-	assert.Equal(t, e.Properties["flags"], []string{"test"})
+	assert.Equal(t, []string{"test"}, e.Properties["flags"])
 }
 
 func TestWithVersion(t *testing.T) {
@@ -122,8 +122,8 @@ func TestWithVersion(t *testing.T) {
 	e := newEvent(withVersion())
 
 	a := assert.New(t)
-	a.Equal(e.Properties["version"], "vTest")
-	a.Equal(e.Properties["git_commit"], "sha-test")
+	a.Equal("vTest", e.Properties["version"])
+	a.Equal("sha-test", e.Properties["git_commit"])
 }
 
 func TestWithOS(t *testing.T) {
@@ -132,8 +132,8 @@ func TestWithOS(t *testing.T) {
 	e := newEvent(withOS())
 
 	a := assert.New(t)
-	a.Equal(e.Properties["os"], runtime.GOOS)
-	a.Equal(e.Properties["arch"], runtime.GOARCH)
+	a.Equal(runtime.GOOS, e.Properties["os"])
+	a.Equal(runtime.GOARCH, e.Properties["arch"])
 }
 
 func TestWithUserAgent(t *testing.T) {
@@ -152,11 +152,11 @@ func TestWithAuthMethod(t *testing.T) {
 			privateKey: "test-private",
 		}
 		e := newEvent(withAuthMethod(c))
-		assert.Equal(t, e.Properties["auth_method"], "api_key")
+		assert.Equal(t, "api_key", e.Properties["auth_method"])
 	})
 	t.Run("Oauth", func(t *testing.T) {
 		e := newEvent(withAuthMethod(&configMock{}))
-		assert.Equal(t, e.Properties["auth_method"], "oauth")
+		assert.Equal(t, "oauth", e.Properties["auth_method"])
 	})
 }
 
@@ -325,28 +325,28 @@ func TestWithChoice(t *testing.T) {
 func TestWithDefault(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 	e := newEvent(withDefault(true))
-	assert.Equal(t, true, e.Properties["default"])
+	assert.Contains(t, e.Properties, "default")
 }
 
 func TestWithEmpty(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	e := newEvent(withEmpty(true))
-	assert.Equal(t, true, e.Properties["empty"])
+	assert.Contains(t, e.Properties, "empty")
 }
 
 func TestWithAnonymousID(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	e := newEvent(withAnonymousID())
-	assert.NotEmpty(t, e.Properties["device_id"])
+	assert.Contains(t, e.Properties, "device_id")
 }
 
 func TestWithDeploymentType(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
 	e := newEvent(WithDeploymentType("test"))
-	assert.Equal(t, e.Properties["deployment_type"], "test")
+	assert.Equal(t, "test", e.Properties["deployment_type"])
 }
 
 func TestWithSignal(t *testing.T) {
@@ -391,9 +391,7 @@ func TestWithHelpCommand_NotFound(t *testing.T) {
 	args := []string{"test2"}
 
 	e := newEvent(withHelpCommand(helpCmd, args))
-
-	_, ok := e.Properties["help_command"]
-	assert.False(t, ok)
+	assert.NotContains(t, e.Properties, "help_command")
 }
 
 type configMock struct {

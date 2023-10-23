@@ -58,9 +58,8 @@ func TestExportBuckets(t *testing.T) {
 
 		a := assert.New(t)
 		var exportBucket atlasv2.DiskBackupSnapshotAWSExportBucket
-		if err = json.Unmarshal(resp, &exportBucket); a.NoError(err) {
-			a.Equal(bucketName, exportBucket.GetBucketName())
-		}
+		r.NoError(json.Unmarshal(resp, &exportBucket))
+		a.Equal(bucketName, exportBucket.GetBucketName())
 		bucketID = exportBucket.GetId()
 	})
 
@@ -73,14 +72,10 @@ func TestExportBuckets(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
 		r.NoError(err, string(resp))
-
-		var r atlasv2.PaginatedBackupSnapshotExportBucket
-		a := assert.New(t)
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.NotEmpty(r)
-		}
+		var buckets atlasv2.PaginatedBackupSnapshotExportBucket
+		r.NoError(json.Unmarshal(resp, &buckets))
+		assert.NotEmpty(t, buckets)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -94,14 +89,10 @@ func TestExportBuckets(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
 		r.NoError(err, string(resp))
-
-		a := assert.New(t)
 		var exportBucket atlasv2.DiskBackupSnapshotAWSExportBucket
-		if err = json.Unmarshal(resp, &exportBucket); a.NoError(err) {
-			a.Equal(bucketName, exportBucket.GetBucketName())
-		}
+		r.NoError(json.Unmarshal(resp, &exportBucket))
+		assert.Equal(t, bucketName, exportBucket.GetBucketName())
 	})
 
 	t.Run("Delete", func(t *testing.T) {

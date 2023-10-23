@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -46,7 +46,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 		Times(1)
 
 	err := opts.Run()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestDescribeBuilder(t *testing.T) {

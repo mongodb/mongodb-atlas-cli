@@ -64,17 +64,15 @@ func TestAtlasTeamUsers(t *testing.T) {
 		a := assert.New(t)
 
 		var users atlasv2.PaginatedApiAppUser
-		if err := json.Unmarshal(resp, &users); a.NoError(err) {
-			found := false
-			for _, user := range users.Results {
-				if user.Username == username {
-					found = true
-					break
-				}
+		require.NoError(t, json.Unmarshal(resp, &users))
+		found := false
+		for _, user := range users.Results {
+			if user.Username == username {
+				found = true
+				break
 			}
-
-			a.True(found)
 		}
+		a.True(found)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -90,9 +88,8 @@ func TestAtlasTeamUsers(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 		var teams atlasv2.PaginatedApiAppUser
-		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
-			a.NotEmpty(teams.Results)
-		}
+		require.NoError(t, json.Unmarshal(resp, &teams))
+		a.NotEmpty(teams.Results)
 	})
 
 	t.Run("List Compact", func(t *testing.T) {
@@ -109,9 +106,8 @@ func TestAtlasTeamUsers(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 		var teams []atlasv2.CloudAppUser
-		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
-			a.NotEmpty(teams)
-		}
+		require.NoError(t, json.Unmarshal(resp, &teams))
+		a.NotEmpty(teams)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -128,9 +124,8 @@ func TestAtlasTeamUsers(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("User '%s' deleted from the team\n", userID)
-			a.Equal(expected, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		expected := fmt.Sprintf("User '%s' deleted from the team\n", userID)
+		a.Equal(expected, string(resp))
 	})
 }

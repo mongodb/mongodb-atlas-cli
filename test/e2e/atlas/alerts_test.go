@@ -24,6 +24,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -50,14 +51,11 @@ func TestAlerts(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var alerts atlasv2.PaginatedAlert
-			err := json.Unmarshal(resp, &alerts)
-			a.NoError(err)
-			a.NotEmpty(alerts.Results)
-			alertID = *alerts.Results[0].Id
-		}
+		require.NoError(t, err, string(resp))
+		var alerts atlasv2.PaginatedAlert
+		require.NoError(t, json.Unmarshal(resp, &alerts))
+		assert.NotEmpty(t, alerts.Results)
+		alertID = *alerts.Results[0].Id
 	})
 
 	t.Run("List with status OPEN", func(t *testing.T) {
@@ -71,7 +69,7 @@ func TestAlerts(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("List with no status", func(t *testing.T) {
@@ -83,7 +81,7 @@ func TestAlerts(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -97,13 +95,11 @@ func TestAlerts(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var alert atlasv2.AlertViewForNdsGroup
-			err := json.Unmarshal(resp, &alert)
-			a.NoError(err)
-			a.Equal(alertID, *alert.Id)
-			a.Equal(closed, *alert.Status)
-		}
+		require.NoError(t, err, string(resp))
+		var alert atlasv2.AlertViewForNdsGroup
+		require.NoError(t, json.Unmarshal(resp, &alert))
+		a.Equal(alertID, *alert.Id)
+		a.Equal(closed, *alert.Status)
 	})
 
 	t.Run("Acknowledge", func(t *testing.T) {
@@ -117,13 +113,10 @@ func TestAlerts(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var alert atlasv2.AlertViewForNdsGroup
-			err := json.Unmarshal(resp, &alert)
-			a.NoError(err)
-			a.Equal(alertID, *alert.Id)
-		}
+		require.NoError(t, err, string(resp))
+		var alert atlasv2.AlertViewForNdsGroup
+		require.NoError(t, json.Unmarshal(resp, &alert))
+		assert.Equal(t, alertID, *alert.Id)
 	})
 
 	t.Run("Acknowledge Forever", func(t *testing.T) {
@@ -136,13 +129,10 @@ func TestAlerts(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var alert atlasv2.AlertViewForNdsGroup
-			err := json.Unmarshal(resp, &alert)
-			a.NoError(err)
-			a.Equal(alertID, *alert.Id)
-		}
+		require.NoError(t, err, string(resp))
+		var alert atlasv2.AlertViewForNdsGroup
+		require.NoError(t, json.Unmarshal(resp, &alert))
+		assert.Equal(t, alertID, *alert.Id)
 	})
 
 	t.Run("UnAcknowledge", func(t *testing.T) {
@@ -155,11 +145,9 @@ func TestAlerts(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var alert atlasv2.AlertViewForNdsGroup
-			err := json.Unmarshal(resp, &alert)
-			a.NoError(err)
-			a.Equal(alertID, *alert.Id)
-		}
+		require.NoError(t, err, string(resp))
+		var alert atlasv2.AlertViewForNdsGroup
+		require.NoError(t, json.Unmarshal(resp, &alert))
+		a.Equal(alertID, *alert.Id)
 	})
 }

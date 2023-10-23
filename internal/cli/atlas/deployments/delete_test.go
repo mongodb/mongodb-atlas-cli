@@ -102,11 +102,12 @@ func TestDelete_Run_Local(t *testing.T) {
 		Return(nil, nil).
 		Times(1)
 
+	const mongodLocalData = "mongod-local-data-"
 	deploymentsTest.
 		MockPodman.
 		EXPECT().
 		RemoveVolumes(ctx,
-			"mongod-local-data-"+opts.DeploymentName,
+			mongodLocalData+opts.DeploymentName,
 			"mongot-local-data-"+opts.DeploymentName,
 			"mongot-local-metrics-"+opts.DeploymentName,
 		).
@@ -137,7 +138,7 @@ func TestDelete_Run_Local(t *testing.T) {
 				},
 				Mounts: []define.InspectMount{
 					{
-						Name: "mongod-local-data-" + opts.DeploymentName,
+						Name: mongodLocalData + opts.DeploymentName,
 					},
 				},
 			},

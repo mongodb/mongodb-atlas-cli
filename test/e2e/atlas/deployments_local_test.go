@@ -121,7 +121,7 @@ func TestDeploymentsLocal(t *testing.T) {
 		cols := strings.Fields(outputLines[1])
 		req.Equal(deploymentName, cols[0])
 		req.Equal("LOCAL", cols[1])
-		req.True(strings.Contains(cols[2], "7.0."), "Expected version to contain '7.0.'")
+		req.Contains(cols[2], "7.0.")
 		req.Equal("IDLE", cols[3])
 	})
 

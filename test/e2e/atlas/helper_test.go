@@ -814,6 +814,39 @@ func createDataFederationForProject(projectID string) (string, error) {
 	return dataFederationName, nil
 }
 
+func listDataFederationsByProject(t *testing.T, cliPath, projectID string) []atlasv2.DataLakeTenant {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		datafederationEntity,
+		"list",
+		"--projectId", projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	t.Log("available datafederations", string(resp))
+	require.NoError(t, err)
+
+	var dataFederations []atlasv2.DataLakeTenant
+	err = json.Unmarshal(resp, &dataFederations)
+	require.NoError(t, err)
+
+	return dataFederations
+}
+
+func deleteAllDataFederations(t *testing.T, cliPath, projectID string) {
+	t.Helper()
+
+	dataFederations := listDataFederationsByProject(t, cliPath, projectID)
+
+	for _, federation := range dataFederations {
+		err := deleteDataFederationForProject(projectID, federation.GetName())
+		require.NoError(t, err)
+	}
+
+	t.Log("all datafederations successfully deleted")
+}
+
 func deleteDataFederationForProject(projectID, dataFedName string) error {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {

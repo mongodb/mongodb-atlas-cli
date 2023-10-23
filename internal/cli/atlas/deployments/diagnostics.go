@@ -90,10 +90,11 @@ func DiagnosticsBuilder() *cobra.Command {
 		},
 	}
 	cmd := &cobra.Command{
-		Use:    "diagnostics <deploymentName>",
-		Short:  "Fetch detailed information about all your deployments and system processes.",
-		Hidden: true, // always hidden
-		Args:   require.ExactArgs(1),
+		Use:     "diagnostics <deploymentName>",
+		Short:   "Fetch detailed information about all your deployments and system processes.",
+		Hidden:  true, // always hidden
+		Aliases: []string{"diagnostic", "diag", "diags"},
+		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"deploymentNameDesc": "Name of the deployment you want to setup.",
 		},

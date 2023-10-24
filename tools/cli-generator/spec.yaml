@@ -525,7 +525,7 @@ stores:
       name: ServiceAccountLister
       method: ServiceAccount
       sdk_method: OrganizationsApi.ListServiceAccount
-      return_type: '[]admin.ServiceAccountDetails'
+      return_type: '*admin.PaginatedServiceAccounts'
     describer:
       name: ServiceAccountDescriber
       method: ServiceAccount

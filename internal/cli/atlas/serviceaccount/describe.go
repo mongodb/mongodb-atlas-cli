@@ -49,7 +49,7 @@ var describeTemplate = `NAME	ID
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.ServiceAccount(opts.ConfigProjectID(), opts.id)
+	r, err := opts.store.GetServiceAccount(opts.ConfigOrgID(), opts.id)
 	if err != nil {
 		return err
 	}
@@ -57,7 +57,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas serviceaccount describe <id> [--projectId projectId].
+// atlas serviceaccount describe <id> [--OrgID OrgID].
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
@@ -73,7 +73,7 @@ atlas serviceaccount describe mdb_sa_id_6531741bcdb9a314321681e2
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
-				opts.ValidateProjectID,
+				opts.ValidateOrgID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
@@ -85,7 +85,7 @@ atlas serviceaccount describe mdb_sa_id_6531741bcdb9a314321681e2
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 

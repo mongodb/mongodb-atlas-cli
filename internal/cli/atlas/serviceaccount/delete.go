@@ -44,10 +44,10 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteServiceAccount, opts.ConfigProjectID())
+	return opts.Delete(opts.store.DeleteServiceAccount, opts.ConfigOrgID())
 }
 
-// atlas serviceaccount delete <id> [--projectId projectId].
+// atlas serviceaccount delete <id> [--OrgID OrgID].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("'%s' deleted\n", "Not deleted"),
@@ -66,7 +66,7 @@ atlas serviceaccount delete mdb_sa_id_6531741bcdb9a314321681e2
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(
-				opts.ValidateProjectID,
+				opts.ValidateOrgID,
 				opts.initStore(cmd.Context()),
 			); err != nil {
 				return err
@@ -80,7 +80,7 @@ atlas serviceaccount delete mdb_sa_id_6531741bcdb9a314321681e2
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
 	return cmd
 }

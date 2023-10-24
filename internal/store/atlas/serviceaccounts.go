@@ -23,7 +23,7 @@ import (
 //go:generate mockgen -destination=../../mocks/atlas/mock_serviceaccounts.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas ServiceAccountLister,ServiceAccountDescriber,ServiceAccountCreator,ServiceAccountUpdater,ServiceAccountDeleter
 
 type ServiceAccountLister interface {
-	ServiceAccount(string) ([]admin.ServiceAccountDetails, error)
+	ServiceAccountList(string) (*admin.PaginatedServiceAccounts, error)
 }
 
 type ServiceAccountCreator interface {
@@ -35,7 +35,7 @@ type ServiceAccountDeleter interface {
 }
 
 type ServiceAccountDescriber interface {
-	ServiceAccount(string, string) (*admin.ServiceAccountDetails, error)
+	GetServiceAccount(string, string) (*admin.ServiceAccountDetails, error)
 }
 
 type ServiceAccountUpdater interface {
@@ -43,7 +43,7 @@ type ServiceAccountUpdater interface {
 }
 
 // ServiceAccount encapsulates the logic to manage different cloud providers.
-func (s *Store) ServiceAccount(orgId string) (*admin.PaginatedServiceAccounts, error) {
+func (s *Store) ServiceAccountList(orgId string) (*admin.PaginatedServiceAccounts, error) {
 	result, _, err := s.clientv2.OrganizationsApi.ListServiceAccounts(s.ctx, orgId).Execute()
 	return result, err
 }

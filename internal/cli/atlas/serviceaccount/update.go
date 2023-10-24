@@ -52,7 +52,7 @@ var updateTemplate = `Service account {{.Name}} updated.`
 func (opts *UpdateOpts) Run() error {
 	updateRequest := opts.newUpdateRequest()
 
-	r, err := opts.store.UpdateServiceAccount(opts.ConfigProjectID(), opts.id, updateRequest)
+	r, err := opts.store.UpdateServiceAccount(opts.ConfigOrgID(), opts.id, updateRequest)
 	if err != nil {
 		return err
 	}
@@ -60,12 +60,12 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newUpdateRequest() *admin.UpdateServiceAccountApiRequest {
+func (opts *UpdateOpts) newUpdateRequest() *admin.ServiceAccountUpdateRequest {
 	// TODO change code to generate entity
 	return nil
 }
 
-// atlas serviceaccount update <id> [--projectId projectId].
+// atlas serviceaccount update <id> [--OrgID OrgID].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{
@@ -83,7 +83,7 @@ atlas serviceaccount update ServiceAccount1
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.PreRunE(
-				opts.ValidateProjectID,
+				opts.ValidateOrgID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
@@ -95,7 +95,7 @@ atlas serviceaccount update ServiceAccount1
 
 	// TODO add more flags here
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 

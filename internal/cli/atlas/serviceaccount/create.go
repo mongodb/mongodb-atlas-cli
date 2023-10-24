@@ -34,9 +34,7 @@ type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	store store.ServiceAccountCreator
-	id    string
-
-	// TODO add flag parameters
+	name    string
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -52,7 +50,7 @@ var createTemplate = `Service account {{.Name}} created.`
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newCreateRequest()
 
-	r, err := opts.store.CreateServiceAccount(opts.ConfigProjectID(), createRequest)
+	r, err := opts.store.CreateServiceAccount(opts.ConfigOrgID(), createRequest)
 	if err != nil {
 		return err
 	}
@@ -60,30 +58,32 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newCreateRequest() *admin.Organizations {
+func (opts *CreateOpts) newCreateRequest() *admin.ServiceAccountRequest {
 	// TODO change code to generate entity
-	return nil
+	return &admin.ServiceAccountRequest{
+		Name: opts.name,
+	}
 }
 
-// atlas serviceaccount create <id> [--projectId projectId].
+// atlas serviceaccount create <id> [--OrgID OrgID].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create <id>",
+		Use:   "create <name>",
 		Short: "Create new service account",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"idDesc": "service account client id",
+			"idDesc": "service account client name",
 			"output": createTemplate,
 		},
 		Example: `# create service account:
 atlas serviceaccount create ServiceAccount1
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.id = args[0]
+			opts.name = args[0]
 			return opts.PreRunE(
-				opts.ValidateProjectID,
+				opts.ValidateOrgID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
@@ -93,9 +93,6 @@ atlas serviceaccount create ServiceAccount1
 		},
 	}
 
-	// TODO add more flags here
-
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 

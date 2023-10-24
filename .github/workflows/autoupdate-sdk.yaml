@@ -1,11 +1,8 @@
 name: Update SDK
 on:
  schedule:
-   - cron: 30 8 * * MON
+   - cron: 30 8 * * TUE
  workflow_dispatch:
- push:
-    branches:
-      - sdk-update-bot
   
 jobs:
   update-sdk:

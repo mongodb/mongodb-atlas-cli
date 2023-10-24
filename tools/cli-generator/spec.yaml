@@ -392,7 +392,7 @@ commands:
         store_name: ServiceAccountUpdater
         store_method: UpdateServiceAccount
         template: update
-        description: Modify the details of the specified service account in the organization.
+        description: Modify the details of the specified service account
         id_name: id
         id_description: service account client id
         output_template: Service account {{.Name}} updated.
@@ -519,3 +519,32 @@ stores:
       name: DataFederationQueryLimitDeleter
       method: DeleteDataFederationQueryLimit
       sdk_method: DataFederationApi.DeleteOneDataFederationInstanceQueryLimit
+  - base_file_name: serviceaccounts
+    template: store
+    lister:
+      name: ServiceAccountLister
+      method: ServiceAccount
+      sdk_method: OrganizationsApi.ListServiceAccount
+      return_type: '[]admin.ServiceAccountDetails'
+    describer:
+      name: ServiceAccountDescriber
+      method: ServiceAccount
+      sdk_method: OrganizationsApi.GetServiceAccount
+      return_type: '*admin.ServiceAccountDetails'
+    creator:
+      name: ServiceAccountCreator
+      method: CreateServiceAccount
+      sdk_method: OrganizationsApi.CreateServiceAccount
+      arg_type: '*admin.ServiceAccountRequest'
+      return_type: '*admin.ServiceAccount'
+    updater:
+      name: ServiceAccountUpdater
+      method: UpdateServiceAccount
+      sdk_method: OrganizationsApi.UpdateServiceAccount
+      arg_type: '*admin.ServiceAccountUpdateRequest'
+      return_type: '*admin.ServiceAccountDetails'
+    deleter:
+      name: ServiceAccountDeleter
+      method: DeleteServiceAccount
+      sdk_method: OrganizationsApi.DeleteServiceAccount
+ 

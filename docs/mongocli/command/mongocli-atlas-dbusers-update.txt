@@ -85,6 +85,10 @@ Options
      - string
      - false
      - Username for authenticating to MongoDB.
+   * - --x509Type
+     - string
+     - false
+     - X.509 method by which the provided username is authenticated.  Valid values are NONE, MANAGED, or CUSTOMER. If you set this to MANAGED the user authenticates with an Atlas-managed X.509 certificate. If you set this to CUSTOMER, the user authenticates with a self-managed X.509 certificate. If you set this to MANAGED or CUSTOMER, you can't set --awsIAMType or --ldapType to any value other than NONE. This value defaults to "NONE".
 
 Inherited Options
 -----------------

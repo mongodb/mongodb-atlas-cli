@@ -18,14 +18,13 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_backup_oplogs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OplogsLister,OplogsDescriber,OplogsCreator,OplogsUpdater,OplogsDeleter
 
 type OplogsLister interface {
-	ListOplogs(*atlas.ListOptions) (*opsmngr.BackupStores, error)
+	ListOplogs(*opsmngr.ListOptions) (*opsmngr.BackupStores, error)
 }
 
 type OplogsDescriber interface {
@@ -45,7 +44,7 @@ type OplogsDeleter interface {
 }
 
 // ListOplogs encapsulates the logic to manage different cloud providers.
-func (s *Store) ListOplogs(options *atlas.ListOptions) (*opsmngr.BackupStores, error) {
+func (s *Store) ListOplogs(options *opsmngr.ListOptions) (*opsmngr.BackupStores, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).OplogStoreConfig.List(s.ctx, options)

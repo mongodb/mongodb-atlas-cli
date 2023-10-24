@@ -22,7 +22,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231001002/admin"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

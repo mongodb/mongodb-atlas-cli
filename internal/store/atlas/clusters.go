@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_clusters.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas ClusterLister,ClusterDescriber,ClusterConfigurationOptionsDescriber

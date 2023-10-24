@@ -15,7 +15,7 @@
 package atlas
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_organizations.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationLister,OrganizationDeleter,OrganizationDescriber,OrganizationCreator

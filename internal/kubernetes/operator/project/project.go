@@ -64,9 +64,7 @@ const (
 )
 
 var (
-	ErrAtlasProject  = errors.New("can not get 'atlas project' resource")
-	ErrTeamsAssigned = errors.New("can not get 'atlas assigned teams' resource")
-	ErrTeamUsers     = errors.New("can not get 'users' objects")
+	ErrAtlasProject = errors.New("can not get 'atlas project' resource")
 )
 
 type AtlasProjectResult struct {
@@ -281,10 +279,10 @@ func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]
 		for aIdx := range role.Actions {
 			action := &role.Actions[aIdx]
 
-			resources := make([]atlasV1.Resource, 0, len(action.Resources))
+			r := make([]atlasV1.Resource, 0, len(action.Resources))
 			for resIdx := range action.Resources {
 				res := &action.Resources[resIdx]
-				resources = append(resources, atlasV1.Resource{
+				r = append(r, atlasV1.Resource{
 					Cluster:    &res.Cluster,
 					Database:   &res.Db,
 					Collection: &res.Collection,
@@ -292,7 +290,7 @@ func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]
 			}
 			actions = append(actions, atlasV1.Action{
 				Name:      action.Action,
-				Resources: resources,
+				Resources: r,
 			})
 		}
 		result = append(result, atlasV1.CustomRole{
@@ -311,7 +309,7 @@ func buildAccessLists(accessListProvider atlas.ProjectIPAccessListLister, projec
 		return nil, err
 	}
 
-	var result []operatorProject.IPAccessList
+	result := make([]operatorProject.IPAccessList, 0, len(accessLists.Results))
 	for _, list := range accessLists.Results {
 		if strings.HasSuffix(list.GetCidrBlock(), cidrException) && list.GetIpAddress() != "" {
 			list.CidrBlock = pointer.Get("")
@@ -351,8 +349,8 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 	if err != nil {
 		return nil, nil, err
 	}
-	var result []operatorProject.Integration
-	var intSecrets []*corev1.Secret
+	result := make([]operatorProject.Integration, 0, len(integrations.Results))
+	intSecrets := make([]*corev1.Secret, 0, len(integrations.Results))
 
 	for _, list := range integrations.Results {
 		iType := list.GetType()
@@ -610,7 +608,7 @@ func buildCloudProviderAccessRoles(cpaProvider store.CloudProviderAccessRoleList
 		return nil, err
 	}
 
-	var result []atlasV1.CloudProviderAccessRole
+	result := make([]atlasV1.CloudProviderAccessRole, 0, len(data.AwsIamRoles))
 	for i := range data.AwsIamRoles {
 		cpa := &data.AwsIamRoles[i]
 		result = append(result, atlasV1.CloudProviderAccessRole{
@@ -658,7 +656,6 @@ func buildAlertConfigurations(acProvider atlas.AlertConfigurationLister, project
 	if err != nil {
 		return nil, err
 	}
-	var result []atlasV1.AlertConfiguration
 
 	convertMatchers := func(atlasMatcher []map[string]interface{}) []atlasV1.Matcher {
 		var res []atlasV1.Matcher
@@ -725,6 +722,7 @@ func buildAlertConfigurations(acProvider atlas.AlertConfigurationLister, project
 		return res
 	}
 
+	result := make([]atlasV1.AlertConfiguration, 0, len(data.Results))
 	for _, alertConfig := range data.Results {
 		result = append(result, atlasV1.AlertConfiguration{
 			EventTypeName:   atlas.StringOrEmpty(alertConfig.EventTypeName),

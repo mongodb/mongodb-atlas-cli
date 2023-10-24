@@ -25,19 +25,19 @@ import (
 //go:generate mockgen -destination=../mocks/mock_global_api_keys.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store GlobalAPIKeyLister,GlobalAPIKeyDescriber,GlobalAPIKeyUpdater,GlobalAPIKeyCreator,GlobalAPIKeyDeleter
 
 type GlobalAPIKeyLister interface {
-	GlobalAPIKeys(*atlas.ListOptions) ([]atlas.APIKey, error)
+	GlobalAPIKeys(*opsmngr.ListOptions) ([]opsmngr.APIKey, error)
 }
 
 type GlobalAPIKeyDescriber interface {
-	GlobalAPIKey(string) (*atlas.APIKey, error)
+	GlobalAPIKey(string) (*opsmngr.APIKey, error)
 }
 
 type GlobalAPIKeyUpdater interface {
-	UpdateGlobalAPIKey(string, *atlas.APIKeyInput) (*atlas.APIKey, error)
+	UpdateGlobalAPIKey(string, *opsmngr.APIKeyInput) (*opsmngr.APIKey, error)
 }
 
 type GlobalAPIKeyCreator interface {
-	CreateGlobalAPIKey(*atlas.APIKeyInput) (*atlas.APIKey, error)
+	CreateGlobalAPIKey(*opsmngr.APIKeyInput) (*opsmngr.APIKey, error)
 }
 
 type GlobalAPIKeyDeleter interface {
@@ -45,7 +45,7 @@ type GlobalAPIKeyDeleter interface {
 }
 
 // GlobalAPIKeys encapsulates the logic to manage different cloud providers.
-func (s *Store) GlobalAPIKeys(opts *atlas.ListOptions) ([]atlas.APIKey, error) {
+func (s *Store) GlobalAPIKeys(opts *opsmngr.ListOptions) ([]opsmngr.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeys.List(s.ctx, opts)
@@ -56,7 +56,7 @@ func (s *Store) GlobalAPIKeys(opts *atlas.ListOptions) ([]atlas.APIKey, error) {
 }
 
 // GlobalAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) GlobalAPIKey(apiKeyID string) (*atlas.APIKey, error) {
+func (s *Store) GlobalAPIKey(apiKeyID string) (*opsmngr.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeys.Get(s.ctx, apiKeyID)
@@ -67,7 +67,7 @@ func (s *Store) GlobalAPIKey(apiKeyID string) (*atlas.APIKey, error) {
 }
 
 // UpdateGlobalAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateGlobalAPIKey(apiKeyID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
+func (s *Store) UpdateGlobalAPIKey(apiKeyID string, input *atlas.APIKeyInput) (*opsmngr.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeys.Update(s.ctx, apiKeyID, input)
@@ -78,7 +78,7 @@ func (s *Store) UpdateGlobalAPIKey(apiKeyID string, input *atlas.APIKeyInput) (*
 }
 
 // CreateGlobalAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateGlobalAPIKey(input *atlas.APIKeyInput) (*atlas.APIKey, error) {
+func (s *Store) CreateGlobalAPIKey(input *opsmngr.APIKeyInput) (*opsmngr.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeys.Create(s.ctx, input)

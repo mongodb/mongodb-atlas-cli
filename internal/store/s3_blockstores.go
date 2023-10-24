@@ -18,14 +18,13 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_backup_s3_blockstores.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store S3BlockstoresLister,S3BlockstoresDeleter,S3BlockstoresCreator,S3BlockstoresUpdater,S3BlockstoresDescriber
 
 type S3BlockstoresLister interface {
-	ListS3Blockstores(*atlas.ListOptions) (*opsmngr.S3Blockstores, error)
+	ListS3Blockstores(*opsmngr.ListOptions) (*opsmngr.S3Blockstores, error)
 }
 
 type S3BlockstoresDeleter interface {
@@ -45,7 +44,7 @@ type S3BlockstoresDescriber interface {
 }
 
 // ListS3Blockstores encapsulates the logic to manage different cloud providers.
-func (s *Store) ListS3Blockstores(options *atlas.ListOptions) (*opsmngr.S3Blockstores, error) {
+func (s *Store) ListS3Blockstores(options *opsmngr.ListOptions) (*opsmngr.S3Blockstores, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).S3BlockstoreConfig.List(s.ctx, options)

@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const (
@@ -56,7 +56,7 @@ func TestAlerts(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err)
 		require.NoError(t, err, string(resp))
-		var alerts mongodbatlas.AlertsResponse
+		var alerts opsmngr.AlertsResponse
 		require.NoError(t, json.Unmarshal(resp, &alerts))
 		a.NotEmpty(alerts.Results)
 		alertID = alerts.Results[0].ID
@@ -89,7 +89,7 @@ func TestAlerts(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var alert mongodbatlas.Alert
+		var alert opsmngr.Alert
 		require.NoError(t, json.Unmarshal(resp, &alert))
 		a.Equal(alertID, alert.ID)
 		a.Equal(closed, alert.Status)
@@ -106,7 +106,7 @@ func TestAlerts(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var alerts mongodbatlas.AlertsResponse
+		var alerts opsmngr.AlertsResponse
 		require.NoError(t, json.Unmarshal(resp, &alerts), string(resp))
 	})
 
@@ -123,7 +123,7 @@ func TestAlerts(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var alerts mongodbatlas.AlertsResponse
+		var alerts opsmngr.AlertsResponse
 		require.NoError(t, json.Unmarshal(resp, &alerts), string(resp))
 	})
 
@@ -140,7 +140,7 @@ func TestAlerts(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var alert mongodbatlas.Alert
+		var alert opsmngr.Alert
 		require.NoError(t, json.Unmarshal(resp, &alert))
 		a.Equal(alertID, alert.ID)
 	})
@@ -157,7 +157,7 @@ func TestAlerts(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var alert mongodbatlas.Alert
+		var alert opsmngr.Alert
 		require.NoError(t, json.Unmarshal(resp, &alert))
 		a.Equal(alertID, alert.ID)
 	})
@@ -173,7 +173,7 @@ func TestAlerts(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var alert mongodbatlas.Alert
+		var alert opsmngr.Alert
 		require.NoError(t, json.Unmarshal(resp, &alert))
 		a.Equal(alertID, alert.ID)
 	})

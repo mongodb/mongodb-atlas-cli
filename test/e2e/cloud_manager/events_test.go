@@ -24,7 +24,7 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestEvents(t *testing.T) {
@@ -48,7 +48,7 @@ func TestEvents(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var events mongodbatlas.EventResponse
+		var events opsmngr.EventResponse
 		if err := json.Unmarshal(resp, &events); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -71,7 +71,7 @@ func TestEvents(t *testing.T) {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
 
-		var events mongodbatlas.EventResponse
+		var events opsmngr.EventResponse
 		if err := json.Unmarshal(resp, &events); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}

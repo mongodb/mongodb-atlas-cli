@@ -28,8 +28,8 @@ jobs:
 
         with:
           title: "APIBot: SDK update"
-          commit-message: "fix: update go SDK"
+          commit-message: "build(deps): bump go.mongodb.org/atlas-sdk"
           delete-branch: true
-          branch: sdk-update
+          branch: atlas-sdk-update
           body: |
             Automatic update for MongoDB Atlas Go Client SDK

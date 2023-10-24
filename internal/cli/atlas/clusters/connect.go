@@ -64,10 +64,10 @@ func username() (string, error) {
 }
 
 func (opts *ConnectOpts) invalidCertFile(certPath string) bool {
-	sevenDaysAgo := time.Now().AddDate(0, 0, -7)
+	aMonthAgo := time.Now().AddDate(0, -1, 0)
 	info, err := opts.fs.Stat(certPath)
 
-	return os.IsNotExist(err) || info.ModTime().Before(sevenDaysAgo)
+	return os.IsNotExist(err) || info.ModTime().Before(aMonthAgo)
 }
 
 func (opts *ConnectOpts) userExists(usr string) bool {

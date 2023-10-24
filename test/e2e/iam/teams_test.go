@@ -55,13 +55,12 @@ func TestTeams(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var team mongodbatlas.Team
-		if err := json.Unmarshal(resp, &team); a.NoError(err) {
-			a.Equal(teamName, team.Name)
-			teamID = team.ID
-		}
+		require.NoError(t, json.Unmarshal(resp, &team))
+		a.Equal(teamName, team.Name)
+		teamID = team.ID
 	})
 	require.NotEmpty(t, teamID)
 
@@ -77,12 +76,11 @@ func TestTeams(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var team mongodbatlas.Team
-		if err := json.Unmarshal(resp, &team); a.NoError(err) {
-			a.Equal(teamID, team.ID)
-		}
+		require.NoError(t, json.Unmarshal(resp, &team))
+		a.Equal(teamID, team.ID)
 	})
 
 	t.Run("Describe By Name", func(t *testing.T) {
@@ -97,12 +95,11 @@ func TestTeams(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var team mongodbatlas.Team
-		if err := json.Unmarshal(resp, &team); a.NoError(err) {
-			a.Equal(teamName, team.Name)
-		}
+		require.NoError(t, json.Unmarshal(resp, &team))
+		a.Equal(teamName, team.Name)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -115,12 +112,11 @@ func TestTeams(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var teams []mongodbatlas.Team
-		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
-			a.NotEmpty(t, teams)
-		}
+		require.NoError(t, json.Unmarshal(resp, &teams))
+		a.NotEmpty(t, teams)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -133,9 +129,8 @@ func TestTeams(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("Team '%s' deleted\n", teamID)
-			a.Equal(expected, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		expected := fmt.Sprintf("Team '%s' deleted\n", teamID)
+		a.Equal(expected, string(resp))
 	})
 }

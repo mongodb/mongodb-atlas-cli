@@ -56,12 +56,10 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe",
-		Aliases: []string{"get"},
-		Short:   "Return the maintenance window details for your project.",
-		Long: `To learn more about maintenance windows, see https://www.mongodb.com/docs/atlas/tutorial/cluster-maintenance-window/.
-
-` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
+		Use:         "describe",
+		Aliases:     []string{"get"},
+		Short:       "Return the maintenance window details for your project.",
+		Long:        longDesc + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{"output": describeTemplate},
 		Example: fmt.Sprintf(`  # Return the maintenance window for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s maintenanceWindows describe --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),

@@ -59,12 +59,11 @@ func TestIntegrations(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var thirdPartyIntegrations atlasv2.PaginatedIntegration
-		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			a.True(integrationExists(datadogEntity, thirdPartyIntegrations))
-		}
+		require.NoError(t, json.Unmarshal(resp, &thirdPartyIntegrations))
+		a.True(integrationExists(datadogEntity, thirdPartyIntegrations))
 	})
 
 	t.Run("Create OPSGENIE", func(t *testing.T) {
@@ -84,12 +83,11 @@ func TestIntegrations(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var thirdPartyIntegrations atlasv2.PaginatedIntegration
-		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			a.True(integrationExists(opsGenieEntity, thirdPartyIntegrations))
-		}
+		require.NoError(t, json.Unmarshal(resp, &thirdPartyIntegrations))
+		a.True(integrationExists(opsGenieEntity, thirdPartyIntegrations))
 	})
 
 	t.Run("Create PAGER_DUTY", func(t *testing.T) {
@@ -109,12 +107,11 @@ func TestIntegrations(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var thirdPartyIntegrations atlasv2.PaginatedIntegration
-		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			a.True(integrationExists(pagerDutyEntity, thirdPartyIntegrations))
-		}
+		require.NoError(t, json.Unmarshal(resp, &thirdPartyIntegrations))
+		a.True(integrationExists(pagerDutyEntity, thirdPartyIntegrations))
 	})
 
 	t.Run("Create VICTOR_OPS", func(t *testing.T) {
@@ -136,12 +133,11 @@ func TestIntegrations(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var thirdPartyIntegrations atlasv2.PaginatedIntegration
-		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			a.True(integrationExists(victorOpsEntity, thirdPartyIntegrations))
-		}
+		require.NoError(t, json.Unmarshal(resp, &thirdPartyIntegrations))
+		a.True(integrationExists(victorOpsEntity, thirdPartyIntegrations))
 	})
 
 	t.Run("Create WEBHOOK", func(t *testing.T) {
@@ -160,12 +156,11 @@ func TestIntegrations(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var thirdPartyIntegrations atlasv2.PaginatedIntegration
-		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			a.True(integrationExists(webhookEntity, thirdPartyIntegrations))
-		}
+		require.NoError(t, json.Unmarshal(resp, &thirdPartyIntegrations))
+		a.True(integrationExists(webhookEntity, thirdPartyIntegrations))
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -179,11 +174,10 @@ func TestIntegrations(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 		var thirdPartyIntegrations atlasv2.PaginatedIntegration
-		if err := json.Unmarshal(resp, &thirdPartyIntegrations); a.NoError(err) {
-			a.NotEmpty(thirdPartyIntegrations.Results)
-		}
+		require.NoError(t, json.Unmarshal(resp, &thirdPartyIntegrations))
+		a.NotEmpty(thirdPartyIntegrations.Results)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -198,11 +192,10 @@ func TestIntegrations(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 		var thirdPartyIntegration atlasv2.ThridPartyIntegration
-		if err := json.Unmarshal(resp, &thirdPartyIntegration); a.NoError(err) {
-			a.Equal(webhookEntity, thirdPartyIntegration.GetType())
-		}
+		require.NoError(t, json.Unmarshal(resp, &thirdPartyIntegration))
+		a.Equal(webhookEntity, thirdPartyIntegration.GetType())
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -217,8 +210,7 @@ func TestIntegrations(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
-
+		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Integration '%s' deleted\n", webhookEntity)
 		a.Equal(expected, string(resp))
 	})

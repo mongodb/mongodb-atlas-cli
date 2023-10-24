@@ -56,11 +56,9 @@ func TestOrgInvitations(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var invitation mongodbatlas.Invitation
-		if err := json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailOrg, invitation.Username)
-			require.NotEmpty(t, invitation.ID)
-		}
-
+		require.NoError(t, json.Unmarshal(resp, &invitation))
+		a.Equal(emailOrg, invitation.Username)
+		require.NotEmpty(t, invitation.ID)
 		orgInvitationID = invitation.ID
 	})
 
@@ -78,9 +76,8 @@ func TestOrgInvitations(t *testing.T) {
 		a := assert.New(t)
 
 		var invitations []mongodbatlas.Invitation
-		if err = json.Unmarshal(resp, &invitations); a.NoError(err) {
-			a.NotEmpty(invitations)
-		}
+		require.NoError(t, json.Unmarshal(resp, &invitations))
+		a.NotEmpty(invitations)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -98,9 +95,8 @@ func TestOrgInvitations(t *testing.T) {
 		a := assert.New(t)
 
 		var invitation mongodbatlas.Invitation
-		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(orgInvitationID, invitation.ID)
-		}
+		require.NoError(t, json.Unmarshal(resp, &invitation))
+		a.Equal(orgInvitationID, invitation.ID)
 	})
 
 	t.Run("Update by email", func(t *testing.T) {
@@ -121,10 +117,9 @@ func TestOrgInvitations(t *testing.T) {
 		a := assert.New(t)
 
 		var invitation mongodbatlas.Invitation
-		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailOrg, invitation.Username)
-			a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
-		}
+		require.NoError(t, json.Unmarshal(resp, &invitation))
+		a.Equal(emailOrg, invitation.Username)
+		a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
 	})
 
 	t.Run("Update by ID", func(t *testing.T) {
@@ -143,10 +138,9 @@ func TestOrgInvitations(t *testing.T) {
 
 		a := assert.New(t)
 		var invitation mongodbatlas.Invitation
-		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailOrg, invitation.Username)
-			a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
-		}
+		require.NoError(t, json.Unmarshal(resp, &invitation))
+		a.Equal(emailOrg, invitation.Username)
+		a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -160,9 +154,8 @@ func TestOrgInvitations(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("Invitation '%s' deleted\n", orgInvitationID)
-			a.Equal(expected, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		expected := fmt.Sprintf("Invitation '%s' deleted\n", orgInvitationID)
+		a.Equal(expected, string(resp))
 	})
 }

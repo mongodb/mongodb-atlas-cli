@@ -22,7 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -45,5 +45,5 @@ func TestAgentsList_Run(t *testing.T) {
 
 	config.SetService(config.OpsManagerService)
 
-	assert.NoError(t, listOpts.Run())
+	require.NoError(t, listOpts.Run())
 }

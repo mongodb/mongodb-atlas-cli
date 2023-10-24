@@ -46,12 +46,11 @@ func TestCustomDNS(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var dns atlasv2.AWSCustomDNSEnabled
-		if err := json.Unmarshal(resp, &dns); a.NoError(err) {
-			a.True(dns.Enabled)
-		}
+		require.NoError(t, json.Unmarshal(resp, &dns))
+		a.True(dns.Enabled)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -66,12 +65,11 @@ func TestCustomDNS(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var dns atlasv2.AWSCustomDNSEnabled
-		if err := json.Unmarshal(resp, &dns); a.NoError(err) {
-			a.True(dns.Enabled)
-		}
+		require.NoError(t, json.Unmarshal(resp, &dns))
+		a.True(dns.Enabled)
 	})
 
 	t.Run("Disable", func(t *testing.T) {
@@ -86,11 +84,9 @@ func TestCustomDNS(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
-
+		require.NoError(t, err, string(resp))
 		var dns atlasv2.AWSCustomDNSEnabled
-		if err := json.Unmarshal(resp, &dns); a.NoError(err) {
-			a.False(dns.Enabled)
-		}
+		require.NoError(t, json.Unmarshal(resp, &dns))
+		a.False(dns.Enabled)
 	})
 }

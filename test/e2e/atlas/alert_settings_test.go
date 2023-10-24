@@ -55,19 +55,17 @@ func TestAlertConfig(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+		var alert admin.GroupAlertsConfig
+		require.NoError(t, json.Unmarshal(resp, &alert))
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var alert admin.GroupAlertsConfig
-			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
-				a.Equal(eventTypeName, alert.GetEventTypeName())
-				a.NotEmpty(alert.Notifications)
-				a.Equal(delayMin, alert.Notifications[0].GetDelayMin())
-				a.Equal(group, alert.Notifications[0].GetTypeName())
-				a.Equal(intervalMin, alert.Notifications[0].GetIntervalMin())
-				a.False(alert.Notifications[0].GetSmsEnabled())
-				alertID = alert.GetId()
-			}
-		}
+		a.Equal(eventTypeName, alert.GetEventTypeName())
+		a.NotEmpty(alert.Notifications)
+		a.Equal(delayMin, alert.Notifications[0].GetDelayMin())
+		a.Equal(group, alert.Notifications[0].GetTypeName())
+		a.Equal(intervalMin, alert.Notifications[0].GetIntervalMin())
+		a.False(alert.Notifications[0].GetSmsEnabled())
+		alertID = alert.GetId()
 	})
 	if alertID == "" {
 		assert.FailNow(t, "Failed to create alert setting")
@@ -81,12 +79,10 @@ func TestAlertConfig(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
-		a := assert.New(t)
+		require.NoError(t, err, string(resp))
 		var config admin.PaginatedAlertConfig
-		if err := json.Unmarshal(resp, &config); a.NoError(err) {
-			a.NotEmpty(config.Results)
-		}
+		require.NoError(t, json.Unmarshal(resp, &config))
+		assert.NotEmpty(t, config.Results)
 	})
 
 	t.Run("List Compact", func(t *testing.T) {
@@ -98,12 +94,10 @@ func TestAlertConfig(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
-		a := assert.New(t)
+		require.NoError(t, err, string(resp))
 		var config []admin.GroupAlertsConfig
-		if err := json.Unmarshal(resp, &config); a.NoError(err) {
-			a.NotEmpty(config)
-		}
+		require.NoError(t, json.Unmarshal(resp, &config))
+		assert.NotEmpty(t, config)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -127,15 +121,13 @@ func TestAlertConfig(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var alert admin.GroupAlertsConfig
-			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
-				a.False(alert.GetEnabled())
-				a.NotEmpty(alert.Notifications)
-				a.True(alert.Notifications[0].GetSmsEnabled())
-				a.True(alert.Notifications[0].GetEmailEnabled())
-			}
-		}
+		require.NoError(t, err, string(resp))
+		var alert admin.GroupAlertsConfig
+		require.NoError(t, json.Unmarshal(resp, &alert))
+		a.False(alert.GetEnabled())
+		a.NotEmpty(alert.Notifications)
+		a.True(alert.Notifications[0].GetSmsEnabled())
+		a.True(alert.Notifications[0].GetEmailEnabled())
 	})
 
 	t.Run("Update Setting using file input", func(t *testing.T) {
@@ -171,15 +163,13 @@ func TestAlertConfig(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var alert admin.GroupAlertsConfig
-			if err := json.Unmarshal(resp, &alert); a.NoError(err) {
-				a.False(alert.GetEnabled())
-				a.NotEmpty(alert.Notifications)
-				a.True(alert.Notifications[0].GetSmsEnabled())
-				a.True(alert.Notifications[0].GetEmailEnabled())
-			}
-		}
+		require.NoError(t, err, string(resp))
+		var alert admin.GroupAlertsConfig
+		require.NoError(t, json.Unmarshal(resp, &alert))
+		a.False(alert.GetEnabled())
+		a.NotEmpty(alert.Notifications)
+		a.True(alert.Notifications[0].GetSmsEnabled())
+		a.True(alert.Notifications[0].GetEmailEnabled())
 	})
 
 	t.Run("Delete", func(t *testing.T) {

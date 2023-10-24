@@ -75,7 +75,7 @@ func UpdateBuilder() *cobra.Command {
 		
 To view possible values for the apiKeyId argument, run %s organizations apiKeys list.
 
-`+fmt.Sprintf(usage.RequiredRole, "Organization User Admin"), cli.ExampleAtlasEntryPoint()),
+%s`, cli.ExampleAtlasEntryPoint(), fmt.Sprintf(usage.RequiredRole, "Organization User Admin")),
 		Annotations: map[string]string{
 			"apiKeyIdDesc": "Unique 24-digit string that identifies your API key.",
 			"output":       updateTemplate,

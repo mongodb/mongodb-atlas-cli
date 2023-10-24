@@ -18,11 +18,10 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestReadAnswer(t *testing.T) {
-	a := assert.New(t)
-
 	testCases := []struct {
 		input    interface{}
 		name     string
@@ -117,15 +116,19 @@ func TestReadAnswer(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		answer, err := readAnswer(testCase.input, testCase.name)
-		a.NoError(err)
-		a.Equal(testCase.expected, answer)
+		input := testCase.input
+		name := testCase.name
+		expected := testCase.expected
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			answer, err := readAnswer(input, name)
+			require.NoError(t, err)
+			assert.Equal(t, expected, answer)
+		})
 	}
 }
 
 func TestReadAnswerNotFound(t *testing.T) {
-	a := assert.New(t)
-
 	testCases := []struct {
 		input interface{}
 		name  string
@@ -166,14 +169,17 @@ func TestReadAnswerNotFound(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		_, err := readAnswer(testCase.input, testCase.name)
-		a.ErrorIs(err, ErrFieldNotFound)
+		input := testCase.input
+		name := testCase.name
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			_, err := readAnswer(input, name)
+			require.ErrorIs(t, err, ErrFieldNotFound)
+		})
 	}
 }
 
 func TestReadAnswerNotStructOrMap(t *testing.T) {
-	a := assert.New(t)
-
 	test := "value"
 
 	testCases := []struct {
@@ -195,7 +201,12 @@ func TestReadAnswerNotStructOrMap(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		_, err := readAnswer(testCase.input, testCase.name)
-		a.ErrorIs(err, ErrNotMapOrStruct)
+		input := testCase.input
+		name := testCase.name
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			_, err := readAnswer(input, name)
+			require.ErrorIs(t, err, ErrNotMapOrStruct)
+		})
 	}
 }

@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/spf13/afero"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 )
@@ -37,32 +36,32 @@ func TestLoad(t *testing.T) {
 	t.Run("load file does not exists", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		err := Load(appFS, xmlFileName, nil)
-		assert.ErrorIs(t, err, ErrFileNotFound)
+		require.ErrorIs(t, err, ErrFileNotFound)
 	})
 	t.Run("load file with no ext", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		_ = afero.WriteFile(appFS, noExtFileName, []byte(""), 0600)
 		err := Load(appFS, noExtFileName, nil)
-		assert.ErrorIs(t, err, ErrMissingFileType)
+		require.ErrorIs(t, err, ErrMissingFileType)
 	})
 	t.Run("load file with invalid ext", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		require.NoError(t, afero.WriteFile(appFS, txtFileName, []byte(""), 0600))
 		err := Load(appFS, txtFileName, nil)
-		assert.ErrorIs(t, err, ErrUnsupportedFileType)
+		require.ErrorIs(t, err, ErrUnsupportedFileType)
 	})
 	t.Run("load valid json file", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		_ = afero.WriteFile(appFS, jsonFileName, []byte("{}"), 0600)
 		out := new(map[string]interface{})
-		assert.NoError(t, Load(appFS, jsonFileName, out))
+		require.NoError(t, Load(appFS, jsonFileName, out))
 	})
 	t.Run("load valid yaml file", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		_ = afero.WriteFile(appFS, yamlFileName, []byte(""), 0600)
 		out := new(map[string]interface{})
 		err := Load(appFS, yamlFileName, out)
-		assert.NoError(t, err, ErrMissingFileType)
+		require.NotErrorIs(t, err, ErrMissingFileType)
 	})
 }
 
@@ -71,12 +70,12 @@ func TestSave(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		filename := "test"
 		err := Save(appFS, filename, nil)
-		assert.ErrorIs(t, err, ErrMissingFileType)
+		require.ErrorIs(t, err, ErrMissingFileType)
 	})
 	t.Run("save file with wrong ext", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		err := Save(appFS, txtFileName, nil)
-		assert.ErrorIs(t, err, ErrUnsupportedFileType)
+		require.ErrorIs(t, err, ErrUnsupportedFileType)
 	})
 	t.Run("save valid yaml file", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
@@ -90,6 +89,6 @@ func TestSave(t *testing.T) {
 		}
 
 		yamlData, _ := yaml.Marshal(&tYaml)
-		assert.NoError(t, Save(appFS, yamlFileName, yamlData))
+		require.NoError(t, Save(appFS, yamlFileName, yamlData))
 	})
 }

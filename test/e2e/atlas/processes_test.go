@@ -45,14 +45,9 @@ func TestProcesses(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		if err := json.Unmarshal(resp, &processes); assert.NoError(t, err) {
-			require.NotEmpty(t, processes.Results)
-		}
+		require.NoError(t, err, string(resp))
+		require.NoError(t, json.Unmarshal(resp, &processes))
+		require.NotEmpty(t, processes.Results)
 	})
 
 	t.Run("list compact", func(t *testing.T) {
@@ -65,15 +60,10 @@ func TestProcesses(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 		var hostViewsCompact []atlasv2.ApiHostViewAtlas
-
-		if err := json.Unmarshal(resp, &hostViewsCompact); assert.NoError(t, err) {
-			require.NotEmpty(t, hostViewsCompact)
-		}
+		require.NoError(t, json.Unmarshal(resp, &hostViewsCompact))
+		require.NotEmpty(t, hostViewsCompact)
 	})
 
 	t.Run("describe", func(t *testing.T) {
@@ -86,14 +76,9 @@ func TestProcesses(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
-		var process *atlasv2.ApiHostViewAtlas
-		if err := json.Unmarshal(resp, &process); assert.NoError(t, err) {
-			assert.Equal(t, *process.Id, *processes.Results[0].Id)
-		}
+		require.NoError(t, err, string(resp))
+		var p *atlasv2.ApiHostViewAtlas
+		require.NoError(t, json.Unmarshal(resp, &p))
+		assert.Equal(t, *p.Id, *processes.Results[0].Id)
 	})
 }

@@ -69,7 +69,7 @@ func TestDefaultOpts_DefaultQuestions(t *testing.T) {
 			opts := &DefaultSetterOpts{
 				Service: tt.fields.Service,
 			}
-			assert.Equalf(t, tt.want, len(opts.DefaultQuestions()), "DefaultQuestions()")
+			assert.Len(t, opts.DefaultQuestions(), tt.want)
 		})
 	}
 }

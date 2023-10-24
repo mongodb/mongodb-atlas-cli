@@ -28,6 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -63,7 +64,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	assert.NoError(t, describeOpts.Run())
+	require.NoError(t, describeOpts.Run())
 
 	assert.Equal(t, `ID     SNAPSHOT   CLUSTER       TYPE        EXPIRES AT                      URLs
 test   test2      ClusterTest   test type   2023-01-01 00:00:00 +0000 UTC   test url

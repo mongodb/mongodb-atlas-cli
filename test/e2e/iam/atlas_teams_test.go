@@ -25,6 +25,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -59,13 +60,12 @@ func TestAtlasTeams(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var team atlasv2.Team
-		if err := json.Unmarshal(resp, &team); a.NoError(err) {
-			a.Equal(teamName, team.Name)
-			teamID = *team.Id
-		}
+		require.NoError(t, json.Unmarshal(resp, &team))
+		a.Equal(teamName, team.Name)
+		teamID = *team.Id
 	})
 
 	t.Run("Describe By Id", func(t *testing.T) {
@@ -79,12 +79,11 @@ func TestAtlasTeams(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var team atlasv2.TeamResponse
-		if err := json.Unmarshal(resp, &team); a.NoError(err) {
-			a.Equal(teamID, *team.Id)
-		}
+		require.NoError(t, json.Unmarshal(resp, &team))
+		a.Equal(teamID, *team.Id)
 	})
 
 	t.Run("Describe By Name", func(t *testing.T) {
@@ -98,12 +97,10 @@ func TestAtlasTeams(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
-
+		require.NoError(t, err, string(resp))
 		var team atlasv2.TeamResponse
-		if err := json.Unmarshal(resp, &team); a.NoError(err) {
-			a.Equal(teamName, *team.Name)
-		}
+		require.NoError(t, json.Unmarshal(resp, &team))
+		a.Equal(teamName, *team.Name)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -115,12 +112,11 @@ func TestAtlasTeams(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var teams atlasv2.PaginatedTeam
-		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
-			a.NotEmpty(t, teams.Results)
-		}
+		require.NoError(t, json.Unmarshal(resp, &teams))
+		a.NotEmpty(t, teams.Results)
 	})
 
 	t.Run("List Compact", func(t *testing.T) {
@@ -133,12 +129,11 @@ func TestAtlasTeams(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var teams []atlasv2.TeamResponse
-		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
-			a.NotEmpty(t, teams)
-		}
+		require.NoError(t, json.Unmarshal(resp, &teams))
+		a.NotEmpty(t, teams)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -150,9 +145,8 @@ func TestAtlasTeams(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("Team '%s' deleted\n", teamID)
-			a.Equal(expected, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		expected := fmt.Sprintf("Team '%s' deleted\n", teamID)
+		a.Equal(expected, string(resp))
 	})
 }

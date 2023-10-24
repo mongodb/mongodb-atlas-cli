@@ -152,14 +152,13 @@ func TestEmptyProject(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
-
-		assertions.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
 			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NotEmpty(t, objects)
 		})
 
 		checkProject(t, objects, expectedProject, assertions)
@@ -216,13 +215,13 @@ func TestProjectWithNonDefaultSettings(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
-		assertions.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NoError(t, err)
+			require.NotEmpty(t, objects)
 		})
 
 		checkProject(t, objects, expectedProject, assertions)
@@ -291,13 +290,13 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
-		assertions.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NoError(t, err)
+			require.NotEmpty(t, objects)
 		})
 
 		checkProject(t, objects, expectedProject, assertions)
@@ -348,13 +347,13 @@ func TestProjectWithAccessList(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
-		assertions.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
 			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NotEmpty(t, objects)
 		})
 
 		checkProject(t, objects, expectedProject, assertions)
@@ -401,13 +400,13 @@ func TestProjectWithAccessRole(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
-		assertions.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NoError(t, err)
+			require.NotEmpty(t, objects)
 		})
 
 		checkProject(t, objects, expectedProject, assertions)
@@ -467,13 +466,13 @@ func TestProjectWithCustomRole(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
-		assertions.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
 			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NotEmpty(t, objects)
 		})
 
 		checkProject(t, objects, expectedProject, assertions)
@@ -527,13 +526,13 @@ func TestProjectWithIntegration(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
-		assertions.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
 			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NotEmpty(t, objects)
 		})
 
 		checkProject(t, objects, expectedProject, assertions)
@@ -587,13 +586,13 @@ func TestProjectWithMaintenanceWindow(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
-		assertions.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
 			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NotEmpty(t, objects)
 		})
 
 		checkProject(t, objects, expectedProject, assertions)
@@ -656,13 +655,13 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 
 		resp, err = cmd.CombinedOutput()
 		t.Log(string(resp))
-		assertions.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
 			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NotEmpty(t, objects)
 		})
 
 		checkProject(t, objects, expectedProject, assertions)
@@ -690,7 +689,8 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 			privateEndpointsEntity,
 			azureEntity,
 			"create",
-			"--region="+region,
+			"--region",
+			region,
 			"--projectId",
 			generator.projectID,
 			"-o=json")
@@ -728,13 +728,13 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 
 		resp, err = cmd.CombinedOutput()
 		t.Log(string(resp))
-		assertions.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
 			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NotEmpty(t, objects)
 		})
 
 		checkProject(t, objects, expectedProject, assertions)
@@ -794,13 +794,13 @@ func TestProjectAndTeams(t *testing.T) {
 
 		resp, err = cmd.CombinedOutput()
 		t.Log(string(resp))
-		assertions.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
 			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NotEmpty(t, objects)
 		})
 
 		checkProject(t, objects, expectedProject, assertions)
@@ -1227,9 +1227,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Generate valid resources of ONE project and ONE cluster", func(t *testing.T) {
@@ -1248,9 +1246,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
@@ -1261,10 +1257,8 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 
 		t.Run("Project present with valid name", func(t *testing.T) {
 			p, found := findAtlasProject(objects)
-			if !found {
-				t.Fatal("AtlasProject is not found in results")
-			}
-			assert.Equal(t, p.Namespace, targetNamespace)
+			require.True(t, found, "AtlasProject is not found in results")
+			assert.Equal(t, targetNamespace, p.Namespace)
 		})
 
 		t.Run("Deployment present with valid data", func(t *testing.T) {
@@ -1281,31 +1275,25 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 			if !found {
 				t.Fatal("AtlasDeployment is not found in results")
 			}
-			a.Equal(expectedDeployment, deployment)
+			assert.Equal(t, expectedDeployment, deployment)
 		})
 
 		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
 			secret, found := findSecret(objects)
-			if !found {
-				t.Fatal("Secret is not found in results")
-			}
-			assert.Equal(t, secret.Namespace, targetNamespace)
+			require.True(t, found, "Secret is not found in results")
+			assert.Equal(t, targetNamespace, secret.Namespace)
 		})
 
 		t.Run("Backup Schedule present with valid data", func(t *testing.T) {
 			schedule, found := atlasBackupSchedule(objects)
-			if !found {
-				t.Fatal("AtlasBackupSchedule is not found in results")
-			}
+			require.True(t, found, "AtlasBackupSchedule is not found in results")
 			assert.Equal(t, expectedBackupSchedule, schedule)
 		})
 
 		t.Run("Backup policy present with valid data", func(t *testing.T) {
 			policy, found := atlasBackupPolicy(objects)
-			if !found {
-				t.Fatal("AtlasBackupSchedule is not found in results")
-			}
-			a.Equal(expectedBackupPolicy, policy)
+			require.True(t, found, "AtlasBackupPolicy is not found in results")
+			assert.Equal(t, expectedBackupPolicy, policy)
 		})
 	})
 
@@ -1325,15 +1313,13 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
 			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NotEmpty(t, objects)
 		})
 
 		t.Run("Project present with valid name", func(t *testing.T) {
@@ -1379,7 +1365,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		t.Run("Output can be decoded", func(t *testing.T) {
 			objects, err = getK8SEntities(resp)
 			require.NoError(t, err, "should not fail on decode")
-			require.True(t, len(objects) > 0, "result should not be empty. got", len(objects))
+			require.NotEmpty(t, objects)
 		})
 
 		t.Run("Project present with valid name", func(t *testing.T) {
@@ -1400,7 +1386,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 			if !found {
 				t.Fatal("Secret is not found in results")
 			}
-			assert.Equal(t, secret.Namespace, targetNamespace)
+			assert.Equal(t, targetNamespace, secret.Namespace)
 		})
 	})
 }
@@ -1457,7 +1443,7 @@ func TestKubernetesConfigGenerateSharedCluster(t *testing.T) {
 			if !found {
 				t.Fatal("AtlasProject is not found in results")
 			}
-			assert.Equal(t, p.Namespace, targetNamespace)
+			assert.Equal(t, targetNamespace, p.Namespace)
 		})
 
 		t.Run("Deployment present with valid data", func(t *testing.T) {
@@ -1584,8 +1570,7 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
 
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
@@ -1614,7 +1599,7 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 			if !found {
 				t.Fatal("AtlasDataFederation is not found in results")
 			}
-			a.Equal(expectedDataFederation, datafederation)
+			assert.Equal(t, expectedDataFederation, datafederation)
 		})
 	})
 
@@ -1633,9 +1618,7 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {
@@ -1670,9 +1653,7 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		t.Log(string(resp))
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
 		t.Run("Output can be decoded", func(t *testing.T) {

@@ -22,6 +22,7 @@ import (
 
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 const dummyCA = `-----BEGIN CERTIFICATE-----
@@ -223,7 +224,7 @@ func TestValidateBlocks(t *testing.T) {
 
 		isEncrypted, err := pem.ValidateBlocks("pemfile")
 
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.False(t, isEncrypted)
 	})
 
@@ -234,7 +235,7 @@ func TestValidateBlocks(t *testing.T) {
 
 		isEncrypted, err := pem.ValidateBlocks("pemfile")
 
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.False(t, isEncrypted)
 	})
 
@@ -245,7 +246,7 @@ func TestValidateBlocks(t *testing.T) {
 
 		isEncrypted, err := pem.ValidateBlocks("pemfile")
 
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.True(t, isEncrypted)
 	})
 
@@ -257,7 +258,7 @@ func TestValidateBlocks(t *testing.T) {
 
 		isEncrypted, err := pem.ValidateBlocks("pemfile")
 
-		assert.Error(t, err)
+		require.Error(t, err)
 		assert.False(t, isEncrypted)
 	})
 
@@ -269,7 +270,7 @@ func TestValidateBlocks(t *testing.T) {
 
 		isEncrypted, err := pem.ValidateBlocks("pemfile")
 
-		assert.Error(t, err)
+		require.Error(t, err)
 		assert.False(t, isEncrypted)
 	})
 }
@@ -282,7 +283,7 @@ func TestDecode(t *testing.T) {
 
 		cert, privateKey, err := pem.Decode("pemfile", "")
 
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Contains(t, string(cert), CertificateBlock)
 		assert.Contains(t, string(privateKey), RSAPrivateKeyBlock)
 	})
@@ -294,7 +295,7 @@ func TestDecode(t *testing.T) {
 
 		cert, privateKey, err := pem.Decode("pemfile", "wrong pwd")
 
-		assert.Error(t, err)
+		require.Error(t, err)
 		assert.Nil(t, cert)
 		assert.Nil(t, privateKey)
 	})
@@ -306,7 +307,7 @@ func TestDecode(t *testing.T) {
 
 		cert, privateKey, err := pem.Decode("pemfile", dummyPwd)
 
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Contains(t, string(cert), CertificateBlock)
 		assert.Contains(t, string(privateKey), RSAPrivateKeyBlock)
 	})

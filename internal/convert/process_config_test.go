@@ -220,7 +220,7 @@ func Test_newConfigRSProcess(t *testing.T) {
 		Version:     "4.4.1-ent",
 	}
 	got := newConfigRSProcess(p, "myReplicaSet")
-	assert.Equal(t, got, want)
+	assert.Equal(t, want, got)
 }
 
 func Test_newConfigRSProcess_audit(t *testing.T) {
@@ -302,7 +302,7 @@ func Test_newConfigRSProcess_audit(t *testing.T) {
 		Version:     "4.4.1-ent",
 	}
 	got := newConfigRSProcess(p, "myReplicaSet")
-	assert.Equal(t, got, want)
+	assert.Equal(t, want, got)
 }
 
 func Test_newReplicaSetProcess(t *testing.T) {
@@ -391,7 +391,7 @@ func Test_newReplicaSetProcess(t *testing.T) {
 		Version:     "4.4.1-ent",
 	}
 	got := newReplicaSetProcess(p, "myReplicaSet")
-	assert.Equal(t, got, want)
+	assert.Equal(t, want, got)
 }
 
 func Test_newMongosProcessConfig(t *testing.T) {
@@ -448,5 +448,5 @@ func Test_newMongosProcessConfig(t *testing.T) {
 		},
 	}
 	got := newMongosProcessConfig(p)
-	assert.Equal(t, got, want)
+	assert.Equal(t, want, got)
 }

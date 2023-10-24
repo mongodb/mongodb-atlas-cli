@@ -22,7 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestDelete_Run(t *testing.T) {
@@ -44,5 +44,5 @@ func TestDelete_Run(t *testing.T) {
 		Times(1)
 
 	err := deleteOpts.Run()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }

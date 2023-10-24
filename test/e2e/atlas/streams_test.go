@@ -113,8 +113,8 @@ func TestStreams(t *testing.T) {
 
 		a.Len(instances.Results, 1)
 		a.Equal(*instances.Results[0].Name, instanceName)
-		a.Equal(instances.Results[0].DataProcessRegion.CloudProvider, "AWS")
-		a.Equal(instances.Results[0].DataProcessRegion.Region, "VIRGINIA_USA")
+		a.Equal("AWS", instances.Results[0].DataProcessRegion.CloudProvider)
+		a.Equal("VIRGINIA_USA", instances.Results[0].DataProcessRegion.Region)
 	})
 
 	t.Run("Describing a streams instance", func(t *testing.T) {
@@ -135,9 +135,9 @@ func TestStreams(t *testing.T) {
 		var instance atlasv2.StreamsTenant
 		req.NoError(json.Unmarshal(resp, &instance))
 
-		a.Equal(*instance.Name, instanceName)
-		a.Equal(instance.DataProcessRegion.CloudProvider, "AWS")
-		a.Equal(instance.DataProcessRegion.Region, "VIRGINIA_USA")
+		a.Equal(instanceName, *instance.Name)
+		a.Equal("AWS", instance.DataProcessRegion.CloudProvider)
+		a.Equal("VIRGINIA_USA", instance.DataProcessRegion.Region)
 	})
 
 	t.Run("Updating a streams instance", func(t *testing.T) {
@@ -164,8 +164,8 @@ func TestStreams(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &instance))
 
 		a.Equal(*instance.Name, instanceName)
-		a.Equal(instance.DataProcessRegion.CloudProvider, "AWS")
-		a.Equal(instance.DataProcessRegion.Region, "VIRGINIA_USA")
+		a.Equal("AWS", instance.DataProcessRegion.CloudProvider)
+		a.Equal("VIRGINIA_USA", instance.DataProcessRegion.Region)
 	})
 
 	// Connections
@@ -214,9 +214,9 @@ func TestStreams(t *testing.T) {
 		var connection atlasv2.StreamsConnection
 		req.NoError(json.Unmarshal(resp, &connection))
 
-		a.Equal(*connection.Name, connectionName)
-		a.Equal(*connection.Type, "Kafka")
-		a.Equal(*connection.BootstrapServers, "example.com:8080,fraud.example.com:8000")
+		a.Equal(connectionName, *connection.Name)
+		a.Equal("Kafka", *connection.Type)
+		a.Equal("example.com:8080,fraud.example.com:8000", *connection.BootstrapServers)
 	})
 
 	t.Run("Listing streams connections", func(t *testing.T) {
@@ -240,9 +240,9 @@ func TestStreams(t *testing.T) {
 
 		connections := response.Results
 		a.Len(connections, 1)
-		a.Equal(*connections[0].Name, connectionName)
-		a.Equal(*connections[0].Type, "Kafka")
-		a.Equal(*connections[0].BootstrapServers, "example.com:8080,fraud.example.com:8000")
+		a.Equal(connectionName, *connections[0].Name)
+		a.Equal("Kafka", *connections[0].Type)
+		a.Equal("example.com:8080,fraud.example.com:8000", *connections[0].BootstrapServers)
 	})
 
 	t.Run("Updating a streams connection", func(t *testing.T) {
@@ -268,7 +268,7 @@ func TestStreams(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &connection))
 
 		a.Equal(*connection.Name, connectionName)
-		a.Equal(*connection.Security.Protocol, "SSL")
+		a.Equal("SSL", *connection.Security.Protocol)
 	})
 
 	t.Run("Deleting a streams connection", func(t *testing.T) {

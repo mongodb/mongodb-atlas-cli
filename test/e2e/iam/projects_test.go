@@ -24,7 +24,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -52,7 +52,7 @@ func TestProjects(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var project mongodbatlas.Project
 		if err = json.Unmarshal(resp, &project); err != nil {
@@ -74,7 +74,7 @@ func TestProjects(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -87,7 +87,7 @@ func TestProjects(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Users", func(t *testing.T) {
@@ -101,7 +101,7 @@ func TestProjects(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -114,7 +114,7 @@ func TestProjects(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Project '%s' deleted\n", projectID)
 		if string(resp) != expected {

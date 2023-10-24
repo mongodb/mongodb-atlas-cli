@@ -136,7 +136,7 @@ func TestGenerateAliases(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got := GenerateAliases(args.use, args.extra...)
-			assert.Equal(t, got, want)
+			assert.Equal(t, want, got)
 		})
 	}
 }

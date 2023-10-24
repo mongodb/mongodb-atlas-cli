@@ -24,6 +24,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -50,11 +51,9 @@ func TestAgentAPIKeys(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 
-		if a.NoError(err, string(resp)) {
-			var keys []*opsmngr.AgentAPIKey
-			err := json.Unmarshal(resp, &keys)
-			a.NoError(err)
-			a.NotEmpty(keys)
-		}
+		require.NoError(t, err, string(resp))
+		var keys []*opsmngr.AgentAPIKey
+		require.NoError(t, json.Unmarshal(resp, &keys))
+		a.NotEmpty(keys)
 	})
 }

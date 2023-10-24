@@ -67,14 +67,13 @@ func TestMaintenanceWindows(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var maintenanceWindow opsmngr.MaintenanceWindow
-		if err := json.Unmarshal(resp, &maintenanceWindow); a.NoError(err) {
-			a.Equal(startDate, maintenanceWindow.StartDate)
-			a.Equal(endDate, maintenanceWindow.EndDate)
-			maintenanceWindowID = maintenanceWindow.ID
-		}
+		require.NoError(t, json.Unmarshal(resp, &maintenanceWindow))
+		a.Equal(startDate, maintenanceWindow.StartDate)
+		a.Equal(endDate, maintenanceWindow.EndDate)
+		maintenanceWindowID = maintenanceWindow.ID
 	})
 
 	t.Run("describe", func(t *testing.T) {
@@ -89,14 +88,11 @@ func TestMaintenanceWindows(t *testing.T) {
 			projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var maintenanceWindow opsmngr.MaintenanceWindow
-		if err := json.Unmarshal(resp, &maintenanceWindow); a.NoError(err) {
-			a.Equal(maintenanceWindowID, maintenanceWindow.ID)
-		}
+		require.NoError(t, json.Unmarshal(resp, &maintenanceWindow))
+		assert.Equal(t, maintenanceWindowID, maintenanceWindow.ID)
 	})
 
 	t.Run("list", func(t *testing.T) {
@@ -112,12 +108,11 @@ func TestMaintenanceWindows(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var maintenanceWindows opsmngr.MaintenanceWindows
-		if err := json.Unmarshal(resp, &maintenanceWindows); a.NoError(err) {
-			a.NotEmpty(maintenanceWindows.Results)
-		}
+		require.NoError(t, json.Unmarshal(resp, &maintenanceWindows))
+		a.NotEmpty(maintenanceWindows.Results)
 	})
 
 	t.Run("update", func(t *testing.T) {
@@ -136,12 +131,11 @@ func TestMaintenanceWindows(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var maintenanceWindow opsmngr.MaintenanceWindow
-		if err := json.Unmarshal(resp, &maintenanceWindow); a.NoError(err) {
-			a.Contains(maintenanceWindow.AlertTypeNames, "CLUSTER")
-		}
+		require.NoError(t, json.Unmarshal(resp, &maintenanceWindow))
+		a.Contains(maintenanceWindow.AlertTypeNames, "CLUSTER")
 	})
 
 	t.Run("delete", func(t *testing.T) {
@@ -158,9 +152,8 @@ func TestMaintenanceWindows(t *testing.T) {
 
 		a := assert.New(t)
 
-		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("Maintenance window '%s' deleted\n", maintenanceWindowID)
-			a.Equal(expected, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		expected := fmt.Sprintf("Maintenance window '%s' deleted\n", maintenanceWindowID)
+		a.Equal(expected, string(resp))
 	})
 }

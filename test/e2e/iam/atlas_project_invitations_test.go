@@ -64,10 +64,9 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		a := assert.New(t)
 
 		var invitation admin.GroupInvitation
-		if err := json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailProject, invitation.GetUsername())
-			require.NotEmpty(t, invitation.GetId())
-		}
+		require.NoError(t, json.Unmarshal(resp, &invitation))
+		a.Equal(emailProject, invitation.GetUsername())
+		require.NotEmpty(t, invitation.GetId())
 		invitationID = invitation.GetId()
 	})
 
@@ -86,9 +85,8 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		a := assert.New(t)
 
 		var invitations []admin.GroupInvitation
-		if err = json.Unmarshal(resp, &invitations); a.NoError(err) {
-			a.NotEmpty(invitations)
-		}
+		require.NoError(t, json.Unmarshal(resp, &invitations))
+		a.NotEmpty(invitations)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -107,10 +105,9 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		a := assert.New(t)
 
 		var invitation admin.GroupInvitation
-		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(invitationID, invitation.GetId())
-			a.Equal([]string{"GROUP_READ_ONLY"}, invitation.GetRoles())
-		}
+		require.NoError(t, json.Unmarshal(resp, &invitation))
+		a.Equal(invitationID, invitation.GetId())
+		a.Equal([]string{"GROUP_READ_ONLY"}, invitation.GetRoles())
 	})
 
 	t.Run("Update by email", func(t *testing.T) {
@@ -134,10 +131,9 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		a := assert.New(t)
 
 		var invitation admin.GroupInvitation
-		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailProject, invitation.GetUsername())
-			a.ElementsMatch([]string{roleName1, roleName2}, invitation.GetRoles())
-		}
+		require.NoError(t, json.Unmarshal(resp, &invitation))
+		a.Equal(emailProject, invitation.GetUsername())
+		a.ElementsMatch([]string{roleName1, roleName2}, invitation.GetRoles())
 	})
 
 	t.Run("Update by ID", func(t *testing.T) {
@@ -160,10 +156,9 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		a := assert.New(t)
 
 		var invitation admin.GroupInvitation
-		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailProject, invitation.GetUsername())
-			a.ElementsMatch([]string{roleName1, roleName2}, invitation.GetRoles())
-		}
+		require.NoError(t, json.Unmarshal(resp, &invitation))
+		a.Equal(emailProject, invitation.GetUsername())
+		a.ElementsMatch([]string{roleName1, roleName2}, invitation.GetRoles())
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -179,9 +174,8 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("Invitation '%s' deleted\n", invitationID)
-			a.Equal(expected, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		expected := fmt.Sprintf("Invitation '%s' deleted\n", invitationID)
+		a.Equal(expected, string(resp))
 	})
 }

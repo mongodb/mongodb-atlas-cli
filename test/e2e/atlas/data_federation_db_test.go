@@ -63,9 +63,8 @@ func TestDataFederation(t *testing.T) {
 
 		a := assert.New(t)
 		var dataLake atlas.DataLake
-		if err = json.Unmarshal(resp, &dataLake); a.NoError(err) {
-			a.Equal(dataFederationName, dataLake.Name)
-		}
+		require.NoError(t, json.Unmarshal(resp, &dataLake))
+		a.Equal(dataFederationName, dataLake.Name)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -81,9 +80,8 @@ func TestDataFederation(t *testing.T) {
 
 		a := assert.New(t)
 		var dataLake atlas.DataLake
-		if err = json.Unmarshal(resp, &dataLake); a.NoError(err) {
-			a.Equal(dataFederationName, dataLake.Name)
-		}
+		require.NoError(t, json.Unmarshal(resp, &dataLake))
+		a.Equal(dataFederationName, dataLake.Name)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -97,9 +95,8 @@ func TestDataFederation(t *testing.T) {
 
 		var r []atlas.DataLake
 		a := assert.New(t)
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.NotEmpty(r)
-		}
+		require.NoError(t, json.Unmarshal(resp, &r))
+		a.NotEmpty(r)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -117,9 +114,8 @@ func TestDataFederation(t *testing.T) {
 
 		var dataLake atlas.DataLake
 		a := assert.New(t)
-		if err = json.Unmarshal(resp, &dataLake); a.NoError(err) {
-			a.Equal(updateRegion, dataLake.DataProcessRegion.Region)
-		}
+		require.NoError(t, json.Unmarshal(resp, &dataLake))
+		a.Equal(updateRegion, dataLake.DataProcessRegion.Region)
 	})
 
 	t.Run("Log", func(t *testing.T) {

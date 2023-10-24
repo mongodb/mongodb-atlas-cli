@@ -80,8 +80,7 @@ func isValidTagForTool(tag, tool string) bool {
 
 func (f *finder) loadOrGet() (*ReleaseInformation, *semver.Version, error) {
 	if newestRelease, err := f.load(); newestRelease != nil && err == nil {
-		ver, err := semver.NewVersion(newestRelease.Version)
-		if err == nil {
+		if ver, err := semver.NewVersion(newestRelease.Version); err == nil {
 			return newestRelease, ver, nil
 		}
 	}

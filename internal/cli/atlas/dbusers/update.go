@@ -42,6 +42,7 @@ type UpdateOpts struct {
 	authDB          string
 	roles           []string
 	scopes          []string
+	x509Type        string
 	store           store.DatabaseUserUpdater
 }
 
@@ -87,6 +88,7 @@ func (opts *UpdateOpts) update(out *admin.CloudDatabaseUser) {
 	if opts.authDB == "" {
 		out.DatabaseName = convert.GetAuthDB(out)
 	}
+	out.X509Type = pointer.GetStringPointerIfNotEmpty(opts.x509Type)
 }
 
 func (opts *UpdateOpts) validateAuthDB() error {
@@ -134,6 +136,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, "", usage.AtlasAuthDB)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles+usage.UpdateWarning)
 	cmd.Flags().StringSliceVar(&opts.scopes, flag.Scope, []string{}, usage.Scopes+usage.UpdateWarning)
+	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, none, usage.X509Type)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

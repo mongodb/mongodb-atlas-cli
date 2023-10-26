@@ -101,10 +101,12 @@ func (opts *DownloadOpts) downloadLogFile() error {
 	}
 	defer f.Close()
 
-	r := opts.newHostLogsParams()
-	if err = opts.downloadStore.DownloadLog(f, r); err != nil {
+	r, err := opts.downloadStore.DownloadLog(opts.newHostLogsParams())
+	if err != nil {
 		_ = opts.OnError(f)
 	}
+	defer r.Close()
+	_, err = io.Copy(f, r)
 	return err
 }
 

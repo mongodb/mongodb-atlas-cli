@@ -17,6 +17,8 @@
 package logs
 
 import (
+	"io"
+	"strings"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -50,8 +52,8 @@ func TestLogsDownloadOpts_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			DownloadLog(gomock.Any(), opts.newHostLogsParams()).
-			Return(nil).
+			DownloadLog(opts.newHostLogsParams()).
+			Return(io.NopCloser(strings.NewReader("")), nil).
 			Times(1)
 		require.NoError(t, opts.Run())
 	}

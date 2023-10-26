@@ -15,8 +15,10 @@
 package logs
 
 import (
+	"compress/gzip"
 	"context"
 	"fmt"
+	"io"
 	"path/filepath"
 	"strings"
 
@@ -35,11 +37,12 @@ import (
 type DownloadOpts struct {
 	cli.GlobalOpts
 	cli.DownloaderOpts
-	host  string
-	name  string
-	start int64
-	end   int64
-	store store.LogsDownloader
+	host       string
+	name       string
+	start      int64
+	end        int64
+	decompress bool
+	store      store.LogsDownloader
 }
 
 var downloadMessage = "Download of %s completed.\n"
@@ -52,18 +55,49 @@ func (opts *DownloadOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
+func (opts *DownloadOpts) write(w io.Writer, r io.Reader) error {
+	if !opts.decompress {
+		_, err := io.Copy(w, r)
+		return err
+	}
+
+	gr, errGz := gzip.NewReader(r)
+	if errGz != nil {
+		return errGz
+	}
+
+	for {
+		_, err := io.CopyN(w, gr, 1024) //nolint:gomnd // 1k each write to avoid compression bomb
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (opts *DownloadOpts) Run() error {
-	f, err := opts.NewWriteCloser()
+	w, err := opts.NewWriteCloser()
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer w.Close()
 
-	r := opts.newHostLogsParams()
-	if err := opts.store.DownloadLog(f, r); err != nil {
-		_ = opts.OnError(f)
+	r, err := opts.store.DownloadLog(opts.newHostLogsParams())
+	if err != nil {
+		_ = opts.OnError(w)
 		return err
 	}
+	defer r.Close()
+
+	if err := opts.write(w, r); err != nil {
+		_ = opts.OnError(w)
+		return err
+	}
+
 	if !opts.ShouldDownloadToStdout() {
 		fmt.Printf(downloadMessage, opts.Out)
 	}
@@ -139,6 +173,7 @@ To find the hostnames for an Atlas project, use the process list command.
 	cmd.Flags().Int64Var(&opts.start, flag.Start, 0, usage.LogStart)
 	cmd.Flags().Int64Var(&opts.end, flag.End, 0, usage.LogEnd)
 	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.ForceFile)
+	cmd.Flags().BoolVarP(&opts.decompress, flag.Decompress, flag.DecompressShort, false, usage.Decompress)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

@@ -58,7 +58,7 @@ func (opts *SetOpts) Run() error {
 	if opts.prop == config.TelemetryEnabledProperty && mongosh.Detect() {
 		err := mongosh.SetTelemetry(value.(bool))
 		if err != nil {
-			return fmt.Errorf("error setting telemetry on mongosh: %w", err)
+			return fmt.Errorf("error enabling telemetry on mongosh: %w", err)
 		}
 	}
 

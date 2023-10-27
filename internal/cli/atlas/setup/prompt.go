@@ -83,7 +83,7 @@ func newDBUserPasswordQuestion(password, message string) *survey.Question {
 func newSampleDataQuestion() survey.Prompt {
 	return &survey.Confirm{
 		Message: "Do you want to load a sample dataset?",
-		Help:    "Load a sample dataset to help you test features in your cluster. See: https://docs.atlas.mongodb.com/sample-data/available-sample-datasets/.",
+		Help:    "Load a sample dataset to help you test features in your cluster. To learn more, see: https://dochub.mongodb.org/core/available-sample-datasets-atlas.",
 		Default: true,
 	}
 }
@@ -96,7 +96,7 @@ func newClusterCreateConfirm() survey.Prompt {
 }
 
 func newClusterDefaultConfirm(tier string) survey.Prompt {
-	message := "Do you want to setup your Atlas database with default settings?"
+	message := "Do you want to set up your Atlas database with default settings?"
 	if tier != DefaultAtlasTier {
 		message = "Are you ready to create your Atlas cluster with the above settings?"
 	}

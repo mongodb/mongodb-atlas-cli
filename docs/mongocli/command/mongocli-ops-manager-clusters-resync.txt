@@ -80,7 +80,7 @@ Options
    * - --timestamp
      - string
      - false
-     - Timestamp in ISO 8601 format when the sync starts. If not set, defaults to the current timestamp.
+     - Timestamp in ISO 8601 format when the sync starts. This option defaults to the current timestamp.
 
 Inherited Options
 -----------------

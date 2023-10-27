@@ -78,7 +78,7 @@ Options
    * - --referenceTimeZoneOffset
      - string
      - false
-     - The ISO-8601-formatted timezone offset where the Ops Manager host resides.
+     - ISO-8601-formatted timezone offset where the Ops Manager host resides.
    * - --snapshotIntervalHours
      - int
      - false

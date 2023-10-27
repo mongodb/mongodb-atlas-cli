@@ -76,7 +76,7 @@ var (
 	settingsDescription       = map[string]string{
 		defaultSettings: "With default settings",
 		customSettings:  "With custom settings",
-		cancelSettings:  "Cancel set up",
+		cancelSettings:  "Cancel setup",
 	}
 	connectWithOptions     = []string{options.MongoshConnect, options.CompassConnect, skipConnect}
 	connectWithDescription = map[string]string{
@@ -119,7 +119,7 @@ func (opts *SetupOpts) logStepStarted(msg string, currentStep int, totalSteps in
 }
 
 func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, currentStep int, steps int) error {
-	opts.logStepStarted("Downloading MongoDB binaries to your local environment...", currentStep, steps)
+	opts.logStepStarted("Downloading the MongoDB binaries to your local environment...", currentStep, steps)
 	defer opts.stop()
 
 	var mongodImages []*podman.Image
@@ -150,7 +150,7 @@ func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, current
 }
 
 func (opts *SetupOpts) setupPodman(ctx context.Context, currentStep int, steps int) error {
-	opts.logStepStarted("Downloading and completing configuration...", currentStep, steps)
+	opts.logStepStarted("Downloading and completing the configuration...", currentStep, steps)
 	defer opts.stop()
 
 	return opts.PodmanClient.Ready(ctx)
@@ -251,7 +251,7 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	}
 
 	// create local deployment
-	opts.logStepStarted(fmt.Sprintf("Creating your cluster %s...", opts.DeploymentName), currentStep, steps)
+	opts.logStepStarted(fmt.Sprintf("Creating your deployment %s...", opts.DeploymentName), currentStep, steps)
 	defer opts.stop()
 
 	if _, err := opts.PodmanClient.CreateNetwork(ctx, opts.LocalNetworkName()); err != nil {
@@ -393,7 +393,7 @@ func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Con
 	for _, c := range containers {
 		for _, n := range c.Names {
 			if n == mongodContainerName {
-				return fmt.Errorf("\"%s\" deployment was already created and is currently in \"%s\" state", opts.DeploymentName, c.State)
+				return fmt.Errorf("\"%s\" deployment already exists and is currently in \"%s\" state", opts.DeploymentName, c.State)
 			}
 		}
 	}
@@ -403,7 +403,7 @@ func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Con
 
 func (opts *SetupOpts) promptSettings() error {
 	p := &survey.Select{
-		Message: "How do you want to set up your local MongoDB database?",
+		Message: "How do you want to set up your local Atlas deployment?",
 		Options: settingOptions,
 		Default: opts.settings,
 		Description: func(value string, index int) string {
@@ -420,7 +420,7 @@ func (opts *SetupOpts) generateDeploymentName() {
 
 func (opts *SetupOpts) promptDeploymentName() error {
 	p := &survey.Input{
-		Message: "Deployment Name [This can't be changed later]",
+		Message: "Deployment Name [You can't change this value later]",
 		Default: opts.DeploymentName,
 	}
 
@@ -435,7 +435,7 @@ func (opts *SetupOpts) promptMdbVersion() error {
 		Message: "Major MongoDB Version",
 		Options: mdbVersions,
 		Default: opts.MdbVersion,
-		Help:    "Major MongoDB Version of the deployment. Will pick the latest minor version available.",
+		Help:    "Major MongoDB Version for the deployment. Atlas CLI applies the latest minor version available.",
 	}
 
 	return telemetry.TrackAskOne(p, &opts.MdbVersion, nil)

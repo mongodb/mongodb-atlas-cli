@@ -40,7 +40,7 @@ Options
    * - -f, --file
      - string
      - false
-     - File name to use, optional file with a json policy configuration.
+     - File name that identifies an optional file with a json policy configuration.
    * - -h, --help
      - 
      - false

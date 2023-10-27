@@ -122,7 +122,7 @@ Options
    * - --transform
      - strings
      - false
-     - Fields to be excluded for this data lake pipeline. Passing this flag replaces preexisting data.
+     - Fields to exclude for this data lake pipeline. Passing this flag replaces preexisting data.
 
        Mutually exclusive with --file.
 

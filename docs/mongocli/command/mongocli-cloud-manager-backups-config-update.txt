@@ -94,11 +94,11 @@ Options
    * - --status
      - string
      - false
-     - Current (or desired) status of the backup configuration.
+     - Status of the backup configuration.
    * - --storageEngine
      - string
      - false
-     - Storage engine used for the backup.
+     - Storage engine for the backup.
    * - --syncSource
      - string
      - false
@@ -106,7 +106,7 @@ Options
    * - --username
      - string
      - false
-     - Username that identifies the user. This value must be a valid email address.
+     - Name that identifies the user. You must specify a valid email address.
 
 Inherited Options
 -----------------

@@ -38,7 +38,7 @@ Options
    * - --alertType
      - strings
      - true
-     - Alert types to silence during maintenance window. Valid values are HOST, REPLICA_SET, CLUSTER, AGENT, or BACKUP.
+     - Alert types to silence during the maintenance window. Valid values include HOST, REPLICA_SET, CLUSTER, AGENT, or BACKUP.
    * - --desc
      - string
      - false

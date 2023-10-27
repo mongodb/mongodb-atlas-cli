@@ -14,7 +14,7 @@ atlas backups exports buckets create
 
 Create an export destination for Atlas backups using an existing AWS S3 bucket.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------
@@ -56,7 +56,7 @@ Options
    * - --cloudProvider
      - string
      - true
-     - Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas only supports AWS.
+     - Name of the provider of the cloud service where Atlas can access the S3 bucket. Atlas supports only AWS.
    * - -h, --help
      - 
      - false

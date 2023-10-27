@@ -14,7 +14,7 @@ atlas serverless update
 
 Updates one serverless instance in the specified project.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------
@@ -68,7 +68,7 @@ Options
    * - --enableServerlessContinuousBackup
      - 
      - false
-     - Enables Serverless Continuous Backup for your serverless instance. If enabled the serverless instance does not use Basic Backup.
+     - Flag that enables Serverless Continuous Backup for your serverless instance. If enabled, the serverless instance does not use Basic Backup.
 
        Mutually exclusive with --disableServerlessContinuousBackup.
    * - --enableTerminationProtection
@@ -92,7 +92,7 @@ Options
    * - --tag
      - stringToString
      - false
-     - List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the serverless instance. Passing this flag replaces preexisting data. This value defaults to [].
+     - List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the serverless instance.Flag that indicates whether passing this flag replaces preexisting data. This value defaults to [].
 
 Inherited Options
 -----------------

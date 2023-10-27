@@ -14,7 +14,7 @@ atlas dataFederation update
 
 Modify the details of the specified data federation database for your project.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------
@@ -62,7 +62,7 @@ Options
    * - --awsTestS3Bucket
      - string
      - false
-     - Name of an Amazon S3 data bucket which Atlas Data Federation uses to validate the provided role.
+     - Name of an Amazon S3 data bucket that Atlas Data Federation uses to validate the provided role.
 
        Mutually exclusive with --file.
    * - -f, --file

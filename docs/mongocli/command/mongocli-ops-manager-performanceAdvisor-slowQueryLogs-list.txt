@@ -18,7 +18,7 @@ The Performance Advisor monitors queries that MongoDB considers slow and suggest
 		
 If you don't set the duration option or the since option, this command returns data from the last 24 hours.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Data Access Read/Write role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Data Access Read/Write role.
 
 Syntax
 ------
@@ -44,7 +44,7 @@ Options
    * - --duration
      - int
      - false
-     - Length of time in milliseconds for which you want to return results. If you set the since option, duration starts at the since date and time. If you don't set the since option, this command returns data from the duration before the current time.
+     - Length of time in milliseconds for which you want to return results. If you specify the since option, the duration starts at the date and time specified. If you don't set the since option, this command returns data from the duration before the current time.
    * - -h, --help
      - 
      - false
@@ -76,7 +76,7 @@ Options
    * - --since
      - int
      - false
-     - Date and time from which the query retrieves the suggested indexes. Specify as the number of seconds that have elapsed since the UNIX epoch. If you don't set the duration option, this command returns data from the since value to the current time.
+     - Date and time from which the query retrieves the suggested indexes. Specify this value as the number of seconds that have elapsed since the UNIX epoch. If you don't set the duration option, this command returns data from the since value to the current time.
 
 Inherited Options
 -----------------

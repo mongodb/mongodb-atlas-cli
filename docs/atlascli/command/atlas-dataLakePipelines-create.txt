@@ -14,7 +14,7 @@ atlas dataLakePipelines create
 
 Creates a new Data Lake Pipeline.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------
@@ -128,7 +128,7 @@ Options
    * - --transform
      - strings
      - false
-     - Fields to be excluded for this data lake pipeline.
+     - Fields to exclude for this data lake pipeline.
 
        Mutually exclusive with --file.
 

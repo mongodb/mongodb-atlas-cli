@@ -42,7 +42,7 @@ Options
    * - --force
      - 
      - false
-     - Overwrites the destination file.
+     - Flag that indicates whether to overwrite the destination file.
    * - --format
      - string
      - false
@@ -54,11 +54,11 @@ Options
    * - --out
      - string
      - false
-     - Output file name. Uses the log name if the output file's name is not specified.
+     - Output file name. This value defaults to the log name.
    * - --skipRedaction
      - 
      - false
-     - Skips redaction of sensitive values. If you set this flag, Ops Manager logs the original values for hostnames, IP addresses, and namespaces in API responses for this job.
+     - Flag that indicates whether to skip the redaction of sensitive values. If you set this flag, Ops Manager logs the original values for hostnames, IP addresses, and namespaces in API responses for this job.
    * - --startDate
      - string
      - true

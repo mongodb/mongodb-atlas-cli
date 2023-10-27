@@ -40,7 +40,7 @@ Options
    * - -f, --file
      - string
      - false
-     - File name to use, optional file with a json policy configuration.
+     - File name that identifies an optional file with a json policy configuration.
    * - -h, --help
      - 
      - false
@@ -56,7 +56,7 @@ Options
    * - --policy
      - strings
      - false
-     - List of policies that the external system applies to this Ops Manager Project. Passing this flag replaces preexisting data.
+     - List of policies that the external system applies to this Ops Manager Project.Flag that indicates whether passing this flag replaces preexisting data.
    * - --projectId
      - string
      - false

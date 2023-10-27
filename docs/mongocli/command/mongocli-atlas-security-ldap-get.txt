@@ -14,7 +14,7 @@ mongocli atlas security ldap get
 
 Return the current LDAP configuration details for your project.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------

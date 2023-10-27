@@ -14,7 +14,7 @@ atlas projects teams update
 
 Modify the roles for the specified team for your project.
 
-To use this command, you must authenticate with a user account or an API key that has the Project User Admin role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project User Admin role.
 
 Syntax
 ------
@@ -68,7 +68,7 @@ Options
    * - --role
      - strings
      - true
-     - User role that applies to all members of the specified team for the associated project. Valid values include GROUP_CLUSTER_MANAGER, GROUP_DATA_ACCESS_ADMIN, GROUP_DATA_ACCESS_READ_ONLY, GROUP_DATA_ACCESS_READ_WRITE, GROUP_OWNER, and GROUP_READ_ONLY. Passing this flag replaces preexisting data.
+     - User role that applies to all members of the specified team for the associated project. Valid values include GROUP_CLUSTER_MANAGER, GROUP_DATA_ACCESS_ADMIN, GROUP_DATA_ACCESS_READ_ONLY, GROUP_DATA_ACCESS_READ_WRITE, GROUP_OWNER, and GROUP_READ_ONLY.Flag that indicates whether passing this flag replaces preexisting data.
 
 Inherited Options
 -----------------

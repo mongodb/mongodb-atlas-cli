@@ -14,7 +14,7 @@ atlas customDbRoles update
 
 Update a custom database role for your project.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------
@@ -56,7 +56,7 @@ Options
    * - --append
      - 
      - false
-     - The input action and inheritedRoles that will be appended to the existing role.
+     - Input action and inheritedRoles to append to the existing role.
    * - -h, --help
      - 
      - false
@@ -64,7 +64,7 @@ Options
    * - --inheritedRole
      - strings
      - false
-     - List of inherited roles and the database on which the role is granted. Passing this flag replaces preexisting data.
+     - List of inherited roles and the database on which the role is granted.Flag that indicates whether passing this flag replaces preexisting data.
    * - -o, --output
      - string
      - false
@@ -72,7 +72,7 @@ Options
    * - --privilege
      - strings
      - false
-     - List of actions per database and collection. If no database or collections are provided, cluster scope is assumed. Passing this flag replaces preexisting data.
+     - List of actions per database and collection. If no database or collections are provided, cluster scope is assumed.Flag that indicates whether passing this flag replaces preexisting data.
    * - --projectId
      - string
      - false

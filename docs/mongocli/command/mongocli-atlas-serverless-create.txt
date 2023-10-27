@@ -14,7 +14,7 @@ mongocli atlas serverless create
 
 Creates one serverless instance in the specified project.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------

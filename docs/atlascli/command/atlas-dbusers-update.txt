@@ -14,7 +14,7 @@ atlas dbusers update
 
 Modify the details for a database user for your project.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------
@@ -76,11 +76,11 @@ Options
    * - --role
      - strings
      - false
-     - User's roles and the databases or collections on which the roles apply. Passing this flag replaces preexisting data.
+     - User's roles and the databases or collections on which the roles apply.Flag that indicates whether passing this flag replaces preexisting data.
    * - --scope
      - strings
      - false
-     - Array of clusters and Atlas Data Lakes that this user has access to. Passing this flag replaces preexisting data.
+     - Array of clusters and Atlas Data Lakes that this user has access to.Flag that indicates whether passing this flag replaces preexisting data.
    * - -u, --username
      - string
      - false

@@ -18,7 +18,7 @@ When you modify the roles for an organization API key with this command, the val
 		
 To view possible values for the apiKeyId argument, run atlas organizations apiKeys list.
 
-To use this command, you must authenticate with a user account or an API key that has the Organization User Admin role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Organization User Admin role.
 
 Syntax
 ------
@@ -68,7 +68,7 @@ Options
    * - --orgId
      - string
      - false
-     - Organization ID to use. Overrides the settings in the configuration file or environment variable.
+     - Organization ID to use. This option overrides the settings in the configuration file or environment variable.
    * - -o, --output
      - string
      - false
@@ -76,7 +76,7 @@ Options
    * - --role
      - strings
      - false
-     - Role or roles that you want to assign to the API key. To assign more than one role, specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. To learn which values the CLI accepts, see the Items Enum for roles in the Atlas API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Programmatic-API-Keys/operation/createApiKey/. Passing this flag replaces preexisting data.
+     - Role or roles that you want to assign to the API key. To assign more than one role, specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. To learn which values the CLI accepts, see the Items Enum for roles in the Atlas API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Programmatic-API-Keys/operation/createApiKey/.Flag that indicates whether passing this flag replaces preexisting data.
 
 Inherited Options
 -----------------

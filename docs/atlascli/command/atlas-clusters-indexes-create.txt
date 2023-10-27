@@ -14,7 +14,7 @@ atlas clusters indexes create
 
 Create a rolling index for the specified cluster for your project.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Data Access Admin role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Data Access Admin role.
 
 Syntax
 ------
@@ -80,7 +80,7 @@ Options
    * - --sparse
      - 
      - false
-     - Flag that creates a sparse index. To learn more about sparse indexes, see https://www.mongodb.com/docs/manual/core/index-sparse/
+     - Flag that creates a sparse index. To learn more, see https://dochub.mongodb.org/core/index-sparse-manual.
 
 Inherited Options
 -----------------

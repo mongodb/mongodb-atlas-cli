@@ -14,7 +14,7 @@ atlas streams connections list
 
 Returns all Atlas Stream Processing connections from your Atlas Stream Processing instance.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Read Only role.
 
 Syntax
 ------
@@ -44,7 +44,7 @@ Options
    * - -i, --instance
      - string
      - true
-     - The name of your Atlas Stream Processing instance.
+     - Name of your Atlas Stream Processing instance.
    * - -o, --output
      - string
      - false

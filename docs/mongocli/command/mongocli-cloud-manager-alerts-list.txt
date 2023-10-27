@@ -14,7 +14,7 @@ mongocli cloud-manager alerts list
 
 Return all alerts for your project.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Read Only role.
 
 Syntax
 ------
@@ -60,7 +60,7 @@ Options
    * - --status
      - string
      - false
-     - State of this alert. Valid values are TRACKING, OPEN, CLOSED, and CANCELLED.
+     - State of the alert. Valid values include TRACKING, OPEN, CLOSED, and CANCELLED.
 
 Inherited Options
 -----------------

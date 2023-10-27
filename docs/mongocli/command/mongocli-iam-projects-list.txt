@@ -14,7 +14,7 @@ mongocli iam projects list
 
 Return all projects.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Data Access Read/Write role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Data Access Read/Write role.
 
 Syntax
 ------
@@ -48,7 +48,7 @@ Options
    * - --orgId
      - string
      - false
-     - Organization ID to use. Overrides the settings in the configuration file or environment variable.
+     - Organization ID to use. This option overrides the settings in the configuration file or environment variable.
    * - -o, --output
      - string
      - false

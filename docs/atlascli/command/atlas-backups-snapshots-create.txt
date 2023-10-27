@@ -16,7 +16,7 @@ Create a backup snapshot for your project and cluster.
 
 You can create on-demand backup snapshots for Atlas cluster tiers M10 and larger.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
 Atlas supports this command only for M10+ clusters.
 
 Syntax

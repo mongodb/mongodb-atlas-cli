@@ -70,7 +70,7 @@ Options
    * - --redacted
      - 
      - false
-     - Replaces emails, hostnames, IP addresses, and namespaces in API responses involving this job with random string values.
+     - Flag that indicates whether to replace emails, hostnames, IP addresses, and namespaces in API responses involving this job with random string values.
    * - --sizeRequestedPerFileBytes
      - int
      - true

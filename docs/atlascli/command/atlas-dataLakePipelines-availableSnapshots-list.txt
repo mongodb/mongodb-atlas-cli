@@ -14,7 +14,7 @@ atlas dataLakePipelines availableSnapshots list
 
 Return all available backup snapshots for the specified data lake pipeline.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Read Only role.
 
 Syntax
 ------
@@ -40,7 +40,7 @@ Options
    * - --completedAfter
      - string
      - false
-     - Date filter of which the backup snapshots where completed. Format must be YYYY-MM-DD
+     - Date filter for when the backup snapshots were completed. You must use the YYYY-MM-DD format.
    * - -h, --help
      - 
      - false

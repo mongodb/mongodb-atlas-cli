@@ -66,7 +66,7 @@ Options
    * - --label
      - strings
      - false
-     - Array of tags to manage which backup jobs Ops Manager can assign to which blockstores. Passing this flag replaces preexisting data.
+     - Array of tags to manage which backup jobs Ops Manager can assign to which blockstores.Flag that indicates whether passing this flag replaces preexisting data.
    * - --loadFactor
      - int
      - false
@@ -74,7 +74,7 @@ Options
    * - --maxCapacityGB
      - int
      - false
-     - The maximum amount of data in GB this blockstore can store.
+     - Maximum amount of data in GB the blockstore can store.
    * - -o, --output
      - string
      - false
@@ -82,15 +82,15 @@ Options
    * - --ssl
      - 
      - false
-     - Flag indicating whether this blockstore only accepts connections encrypted using TLS.
+     - Flag that indicates whether the blockstore accepts only connections encrypted using TLS.
    * - --uri
      - string
      - true
-     - A comma-separated list of hosts in the <hostname:port> format that can be used to access this blockstore.
+     - Comma-separated list of hosts in the <hostname:port> format for accessing the blockstore.
    * - --writeConcern
      - string
      - false
-     - The write concern used for this blockstore.
+     - Write concern for the blockstore.
 
 Inherited Options
 -----------------

@@ -18,7 +18,7 @@ The network peering create command checks if a VPC exists in the region you spec
 		
 To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------
@@ -48,7 +48,7 @@ Options
    * - --atlasCidrBlock
      - string
      - false
-     - CIDR block that Atlas uses for all network peering connections created in the project. Required only if you do not already have an Atlas VPC. To learn more, see the Atlas UI tab at https://www.mongodb.com/docs/atlas/security-vpc-peering/#in-configure-your-network-peering-connection.
+     - CIDR block that Atlas uses for all network peering connections created in the project. This option is required only if you do not already have an Atlas VPC. To learn more, see the Atlas UI tab at https://dochub.mongodb.org/core/peering-connection-atlas.
    * - -h, --help
      - 
      - false

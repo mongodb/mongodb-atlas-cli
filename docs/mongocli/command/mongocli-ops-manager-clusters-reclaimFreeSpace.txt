@@ -72,7 +72,7 @@ Options
    * - --timestamp
      - string
      - false
-     - Timestamp in ISO 8601 format when the service reclaims the space. If not set, defaults to the current timestamp.
+     - Timestamp in ISO 8601 format when the service reclaims the space. This option defaults to the current timestamp.
 
 Inherited Options
 -----------------

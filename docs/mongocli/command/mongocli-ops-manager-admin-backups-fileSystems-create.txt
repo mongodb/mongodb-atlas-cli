@@ -58,7 +58,7 @@ Options
    * - --mmapv1CompressionSetting
      - string
      - true
-     - The compression setting for the MMAPv1 storage engine snaphots.
+     - Compression setting for the MMAPv1 storage engine snaphots.
    * - --name
      - string
      - true
@@ -70,11 +70,11 @@ Options
    * - --storePath
      - string
      - true
-     - The location where file system-based backups are stored on the file system store host.
+     - Location on the file system store host for storing file system-based backups.
    * - --wtCompressionSetting
      - string
      - true
-     - The compression setting for the WiredTiger storage engine snaphots.
+     - Compression setting for the WiredTiger storage engine snaphots.
 
 Inherited Options
 -----------------

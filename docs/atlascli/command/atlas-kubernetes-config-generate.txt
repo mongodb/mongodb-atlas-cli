@@ -52,7 +52,7 @@ Options
    * - --includeSecrets
      - 
      - false
-     - Generate kubernetes secrets with data for projects, users, deployments entities
+     - Flag that generates kubernetes secrets with data for projects, users, deployments entities.
    * - --operatorVersion
      - string
      - false
@@ -60,7 +60,7 @@ Options
    * - --orgId
      - string
      - false
-     - Organization ID to use. Overrides the settings in the configuration file or environment variable.
+     - Organization ID to use. This option overrides the settings in the configuration file or environment variable.
    * - --projectId
      - string
      - false

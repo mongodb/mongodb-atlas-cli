@@ -20,7 +20,7 @@ When you run this command:
 - If the endpoint ID doesn't exist, Atlas Data Lake appends the new endpoint to the list of endpoints in the endpoint ID list.
 Your API key must have the GROUP_ATLAS_ADMIN (Project Owner) role to create a private endpoint.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
+Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------

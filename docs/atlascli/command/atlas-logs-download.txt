@@ -61,6 +61,10 @@ Options
      - Type
      - Required
      - Description
+   * - -d, --decompress
+     - 
+     - false
+     - Flag that indicates whether to decompress the log files.
    * - --end
      - int
      - false

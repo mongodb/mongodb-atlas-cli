@@ -64,7 +64,7 @@ Options
    * - --inheritedRole
      - strings
      - false
-     - List of inherited roles and the database on which the role is granted.Flag that indicates whether passing this flag replaces preexisting data.
+     - List of inherited roles and the database on which the role is granted.Flag that indicates whether to replace preexisting data.
    * - -o, --output
      - string
      - false
@@ -72,7 +72,7 @@ Options
    * - --privilege
      - strings
      - false
-     - List of actions per database and collection. If no database or collections are provided, cluster scope is assumed.Flag that indicates whether passing this flag replaces preexisting data.
+     - List of actions per database and collection. If no database or collections are provided, cluster scope is assumed.Flag that indicates whether to replace preexisting data.
    * - --projectId
      - string
      - false

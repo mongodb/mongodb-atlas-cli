@@ -7,7 +7,7 @@
 //      http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS"BASIS,
+// distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
@@ -447,7 +447,7 @@ dbName and collection are required only for built-in roles.`
 	Tag                                       = "List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the cluster."
 	DeploymentTag                             = "List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the deployment."
 	ServerlessTag                             = "List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the serverless instance."
-	UpdateWarning                             = "Flag that indicates whether passing this flag replaces preexisting data."
+	UpdateWarning                             = "Flag that indicates whether to replace preexisting data."
 	EnableWatch                               = "Flag that indicates whether to watch the command until it completes its execution or the watch times out. To set the time that the watch times out, use the --watchTimeout option."
 	EnableWatchDefault                        = "Flag that indicates whether to watch the command until it completes its execution or the watch times out."
 	WatchTimeout                              = "Time in seconds until a watch times out. After a watch times out, the CLI no longer watches the command."

@@ -54,7 +54,7 @@ Options
    * - --alertType
      - strings
      - false
-     - Alert types to silence during the maintenance window. Valid values include HOST, REPLICA_SET, CLUSTER, AGENT, or BACKUP.Flag that indicates whether passing this flag replaces preexisting data.
+     - Alert types to silence during the maintenance window. Valid values include HOST, REPLICA_SET, CLUSTER, AGENT, or BACKUP.Flag that indicates whether to replace preexisting data.
    * - --desc
      - string
      - false

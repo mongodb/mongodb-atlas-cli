@@ -86,7 +86,7 @@ Options
    * - --sinkPartitionField
      - strings
      - false
-     - Ordered fields used to physically organize data in the destination.Flag that indicates whether passing this flag replaces preexisting data.
+     - Ordered fields used to physically organize data in the destination.Flag that indicates whether to replace preexisting data.
 
        Mutually exclusive with --file.
    * - --sourceClusterName
@@ -122,7 +122,7 @@ Options
    * - --transform
      - strings
      - false
-     - Fields to exclude for this data lake pipeline.Flag that indicates whether passing this flag replaces preexisting data.
+     - Fields to exclude for this data lake pipeline.Flag that indicates whether to replace preexisting data.
 
        Mutually exclusive with --file.
 

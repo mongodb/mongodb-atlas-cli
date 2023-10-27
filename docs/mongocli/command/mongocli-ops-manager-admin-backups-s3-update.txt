@@ -82,7 +82,7 @@ Options
    * - --label
      - strings
      - false
-     - Array of tags to manage which backup jobs Ops Manager can assign to which blockstores.Flag that indicates whether passing this flag replaces preexisting data.
+     - Array of tags to manage which backup jobs Ops Manager can assign to which blockstores.Flag that indicates whether to replace preexisting data.
    * - --loadFactor
      - int
      - false

@@ -76,11 +76,11 @@ Options
    * - --role
      - strings
      - false
-     - User's roles and the databases or collections on which the roles apply.Flag that indicates whether passing this flag replaces preexisting data.
+     - User's roles and the databases or collections on which the roles apply.Flag that indicates whether to replace preexisting data.
    * - --scope
      - strings
      - false
-     - Array of clusters and Atlas Data Lakes that this user has access to.Flag that indicates whether passing this flag replaces preexisting data.
+     - Array of clusters and Atlas Data Lakes that this user has access to.Flag that indicates whether to replace preexisting data.
    * - -u, --username
      - string
      - false

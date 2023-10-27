@@ -92,7 +92,7 @@ Options
    * - --tag
      - stringToString
      - false
-     - List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the serverless instance.Flag that indicates whether passing this flag replaces preexisting data. This value defaults to [].
+     - List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the serverless instance.Flag that indicates whether to replace preexisting data. This value defaults to [].
 
 Inherited Options
 -----------------

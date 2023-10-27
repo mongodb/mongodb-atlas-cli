@@ -56,7 +56,7 @@ Options
    * - --policy
      - strings
      - false
-     - List of policies that the external system applies to this Ops Manager Project.Flag that indicates whether passing this flag replaces preexisting data.
+     - List of policies that the external system applies to this Ops Manager Project.Flag that indicates whether to replace preexisting data.
    * - --projectId
      - string
      - false

@@ -66,7 +66,7 @@ Options
    * - --role
      - strings
      - true
-     - Role or roles that you want to assign to the API key. To assign more than one role, you can specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. Valid values are GLOBAL_AUTOMATION_ADMIN, GLOBAL_BACKUP_ADMIN GLOBAL_MONITORING_ADMIN, GLOBAL_OWNER, GLOBAL_READ_ONLY,GLOBAL_USER_ADMIN.Flag that indicates whether to replace preexisting data.
+     - Role or roles that you want to assign to the API key. To assign more than one role, you can specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. Valid values are GLOBAL_AUTOMATION_ADMIN, GLOBAL_BACKUP_ADMIN GLOBAL_MONITORING_ADMIN, GLOBAL_OWNER, GLOBAL_READ_ONLY,GLOBAL_USER_ADMIN. Passing this flag replaces preexisting data.
 
 Inherited Options
 -----------------

@@ -74,7 +74,7 @@ Options
    * - --role
      - strings
      - true
-     - User's roles  for the associated organization. To learn which values MCLI accepts, see the Items Enum for roles in the Atlas API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/#operation/createOrganizationInvitation/.Flag that indicates whether to replace preexisting data.
+     - User's roles  for the associated organization. To learn which values MCLI accepts, see the Items Enum for roles in the Atlas API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/#operation/createOrganizationInvitation/. Passing this flag replaces preexisting data.
 
 Inherited Options
 -----------------

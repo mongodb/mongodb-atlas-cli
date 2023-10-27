@@ -62,7 +62,7 @@ Options
    * - --excludedNamespace
      - strings
      - false
-     - List of database names and collection names to omit from the backup.Flag that indicates whether to replace preexisting data.
+     - List of database names and collection names to omit from the backup. Passing this flag replaces preexisting data.
    * - -h, --help
      - 
      - false
@@ -70,7 +70,7 @@ Options
    * - --includedNamespace
      - strings
      - false
-     - List of database names and collection names to include in the backup.Flag that indicates whether to replace preexisting data.
+     - List of database names and collection names to include in the backup. Passing this flag replaces preexisting data.
    * - -o, --output
      - string
      - false

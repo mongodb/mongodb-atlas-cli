@@ -301,7 +301,7 @@ dbName and collection are required only for built-in roles.`
 	APIRegion                                 = "Code that indicates which regional URL MongoDB uses to access the third-party API. Valid values are US and EU."
 	DatadogAPIRegion                          = "Code that indicates which regional URL MongoDB uses to access the Datadog API. Valid values are US, EU, US3, and US5."
 	SkipMongosh                               = "Flag that indicates whether to skip accessing your deployment with MongoDB Shell."
-	SkipSampleData                            = "Flag that ndicates whether to skip loading sample data into your MongoDB cluster."
+	SkipSampleData                            = "Flag that indicates whether to skip loading sample data into your MongoDB cluster."
 	SkipSampleDataDeployment                  = "Flag that indicates whether to skip loading sample data into your MongoDB deployment."
 	ContainerRegion                           = "Cloud provider region where the VPC that you peered with the Atlas VPC resides."
 	ContainerRegions                          = "List of Atlas regions where the container resides."

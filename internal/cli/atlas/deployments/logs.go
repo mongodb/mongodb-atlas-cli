@@ -86,7 +86,7 @@ func (opts *DownloadOpts) RunAtlas() error {
 	return nil
 }
 
-func (opts *DownloadOpts) write(w io.Writer, r io.Reader) error {
+func (*DownloadOpts) write(w io.Writer, r io.Reader) error {
 	gr, errGz := gzip.NewReader(r)
 	if errGz != nil {
 		return errGz

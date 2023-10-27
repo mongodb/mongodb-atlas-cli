@@ -12,7 +12,7 @@ mongocli atlas dbusers update
    :depth: 1
    :class: singlecol
 
-Modify the details for a database user for your project.
+Modify the details of a database user in your project.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 

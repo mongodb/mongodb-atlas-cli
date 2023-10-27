@@ -58,7 +58,7 @@ Related Commands
 * :ref:`atlas-dbusers-delete` - Remove the specified database user from your project.
 * :ref:`atlas-dbusers-describe` - Return the details for the specified database user for your project.
 * :ref:`atlas-dbusers-list` - Return all database users for your project.
-* :ref:`atlas-dbusers-update` - Modify the details for a database user for your project.
+* :ref:`atlas-dbusers-update` - Modify the details of a database user in your project.
 
 
 .. toctree::

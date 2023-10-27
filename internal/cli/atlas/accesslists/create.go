@@ -35,7 +35,7 @@ const (
 	cidrBlock        = "cidrBlock"
 	ipAddress        = "ipAddress"
 	awsSecurityGroup = "awsSecurityGroup"
-	createTemplate   = "Created new IP access list.\n"
+	createTemplate   = "Created a new IP access list.\n"
 )
 
 type CreateOpts struct {
@@ -101,7 +101,7 @@ func IPAddress() (string, error) {
 		return publicIP, nil
 	}
 
-	return "", errors.New("not able to find your public IP address. Specify the public IP address for this command")
+	return "", errors.New("unable to find your public IP address. Specify the public IP address for this command")
 }
 
 func (opts *CreateOpts) needsArg() bool {
@@ -113,7 +113,7 @@ func (opts *CreateOpts) validateCurrentIPFlag(cmd *cobra.Command, args []string)
 	return func() error {
 		if !opts.needsArg() && len(args) > 0 {
 			return fmt.Errorf(
-				"please either provide [entry] or use %s to use current IP Address.\n\nUsage: %s",
+				"please either provide [entry] or use %s to use your current IP Address.\n\nUsage: %s",
 				flag.CurrentIP,
 				cmd.UseLine(),
 			)

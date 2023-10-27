@@ -468,5 +468,5 @@ dbName and collection are required only for built-in roles.`
 	LogName                                   = "Name of the log file (e.g. mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gz)."
 	LogHostName                               = "Name of the host that stores the log files that you want to download."
 	requiredForAtlas                          = " Required when creating organizations authenticated with API Keys."
-	Decompress                                = "Decompress log files"
+	Decompress                                = "Flag that indicates whether to decompress the log files."
 )

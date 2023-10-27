@@ -64,7 +64,7 @@ Options
    * - -d, --decompress
      - 
      - false
-     - Decompress log files
+     - Flag that indicates whether to decompress the log files.
    * - --end
      - int
      - false

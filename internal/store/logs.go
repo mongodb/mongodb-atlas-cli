@@ -26,7 +26,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LogsDownloader,LogJobsDownloader,LogCollector,LogJobLister,LogJobDeleter
 
 type LogsDownloader interface {
-	DownloadLog(io.Writer, *admin.GetHostLogsApiParams) error
+	DownloadLog(*admin.GetHostLogsApiParams) (io.ReadCloser, error)
 }
 
 type LogJobsDownloader interface {
@@ -79,20 +79,19 @@ func (s *Store) Collect(groupID string, newLog *opsmngr.LogCollectionJob) (*opsm
 }
 
 // DownloadLog encapsulates the logic to manage different cloud providers.
-func (s *Store) DownloadLog(out io.Writer, params *admin.GetHostLogsApiParams) error {
+func (s *Store) DownloadLog(params *admin.GetHostLogsApiParams) (io.ReadCloser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostLogsWithParams(s.ctx, params).Execute()
 		if err != nil {
-			return err
+			return nil, err
 		}
 		if result == nil {
-			return fmt.Errorf("returned file is empty")
+			return nil, fmt.Errorf("returned file is empty")
 		}
-		_, err = io.Copy(out, result)
-		return err
+		return result, nil
 	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 

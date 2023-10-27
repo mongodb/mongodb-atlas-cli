@@ -18,10 +18,9 @@ package deployments
 
 import (
 	"bytes"
-	"compress/gzip"
 	"context"
+	"encoding/base64"
 	"io"
-	"os"
 	"strings"
 	"testing"
 
@@ -33,7 +32,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/spf13/afero"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestLogsBuilder(t *testing.T) {
@@ -85,15 +83,15 @@ func TestLogs_RunLocal(t *testing.T) {
 func TestLogs_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
-	buf := new(bytes.Buffer)
 	atlasDeployment := "localDeployment1"
 	mockStore := mocks.NewMockLogsDownloader(ctrl)
 	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, atlasDeployment)
 
 	downloadOpts := &DownloadOpts{
-		OutputOpts:     cli.OutputOpts{OutWriter: buf},
-		GlobalOpts:     cli.GlobalOpts{ProjectID: "ProjectID"},
-		DownloaderOpts: cli.DownloaderOpts{},
+		GlobalOpts: cli.GlobalOpts{ProjectID: "ProjectID"},
+		DownloaderOpts: cli.DownloaderOpts{
+			Out: "out",
+		},
 		DeploymentOpts: *deploymentTest.Opts,
 		downloadStore:  mockStore,
 		host:           "test",
@@ -101,29 +99,14 @@ func TestLogs_RunAtlas(t *testing.T) {
 	}
 
 	downloadOpts.Fs = afero.NewMemMapFs()
-	downloadOpts.Out = downloadOpts.name
 	deploymentTest.CommonAtlasMocks(downloadOpts.ProjectID)
 
+	b, _ := base64.RawStdEncoding.DecodeString("H4sIAAAAAAAA/8pIzcnJVyjPL8pJAQQAAP//hRFKDQsAAAA") // "hello world" gzipped
 	mockStore.
 		EXPECT().
-		DownloadLog(gomock.Any(), downloadOpts.newHostLogsParams()).
-		Times(1).
-		DoAndReturn(func(_ io.Writer, _ *admin.GetHostLogsApiParams) error {
-			f, err := downloadOpts.Fs.OpenFile(downloadOpts.Out, os.O_WRONLY|os.O_CREATE, 0644)
-			if err != nil {
-				return err
-			}
-
-			zw := gzip.NewWriter(f)
-			defer zw.Close()
-			zw.Name = downloadOpts.Out
-
-			if _, err = zw.Write([]byte("log\nlog\n")); err != nil {
-				return err
-			}
-
-			return nil
-		})
+		DownloadLog(downloadOpts.newHostLogsParams()).
+		Return(io.NopCloser(bytes.NewReader(b)), nil).
+		Times(1)
 
 	if err := downloadOpts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

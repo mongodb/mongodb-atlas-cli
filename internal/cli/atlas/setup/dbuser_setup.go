@@ -59,7 +59,7 @@ func (opts *Opts) askDBUserOptions() error {
 		if config.Service() == config.CloudGovService {
 			minLength = 12
 		}
-		message := fmt.Sprintf(" [Must be >%d characters. Press Enter to use an auto-generated password]", minLength)
+		message := fmt.Sprintf(" [You must include >%d characters. Press Enter to use an auto-generated password]", minLength)
 
 		qs = append(qs, newDBUserPasswordQuestion(opts.DBUserPassword, message))
 	}

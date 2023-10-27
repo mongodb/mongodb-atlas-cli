@@ -368,4 +368,6 @@ const (
 	Instance                                  = "instance"                                  // Instance flag
 	InstanceShort                             = "i"                                         // InstanceShort flag
 	ConnectionStringType                      = "connectionStringType"                      // ConnectionStringType flag
+	Decompress                                = "decompress"                                // Decompress flag
+	DecompressShort                           = "d"                                         // DecompressShort flag
 )

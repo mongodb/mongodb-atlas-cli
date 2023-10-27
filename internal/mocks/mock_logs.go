@@ -37,17 +37,18 @@ func (m *MockLogsDownloader) EXPECT() *MockLogsDownloaderMockRecorder {
 }
 
 // DownloadLog mocks base method.
-func (m *MockLogsDownloader) DownloadLog(arg0 io.Writer, arg1 *admin.GetHostLogsApiParams) error {
+func (m *MockLogsDownloader) DownloadLog(arg0 *admin.GetHostLogsApiParams) (io.ReadCloser, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DownloadLog", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret := m.ctrl.Call(m, "DownloadLog", arg0)
+	ret0, _ := ret[0].(io.ReadCloser)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // DownloadLog indicates an expected call of DownloadLog.
-func (mr *MockLogsDownloaderMockRecorder) DownloadLog(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockLogsDownloaderMockRecorder) DownloadLog(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadLog", reflect.TypeOf((*MockLogsDownloader)(nil).DownloadLog), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DownloadLog", reflect.TypeOf((*MockLogsDownloader)(nil).DownloadLog), arg0)
 }
 
 // MockLogJobsDownloader is a mock of LogJobsDownloader interface.

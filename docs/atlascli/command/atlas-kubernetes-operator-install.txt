@@ -79,7 +79,7 @@ Options
    * - --watchNamespace
      - strings
      - false
-     - List that containes namespaces that the operator will listen to.
+     - List that contains namespaces that the operator will listen to.
 
 Inherited Options
 -----------------

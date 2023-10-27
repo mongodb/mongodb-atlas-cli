@@ -14,7 +14,7 @@ atlas streams instances describe
 
 Describe an Atlas Stream Processing instance for your project.
 
-Role required to use this command. You must authenticate with a user account or an API key that has the Project Read Only role.
+To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
 
 Syntax
 ------

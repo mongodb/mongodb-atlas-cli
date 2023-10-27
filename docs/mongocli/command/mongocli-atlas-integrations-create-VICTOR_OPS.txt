@@ -18,7 +18,7 @@ VictorOps is now Splunk On-Call.
 		
 The requesting API key must have the Organization Owner or Project Owner role to configure an integration with Splunk On-Call.
 
-Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
+To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------

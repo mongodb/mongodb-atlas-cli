@@ -96,7 +96,7 @@ Options
    * - --skipSampleData
      - 
      - false
-     - Flag that ndicates whether to skip loading sample data into your MongoDB cluster.
+     - Flag that indicates whether to skip loading sample data into your MongoDB cluster.
    * - --tag
      - stringToString
      - false

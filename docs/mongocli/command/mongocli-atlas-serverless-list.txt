@@ -14,7 +14,7 @@ mongocli atlas serverless list
 
 Return all serverless instances in the specified project.
 
-Role required to use this command. You must authenticate with a user account or an API key that has the Project Read Only role.
+To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
 
 Syntax
 ------

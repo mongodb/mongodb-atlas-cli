@@ -14,7 +14,7 @@ mongocli atlas security ldap verify status
 
 Get the status of an LDAP configuration request.
 
-Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
+To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------

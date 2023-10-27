@@ -14,7 +14,7 @@ atlas projects invitations invite
 
 Invite the specified MongoDB user to your project.
 
-Role required to use this command. You must authenticate with a user account or an API key that has the Project User Admin role.
+To use this command, you must authenticate with a user account or an API key that has the Project User Admin role.
 
 Syntax
 ------

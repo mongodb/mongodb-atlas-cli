@@ -15,7 +15,7 @@ atlas streams instances update
 Updates an Atlas Stream Processing instance for your project.
 
 Before updating an Atlas Streams Processing instance, you must first stop all processes associated with it.
-Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
+To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------

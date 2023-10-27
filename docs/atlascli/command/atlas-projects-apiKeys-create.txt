@@ -16,7 +16,7 @@ Create an organization API key and assign it to your project.
 
 MongoDB returns the private API key only once. After you run this command, immediately copy, save, and secure both the public and private API keys.
 
-Role required to use this command. You must authenticate with a user account or an API key that has the Project User Admin role.
+To use this command, you must authenticate with a user account or an API key that has the Project User Admin role.
 
 Syntax
 ------

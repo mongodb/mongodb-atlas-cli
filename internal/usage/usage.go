@@ -426,7 +426,7 @@ dbName and collection are required only for built-in roles.`
 	KubernetesClusterConfig                   = "Path to the kubeconfig file to use for CLI requests."
 	KubernetesClusterContext                  = "Name of the kubeconfig context to use."
 	ExportID                                  = "Unique string that identifies the AWS S3 bucket to which you export your snapshots."
-	RequiredRole                              = "Role required to use this command. You must authenticate with a user account or an API key that has the %s role."
+	RequiredRole                              = "To use this command, you must authenticate with a user account or an API key that has the %s role."
 	RestoreJobID                              = "Unique identifier that identifies the Restore Job."
 	DeliveryType                              = "Type of restore job to create. Valid values include: automated, download, pointInTime. To learn more about types of restore jobs, see https://dochub.mongodb.org/core/backup-restore-cluster-atlas."
 	EnableServerlessContinuousBackup          = "Flag that enables Serverless Continuous Backup for your serverless instance. If enabled, the serverless instance does not use Basic Backup."

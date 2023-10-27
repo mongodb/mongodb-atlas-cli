@@ -17,7 +17,7 @@ Return the process measurements for the specified host.
 To return the hostname and port needed for this command, run
 atlas processes list
 
-Role required to use this command. You must authenticate with a user account or an API key that has the Project Read Only role.
+To use this command, you must authenticate with a user account or an API key that has the Project Read Only role.
 
 Syntax
 ------

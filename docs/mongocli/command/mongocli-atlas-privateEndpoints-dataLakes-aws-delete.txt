@@ -14,7 +14,7 @@ mongocli atlas privateEndpoints dataLakes aws delete
 
 Delete a specific Data Lake private endpoint for your project.
 
-Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
+To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------

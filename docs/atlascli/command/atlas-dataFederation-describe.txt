@@ -14,7 +14,7 @@ atlas dataFederation describe
 
 Return the details for the specified data federation database for your project.
 
-Role required to use this command. You must authenticate with a user account or an API key that has the Project Owner role.
+To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
 Syntax
 ------

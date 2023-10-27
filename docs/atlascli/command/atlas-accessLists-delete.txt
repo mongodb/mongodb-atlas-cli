@@ -16,7 +16,7 @@ Remove the specified IP access list entry from your project.
 
 The command prompts you to confirm the operation when you run the command without the force option.
 
-Role required to use this command. You must authenticate with a user account or an API key that has the Read Write role.
+To use this command, you must authenticate with a user account or an API key that has the Read Write role.
 
 Syntax
 ------

@@ -48,7 +48,10 @@ type DownloadOpts struct {
 	end           int64
 }
 
-var ErrAtlasNotSupported = errors.New("atlas deployments are not supported")
+var (
+	ErrAtlasNotSupported = errors.New("atlas deployments are not supported")
+	errEmptyLog          = errors.New("log is empty")
+)
 
 func (opts *DownloadOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -92,14 +95,22 @@ func (*DownloadOpts) write(w io.Writer, r io.Reader) error {
 		return errGz
 	}
 
+	written := false
 	for {
-		_, err := io.CopyN(w, gr, 1024) //nolint:gomnd // 1k each write to avoid compression bomb
+		n, err := io.CopyN(w, gr, 1024) //nolint:gomnd // 1k each write to avoid compression bomb
+		if n > 0 {
+			written = true
+		}
 		if err != nil {
 			if err == io.EOF {
 				break
 			}
 			return err
 		}
+	}
+
+	if !written {
+		return errEmptyLog
 	}
 
 	return nil

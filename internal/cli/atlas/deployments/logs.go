@@ -20,7 +20,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -50,8 +49,6 @@ type DownloadOpts struct {
 }
 
 var ErrAtlasNotSupported = errors.New("atlas deployments are not supported")
-
-const filePermission = 0644
 
 func (opts *DownloadOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -86,49 +83,49 @@ func (opts *DownloadOpts) RunAtlas() error {
 	}
 	defer opts.Fs.Remove(opts.Out) //nolint:errcheck
 
-	output, err := opts.unzipFile()
-	if err != nil {
-		return err
+	return nil
+}
+
+func (opts *DownloadOpts) write(w io.Writer, r io.Reader) error {
+	gr, errGz := gzip.NewReader(r)
+	if errGz != nil {
+		return errGz
 	}
 
-	return opts.Print(output)
+	for {
+		_, err := io.CopyN(w, gr, 1024) //nolint:gomnd // 1k each write to avoid compression bomb
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (opts *DownloadOpts) downloadLogFile() error {
-	f, err := opts.NewWriteCloser()
+	w, err := opts.NewWriteCloser()
 	if err != nil {
+		_ = opts.OnError(w)
 		return err
 	}
-	defer f.Close()
+	defer w.Close()
 
 	r, err := opts.downloadStore.DownloadLog(opts.newHostLogsParams())
 	if err != nil {
-		_ = opts.OnError(f)
+		_ = opts.OnError(w)
+		return err
 	}
 	defer r.Close()
-	_, err = io.Copy(f, r)
-	return err
-}
 
-func (opts *DownloadOpts) unzipFile() (string, error) {
-	gzippedFile, err := opts.Fs.OpenFile(opts.Out, os.O_RDONLY, filePermission)
-	if err != nil {
-		return "", err
-	}
-	defer gzippedFile.Close()
-
-	gzReader, err := gzip.NewReader(gzippedFile)
-	if err != nil {
-		return "", err
-	}
-	defer gzReader.Close()
-
-	s, err := io.ReadAll(gzReader)
-	if err != nil {
-		return "", err
+	if err := opts.write(w, r); err != nil {
+		_ = opts.OnError(w)
+		return err
 	}
 
-	return string(s), nil
+	return nil
 }
 
 func (opts *DownloadOpts) newHostLogsParams() *admin.GetHostLogsApiParams {
@@ -176,7 +173,12 @@ func (opts *DownloadOpts) validateAtlasFlags() error {
 
 // atlas deployments logs.
 func LogsBuilder() *cobra.Command {
-	opts := &DownloadOpts{}
+	opts := &DownloadOpts{
+		DownloaderOpts: cli.DownloaderOpts{
+			Fs:  afero.NewOsFs(),
+			Out: "-", // stdout
+		},
+	}
 	cmd := &cobra.Command{
 		Use:     "logs",
 		Short:   "Get deployments logs.",
@@ -184,14 +186,10 @@ func LogsBuilder() *cobra.Command {
 		Args:    require.NoArgs,
 		GroupID: "local",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			w := cmd.OutOrStdout()
-			opts.Fs = afero.NewOsFs()
-			opts.Out = opts.name
-
 			return opts.PreRunE(
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(w, ""))
+				opts.InitOutput(cmd.OutOrStdout(), ""))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.Run(cmd.Context())

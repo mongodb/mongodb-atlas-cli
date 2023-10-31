@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -44,7 +44,7 @@ func TestList_Run(t *testing.T) {
 		Times(1)
 
 	err := listOpts.Run()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestListBuilder(t *testing.T) {

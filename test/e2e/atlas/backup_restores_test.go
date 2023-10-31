@@ -61,9 +61,8 @@ func TestRestores(t *testing.T) {
 
 		a := assert.New(t)
 		var snapshot atlasv2.DiskBackupSnapshot
-		if err = json.Unmarshal(resp, &snapshot); a.NoError(err) {
-			a.Equal("test-snapshot", snapshot.GetDescription())
-		}
+		require.NoError(t, json.Unmarshal(resp, &snapshot))
+		a.Equal("test-snapshot", snapshot.GetDescription())
 		snapshotID = snapshot.GetId()
 	})
 
@@ -103,11 +102,9 @@ func TestRestores(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		r.NoError(err, string(resp))
-		a := assert.New(t)
 		var result atlasv2.DiskBackupSnapshotRestoreJob
-		if err = json.Unmarshal(resp, &result); a.NoError(err) {
-			restoreJobID = result.GetId()
-		}
+		require.NoError(t, json.Unmarshal(resp, &result))
+		restoreJobID = result.GetId()
 	})
 
 	t.Run("Restores Watch", func(t *testing.T) {
@@ -143,9 +140,8 @@ func TestRestores(t *testing.T) {
 
 		a := assert.New(t)
 		var result atlasv2.PaginatedCloudBackupRestoreJob
-		if err = json.Unmarshal(resp, &result); a.NoError(err, string(resp)) {
-			a.NotEmpty(result)
-		}
+		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
+		a.NotEmpty(result)
 	})
 
 	t.Run("Restores Describe", func(t *testing.T) {
@@ -166,9 +162,8 @@ func TestRestores(t *testing.T) {
 
 		a := assert.New(t)
 		var result atlasv2.DiskBackupSnapshotRestoreJob
-		if err = json.Unmarshal(resp, &result); a.NoError(err, string(resp)) {
-			a.NotEmpty(result)
-		}
+		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
+		a.NotEmpty(result)
 	})
 
 	t.Run("Delete snapshot", func(t *testing.T) {

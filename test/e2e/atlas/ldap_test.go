@@ -98,9 +98,8 @@ func TestLDAPWithFlags(t *testing.T) {
 
 		a := assert.New(t)
 		var configuration atlasv2.LDAPVerifyConnectivityJobRequest
-		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-			a.Equal(requestID, *configuration.RequestId)
-		}
+		require.NoError(t, json.Unmarshal(resp, &configuration))
+		a.Equal(requestID, *configuration.RequestId)
 	})
 
 	t.Run("Save", func(t *testing.T) {
@@ -142,9 +141,8 @@ func TestLDAPWithFlags(t *testing.T) {
 
 		a := assert.New(t)
 		var configuration atlasv2.UserSecurity
-		if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-			a.Equal(ldapHostname, *configuration.Ldap.Hostname)
-		}
+		require.NoError(t, json.Unmarshal(resp, &configuration))
+		a.Equal(ldapHostname, *configuration.Ldap.Hostname)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -239,12 +237,9 @@ func testLDAPVerifyCmd(t *testing.T, cmd *exec.Cmd) string {
 
 	a := assert.New(t)
 	var configuration atlasv2.LDAPVerifyConnectivityJobRequest
-	if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-		a.Equal(pending, *configuration.Status)
-		return *configuration.RequestId
-	}
-
-	return ""
+	require.NoError(t, json.Unmarshal(resp, &configuration))
+	a.Equal(pending, *configuration.Status)
+	return *configuration.RequestId
 }
 
 func testLDAPSaveCmd(t *testing.T, cmd *exec.Cmd) {
@@ -256,7 +251,6 @@ func testLDAPSaveCmd(t *testing.T, cmd *exec.Cmd) {
 
 	a := assert.New(t)
 	var configuration atlasv2.UserSecurity
-	if err := json.Unmarshal(resp, &configuration); a.NoError(err) {
-		a.Equal(ldapHostname, *configuration.Ldap.Hostname)
-	}
+	require.NoError(t, json.Unmarshal(resp, &configuration))
+	a.Equal(ldapHostname, *configuration.Ldap.Hostname)
 }

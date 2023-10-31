@@ -191,6 +191,7 @@ func AutomationConfigWithMonitoring() *opsmngr.AutomationConfig {
 
 func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.AutomationConfig {
 	fipsMode := true
+	procName := name + "_0"
 	return &opsmngr.AutomationConfig{
 		Processes: []*opsmngr.Process{
 			{
@@ -233,7 +234,7 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 					},
 				},
 				AuthSchemaVersion:           defaultAuthSchemaVersion,
-				Name:                        name + "_0",
+				Name:                        procName,
 				Disabled:                    disabled,
 				FeatureCompatibilityVersion: "4.2",
 				Hostname:                    "host0",
@@ -254,7 +255,7 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 						ArbiterOnly:        false,
 						BuildIndexes:       true,
 						Hidden:             false,
-						Host:               name + "_0",
+						Host:               procName,
 						Priority:           1,
 						SlaveDelay:         pointer.Get[float64](1),
 						SecondaryDelaySecs: pointer.Get[float64](1),
@@ -267,6 +268,8 @@ func AutomationConfigWithOneReplicaSet(name string, disabled bool) *opsmngr.Auto
 }
 
 func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.AutomationConfig {
+	configName := name + "_configRS_1"
+	shardName := name + "_myShard_0_0"
 	return &opsmngr.AutomationConfig{
 		Auth: opsmngr.Auth{
 			DeploymentAuthMechanisms: []string{},
@@ -291,7 +294,7 @@ func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.
 					TimeThresholdHrs: defaultTimeThresholdHrs,
 				},
 				AuthSchemaVersion:           defaultAuthSchemaVersion,
-				Name:                        name + "_myShard_0_0",
+				Name:                        shardName,
 				Disabled:                    disabled,
 				FeatureCompatibilityVersion: "4.2",
 				Hostname:                    "example",
@@ -319,7 +322,7 @@ func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.
 					TimeThresholdHrs: defaultTimeThresholdHrs,
 				},
 				AuthSchemaVersion:           defaultAuthSchemaVersion,
-				Name:                        name + "_configRS_1",
+				Name:                        configName,
 				Disabled:                    disabled,
 				FeatureCompatibilityVersion: "4.2",
 				Hostname:                    "example",
@@ -360,7 +363,7 @@ func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.
 						ArbiterOnly:        false,
 						BuildIndexes:       true,
 						Hidden:             false,
-						Host:               name + "_myShard_0_0",
+						Host:               shardName,
 						Priority:           1,
 						SlaveDelay:         pointer.Get[float64](1),
 						SecondaryDelaySecs: pointer.Get[float64](1),
@@ -377,7 +380,7 @@ func AutomationConfigWithOneShardedCluster(name string, disabled bool) *opsmngr.
 						ArbiterOnly:        false,
 						BuildIndexes:       true,
 						Hidden:             false,
-						Host:               name + "_configRS_1",
+						Host:               configName,
 						Priority:           1,
 						SlaveDelay:         pointer.Get[float64](1),
 						SecondaryDelaySecs: pointer.Get[float64](1),

@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/crds"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/version"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	"k8s.io/apimachinery/pkg/util/validation"
@@ -47,6 +47,7 @@ type InstallOpts struct {
 	watchNamespace  []string
 	projectName     string
 	importResources bool
+	atlasGov        bool
 	KubeConfig      string
 	KubeContext     string
 }
@@ -108,7 +109,7 @@ func (opts *InstallOpts) Run(ctx context.Context) error {
 	installer := operator.NewInstaller(opts.versionProvider, kubeCtl)
 
 	profile := config.Default()
-	atlasStore, err := store.New(store.AuthenticatedPreset(profile), store.WithContext(ctx))
+	atlasStore, err := atlas.New(atlas.AuthenticatedPreset(profile), atlas.WithContext(ctx))
 	if err != nil {
 		return err
 	}
@@ -130,6 +131,7 @@ func (opts *InstallOpts) Run(ctx context.Context) error {
 		WithWatchNamespaces(opts.watchNamespace).
 		WithWatchProjectName(opts.projectName).
 		WithImportResources(opts.importResources).
+		WithAtlasGov(opts.atlasGov).
 		Run(ctx, opts.OrgID)
 
 	if err != nil {
@@ -154,6 +156,9 @@ This command creates an API key for the Operator and adds it to Kubernetes as a 
 The key is scoped to the project when you specify the --projectName option and to the organization when you omit the --projectName option.`,
 		Example: `# Install latest version of the operator into the default namespace:
   atlas kubernetes operator install
+
+  # Install the latest version of the operator targeting Atlas for Government instead of regular commercial Atlas:
+  atlas kubernetes operator install --atlasGov
 
   # Install a specific version of the operator:
   atlas kubernetes operator install --operatorVersion=1.7.0
@@ -190,6 +195,7 @@ The key is scoped to the project when you specify the --projectName option and t
 	flags.StringSliceVar(&opts.watchNamespace, flag.OperatorWatchNamespace, []string{}, usage.OperatorWatchNamespace)
 	flags.StringVar(&opts.projectName, flag.OperatorProjectName, "", usage.OperatorProjectName)
 	flags.BoolVar(&opts.importResources, flag.OperatorImport, false, usage.OperatorImport)
+	flags.BoolVar(&opts.atlasGov, flag.OperatorAtlasGov, false, usage.OperatorAtlasGov)
 	flags.StringVar(&opts.KubeConfig, flag.KubernetesClusterConfig, "", usage.KubernetesClusterConfig)
 	flags.StringVar(&opts.KubeContext, flag.KubernetesClusterContext, "", usage.KubernetesClusterContext)
 

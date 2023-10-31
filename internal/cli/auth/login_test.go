@@ -200,7 +200,7 @@ func Test_shouldRetryAuthenticate(t *testing.T) {
 		name      string
 		args      args
 		wantRetry bool
-		wantErr   assert.ErrorAssertionFunc
+		wantErr   require.ErrorAssertionFunc
 	}{
 		{
 			name: "timed out error",
@@ -209,7 +209,7 @@ func Test_shouldRetryAuthenticate(t *testing.T) {
 				p:   &confirmMock{},
 			},
 			wantRetry: true,
-			wantErr:   assert.NoError,
+			wantErr:   require.NoError,
 		},
 		{
 			name: "random error",
@@ -218,15 +218,13 @@ func Test_shouldRetryAuthenticate(t *testing.T) {
 				p:   &confirmMock{},
 			},
 			wantRetry: false,
-			wantErr:   assert.NoError,
+			wantErr:   require.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			gotRetry, err := shouldRetryAuthenticate(tt.args.err, tt.args.p)
-			if !tt.wantErr(t, err, fmt.Sprintf("shouldRetryAuthenticate(%v, %v)", tt.args.err, tt.args.p)) {
-				return
-			}
+			tt.wantErr(t, err, fmt.Sprintf("shouldRetryAuthenticate(%v, %v)", tt.args.err, tt.args.p))
 			assert.Equalf(t, tt.wantRetry, gotRetry, "shouldRetryAuthenticate(%v, %v)", tt.args.err, tt.args.p)
 		})
 	}

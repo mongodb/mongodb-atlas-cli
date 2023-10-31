@@ -46,13 +46,11 @@ func TestAgents(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 
-		if a.NoError(err, string(resp)) {
-			var servers *opsmngr.Agents
-			err := json.Unmarshal(resp, &servers)
-			require.NoError(t, err)
-			a.NotZero(servers.TotalCount)
-			hostname = servers.Results[0].Hostname
-		}
+		require.NoError(t, err, string(resp))
+		var servers *opsmngr.Agents
+		require.NoError(t, json.Unmarshal(resp, &servers))
+		a.NotZero(servers.TotalCount)
+		hostname = servers.Results[0].Hostname
 	})
 
 	t.Run("Version List", func(t *testing.T) {
@@ -68,12 +66,10 @@ func TestAgents(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 
-		if a.NoError(err, string(resp)) {
-			var agents *opsmngr.AgentVersions
-			err := json.Unmarshal(resp, &agents)
-			require.NoError(t, err)
-			a.NotZero(agents.Count)
-		}
+		require.NoError(t, err, string(resp))
+		var agents *opsmngr.AgentVersions
+		require.NoError(t, json.Unmarshal(resp, &agents))
+		a.NotZero(agents.Count)
 	})
 
 	t.Run("Enable backup", func(t *testing.T) {
@@ -85,7 +81,7 @@ func TestAgents(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 	t.Run("Disable backup", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -96,7 +92,7 @@ func TestAgents(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Enable monitoring", func(t *testing.T) {
@@ -108,7 +104,7 @@ func TestAgents(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 	t.Run("Disable monitoring", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -119,6 +115,6 @@ func TestAgents(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 }

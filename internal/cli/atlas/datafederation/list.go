@@ -50,7 +50,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.DataFederationList(opts.ConfigProjectID(), opts.typeFlag)
+	r, err := opts.store.DataFederationList(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}

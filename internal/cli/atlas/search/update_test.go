@@ -22,7 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/spf13/afero"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -40,16 +40,14 @@ func TestUpdateOpts_Run(t *testing.T) {
 		expected := &atlasv2.ClusterSearchIndex{}
 
 		request, err := updateOpts.NewSearchIndex()
-		if err != nil {
-			t.Fatalf("newSearchIndex() unexpected error: %v", err)
-		}
+		require.NoError(t, err)
 		mockStore.
 			EXPECT().
 			UpdateSearchIndexes(updateOpts.ConfigProjectID(), updateOpts.clusterName, updateOpts.id, request).
 			Return(expected, nil).
 			Times(1)
 
-		assert.NoError(t, updateOpts.Run())
+		require.NoError(t, updateOpts.Run())
 	})
 
 	t.Run("file run", func(t *testing.T) {
@@ -68,15 +66,13 @@ func TestUpdateOpts_Run(t *testing.T) {
 		expected := &atlasv2.ClusterSearchIndex{}
 
 		request, err := updateOpts.NewSearchIndex()
-		if err != nil {
-			t.Fatalf("newSearchIndex() unexpected error: %v", err)
-		}
+		require.NoError(t, err)
 		mockStore.
 			EXPECT().
 			UpdateSearchIndexes(updateOpts.ConfigProjectID(), updateOpts.clusterName, updateOpts.id, request).
 			Return(expected, nil).
 			Times(1)
 
-		assert.NoError(t, updateOpts.Run())
+		require.NoError(t, updateOpts.Run())
 	})
 }

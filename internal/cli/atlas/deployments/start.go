@@ -17,16 +17,12 @@ package deployments
 import (
 	"context"
 	"errors"
-	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -37,14 +33,12 @@ type StartOpts struct {
 	cli.OutputOpts
 	cli.GlobalOpts
 	options.DeploymentOpts
-	store  store.ClusterStarter
-	config setup.ProfileReader
+	store store.ClusterStarter
 }
 
 var (
 	ErrDeploymentIsDeleting = errors.New("deployment state is DELETING")
 	ErrNoDeploymentName     = errors.New("deployment name is required for Atlas resources")
-	ErrNotAuthenticated     = errors.New("you are not authenticated. Please, run atlas auth  login")
 	startTemplate           = "Starting deployment '{{.Name}}'.\n"
 )
 
@@ -57,37 +51,39 @@ func (opts *StartOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *StartOpts) Run(ctx context.Context) error {
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	deployment, err := opts.SelectDeployments(ctx, opts.ConfigProjectID())
+	if err != nil {
 		return err
 	}
 
-	if strings.EqualFold(opts.DeploymentType, options.LocalCluster) {
-		return opts.RunLocal(ctx)
+	if opts.IsLocalDeploymentType() {
+		return opts.RunLocal(ctx, deployment)
 	}
 
 	return opts.RunAtlas()
 }
 
-func (opts *StartOpts) RunLocal(ctx context.Context) error {
-	localDeployments, err := opts.GetLocalDeployments(ctx)
-	if err != nil {
+func (opts *StartOpts) RunLocal(ctx context.Context, deployment options.Deployment) error {
+	opts.StartSpinner()
+	defer opts.StopSpinner()
+
+	if err := opts.startContainer(ctx, deployment); err != nil {
 		return err
 	}
 
-	for _, deployment := range localDeployments {
-		if deployment.Name == opts.DeploymentName {
-			if err = opts.startContainer(ctx, deployment); err != nil {
-				return err
-			}
-
-			return opts.Print(
-				admin.AdvancedClusterDescription{
-					Name: &opts.DeploymentName,
-				})
-		}
+	mongotIPAddress, errIP := opts.MongotIP(ctx)
+	if errIP != nil {
+		return errIP
 	}
 
-	return options.ErrDeploymentNotFound
+	if err := opts.WaitForMongot(ctx, mongotIPAddress); err != nil {
+		return err
+	}
+
+	return opts.Print(
+		admin.AdvancedClusterDescription{
+			Name: &opts.DeploymentName,
+		})
 }
 
 func (opts *StartOpts) startContainer(ctx context.Context, deployment options.Deployment) error {
@@ -115,9 +111,9 @@ func (opts *StartOpts) startContainer(ctx context.Context, deployment options.De
 }
 
 func (opts *StartOpts) RunAtlas() error {
-	if !opts.IsCliAuthenticated() {
-		return ErrNotAuthenticated
-	}
+	opts.StartSpinner()
+	defer opts.StopSpinner()
+
 	r, err := opts.store.StartCluster(opts.ConfigProjectID(), opts.DeploymentName)
 	if err != nil {
 		return err
@@ -126,31 +122,11 @@ func (opts *StartOpts) RunAtlas() error {
 	return opts.Print(r)
 }
 
-func (opts *StartOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
-			return err
-		}
-	}
-
-	if opts.DeploymentType == options.AtlasCluster && opts.DeploymentName == "" {
-		return ErrNoDeploymentName
-	}
-
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{
 		Use:     "start <deploymentName>",
-		Short:   "Start a deployment",
+		Short:   "Start a deployment after you stop a machine, it goes into sleep mode, or restarts.",
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{
@@ -158,18 +134,10 @@ func StartBuilder() *cobra.Command {
 			"output":             startTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			opts.config = config.Default()
-			opts.CredStore = config.Default()
-			log.SetWriter(cmd.OutOrStdout())
-
-			if err := opts.PreRunE(
+			return opts.PreRunE(
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(log.Writer(), startTemplate)); err != nil {
-				return err
-			}
-
-			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
-			return nil
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.InitOutput(cmd.OutOrStdout(), startTemplate))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {

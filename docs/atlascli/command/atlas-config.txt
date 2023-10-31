@@ -57,7 +57,7 @@ Related Commands
 ----------------
 
 * :ref:`atlas-config-delete` - Delete a profile.
-* :ref:`atlas-config-describe` - Return a specific profile.
+* :ref:`atlas-config-describe` - Return the profile you specify.
 * :ref:`atlas-config-edit` - Opens the config file with the default text editor.
 * :ref:`atlas-config-init` - Configure a profile to store access settings for your MongoDB deployment.
 * :ref:`atlas-config-list` - Return a list of available profiles by name.

@@ -41,6 +41,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
+	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/templatewriter"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -50,7 +51,6 @@ import (
 
 const (
 	internalMongodPort = 27017
-	internalMongotPort = 27027
 	mdb6               = "6.0"
 	mdb7               = "7.0"
 	replicaSetName     = "rs-localdev"
@@ -58,12 +58,9 @@ const (
 	defaultSettings    = "default"
 	customSettings     = "custom"
 	cancelSettings     = "cancel"
-	compassConnect     = "compass"
-	mongoshConnect     = "mongosh"
 	skipConnect        = "skip"
 	spinnerSpeed       = 100 * time.Millisecond
 	shortStepCount     = 2
-	waitMongotTimeout  = 5 * time.Minute
 )
 
 var (
@@ -79,13 +76,13 @@ var (
 	settingsDescription       = map[string]string{
 		defaultSettings: "With default settings",
 		customSettings:  "With custom settings",
-		cancelSettings:  "Cancel set up",
+		cancelSettings:  "Cancel setup",
 	}
-	connectWithOptions     = []string{mongoshConnect, compassConnect, skipConnect}
+	connectWithOptions     = []string{options.MongoshConnect, options.CompassConnect, skipConnect}
 	connectWithDescription = map[string]string{
-		mongoshConnect: "MongoDB Shell",
-		compassConnect: "MongoDB Compass",
-		skipConnect:    "Skip Connection",
+		options.MongoshConnect: "MongoDB Shell",
+		options.CompassConnect: "MongoDB Compass",
+		skipConnect:            "Skip Connection",
 	}
 	mdbVersions = []string{mdb7, mdb6}
 	//go:embed scripts/start_mongod.sh
@@ -98,7 +95,6 @@ type SetupOpts struct {
 	options.DeploymentOpts
 	cli.OutputOpts
 	cli.GlobalOpts
-	podmanClient  podman.Client
 	mongodbClient mongodbclient.MongoDBClient
 	settings      string
 	connectWith   string
@@ -107,11 +103,6 @@ type SetupOpts struct {
 	mongotIP      string
 	s             *spinner.Spinner
 	atlasSetup    *setup.Opts
-}
-
-func (opts *SetupOpts) initPodmanClient() error {
-	opts.podmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
-	return opts.DeploymentOpts.InitStore(opts.podmanClient)()
 }
 
 func (opts *SetupOpts) initMongoDBClient(ctx context.Context) func() error {
@@ -128,29 +119,29 @@ func (opts *SetupOpts) logStepStarted(msg string, currentStep int, totalSteps in
 }
 
 func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, currentStep int, steps int) error {
-	opts.logStepStarted("Downloading MongoDB binaries to your local environment...", currentStep, steps)
+	opts.logStepStarted("Downloading the MongoDB binaries to your local environment...", currentStep, steps)
 	defer opts.stop()
 
 	var mongodImages []*podman.Image
 	var mongotImages []*podman.Image
 	var err error
 
-	if mongodImages, err = opts.podmanClient.ListImages(ctx, opts.MongodDockerImageName()); err != nil {
+	if mongodImages, err = opts.PodmanClient.ListImages(ctx, opts.MongodDockerImageName()); err != nil {
 		return err
 	}
 
 	if len(mongodImages) == 0 {
-		if _, err = opts.podmanClient.PullImage(ctx, opts.MongodDockerImageName()); err != nil {
+		if _, err = opts.PodmanClient.PullImage(ctx, opts.MongodDockerImageName()); err != nil {
 			return err
 		}
 	}
 
-	if mongotImages, err = opts.podmanClient.ListImages(ctx, options.MongotDockerImageName); err != nil {
+	if mongotImages, err = opts.PodmanClient.ListImages(ctx, options.MongotDockerImageName); err != nil {
 		return err
 	}
 
 	if len(mongotImages) == 0 {
-		if _, err := opts.podmanClient.PullImage(ctx, options.MongotDockerImageName); err != nil {
+		if _, err := opts.PodmanClient.PullImage(ctx, options.MongotDockerImageName); err != nil {
 			return err
 		}
 	}
@@ -159,17 +150,17 @@ func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, current
 }
 
 func (opts *SetupOpts) setupPodman(ctx context.Context, currentStep int, steps int) error {
-	opts.logStepStarted("Downloading and completing configuration...", currentStep, steps)
+	opts.logStepStarted("Downloading and completing the configuration...", currentStep, steps)
 	defer opts.stop()
 
-	return opts.podmanClient.Ready(ctx)
+	return opts.PodmanClient.Ready(ctx)
 }
 
 func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, steps int) error {
 	opts.logStepStarted("Starting your local environment...", currentStep, steps)
 	defer opts.stop()
 
-	containers, errList := opts.podmanClient.ListContainers(ctx, options.MongodHostnamePrefix)
+	containers, errList := opts.PodmanClient.ListContainers(ctx, options.MongodHostnamePrefix)
 	if errList != nil {
 		return errList
 	}
@@ -178,16 +169,20 @@ func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, st
 }
 
 func (opts *SetupOpts) internalIPs(ctx context.Context) error {
-	n, err := opts.podmanClient.Network(ctx, opts.LocalNetworkName())
+	n, err := opts.PodmanClient.Network(ctx, opts.LocalNetworkName())
 	if err != nil {
 		return err
 	}
 	if len(n) < 1 {
 		return podman.ErrNetworkNotFound
 	}
-
+	if len(n[0].Subnets) < 1 {
+		return podman.ErrNetworkNotFound
+	}
 	ipNet := n[0].Subnets[0].Subnet
-
+	if len(ipNet.IP) < 4 { //nolint:gomnd // ip ranges are meant to have 4 segments (e.g. 127.0.0.1)
+		return podman.ErrNetworkNotFound
+	}
 	ipNet.IP[3] = 10
 	opts.mongodIP = ipNet.IP.String()
 	ipNet.IP[3] = 11
@@ -201,7 +196,7 @@ func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needPodmanSetu
 	needPodmanSetup = false
 	needToPullImages = false
 
-	setupState := opts.podmanClient.Diagnostics(ctx)
+	setupState := opts.PodmanClient.Diagnostics(ctx)
 
 	if setupState.MachineRequired &&
 		(!setupState.MachineFound || setupState.MachineState != "running") {
@@ -224,10 +219,6 @@ func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needPodmanSetu
 }
 
 func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
-	if err := podman.Installed(); err != nil {
-		return err
-	}
-
 	steps, needPodmanSetup, needToPullImages := opts.planSteps(ctx)
 	currentStep := 1
 	longWaitWarning := ""
@@ -260,10 +251,10 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	}
 
 	// create local deployment
-	opts.logStepStarted(fmt.Sprintf("Creating your cluster %s...", opts.DeploymentName), currentStep, steps)
+	opts.logStepStarted(fmt.Sprintf("Creating your deployment %s...", opts.DeploymentName), currentStep, steps)
 	defer opts.stop()
 
-	if _, err := opts.podmanClient.CreateNetwork(ctx, opts.LocalNetworkName()); err != nil {
+	if _, err := opts.PodmanClient.CreateNetwork(ctx, opts.LocalNetworkName()); err != nil {
 		return err
 	}
 
@@ -282,11 +273,11 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 
 func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents string) error {
 	mongodDataVolume := opts.LocalMongodDataVolume()
-	if _, err := opts.podmanClient.CreateVolume(ctx, mongodDataVolume); err != nil {
+	if _, err := opts.PodmanClient.CreateVolume(ctx, mongodDataVolume); err != nil {
 		return err
 	}
 
-	if _, err := opts.podmanClient.RunContainer(ctx,
+	if _, err := opts.PodmanClient.RunContainer(ctx,
 		podman.RunContainerOpts{
 			Detach:   true,
 			Image:    opts.MongodDockerImageName(),
@@ -298,7 +289,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 				"KEYFILE":         "/data/configdb/keyfile",
 				"MAXCONNS":        maxConns,
 				"REPLSETNAME":     replicaSetName,
-				"MONGOTHOST":      opts.internalMongotAddress(),
+				"MONGOTHOST":      opts.InternalMongotAddress(opts.mongotIP),
 			},
 			Volumes: map[string]string{
 				mongodDataVolume: "/data/db",
@@ -362,22 +353,18 @@ func (opts *SetupOpts) internalMongodAddress() string {
 	return fmt.Sprintf("%s:%d", opts.mongodIP, internalMongodPort)
 }
 
-func (opts *SetupOpts) internalMongotAddress() string {
-	return fmt.Sprintf("%s:%d", opts.mongotIP, internalMongotPort)
-}
-
 func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents string) error {
 	mongotDataVolume := opts.LocalMongotDataVolume()
-	if _, err := opts.podmanClient.CreateVolume(ctx, mongotDataVolume); err != nil {
+	if _, err := opts.PodmanClient.CreateVolume(ctx, mongotDataVolume); err != nil {
 		return err
 	}
 
 	mongotMetricsVolume := opts.LocalMongoMetricsVolume()
-	if _, err := opts.podmanClient.CreateVolume(ctx, mongotMetricsVolume); err != nil {
+	if _, err := opts.PodmanClient.CreateVolume(ctx, mongotMetricsVolume); err != nil {
 		return err
 	}
 
-	if _, err := opts.podmanClient.RunContainer(ctx, podman.RunContainerOpts{
+	if _, err := opts.PodmanClient.RunContainer(ctx, podman.RunContainerOpts{
 		Detach:     true,
 		Image:      options.MongotDockerImageName,
 		Name:       opts.LocalMongotHostname(),
@@ -398,22 +385,7 @@ func (opts *SetupOpts) configureMongot(ctx context.Context, keyFileContents stri
 		return err
 	}
 
-	return opts.waitForMongot(ctx)
-}
-
-func (opts *SetupOpts) waitForMongot(parentCtx context.Context) error {
-	ctx, cancel := context.WithTimeout(parentCtx, waitMongotTimeout)
-	defer cancel()
-	for {
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		default:
-			if err := opts.podmanClient.Exec(ctx, opts.LocalMongodHostname(), "/bin/sh", "-c", fmt.Sprintf("mongosh %s --eval \"db.adminCommand('ping')\"", opts.internalMongotAddress())); err == nil { // ping was successful
-				return nil
-			}
-		}
-	}
+	return opts.WaitForMongot(ctx, opts.mongotIP)
 }
 
 func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Container) error {
@@ -421,7 +393,7 @@ func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Con
 	for _, c := range containers {
 		for _, n := range c.Names {
 			if n == mongodContainerName {
-				return fmt.Errorf("\"%s\" deployment was already created and is currently in \"%s\" state", opts.DeploymentName, c.State)
+				return fmt.Errorf("\"%s\" deployment already exists and is currently in \"%s\" state", opts.DeploymentName, c.State)
 			}
 		}
 	}
@@ -431,7 +403,7 @@ func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Con
 
 func (opts *SetupOpts) promptSettings() error {
 	p := &survey.Select{
-		Message: "How do you want to set up your local MongoDB database?",
+		Message: "How do you want to set up your local Atlas deployment?",
 		Options: settingOptions,
 		Default: opts.settings,
 		Description: func(value string, index int) string {
@@ -448,7 +420,7 @@ func (opts *SetupOpts) generateDeploymentName() {
 
 func (opts *SetupOpts) promptDeploymentName() error {
 	p := &survey.Input{
-		Message: "Deployment Name [This can't be changed later]",
+		Message: "Deployment Name [You can't change this value later]",
 		Default: opts.DeploymentName,
 	}
 
@@ -463,7 +435,7 @@ func (opts *SetupOpts) promptMdbVersion() error {
 		Message: "Major MongoDB Version",
 		Options: mdbVersions,
 		Default: opts.MdbVersion,
-		Help:    "Major MongoDB Version of the deployment. Will pick the latest minor version available.",
+		Help:    "Major MongoDB Version for the deployment. Atlas CLI applies the latest minor version available.",
 	}
 
 	return telemetry.TrackAskOne(p, &opts.MdbVersion, nil)
@@ -563,10 +535,7 @@ func (opts *SetupOpts) validateFlags() error {
 		}
 	}
 
-	if opts.connectWith != "" &&
-		!strings.EqualFold(opts.connectWith, compassConnect) &&
-		!strings.EqualFold(opts.connectWith, mongoshConnect) &&
-		!strings.EqualFold(opts.connectWith, skipConnect) {
+	if opts.connectWith != "" && !search.StringInSliceFold(connectWithOptions, opts.connectWith) {
 		return fmt.Errorf("%w: %s", errUnsupportedConnectWith, opts.connectWith)
 	}
 
@@ -620,17 +589,17 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 	switch opts.connectWith {
 	case skipConnect:
 		fmt.Fprintln(os.Stderr, "connection skipped")
-	case compassConnect:
+	case options.CompassConnect:
 		if !compass.Detect() {
-			return errCompassNotInstalled
+			return options.ErrCompassNotInstalled
 		}
 		if _, err := log.Warningln("Launching MongoDB Compass..."); err != nil {
 			return err
 		}
 		return compass.Run("", "", cs)
-	case mongoshConnect:
+	case options.MongoshConnect:
 		if !mongosh.Detect() {
-			return errMongoshNotInstalled
+			return options.ErrMongoshNotInstalled
 		}
 		return mongosh.Run("", "", cs)
 	}
@@ -643,14 +612,12 @@ func (opts *SetupOpts) validateAndPrompt() error {
 		return err
 	}
 
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
-			return err
-		}
+	if err := opts.ValidateAndPromptDeploymentType(); err != nil {
+		return err
 	}
 
 	// Defer prompts to Atlas command
-	if opts.DeploymentType == options.AtlasCluster {
+	if opts.IsAtlasDeploymentType() {
 		return nil
 	}
 
@@ -695,8 +662,12 @@ Port	{{.Port}}
 }
 
 func (opts *SetupOpts) runLocal(ctx context.Context) error {
+	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
+		return err
+	}
+
 	if err := opts.createLocalDeployment(ctx); err != nil {
-		_ = opts.Remove(ctx)
+		_ = opts.RemoveLocal(ctx)
 		return err
 	}
 
@@ -782,7 +753,7 @@ func SetupBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
-				opts.initPodmanClient,
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initMongoDBClient(cmd.Context()),
 			)
 		},

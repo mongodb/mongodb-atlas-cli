@@ -25,7 +25,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
 func TestCleanup(t *testing.T) {
@@ -45,17 +45,17 @@ func TestCleanup(t *testing.T) {
 	resp, err := cmd.CombinedOutput()
 	req.NoError(err, string(resp))
 
-	var projects mongodbatlas.Projects
+	var projects admin.PaginatedAtlasGroup
 	err = json.Unmarshal(resp, &projects)
 	req.NoError(err, string(resp))
 	t.Logf("%s\n", resp)
 	for _, project := range projects.Results {
-		projectID := project.ID
+		projectID := project.GetId()
 		if projectID == os.Getenv("MCLI_PROJECT_ID") {
 			t.Log("skipping project", projectID)
 			continue
 		}
-		t.Run(fmt.Sprintf("trying to delete project %s\n", project.ID), func(t *testing.T) {
+		t.Run(fmt.Sprintf("trying to delete project %s\n", project.GetId()), func(t *testing.T) {
 			t.Parallel()
 			deleteAllNetworkPeers(t, cliPath, projectID, "aws")
 			deleteAllNetworkPeers(t, cliPath, projectID, "gcp")
@@ -65,6 +65,7 @@ func TestCleanup(t *testing.T) {
 			deleteAllPrivateEndpoints(t, cliPath, projectID, "azure")
 			deleteClustersForProject(t, cliPath, projectID)
 			deleteDatapipelinesForProject(t, cliPath, projectID)
+			deleteAllDataFederations(t, cliPath, projectID)
 			deleteProjectWithRetry(t, projectID)
 		})
 	}

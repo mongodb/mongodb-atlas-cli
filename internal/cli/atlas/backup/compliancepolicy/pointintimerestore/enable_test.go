@@ -173,9 +173,9 @@ func TestRestoreWindowDaysValidator(t *testing.T) {
 		}
 
 		if testOptions.wantErr {
-			assert.Error(t, opts.validateRestoreWindowDays())
+			require.Error(t, opts.validateRestoreWindowDays())
 		} else {
-			assert.NoError(t, opts.validateRestoreWindowDays())
+			require.NoError(t, opts.validateRestoreWindowDays())
 		}
 	}
 }

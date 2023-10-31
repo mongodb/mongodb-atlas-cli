@@ -61,9 +61,8 @@ func TestDataFederationQueryLimit(t *testing.T) {
 
 		a := assert.New(t)
 		var dataLake atlas.DataLake
-		if err = json.Unmarshal(resp, &dataLake); a.NoError(err) {
-			a.Equal(dataFederationName, dataLake.Name)
-		}
+		require.NoError(t, json.Unmarshal(resp, &dataLake))
+		a.Equal(dataFederationName, dataLake.Name)
 	})
 
 	t.Run("Create", func(t *testing.T) {
@@ -82,12 +81,11 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		cmd.Env = os.Environ()
 
 		a := assert.New(t)
-		if resp, err := cmd.CombinedOutput(); a.NoError(err, string(resp)) {
-			var r atlasv2.DataFederationTenantQueryLimit
-			if err = json.Unmarshal(resp, &r); a.NoError(err) {
-				a.Equal(dataFederationName, *r.TenantName)
-			}
-		}
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+		var r atlasv2.DataFederationTenantQueryLimit
+		require.NoError(t, json.Unmarshal(resp, &r))
+		a.Equal(dataFederationName, *r.TenantName)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -104,9 +102,8 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 		var r atlasv2.DataFederationTenantQueryLimit
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.Equal(limitName, r.Name)
-		}
+		require.NoError(t, json.Unmarshal(resp, &r))
+		a.Equal(limitName, r.Name)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -121,11 +118,10 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 		var r []atlasv2.DataFederationTenantQueryLimit
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.NotEmpty(r)
-		}
+		require.NoError(t, json.Unmarshal(resp, &r))
+		a.NotEmpty(r)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -141,7 +137,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("'%s' deleted\n", limitName)
 		a.Equal(expected, string(resp))
 	})

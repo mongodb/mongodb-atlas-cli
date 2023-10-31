@@ -22,18 +22,17 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func BuildDBUsers(provider store.AtlasOperatorDBUsersStore, projectID, projectName, targetNamespace string, dictionary map[string]string, version string) ([]*atlasV1.AtlasDatabaseUser, []*corev1.Secret, error) {
-	users, err := provider.DatabaseUsers(projectID, &mongodbatlas.ListOptions{})
+func BuildDBUsers(provider atlas.OperatorDBUsersStore, projectID, projectName, targetNamespace string, dictionary map[string]string, version string) ([]*atlasV1.AtlasDatabaseUser, []*corev1.Secret, error) {
+	users, err := provider.DatabaseUsers(projectID, &atlas.ListOptions{})
 	if err != nil {
 		return nil, nil, err
 	}

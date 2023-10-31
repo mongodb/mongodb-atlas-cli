@@ -23,16 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	NAME	DATABASE	COLLECTION{{range .}}
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}{{end}}
+var listTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS{{range .}}
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}{{end}}
 `
 
 type ListOpts struct {
@@ -45,11 +43,15 @@ type ListOpts struct {
 }
 
 func (opts *ListOpts) Run(ctx context.Context) error {
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	if _, err := opts.SelectDeployments(ctx, opts.ConfigProjectID()); err != nil {
 		return err
 	}
 
-	if opts.DeploymentType == options.AtlasCluster {
+	if err := opts.validateAndPrompt(); err != nil {
+		return err
+	}
+
+	if opts.IsAtlasDeploymentType() {
 		return opts.RunAtlas()
 	}
 
@@ -96,23 +98,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *ListOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
-			return err
-		}
-	}
-
-	if opts.DeploymentType == options.AtlasCluster && opts.DeploymentName == "" {
-		return ErrNoDeploymentName
-	}
-
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
-			return err
-		}
-	}
-
+func (opts *ListOpts) validateAndPrompt() error {
 	if opts.DBName == "" {
 		if err := promptRequiredName("Database", &opts.DBName); err != nil {
 			return err
@@ -120,9 +106,7 @@ func (opts *ListOpts) validateAndPrompt(ctx context.Context) error {
 	}
 
 	if opts.Collection == "" {
-		if err := promptRequiredName("Collection", &opts.Collection); err != nil {
-			return err
-		}
+		return promptRequiredName("Collection", &opts.Collection)
 	}
 
 	return nil
@@ -141,10 +125,9 @@ func ListBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			w := cmd.OutOrStdout()
-			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
 			return opts.PreRunE(
 				opts.InitOutput(w, listTemplate),
-				opts.InitStore(opts.PodmanClient),
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient,
 			)
@@ -159,6 +142,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

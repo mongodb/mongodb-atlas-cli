@@ -62,7 +62,7 @@ func TestOrgs(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("List Org Users", func(t *testing.T) {
@@ -76,6 +76,6 @@ func TestOrgs(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 }

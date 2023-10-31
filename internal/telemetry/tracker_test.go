@@ -29,6 +29,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestTrackCommand(t *testing.T) {
@@ -36,9 +37,6 @@ func TestTrackCommand(t *testing.T) {
 	mockStore := mocks.NewMockEventsSender(ctrl)
 
 	config.ToolName = config.AtlasCLI
-
-	a := assert.New(t)
-
 	cmd := &cobra.Command{
 		Use: "test-command",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -46,7 +44,7 @@ func TestTrackCommand(t *testing.T) {
 	}
 	_ = cmd.ExecuteContext(NewContext())
 
-	tracker := &tracker{
+	tr := &tracker{
 		fs:               afero.NewMemMapFs(),
 		maxCacheFileSize: defaultMaxCacheFileSize,
 		store:            mockStore,
@@ -59,9 +57,7 @@ func TestTrackCommand(t *testing.T) {
 		SendEvents(gomock.Any()).
 		Return(nil).
 		Times(1)
-
-	err := tracker.trackCommand(TrackOptions{})
-	a.NoError(err)
+	require.NoError(t, tr.trackCommand(TrackOptions{}))
 }
 
 func TestTrackCommandWithError(t *testing.T) {
@@ -70,9 +66,8 @@ func TestTrackCommandWithError(t *testing.T) {
 
 	config.ToolName = config.AtlasCLI
 
-	a := assert.New(t)
 	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
-	a.NoError(err)
+	require.NoError(t, err)
 
 	cmd := &cobra.Command{
 		Use: "test-command",
@@ -81,9 +76,9 @@ func TestTrackCommandWithError(t *testing.T) {
 		},
 	}
 	errCmd := cmd.ExecuteContext(NewContext())
-	a.Error(errCmd)
+	require.Error(t, errCmd)
 
-	tracker := &tracker{
+	tr := &tracker{
 		fs:               afero.NewMemMapFs(),
 		maxCacheFileSize: defaultMaxCacheFileSize,
 		cacheDir:         cacheDir,
@@ -98,10 +93,10 @@ func TestTrackCommandWithError(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	err = tracker.trackCommand(TrackOptions{
+	err = tr.trackCommand(TrackOptions{
 		Err: errCmd,
 	})
-	a.NoError(err)
+	require.NoError(t, err)
 }
 
 func TestTrackCommandWithSendError(t *testing.T) {
@@ -110,9 +105,8 @@ func TestTrackCommandWithSendError(t *testing.T) {
 
 	config.ToolName = config.AtlasCLI
 
-	a := assert.New(t)
 	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
-	a.NoError(err)
+	require.NoError(t, err)
 
 	cmd := &cobra.Command{
 		Use: "test-command",
@@ -120,9 +114,10 @@ func TestTrackCommandWithSendError(t *testing.T) {
 		},
 	}
 	errCmd := cmd.ExecuteContext(NewContext())
-	a.NoError(errCmd)
 
-	tracker := &tracker{
+	require.NoError(t, errCmd)
+
+	tr := &tracker{
 		fs:               afero.NewMemMapFs(),
 		maxCacheFileSize: defaultMaxCacheFileSize,
 		cacheDir:         cacheDir,
@@ -137,30 +132,29 @@ func TestTrackCommandWithSendError(t *testing.T) {
 		Return(errors.New("test send error")).
 		Times(1)
 
-	err = tracker.trackCommand(TrackOptions{
+	err = tr.trackCommand(TrackOptions{
 		Err: errCmd,
 	})
-	a.NoError(err)
+	require.NoError(t, err)
 
 	// Verify that the file exists
 	filename := filepath.Join(cacheDir, cacheFilename)
-	info, statError := tracker.fs.Stat(filename)
-	a.NoError(statError)
+	info, statError := tr.fs.Stat(filename)
+	require.NoError(t, statError)
 	// Verify the file name
-	a.Equal(info.Name(), cacheFilename)
+	assert.Equal(t, cacheFilename, info.Name())
 	// Verify that the file contains some data
 	var minExpectedSize int64 = 10
-	a.True(info.Size() > minExpectedSize)
+	assert.Greater(t, info.Size(), minExpectedSize)
 }
 
 func TestSave(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
-	a := assert.New(t)
 	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
-	a.NoError(err)
+	require.NoError(t, err)
 
-	tracker := &tracker{
+	tr := &tracker{
 		fs:               afero.NewMemMapFs(),
 		maxCacheFileSize: defaultMaxCacheFileSize,
 		cacheDir:         cacheDir,
@@ -174,26 +168,25 @@ func TestSave(t *testing.T) {
 		Source:     config.ToolName,
 		Properties: properties,
 	}
-	a.NoError(tracker.save(event))
+	require.NoError(t, tr.save(event))
 	// Verify that the file exists
 	filename := path.Join(cacheDir, cacheFilename)
-	info, statError := tracker.fs.Stat(filename)
-	a.NoError(statError)
+	info, statError := tr.fs.Stat(filename)
+	require.NoError(t, statError)
 	// Verify the file name
-	a.Equal(info.Name(), cacheFilename)
+	a := assert.New(t)
+	a.Equal(cacheFilename, info.Name())
 	// Verify that the file contains some data
 	var minExpectedSize int64 = 10
-	a.True(info.Size() > minExpectedSize)
+	a.Greater(info.Size(), minExpectedSize)
 }
 
 func TestSaveOverMaxCacheFileSize(t *testing.T) {
 	config.ToolName = config.AtlasCLI
-
-	a := assert.New(t)
 	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
-	a.NoError(err)
+	require.NoError(t, err)
 
-	tracker := &tracker{
+	tr := &tracker{
 		fs:               afero.NewMemMapFs(),
 		maxCacheFileSize: 10, // 10 bytes
 		cacheDir:         cacheDir,
@@ -209,43 +202,41 @@ func TestSaveOverMaxCacheFileSize(t *testing.T) {
 	}
 
 	// First save will work as the cache file will be new
-	a.NoError(tracker.save(event))
+	require.NoError(t, tr.save(event))
 	// Second save should fail as the file will be larger than 10 bytes
-	a.Error(tracker.save(event))
+	require.Error(t, tr.save(event))
 }
 
 func TestOpenCacheFile(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 
-	a := assert.New(t)
 	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
-	a.NoError(err)
+	require.NoError(t, err)
 
-	tracker := &tracker{
+	tr := &tracker{
 		fs:               afero.NewMemMapFs(),
 		maxCacheFileSize: 10, // 10 bytes
 		cacheDir:         cacheDir,
 	}
 
-	_, err = tracker.openCacheFile()
-	a.NoError(err)
+	_, err = tr.openCacheFile()
+	require.NoError(t, err)
 	// Verify that the file exists
 	filename := path.Join(cacheDir, cacheFilename)
-	info, statError := tracker.fs.Stat(filename)
-	a.NoError(statError)
+	info, statError := tr.fs.Stat(filename)
+	require.NoError(t, statError)
 	// Verify the file name
-	a.Equal(info.Name(), cacheFilename)
+	a := assert.New(t)
+	a.Equal(cacheFilename, info.Name())
 	// Verify that the file is empty
 	var expectedSize int64 // The nil value is zero
-	a.Equal(info.Size(), expectedSize)
+	a.Equal(expectedSize, info.Size())
 }
 
 func TestTrackSurvey(t *testing.T) {
 	config.ToolName = config.AtlasCLI
-
-	a := assert.New(t)
 	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
-	a.NoError(err)
+	require.NoError(t, err)
 
 	cmd := &cobra.Command{
 		Use: "test-command",
@@ -253,9 +244,9 @@ func TestTrackSurvey(t *testing.T) {
 		},
 	}
 	errCmd := cmd.ExecuteContext(NewContext())
-	a.NoError(errCmd)
+	require.NoError(t, errCmd)
 
-	tracker := &tracker{
+	tr := &tracker{
 		fs:               afero.NewMemMapFs(),
 		maxCacheFileSize: defaultMaxCacheFileSize,
 		cacheDir:         cacheDir,
@@ -263,19 +254,20 @@ func TestTrackSurvey(t *testing.T) {
 	}
 
 	response := true
-	err = tracker.trackSurvey(
+	err = tr.trackSurvey(
 		&survey.Confirm{Message: "test"},
 		&response,
 		nil,
 	)
-	a.NoError(err)
+	require.NoError(t, err)
 	// Verify that the file exists
 	filename := filepath.Join(cacheDir, cacheFilename)
-	info, statError := tracker.fs.Stat(filename)
-	a.NoError(statError)
+	info, statError := tr.fs.Stat(filename)
+	require.NoError(t, statError)
 	// Verify the file name
-	a.Equal(info.Name(), cacheFilename)
+	a := assert.New(t)
+	a.Equal(cacheFilename, info.Name())
 	// Verify that the file contains some data
 	var minExpectedSize int64 = 10
-	a.True(info.Size() > minExpectedSize)
+	a.Greater(info.Size(), minExpectedSize)
 }

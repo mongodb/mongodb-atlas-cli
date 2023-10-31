@@ -18,14 +18,13 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_feature_control_policy.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store FeatureControlPoliciesLister,FeatureControlPoliciesUpdater
 
 type FeatureControlPoliciesLister interface {
-	FeatureControlPolicies(string, *atlas.ListOptions) (*opsmngr.FeaturePolicy, error)
+	FeatureControlPolicies(string, *opsmngr.ListOptions) (*opsmngr.FeaturePolicy, error)
 }
 
 type FeatureControlPoliciesUpdater interface {
@@ -33,7 +32,7 @@ type FeatureControlPoliciesUpdater interface {
 }
 
 // FeatureControlPolicies encapsulate the logic to manage different cloud providers.
-func (s *Store) FeatureControlPolicies(projectID string, opts *atlas.ListOptions) (*opsmngr.FeaturePolicy, error) {
+func (s *Store) FeatureControlPolicies(projectID string, opts *opsmngr.ListOptions) (*opsmngr.FeaturePolicy, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).FeatureControlPolicies.List(s.ctx, projectID, opts)

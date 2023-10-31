@@ -42,8 +42,8 @@ type LoginConfig interface {
 }
 
 var (
-	ErrProjectIDNotFound = errors.New("you don't have access to this or it doesn't exist")
-	ErrOrgIDNotFound     = errors.New("you don't have access to this organization ID or it doesn't exist")
+	ErrProjectIDNotFound = errors.New("project is inaccessible. You either don't have access to this project or the project doesn't exist")
+	ErrOrgIDNotFound     = errors.New("organization is inaccessible. You don't have access to this organization or the organization doesn't exist")
 )
 
 type LoginOpts struct {
@@ -162,9 +162,7 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 	// Initialize the text to be displayed if users are asked to select orgs or projects
 	opts.OnMultipleOrgsOrProjects = func() {
 		if !opts.AskedOrgsOrProjects {
-			_, _ = fmt.Fprintln(opts.OutWriter, `Now set your default organization and project.
-
-You have multiple organizations or projects, select one to proceed.`)
+			_, _ = fmt.Fprintln(opts.OutWriter, `Select one default organization and one default project.`)
 		}
 	}
 
@@ -194,8 +192,8 @@ You have multiple organizations or projects, select one to proceed.`)
 		}
 
 		_, _ = fmt.Fprintf(opts.OutWriter, `
-Your profile is now configured.
-You can use [%s config set] to change these settings at a later time.
+You have successfully configured your profile.
+You can use [%s config set] to change your profile settings later.
 `, config.BinName())
 	}
 
@@ -304,7 +302,7 @@ func LoginBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
-		Example: fmt.Sprintf(`  # To start the interactive login for your MongoDB %s account:
+		Example: fmt.Sprintf(`  # Log in to your MongoDB %s account in interactive mode:
   %s auth login
 `, tool(), config.BinName()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -331,7 +329,7 @@ func LoginBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
-	_ = cmd.Flags().MarkDeprecated("skipConfig", "if profile is configured, the login flow will skip the config step by default.")
+	_ = cmd.Flags().MarkDeprecated("skipConfig", "if you configured a profile, the command skips the config step by default.")
 	return cmd
 }
 

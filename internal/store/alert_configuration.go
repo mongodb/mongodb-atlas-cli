@@ -26,7 +26,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_alert_configuration.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AlertConfigurationLister,AlertConfigurationCreator,AlertConfigurationDeleter,AlertConfigurationUpdater,MatcherFieldsLister,AlertConfigurationEnabler,AlertConfigurationDisabler
 
 type AlertConfigurationLister interface {
-	AlertConfigurations(string, *atlas.ListOptions) ([]atlas.AlertConfiguration, error)
+	AlertConfigurations(string, *opsmngr.ListOptions) ([]atlas.AlertConfiguration, error)
 }
 
 type AlertConfigurationCreator interface {

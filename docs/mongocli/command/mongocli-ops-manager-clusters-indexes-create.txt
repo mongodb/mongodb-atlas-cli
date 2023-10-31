@@ -54,19 +54,19 @@ Options
    * - --MaxVariable
      - string
      - false
-     - Flag that, if specified, determines which characters to ignore. This flag applies only if indexConfigs.collation.alternate is set to shifted.
+     - Flag that determines which characters to ignore. This flag applies only if you set indexConfigs.collation.alternate to shifted.
    * - --alternate
      - string
      - false
-     - Flag that, if specified, determines whether collation should consider whitespace and punctuation as base characters during comparisons.
+     - Flag that determines whether collation should consider whitespace and punctuation as base characters during comparisons.
    * - --backwards
      - 
      - false
-     - Flag that, if set to true, strings with diacritics sort from the back to the front of the string.
+     - Flag that indicates whether strings with diacritics sort from the back to the front of the string.
    * - --caseFirst
      - string
      - false
-     - Flag that, if specified, determines the sort order of case differences during tertiary level comparisons.
+     - Flag that determines the sort order of case differences during tertiary level comparisons.
    * - --caseLevel
      - 
      - false
@@ -94,11 +94,11 @@ Options
    * - --normalization
      - 
      - false
-     - Flag that, if set to true, collation checks if text requires normalization and performs normalization to compare text.
+     - Flag that indicates whether collation checks if text requires normalization and performs normalization to compare text.
    * - --numericOrdering
      - 
      - false
-     - Flag that, if set to true, indicates that collation compares numeric strings as numbers. If set to false, collation compares numeric strings as strings.
+     - Flag that indicates that collation compares numeric strings as numbers. If you set to false, collation compares numeric strings as strings.
    * - --projectId
      - string
      - false
@@ -106,11 +106,11 @@ Options
    * - --rsName
      - string
      - true
-     - The replica set that the index is built on.
+     - Replica set that the index is built on.
    * - --sparse
      - 
      - false
-     - Flag that creates a sparse index. To learn more about sparse indexes, see https://www.mongodb.com/docs/manual/core/index-sparse/
+     - Flag that creates a sparse index. To learn more, see https://dochub.mongodb.org/core/index-sparse-manual.
    * - --strength
      - int
      - false

@@ -54,7 +54,7 @@ Options
    * - --force
      - 
      - false
-     - If specified, skips Ops Manager version check.
+     - Flag that indicates whether to skip the Ops Manager version check.
    * - -h, --help
      - 
      - false

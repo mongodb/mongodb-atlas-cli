@@ -50,7 +50,7 @@ Options
    * - --verbose
      - 
      - false
-     - Flag that, if set to true, returns all child jobs in the response.
+     - Flag that returns all child jobs in the response.
 
 Inherited Options
 -----------------

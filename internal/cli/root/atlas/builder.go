@@ -159,7 +159,13 @@ Use the --help flag with any command for more info on that command.`,
 				if err := prerun.ExecuteE(
 					opts.InitFlow(config.Default()),
 					func() error {
-						return opts.RefreshAccessToken(cmd.Context())
+						if err := opts.RefreshAccessToken(cmd.Context()); err != nil {
+							if authReq == RequiredAuth {
+								return err
+							}
+							_, _ = log.Warningf("Could not refresh access token: %s\n", err.Error())
+						}
+						return nil
 					},
 				); err != nil {
 					return err

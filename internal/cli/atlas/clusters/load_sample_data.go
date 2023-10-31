@@ -42,7 +42,7 @@ func (opts *LoadSampleDataOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var addTmpl = "Sample Data Job {{.Id}} created.\n"
+var addTmpl = "Sample data load job {{.Id}} created.\n"
 
 func (opts *LoadSampleDataOpts) Run() error {
 	r, err := opts.store.AddSampleData(opts.ConfigProjectID(), opts.name)
@@ -62,7 +62,7 @@ func LoadSampleDataBuilder(deprecate bool) *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"clusterNameDesc": "Name of the cluster for which you want to load sample data.",
+			"clusterNameDesc": "Label that identifies the cluster that you want to load sample data into.",
 			"output":          addTmpl,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -38,7 +38,7 @@ Options
    * - --acceptedTos
      - 
      - true
-     - Flag indicating whether or not you accepted the terms of service for using Amazon S3-compatible stores with Ops Manager.
+     - Flag that indicates whether you accepted the terms of service for using Amazon S3-compatible stores with Ops Manager.
    * - --assignment
      - 
      - false
@@ -54,7 +54,7 @@ Options
    * - --disableProxyS3
      - 
      - false
-     - Flag indicating whether the HTTP proxy should be used when connecting to Amazon S3.
+     - Flag that indicates whether to use the HTTP proxy when connecting to Amazon S3.
    * - --encryptedCredentials
      - 
      - false
@@ -82,7 +82,7 @@ Options
    * - --pathStyleAccessEnabled
      - 
      - false
-     - Flag indicating the style of this endpoint.
+     - Flag that indicates the style of the endpoint.
    * - --s3AuthMethod
      - string
      - true
@@ -98,19 +98,19 @@ Options
    * - --s3MaxConnections
      - int
      - false
-     - Positive integer indicating the maximum number of connections to this Amazon S3 blockstore.
+     - Positive integer that indicates the maximum number of connections to this Amazon S3 blockstore.
    * - --sseEnabled
      - 
      - false
-     - Flag indicating whether this Amazon S3 blockstore enables server-side encryption.
+     - Flag that indicates whether the Amazon S3 blockstore enables server-side encryption.
    * - --uri
      - string
      - true
-     - A comma-separated list of hosts in the <hostname:port> format that can be used to access this blockstore.
+     - Comma-separated list of hosts in the <hostname:port> format for accessing the blockstore.
    * - --writeConcern
      - string
      - false
-     - The write concern used for this blockstore.
+     - Write concern for the blockstore.
 
 Inherited Options
 -----------------

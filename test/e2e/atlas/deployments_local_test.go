@@ -62,8 +62,6 @@ func TestDeploymentsLocal(t *testing.T) {
 				deploymentEntity,
 				"diagnostics",
 				deploymentName,
-				"-o",
-				"json",
 			)
 
 			cmd.Env = os.Environ()
@@ -92,7 +90,9 @@ func TestDeploymentsLocal(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"delete",
-			"test",
+			deploymentName,
+			"--type",
+			"local",
 			"--force",
 		)
 
@@ -115,9 +115,14 @@ func TestDeploymentsLocal(t *testing.T) {
 		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
 
-		req.Equal(`NAME   TYPE    MDB VER   STATE
-test   LOCAL   7.0.1     IDLE
-`, o)
+		outputLines := strings.Split(o, "\n")
+		req.Equal(`NAME   TYPE    MDB VER   STATE`, outputLines[0])
+
+		cols := strings.Fields(outputLines[1])
+		req.Equal(deploymentName, cols[0])
+		req.Equal("LOCAL", cols[1])
+		req.Contains(cols[2], "7.0.")
+		req.Equal("IDLE", cols[3])
 	})
 
 	ctx := context.Background()
@@ -130,6 +135,8 @@ test   LOCAL   7.0.1     IDLE
 			deploymentEntity,
 			"connect",
 			deploymentName,
+			"--type",
+			"local",
 			"--connectWith",
 			"connectionString",
 		)
@@ -253,7 +260,7 @@ test   LOCAL   7.0.1     IDLE
 		var results []bson.M
 		err = c.All(ctx, &results)
 		req.NoError(err)
-		req.Equal(1, len(results))
+		req.Len(results, 1)
 	})
 
 	t.Run("Delete Index", func(t *testing.T) {

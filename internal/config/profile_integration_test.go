@@ -22,6 +22,7 @@ import (
 
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 const (
@@ -90,10 +91,11 @@ func profileWithFullDescription() *Profile {
 
 func TestProfile_Get_FullProfile(t *testing.T) {
 	profile := profileWithFullDescription()
-	a := assert.New(t)
-	a.NoError(profile.LoadMongoCLIConfig(false))
+
+	require.NoError(t, profile.LoadMongoCLIConfig(false))
 
 	desc := profile.Map()
+	a := assert.New(t)
 	a.Equal("default", profile.Name())
 	a.Len(desc, 9)
 	a.Equal("cloud", profile.Service())
@@ -106,9 +108,9 @@ func TestProfile_Get_FullProfile(t *testing.T) {
 
 func TestProfile_Get_Default(t *testing.T) {
 	profile := profileWithOneDefaultUserOneNonDefault()
-	a := assert.New(t)
-	a.NoError(profile.LoadMongoCLIConfig(false))
+	require.NoError(t, profile.LoadMongoCLIConfig(false))
 	desc := profile.Map()
+	a := assert.New(t)
 	a.Equal(DefaultProfile, profile.Name())
 	a.Len(desc, 4)
 }
@@ -117,12 +119,11 @@ func TestProfile_Get_NonDefault(t *testing.T) {
 	profile := profileWithOneNonDefaultUser()
 	profile.SetName(atlas)
 
-	a := assert.New(t)
-
-	a.NoError(profile.LoadMongoCLIConfig(false))
+	require.NoError(t, profile.LoadMongoCLIConfig(false))
 
 	desc := profile.Map()
 
+	a := assert.New(t)
 	a.Equal(atlas, profile.Name(), "expected atlas Profile to be described")
 	a.Len(desc, 3)
 	a.Equal("5cac6a2179358edabd12b572", profile.OrgID(), "project id should match")
@@ -131,65 +132,55 @@ func TestProfile_Get_NonDefault(t *testing.T) {
 
 func TestProfile_Delete_NonDefault(t *testing.T) {
 	profile := profileWithOneDefaultUserOneNonDefault()
-
-	a := assert.New(t)
-
-	a.NoError(profile.LoadMongoCLIConfig(false))
+	require.NoError(t, profile.LoadMongoCLIConfig(false))
 
 	profile.SetName(atlas)
 
-	if a.NoError(profile.Delete()) {
-		a.NoError(profile.LoadMongoCLIConfig(false))
-		desc := profile.Map()
-		a.Len(desc, 0, "Profile should have no properties")
-	}
+	require.NoError(t, profile.Delete())
+	require.NoError(t, profile.LoadMongoCLIConfig(false))
+	desc := profile.Map()
+	assert.Empty(t, desc, "Profile should have no properties")
 }
 
 func TestProfile_Rename(t *testing.T) {
 	profile := profileWithOneDefaultUserOneNonDefault()
 	profile.SetName(DefaultProfile)
 
-	a := assert.New(t)
-	a.NoError(profile.LoadMongoCLIConfig(false))
+	require.NoError(t, profile.LoadMongoCLIConfig(false))
 	defaultDescription := profile.Map()
-	if a.NoError(profile.Rename(newProfileName)) {
-		a.NoError(profile.LoadMongoCLIConfig(false))
-		profile.SetName(DefaultProfile)
-		a.Empty(profile.Map())
-		profile.SetName(newProfileName)
-		descriptionAfterRename := profile.Map()
-		// after renaming, one Profile should exist
-		a.Equal(defaultDescription, descriptionAfterRename, "descriptions should be equal after renaming")
-	}
+	require.NoError(t, profile.Rename(newProfileName))
+	require.NoError(t, profile.LoadMongoCLIConfig(false))
+	profile.SetName(DefaultProfile)
+	a := assert.New(t)
+	a.Empty(profile.Map())
+	profile.SetName(newProfileName)
+	descriptionAfterRename := profile.Map()
+	// after renaming, one Profile should exist
+	a.Equal(defaultDescription, descriptionAfterRename, "descriptions should be equal after renaming")
 }
 
 func TestProfile_Rename_OverwriteExisting(t *testing.T) {
 	profile := profileWithOneDefaultUserOneNonDefault()
 	profile.SetName(DefaultProfile)
 
-	a := assert.New(t)
-	a.NoError(profile.LoadMongoCLIConfig(false))
+	require.NoError(t, profile.LoadMongoCLIConfig(false))
 	defaultDescription := profile.Map()
 
-	if a.NoError(profile.Rename(atlas)) {
-		a.NoError(profile.LoadMongoCLIConfig(false))
-		profile.SetName(atlas)
-
-		descriptionAfterRename := profile.Map()
-
-		// after renaming, one Profile should exist
-		a.Equal(defaultDescription, descriptionAfterRename, "descriptions should be equal after renaming")
-	}
+	require.NoError(t, profile.Rename(atlas))
+	require.NoError(t, profile.LoadMongoCLIConfig(false))
+	profile.SetName(atlas)
+	descriptionAfterRename := profile.Map()
+	// after renaming, one Profile should exist
+	assert.Equal(t, defaultDescription, descriptionAfterRename, "descriptions should be equal after renaming")
 }
 
 func TestProfile_Set(t *testing.T) {
 	profile := profileWithOneDefaultUserOneNonDefault()
-	a := assert.New(t)
-	a.NoError(profile.LoadMongoCLIConfig(false))
+	require.NoError(t, profile.LoadMongoCLIConfig(false))
 
 	profile.SetName(DefaultProfile)
 
 	profile.Set(projectID, "newProjectId")
 
-	a.Equal("newProjectId", profile.ProjectID(), "project id should be set to new value")
+	assert.Equal(t, "newProjectId", profile.ProjectID(), "project id should be set to new value")
 }

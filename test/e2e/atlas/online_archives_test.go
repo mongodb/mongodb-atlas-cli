@@ -26,6 +26,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -89,11 +90,9 @@ func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	if err != nil {
-		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-	}
+	require.NoError(t, err, string(resp))
 	expected := fmt.Sprintf("Archive '%s' deleted\n", archiveID)
-	assert.Equal(t, string(resp), expected)
+	assert.Equal(t, expected, string(resp))
 }
 
 func watchOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
@@ -123,7 +122,7 @@ func startOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	// online archive never reaches goal state as the db and collection must exists
+	// online archive never reaches goal state as the db and collection must exist
 	const expectedError = "ONLINE_ARCHIVE_CANNOT_MODIFY_FIELD"
 	if err != nil && !strings.Contains(string(resp), expectedError) {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))

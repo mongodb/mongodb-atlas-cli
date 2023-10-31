@@ -17,7 +17,6 @@ package indexes
 import (
 	"context"
 	"errors"
-	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -26,9 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
@@ -73,19 +70,6 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 
 func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 	var err error
-	if err = opts.PodmanClient.Ready(ctx); err != nil {
-		return err
-	}
-
-	if opts.DeploymentName != "" {
-		if err = opts.DeploymentOpts.CheckIfDeploymentExists(ctx); err != nil {
-			return err
-		}
-	} else {
-		if err = opts.DeploymentOpts.Select(ctx); err != nil {
-			return err
-		}
-	}
 
 	if err = opts.validateAndPrompt(); err != nil {
 		return err
@@ -130,22 +114,13 @@ func (opts *CreateOpts) RunAtlas() error {
 }
 
 func (opts *CreateOpts) Run(ctx context.Context) error {
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
-			return err
-		}
+	_, err := opts.SelectDeployments(ctx, opts.ConfigProjectID())
+	if err != nil {
+		return err
 	}
 
-	if strings.EqualFold(opts.DeploymentType, "local") {
+	if opts.IsLocalDeploymentType() {
 		return opts.RunLocal(ctx)
-	}
-
-	if !opts.IsCliAuthenticated() {
-		return ErrNotAuthenticated
-	}
-
-	if opts.DeploymentName == "" {
-		return ErrNoDeploymentName
 	}
 
 	return opts.RunAtlas()
@@ -269,17 +244,19 @@ func CreateBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			w := cmd.OutOrStdout()
-			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
 			opts.WatchOpts.OutWriter = w
-			log.SetWriter(w)
 
 			if opts.DeploymentType == "atlas" && opts.EnableWatch {
 				return ErrWatchNotAvailable
 			}
 
+			if opts.Filename != "" && (opts.DBName != "" || opts.Collection != "") {
+				return errors.New("the '-file' flag cannot be used in conjunction with the 'db' and 'collection' flags, please choose either 'file' or 'db' and '-collection', but not both")
+			}
+
 			return opts.PreRunE(
 				opts.InitOutput(w, createTemplate),
-				opts.InitStore(opts.PodmanClient),
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient(cmd.Context()),
 			)
@@ -301,6 +278,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVarP(&opts.Filename, flag.File, flag.FileShort, "", usage.SearchFilename)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	// Local only
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
@@ -309,10 +287,9 @@ func CreateBuilder() *cobra.Command {
 	// Atlas only
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
+	cmd.MarkFlagsMutuallyExclusive(flag.Database, flag.File)
+	cmd.MarkFlagsMutuallyExclusive(flag.Collection, flag.File)
 	_ = cmd.MarkFlagFilename(flag.File)
-
-	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Database)
-	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Collection)
 
 	return cmd
 }

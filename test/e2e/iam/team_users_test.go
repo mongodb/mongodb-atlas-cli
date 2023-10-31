@@ -65,17 +65,15 @@ func TestTeamUsers(t *testing.T) {
 		a := assert.New(t)
 
 		var users []mongodbatlas.AtlasUser
-		if err := json.Unmarshal(resp, &users); a.NoError(err) {
-			found := false
-			for _, user := range users {
-				if user.Username == username {
-					found = true
-					break
-				}
+		require.NoError(t, json.Unmarshal(resp, &users))
+		found := false
+		for _, user := range users {
+			if user.Username == username {
+				found = true
+				break
 			}
-
-			a.True(found)
 		}
+		a.True(found)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -92,9 +90,8 @@ func TestTeamUsers(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 		var teams []mongodbatlas.AtlasUser
-		if err := json.Unmarshal(resp, &teams); a.NoError(err) {
-			a.NotEmpty(teams)
-		}
+		require.NoError(t, json.Unmarshal(resp, &teams))
+		a.NotEmpty(teams)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -112,9 +109,8 @@ func TestTeamUsers(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("User '%s' deleted from the team\n", userID)
-			a.Equal(expected, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		expected := fmt.Sprintf("User '%s' deleted from the team\n", userID)
+		a.Equal(expected, string(resp))
 	})
 }

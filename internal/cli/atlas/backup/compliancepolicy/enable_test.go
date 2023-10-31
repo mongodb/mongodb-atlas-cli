@@ -22,6 +22,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -104,5 +105,5 @@ func TestEnableOpts_Run_invalidEmail(t *testing.T) {
 		authorizedEmail: invalidEmail,
 	}
 
-	assert.Error(t, opts.Run())
+	require.Error(t, opts.Run())
 }

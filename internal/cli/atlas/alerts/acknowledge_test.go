@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -99,7 +99,7 @@ func TestAcknowledgeOpts_Run(t *testing.T) {
 					AcknowledgeAlert(params).
 					Return(nil, errors.New("fake")).
 					Times(1)
-				assert.Error(t, opts.Run())
+				require.Error(t, opts.Run())
 			} else {
 				expected := &admin.AlertViewForNdsGroup{}
 				mockStore.
@@ -107,7 +107,7 @@ func TestAcknowledgeOpts_Run(t *testing.T) {
 					AcknowledgeAlert(params).
 					Return(expected, nil).
 					Times(1)
-				assert.NoError(t, opts.Run())
+				require.NoError(t, opts.Run())
 			}
 		})
 	}

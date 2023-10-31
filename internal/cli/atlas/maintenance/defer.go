@@ -56,9 +56,7 @@ func DeferBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "defer",
 		Short: "Defer scheduled maintenance for your project for one week.",
-		Long: `To learn more about maintenance windows, see https://www.mongodb.com/docs/atlas/tutorial/cluster-maintenance-window/.
-
-` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Long:  longDesc + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"output": deferTemplate,
 		},

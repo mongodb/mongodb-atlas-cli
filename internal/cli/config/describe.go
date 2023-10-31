@@ -36,7 +36,7 @@ var descTemplate = `SETTING	VALUE{{ range $key, $value := . }}
 
 func (opts *describeOpts) Run() error {
 	if !config.Exists(opts.name) {
-		return fmt.Errorf("no profile with name '%s'", opts.name)
+		return fmt.Errorf("you don't have a profile named '%s'", opts.name)
 	}
 	config.SetName(opts.name)
 	return opts.Print(config.Map())
@@ -48,10 +48,10 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe <name>",
 		Aliases: []string{"get"},
-		Short:   "Return a specific profile.",
+		Short:   "Return the profile you specify.",
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"nameDesc": "Name of the profile.",
+			"nameDesc": "Label that identifies the profile.",
 		},
 		PreRun: func(cmd *cobra.Command, args []string) {
 			opts.OutWriter = cmd.OutOrStdout()

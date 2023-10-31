@@ -53,11 +53,9 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var invitation admin.OrganizationInvitation
-		if err := json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailOrg, invitation.GetUsername())
-			require.NotEmpty(t, invitation.GetId())
-		}
-
+		require.NoError(t, json.Unmarshal(resp, &invitation))
+		a.Equal(emailOrg, invitation.GetUsername())
+		require.NotEmpty(t, invitation.GetId())
 		orgInvitationID = invitation.GetId()
 	})
 
@@ -74,9 +72,8 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a := assert.New(t)
 
 		var invitations []admin.OrganizationInvitation
-		if err = json.Unmarshal(resp, &invitations); a.NoError(err) {
-			a.NotEmpty(invitations)
-		}
+		require.NoError(t, json.Unmarshal(resp, &invitations))
+		a.NotEmpty(invitations)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -93,10 +90,9 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a := assert.New(t)
 
 		var invitation admin.OrganizationInvitation
-		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(orgInvitationID, invitation.GetId())
-			a.Equal([]string{"ORG_MEMBER"}, invitation.GetRoles())
-		}
+		require.NoError(t, json.Unmarshal(resp, &invitation))
+		a.Equal(orgInvitationID, invitation.GetId())
+		a.Equal([]string{"ORG_MEMBER"}, invitation.GetRoles())
 	})
 
 	t.Run("Update by email", func(t *testing.T) {
@@ -116,10 +112,9 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a := assert.New(t)
 
 		var invitation admin.OrganizationInvitation
-		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailOrg, invitation.GetUsername())
-			a.ElementsMatch([]string{roleNameOrg}, invitation.GetRoles())
-		}
+		require.NoError(t, json.Unmarshal(resp, &invitation))
+		a.Equal(emailOrg, invitation.GetUsername())
+		a.ElementsMatch([]string{roleNameOrg}, invitation.GetRoles())
 	})
 
 	t.Run("Update by ID", func(t *testing.T) {
@@ -137,10 +132,9 @@ func TestAtlasOrgInvitations(t *testing.T) {
 
 		a := assert.New(t)
 		var invitation admin.OrganizationInvitation
-		if err = json.Unmarshal(resp, &invitation); a.NoError(err) {
-			a.Equal(emailOrg, invitation.GetUsername())
-			a.ElementsMatch([]string{roleNameOrg}, invitation.GetRoles())
-		}
+		require.NoError(t, json.Unmarshal(resp, &invitation))
+		a.Equal(emailOrg, invitation.GetUsername())
+		a.ElementsMatch([]string{roleNameOrg}, invitation.GetRoles())
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -153,9 +147,8 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("Invitation '%s' deleted\n", orgInvitationID)
-			a.Equal(expected, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		expected := fmt.Sprintf("Invitation '%s' deleted\n", orgInvitationID)
+		a.Equal(expected, string(resp))
 	})
 }

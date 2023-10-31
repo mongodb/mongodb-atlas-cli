@@ -23,9 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -37,6 +35,7 @@ const (
 )
 
 type DeleteOpts struct {
+	cli.OutputOpts
 	cli.GlobalOpts
 	*cli.DeleteOpts
 	options.DeploymentOpts
@@ -46,15 +45,21 @@ type DeleteOpts struct {
 }
 
 func (opts *DeleteOpts) Run(ctx context.Context) error {
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	if _, err := opts.SelectDeployments(ctx, opts.ConfigProjectID()); err != nil {
 		return err
+	}
+
+	if opts.Entry == "" {
+		if err := promptRequiredName("Search Index ID", &opts.Entry); err != nil {
+			return err
+		}
 	}
 
 	if err := opts.Prompt(); err != nil {
 		return err
 	}
 
-	if opts.DeploymentType == options.AtlasCluster {
+	if opts.IsAtlasDeploymentType() {
 		return opts.RunAtlas()
 	}
 
@@ -94,32 +99,6 @@ func (opts *DeleteOpts) initMongoDBClient(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DeleteOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
-			return err
-		}
-	}
-
-	if opts.DeploymentType == options.AtlasCluster && opts.DeploymentName == "" {
-		return ErrNoDeploymentName
-	}
-
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
-			return err
-		}
-	}
-
-	if opts.Entry == "" {
-		if err := promptRequiredName("Search Index ID", &opts.Entry); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts(deletedMessage, deleteMessageFailed),
@@ -135,10 +114,8 @@ func DeleteBuilder() *cobra.Command {
 			"output":      opts.SuccessMessage(),
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			w := cmd.OutOrStdout()
-			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
 			return opts.PreRunE(
-				opts.InitStore(opts.PodmanClient),
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient(cmd.Context()),
 			)
@@ -155,6 +132,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

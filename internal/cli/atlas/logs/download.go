@@ -15,8 +15,11 @@
 package logs
 
 import (
+	"compress/gzip"
 	"context"
+	"errors"
 	"fmt"
+	"io"
 	"path/filepath"
 	"strings"
 
@@ -32,14 +35,17 @@ import (
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
+var errEmptyLog = errors.New("log is empty")
+
 type DownloadOpts struct {
 	cli.GlobalOpts
 	cli.DownloaderOpts
-	host  string
-	name  string
-	start int64
-	end   int64
-	store store.LogsDownloader
+	host       string
+	name       string
+	start      int64
+	end        int64
+	decompress bool
+	store      store.LogsDownloader
 }
 
 var downloadMessage = "Download of %s completed.\n"
@@ -52,21 +58,62 @@ func (opts *DownloadOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DownloadOpts) Run() error {
-	f, err := opts.NewWriteCloser()
-	if err != nil {
+func (opts *DownloadOpts) write(w io.Writer, r io.Reader) error {
+	if !opts.decompress {
+		_, err := io.Copy(w, r)
 		return err
 	}
 
-	r := opts.newHostLogsParams()
-	if err := opts.store.DownloadLog(f, r); err != nil {
-		_ = opts.OnError(f)
+	gr, errGz := gzip.NewReader(r)
+	if errGz != nil {
+		return errGz
+	}
+
+	written := false
+	for {
+		n, err := io.CopyN(w, gr, 1024) //nolint:gomnd // 1k each write to avoid compression bomb
+		if n > 0 {
+			written = true
+		}
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return err
+		}
+	}
+
+	if !written {
+		return errEmptyLog
+	}
+
+	return nil
+}
+
+func (opts *DownloadOpts) Run() error {
+	w, err := opts.NewWriteCloser()
+	if err != nil {
 		return err
 	}
+	defer w.Close()
+
+	r, err := opts.store.DownloadLog(opts.newHostLogsParams())
+	if err != nil {
+		_ = opts.OnError(w)
+		return err
+	}
+	defer r.Close()
+
+	if err := opts.write(w, r); err != nil {
+		_ = opts.OnError(w)
+		return err
+	}
+
 	if !opts.ShouldDownloadToStdout() {
 		fmt.Printf(downloadMessage, opts.Out)
 	}
-	return f.Close()
+
+	return nil
 }
 
 func (opts *DownloadOpts) initDefaultOut() error {
@@ -137,6 +184,7 @@ To find the hostnames for an Atlas project, use the process list command.
 	cmd.Flags().Int64Var(&opts.start, flag.Start, 0, usage.LogStart)
 	cmd.Flags().Int64Var(&opts.end, flag.End, 0, usage.LogEnd)
 	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.ForceFile)
+	cmd.Flags().BoolVarP(&opts.decompress, flag.Decompress, flag.DecompressShort, false, usage.Decompress)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

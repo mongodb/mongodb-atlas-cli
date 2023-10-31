@@ -47,14 +47,11 @@ func TestAccessRoles(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var iamRole atlasv2.CloudProviderAccessRole
-		if err := json.Unmarshal(resp, &iamRole); a.NoError(err) {
-			a.Equal(aws, iamRole.ProviderName)
-		}
+		require.NoError(t, json.Unmarshal(resp, &iamRole))
+		assert.Equal(t, aws, iamRole.ProviderName)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -67,13 +64,9 @@ func TestAccessRoles(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		a.NoError(err, string(resp))
-
+		require.NoError(t, err, string(resp))
 		var roles atlasv2.CloudProviderAccessRoles
-		if err := json.Unmarshal(resp, &roles); a.NoError(err) {
-			a.Len(roles.AwsIamRoles, 1)
-		}
+		require.NoError(t, json.Unmarshal(resp, &roles))
+		assert.Len(t, roles.AwsIamRoles, 1)
 	})
 }

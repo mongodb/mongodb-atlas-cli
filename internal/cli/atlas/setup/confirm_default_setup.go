@@ -44,13 +44,14 @@ Cluster Disk Size (GiB):		%.1f`, opts.Tier, diskSize)
 	fmt.Printf(`
 [Default Settings]
 Cluster Name:				%s%s
-Cloud Provider and Region:		%s
+Cloud Provider and Region:		%s - %s
 Database User Username:			%s%s
 Allow connections from (IP Address):	%s
 `,
 		values.ClusterName,
 		clusterTier,
-		values.Provider+" - "+values.Region,
+		values.Provider,
+		values.Region,
 		values.DBUsername,
 		loadSampleData,
 		strings.Join(values.IPAddresses, ", "),

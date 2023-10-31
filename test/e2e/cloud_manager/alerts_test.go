@@ -25,7 +25,8 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"github.com/stretchr/testify/require"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const (
@@ -53,15 +54,12 @@ func TestAlerts(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
-
-		if a.NoError(err, string(resp)) {
-			var alerts mongodbatlas.AlertsResponse
-			err := json.Unmarshal(resp, &alerts)
-			a.NoError(err)
-			a.NotEmpty(alerts.Results)
-			alertID = alerts.Results[0].ID
-		}
+		require.NoError(t, err)
+		require.NoError(t, err, string(resp))
+		var alerts opsmngr.AlertsResponse
+		require.NoError(t, json.Unmarshal(resp, &alerts))
+		a.NotEmpty(alerts.Results)
+		alertID = alerts.Results[0].ID
 	})
 
 	t.Run("List with status OPEN", func(t *testing.T) {
@@ -76,7 +74,7 @@ func TestAlerts(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -90,15 +88,11 @@ func TestAlerts(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
-
-		if a.NoError(err, string(resp)) {
-			var alert mongodbatlas.Alert
-			err := json.Unmarshal(resp, &alert)
-			a.NoError(err)
-			a.Equal(alertID, alert.ID)
-			a.Equal(closed, alert.Status)
-		}
+		require.NoError(t, err, string(resp))
+		var alert opsmngr.Alert
+		require.NoError(t, json.Unmarshal(resp, &alert))
+		a.Equal(alertID, alert.ID)
+		a.Equal(closed, alert.Status)
 	})
 
 	t.Run("List with no status", func(t *testing.T) {
@@ -111,13 +105,9 @@ func TestAlerts(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
-
-		if a.NoError(err, string(resp)) {
-			var alerts mongodbatlas.AlertsResponse
-			err = json.Unmarshal(resp, &alerts)
-			a.NoError(err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		var alerts opsmngr.AlertsResponse
+		require.NoError(t, json.Unmarshal(resp, &alerts), string(resp))
 	})
 
 	t.Run("List with status CLOSED", func(t *testing.T) {
@@ -132,13 +122,9 @@ func TestAlerts(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
-
-		if a.NoError(err, string(resp)) {
-			var alerts mongodbatlas.AlertsResponse
-			err = json.Unmarshal(resp, &alerts)
-			a.NoError(err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		var alerts opsmngr.AlertsResponse
+		require.NoError(t, json.Unmarshal(resp, &alerts), string(resp))
 	})
 
 	t.Run("Acknowledge", func(t *testing.T) {
@@ -153,14 +139,10 @@ func TestAlerts(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
-
-		if a.NoError(err, string(resp)) {
-			var alert mongodbatlas.Alert
-			err := json.Unmarshal(resp, &alert)
-			a.NoError(err)
-			a.Equal(alertID, alert.ID)
-		}
+		require.NoError(t, err, string(resp))
+		var alert opsmngr.Alert
+		require.NoError(t, json.Unmarshal(resp, &alert))
+		a.Equal(alertID, alert.ID)
 	})
 
 	t.Run("Acknowledge Forever", func(t *testing.T) {
@@ -174,14 +156,10 @@ func TestAlerts(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a.NoError(err)
-
-		if a.NoError(err, string(resp)) {
-			var alert mongodbatlas.Alert
-			err := json.Unmarshal(resp, &alert)
-			a.NoError(err)
-			a.Equal(alertID, alert.ID)
-		}
+		require.NoError(t, err, string(resp))
+		var alert opsmngr.Alert
+		require.NoError(t, json.Unmarshal(resp, &alert))
+		a.Equal(alertID, alert.ID)
 	})
 
 	t.Run("UnAcknowledge", func(t *testing.T) {
@@ -194,14 +172,9 @@ func TestAlerts(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a.NoError(err)
-
-		if a.NoError(err, string(resp)) {
-			var alert mongodbatlas.Alert
-			err := json.Unmarshal(resp, &alert)
-			a.NoError(err)
-			a.Equal(alertID, alert.ID)
-		}
+		require.NoError(t, err, string(resp))
+		var alert opsmngr.Alert
+		require.NoError(t, json.Unmarshal(resp, &alert))
+		a.Equal(alertID, alert.ID)
 	})
 }

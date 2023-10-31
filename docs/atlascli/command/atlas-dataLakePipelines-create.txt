@@ -128,7 +128,7 @@ Options
    * - --transform
      - strings
      - false
-     - Fields to be excluded for this data lake pipeline.
+     - Fields to exclude for this data lake pipeline.
 
        Mutually exclusive with --file.
 

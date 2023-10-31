@@ -30,7 +30,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-var ErrNoRegions = errors.New("no regions found for cloud provider")
+var ErrNoRegions = errors.New("no regions found for the cloud provider")
 
 func (opts *Opts) createCluster() error {
 	if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {

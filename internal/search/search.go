@@ -15,6 +15,8 @@
 package search
 
 import (
+	"strings"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
@@ -24,6 +26,15 @@ import (
 func StringInSlice(a []string, x string) bool {
 	for _, b := range a {
 		if b == x {
+			return true
+		}
+	}
+	return false
+}
+
+func StringInSliceFold(a []string, x string) bool {
+	for _, b := range a {
+		if strings.EqualFold(b, x) {
 			return true
 		}
 	}

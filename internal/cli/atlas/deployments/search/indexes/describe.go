@@ -22,16 +22,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `ID	NAME	DATABASE	COLLECTION
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}
+var describeTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}
 `
 
 type DescribeOpts struct {
@@ -44,11 +42,17 @@ type DescribeOpts struct {
 }
 
 func (opts *DescribeOpts) Run(ctx context.Context) error {
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	_, err := opts.SelectDeployments(ctx, opts.ConfigProjectID())
+	if err != nil {
 		return err
 	}
 
-	if opts.DeploymentType == options.AtlasCluster {
+	if opts.indexID == "" {
+		if err := promptRequiredName("Search Index ID", &opts.indexID); err != nil {
+			return err
+		}
+	}
+	if opts.IsAtlasDeploymentType() {
 		return opts.RunAtlas()
 	}
 
@@ -98,32 +102,6 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DescribeOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
-			return err
-		}
-	}
-
-	if opts.DeploymentType == options.AtlasCluster && opts.DeploymentName == "" {
-		return ErrNoDeploymentName
-	}
-
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
-			return err
-		}
-	}
-
-	if opts.indexID == "" {
-		if err := promptRequiredName("Search Index ID", &opts.indexID); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
@@ -137,10 +115,9 @@ func DescribeBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			w := cmd.OutOrStdout()
-			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), w)
 			return opts.PreRunE(
 				opts.InitOutput(w, describeTemplate),
-				opts.InitStore(opts.PodmanClient),
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient(cmd.Context()),
 			)
@@ -156,6 +133,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	return cmd
 }

@@ -40,6 +40,10 @@ Options
      - Type
      - Required
      - Description
+   * - --atlasGov
+     - 
+     - false
+     - Flag that indicates whether to configure Atlas for Government as a target of the operator.
    * - -h, --help
      - 
      - false
@@ -47,11 +51,11 @@ Options
    * - --import
      - 
      - false
-     - Flag to import existing Atlas resources into the cluster to be managed by the operator.
+     - Flag that indicates whether to import existing Atlas resources into the cluster for the operator to manage.
    * - --kubeContext
      - string
      - false
-     - The name of the kubeconfig context to use.
+     - Name of the kubeconfig context to use.
    * - --kubeconfig
      - string
      - false
@@ -59,11 +63,11 @@ Options
    * - --operatorVersion
      - string
      - false
-     - Version of the operator to be installed.
+     - Version of the operator to install.
    * - --orgId
      - string
      - false
-     - Organization ID to use. Overrides the settings in the configuration file or environment variable.
+     - Organization ID to use. This option overrides the settings in the configuration file or environment variable.
    * - --projectName
      - string
      - false
@@ -75,7 +79,7 @@ Options
    * - --watchNamespace
      - strings
      - false
-     - List of namespaces which the operator will be listen to.
+     - List that contains namespaces that the operator will listen to.
 
 Inherited Options
 -----------------
@@ -100,6 +104,12 @@ Examples
 
    # Install latest version of the operator into the default namespace:
    atlas kubernetes operator install
+
+   
+.. code-block::
+
+   # Install the latest version of the operator targeting Atlas for Government instead of regular commercial Atlas:
+   atlas kubernetes operator install --atlasGov
 
    
 .. code-block::

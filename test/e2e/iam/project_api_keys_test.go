@@ -25,14 +25,13 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestProjectAPIKeys(t *testing.T) {
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	var ID string
 
@@ -50,14 +49,11 @@ func TestProjectAPIKeys(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var key mongodbatlas.APIKey
-			if err := json.Unmarshal(resp, &key); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			a.Equal(desc, key.Desc)
-			ID = key.ID
-		}
+		require.NoError(t, err, string(resp))
+		var key mongodbatlas.APIKey
+		require.NoError(t, json.Unmarshal(resp, &key))
+		a.Equal(desc, key.Desc)
+		ID = key.ID
 	})
 
 	if ID == "" {
@@ -80,7 +76,7 @@ func TestProjectAPIKeys(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -92,14 +88,9 @@ func TestProjectAPIKeys(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 		var keys []mongodbatlas.APIKey
-		if err := json.Unmarshal(resp, &keys); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		require.NoError(t, json.Unmarshal(resp, &keys))
 		assert.NotEmpty(t, keys)
 	})
 
@@ -115,9 +106,8 @@ func TestProjectAPIKeys(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
-			a.Equal(expected, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
+		a.Equal(expected, string(resp))
 	})
 }

@@ -52,15 +52,15 @@ Options
    * - --includeSecrets
      - 
      - false
-     - Generate kubernetes secrets with data for projects, users, deployments entities
+     - Flag that generates kubernetes secrets with data for projects, users, deployments entities.
    * - --operatorVersion
      - string
      - false
-     - Version of Atlas Kubernetes Operator to generate resources for. This value defaults to "1.8.0".
+     - Version of Atlas Kubernetes Operator to generate resources for. This value defaults to "1.9.0".
    * - --orgId
      - string
      - false
-     - Organization ID to use. Overrides the settings in the configuration file or environment variable.
+     - Organization ID to use. This option overrides the settings in the configuration file or environment variable.
    * - --projectId
      - string
      - false

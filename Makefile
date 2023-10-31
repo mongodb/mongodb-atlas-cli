@@ -1,6 +1,6 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
-GOLANGCI_VERSION=v1.53.3
+GOLANGCI_VERSION=v1.55.0
 COVERAGE=coverage.out
 
 MCLI_SOURCE_FILES?=./cmd/mongocli
@@ -200,10 +200,7 @@ check-library-owners: ## Check that all the dependencies in go.mod has a owner i
 
 .PHONY: update-atlas-sdk
 update-atlas-sdk: ## Update the atlas-sdk dependency
-	@echo "==> Updating SDK to latest major version"
-	gomajor get go.mongodb.org/atlas-sdk/v20230201001@latest
-	go mod tidy
-	@echo "==> Done, remember to update build/ci/library_owners.json"
+	./scripts/update-sdk.sh
 
 .PHONY: help
 .DEFAULT_GOAL := help

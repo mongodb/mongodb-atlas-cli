@@ -40,7 +40,7 @@ Arguments
    * - clusterName
      - string
      - true
-     - Name of the cluster for which you want to load sample data.
+     - Label that identifies the cluster that you want to load sample data into.
 
 Options
 -------
@@ -89,6 +89,6 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   Sample Data Job <Id> created.
+   Sample data load job <Id> created.
    
 

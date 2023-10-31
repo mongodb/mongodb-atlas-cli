@@ -58,13 +58,10 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var key atlasv2.PaginatedApiUserAccessList
-			if err := json.Unmarshal(resp, &key); a.NoError(err) {
-				a.NotEmpty(key.Results)
-			}
-		}
+		require.NoError(t, err, string(resp))
+		var key atlasv2.PaginatedApiUserAccessList
+		require.NoError(t, json.Unmarshal(resp, &key))
+		assert.NotEmpty(t, key.Results)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -77,13 +74,10 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var key atlasv2.PaginatedApiUserAccessList
-			if err := json.Unmarshal(resp, &key); a.NoError(err) {
-				a.NotEmpty(key.Results)
-			}
-		}
+		require.NoError(t, err, string(resp))
+		var key atlasv2.PaginatedApiUserAccessList
+		require.NoError(t, json.Unmarshal(resp, &key))
+		assert.NotEmpty(t, key.Results)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -102,14 +96,11 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var key atlasv2.PaginatedApiUserAccessList
-			if err := json.Unmarshal(resp, &key); a.NoError(err) {
-				a.NotEmpty(key.Results)
-				entry = *key.Results[0].IpAddress
-			}
-		}
+		require.NoError(t, err, string(resp))
+		var key atlasv2.PaginatedApiUserAccessList
+		require.NoError(t, json.Unmarshal(resp, &key))
+		assert.NotEmpty(t, key.Results)
+		entry = *key.Results[0].IpAddress
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -130,8 +121,7 @@ func deleteAtlasAccessListEntry(t *testing.T, cliPath, entry, apiKeyID string) {
 		"--force")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	if assert.NoError(t, err, string(resp)) {
-		expected := fmt.Sprintf("Access list entry '%s' deleted\n", entry)
-		assert.Equal(t, string(resp), expected)
-	}
+	require.NoError(t, err, string(resp))
+	expected := fmt.Sprintf("Access list entry '%s' deleted\n", entry)
+	assert.Equal(t, expected, string(resp))
 }

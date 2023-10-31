@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // CmdValidator helps validate a cobra.Command, verifying the number of sub commands
@@ -54,11 +55,6 @@ func CleanupConfig() {
 func VerifyOutputTemplate(t *testing.T, tmpl string, typeValue interface{}) {
 	t.Helper()
 	parsedTemplate, err := template.New("output").Parse(tmpl)
-	if err != nil {
-		t.Fatalf("Failed to validate table format template: %v", err)
-	}
-	err = templatecheck.CheckText(parsedTemplate, typeValue)
-	if err != nil {
-		t.Fatalf("Failed to validate table format template: %v", err)
-	}
+	require.NoError(t, err)
+	require.NoError(t, templatecheck.CheckText(parsedTemplate, typeValue))
 }

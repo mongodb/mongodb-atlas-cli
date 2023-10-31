@@ -17,100 +17,25 @@ package deployments
 import (
 	"context"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/compass"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type ConnectOpts struct {
-	cli.OutputOpts
-	cli.GlobalOpts
-	options.DeploymentOpts
-	podmanClient podman.Client
-	connectWith  string
-}
-
-func (opts *ConnectOpts) validateFlags() error {
-	if opts.DeploymentName != "" {
-		if err := options.ValidateDeploymentName(opts.DeploymentName); err != nil {
-			return err
-		}
-	}
-
-	if opts.connectWith != "" {
-		if err := options.ValidateConnectWith(opts.connectWith); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (opts *ConnectOpts) Run(ctx context.Context) error {
-	if err := opts.podmanClient.Ready(ctx); err != nil {
-		return err
-	}
-
-	telemetry.AppendOption(telemetry.WithDeploymentType(options.LocalCluster)) // always local
-	if opts.DeploymentName != "" {
-		if err := opts.DeploymentOpts.CheckIfDeploymentExists(ctx); err != nil {
-			return err
-		}
-	} else {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
-			return err
-		}
-	}
-
-	if opts.connectWith == "" {
-		var err error
-		if opts.connectWith, err = opts.DeploymentOpts.PromptConnectWith(); err != nil {
-			return err
-		}
-	}
-
-	connectionString, err := opts.ConnectionString(ctx)
-	if err != nil {
-		return err
-	}
-
-	switch opts.connectWith {
-	case options.ConnectWithConnectionString:
-		opts.Print(connectionString)
-	case compassConnect:
-		if !compass.Detect() {
-			return errCompassNotInstalled
-		}
-		if _, err := log.Warningln("Launching MongoDB Compass..."); err != nil {
-			return err
-		}
-		return compass.Run("", "", connectionString)
-	case mongoshConnect:
-		if !mongosh.Detect() {
-			return errMongoshNotInstalled
-		}
-		return mongosh.Run("", "", connectionString)
-	}
-
-	return nil
+func Run(ctx context.Context, opts *options.ConnectOpts) error {
+	return opts.Connect(ctx)
 }
 
 // atlas deployments connect [clusterName].
 func ConnectBuilder() *cobra.Command {
-	opts := &ConnectOpts{}
+	opts := &options.ConnectOpts{}
 	cmd := &cobra.Command{
 		Use:     "connect [deploymentName]",
-		Short:   "Connect to a deployment.",
+		Short:   "Connect to a deployment that is running locally or in Atlas. If the deployment is paused, make sure to run atlas deployments start first.",
 		Args:    require.MaximumNArgs(1),
-		GroupID: "local",
+		GroupID: "all",
 		Annotations: map[string]string{
 			"deploymentNameDesc": "Name of the deployment that you want to connect to.",
 		},
@@ -118,18 +43,30 @@ func ConnectBuilder() *cobra.Command {
 			if len(args) == 1 {
 				opts.DeploymentName = args[0]
 			}
-			opts.podmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
-			return opts.PreRunE(opts.InitOutput(cmd.OutOrStdout(), ""), opts.InitStore(opts.podmanClient), opts.validateFlags)
+			return opts.PreRunE(
+				opts.InitOutput(cmd.OutOrStdout(), ""),
+				opts.InitInput(cmd.InOrStdin()),
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.InitAtlasStore(cmd.Context()),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return opts.Run(cmd.Context())
+			return Run(cmd.Context(), opts)
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWith)
+	cmd.Flags().StringVar(&opts.ConnectWith, flag.ConnectWith, "", usage.ConnectWith)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
+	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
+	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
+	cmd.Flags().StringVar(&opts.ConnectionStringType, flag.ConnectionStringType, options.ConnectionStringTypeStandard, usage.ConnectionStringType)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return options.ConnectWithOptions, cobra.ShellCompDirectiveDefault
+	})
+	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return options.DeploymentTypeOptions, cobra.ShellCompDirectiveDefault
 	})
 
 	return cmd

@@ -17,6 +17,8 @@
 package logs
 
 import (
+	"io"
+	"strings"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -25,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestLogsDownloadOpts_Run(t *testing.T) {
@@ -49,13 +52,10 @@ func TestLogsDownloadOpts_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			DownloadLog(gomock.Any(), opts.newHostLogsParams()).
-			Return(nil).
+			DownloadLog(opts.newHostLogsParams()).
+			Return(io.NopCloser(strings.NewReader("")), nil).
 			Times(1)
-
-		if err := opts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error downloading %v logs: %v", validLogToDownload, err)
-		}
+		require.NoError(t, opts.Run())
 	}
 }
 
@@ -105,9 +105,8 @@ func TestDownloadOpts_initDefaultOut(t *testing.T) {
 				name: logName,
 			}
 			opts.Out = out
-			a := assert.New(t)
-			a.NoError(opts.initDefaultOut())
-			a.Equal(opts.Out, want)
+			require.NoError(t, opts.initDefaultOut())
+			assert.Equal(t, want, opts.Out)
 		})
 	}
 }

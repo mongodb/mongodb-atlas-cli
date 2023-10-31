@@ -252,8 +252,8 @@ func referenceExportedProject(projectName, teamName string) *akov1.AtlasProject 
 				},
 			},
 			Auditing: &akov1.Auditing{
-				AuditAuthorizationSuccess: toptr.MakePtr(false),
-				Enabled:                   toptr.MakePtr(false),
+				AuditAuthorizationSuccess: false,
+				Enabled:                   false,
 			},
 			Teams: []akov1.Team{
 				{
@@ -266,6 +266,7 @@ func referenceExportedProject(projectName, teamName string) *akov1.AtlasProject 
 					},
 				},
 			},
+			RegionUsageRestrictions: "NONE",
 		},
 	}
 }

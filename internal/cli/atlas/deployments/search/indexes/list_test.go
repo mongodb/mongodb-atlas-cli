@@ -26,6 +26,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
@@ -37,10 +38,8 @@ import (
 
 func TestList_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockPodman := mocks.NewMockClient(ctrl)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockDB := mocks.NewMockDatabase(ctrl)
-	mockStore := mocks.NewMockSearchIndexLister(ctrl)
 	ctx := context.Background()
 
 	const (
@@ -49,15 +48,15 @@ func TestList_RunLocal(t *testing.T) {
 		expectedCollection      = "col1"
 		expectedName            = "test"
 		expectedID              = "1"
+		expectedStatus          = "STEADY"
 	)
 
 	buf := new(bytes.Buffer)
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
+	mockPodman := deploymentTest.MockPodman
+
 	opts := &ListOpts{
-		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:   mockPodman,
-			DeploymentName: expectedLocalDeployment,
-			DeploymentType: options.LocalCluster,
-		},
+		DeploymentOpts: *deploymentTest.Opts,
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
 			Template:  listTemplate,
@@ -67,8 +66,9 @@ func TestList_RunLocal(t *testing.T) {
 			DBName:     expectedDB,
 			Collection: expectedCollection,
 		},
-		store: mockStore,
 	}
+
+	deploymentTest.LocalMockFlow(ctx)
 
 	mockPodman.
 		EXPECT().
@@ -122,6 +122,7 @@ func TestList_RunLocal(t *testing.T) {
 			IndexID:        pointer.GetStringPointerIfNotEmpty(expectedID),
 			CollectionName: expectedCollection,
 			Database:       expectedDB,
+			Status:         pointer.GetStringPointerIfNotEmpty(expectedStatus),
 		},
 	}
 
@@ -135,15 +136,14 @@ func TestList_RunLocal(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, fmt.Sprintf(`ID    NAME   DATABASE   COLLECTION
-%s     %s   %s        %s
-`, expectedID, expectedName, expectedDB, expectedCollection), buf.String())
+	assert.Equal(t, fmt.Sprintf(`ID    NAME   DATABASE   COLLECTION   STATUS
+%s     %s   %s        %s         %s
+`, expectedID, expectedName, expectedDB, expectedCollection, expectedStatus), buf.String())
 	t.Log(buf.String())
 }
 
 func TestList_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockPodman := mocks.NewMockClient(ctrl)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockStore := mocks.NewMockSearchIndexLister(ctrl)
 	ctx := context.Background()
@@ -158,12 +158,10 @@ func TestList_RunAtlas(t *testing.T) {
 	)
 
 	buf := new(bytes.Buffer)
+	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, expectedLocalDeployment)
+
 	opts := &ListOpts{
-		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:   mockPodman,
-			DeploymentName: expectedLocalDeployment,
-			DeploymentType: options.AtlasCluster,
-		},
+		DeploymentOpts: *deploymentTest.Opts,
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
 			Template:  listTemplate,
@@ -179,41 +177,7 @@ func TestList_RunAtlas(t *testing.T) {
 		store: mockStore,
 	}
 
-	mockPodman.
-		EXPECT().
-		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
-		Return([]*define.InspectContainerData{
-			{
-				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
-				Config: &define.InspectContainerConfig{
-					Labels: map[string]string{
-						"version": "7.0.1",
-					},
-				},
-				HostConfig: &define.InspectContainerHostConfig{
-					PortBindings: map[string][]define.InspectHostPort{
-						"27017/tcp": {
-							{
-								HostIP:   "127.0.0.1",
-								HostPort: "27017",
-							},
-						},
-					},
-				},
-				Mounts: []define.InspectMount{
-					{
-						Name: opts.DeploymentOpts.LocalMongodDataVolume(),
-					},
-				},
-			},
-		}, nil).
-		Times(0)
-
-	mockMongodbClient.
-		EXPECT().
-		Connect("mongodb://localhost:27017/?directConnection=true", int64(10)).
-		Return(options.ErrDeploymentNotFound).
-		Times(0)
+	deploymentTest.CommonAtlasMocks(expectedProjectID)
 
 	mockStore.
 		EXPECT().

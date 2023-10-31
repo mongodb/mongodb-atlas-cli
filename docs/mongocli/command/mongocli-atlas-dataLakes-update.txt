@@ -76,7 +76,7 @@ Options
    * - --testBucket
      - string
      - false
-     - Name of an Amazon S3 data bucket which Atlas Data Federation uses to validate the provided role.
+     - Name of an Amazon S3 data bucket that Atlas Data Federation uses to validate the provided role.
 
 Inherited Options
 -----------------

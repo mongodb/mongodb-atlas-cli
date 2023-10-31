@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -95,14 +96,14 @@ func TestDescribeOpts_Run(t *testing.T) {
 					Alert(cmd.ProjectID, cmd.alertID).
 					Return(nil, errors.New("fake")).
 					Times(1)
-				assert.Error(t, cmd.Run())
+				require.Error(t, cmd.Run())
 			} else {
 				mockStore.
 					EXPECT().
 					Alert(cmd.ProjectID, cmd.alertID).
 					Return(expected, nil).
 					Times(1)
-				assert.NoError(t, cmd.Run())
+				require.NoError(t, cmd.Run())
 				assert.Equal(t, `ID     TYPE   METRIC   STATUS
 test   test   test     test
 `, buf.String())

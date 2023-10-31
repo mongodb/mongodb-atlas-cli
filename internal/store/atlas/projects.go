@@ -16,18 +16,17 @@ package atlas
 
 import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_projects.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter
 
 type ProjectLister interface {
-	Projects(*atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
+	Projects(*ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
 }
 
 type OrgProjectLister interface {
-	GetOrgProjects(string, *atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
-	Projects(*atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
+	GetOrgProjects(string, *ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
+	Projects(*ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
 }
 
 type ProjectCreator interface {
@@ -44,7 +43,7 @@ type ProjectDescriber interface {
 }
 
 type ProjectUsersLister interface {
-	ProjectUsers(string, *atlas.ListOptions) (*atlasv2.PaginatedAppUser, error)
+	ProjectUsers(string, *ListOptions) (*atlasv2.PaginatedAppUser, error)
 }
 
 type ProjectUserDeleter interface {
@@ -64,7 +63,7 @@ type ProjectTeamDeleter interface {
 }
 
 // Projects encapsulates the logic to manage different cloud providers.
-func (s *Store) Projects(opts *atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
+func (s *Store) Projects(opts *ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
 	res := s.clientv2.ProjectsApi.ListProjects(s.ctx)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
@@ -74,7 +73,7 @@ func (s *Store) Projects(opts *atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup,
 }
 
 // GetOrgProjects encapsulates the logic to manage different cloud providers.
-func (s *Store) GetOrgProjects(orgID string, opts *atlas.ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
+func (s *Store) GetOrgProjects(orgID string, opts *ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
 	res := s.clientv2.OrganizationsApi.ListOrganizationProjects(s.ctx, orgID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
@@ -107,7 +106,7 @@ func (s *Store) DeleteProject(projectID string) error {
 }
 
 // ProjectUsers lists all IAM users in a project.
-func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedAppUser, error) {
+func (s *Store) ProjectUsers(projectID string, opts *ListOptions) (*atlasv2.PaginatedAppUser, error) {
 	res := s.clientv2.ProjectsApi.ListProjectUsers(s.ctx, projectID)
 	if opts != nil {
 		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)

@@ -18,11 +18,11 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 // ParseServiceVersion parses service version into semver.Version.
-func ParseServiceVersion(v *atlas.ServiceVersion) (*semver.Version, error) {
+func ParseServiceVersion(v *opsmngr.ServiceVersion) (*semver.Version, error) {
 	versionParts := strings.Split(v.Version, ".")
 
 	const maxVersionParts = 2

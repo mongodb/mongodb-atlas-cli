@@ -18,7 +18,6 @@ import (
 	"context"
 	"errors"
 	"os/exec"
-	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -27,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -60,37 +58,27 @@ func (opts *PauseOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *PauseOpts) Run(ctx context.Context) error {
-	if err := opts.validateAndPrompt(ctx); err != nil {
+	deployment, err := opts.SelectDeployments(ctx, opts.ConfigProjectID())
+	if err != nil {
 		return err
 	}
 
-	if strings.EqualFold(opts.DeploymentType, options.LocalCluster) {
-		return opts.RunLocal(ctx)
+	if opts.IsLocalDeploymentType() {
+		return opts.RunLocal(ctx, deployment)
 	}
 
 	return opts.RunAtlas()
 }
 
-func (opts *PauseOpts) RunLocal(ctx context.Context) error {
-	localDeployments, err := opts.GetLocalDeployments(ctx)
-	if err != nil {
+func (opts *PauseOpts) RunLocal(ctx context.Context, deployment options.Deployment) error {
+	if err := opts.pauseContainer(ctx, deployment); err != nil {
 		return err
 	}
 
-	for _, deployment := range localDeployments {
-		if deployment.Name == opts.DeploymentName {
-			if err = opts.pauseContainer(ctx, deployment); err != nil {
-				return err
-			}
-
-			return opts.Print(
-				admin.AdvancedClusterDescription{
-					Name: &opts.DeploymentName,
-				})
-		}
-	}
-
-	return options.ErrDeploymentNotFound
+	return opts.Print(
+		admin.AdvancedClusterDescription{
+			Name: &opts.DeploymentName,
+		})
 }
 
 func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.Deployment) error {
@@ -99,6 +87,9 @@ func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.De
 	}
 
 	if deployment.StateName == options.IdleState {
+		opts.StartSpinner()
+		defer opts.StopSpinner()
+
 		// search for a process "java ... mongot", extract the process ID, kill the process with SIGTERM (15)
 		const stopMongot = "grep -l java.*mongot /proc/*/cmdline | awk -F'/' '{print $3; exit}' | while read -r pid; do kill -15 $pid; done"
 		if err := opts.PodmanClient.Exec(ctx, opts.LocalMongotHostname(), "/bin/sh", "-c", stopMongot); err != nil {
@@ -117,9 +108,8 @@ func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.De
 }
 
 func (opts *PauseOpts) RunAtlas() error {
-	if !opts.IsCliAuthenticated() {
-		return ErrNotAuthenticated
-	}
+	opts.StartSpinner()
+	defer opts.StopSpinner()
 
 	r, err := opts.store.PauseCluster(opts.ConfigProjectID(), opts.DeploymentName)
 	if err != nil {
@@ -127,26 +117,6 @@ func (opts *PauseOpts) RunAtlas() error {
 	}
 
 	return opts.Print(r)
-}
-
-func (opts *PauseOpts) validateAndPrompt(ctx context.Context) error {
-	if opts.DeploymentType == "" {
-		if err := opts.PromptDeploymentType(); err != nil {
-			return err
-		}
-	}
-
-	if opts.DeploymentType == options.AtlasCluster && opts.DeploymentName == "" {
-		return ErrNoDeploymentName
-	}
-
-	if opts.DeploymentName == "" {
-		if err := opts.DeploymentOpts.Select(ctx); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
 func (opts *PauseOpts) StopMongoD(ctx context.Context, names string) error {
@@ -167,16 +137,11 @@ func PauseBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.config = config.Default()
 			opts.CredStore = config.Default()
-			log.SetWriter(cmd.OutOrStdout())
 
-			if err := opts.PreRunE(
+			return opts.PreRunE(
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(log.Writer(), pauseTemplate)); err != nil {
-				return err
-			}
-
-			opts.PodmanClient = podman.NewClient(log.IsDebugLevel(), log.Writer())
-			return nil
+				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.InitOutput(log.Writer(), pauseTemplate))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {

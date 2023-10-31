@@ -59,7 +59,7 @@ func TestAtlasOrgs(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err2 := cmd.CombinedOutput()
-		assert.NoError(t, err2, string(resp))
+		require.NoError(t, err2, string(resp))
 	})
 
 	var userID string
@@ -73,10 +73,9 @@ func TestAtlasOrgs(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err2 := cmd.CombinedOutput()
-		assert.NoError(t, err2, string(resp))
+		require.NoError(t, err2, string(resp))
 		var users admin.PaginatedApiAppUser
-		err = json.Unmarshal(resp, &users)
-		require.NoError(t, err, string(resp))
+		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
 		assert.NotEmpty(t, users.GetResults())
 		userID = users.Results[0].GetId()
 	})
@@ -104,10 +103,9 @@ func TestAtlasOrgs(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
-		var org admin.CreateOrganizationResponse
-		err = json.Unmarshal(resp, &org)
 		require.NoError(t, err, string(resp))
+		var org admin.CreateOrganizationResponse
+		require.NoError(t, json.Unmarshal(resp, &org), string(resp))
 		orgID = org.Organization.GetId()
 		publicAPIKey = org.ApiKey.GetPublicKey()
 		privateAPIKey = org.ApiKey.GetPrivateKey()
@@ -117,7 +115,7 @@ func TestAtlasOrgs(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		t.Skip("Skipping delete org e2e test, exceeded max number of linked orgs. Will reenable post cleanup")
+		t.Skip("Skipping delete org e2e test, exceeded max number of linked orgs. Will re-enable post cleanup")
 		if os.Getenv("MCLI_SERVICE") == "cloudgov" {
 			t.Skip("not available for gov")
 		}
@@ -131,6 +129,6 @@ func TestAtlasOrgs(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 }

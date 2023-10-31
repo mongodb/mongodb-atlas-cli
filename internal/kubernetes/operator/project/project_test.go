@@ -27,15 +27,17 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	atlasmocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/project"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
+	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -47,19 +49,16 @@ const resourceVersion = "x.y.z"
 
 func TestBuildAtlasProject(t *testing.T) {
 	ctl := gomock.NewController(t)
-	projectStore := mocks.NewMockAtlasOperatorProjectStore(ctl)
+	projectStore := atlasmocks.NewMockOperatorProjectStore(ctl)
 	featureValidator := mocks.NewMockFeatureValidator(ctl)
 	t.Run("Can convert Project entity with secrets data", func(t *testing.T) {
 		targetNamespace := "test-namespace"
 
-		p := &mongodbatlas.Project{
-			ID:                        projectID,
-			OrgID:                     orgID,
+		p := &atlasv2.Group{
+			Id:                        toptr.MakePtr(projectID),
+			OrgId:                     orgID,
 			Name:                      "TestProjectName",
 			ClusterCount:              0,
-			Created:                   "",
-			RegionUsageRestrictions:   "",
-			Links:                     nil,
 			WithDefaultAlertsSettings: pointer.Get(false),
 		}
 
@@ -159,57 +158,57 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 		privateEndpoints := []atlasv2.EndpointService{privateAWSEndpoint}
 
-		alertConfigs := []mongodbatlas.AlertConfiguration{
-			{
-				EventTypeName: "TestEventTypeName",
-				Enabled:       pointer.Get(true),
-				Matchers: []mongodbatlas.Matcher{
-					{
-						FieldName: "TestFieldName",
-						Operator:  "TestOperator",
-						Value:     "TestValue",
+		alertConfigResult := &atlasv2.PaginatedAlertConfig{
+			Results: []atlasv2.GroupAlertsConfig{
+				{
+					Enabled:       pointer.Get(true),
+					EventTypeName: pointer.Get("TestEventTypeName"),
+					Matchers: []map[string]interface{}{
+						{
+							"FieldName": "TestFieldName",
+							"Operator":  "TestOperator",
+							"Value":     "TestValue",
+						},
 					},
-				},
-				MetricThreshold: &mongodbatlas.MetricThreshold{
-					MetricName: "TestMetricName",
-					Operator:   "TestOperator",
-					Threshold:  10,
-					Units:      "TestUnits",
-					Mode:       "TestMode",
-				},
-				Threshold: &mongodbatlas.Threshold{
-					Operator:  "TestOperator",
-					Units:     "TestUnits",
-					Threshold: 10,
-				},
-				Notifications: []mongodbatlas.Notification{
-					{
-						APIToken:            "TestAPIToken",
-						ChannelName:         "TestChannelName",
-						DatadogAPIKey:       "TestDatadogAPIKey",
-						DatadogRegion:       "TestDatadogRegion",
-						DelayMin:            pointer.Get(5),
-						EmailAddress:        "TestEmail@mongodb.com",
-						EmailEnabled:        pointer.Get(true),
-						FlowdockAPIToken:    "TestFlowDockApiToken",
-						FlowName:            "TestFlowName",
-						IntervalMin:         0,
-						MobileNumber:        "+12345678900",
-						OpsGenieAPIKey:      "TestGenieAPIKey",
-						OpsGenieRegion:      "TestGenieRegion",
-						OrgName:             "TestOrgName",
-						ServiceKey:          "TestServiceKey",
-						SMSEnabled:          pointer.Get(true),
-						TeamID:              "TestTeamID",
-						TeamName:            "TestTeamName",
-						TypeName:            "TestTypeName",
-						Username:            "TestUserName",
-						VictorOpsAPIKey:     "TestVictorOpsAPIKey",
-						VictorOpsRoutingKey: "TestVictorOpsRoutingKey",
-						Roles:               []string{"Role1", "Role2"},
+					MetricThreshold: &atlasv2.ServerlessMetricThreshold{
+						MetricName: "TestMetricName",
+						Operator:   pointer.Get("TestOperator"),
+						Threshold:  pointer.Get(10.0),
+						Units:      pointer.Get("TestUnits"),
+						Mode:       pointer.Get("TestMode"),
+					},
+					Threshold: &atlasv2.GreaterThanRawThreshold{
+						Operator:  pointer.Get("TestOperator"),
+						Units:     pointer.Get("TestUnits"),
+						Threshold: pointer.Get(10),
+					},
+					Notifications: []atlasv2.AlertsNotificationRootForGroup{
+						{
+							ApiToken:            pointer.Get("TestAPIToken"),
+							ChannelName:         pointer.Get("TestChannelName"),
+							DatadogApiKey:       pointer.Get("TestDatadogAPIKey"),
+							DatadogRegion:       pointer.Get("TestDatadogRegion"),
+							DelayMin:            pointer.Get(5),
+							EmailAddress:        pointer.Get("TestEmail@mongodb.com"),
+							EmailEnabled:        pointer.Get(true),
+							IntervalMin:         pointer.Get(0),
+							MobileNumber:        pointer.Get("+12345678900"),
+							OpsGenieApiKey:      pointer.Get("TestGenieAPIKey"),
+							OpsGenieRegion:      pointer.Get("TestGenieRegion"),
+							ServiceKey:          pointer.Get("TestServiceKey"),
+							SmsEnabled:          pointer.Get(true),
+							TeamId:              pointer.Get("TestTeamID"),
+							TeamName:            pointer.Get("TestTeamName"),
+							TypeName:            pointer.Get("TestTypeName"),
+							Username:            pointer.Get("TestUserName"),
+							VictorOpsApiKey:     pointer.Get("TestVictorOpsAPIKey"),
+							VictorOpsRoutingKey: pointer.Get("TestVictorOpsRoutingKey"),
+							Roles:               []string{"Role1", "Role2"},
+						},
 					},
 				},
 			},
+			TotalCount: pointer.GetNonZeroValue(1),
 		}
 
 		projectSettings := &atlasv2.GroupSettings{
@@ -244,36 +243,41 @@ func TestBuildAtlasProject(t *testing.T) {
 			},
 		}
 
-		projectTeams := &mongodbatlas.TeamsAssigned{
+		projectTeams := &atlasv2.PaginatedTeamRole{
 			Links: nil,
-			Results: []*mongodbatlas.Result{
+			Results: []atlasv2.TeamRole{
 				{
-					Links:     nil,
-					TeamID:    teamID,
+					TeamId:    toptr.MakePtr(teamID),
 					RoleNames: []string{string(atlasV1.TeamRoleClusterManager)},
 				},
 			},
-			TotalCount: 1,
+			TotalCount: toptr.MakePtr(1),
 		}
-		teams := &mongodbatlas.Team{
-			ID:        teamID,
-			Name:      "TestTeamName",
-			Usernames: []string{},
+		teams := &atlasv2.TeamResponse{
+			Id:   toptr.MakePtr(teamID),
+			Name: toptr.MakePtr("TestTeamName"),
 		}
 
-		teamUsers := []mongodbatlas.AtlasUser{
-			{
-				EmailAddress: "testuser@mooooongodb.com",
-				FirstName:    "TestName",
-				ID:           "TestID",
-				LastName:     "TestLastName",
+		teamUsers := &atlasv2.PaginatedApiAppUser{
+			Results: []atlasv2.CloudAppUser{
+				{
+					EmailAddress: "testuser@mooooongodb.com",
+					FirstName:    "TestName",
+					Id:           toptr.MakePtr("TestID"),
+					LastName:     "TestLastName",
+				},
 			},
+			TotalCount: toptr.MakePtr(1),
 		}
 
-		listOption := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
-		containerListOptionAWS := &mongodbatlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(provider.ProviderAWS)}
-		containerListOptionGCP := &mongodbatlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(provider.ProviderGCP)}
-		containerListOptionAzure := &mongodbatlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(provider.ProviderAzure)}
+		listOption := &atlas.ListOptions{ItemsPerPage: MaxItems}
+		listAlterOpt := &atlasv2.ListAlertConfigurationsApiParams{
+			GroupId:      projectID,
+			ItemsPerPage: &listOption.ItemsPerPage,
+		}
+		containerListOptionAWS := &atlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(provider.ProviderAWS)}
+		containerListOptionGCP := &atlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(provider.ProviderGCP)}
+		containerListOptionAzure := &atlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(provider.ProviderAzure)}
 		projectStore.EXPECT().Project(projectID).Return(p, nil)
 		projectStore.EXPECT().ProjectIPAccessLists(projectID, listOption).Return(ipAccessLists, nil)
 		projectStore.EXPECT().MaintenanceWindow(projectID).Return(mw, nil)
@@ -288,7 +292,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		projectStore.EXPECT().CloudProviderAccessRoles(projectID).Return(cpas, nil)
 		projectStore.EXPECT().ProjectSettings(projectID).Return(projectSettings, nil)
 		projectStore.EXPECT().Auditing(projectID).Return(auditing, nil)
-		projectStore.EXPECT().AlertConfigurations(projectID, listOption).Return(alertConfigs, nil)
+		projectStore.EXPECT().AlertConfigurations(listAlterOpt).Return(alertConfigResult, nil)
 		projectStore.EXPECT().DatabaseRoles(projectID).Return(customRoles, nil)
 		projectStore.EXPECT().ProjectTeams(projectID).Return(projectTeams, nil)
 		projectStore.EXPECT().TeamByID(orgID, teamID).Return(teams, nil)
@@ -315,52 +319,51 @@ func TestBuildAtlasProject(t *testing.T) {
 		gotProject := projectResult.Project
 		gotTeams := projectResult.Teams
 
+		alertConfigs := alertConfigResult.Results
 		expectedThreshold := &atlasV1.Threshold{
-			Operator:  alertConfigs[0].Threshold.Operator,
-			Units:     alertConfigs[0].Threshold.Units,
-			Threshold: fmt.Sprintf("%f", alertConfigs[0].Threshold.Threshold),
+			Operator:  atlas.StringOrEmpty(alertConfigs[0].Threshold.Operator),
+			Units:     atlas.StringOrEmpty(alertConfigs[0].Threshold.Units),
+			Threshold: fmt.Sprintf("%d", pointer.GetOrDefault(alertConfigs[0].Threshold.Threshold, 0)),
 		}
 		expectedMatchers := []atlasV1.Matcher{
 			{
-				FieldName: alertConfigs[0].Matchers[0].FieldName,
-				Operator:  alertConfigs[0].Matchers[0].Operator,
-				Value:     alertConfigs[0].Matchers[0].Value,
+				FieldName: (alertConfigs[0].Matchers[0]["FieldName"]).(string),
+				Operator:  (alertConfigs[0].Matchers[0]["Operator"]).(string),
+				Value:     (alertConfigs[0].Matchers[0]["Value"]).(string),
 			},
 		}
 		expectedNotifications := []atlasV1.Notification{
 			{
-				APIToken:            alertConfigs[0].Notifications[0].APIToken,
-				ChannelName:         alertConfigs[0].Notifications[0].ChannelName,
-				DatadogAPIKey:       alertConfigs[0].Notifications[0].DatadogAPIKey,
-				DatadogRegion:       alertConfigs[0].Notifications[0].DatadogRegion,
+				APIToken:            atlas.StringOrEmpty(alertConfigs[0].Notifications[0].ApiToken),
+				ChannelName:         atlas.StringOrEmpty(alertConfigs[0].Notifications[0].ChannelName),
+				DatadogAPIKey:       atlas.StringOrEmpty(alertConfigs[0].Notifications[0].DatadogApiKey),
+				DatadogRegion:       atlas.StringOrEmpty(alertConfigs[0].Notifications[0].DatadogRegion),
 				DelayMin:            alertConfigs[0].Notifications[0].DelayMin,
-				EmailAddress:        alertConfigs[0].Notifications[0].EmailAddress,
+				EmailAddress:        atlas.StringOrEmpty(alertConfigs[0].Notifications[0].EmailAddress),
 				EmailEnabled:        alertConfigs[0].Notifications[0].EmailEnabled,
-				FlowdockAPIToken:    alertConfigs[0].Notifications[0].FlowdockAPIToken,
-				FlowName:            alertConfigs[0].Notifications[0].FlowName,
-				IntervalMin:         alertConfigs[0].Notifications[0].IntervalMin,
-				MobileNumber:        alertConfigs[0].Notifications[0].MobileNumber,
-				OpsGenieAPIKey:      alertConfigs[0].Notifications[0].OpsGenieAPIKey,
-				OpsGenieRegion:      alertConfigs[0].Notifications[0].OpsGenieRegion,
-				OrgName:             alertConfigs[0].Notifications[0].OrgName,
-				ServiceKey:          alertConfigs[0].Notifications[0].ServiceKey,
-				SMSEnabled:          alertConfigs[0].Notifications[0].SMSEnabled,
-				TeamID:              alertConfigs[0].Notifications[0].TeamID,
-				TeamName:            alertConfigs[0].Notifications[0].TeamName,
-				TypeName:            alertConfigs[0].Notifications[0].TypeName,
-				Username:            alertConfigs[0].Notifications[0].Username,
-				VictorOpsAPIKey:     alertConfigs[0].Notifications[0].VictorOpsAPIKey,
-				VictorOpsRoutingKey: alertConfigs[0].Notifications[0].VictorOpsRoutingKey,
+				IntervalMin:         pointer.GetOrDefault(alertConfigs[0].Notifications[0].IntervalMin, 0),
+				MobileNumber:        atlas.StringOrEmpty(alertConfigs[0].Notifications[0].MobileNumber),
+				OpsGenieAPIKey:      atlas.StringOrEmpty(alertConfigs[0].Notifications[0].OpsGenieApiKey),
+				OpsGenieRegion:      atlas.StringOrEmpty(alertConfigs[0].Notifications[0].OpsGenieRegion),
+				ServiceKey:          atlas.StringOrEmpty(alertConfigs[0].Notifications[0].ServiceKey),
+				SMSEnabled:          alertConfigs[0].Notifications[0].SmsEnabled,
+				TeamID:              atlas.StringOrEmpty(alertConfigs[0].Notifications[0].TeamId),
+				TeamName:            atlas.StringOrEmpty(alertConfigs[0].Notifications[0].TeamName),
+				TypeName:            atlas.StringOrEmpty(alertConfigs[0].Notifications[0].TypeName),
+				Username:            atlas.StringOrEmpty(alertConfigs[0].Notifications[0].Username),
+				VictorOpsAPIKey:     atlas.StringOrEmpty(alertConfigs[0].Notifications[0].VictorOpsApiKey),
+				VictorOpsRoutingKey: atlas.StringOrEmpty(alertConfigs[0].Notifications[0].VictorOpsRoutingKey),
 				Roles:               alertConfigs[0].Notifications[0].Roles,
 			},
 		}
 		expectedMetricThreshold := &atlasV1.MetricThreshold{
 			MetricName: alertConfigs[0].MetricThreshold.MetricName,
-			Operator:   alertConfigs[0].MetricThreshold.Operator,
-			Threshold:  fmt.Sprintf("%f", alertConfigs[0].MetricThreshold.Threshold),
-			Units:      alertConfigs[0].MetricThreshold.Units,
-			Mode:       alertConfigs[0].MetricThreshold.Mode,
+			Operator:   atlas.StringOrEmpty(alertConfigs[0].MetricThreshold.Operator),
+			Threshold:  fmt.Sprintf("%f", pointer.GetOrDefault(alertConfigs[0].MetricThreshold.Threshold, 0.0)),
+			Units:      atlas.StringOrEmpty(alertConfigs[0].MetricThreshold.Units),
+			Mode:       atlas.StringOrEmpty(alertConfigs[0].MetricThreshold.Mode),
 		}
+		teamsName := atlas.StringOrEmpty(teams.Name)
 		expectedTeams := []*atlasV1.AtlasTeam{
 			{
 				TypeMeta: v1.TypeMeta{
@@ -368,15 +371,15 @@ func TestBuildAtlasProject(t *testing.T) {
 					APIVersion: "atlas.mongodb.com/v1",
 				},
 				ObjectMeta: v1.ObjectMeta{
-					Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(p.Name), strings.ToLower(teams.Name)),
+					Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(p.Name), strings.ToLower(teamsName)),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
 						features.ResourceVersion: resourceVersion,
 					},
 				},
 				Spec: atlasV1.TeamSpec{
-					Name:      teams.Name,
-					Usernames: []atlasV1.TeamUser{atlasV1.TeamUser(teamUsers[0].Username)},
+					Name:      teamsName,
+					Usernames: []atlasV1.TeamUser{atlasV1.TeamUser(teamUsers.Results[0].Username)},
 				},
 				Status: status.TeamStatus{
 					Common: status.Common{
@@ -438,7 +441,7 @@ func TestBuildAtlasProject(t *testing.T) {
 				AlertConfigurations: []atlasV1.AlertConfiguration{
 					{
 						Enabled:         *alertConfigs[0].Enabled,
-						EventTypeName:   alertConfigs[0].EventTypeName,
+						EventTypeName:   atlas.StringOrEmpty(alertConfigs[0].EventTypeName),
 						Matchers:        expectedMatchers,
 						Threshold:       expectedThreshold,
 						Notifications:   expectedNotifications,
@@ -482,9 +485,9 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 				},
 				Auditing: &atlasV1.Auditing{
-					AuditAuthorizationSuccess: &auditing.AuditAuthorizationSuccess,
+					AuditAuthorizationSuccess: auditing.AuditAuthorizationSuccess,
 					AuditFilter:               auditing.AuditFilter,
-					Enabled:                   &auditing.Enabled,
+					Enabled:                   auditing.Enabled,
 				},
 				Settings: &atlasV1.ProjectSettings{
 					IsCollectDatabaseSpecificsStatisticsEnabled: projectSettings.IsCollectDatabaseSpecificsStatisticsEnabled,
@@ -519,7 +522,7 @@ func TestBuildAtlasProject(t *testing.T) {
 				Teams: []atlasV1.Team{
 					{
 						TeamRef: common.ResourceRefNamespaced{
-							Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(p.Name), strings.ToLower(teams.Name)),
+							Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(p.Name), strings.ToLower(teamsName)),
 							Namespace: targetNamespace,
 						},
 						Roles: []atlasV1.TeamRole{atlasV1.TeamRole(projectTeams.Results[0].RoleNames[0])},
@@ -618,7 +621,7 @@ func TestBuildProjectConnectionSecret(t *testing.T) {
 func Test_buildAccessLists(t *testing.T) {
 	ctl := gomock.NewController(t)
 
-	alProvider := mocks.NewMockProjectIPAccessListLister(ctl)
+	alProvider := atlasmocks.NewMockProjectIPAccessListLister(ctl)
 	t.Run("Can convert Access Lists", func(t *testing.T) {
 		data := &atlasv2.PaginatedNetworkAccess{
 			Links: nil,
@@ -635,7 +638,7 @@ func Test_buildAccessLists(t *testing.T) {
 			TotalCount: pointer.Get(1),
 		}
 
-		listOptions := &mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
+		listOptions := &atlas.ListOptions{ItemsPerPage: MaxItems}
 
 		alProvider.EXPECT().ProjectIPAccessLists(projectID, listOptions).Return(data, nil)
 
@@ -680,9 +683,9 @@ func Test_buildAuditing(t *testing.T) {
 		}
 
 		expected := &atlasV1.Auditing{
-			AuditAuthorizationSuccess: &data.AuditAuthorizationSuccess,
+			AuditAuthorizationSuccess: data.AuditAuthorizationSuccess,
 			AuditFilter:               data.AuditFilter,
-			Enabled:                   &data.Enabled,
+			Enabled:                   data.Enabled,
 		}
 
 		if !reflect.DeepEqual(expected, got) {
@@ -1026,7 +1029,7 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 func Test_buildNetworkPeering(t *testing.T) {
 	ctl := gomock.NewController(t)
 
-	peerProvider := mocks.NewMockPeeringConnectionLister(ctl)
+	peerProvider := atlasmocks.NewMockPeeringConnectionLister(ctl)
 	t.Run("Can convert Peering connections", func(t *testing.T) {
 		peeringConnectionAWS := &atlasv2.BaseNetworkPeeringConnectionSettings{
 			AccepterRegionName:  pointer.Get("TestRegionName"),
@@ -1045,10 +1048,10 @@ func Test_buildNetworkPeering(t *testing.T) {
 			*peeringConnectionAWS,
 		}
 
-		listOptions := mongodbatlas.ListOptions{ItemsPerPage: MaxItems}
-		containerListOptionAWS := &mongodbatlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(provider.ProviderAWS)}
-		containerListOptionGCP := &mongodbatlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(provider.ProviderGCP)}
-		containerListOptionAzure := &mongodbatlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(provider.ProviderAzure)}
+		listOptions := atlas.ListOptions{ItemsPerPage: MaxItems}
+		containerListOptionAWS := &atlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(provider.ProviderAWS)}
+		containerListOptionGCP := &atlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(provider.ProviderGCP)}
+		containerListOptionAzure := &atlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(provider.ProviderAzure)}
 
 		peerProvider.EXPECT().PeeringConnections(projectID, containerListOptionAWS).Return(peeringConnections, nil)
 		peerProvider.EXPECT().PeeringConnections(projectID, containerListOptionGCP).Return(nil, nil)

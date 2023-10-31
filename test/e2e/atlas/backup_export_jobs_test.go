@@ -94,14 +94,10 @@ func TestExportJobs(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
 		r.NoError(err, string(resp))
-
-		a := assert.New(t)
 		var exportBucket atlasv2.DiskBackupSnapshotAWSExportBucket
-		if err = json.Unmarshal(resp, &exportBucket); a.NoError(err) {
-			a.Equal(bucketName, exportBucket.GetBucketName())
-		}
+		r.NoError(json.Unmarshal(resp, &exportBucket))
+		assert.Equal(t, bucketName, exportBucket.GetBucketName())
 		bucketID = exportBucket.GetId()
 	})
 
@@ -121,9 +117,8 @@ func TestExportJobs(t *testing.T) {
 
 		a := assert.New(t)
 		var snapshot atlasv2.DiskBackupSnapshot
-		if err = json.Unmarshal(resp, &snapshot); a.NoError(err) {
-			a.Equal("test-snapshot", snapshot.GetDescription())
-		}
+		r.NoError(json.Unmarshal(resp, &snapshot))
+		a.Equal("test-snapshot", snapshot.GetDescription())
 		snapshotID = snapshot.GetId()
 	})
 
@@ -157,14 +152,11 @@ func TestExportJobs(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		r.NoError(err, string(resp))
-
 		a := assert.New(t)
 		var job atlasv2.DiskBackupExportJob
-		if err = json.Unmarshal(resp, &job); a.NoError(err) {
-			a.Equal(job.GetExportBucketId(), bucketID)
-
-			exportJobID = job.GetId()
-		}
+		r.NoError(json.Unmarshal(resp, &job))
+		a.Equal(job.GetExportBucketId(), bucketID)
+		exportJobID = job.GetId()
 	})
 
 	t.Run("Watch create job", func(t *testing.T) {
@@ -199,9 +191,8 @@ func TestExportJobs(t *testing.T) {
 
 		a := assert.New(t)
 		var job atlasv2.DiskBackupExportJob
-		if err = json.Unmarshal(resp, &job); a.NoError(err) {
-			a.Equal(job.GetExportBucketId(), bucketID)
-		}
+		r.NoError(json.Unmarshal(resp, &job))
+		a.Equal(job.GetExportBucketId(), bucketID)
 	})
 
 	t.Run("List jobs", func(t *testing.T) {
@@ -216,11 +207,10 @@ func TestExportJobs(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		r.NoError(err, string(resp))
 
-		var r atlasv2.PaginatedApiAtlasDiskBackupExportJob
+		var jobs atlasv2.PaginatedApiAtlasDiskBackupExportJob
 		a := assert.New(t)
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.NotEmpty(r)
-		}
+		r.NoError(json.Unmarshal(resp, &jobs))
+		a.NotEmpty(jobs)
 	})
 
 	t.Run("Delete snapshot", func(t *testing.T) {

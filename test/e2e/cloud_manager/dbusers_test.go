@@ -26,6 +26,8 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -36,9 +38,7 @@ func TestDBUsersWithFlags(t *testing.T) {
 	}
 
 	cliPath, err := e2e.Bin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	// make sure security is enabled, this should be a no-op for cloud manager
 	t.Run("Enable security", func(t *testing.T) {
@@ -52,7 +52,8 @@ func TestDBUsersWithFlags(t *testing.T) {
 			entity,
 			dbUsersEntity,
 			"create",
-			"--username="+username,
+			"--username",
+			username,
 			"--password=passW0rd",
 			"--role=readWriteAnyDatabase",
 			"--mechanisms=SCRAM-SHA-256")
@@ -68,20 +69,11 @@ func TestDBUsersWithFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
+		require.NoError(t, err, string(resp))
 
 		var users []opsmngr.MongoDBUser
-		if err := json.Unmarshal(resp, &users); err != nil {
-			t.Log(string(resp))
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(users) == 0 {
-			t.Fatalf("expected len(users) > 0, got 0")
-		}
+		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
+		assert.NotEmpty(t, users)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -112,7 +104,8 @@ func TestDBUsersWithStdin(t *testing.T) {
 			entity,
 			dbUsersEntity,
 			"create",
-			"--username="+username,
+			"--username",
+			username,
 			"--role=readWriteAnyDatabase",
 			"--mechanisms=SCRAM-SHA-256")
 
@@ -186,12 +179,6 @@ func testCreatePasswordCmd(t *testing.T, cmd *exec.Cmd) {
 	cmd.Env = os.Environ()
 
 	resp, err := cmd.CombinedOutput()
-
-	if err != nil {
-		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-	}
-
-	if !strings.Contains(string(resp), "Changes are being applied") {
-		t.Errorf("got=%#v\nwant=%#v\n", string(resp), "Changes are being applied")
-	}
+	require.NoError(t, err, string(resp))
+	assert.Contains(t, string(resp), "Changes are being applied")
 }

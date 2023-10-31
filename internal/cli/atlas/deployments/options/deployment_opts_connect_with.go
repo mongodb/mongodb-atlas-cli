@@ -16,9 +16,9 @@ package options
 import (
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 )
 
@@ -39,14 +39,7 @@ var (
 )
 
 func ValidateConnectWith(s string) error {
-	found := false
-	for _, option := range ConnectWithOptions {
-		if strings.EqualFold(option, s) {
-			found = true
-			break
-		}
-	}
-	if !found {
+	if !search.StringInSliceFold(ConnectWithOptions, s) {
 		return fmt.Errorf("%w: %s", ErrInvalidConnectWith, s)
 	}
 	return nil

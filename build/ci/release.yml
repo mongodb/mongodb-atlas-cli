@@ -1,11 +1,11 @@
 variables:
   - &go_linux_version
-      go_root: "/opt/golang/go1.20"
-      go_bin: "/opt/golang/go1.20/bin"
+      go_root: "/opt/golang/go1.21"
+      go_bin: "/opt/golang/go1.21/bin"
       go_base_path: ""
   - &go_windows_version
-      go_root: "c:\\golang\\go1.19"
-      go_bin: "c:\\golang\\go1.19/bin"
+      go_root: "c:\\golang\\go1.21"
+      go_bin: "c:\\golang\\go1.21/bin"
       go_base_path: "c:"
   - &go_env
       XDG_CONFIG_HOME: ${go_base_path}${workdir}
@@ -257,32 +257,6 @@ functions:
           - tool_name
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/
         binary: Powershell -File ./build/package/powershell/windows_post_package_test.ps1
-  "generate evergreen":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        include_expansions_in_env:
-          - go_base_path
-          - workdir
-          - tool_name
-          - task_type
-        binary: build/ci/evergreen-generate-tasks.sh
-    - command: s3.put
-      params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-          - src/github.com/mongodb/mongodb-atlas-cli/tasks.json
-        remote_file: ${project}/dist/${revision}_${created_at}/${tool_name}/${task_type}/
-        bucket: mongodb-mongocli-build
-        permissions: public-read
-        content_type: ${content_type|application/json}
-        display_name: internal-bucket
-    - command: generate.tasks
-      params:
-        files:
-          - tasks.json
   "docker build repo":
     - command: subprocess.exec
       type: test

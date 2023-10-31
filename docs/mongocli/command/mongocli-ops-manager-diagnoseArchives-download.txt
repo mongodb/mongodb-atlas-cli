@@ -50,7 +50,7 @@ Options
    * - --out
      - string
      - false
-     - Optional output file name. Uses diagnose-archive.tar.gz if the output file's name is not specified. This value defaults to "diagnose-archive.tar.gz".
+     - Optional output file name. This value defaults to diagnose-archive.tar.gz. This value defaults to "diagnose-archive.tar.gz".
    * - --projectId
      - string
      - false

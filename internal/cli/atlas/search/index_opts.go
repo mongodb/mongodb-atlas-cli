@@ -87,6 +87,11 @@ func (opts *IndexOpts) NewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	if opts.SearchAnalyzer == "" {
+		opts.SearchAnalyzer = DefaultAnalyzer
+	}
+
 	i := &atlasv2.ClusterSearchIndex{
 		Analyzer:       &opts.Analyzer,
 		CollectionName: opts.Collection,

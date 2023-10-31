@@ -21,7 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -41,5 +41,5 @@ func TestCreate_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	assert.NoError(t, createOpts.Run())
+	require.NoError(t, createOpts.Run())
 }

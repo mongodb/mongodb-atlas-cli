@@ -19,16 +19,19 @@ package deployments
 import (
 	"bytes"
 	"context"
+	"encoding/base64"
+	"io"
 	"strings"
 	"testing"
 
-	"github.com/containers/podman/v4/libpod/define"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/spf13/afero"
 )
 
 func TestLogsBuilder(t *testing.T) {
@@ -43,59 +46,22 @@ func TestLogsBuilder(t *testing.T) {
 	)
 }
 
-func TestLogs_Run(t *testing.T) {
+func TestLogs_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
-
-	mockPodman := mocks.NewMockClient(ctrl)
 	ctx := context.Background()
-	expectedLocalDeployment := "localDeployment1"
 	buf := new(bytes.Buffer)
+	expectedLocalDeployment := "localDeployment"
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
+	mockPodman := deploymentTest.MockPodman
 
 	downloadOpts := &DownloadOpts{
-		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:   mockPodman,
-			DeploymentName: expectedLocalDeployment,
-		},
+		DeploymentOpts: *deploymentTest.Opts,
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
 		},
 	}
 
-	mockPodman.
-		EXPECT().
-		Ready(ctx).
-		Return(nil).
-		Times(1)
-
-	mockPodman.
-		EXPECT().
-		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
-		Return([]*define.InspectContainerData{
-			{
-				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
-				Config: &define.InspectContainerConfig{
-					Labels: map[string]string{
-						"version": "7.0.1",
-					},
-				},
-				HostConfig: &define.InspectContainerHostConfig{
-					PortBindings: map[string][]define.InspectHostPort{
-						"27017/tcp": {
-							{
-								HostIP:   "127.0.0.1",
-								HostPort: "27017",
-							},
-						},
-					},
-				},
-				Mounts: []define.InspectMount{
-					{
-						Name: downloadOpts.DeploymentOpts.LocalMongodDataVolume(),
-					},
-				},
-			},
-		}, nil).
-		Times(1)
+	deploymentTest.LocalMockFlow(ctx)
 
 	mockPodman.
 		EXPECT().
@@ -111,5 +77,38 @@ func TestLogs_Run(t *testing.T) {
 
 	if !strings.Contains(buf.String(), expectedLogs) {
 		t.Fatalf("Run() expected output: %s, got: %s", expectedLogs, buf.String())
+	}
+}
+
+func TestLogs_RunAtlas(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	ctx := context.Background()
+	atlasDeployment := "localDeployment1"
+	mockStore := mocks.NewMockLogsDownloader(ctrl)
+	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, atlasDeployment)
+
+	downloadOpts := &DownloadOpts{
+		GlobalOpts: cli.GlobalOpts{ProjectID: "ProjectID"},
+		DownloaderOpts: cli.DownloaderOpts{
+			Out: "out",
+		},
+		DeploymentOpts: *deploymentTest.Opts,
+		downloadStore:  mockStore,
+		host:           "test",
+		name:           "mongodb.gz",
+	}
+
+	downloadOpts.Fs = afero.NewMemMapFs()
+	deploymentTest.CommonAtlasMocks(downloadOpts.ProjectID)
+
+	b, _ := base64.RawStdEncoding.DecodeString("H4sIAAAAAAAA/8pIzcnJVyjPL8pJAQQAAP//hRFKDQsAAAA") // "hello world" gzipped
+	mockStore.
+		EXPECT().
+		DownloadLog(downloadOpts.newHostLogsParams()).
+		Return(io.NopCloser(bytes.NewReader(b)), nil).
+		Times(1)
+
+	if err := downloadOpts.Run(ctx); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

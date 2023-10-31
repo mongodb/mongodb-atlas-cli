@@ -48,10 +48,9 @@ func TestMaintenanceWindows(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			expected := "Maintenance window updated.\n"
-			a.Equal(expected, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		expected := "Maintenance window updated.\n"
+		a.Equal(expected, string(resp))
 	})
 
 	t.Run("describe", func(t *testing.T) {
@@ -66,13 +65,12 @@ func TestMaintenanceWindows(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		a.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var maintenanceWindow atlasv2.GroupMaintenanceWindow
-		if err := json.Unmarshal(resp, &maintenanceWindow); a.NoError(err) {
-			a.Equal(1, maintenanceWindow.DayOfWeek)
-			a.Equal(1, maintenanceWindow.HourOfDay)
-		}
+		require.NoError(t, json.Unmarshal(resp, &maintenanceWindow))
+		a.Equal(1, maintenanceWindow.DayOfWeek)
+		a.Equal(1, maintenanceWindow.HourOfDay)
 	})
 
 	t.Run("clear", func(t *testing.T) {
@@ -86,9 +84,8 @@ func TestMaintenanceWindows(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			expected := "Maintenance window removed.\n"
-			a.Equal(expected, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		expected := "Maintenance window removed.\n"
+		a.Equal(expected, string(resp))
 	})
 }

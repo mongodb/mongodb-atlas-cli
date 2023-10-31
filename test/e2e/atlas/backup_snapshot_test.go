@@ -89,9 +89,8 @@ func TestSnapshots(t *testing.T) {
 
 		a := assert.New(t)
 		var snapshot atlasv2.DiskBackupSnapshot
-		if err = json.Unmarshal(resp, &snapshot); a.NoError(err) {
-			a.Equal("test-snapshot", snapshot.GetDescription())
-		}
+		require.NoError(t, json.Unmarshal(resp, &snapshot))
+		a.Equal("test-snapshot", snapshot.GetDescription())
 		snapshotID = snapshot.GetId()
 	})
 
@@ -120,11 +119,10 @@ func TestSnapshots(t *testing.T) {
 
 		r.NoError(err, string(resp))
 
-		var r atlasv2.PaginatedCloudBackupReplicaSet
+		var backups atlasv2.PaginatedCloudBackupReplicaSet
 		a := assert.New(t)
-		if err = json.Unmarshal(resp, &r); a.NoError(err) {
-			a.NotEmpty(r)
-		}
+		r.NoError(json.Unmarshal(resp, &backups))
+		a.NotEmpty(backups)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -143,9 +141,8 @@ func TestSnapshots(t *testing.T) {
 
 		a := assert.New(t)
 		var result atlasv2.DiskBackupReplicaSet
-		if err = json.Unmarshal(resp, &result); a.NoError(err) {
-			a.Equal(snapshotID, result.GetId())
-		}
+		r.NoError(json.Unmarshal(resp, &result))
+		a.Equal(snapshotID, result.GetId())
 	})
 
 	t.Run("Delete", func(t *testing.T) {

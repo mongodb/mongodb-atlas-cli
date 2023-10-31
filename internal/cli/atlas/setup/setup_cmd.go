@@ -58,7 +58,7 @@ const (
 	defaultRegionGov    = "US_GOV_EAST_1"
 )
 
-var errNeedsProject = errors.New("please make sure to select or add a project to the profile")
+var errNeedsProject = errors.New("ensure you select or add a project to the profile")
 
 const setupTemplateMongoshDetected = `
 MongoDB Shell detected. Connecting to your Atlas cluster:
@@ -79,7 +79,7 @@ Enter 'atlas cluster watch %s' to learn when your cluster is available.
 `
 
 const setupTemplateStoreWarning = `
-Please store your database authentication access details in a secure location: 
+Store your database authentication access details in a secure location:
 Database User Username: %s
 Database User Password: %s
 `
@@ -384,7 +384,7 @@ func (opts *Opts) setupCloseHandler() {
 func (opts *Opts) Run(ctx context.Context) error {
 	if !opts.skipRegister {
 		_, _ = fmt.Fprintf(opts.OutWriter, `
-This command will help you
+This command will help you:
 1. Create and verify your MongoDB Atlas account in your browser.
 2. Return to the terminal to create your first free MongoDB database in Atlas.
 `)
@@ -392,8 +392,8 @@ This command will help you
 			return err
 		}
 	} else if !opts.skipLogin {
-		_, _ = fmt.Fprintf(opts.OutWriter, `What will happen next:
-1. Login and verify your MongoDB Atlas account in your browser.
+		_, _ = fmt.Fprintf(opts.OutWriter, `Next steps:
+1. Log in and verify your MongoDB Atlas account in your browser.
 2. Return to the terminal to create your first free MongoDB database in Atlas.
 `)
 

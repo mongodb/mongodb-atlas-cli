@@ -25,6 +25,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -50,19 +51,13 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			var key atlasv2.ApiKeyUserDetails
-			if err := json.Unmarshal(resp, &key); err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			a.Equal(desc, *key.Desc)
-			ID = *key.Id
-		}
+		require.NoError(t, err, string(resp))
+		var key atlasv2.ApiKeyUserDetails
+		require.NoError(t, json.Unmarshal(resp, &key))
+		a.Equal(desc, *key.Desc)
+		ID = *key.Id
 	})
-
-	if ID == "" {
-		assert.FailNow(t, "Failed to create API key")
-	}
+	require.NotEmpty(t, ID)
 
 	defer func() {
 		if e := deleteOrgAPIKey(ID); e != nil {
@@ -80,7 +75,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -131,11 +126,8 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
-		if a.NoError(err, string(resp)) {
-			expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
-			a.Equal(expected, string(resp))
-		}
+		require.NoError(t, err, string(resp))
+		expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
+		assert.Equal(t, expected, string(resp))
 	})
 }

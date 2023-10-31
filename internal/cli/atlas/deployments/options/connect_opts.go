@@ -40,12 +40,11 @@ type ConnectOpts struct {
 }
 
 func (opts *ConnectOpts) Connect(ctx context.Context) error {
-	if err := opts.askConnectWith(); err != nil {
+	if _, err := opts.SelectDeployments(ctx, opts.ConfigProjectID()); err != nil {
 		return err
 	}
 
-	_, err := opts.SelectDeployments(ctx, opts.ConfigProjectID())
-	if err != nil {
+	if err := opts.askConnectWith(); err != nil {
 		return err
 	}
 

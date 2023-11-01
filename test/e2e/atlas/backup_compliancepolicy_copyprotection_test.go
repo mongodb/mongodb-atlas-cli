@@ -55,7 +55,7 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 
 		trimmedResponse := removeDotsFromWatching(resp)
 
-		var compliancepolicy atlasv2.DataProtectionSettings
+		var compliancepolicy atlasv2.DataProtectionSettings20231001
 		r.NoError(json.Unmarshal(trimmedResponse, &compliancepolicy), string(trimmedResponse))
 
 		assert.True(t, *compliancepolicy.CopyProtectionEnabled)
@@ -76,7 +76,7 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 		resp, outputErr := cmd.CombinedOutput()
 		r.NoError(outputErr, string(resp))
 
-		var compliancepolicy atlasv2.DataProtectionSettings
+		var compliancepolicy atlasv2.DataProtectionSettings20231001
 		r.NoError(json.Unmarshal(resp, &compliancepolicy), string(resp))
 
 		assert.False(t, *compliancepolicy.CopyProtectionEnabled)

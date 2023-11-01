@@ -42,7 +42,7 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 		RetentionUnit:     "days",
 		RetentionValue:    1,
 	}
-	policy := &atlasv2.DataProtectionSettings{
+	policy := &atlasv2.DataProtectionSettings20231001{
 		ScheduledPolicyItems: []atlasv2.DiskBackupApiPolicyItem{scheduledPolicyItem},
 		ProjectId:            &g.projectID,
 		AuthorizedEmail:      authorizedEmail,
@@ -68,7 +68,7 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 
 	r.NoError(outputErr, string(resp))
 
-	var result atlasv2.DataProtectionSettings
+	var result atlasv2.DataProtectionSettings20231001
 	r.NoError(json.Unmarshal(resp, &result), resp)
 
 	a := assert.New(t)

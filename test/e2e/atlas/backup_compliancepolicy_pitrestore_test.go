@@ -41,7 +41,7 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 		RetentionUnit:     "days",
 		RetentionValue:    1,
 	}
-	compliancePolicy := atlasv2.DataProtectionSettings{
+	compliancePolicy := atlasv2.DataProtectionSettings20231001{
 		ScheduledPolicyItems: []atlasv2.DiskBackupApiPolicyItem{initialItem},
 	}
 	res, err := setupCompliancePolicy(t, g.projectID, &compliancePolicy)
@@ -66,7 +66,7 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 		resp, outputErr := cmd.CombinedOutput()
 		r.NoError(outputErr, string(resp))
 
-		var compliancepolicy atlasv2.DataProtectionSettings
+		var compliancepolicy atlasv2.DataProtectionSettings20231001
 		r.NoError(json.Unmarshal(resp, &compliancepolicy), string(resp))
 
 		assert.True(t, compliancepolicy.GetPitEnabled())

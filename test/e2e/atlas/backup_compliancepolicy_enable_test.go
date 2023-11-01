@@ -50,7 +50,7 @@ func TestBackupCompliancePolicyEnable(t *testing.T) {
 	cmd.Env = os.Environ()
 	resp, outputErr := cmd.CombinedOutput()
 	r.NoError(outputErr, string(resp))
-	var result atlasv2.DataProtectionSettings
+	var result atlasv2.DataProtectionSettings20231001
 	r.NoError(json.Unmarshal(resp, &result), string(resp))
 
 	assert.Equal(t, authorizedEmail, result.GetAuthorizedEmail())

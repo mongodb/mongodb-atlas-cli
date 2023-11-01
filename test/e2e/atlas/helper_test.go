@@ -949,7 +949,7 @@ func enableCompliancePolicy(projectID string) error {
 	return nil
 }
 
-func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error) {
+func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atlasv2.DataProtectionSettings20231001) (*atlasv2.DataProtectionSettings20231001, error) {
 	t.Helper()
 	compliancePolicy.SetAuthorizedEmail(authorizedEmail)
 	compliancePolicy.SetProjectId(projectID)
@@ -985,7 +985,7 @@ func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atl
 	}
 	trimmedResponse := removeDotsFromWatching(resp)
 
-	var result atlasv2.DataProtectionSettings
+	var result atlasv2.DataProtectionSettings20231001
 	if err := json.Unmarshal(trimmedResponse, &result); err != nil {
 		return nil, err
 	}

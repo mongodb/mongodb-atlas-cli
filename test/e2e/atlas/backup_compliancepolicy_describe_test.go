@@ -49,7 +49,7 @@ func TestBackupCompliancePolicyDescribe(t *testing.T) {
 
 	r.NoError(outputErr, string(resp))
 
-	var result atlasv2.DataProtectionSettings
+	var result atlasv2.DataProtectionSettings20231001
 	r.NoError(json.Unmarshal(resp, &result), string(resp))
 
 	assert.NotEmpty(t, result)

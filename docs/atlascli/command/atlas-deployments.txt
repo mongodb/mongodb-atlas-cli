@@ -53,10 +53,10 @@ Related Commands
 * :ref:`atlas-deployments-delete` - Delete a deployment.
 * :ref:`atlas-deployments-list` - Return all deployments.
 * :ref:`atlas-deployments-logs` - Get deployments logs.
-* :ref:`atlas-deployments-pause` - Pause a deployment
+* :ref:`atlas-deployments-pause` - Pause a deployment.
 * :ref:`atlas-deployments-search` - Manage search for cloud and local deployments.
 * :ref:`atlas-deployments-setup` - Create a local deployment.
-* :ref:`atlas-deployments-start` - Start a deployment after you stop a machine, it goes into sleep mode, or restarts.
+* :ref:`atlas-deployments-start` - Start a deployment.
 
 
 .. toctree::

@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_access_role.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CloudProviderAccessRoleLister

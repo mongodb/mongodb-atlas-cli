@@ -37,7 +37,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

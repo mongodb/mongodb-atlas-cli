@@ -19,7 +19,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_live_migrations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LiveMigrationCreator,LiveMigrationDescriber

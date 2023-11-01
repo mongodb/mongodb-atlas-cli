@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
 
 func TestDescribeBuilder(t *testing.T) {

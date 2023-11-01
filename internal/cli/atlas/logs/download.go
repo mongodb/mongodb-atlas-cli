@@ -130,11 +130,11 @@ func (opts *DownloadOpts) newHostLogsParams() *admin.GetHostLogsApiParams {
 		HostName: opts.host,
 		LogName:  fileBaseName,
 	}
-	if opts.start > 0 {
+	if opts.start != 0 {
 		params.StartDate = &opts.start
 	}
-	if opts.end > 0 {
-		params.StartDate = &opts.end
+	if opts.end != 0 {
+		params.EndDate = &opts.end
 	}
 	return params
 }

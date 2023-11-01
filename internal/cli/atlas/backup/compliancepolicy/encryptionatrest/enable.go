@@ -32,7 +32,7 @@ import (
 type EnableOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	policy *atlasv2.DataProtectionSettings
+	policy *atlasv2.DataProtectionSettings20231001
 	store  store.CompliancePolicyEncryptionAtRestEnabler
 }
 

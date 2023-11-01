@@ -53,7 +53,7 @@ func TestEnableOpts_Watcher(t *testing.T) {
 		confirm: true,
 	}
 	state := active
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: &state,
 	}
 
@@ -76,7 +76,7 @@ func TestEnableOpts_Run(t *testing.T) {
 	state := active
 	email := authorizedEmail
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: &state,
 	}
 
@@ -88,7 +88,7 @@ func TestEnableOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		EnableCompliancePolicy(opts.ProjectID, email).
+		EnableCompliancePolicy(opts.ProjectID, email, "", "").
 		Return(expected, nil).
 		Times(1)
 

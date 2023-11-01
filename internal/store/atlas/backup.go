@@ -19,58 +19,58 @@ import (
 )
 
 type CompliancePolicyDescriber interface {
-	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error)
+	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
 }
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicyUpdater,CompliancePolicyEncryptionAtRestEnabler,CompliancePolicyEncryptionAtRestDisabler,CompliancePolicyEnabler,CompliancePolicyCopyProtectionEnabler,CompliancePolicyCopyProtectionDisabler,CompliancePolicyPointInTimeRestoresEnabler
 
 type CompliancePolicyPointInTimeRestoresEnabler interface {
-	EnablePointInTimeRestore(projectID string, restoreWindowDays int) (*atlasv2.DataProtectionSettings, error)
+	EnablePointInTimeRestore(projectID string, restoreWindowDays int) (*atlasv2.DataProtectionSettings20231001, error)
 	CompliancePolicyDescriber
 }
 
 type CompliancePolicyEnabler interface {
-	EnableCompliancePolicy(projectID string, authorizedEmail string) (*atlasv2.DataProtectionSettings, error)
+	EnableCompliancePolicy(projectID, authorizedEmail, authorizedFirstName, authorizedLastName string) (*atlasv2.DataProtectionSettings20231001, error)
 	CompliancePolicyDescriber
 }
 
 type CompliancePolicyCopyProtectionEnabler interface {
-	EnableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings, error)
+	EnableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
 	CompliancePolicyDescriber
 }
 type CompliancePolicyCopyProtectionDisabler interface {
-	DisableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings, error)
+	DisableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
 	CompliancePolicyDescriber
 }
 type CompliancePolicyEncryptionAtRestUpdater interface {
-	UpdateEncryptionAtRest(projectID string, enable bool) (*atlasv2.DataProtectionSettings, error)
+	UpdateEncryptionAtRest(projectID string, enable bool) (*atlasv2.DataProtectionSettings20231001, error)
 }
 type CompliancePolicyUpdater interface {
 	CompliancePolicyDescriber
-	UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error)
+	UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings20231001) (*atlasv2.DataProtectionSettings20231001, error)
 }
 
 type CompliancePolicyEncryptionAtRestEnabler interface {
-	EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error)
+	EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
 	CompliancePolicyDescriber
 }
 
 type CompliancePolicyEncryptionAtRestDisabler interface {
-	DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error)
+	DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
 	CompliancePolicyDescriber
 }
 
-func (s *Store) DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings, error) {
+func (s *Store) DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
 	result, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	return result, err
 }
 
-func (s *Store) UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings) (*atlasv2.DataProtectionSettings, error) {
+func (s *Store) UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings20231001) (*atlasv2.DataProtectionSettings20231001, error) {
 	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, opts).Execute()
 	return result, err
 }
 
-func (s *Store) EnablePointInTimeRestore(projectID string, restoreWindowDays int) (*atlasv2.DataProtectionSettings, error) {
+func (s *Store) EnablePointInTimeRestore(projectID string, restoreWindowDays int) (*atlasv2.DataProtectionSettings20231001, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, err
@@ -83,7 +83,7 @@ func (s *Store) EnablePointInTimeRestore(projectID string, restoreWindowDays int
 	}
 	return result, nil
 }
-func (s *Store) EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error) {
+func (s *Store) EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, err
@@ -97,7 +97,7 @@ func (s *Store) EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectio
 	return result, nil
 }
 
-func (s *Store) EnableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings, error) {
+func (s *Store) EnableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, err
@@ -110,7 +110,7 @@ func (s *Store) EnableCopyProtection(projectID string) (*atlasv2.DataProtectionS
 	}
 	return result, nil
 }
-func (s *Store) DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings, error) {
+func (s *Store) DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, err
@@ -124,7 +124,7 @@ func (s *Store) DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtecti
 	return result, nil
 }
 
-func (s *Store) DisableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings, error) {
+func (s *Store) DisableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, err
@@ -137,8 +137,8 @@ func (s *Store) DisableCopyProtection(projectID string) (*atlasv2.DataProtection
 	}
 	return result, nil
 }
-func (s *Store) EnableCompliancePolicy(projectID string, authorizedEmail string) (*atlasv2.DataProtectionSettings, error) {
-	compliancePolicy := newEmptyCompliancePolicy(projectID, authorizedEmail)
+func (s *Store) EnableCompliancePolicy(projectID, authorizedEmail, authorizedFirstName, authorizedLastName string) (*atlasv2.DataProtectionSettings20231001, error) {
+	compliancePolicy := newEmptyCompliancePolicy(projectID, authorizedEmail, authorizedFirstName, authorizedLastName)
 
 	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
 	if err != nil {
@@ -147,8 +147,8 @@ func (s *Store) EnableCompliancePolicy(projectID string, authorizedEmail string)
 	return result, nil
 }
 
-func newEmptyCompliancePolicy(projectID string, authorizedEmail string) *atlasv2.DataProtectionSettings {
-	policy := atlasv2.NewDataProtectionSettings(authorizedEmail)
+func newEmptyCompliancePolicy(projectID, authorizedEmail, authorizedFirstName, authorizedLastName string) *atlasv2.DataProtectionSettings20231001 {
+	policy := atlasv2.NewDataProtectionSettings20231001(authorizedEmail, authorizedFirstName, authorizedLastName)
 	policy.SetProjectId(projectID)
 	return policy
 }

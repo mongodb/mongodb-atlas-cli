@@ -642,9 +642,9 @@ func buildAuditing(auditingProvider store.AuditingDescriber, projectID string) (
 	}
 
 	return &atlasV1.Auditing{
-		AuditAuthorizationSuccess: data.AuditAuthorizationSuccess,
-		AuditFilter:               data.AuditFilter,
-		Enabled:                   data.Enabled,
+		AuditAuthorizationSuccess: pointer.GetOrZero(data.AuditAuthorizationSuccess),
+		AuditFilter:               pointer.GetOrZero(data.AuditFilter),
+		Enabled:                   pointer.GetOrZero(data.Enabled),
 	}, nil
 }
 

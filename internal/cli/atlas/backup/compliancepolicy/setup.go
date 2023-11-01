@@ -35,7 +35,7 @@ import (
 type SetupOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	policy  *atlasv2.DataProtectionSettings
+	policy  *atlasv2.DataProtectionSettings20231001
 	store   store.CompliancePolicyUpdater
 	fs      afero.Fs
 	path    string
@@ -134,7 +134,7 @@ func (opts *SetupOpts) Run() error {
 
 func SetupBuilder() *cobra.Command {
 	opts := &SetupOpts{
-		policy: new(atlasv2.DataProtectionSettings),
+		policy: new(atlasv2.DataProtectionSettings20231001),
 		fs:     afero.NewOsFs(),
 	}
 	use := "setup"

@@ -21,6 +21,14 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
+func GetOrZero[T any](ptr *T) T {
+	if ptr == nil {
+		var zero T
+		return zero
+	}
+	return *ptr
+}
+
 func GetOrDefault[T any](ptr *T, defaultValue T) T {
 	if ptr != nil {
 		return *ptr
@@ -39,7 +47,7 @@ func GetStringPointerIfNotEmpty(input string) *string {
 	return nil
 }
 
-func GetArrayPointerIfNotEmpty(input []string) *[]string {
+func GetArrayPointerIfNotEmpty[T any](input []T) *[]T {
 	if len(input) > 0 {
 		return &input
 	}

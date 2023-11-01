@@ -51,7 +51,7 @@ func TestSetupOpts_Watcher(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: &state,
 	}
 
@@ -77,10 +77,10 @@ func TestSetupOpts_Run(t *testing.T) {
 	opts := &SetupOpts{
 		store:   mockStore,
 		confirm: true,
-		policy:  new(atlasv2.DataProtectionSettings),
+		policy:  new(atlasv2.DataProtectionSettings20231001),
 	}
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: &state,
 	}
 
@@ -106,13 +106,13 @@ func TestSetupOpts_WatchRun(t *testing.T) {
 	opts := &SetupOpts{
 		store:   mockStore,
 		confirm: true,
-		policy:  new(atlasv2.DataProtectionSettings),
+		policy:  new(atlasv2.DataProtectionSettings20231001),
 		WatchOpts: cli.WatchOpts{
 			EnableWatch: true,
 		},
 	}
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: &state,
 	}
 

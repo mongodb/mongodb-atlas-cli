@@ -35,10 +35,10 @@ func (m *MockCompliancePolicyDescriber) EXPECT() *MockCompliancePolicyDescriberM
 }
 
 // DescribeCompliancePolicy mocks base method.
-func (m *MockCompliancePolicyDescriber) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings, error) {
+func (m *MockCompliancePolicyDescriber) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeCompliancePolicy", arg0)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockCompliancePolicyUpdater) EXPECT() *MockCompliancePolicyUpdaterMockR
 }
 
 // DescribeCompliancePolicy mocks base method.
-func (m *MockCompliancePolicyUpdater) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings, error) {
+func (m *MockCompliancePolicyUpdater) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeCompliancePolicy", arg0)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -88,10 +88,10 @@ func (mr *MockCompliancePolicyUpdaterMockRecorder) DescribeCompliancePolicy(arg0
 }
 
 // UpdateCompliancePolicy mocks base method.
-func (m *MockCompliancePolicyUpdater) UpdateCompliancePolicy(arg0 string, arg1 *admin.DataProtectionSettings) (*admin.DataProtectionSettings, error) {
+func (m *MockCompliancePolicyUpdater) UpdateCompliancePolicy(arg0 string, arg1 *admin.DataProtectionSettings20231001) (*admin.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateCompliancePolicy", arg0, arg1)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -126,10 +126,10 @@ func (m *MockCompliancePolicyEncryptionAtRestEnabler) EXPECT() *MockCompliancePo
 }
 
 // DescribeCompliancePolicy mocks base method.
-func (m *MockCompliancePolicyEncryptionAtRestEnabler) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings, error) {
+func (m *MockCompliancePolicyEncryptionAtRestEnabler) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeCompliancePolicy", arg0)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -141,10 +141,10 @@ func (mr *MockCompliancePolicyEncryptionAtRestEnablerMockRecorder) DescribeCompl
 }
 
 // EnableEncryptionAtRest mocks base method.
-func (m *MockCompliancePolicyEncryptionAtRestEnabler) EnableEncryptionAtRest(arg0 string) (*admin.DataProtectionSettings, error) {
+func (m *MockCompliancePolicyEncryptionAtRestEnabler) EnableEncryptionAtRest(arg0 string) (*admin.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "EnableEncryptionAtRest", arg0)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -179,10 +179,10 @@ func (m *MockCompliancePolicyEncryptionAtRestDisabler) EXPECT() *MockComplianceP
 }
 
 // DescribeCompliancePolicy mocks base method.
-func (m *MockCompliancePolicyEncryptionAtRestDisabler) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings, error) {
+func (m *MockCompliancePolicyEncryptionAtRestDisabler) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeCompliancePolicy", arg0)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -194,10 +194,10 @@ func (mr *MockCompliancePolicyEncryptionAtRestDisablerMockRecorder) DescribeComp
 }
 
 // DisableEncryptionAtRest mocks base method.
-func (m *MockCompliancePolicyEncryptionAtRestDisabler) DisableEncryptionAtRest(arg0 string) (*admin.DataProtectionSettings, error) {
+func (m *MockCompliancePolicyEncryptionAtRestDisabler) DisableEncryptionAtRest(arg0 string) (*admin.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DisableEncryptionAtRest", arg0)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -232,10 +232,10 @@ func (m *MockCompliancePolicyEnabler) EXPECT() *MockCompliancePolicyEnablerMockR
 }
 
 // DescribeCompliancePolicy mocks base method.
-func (m *MockCompliancePolicyEnabler) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings, error) {
+func (m *MockCompliancePolicyEnabler) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeCompliancePolicy", arg0)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -247,18 +247,18 @@ func (mr *MockCompliancePolicyEnablerMockRecorder) DescribeCompliancePolicy(arg0
 }
 
 // EnableCompliancePolicy mocks base method.
-func (m *MockCompliancePolicyEnabler) EnableCompliancePolicy(arg0, arg1 string) (*admin.DataProtectionSettings, error) {
+func (m *MockCompliancePolicyEnabler) EnableCompliancePolicy(arg0, arg1, arg2, arg3 string) (*admin.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EnableCompliancePolicy", arg0, arg1)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings)
+	ret := m.ctrl.Call(m, "EnableCompliancePolicy", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // EnableCompliancePolicy indicates an expected call of EnableCompliancePolicy.
-func (mr *MockCompliancePolicyEnablerMockRecorder) EnableCompliancePolicy(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockCompliancePolicyEnablerMockRecorder) EnableCompliancePolicy(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnableCompliancePolicy", reflect.TypeOf((*MockCompliancePolicyEnabler)(nil).EnableCompliancePolicy), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnableCompliancePolicy", reflect.TypeOf((*MockCompliancePolicyEnabler)(nil).EnableCompliancePolicy), arg0, arg1, arg2, arg3)
 }
 
 // MockCompliancePolicyCopyProtectionEnabler is a mock of CompliancePolicyCopyProtectionEnabler interface.
@@ -285,10 +285,10 @@ func (m *MockCompliancePolicyCopyProtectionEnabler) EXPECT() *MockCompliancePoli
 }
 
 // DescribeCompliancePolicy mocks base method.
-func (m *MockCompliancePolicyCopyProtectionEnabler) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings, error) {
+func (m *MockCompliancePolicyCopyProtectionEnabler) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeCompliancePolicy", arg0)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -300,10 +300,10 @@ func (mr *MockCompliancePolicyCopyProtectionEnablerMockRecorder) DescribeComplia
 }
 
 // EnableCopyProtection mocks base method.
-func (m *MockCompliancePolicyCopyProtectionEnabler) EnableCopyProtection(arg0 string) (*admin.DataProtectionSettings, error) {
+func (m *MockCompliancePolicyCopyProtectionEnabler) EnableCopyProtection(arg0 string) (*admin.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "EnableCopyProtection", arg0)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -338,10 +338,10 @@ func (m *MockCompliancePolicyCopyProtectionDisabler) EXPECT() *MockCompliancePol
 }
 
 // DescribeCompliancePolicy mocks base method.
-func (m *MockCompliancePolicyCopyProtectionDisabler) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings, error) {
+func (m *MockCompliancePolicyCopyProtectionDisabler) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeCompliancePolicy", arg0)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -353,10 +353,10 @@ func (mr *MockCompliancePolicyCopyProtectionDisablerMockRecorder) DescribeCompli
 }
 
 // DisableCopyProtection mocks base method.
-func (m *MockCompliancePolicyCopyProtectionDisabler) DisableCopyProtection(arg0 string) (*admin.DataProtectionSettings, error) {
+func (m *MockCompliancePolicyCopyProtectionDisabler) DisableCopyProtection(arg0 string) (*admin.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DisableCopyProtection", arg0)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -391,10 +391,10 @@ func (m *MockCompliancePolicyPointInTimeRestoresEnabler) EXPECT() *MockComplianc
 }
 
 // DescribeCompliancePolicy mocks base method.
-func (m *MockCompliancePolicyPointInTimeRestoresEnabler) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings, error) {
+func (m *MockCompliancePolicyPointInTimeRestoresEnabler) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeCompliancePolicy", arg0)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -406,10 +406,10 @@ func (mr *MockCompliancePolicyPointInTimeRestoresEnablerMockRecorder) DescribeCo
 }
 
 // EnablePointInTimeRestore mocks base method.
-func (m *MockCompliancePolicyPointInTimeRestoresEnabler) EnablePointInTimeRestore(arg0 string, arg1 int) (*admin.DataProtectionSettings, error) {
+func (m *MockCompliancePolicyPointInTimeRestoresEnabler) EnablePointInTimeRestore(arg0 string, arg1 int) (*admin.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "EnablePointInTimeRestore", arg0, arg1)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

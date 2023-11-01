@@ -49,7 +49,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	require.NoError(t, opts.Run())
 	assert.Equal(t, `AUDIT AUTHORIZATION SUCCESS   AUDIT FILTER   CONFIGURATION TYPE   ENABLED
-false                                        <nil>                false
+<nil>                         <nil>          <nil>                <nil>
 `, buf.String())
 	t.Log(buf.String())
 }

@@ -59,7 +59,7 @@ func TestEnableOpts_Watcher(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: atlasv2.PtrString(active),
 	}
 
@@ -80,11 +80,11 @@ func TestEnableOpts_Run(t *testing.T) {
 	pointInTimeRestoreBefore := false
 	pointInTimeRestoreAfter := true
 
-	initial := &atlasv2.DataProtectionSettings{
+	initial := &atlasv2.DataProtectionSettings20231001{
 		PitEnabled: &pointInTimeRestoreBefore,
 	}
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State:      atlasv2.PtrString(active),
 		PitEnabled: &pointInTimeRestoreAfter,
 	}
@@ -122,7 +122,7 @@ func TestEnableOpts_WatchRun(t *testing.T) {
 		restoreWindowDays: 1,
 	}
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: atlasv2.PtrString(active),
 	}
 

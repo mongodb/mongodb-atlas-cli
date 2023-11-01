@@ -43,7 +43,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 	opts := &DescribeOpts{
 		store: mockStore,
 	}
-	expected := &atlasv2.DataProtectionSettings{}
+	expected := &atlasv2.DataProtectionSettings20231001{}
 
 	mockStore.
 		EXPECT().

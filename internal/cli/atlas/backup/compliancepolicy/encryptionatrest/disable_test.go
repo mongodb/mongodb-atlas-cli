@@ -58,7 +58,7 @@ func TestDisableOpts_Watcher(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: atlasv2.PtrString(active),
 	}
 
@@ -78,7 +78,7 @@ func TestDisableOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockCompliancePolicyEncryptionAtRestDisabler(ctrl)
 	encryptionAtRestAfter := false
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		EncryptionAtRestEnabled: &encryptionAtRestAfter,
 	}
 
@@ -110,7 +110,7 @@ func TestDisableOpts_WatchRun(t *testing.T) {
 		},
 	}
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: atlasv2.PtrString(active),
 	}
 

@@ -60,7 +60,7 @@ type Diagnostic struct {
 	Errors          []string
 }
 
-const PodmanRunningState = machine.Running
+const RunningState = machine.Running
 
 type RunContainerOpts struct {
 	Detach   bool
@@ -263,7 +263,7 @@ func (o *client) machineStart(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	if info.State != PodmanRunningState {
+	if info.State != RunningState {
 		_, err := o.runPodman(ctx, "machine", "start")
 		if err != nil {
 			return err
@@ -281,7 +281,7 @@ func Installed() error {
 }
 
 func podmanMachineIsRequired() bool {
-	// macOs and Windows require VMs
+	// macOS and Windows require VMs
 	return runtime.GOOS == "windows" || runtime.GOOS == "darwin"
 }
 

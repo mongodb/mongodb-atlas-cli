@@ -31,6 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20230201008/admin"
 )
 
@@ -53,8 +54,8 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 		},
 	}
 
-	expectedLocalDeployment := deploymentsTest.MockContainerWithState("paused")
-	deploymentsTest.LocalMockFlowWithMockContainer(ctx, expectedLocalDeployment)
+	expected := deploymentsTest.MockContainerWithState("paused")
+	deploymentsTest.LocalMockFlowWithMockContainer(ctx, expected)
 
 	mockPodman.
 		EXPECT().
@@ -86,11 +87,8 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 		Return(nil, nil).
 		Times(1)
 
-	if err := startOpts.Run(ctx); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-
-	assert.Equal(t, fmt.Sprintf("Starting deployment '%s'.\n", deploymentName), buf.String())
+	require.NoError(t, startOpts.Run(ctx))
+	assert.Equal(t, fmt.Sprintf("\nStarting deployment '%s'.\n", deploymentName), buf.String())
 	t.Log(buf.String())
 }
 
@@ -113,8 +111,8 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 		},
 	}
 
-	expectedLocalDeployment := deploymentsTest.MockContainerWithState("exited")
-	deploymentsTest.LocalMockFlowWithMockContainer(ctx, expectedLocalDeployment)
+	expected := deploymentsTest.MockContainerWithState("exited")
+	deploymentsTest.LocalMockFlowWithMockContainer(ctx, expected)
 
 	mockPodman.
 		EXPECT().
@@ -146,11 +144,8 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 		Return(nil, nil).
 		Times(1)
 
-	if err := startOpts.Run(ctx); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-
-	assert.Equal(t, fmt.Sprintf("Starting deployment '%s'.\n", deploymentName), buf.String())
+	require.NoError(t, startOpts.Run(ctx))
+	assert.Equal(t, fmt.Sprintf("\nStarting deployment '%s'.\n", deploymentName), buf.String())
 	t.Log(buf.String())
 }
 
@@ -158,12 +153,12 @@ func TestStart_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterStarter(ctrl)
 	ctx := context.Background()
-	deploymentName := "atlasCluster1"
+	const deploymentName = "atlasCluster1"
 
 	deploymentsTest := fixture.NewMockAtlasDeploymentOpts(ctrl, deploymentName)
 
 	buf := new(bytes.Buffer)
-	listOpts := &StartOpts{
+	opts := &StartOpts{
 		store:          mockStore,
 		DeploymentOpts: *deploymentsTest.Opts,
 		GlobalOpts: cli.GlobalOpts{
@@ -186,11 +181,8 @@ func TestStart_RunAtlas(t *testing.T) {
 			}, nil).
 		Times(1)
 
-	if err := listOpts.Run(ctx); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-
-	assert.Equal(t, fmt.Sprintf("Starting deployment '%s'.\n", deploymentName), buf.String())
+	require.NoError(t, opts.Run(ctx))
+	assert.Equal(t, fmt.Sprintf("\nStarting deployment '%s'.\n", deploymentName), buf.String())
 	t.Log(buf.String())
 }
 

@@ -38,8 +38,7 @@ type StartOpts struct {
 
 var (
 	ErrDeploymentIsDeleting = errors.New("deployment state is DELETING")
-	ErrNoDeploymentName     = errors.New("deployment name is required for Atlas resources")
-	startTemplate           = "Starting deployment '{{.Name}}'.\n"
+	startTemplate           = "\nStarting deployment '{{.Name}}'.\n"
 )
 
 func (opts *StartOpts) initStore(ctx context.Context) func() error {
@@ -126,7 +125,8 @@ func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{
 		Use:     "start <deploymentName>",
-		Short:   "Start a deployment after you stop a machine, it goes into sleep mode, or restarts.",
+		Short:   "Start a deployment.",
+		Long:    "After you stop a machine, it goes into sleep mode, or restarts.",
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{

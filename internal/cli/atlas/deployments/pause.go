@@ -86,25 +86,24 @@ func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.De
 		return nil
 	}
 
-	if deployment.StateName == options.IdleState {
-		opts.StartSpinner()
-		defer opts.StopSpinner()
+	if deployment.StateName != options.IdleState {
+		return errDeploymentIsNotIDLE
+	}
+	opts.StartSpinner()
+	defer opts.StopSpinner()
 
-		// search for a process "java ... mongot", extract the process ID, kill the process with SIGTERM (15)
-		const stopMongot = "grep -l java.*mongot /proc/*/cmdline | awk -F'/' '{print $3; exit}' | while read -r pid; do kill -15 $pid; done"
-		if err := opts.PodmanClient.Exec(ctx, opts.LocalMongotHostname(), "/bin/sh", "-c", stopMongot); err != nil {
-			return err
-		}
-
-		err := opts.PodmanClient.Exec(ctx, opts.LocalMongodHostname(), "mongod", "--shutdown")
-		var exitErr *exec.ExitError
-		if errors.As(err, &exitErr) && exitErr.ExitCode() == podmanContainerTerminatedExitCode {
-			return nil
-		}
+	// search for a process "java ... mongot", extract the process ID, kill the process with SIGTERM (15)
+	const stopMongot = "grep -l java.*mongot /proc/*/cmdline | awk -F'/' '{print $3; exit}' | while read -r pid; do kill -15 $pid; done"
+	if err := opts.PodmanClient.Exec(ctx, opts.LocalMongotHostname(), "/bin/sh", "-c", stopMongot); err != nil {
 		return err
 	}
 
-	return errDeploymentIsNotIDLE
+	err := opts.PodmanClient.Exec(ctx, opts.LocalMongodHostname(), "mongod", "--shutdown")
+	var exitErr *exec.ExitError
+	if errors.As(err, &exitErr) && exitErr.ExitCode() == podmanContainerTerminatedExitCode {
+		return nil
+	}
+	return err
 }
 
 func (opts *PauseOpts) RunAtlas() error {
@@ -127,7 +126,8 @@ func PauseBuilder() *cobra.Command {
 	opts := &PauseOpts{}
 	cmd := &cobra.Command{
 		Use:     "pause <deploymentName>",
-		Short:   "Pause a deployment",
+		Aliases: []string{"stop"},
+		Short:   "Pause a deployment.",
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{

@@ -32,14 +32,15 @@ import (
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	clusterName  string
-	dbName       string
-	collection   string
-	dateField    string
-	dateFormat   string
-	archiveAfter int
-	partitions   []string
-	store        store.OnlineArchiveCreator
+	clusterName     string
+	dbName          string
+	collection      string
+	dateField       string
+	dateFormat      string
+	archiveAfter    int
+	partitions      []string
+	expireAfterDays int
+	store           store.OnlineArchiveCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -64,7 +65,7 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchiveCreate {
-	return &atlasv2.BackupOnlineArchiveCreate{
+	archive := &atlasv2.BackupOnlineArchiveCreate{
 		CollName: opts.collection,
 		Criteria: atlasv2.Criteria{
 			DateField:       &opts.dateField,
@@ -74,6 +75,14 @@ func (opts *CreateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchiveCreate {
 		DbName:          opts.dbName,
 		PartitionFields: opts.partitionFields(),
 	}
+
+	if opts.expireAfterDays > 0 {
+		archive.DataExpirationRule = &atlasv2.DataExpirationRule{
+			ExpireAfterDays: &opts.expireAfterDays,
+		}
+	}
+
+	return archive
 }
 
 func (opts *CreateOpts) partitionFields() []atlasv2.PartitionField {
@@ -122,6 +131,7 @@ To learn more about online archives, see https://www.mongodb.com/docs/atlas/onli
 	cmd.Flags().StringVar(&opts.dateField, flag.DateField, "", usage.DateField)
 	cmd.Flags().StringVar(&opts.dateFormat, flag.DateFormat, "ISODATE", usage.DateFormat)
 	cmd.Flags().IntVar(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
+	cmd.Flags().IntVar(&opts.expireAfterDays, flag.ExpireAfterDays, 0, usage.ExpireAfterDays)
 	cmd.Flags().StringSliceVar(&opts.partitions, flag.Partition, nil, usage.PartitionFields)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

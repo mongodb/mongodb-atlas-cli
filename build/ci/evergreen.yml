@@ -217,29 +217,6 @@ functions:
           elif [ -n "$(which brew 2>/dev/null)" ]; then
             sudo brew install podman
           fi
-  "install snyk":
-    - command: shell.exec
-      type: setup
-      params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
-        script: |
-          set -Eeou pipefail
-
-          curl -sfL https://github.com/snyk/snyk/releases/download/v${snyk_ver}/snyk-linux -o snyk
-          chmod +x snyk
-  "snyk scan":
-    - command: shell.exec
-      type: test
-      params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        script: |
-          export SNYK_TOKEN=${snyk_token}
-
-          set -Eeou pipefail
-
-          export GOROOT="${go_root}"
-          export PATH="./bin:$GOROOT/bin:$PATH"
-          ./bin/snyk test --org=cloud
   "install pykmip":
     - command: subprocess.exec
       type: setup
@@ -318,11 +295,6 @@ tasks:
     tags: [ "code_health" ]
     commands:
       - func: "build atlascli"
-  - name: snyk_scan
-    tags: ["snyk"]
-    commands:
-      - func: "install snyk"
-      - func: "snyk scan"
   - name: config_e2e
     tags: ["e2e","required"]
     must_have_test_results: true
@@ -1550,14 +1522,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".ops-manager-60"
-  - name: snyk
-    display_name: "Snyk"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: .snyk
   - name: e2e_atlas_deployments
     display_name: "E2E Atlas Deployments Tests"
     run_on:

@@ -90,7 +90,7 @@ func (opts *EnableOpts) Run() error {
 			return errors.New("did not receive confirmation to enable backup compliance policy")
 		}
 	}
-	compliancePolicy, err := opts.store.EnableCompliancePolicy(opts.ConfigProjectID(), opts.authorizedEmail, "", "")
+	compliancePolicy, err := opts.store.EnableCompliancePolicy(opts.ConfigProjectID(), opts.authorizedEmail, "", "") // TODO fix when addressing CLOUDP-198381
 	opts.policy = compliancePolicy
 	if err != nil {
 		return fmt.Errorf("couldn't enable compliance policy: %w", err)

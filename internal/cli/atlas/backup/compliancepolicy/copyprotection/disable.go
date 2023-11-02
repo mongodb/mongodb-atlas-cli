@@ -26,13 +26,13 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
 
 type DisableOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	policy *atlasv2.DataProtectionSettings
+	policy *atlasv2.DataProtectionSettings20231001
 	store  store.CompliancePolicyCopyProtectionDisabler
 }
 

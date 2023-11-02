@@ -31,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -642,9 +642,9 @@ func buildAuditing(auditingProvider store.AuditingDescriber, projectID string) (
 	}
 
 	return &atlasV1.Auditing{
-		AuditAuthorizationSuccess: data.AuditAuthorizationSuccess,
-		AuditFilter:               data.AuditFilter,
-		Enabled:                   data.Enabled,
+		AuditAuthorizationSuccess: pointer.GetOrZero(data.AuditAuthorizationSuccess),
+		AuditFilter:               pointer.GetOrZero(data.AuditFilter),
+		Enabled:                   pointer.GetOrZero(data.Enabled),
 	}, nil
 }
 

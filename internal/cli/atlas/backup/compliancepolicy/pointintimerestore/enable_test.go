@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
 
 func TestEnableBuilder(t *testing.T) {
@@ -59,7 +59,7 @@ func TestEnableOpts_Watcher(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: atlasv2.PtrString(active),
 	}
 
@@ -80,11 +80,11 @@ func TestEnableOpts_Run(t *testing.T) {
 	pointInTimeRestoreBefore := false
 	pointInTimeRestoreAfter := true
 
-	initial := &atlasv2.DataProtectionSettings{
+	initial := &atlasv2.DataProtectionSettings20231001{
 		PitEnabled: &pointInTimeRestoreBefore,
 	}
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State:      atlasv2.PtrString(active),
 		PitEnabled: &pointInTimeRestoreAfter,
 	}
@@ -122,7 +122,7 @@ func TestEnableOpts_WatchRun(t *testing.T) {
 		restoreWindowDays: 1,
 	}
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: atlasv2.PtrString(active),
 	}
 

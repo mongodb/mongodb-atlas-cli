@@ -37,7 +37,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
 	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -78,10 +78,10 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 
 		auditing := &atlasv2.AuditLog{
-			AuditAuthorizationSuccess: true,
-			AuditFilter:               "TestFilter",
+			AuditAuthorizationSuccess: pointer.Get(true),
+			AuditFilter:               pointer.Get("TestFilter"),
 			ConfigurationType:         pointer.Get("TestConfigType"),
-			Enabled:                   true,
+			Enabled:                   pointer.Get(true),
 		}
 
 		authDate, _ := time.Parse(time.RFC3339, "01-01-2001")
@@ -485,9 +485,9 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 				},
 				Auditing: &atlasV1.Auditing{
-					AuditAuthorizationSuccess: auditing.AuditAuthorizationSuccess,
-					AuditFilter:               auditing.AuditFilter,
-					Enabled:                   auditing.Enabled,
+					AuditAuthorizationSuccess: pointer.GetOrZero(auditing.AuditAuthorizationSuccess),
+					AuditFilter:               pointer.GetOrZero(auditing.AuditFilter),
+					Enabled:                   pointer.GetOrZero(auditing.Enabled),
 				},
 				Settings: &atlasV1.ProjectSettings{
 					IsCollectDatabaseSpecificsStatisticsEnabled: projectSettings.IsCollectDatabaseSpecificsStatisticsEnabled,
@@ -669,10 +669,10 @@ func Test_buildAuditing(t *testing.T) {
 	auditingProvider := mocks.NewMockAuditingDescriber(ctl)
 	t.Run("Can convert Auditing", func(t *testing.T) {
 		data := &atlasv2.AuditLog{
-			AuditAuthorizationSuccess: true,
-			AuditFilter:               "TestFilter",
+			AuditAuthorizationSuccess: pointer.Get(true),
+			AuditFilter:               pointer.Get("TestFilter"),
 			ConfigurationType:         pointer.Get("TestType"),
-			Enabled:                   true,
+			Enabled:                   pointer.Get(true),
 		}
 
 		auditingProvider.EXPECT().Auditing(projectID).Return(data, nil)
@@ -683,9 +683,9 @@ func Test_buildAuditing(t *testing.T) {
 		}
 
 		expected := &atlasV1.Auditing{
-			AuditAuthorizationSuccess: data.AuditAuthorizationSuccess,
-			AuditFilter:               data.AuditFilter,
-			Enabled:                   data.Enabled,
+			AuditAuthorizationSuccess: pointer.GetOrZero(data.AuditAuthorizationSuccess),
+			AuditFilter:               pointer.GetOrZero(data.AuditFilter),
+			Enabled:                   pointer.GetOrZero(data.Enabled),
 		}
 
 		if !reflect.DeepEqual(expected, got) {

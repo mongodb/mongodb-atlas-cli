@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
@@ -49,7 +49,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	require.NoError(t, opts.Run())
 	assert.Equal(t, `AUDIT AUTHORIZATION SUCCESS   AUDIT FILTER   CONFIGURATION TYPE   ENABLED
-false                                        <nil>                false
+<nil>                         <nil>          <nil>                <nil>
 `, buf.String())
 	t.Log(buf.String())
 }

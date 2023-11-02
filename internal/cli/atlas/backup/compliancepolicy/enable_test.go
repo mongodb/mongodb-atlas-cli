@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
 
 const (
@@ -53,7 +53,7 @@ func TestEnableOpts_Watcher(t *testing.T) {
 		confirm: true,
 	}
 	state := active
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: &state,
 	}
 
@@ -76,7 +76,7 @@ func TestEnableOpts_Run(t *testing.T) {
 	state := active
 	email := authorizedEmail
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: &state,
 	}
 
@@ -88,7 +88,7 @@ func TestEnableOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		EnableCompliancePolicy(opts.ProjectID, email).
+		EnableCompliancePolicy(opts.ProjectID, email, "", "").
 		Return(expected, nil).
 		Times(1)
 

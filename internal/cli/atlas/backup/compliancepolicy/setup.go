@@ -29,13 +29,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
 
 type SetupOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	policy  *atlasv2.DataProtectionSettings
+	policy  *atlasv2.DataProtectionSettings20231001
 	store   store.CompliancePolicyUpdater
 	fs      afero.Fs
 	path    string
@@ -134,7 +134,7 @@ func (opts *SetupOpts) Run() error {
 
 func SetupBuilder() *cobra.Command {
 	opts := &SetupOpts{
-		policy: new(atlasv2.DataProtectionSettings),
+		policy: new(atlasv2.DataProtectionSettings20231001),
 		fs:     afero.NewOsFs(),
 	}
 	use := "setup"

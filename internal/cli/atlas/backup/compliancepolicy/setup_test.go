@@ -23,7 +23,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
 
 func TestSetupBuilder(t *testing.T) {
@@ -51,7 +51,7 @@ func TestSetupOpts_Watcher(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: &state,
 	}
 
@@ -77,10 +77,10 @@ func TestSetupOpts_Run(t *testing.T) {
 	opts := &SetupOpts{
 		store:   mockStore,
 		confirm: true,
-		policy:  new(atlasv2.DataProtectionSettings),
+		policy:  new(atlasv2.DataProtectionSettings20231001),
 	}
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: &state,
 	}
 
@@ -106,13 +106,13 @@ func TestSetupOpts_WatchRun(t *testing.T) {
 	opts := &SetupOpts{
 		store:   mockStore,
 		confirm: true,
-		policy:  new(atlasv2.DataProtectionSettings),
+		policy:  new(atlasv2.DataProtectionSettings20231001),
 		WatchOpts: cli.WatchOpts{
 			EnableWatch: true,
 		},
 	}
 
-	expected := &atlasv2.DataProtectionSettings{
+	expected := &atlasv2.DataProtectionSettings20231001{
 		State: &state,
 	}
 

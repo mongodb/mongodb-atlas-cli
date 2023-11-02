@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
 
 func TestDescribeBuilder(t *testing.T) {
@@ -43,7 +43,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 	opts := &DescribeOpts{
 		store: mockStore,
 	}
-	expected := &atlasv2.DataProtectionSettings{}
+	expected := &atlasv2.DataProtectionSettings20231001{}
 
 	mockStore.
 		EXPECT().

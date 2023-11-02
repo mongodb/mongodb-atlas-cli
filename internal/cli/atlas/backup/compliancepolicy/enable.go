@@ -28,13 +28,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
 
 type EnableOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	policy          *atlasv2.DataProtectionSettings
+	policy          *atlasv2.DataProtectionSettings20231001
 	store           store.CompliancePolicyEnabler
 	authorizedEmail string
 	confirm         bool
@@ -90,7 +90,7 @@ func (opts *EnableOpts) Run() error {
 			return errors.New("did not receive confirmation to enable backup compliance policy")
 		}
 	}
-	compliancePolicy, err := opts.store.EnableCompliancePolicy(opts.ConfigProjectID(), opts.authorizedEmail)
+	compliancePolicy, err := opts.store.EnableCompliancePolicy(opts.ConfigProjectID(), opts.authorizedEmail, "", "") // TODO fix when addressing CLOUDP-198381
 	opts.policy = compliancePolicy
 	if err != nil {
 		return fmt.Errorf("couldn't enable compliance policy: %w", err)

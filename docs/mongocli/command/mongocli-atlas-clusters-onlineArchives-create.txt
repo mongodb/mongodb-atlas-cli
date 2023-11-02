@@ -41,10 +41,6 @@ Options
      - Type
      - Required
      - Description
-   * - --ExpireAfterDays
-     - int
-     - false
-     - Number of days used in the date criteria for nominating documents for deletion.
    * - --archiveAfter
      - int
      - true
@@ -69,6 +65,10 @@ Options
      - string
      - true
      - Name of the database.
+   * - --expireAfterDays
+     - int
+     - false
+     - Number of days used in the date criteria for nominating documents for deletion.
    * - -h, --help
      - 
      - false

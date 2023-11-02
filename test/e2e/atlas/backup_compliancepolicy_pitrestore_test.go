@@ -29,7 +29,7 @@ import (
 )
 
 func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
-	//TODO remove after CLOUDP-198381
+	// TODO remove after CLOUDP-198381
 	t.Skip("reenable tests when CLOUDP-198381 is addressed")
 
 	cliPath, err := e2e.AtlasCLIBin()

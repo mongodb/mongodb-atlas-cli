@@ -32,10 +32,11 @@ import (
 type UpdateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	id           string
-	clusterName  string
-	archiveAfter int
-	store        store.OnlineArchiveUpdater
+	id              string
+	clusterName     string
+	archiveAfter    int
+	expireAfterDays int
+	store           store.OnlineArchiveUpdater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -65,6 +66,13 @@ func (opts *UpdateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchive {
 			ExpireAfterDays: pointer.Get(opts.archiveAfter),
 		},
 	}
+
+	if opts.expireAfterDays > 0 {
+		archive.DataExpirationRule = &atlasv2.DataExpirationRule{
+			ExpireAfterDays: &opts.expireAfterDays,
+		}
+	}
+
 	return archive
 }
 
@@ -97,6 +105,7 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().IntVar(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
+	cmd.Flags().IntVar(&opts.expireAfterDays, flag.ExpireAfterDays, 0, usage.ExpireAfterDays)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

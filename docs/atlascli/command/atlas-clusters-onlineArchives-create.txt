@@ -65,6 +65,10 @@ Options
      - string
      - true
      - Name of the database.
+   * - --expireAfterDays
+     - int
+     - false
+     - Number of days used in the date criteria for nominating documents for deletion.
    * - -h, --help
      - 
      - false

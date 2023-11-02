@@ -265,6 +265,7 @@ dbName and collection are required only for built-in roles.`
 	DateField                                 = "Name of an already indexed date field from the documents."
 	PartitionFields                           = "Fields to use to partition data. You can specify up to two frequently queried fields separated by a comma."
 	ArchiveAfter                              = "Number of days after which to archive cluster data."
+	ExpireAfterDays                           = "Number of days used in the date criteria for nominating documents for deletion."
 	TargetProjectID                           = "Unique identifier of the project that contains the destination cluster for the restore job. You must specify a targetProjectId for automated restores."
 	APIAccessListIPEntry                      = "IP address to add to the access list for your API key. To add more than one IP address, specify each address with a separate ip flag or specify all addresses as a comma-separated list using one ip flag. You can't set both ip and cidr in the same command."
 	NetworkAccessListIPEntry                  = "IP address to grant access to the deployment."

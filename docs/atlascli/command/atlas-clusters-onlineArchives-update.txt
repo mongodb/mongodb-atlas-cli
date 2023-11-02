@@ -61,6 +61,10 @@ Options
      - string
      - true
      - Name of the cluster.
+   * - --expireAfterDays
+     - int
+     - false
+     - Number of days used in the date criteria for nominating documents for deletion.
    * - -h, --help
      - 
      - false

@@ -106,6 +106,7 @@ const (
 	Comment                                   = "comment"                                   // Comment flag
 	DeleteAfter                               = "deleteAfter"                               // DeleteAfter flag
 	ArchiveAfter                              = "archiveAfter"                              // ArchiveAfter flag
+	ExpireAfterDays                           = "expireAfterDays"                           // ExpireAfterDays flag
 	DayOfWeek                                 = "dayOfWeek"                                 // DayOfWeek flag
 	HourOfDay                                 = "hourOfDay"                                 // HourOfDay flag
 	StartASAP                                 = "startASAP"                                 // StartASAP flag

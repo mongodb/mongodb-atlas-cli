@@ -38,6 +38,11 @@ export GO111MODULE := on
 export MCLI_E2E_BINARY
 export ATLAS_E2E_BINARY
 
+.PHONY: pre-commit
+pre-commit:  ## Run pre-commit hook
+	@echo "==> Running pre-commit hook..."
+	@scripts/pre-commit.sh
+
 .PHONY: deps
 deps:  ## Download go module dependencies
 	@echo "==> Installing go.mod dependencies..."

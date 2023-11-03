@@ -54,11 +54,11 @@ var distros = map[string]Platform{
 	},
 	"debian10": {
 		extension:     deb,
-		architectures: []string{x86_64},
+		architectures: []string{x86_64, arm64},
 	},
 	"debian11": {
 		extension:     deb,
-		architectures: []string{x86_64},
+		architectures: []string{x86_64, arm64},
 	},
 	"ubuntu2004": {
 		extension:     deb,

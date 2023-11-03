@@ -126,17 +126,6 @@ repos:
     repos:
       - zypper/suse/15/mongodb-org
 
-  - name: debian92
-    type: deb
-    code_name: "stretch"
-    bucket: repo.mongodb.org
-    edition: org
-    component: main
-    architectures:
-      - amd64
-    repos:
-      - apt/debian/dists/stretch/mongodb-org
-
   - name: debian11
     type: deb
     code_name: "bullseye"
@@ -158,20 +147,6 @@ repos:
       - amd64
     repos:
       - apt/debian/dists/buster/mongodb-org
-
-  - name: ubuntu1804
-    type: deb
-    code_name: "bionic"
-    edition: org
-    bucket: repo.mongodb.org
-    component: multiverse
-    architectures:
-      - amd64
-      - i386
-      - s390x
-      - arm64
-    repos:
-      - apt/ubuntu/dists/bionic/mongodb-org
 
   - name: ubuntu2004
     type: deb
@@ -294,32 +269,6 @@ repos:
       - amd64
     repos:
       - apt/debian/dists/buster/mongodb-enterprise
-
-  - name: debian92
-    type: deb
-    edition: enterprise
-    code_name: "stretch"
-    bucket: repo.mongodb.com
-    component: main
-    architectures:
-      - amd64
-    repos:
-      - apt/debian/dists/stretch/mongodb-enterprise
-
-  - name: ubuntu1804
-    type: deb
-    code_name: "bionic"
-    edition: enterprise
-    bucket: repo.mongodb.com
-    component: multiverse
-    architectures:
-      - amd64
-      - ppc64el
-      - i386
-      - s390x
-      - arm64
-    repos:
-      - apt/ubuntu/dists/bionic/mongodb-enterprise
 
   - name: ubuntu2004
     type: deb

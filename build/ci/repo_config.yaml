@@ -134,6 +134,7 @@ repos:
     component: main
     architectures:
       - amd64
+      - arm64
     repos:
       - apt/debian/dists/bullseye/mongodb-org
 
@@ -145,6 +146,7 @@ repos:
     component: main
     architectures:
       - amd64
+      - arm64
     repos:
       - apt/debian/dists/buster/mongodb-org
 
@@ -256,6 +258,7 @@ repos:
     component: main
     architectures:
       - amd64
+      - arm64
     repos:
       - apt/debian/dists/bullseye/mongodb-enterprise
 
@@ -267,6 +270,7 @@ repos:
     component: main
     architectures:
       - amd64
+      - arm64
     repos:
       - apt/debian/dists/buster/mongodb-enterprise
 

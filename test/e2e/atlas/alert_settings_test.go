@@ -83,7 +83,7 @@ func TestAlertConfig(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		var config admin.GroupAlertsConfig
 		require.NoError(t, json.Unmarshal(resp, &config))
-		assert.Equal(t, alertID, config.Id)
+		assert.Equal(t, alertID, config.GetId())
 	})
 
 	t.Run("List", func(t *testing.T) {

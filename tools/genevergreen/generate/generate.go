@@ -41,6 +41,7 @@ var (
 		"rhel9",
 		"debian10",
 		"debian11",
+		"debian12",
 		"ubuntu20.04",
 		"ubuntu22.04",
 	}
@@ -54,6 +55,7 @@ var (
 		"ubuntu22.04":  "ubuntu22.04-deb",
 		"debian10":     "debian10-deb",
 		"debian11":     "debian11-deb",
+		"debian12":     "debian12-deb",
 	}
 	newOs = map[string]string{
 		"centos7":      "rhel70",
@@ -64,6 +66,7 @@ var (
 		"ubuntu22.04":  "ubuntu2204",
 		"debian10":     "debian10",
 		"debian11":     "debian11",
+		"debian12":     "debian12",
 	}
 )
 

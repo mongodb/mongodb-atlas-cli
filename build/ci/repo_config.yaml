@@ -126,6 +126,18 @@ repos:
     repos:
       - zypper/suse/15/mongodb-org
 
+  - name: debian12
+    type: deb
+    code_name: "bookworm"
+    bucket: repo.mongodb.org
+    edition: org
+    component: main
+    architectures:
+      - amd64
+      - arm64
+    repos:
+      - apt/debian/dists/bookworm/mongodb-org
+
   - name: debian11
     type: deb
     code_name: "bullseye"
@@ -249,6 +261,18 @@ repos:
     bucket: repo.mongodb.com
     repos:
       - zypper/suse/15/mongodb-enterprise
+
+  - name: debian12
+    type: deb
+    edition: enterprise
+    code_name: "bookworm"
+    bucket: repo.mongodb.com
+    component: main
+    architectures:
+      - amd64
+      - arm64
+    repos:
+      - apt/debian/dists/bookworm/mongodb-enterprise
 
   - name: debian11
     type: deb

@@ -71,6 +71,21 @@ func TestAlertConfig(t *testing.T) {
 		assert.FailNow(t, "Failed to create alert setting")
 	}
 
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			alertsEntity,
+			configEntity,
+			"get",
+			alertID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+		var config admin.GroupAlertsConfig
+		require.NoError(t, json.Unmarshal(resp, &config))
+		assert.Equal(t, alertID, config.Id)
+	})
+
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,

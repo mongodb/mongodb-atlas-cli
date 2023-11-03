@@ -183,6 +183,7 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(
 		CreateBuilder(),
 		ListBuilder(),
+		describeBuilder(),
 		DeleteBuilder(),
 		FieldsBuilder(),
 		UpdateBuilder(),

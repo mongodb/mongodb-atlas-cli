@@ -19,7 +19,7 @@ import (
 	"go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_alert_configuration.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas AlertConfigurationLister,AlertConfigurationCreator,AlertConfigurationDeleter,AlertConfigurationUpdater,MatcherFieldsLister,AlertConfigurationEnabler,AlertConfigurationDisabler
+//go:generate mockgen -destination=../../mocks/atlas/mock_alert_configuration.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas AlertConfigurationLister,AlertConfigurationCreator,AlertConfigurationDeleter,AlertConfigurationUpdater,MatcherFieldsLister,AlertConfigurationEnabler,AlertConfigurationDisabler,AlertConfigurationDescriber
 
 type AlertConfigurationLister interface {
 	AlertConfigurations(*admin.ListAlertConfigurationsApiParams) (*admin.PaginatedAlertConfig, error)
@@ -47,6 +47,10 @@ type AlertConfigurationEnabler interface {
 
 type AlertConfigurationDisabler interface {
 	DisableAlertConfiguration(string, string) (*admin.GroupAlertsConfig, error)
+}
+
+type AlertConfigurationDescriber interface {
+	AlertConfiguration(string, string) (*admin.GroupAlertsConfig, error)
 }
 
 // AlertConfigurations encapsulate the logic to manage different cloud providers.
@@ -93,5 +97,10 @@ func (s *Store) DisableAlertConfiguration(projectID, id string) (*admin.GroupAle
 		Enabled: pointer.Get(false),
 	}
 	result, _, err := s.clientv2.AlertConfigurationsApi.ToggleAlertConfiguration(s.ctx, projectID, id, &toggle).Execute()
+	return result, err
+}
+
+func (s *Store) AlertConfiguration(projectID, id string) (*admin.GroupAlertsConfig, error) {
+	result, _, err := s.clientv2.AlertConfigurationsApi.GetAlertConfiguration(s.ctx, projectID, id).Execute()
 	return result, err
 }

@@ -53,6 +53,7 @@ Related Commands
 
 * :ref:`atlas-alerts-settings-create` - Create an alert configuration for your project.
 * :ref:`atlas-alerts-settings-delete` - Remove the specified alert configuration for your project.
+* :ref:`atlas-alerts-settings-describe` - Return the details for the specified alert settings for your project.
 * :ref:`atlas-alerts-settings-disable` - Disables one alert configuration for the specified project.
 * :ref:`atlas-alerts-settings-enable` - Enables one alert configuration for the specified project.
 * :ref:`atlas-alerts-settings-fields` - Manages alert configuration fields for your project.
@@ -65,6 +66,7 @@ Related Commands
 
    create </command/atlas-alerts-settings-create>
    delete </command/atlas-alerts-settings-delete>
+   describe </command/atlas-alerts-settings-describe>
    disable </command/atlas-alerts-settings-disable>
    enable </command/atlas-alerts-settings-enable>
    fields </command/atlas-alerts-settings-fields>

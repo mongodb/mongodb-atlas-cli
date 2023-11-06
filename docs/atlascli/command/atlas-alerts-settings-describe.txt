@@ -40,7 +40,7 @@ Arguments
    * - alertConfigId
      - string
      - true
-     - Unique identifier of the alert settings you want to describe..
+     - Unique identifier of the alert settings you want to describe.
 
 Options
 -------

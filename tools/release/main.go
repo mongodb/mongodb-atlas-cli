@@ -117,8 +117,8 @@ func generateFile(name, version string) error {
 		Platform: []Platform{
 			*newPlatform(packageName, version, "x86_64", "linux", "Linux (x86_64)", []string{"tar.gz"}),
 			*newPlatform(packageName, version, "arm64", "linux", "Linux (arm64)", []string{"tar.gz"}),
-			*newPlatform(packageName, version, "x86_64", "linux", "Debian 10, 11 / Ubuntu 18.04, 20.04, 22.04 (x86_64)", []string{"deb"}),
-			*newPlatform(packageName, version, "arm64", "linux", "Debian 10, 11 / Ubuntu 18.04, 20.04, 22.04 (arm64)", []string{"deb"}),
+			*newPlatform(packageName, version, "x86_64", "linux", "Debian 10, 11, 12 / Ubuntu 20.04, 22.04 (x86_64)", []string{"deb"}),
+			*newPlatform(packageName, version, "arm64", "linux", "Debian 10, 11, 12 / Ubuntu 20.04, 22.04 (arm64)", []string{"deb"}),
 			*newPlatform(packageName, version, "x86_64", "linux", "Red Hat + CentOS 7, 8, 9 / SUSE 12 + 15 / Amazon Linux 2 (x86_64)", []string{"rpm"}),
 			*newPlatform(packageName, version, "arm64", "linux", "Red Hat + CentOS 7, 8, 9 / SUSE 12 + 15 / Amazon Linux 2 (arm64)", []string{"rpm"}),
 			*newPlatform(packageName, version, "x86_64", "windows", "Microsoft Windows", []string{"msi", "zip"}),

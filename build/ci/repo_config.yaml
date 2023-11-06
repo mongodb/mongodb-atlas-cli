@@ -126,16 +126,17 @@ repos:
     repos:
       - zypper/suse/15/mongodb-org
 
-  - name: debian92
+  - name: debian12
     type: deb
-    code_name: "stretch"
+    code_name: "bookworm"
     bucket: repo.mongodb.org
     edition: org
     component: main
     architectures:
       - amd64
+      - arm64
     repos:
-      - apt/debian/dists/stretch/mongodb-org
+      - apt/debian/dists/bookworm/mongodb-org
 
   - name: debian11
     type: deb
@@ -145,6 +146,7 @@ repos:
     component: main
     architectures:
       - amd64
+      - arm64
     repos:
       - apt/debian/dists/bullseye/mongodb-org
 
@@ -156,22 +158,9 @@ repos:
     component: main
     architectures:
       - amd64
-    repos:
-      - apt/debian/dists/buster/mongodb-org
-
-  - name: ubuntu1804
-    type: deb
-    code_name: "bionic"
-    edition: org
-    bucket: repo.mongodb.org
-    component: multiverse
-    architectures:
-      - amd64
-      - i386
-      - s390x
       - arm64
     repos:
-      - apt/ubuntu/dists/bionic/mongodb-org
+      - apt/debian/dists/buster/mongodb-org
 
   - name: ubuntu2004
     type: deb
@@ -273,6 +262,18 @@ repos:
     repos:
       - zypper/suse/15/mongodb-enterprise
 
+  - name: debian12
+    type: deb
+    edition: enterprise
+    code_name: "bookworm"
+    bucket: repo.mongodb.com
+    component: main
+    architectures:
+      - amd64
+      - arm64
+    repos:
+      - apt/debian/dists/bookworm/mongodb-enterprise
+
   - name: debian11
     type: deb
     edition: enterprise
@@ -281,6 +282,7 @@ repos:
     component: main
     architectures:
       - amd64
+      - arm64
     repos:
       - apt/debian/dists/bullseye/mongodb-enterprise
 
@@ -292,34 +294,9 @@ repos:
     component: main
     architectures:
       - amd64
-    repos:
-      - apt/debian/dists/buster/mongodb-enterprise
-
-  - name: debian92
-    type: deb
-    edition: enterprise
-    code_name: "stretch"
-    bucket: repo.mongodb.com
-    component: main
-    architectures:
-      - amd64
-    repos:
-      - apt/debian/dists/stretch/mongodb-enterprise
-
-  - name: ubuntu1804
-    type: deb
-    code_name: "bionic"
-    edition: enterprise
-    bucket: repo.mongodb.com
-    component: multiverse
-    architectures:
-      - amd64
-      - ppc64el
-      - i386
-      - s390x
       - arm64
     repos:
-      - apt/ubuntu/dists/bionic/mongodb-enterprise
+      - apt/debian/dists/buster/mongodb-enterprise
 
   - name: ubuntu2004
     type: deb

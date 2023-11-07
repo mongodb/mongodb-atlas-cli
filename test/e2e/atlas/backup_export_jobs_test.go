@@ -64,7 +64,7 @@ func TestExportJobs(t *testing.T) {
 
 		var cluster *atlasv2.AdvancedClusterDescription
 		r.NoError(json.Unmarshal(resp, &cluster))
-		ensureCluster(t, cluster, clusterName, tierM10, 10, false)
+		ensureCluster(t, cluster, clusterName, e2eSharedMDBVer, 10, false)
 	})
 	t.Cleanup(func() {
 		require.NoError(t, deleteClusterForProject("", clusterName))

@@ -21,14 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestRestoresListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockContinuousJobLister(ctrl)
 
-	expected := &mongodbatlas.ContinuousJobs{}
+	expected := &opsmngr.ContinuousJobs{}
 	clusterID := "5ec2ac941271767f21cbaeff"
 
 	listOpts := &RestoresListOpts{

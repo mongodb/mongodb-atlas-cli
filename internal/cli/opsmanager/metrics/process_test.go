@@ -21,7 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const oneMinute = "PT1M"
@@ -30,7 +30,7 @@ func TestProcess_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockHostMeasurementLister(ctrl)
 
-	expected := &mongodbatlas.ProcessMeasurements{}
+	expected := &opsmngr.ProcessMeasurements{}
 
 	listOpts := &ProcessOpts{
 		hostID: "hard-00-00.mongodb.net",

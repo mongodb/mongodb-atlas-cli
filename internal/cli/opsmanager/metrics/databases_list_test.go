@@ -21,14 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestDatabasesListsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockHostDatabaseLister(ctrl)
 
-	expected := &mongodbatlas.ProcessDatabasesResponse{}
+	expected := &opsmngr.ProcessDatabasesResponse{}
 
 	listOpts := &DatabasesListsOpts{
 		hostID: "1",

@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const (
@@ -72,8 +72,8 @@ func (opts *RestoresStartOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *RestoresStartOpts) newContinuousJobRequest() *atlas.ContinuousJobRequest {
-	request := &atlas.ContinuousJobRequest{SnapshotID: opts.snapshotID}
+func (opts *RestoresStartOpts) newContinuousJobRequest() *opsmngr.ContinuousJobRequest {
+	request := &opsmngr.ContinuousJobRequest{SnapshotID: opts.snapshotID}
 	request.Delivery.MethodName = opts.method
 
 	if opts.isAutomatedRestore() {

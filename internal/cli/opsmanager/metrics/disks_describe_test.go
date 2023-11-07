@@ -21,16 +21,16 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestDisksDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockHostDiskMeasurementsLister(ctrl)
 
-	expected := &mongodbatlas.ProcessDiskMeasurements{
-		ProcessMeasurements: &mongodbatlas.ProcessMeasurements{
-			Measurements: []*mongodbatlas.Measurements{},
+	expected := &opsmngr.ProcessDiskMeasurements{
+		ProcessMeasurements: &opsmngr.ProcessMeasurements{
+			Measurements: []*opsmngr.Measurements{},
 		},
 	}
 

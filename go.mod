@@ -47,7 +47,7 @@ require (
 	go.mongodb.org/atlas v0.35.0
 	go.mongodb.org/atlas-sdk/v20231001002 v20231001002.0.0
 	go.mongodb.org/mongo-driver v1.12.1
-	go.mongodb.org/ops-manager v0.55.2
+	go.mongodb.org/ops-manager v0.55.3
 	golang.org/x/crypto v0.14.0
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
 	golang.org/x/mod v0.13.0

@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockContinuousSnapshotsLister(ctrl)
 
-	expected := &mongodbatlas.ContinuousSnapshots{}
+	expected := &opsmngr.ContinuousSnapshots{}
 
 	clusterID := "5ec2ac941271767f21cbaefe"
 

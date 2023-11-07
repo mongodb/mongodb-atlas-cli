@@ -58,7 +58,7 @@ func TestSnapshots(t *testing.T) {
 		err = json.Unmarshal(resp, &cluster)
 		r.NoError(err)
 
-		ensureCluster(t, cluster, clusterName, tierM10, 10, false)
+		ensureCluster(t, cluster, clusterName, e2eSharedMDBVer, 10, false)
 	})
 
 	t.Run("Watch create cluster", func(t *testing.T) {

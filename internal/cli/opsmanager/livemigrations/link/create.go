@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 var createTemplate = "Organization link successfully created.\n"
@@ -54,8 +54,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newCreateLinkRequest() *mongodbatlas.LinkToken {
-	return &mongodbatlas.LinkToken{
+func (opts *CreateOpts) newCreateLinkRequest() *opsmngr.LinkToken {
+	return &opsmngr.LinkToken{
 		LinkToken: opts.linkToken,
 	}
 }

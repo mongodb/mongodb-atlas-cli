@@ -24,7 +24,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -39,7 +38,7 @@ func TestLinkCreateOpts_Run(t *testing.T) {
 	}
 
 	mockStore.
-		EXPECT().ConnectOrganizations(createOpts.OrgID, &mongodbatlas.LinkToken{LinkToken: "test"}).Return(&opsmngr.ConnectionStatus{}, nil).
+		EXPECT().ConnectOrganizations(createOpts.OrgID, &opsmngr.LinkToken{LinkToken: "test"}).Return(&opsmngr.ConnectionStatus{}, nil).
 		Times(1)
 
 	if err := createOpts.Run(); err != nil {

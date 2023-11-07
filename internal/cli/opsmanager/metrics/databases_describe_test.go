@@ -22,7 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestDatabasesDescribeOpts_Run(t *testing.T) {
@@ -36,9 +36,9 @@ func TestDatabasesDescribeOpts_Run(t *testing.T) {
 	}
 
 	opts := listOpts.NewProcessMetricsListOptions()
-	expected := &mongodbatlas.ProcessDatabaseMeasurements{
-		ProcessMeasurements: &mongodbatlas.ProcessMeasurements{
-			Measurements: []*mongodbatlas.Measurements{},
+	expected := &opsmngr.ProcessDatabaseMeasurements{
+		ProcessMeasurements: &opsmngr.ProcessMeasurements{
+			Measurements: []*opsmngr.Measurements{},
 		},
 	}
 	mockStore.

@@ -21,14 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestDisksListsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockHostDisksLister(ctrl)
 
-	expected := &mongodbatlas.ProcessDisksResponse{}
+	expected := &opsmngr.ProcessDisksResponse{}
 
 	listOpts := &DisksListsOpts{
 		hostID: "1",

@@ -21,14 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestRestoresStart_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockContinuousJobCreator(ctrl)
 
-	expected := &mongodbatlas.ContinuousJobs{}
+	expected := &opsmngr.ContinuousJobs{}
 
 	t.Run(automatedRestore, func(t *testing.T) {
 		listOpts := &RestoresStartOpts{

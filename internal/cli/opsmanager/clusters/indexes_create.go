@@ -104,8 +104,8 @@ func (opts *IndexesCreateOpts) newIndex() (*opsmngr.IndexConfig, error) {
 	return i, nil
 }
 
-func (opts *IndexesCreateOpts) newIndexOptions() *atlas.IndexOptions {
-	return &atlas.IndexOptions{
+func (opts *IndexesCreateOpts) newIndexOptions() *opsmngr.IndexOptions {
+	return &opsmngr.IndexOptions{
 		Sparse: opts.sparse,
 		Name:   opts.name,
 	}

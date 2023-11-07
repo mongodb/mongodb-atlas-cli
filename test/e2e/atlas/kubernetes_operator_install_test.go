@@ -273,11 +273,11 @@ func setupCluster(t *testing.T, name string, namespaces ...string) *operatorHelp
 	t.Helper()
 
 	t.Logf("creating cluster %s", name)
-	err := createCluster(name)
+	err := createK8SCluster(name)
 	require.NoError(t, err)
 
 	t.Cleanup(func() {
-		err = deleteCluster(name)
+		err = deleteK8SCluster(name)
 		require.NoError(t, err)
 	})
 

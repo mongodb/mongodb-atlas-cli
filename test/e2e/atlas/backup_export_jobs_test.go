@@ -63,10 +63,11 @@ func TestExportJobs(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		var cluster *atlasv2.AdvancedClusterDescription
-		err = json.Unmarshal(resp, &cluster)
-		r.NoError(err)
-
+		r.NoError(json.Unmarshal(resp, &cluster))
 		ensureCluster(t, cluster, clusterName, tierM10, 10, false)
+	})
+	t.Cleanup(func() {
+		require.NoError(t, deleteClusterForProject("", clusterName))
 	})
 
 	t.Run("Watch create cluster", func(t *testing.T) {
@@ -235,33 +236,6 @@ func TestExportJobs(t *testing.T) {
 			snapshotID,
 			"--clusterName",
 			clusterName)
-		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
-	})
-
-	t.Run("Delete cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"delete",
-			clusterName,
-			"--force",
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		r.NoError(err, string(resp))
-
-		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
-		a := assert.New(t)
-		a.Equal(expected, string(resp))
-	})
-
-	t.Run("Watch delete cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-		)
 		cmd.Env = os.Environ()
 		resp, _ := cmd.CombinedOutput()
 		t.Log(string(resp))

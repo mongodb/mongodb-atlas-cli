@@ -53,7 +53,7 @@ func TestCreateOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	request := opts.newOnlineArchive()
+	request, _ := opts.newOnlineArchive()
 
 	expected := &atlasv2.BackupOnlineArchive{}
 	mockStore.

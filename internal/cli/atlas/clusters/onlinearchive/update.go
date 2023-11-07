@@ -21,10 +21,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
@@ -37,6 +39,8 @@ type UpdateOpts struct {
 	archiveAfter    int
 	expireAfterDays int
 	store           store.OnlineArchiveUpdater
+	filename        string
+	fs              afero.Fs
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -50,7 +54,11 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 var updateTemplate = "Online archive '{{.Id}}' updated.\n"
 
 func (opts *UpdateOpts) Run() error {
-	archive := opts.newOnlineArchive()
+	archive, err := opts.newOnlineArchive()
+	if err != nil {
+		return err
+	}
+
 	r, err := opts.store.UpdateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
 	if err != nil {
 		return err
@@ -59,7 +67,15 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchive {
+func (opts *UpdateOpts) newOnlineArchive() (*atlasv2.BackupOnlineArchive, error) {
+	if opts.filename != "" {
+		var archive *atlasv2.BackupOnlineArchive
+		if err := file.Load(opts.fs, opts.filename, &archive); err != nil {
+			return nil, err
+		}
+		return archive, nil
+	}
+
 	archive := &atlasv2.BackupOnlineArchive{
 		Id: &opts.id,
 		Criteria: &atlasv2.Criteria{
@@ -73,12 +89,14 @@ func (opts *UpdateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchive {
 		}
 	}
 
-	return archive
+	return archive, nil
 }
 
 // mongocli atlas cluster(s) onlineArchive(s) start <archiveId> [--clusterName name][--archiveAfter N] [--projectId projectId].
 func UpdateBuilder() *cobra.Command {
-	opts := &UpdateOpts{}
+	opts := &UpdateOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "update <archiveId>",
 		Short: "Modify the archiving rule for the specified online archive for a cluster.",
@@ -91,6 +109,9 @@ func UpdateBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  # Update the archiving rule to archive after 5 days for the online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
   %s clusters onlineArchives update 5f189832e26ec075e10c32d3 --clusterName --archiveAfter 5 myCluster --output json`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if opts.filename == "" {
+				_ = cmd.MarkFlagRequired(flag.ArchiveAfter)
+			}
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
@@ -106,13 +127,15 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().IntVar(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
 	cmd.Flags().IntVar(&opts.expireAfterDays, flag.ExpireAfterDays, 0, usage.ExpireAfterDays)
+	cmd.Flags().StringVar(&opts.filename, flag.File, "", usage.OnlineArchiveFilename)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
-	_ = cmd.MarkFlagRequired(flag.ArchiveAfter)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.ArchiveAfter)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.ExpireAfterDays)
 
 	return cmd
 }

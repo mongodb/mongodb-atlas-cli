@@ -453,7 +453,7 @@ dbName and collection are required only for built-in roles.`
 	EnableWatchDefault                        = "Flag that indicates whether to watch the command until it completes its execution or the watch times out."
 	WatchTimeout                              = "Time in seconds until a watch times out. After a watch times out, the CLI no longer watches the command."
 	CompactResponse                           = "Flag that enables the compact array response structure for a json output. The --compact option returns array objects as top-level responses and allows backward compatibility for scripts based on previous CLI versions. Omitting the --compact option for a json output returns array objects within a 'results' sub-array. You must specify --output json to use this option."
-	DataFederationFile                        = "Path to an optional JSON configuration file that defines data federation settings."
+	DataFederationFile                        = "Path to an optional JSON configuration file that defines data federation settings. . To learn more about configuration files for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/reference/json/data-federation-config-file/."
 	BackupCompliancePolicyFile                = "Path to a JSON configuration file that defines backup compliance policy settings."
 	DataFederationType                        = "Type of Federated Database Instances to return."
 	DataFederation                            = "Identifier of the Federated Database Instance."
@@ -470,4 +470,5 @@ dbName and collection are required only for built-in roles.`
 	LogHostName                               = "Name of the host that stores the log files that you want to download."
 	requiredForAtlas                          = "Required when creating organizations authenticated with API Keys."
 	Decompress                                = "Flag that indicates whether to decompress the log files."
+	OnlineArchiveFilename                     = "Path to an optional JSON configuration file that defines online archive settings. To learn more about configuration files for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/reference/json/."
 )

@@ -68,7 +68,7 @@ Options
    * - -f, --file
      - string
      - false
-     - Path to an optional JSON configuration file that defines data federation settings.
+     - Path to an optional JSON configuration file that defines data federation settings. . To learn more about configuration files for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/reference/json/data-federation-config-file/.
 
        Mutually exclusive with --region, --awsRoleId, --awsTestS3Bucket.
    * - -h, --help

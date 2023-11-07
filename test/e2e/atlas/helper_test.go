@@ -881,12 +881,12 @@ func ensureSharedCluster(t *testing.T, cluster *atlasv2.LegacyAtlasCluster, clus
 	t.Helper()
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.GetName())
-	a.Equal(e2eSharedMDBVer, cluster.MongoDBMajorVersion)
+	a.Equal(e2eSharedMDBVer, cluster.GetMongoDBMajorVersion())
 	if cluster.ProviderSettings != nil {
 		a.Equal(tier, cluster.ProviderSettings.GetInstanceSizeName())
 	}
-	a.InDelta(diskSizeGB, *cluster.DiskSizeGB, 0.01)
-	a.Equal(terminationProtection, *cluster.TerminationProtectionEnabled)
+	a.InDelta(diskSizeGB, cluster.GetDiskSizeGB(), 0.01)
+	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
 }
 
 func compareStingsWithHiddenPart(expectedSting, actualString string, specialChar uint8) bool {

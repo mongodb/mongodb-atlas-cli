@@ -17,7 +17,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/kms v1.26.0
 	github.com/briandowns/spinner v1.23.0
 	github.com/containers/common v0.56.0
-	github.com/containers/podman/v4 v4.7.0
+	github.com/containers/podman/v4 v4.7.2
 	github.com/creack/pty v1.1.20
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/evergreen-ci/shrub v0.0.0-20230905131908-6b01f04bb1d2

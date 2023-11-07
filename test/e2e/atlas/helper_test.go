@@ -883,7 +883,7 @@ func ensureSharedCluster(t *testing.T, cluster *atlasv2.LegacyAtlasCluster, clus
 	a.Equal(clusterName, cluster.GetName())
 	a.Equal(e2eSharedMDBVer, cluster.MongoDBMajorVersion)
 	if cluster.ProviderSettings != nil {
-		a.Equal(tier, cluster.ProviderSettings.InstanceSizeName)
+		a.Equal(tier, cluster.ProviderSettings.GetInstanceSizeName())
 	}
 	a.InDelta(diskSizeGB, *cluster.DiskSizeGB, 0.01)
 	a.Equal(terminationProtection, *cluster.TerminationProtectionEnabled)

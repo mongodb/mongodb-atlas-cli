@@ -352,17 +352,17 @@ func newAvailableRegion(projectID, tier, provider string) (string, error) {
 		return "", fmt.Errorf("error getting regions %w: %s", err, string(resp))
 	}
 
-	var cloudProviders mongodbatlas.CloudProviders
+	var cloudProviders atlasv2.PaginatedApiAtlasProviderRegions
 	err = json.Unmarshal(resp, &cloudProviders)
 	if err != nil {
 		return "", fmt.Errorf("error unmarshaling response %w: %s", err, string(resp))
 	}
 
-	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {
+	if cloudProviders.GetTotalCount() == 0 || len(cloudProviders.GetResults()[0].InstanceSizes) == 0 {
 		return "", errNoRegions
 	}
 
-	return cloudProviders.Results[0].InstanceSizes[0].AvailableRegions[0].Name, nil
+	return cloudProviders.Results[0].GetInstanceSizes()[0].GetAvailableRegions()[0].GetName(), nil
 }
 
 func RandClusterName() (string, error) {
@@ -494,11 +494,11 @@ func getFirstOrgUser() (string, error) {
 		return "", fmt.Errorf("%s (%w)", string(resp), err)
 	}
 
-	var users mongodbatlas.AtlasUsersResponse
+	var users atlasv2.PaginatedAppUser
 	if err := json.Unmarshal(resp, &users); err != nil {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
-	if len(users.Results) == 0 {
+	if users.GetTotalCount() == 0 {
 		return "", fmt.Errorf("no users found")
 	}
 
@@ -525,12 +525,12 @@ func createTeam(teamName, userName string) (string, error) {
 		return "", fmt.Errorf("%s (%w)", string(resp), err)
 	}
 
-	var team mongodbatlas.Team
+	var team atlasv2.Team
 	if err := json.Unmarshal(resp, &team); err != nil {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 
-	return team.ID, nil
+	return team.GetId(), nil
 }
 
 func createProject(projectName string) (string, error) {
@@ -554,12 +554,12 @@ func createProject(projectName string) (string, error) {
 		return "", fmt.Errorf("%s (%w)", string(resp), err)
 	}
 
-	var project mongodbatlas.Project
+	var project atlasv2.Group
 	if err := json.Unmarshal(resp, &project); err != nil {
 		return "", fmt.Errorf("invalid response: %s (%w)", string(resp), err)
 	}
 
-	return project.ID, nil
+	return project.GetId(), nil
 }
 
 func createProjectWithoutAlertSettings(projectName string) (string, error) {
@@ -603,13 +603,13 @@ func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
 	resp, err := cmd.CombinedOutput()
 	t.Log(string(resp))
 	require.NoError(t, err)
-	var clusters mongodbatlas.AdvancedClustersResponse
+	var clusters atlasv2.PaginatedAdvancedClusterDescription
 	require.NoError(t, json.Unmarshal(resp, &clusters))
 	for _, cluster := range clusters.Results {
-		if cluster.StateName == "DELETING" {
+		if cluster.GetStateName() == "DELETING" {
 			continue
 		}
-		assert.NoError(t, deleteClusterForProject(projectID, cluster.Name)) //nolint: testifylint // we want to check all instead of failing early
+		assert.NoError(t, deleteClusterForProject(projectID, cluster.GetName())) //nolint: testifylint // we want to check all instead of failing early
 	}
 }
 
@@ -647,11 +647,11 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 	resp, err := cmd.CombinedOutput()
 	t.Log("available network peers", string(resp))
 	require.NoError(t, err)
-	var networkPeers []mongodbatlas.Peer
+	var networkPeers []atlasv2.BaseNetworkPeeringConnectionSettings
 	err = json.Unmarshal(resp, &networkPeers)
 	require.NoError(t, err)
 	for _, peer := range networkPeers {
-		peerID := peer.ID
+		peerID := peer.GetId()
 		cmd = exec.Command(cliPath,
 			networkingEntity,
 			networkPeeringEntity,
@@ -677,18 +677,18 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 		deletePrivateEndpoint(t, cliPath, projectID, provider, endpoint.GetId())
 	}
 
-	clear := false
+	done := false
 	for attempt := 0; attempt < 10; attempt++ {
 		privateEndpoints = listPrivateEndpointsByProject(t, cliPath, projectID, provider)
 		if len(privateEndpoints) == 0 {
 			t.Logf("all %s private endpoints successfully deleted", provider)
-			clear = true
+			done = true
 			break
 		}
 		time.Sleep(sleep)
 	}
 
-	require.True(t, clear, "failed to clean all private endpoints")
+	require.True(t, done, "failed to clean all private endpoints")
 }
 
 func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider string) []atlasv2.EndpointService {
@@ -877,10 +877,10 @@ func ensureCluster(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, cl
 	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
 }
 
-func ensureSharedCluster(t *testing.T, cluster *mongodbatlas.Cluster, clusterName, tier string, diskSizeGB float64, terminationProtection bool) {
+func ensureSharedCluster(t *testing.T, cluster *atlasv2.LegacyAtlasCluster, clusterName, tier string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)
-	a.Equal(clusterName, cluster.Name)
+	a.Equal(clusterName, cluster.GetName())
 	a.Equal(e2eSharedMDBVer, cluster.MongoDBMajorVersion)
 	if cluster.ProviderSettings != nil {
 		a.Equal(tier, cluster.ProviderSettings.InstanceSizeName)

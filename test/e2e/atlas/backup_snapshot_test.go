@@ -26,7 +26,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestSnapshots(t *testing.T) {
@@ -55,11 +54,11 @@ func TestSnapshots(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		r.NoError(err, string(resp))
 
-		var cluster *atlas.Cluster
+		var cluster *atlasv2.AdvancedClusterDescription
 		err = json.Unmarshal(resp, &cluster)
 		r.NoError(err)
 
-		ensureSharedCluster(t, cluster, clusterName, tierM10, 10, false)
+		ensureCluster(t, cluster, clusterName, tierM10, 10, false)
 	})
 
 	t.Run("Watch create cluster", func(t *testing.T) {

@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
 
 func TestDataFederation(t *testing.T) {
@@ -62,9 +62,9 @@ func TestDataFederation(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var dataLake atlas.DataLake
+		var dataLake atlas.DataLakeTenant
 		require.NoError(t, json.Unmarshal(resp, &dataLake))
-		a.Equal(dataFederationName, dataLake.Name)
+		a.Equal(dataFederationName, dataLake.GetName())
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -79,9 +79,9 @@ func TestDataFederation(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var dataLake atlas.DataLake
+		var dataLake atlas.DataLakeTenant
 		require.NoError(t, json.Unmarshal(resp, &dataLake))
-		a.Equal(dataFederationName, dataLake.Name)
+		a.Equal(dataFederationName, dataLake.GetName())
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -93,7 +93,7 @@ func TestDataFederation(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		r.NoError(err, string(resp))
 
-		var r []atlas.DataLake
+		var r []atlas.DataLakeTenant
 		a := assert.New(t)
 		require.NoError(t, json.Unmarshal(resp, &r))
 		a.NotEmpty(r)
@@ -112,10 +112,10 @@ func TestDataFederation(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		r.NoError(err, string(resp))
 
-		var dataLake atlas.DataLake
+		var dataLake atlas.DataLakeTenant
 		a := assert.New(t)
 		require.NoError(t, json.Unmarshal(resp, &dataLake))
-		a.Equal(updateRegion, dataLake.DataProcessRegion.Region)
+		a.Equal(updateRegion, dataLake.GetDataProcessRegion().Region)
 	})
 
 	t.Run("Log", func(t *testing.T) {

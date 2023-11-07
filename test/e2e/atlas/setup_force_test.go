@@ -27,7 +27,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestSetup(t *testing.T) {
@@ -107,9 +106,9 @@ func TestSetup(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var user mongodbatlas.DatabaseUser
+		var user atlasv2.CloudDatabaseUser
 		require.NoError(t, json.Unmarshal(resp, &user), string(resp))
-		assert.Equal(t, dbUserUsername, user.Username)
+		assert.Equal(t, dbUserUsername, user.GetUsername())
 	})
 
 	t.Run("Describe Cluster", func(t *testing.T) {

@@ -26,7 +26,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDataFederationQueryLimit(t *testing.T) {
@@ -60,9 +59,9 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		a := assert.New(t)
-		var dataLake atlas.DataLake
+		var dataLake atlasv2.DataLakeTenant
 		require.NoError(t, json.Unmarshal(resp, &dataLake))
-		a.Equal(dataFederationName, dataLake.Name)
+		a.Equal(dataFederationName, dataLake.GetName())
 	})
 
 	t.Run("Create", func(t *testing.T) {

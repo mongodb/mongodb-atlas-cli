@@ -131,14 +131,6 @@ To learn more about online archives, see https://www.mongodb.com/docs/atlas/onli
   # Create an online archive for the sample_mflix.movies collection in a cluster named myTestCluster using a profile named egAtlasProfile when the current date is greater than the value of the released date plus 2 days. Data is partitioned based on the title field, year field, and released field from the documents in the collection:
   %[1]s clusters onlineArchive create --clusterName myTestCluster --db sample_mflix --collection movies --dateField released --archiveAfter 2 --partition title,year --output json -P egAtlasProfile `, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if opts.filename == "" {
-				_ = cmd.MarkFlagRequired(flag.ClusterName)
-				_ = cmd.MarkFlagRequired(flag.Database)
-				_ = cmd.MarkFlagRequired(flag.Collection)
-				_ = cmd.MarkFlagRequired(flag.DateField)
-				_ = cmd.MarkFlagRequired(flag.ArchiveAfter)
-			}
-
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
@@ -159,10 +151,17 @@ To learn more about online archives, see https://www.mongodb.com/docs/atlas/onli
 	cmd.Flags().IntVar(&opts.expireAfterDays, flag.ExpireAfterDays, 0, usage.ExpireAfterDays)
 	cmd.Flags().StringSliceVar(&opts.partitions, flag.Partition, nil, usage.PartitionFields)
 	cmd.Flags().StringVar(&opts.filename, flag.File, "", usage.OnlineArchiveFilename)
+	_ = cmd.MarkFlagFilename(flag.File)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+
+	_ = cmd.MarkFlagRequired(flag.ClusterName)
+
+	cmd.MarkFlagsRequiredTogether(flag.Database, flag.Collection, flag.DateField, flag.ArchiveAfter)
+
+	cmd.MarkFlagsOneRequired(flag.Database, flag.Collection, flag.DateField, flag.ArchiveAfter, flag.File)
 
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Database)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Collection)

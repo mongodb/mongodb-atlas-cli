@@ -49,7 +49,7 @@ Options
        Mutually exclusive with --file.
    * - --clusterName
      - string
-     - false
+     - true
      - Name of the cluster.
    * - --collection
      - string

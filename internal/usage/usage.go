@@ -470,5 +470,5 @@ dbName and collection are required only for built-in roles.`
 	LogHostName                               = "Name of the host that stores the log files that you want to download."
 	requiredForAtlas                          = "Required when creating organizations authenticated with API Keys."
 	Decompress                                = "Flag that indicates whether to decompress the log files."
-	OnlineArchiveFilename                     = "Path to an optional JSON configuration file that defines online archive settings. To learn more about configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-reference-json."
+	OnlineArchiveFilename                     = "Path to an optional JSON configuration file that defines online archive settings. To learn more about configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-json-online-archive-config."
 )

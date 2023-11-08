@@ -342,7 +342,7 @@ dbName and collection are required only for built-in roles.`
 	AWSIAMType                                = "AWS IAM method by which the provided username is authenticated. Valid values are NONE, USER, or ROLE. If you set this to USER or ROLE, the user authenticates with IAM credentials and doesn't need a password. If you set this to USER or ROLE, you can't set --x509Type or --ldapType to any value other than NONE."
 	X509Type                                  = "X.509 method for authenticating the specified username. Valid values include NONE, MANAGED, and CUSTOMER. If you set this to MANAGED the user authenticates with an Atlas-managed X.509 certificate. If you set this to CUSTOMER, the user authenticates with a self-managed X.509 certificate. If you set this to MANAGED or CUSTOMER, you can't set --awsIAMType or --ldapType to any value other than NONE."
 	LDAPType                                  = "LDAP method by which the provided username is authenticated. Valid values are NONE, USER, or GROUP. If you set this to USER or GROUP, the user authenticates with LDAP. If you set this to USER or GROUP, you can't set --x509Type or --awsIAMType to any value other than NONE."
-	DateFormat                                = "Date format for the date field. Valid values are ISODATE, EPOCH_SECONDS, EPOCH_MILLIS, or EPOCH_NANOSECONDS."
+	DateFormat                                = `Date format for the date field. Valid values are "ISODATE", "EPOCH_SECONDS", "EPOCH_MILLIS", or "EPOCH_NANOSECONDS".`
 	ServerUsageFormat                         = "Compression format of the resulting report. Valid values are ZIP, TAR, or .GZ."
 	S3AuthMethod                              = "Method used to authorize access to the Amazon S3 bucket specified in s3BucketName. Valid values are KEYS or IAM_ROLE."
 	ClusterCheckpointIntervalMin              = "Number of minutes between successive cluster checkpoints. Valid values are 15, 30, or 60."
@@ -453,7 +453,7 @@ dbName and collection are required only for built-in roles.`
 	EnableWatchDefault                        = "Flag that indicates whether to watch the command until it completes its execution or the watch times out."
 	WatchTimeout                              = "Time in seconds until a watch times out. After a watch times out, the CLI no longer watches the command."
 	CompactResponse                           = "Flag that enables the compact array response structure for a json output. The --compact option returns array objects as top-level responses and allows backward compatibility for scripts based on previous CLI versions. Omitting the --compact option for a json output returns array objects within a 'results' sub-array. You must specify --output json to use this option."
-	DataFederationFile                        = "Path to an optional JSON configuration file that defines data federation settings. . To learn more about configuration files for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/reference/json/data-federation-config-file/."
+	DataFederationFile                        = "Path to an optional JSON configuration file that defines data federation settings. To learn more about configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-json-data-federation-config."
 	BackupCompliancePolicyFile                = "Path to a JSON configuration file that defines backup compliance policy settings."
 	DataFederationType                        = "Type of Federated Database Instances to return."
 	DataFederation                            = "Identifier of the Federated Database Instance."
@@ -470,5 +470,5 @@ dbName and collection are required only for built-in roles.`
 	LogHostName                               = "Name of the host that stores the log files that you want to download."
 	requiredForAtlas                          = "Required when creating organizations authenticated with API Keys."
 	Decompress                                = "Flag that indicates whether to decompress the log files."
-	OnlineArchiveFilename                     = "Path to an optional JSON configuration file that defines online archive settings. To learn more about configuration files for the Atlas CLI, see https://www.mongodb.com/docs/atlas/cli/stable/reference/json/."
+	OnlineArchiveFilename                     = "Path to an optional JSON configuration file that defines online archive settings. To learn more about configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-reference-json."
 )

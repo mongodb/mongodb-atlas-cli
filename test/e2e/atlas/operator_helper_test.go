@@ -66,7 +66,7 @@ func newOperatorHelper(t *testing.T) (*operatorHelper, error) {
 	}, nil
 }
 
-func createCluster(name string) error {
+func createK8SCluster(name string) error {
 	clusterConfig := &v1alpha4.Cluster{
 		Networking: v1alpha4.Networking{
 			IPFamily: v1alpha4.IPv4Family,
@@ -74,28 +74,18 @@ func createCluster(name string) error {
 	}
 
 	provider := cluster.NewProvider(cluster.ProviderWithDocker())
-	err := provider.Create(
+	return provider.Create(
 		name,
 		cluster.CreateWithV1Alpha4Config(clusterConfig),
 		cluster.CreateWithWaitForReady(1*time.Minute),
 		cluster.CreateWithDisplayUsage(false),
 		cluster.CreateWithDisplaySalutation(false),
 	)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
-func deleteCluster(name string) error {
+func deleteK8SCluster(name string) error {
 	provider := cluster.NewProvider(cluster.ProviderWithDocker())
-	err := provider.Delete(name, "")
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return provider.Delete(name, "")
 }
 
 func (oh *operatorHelper) getK8sObject(key client.ObjectKey, object client.Object, track bool) error {
@@ -125,12 +115,7 @@ func (oh *operatorHelper) createK8sObject(object client.Object, track bool) erro
 }
 
 func (oh *operatorHelper) deleteK8sObject(object client.Object) error {
-	err := oh.k8sClient.Delete(context.Background(), object, &client.DeleteOptions{})
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return oh.k8sClient.Delete(context.Background(), object, &client.DeleteOptions{})
 }
 
 func (oh *operatorHelper) getPodFromDeployment(deployment *appsv1.Deployment) ([]corev1.Pod, error) {

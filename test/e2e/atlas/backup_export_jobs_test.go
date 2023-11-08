@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (atlas && backup && exports && jobs)
 
 package atlas_test
@@ -26,7 +27,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestExportJobs(t *testing.T) {
@@ -62,11 +62,12 @@ func TestExportJobs(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		r.NoError(err, string(resp))
 
-		var cluster *atlas.Cluster
-		err = json.Unmarshal(resp, &cluster)
-		r.NoError(err)
-
-		ensureSharedCluster(t, cluster, clusterName, tierM10, 10, false)
+		var cluster *atlasv2.AdvancedClusterDescription
+		r.NoError(json.Unmarshal(resp, &cluster))
+		ensureCluster(t, cluster, clusterName, e2eSharedMDBVer, 10, false)
+	})
+	t.Cleanup(func() {
+		require.NoError(t, deleteClusterForProject("", clusterName))
 	})
 
 	t.Run("Watch create cluster", func(t *testing.T) {
@@ -235,33 +236,6 @@ func TestExportJobs(t *testing.T) {
 			snapshotID,
 			"--clusterName",
 			clusterName)
-		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
-	})
-
-	t.Run("Delete cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"delete",
-			clusterName,
-			"--force",
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		r.NoError(err, string(resp))
-
-		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
-		a := assert.New(t)
-		a.Equal(expected, string(resp))
-	})
-
-	t.Run("Watch delete cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-		)
 		cmd.Env = os.Environ()
 		resp, _ := cmd.CombinedOutput()
 		t.Log(string(resp))

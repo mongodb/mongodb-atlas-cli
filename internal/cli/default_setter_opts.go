@@ -357,9 +357,7 @@ func (opts *DefaultSetterOpts) SetUpOrg() {
 }
 
 func (opts *DefaultSetterOpts) SetUpOutput() {
-	if opts.Output != plaintextFormat {
-		config.SetOutput(opts.Output)
-	}
+	config.SetOutput(opts.Output)
 }
 
 // atlasProjects transform []*atlas.Project to a []string of ids and another for names.

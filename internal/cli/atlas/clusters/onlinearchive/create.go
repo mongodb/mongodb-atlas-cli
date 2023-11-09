@@ -21,10 +21,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
 )
@@ -41,6 +43,8 @@ type CreateOpts struct {
 	partitions      []string
 	expireAfterDays int
 	store           store.OnlineArchiveCreator
+	filename        string
+	fs              afero.Fs
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -54,7 +58,10 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 var createTemplate = "Online archive '{{.Id}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
-	archive := opts.newOnlineArchive()
+	archive, err := opts.newOnlineArchive()
+	if err != nil {
+		return err
+	}
 
 	r, err := opts.store.CreateOnlineArchive(opts.ConfigProjectID(), opts.clusterName, archive)
 	if err != nil {
@@ -64,7 +71,15 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchiveCreate {
+func (opts *CreateOpts) newOnlineArchive() (*atlasv2.BackupOnlineArchiveCreate, error) {
+	if opts.filename != "" {
+		var archive *atlasv2.BackupOnlineArchiveCreate
+		if err := file.Load(opts.fs, opts.filename, &archive); err != nil {
+			return nil, err
+		}
+		return archive, nil
+	}
+
 	archive := &atlasv2.BackupOnlineArchiveCreate{
 		CollName: opts.collection,
 		Criteria: atlasv2.Criteria{
@@ -82,7 +97,7 @@ func (opts *CreateOpts) newOnlineArchive() *atlasv2.BackupOnlineArchiveCreate {
 		}
 	}
 
-	return archive
+	return archive, nil
 }
 
 func (opts *CreateOpts) partitionFields() []atlasv2.PartitionField {
@@ -98,7 +113,9 @@ func (opts *CreateOpts) partitionFields() []atlasv2.PartitionField {
 
 // mongocli atlas cluster(s) onlineArchive(s) create [--clusterName clusterName] [--db dbName][--collection collection][--partition fieldName:fieldType][--projectId projectId].
 func CreateBuilder() *cobra.Command {
-	opts := &CreateOpts{}
+	opts := &CreateOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create an online archive for a collection in the specified cluster.",
@@ -133,16 +150,26 @@ To learn more about online archives, see https://www.mongodb.com/docs/atlas/onli
 	cmd.Flags().IntVar(&opts.archiveAfter, flag.ArchiveAfter, 0, usage.ArchiveAfter)
 	cmd.Flags().IntVar(&opts.expireAfterDays, flag.ExpireAfterDays, 0, usage.ExpireAfterDays)
 	cmd.Flags().StringSliceVar(&opts.partitions, flag.Partition, nil, usage.PartitionFields)
+	cmd.Flags().StringVar(&opts.filename, flag.File, "", usage.OnlineArchiveFilename)
+	_ = cmd.MarkFlagFilename(flag.File)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
-	_ = cmd.MarkFlagRequired(flag.Database)
-	_ = cmd.MarkFlagRequired(flag.Collection)
-	_ = cmd.MarkFlagRequired(flag.DateField)
-	_ = cmd.MarkFlagRequired(flag.ArchiveAfter)
+
+	cmd.MarkFlagsRequiredTogether(flag.Database, flag.Collection, flag.DateField, flag.ArchiveAfter)
+
+	cmd.MarkFlagsOneRequired(flag.Database, flag.Collection, flag.DateField, flag.ArchiveAfter, flag.File)
+
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Database)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Collection)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DateField)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DateFormat)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.ArchiveAfter)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.ExpireAfterDays)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Partition)
 
 	return cmd
 }

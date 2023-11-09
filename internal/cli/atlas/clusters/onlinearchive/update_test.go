@@ -51,9 +51,11 @@ func TestUpdateOpts_Run(t *testing.T) {
 
 	expected := &atlasv2.BackupOnlineArchive{}
 
+	request, _ := updateOpts.newOnlineArchive()
+
 	mockStore.
 		EXPECT().
-		UpdateOnlineArchive(updateOpts.ConfigProjectID(), updateOpts.clusterName, updateOpts.newOnlineArchive()).
+		UpdateOnlineArchive(updateOpts.ConfigProjectID(), updateOpts.clusterName, request).
 		Return(expected, nil).
 		Times(1)
 

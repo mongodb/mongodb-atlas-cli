@@ -146,6 +146,9 @@ func (opts *DefaultSetterOpts) orgs(filter string) (results interface{}, err err
 		}
 		return nil, commonerrors.Check(err)
 	}
+	if orgs == nil {
+		return nil, errNoResults
+	}
 	switch r := orgs.(type) {
 	case *atlasv2.PaginatedOrganization:
 		if *r.TotalCount == 0 {
@@ -163,6 +166,8 @@ func (opts *DefaultSetterOpts) orgs(filter string) (results interface{}, err err
 			return nil, errTooManyResults
 		}
 		results = r.Results
+	default:
+		return nil, errNoResults
 	}
 	return results, nil
 }

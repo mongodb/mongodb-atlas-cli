@@ -93,7 +93,7 @@ func CreateBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Example: fmt.Sprintf(`  # Deploy a serverlessIntance named myInstance for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %[1]s serverless create serverless myInstance --provider AWS --region US_EAST_1 --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+  %[1]s serverless create myInstance --provider AWS --region US_EAST_1 --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
 		Annotations: map[string]string{
 			"instanceNameDesc": "Human-readable label that identifies your serverless instance.",
 			"output":           createTemplate,

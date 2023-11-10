@@ -103,7 +103,7 @@ func TestAtlasUsers(t *testing.T) {
 			usersEntity,
 			"invite",
 			"--username", emailUser,
-			"--password", "passW0rd",
+			"--password", fmt.Sprintf("~passW0rd%v~", n),
 			"--country", "US",
 			"--email", emailUser,
 			"--firstName", "TestFirstName",

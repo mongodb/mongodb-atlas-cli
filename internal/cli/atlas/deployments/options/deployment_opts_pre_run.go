@@ -17,6 +17,7 @@ package options
 import (
 	"context"
 	"errors"
+	"fmt"
 	"runtime"
 	"strings"
 
@@ -26,6 +27,9 @@ import (
 	"go.mongodb.org/atlas-sdk/v20231001002/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
+
+var errFetchingAtlasDeployments = errors.New("failed to retrieve Atlas deployments")
+var errAtlasDeploymentsCredentials = errors.New("failed to access Atlas deployments, update your credentials by running 'atlas auth login' (alternatively you may set api keys via 'atlas config init')")
 
 func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID string) (Deployment, error) {
 	var atlasDeployments, localDeployments []Deployment
@@ -37,7 +41,7 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 				return Deployment{}, atlasErr
 			}
 			if atlasErr != ErrNotAuthenticated {
-				_, _ = log.Warningf("Warning: failed to retrieve Atlas deployments because %q\n", atlasErr.Error())
+				_, _ = log.Warningf("Warning: %s\n", atlasErr)
 			}
 		}
 	}
@@ -110,7 +114,10 @@ func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, er
 
 	projectClusters, err := opts.AtlasClusterListStore.ProjectClusters(projectID, listOpts)
 	if err != nil {
-		return nil, err
+		if apiErr, ok := admin.AsError(err); ok && apiErr != nil && apiErr.Error != nil && *apiErr.Error == 401 {
+			return nil, errAtlasDeploymentsCredentials
+		}
+		return nil, fmt.Errorf("%w: %s", errFetchingAtlasDeployments, err.Error())
 	}
 	atlasClusters := projectClusters.(*admin.PaginatedAdvancedClusterDescription)
 

@@ -17,7 +17,6 @@ package deployments
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -38,8 +37,6 @@ const listTemplate = `NAME	TYPE	MDB VER	STATE
 {{range .}}{{.Name}}	{{.Type}}	{{.MongoDBVersion}}	{{.StateName}}
 {{end}}`
 
-const errAtlas = "failed to retrieve Atlas deployments with: %s"
-
 func (opts *ListOpts) Run(ctx context.Context) error {
 	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
 		return err
@@ -56,16 +53,11 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 		atlasClusters, atlasErr = opts.AtlasDeployments(opts.ProjectID)
 	}
 
-	err = opts.Print(append(atlasClusters, mdbContainers...))
-	if err != nil {
+	if err := opts.Print(append(atlasClusters, mdbContainers...)); err != nil {
 		return err
 	}
 
-	if atlasErr != nil {
-		return fmt.Errorf(errAtlas, atlasErr.Error())
-	}
-
-	return nil
+	return atlasErr
 }
 
 func (opts *ListOpts) PostRun(_ context.Context) error {

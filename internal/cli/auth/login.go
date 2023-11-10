@@ -34,7 +34,7 @@ import (
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth LoginConfig,LoginFlow
+//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth LoginConfig
 
 type LoginConfig interface {
 	config.SetSaver
@@ -56,11 +56,6 @@ type LoginOpts struct {
 	NoBrowser      bool
 	SkipConfig     bool
 	config         LoginConfig
-}
-
-type LoginFlow interface {
-	LoginRun(ctx context.Context) error
-	LoginPreRun() error
 }
 
 // SyncWithOAuthAccessProfile returns a function that is synchronizing the oauth settings

@@ -97,19 +97,18 @@ func TestAtlasUsers(t *testing.T) {
 	t.Run("Invite", func(t *testing.T) {
 		n, err := e2e.RandInt(10000)
 		require.NoError(t, err)
-		emailUser := fmt.Sprintf("test-%v@moongodb.com", n)
-		password := fmt.Sprintf("**passW0rd%v**", n)
+		emailUser := fmt.Sprintf("cli-test-%v@moongodb.com", n)
 		t.Log("emailUser", emailUser, "orgID", orgID)
 		cmd := exec.Command(cliPath,
 			usersEntity,
 			"invite",
 			"--username", emailUser,
-			"--password", password,
+			"--password", "**passW0rd**",
 			"--country", "US",
 			"--email", emailUser,
 			"--firstName", "TestFirstName",
 			"--lastName", "TestLastName",
-			"--orgRole", orgID+":ORG_MEMBER",
+			"--orgRole", orgID+":ORG_READ_ONLY",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

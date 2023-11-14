@@ -25,15 +25,16 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
-	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
-	operatorProject "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/project"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
+	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
+	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
+	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
+	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
+	akov2toptr "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/util/toptr"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	k8snames "k8s.io/apiserver/pkg/storage/names"
 )
 
 const (
@@ -68,9 +69,9 @@ var (
 )
 
 type AtlasProjectResult struct {
-	Project *atlasV1.AtlasProject
+	Project *akov2.AtlasProject
 	Secrets []*corev1.Secret
-	Teams   []*atlasV1.AtlasTeam
+	Teams   []*akov2.AtlasTeam
 }
 
 func BuildAtlasProject(projectStore atlas.OperatorProjectStore, validator features.FeatureValidator, orgID, projectID, targetNamespace string, includeSecret bool, dictionary map[string]string, version string) (*AtlasProjectResult, error) {
@@ -84,7 +85,7 @@ func BuildAtlasProject(projectStore atlas.OperatorProjectStore, validator featur
 		return nil, ErrAtlasProject
 	}
 
-	projectResult := &atlasV1.AtlasProject{
+	projectResult := &akov2.AtlasProject{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AtlasProject",
 			APIVersion: "atlas.mongodb.com/v1",
@@ -96,7 +97,7 @@ func BuildAtlasProject(projectStore atlas.OperatorProjectStore, validator featur
 				features.ResourceVersion: version,
 			},
 		},
-		Spec: atlasV1.AtlasProjectSpec{
+		Spec: akov2.AtlasProjectSpec{
 			Name:                          project.Name,
 			ConnectionSecret:              nil,
 			ProjectIPAccessList:           nil,
@@ -115,9 +116,9 @@ func BuildAtlasProject(projectStore atlas.OperatorProjectStore, validator featur
 			Teams:                         nil,
 			RegionUsageRestrictions:       atlas.StringOrEmpty(project.RegionUsageRestrictions),
 		},
-		Status: status.AtlasProjectStatus{
-			Common: status.Common{
-				Conditions: []status.Condition{},
+		Status: akov2status.AtlasProjectStatus{
+			Common: akov2status.Common{
+				Conditions: []akov2status.Condition{},
 			},
 		},
 	}
@@ -144,7 +145,7 @@ func BuildAtlasProject(projectStore atlas.OperatorProjectStore, validator featur
 		projectResult.Spec.MaintenanceWindow = maintenanceWindows
 	}
 
-	secretRef := &common.ResourceRefNamespaced{}
+	secretRef := &akov2common.ResourceRefNamespaced{}
 	if includeSecret {
 		secretRef.Name = resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, project.Name), dictionary)
 	}
@@ -176,11 +177,12 @@ func BuildAtlasProject(projectStore atlas.OperatorProjectStore, validator featur
 	}
 
 	if validator.FeatureExist(features.ResourceAtlasProject, featureEncryptionAtRest) {
-		encryptionAtRest, ferr := buildEncryptionAtRest(projectStore, projectID)
+		encryptionAtRest, secrets, ferr := buildEncryptionAtRest(projectStore, projectID, project.Name, targetNamespace, dictionary)
 		if ferr != nil {
 			return nil, ferr
 		}
 		projectResult.Spec.EncryptionAtRest = encryptionAtRest
+		result.Secrets = append(result.Secrets, secrets...)
 	}
 
 	if validator.FeatureExist(features.ResourceAtlasProject, featureCloudProviderAccessRoles) {
@@ -208,11 +210,12 @@ func BuildAtlasProject(projectStore atlas.OperatorProjectStore, validator featur
 	}
 
 	if validator.FeatureExist(features.ResourceAtlasProject, featureAlertConfiguration) {
-		alertConfigurations, ferr := buildAlertConfigurations(projectStore, projectID)
+		alertConfigurations, secrets, ferr := buildAlertConfigurations(projectStore, projectID, project.Name, targetNamespace, dictionary)
 		if ferr != nil {
 			return nil, ferr
 		}
 		projectResult.Spec.AlertConfigurations = alertConfigurations
+		result.Secrets = append(result.Secrets, secrets...)
 	}
 
 	if validator.FeatureExist(features.ResourceAtlasProject, featureCustomRoles) {
@@ -236,12 +239,13 @@ func BuildAtlasProject(projectStore atlas.OperatorProjectStore, validator featur
 }
 
 func BuildProjectConnectionSecret(credsProvider store.CredentialsGetter, name, namespace, orgID string, includeCreds bool, dictionary map[string]string) *corev1.Secret {
-	secret := secrets.NewAtlasSecret(fmt.Sprintf("%s-credentials", name), namespace, map[string][]byte{
-		secrets.CredOrgID:         []byte(""),
-		secrets.CredPublicAPIKey:  []byte(""),
-		secrets.CredPrivateAPIKey: []byte(""),
-	},
-		dictionary)
+	secret := secrets.NewAtlasSecretBuilder(fmt.Sprintf("%s-credentials", name), namespace, dictionary).
+		WithData(map[string][]byte{
+			secrets.CredOrgID:         []byte(""),
+			secrets.CredPublicAPIKey:  []byte(""),
+			secrets.CredPrivateAPIKey: []byte(""),
+		}).
+		Build()
 	if includeCreds {
 		secret.Data = map[string][]byte{
 			secrets.CredOrgID:         []byte(orgID),
@@ -252,7 +256,7 @@ func BuildProjectConnectionSecret(credsProvider store.CredentialsGetter, name, n
 	return secret
 }
 
-func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]atlasV1.CustomRole, error) {
+func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]akov2.CustomRole, error) {
 	dbRoles, err := crProvider.DatabaseRoles(projectID)
 	if err != nil {
 		return nil, err
@@ -261,39 +265,39 @@ func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]
 		return nil, nil
 	}
 
-	result := make([]atlasV1.CustomRole, 0, len(dbRoles))
+	result := make([]akov2.CustomRole, 0, len(dbRoles))
 	roles := dbRoles
 	for rIdx := range roles {
 		role := &roles[rIdx]
 
-		inhRoles := make([]atlasV1.Role, 0, len(role.InheritedRoles))
+		inhRoles := make([]akov2.Role, 0, len(role.InheritedRoles))
 		for inhRIdx := range role.InheritedRoles {
 			rl := &role.InheritedRoles[inhRIdx]
-			inhRoles = append(inhRoles, atlasV1.Role{
+			inhRoles = append(inhRoles, akov2.Role{
 				Name:     rl.Role,
 				Database: rl.Db,
 			})
 		}
 
-		actions := make([]atlasV1.Action, 0, len(role.Actions))
+		actions := make([]akov2.Action, 0, len(role.Actions))
 		for aIdx := range role.Actions {
 			action := &role.Actions[aIdx]
 
-			r := make([]atlasV1.Resource, 0, len(action.Resources))
+			r := make([]akov2.Resource, 0, len(action.Resources))
 			for resIdx := range action.Resources {
 				res := &action.Resources[resIdx]
-				r = append(r, atlasV1.Resource{
+				r = append(r, akov2.Resource{
 					Cluster:    &res.Cluster,
 					Database:   &res.Db,
 					Collection: &res.Collection,
 				})
 			}
-			actions = append(actions, atlasV1.Action{
+			actions = append(actions, akov2.Action{
 				Name:      action.Action,
 				Resources: r,
 			})
 		}
-		result = append(result, atlasV1.CustomRole{
+		result = append(result, akov2.CustomRole{
 			Name:           role.RoleName,
 			InheritedRoles: inhRoles,
 			Actions:        actions,
@@ -302,14 +306,14 @@ func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]
 	return result, nil
 }
 
-func buildAccessLists(accessListProvider atlas.ProjectIPAccessListLister, projectID string) ([]operatorProject.IPAccessList, error) {
+func buildAccessLists(accessListProvider atlas.ProjectIPAccessListLister, projectID string) ([]akov2project.IPAccessList, error) {
 	// pagination not required, max 200 entries can be configured via API
 	accessLists, err := accessListProvider.ProjectIPAccessLists(projectID, &atlas.ListOptions{ItemsPerPage: MaxItems})
 	if err != nil {
 		return nil, err
 	}
 
-	result := make([]operatorProject.IPAccessList, 0, len(accessLists.Results))
+	result := make([]akov2project.IPAccessList, 0, len(accessLists.Results))
 	for _, list := range accessLists.Results {
 		if strings.HasSuffix(list.GetCidrBlock(), cidrException) && list.GetIpAddress() != "" {
 			list.CidrBlock = pointer.Get("")
@@ -318,7 +322,7 @@ func buildAccessLists(accessListProvider atlas.ProjectIPAccessListLister, projec
 		if !list.GetDeleteAfterDate().IsZero() {
 			deleteAfterDate = list.GetDeleteAfterDate().String()
 		}
-		result = append(result, operatorProject.IPAccessList{
+		result = append(result, akov2project.IPAccessList{
 			AwsSecurityGroup: list.GetAwsSecurityGroup(),
 			CIDRBlock:        list.GetCidrBlock(),
 			Comment:          list.GetComment(),
@@ -329,13 +333,13 @@ func buildAccessLists(accessListProvider atlas.ProjectIPAccessListLister, projec
 	return result, nil
 }
 
-func buildMaintenanceWindows(mwProvider store.MaintenanceWindowDescriber, projectID string) (operatorProject.MaintenanceWindow, error) {
+func buildMaintenanceWindows(mwProvider store.MaintenanceWindowDescriber, projectID string) (akov2project.MaintenanceWindow, error) {
 	mw, err := mwProvider.MaintenanceWindow(projectID)
 	if err != nil {
-		return operatorProject.MaintenanceWindow{}, err
+		return akov2project.MaintenanceWindow{}, err
 	}
 
-	return operatorProject.MaintenanceWindow{
+	return akov2project.MaintenanceWindow{
 		DayOfWeek: mw.DayOfWeek,
 		HourOfDay: mw.HourOfDay,
 		AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
@@ -344,23 +348,26 @@ func buildMaintenanceWindows(mwProvider store.MaintenanceWindowDescriber, projec
 	}, nil
 }
 
-func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNamespace string, includeSecrets bool, dictionary map[string]string) ([]operatorProject.Integration, []*corev1.Secret, error) {
+func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNamespace string, includeSecrets bool, dictionary map[string]string) ([]akov2project.Integration, []*corev1.Secret, error) {
 	integrations, err := intProvider.Integrations(projectID)
 	if err != nil {
 		return nil, nil, err
 	}
-	result := make([]operatorProject.Integration, 0, len(integrations.Results))
+	result := make([]akov2project.Integration, 0, len(integrations.Results))
 	intSecrets := make([]*corev1.Secret, 0, len(integrations.Results))
 
 	for _, list := range integrations.Results {
 		iType := list.GetType()
-		secret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s", projectID, strings.ToLower(iType)),
-			targetNamespace, map[string][]byte{secrets.PasswordField: []byte("")}, dictionary)
+		secret := secrets.NewAtlasSecretBuilder(
+			fmt.Sprintf("%s-integration-%s", projectID, strings.ToLower(iType)),
+			targetNamespace,
+			dictionary,
+		).WithData(map[string][]byte{secrets.PasswordField: []byte("")}).Build()
 
-		integration := operatorProject.Integration{
+		integration := akov2project.Integration{
 			Type: iType,
 		}
-		secretRef := common.ResourceRefNamespaced{
+		secretRef := akov2common.ResourceRefNamespaced{
 			Name:      resources.NormalizeAtlasName(secret.Name, dictionary),
 			Namespace: targetNamespace,
 		}
@@ -414,9 +421,11 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 			}
 			if list.GetRoutingKey() != "" {
 				// Secret with routing key
-				routingSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
+				routingSecret := secrets.NewAtlasSecretBuilder(
+					fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
 					targetNamespace,
-					map[string][]byte{secrets.PasswordField: []byte(routingKeyData)}, dictionary)
+					dictionary,
+				).WithData(map[string][]byte{secrets.PasswordField: []byte(routingKeyData)}).Build()
 				intSecrets = append(intSecrets, routingSecret)
 			}
 		case newRelicIntegrationType:
@@ -428,14 +437,16 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 				writeToken = list.GetWriteToken()
 				readToken = list.GetReadToken()
 			}
-			writeTokenSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
+			writeTokenSecret := secrets.NewAtlasSecretBuilder(
+				fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
 				targetNamespace,
-				map[string][]byte{secrets.PasswordField: []byte(writeToken)}, dictionary)
-			readTokenSecret := secrets.NewAtlasSecret(fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
-				targetNamespace,
-				map[string][]byte{secrets.PasswordField: []byte(readToken)},
 				dictionary,
-			)
+			).WithData(map[string][]byte{secrets.PasswordField: []byte(writeToken)}).Build()
+			readTokenSecret := secrets.NewAtlasSecretBuilder(
+				fmt.Sprintf("%s-integration-%s-routing-key", projectID, strings.ToLower(iType)),
+				targetNamespace,
+				dictionary,
+			).WithData(map[string][]byte{secrets.PasswordField: []byte(readToken)}).Build()
 			intSecrets = append(intSecrets, writeTokenSecret, readTokenSecret)
 		}
 		result = append(result, integration)
@@ -445,21 +456,21 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 	return result, intSecrets, nil
 }
 
-func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID string) ([]atlasV1.PrivateEndpoint, error) {
-	var result []atlasV1.PrivateEndpoint
-	for _, cloudProvider := range []provider.ProviderName{provider.ProviderAWS, provider.ProviderGCP, provider.ProviderAzure} {
+func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID string) ([]akov2.PrivateEndpoint, error) {
+	var result []akov2.PrivateEndpoint
+	for _, cloudProvider := range []akov2provider.ProviderName{akov2provider.ProviderAWS, akov2provider.ProviderGCP, akov2provider.ProviderAzure} {
 		peList, err := peProvider.PrivateEndpoints(projectID, string(cloudProvider))
 		if err != nil {
 			return nil, err
 		}
 		for i := range peList {
 			pe := &peList[i]
-			result = append(result, atlasV1.PrivateEndpoint{
+			result = append(result, akov2.PrivateEndpoint{
 				Provider:          cloudProvider,
 				IP:                "",
 				GCPProjectID:      "",
 				EndpointGroupName: "",
-				Endpoints:         atlasV1.GCPEndpoints{},
+				Endpoints:         akov2.GCPEndpoints{},
 				ID:                pe.GetId(),
 				Region:            pe.GetRegionName(),
 			})
@@ -468,13 +479,13 @@ func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID str
 	return result, nil
 }
 
-func buildNetworkPeering(npProvider atlas.PeeringConnectionLister, projectID string) ([]atlasV1.NetworkPeer, error) {
+func buildNetworkPeering(npProvider atlas.PeeringConnectionLister, projectID string) ([]akov2.NetworkPeer, error) {
 	// pagination not required, max 25 entries per provider can be configured via API
 	npListAWS, err := npProvider.PeeringConnections(projectID, &atlas.ContainersListOptions{
 		ListOptions: atlas.ListOptions{
 			ItemsPerPage: MaxItems,
 		},
-		ProviderName: string(provider.ProviderAWS),
+		ProviderName: string(akov2provider.ProviderAWS),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("error getting network peering connections for AWS: %w", err)
@@ -484,7 +495,7 @@ func buildNetworkPeering(npProvider atlas.PeeringConnectionLister, projectID str
 		ListOptions: atlas.ListOptions{
 			ItemsPerPage: MaxItems,
 		},
-		ProviderName: string(provider.ProviderGCP),
+		ProviderName: string(akov2provider.ProviderGCP),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("error getting network peering connections for GCP: %w", err)
@@ -494,33 +505,33 @@ func buildNetworkPeering(npProvider atlas.PeeringConnectionLister, projectID str
 		ListOptions: atlas.ListOptions{
 			ItemsPerPage: MaxItems,
 		},
-		ProviderName: string(provider.ProviderAzure),
+		ProviderName: string(akov2provider.ProviderAzure),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("error getting network peering connections for Azure: %w", err)
 	}
 
-	result := make([]atlasV1.NetworkPeer, 0, len(npListAWS)+len(npListGCP)+len(npListAzure))
+	result := make([]akov2.NetworkPeer, 0, len(npListAWS)+len(npListGCP)+len(npListAzure))
 
 	for i := range npListAWS {
 		np := npListAWS[i]
-		result = append(result, convertNetworkPeer(np, provider.ProviderAWS))
+		result = append(result, convertNetworkPeer(np, akov2provider.ProviderAWS))
 	}
 
 	for i := range npListGCP {
 		np := npListGCP[i]
-		result = append(result, convertNetworkPeer(np, provider.ProviderGCP))
+		result = append(result, convertNetworkPeer(np, akov2provider.ProviderGCP))
 	}
 
 	for i := range npListAzure {
 		np := npListAzure[i]
-		result = append(result, convertNetworkPeer(np, provider.ProviderAzure))
+		result = append(result, convertNetworkPeer(np, akov2provider.ProviderAzure))
 	}
 
 	return result, nil
 }
 
-func convertNetworkPeer(np atlasv2.BaseNetworkPeeringConnectionSettings, providerName provider.ProviderName) atlasV1.NetworkPeer {
+func convertNetworkPeer(np atlasv2.BaseNetworkPeeringConnectionSettings, providerName akov2provider.ProviderName) akov2.NetworkPeer {
 	switch np.GetProviderName() {
 	case "AWS":
 		return convertAWSNetworkPeer(&np, providerName)
@@ -529,12 +540,12 @@ func convertNetworkPeer(np atlasv2.BaseNetworkPeeringConnectionSettings, provide
 	case "Azure":
 		return convertAzureNetworkPeer(&np, providerName)
 	default:
-		return atlasV1.NetworkPeer{}
+		return akov2.NetworkPeer{}
 	}
 }
 
-func convertAWSNetworkPeer(np *atlasv2.BaseNetworkPeeringConnectionSettings, providerName provider.ProviderName) atlasV1.NetworkPeer {
-	return atlasV1.NetworkPeer{
+func convertAWSNetworkPeer(np *atlasv2.BaseNetworkPeeringConnectionSettings, providerName akov2provider.ProviderName) akov2.NetworkPeer {
+	return akov2.NetworkPeer{
 		AccepterRegionName:  np.GetAccepterRegionName(),
 		AWSAccountID:        np.GetAwsAccountId(),
 		ContainerRegion:     "",
@@ -545,8 +556,8 @@ func convertAWSNetworkPeer(np *atlasv2.BaseNetworkPeeringConnectionSettings, pro
 	}
 }
 
-func convertAzureNetworkPeer(np *atlasv2.BaseNetworkPeeringConnectionSettings, providerName provider.ProviderName) atlasV1.NetworkPeer {
-	return atlasV1.NetworkPeer{
+func convertAzureNetworkPeer(np *atlasv2.BaseNetworkPeeringConnectionSettings, providerName akov2provider.ProviderName) akov2.NetworkPeer {
+	return akov2.NetworkPeer{
 		AzureDirectoryID:    np.GetAzureDirectoryId(),
 		AzureSubscriptionID: np.GetAzureSubscriptionId(),
 		ContainerRegion:     "",
@@ -557,8 +568,8 @@ func convertAzureNetworkPeer(np *atlasv2.BaseNetworkPeeringConnectionSettings, p
 	}
 }
 
-func convertGCPNetworkPeer(np *atlasv2.BaseNetworkPeeringConnectionSettings, providerName provider.ProviderName) atlasV1.NetworkPeer {
-	return atlasV1.NetworkPeer{
+func convertGCPNetworkPeer(np *atlasv2.BaseNetworkPeeringConnectionSettings, providerName akov2provider.ProviderName) akov2.NetworkPeer {
+	return akov2.NetworkPeer{
 		GCPProjectID:    np.GetGcpProjectId(),
 		ContainerRegion: "",
 		ContainerID:     np.ContainerId,
@@ -567,51 +578,70 @@ func convertGCPNetworkPeer(np *atlasv2.BaseNetworkPeeringConnectionSettings, pro
 	}
 }
 
-func buildEncryptionAtRest(encProvider store.EncryptionAtRestDescriber, projectID string) (*atlasV1.EncryptionAtRest, error) {
+func buildEncryptionAtRest(encProvider store.EncryptionAtRestDescriber, projectID, projectName, targetNamespace string, dictionary map[string]string) (*akov2.EncryptionAtRest, []*corev1.Secret, error) {
 	data, err := encProvider.EncryptionAtRest(projectID)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return &atlasV1.EncryptionAtRest{
-		AwsKms: atlasV1.AwsKms{
-			Enabled:             data.AwsKms.Enabled,
-			AccessKeyID:         data.AwsKms.GetAccessKeyID(),
-			SecretAccessKey:     data.AwsKms.GetSecretAccessKey(),
-			CustomerMasterKeyID: data.AwsKms.GetCustomerMasterKeyID(),
-			Region:              data.AwsKms.GetRegion(),
-			RoleID:              data.AwsKms.GetRoleId(),
-			Valid:               data.AwsKms.Valid,
+	ref := &akov2.EncryptionAtRest{
+		AwsKms: akov2.AwsKms{
+			Enabled: data.AwsKms.Enabled,
+			Region:  data.AwsKms.GetRegion(),
+			Valid:   data.AwsKms.Valid,
+			SecretRef: akov2common.ResourceRefNamespaced{
+				Name:      resources.NormalizeAtlasName(generateName("aws-credentials-"), dictionary),
+				Namespace: targetNamespace,
+			},
 		},
-		AzureKeyVault: atlasV1.AzureKeyVault{
+		AzureKeyVault: akov2.AzureKeyVault{
 			Enabled:           data.AzureKeyVault.Enabled,
 			ClientID:          data.AzureKeyVault.GetClientID(),
 			AzureEnvironment:  data.AzureKeyVault.GetAzureEnvironment(),
-			SubscriptionID:    data.AzureKeyVault.GetSubscriptionID(),
 			ResourceGroupName: data.AzureKeyVault.GetResourceGroupName(),
-			KeyVaultName:      data.AzureKeyVault.GetKeyVaultName(),
-			KeyIdentifier:     data.AzureKeyVault.GetKeyIdentifier(),
-			Secret:            data.AzureKeyVault.GetSecret(),
 			TenantID:          data.AzureKeyVault.GetTenantID(),
+			SecretRef: akov2common.ResourceRefNamespaced{
+				Name:      resources.NormalizeAtlasName(generateName("azure-credentials-"), dictionary),
+				Namespace: targetNamespace,
+			},
 		},
-		GoogleCloudKms: atlasV1.GoogleCloudKms{
-			Enabled:              data.GoogleCloudKms.Enabled,
-			ServiceAccountKey:    data.GoogleCloudKms.GetServiceAccountKey(),
-			KeyVersionResourceID: data.GoogleCloudKms.GetKeyVersionResourceID(),
+		GoogleCloudKms: akov2.GoogleCloudKms{
+			Enabled: data.GoogleCloudKms.Enabled,
+			SecretRef: akov2common.ResourceRefNamespaced{
+				Name:      resources.NormalizeAtlasName(generateName("gcp-credentials-"), dictionary),
+				Namespace: targetNamespace,
+			},
 		},
-	}, nil
+	}
+
+	secret := []*corev1.Secret{
+		secrets.NewAtlasSecretBuilder(ref.AwsKms.SecretRef.Name, ref.AwsKms.SecretRef.Namespace, dictionary).
+			WithData(map[string][]byte{"CustomerMasterKeyID": []byte(""), "RoleID": []byte("")}).
+			WithProjectLabels(projectID, projectName).
+			Build(),
+		secrets.NewAtlasSecretBuilder(ref.AzureKeyVault.SecretRef.Name, ref.AzureKeyVault.SecretRef.Namespace, dictionary).
+			WithData(map[string][]byte{"SubscriptionID": []byte(""), "KeyVaultName": []byte(""), "KeyIdentifier": []byte(""), "Secret": []byte("")}).
+			WithProjectLabels(projectID, projectName).
+			Build(),
+		secrets.NewAtlasSecretBuilder(ref.GoogleCloudKms.SecretRef.Name, ref.GoogleCloudKms.SecretRef.Namespace, dictionary).
+			WithData(map[string][]byte{"ServiceAccountKey": []byte(""), "KeyVersionResourceID": []byte("")}).
+			WithProjectLabels(projectID, projectName).
+			Build(),
+	}
+
+	return ref, secret, nil
 }
 
-func buildCloudProviderAccessRoles(cpaProvider store.CloudProviderAccessRoleLister, projectID string) ([]atlasV1.CloudProviderAccessRole, error) {
+func buildCloudProviderAccessRoles(cpaProvider store.CloudProviderAccessRoleLister, projectID string) ([]akov2.CloudProviderAccessRole, error) {
 	data, err := cpaProvider.CloudProviderAccessRoles(projectID)
 	if err != nil {
 		return nil, err
 	}
 
-	result := make([]atlasV1.CloudProviderAccessRole, 0, len(data.AwsIamRoles))
+	result := make([]akov2.CloudProviderAccessRole, 0, len(data.AwsIamRoles))
 	for i := range data.AwsIamRoles {
 		cpa := &data.AwsIamRoles[i]
-		result = append(result, atlasV1.CloudProviderAccessRole{
+		result = append(result, akov2.CloudProviderAccessRole{
 			ProviderName:      cpa.ProviderName,
 			IamAssumedRoleArn: cpa.GetIamAssumedRoleArn(),
 		})
@@ -620,13 +650,13 @@ func buildCloudProviderAccessRoles(cpaProvider store.CloudProviderAccessRoleList
 	return result, nil
 }
 
-func buildProjectSettings(psProvider store.ProjectSettingsDescriber, projectID string) (*atlasV1.ProjectSettings, error) {
+func buildProjectSettings(psProvider store.ProjectSettingsDescriber, projectID string) (*akov2.ProjectSettings, error) {
 	data, err := psProvider.ProjectSettings(projectID)
 	if err != nil {
 		return nil, err
 	}
 
-	return &atlasV1.ProjectSettings{
+	return &akov2.ProjectSettings{
 		IsCollectDatabaseSpecificsStatisticsEnabled: data.IsCollectDatabaseSpecificsStatisticsEnabled,
 		IsDataExplorerEnabled:                       data.IsDataExplorerEnabled,
 		IsPerformanceAdvisorEnabled:                 data.IsPerformanceAdvisorEnabled,
@@ -635,32 +665,32 @@ func buildProjectSettings(psProvider store.ProjectSettingsDescriber, projectID s
 	}, nil
 }
 
-func buildAuditing(auditingProvider store.AuditingDescriber, projectID string) (*atlasV1.Auditing, error) {
+func buildAuditing(auditingProvider store.AuditingDescriber, projectID string) (*akov2.Auditing, error) {
 	data, err := auditingProvider.Auditing(projectID)
 	if err != nil {
 		return nil, err
 	}
 
-	return &atlasV1.Auditing{
+	return &akov2.Auditing{
 		AuditAuthorizationSuccess: pointer.GetOrZero(data.AuditAuthorizationSuccess),
 		AuditFilter:               pointer.GetOrZero(data.AuditFilter),
 		Enabled:                   pointer.GetOrZero(data.Enabled),
 	}, nil
 }
 
-func buildAlertConfigurations(acProvider atlas.AlertConfigurationLister, projectID string) ([]atlasV1.AlertConfiguration, error) {
+func buildAlertConfigurations(acProvider atlas.AlertConfigurationLister, projectID, projectName, targetNamespace string, dictionary map[string]string) ([]akov2.AlertConfiguration, []*corev1.Secret, error) {
 	data, err := acProvider.AlertConfigurations(&atlasv2.ListAlertConfigurationsApiParams{
 		GroupId:      projectID,
-		ItemsPerPage: toptr.MakePtr(MaxItems),
+		ItemsPerPage: akov2toptr.MakePtr(MaxItems),
 	})
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	convertMatchers := func(atlasMatcher []map[string]interface{}) []atlasV1.Matcher {
-		var res []atlasV1.Matcher
+	convertMatchers := func(atlasMatcher []map[string]interface{}) []akov2.Matcher {
+		var res []akov2.Matcher
 		for _, m := range atlasMatcher {
-			res = append(res, atlasV1.Matcher{
+			res = append(res, akov2.Matcher{
 				FieldName: (m["FieldName"]).(string),
 				Operator:  (m["Operator"]).(string),
 				Value:     (m["Value"]).(string),
@@ -669,11 +699,11 @@ func buildAlertConfigurations(acProvider atlas.AlertConfigurationLister, project
 		return res
 	}
 
-	convertMetricThreshold := func(atlasMT *atlasv2.ServerlessMetricThreshold) *atlasV1.MetricThreshold {
+	convertMetricThreshold := func(atlasMT *atlasv2.ServerlessMetricThreshold) *akov2.MetricThreshold {
 		if atlasMT == nil {
-			return &atlasV1.MetricThreshold{}
+			return &akov2.MetricThreshold{}
 		}
-		return &atlasV1.MetricThreshold{
+		return &akov2.MetricThreshold{
 			MetricName: atlasMT.MetricName,
 			Operator:   atlas.StringOrEmpty(atlasMT.Operator),
 			Threshold:  fmt.Sprintf("%f", pointer.GetOrDefault(atlasMT.Threshold, 0.0)),
@@ -682,62 +712,118 @@ func buildAlertConfigurations(acProvider atlas.AlertConfigurationLister, project
 		}
 	}
 
-	convertThreshold := func(atlasT *atlasv2.GreaterThanRawThreshold) *atlasV1.Threshold {
+	convertThreshold := func(atlasT *atlasv2.GreaterThanRawThreshold) *akov2.Threshold {
 		if atlasT == nil {
-			return &atlasV1.Threshold{}
+			return &akov2.Threshold{}
 		}
-		return &atlasV1.Threshold{
+		return &akov2.Threshold{
 			Operator:  atlas.StringOrEmpty(atlasT.Operator),
 			Units:     atlas.StringOrEmpty(atlasT.Units),
 			Threshold: fmt.Sprintf("%d", pointer.GetOrDefault(atlasT.Threshold, 0)),
 		}
 	}
+	convertNotifications := func(atlasNotifications []atlasv2.AlertsNotificationRootForGroup) ([]akov2.Notification, []*corev1.Secret) {
+		var (
+			akoNotifications []akov2.Notification
+			akoSecrets       []*corev1.Secret
+		)
 
-	convertNotifications := func(atlasN []atlasv2.AlertsNotificationRootForGroup) []atlasV1.Notification {
-		var res []atlasV1.Notification
-		for _, n := range atlasN {
-			res = append(res, atlasV1.Notification{
-				APIToken:            atlas.StringOrEmpty(n.ApiToken),
-				ChannelName:         atlas.StringOrEmpty(n.ChannelName),
-				DatadogAPIKey:       atlas.StringOrEmpty(n.DatadogApiKey),
-				DatadogRegion:       atlas.StringOrEmpty(n.DatadogRegion),
-				DelayMin:            n.DelayMin,
-				EmailAddress:        atlas.StringOrEmpty(n.EmailAddress),
-				EmailEnabled:        n.EmailEnabled,
-				IntervalMin:         pointer.GetOrDefault(n.IntervalMin, 0),
-				MobileNumber:        atlas.StringOrEmpty(n.MobileNumber),
-				OpsGenieAPIKey:      atlas.StringOrEmpty(n.OpsGenieApiKey),
-				OpsGenieRegion:      atlas.StringOrEmpty(n.OpsGenieRegion),
-				ServiceKey:          atlas.StringOrEmpty(n.ServiceKey),
-				SMSEnabled:          n.SmsEnabled,
-				TeamID:              atlas.StringOrEmpty(n.TeamId),
-				TeamName:            atlas.StringOrEmpty(n.TeamName),
-				TypeName:            atlas.StringOrEmpty(n.TypeName),
-				Username:            atlas.StringOrEmpty(n.Username),
-				VictorOpsAPIKey:     atlas.StringOrEmpty(n.VictorOpsApiKey),
-				VictorOpsRoutingKey: atlas.StringOrEmpty(n.VictorOpsRoutingKey),
-				Roles:               n.Roles,
-			})
+		for _, atlasNotification := range atlasNotifications {
+			akoNotification := akov2.Notification{
+				APITokenRef: akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(generateName("api-token-"), dictionary),
+					Namespace: targetNamespace,
+				},
+				ChannelName: atlas.StringOrEmpty(atlasNotification.ChannelName),
+				DatadogAPIKeyRef: akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(generateName("datadog-api-key-"), dictionary),
+					Namespace: targetNamespace,
+				},
+				DatadogRegion: atlas.StringOrEmpty(atlasNotification.DatadogRegion),
+				DelayMin:      atlasNotification.DelayMin,
+				EmailAddress:  atlas.StringOrEmpty(atlasNotification.EmailAddress),
+				EmailEnabled:  atlasNotification.EmailEnabled,
+				IntervalMin:   pointer.GetOrDefault(atlasNotification.IntervalMin, 0),
+				MobileNumber:  atlas.StringOrEmpty(atlasNotification.MobileNumber),
+				OpsGenieAPIKeyRef: akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(generateName("ops-genie-api-key-"), dictionary),
+					Namespace: targetNamespace,
+				},
+				OpsGenieRegion: atlas.StringOrEmpty(atlasNotification.OpsGenieRegion),
+				ServiceKeyRef: akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(generateName("service-key-"), dictionary),
+					Namespace: targetNamespace,
+				},
+				SMSEnabled: atlasNotification.SmsEnabled,
+				TeamID:     atlas.StringOrEmpty(atlasNotification.TeamId),
+				TeamName:   atlas.StringOrEmpty(atlasNotification.TeamName),
+				TypeName:   atlas.StringOrEmpty(atlasNotification.TypeName),
+				Username:   atlas.StringOrEmpty(atlasNotification.Username),
+				VictorOpsSecretRef: akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(generateName("victor-ops-credentials-"), dictionary),
+					Namespace: targetNamespace,
+				},
+				Roles: atlasNotification.Roles,
+			}
+			akoNotifications = append(akoNotifications, akoNotification)
+
+			akoSecrets = append(akoSecrets, []*corev1.Secret{
+				secrets.NewAtlasSecretBuilder(akoNotification.APITokenRef.Name, akoNotification.APITokenRef.Namespace, dictionary).
+					WithData(map[string][]byte{"APIToken": []byte("")}).
+					WithProjectLabels(projectID, projectName).
+					WithNotifierID(atlasNotification.NotifierId).
+					Build(),
+				secrets.NewAtlasSecretBuilder(akoNotification.DatadogAPIKeyRef.Name, akoNotification.DatadogAPIKeyRef.Namespace, dictionary).
+					WithData(map[string][]byte{"DatadogAPIKey": []byte("")}).
+					WithProjectLabels(projectID, projectName).
+					WithNotifierID(atlasNotification.NotifierId).
+					Build(),
+				secrets.NewAtlasSecretBuilder(akoNotification.OpsGenieAPIKeyRef.Name, akoNotification.OpsGenieAPIKeyRef.Namespace, dictionary).
+					WithData(map[string][]byte{"OpsGenieAPIKey": []byte("")}).
+					WithProjectLabels(projectID, projectName).
+					WithNotifierID(atlasNotification.NotifierId).
+					Build(),
+				secrets.NewAtlasSecretBuilder(akoNotification.ServiceKeyRef.Name, akoNotification.ServiceKeyRef.Namespace, dictionary).
+					WithData(map[string][]byte{"ServiceKey": []byte("")}).
+					WithProjectLabels(projectID, projectName).
+					WithNotifierID(atlasNotification.NotifierId).
+					Build(),
+				secrets.NewAtlasSecretBuilder(akoNotification.VictorOpsSecretRef.Name, akoNotification.VictorOpsSecretRef.Namespace, dictionary).
+					WithData(map[string][]byte{"VictorOpsAPIKey": []byte(""), "VictorOpsRoutingKey": []byte("")}).
+					WithProjectLabels(projectID, projectName).
+					WithNotifierID(atlasNotification.NotifierId).
+					Build(),
+			}...)
 		}
-		return res
+
+		return akoNotifications, akoSecrets
 	}
 
-	result := make([]atlasV1.AlertConfiguration, 0, len(data.Results))
-	for _, alertConfig := range data.Results {
-		result = append(result, atlasV1.AlertConfiguration{
+	secretResults := []*corev1.Secret{}
+	results := make([]akov2.AlertConfiguration, 0, len(data.Results))
+	for i := range data.Results {
+		alertConfig := &data.Results[i]
+
+		notifications, notificationSecrets := convertNotifications(alertConfig.Notifications)
+		secretResults = append(secretResults, notificationSecrets...)
+
+		results = append(results, akov2.AlertConfiguration{
 			EventTypeName:   atlas.StringOrEmpty(alertConfig.EventTypeName),
 			Enabled:         pointer.GetOrDefault(alertConfig.Enabled, false),
 			Matchers:        convertMatchers(alertConfig.Matchers),
 			MetricThreshold: convertMetricThreshold(alertConfig.MetricThreshold),
 			Threshold:       convertThreshold(alertConfig.Threshold),
-			Notifications:   convertNotifications(alertConfig.Notifications),
+			Notifications:   notifications,
 		})
 	}
-
-	return result, nil
+	return results, secretResults, nil
 }
 
-func buildTeams(teamsProvider atlas.OperatorTeamsStore, orgID, projectID, projectName, targetNamespace, version string, dictionary map[string]string) ([]atlasV1.Team, []*atlasV1.AtlasTeam, error) {
+func generateName(base string) string {
+	return k8snames.SimpleNameGenerator.GenerateName(base)
+}
+
+func buildTeams(teamsProvider atlas.OperatorTeamsStore, orgID, projectID, projectName, targetNamespace, version string, dictionary map[string]string) ([]akov2.Team, []*akov2.AtlasTeam, error) {
 	projectTeams, err := teamsProvider.ProjectTeams(projectID)
 	if err != nil {
 		return nil, nil, err
@@ -755,31 +841,31 @@ func buildTeams(teamsProvider atlas.OperatorTeamsStore, orgID, projectID, projec
 		return result, nil
 	}
 
-	convertRoleNames := func(input []string) []atlasV1.TeamRole {
+	convertRoleNames := func(input []string) []akov2.TeamRole {
 		if len(input) == 0 {
 			return nil
 		}
-		result := make([]atlasV1.TeamRole, 0, len(input))
+		result := make([]akov2.TeamRole, 0, len(input))
 		for i := range input {
-			result = append(result, atlasV1.TeamRole(input[i]))
+			result = append(result, akov2.TeamRole(input[i]))
 		}
 		return result
 	}
 
-	convertUserNames := func(input []string) []atlasV1.TeamUser {
+	convertUserNames := func(input []string) []akov2.TeamUser {
 		if len(input) == 0 {
 			return nil
 		}
 
-		result := make([]atlasV1.TeamUser, 0, len(input))
+		result := make([]akov2.TeamUser, 0, len(input))
 		for i := range input {
-			result = append(result, atlasV1.TeamUser(input[i]))
+			result = append(result, akov2.TeamUser(input[i]))
 		}
 		return result
 	}
 
-	teamsRefs := make([]atlasV1.Team, 0, len(projectTeams.Results))
-	atlasTeamCRs := make([]*atlasV1.AtlasTeam, 0, len(projectTeams.Results))
+	teamsRefs := make([]akov2.Team, 0, len(projectTeams.Results))
+	atlasTeamCRs := make([]*akov2.AtlasTeam, 0, len(projectTeams.Results))
 
 	for i := range projectTeams.Results {
 		teamRef := projectTeams.Results[i]
@@ -793,8 +879,8 @@ func buildTeams(teamsProvider atlas.OperatorTeamsStore, orgID, projectID, projec
 
 		teamName := atlas.StringOrEmpty(team.Name)
 		crName := resources.NormalizeAtlasName(fmt.Sprintf("%s-team-%s", projectName, teamName), dictionary)
-		teamsRefs = append(teamsRefs, atlasV1.Team{
-			TeamRef: common.ResourceRefNamespaced{
+		teamsRefs = append(teamsRefs, akov2.Team{
+			TeamRef: akov2common.ResourceRefNamespaced{
 				Name:      crName,
 				Namespace: targetNamespace,
 			},
@@ -806,7 +892,7 @@ func buildTeams(teamsProvider atlas.OperatorTeamsStore, orgID, projectID, projec
 			return nil, nil, err
 		}
 
-		atlasTeamCRs = append(atlasTeamCRs, &atlasV1.AtlasTeam{
+		atlasTeamCRs = append(atlasTeamCRs, &akov2.AtlasTeam{
 			TypeMeta: v1.TypeMeta{
 				Kind:       "AtlasTeam",
 				APIVersion: "atlas.mongodb.com/v1",
@@ -818,13 +904,13 @@ func buildTeams(teamsProvider atlas.OperatorTeamsStore, orgID, projectID, projec
 					features.ResourceVersion: version,
 				},
 			},
-			Spec: atlasV1.TeamSpec{
+			Spec: akov2.TeamSpec{
 				Name:      atlas.StringOrEmpty(team.Name),
 				Usernames: convertUserNames(users),
 			},
-			Status: status.TeamStatus{
-				Common: status.Common{
-					Conditions: []status.Condition{},
+			Status: akov2status.TeamStatus{
+				Common: akov2status.Common{
+					Conditions: []akov2status.Condition{},
 				},
 			},
 		})

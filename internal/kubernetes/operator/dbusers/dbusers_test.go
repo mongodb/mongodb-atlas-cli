@@ -24,6 +24,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/go-test/deep"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
@@ -31,9 +32,9 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
-	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
+	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
+	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	corev1 "k8s.io/api/core/v1"
@@ -53,7 +54,7 @@ func Test_convertUserLabels(t *testing.T) {
 			},
 		}
 
-		expectedLabels := []common.LabelSpec{
+		expectedLabels := []akov2common.LabelSpec{
 			{
 				Key:   "TestKey",
 				Value: "TestValue",
@@ -78,7 +79,7 @@ func Test_convertUserRoles(t *testing.T) {
 			},
 		}
 
-		expectedRoles := []atlasV1.RoleSpec{
+		expectedRoles := []akov2.RoleSpec{
 			{
 				RoleName:       "TestRole",
 				DatabaseName:   "TestDB",
@@ -95,6 +96,7 @@ func Test_buildUserSecret(t *testing.T) {
 	dictionary := resources.AtlasNameToKubernetesName()
 	t.Run("Can build user secret WITHOUT credentials", func(t *testing.T) {
 		projectName := "TestProject-1"
+		projectID := "123"
 		atlasUser := &atlasv2.CloudDatabaseUser{
 			Password: pointer.Get("TestPassword"),
 			Username: "TestName",
@@ -109,7 +111,9 @@ func Test_buildUserSecret(t *testing.T) {
 				Name:      strings.ToLower(fmt.Sprintf("%s-%s", projectName, atlasUser.Username)),
 				Namespace: "TestNamespace",
 				Labels: map[string]string{
-					secrets.TypeLabelKey: secrets.CredLabelVal,
+					secrets.TypeLabelKey:        secrets.CredLabelVal,
+					secrets.ProjectIDLabelKey:   resources.NormalizeAtlasName(projectID, dictionary),
+					secrets.ProjectNameLabelKey: resources.NormalizeAtlasName(projectName, dictionary),
 				},
 			},
 			Data: map[string][]byte{
@@ -117,9 +121,9 @@ func Test_buildUserSecret(t *testing.T) {
 			},
 		}
 
-		got := buildUserSecret(resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, atlasUser.Username), dictionary), "TestNamespace", dictionary)
-		if !reflect.DeepEqual(got, expectedSecret) {
-			t.Errorf("buildUserSecret(); \r\n got:%v;s\r\n want:%v", got, expectedSecret)
+		got := buildUserSecret(resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, atlasUser.Username), dictionary), "TestNamespace", projectID, projectName, dictionary)
+		if diff := deep.Equal(expectedSecret, got); diff != nil {
+			t.Fatalf("buildUserSecret() mismatch: %v", diff)
 		}
 	})
 }
@@ -176,7 +180,7 @@ func TestBuildDBUsers(t *testing.T) {
 			t.Fatalf("%v", err)
 		}
 
-		expectedUser := &atlasV1.AtlasDatabaseUser{
+		expectedUser := &akov2.AtlasDatabaseUser{
 			TypeMeta: v1.TypeMeta{
 				Kind:       "AtlasDatabaseUser",
 				APIVersion: "atlas.mongodb.com/v1",
@@ -188,41 +192,41 @@ func TestBuildDBUsers(t *testing.T) {
 					features.ResourceVersion: resourceVersion,
 				},
 			},
-			Spec: atlasV1.AtlasDatabaseUserSpec{
-				Project: common.ResourceRefNamespaced{
+			Spec: akov2.AtlasDatabaseUserSpec{
+				Project: akov2common.ResourceRefNamespaced{
 					Name:      resources.NormalizeAtlasName(projectName, dictionary),
 					Namespace: targetNamespace,
 				},
 				DatabaseName:    user.DatabaseName,
 				DeleteAfterDate: user.DeleteAfterDate.String(),
-				Labels: []common.LabelSpec{
+				Labels: []akov2common.LabelSpec{
 					{
 						Key:   *user.Labels[0].Key,
 						Value: *user.Labels[0].Value,
 					},
 				},
-				Roles: []atlasV1.RoleSpec{
+				Roles: []akov2.RoleSpec{
 					{
 						RoleName:       user.Roles[0].RoleName,
 						DatabaseName:   user.Roles[0].DatabaseName,
 						CollectionName: *user.Roles[0].CollectionName,
 					},
 				},
-				Scopes: []atlasV1.ScopeSpec{
+				Scopes: []akov2.ScopeSpec{
 					{
 						Name: user.Scopes[0].Name,
-						Type: atlasV1.ScopeType(user.Scopes[0].Type),
+						Type: akov2.ScopeType(user.Scopes[0].Type),
 					},
 				},
-				PasswordSecret: &common.ResourceRef{
+				PasswordSecret: &akov2common.ResourceRef{
 					Name: relatedSecrets[0].Name,
 				},
 				Username: user.Username,
 				X509Type: *user.X509Type,
 			},
-			Status: status.AtlasDatabaseUserStatus{
-				Common: status.Common{
-					Conditions: []status.Condition{},
+			Status: akov2status.AtlasDatabaseUserStatus{
+				Common: akov2status.Common{
+					Conditions: []akov2status.Condition{},
 				},
 			},
 		}
@@ -239,14 +243,16 @@ func TestBuildDBUsers(t *testing.T) {
 			t.Fatalf("User result doesn't match.\r\nexpected: %v,\r\ngot: %v\r\n", string(ed), string(gd))
 		}
 
-		expectedSecret := secrets.NewAtlasSecret(
+		expectedSecret := secrets.NewAtlasSecretBuilder(
 			fmt.Sprintf("%v-%v", projectName, user.Username),
 			targetNamespace,
-			map[string][]byte{
-				secrets.PasswordField: []byte(""),
-			}, dictionary)
-		if !reflect.DeepEqual(relatedSecrets[0], expectedSecret) {
-			t.Fatalf("Secret result doesn't match.\r\nexpected: %v\r\ngot %v\r\n", expectedSecret, relatedSecrets[0])
+			dictionary,
+		).WithData(map[string][]byte{
+			secrets.PasswordField: []byte(""),
+		}).WithProjectLabels(projectID, projectName).Build()
+
+		if diff := deep.Equal(relatedSecrets[0], expectedSecret); diff != nil {
+			t.Fatalf("Secret mismatch: %v", diff)
 		}
 	})
 

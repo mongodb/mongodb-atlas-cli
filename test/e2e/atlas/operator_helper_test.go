@@ -22,8 +22,8 @@ import (
 	"testing"
 	"time"
 
-	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
+	akov2toptr "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/util/toptr"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -50,7 +50,7 @@ func newOperatorHelper(t *testing.T) (*operatorHelper, error) {
 		return nil, err
 	}
 
-	err = akov1.AddToScheme(scheme.Scheme)
+	err = akov2.AddToScheme(scheme.Scheme)
 	if err != nil {
 		return nil, err
 	}
@@ -101,17 +101,8 @@ func (oh *operatorHelper) getK8sObject(key client.ObjectKey, object client.Objec
 	return nil
 }
 
-func (oh *operatorHelper) createK8sObject(object client.Object, track bool) error {
-	err := oh.k8sClient.Create(context.Background(), object, &client.CreateOptions{})
-	if err != nil {
-		return err
-	}
-
-	if track {
-		oh.resourcesTracked = append(oh.resourcesTracked, object)
-	}
-
-	return nil
+func (oh *operatorHelper) createK8sObject(object client.Object) error {
+	return oh.k8sClient.Create(context.Background(), object, &client.CreateOptions{})
 }
 
 func (oh *operatorHelper) deleteK8sObject(object client.Object) error {
@@ -167,7 +158,7 @@ func (oh *operatorHelper) stopOperator() {
 		oh.t.Errorf("unable to retrieve operator deployment: %v", err)
 	}
 
-	deployment.Spec.Replicas = toptr.MakePtr(int32(0))
+	deployment.Spec.Replicas = akov2toptr.MakePtr(int32(0))
 
 	err = oh.k8sClient.Update(context.Background(), &deployment, &client.UpdateOptions{})
 	if err != nil {
@@ -186,7 +177,7 @@ func (oh *operatorHelper) startOperator() {
 		oh.t.Errorf("unable to retrieve operator deployment: %v", err)
 	}
 
-	deployment.Spec.Replicas = toptr.MakePtr(int32(1))
+	deployment.Spec.Replicas = akov2toptr.MakePtr(int32(1))
 
 	err = oh.k8sClient.Update(context.Background(), &deployment, &client.UpdateOptions{})
 	if err != nil {

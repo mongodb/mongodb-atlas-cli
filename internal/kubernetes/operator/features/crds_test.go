@@ -273,9 +273,9 @@ func Test_CRDCompatibleVersion(t *testing.T) {
 	})
 
 	t.Run("should return operator major version when it is less than supported CRD version", func(t *testing.T) {
-		crdVersion, err := semver.NewVersion(LatestOperatorMajorVersion)
+		latestOperatorSemver, err := semver.NewVersion(LatestOperatorMajorVersion)
 		require.NoError(t, err)
-		operatorVersion := semver.New(crdVersion.Major(), crdVersion.Minor()-1, 2, "", "")
+		operatorVersion := semver.New(latestOperatorSemver.Major(), latestOperatorSemver.Minor(), 2, "", "")
 
 		expected := fmt.Sprintf("%d.%d.0", operatorVersion.Major(), operatorVersion.Minor())
 		compatibleVersion, err := CRDCompatibleVersion(operatorVersion.String())
@@ -284,9 +284,9 @@ func Test_CRDCompatibleVersion(t *testing.T) {
 	})
 
 	t.Run("should return operator major version when it is equal than supported CRD version", func(t *testing.T) {
-		crdVersion, err := semver.NewVersion(LatestOperatorMajorVersion)
+		latestOperatorSemver, err := semver.NewVersion(LatestOperatorMajorVersion)
 		require.NoError(t, err)
-		operatorVersion := semver.New(crdVersion.Major(), crdVersion.Minor(), crdVersion.Patch(), "", "")
+		operatorVersion := semver.New(latestOperatorSemver.Major(), latestOperatorSemver.Minor(), latestOperatorSemver.Patch(), "", "")
 
 		expected := fmt.Sprintf("%d.%d.0", operatorVersion.Major(), operatorVersion.Minor())
 		compatibleVersion, err := CRDCompatibleVersion(operatorVersion.String())
@@ -295,9 +295,9 @@ func Test_CRDCompatibleVersion(t *testing.T) {
 	})
 
 	t.Run("should return CRD major version when it is less than operator version", func(t *testing.T) {
-		crdVersion, err := semver.NewVersion(LatestOperatorMajorVersion)
+		latestOperatorSemver, err := semver.NewVersion(LatestOperatorMajorVersion)
 		require.NoError(t, err)
-		operatorVersion := semver.New(crdVersion.Major(), crdVersion.Minor()+1, 0, "", "")
+		operatorVersion := semver.New(latestOperatorSemver.Major(), latestOperatorSemver.Minor()+1, 0, "", "")
 
 		compatibleVersion, err := CRDCompatibleVersion(operatorVersion.String())
 		require.NoError(t, err)

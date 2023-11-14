@@ -74,6 +74,16 @@ var (
 			ResourceAtlasDataFederation,
 			ResourceAtlasFederatedAuth,
 		},
+		"2.0.0": {
+			ResourceAtlasDatabaseUser,
+			ResourceAtlasProject,
+			ResourceAtlasDeployment,
+			ResourceAtlasBackupSchedule,
+			ResourceAtlasBackupPolicy,
+			ResourceAtlasTeam,
+			ResourceAtlasDataFederation,
+			ResourceAtlasFederatedAuth,
+		},
 	}
 )
 

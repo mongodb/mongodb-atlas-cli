@@ -33,7 +33,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mongodb-forks/digest v1.0.5
 	github.com/mongodb-labs/cobra2snooty v0.16.0
-	github.com/mongodb/mongodb-atlas-kubernetes v1.9.0
+	github.com/mongodb/mongodb-atlas-kubernetes v1.9.1-0.20231114164229-16216fe4c25f
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
 	github.com/shirou/gopsutil/v3 v3.23.10
@@ -65,7 +65,7 @@ require (
 )
 
 require (
-	cloud.google.com/go/compute v1.23.1 // indirect
+	cloud.google.com/go/compute v1.23.3 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	cloud.google.com/go/iam v1.1.3 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.5.0 // indirect
@@ -105,7 +105,7 @@ require (
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gemalto/flume v0.13.0 // indirect
-	github.com/go-logr/logr v1.2.4 // indirect
+	github.com/go-logr/logr v1.3.0 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect

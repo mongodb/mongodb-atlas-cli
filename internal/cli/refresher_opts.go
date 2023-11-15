@@ -25,6 +25,8 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
+var TokenRefreshed bool
+
 type RefresherOpts struct {
 	flow Refresher
 }
@@ -58,6 +60,7 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 		return err
 	}
 	if current.Valid() {
+		TokenRefreshed = true
 		return nil
 	}
 	t, _, err := opts.flow.RefreshToken(ctx, config.RefreshToken())
@@ -73,7 +76,11 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 	}
 	config.SetAccessToken(t.AccessToken)
 	config.SetRefreshToken(t.RefreshToken)
-	return config.Save()
+	if err := config.Save(); err != nil {
+		return err
+	}
+	TokenRefreshed = true
+	return nil
 }
 
 func (opts *RefresherOpts) PollToken(c context.Context, d *atlasauth.DeviceCode) (*atlasauth.Token, *atlas.Response, error) {

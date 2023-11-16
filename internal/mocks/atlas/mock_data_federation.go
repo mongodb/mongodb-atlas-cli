@@ -5,7 +5,7 @@
 package atlas
 
 import (
-	os "os"
+	io "io"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -278,10 +278,10 @@ func (m *MockDataFederationLogDownloader) EXPECT() *MockDataFederationLogDownloa
 }
 
 // DataFederationLogs mocks base method.
-func (m *MockDataFederationLogDownloader) DataFederationLogs(arg0, arg1 string, arg2, arg3 int64) (*os.File, error) {
+func (m *MockDataFederationLogDownloader) DataFederationLogs(arg0, arg1 string, arg2, arg3 int64) (io.ReadCloser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DataFederationLogs", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(*os.File)
+	ret0, _ := ret[0].(io.ReadCloser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

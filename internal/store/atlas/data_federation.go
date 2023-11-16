@@ -17,9 +17,9 @@
 package atlas
 
 import (
-	"os"
+	"io"
 
-	"go.mongodb.org/atlas-sdk/v20231115001/admin"
+	"go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_data_federation.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas DataFederationLister,DataFederationDescriber,DataFederationStore,DataFederationCreator,DataFederationUpdater,DataFederationDeleter,DataFederationLogDownloader
@@ -50,7 +50,7 @@ type DataFederationUpdater interface {
 }
 
 type DataFederationLogDownloader interface {
-	DataFederationLogs(string, string, int64, int64) (*os.File, error)
+	DataFederationLogs(string, string, int64, int64) (io.ReadCloser, error)
 }
 
 // DataFederationList encapsulates the logic to manage different cloud providers.
@@ -85,7 +85,7 @@ func (s *Store) DeleteDataFederation(projectID, id string) error {
 }
 
 // DataFederationLogs encapsulates the logic to manage different cloud providers.
-func (s *Store) DataFederationLogs(projectID, id string, startDate, endDate int64) (*os.File, error) {
+func (s *Store) DataFederationLogs(projectID, id string, startDate, endDate int64) (io.ReadCloser, error) {
 	req := s.clientv2.DataFederationApi.DownloadFederatedDatabaseQueryLogs(s.ctx, projectID, id)
 	if startDate != 0 {
 		req = req.StartDate(startDate)

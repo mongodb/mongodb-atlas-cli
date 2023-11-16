@@ -20,7 +20,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	customTime "github.com/mongodb/mongodb-atlas-cli/internal/time"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 

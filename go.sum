@@ -554,8 +554,8 @@ github.com/yusufpapurcu/wmi v1.2.3 h1:E1ctvB7uKFMOJw3fdOW32DwGE9I7t++CRUEMKvFoFi
 github.com/yusufpapurcu/wmi v1.2.3/go.mod h1:SBZ9tNy3G9/m5Oi98Zks0QjeHVDvuK0qfxQmPyzfmi0=
 go.mongodb.org/atlas v0.35.0 h1:fLSPEyv+QcrG5djPWMekaM+BEVfEVBKQO4yEUQl4CQ4=
 go.mongodb.org/atlas v0.35.0/go.mod h1:nfPldE9dSama6G2IbIzmEza02Ly7yFZjMMVscaM0uEc=
-go.mongodb.org/atlas-sdk/v20231115001 v20231115001.0.0 h1:jYGEHBgF5ulTNzM2uItcb9DH4nzMeiQ2FbW5lz3WzUY=
-go.mongodb.org/atlas-sdk/v20231115001 v20231115001.0.0/go.mod h1:nU/m9cPzYGzufugZD1QHd8DvMz9XXQdLo0BUnK8K224=
+go.mongodb.org/atlas-sdk/v20231115002 v20231115002.0.0 h1:64tUWA1fBUbyG9yiLX3wvYPb6Vk/ayUVU2jcsPUpQ3U=
+go.mongodb.org/atlas-sdk/v20231115002 v20231115002.0.0/go.mod h1:el7cm23kEiiw72HAYimhNweKqp/ubHsNJk+Mk30yJhM=
 go.mongodb.org/mongo-driver v1.13.0 h1:67DgFFjYOCMWdtTEmKFpV3ffWlFnh+CYZ8ZS/tXWUfY=
 go.mongodb.org/mongo-driver v1.13.0/go.mod h1:/rGBTebI3XYboVmgz+Wv3Bcbl3aD0QF9zl6kDDw18rQ=
 go.mongodb.org/ops-manager v0.55.3 h1:ZckNLra9XfvUxWgRfdCVOr7QkeCPi7S4VNbcK5di/2A=

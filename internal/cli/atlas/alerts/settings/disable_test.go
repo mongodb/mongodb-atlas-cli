@@ -25,7 +25,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20231115001/admin"
+	"go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestDisableBuilder(t *testing.T) {

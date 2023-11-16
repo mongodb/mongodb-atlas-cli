@@ -39,14 +39,14 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("setup-compliance-policy")
 
-	scheduledPolicyItem := atlasv2.DiskBackupApiPolicyItem{
+	scheduledPolicyItem := atlasv2.BackupComplianceScheduledPolicyItem{
 		FrequencyInterval: 1,
 		FrequencyType:     "daily",
 		RetentionUnit:     "days",
 		RetentionValue:    1,
 	}
 	policy := &atlasv2.DataProtectionSettings20231001{
-		ScheduledPolicyItems: []atlasv2.DiskBackupApiPolicyItem{scheduledPolicyItem},
+		ScheduledPolicyItems: []atlasv2.BackupComplianceScheduledPolicyItem{scheduledPolicyItem},
 		ProjectId:            &g.projectID,
 		AuthorizedEmail:      authorizedEmail,
 	}

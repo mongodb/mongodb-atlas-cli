@@ -38,14 +38,14 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("compliance-policy-pointintimerestore")
-	initialItem := atlasv2.DiskBackupApiPolicyItem{
+	initialItem := atlasv2.BackupComplianceScheduledPolicyItem{
 		FrequencyInterval: 1,
 		FrequencyType:     "hourly",
 		RetentionUnit:     "days",
 		RetentionValue:    1,
 	}
 	compliancePolicy := atlasv2.DataProtectionSettings20231001{
-		ScheduledPolicyItems: []atlasv2.DiskBackupApiPolicyItem{initialItem},
+		ScheduledPolicyItems: []atlasv2.BackupComplianceScheduledPolicyItem{initialItem},
 	}
 	res, err := setupCompliancePolicy(t, g.projectID, &compliancePolicy)
 	r.NoError(err)

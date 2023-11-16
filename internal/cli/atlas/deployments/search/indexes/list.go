@@ -29,8 +29,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS{{range .}}
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}{{end}}
+var listTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS	TYPE{{range .}}
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}	{{if .Type}}{{.Type}}{{else}}` + search.DefaultType + `{{end}}{{end}}
 `
 
 type ListOpts struct {

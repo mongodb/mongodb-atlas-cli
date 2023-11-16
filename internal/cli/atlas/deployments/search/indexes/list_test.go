@@ -49,6 +49,7 @@ func TestList_RunLocal(t *testing.T) {
 		expectedName            = "test"
 		expectedID              = "1"
 		expectedStatus          = "STEADY"
+		expectedType            = "search"
 	)
 
 	buf := new(bytes.Buffer)
@@ -123,6 +124,7 @@ func TestList_RunLocal(t *testing.T) {
 			CollectionName: expectedCollection,
 			Database:       expectedDB,
 			Status:         pointer.GetStringPointerIfNotEmpty(expectedStatus),
+			Type:           pointer.GetStringPointerIfNotEmpty(expectedType),
 		},
 	}
 
@@ -136,9 +138,9 @@ func TestList_RunLocal(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	assert.Equal(t, fmt.Sprintf(`ID    NAME   DATABASE   COLLECTION   STATUS
-%s     %s   %s        %s         %s
-`, expectedID, expectedName, expectedDB, expectedCollection, expectedStatus), buf.String())
+	assert.Equal(t, fmt.Sprintf(`ID    NAME   DATABASE   COLLECTION   STATUS   TYPE
+%s     %s   %s        %s         %s   %s
+`, expectedID, expectedName, expectedDB, expectedCollection, expectedStatus, expectedType), buf.String())
 	t.Log(buf.String())
 }
 

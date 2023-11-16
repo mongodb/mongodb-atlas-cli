@@ -44,8 +44,8 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var describeTemplate = `ID	NAME	DATABASE	COLLECTION
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}
+var describeTemplate = `ID	NAME	DATABASE	COLLECTION	TYPE
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{if .Type }}{{.Type}}{{else}}` + DefaultType + `{{end}}
 `
 
 func (opts *DescribeOpts) Run() error {

@@ -420,8 +420,8 @@ github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9G
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
 github.com/mongodb-forks/digest v1.0.5 h1:EJu3wtLZcA0HCvsZpX5yuD193/sW9tHiNvrEM5apXMk=
 github.com/mongodb-forks/digest v1.0.5/go.mod h1:rb+EX8zotClD5Dj4NdgxnJXG9nwrlx3NWKJ8xttz1Dg=
-github.com/mongodb-labs/cobra2snooty v0.16.0 h1:+q89WQ6KCBWKaxKoXnVmgpPk7DsIJv2LTcvMqCSgOD4=
-github.com/mongodb-labs/cobra2snooty v0.16.0/go.mod h1:eZYlGRCR9pVAqS6Wwz2eVQ9i3Dy4EtcG8jVkcfFWS7Y=
+github.com/mongodb-labs/cobra2snooty v0.17.0 h1:Os4RpsIHViw2fT6Wk5d5cG/rItRS0c8Za8sKKhw3oc8=
+github.com/mongodb-labs/cobra2snooty v0.17.0/go.mod h1:TgFBJczSy1fdW6HY5ZGQfC9EOlhrD1ZJ9hWRldG5gTI=
 github.com/mongodb/mongodb-atlas-kubernetes v1.9.0 h1:G0W00WwOMf00slHjQG5I6JhQPzN2zAjee1rQJxA9t+w=
 github.com/mongodb/mongodb-atlas-kubernetes v1.9.0/go.mod h1:S7JpgyRq6Asp/PBNFWppwUTwao7EIFgFau3ltpt3rpA=
 github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe/go.mod h1:wL8QJuTMNUDYhXwkmfOly8iTdp5TEcJFWZD2D7SIkUc=

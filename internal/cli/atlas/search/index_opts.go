@@ -20,6 +20,7 @@ import (
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/spf13/afero"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
@@ -27,6 +28,9 @@ import (
 const DefaultAnalyzer = "lucene.standard"
 const deprecatedFlagMessage = "please use --file instead"
 const failedToLoadIndexMessage = "failed to parse JSON file due to %s"
+const SearchIndexType = "search"
+const VectorSearchIndexType = "vectorSearch"
+const DefaultType = SearchIndexType
 
 type IndexOpts struct {
 	Name           string
@@ -80,6 +84,11 @@ func (opts *IndexOpts) NewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
 		if err := file.Load(opts.Fs, opts.Filename, index); err != nil {
 			return nil, fmt.Errorf(failedToLoadIndexMessage, err.Error())
 		}
+
+		if index.Type == nil {
+			index.Type = pointer.Get(DefaultType)
+		}
+
 		return index, nil
 	}
 
@@ -102,6 +111,8 @@ func (opts *IndexOpts) NewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
 		},
 		Name:           opts.Name,
 		SearchAnalyzer: &opts.SearchAnalyzer,
+		// only search indexes can be created using flags
+		Type: pointer.Get(SearchIndexType),
 	}
 	return i, nil
 }

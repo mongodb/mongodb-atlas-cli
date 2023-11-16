@@ -17,7 +17,7 @@ package convert
 import (
 	"strings"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115001/admin"
 )
 
 const (

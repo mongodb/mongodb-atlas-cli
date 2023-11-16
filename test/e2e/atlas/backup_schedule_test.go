@@ -23,7 +23,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115001/admin"
 )
 
 func TestSchedule(t *testing.T) {

@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115001/admin"
 )
 
 func TestBackupCompliancePolicySetup(t *testing.T) {
@@ -39,14 +39,14 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("setup-compliance-policy")
 
-	scheduledPolicyItem := atlasv2.DiskBackupApiPolicyItem{
+	scheduledPolicyItem := atlasv2.BackupComplianceScheduledPolicyItem{
 		FrequencyInterval: 1,
 		FrequencyType:     "daily",
 		RetentionUnit:     "days",
 		RetentionValue:    1,
 	}
 	policy := &atlasv2.DataProtectionSettings20231001{
-		ScheduledPolicyItems: []atlasv2.DiskBackupApiPolicyItem{scheduledPolicyItem},
+		ScheduledPolicyItems: []atlasv2.BackupComplianceScheduledPolicyItem{scheduledPolicyItem},
 		ProjectId:            &g.projectID,
 		AuthorizedEmail:      authorizedEmail,
 	}

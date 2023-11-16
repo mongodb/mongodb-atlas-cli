@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115001/admin"
 )
 
 type CreateOpts struct {

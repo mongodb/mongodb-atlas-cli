@@ -23,7 +23,7 @@ import (
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"go.mongodb.org/atlas-sdk/v20231001002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115001/admin"
 )
 
 const projectID = "TestProjectID"

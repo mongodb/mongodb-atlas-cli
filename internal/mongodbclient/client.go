@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"time"
 
-	"go.mongodb.org/atlas-sdk/v20231001002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115001/admin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

@@ -15,7 +15,7 @@
 package atlas
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231001002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115001/admin"
 )
 
 type CompliancePolicyDescriber interface {

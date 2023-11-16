@@ -33,10 +33,6 @@ var describeTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS	TYPE
 {{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}	{{if .Type}}{{.Type}}{{else}}` + search.DefaultType + `{{end}}
 `
 
-var describeOutputTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS	TYPE
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}	{{.Type}}
-`
-
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
@@ -116,7 +112,7 @@ func DescribeBuilder() *cobra.Command {
 		GroupID: "all",
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",
-			"output":      describeOutputTemplate,
+			"output":      describeTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			w := cmd.OutOrStdout()

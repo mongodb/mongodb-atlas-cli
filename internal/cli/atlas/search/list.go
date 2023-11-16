@@ -48,9 +48,6 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 var listTemplate = `ID	NAME	DATABASE	COLLECTION	TYPE{{range .}}
 {{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{if .Type }}{{.Type}}{{else}}` + DefaultType + `{{end}}{{end}}
 `
-var listOutputTemplate = `ID	NAME	DATABASE	COLLECTION	TYPE{{range .}}
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Type}}{{end}}
-`
 
 func (opts *ListOpts) Run() error {
 	r, err := opts.store.SearchIndexes(opts.ConfigProjectID(), opts.clusterName, opts.dbName, opts.collName)
@@ -69,7 +66,7 @@ func ListBuilder() *cobra.Command {
 		Short: "List all Atlas Search indexes for a cluster.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
 		Annotations: map[string]string{
-			"output": listOutputTemplate,
+			"output": listTemplate,
 		},
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,

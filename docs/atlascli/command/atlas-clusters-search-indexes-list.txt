@@ -85,7 +85,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   ID          NAME     DATABASE     COLLECTION         TYPE{{range .>
+   ID          NAME     DATABASE     COLLECTION         TYPE
    <IndexID>   <Name>   <Database>   <CollectionName>   <Type>
    
 

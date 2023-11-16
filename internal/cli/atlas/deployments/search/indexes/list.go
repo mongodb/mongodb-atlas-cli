@@ -33,10 +33,6 @@ var listTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS	TYPE{{range .}}
 {{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}	{{if .Type}}{{.Type}}{{else}}` + search.DefaultType + `{{end}}{{end}}
 `
 
-var listOutputTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS	TYPE{{range .}}
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}	{{.Type}}{{end}}
-`
-
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
@@ -125,7 +121,7 @@ func ListBuilder() *cobra.Command {
 		Args:    require.NoArgs,
 		GroupID: "all",
 		Annotations: map[string]string{
-			"output": listOutputTemplate,
+			"output": listTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			w := cmd.OutOrStdout()

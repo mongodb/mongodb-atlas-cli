@@ -70,7 +70,7 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 	}
 
 	// Empty these fields so that they are not included into the index definition for the MongoDB command
-	index = removeFields(index, "id", "collectionName", "database")
+	index = removeFields(index, "id", "collectionName", "database", "type")
 
 	indexCommand := bson.D{
 		{

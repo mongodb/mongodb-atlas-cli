@@ -22,7 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestDBUserList_Run(t *testing.T) {

@@ -18,7 +18,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20231115001/admin"
+	"go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 const (

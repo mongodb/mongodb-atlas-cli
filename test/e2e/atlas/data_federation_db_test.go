@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlas "go.mongodb.org/atlas-sdk/v20231115001/admin"
+	atlas "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestDataFederation(t *testing.T) {

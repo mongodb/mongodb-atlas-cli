@@ -30,6 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
@@ -126,6 +127,7 @@ func TestCreate_RunLocal(t *testing.T) {
 		},
 		Name:           opts.Name,
 		SearchAnalyzer: &opts.SearchAnalyzer,
+		Type:           pointer.Get(search.DefaultType),
 	}
 
 	indexWithID := &atlasv2.ClusterSearchIndex{
@@ -139,6 +141,7 @@ func TestCreate_RunLocal(t *testing.T) {
 		Name:           opts.Name,
 		SearchAnalyzer: &opts.SearchAnalyzer,
 		IndexID:        &indexID,
+		Type:           pointer.Get(search.DefaultType),
 	}
 
 	mockDB.
@@ -308,6 +311,7 @@ func TestCreate_RunAtlas(t *testing.T) {
 		},
 		Name:           opts.Name,
 		SearchAnalyzer: &opts.SearchAnalyzer,
+		Type:           pointer.Get(search.DefaultType),
 	}
 
 	indexWithID := &atlasv2.ClusterSearchIndex{

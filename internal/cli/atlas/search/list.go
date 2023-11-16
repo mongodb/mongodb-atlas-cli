@@ -45,8 +45,11 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	NAME	DATABASE	COLLECTION{{range .}}
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}{{end}}
+var listTemplate = `ID	NAME	DATABASE	COLLECTION	TYPE{{range .}}
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{if .Type }}{{.Type}}{{else}}` + DefaultType + `{{end}}{{end}}
+`
+var listOutputTemplate = `ID	NAME	DATABASE	COLLECTION	TYPE{{range .}}
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Type}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {
@@ -62,9 +65,12 @@ func (opts *ListOpts) Run() error {
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
-		Short:   "List all Atlas Search indexes for a cluster.",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
+		Use:   "list",
+		Short: "List all Atlas Search indexes for a cluster.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
+		Annotations: map[string]string{
+			"output": listOutputTemplate,
+		},
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return the JSON-formatted list of Atlas search indexes on the sample_mflix.movies database in the cluster named myCluster:

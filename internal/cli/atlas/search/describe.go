@@ -44,8 +44,11 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var describeTemplate = `ID	NAME	DATABASE	COLLECTION
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}
+var describeTemplate = `ID	NAME	DATABASE	COLLECTION	TYPE
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{if .Type }}{{.Type}}{{else}}` + DefaultType + `{{end}}
+`
+var describeOutputTemplate = `ID	NAME	DATABASE	COLLECTION	TYPE
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Type}}
 `
 
 func (opts *DescribeOpts) Run() error {
@@ -67,7 +70,7 @@ func DescribeBuilder() *cobra.Command {
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",
-			"output":      describeTemplate,
+			"output":      describeOutputTemplate,
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the search index with the ID 5f1f40842f2ac35f49190c20 for the cluster named myCluster:
   %s clusters search indexes describe 5f1f40842f2ac35f49190c20 --clusterName myCluster --output json`, cli.ExampleAtlasEntryPoint()),

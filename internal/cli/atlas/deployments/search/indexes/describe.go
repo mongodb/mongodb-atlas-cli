@@ -19,6 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
@@ -28,8 +29,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS
-{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}
+var describeTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS	TYPE
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}	{{if .Type}}{{.Type}}{{else}}` + search.DefaultType + `{{end}}
+`
+
+var describeOutputTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS	TYPE
+{{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}	{{.Type}}
 `
 
 type DescribeOpts struct {
@@ -111,7 +116,7 @@ func DescribeBuilder() *cobra.Command {
 		GroupID: "all",
 		Annotations: map[string]string{
 			"indexIdDesc": "ID of the index.",
-			"output":      describeTemplate,
+			"output":      describeOutputTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			w := cmd.OutOrStdout()

@@ -20,5 +20,5 @@ LATEST_SDK_RELEASE=$(curl -sSfL -X GET  https://api.github.com/repos/mongodb/atl
 echo  "==> Updating SDK to latest major version $LATEST_SDK_RELEASE"
 gomajor get "go.mongodb.org/atlas-sdk/$LATEST_SDK_RELEASE@latest"
 go mod tidy
-sed -i"" -r "s|go.mongodb.org/atlas-sdk/v[0-9]*|go.mongodb.org/atlas-sdk/$LATEST_SDK_RELEASE|" build/ci/library_owners.json
+sed -i -r "s|go.mongodb.org/atlas-sdk/v[0-9]*|go.mongodb.org/atlas-sdk/$LATEST_SDK_RELEASE|" build/ci/library_owners.json
 echo "Done"

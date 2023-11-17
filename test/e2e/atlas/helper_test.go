@@ -272,7 +272,7 @@ func e2eTier() string {
 	return tier
 }
 
-func deleteClusterForProject(projectID, clusterName string) error {
+func internalDeleteClusterForProject(projectID, clusterName string) error {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return err
@@ -292,6 +292,17 @@ func deleteClusterForProject(projectID, clusterName string) error {
 		return fmt.Errorf("error deleting cluster %w: %s", err, string(resp))
 	}
 
+	// this command will fail with 404 once the cluster is deleted
+	// we just need to wait for this to close the project
+	_ = watchCluster(projectID, clusterName)
+	return nil
+}
+
+func watchCluster(projectID, clusterName string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
 	watchArgs := []string{
 		clustersEntity,
 		"watch",
@@ -302,9 +313,43 @@ func deleteClusterForProject(projectID, clusterName string) error {
 	}
 	watchCmd := exec.Command(cliPath, watchArgs...)
 	watchCmd.Env = os.Environ()
-	// this command will fail with 404 once the cluster is deleted
-	// we just need to wait for this to close the project
-	_ = watchCmd.Run()
+	return watchCmd.Run()
+}
+
+func removeTerminationProtectionFromCluster(projectID, clusterName string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+	args := []string{
+		clustersEntity,
+		"update",
+		clusterName,
+		"--disableTerminationProtection",
+	}
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	updateCmd := exec.Command(cliPath, args...)
+	updateCmd.Env = os.Environ()
+	if resp, err := updateCmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("error updating cluster %w: %s", err, string(resp))
+	}
+
+	return watchCluster(projectID, clusterName)
+}
+
+func deleteClusterForProject(projectID, clusterName string) error {
+	if err := internalDeleteClusterForProject(projectID, clusterName); err != nil {
+		if !strings.Contains(err.Error(), "CANNOT_TERMINATE_CLUSTER_WHEN_TERMINATION_PROTECTION_ENABLED") {
+			return err
+		}
+		if err := removeTerminationProtectionFromCluster(projectID, clusterName); err != nil {
+			return err
+		}
+		return internalDeleteClusterForProject(projectID, clusterName)
+	}
+
 	return nil
 }
 

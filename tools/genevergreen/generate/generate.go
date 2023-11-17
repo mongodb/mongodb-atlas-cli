@@ -160,9 +160,6 @@ func PostPkgMetaTasks(c *shrub.Configuration, toolName string) {
 	}
 
 	for _, os := range oses {
-		if os == "debian12" {
-			continue // TODO fix me after CLOUDP-209440
-		}
 		t := &shrub.Task{
 			Name: fmt.Sprintf("pkg_test_%s_meta_docker_%s", toolName, os),
 		}

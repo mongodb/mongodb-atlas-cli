@@ -37,7 +37,7 @@
                       "id": "12"
                   },
                   "customfield_12751": [{
-                          "id": "22223"
+                          "id": "14562"
                   }],
                   "description": "This ticket tracks the following GitHub issue: '"${ISSUE_URL}"'.",
                   "components": [

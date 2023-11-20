@@ -57,15 +57,14 @@ func TestCleanup(t *testing.T) {
 		}
 		t.Run(fmt.Sprintf("trying to delete project %s\n", project.GetId()), func(t *testing.T) {
 			t.Parallel()
-			deleteAllNetworkPeers(t, cliPath, projectID, "aws")
-			deleteAllNetworkPeers(t, cliPath, projectID, "gcp")
-			deleteAllNetworkPeers(t, cliPath, projectID, "azure")
-			deleteAllPrivateEndpoints(t, cliPath, projectID, "aws")
-			deleteAllPrivateEndpoints(t, cliPath, projectID, "gcp")
-			deleteAllPrivateEndpoints(t, cliPath, projectID, "azure")
+			for _, provider := range []string{"aws", "gcp", "azure"} {
+				deleteAllNetworkPeers(t, cliPath, projectID, provider)
+				deleteAllPrivateEndpoints(t, cliPath, projectID, provider)
+			}
 			deleteClustersForProject(t, cliPath, projectID)
 			deleteDatapipelinesForProject(t, cliPath, projectID)
 			deleteAllDataFederations(t, cliPath, projectID)
+			deleteAllServerlessInstances(t, cliPath, projectID)
 			deleteProjectWithRetry(t, projectID)
 		})
 	}

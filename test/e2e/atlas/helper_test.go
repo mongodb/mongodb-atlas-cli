@@ -879,6 +879,25 @@ func listDataFederationsByProject(t *testing.T, cliPath, projectID string) []atl
 	return dataFederations
 }
 
+func listServerlessByProject(t *testing.T, cliPath, projectID string) []atlasv2.ServerlessInstanceDescription {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		serverlessEntity,
+		"list",
+		"--projectId", projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	require.NoError(t, err)
+
+	var serverlessInstances []atlasv2.ServerlessInstanceDescription
+	err = json.Unmarshal(resp, &serverlessInstances)
+	require.NoError(t, err)
+
+	return serverlessInstances
+}
+
 func deleteAllDataFederations(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
@@ -890,6 +909,19 @@ func deleteAllDataFederations(t *testing.T, cliPath, projectID string) {
 	}
 
 	t.Log("all datafederations successfully deleted")
+}
+
+func deleteAllServerlessInstances(t *testing.T, cliPath, projectID string) {
+	t.Helper()
+
+	serverlessInstances := listServerlessByProject(t, cliPath, projectID)
+
+	for _, instance := range serverlessInstances {
+		err := deleteServerlessInstanceForProject(projectID, instance.GetName())
+		require.NoError(t, err)
+	}
+
+	t.Log("all serverless instances successfully deleted")
 }
 
 func deleteDataFederationForProject(projectID, dataFedName string) error {

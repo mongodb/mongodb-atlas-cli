@@ -27,7 +27,9 @@ import (
 )
 
 const (
-	authorizedEmail = "firstname.lastname@example.com"
+	authorizedUserFirstName = "firstname"
+	authorizedUserLastName  = "lastname"
+	authorizedEmail         = "firstname.lastname@example.com"
 )
 
 func TestEnableBuilder(t *testing.T) {
@@ -37,6 +39,8 @@ func TestEnableBuilder(t *testing.T) {
 		0,
 		[]string{
 			flag.ProjectID,
+			flag.AuthorizedUserFirstName,
+			flag.AuthorizedUserLastName,
 			flag.AuthorizedEmail,
 			flag.Output,
 			flag.EnableWatch,
@@ -74,21 +78,22 @@ func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCompliancePolicyEnabler(ctrl)
 	state := active
-	email := authorizedEmail
 
 	expected := &atlasv2.DataProtectionSettings20231001{
 		State: &state,
 	}
 
 	opts := &EnableOpts{
-		store:           mockStore,
-		authorizedEmail: email,
-		confirm:         true,
+		store:                   mockStore,
+		authorizedUserFirstName: authorizedUserFirstName,
+		authorizedUserLastName:  authorizedUserLastName,
+		authorizedEmail:         authorizedEmail,
+		confirm:                 true,
 	}
 
 	mockStore.
 		EXPECT().
-		EnableCompliancePolicy(opts.ProjectID, email, "", "").
+		EnableCompliancePolicy(opts.ProjectID, authorizedEmail, authorizedUserFirstName, authorizedUserLastName).
 		Return(expected, nil).
 		Times(1)
 

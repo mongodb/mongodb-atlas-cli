@@ -46,9 +46,11 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 		RetentionValue:    1,
 	}
 	policy := &atlasv2.DataProtectionSettings20231001{
-		ScheduledPolicyItems: []atlasv2.BackupComplianceScheduledPolicyItem{scheduledPolicyItem},
-		ProjectId:            &g.projectID,
-		AuthorizedEmail:      authorizedEmail,
+		ScheduledPolicyItems:    []atlasv2.BackupComplianceScheduledPolicyItem{scheduledPolicyItem},
+		ProjectId:               &g.projectID,
+		AuthorizedUserLastName:  authorizedUserFirstName,
+		AuthorizedUserFirstName: authorizedUserLastName,
+		AuthorizedEmail:         authorizedEmail,
 	}
 	path := "./compliancepolicy.json"
 
@@ -76,5 +78,7 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 
 	a := assert.New(t)
 	a.Len(result.GetScheduledPolicyItems(), 1)
+	a.Equal(authorizedUserFirstName, result.GetAuthorizedUserFirstName())
+	a.Equal(authorizedUserLastName, result.GetAuthorizedUserLastName())
 	a.Equal(authorizedEmail, result.GetAuthorizedEmail())
 }

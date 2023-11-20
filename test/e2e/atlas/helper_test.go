@@ -128,7 +128,9 @@ const (
 
 // Backup compliance policy constants.
 const (
-	authorizedEmail = "firstname.lastname@example.com"
+	authorizedUserFirstName = "firstname"
+	authorizedUserLastName  = "lastname"
+	authorizedEmail         = "firstname.lastname@example.com"
 )
 
 func deployServerlessInstanceForProject(projectID string) (string, error) {

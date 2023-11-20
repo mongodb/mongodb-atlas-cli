@@ -33,6 +33,8 @@ type DescribeOpts struct {
 }
 
 var dataProtectionSettingsTemplate = `Project:	{{.ProjectId}}
+Authorized user first name:	{{.AuthorizedUserFirstName}}
+Authorized user last name:	{{.AuthorizedUserLastName}}
 Authorized e-mail:	{{.AuthorizedEmail}}
 Copy protection enabled:	{{.CopyProtectionEnabled}}
 Encryption at rest enabled:	{{.EncryptionAtRestEnabled}}

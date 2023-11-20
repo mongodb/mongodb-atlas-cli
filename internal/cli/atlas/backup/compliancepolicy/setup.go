@@ -45,6 +45,8 @@ type SetupOpts struct {
 var setupWatchTemplate = `Your backup compliance policy has been set up with the following configuration:
 
 Project:	{{.ProjectId}}
+Authorized user first name:	{{.AuthorizedUserFirstName}}
+Authorized user last name:	{{.AuthorizedUserLastName}}
 Authorized e-mail:	{{.AuthorizedEmail}}
 Copy protection enabled:	{{.CopyProtectionEnabled}}
 Encryption at rest enabled:	{{.EncryptionAtRestEnabled}}
@@ -62,6 +64,8 @@ ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
 var setupTemplate = `Your backup compliance policy is being set up with the following configuration:
 
 Project:	{{.ProjectId}}
+Authorized user first name:	{{.AuthorizedUserFirstName}}
+Authorized user last name:	{{.AuthorizedUserLastName}}
 Authorized e-mail:	{{.AuthorizedEmail}}
 Copy protection enabled:	{{.CopyProtectionEnabled}}
 Encryption at rest enabled:	{{.EncryptionAtRestEnabled}}

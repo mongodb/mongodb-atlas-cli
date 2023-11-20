@@ -29,9 +29,6 @@ import (
 )
 
 func TestBackupCompliancePolicyEnable(t *testing.T) {
-	// TODO remove after CLOUDP-198381
-	t.Skip("reenable tests when CLOUDP-198381 is addressed")
-
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
@@ -45,6 +42,10 @@ func TestBackupCompliancePolicyEnable(t *testing.T) {
 		"enable",
 		"--projectId",
 		g.projectID,
+		"--authorizedUserFirstName",
+		authorizedUserFirstName,
+		"--authorizedUserLastName",
+		authorizedUserLastName,
 		"--authorizedEmail",
 		authorizedEmail,
 		"-o=json",

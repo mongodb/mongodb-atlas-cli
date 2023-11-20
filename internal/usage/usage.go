@@ -460,6 +460,8 @@ dbName and collection are required only for built-in roles.`
 	ExporterDataFederationName                = "One or more comma separated data federation names to import"
 	DataFederationQueryLimitValue             = "Value given to the query limit."
 	OverrunPolicy                             = "Action to take when the usage limit is exceeded."
+	AuthorizedUserFirstName                   = "First name of the user who authorized to updated the Backup Compliance Policy settings."
+	AuthorizedUserLastName                    = "Last name of the user who authorized to updated the Backup Compliance Policy settings."
 	AuthorizedEmail                           = "Email address of a security or legal representative."
 	DeploymentType                            = "Type of deployment that you want to create. Valid values are ATLAS or LOCAL."
 	MongodPort                                = "Port that the MongoDB server listens to for client connections."

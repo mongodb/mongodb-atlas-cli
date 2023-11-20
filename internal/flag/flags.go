@@ -363,6 +363,8 @@ const (
 	DataFederationName                        = "dataFederationName"                        // DataFederationName flag
 	Value                                     = "value"                                     // Value flag
 	OverrunPolicy                             = "overrunPolicy"                             // OverrunPolicy flag
+	AuthorizedUserFirstName                   = "authorizedUserFirstName"                   // authorizedUserFirstName flag
+	AuthorizedUserLastName                    = "authorizedUserLastName"                    // authorizedUserLastName flag
 	AuthorizedEmail                           = "authorizedEmail"                           // authorizedEmail flag
 	ConnectWith                               = "connectWith"                               // connectWith flag
 	DeploymentName                            = "deploymentName"                            // deploymentName flag

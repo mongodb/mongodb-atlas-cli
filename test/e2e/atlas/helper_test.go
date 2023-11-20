@@ -96,6 +96,7 @@ const (
 	teamsEntity                  = "teams"
 	setupEntity                  = "setup"
 	deploymentEntity             = "deployments"
+	deletingState                = "DELETING"
 )
 
 // AlertConfig constants.
@@ -177,6 +178,25 @@ func deployServerlessInstanceForProject(projectID string) (string, error) {
 	return clusterName, nil
 }
 
+func watchServerlessInstanceForProject(projectID, clusterName string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+
+	watchArgs := []string{
+		serverlessEntity,
+		"watch",
+		clusterName,
+	}
+	if projectID != "" {
+		watchArgs = append(watchArgs, "--projectId", projectID)
+	}
+	watchCmd := exec.Command(cliPath, watchArgs...)
+	watchCmd.Env = os.Environ()
+	return watchCmd.Run()
+}
+
 func deleteServerlessInstanceForProject(projectID, clusterName string) error {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
@@ -197,19 +217,9 @@ func deleteServerlessInstanceForProject(projectID, clusterName string) error {
 		return fmt.Errorf("error deleting serverless instance %w: %s", err, string(resp))
 	}
 
-	watchArgs := []string{
-		serverlessEntity,
-		"watch",
-		clusterName,
-	}
-	if projectID != "" {
-		watchArgs = append(watchArgs, "--projectId", projectID)
-	}
-	watchCmd := exec.Command(cliPath, watchArgs...)
-	watchCmd.Env = os.Environ()
 	// this command will fail with 404 once the cluster is deleted
 	// we just need to wait for this to close the project
-	_ = watchCmd.Run()
+	_ = watchServerlessInstanceForProject(projectID, clusterName)
 	return nil
 }
 
@@ -651,7 +661,8 @@ func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
 	var clusters atlasv2.PaginatedAdvancedClusterDescription
 	require.NoError(t, json.Unmarshal(resp, &clusters))
 	for _, cluster := range clusters.Results {
-		if cluster.GetStateName() == "DELETING" {
+		if cluster.GetStateName() == deletingState {
+			_ = watchCluster(projectID, cluster.GetName())
 			continue
 		}
 		assert.NoError(t, deleteClusterForProject(projectID, cluster.GetName())) //nolint: testifylint // we want to check all instead of failing early
@@ -917,6 +928,10 @@ func deleteAllServerlessInstances(t *testing.T, cliPath, projectID string) {
 	serverlessInstances := listServerlessByProject(t, cliPath, projectID)
 
 	for _, instance := range serverlessInstances {
+		if instance.GetStateName() == deletingState {
+			_ = watchServerlessInstanceForProject(projectID, instance.GetName())
+			continue
+		}
 		err := deleteServerlessInstanceForProject(projectID, instance.GetName())
 		require.NoError(t, err)
 	}

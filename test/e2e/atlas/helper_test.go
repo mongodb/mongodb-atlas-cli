@@ -197,11 +197,9 @@ func watchServerlessInstanceForProject(projectID, clusterName string) error {
 	return watchCmd.Run()
 }
 
-func deleteServerlessInstanceForProject(projectID, clusterName string) error {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return err
-	}
+func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, clusterName string) {
+	t.Helper()
+
 	args := []string{
 		serverlessEntity,
 		"delete",
@@ -213,14 +211,10 @@ func deleteServerlessInstanceForProject(projectID, clusterName string) error {
 	}
 	deleteCmd := exec.Command(cliPath, args...)
 	deleteCmd.Env = os.Environ()
-	if resp, err := deleteCmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("error deleting serverless instance %w: %s", err, string(resp))
-	}
+	resp, err := deleteCmd.CombinedOutput()
+	require.NoError(t, err, resp)
 
-	// this command will fail with 404 once the cluster is deleted
-	// we just need to wait for this to close the project
 	_ = watchServerlessInstanceForProject(projectID, clusterName)
-	return nil
 }
 
 func deployClusterForProject(projectID, tier string, enableBackup bool) (string, string, error) {
@@ -647,7 +641,7 @@ func createProjectWithoutAlertSettings(projectName string) (string, error) {
 	return project.ID, nil
 }
 
-func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
+func listClustersForProject(t *testing.T, cliPath, projectID string) atlasv2.PaginatedAdvancedClusterDescription {
 	t.Helper()
 	cmd := exec.Command(cliPath,
 		clustersEntity,
@@ -660,12 +654,23 @@ func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
 	require.NoError(t, err)
 	var clusters atlasv2.PaginatedAdvancedClusterDescription
 	require.NoError(t, json.Unmarshal(resp, &clusters))
+	return clusters
+}
+
+func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
+	t.Helper()
+	clusters := listClustersForProject(t, cliPath, projectID)
 	for _, cluster := range clusters.Results {
-		if cluster.GetStateName() == deletingState {
-			_ = watchCluster(projectID, cluster.GetName())
-			continue
-		}
-		assert.NoError(t, deleteClusterForProject(projectID, cluster.GetName())) //nolint: testifylint // we want to check all instead of failing early
+		func(clusterName, state string) {
+			t.Run(fmt.Sprintf("delete cluster %s\n", clusterName), func(t *testing.T) {
+				t.Parallel()
+				if state == deletingState {
+					_ = watchCluster(projectID, clusterName)
+					return
+				}
+				assert.NoError(t, deleteClusterForProject(projectID, clusterName)) //nolint: testifylint // we want to check all instead of failing early
+			})
+		}(cluster.GetName(), cluster.GetStateName())
 	}
 }
 
@@ -913,12 +918,9 @@ func deleteAllDataFederations(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
 	dataFederations := listDataFederationsByProject(t, cliPath, projectID)
-
 	for _, federation := range dataFederations {
-		err := deleteDataFederationForProject(projectID, federation.GetName())
-		require.NoError(t, err)
+		deleteDataFederationForProject(t, cliPath, projectID, federation.GetName())
 	}
-
 	t.Log("all datafederations successfully deleted")
 }
 
@@ -926,24 +928,24 @@ func deleteAllServerlessInstances(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
 	serverlessInstances := listServerlessByProject(t, cliPath, projectID)
-
-	for _, instance := range serverlessInstances.Results {
-		if instance.GetStateName() == deletingState {
-			_ = watchServerlessInstanceForProject(projectID, instance.GetName())
-			continue
-		}
-		err := deleteServerlessInstanceForProject(projectID, instance.GetName())
-		require.NoError(t, err)
+	for _, serverless := range serverlessInstances.Results {
+		func(serverlessInstance, state string) {
+			t.Run(fmt.Sprintf("delete serverless instance %s\n", serverlessInstance), func(t *testing.T) {
+				t.Parallel()
+				if state == deletingState {
+					_ = watchServerlessInstanceForProject(projectID, serverlessInstance)
+					return
+				}
+				deleteServerlessInstanceForProject(t, cliPath, projectID, serverlessInstance)
+			})
+		}(serverless.GetName(), serverless.GetStateName())
 	}
 
 	t.Log("all serverless instances successfully deleted")
 }
 
-func deleteDataFederationForProject(projectID, dataFedName string) error {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return err
-	}
+func deleteDataFederationForProject(t *testing.T, cliPath, projectID, dataFedName string) {
+	t.Helper()
 
 	cmd := exec.Command(cliPath,
 		datafederationEntity,
@@ -953,11 +955,7 @@ func deleteDataFederationForProject(projectID, dataFedName string) error {
 		"--force")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("%s (%w)", string(resp), err)
-	}
-
-	return nil
+	require.NoError(t, err, resp)
 }
 
 func ensureCluster(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, clusterName, version string, diskSizeGB float64, terminationProtection bool) {

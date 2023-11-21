@@ -20,7 +20,6 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
-	"strings"
 	"testing"
 	"time"
 
@@ -242,11 +241,6 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 			break
 		}
 		t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, backoff, projectID, e)
-		if strings.Contains(e.Error(), "CANNOT_CLOSE_GROUP_ACTIVE_ATLAS_CLUSTERS") {
-			cliPath, err := e2e.AtlasCLIBin()
-			require.NoError(t, err)
-			deleteClustersForProject(t, cliPath, projectID)
-		}
 		time.Sleep(time.Duration(backoff) * time.Second)
 		backoff *= 2
 	}
@@ -319,9 +313,9 @@ func (g *atlasE2ETestGenerator) generateServerlessCluster() {
 	g.t.Logf("serverlessName=%s", g.serverlessName)
 
 	g.t.Cleanup(func() {
-		if e := deleteServerlessInstanceForProject(g.projectID, g.serverlessName); e != nil {
-			g.t.Errorf("unexpected error deleting serverless instance: %v", e)
-		}
+		cliPath, err := e2e.AtlasCLIBin()
+		require.NoError(g.t, err)
+		deleteServerlessInstanceForProject(g.t, cliPath, g.projectID, g.serverlessName)
 	})
 }
 
@@ -380,11 +374,12 @@ func (g *atlasE2ETestGenerator) generateDataFederation() {
 
 	g.t.Cleanup(func() {
 		g.Logf("Data Federation cleanup %q\n", storeName)
-		if e := deleteDataFederationForProject(g.projectID, storeName); e != nil {
-			g.t.Errorf("unexpected error deleting data federation: %v", e)
-		} else {
-			g.Logf("data federation %q successfully deleted", storeName)
-		}
+
+		cliPath, err := e2e.AtlasCLIBin()
+		require.NoError(g.t, err)
+
+		deleteDataFederationForProject(g.t, cliPath, g.projectID, storeName)
+		g.Logf("data federation %q successfully deleted", storeName)
 	})
 }
 

@@ -89,7 +89,9 @@ func TestCleanup(t *testing.T) {
 						deleteAllServerlessInstances(t, cliPath, projectID)
 					})
 				})
-				deleteProjectWithRetry(t, projectID)
+				t.Cleanup(func() {
+					deleteProjectWithRetry(t, projectID)
+				})
 			})
 		}(project.GetId())
 	}

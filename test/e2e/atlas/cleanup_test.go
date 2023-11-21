@@ -55,18 +55,44 @@ func TestCleanup(t *testing.T) {
 			t.Log("skipping project", projectID)
 			continue
 		}
-		t.Run(fmt.Sprintf("trying to delete project %s\n", project.GetId()), func(t *testing.T) {
-			t.Parallel()
-			deleteAllNetworkPeers(t, cliPath, projectID, "aws")
-			deleteAllNetworkPeers(t, cliPath, projectID, "gcp")
-			deleteAllNetworkPeers(t, cliPath, projectID, "azure")
-			deleteAllPrivateEndpoints(t, cliPath, projectID, "aws")
-			deleteAllPrivateEndpoints(t, cliPath, projectID, "gcp")
-			deleteAllPrivateEndpoints(t, cliPath, projectID, "azure")
-			deleteClustersForProject(t, cliPath, projectID)
-			deleteDatapipelinesForProject(t, cliPath, projectID)
-			deleteAllDataFederations(t, cliPath, projectID)
-			deleteProjectWithRetry(t, projectID)
-		})
+		func(projectId string) {
+			t.Run(fmt.Sprintf("trying to delete project %s", projectId), func(t *testing.T) {
+				t.Parallel()
+				t.Run(fmt.Sprintf("trying to delete project's %s resources", projectId), func(t *testing.T) {
+					t.Parallel()
+					for _, provider := range []string{"aws", "gcp", "azure"} {
+						func(provider string) {
+							t.Run(fmt.Sprintf("delete network peers for %s", provider), func(t *testing.T) {
+								t.Parallel()
+								deleteAllNetworkPeers(t, cliPath, projectID, provider)
+							})
+							t.Run(fmt.Sprintf("delete private endpoints for %s", provider), func(t *testing.T) {
+								t.Parallel()
+								deleteAllPrivateEndpoints(t, cliPath, projectID, provider)
+							})
+						}(provider)
+					}
+					t.Run("delete all clusters", func(t *testing.T) {
+						t.Parallel()
+						deleteAllClustersForProject(t, cliPath, projectID)
+					})
+					t.Run("delete datapipelines", func(t *testing.T) {
+						t.Parallel()
+						deleteDatapipelinesForProject(t, cliPath, projectID)
+					})
+					t.Run("delete data deferations", func(t *testing.T) {
+						t.Parallel()
+						deleteAllDataFederations(t, cliPath, projectID)
+					})
+					t.Run("delete all serverless instances", func(t *testing.T) {
+						t.Parallel()
+						deleteAllServerlessInstances(t, cliPath, projectID)
+					})
+				})
+				t.Cleanup(func() {
+					deleteProjectWithRetry(t, projectID)
+				})
+			})
+		}(project.GetId())
 	}
 }

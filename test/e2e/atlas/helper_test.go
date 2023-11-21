@@ -96,6 +96,7 @@ const (
 	teamsEntity                  = "teams"
 	setupEntity                  = "setup"
 	deploymentEntity             = "deployments"
+	deletingState                = "DELETING"
 )
 
 // AlertConfig constants.
@@ -177,24 +178,10 @@ func deployServerlessInstanceForProject(projectID string) (string, error) {
 	return clusterName, nil
 }
 
-func deleteServerlessInstanceForProject(projectID, clusterName string) error {
+func watchServerlessInstanceForProject(projectID, clusterName string) error {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return err
-	}
-	args := []string{
-		serverlessEntity,
-		"delete",
-		clusterName,
-		"--force",
-	}
-	if projectID != "" {
-		args = append(args, "--projectId", projectID)
-	}
-	deleteCmd := exec.Command(cliPath, args...)
-	deleteCmd.Env = os.Environ()
-	if resp, err := deleteCmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("error deleting serverless instance %w: %s", err, string(resp))
 	}
 
 	watchArgs := []string{
@@ -207,10 +194,27 @@ func deleteServerlessInstanceForProject(projectID, clusterName string) error {
 	}
 	watchCmd := exec.Command(cliPath, watchArgs...)
 	watchCmd.Env = os.Environ()
-	// this command will fail with 404 once the cluster is deleted
-	// we just need to wait for this to close the project
-	_ = watchCmd.Run()
-	return nil
+	return watchCmd.Run()
+}
+
+func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, clusterName string) {
+	t.Helper()
+
+	args := []string{
+		serverlessEntity,
+		"delete",
+		clusterName,
+		"--force",
+	}
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	deleteCmd := exec.Command(cliPath, args...)
+	deleteCmd.Env = os.Environ()
+	resp, err := deleteCmd.CombinedOutput()
+	require.NoError(t, err, resp)
+
+	_ = watchServerlessInstanceForProject(projectID, clusterName)
 }
 
 func deployClusterForProject(projectID, tier string, enableBackup bool) (string, string, error) {
@@ -272,7 +276,7 @@ func e2eTier() string {
 	return tier
 }
 
-func deleteClusterForProject(projectID, clusterName string) error {
+func internalDeleteClusterForProject(projectID, clusterName string) error {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return err
@@ -292,6 +296,17 @@ func deleteClusterForProject(projectID, clusterName string) error {
 		return fmt.Errorf("error deleting cluster %w: %s", err, string(resp))
 	}
 
+	// this command will fail with 404 once the cluster is deleted
+	// we just need to wait for this to close the project
+	_ = watchCluster(projectID, clusterName)
+	return nil
+}
+
+func watchCluster(projectID, clusterName string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
 	watchArgs := []string{
 		clustersEntity,
 		"watch",
@@ -302,9 +317,43 @@ func deleteClusterForProject(projectID, clusterName string) error {
 	}
 	watchCmd := exec.Command(cliPath, watchArgs...)
 	watchCmd.Env = os.Environ()
-	// this command will fail with 404 once the cluster is deleted
-	// we just need to wait for this to close the project
-	_ = watchCmd.Run()
+	return watchCmd.Run()
+}
+
+func removeTerminationProtectionFromCluster(projectID, clusterName string) error {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+	args := []string{
+		clustersEntity,
+		"update",
+		clusterName,
+		"--disableTerminationProtection",
+	}
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	updateCmd := exec.Command(cliPath, args...)
+	updateCmd.Env = os.Environ()
+	if resp, err := updateCmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("error updating cluster %w: %s", err, string(resp))
+	}
+
+	return watchCluster(projectID, clusterName)
+}
+
+func deleteClusterForProject(projectID, clusterName string) error {
+	if err := internalDeleteClusterForProject(projectID, clusterName); err != nil {
+		if !strings.Contains(err.Error(), "CANNOT_TERMINATE_CLUSTER_WHEN_TERMINATION_PROTECTION_ENABLED") {
+			return err
+		}
+		if err := removeTerminationProtectionFromCluster(projectID, clusterName); err != nil {
+			return err
+		}
+		return internalDeleteClusterForProject(projectID, clusterName)
+	}
+
 	return nil
 }
 
@@ -592,7 +641,7 @@ func createProjectWithoutAlertSettings(projectName string) (string, error) {
 	return project.ID, nil
 }
 
-func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
+func listClustersForProject(t *testing.T, cliPath, projectID string) atlasv2.PaginatedAdvancedClusterDescription {
 	t.Helper()
 	cmd := exec.Command(cliPath,
 		clustersEntity,
@@ -605,11 +654,23 @@ func deleteClustersForProject(t *testing.T, cliPath, projectID string) {
 	require.NoError(t, err)
 	var clusters atlasv2.PaginatedAdvancedClusterDescription
 	require.NoError(t, json.Unmarshal(resp, &clusters))
+	return clusters
+}
+
+func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
+	t.Helper()
+	clusters := listClustersForProject(t, cliPath, projectID)
 	for _, cluster := range clusters.Results {
-		if cluster.GetStateName() == "DELETING" {
-			continue
-		}
-		assert.NoError(t, deleteClusterForProject(projectID, cluster.GetName())) //nolint: testifylint // we want to check all instead of failing early
+		func(clusterName, state string) {
+			t.Run(fmt.Sprintf("delete cluster %s\n", clusterName), func(t *testing.T) {
+				t.Parallel()
+				if state == deletingState {
+					_ = watchCluster(projectID, clusterName)
+					return
+				}
+				assert.NoError(t, deleteClusterForProject(projectID, clusterName)) //nolint: testifylint // we want to check all instead of failing early
+			})
+		}(cluster.GetName(), cluster.GetStateName())
 	}
 }
 
@@ -834,24 +895,57 @@ func listDataFederationsByProject(t *testing.T, cliPath, projectID string) []atl
 	return dataFederations
 }
 
+func listServerlessByProject(t *testing.T, cliPath, projectID string) *atlasv2.PaginatedServerlessInstanceDescription {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		serverlessEntity,
+		"list",
+		"--projectId", projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	require.NoError(t, err)
+
+	var serverlessInstances *atlasv2.PaginatedServerlessInstanceDescription
+	err = json.Unmarshal(resp, &serverlessInstances)
+	require.NoError(t, err)
+
+	return serverlessInstances
+}
+
 func deleteAllDataFederations(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
 	dataFederations := listDataFederationsByProject(t, cliPath, projectID)
-
 	for _, federation := range dataFederations {
-		err := deleteDataFederationForProject(projectID, federation.GetName())
-		require.NoError(t, err)
+		deleteDataFederationForProject(t, cliPath, projectID, federation.GetName())
 	}
-
 	t.Log("all datafederations successfully deleted")
 }
 
-func deleteDataFederationForProject(projectID, dataFedName string) error {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return err
+func deleteAllServerlessInstances(t *testing.T, cliPath, projectID string) {
+	t.Helper()
+
+	serverlessInstances := listServerlessByProject(t, cliPath, projectID)
+	for _, serverless := range serverlessInstances.Results {
+		func(serverlessInstance, state string) {
+			t.Run(fmt.Sprintf("delete serverless instance %s\n", serverlessInstance), func(t *testing.T) {
+				t.Parallel()
+				if state == deletingState {
+					_ = watchServerlessInstanceForProject(projectID, serverlessInstance)
+					return
+				}
+				deleteServerlessInstanceForProject(t, cliPath, projectID, serverlessInstance)
+			})
+		}(serverless.GetName(), serverless.GetStateName())
 	}
+
+	t.Log("all serverless instances successfully deleted")
+}
+
+func deleteDataFederationForProject(t *testing.T, cliPath, projectID, dataFedName string) {
+	t.Helper()
 
 	cmd := exec.Command(cliPath,
 		datafederationEntity,
@@ -861,11 +955,7 @@ func deleteDataFederationForProject(projectID, dataFedName string) error {
 		"--force")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("%s (%w)", string(resp), err)
-	}
-
-	return nil
+	require.NoError(t, err, resp)
 }
 
 func ensureCluster(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, clusterName, version string, diskSizeGB float64, terminationProtection bool) {

@@ -12,21 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package policies
+package ondemand
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/policies/ondemand"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/policies/scheduled"
 	"github.com/spf13/cobra"
 )
 
 func baseCommand() *cobra.Command {
-	const use = "policies"
+	const use = "ondemand"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage the individual policy items of the backup compliance policy for your project.",
+		Short:   "Manage the ondemand policy item of the backup compliance policy for your project.",
 	}
 
 	return cmd
@@ -37,8 +35,6 @@ func Builder() *cobra.Command {
 
 	cmd.AddCommand(
 		DescribeBuilder(),
-		ondemand.Builder(),
-		scheduled.Builder(),
 	)
 
 	return cmd

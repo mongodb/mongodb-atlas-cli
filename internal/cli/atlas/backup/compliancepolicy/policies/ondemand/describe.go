@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package compliancepolicy
+package ondemand
 
 import (
 	"context"
@@ -28,9 +28,14 @@ import (
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-
-	store store.CompliancePolicyDescriber
+	retentionUnit  string
+	retentionValue int
+	store          store.CompliancePolicyDescriber
 }
+
+const describeTemplate = `ID	RETENTION
+{{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
+`
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -54,12 +59,12 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe",
 		Aliases: []string{"get"},
-		Short:   "Return the backup compliance policy for your project.",
+		Short:   "Return the ondemand policy item of the backup compliance policy for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), bcpTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

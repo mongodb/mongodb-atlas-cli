@@ -42,9 +42,7 @@ type SetupOpts struct {
 	confirm bool
 }
 
-var setupWatchTemplate = `Your backup compliance policy has been set up with the following configuration:
-
-Project:	{{.ProjectId}}
+const bcpTemplate = `Project:	{{.ProjectId}}
 Authorized user first name:	{{.AuthorizedUserFirstName}}
 Authorized user last name:	{{.AuthorizedUserLastName}}
 Authorized e-mail:	{{.AuthorizedEmail}}
@@ -61,26 +59,13 @@ ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
 {{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	-	{{.OnDemandPolicyItem.FrequencyType}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
 `
 
-var setupTemplate = `Your backup compliance policy is being set up with the following configuration:
+const setupWatchTemplate = `Your backup compliance policy has been set up with the following configuration:
+` + bcpTemplate
 
-Project:	{{.ProjectId}}
-Authorized user first name:	{{.AuthorizedUserFirstName}}
-Authorized user last name:	{{.AuthorizedUserLastName}}
-Authorized e-mail:	{{.AuthorizedEmail}}
-Copy protection enabled:	{{.CopyProtectionEnabled}}
-Encryption at rest enabled:	{{.EncryptionAtRestEnabled}}
-Point-in-Time restores enabled:	{{.PitEnabled}}
-Restore window days:	{{.RestoreWindowDays}}
+const setupTemplate = `Your backup compliance policy is being set up with the following configuration:
+` + bcpTemplate
 
-POLICIES
-ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
-{{- range .ScheduledPolicyItems}}
-{{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
-{{- end}}
-{{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	-	{{.OnDemandPolicyItem.FrequencyType}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
-`
-
-var confirmationMessage = `Backup compliance policy can not be disabled without MongoDB Support. Please confirm that you want to continue.
+const confirmationMessage = `Backup compliance policy can not be disabled without MongoDB Support. Please confirm that you want to continue.
 Learn more: https://www.mongodb.com/docs/atlas/backup/cloud-backup/backup-compliance-policy/
 `
 

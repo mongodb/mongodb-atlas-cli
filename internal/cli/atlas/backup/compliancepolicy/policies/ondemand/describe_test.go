@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package compliancepolicy
+package ondemand
 
 import (
 	"testing"
@@ -55,5 +55,5 @@ func TestDescribeOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	test.VerifyOutputTemplate(t, bcpTemplate, expected)
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }

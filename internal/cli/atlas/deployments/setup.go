@@ -99,6 +99,7 @@ type SetupOpts struct {
 	settings      string
 	connectWith   string
 	force         bool
+	bindAllIPs    bool
 	mongodIP      string
 	mongotIP      string
 	s             *spinner.Spinner
@@ -297,8 +298,9 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 			Ports: map[int]int{
 				opts.Port: internalMongodPort,
 			},
-			Network: opts.LocalNetworkName(),
-			IP:      opts.mongodIP,
+			BindAllIPs: opts.bindAllIPs,
+			Network:    opts.LocalNetworkName(),
+			IP:         opts.mongodIP,
 			// wrap the entrypoint with a chain of commands that
 			// creates the keyfile in the container and sets the 400 permissions for it,
 			// then starts the entrypoint with the local dev config
@@ -769,6 +771,8 @@ func SetupBuilder() *cobra.Command {
 
 	// Local only
 	cmd.Flags().IntVar(&opts.Port, flag.Port, 0, usage.MongodPort)
+	cmd.Flags().BoolVar(&opts.bindAllIPs, flag.BindAllIPs, false, usage.BindAllIPs)
+	_ = cmd.Flags().MarkHidden(flag.BindAllIPs)
 
 	// Atlas only
 	opts.atlasSetup.SetupAtlasFlags(cmd)

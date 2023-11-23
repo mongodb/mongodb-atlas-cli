@@ -441,7 +441,7 @@ func TestBuildAtlasProject(t *testing.T) {
 					{
 						Provider:          akov2provider.ProviderAWS,
 						Region:            *privateAWSEndpoint.RegionName,
-						ID:                *privateAWSEndpoint.Id,
+						ID:                firstElementOrZeroValue(privateAWSEndpoint.InterfaceEndpoints),
 						IP:                "",
 						GCPProjectID:      "",
 						EndpointGroupName: "",
@@ -1148,7 +1148,7 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 			RegionName:          pointer.Get("US_EAST_1"),
 			EndpointServiceName: nil,
 			ErrorMessage:        nil,
-			InterfaceEndpoints:  nil,
+			InterfaceEndpoints:  []string{"vpce-123456"},
 			Status:              nil,
 		}
 
@@ -1165,7 +1165,7 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 			{
 				Provider:          providerName,
 				Region:            *privateEndpoint.RegionName,
-				ID:                *privateEndpoint.Id,
+				ID:                "vpce-123456",
 				IP:                "",
 				GCPProjectID:      "",
 				EndpointGroupName: "",
@@ -1204,7 +1204,6 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 			{
 				Provider:          providerName,
 				Region:            *privateEndpoint.RegionName,
-				ID:                *privateEndpoint.Id,
 				IP:                "",
 				GCPProjectID:      "",
 				EndpointGroupName: "",
@@ -1313,5 +1312,19 @@ func Test_buildCustomRoles(t *testing.T) {
 		if !reflect.DeepEqual(got, expected) {
 			t.Fatalf("Custom Roles mismatch. expected: %v\r\ngot: %v\r\n", expected, got)
 		}
+	})
+}
+
+func TestFirstElementOrEmpty(t *testing.T) {
+	t.Run("should return zero value when slice is empty", func(t *testing.T) {
+		assert.Equal(t, "", firstElementOrZeroValue([]string{}))
+	})
+
+	t.Run("should return first item when slice has a single item", func(t *testing.T) {
+		assert.Equal(t, "1", firstElementOrZeroValue([]string{"1"}))
+	})
+
+	t.Run("should return first item when slice has multiple items", func(t *testing.T) {
+		assert.Equal(t, "1", firstElementOrZeroValue([]string{"1", "2", "3"}))
 	})
 }

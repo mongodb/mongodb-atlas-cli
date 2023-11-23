@@ -467,12 +467,12 @@ func buildPrivateEndpoints(peProvider store.PrivateEndpointLister, projectID str
 			pe := &peList[i]
 			result = append(result, akov2.PrivateEndpoint{
 				Provider:          cloudProvider,
+				Region:            pe.GetRegionName(),
+				ID:                firstElementOrZeroValue(pe.GetInterfaceEndpoints()),
 				IP:                "",
 				GCPProjectID:      "",
 				EndpointGroupName: "",
 				Endpoints:         akov2.GCPEndpoints{},
-				ID:                pe.GetId(),
-				Region:            pe.GetRegionName(),
 			})
 		}
 	}
@@ -948,4 +948,14 @@ func buildTeams(teamsProvider atlas.OperatorTeamsStore, orgID, projectID, projec
 	}
 
 	return teamsRefs, atlasTeamCRs, nil
+}
+
+func firstElementOrZeroValue[T any](collection []T) T {
+	var item T
+
+	if len(collection) > 0 {
+		item = collection[0]
+	}
+
+	return item
 }

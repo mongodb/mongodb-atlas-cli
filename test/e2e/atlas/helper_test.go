@@ -194,7 +194,10 @@ func watchServerlessInstanceForProject(projectID, clusterName string) error {
 	}
 	watchCmd := exec.Command(cliPath, watchArgs...)
 	watchCmd.Env = os.Environ()
-	return watchCmd.Run()
+	if resp, err := watchCmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("error watching serverless instance %w: %s", err, string(resp))
+	}
+	return nil
 }
 
 func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, clusterName string) {
@@ -317,7 +320,10 @@ func watchCluster(projectID, clusterName string) error {
 	}
 	watchCmd := exec.Command(cliPath, watchArgs...)
 	watchCmd.Env = os.Environ()
-	return watchCmd.Run()
+	if resp, err := watchCmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("error waiting for cluster %w: %s", err, string(resp))
+	}
+	return nil
 }
 
 func removeTerminationProtectionFromCluster(projectID, clusterName string) error {

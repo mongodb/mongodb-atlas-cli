@@ -73,10 +73,11 @@ var (
 	errFlagTypeRequired         = errors.New("the --" + flag.TypeFlag + " flag is required when the --" + flag.Force + " flag is set")
 	errFlagsTypeAndAuthRequired = errors.New("the --" + flag.TypeFlag + ", --" + flag.Username + " and --" + flag.Password +
 		" flags are required when the --" + flag.Force + " and --" + flag.BindIpAll + " flags are set")
-	errInvalidDeploymentType  = errors.New("the deployment type is invalid")
-	errInvalidMongoDBVersion  = errors.New("the mongodb version is invalid")
-	errUnsupportedConnectWith = errors.New("the --" + flag.ConnectWith + " flag is unsupported")
-	errFlagUsernameRequired   = errors.New("the --" + flag.Username +
+	errInvalidDeploymentType      = errors.New("the deployment type is invalid")
+	errIncompatibleDeploymentType = errors.New("the --" + flag.BindIpAll + " flag applies only to LOCAL deployments")
+	errInvalidMongoDBVersion      = errors.New("the mongodb version is invalid")
+	errUnsupportedConnectWith     = errors.New("the --" + flag.ConnectWith + " flag is unsupported")
+	errFlagUsernameRequired       = errors.New("the --" + flag.Username +
 		" is required to enable authentication when --" + flag.BindIpAll + " flag is set")
 	settingOptions      = []string{defaultSettings, customSettings, cancelSettings}
 	settingsDescription = map[string]string{
@@ -287,22 +288,27 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 
 	tempRootUserPassword := base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))
 
+	envVars := map[string]string{
+		"KEYFILECONTENTS": keyFileContents,
+		"DBPATH":          "/data/db",
+		"KEYFILE":         "/data/configdb/keyfile",
+		"MAXCONNS":        maxConns,
+		"REPLSETNAME":     replicaSetName,
+		"MONGOTHOST":      opts.InternalMongotAddress(opts.mongotIP),
+	}
+
+	if opts.IsAuthEnabled() {
+		envVars["MONGODB_INITDB_ROOT_USERNAME"] = tempRootUser
+		envVars["MONGODB_INITDB_ROOT_PASSWORD"] = tempRootUserPassword
+	}
+
 	if _, err := opts.PodmanClient.RunContainer(ctx,
 		podman.RunContainerOpts{
 			Detach:   true,
 			Image:    opts.MongodDockerImageName(),
 			Name:     opts.LocalMongodHostname(),
 			Hostname: opts.LocalMongodHostname(),
-			EnvVars: map[string]string{
-				"KEYFILECONTENTS":              keyFileContents,
-				"DBPATH":                       "/data/db",
-				"KEYFILE":                      "/data/configdb/keyfile",
-				"MAXCONNS":                     maxConns,
-				"REPLSETNAME":                  replicaSetName,
-				"MONGOTHOST":                   opts.InternalMongotAddress(opts.mongotIP),
-				"MONGODB_INITDB_ROOT_USERNAME": tempRootUser,
-				"MONGODB_INITDB_ROOT_PASSWORD": tempRootUserPassword,
-			},
+			EnvVars:  envVars,
 			Volumes: map[string]string{
 				mongodDataVolume: "/data/db",
 			},
@@ -326,11 +332,13 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 
 func (opts *SetupOpts) initLocalDeployment(ctx context.Context, tempRootUserPassword string) error {
 	// connect to local deployment
-	connectionString := fmt.Sprintf("mongodb://%s:%s@localhost:%d/?directConnection=true",
-		url.QueryEscape(tempRootUser),
-		url.QueryEscape(tempRootUserPassword),
-		opts.Port,
-	)
+	connectionString := fmt.Sprintf("mongodb://localhost:%d/?directConnection=true", opts.Port)
+	if opts.IsAuthEnabled() {
+		connectionString = fmt.Sprintf("mongodb://%s:%s@localhost:%d/?directConnection=true",
+			url.QueryEscape(tempRootUser),
+			url.QueryEscape(tempRootUserPassword),
+			opts.Port)
+	}
 
 	const waitSeconds = 60
 	if err := opts.mongodbClient.Connect(connectionString, waitSeconds); err != nil {
@@ -341,6 +349,10 @@ func (opts *SetupOpts) initLocalDeployment(ctx context.Context, tempRootUserPass
 
 	if err := opts.initReplicaSet(ctx, adminDb); err != nil {
 		return err
+	}
+
+	if !opts.IsAuthEnabled() {
+		return nil
 	}
 
 	if err := opts.createAdminUser(ctx, adminDb); err != nil {
@@ -539,6 +551,10 @@ func (opts *SetupOpts) promptPort() error {
 func (opts *SetupOpts) validateDeploymentTypeFlag() error {
 	if opts.DeploymentType == "" && opts.force {
 		return errFlagTypeRequired
+	}
+
+	if opts.IsLocalDeploymentType() && opts.bindIpAll {
+		return errIncompatibleDeploymentType
 	}
 
 	if opts.DeploymentType != "" && !strings.EqualFold(opts.DeploymentType, options.AtlasCluster) && !strings.EqualFold(opts.DeploymentType, options.LocalCluster) {

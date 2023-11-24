@@ -32,7 +32,7 @@ then
             --setParameter "searchIndexManagementHostAndPort=$MONGOTHOST"
 else
     python3 /usr/local/bin/docker-entrypoint.py \
-            --transitionToAuth
+            --transitionToAuth \
             --dbpath "$DBPATH" \
             --keyFile "$KEYFILE" \
             --replSet "$REPLSETNAME" \

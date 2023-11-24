@@ -252,3 +252,7 @@ func (opts *DeploymentOpts) IsLocalDeploymentType() bool {
 func (opts *DeploymentOpts) NoDeploymentTypeSet() bool {
 	return strings.EqualFold(opts.DeploymentType, "")
 }
+
+func (opts *DeploymentOpts) IsAuthEnabled() bool {
+	return opts.AdminUsername != ""
+}

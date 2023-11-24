@@ -275,7 +275,7 @@ func Test_CRDCompatibleVersion(t *testing.T) {
 	t.Run("should return operator major version when it is less than supported CRD version", func(t *testing.T) {
 		latestOperatorSemver, err := semver.NewVersion(LatestOperatorMajorVersion)
 		require.NoError(t, err)
-		operatorVersion := semver.New(latestOperatorSemver.Major(), latestOperatorSemver.Minor(), 2, "", "")
+		operatorVersion := semver.New(latestOperatorSemver.Major()-1, latestOperatorSemver.Minor(), 2, "", "")
 
 		expected := fmt.Sprintf("%d.%d.0", operatorVersion.Major(), operatorVersion.Minor())
 		compatibleVersion, err := CRDCompatibleVersion(operatorVersion.String())

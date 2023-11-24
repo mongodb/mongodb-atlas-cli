@@ -571,14 +571,13 @@ func TestProjectWithMaintenanceWindow(t *testing.T) {
 	generator := s.generator
 	expectedProject := s.expectedProject
 	assertions := s.assertions
-	dictionary := resources.AtlasNameToKubernetesName()
 
 	newMaintenanceWindow := akov2project.MaintenanceWindow{
 		DayOfWeek: 1,
 		HourOfDay: 1,
 	}
 	expectedProject.Spec.MaintenanceWindow = newMaintenanceWindow
-	expectedProject.Spec.AlertConfigurations = defaultMaintenanceWindowAlertConfigs(expectedProject, dictionary)
+	expectedProject.Spec.AlertConfigurations = defaultMaintenanceWindowAlertConfigs()
 
 	t.Run("Add integration to the project", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -1106,8 +1105,8 @@ func referenceSharedCluster(name, region, namespace, projectName string, labels 
 	return cluster
 }
 
-func defaultMaintenanceWindowAlertConfigs(project *akov2.AtlasProject, dictionary map[string]string) []akov2.AlertConfiguration {
-	ownerNotifications := func(i int) []akov2.Notification {
+func defaultMaintenanceWindowAlertConfigs() []akov2.AlertConfiguration {
+	ownerNotifications := func() []akov2.Notification {
 		return []akov2.Notification{
 			{
 				EmailEnabled: pointer.Get(true),
@@ -1116,57 +1115,46 @@ func defaultMaintenanceWindowAlertConfigs(project *akov2.AtlasProject, dictionar
 				SMSEnabled:   pointer.Get(false),
 				TypeName:     "GROUP",
 				Roles:        []string{"GROUP_OWNER"},
-				APITokenRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-api-token-%d", project.Name, i), dictionary),
-					Namespace: project.Namespace,
-				},
-				DatadogAPIKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-datadog-api-key-%d", project.Name, i), dictionary),
-					Namespace: project.Namespace,
-				},
-				OpsGenieAPIKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-ops-genie-api-key-%d", project.Name, i), dictionary),
-					Namespace: project.Namespace,
-				},
-				ServiceKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-service-key-%d", project.Name, i), dictionary),
-					Namespace: project.Namespace,
-				},
-				VictorOpsSecretRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-victor-ops-credentials-%d", project.Name, i), dictionary),
-					Namespace: project.Namespace,
-				},
 			},
 		}
 	}
 
 	return []akov2.AlertConfiguration{
 		{
-			Enabled:         true,
-			EventTypeName:   "MAINTENANCE_IN_ADVANCED",
-			Threshold:       &akov2.Threshold{},
-			Notifications:   ownerNotifications(0),
+			Enabled:       true,
+			EventTypeName: "MAINTENANCE_IN_ADVANCED",
+			Threshold:     &akov2.Threshold{},
+			Notifications: []akov2.Notification{
+				{
+					EmailEnabled: pointer.Get(true),
+					IntervalMin:  60,
+					DelayMin:     pointer.Get(0),
+					SMSEnabled:   pointer.Get(false),
+					TypeName:     "GROUP",
+					Roles:        []string{"GROUP_OWNER"},
+				},
+			},
 			MetricThreshold: &akov2.MetricThreshold{},
 		},
 		{
 			Enabled:         true,
 			EventTypeName:   "MAINTENANCE_STARTED",
 			Threshold:       &akov2.Threshold{},
-			Notifications:   ownerNotifications(1),
+			Notifications:   ownerNotifications(),
 			MetricThreshold: &akov2.MetricThreshold{},
 		},
 		{
 			Enabled:         true,
 			EventTypeName:   "MAINTENANCE_NO_LONGER_NEEDED",
 			Threshold:       &akov2.Threshold{},
-			Notifications:   ownerNotifications(2),
+			Notifications:   ownerNotifications(),
 			MetricThreshold: &akov2.MetricThreshold{},
 		},
 		{
 			Enabled:         true,
 			EventTypeName:   "MAINTENANCE_AUTO_DEFERRED",
 			Threshold:       &akov2.Threshold{},
-			Notifications:   ownerNotifications(3),
+			Notifications:   ownerNotifications(),
 			MetricThreshold: &akov2.MetricThreshold{},
 		},
 	}

@@ -22,6 +22,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2toptr "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/util/toptr"
 	appsv1 "k8s.io/api/apps/v1"
@@ -158,7 +159,7 @@ func (oh *operatorHelper) stopOperator() {
 		oh.t.Errorf("unable to retrieve operator deployment: %v", err)
 	}
 
-	deployment.Spec.Replicas = akov2toptr.MakePtr(int32(0))
+	deployment.Spec.Replicas = pointer.Get[int32](0)
 
 	err = oh.k8sClient.Update(context.Background(), &deployment, &client.UpdateOptions{})
 	if err != nil {

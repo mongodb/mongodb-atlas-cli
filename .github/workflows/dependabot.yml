@@ -1,7 +1,9 @@
 ---
   name: Create JIRA ticket for dependabot prs
 
-  on: pull_request
+  on:
+    pull_request:
+      types: [opened]
 
   permissions: 
     pull-requests: write

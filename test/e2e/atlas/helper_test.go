@@ -273,7 +273,6 @@ func deployClusterForProject(projectID, tier string, enableBackup bool) (string,
 
 func e2eTier() string {
 	tier := e2eClusterTier
-	// tier := e2eSharedClusterTier
 	if IsGov() {
 		tier = e2eGovClusterTier
 	}

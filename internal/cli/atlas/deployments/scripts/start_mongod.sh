@@ -20,11 +20,23 @@ then
     chmod 400 "$KEYFILE"
 fi
 
-python3 /usr/local/bin/docker-entrypoint.py \
-        --transitionToAuth \
-        --dbpath "$DBPATH" \
-        --keyFile "$KEYFILE" \
-        --replSet "$REPLSETNAME" \
-        --maxConns "$MAXCONNS" \
-        --setParameter "mongotHost=$MONGOTHOST" \
-        --setParameter "searchIndexManagementHostAndPort=$MONGOTHOST"
+
+if [ -n "$MONGODB_INITDB_ROOT_USERNAME" ] # auth enabled
+then
+    python3 /usr/local/bin/docker-entrypoint.py \
+            --dbpath "$DBPATH" \
+            --keyFile "$KEYFILE" \
+            --replSet "$REPLSETNAME" \
+            --maxConns "$MAXCONNS" \
+            --setParameter "mongotHost=$MONGOTHOST" \
+            --setParameter "searchIndexManagementHostAndPort=$MONGOTHOST"
+else
+    python3 /usr/local/bin/docker-entrypoint.py \
+            --transitionToAuth
+            --dbpath "$DBPATH" \
+            --keyFile "$KEYFILE" \
+            --replSet "$REPLSETNAME" \
+            --maxConns "$MAXCONNS" \
+            --setParameter "mongotHost=$MONGOTHOST" \
+            --setParameter "searchIndexManagementHostAndPort=$MONGOTHOST"
+fi

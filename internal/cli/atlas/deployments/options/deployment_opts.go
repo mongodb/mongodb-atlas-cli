@@ -88,6 +88,8 @@ type DeploymentOpts struct {
 	DeploymentType        string
 	MdbVersion            string
 	Port                  int
+	AdminUsername         string
+	AdminUserPassword     string
 	PodmanClient          podman.Client
 	CredStore             store.CredentialsGetter
 	s                     *spinner.Spinner

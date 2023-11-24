@@ -471,5 +471,5 @@ dbName and collection are required only for built-in roles.`
 	requiredForAtlas                          = "Required when creating organizations authenticated with API Keys."
 	Decompress                                = "Flag that indicates whether to decompress the log files."
 	OnlineArchiveFilename                     = "Path to an optional JSON configuration file that defines online archive settings. To learn more about configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-json-online-archive-config."
-	BindAllIPs                                = "Flag that indicates whether the port binding should happen for all IPs or only for the localhost interface of the host (127.0.0.1)."
+	BindIpAll                                 = "Flag that indicates whether the port binding should happen for all IPs or only for the localhost interface 127.0.0.1."
 )

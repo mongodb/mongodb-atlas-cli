@@ -72,7 +72,7 @@ type RunContainerOpts struct {
 	Volumes map[string]string
 	// map[hostPort, containerPort]
 	Ports      map[int]int
-	BindAllIPs bool
+	BindIpAll  bool
 	Network    string
 	EnvVars    map[string]string
 	Args       []string
@@ -362,7 +362,7 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 
 	for hostPort, containerPort := range opts.Ports {
 		portMapping := strconv.Itoa(hostPort) + ":" + strconv.Itoa(containerPort)
-		if !opts.BindAllIPs {
+		if !opts.BindIpAll {
 			portMapping = "127.0.0.1:" + portMapping
 		}
 		arg = append(arg, "-p", portMapping)

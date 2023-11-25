@@ -371,5 +371,5 @@ const (
 	ConnectionStringType                      = "connectionStringType"                      // ConnectionStringType flag
 	Decompress                                = "decompress"                                // Decompress flag
 	DecompressShort                           = "d"                                         // DecompressShort flag
-	BindIpAll                                 = "bindIpAll"                                 // BindIpAll flag
+	BindIPAll                                 = "bindIpAll"                                 // BindIpAll flag
 )

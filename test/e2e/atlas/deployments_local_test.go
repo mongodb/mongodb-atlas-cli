@@ -36,7 +36,6 @@ const (
 	collectionName = "myCol"
 	databaseName   = "myDB"
 	indexName      = "indexTest"
-	deploymentName = "test"
 )
 
 func splitOutput(cmd *exec.Cmd) (string, string, error) {
@@ -48,6 +47,8 @@ func splitOutput(cmd *exec.Cmd) (string, string, error) {
 }
 
 func TestDeploymentsLocal(t *testing.T) {
+	const deploymentName = "test"
+
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("deployments")
 
@@ -326,15 +327,18 @@ func TestDeploymentsLocal(t *testing.T) {
 }
 
 func TestDeploymentsLocalWithAuth(t *testing.T) {
+	const (
+		deploymentName = "test-auth"
+		dbUsername     = "admin"
+		dbUserPassword = "testpwd"
+	)
+
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("auth_deployment")
 
 	cliPath, err := e2e.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
-
-	dbUsername := "admin"
-	dbUserPassword := "testpwd"
 
 	t.Run("Setup", func(t *testing.T) {
 		defer func(t *testing.T) {

@@ -33,8 +33,14 @@ func TestCleanup(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	req.NoError(err)
 
-	deleteOrgInvitations(t, cliPath)
-	deleteOrgTeams(t, cliPath)
+	t.Run("trying to org invitations", func(t *testing.T) {
+		t.Parallel()
+		deleteOrgInvitations(t, cliPath)
+	})
+	t.Run("trying to org teams", func(t *testing.T) {
+		t.Parallel()
+		deleteOrgTeams(t, cliPath)
+	})
 
 	cmd := exec.Command(cliPath,
 		projectEntity,
@@ -85,6 +91,9 @@ func TestCleanup(t *testing.T) {
 						deleteAllDataFederations(t, cliPath, projectID)
 					})
 					t.Run("delete all serverless instances", func(t *testing.T) {
+						if IsGov() {
+							t.Skip()
+						}
 						t.Parallel()
 						deleteAllServerlessInstances(t, cliPath, projectID)
 					})

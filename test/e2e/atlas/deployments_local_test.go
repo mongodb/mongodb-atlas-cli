@@ -406,7 +406,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		req.NoError(err, e)
 
 		outputLines := strings.Split(o, "\n")
-		req.Equal(`NAME      TYPE    MDB VER   STATE`, outputLines[0])
+		req.Equal(`NAME        TYPE    MDB VER   STATE`, outputLines[0])
 
 		cols := strings.Fields(outputLines[1])
 		req.Equal(deploymentName, cols[0])

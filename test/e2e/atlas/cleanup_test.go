@@ -33,11 +33,11 @@ func TestCleanup(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	req.NoError(err)
 
-	t.Run("trying to org invitations", func(t *testing.T) {
+	t.Run("trying to delete org invitations", func(t *testing.T) {
 		t.Parallel()
 		deleteOrgInvitations(t, cliPath)
 	})
-	t.Run("trying to org teams", func(t *testing.T) {
+	t.Run("trying to delete org teams", func(t *testing.T) {
 		t.Parallel()
 		deleteOrgTeams(t, cliPath)
 	})
@@ -92,7 +92,7 @@ func TestCleanup(t *testing.T) {
 					})
 					t.Run("delete all serverless instances", func(t *testing.T) {
 						if IsGov() {
-							t.Skip()
+							t.Skip("serverless is not available on gov")
 						}
 						t.Parallel()
 						deleteAllServerlessInstances(t, cliPath, projectID)

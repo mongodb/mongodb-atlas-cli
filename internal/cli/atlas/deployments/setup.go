@@ -553,7 +553,7 @@ func (opts *SetupOpts) validateDeploymentTypeFlag() error {
 		return errFlagTypeRequired
 	}
 
-	if opts.IsLocalDeploymentType() && opts.bindIPAll {
+	if !opts.IsLocalDeploymentType() && opts.bindIPAll {
 		return errIncompatibleDeploymentType
 	}
 

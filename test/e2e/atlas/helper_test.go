@@ -215,7 +215,7 @@ func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, cluste
 	deleteCmd := exec.Command(cliPath, args...)
 	deleteCmd.Env = os.Environ()
 	resp, err := deleteCmd.CombinedOutput()
-	require.NoError(t, err, resp)
+	require.NoError(t, err, string(resp))
 
 	_ = watchServerlessInstanceForProject(projectID, clusterName)
 }
@@ -657,7 +657,7 @@ func listClustersForProject(t *testing.T, cliPath, projectID string) atlasv2.Pag
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	t.Log(string(resp))
-	require.NoError(t, err)
+	require.NoError(t, err, string(resp))
 	var clusters atlasv2.PaginatedAdvancedClusterDescription
 	require.NoError(t, json.Unmarshal(resp, &clusters))
 	return clusters
@@ -690,7 +690,7 @@ func deleteDatapipelinesForProject(t *testing.T, cliPath, projectID string) {
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	t.Log(string(resp))
-	require.NoError(t, err)
+	require.NoError(t, err, string(resp))
 	var pipelines []atlasv2.DataLakeIngestionPipeline
 	require.NoError(t, json.Unmarshal(resp, &pipelines))
 	for _, p := range pipelines {
@@ -713,7 +713,7 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	t.Log("available network peers", string(resp))
-	require.NoError(t, err)
+	require.NoError(t, err, string(resp))
 	var networkPeers []atlasv2.BaseNetworkPeeringConnectionSettings
 	err = json.Unmarshal(resp, &networkPeers)
 	require.NoError(t, err)
@@ -771,7 +771,7 @@ func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider st
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	t.Log(string(resp))
-	require.NoError(t, err)
+	require.NoError(t, err, string(resp))
 	var privateEndpoints []atlasv2.EndpointService
 	err = json.Unmarshal(resp, &privateEndpoints)
 	require.NoError(t, err)
@@ -892,7 +892,7 @@ func listDataFederationsByProject(t *testing.T, cliPath, projectID string) []atl
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	t.Log("available datafederations", string(resp))
-	require.NoError(t, err)
+	require.NoError(t, err, string(resp))
 
 	var dataFederations []atlasv2.DataLakeTenant
 	err = json.Unmarshal(resp, &dataFederations)
@@ -911,7 +911,7 @@ func listServerlessByProject(t *testing.T, cliPath, projectID string) *atlasv2.P
 		"-o=json")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	require.NoError(t, err)
+	require.NoError(t, err, string(resp))
 
 	var serverlessInstances *atlasv2.PaginatedServerlessInstanceDescription
 	err = json.Unmarshal(resp, &serverlessInstances)
@@ -961,7 +961,7 @@ func deleteDataFederationForProject(t *testing.T, cliPath, projectID, dataFedNam
 		"--force")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	require.NoError(t, err, resp)
+	require.NoError(t, err, string(resp))
 }
 
 func ensureCluster(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, clusterName, version string, diskSizeGB float64, terminationProtection bool) {

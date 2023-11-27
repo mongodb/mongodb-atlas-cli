@@ -88,6 +88,8 @@ type DeploymentOpts struct {
 	DeploymentType        string
 	MdbVersion            string
 	Port                  int
+	DBUsername            string
+	DBUserPassword        string
 	PodmanClient          podman.Client
 	CredStore             store.CredentialsGetter
 	s                     *spinner.Spinner
@@ -249,4 +251,8 @@ func (opts *DeploymentOpts) IsLocalDeploymentType() bool {
 
 func (opts *DeploymentOpts) NoDeploymentTypeSet() bool {
 	return strings.EqualFold(opts.DeploymentType, "")
+}
+
+func (opts *DeploymentOpts) IsAuthEnabled() bool {
+	return opts.DBUsername != ""
 }

@@ -27,6 +27,7 @@ type Database interface {
 	InsertOne(ctx context.Context, collection string, doc interface{}) (interface{}, error)
 	InitiateReplicaSet(ctx context.Context, rsName string, hostname string, internalPort int, externalPort int) error
 	SearchIndex
+	User
 	Collection(string) Collection
 }
 

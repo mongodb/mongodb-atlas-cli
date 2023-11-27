@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -61,19 +62,25 @@ const (
 	skipConnect        = "skip"
 	spinnerSpeed       = 100 * time.Millisecond
 	shortStepCount     = 2
+	tempRootUser       = "tempRootUser"
 )
 
 var (
-	errCancel                 = errors.New("the setup was cancelled")
-	errMustBeInt              = errors.New("you must specify an integer")
-	errPortOutOfRange         = errors.New("you must specify a port within the range 1..65535")
-	errPortNotAvailable       = errors.New("the port is unavailable")
-	errFlagTypeRequired       = errors.New("the --type flag is required when the --force flag is set")
-	errInvalidDeploymentType  = errors.New("the deployment type is invalid")
-	errInvalidMongoDBVersion  = errors.New("the mongodb version is invalid")
-	errUnsupportedConnectWith = errors.New("the --connectWith flag is unsupported")
-	settingOptions            = []string{defaultSettings, customSettings, cancelSettings}
-	settingsDescription       = map[string]string{
+	errCancel                   = errors.New("the setup was cancelled")
+	errMustBeInt                = errors.New("you must specify an integer")
+	errPortOutOfRange           = errors.New("you must specify a port within the range 1..65535")
+	errPortNotAvailable         = errors.New("the port is unavailable")
+	errFlagTypeRequired         = fmt.Errorf("the --%s flag is required when the --%s flag is set", flag.TypeFlag, flag.Force)
+	errFlagsTypeAndAuthRequired = fmt.Errorf("the --%s, --%s and --%s flags are required when the --%s and --%s flags are set",
+		flag.TypeFlag, flag.Username, flag.Password, flag.Force, flag.BindIPAll)
+	errInvalidDeploymentType      = errors.New("the deployment type is invalid")
+	errIncompatibleDeploymentType = fmt.Errorf("the --%s flag applies only to LOCAL deployments", flag.BindIPAll)
+	errInvalidMongoDBVersion      = errors.New("the mongodb version is invalid")
+	errUnsupportedConnectWith     = fmt.Errorf("the --%s flag is unsupported", flag.ConnectWith)
+	errFlagUsernameRequired       = fmt.Errorf("the --%s is required to enable authentication when --%s flag is set",
+		flag.Username, flag.BindIPAll)
+	settingOptions      = []string{defaultSettings, customSettings, cancelSettings}
+	settingsDescription = map[string]string{
 		defaultSettings: "With default settings",
 		customSettings:  "With custom settings",
 		cancelSettings:  "Cancel setup",
@@ -95,10 +102,12 @@ type SetupOpts struct {
 	options.DeploymentOpts
 	cli.OutputOpts
 	cli.GlobalOpts
+	cli.InputOpts
 	mongodbClient mongodbclient.MongoDBClient
 	settings      string
 	connectWith   string
 	force         bool
+	bindIPAll     bool
 	mongodIP      string
 	mongotIP      string
 	s             *spinner.Spinner
@@ -277,28 +286,38 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 		return err
 	}
 
+	tempRootUserPassword := base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))
+
+	envVars := map[string]string{
+		"KEYFILECONTENTS": keyFileContents,
+		"DBPATH":          "/data/db",
+		"KEYFILE":         "/data/configdb/keyfile",
+		"MAXCONNS":        maxConns,
+		"REPLSETNAME":     replicaSetName,
+		"MONGOTHOST":      opts.InternalMongotAddress(opts.mongotIP),
+	}
+
+	if opts.IsAuthEnabled() {
+		envVars["MONGODB_INITDB_ROOT_USERNAME"] = tempRootUser
+		envVars["MONGODB_INITDB_ROOT_PASSWORD"] = tempRootUserPassword
+	}
+
 	if _, err := opts.PodmanClient.RunContainer(ctx,
 		podman.RunContainerOpts{
 			Detach:   true,
 			Image:    opts.MongodDockerImageName(),
 			Name:     opts.LocalMongodHostname(),
 			Hostname: opts.LocalMongodHostname(),
-			EnvVars: map[string]string{
-				"KEYFILECONTENTS": keyFileContents,
-				"DBPATH":          "/data/db",
-				"KEYFILE":         "/data/configdb/keyfile",
-				"MAXCONNS":        maxConns,
-				"REPLSETNAME":     replicaSetName,
-				"MONGOTHOST":      opts.InternalMongotAddress(opts.mongotIP),
-			},
+			EnvVars:  envVars,
 			Volumes: map[string]string{
 				mongodDataVolume: "/data/db",
 			},
 			Ports: map[int]int{
 				opts.Port: internalMongodPort,
 			},
-			Network: opts.LocalNetworkName(),
-			IP:      opts.mongodIP,
+			BindIPAll: opts.bindIPAll,
+			Network:   opts.LocalNetworkName(),
+			IP:        opts.mongodIP,
 			// wrap the entrypoint with a chain of commands that
 			// creates the keyfile in the container and sets the 400 permissions for it,
 			// then starts the entrypoint with the local dev config
@@ -308,14 +327,17 @@ func (opts *SetupOpts) configureMongod(ctx context.Context, keyFileContents stri
 		return err
 	}
 
-	return opts.initReplicaSet(ctx)
+	return opts.initLocalDeployment(ctx, tempRootUserPassword)
 }
 
-func (opts *SetupOpts) initReplicaSet(ctx context.Context) error {
+func (opts *SetupOpts) initLocalDeployment(ctx context.Context, tempRootUserPassword string) error {
 	// connect to local deployment
-	connectionString, e := opts.ConnectionString(ctx)
-	if e != nil {
-		return e
+	connectionString := fmt.Sprintf("mongodb://localhost:%d/?directConnection=true", opts.Port)
+	if opts.IsAuthEnabled() {
+		connectionString = fmt.Sprintf("mongodb://%s:%s@localhost:%d/?directConnection=true",
+			url.QueryEscape(tempRootUser),
+			url.QueryEscape(tempRootUserPassword),
+			opts.Port)
 	}
 
 	const waitSeconds = 60
@@ -323,16 +345,31 @@ func (opts *SetupOpts) initReplicaSet(ctx context.Context) error {
 		return err
 	}
 	defer opts.mongodbClient.Disconnect()
-	db := opts.mongodbClient.Database("admin")
+	adminDB := opts.mongodbClient.Database("admin")
 
-	// initiate ReplicaSet
-	if err := db.InitiateReplicaSet(ctx, replicaSetName, opts.LocalMongodHostname(), internalMongodPort, opts.Port); err != nil {
+	if err := opts.initReplicaSet(ctx, adminDB); err != nil {
+		return err
+	}
+
+	if !opts.IsAuthEnabled() {
+		return nil
+	}
+
+	if err := opts.createAdminUser(ctx, adminDB); err != nil {
+		return err
+	}
+
+	return adminDB.DropUser(ctx, tempRootUser)
+}
+
+func (opts *SetupOpts) initReplicaSet(ctx context.Context, adminDB mongodbclient.Database) error {
+	if err := adminDB.InitiateReplicaSet(ctx, replicaSetName, opts.LocalMongodHostname(), internalMongodPort, opts.Port); err != nil {
 		return err
 	}
 
 	const waitForPrimarySeconds = 60
 	for i := 0; i < waitForPrimarySeconds; i++ {
-		r, err := db.RunCommand(ctx, bson.D{{Key: "hello", Value: 1}})
+		r, err := adminDB.RunCommand(ctx, bson.D{{Key: "hello", Value: 1}})
 		if err != nil {
 			continue
 		}
@@ -345,8 +382,16 @@ func (opts *SetupOpts) initReplicaSet(ctx context.Context) error {
 	}
 
 	// insert local dev cluster marker
-	_, err := db.InsertOne(ctx, "atlascli", bson.M{"managedClusterType": "atlasCliLocalDevCluster"})
+	_, err := adminDB.InsertOne(ctx, "atlascli", bson.M{"managedClusterType": "atlasCliLocalDevCluster"})
 	return err
+}
+
+func (opts *SetupOpts) createAdminUser(ctx context.Context, db mongodbclient.Database) error {
+	return db.CreateUser(ctx,
+		opts.DBUsername,
+		opts.DBUserPassword,
+		[]string{"userAdminAnyDatabase", "readWriteAnyDatabase"},
+	)
 }
 
 func (opts *SetupOpts) internalMongodAddress() string {
@@ -508,12 +553,33 @@ func (opts *SetupOpts) validateDeploymentTypeFlag() error {
 		return errFlagTypeRequired
 	}
 
+	if !opts.IsLocalDeploymentType() && opts.bindIPAll {
+		return errIncompatibleDeploymentType
+	}
+
 	if opts.DeploymentType != "" && !strings.EqualFold(opts.DeploymentType, options.AtlasCluster) && !strings.EqualFold(opts.DeploymentType, options.LocalCluster) {
 		return fmt.Errorf("%w: %s", errInvalidDeploymentType, opts.DeploymentType)
 	}
 
 	return nil
 }
+
+func (opts *SetupOpts) validateBindIPAllFlag() error {
+	if !opts.bindIPAll {
+		return nil
+	}
+
+	if opts.force && (opts.DeploymentType == "" || opts.DBUsername == "" || opts.DBUserPassword == "") {
+		return errFlagsTypeAndAuthRequired
+	}
+
+	if opts.DBUsername == "" {
+		return errFlagUsernameRequired
+	}
+
+	return nil
+}
+
 func (opts *SetupOpts) validateFlags() error {
 	if err := opts.validateDeploymentTypeFlag(); err != nil {
 		return err
@@ -539,28 +605,60 @@ func (opts *SetupOpts) validateFlags() error {
 		return fmt.Errorf("%w: %s", errUnsupportedConnectWith, opts.connectWith)
 	}
 
-	return nil
+	return opts.validateBindIPAllFlag()
 }
 
-func (opts *SetupOpts) setDefaultSettings() (ok bool, err error) {
+func (opts *SetupOpts) promptLocalAdminPassword() error {
+	if !opts.IsTerminalInput() {
+		_, err := fmt.Fscanln(opts.InReader, &opts.DBUserPassword)
+		return err
+	}
+
+	p := &survey.Password{
+		Message: "Password for authenticating to local deployment",
+	}
+	return telemetry.TrackAskOne(p, &opts.DBUserPassword)
+}
+
+func (opts *SetupOpts) setDefaultSettings() error {
 	opts.settings = defaultSettings
+	defaultValuesSet := false
 
 	if opts.DeploymentName == "" {
 		opts.generateDeploymentName()
-		ok = true
+		defaultValuesSet = true
 	}
 
 	if opts.MdbVersion == "" {
 		opts.MdbVersion = mdb7
-		ok = true
+		defaultValuesSet = true
 	}
 
 	if opts.Port == 0 {
-		opts.Port, err = availablePort()
-		ok = true
+		port, err := availablePort()
+		if err != nil {
+			return err
+		}
+		opts.Port = port
+		defaultValuesSet = true
 	}
 
-	return
+	if defaultValuesSet {
+		templatewriter.Print(os.Stderr, `
+[Default Settings]
+Deployment Name	{{.DeploymentName}}
+MongoDB Version	{{.MdbVersion}}
+Port	{{.Port}}
+
+`, opts)
+		if !opts.force {
+			if err := opts.promptSettings(); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }
 
 func (opts *SetupOpts) promptConnect() error {
@@ -621,24 +719,14 @@ func (opts *SetupOpts) validateAndPrompt() error {
 		return nil
 	}
 
-	ok, err := opts.setDefaultSettings()
-	if err != nil {
-		return err
-	}
-	if ok {
-		templatewriter.Print(os.Stderr, `
-[Default Settings]
-Deployment Name	{{.DeploymentName}}
-MongoDB Version	{{.MdbVersion}}
-Port	{{.Port}}
-
-`, opts)
-
-		if !opts.force {
-			if err := opts.promptSettings(); err != nil {
-				return err
-			}
+	if opts.DBUsername != "" && opts.DBUserPassword == "" {
+		if err := opts.promptLocalAdminPassword(); err != nil {
+			return err
 		}
+	}
+
+	if err := opts.setDefaultSettings(); err != nil {
+		return err
 	}
 
 	switch opts.settings {
@@ -671,7 +759,10 @@ func (opts *SetupOpts) runLocal(ctx context.Context) error {
 		return err
 	}
 
-	cs := fmt.Sprintf("mongodb://localhost:%d/?directConnection=true", opts.Port)
+	cs, err := opts.ConnectionString(ctx)
+	if err != nil {
+		return err
+	}
 
 	_, _ = log.Warningln("Deployment created!")
 	_, _ = fmt.Fprintf(opts.OutWriter, "Connection string: %s\n", cs)
@@ -750,9 +841,12 @@ func SetupBuilder() *cobra.Command {
 			}
 
 			opts.force = opts.atlasSetup.Confirm
+			opts.DBUsername = opts.atlasSetup.DBUsername
+			opts.DBUserPassword = opts.atlasSetup.DBUserPassword
 
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
+				opts.InitInput(cmd.InOrStdin()),
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initMongoDBClient(cmd.Context()),
 			)
@@ -769,6 +863,7 @@ func SetupBuilder() *cobra.Command {
 
 	// Local only
 	cmd.Flags().IntVar(&opts.Port, flag.Port, 0, usage.MongodPort)
+	cmd.Flags().BoolVar(&opts.bindIPAll, flag.BindIPAll, false, usage.BindIPAll)
 
 	// Atlas only
 	opts.atlasSetup.SetupAtlasFlags(cmd)

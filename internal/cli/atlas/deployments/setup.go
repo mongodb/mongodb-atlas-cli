@@ -388,8 +388,8 @@ func (opts *SetupOpts) initReplicaSet(ctx context.Context, adminDB mongodbclient
 
 func (opts *SetupOpts) createAdminUser(ctx context.Context, db mongodbclient.Database) error {
 	return db.CreateUser(ctx,
-		opts.AdminUsername,
-		opts.AdminUserPassword,
+		opts.DBUsername,
+		opts.DBUserPassword,
 		[]string{"userAdminAnyDatabase", "readWriteAnyDatabase"},
 	)
 }
@@ -569,11 +569,11 @@ func (opts *SetupOpts) validateBindIPAllFlag() error {
 		return nil
 	}
 
-	if opts.force && (opts.DeploymentType == "" || opts.AdminUsername == "" || opts.AdminUserPassword == "") {
+	if opts.force && (opts.DeploymentType == "" || opts.DBUsername == "" || opts.DBUserPassword == "") {
 		return errFlagsTypeAndAuthRequired
 	}
 
-	if opts.AdminUsername == "" {
+	if opts.DBUsername == "" {
 		return errFlagUsernameRequired
 	}
 
@@ -610,14 +610,14 @@ func (opts *SetupOpts) validateFlags() error {
 
 func (opts *SetupOpts) promptLocalAdminPassword() error {
 	if !opts.IsTerminalInput() {
-		_, err := fmt.Fscanln(opts.InReader, &opts.AdminUserPassword)
+		_, err := fmt.Fscanln(opts.InReader, &opts.DBUserPassword)
 		return err
 	}
 
 	p := &survey.Password{
 		Message: "Password for authenticating to local deployment",
 	}
-	return telemetry.TrackAskOne(p, &opts.AdminUserPassword)
+	return telemetry.TrackAskOne(p, &opts.DBUserPassword)
 }
 
 func (opts *SetupOpts) setDefaultSettings() error {
@@ -719,7 +719,7 @@ func (opts *SetupOpts) validateAndPrompt() error {
 		return nil
 	}
 
-	if opts.AdminUsername != "" && opts.AdminUserPassword == "" {
+	if opts.DBUsername != "" && opts.DBUserPassword == "" {
 		if err := opts.promptLocalAdminPassword(); err != nil {
 			return err
 		}
@@ -841,8 +841,8 @@ func SetupBuilder() *cobra.Command {
 			}
 
 			opts.force = opts.atlasSetup.Confirm
-			opts.AdminUsername = opts.atlasSetup.DBUsername
-			opts.AdminUserPassword = opts.atlasSetup.DBUserPassword
+			opts.DBUsername = opts.atlasSetup.DBUsername
+			opts.DBUserPassword = opts.atlasSetup.DBUserPassword
 
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),

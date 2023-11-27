@@ -44,8 +44,8 @@ func (opts *DeploymentOpts) ConnectionString(ctx context.Context) (string, error
 	}
 	if opts.IsAuthEnabled() {
 		return fmt.Sprintf("mongodb://%s:%s@localhost:%d/?directConnection=true",
-			url.QueryEscape(opts.AdminUsername),
-			url.QueryEscape(opts.AdminUserPassword),
+			url.QueryEscape(opts.DBUsername),
+			url.QueryEscape(opts.DBUserPassword),
 			opts.Port,
 		), nil
 	}

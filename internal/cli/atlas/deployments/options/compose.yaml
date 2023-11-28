@@ -1,0 +1,83 @@
+services:
+  mongod:
+    image: "docker.io/mongodb/mongodb-enterprise-server:${MONGOD_VERSION}-ubi8"
+    hostname: mongod
+    command:
+      mongod --transitionToAuth --dbpath '/data/db' --keyFile '/data/configdb/keyfile' --replSet 'rs-localdev' --maxConns '32200' --setParameter "mongotHost=mongot:27027" --setParameter "searchIndexManagementHostAndPort=mongot:27027"
+    ports:
+      - "${PORT}:27017"
+    volumes:
+      - mongod-data:/data/db
+    networks:
+      - mdb-local
+    secrets:
+      - source: keyfile
+        target: /data/configdb/keyfile
+        mode: 0400
+        uid: '997'
+        gid: '997'
+    healthcheck:
+      test: [
+        "CMD",
+        "mongosh",
+        "mongodb://localhost:27017/admin?directConnection=true",
+        "--eval",
+        "try {
+          rs.status();
+        } catch(e) {
+          var config = {
+            \"_id\" : \"rs-localdev\",
+            members : [
+              {
+                \"_id\" : 0,
+                host : \"mongod:27017\",
+                horizons: {
+                  external: \"localhost:${PORT}\"
+                }
+              }
+            ]
+          };
+          rs.initiate(config);
+        }"]
+
+  mongot:
+    depends_on:
+      mongod:
+        condition: service_healthy
+    image: "docker.io/mongodb/mongodb-atlas-search:preview"
+    hostname: mongot
+    environment:
+      MONGOD_HOST_AND_PORT: mongod:27017
+    volumes:
+      - mongot-data:/var/lib/mongot
+      - mongot-metrics:/var/lib/mongot/metrics
+    networks:
+      - mdb-local
+    secrets:
+      - source: keyfile
+        target: /var/lib/mongot/keyfile
+        mode: 0400
+    healthcheck:
+      test: [
+        "CMD-SHELL",
+        "rm -f /etc/yum.repos.d/mongodb-org-7.0.repo",
+        "echo '[mongodb-org-7.0]' >> /etc/yum.repos.d/mongodb-org-7.0.repo",
+        "echo 'name=MongoDB Repository' >> /etc/yum.repos.d/mongodb-org-7.0.repo",
+        "echo 'baseurl=https://repo.mongodb.org/yum/amazon/$$releasever/mongodb-org/7.0/$$basearch/' >> /etc/yum.repos.d/mongodb-org-7.0.repo",
+        "echo 'gpgcheck=1' >> /etc/yum.repos.d/mongodb-org-7.0.repo",
+        "echo 'enabled=1' >> /etc/yum.repos.d/mongodb-org-7.0.repo",
+        "echo 'gpgkey=https://www.mongodb.org/static/pgp/server-7.0.asc' >> /etc/yum.repos.d/mongodb-org-7.0.repo",
+        "yum install -y mongodb-mongosh",
+        "mongosh 'mongodb://localhost:27027' --eval 'db.adminCommand(\"ping\")'"]
+
+volumes:
+  mongod-data:
+  mongot-data:
+  mongot-metrics:
+
+networks:
+  mdb-local:
+
+secrets:
+  keyfile:
+    environment: "KEY_FILE"

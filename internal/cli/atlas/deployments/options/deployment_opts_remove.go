@@ -13,31 +13,18 @@
 // limitations under the License.
 package options
 
-import "context"
+import (
+	"bytes"
+	"context"
+	"os"
+	"os/exec"
+)
 
 func (opts *DeploymentOpts) RemoveLocal(ctx context.Context) error {
-	volumes := []string{opts.LocalMongodDataVolume(), opts.LocalMongotDataVolume(), opts.LocalMongoMetricsVolume()}
-
-	if c, _ := opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname()); c != nil {
-		for _, m := range c[0].Mounts {
-			if m.Name != opts.LocalMongodDataVolume() {
-				volumes = append(volumes, m.Name)
-				break
-			}
-		}
-	}
-
-	if _, errRemove := opts.PodmanClient.RemoveContainers(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname()); errRemove != nil {
-		return errRemove
-	}
-
-	if _, errRemove := opts.PodmanClient.RemoveNetworks(ctx, opts.LocalNetworkName()); errRemove != nil {
-		return errRemove
-	}
-
-	if _, errRemove := opts.PodmanClient.RemoveVolumes(ctx, volumes...); errRemove != nil {
-		return errRemove
-	}
-
-	return nil
+	cmd := exec.Command("docker", "compose", "-f", "/dev/stdin", "down", "-v")
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = bytes.NewReader(ComposeDefinition)
+	cmd.Env = append(os.Environ(), "COMPOSE_PROJECT_NAME="+opts.DeploymentName)
+	return cmd.Run()
 }

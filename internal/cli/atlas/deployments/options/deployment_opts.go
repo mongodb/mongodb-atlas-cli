@@ -16,11 +16,12 @@ package options
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"os/exec"
 	"regexp"
-	"sort"
 	"strings"
 	"time"
 
@@ -181,26 +182,31 @@ func (opts *DeploymentOpts) IsCliAuthenticated() bool {
 }
 
 func (opts *DeploymentOpts) GetLocalDeployments(ctx context.Context) ([]Deployment, error) {
-	mdbContainers, err := opts.PodmanClient.ListContainers(ctx, MongodHostnamePrefix)
+	var output []byte
+	cmd := exec.Command("docker", "compose", "ls", "--format", "json")
+	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return nil, err
 	}
-	sort.Slice(mdbContainers, func(i, j int) bool {
-		return mdbContainers[i].Names[0] < mdbContainers[j].Names[0]
-	})
 
-	deployments := make([]Deployment, len(mdbContainers))
-	for i, c := range mdbContainers {
-		stateName, found := localStateMap[c.State]
+	var data []map[string]interface{}
+	if err = json.Unmarshal(output, &data); err != nil {
+		return nil, err
+	}
+
+	deployments := make([]Deployment, len(data))
+	for i, c := range data {
+		status := c["Status"].(string)
+		status = strings.Split(status, "(")[0]
+		stateName, found := localStateMap[status]
 		if !found {
-			stateName = strings.ToUpper(c.State)
+			stateName = strings.ToUpper(status)
 		}
 
-		name := strings.TrimPrefix(c.Names[0], MongodHostnamePrefix+"-")
 		deployments[i] = Deployment{
 			Type:           "LOCAL",
-			Name:           name,
-			MongoDBVersion: c.Labels["version"],
+			Name:           c["Name"].(string),
+			MongoDBVersion: "7.0", // TODO fixme
 			StateName:      stateName,
 		}
 	}

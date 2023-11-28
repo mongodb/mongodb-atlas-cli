@@ -76,8 +76,6 @@ func (opts *DeleteOpts) runAtlas() error {
 func (opts *DeleteOpts) runLocal(ctx context.Context) error {
 	return opts.Delete(func() error {
 		_, _ = log.Warningln("deleting deployment...")
-		opts.StartSpinner()
-		defer opts.StopSpinner()
 		return opts.DeploymentOpts.RemoveLocal(ctx)
 	})
 }

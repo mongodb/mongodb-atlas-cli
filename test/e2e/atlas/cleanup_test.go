@@ -41,67 +41,61 @@ func TestCleanup(t *testing.T) {
 		t.Parallel()
 		deleteOrgTeams(t, cliPath)
 	})
-
-	cmd := exec.Command(cliPath,
-		projectEntity,
+	args := []string{projectEntity,
 		"list",
 		"--limit=500",
-		"-o=json")
+		"-o=json",
+	}
+	if orgID, set := os.LookupEnv("MCLI_ORG_ID"); set {
+		args = append(args, "--orgId", orgID)
+	}
+	cmd := exec.Command(cliPath, args...)
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	req.NoError(err, string(resp))
-
 	var projects admin.PaginatedAtlasGroup
-	err = json.Unmarshal(resp, &projects)
-	req.NoError(err, string(resp))
-	t.Logf("%s\n", resp)
+	req.NoError(json.Unmarshal(resp, &projects), string(resp))
+	t.Logf("projects:\n%s\n", resp)
 	for _, project := range projects.Results {
 		projectID := project.GetId()
-		if projectID == os.Getenv("MCLI_PROJECT_ID") {
-			t.Log("skipping project", projectID)
-			continue
-		}
-		func(projectId string) {
-			t.Run(fmt.Sprintf("trying to delete project %s", projectId), func(t *testing.T) {
-				t.Parallel()
-				t.Run(fmt.Sprintf("trying to delete project's %s resources", projectId), func(t *testing.T) {
+		t.Run(fmt.Sprintf("trying to delete project %s", projectID), func(t *testing.T) {
+			t.Parallel()
+			if projectID == os.Getenv("MCLI_PROJECT_ID") {
+				t.Skip("skipping project", projectID)
+			}
+			for _, provider := range []string{"aws", "gcp", "azure"} {
+				p := provider
+				t.Run(fmt.Sprintf("delete network peers for %s", p), func(t *testing.T) {
 					t.Parallel()
-					for _, provider := range []string{"aws", "gcp", "azure"} {
-						func(provider string) {
-							t.Run(fmt.Sprintf("delete network peers for %s", provider), func(t *testing.T) {
-								t.Parallel()
-								deleteAllNetworkPeers(t, cliPath, projectID, provider)
-							})
-							t.Run(fmt.Sprintf("delete private endpoints for %s", provider), func(t *testing.T) {
-								t.Parallel()
-								deleteAllPrivateEndpoints(t, cliPath, projectID, provider)
-							})
-						}(provider)
-					}
-					t.Run("delete all clusters", func(t *testing.T) {
-						t.Parallel()
-						deleteAllClustersForProject(t, cliPath, projectID)
-					})
-					t.Run("delete datapipelines", func(t *testing.T) {
-						t.Parallel()
-						deleteDatapipelinesForProject(t, cliPath, projectID)
-					})
-					t.Run("delete data deferations", func(t *testing.T) {
-						t.Parallel()
-						deleteAllDataFederations(t, cliPath, projectID)
-					})
-					t.Run("delete all serverless instances", func(t *testing.T) {
-						if IsGov() {
-							t.Skip("serverless is not available on gov")
-						}
-						t.Parallel()
-						deleteAllServerlessInstances(t, cliPath, projectID)
-					})
+					deleteAllNetworkPeers(t, cliPath, projectID, p)
 				})
-				t.Cleanup(func() {
-					deleteProjectWithRetry(t, projectID)
+				t.Run(fmt.Sprintf("delete private endpoints for %s", p), func(t *testing.T) {
+					t.Parallel()
+					deleteAllPrivateEndpoints(t, cliPath, projectID, p)
 				})
+			}
+			t.Run("delete all clusters", func(t *testing.T) {
+				t.Parallel()
+				deleteAllClustersForProject(t, cliPath, projectID)
 			})
-		}(project.GetId())
+			t.Run("delete datapipelines", func(t *testing.T) {
+				t.Parallel()
+				deleteDatapipelinesForProject(t, cliPath, projectID)
+			})
+			t.Run("delete data deferations", func(t *testing.T) {
+				t.Parallel()
+				deleteAllDataFederations(t, cliPath, projectID)
+			})
+			t.Run("delete all serverless instances", func(t *testing.T) {
+				if IsGov() {
+					t.Skip("serverless is not available on gov")
+				}
+				t.Parallel()
+				deleteAllServerlessInstances(t, cliPath, projectID)
+			})
+		})
+		t.Cleanup(func() {
+			deleteProjectWithRetry(t, projectID)
+		})
 	}
 }

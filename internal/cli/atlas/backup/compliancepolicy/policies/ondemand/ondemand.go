@@ -35,8 +35,10 @@ func Builder() *cobra.Command {
 
 	cmd.AddCommand(
 		CreateBuilder(),
-		DescribeBuilder(),
 		UpdateBuilder(),
+		DescribeBuilder(),
+		// delete command not available as once set,
+		// an ondemand policy can only be updated.
 	)
 
 	return cmd

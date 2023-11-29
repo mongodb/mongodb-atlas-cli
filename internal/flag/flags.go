@@ -374,4 +374,8 @@ const (
 	Decompress                                = "decompress"                                // Decompress flag
 	DecompressShort                           = "d"                                         // DecompressShort flag
 	BindIPAll                                 = "bindIpAll"                                 // BindIpAll flag
+	FrequencyType                             = "frequencyType"                             // FrequencyType flag
+	FrequencyInterval                         = "frequencyInterval"                         // FrequencyInterval flag
+	RetentionUnit                             = "retentionUnit"                             // RetentionUnit flag
+	RetentionValue                            = "retentionValue"                            // RetentionValue flag
 )

@@ -22,7 +22,7 @@ type CompliancePolicyDescriber interface {
 	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
 }
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicyUpdater,CompliancePolicyEncryptionAtRestEnabler,CompliancePolicyEncryptionAtRestDisabler,CompliancePolicyEnabler,CompliancePolicyCopyProtectionEnabler,CompliancePolicyCopyProtectionDisabler,CompliancePolicyPointInTimeRestoresEnabler,CompliancePolicyOnDemandPolicyCreator
+//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicyUpdater,CompliancePolicyEncryptionAtRestEnabler,CompliancePolicyEncryptionAtRestDisabler,CompliancePolicyEnabler,CompliancePolicyCopyProtectionEnabler,CompliancePolicyCopyProtectionDisabler,CompliancePolicyPointInTimeRestoresEnabler,CompliancePolicyOnDemandPolicyCreator,CompliancePolicyOnDemandPolicyDeleter
 
 type CompliancePolicyPointInTimeRestoresEnabler interface {
 	EnablePointInTimeRestore(projectID string, restoreWindowDays int) (*atlasv2.DataProtectionSettings20231001, error)
@@ -62,7 +62,11 @@ type CompliancePolicyEncryptionAtRestDisabler interface {
 
 type CompliancePolicyOnDemandPolicyCreator interface {
 	CreateOnDemandPolicy(projectID string, policy *atlasv2.BackupComplianceOnDemandPolicyItem) (*atlasv2.DataProtectionSettings20231001, error)
-	ProjectLister
+	CompliancePolicyDescriber
+}
+
+type CompliancePolicyOnDemandPolicyDeleter interface {
+	DeleteOnDemandPolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
 	CompliancePolicyDescriber
 }
 
@@ -83,12 +87,10 @@ func (s *Store) EnablePointInTimeRestore(projectID string, restoreWindowDays int
 	}
 	compliancePolicy.SetRestoreWindowDays(restoreWindowDays)
 	compliancePolicy.SetPitEnabled(true)
-	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
 }
+
 func (s *Store) EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	if err != nil {
@@ -96,11 +98,7 @@ func (s *Store) EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectio
 	}
 	compliancePolicy.SetEncryptionAtRestEnabled(true)
 
-	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
 }
 
 func (s *Store) EnableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
@@ -110,11 +108,7 @@ func (s *Store) EnableCopyProtection(projectID string) (*atlasv2.DataProtectionS
 	}
 	compliancePolicy.SetCopyProtectionEnabled(true)
 
-	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
 }
 func (s *Store) DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
@@ -123,11 +117,7 @@ func (s *Store) DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtecti
 	}
 	compliancePolicy.SetEncryptionAtRestEnabled(false)
 
-	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
 }
 
 func (s *Store) DisableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
@@ -137,20 +127,12 @@ func (s *Store) DisableCopyProtection(projectID string) (*atlasv2.DataProtection
 	}
 	compliancePolicy.SetCopyProtectionEnabled(false)
 
-	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
 }
 func (s *Store) EnableCompliancePolicy(projectID, authorizedEmail, authorizedFirstName, authorizedLastName string) (*atlasv2.DataProtectionSettings20231001, error) {
 	compliancePolicy := newEmptyCompliancePolicy(projectID, authorizedEmail, authorizedFirstName, authorizedLastName)
 
-	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
 }
 
 func (s *Store) CreateOnDemandPolicy(projectID string, policy *atlasv2.BackupComplianceOnDemandPolicyItem) (*atlasv2.DataProtectionSettings20231001, error) {
@@ -161,6 +143,21 @@ func (s *Store) CreateOnDemandPolicy(projectID string, policy *atlasv2.BackupCom
 
 	compliancePolicy.SetOnDemandPolicyItem(*policy)
 
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
+}
+
+func (s *Store) DeleteOnDemandPolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	if err != nil {
+		return nil, err
+	}
+
+	compliancePolicy.OnDemandPolicyItem = nil
+
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
+}
+
+func (s *Store) updateDataProtectionSettings(projectID string, compliancePolicy *atlasv2.DataProtectionSettings20231001) (*atlasv2.DataProtectionSettings20231001, error) {
 	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
 	if err != nil {
 		return nil, err

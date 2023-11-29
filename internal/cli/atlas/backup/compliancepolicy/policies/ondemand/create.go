@@ -16,16 +16,13 @@ package ondemand
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
@@ -33,14 +30,15 @@ import (
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	store  store.CompliancePolicyOnDemandPolicyCreator
-	fs     afero.Fs
-	path   string
-	policy *atlasv2.DataProtectionSettings20231001
+	store          store.CompliancePolicyOnDemandPolicyCreator
+	policy         *atlasv2.DataProtectionSettings20231001
+	retentionUnit  string
+	retentionValue int
 }
 
 const (
-	active = "ACTIVE"
+	active                = "ACTIVE"
+	ondemandFrequencyType = "ondemand"
 )
 
 const updateTemplate = `Your backup compliance policy is being updated
@@ -54,13 +52,9 @@ const example = `  # How to create an ondemand policy ....:
 `
 
 func (opts *Opts) initStore(ctx context.Context) func() error {
-	return func() error {
-		var err error
+	return func() (err error) {
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
-		if err != nil {
-			return err
-		}
-		return nil
+		return
 	}
 }
 
@@ -70,22 +64,23 @@ func (opts *Opts) watcher() (bool, error) {
 		return false, err
 	}
 	opts.policy = res
-	if res.GetState() == "" {
-		return false, errors.New("could not access State field")
-	}
 	return res.GetState() == active, nil
 }
 
-func (opts *Opts) Run(policyItem *atlasv2.BackupComplianceOnDemandPolicyItem) error {
-	result, err := opts.store.CreateOnDemandPolicy(opts.ProjectID, policyItem)
-	if err != nil {
+func (opts *Opts) Run() (err error) {
+	policyItem := &atlasv2.BackupComplianceOnDemandPolicyItem{
+		FrequencyType:  ondemandFrequencyType,
+		RetentionUnit:  opts.retentionUnit,
+		RetentionValue: opts.retentionValue,
+	}
+
+	if opts.policy, err = opts.store.CreateOnDemandPolicy(opts.ProjectID, policyItem); err != nil {
 		return err
 	}
-	opts.policy = result
+
 	if opts.EnableWatch {
-		err := opts.Watch(opts.watcher)
-		if err != nil {
-			return fmt.Errorf("received an error while watching for completion: %w", err)
+		if errW := opts.Watch(opts.watcher); errW != nil {
+			return fmt.Errorf("received an error while watching for completion: %w", errW)
 		}
 		opts.Template = updateWatchTemplate
 	}
@@ -93,9 +88,7 @@ func (opts *Opts) Run(policyItem *atlasv2.BackupComplianceOnDemandPolicyItem) er
 }
 
 func CreateBuilder() *cobra.Command {
-	opts := &Opts{
-		fs: afero.NewOsFs(),
-	}
+	opts := &Opts{}
 	cmd := &cobra.Command{
 		Use:     "create",
 		Short:   "Create the backup compliance ondemand policy for your project.",
@@ -108,19 +101,19 @@ func CreateBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			policyItem := &atlasv2.BackupComplianceOnDemandPolicyItem{}
-			if err := file.Load(opts.fs, opts.path, policyItem); err != nil {
-				return err
-			}
-			return opts.Run(policyItem)
+			return opts.Run()
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.retentionUnit, flag.RetentionUnit, "", usage.RetentionUnit)
+	cmd.Flags().IntVar(&opts.retentionValue, flag.RetentionValue, 0, usage.RetentionValue)
+	_ = cmd.MarkFlagRequired(flag.RetentionUnit)
+	_ = cmd.MarkFlagRequired(flag.RetentionValue)
+
+	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
-	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
-	_ = cmd.MarkFlagRequired(flag.File)
 	return cmd
 }

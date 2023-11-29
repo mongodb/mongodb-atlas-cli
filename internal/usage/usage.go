@@ -474,4 +474,8 @@ dbName and collection are required only for built-in roles.`
 	Decompress                                = "Flag that indicates whether to decompress the log files."
 	OnlineArchiveFilename                     = "Path to an optional JSON configuration file that defines online archive settings. To learn more about configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-json-online-archive-config."
 	BindIPAll                                 = "Flag that indicates whether the LOCAL deployment port binding should happen for all IPs or only for the localhost interface 127.0.0.1."
+	FrequencyType                             = "Frequency type associated with the backup policy."
+	FrequencyInterval                         = "Number that indicates the frequency interval for a set of snapshots."
+	RetentionUnit                             = "Unit of time in which MongoDB Cloud measures snapshot retention: 'days' 'weeks' 'months'. "
+	RetentionValue                            = "Duration in days, weeks, or months that MongoDB Cloud retains the snapshot. For less frequent policy items, MongoDB Cloud requires that you specify a value greater than or equal to the value specified for more frequent policy items."
 )

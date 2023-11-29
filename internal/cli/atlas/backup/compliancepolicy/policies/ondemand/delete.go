@@ -25,17 +25,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type DescribeOpts struct {
+type DeleteOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	store store.CompliancePolicyDescriber
+	*cli.DeleteOpts
+	store store.CompliancePolicyOnDemandPolicyDeleter
 }
 
-const describeTemplate = `ID	RETENTION
+const deleteTemplate = `ID	RETENTION
 {{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
 `
+const confirmationMessage = "Are you sure you want to delete the ondemand policy item of the backup compliance policy"
 
-func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
+func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -43,8 +45,8 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DescribeOpts) Run() error {
-	raw, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
+func (opts *DeleteOpts) Run() error {
+	raw, err := opts.store.DeleteOnDemandPolicy(opts.ConfigProjectID())
 	if err != nil {
 		return err
 	}
@@ -52,24 +54,28 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(raw)
 }
 
-func DescribeBuilder() *cobra.Command {
-	opts := new(DescribeOpts)
+func DeleteBuilder() *cobra.Command {
+	opts := new(DeleteOpts)
 	cmd := &cobra.Command{
-		Use:     "describe",
-		Aliases: []string{"get"},
-		Short:   "Return the ondemand policy item of the backup compliance policy for your project.",
+		Use:   "delete",
+		Short: "Deletes the ondemand policy item of the backup compliance policy for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), deleteTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := opts.PromptWithMessage(confirmationMessage); err != nil {
+				return err
+			}
+
 			return opts.Run()
 		},
 	}
 
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())

@@ -197,7 +197,7 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
-  "install podman":
+  "install docker":
     - command: shell.exec
       type: setup
       params:
@@ -208,14 +208,14 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           if [ -n "$(which yum 2>/dev/null)" ]; then
-            sudo yum install -y podman
+            sudo yum install -y docker
           elif [ -n "$(which apt-get 2>/dev/null)" ]; then
             sudo apt-get update
-            sudo apt-get install -y podman
+            sudo apt-get install -y docker
           elif [ -n "$(which zypper 2>/dev/null)" ]; then
-            sudo zypper install -y podman
+            sudo zypper install -y docker
           elif [ -n "$(which brew 2>/dev/null)" ]; then
-            sudo brew install podman
+            sudo brew install docker
           fi
   "install pykmip":
     - command: subprocess.exec
@@ -1365,7 +1365,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "install podman"
+      - func: "install docker"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:

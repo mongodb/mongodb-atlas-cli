@@ -1,14 +1,16 @@
 services:
   mongod:
-    image: "docker.io/mongodb/mongodb-enterprise-server:${MONGOD_VERSION}-ubi8"
+    image: "docker.io/mongodb/mongodb-enterprise-server:{{ .MongodVersion }}-ubi8"
     hostname: mongod
     command:
-      mongod --transitionToAuth --dbpath '/data/db' --keyFile '/data/configdb/keyfile' --replSet 'rs-localdev' --maxConns '32200' --setParameter "mongotHost=mongot:27027" --setParameter "searchIndexManagementHostAndPort=mongot:27027"
+      mongod {{ if not .Username }}--transitionToAuth {{end}}--dbpath '/data/db' --keyFile '/data/configdb/keyfile' --replSet 'rs-localdev' --maxConns '32200' --setParameter "mongotHost=mongot:27027" --setParameter "searchIndexManagementHostAndPort=mongot:27027"
+    {{ if .Username }}
     environment:
-      - MONGODB_INITDB_ROOT_USERNAME=${MONGODB_INITDB_ROOT_USERNAME}
-      - MONGODB_INITDB_ROOT_PASSWORD=${MONGODB_INITDB_ROOT_PASSWORD}
+      - MONGODB_INITDB_ROOT_USERNAME={{ .Username }}
+      - MONGODB_INITDB_ROOT_PASSWORD={{ .Password }}
+    {{ end }}
     ports:
-      - "${BIND_IP}:${PORT}:27017"
+      - "{{ .BindIp }}:{{ .Port }}:27017"
     volumes:
       - mongod-data:/data/db
     networks:
@@ -17,13 +19,13 @@ services:
       - source: keyfile
         target: /data/configdb/keyfile
         mode: 0400
-        uid: '997'
         gid: '997'
+        uid: '997'
     healthcheck:
       test: [
         "CMD",
         "mongosh",
-        "mongodb://localhost:27017/admin?directConnection=true",
+        "mongodb://{{ if .Username }}{{ .Username }}:{{ .Password }}@{{ end }}localhost:27017/admin?directConnection=true",
         "--eval",
         "try {
           rs.status();
@@ -35,7 +37,7 @@ services:
                 \"_id\" : 0,
                 host : \"mongod:27017\",
                 horizons: {
-                  external: \"localhost:${PORT}\"
+                  external: \"localhost:{{ .Port }}\"
                 }
               }
             ]

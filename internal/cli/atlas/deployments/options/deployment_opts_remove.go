@@ -14,17 +14,24 @@
 package options
 
 import (
-	"bytes"
 	"context"
 	"os"
 	"os/exec"
 )
 
 func (opts *DeploymentOpts) RemoveLocal(ctx context.Context) error {
+	buf, err := ComposeDefinition(&ComposeDefinitionOptions{
+		Port:          "27017",
+		MongodVersion: "7.0",
+		BindIp:        "127.0.0.1",
+	})
+	if err != nil {
+		return err
+	}
 	cmd := exec.Command("docker", "compose", "-f", "/dev/stdin", "down", "-v")
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
-	cmd.Stdin = bytes.NewReader(ComposeDefinition)
-	cmd.Env = append(os.Environ(), "COMPOSE_PROJECT_NAME="+opts.DeploymentName)
+	cmd.Stdin = buf
+	cmd.Env = append(os.Environ(), "COMPOSE_PROJECT_NAME="+opts.DeploymentName, "KEY_FILE=keyfile")
 	return cmd.Run()
 }

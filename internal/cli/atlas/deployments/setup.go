@@ -15,11 +15,11 @@
 package deployments
 
 import (
-	"bytes"
 	"context"
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"io"
 	"math/rand"
 	"net"
 	"os"
@@ -100,30 +100,46 @@ type SetupOpts struct {
 	force       bool
 	atlasSetup  *setup.Opts
 	bindIPAll   bool
+	compose     bool
 }
 
 func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
-	keyFileContents := base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))
-
-	env := append(os.Environ(), "COMPOSE_PROJECT_NAME="+opts.DeploymentName, "PORT="+strconv.Itoa(opts.Port), "KEY_FILE="+keyFileContents, "MONGOD_VERSION="+opts.MdbVersion)
-
+	composeOpt := &options.ComposeDefinitionOptions{
+		Port:          strconv.Itoa(opts.Port),
+		MongodVersion: opts.MdbVersion,
+		BindIp:        "127.0.0.1",
+	}
 	if opts.bindIPAll {
-		env = append(env, "BIND_IP=0.0.0.0")
-	} else {
-		env = append(env, "BIND_IP=127.0.0.1")
+		composeOpt.BindIp = "0.0.0.0"
 	}
 
 	if opts.IsAuthEnabled() {
 		tempRootUserPassword := base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))
 
-		env = append(env, "MONGODB_INITDB_ROOT_USERNAME"+tempRootUser, "MONGODB_INITDB_ROOT_PASSWORD"+tempRootUserPassword)
+		composeOpt.Username = tempRootUser
+		composeOpt.Password = tempRootUserPassword
 	}
+
+	buf, err := options.ComposeDefinition(composeOpt)
+	if err != nil {
+		return err
+	}
+
+	if opts.compose {
+		if _, err := io.Copy(opts.OutWriter, buf); err != nil {
+			return err
+		}
+
+		return nil
+	}
+
+	keyFileContents := base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))
 
 	cmd := exec.Command("docker", "compose", "-f", "/dev/stdin", "up", "-d", "--wait")
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
-	cmd.Stdin = bytes.NewReader(options.ComposeDefinition)
-	cmd.Env = env
+	cmd.Stdin = buf
+	cmd.Env = append(os.Environ(), "COMPOSE_PROJECT_NAME="+opts.DeploymentName, "KEY_FILE="+keyFileContents)
 	return cmd.Run()
 }
 
@@ -544,6 +560,7 @@ func SetupBuilder() *cobra.Command {
 	// Local only
 	cmd.Flags().IntVar(&opts.Port, flag.Port, 0, usage.MongodPort)
 	cmd.Flags().BoolVar(&opts.bindIPAll, flag.BindIPAll, false, usage.BindIPAll)
+	cmd.Flags().BoolVar(&opts.compose, "compose", false, "output compose definition")
 
 	// Atlas only
 	opts.atlasSetup.SetupAtlasFlags(cmd)

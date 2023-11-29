@@ -58,11 +58,15 @@ func TestCleanup(t *testing.T) {
 	t.Logf("projects:\n%s\n", resp)
 	for _, project := range projects.Results {
 		projectID := project.GetId()
+		if projectID == os.Getenv("MCLI_PROJECT_ID") {
+			t.Log("skipping project", projectID)
+			continue
+		}
 		t.Run(fmt.Sprintf("trying to delete project %s", projectID), func(t *testing.T) {
 			t.Parallel()
-			if projectID == os.Getenv("MCLI_PROJECT_ID") {
-				t.Skip("skipping project", projectID)
-			}
+			t.Cleanup(func() {
+				deleteProjectWithRetry(t, projectID)
+			})
 			for _, provider := range []string{"aws", "gcp", "azure"} {
 				p := provider
 				t.Run(fmt.Sprintf("delete network peers for %s", p), func(t *testing.T) {
@@ -93,9 +97,6 @@ func TestCleanup(t *testing.T) {
 				t.Parallel()
 				deleteAllServerlessInstances(t, cliPath, projectID)
 			})
-		})
-		t.Cleanup(func() {
-			deleteProjectWithRetry(t, projectID)
 		})
 	}
 }

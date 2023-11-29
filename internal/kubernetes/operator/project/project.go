@@ -589,10 +589,6 @@ func buildEncryptionAtRest(encProvider store.EncryptionAtRestDescriber, projectI
 			Enabled: data.AwsKms.Enabled,
 			Region:  data.AwsKms.GetRegion(),
 			Valid:   data.AwsKms.Valid,
-			SecretRef: akov2common.ResourceRefNamespaced{
-				Name:      resources.NormalizeAtlasName(generateName("aws-credentials-"), dictionary),
-				Namespace: targetNamespace,
-			},
 		},
 		AzureKeyVault: akov2.AzureKeyVault{
 			Enabled:           data.AzureKeyVault.Enabled,
@@ -600,36 +596,49 @@ func buildEncryptionAtRest(encProvider store.EncryptionAtRestDescriber, projectI
 			AzureEnvironment:  data.AzureKeyVault.GetAzureEnvironment(),
 			ResourceGroupName: data.AzureKeyVault.GetResourceGroupName(),
 			TenantID:          data.AzureKeyVault.GetTenantID(),
-			SecretRef: akov2common.ResourceRefNamespaced{
-				Name:      resources.NormalizeAtlasName(generateName("azure-credentials-"), dictionary),
-				Namespace: targetNamespace,
-			},
 		},
 		GoogleCloudKms: akov2.GoogleCloudKms{
 			Enabled: data.GoogleCloudKms.Enabled,
-			SecretRef: akov2common.ResourceRefNamespaced{
-				Name:      resources.NormalizeAtlasName(generateName("gcp-credentials-"), dictionary),
-				Namespace: targetNamespace,
-			},
 		},
 	}
 
-	secret := []*corev1.Secret{
-		secrets.NewAtlasSecretBuilder(ref.AwsKms.SecretRef.Name, ref.AwsKms.SecretRef.Namespace, dictionary).
+	var ss []*corev1.Secret
+	switch {
+	case data.AwsKms.Enabled != nil && *data.AwsKms.Enabled:
+		ref.AwsKms.SecretRef = akov2common.ResourceRefNamespaced{
+			Name:      resources.NormalizeAtlasName(generateName("aws-credentials-"), dictionary),
+			Namespace: targetNamespace,
+		}
+
+		ss = append(ss, secrets.NewAtlasSecretBuilder(ref.AwsKms.SecretRef.Name, ref.AwsKms.SecretRef.Namespace, dictionary).
 			WithData(map[string][]byte{"CustomerMasterKeyID": []byte(""), "RoleID": []byte("")}).
 			WithProjectLabels(projectID, projectName).
-			Build(),
-		secrets.NewAtlasSecretBuilder(ref.AzureKeyVault.SecretRef.Name, ref.AzureKeyVault.SecretRef.Namespace, dictionary).
+			Build())
+
+	case data.AzureKeyVault.Enabled != nil && *data.AzureKeyVault.Enabled:
+		ref.AzureKeyVault.SecretRef = akov2common.ResourceRefNamespaced{
+			Name:      resources.NormalizeAtlasName(generateName("azure-credentials-"), dictionary),
+			Namespace: targetNamespace,
+		}
+
+		ss = append(ss, secrets.NewAtlasSecretBuilder(ref.AzureKeyVault.SecretRef.Name, ref.AzureKeyVault.SecretRef.Namespace, dictionary).
 			WithData(map[string][]byte{"SubscriptionID": []byte(""), "KeyVaultName": []byte(""), "KeyIdentifier": []byte(""), "Secret": []byte("")}).
 			WithProjectLabels(projectID, projectName).
-			Build(),
-		secrets.NewAtlasSecretBuilder(ref.GoogleCloudKms.SecretRef.Name, ref.GoogleCloudKms.SecretRef.Namespace, dictionary).
+			Build())
+
+	case data.GoogleCloudKms.Enabled != nil && *data.GoogleCloudKms.Enabled:
+		ref.AzureKeyVault.SecretRef = akov2common.ResourceRefNamespaced{
+			Name:      resources.NormalizeAtlasName(generateName("gcp-credentials-"), dictionary),
+			Namespace: targetNamespace,
+		}
+
+		ss = append(ss, secrets.NewAtlasSecretBuilder(ref.GoogleCloudKms.SecretRef.Name, ref.GoogleCloudKms.SecretRef.Namespace, dictionary).
 			WithData(map[string][]byte{"ServiceAccountKey": []byte(""), "KeyVersionResourceID": []byte("")}).
 			WithProjectLabels(projectID, projectName).
-			Build(),
+			Build())
 	}
 
-	return ref, secret, nil
+	return ref, ss, nil
 }
 
 func buildCloudProviderAccessRoles(cpaProvider store.CloudProviderAccessRoleLister, projectID string) ([]akov2.CloudProviderAccessRole, error) {
@@ -730,70 +739,92 @@ func buildAlertConfigurations(acProvider atlas.AlertConfigurationLister, project
 
 		for _, atlasNotification := range atlasNotifications {
 			akoNotification := akov2.Notification{
-				APITokenRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(generateName("api-token-"), dictionary),
-					Namespace: targetNamespace,
-				},
-				ChannelName: atlas.StringOrEmpty(atlasNotification.ChannelName),
-				DatadogAPIKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(generateName("datadog-api-key-"), dictionary),
-					Namespace: targetNamespace,
-				},
-				DatadogRegion: atlas.StringOrEmpty(atlasNotification.DatadogRegion),
-				DelayMin:      atlasNotification.DelayMin,
-				EmailAddress:  atlas.StringOrEmpty(atlasNotification.EmailAddress),
-				EmailEnabled:  atlasNotification.EmailEnabled,
-				IntervalMin:   pointer.GetOrDefault(atlasNotification.IntervalMin, 0),
-				MobileNumber:  atlas.StringOrEmpty(atlasNotification.MobileNumber),
-				OpsGenieAPIKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(generateName("ops-genie-api-key-"), dictionary),
-					Namespace: targetNamespace,
-				},
+				ChannelName:    atlas.StringOrEmpty(atlasNotification.ChannelName),
+				DatadogRegion:  atlas.StringOrEmpty(atlasNotification.DatadogRegion),
+				DelayMin:       atlasNotification.DelayMin,
+				EmailAddress:   atlas.StringOrEmpty(atlasNotification.EmailAddress),
+				EmailEnabled:   atlasNotification.EmailEnabled,
+				IntervalMin:    pointer.GetOrDefault(atlasNotification.IntervalMin, 0),
+				MobileNumber:   atlas.StringOrEmpty(atlasNotification.MobileNumber),
 				OpsGenieRegion: atlas.StringOrEmpty(atlasNotification.OpsGenieRegion),
-				ServiceKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(generateName("service-key-"), dictionary),
-					Namespace: targetNamespace,
-				},
-				SMSEnabled: atlasNotification.SmsEnabled,
-				TeamID:     atlas.StringOrEmpty(atlasNotification.TeamId),
-				TeamName:   atlas.StringOrEmpty(atlasNotification.TeamName),
-				TypeName:   atlas.StringOrEmpty(atlasNotification.TypeName),
-				Username:   atlas.StringOrEmpty(atlasNotification.Username),
-				VictorOpsSecretRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(generateName("victor-ops-credentials-"), dictionary),
-					Namespace: targetNamespace,
-				},
-				Roles: atlasNotification.Roles,
+				SMSEnabled:     atlasNotification.SmsEnabled,
+				TeamID:         atlas.StringOrEmpty(atlasNotification.TeamId),
+				TeamName:       atlas.StringOrEmpty(atlasNotification.TeamName),
+				TypeName:       atlas.StringOrEmpty(atlasNotification.TypeName),
+				Username:       atlas.StringOrEmpty(atlasNotification.Username),
+				Roles:          atlasNotification.Roles,
 			}
-			akoNotifications = append(akoNotifications, akoNotification)
 
-			akoSecrets = append(akoSecrets, []*corev1.Secret{
-				secrets.NewAtlasSecretBuilder(akoNotification.APITokenRef.Name, akoNotification.APITokenRef.Namespace, dictionary).
-					WithData(map[string][]byte{"APIToken": []byte("")}).
-					WithProjectLabels(projectID, projectName).
-					WithNotifierID(atlasNotification.NotifierId).
-					Build(),
-				secrets.NewAtlasSecretBuilder(akoNotification.DatadogAPIKeyRef.Name, akoNotification.DatadogAPIKeyRef.Namespace, dictionary).
-					WithData(map[string][]byte{"DatadogAPIKey": []byte("")}).
-					WithProjectLabels(projectID, projectName).
-					WithNotifierID(atlasNotification.NotifierId).
-					Build(),
-				secrets.NewAtlasSecretBuilder(akoNotification.OpsGenieAPIKeyRef.Name, akoNotification.OpsGenieAPIKeyRef.Namespace, dictionary).
-					WithData(map[string][]byte{"OpsGenieAPIKey": []byte("")}).
-					WithProjectLabels(projectID, projectName).
-					WithNotifierID(atlasNotification.NotifierId).
-					Build(),
-				secrets.NewAtlasSecretBuilder(akoNotification.ServiceKeyRef.Name, akoNotification.ServiceKeyRef.Namespace, dictionary).
-					WithData(map[string][]byte{"ServiceKey": []byte("")}).
-					WithProjectLabels(projectID, projectName).
-					WithNotifierID(atlasNotification.NotifierId).
-					Build(),
-				secrets.NewAtlasSecretBuilder(akoNotification.VictorOpsSecretRef.Name, akoNotification.VictorOpsSecretRef.Namespace, dictionary).
-					WithData(map[string][]byte{"VictorOpsAPIKey": []byte(""), "VictorOpsRoutingKey": []byte("")}).
-					WithProjectLabels(projectID, projectName).
-					WithNotifierID(atlasNotification.NotifierId).
-					Build(),
-			}...)
+			if atlasNotification.TypeName != nil {
+				switch *atlasNotification.TypeName {
+				case pagerDutyIntegrationType:
+					akoNotification.ServiceKeyRef = akov2common.ResourceRefNamespaced{
+						Name:      resources.NormalizeAtlasName(generateName("service-key-"), dictionary),
+						Namespace: targetNamespace,
+					}
+
+					akoSecrets = append(akoSecrets,
+						secrets.NewAtlasSecretBuilder(akoNotification.ServiceKeyRef.Name, akoNotification.ServiceKeyRef.Namespace, dictionary).
+							WithData(map[string][]byte{"ServiceKey": []byte("")}).
+							WithProjectLabels(projectID, projectName).
+							WithNotifierLabels(atlasNotification.NotifierId, pagerDutyIntegrationType).
+							Build())
+
+				case slackIntegrationType:
+					akoNotification.APITokenRef = akov2common.ResourceRefNamespaced{
+						Name:      resources.NormalizeAtlasName(generateName("api-token-"), dictionary),
+						Namespace: targetNamespace,
+					}
+
+					akoSecrets = append(akoSecrets,
+						secrets.NewAtlasSecretBuilder(akoNotification.APITokenRef.Name, akoNotification.APITokenRef.Namespace, dictionary).
+							WithData(map[string][]byte{"APIToken": []byte("")}).
+							WithProjectLabels(projectID, projectName).
+							WithNotifierLabels(atlasNotification.NotifierId, slackIntegrationType).
+							Build())
+
+				case datadogIntegrationType:
+					akoNotification.DatadogAPIKeyRef = akov2common.ResourceRefNamespaced{
+						Name:      resources.NormalizeAtlasName(generateName("datadog-api-key-"), dictionary),
+						Namespace: targetNamespace,
+					}
+
+					akoSecrets = append(akoSecrets,
+						secrets.NewAtlasSecretBuilder(akoNotification.DatadogAPIKeyRef.Name, akoNotification.DatadogAPIKeyRef.Namespace, dictionary).
+							WithData(map[string][]byte{"DatadogAPIKey": []byte("")}).
+							WithProjectLabels(projectID, projectName).
+							WithNotifierLabels(atlasNotification.NotifierId, datadogIntegrationType).
+							Build())
+
+				case opsGenieIntegrationType:
+					akoNotification.OpsGenieAPIKeyRef = akov2common.ResourceRefNamespaced{
+						Name:      resources.NormalizeAtlasName(generateName("ops-genie-api-key-"), dictionary),
+						Namespace: targetNamespace,
+					}
+
+					akoSecrets = append(akoSecrets,
+						secrets.NewAtlasSecretBuilder(akoNotification.OpsGenieAPIKeyRef.Name, akoNotification.OpsGenieAPIKeyRef.Namespace, dictionary).
+							WithData(map[string][]byte{"OpsGenieAPIKey": []byte("")}).
+							WithProjectLabels(projectID, projectName).
+							WithNotifierLabels(atlasNotification.NotifierId, opsGenieIntegrationType).
+							Build())
+
+				case victorOpsIntegrationType:
+					akoNotification.VictorOpsSecretRef = akov2common.ResourceRefNamespaced{
+						Name:      resources.NormalizeAtlasName(generateName("victor-ops-credentials-"), dictionary),
+						Namespace: targetNamespace,
+					}
+
+					akoSecrets = append(akoSecrets,
+						secrets.NewAtlasSecretBuilder(akoNotification.VictorOpsSecretRef.Name, akoNotification.VictorOpsSecretRef.Namespace, dictionary).
+							WithData(map[string][]byte{"VictorOpsAPIKey": []byte(""), "VictorOpsRoutingKey": []byte("")}).
+							WithProjectLabels(projectID, projectName).
+							WithNotifierLabels(atlasNotification.NotifierId, victorOpsIntegrationType).
+							Build())
+				}
+			}
+
+			akoNotifications = append(akoNotifications, akoNotification)
 		}
 
 		return akoNotifications, akoSecrets

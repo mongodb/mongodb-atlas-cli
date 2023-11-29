@@ -557,7 +557,7 @@ func TestProjectWithIntegration(t *testing.T) {
 		})
 
 		checkProject(t, objects, expectedProject, assertions)
-		assertions.Len(objects, 6, "should have 6 objects in the output: project, integration secret, atlas secret")
+		assertions.Len(objects, 3, "should have 3 objects in the output: project, integration secret, atlas secret")
 		integrationSecret := objects[1].(*corev1.Secret)
 		password, ok := integrationSecret.Data["password"]
 		assertions.True(ok, "should have password field in the integration secret")

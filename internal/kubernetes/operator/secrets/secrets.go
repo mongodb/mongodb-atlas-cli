@@ -21,15 +21,16 @@ import (
 )
 
 const (
-	TypeLabelKey        = "atlas.mongodb.com/type"
-	ProjectIDLabelKey   = "atlas.mongodb.com/project-id"
-	ProjectNameLabelKey = "atlas.mongodb.com/project-name"
-	NotifierIDLabelKey  = "atlas.mongodb.com/notifier-id"
-	CredLabelVal        = "credentials"
-	PasswordField       = "password"
-	CredPrivateAPIKey   = "privateApiKey"
-	CredPublicAPIKey    = "publicApiKey"
-	CredOrgID           = "orgId"
+	TypeLabelKey         = "atlas.mongodb.com/type"
+	ProjectIDLabelKey    = "atlas.mongodb.com/project-id"
+	ProjectNameLabelKey  = "atlas.mongodb.com/project-name"
+	NotifierIDLabelKey   = "atlas.mongodb.com/notifier-id"
+	NotifierNameLabelKey = "atlas.mongodb.com/notifier-type-name"
+	CredLabelVal         = "credentials"
+	PasswordField        = "password"
+	CredPrivateAPIKey    = "privateApiKey"
+	CredPublicAPIKey     = "publicApiKey"
+	CredOrgID            = "orgId"
 )
 
 type AtlasSecretBuilder func() (*corev1.Secret, map[string]string)
@@ -70,13 +71,14 @@ func (a AtlasSecretBuilder) WithProjectLabels(id, name string) AtlasSecretBuilde
 	})
 }
 
-func (a AtlasSecretBuilder) WithNotifierID(id *string) AtlasSecretBuilder {
+func (a AtlasSecretBuilder) WithNotifierLabels(id *string, typeName string) AtlasSecretBuilder {
 	return AtlasSecretBuilder(func() (*corev1.Secret, map[string]string) {
 		s, d := a()
 		if id == nil {
 			return s, d
 		}
 		s.Labels[NotifierIDLabelKey] = resources.NormalizeAtlasName(*id, d)
+		s.Labels[NotifierNameLabelKey] = typeName // don't normalize type name, as it is already a short form
 		return s, d
 	})
 }

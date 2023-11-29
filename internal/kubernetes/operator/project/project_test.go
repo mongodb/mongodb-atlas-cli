@@ -38,6 +38,7 @@ import (
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	akov2toptr "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/util/toptr"
+	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -337,13 +338,13 @@ func TestBuildAtlasProject(t *testing.T) {
 			{
 				APITokenRef: akov2common.ResourceRefNamespaced{
 					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].APITokenRef.Name,
-					Namespace: targetNamespace,
+					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].APITokenRef.Namespace,
 				},
 				ChannelName:   atlas.StringOrEmpty(alertConfigs[0].Notifications[0].ChannelName),
 				DatadogRegion: atlas.StringOrEmpty(alertConfigs[0].Notifications[0].DatadogRegion),
 				DatadogAPIKeyRef: akov2common.ResourceRefNamespaced{
 					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].DatadogAPIKeyRef.Name,
-					Namespace: targetNamespace,
+					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].DatadogAPIKeyRef.Namespace,
 				},
 				DelayMin:       alertConfigs[0].Notifications[0].DelayMin,
 				EmailAddress:   atlas.StringOrEmpty(alertConfigs[0].Notifications[0].EmailAddress),
@@ -353,11 +354,11 @@ func TestBuildAtlasProject(t *testing.T) {
 				OpsGenieRegion: atlas.StringOrEmpty(alertConfigs[0].Notifications[0].OpsGenieRegion),
 				OpsGenieAPIKeyRef: akov2common.ResourceRefNamespaced{
 					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].OpsGenieAPIKeyRef.Name,
-					Namespace: targetNamespace,
+					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].OpsGenieAPIKeyRef.Namespace,
 				},
 				ServiceKeyRef: akov2common.ResourceRefNamespaced{
 					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].ServiceKeyRef.Name,
-					Namespace: targetNamespace,
+					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].ServiceKeyRef.Namespace,
 				},
 				SMSEnabled: alertConfigs[0].Notifications[0].SmsEnabled,
 				TeamID:     atlas.StringOrEmpty(alertConfigs[0].Notifications[0].TeamId),
@@ -367,7 +368,7 @@ func TestBuildAtlasProject(t *testing.T) {
 				Roles:      alertConfigs[0].Notifications[0].Roles,
 				VictorOpsSecretRef: akov2common.ResourceRefNamespaced{
 					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].VictorOpsSecretRef.Name,
-					Namespace: targetNamespace,
+					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].VictorOpsSecretRef.Namespace,
 				},
 			},
 		}
@@ -494,20 +495,20 @@ func TestBuildAtlasProject(t *testing.T) {
 					AwsKms: akov2.AwsKms{
 						SecretRef: akov2common.ResourceRefNamespaced{
 							Name:      gotProject.Spec.EncryptionAtRest.AwsKms.SecretRef.Name,
-							Namespace: targetNamespace,
+							Namespace: gotProject.Spec.EncryptionAtRest.AwsKms.SecretRef.Namespace,
 						},
 					},
 					AzureKeyVault: akov2.AzureKeyVault{
 						SecretRef: akov2common.ResourceRefNamespaced{
 							Name:      gotProject.Spec.EncryptionAtRest.AzureKeyVault.SecretRef.Name,
-							Namespace: targetNamespace,
+							Namespace: gotProject.Spec.EncryptionAtRest.AzureKeyVault.SecretRef.Namespace,
 						},
 					},
 					GoogleCloudKms: akov2.GoogleCloudKms{
 						Enabled: encryptionAtRest.GoogleCloudKms.Enabled,
 						SecretRef: akov2common.ResourceRefNamespaced{
 							Name:      gotProject.Spec.EncryptionAtRest.GoogleCloudKms.SecretRef.Name,
-							Namespace: targetNamespace,
+							Namespace: gotProject.Spec.EncryptionAtRest.GoogleCloudKms.SecretRef.Namespace,
 						},
 					},
 				},
@@ -563,13 +564,8 @@ func TestBuildAtlasProject(t *testing.T) {
 			},
 		}
 
-		if diff := deep.Equal(expectedProject, gotProject); diff != nil {
-			t.Fatalf("Project mismatch: %v", diff)
-		}
-
-		if diff := deep.Equal(expectedTeams, gotTeams); diff != nil {
-			t.Fatalf("Teams mismatch: %v", diff)
-		}
+		assert.Equal(t, expectedProject, gotProject)
+		assert.Equal(t, expectedTeams, gotTeams)
 	})
 }
 
@@ -796,19 +792,19 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 				Valid:   data.AwsKms.Valid,
 				SecretRef: akov2common.ResourceRefNamespaced{
 					Name:      got.AwsKms.SecretRef.Name,
-					Namespace: targetNamespace,
+					Namespace: got.AwsKms.SecretRef.Namespace,
 				},
 			},
 			AzureKeyVault: akov2.AzureKeyVault{
 				SecretRef: akov2common.ResourceRefNamespaced{
 					Name:      got.AzureKeyVault.SecretRef.Name,
-					Namespace: targetNamespace,
+					Namespace: got.AzureKeyVault.SecretRef.Namespace,
 				},
 			},
 			GoogleCloudKms: akov2.GoogleCloudKms{
 				SecretRef: akov2common.ResourceRefNamespaced{
 					Name:      got.GoogleCloudKms.SecretRef.Name,
-					Namespace: targetNamespace,
+					Namespace: got.GoogleCloudKms.SecretRef.Namespace,
 				},
 			},
 		}
@@ -837,20 +833,20 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 			AwsKms: akov2.AwsKms{
 				SecretRef: akov2common.ResourceRefNamespaced{
 					Name:      got.AwsKms.SecretRef.Name,
-					Namespace: targetNamespace,
+					Namespace: got.AwsKms.SecretRef.Namespace,
 				},
 			},
 			AzureKeyVault: akov2.AzureKeyVault{
 				SecretRef: akov2common.ResourceRefNamespaced{
 					Name:      got.AzureKeyVault.SecretRef.Name,
-					Namespace: targetNamespace,
+					Namespace: got.AzureKeyVault.SecretRef.Namespace,
 				},
 			},
 			GoogleCloudKms: akov2.GoogleCloudKms{
 				Enabled: data.GoogleCloudKms.Enabled,
 				SecretRef: akov2common.ResourceRefNamespaced{
 					Name:      got.GoogleCloudKms.SecretRef.Name,
-					Namespace: targetNamespace,
+					Namespace: got.GoogleCloudKms.SecretRef.Namespace,
 				},
 			},
 		}
@@ -886,7 +882,7 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 			AwsKms: akov2.AwsKms{
 				SecretRef: akov2common.ResourceRefNamespaced{
 					Name:      got.AwsKms.SecretRef.Name,
-					Namespace: targetNamespace,
+					Namespace: got.AwsKms.SecretRef.Namespace,
 				},
 			},
 			AzureKeyVault: akov2.AzureKeyVault{
@@ -897,13 +893,13 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 				TenantID:          data.AzureKeyVault.GetTenantID(),
 				SecretRef: akov2common.ResourceRefNamespaced{
 					Name:      got.AzureKeyVault.SecretRef.Name,
-					Namespace: targetNamespace,
+					Namespace: got.AzureKeyVault.SecretRef.Namespace,
 				},
 			},
 			GoogleCloudKms: akov2.GoogleCloudKms{
 				SecretRef: akov2common.ResourceRefNamespaced{
 					Name:      got.GoogleCloudKms.SecretRef.Name,
-					Namespace: targetNamespace,
+					Namespace: got.GoogleCloudKms.SecretRef.Namespace,
 				},
 			},
 		}

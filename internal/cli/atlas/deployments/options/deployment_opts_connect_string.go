@@ -17,6 +17,7 @@ package options
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"strconv"
 
 	"github.com/containers/podman/v4/libpod/define"
@@ -41,5 +42,13 @@ func (opts *DeploymentOpts) ConnectionString(ctx context.Context) (string, error
 		}
 		opts.updateFields(c)
 	}
+	if opts.IsAuthEnabled() {
+		return fmt.Sprintf("mongodb://%s:%s@localhost:%d/?directConnection=true",
+			url.QueryEscape(opts.DBUsername),
+			url.QueryEscape(opts.DBUserPassword),
+			opts.Port,
+		), nil
+	}
+
 	return fmt.Sprintf("mongodb://localhost:%d/?directConnection=true", opts.Port), nil
 }

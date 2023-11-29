@@ -4,8 +4,11 @@ services:
     hostname: mongod
     command:
       mongod --transitionToAuth --dbpath '/data/db' --keyFile '/data/configdb/keyfile' --replSet 'rs-localdev' --maxConns '32200' --setParameter "mongotHost=mongot:27027" --setParameter "searchIndexManagementHostAndPort=mongot:27027"
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=${MONGODB_INITDB_ROOT_USERNAME}
+      - MONGODB_INITDB_ROOT_PASSWORD=${MONGODB_INITDB_ROOT_PASSWORD}
     ports:
-      - "${PORT}:27017"
+      - "${BIND_IP}:${PORT}:27017"
     volumes:
       - mongod-data:/data/db
     networks:

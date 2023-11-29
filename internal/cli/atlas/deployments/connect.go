@@ -58,8 +58,8 @@ func ConnectBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ConnectWith, flag.ConnectWith, "", usage.ConnectWith)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
-	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
-	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
+	cmd.Flags().StringVar(&opts.DeploymentOpts.DBUsername, flag.Username, "", usage.DBUsername)
+	cmd.Flags().StringVar(&opts.DeploymentOpts.DBUserPassword, flag.Password, "", usage.Password)
 	cmd.Flags().StringVar(&opts.ConnectionStringType, flag.ConnectionStringType, options.ConnectionStringTypeStandard, usage.ConnectionStringType)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {

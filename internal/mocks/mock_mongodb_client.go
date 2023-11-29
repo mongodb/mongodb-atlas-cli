@@ -157,6 +157,34 @@ func (mr *MockDatabaseMockRecorder) CreateSearchIndex(arg0, arg1, arg2 interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSearchIndex", reflect.TypeOf((*MockDatabase)(nil).CreateSearchIndex), arg0, arg1, arg2)
 }
 
+// CreateUser mocks base method.
+func (m *MockDatabase) CreateUser(arg0 context.Context, arg1, arg2 string, arg3 []string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateUser", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateUser indicates an expected call of CreateUser.
+func (mr *MockDatabaseMockRecorder) CreateUser(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockDatabase)(nil).CreateUser), arg0, arg1, arg2, arg3)
+}
+
+// DropUser mocks base method.
+func (m *MockDatabase) DropUser(arg0 context.Context, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DropUser", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DropUser indicates an expected call of DropUser.
+func (mr *MockDatabaseMockRecorder) DropUser(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DropUser", reflect.TypeOf((*MockDatabase)(nil).DropUser), arg0, arg1)
+}
+
 // InitiateReplicaSet mocks base method.
 func (m *MockDatabase) InitiateReplicaSet(arg0 context.Context, arg1, arg2 string, arg3, arg4 int) error {
 	m.ctrl.T.Helper()

@@ -17,11 +17,14 @@ package options
 import (
 	"context"
 	"errors"
+	"fmt"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/compass"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
+	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 )
 
 var (
@@ -82,13 +85,32 @@ func (opts *ConnectOpts) connectToDeployment(connectionString string) error {
 		if _, err := log.Warningln("Launching MongoDB Compass..."); err != nil {
 			return err
 		}
-		return compass.Run(opts.DBUsername, opts.DBUserPassword, connectionString)
+		return compass.Run(opts.DeploymentOpts.DBUsername, opts.DeploymentOpts.DBUserPassword, connectionString)
 	case MongoshConnect:
 		if !mongosh.Detect() {
 			return ErrMongoshNotInstalled
 		}
-		return mongosh.Run(opts.DBUsername, opts.DBUserPassword, connectionString)
+		return mongosh.Run(opts.DeploymentOpts.DBUsername, opts.DeploymentOpts.DBUserPassword, connectionString)
 	}
 
 	return nil
+}
+
+func (opts *ConnectOpts) promptDBUsername() error {
+	p := &survey.Input{
+		Message: "Username for authenticating to MongoDB deployment",
+	}
+	return telemetry.TrackAskOne(p, &opts.DeploymentOpts.DBUsername)
+}
+
+func (opts *ConnectOpts) promptDBUserPassword() error {
+	if !opts.IsTerminalInput() {
+		_, err := fmt.Fscanln(opts.InReader, &opts.DeploymentOpts.DBUserPassword)
+		return err
+	}
+
+	p := &survey.Password{
+		Message: "Password for authenticating to MongoDB deployment",
+	}
+	return telemetry.TrackAskOne(p, &opts.DeploymentOpts.DBUserPassword)
 }

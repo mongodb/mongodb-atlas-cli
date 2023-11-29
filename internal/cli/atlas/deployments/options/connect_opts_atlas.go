@@ -29,8 +29,6 @@ import (
 type ConnectToAtlasOpts struct {
 	cli.GlobalOpts
 	cli.InputOpts
-	DBUsername           string
-	DBUserPassword       string
 	ConnectionStringType string
 	Store                store.AtlasClusterDescriber
 }
@@ -45,13 +43,13 @@ func (opts *ConnectToAtlasOpts) InitAtlasStore(ctx context.Context) func() error
 
 func (opts *ConnectOpts) validateAndPromptAtlasOpts() error {
 	requiresAuth := opts.ConnectWith == MongoshConnect || opts.ConnectWith == CompassConnect
-	if requiresAuth && opts.DBUsername == "" {
+	if requiresAuth && opts.DeploymentOpts.DBUsername == "" {
 		if err := opts.promptDBUsername(); err != nil {
 			return err
 		}
 	}
 
-	if requiresAuth && opts.DBUserPassword == "" {
+	if requiresAuth && opts.DeploymentOpts.DBUserPassword == "" {
 		if err := opts.promptDBUserPassword(); err != nil {
 			return err
 		}
@@ -79,25 +77,6 @@ func (opts *ConnectToAtlasOpts) validateAndPromptConnectionStringType() error {
 	}
 
 	return nil
-}
-
-func (opts *ConnectToAtlasOpts) promptDBUsername() error {
-	p := &survey.Input{
-		Message: "Username for authenticating to MongoDB deployment",
-	}
-	return telemetry.TrackAskOne(p, &opts.DBUsername)
-}
-
-func (opts *ConnectToAtlasOpts) promptDBUserPassword() error {
-	if !opts.IsTerminalInput() {
-		_, err := fmt.Fscanln(opts.InReader, &opts.DBUserPassword)
-		return err
-	}
-
-	p := &survey.Password{
-		Message: "Password for authenticating to MongoDB deployment",
-	}
-	return telemetry.TrackAskOne(p, &opts.DBUserPassword)
 }
 
 func (opts *ConnectOpts) connectToAtlas() error {

@@ -18,6 +18,10 @@
         uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 2
+      - name: Find JIRA team
+        id: find
+        run: |
+          echo "assigned_team="$(git diff HEAD~1..HEAD -- go.mod | grep -v "// indirect" | grep -i "^\-" | grep -v "^\-\-\-" | awk '{print $2}' | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners.json" | sh | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners_jira.json" | sh | head -1)  >> "${GITHUB_OUTPUT}"
       - name: Create JIRA ticket
         id: create
         shell: bash
@@ -27,7 +31,6 @@
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
           JIRA_ASSIGNEE: ${{ secrets.ASSIGNEE_JIRA_TICKET }}
         run: |
-          ASSIGNED_TEAM=$(git diff HEAD~1..HEAD -- go.mod | grep -v "// indirect" | grep -i "^\-" | grep -v "^\-\-\-" | awk '{print $2}' | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners.json" | sh | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners_jira.json" | sh | head -1)
           json_response=$(curl --request POST \
             --url 'https://jira.mongodb.org/rest/api/2/issue' \
             --header 'Authorization: Bearer '"${JIRA_API_TOKEN}" \
@@ -43,7 +46,7 @@
                       "id": "12"
                   },
                   "customfield_12751": [{
-                          "id": "$ASSIGNED_TEAM"
+                          "id": "${{ steps.find.outputs.assigned_team }}"
                   }],
                   "description": "This ticket tracks the following GitHub pull request: '"${PR_URL}"'.",
                   "components": [

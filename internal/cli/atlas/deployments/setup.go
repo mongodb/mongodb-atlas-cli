@@ -25,7 +25,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/google/uuid"
@@ -47,18 +46,15 @@ import (
 )
 
 const (
-	internalMongodPort = 27017
-	mdb6               = "6.0"
-	mdb7               = "7.0"
-	replicaSetName     = "rs-localdev"
-	maxConns           = "32200" // --maxConns https://jira.mongodb.org/browse/SERVER-51233: Given the default max_map_count is 65530, we can support ~32200 connections
-	defaultSettings    = "default"
-	customSettings     = "custom"
-	cancelSettings     = "cancel"
-	skipConnect        = "skip"
-	spinnerSpeed       = 100 * time.Millisecond
-	shortStepCount     = 2
-	tempRootUser       = "tempRootUser"
+	defaultMongodPort = 27017
+	mdb6              = "6.0"
+	mdb7              = "7.0"
+	maxConns          = "32200" // --maxConns https://jira.mongodb.org/browse/SERVER-51233: Given the default max_map_count is 65530, we can support ~32200 connections
+	defaultSettings   = "default"
+	customSettings    = "custom"
+	cancelSettings    = "cancel"
+	skipConnect       = "skip"
+	tempRootUser      = "tempRootUser"
 )
 
 var (
@@ -104,13 +100,14 @@ type SetupOpts struct {
 }
 
 func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
-	composeOpt := compose.New(opts.DeploymentName)
-	composeOpt.Port = strconv.Itoa(opts.Port)
-	composeOpt.MongodVersion = opts.MdbVersion
-	composeOpt.KeyFile = base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))
+	composeOpt := []compose.Option{
+		compose.WithPort(strconv.Itoa(opts.Port)),
+		compose.WithMongodVersion(opts.MdbVersion),
+		compose.WithKeyFile(base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))),
+	}
 
 	if opts.bindIPAll {
-		composeOpt.BindIp = "0.0.0.0"
+		composeOpt = append(composeOpt, compose.WithBindIp("0.0.0.0"))
 	}
 
 	if opts.IsAuthEnabled() {
@@ -121,12 +118,13 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 			opts.DBUserPassword = tempRootUserPassword
 		}
 
-		composeOpt.Username = opts.DBUsername
-		composeOpt.Password = opts.DBUserPassword
+		composeOpt = append(composeOpt, compose.WithUsername(opts.DBUsername), compose.WithPassword(opts.DBUserPassword))
 	}
 
+	c := compose.New(opts.DeploymentName, composeOpt...)
+
 	if opts.compose {
-		buf, err := composeOpt.Render()
+		buf, err := c.Render()
 		if err != nil {
 			return err
 		}
@@ -138,7 +136,7 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 		return nil
 	}
 
-	return composeOpt.Run("up", "-d", "--wait")
+	return c.Run("up", "-d", "--wait")
 }
 
 func (opts *SetupOpts) promptSettings() error {
@@ -183,8 +181,8 @@ func (opts *SetupOpts) promptMdbVersion() error {
 
 func availablePort() (int, error) {
 	// prefer mongodb default's port
-	if err := checkPort(internalMongodPort); err == nil {
-		return internalMongodPort, nil
+	if err := checkPort(defaultMongodPort); err == nil {
+		return defaultMongodPort, nil
 	}
 
 	server, err := net.Listen("tcp", "localhost:0")

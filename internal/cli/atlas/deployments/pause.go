@@ -17,10 +17,9 @@ package deployments
 import (
 	"context"
 	"errors"
-	"os"
-	"os/exec"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/compose"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -90,21 +89,7 @@ func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.De
 	if deployment.StateName != options.IdleState {
 		return errDeploymentIsNotIDLE
 	}
-	buf, err := options.ComposeDefinition(&options.ComposeDefinitionOptions{
-		Name:          opts.DeploymentName,
-		Port:          "27017",
-		MongodVersion: "7.0",
-		BindIp:        "127.0.0.1",
-	})
-	if err != nil {
-		return err
-	}
-	cmd := exec.Command("docker", "compose", "-f", "/dev/stdin", "pause")
-	cmd.Stderr = os.Stderr
-	cmd.Stdout = os.Stdout
-	cmd.Stdin = buf
-	cmd.Env = append(os.Environ(), "KEY_FILE=keyfile")
-	return cmd.Run()
+	return compose.New(opts.DeploymentName).Run("pause")
 }
 
 func (opts *PauseOpts) RunAtlas() error {

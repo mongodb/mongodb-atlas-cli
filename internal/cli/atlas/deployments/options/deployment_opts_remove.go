@@ -15,24 +15,10 @@ package options
 
 import (
 	"context"
-	"os"
-	"os/exec"
+
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/compose"
 )
 
 func (opts *DeploymentOpts) RemoveLocal(ctx context.Context) error {
-	buf, err := ComposeDefinition(&ComposeDefinitionOptions{
-		Name:          opts.DeploymentName,
-		Port:          "27017",
-		MongodVersion: "7.0",
-		BindIp:        "127.0.0.1",
-	})
-	if err != nil {
-		return err
-	}
-	cmd := exec.Command("docker", "compose", "-f", "/dev/stdin", "down", "-v")
-	cmd.Stderr = os.Stderr
-	cmd.Stdout = os.Stdout
-	cmd.Stdin = buf
-	cmd.Env = append(os.Environ(), "KEY_FILE=keyfile")
-	return cmd.Run()
+	return compose.New(opts.DeploymentName).Run("down", "-v")
 }

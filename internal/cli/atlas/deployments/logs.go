@@ -20,12 +20,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/compose"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -158,21 +157,10 @@ func (opts *DownloadOpts) newHostLogsParams() *admin.GetHostLogsApiParams {
 }
 
 func (opts *DownloadOpts) RunLocal(ctx context.Context) error {
-	buf, err := options.ComposeDefinition(&options.ComposeDefinitionOptions{
-		Name:          opts.DeploymentName,
-		Port:          "27017",
-		MongodVersion: "7.0",
-		BindIp:        "127.0.0.1",
-	})
-	if err != nil {
+	if err := compose.New(opts.DeploymentName).Run("logs"); err != nil {
 		return err
 	}
-	cmd := exec.Command("docker", "compose", "-f", "/dev/stdin", "logs")
-	cmd.Stderr = os.Stderr
-	cmd.Stdout = os.Stdout
-	cmd.Stdin = buf
-	cmd.Env = append(os.Environ(), "KEY_FILE=keyfile")
-	return cmd.Run()
+	return nil
 }
 
 func (opts *DownloadOpts) validateAtlasFlags() error {

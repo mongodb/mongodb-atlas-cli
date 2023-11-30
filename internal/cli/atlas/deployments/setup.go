@@ -23,7 +23,6 @@ import (
 	"math/rand"
 	"net"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 	"time"
@@ -31,6 +30,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/google/uuid"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/compose"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -104,12 +104,11 @@ type SetupOpts struct {
 }
 
 func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
-	composeOpt := &options.ComposeDefinitionOptions{
-		Name:          opts.DeploymentName,
-		Port:          strconv.Itoa(opts.Port),
-		MongodVersion: opts.MdbVersion,
-		BindIp:        "127.0.0.1",
-	}
+	composeOpt := compose.New(opts.DeploymentName)
+	composeOpt.Port = strconv.Itoa(opts.Port)
+	composeOpt.MongodVersion = opts.MdbVersion
+	composeOpt.KeyFile = base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))
+
 	if opts.bindIPAll {
 		composeOpt.BindIp = "0.0.0.0"
 	}
@@ -126,12 +125,12 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 		composeOpt.Password = opts.DBUserPassword
 	}
 
-	buf, err := options.ComposeDefinition(composeOpt)
-	if err != nil {
-		return err
-	}
-
 	if opts.compose {
+		buf, err := composeOpt.Render()
+		if err != nil {
+			return err
+		}
+
 		if _, err := io.Copy(opts.OutWriter, buf); err != nil {
 			return err
 		}
@@ -139,14 +138,7 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 		return nil
 	}
 
-	keyFileContents := base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))
-
-	cmd := exec.Command("docker", "compose", "-f", "/dev/stdin", "up", "-d", "--wait")
-	cmd.Stderr = os.Stderr
-	cmd.Stdout = os.Stdout
-	cmd.Stdin = buf
-	cmd.Env = append(os.Environ(), "KEY_FILE="+keyFileContents)
-	return cmd.Run()
+	return composeOpt.Run("up", "-d", "--wait")
 }
 
 func (opts *SetupOpts) promptSettings() error {

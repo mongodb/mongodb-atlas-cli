@@ -17,8 +17,6 @@ package deployments
 import (
 	"context"
 
-	"github.com/containers/common/libnetwork/types"
-	"github.com/containers/podman/v4/libpod/define"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -31,22 +29,22 @@ type diagnosticsOpts struct {
 	options.DeploymentOpts
 }
 
-type diagnosticLogs struct {
-	MongoD []string
-	MongoT []string
-}
-type diagnostic struct {
-	Machine machineDiagnostic
-	// Diagnostic *podman.Diagnostic
-	Containers []*define.InspectContainerData
-	Logs       diagnosticLogs
-	Network    *types.Network
-	Errors     []error
-}
-type machineDiagnostic struct {
-	OS   string
-	Arch string
-}
+// type diagnosticLogs struct {
+// 	MongoD []string
+// 	MongoT []string
+// }
+// type diagnostic struct {
+// 	Machine machineDiagnostic
+// 	Diagnostic *podman.Diagnostic
+// 	Containers []*define.InspectContainerData
+// 	Logs diagnosticLogs
+// 	Network *types.Network
+// 	Errors []error
+// }
+// type machineDiagnostic struct {
+// 	OS   string
+// 	Arch string
+// }
 
 func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 	// TODO fixme

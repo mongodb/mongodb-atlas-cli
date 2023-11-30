@@ -33,11 +33,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/project"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
+	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
+	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
+	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
+	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
@@ -86,7 +86,7 @@ type KubernetesConfigGenerateProjectSuite struct {
 	t               *testing.T
 	assertions      *assert.Assertions
 	generator       *atlasE2ETestGenerator
-	expectedProject *atlasV1.AtlasProject
+	expectedProject *akov2.AtlasProject
 	cliPath         string
 }
 
@@ -107,7 +107,7 @@ func InitialSetupWithTeam(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	s.assertions = assert.New(t)
 
 	// always register atlas entities
-	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
+	require.NoError(t, akov2.AddToScheme(scheme.Scheme))
 	return s
 }
 
@@ -127,7 +127,7 @@ func InitialSetup(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	s.assertions = assert.New(t)
 
 	// always register atlas entities
-	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
+	require.NoError(t, akov2.AddToScheme(scheme.Scheme))
 	return s
 }
 
@@ -229,28 +229,49 @@ func TestProjectWithNonDefaultSettings(t *testing.T) {
 }
 
 func TestProjectWithNonDefaultAlertConf(t *testing.T) {
+	dictionary := resources.AtlasNameToKubernetesName()
 	s := InitialSetup(t)
 	cliPath := s.cliPath
 	generator := s.generator
 	expectedProject := s.expectedProject
 	assertions := s.assertions
 
-	newAlertConfig := atlasV1.AlertConfiguration{
-		Threshold:       &atlasV1.Threshold{},
-		MetricThreshold: &atlasV1.MetricThreshold{},
+	newAlertConfig := akov2.AlertConfiguration{
+		Threshold:       &akov2.Threshold{},
+		MetricThreshold: &akov2.MetricThreshold{},
 		EventTypeName:   eventTypeName,
 		Enabled:         true,
-		Notifications: []atlasV1.Notification{
+		Notifications: []akov2.Notification{
 			{
 				TypeName:     group,
 				IntervalMin:  intervalMin,
 				DelayMin:     pointer.Get(delayMin),
 				SMSEnabled:   pointer.Get(false),
 				EmailEnabled: pointer.Get(true),
+				APITokenRef: akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-api-token-0", expectedProject.Name), dictionary),
+					Namespace: targetNamespace,
+				},
+				DatadogAPIKeyRef: akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-datadog-api-key-0", expectedProject.Name), dictionary),
+					Namespace: targetNamespace,
+				},
+				OpsGenieAPIKeyRef: akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-ops-genie-api-key-0", expectedProject.Name), dictionary),
+					Namespace: targetNamespace,
+				},
+				ServiceKeyRef: akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-service-key-0", expectedProject.Name), dictionary),
+					Namespace: targetNamespace,
+				},
+				VictorOpsSecretRef: akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-victor-ops-credentials-0", expectedProject.Name), dictionary),
+					Namespace: targetNamespace,
+				},
 			},
 		},
 	}
-	expectedProject.Spec.AlertConfigurations = []atlasV1.AlertConfiguration{
+	expectedProject.Spec.AlertConfigurations = []akov2.AlertConfiguration{
 		newAlertConfig,
 	}
 
@@ -311,11 +332,11 @@ func TestProjectWithAccessList(t *testing.T) {
 	assertions := s.assertions
 
 	entry := "192.168.0.10"
-	newIPAccess := project.IPAccessList{
+	newIPAccess := akov2project.IPAccessList{
 		IPAddress: entry,
 		Comment:   "test",
 	}
-	expectedProject.Spec.ProjectIPAccessList = []project.IPAccessList{
+	expectedProject.Spec.ProjectIPAccessList = []akov2project.IPAccessList{
 		newIPAccess,
 	}
 
@@ -367,10 +388,10 @@ func TestProjectWithAccessRole(t *testing.T) {
 	expectedProject := s.expectedProject
 	assertions := s.assertions
 
-	newIPAccess := atlasV1.CloudProviderAccessRole{
-		ProviderName: string(provider.ProviderAWS),
+	newIPAccess := akov2.CloudProviderAccessRole{
+		ProviderName: string(akov2provider.ProviderAWS),
 	}
-	expectedProject.Spec.CloudProviderAccessRoles = []atlasV1.CloudProviderAccessRole{
+	expectedProject.Spec.CloudProviderAccessRoles = []akov2.CloudProviderAccessRole{
 		newIPAccess,
 	}
 
@@ -420,12 +441,12 @@ func TestProjectWithCustomRole(t *testing.T) {
 	expectedProject := s.expectedProject
 	assertions := s.assertions
 
-	newCustomRole := atlasV1.CustomRole{
+	newCustomRole := akov2.CustomRole{
 		Name: "test-role",
-		Actions: []atlasV1.Action{
+		Actions: []akov2.Action{
 			{
 				Name: "FIND",
-				Resources: []atlasV1.Resource{
+				Resources: []akov2.Resource{
 					{
 						Database:   pointer.Get("test-db	"),
 						Collection: pointer.Get(""),
@@ -435,7 +456,7 @@ func TestProjectWithCustomRole(t *testing.T) {
 			},
 		},
 	}
-	expectedProject.Spec.CustomRoles = []atlasV1.CustomRole{
+	expectedProject.Spec.CustomRoles = []akov2.CustomRole{
 		newCustomRole,
 	}
 
@@ -487,15 +508,15 @@ func TestProjectWithIntegration(t *testing.T) {
 	assertions := s.assertions
 
 	datadogKey := "00000000000000000000000000000012"
-	newIntegration := project.Integration{
+	newIntegration := akov2project.Integration{
 		Type:   datadogEntity,
 		Region: "US", // it's a default value
-		APIKeyRef: common.ResourceRefNamespaced{
+		APIKeyRef: akov2common.ResourceRefNamespaced{
 			Namespace: targetNamespace,
 			Name:      fmt.Sprintf("%s-integration-%s", generator.projectID, strings.ToLower(datadogEntity)),
 		},
 	}
-	expectedProject.Spec.Integrations = []project.Integration{
+	expectedProject.Spec.Integrations = []akov2project.Integration{
 		newIntegration,
 	}
 
@@ -551,7 +572,7 @@ func TestProjectWithMaintenanceWindow(t *testing.T) {
 	expectedProject := s.expectedProject
 	assertions := s.assertions
 
-	newMaintenanceWindow := project.MaintenanceWindow{
+	newMaintenanceWindow := akov2project.MaintenanceWindow{
 		DayOfWeek: 1,
 		HourOfDay: 1,
 	}
@@ -607,12 +628,12 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 	assertions := s.assertions
 
 	atlasCidrBlock := "10.8.0.0/18"
-	networkPeer := atlasV1.NetworkPeer{
-		ProviderName: provider.ProviderGCP,
+	networkPeer := akov2.NetworkPeer{
+		ProviderName: akov2provider.ProviderGCP,
 		NetworkName:  "test-network",
 		GCPProjectID: "test-project-gcp",
 	}
-	expectedProject.Spec.NetworkPeers = []atlasV1.NetworkPeer{
+	expectedProject.Spec.NetworkPeers = []akov2.NetworkPeer{
 		networkPeer,
 	}
 
@@ -676,11 +697,11 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 	assertions := s.assertions
 
 	const region = "northeurope"
-	newPrivateEndpoint := atlasV1.PrivateEndpoint{
-		Provider: provider.ProviderAzure,
+	newPrivateEndpoint := akov2.PrivateEndpoint{
+		Provider: akov2provider.ProviderAzure,
 		Region:   "EUROPE_NORTH",
 	}
-	expectedProject.Spec.PrivateEndpoints = []atlasV1.PrivateEndpoint{
+	expectedProject.Spec.PrivateEndpoints = []akov2.PrivateEndpoint{
 		newPrivateEndpoint,
 	}
 
@@ -751,18 +772,18 @@ func TestProjectAndTeams(t *testing.T) {
 	teamRole := "GROUP_OWNER"
 
 	t.Run("Add team to project", func(t *testing.T) {
-		expectedTeam := referenceTeam(generator.teamName, targetNamespace, []atlasV1.TeamUser{
-			atlasV1.TeamUser(generator.teamUser),
+		expectedTeam := referenceTeam(generator.teamName, targetNamespace, []akov2.TeamUser{
+			akov2.TeamUser(generator.teamUser),
 		}, generator.projectName, expectedLabels)
 
-		expectedProject.Spec.Teams = []atlasV1.Team{
+		expectedProject.Spec.Teams = []akov2.Team{
 			{
-				TeamRef: common.ResourceRefNamespaced{
+				TeamRef: akov2common.ResourceRefNamespaced{
 					Namespace: targetNamespace,
 					Name:      expectedTeam.Name,
 				},
-				Roles: []atlasV1.TeamRole{
-					atlasV1.TeamRole(teamRole),
+				Roles: []akov2.TeamRole{
+					akov2.TeamRole(teamRole),
 				},
 			},
 		}
@@ -806,7 +827,7 @@ func TestProjectAndTeams(t *testing.T) {
 		checkProject(t, objects, expectedProject, assertions)
 		t.Run("Team is created", func(t *testing.T) {
 			for _, obj := range objects {
-				if team, ok := obj.(*atlasV1.AtlasTeam); ok {
+				if team, ok := obj.(*akov2.AtlasTeam); ok {
 					assertions.Equal(expectedTeam, team)
 				}
 			}
@@ -814,10 +835,10 @@ func TestProjectAndTeams(t *testing.T) {
 	})
 }
 
-func referenceTeam(name, namespace string, users []atlasV1.TeamUser, projectName string, labels map[string]string) *atlasV1.AtlasTeam {
+func referenceTeam(name, namespace string, users []akov2.TeamUser, projectName string, labels map[string]string) *akov2.AtlasTeam {
 	dictionary := resources.AtlasNameToKubernetesName()
 
-	return &atlasV1.AtlasTeam{
+	return &akov2.AtlasTeam{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AtlasTeam",
 			APIVersion: "atlas.mongodb.com/v1",
@@ -827,26 +848,26 @@ func referenceTeam(name, namespace string, users []atlasV1.TeamUser, projectName
 			Namespace: namespace,
 			Labels:    labels,
 		},
-		Spec: atlasV1.TeamSpec{
+		Spec: akov2.TeamSpec{
 			Name:      name,
 			Usernames: users,
 		},
-		Status: status.TeamStatus{
-			Common: status.Common{
-				Conditions: []status.Condition{},
+		Status: akov2status.TeamStatus{
+			Common: akov2status.Common{
+				Conditions: []akov2status.Condition{},
 			},
 		},
 	}
 }
 
-func checkProject(t *testing.T, output []runtime.Object, expected *atlasV1.AtlasProject, asserts *assert.Assertions) {
+func checkProject(t *testing.T, output []runtime.Object, expected *akov2.AtlasProject, asserts *assert.Assertions) {
 	t.Helper()
 	t.Run("Project presents with expected data", func(t *testing.T) {
 		found := false
-		var p *atlasV1.AtlasProject
+		var p *akov2.AtlasProject
 		var ok bool
 		for i := range output {
-			p, ok = output[i].(*atlasV1.AtlasProject)
+			p, ok = output[i].(*akov2.AtlasProject)
 			if ok {
 				found = true
 				break
@@ -855,13 +876,30 @@ func checkProject(t *testing.T, output []runtime.Object, expected *atlasV1.Atlas
 		if !found {
 			t.Fatal("AtlasProject is not found in results")
 		}
+
+		// secretref names are randomly generated so we can't determine those in forehand
+		expected.Spec.EncryptionAtRest.AwsKms = p.Spec.EncryptionAtRest.AwsKms
+		expected.Spec.EncryptionAtRest.GoogleCloudKms = p.Spec.EncryptionAtRest.GoogleCloudKms
+		expected.Spec.EncryptionAtRest.AzureKeyVault = p.Spec.EncryptionAtRest.AzureKeyVault
+
+		for i := range p.Spec.AlertConfigurations {
+			alertConfig := &p.Spec.AlertConfigurations[i]
+			for j := range alertConfig.Notifications {
+				expected.Spec.AlertConfigurations[i].Notifications[j].APITokenRef = p.Spec.AlertConfigurations[i].Notifications[j].APITokenRef
+				expected.Spec.AlertConfigurations[i].Notifications[j].DatadogAPIKeyRef = p.Spec.AlertConfigurations[i].Notifications[j].DatadogAPIKeyRef
+				expected.Spec.AlertConfigurations[i].Notifications[j].OpsGenieAPIKeyRef = p.Spec.AlertConfigurations[i].Notifications[j].OpsGenieAPIKeyRef
+				expected.Spec.AlertConfigurations[i].Notifications[j].ServiceKeyRef = p.Spec.AlertConfigurations[i].Notifications[j].ServiceKeyRef
+				expected.Spec.AlertConfigurations[i].Notifications[j].VictorOpsSecretRef = p.Spec.AlertConfigurations[i].Notifications[j].VictorOpsSecretRef
+			}
+		}
+
 		asserts.Equal(expected, p)
 	})
 }
 
-func referenceProject(name, namespace string, labels map[string]string) *atlasV1.AtlasProject {
+func referenceProject(name, namespace string, labels map[string]string) *akov2.AtlasProject {
 	dictionary := resources.AtlasNameToKubernetesName()
-	return &atlasV1.AtlasProject{
+	return &akov2.AtlasProject{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AtlasProject",
 			APIVersion: "atlas.mongodb.com/v1",
@@ -871,46 +909,58 @@ func referenceProject(name, namespace string, labels map[string]string) *atlasV1
 			Namespace: namespace,
 			Labels:    labels,
 		},
-		Status: status.AtlasProjectStatus{
-			Common: status.Common{
-				Conditions: []status.Condition{},
+		Status: akov2status.AtlasProjectStatus{
+			Common: akov2status.Common{
+				Conditions: []akov2status.Condition{},
 			},
 		},
-		Spec: atlasV1.AtlasProjectSpec{
+		Spec: akov2.AtlasProjectSpec{
 			Name: name,
-			ConnectionSecret: &common.ResourceRefNamespaced{
+			ConnectionSecret: &akov2common.ResourceRefNamespaced{
 				Name: resources.NormalizeAtlasName(fmt.Sprintf("%s-credentials", name), dictionary),
 			},
-			Settings: &atlasV1.ProjectSettings{
+			Settings: &akov2.ProjectSettings{
 				IsCollectDatabaseSpecificsStatisticsEnabled: pointer.Get(true),
 				IsDataExplorerEnabled:                       pointer.Get(true),
 				IsPerformanceAdvisorEnabled:                 pointer.Get(true),
 				IsRealtimePerformancePanelEnabled:           pointer.Get(true),
 				IsSchemaAdvisorEnabled:                      pointer.Get(true),
 			},
-			Auditing: &atlasV1.Auditing{
+			Auditing: &akov2.Auditing{
 				AuditAuthorizationSuccess: false,
 				Enabled:                   false,
 			},
-			EncryptionAtRest: &atlasV1.EncryptionAtRest{
-				AwsKms: atlasV1.AwsKms{
+			EncryptionAtRest: &akov2.EncryptionAtRest{
+				AwsKms: akov2.AwsKms{
 					Enabled: pointer.Get(false),
 					Valid:   pointer.Get(false),
+					SecretRef: akov2common.ResourceRefNamespaced{
+						Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-aws-credentials", name), dictionary),
+						Namespace: namespace,
+					},
 				},
-				AzureKeyVault: atlasV1.AzureKeyVault{
+				AzureKeyVault: akov2.AzureKeyVault{
 					Enabled: pointer.Get(false),
+					SecretRef: akov2common.ResourceRefNamespaced{
+						Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-azure-credentials", name), dictionary),
+						Namespace: namespace,
+					},
 				},
-				GoogleCloudKms: atlasV1.GoogleCloudKms{
+				GoogleCloudKms: akov2.GoogleCloudKms{
 					Enabled: pointer.Get(false),
+					SecretRef: akov2common.ResourceRefNamespaced{
+						Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-gcp-credentials", name), dictionary),
+						Namespace: namespace,
+					},
 				},
 			},
 		},
 	}
 }
 
-func referenceAdvancedCluster(name, region, namespace, projectName string, labels map[string]string) *atlasV1.AtlasDeployment {
+func referenceAdvancedCluster(name, region, namespace, projectName string, labels map[string]string) *akov2.AtlasDeployment {
 	dictionary := resources.AtlasNameToKubernetesName()
-	return &atlasV1.AtlasDeployment{
+	return &akov2.AtlasDeployment{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AtlasDeployment",
 			APIVersion: "atlas.mongodb.com/v1",
@@ -920,25 +970,25 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 			Namespace: namespace,
 			Labels:    labels,
 		},
-		Spec: atlasV1.AtlasDeploymentSpec{
-			Project: common.ResourceRefNamespaced{
+		Spec: akov2.AtlasDeploymentSpec{
+			Project: akov2common.ResourceRefNamespaced{
 				Name:      resources.NormalizeAtlasName(projectName, dictionary),
 				Namespace: namespace,
 			},
-			BackupScheduleRef: common.ResourceRefNamespaced{
+			BackupScheduleRef: akov2common.ResourceRefNamespaced{
 				Namespace: targetNamespace,
 				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backupschedule", projectName, name), dictionary),
 			},
-			AdvancedDeploymentSpec: &atlasV1.AdvancedDeploymentSpec{
+			DeploymentSpec: &akov2.AdvancedDeploymentSpec{
 				BackupEnabled: pointer.Get(true),
-				BiConnector: &atlasV1.BiConnectorSpec{
+				BiConnector: &akov2.BiConnectorSpec{
 					Enabled:        pointer.Get(false),
 					ReadPreference: "secondary",
 				},
-				ClusterType:              string(atlasV1.TypeReplicaSet),
+				ClusterType:              string(akov2.TypeReplicaSet),
 				DiskSizeGB:               nil,
 				EncryptionAtRestProvider: "NONE",
-				Labels: []common.LabelSpec{
+				Labels: []akov2common.LabelSpec{
 					{
 						Key:   "Infrastructure Tool",
 						Value: "Atlas CLI",
@@ -947,41 +997,41 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 				Name:       name,
 				Paused:     pointer.Get(false),
 				PitEnabled: pointer.Get(true),
-				ReplicationSpecs: []*atlasV1.AdvancedReplicationSpec{
+				ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
 					{
 						NumShards: 1,
 						ZoneName:  "Zone 1",
-						RegionConfigs: []*atlasV1.AdvancedRegionConfig{
+						RegionConfigs: []*akov2.AdvancedRegionConfig{
 							{
-								AnalyticsSpecs: &atlasV1.Specs{
+								AnalyticsSpecs: &akov2.Specs{
 									DiskIOPS:      pointer.Get(int64(3000)),
 									EbsVolumeType: "STANDARD",
 									InstanceSize:  e2eClusterTier,
 									NodeCount:     pointer.Get(0),
 								},
-								ElectableSpecs: &atlasV1.Specs{
+								ElectableSpecs: &akov2.Specs{
 									DiskIOPS:      pointer.Get(int64(3000)),
 									EbsVolumeType: "STANDARD",
 									InstanceSize:  e2eClusterTier,
 									NodeCount:     pointer.Get(3),
 								},
-								ReadOnlySpecs: &atlasV1.Specs{
+								ReadOnlySpecs: &akov2.Specs{
 									DiskIOPS:      pointer.Get(int64(3000)),
 									EbsVolumeType: "STANDARD",
 									InstanceSize:  e2eClusterTier,
 									NodeCount:     pointer.Get(0),
 								},
-								AutoScaling: &atlasV1.AdvancedAutoScalingSpec{
-									DiskGB: &atlasV1.DiskGB{
+								AutoScaling: &akov2.AdvancedAutoScalingSpec{
+									DiskGB: &akov2.DiskGB{
 										Enabled: pointer.Get(false),
 									},
-									Compute: &atlasV1.ComputeSpec{
+									Compute: &akov2.ComputeSpec{
 										Enabled:          pointer.Get(false),
 										ScaleDownEnabled: pointer.Get(false),
 									},
 								},
 								Priority:     pointer.Get(7),
-								ProviderName: string(provider.ProviderAWS),
+								ProviderName: string(akov2provider.ProviderAWS),
 								RegionName:   region,
 							},
 						},
@@ -990,23 +1040,23 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 				RootCertType:         "ISRGROOTX1",
 				VersionReleaseSystem: "LTS",
 			},
-			ProcessArgs: &atlasV1.ProcessArgs{
+			ProcessArgs: &akov2.ProcessArgs{
 				MinimumEnabledTLSProtocol: "TLS1_2",
 				JavascriptEnabled:         pointer.Get(true),
 				NoTableScan:               pointer.Get(false),
 			},
 		},
-		Status: status.AtlasDeploymentStatus{
-			Common: status.Common{
-				Conditions: []status.Condition{},
+		Status: akov2status.AtlasDeploymentStatus{
+			Common: akov2status.Common{
+				Conditions: []akov2status.Condition{},
 			},
 		},
 	}
 }
 
-func referenceServerless(name, region, namespace, projectName string, labels map[string]string) *atlasV1.AtlasDeployment {
+func referenceServerless(name, region, namespace, projectName string, labels map[string]string) *akov2.AtlasDeployment {
 	dictionary := resources.AtlasNameToKubernetesName()
-	return &atlasV1.AtlasDeployment{
+	return &akov2.AtlasDeployment{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AtlasDeployment",
 			APIVersion: "atlas.mongodb.com/v1",
@@ -1016,91 +1066,103 @@ func referenceServerless(name, region, namespace, projectName string, labels map
 			Namespace: namespace,
 			Labels:    labels,
 		},
-		Spec: atlasV1.AtlasDeploymentSpec{
-			Project: common.ResourceRefNamespaced{
+		Spec: akov2.AtlasDeploymentSpec{
+			Project: akov2common.ResourceRefNamespaced{
 				Name:      resources.NormalizeAtlasName(projectName, dictionary),
 				Namespace: namespace,
 			},
-			ServerlessSpec: &atlasV1.ServerlessSpec{
+			ServerlessSpec: &akov2.ServerlessSpec{
 				Name: name,
-				ProviderSettings: &atlasV1.ProviderSettingsSpec{
-					BackingProviderName: string(provider.ProviderAWS),
-					ProviderName:        provider.ProviderServerless,
+				ProviderSettings: &akov2.ProviderSettingsSpec{
+					BackingProviderName: string(akov2provider.ProviderAWS),
+					ProviderName:        akov2provider.ProviderServerless,
 					RegionName:          region,
 				},
 			},
 		},
-		Status: status.AtlasDeploymentStatus{
-			Common: status.Common{
-				Conditions: []status.Condition{},
+		Status: akov2status.AtlasDeploymentStatus{
+			Common: akov2status.Common{
+				Conditions: []akov2status.Condition{},
 			},
 		},
 	}
 }
 
-func referenceSharedCluster(name, region, namespace, projectName string, labels map[string]string) *atlasV1.AtlasDeployment {
+func referenceSharedCluster(name, region, namespace, projectName string, labels map[string]string) *akov2.AtlasDeployment {
 	cluster := referenceAdvancedCluster(name, region, namespace, projectName, labels)
-	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs = &atlasV1.Specs{
+	cluster.Spec.DeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs = &akov2.Specs{
 		DiskIOPS:     pointer.Get(int64(0)),
 		InstanceSize: e2eSharedClusterTier,
 	}
-	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs = nil
-	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].AnalyticsSpecs = nil
-	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].AutoScaling = nil
-	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].BackingProviderName = string(provider.ProviderAWS)
-	cluster.Spec.AdvancedDeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ProviderName = string(provider.ProviderTenant)
+	cluster.Spec.DeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs = nil
+	cluster.Spec.DeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].AnalyticsSpecs = nil
+	cluster.Spec.DeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].AutoScaling = nil
+	cluster.Spec.DeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].BackingProviderName = string(akov2provider.ProviderAWS)
+	cluster.Spec.DeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ProviderName = string(akov2provider.ProviderTenant)
 
-	cluster.Spec.AdvancedDeploymentSpec.PitEnabled = pointer.Get(false)
-	cluster.Spec.BackupScheduleRef = common.ResourceRefNamespaced{}
+	cluster.Spec.DeploymentSpec.PitEnabled = pointer.Get(false)
+	cluster.Spec.BackupScheduleRef = akov2common.ResourceRefNamespaced{}
 	return cluster
 }
 
-func defaultMaintenanceWindowAlertConfigs() []atlasV1.AlertConfiguration {
-	ownerNotifications := []atlasV1.Notification{
-		{
-			EmailEnabled: pointer.Get(true),
-			IntervalMin:  60,
-			DelayMin:     pointer.Get(0),
-			SMSEnabled:   pointer.Get(false),
-			TypeName:     "GROUP",
-			Roles:        []string{"GROUP_OWNER"},
-		},
+func defaultMaintenanceWindowAlertConfigs() []akov2.AlertConfiguration {
+	ownerNotifications := func() []akov2.Notification {
+		return []akov2.Notification{
+			{
+				EmailEnabled: pointer.Get(true),
+				IntervalMin:  60,
+				DelayMin:     pointer.Get(0),
+				SMSEnabled:   pointer.Get(false),
+				TypeName:     "GROUP",
+				Roles:        []string{"GROUP_OWNER"},
+			},
+		}
 	}
-	return []atlasV1.AlertConfiguration{
+
+	return []akov2.AlertConfiguration{
 		{
-			Enabled:         true,
-			EventTypeName:   "MAINTENANCE_IN_ADVANCED",
-			Threshold:       &atlasV1.Threshold{},
-			Notifications:   ownerNotifications,
-			MetricThreshold: &atlasV1.MetricThreshold{},
+			Enabled:       true,
+			EventTypeName: "MAINTENANCE_IN_ADVANCED",
+			Threshold:     &akov2.Threshold{},
+			Notifications: []akov2.Notification{
+				{
+					EmailEnabled: pointer.Get(true),
+					IntervalMin:  60,
+					DelayMin:     pointer.Get(0),
+					SMSEnabled:   pointer.Get(false),
+					TypeName:     "GROUP",
+					Roles:        []string{"GROUP_OWNER"},
+				},
+			},
+			MetricThreshold: &akov2.MetricThreshold{},
 		},
 		{
 			Enabled:         true,
 			EventTypeName:   "MAINTENANCE_STARTED",
-			Threshold:       &atlasV1.Threshold{},
-			Notifications:   ownerNotifications,
-			MetricThreshold: &atlasV1.MetricThreshold{},
+			Threshold:       &akov2.Threshold{},
+			Notifications:   ownerNotifications(),
+			MetricThreshold: &akov2.MetricThreshold{},
 		},
 		{
 			Enabled:         true,
 			EventTypeName:   "MAINTENANCE_NO_LONGER_NEEDED",
-			Threshold:       &atlasV1.Threshold{},
-			Notifications:   ownerNotifications,
-			MetricThreshold: &atlasV1.MetricThreshold{},
+			Threshold:       &akov2.Threshold{},
+			Notifications:   ownerNotifications(),
+			MetricThreshold: &akov2.MetricThreshold{},
 		},
 		{
 			Enabled:         true,
 			EventTypeName:   "MAINTENANCE_AUTO_DEFERRED",
-			Threshold:       &atlasV1.Threshold{},
-			Notifications:   ownerNotifications,
-			MetricThreshold: &atlasV1.MetricThreshold{},
+			Threshold:       &akov2.Threshold{},
+			Notifications:   ownerNotifications(),
+			MetricThreshold: &akov2.MetricThreshold{},
 		},
 	}
 }
 
-func referenceBackupSchedule(namespace, projectName, clusterName string, labels map[string]string) *atlasV1.AtlasBackupSchedule {
+func referenceBackupSchedule(namespace, projectName, clusterName string, labels map[string]string) *akov2.AtlasBackupSchedule {
 	dictionary := resources.AtlasNameToKubernetesName()
-	return &atlasV1.AtlasBackupSchedule{
+	return &akov2.AtlasBackupSchedule{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AtlasBackupSchedule",
 			APIVersion: "atlas.mongodb.com/v1",
@@ -1110,8 +1172,8 @@ func referenceBackupSchedule(namespace, projectName, clusterName string, labels 
 			Namespace: namespace,
 			Labels:    labels,
 		},
-		Spec: atlasV1.AtlasBackupScheduleSpec{
-			PolicyRef: common.ResourceRefNamespaced{
+		Spec: akov2.AtlasBackupScheduleSpec{
+			PolicyRef: akov2common.ResourceRefNamespaced{
 				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName), dictionary),
 				Namespace: namespace,
 			},
@@ -1122,9 +1184,9 @@ func referenceBackupSchedule(namespace, projectName, clusterName string, labels 
 	}
 }
 
-func referenceBackupPolicy(namespace, projectName, clusterName string, labels map[string]string) *atlasV1.AtlasBackupPolicy {
+func referenceBackupPolicy(namespace, projectName, clusterName string, labels map[string]string) *akov2.AtlasBackupPolicy {
 	dictionary := resources.AtlasNameToKubernetesName()
-	return &atlasV1.AtlasBackupPolicy{
+	return &akov2.AtlasBackupPolicy{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AtlasBackupPolicy",
 			APIVersion: "atlas.mongodb.com/v1",
@@ -1134,8 +1196,8 @@ func referenceBackupPolicy(namespace, projectName, clusterName string, labels ma
 			Namespace: namespace,
 			Labels:    labels,
 		},
-		Spec: atlasV1.AtlasBackupPolicySpec{
-			Items: []atlasV1.AtlasBackupPolicyItem{
+		Spec: akov2.AtlasBackupPolicySpec{
+			Items: []akov2.AtlasBackupPolicyItem{
 				{
 					FrequencyType:     "hourly",
 					FrequencyInterval: 6,
@@ -1165,7 +1227,7 @@ func referenceBackupPolicy(namespace, projectName, clusterName string, labels ma
 	}
 }
 
-func checkClustersData(t *testing.T, deployments []*atlasV1.AtlasDeployment, clusterNames []string, region, namespace, projectName string) {
+func checkClustersData(t *testing.T, deployments []*akov2.AtlasDeployment, clusterNames []string, region, namespace, projectName string) {
 	t.Helper()
 	assert.Len(t, deployments, len(clusterNames))
 	var entries []string
@@ -1177,9 +1239,9 @@ func checkClustersData(t *testing.T, deployments []*atlasV1.AtlasDeployment, clu
 				assert.Equal(t, expectedDeployment, deployment)
 				entries = append(entries, name)
 			}
-		} else if deployment.Spec.AdvancedDeploymentSpec != nil {
-			if ok := search.StringInSlice(clusterNames, deployment.Spec.AdvancedDeploymentSpec.Name); ok {
-				name := deployment.Spec.AdvancedDeploymentSpec.Name
+		} else if deployment.Spec.DeploymentSpec != nil {
+			if ok := search.StringInSlice(clusterNames, deployment.Spec.DeploymentSpec.Name); ok {
+				name := deployment.Spec.DeploymentSpec.Name
 				expectedDeployment := referenceAdvancedCluster(name, region, namespace, projectName, expectedLabels)
 				assert.Equal(t, expectedDeployment, deployment)
 				entries = append(entries, name)
@@ -1209,7 +1271,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 	require.NoError(t, err)
 
 	// always register atlas entities
-	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
+	require.NoError(t, akov2.AddToScheme(scheme.Scheme))
 
 	t.Run("Update backup schedule", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -1263,10 +1325,10 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 
 		t.Run("Deployment present with valid data", func(t *testing.T) {
 			found := false
-			var deployment *atlasV1.AtlasDeployment
+			var deployment *akov2.AtlasDeployment
 			var ok bool
 			for i := range objects {
-				deployment, ok = objects[i].(*atlasV1.AtlasDeployment)
+				deployment, ok = objects[i].(*akov2.AtlasDeployment)
 				if ok {
 					found = true
 					break
@@ -1391,9 +1453,9 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 	})
 }
 
-func atlasBackupPolicy(objects []runtime.Object) (*atlasV1.AtlasBackupPolicy, bool) {
+func atlasBackupPolicy(objects []runtime.Object) (*akov2.AtlasBackupPolicy, bool) {
 	for i := range objects {
-		if policy, ok := objects[i].(*atlasV1.AtlasBackupPolicy); ok {
+		if policy, ok := objects[i].(*akov2.AtlasBackupPolicy); ok {
 			return policy, ok
 		}
 	}
@@ -1414,7 +1476,7 @@ func TestKubernetesConfigGenerateSharedCluster(t *testing.T) {
 	require.NoError(t, err)
 
 	// always register atlas entities
-	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
+	require.NoError(t, akov2.AddToScheme(scheme.Scheme))
 
 	t.Run("Generate valid resources of ONE project and TWO clusters without listing clusters", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -1462,10 +1524,10 @@ func TestKubernetesConfigGenerateSharedCluster(t *testing.T) {
 	})
 }
 
-func atlasDeployments(objects []runtime.Object) []*atlasV1.AtlasDeployment {
-	var ds []*atlasV1.AtlasDeployment
+func atlasDeployments(objects []runtime.Object) []*akov2.AtlasDeployment {
+	var ds []*akov2.AtlasDeployment
 	for i := range objects {
-		d, ok := objects[i].(*atlasV1.AtlasDeployment)
+		d, ok := objects[i].(*akov2.AtlasDeployment)
 		if ok {
 			ds = append(ds, d)
 		}
@@ -1473,9 +1535,9 @@ func atlasDeployments(objects []runtime.Object) []*atlasV1.AtlasDeployment {
 	return ds
 }
 
-func findAtlasProject(objects []runtime.Object) (*atlasV1.AtlasProject, bool) {
+func findAtlasProject(objects []runtime.Object) (*akov2.AtlasProject, bool) {
 	for i := range objects {
-		if p, ok := objects[i].(*atlasV1.AtlasProject); ok {
+		if p, ok := objects[i].(*akov2.AtlasProject); ok {
 			return p, ok
 		}
 	}
@@ -1491,18 +1553,18 @@ func findSecret(objects []runtime.Object) (*corev1.Secret, bool) {
 	return nil, false
 }
 
-func atlasBackupSchedule(objects []runtime.Object) (*atlasV1.AtlasBackupSchedule, bool) {
+func atlasBackupSchedule(objects []runtime.Object) (*akov2.AtlasBackupSchedule, bool) {
 	for i := range objects {
-		if schedule, ok := objects[i].(*atlasV1.AtlasBackupSchedule); ok {
+		if schedule, ok := objects[i].(*akov2.AtlasBackupSchedule); ok {
 			return schedule, ok
 		}
 	}
 	return nil, false
 }
 
-func referenceDataFederation(name, namespace, projectName string, labels map[string]string) *atlasV1.AtlasDataFederation {
+func referenceDataFederation(name, namespace, projectName string, labels map[string]string) *akov2.AtlasDataFederation {
 	dictionary := resources.AtlasNameToKubernetesName()
-	return &atlasV1.AtlasDataFederation{
+	return &akov2.AtlasDataFederation{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AtlasDataFederation",
 			APIVersion: "atlas.mongodb.com/v1",
@@ -1512,25 +1574,25 @@ func referenceDataFederation(name, namespace, projectName string, labels map[str
 			Namespace: namespace,
 			Labels:    labels,
 		},
-		Spec: atlasV1.DataFederationSpec{
-			Project: common.ResourceRefNamespaced{
+		Spec: akov2.DataFederationSpec{
+			Project: akov2common.ResourceRefNamespaced{
 				Name:      resources.NormalizeAtlasName(projectName, dictionary),
 				Namespace: namespace,
 			},
 			Name:                name,
-			CloudProviderConfig: &atlasV1.CloudProviderConfig{},
-			DataProcessRegion: &atlasV1.DataProcessRegion{
+			CloudProviderConfig: &akov2.CloudProviderConfig{},
+			DataProcessRegion: &akov2.DataProcessRegion{
 				CloudProvider: "AWS",
 				Region:        "DUBLIN_IRL",
 			},
-			Storage: &atlasV1.Storage{
+			Storage: &akov2.Storage{
 				Databases: nil,
 				Stores:    nil,
 			},
 		},
-		Status: status.DataFederationStatus{
-			Common: status.Common{
-				Conditions: []status.Condition{},
+		Status: akov2status.DataFederationStatus{
+			Common: akov2status.Common{
+				Conditions: []akov2status.Condition{},
 			},
 		},
 	}
@@ -1552,7 +1614,7 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 	require.NoError(t, err)
 
 	// always register atlas entities
-	require.NoError(t, atlasV1.AddToScheme(scheme.Scheme))
+	require.NoError(t, akov2.AddToScheme(scheme.Scheme))
 
 	t.Run("Generate valid resources of ONE project and ONE data federation", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -1587,10 +1649,10 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 		})
 		t.Run("Deployment present with valid data", func(t *testing.T) {
 			found := false
-			var datafederation *atlasV1.AtlasDataFederation
+			var datafederation *akov2.AtlasDataFederation
 			var ok bool
 			for i := range objects {
-				datafederation, ok = objects[i].(*atlasV1.AtlasDataFederation)
+				datafederation, ok = objects[i].(*akov2.AtlasDataFederation)
 				if ok {
 					found = true
 					break
@@ -1675,10 +1737,10 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 	})
 }
 
-func atlasDataFederations(objects []runtime.Object) []*atlasV1.AtlasDataFederation {
-	var df []*atlasV1.AtlasDataFederation
+func atlasDataFederations(objects []runtime.Object) []*akov2.AtlasDataFederation {
+	var df []*akov2.AtlasDataFederation
 	for i := range objects {
-		d, ok := objects[i].(*atlasV1.AtlasDataFederation)
+		d, ok := objects[i].(*akov2.AtlasDataFederation)
 		if ok {
 			df = append(df, d)
 		}
@@ -1686,7 +1748,7 @@ func atlasDataFederations(objects []runtime.Object) []*atlasV1.AtlasDataFederati
 	return df
 }
 
-func checkDataFederationData(t *testing.T, dataFederations []*atlasV1.AtlasDataFederation, dataFedNames []string, namespace, projectName string) {
+func checkDataFederationData(t *testing.T, dataFederations []*akov2.AtlasDataFederation, dataFedNames []string, namespace, projectName string) {
 	t.Helper()
 	assert.Len(t, dataFederations, len(dataFedNames))
 	var entries []string

@@ -31,11 +31,11 @@ import (
 	atlasmocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
-	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
+	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
+	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
+	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
+	akov2toptr "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/util/toptr"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -201,7 +201,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		clusterStore.EXPECT().GlobalCluster(projectName, clusterName).Return(globalCluster, nil)
 		clusterStore.EXPECT().DescribeSchedule(projectName, clusterName).Return(backupSchedule, nil)
 
-		expectCluster := &atlasV1.AtlasDeployment{
+		expectCluster := &akov2.AtlasDeployment{
 			TypeMeta: v1.TypeMeta{
 				Kind:       "AtlasDeployment",
 				APIVersion: "atlas.mongodb.com/v1",
@@ -213,21 +213,20 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					features.ResourceVersion: resourceVersion,
 				},
 			},
-			Spec: atlasV1.AtlasDeploymentSpec{
-				Project: common.ResourceRefNamespaced{
+			Spec: akov2.AtlasDeploymentSpec{
+				Project: akov2common.ResourceRefNamespaced{
 					Name:      strings.ToLower(projectName),
 					Namespace: targetNamespace,
 				},
-				DeploymentSpec: nil,
-				AdvancedDeploymentSpec: &atlasV1.AdvancedDeploymentSpec{
+				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
 					BackupEnabled: cluster.BackupEnabled,
-					CustomZoneMapping: []atlasV1.CustomZoneMapping{
+					CustomZoneMapping: []akov2.CustomZoneMapping{
 						{
 							Location: firstLocation,
 							Zone:     *cluster.ReplicationSpecs[0].ZoneName,
 						},
 					},
-					ManagedNamespaces: []atlasV1.ManagedNamespace{
+					ManagedNamespaces: []akov2.ManagedNamespace{
 						{
 							Db:                     managedNamespace[0].Db,
 							Collection:             managedNamespace[0].Collection,
@@ -238,13 +237,13 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 							PresplitHashedZones:    managedNamespace[0].PresplitHashedZones,
 						},
 					},
-					BiConnector: &atlasV1.BiConnectorSpec{
+					BiConnector: &akov2.BiConnectorSpec{
 						Enabled:        cluster.BiConnector.Enabled,
 						ReadPreference: *cluster.BiConnector.ReadPreference,
 					},
 					ClusterType:              *cluster.ClusterType,
 					EncryptionAtRestProvider: *cluster.EncryptionAtRestProvider,
-					Labels: []common.LabelSpec{
+					Labels: []akov2common.LabelSpec{
 						{
 							Key:   *cluster.Labels[0].Key,
 							Value: *cluster.Labels[0].Value,
@@ -253,33 +252,33 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					Name:       clusterName,
 					Paused:     cluster.Paused,
 					PitEnabled: cluster.PitEnabled,
-					ReplicationSpecs: []*atlasV1.AdvancedReplicationSpec{
+					ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
 						{
 							NumShards: *cluster.ReplicationSpecs[0].NumShards,
 							ZoneName:  *cluster.ReplicationSpecs[0].ZoneName,
-							RegionConfigs: []*atlasV1.AdvancedRegionConfig{
+							RegionConfigs: []*akov2.AdvancedRegionConfig{
 								{
-									AnalyticsSpecs: &atlasV1.Specs{
+									AnalyticsSpecs: &akov2.Specs{
 										DiskIOPS:      pointer.Get(int64(*cluster.ReplicationSpecs[0].RegionConfigs[0].AnalyticsSpecs.DiskIOPS)),
 										EbsVolumeType: *cluster.ReplicationSpecs[0].RegionConfigs[0].AnalyticsSpecs.EbsVolumeType,
 										InstanceSize:  *cluster.ReplicationSpecs[0].RegionConfigs[0].AnalyticsSpecs.InstanceSize,
 										NodeCount:     cluster.ReplicationSpecs[0].RegionConfigs[0].AnalyticsSpecs.NodeCount,
 									},
-									ElectableSpecs: &atlasV1.Specs{
+									ElectableSpecs: &akov2.Specs{
 										DiskIOPS:      pointer.Get(int64(*cluster.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs.DiskIOPS)),
 										EbsVolumeType: *cluster.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs.EbsVolumeType,
 										InstanceSize:  *cluster.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs.InstanceSize,
 										NodeCount:     cluster.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs.NodeCount,
 									},
-									ReadOnlySpecs: &atlasV1.Specs{
+									ReadOnlySpecs: &akov2.Specs{
 										DiskIOPS:      pointer.Get(int64(*cluster.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs.DiskIOPS)),
 										EbsVolumeType: *cluster.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs.EbsVolumeType,
 										InstanceSize:  *cluster.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs.InstanceSize,
 										NodeCount:     cluster.ReplicationSpecs[0].RegionConfigs[0].ReadOnlySpecs.NodeCount,
 									},
-									AutoScaling: &atlasV1.AdvancedAutoScalingSpec{
-										DiskGB: &atlasV1.DiskGB{Enabled: cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.DiskGB.Enabled},
-										Compute: &atlasV1.ComputeSpec{
+									AutoScaling: &akov2.AdvancedAutoScalingSpec{
+										DiskGB: &akov2.DiskGB{Enabled: cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.DiskGB.Enabled},
+										Compute: &akov2.ComputeSpec{
 											Enabled:          cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.Compute.Enabled,
 											ScaleDownEnabled: cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.Compute.ScaleDownEnabled,
 											MinInstanceSize:  *cluster.ReplicationSpecs[0].RegionConfigs[0].AutoScaling.Compute.MinInstanceSize,
@@ -296,12 +295,12 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					RootCertType:         *cluster.RootCertType,
 					VersionReleaseSystem: *cluster.VersionReleaseSystem,
 				},
-				BackupScheduleRef: common.ResourceRefNamespaced{
+				BackupScheduleRef: akov2common.ResourceRefNamespaced{
 					Name:      strings.ToLower(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName)),
 					Namespace: targetNamespace,
 				},
 				ServerlessSpec: nil,
-				ProcessArgs: &atlasV1.ProcessArgs{
+				ProcessArgs: &akov2.ProcessArgs{
 					DefaultReadConcern:               processArgs.GetDefaultReadConcern(),
 					DefaultWriteConcern:              processArgs.GetDefaultWriteConcern(),
 					MinimumEnabledTLSProtocol:        processArgs.GetMinimumEnabledTlsProtocol(),
@@ -313,14 +312,14 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					SampleRefreshIntervalBIConnector: pointer.Get(int64(processArgs.GetSampleRefreshIntervalBIConnector())),
 				},
 			},
-			Status: status.AtlasDeploymentStatus{
-				Common: status.Common{
-					Conditions: []status.Condition{},
+			Status: akov2status.AtlasDeploymentStatus{
+				Common: akov2status.Common{
+					Conditions: []akov2status.Condition{},
 				},
 			},
 		}
 
-		expectPolicies := []*atlasV1.AtlasBackupPolicy{
+		expectPolicies := []*akov2.AtlasBackupPolicy{
 			{
 				TypeMeta: v1.TypeMeta{
 					Kind:       "AtlasBackupPolicy",
@@ -333,8 +332,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 						features.ResourceVersion: resourceVersion,
 					},
 				},
-				Spec: atlasV1.AtlasBackupPolicySpec{
-					Items: []atlasV1.AtlasBackupPolicyItem{
+				Spec: akov2.AtlasBackupPolicySpec{
+					Items: []akov2.AtlasBackupPolicyItem{
 						{
 							FrequencyType:     backupSchedule.Policies[0].PolicyItems[0].GetFrequencyType(),
 							FrequencyInterval: backupSchedule.Policies[0].PolicyItems[0].GetFrequencyInterval(),
@@ -343,11 +342,11 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 						},
 					},
 				},
-				Status: status.BackupPolicyStatus{},
+				Status: akov2status.BackupPolicyStatus{},
 			},
 		}
 
-		expectSchedule := &atlasV1.AtlasBackupSchedule{
+		expectSchedule := &akov2.AtlasBackupSchedule{
 			TypeMeta: v1.TypeMeta{
 				Kind:       "AtlasBackupSchedule",
 				APIVersion: "atlas.mongodb.com/v1",
@@ -359,13 +358,13 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					features.ResourceVersion: resourceVersion,
 				},
 			},
-			Spec: atlasV1.AtlasBackupScheduleSpec{
+			Spec: akov2.AtlasBackupScheduleSpec{
 				AutoExportEnabled: *backupSchedule.AutoExportEnabled,
-				Export: &atlasV1.AtlasBackupExportSpec{
+				Export: &akov2.AtlasBackupExportSpec{
 					ExportBucketID: backupSchedule.Export.GetExportBucketId(),
 					FrequencyType:  backupSchedule.Export.GetFrequencyType(),
 				},
-				PolicyRef: common.ResourceRefNamespaced{
+				PolicyRef: akov2common.ResourceRefNamespaced{
 					Name:      strings.ToLower(expectPolicies[0].Name),
 					Namespace: expectPolicies[0].Namespace,
 				},
@@ -374,17 +373,16 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				RestoreWindowDays:                 int64(backupSchedule.GetRestoreWindowDays()),
 				UpdateSnapshots:                   backupSchedule.GetUpdateSnapshots(),
 				UseOrgAndGroupNamesInExportPrefix: backupSchedule.GetUseOrgAndGroupNamesInExportPrefix(),
-				CopySettings: []atlasV1.CopySetting{
+				CopySettings: []akov2.CopySetting{
 					{
-						CloudProvider:     pointer.Get("AWS"),
-						RegionName:        pointer.Get("US_EAST_1"),
-						ReplicationSpecID: pointer.Get("123456"),
-						ShouldCopyOplogs:  pointer.Get(false),
-						Frequencies:       []string{"DAILY"},
+						CloudProvider:    pointer.Get("AWS"),
+						RegionName:       pointer.Get("US_EAST_1"),
+						ShouldCopyOplogs: pointer.Get(false),
+						Frequencies:      []string{"DAILY"},
 					},
 				},
 			},
-			Status: status.BackupScheduleStatus{},
+			Status: akov2status.BackupScheduleStatus{},
 		}
 
 		expected := &AtlasDeploymentResult{
@@ -439,17 +437,17 @@ func TestBuildServerlessDeployments(t *testing.T) {
 		}
 
 		cluster := &atlasv2.ServerlessInstanceDescription{
-			Id:             toptr.MakePtr("TestClusterID"),
-			GroupId:        toptr.MakePtr("TestGroupID"),
-			MongoDBVersion: toptr.MakePtr("5.0"),
-			Name:           toptr.MakePtr(clusterName),
-			CreateDate:     toptr.MakePtr(time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC)),
+			Id:             akov2toptr.MakePtr("TestClusterID"),
+			GroupId:        akov2toptr.MakePtr("TestGroupID"),
+			MongoDBVersion: akov2toptr.MakePtr("5.0"),
+			Name:           akov2toptr.MakePtr(clusterName),
+			CreateDate:     akov2toptr.MakePtr(time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC)),
 			ProviderSettings: atlasv2.ServerlessProviderSettings{
 				BackingProviderName: "AWS",
-				ProviderName:        toptr.MakePtr("AWS"),
+				ProviderName:        akov2toptr.MakePtr("AWS"),
 				RegionName:          "US_EAST_1",
 			},
-			StateName:               toptr.MakePtr(""),
+			StateName:               akov2toptr.MakePtr(""),
 			ServerlessBackupOptions: nil,
 			ConnectionStrings:       nil,
 			Links:                   nil,
@@ -458,7 +456,7 @@ func TestBuildServerlessDeployments(t *testing.T) {
 		clusterStore.EXPECT().GetServerlessInstance(projectName, clusterName).Return(cluster, nil)
 		clusterStore.EXPECT().ServerlessPrivateEndpoints(projectName, clusterName).Return(spe, nil)
 
-		expected := &atlasV1.AtlasDeployment{
+		expected := &akov2.AtlasDeployment{
 			TypeMeta: v1.TypeMeta{
 				Kind:       "AtlasDeployment",
 				APIVersion: "atlas.mongodb.com/v1",
@@ -470,20 +468,20 @@ func TestBuildServerlessDeployments(t *testing.T) {
 					features.ResourceVersion: resourceVersion,
 				},
 			},
-			Spec: atlasV1.AtlasDeploymentSpec{
-				Project: common.ResourceRefNamespaced{
+			Spec: akov2.AtlasDeploymentSpec{
+				Project: akov2common.ResourceRefNamespaced{
 					Name:      strings.ToLower(projectName),
 					Namespace: targetNamespace,
 				},
-				BackupScheduleRef: common.ResourceRefNamespaced{},
-				ServerlessSpec: &atlasV1.ServerlessSpec{
+				BackupScheduleRef: akov2common.ResourceRefNamespaced{},
+				ServerlessSpec: &akov2.ServerlessSpec{
 					Name: atlas.StringOrEmpty(cluster.Name),
-					ProviderSettings: &atlasV1.ProviderSettingsSpec{
+					ProviderSettings: &akov2.ProviderSettingsSpec{
 						BackingProviderName: cluster.ProviderSettings.BackingProviderName,
-						ProviderName:        provider.ProviderName(atlas.StringOrEmpty(cluster.ProviderSettings.ProviderName)),
+						ProviderName:        akov2provider.ProviderName(atlas.StringOrEmpty(cluster.ProviderSettings.ProviderName)),
 						RegionName:          cluster.ProviderSettings.RegionName,
 					},
-					PrivateEndpoints: []atlasV1.ServerlessPrivateEndpoint{
+					PrivateEndpoints: []akov2.ServerlessPrivateEndpoint{
 						{
 							Name:                     speComment,
 							CloudProviderEndpointID:  speCloudProviderEndpointID,
@@ -493,9 +491,9 @@ func TestBuildServerlessDeployments(t *testing.T) {
 				},
 				ProcessArgs: nil,
 			},
-			Status: status.AtlasDeploymentStatus{
-				Common: status.Common{
-					Conditions: []status.Condition{},
+			Status: akov2status.AtlasDeploymentStatus{
+				Common: akov2status.Common{
+					Conditions: []akov2status.Condition{},
 				},
 			},
 		}

@@ -20,7 +20,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
-	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -110,29 +110,29 @@ func sortResources(projectResources, deploymentResources []runtime.Object, versi
 			sortedResources[0] = append(sortedResources[0], resource)
 		}
 
-		if _, ok := resource.(*akov1.AtlasTeam); ok {
+		if _, ok := resource.(*akov2.AtlasTeam); ok {
 			sortedResources[1] = append(sortedResources[1], resource)
 		}
 
-		if _, ok := resource.(*akov1.AtlasProject); ok {
+		if _, ok := resource.(*akov2.AtlasProject); ok {
 			sortedResources[2] = append(sortedResources[2], resource)
 		}
 
-		if _, ok := resource.(*akov1.AtlasDatabaseUser); ok {
+		if _, ok := resource.(*akov2.AtlasDatabaseUser); ok {
 			sortedResources[3] = append(sortedResources[3], resource)
 		}
 	}
 
 	for _, resource := range deploymentResources {
-		if _, ok := resource.(*akov1.AtlasBackupPolicy); ok {
+		if _, ok := resource.(*akov2.AtlasBackupPolicy); ok {
 			sortedResources[4] = append(sortedResources[4], resource)
 		}
 
-		if _, ok := resource.(*akov1.AtlasBackupSchedule); ok {
+		if _, ok := resource.(*akov2.AtlasBackupSchedule); ok {
 			sortedResources[5] = append(sortedResources[5], resource)
 		}
 
-		if _, ok := resource.(*akov1.AtlasDeployment); ok {
+		if _, ok := resource.(*akov2.AtlasDeployment); ok {
 			sortedResources[6] = append(sortedResources[6], resource)
 		}
 	}

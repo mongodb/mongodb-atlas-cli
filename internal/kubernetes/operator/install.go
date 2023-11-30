@@ -24,9 +24,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
-	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
+	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
+	akov2toptr "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/util/toptr"
 	"go.mongodb.org/atlas-sdk/v20231115002/admin"
 	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -140,8 +140,8 @@ func (i *Install) ensureProject(orgID, projectName string) (*admin.Group, error)
 		Group: &admin.Group{
 			Name:                      projectName,
 			OrgId:                     orgID,
-			RegionUsageRestrictions:   toptr.MakePtr(""),
-			WithDefaultAlertsSettings: toptr.MakePtr(true),
+			RegionUsageRestrictions:   akov2toptr.MakePtr(""),
+			WithDefaultAlertsSettings: akov2toptr.MakePtr(true),
 		},
 	})
 	if err != nil {
@@ -254,14 +254,14 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 }
 
 func (i *Install) ensureCredentialsAssignment(ctx context.Context) error {
-	projects := &akov1.AtlasProjectList{}
+	projects := &akov2.AtlasProjectList{}
 	err := i.kubectl.List(ctx, projects, client.InNamespace(i.namespace))
 	if err != nil {
 		return errors.New("failed to list projects")
 	}
 
 	for index := range projects.Items {
-		var connectionSecret *common.ResourceRefNamespaced
+		var connectionSecret *akov2common.ResourceRefNamespaced
 		project := projects.Items[index]
 
 		if i.projectName != "" {
@@ -272,7 +272,7 @@ func (i *Install) ensureCredentialsAssignment(ctx context.Context) error {
 				}
 			}
 
-			connectionSecret = &common.ResourceRefNamespaced{
+			connectionSecret = &akov2common.ResourceRefNamespaced{
 				Name:      fmt.Sprintf(credentialsProjectScopedName, project.Name),
 				Namespace: i.namespace,
 			}

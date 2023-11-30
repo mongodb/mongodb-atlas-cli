@@ -24,11 +24,13 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
+	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
+	akov2toptr "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/util/toptr"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	corev1 "k8s.io/api/core/v1"
+	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -67,10 +69,22 @@ func TestKubernetesConfigApply(t *testing.T) {
 			operator.restoreOperator()
 		})
 
+		e2eNamespace := &corev1.Namespace{
+			ObjectMeta: apisv1.ObjectMeta{
+				Name: "e2e-autodetect-parameters",
+			},
+		}
+		t.Logf("adding namespace %s", e2eNamespace)
+		require.NoError(t, operator.createK8sObject(e2eNamespace))
+		g.t.Cleanup(func() {
+			req.NoError(operator.deleteK8sObject(e2eNamespace))
+		})
+
 		cmd := exec.Command(cliPath,
 			"kubernetes",
 			"config",
 			"apply",
+			"--targetNamespace", "e2e-autodetect-parameters",
 			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -89,10 +103,22 @@ func TestKubernetesConfigApply(t *testing.T) {
 			operator.restoreOperatorImage()
 		})
 
+		e2eNamespace := &corev1.Namespace{
+			ObjectMeta: apisv1.ObjectMeta{
+				Name: "e2e-autodetect-operator-version",
+			},
+		}
+		t.Logf("adding namespace %s", e2eNamespace)
+		require.NoError(t, operator.createK8sObject(e2eNamespace))
+		g.t.Cleanup(func() {
+			req.NoError(operator.deleteK8sObject(e2eNamespace))
+		})
+
 		cmd := exec.Command(cliPath,
 			"kubernetes",
 			"config",
 			"apply",
+			"--targetNamespace", "e2e-autodetect-operator-version",
 			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -111,10 +137,22 @@ func TestKubernetesConfigApply(t *testing.T) {
 			operator.startOperator()
 		})
 
+		e2eNamespace := &corev1.Namespace{
+			ObjectMeta: apisv1.ObjectMeta{
+				Name: "e2e-export-atlas-resource",
+			},
+		}
+		t.Logf("adding namespace %s", e2eNamespace)
+		require.NoError(t, operator.createK8sObject(e2eNamespace))
+		g.t.Cleanup(func() {
+			req.NoError(operator.deleteK8sObject(e2eNamespace))
+		})
+
 		cmd := exec.Command(cliPath,
 			"kubernetes",
 			"config",
 			"apply",
+			"--targetNamespace", "e2e-export-atlas-resource",
 			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -124,32 +162,31 @@ func TestKubernetesConfigApply(t *testing.T) {
 			operator.cleanUpResources()
 		})
 
-		namespace := "mongodb-atlas-system"
-		akoProject := akov1.AtlasProject{}
+		akoProject := akov2.AtlasProject{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(g.projectName), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(g.projectName), Namespace: e2eNamespace.Name},
 			&akoProject,
 			true,
 		)
 		req.NoError(err)
 		a.NotEmpty(akoProject.Spec.AlertConfigurations)
 		akoProject.Spec.AlertConfigurations = nil
-		a.Equal(referenceExportedProject(g.projectName, g.teamName).Spec, akoProject.Spec)
+		a.Equal(referenceExportedProject(g.projectName, g.teamName, &akoProject).Spec, akoProject.Spec)
 
 		// Assert Database User
-		akoDBUser := akov1.AtlasDatabaseUser{}
+		akoDBUser := akov2.AtlasDatabaseUser{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.dbUser)), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.dbUser)), Namespace: e2eNamespace.Name},
 			&akoDBUser,
 			true,
 		)
 		req.NoError(err)
-		a.Equal(referenceExportedDBUser(g.projectName, g.dbUser).Spec, akoDBUser.Spec)
+		a.Equal(referenceExportedDBUser(g.projectName, g.dbUser, e2eNamespace.Name).Spec, akoDBUser.Spec)
 
 		// Assert Team
-		akoTeam := akov1.AtlasTeam{}
+		akoTeam := akov2.AtlasTeam{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-team-%s", g.projectName, g.teamName)), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-team-%s", g.projectName, g.teamName)), Namespace: e2eNamespace.Name},
 			&akoTeam,
 			true,
 		)
@@ -157,9 +194,9 @@ func TestKubernetesConfigApply(t *testing.T) {
 		a.Equal(referenceExportedTeam(g.teamName, g.teamUser).Spec, akoTeam.Spec)
 
 		// Assert Backup Policy
-		akoBkpPolicy := akov1.AtlasBackupPolicy{}
+		akoBkpPolicy := akov2.AtlasBackupPolicy{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s-backuppolicy", g.projectName, g.clusterName)), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s-backuppolicy", g.projectName, g.clusterName)), Namespace: e2eNamespace.Name},
 			&akoBkpPolicy,
 			true,
 		)
@@ -167,35 +204,34 @@ func TestKubernetesConfigApply(t *testing.T) {
 		a.Equal(referenceExportedBackupPolicy().Spec, akoBkpPolicy.Spec)
 
 		// Assert Backup Schedule
-		akoBkpSchedule := akov1.AtlasBackupSchedule{}
+		akoBkpSchedule := akov2.AtlasBackupSchedule{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s-backupschedule", g.projectName, g.clusterName)), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s-backupschedule", g.projectName, g.clusterName)), Namespace: e2eNamespace.Name},
 			&akoBkpSchedule,
 			true,
 		)
 		req.NoError(err)
 		a.Equal(
-			referenceExportedBackupSchedule(g.projectName, g.clusterName, akoBkpSchedule.Spec.ReferenceHourOfDay, akoBkpSchedule.Spec.ReferenceMinuteOfHour).Spec,
+			referenceExportedBackupSchedule(g.projectName, g.clusterName, e2eNamespace.Name, akoBkpSchedule.Spec.ReferenceHourOfDay, akoBkpSchedule.Spec.ReferenceMinuteOfHour).Spec,
 			akoBkpSchedule.Spec,
 		)
 
 		// Assert Deployment
-		akoDeployment := akov1.AtlasDeployment{}
+		akoDeployment := akov2.AtlasDeployment{}
 		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.clusterName)), Namespace: namespace},
+			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.clusterName)), Namespace: e2eNamespace.Name},
 			&akoDeployment,
 			true,
 		)
 		req.NoError(err)
-		a.Equal(referenceExportedDeployment(g.projectName, g.clusterName).Spec, akoDeployment.Spec)
+		a.Equal(referenceExportedDeployment(g.projectName, g.clusterName, e2eNamespace.Name).Spec, akoDeployment.Spec)
 	})
 }
 
 func setupAtlasResources(t *testing.T) *atlasE2ETestGenerator {
 	t.Helper()
 
-	g := newAtlasE2ETestGenerator(t)
-	g.enableBackup = true
+	g := newAtlasE2ETestGeneratorWithBackup(t)
 	g.generateProject("k8sConfigApply")
 	g.generateCluster()
 	g.generateTeam("k8sConfigApply")
@@ -224,44 +260,56 @@ func setupAtlasResources(t *testing.T) *atlasE2ETestGenerator {
 	return g
 }
 
-func referenceExportedProject(projectName, teamName string) *akov1.AtlasProject {
-	return &akov1.AtlasProject{
-		Spec: akov1.AtlasProjectSpec{
+func referenceExportedProject(projectName, teamName string, expectedProject *akov2.AtlasProject) *akov2.AtlasProject {
+	return &akov2.AtlasProject{
+		Spec: akov2.AtlasProjectSpec{
 			Name: projectName,
-			ConnectionSecret: &common.ResourceRefNamespaced{
+			ConnectionSecret: &akov2common.ResourceRefNamespaced{
 				Name: prepareK8sName(fmt.Sprintf("%s-credentials", projectName)),
 			},
 			WithDefaultAlertsSettings: true,
-			Settings: &akov1.ProjectSettings{
-				IsCollectDatabaseSpecificsStatisticsEnabled: toptr.MakePtr(true),
-				IsDataExplorerEnabled:                       toptr.MakePtr(true),
-				IsPerformanceAdvisorEnabled:                 toptr.MakePtr(true),
-				IsRealtimePerformancePanelEnabled:           toptr.MakePtr(true),
-				IsSchemaAdvisorEnabled:                      toptr.MakePtr(true),
+			Settings: &akov2.ProjectSettings{
+				IsCollectDatabaseSpecificsStatisticsEnabled: akov2toptr.MakePtr(true),
+				IsDataExplorerEnabled:                       akov2toptr.MakePtr(true),
+				IsPerformanceAdvisorEnabled:                 akov2toptr.MakePtr(true),
+				IsRealtimePerformancePanelEnabled:           akov2toptr.MakePtr(true),
+				IsSchemaAdvisorEnabled:                      akov2toptr.MakePtr(true),
 			},
-			EncryptionAtRest: &akov1.EncryptionAtRest{
-				AwsKms: akov1.AwsKms{
-					Enabled: toptr.MakePtr(false),
-					Valid:   toptr.MakePtr(false),
+			EncryptionAtRest: &akov2.EncryptionAtRest{
+				AwsKms: akov2.AwsKms{
+					Enabled: akov2toptr.MakePtr(false),
+					Valid:   akov2toptr.MakePtr(false),
+					SecretRef: akov2common.ResourceRefNamespaced{
+						Name:      expectedProject.Spec.EncryptionAtRest.AwsKms.SecretRef.Name,
+						Namespace: expectedProject.Spec.EncryptionAtRest.AwsKms.SecretRef.Namespace,
+					},
 				},
-				AzureKeyVault: akov1.AzureKeyVault{
-					Enabled: toptr.MakePtr(false),
+				AzureKeyVault: akov2.AzureKeyVault{
+					Enabled: akov2toptr.MakePtr(false),
+					SecretRef: akov2common.ResourceRefNamespaced{
+						Name:      expectedProject.Spec.EncryptionAtRest.AzureKeyVault.SecretRef.Name,
+						Namespace: expectedProject.Spec.EncryptionAtRest.AzureKeyVault.SecretRef.Namespace,
+					},
 				},
-				GoogleCloudKms: akov1.GoogleCloudKms{
-					Enabled: toptr.MakePtr(false),
+				GoogleCloudKms: akov2.GoogleCloudKms{
+					Enabled: akov2toptr.MakePtr(false),
+					SecretRef: akov2common.ResourceRefNamespaced{
+						Name:      expectedProject.Spec.EncryptionAtRest.GoogleCloudKms.SecretRef.Name,
+						Namespace: expectedProject.Spec.EncryptionAtRest.GoogleCloudKms.SecretRef.Namespace,
+					},
 				},
 			},
-			Auditing: &akov1.Auditing{
+			Auditing: &akov2.Auditing{
 				AuditAuthorizationSuccess: false,
 				Enabled:                   false,
 			},
-			Teams: []akov1.Team{
+			Teams: []akov2.Team{
 				{
-					TeamRef: common.ResourceRefNamespaced{
-						Namespace: "mongodb-atlas-system",
+					TeamRef: akov2common.ResourceRefNamespaced{
+						Namespace: expectedProject.Namespace,
 						Name:      prepareK8sName(fmt.Sprintf("%s-team-%s", projectName, teamName)),
 					},
-					Roles: []akov1.TeamRole{
+					Roles: []akov2.TeamRole{
 						"GROUP_OWNER",
 					},
 				},
@@ -271,14 +319,14 @@ func referenceExportedProject(projectName, teamName string) *akov1.AtlasProject 
 	}
 }
 
-func referenceExportedDBUser(projectName, dbUser string) *akov1.AtlasDatabaseUser {
-	return &akov1.AtlasDatabaseUser{
-		Spec: akov1.AtlasDatabaseUserSpec{
-			Project: common.ResourceRefNamespaced{
+func referenceExportedDBUser(projectName, dbUser, namespace string) *akov2.AtlasDatabaseUser {
+	return &akov2.AtlasDatabaseUser{
+		Spec: akov2.AtlasDatabaseUserSpec{
+			Project: akov2common.ResourceRefNamespaced{
 				Name:      prepareK8sName(projectName),
-				Namespace: "mongodb-atlas-system",
+				Namespace: namespace,
 			},
-			Roles: []akov1.RoleSpec{
+			Roles: []akov2.RoleSpec{
 				{
 					RoleName:     "readAnyDatabase",
 					DatabaseName: "admin",
@@ -291,23 +339,23 @@ func referenceExportedDBUser(projectName, dbUser string) *akov1.AtlasDatabaseUse
 	}
 }
 
-func referenceExportedTeam(teamName, username string) *akov1.AtlasTeam {
-	return &akov1.AtlasTeam{
-		Spec: akov1.TeamSpec{
+func referenceExportedTeam(teamName, username string) *akov2.AtlasTeam {
+	return &akov2.AtlasTeam{
+		Spec: akov2.TeamSpec{
 			Name: teamName,
-			Usernames: []akov1.TeamUser{
-				akov1.TeamUser(username),
+			Usernames: []akov2.TeamUser{
+				akov2.TeamUser(username),
 			},
 		},
 	}
 }
 
-func referenceExportedBackupSchedule(projectName, clusterName string, refHour, refMin int64) *akov1.AtlasBackupSchedule {
-	return &akov1.AtlasBackupSchedule{
-		Spec: akov1.AtlasBackupScheduleSpec{
-			PolicyRef: common.ResourceRefNamespaced{
+func referenceExportedBackupSchedule(projectName, clusterName, namespace string, refHour, refMin int64) *akov2.AtlasBackupSchedule {
+	return &akov2.AtlasBackupSchedule{
+		Spec: akov2.AtlasBackupScheduleSpec{
+			PolicyRef: akov2common.ResourceRefNamespaced{
 				Name:      prepareK8sName(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName)),
-				Namespace: "mongodb-atlas-system",
+				Namespace: namespace,
 			},
 			AutoExportEnabled:     false,
 			ReferenceHourOfDay:    refHour,
@@ -317,10 +365,10 @@ func referenceExportedBackupSchedule(projectName, clusterName string, refHour, r
 	}
 }
 
-func referenceExportedBackupPolicy() *akov1.AtlasBackupPolicy {
-	return &akov1.AtlasBackupPolicy{
-		Spec: akov1.AtlasBackupPolicySpec{
-			Items: []akov1.AtlasBackupPolicyItem{
+func referenceExportedBackupPolicy() *akov2.AtlasBackupPolicy {
+	return &akov2.AtlasBackupPolicy{
+		Spec: akov2.AtlasBackupPolicySpec{
+			Items: []akov2.AtlasBackupPolicyItem{
 				{
 					FrequencyType:     "hourly",
 					FrequencyInterval: 6,
@@ -350,68 +398,68 @@ func referenceExportedBackupPolicy() *akov1.AtlasBackupPolicy {
 	}
 }
 
-func referenceExportedDeployment(projectName, clusterName string) *akov1.AtlasDeployment {
-	return &akov1.AtlasDeployment{
-		Spec: akov1.AtlasDeploymentSpec{
-			Project: common.ResourceRefNamespaced{
+func referenceExportedDeployment(projectName, clusterName, namespace string) *akov2.AtlasDeployment {
+	return &akov2.AtlasDeployment{
+		Spec: akov2.AtlasDeploymentSpec{
+			Project: akov2common.ResourceRefNamespaced{
 				Name:      prepareK8sName(projectName),
-				Namespace: "mongodb-atlas-system",
+				Namespace: namespace,
 			},
-			BackupScheduleRef: common.ResourceRefNamespaced{
+			BackupScheduleRef: akov2common.ResourceRefNamespaced{
 				Name:      prepareK8sName(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName)),
-				Namespace: "mongodb-atlas-system",
+				Namespace: namespace,
 			},
-			AdvancedDeploymentSpec: &akov1.AdvancedDeploymentSpec{
+			DeploymentSpec: &akov2.AdvancedDeploymentSpec{
 				Name:          clusterName,
-				BackupEnabled: toptr.MakePtr(true),
-				BiConnector: &akov1.BiConnectorSpec{
-					Enabled:        toptr.MakePtr(false),
+				BackupEnabled: akov2toptr.MakePtr(true),
+				BiConnector: &akov2.BiConnectorSpec{
+					Enabled:        akov2toptr.MakePtr(false),
 					ReadPreference: "secondary",
 				},
 				ClusterType:              "REPLICASET",
 				EncryptionAtRestProvider: "NONE",
-				Labels: []common.LabelSpec{
+				Labels: []akov2common.LabelSpec{
 					{
 						Key:   "Infrastructure Tool",
 						Value: "Atlas CLI",
 					},
 				},
-				Paused:     toptr.MakePtr(false),
-				PitEnabled: toptr.MakePtr(true),
-				ReplicationSpecs: []*akov1.AdvancedReplicationSpec{
+				Paused:     akov2toptr.MakePtr(false),
+				PitEnabled: akov2toptr.MakePtr(true),
+				ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
 					{
 						NumShards: 1,
 						ZoneName:  "Zone 1",
-						RegionConfigs: []*akov1.AdvancedRegionConfig{
+						RegionConfigs: []*akov2.AdvancedRegionConfig{
 							{
-								AnalyticsSpecs: &akov1.Specs{
-									DiskIOPS:      toptr.MakePtr(int64(3000)),
+								AnalyticsSpecs: &akov2.Specs{
+									DiskIOPS:      akov2toptr.MakePtr(int64(3000)),
 									EbsVolumeType: "STANDARD",
 									InstanceSize:  "M10",
-									NodeCount:     toptr.MakePtr(0),
+									NodeCount:     akov2toptr.MakePtr(0),
 								},
-								ElectableSpecs: &akov1.Specs{
-									DiskIOPS:      toptr.MakePtr(int64(3000)),
+								ElectableSpecs: &akov2.Specs{
+									DiskIOPS:      akov2toptr.MakePtr(int64(3000)),
 									EbsVolumeType: "STANDARD",
 									InstanceSize:  "M10",
-									NodeCount:     toptr.MakePtr(3),
+									NodeCount:     akov2toptr.MakePtr(3),
 								},
-								ReadOnlySpecs: &akov1.Specs{
-									DiskIOPS:      toptr.MakePtr(int64(3000)),
+								ReadOnlySpecs: &akov2.Specs{
+									DiskIOPS:      akov2toptr.MakePtr(int64(3000)),
 									EbsVolumeType: "STANDARD",
 									InstanceSize:  "M10",
-									NodeCount:     toptr.MakePtr(0),
+									NodeCount:     akov2toptr.MakePtr(0),
 								},
-								AutoScaling: &akov1.AdvancedAutoScalingSpec{
-									DiskGB: &akov1.DiskGB{
-										Enabled: toptr.MakePtr(false),
+								AutoScaling: &akov2.AdvancedAutoScalingSpec{
+									DiskGB: &akov2.DiskGB{
+										Enabled: akov2toptr.MakePtr(false),
 									},
-									Compute: &akov1.ComputeSpec{
-										Enabled:          toptr.MakePtr(false),
-										ScaleDownEnabled: toptr.MakePtr(false),
+									Compute: &akov2.ComputeSpec{
+										Enabled:          akov2toptr.MakePtr(false),
+										ScaleDownEnabled: akov2toptr.MakePtr(false),
 									},
 								},
-								Priority:     toptr.MakePtr(7),
+								Priority:     akov2toptr.MakePtr(7),
 								ProviderName: "AWS",
 								RegionName:   "US_EAST_1",
 							},
@@ -421,10 +469,10 @@ func referenceExportedDeployment(projectName, clusterName string) *akov1.AtlasDe
 				RootCertType:         "ISRGROOTX1",
 				VersionReleaseSystem: "LTS",
 			},
-			ProcessArgs: &akov1.ProcessArgs{
+			ProcessArgs: &akov2.ProcessArgs{
 				MinimumEnabledTLSProtocol: "TLS1_2",
-				JavascriptEnabled:         toptr.MakePtr(true),
-				NoTableScan:               toptr.MakePtr(false),
+				JavascriptEnabled:         akov2toptr.MakePtr(true),
+				NoTableScan:               akov2toptr.MakePtr(false),
 			},
 		},
 	}

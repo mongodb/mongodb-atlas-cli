@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 	"time"
 
@@ -214,7 +215,7 @@ func deleteTeamWithRetry(t *testing.T, teamID string) {
 	backoff := 1
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
 		e := deleteTeam(teamID)
-		if e == nil {
+		if e == nil || strings.Contains(e.Error(), "GROUP_NOT_FOUND") {
 			t.Logf("team %q successfully deleted", teamID)
 			deleted = true
 			break
@@ -235,7 +236,7 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	backoff := 1
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
 		e := deleteProject(projectID)
-		if e == nil {
+		if e == nil || strings.Contains(e.Error(), "GROUP_NOT_FOUND") {
 			t.Logf("project %q successfully deleted", projectID)
 			deleted = true
 			break

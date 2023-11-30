@@ -100,8 +100,8 @@ func TestAlerts(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		var alert atlasv2.AlertViewForNdsGroup
 		require.NoError(t, json.Unmarshal(resp, &alert))
-		a.Equal(alertID, *alert.Id)
-		a.Equal(closed, *alert.Status)
+		a.Equal(alertID, alert.GetId())
+		a.Equal(closed, alert.GetStatus())
 	})
 
 	t.Run("Acknowledge", func(t *testing.T) {
@@ -118,7 +118,7 @@ func TestAlerts(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		var alert atlasv2.AlertViewForNdsGroup
 		require.NoError(t, json.Unmarshal(resp, &alert))
-		assert.Equal(t, alertID, *alert.Id)
+		assert.Equal(t, alertID, alert.GetId())
 	})
 
 	t.Run("Acknowledge Forever", func(t *testing.T) {
@@ -134,7 +134,7 @@ func TestAlerts(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		var alert atlasv2.AlertViewForNdsGroup
 		require.NoError(t, json.Unmarshal(resp, &alert))
-		assert.Equal(t, alertID, *alert.Id)
+		assert.Equal(t, alertID, alert.GetId())
 	})
 
 	t.Run("UnAcknowledge", func(t *testing.T) {
@@ -150,6 +150,6 @@ func TestAlerts(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		var alert atlasv2.AlertViewForNdsGroup
 		require.NoError(t, json.Unmarshal(resp, &alert))
-		a.Equal(alertID, *alert.Id)
+		a.Equal(alertID, alert.GetId())
 	})
 }

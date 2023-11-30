@@ -72,24 +72,6 @@ func (opts *StartOpts) RunLocal(ctx context.Context, deployment options.Deployme
 		return err
 	}
 
-	buf, err := options.ComposeDefinition(&options.ComposeDefinitionOptions{
-		Name:          opts.DeploymentName,
-		Port:          "27017",
-		MongodVersion: "7.0",
-		BindIp:        "127.0.0.1",
-	})
-	if err != nil {
-		return err
-	}
-	cmd := exec.Command("docker", "compose", "-f", "/dev/stdin", "unpause")
-	cmd.Stderr = os.Stderr
-	cmd.Stdout = os.Stdout
-	cmd.Stdin = buf
-	cmd.Env = append(os.Environ(), "KEY_FILE=keyfile")
-	if err := cmd.Run(); err != nil {
-		return err
-	}
-
 	return opts.Print(
 		admin.AdvancedClusterDescription{
 			Name: &opts.DeploymentName,
@@ -102,19 +84,43 @@ func (opts *StartOpts) startContainer(ctx context.Context, deployment options.De
 	}
 
 	if deployment.StateName == options.StoppedState {
-		if _, err := opts.PodmanClient.StartContainers(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname()); err != nil {
+		buf, err := options.ComposeDefinition(&options.ComposeDefinitionOptions{
+			Name:          opts.DeploymentName,
+			Port:          "27017",
+			MongodVersion: "7.0",
+			BindIp:        "127.0.0.1",
+		})
+		if err != nil {
 			return err
 		}
-
-		return nil
+		cmd := exec.Command("docker", "compose", "-f", "/dev/stdin", "start")
+		cmd.Stderr = os.Stderr
+		cmd.Stdout = os.Stdout
+		cmd.Stdin = buf
+		cmd.Env = append(os.Environ(), "KEY_FILE=keyfile")
+		if err := cmd.Run(); err != nil {
+			return err
+		}
 	}
 
 	if deployment.StateName == options.PausedState {
-		if _, err := opts.PodmanClient.UnpauseContainers(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname()); err != nil {
+		buf, err := options.ComposeDefinition(&options.ComposeDefinitionOptions{
+			Name:          opts.DeploymentName,
+			Port:          "27017",
+			MongodVersion: "7.0",
+			BindIp:        "127.0.0.1",
+		})
+		if err != nil {
 			return err
 		}
-
-		return nil
+		cmd := exec.Command("docker", "compose", "-f", "/dev/stdin", "unpause")
+		cmd.Stderr = os.Stderr
+		cmd.Stdout = os.Stdout
+		cmd.Stdin = buf
+		cmd.Env = append(os.Environ(), "KEY_FILE=keyfile")
+		if err := cmd.Run(); err != nil {
+			return err
+		}
 	}
 
 	return ErrDeploymentIsDeleting

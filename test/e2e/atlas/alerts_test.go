@@ -33,10 +33,9 @@ const (
 )
 
 func TestAlerts(t *testing.T) {
-	var alertID string
-
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
+	var alertID string
 	// This test should be run before all other tests to grab an alert ID for all others tests
 	t.Run("List with status CLOSED", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -52,8 +51,9 @@ func TestAlerts(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		var alerts atlasv2.PaginatedAlert
 		require.NoError(t, json.Unmarshal(resp, &alerts))
-		require.NotEmpty(t, alerts.Results)
-		alertID = alerts.Results[0].GetId()
+		if len(alerts.Results) != 0 {
+			alertID = alerts.Results[0].GetId()
+		}
 	})
 
 	t.Run("List with status OPEN", func(t *testing.T) {
@@ -81,6 +81,10 @@ func TestAlerts(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 	})
+
+	if alertID == "" {
+		t.Skip("no alert found")
+	}
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

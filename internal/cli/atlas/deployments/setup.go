@@ -107,7 +107,7 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	}
 
 	if opts.bindIPAll {
-		composeOpt = append(composeOpt, compose.WithBindIp("0.0.0.0"))
+		composeOpt = append(composeOpt, compose.WithBindIP("0.0.0.0"))
 	}
 
 	if opts.IsAuthEnabled() {
@@ -136,7 +136,7 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 		return nil
 	}
 
-	return c.Up()
+	return c.Up(ctx)
 }
 
 func (opts *SetupOpts) promptSettings() error {

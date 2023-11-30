@@ -24,10 +24,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 )
 
-var errEmptyLocalDeployments = errors.New("currently there are no deployment in your local system")
 var errNoDeployments = errors.New("currently there are no deployments")
 var ErrDeploymentNotFound = errors.New("deployment not found")
-var errDeploymentRequiredOnPipe = fmt.Errorf("deployment name is required  when piping the output of the command")
 
 func (opts *DeploymentOpts) Select(deployments []Deployment) (Deployment, error) {
 	if len(deployments) == 0 {

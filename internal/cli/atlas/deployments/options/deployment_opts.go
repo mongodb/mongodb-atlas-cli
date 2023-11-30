@@ -180,9 +180,9 @@ func (opts *DeploymentOpts) IsCliAuthenticated() bool {
 	return opts.CredStore.AuthType() != config.NotLoggedIn
 }
 
-func (opts *DeploymentOpts) GetLocalDeployments(ctx context.Context) ([]Deployment, error) {
+func (*DeploymentOpts) GetLocalDeployments(ctx context.Context) ([]Deployment, error) {
 	var output []byte
-	cmd := exec.Command("docker", "compose", "ls", "--format", "json")
+	cmd := exec.CommandContext(ctx, "docker", "compose", "ls", "--format", "json")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return nil, err

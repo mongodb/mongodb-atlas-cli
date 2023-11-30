@@ -20,7 +20,7 @@ import (
 	"net/url"
 )
 
-func (opts *DeploymentOpts) ConnectionString(ctx context.Context) (string, error) {
+func (opts *DeploymentOpts) ConnectionString(_ context.Context) (string, error) {
 	// if opts.Port == 0 {
 	// TODO fixme
 	// }

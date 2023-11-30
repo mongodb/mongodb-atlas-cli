@@ -89,7 +89,7 @@ func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.De
 	if deployment.StateName != options.IdleState {
 		return errDeploymentIsNotIDLE
 	}
-	return compose.New(opts.DeploymentName).Pause()
+	return compose.New(opts.DeploymentName).Pause(ctx)
 }
 
 func (opts *PauseOpts) RunAtlas() error {

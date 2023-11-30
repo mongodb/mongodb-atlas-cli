@@ -20,5 +20,5 @@ import (
 )
 
 func (opts *DeploymentOpts) RemoveLocal(ctx context.Context) error {
-	return compose.New(opts.DeploymentName).Down()
+	return compose.New(opts.DeploymentName).Down(ctx)
 }

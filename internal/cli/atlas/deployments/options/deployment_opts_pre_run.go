@@ -132,7 +132,7 @@ func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, er
 	return deployments, nil
 }
 
-func (opts *DeploymentOpts) LocalDeploymentPreRun(ctx context.Context) error {
+func (*DeploymentOpts) LocalDeploymentPreRun(_ context.Context) error {
 	if !localDeploymentSupportedByOs() {
 		_, _ = log.Warningln("Local deployments are not supported on this OS, to see local deployments requirements visit https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-deploy-local/.")
 	}

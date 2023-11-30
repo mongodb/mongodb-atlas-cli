@@ -83,11 +83,11 @@ func (opts *StartOpts) startContainer(ctx context.Context, deployment options.De
 	}
 
 	if deployment.StateName == options.StoppedState {
-		return compose.New(opts.DeploymentName).Start()
+		return compose.New(opts.DeploymentName).Start(ctx)
 	}
 
 	if deployment.StateName == options.PausedState {
-		return compose.New(opts.DeploymentName).Unpause()
+		return compose.New(opts.DeploymentName).Unpause(ctx)
 	}
 
 	return ErrDeploymentIsDeleting

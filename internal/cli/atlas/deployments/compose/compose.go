@@ -2,6 +2,7 @@ package compose
 
 import (
 	"bytes"
+	"context"
 	_ "embed"
 	"io"
 	"os"
@@ -11,23 +12,23 @@ import (
 
 //go:embed compose.yaml.tmpl
 var composeContent string
-var composeTemplate *template.Template = template.Must(template.New("").Parse(composeContent))
+var composeTemplate = template.Must(template.New("").Parse(composeContent))
 
 type Compose interface {
 	Render() (io.Reader, error)
-	Down() error
-	Up() error
-	Logs() error
-	Pause() error
-	Unpause() error
-	Start() error
+	Down(context.Context) error
+	Up(context.Context) error
+	Logs(context.Context) error
+	Pause(context.Context) error
+	Unpause(context.Context) error
+	Start(context.Context) error
 }
 
 type composeImpl struct {
 	Name          string
 	Port          string
 	MongodVersion string
-	BindIp        string
+	BindIP        string
 	Username      string
 	Password      string
 	KeyFile       string
@@ -40,7 +41,7 @@ func New(name string, opt ...Option) Compose {
 		Name:          name,
 		Port:          "27017",
 		MongodVersion: "7.0",
-		BindIp:        "127.0.0.1",
+		BindIP:        "127.0.0.1",
 		KeyFile:       "keyfile",
 	}
 
@@ -63,9 +64,9 @@ func WithMongodVersion(s string) Option {
 	}
 }
 
-func WithBindIp(s string) Option {
+func WithBindIP(s string) Option {
 	return func(c *composeImpl) {
-		c.BindIp = s
+		c.BindIP = s
 	}
 }
 
@@ -95,13 +96,13 @@ func (opt *composeImpl) Render() (io.Reader, error) {
 	return buf, nil
 }
 
-func (opt *composeImpl) run(args ...string) error {
+func (opt *composeImpl) run(ctx context.Context, args ...string) error {
 	buf, err := opt.Render()
 	if err != nil {
 		return err
 	}
 	composeArgs := append([]string{"compose", "-f", "/dev/stdin"}, args...)
-	cmd := exec.Command("docker", composeArgs...)
+	cmd := exec.CommandContext(ctx, "docker", composeArgs...)
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = buf
@@ -109,26 +110,26 @@ func (opt *composeImpl) run(args ...string) error {
 	return cmd.Run()
 }
 
-func (opt *composeImpl) Down() error {
-	return opt.run("down", "-v")
+func (opt *composeImpl) Down(ctx context.Context) error {
+	return opt.run(ctx, "down", "-v")
 }
 
-func (opt *composeImpl) Up() error {
-	return opt.run("up", "-d", "--wait")
+func (opt *composeImpl) Up(ctx context.Context) error {
+	return opt.run(ctx, "up", "-d", "--wait")
 }
 
-func (opt *composeImpl) Logs() error {
-	return opt.run("logs")
+func (opt *composeImpl) Logs(ctx context.Context) error {
+	return opt.run(ctx, "logs")
 }
 
-func (opt *composeImpl) Pause() error {
-	return opt.run("pause")
+func (opt *composeImpl) Pause(ctx context.Context) error {
+	return opt.run(ctx, "pause")
 }
 
-func (opt *composeImpl) Unpause() error {
-	return opt.run("unpause")
+func (opt *composeImpl) Unpause(ctx context.Context) error {
+	return opt.run(ctx, "unpause")
 }
 
-func (opt *composeImpl) Start() error {
-	return opt.run("start")
+func (opt *composeImpl) Start(ctx context.Context) error {
+	return opt.run(ctx, "start")
 }

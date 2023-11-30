@@ -46,7 +46,7 @@ type diagnosticsOpts struct {
 // 	Arch string
 // }
 
-func (opts *diagnosticsOpts) Run(ctx context.Context) error {
+func (*diagnosticsOpts) Run(_ context.Context) error {
 	// TODO fixme
 
 	// d := &diagnostic{

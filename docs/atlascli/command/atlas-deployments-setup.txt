@@ -61,6 +61,10 @@ Options
      - 
      - false
      - Flag that indicates whether the LOCAL deployment port binding should happen for all IPs or only for the localhost interface 127.0.0.1.
+   * - --compose
+     - 
+     - false
+     - output compose definition
    * - --connectWith
      - string
      - false

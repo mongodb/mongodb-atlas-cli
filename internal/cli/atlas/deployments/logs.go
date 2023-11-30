@@ -157,10 +157,7 @@ func (opts *DownloadOpts) newHostLogsParams() *admin.GetHostLogsApiParams {
 }
 
 func (opts *DownloadOpts) RunLocal(ctx context.Context) error {
-	if err := compose.New(opts.DeploymentName).Logs(); err != nil {
-		return err
-	}
-	return nil
+	return compose.New(opts.DeploymentName).Logs(ctx)
 }
 
 func (opts *DownloadOpts) validateAtlasFlags() error {

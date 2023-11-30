@@ -82,11 +82,10 @@ func TestAlerts(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	if alertID == "" {
-		t.Skip("no alert found")
-	}
-
 	t.Run("Describe", func(t *testing.T) {
+		if alertID == "" {
+			t.Skip("no alert found")
+		}
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			"describe",
@@ -105,6 +104,9 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("Acknowledge", func(t *testing.T) {
+		if alertID == "" {
+			t.Skip("no alert found")
+		}
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			"ack",
@@ -122,6 +124,9 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("Acknowledge Forever", func(t *testing.T) {
+		if alertID == "" {
+			t.Skip("no alert found")
+		}
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			"ack",
@@ -138,6 +143,9 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("UnAcknowledge", func(t *testing.T) {
+		if alertID == "" {
+			t.Skip("no alert found")
+		}
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			"unack",

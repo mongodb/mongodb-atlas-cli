@@ -136,7 +136,7 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 		return nil
 	}
 
-	return c.Run("up", "-d", "--wait")
+	return c.Up()
 }
 
 func (opts *SetupOpts) promptSettings() error {

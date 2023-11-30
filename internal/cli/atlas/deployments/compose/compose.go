@@ -15,7 +15,12 @@ var composeTemplate *template.Template = template.Must(template.New("").Parse(co
 
 type Compose interface {
 	Render() (io.Reader, error)
-	Run(args ...string) error
+	Down() error
+	Up() error
+	Logs() error
+	Pause() error
+	Unpause() error
+	Start() error
 }
 
 type composeImpl struct {
@@ -90,7 +95,7 @@ func (opt *composeImpl) Render() (io.Reader, error) {
 	return buf, nil
 }
 
-func (opt *composeImpl) Run(args ...string) error {
+func (opt *composeImpl) run(args ...string) error {
 	buf, err := opt.Render()
 	if err != nil {
 		return err
@@ -102,4 +107,28 @@ func (opt *composeImpl) Run(args ...string) error {
 	cmd.Stdin = buf
 	cmd.Env = append(os.Environ(), "KEY_FILE="+opt.KeyFile)
 	return cmd.Run()
+}
+
+func (opt *composeImpl) Down() error {
+	return opt.run("down", "-v")
+}
+
+func (opt *composeImpl) Up() error {
+	return opt.run("up", "-d", "--wait")
+}
+
+func (opt *composeImpl) Logs() error {
+	return opt.run("logs")
+}
+
+func (opt *composeImpl) Pause() error {
+	return opt.run("pause")
+}
+
+func (opt *composeImpl) Unpause() error {
+	return opt.run("unpause")
+}
+
+func (opt *composeImpl) Start() error {
+	return opt.run("start")
 }

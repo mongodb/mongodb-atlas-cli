@@ -157,7 +157,7 @@ func (opts *DownloadOpts) newHostLogsParams() *admin.GetHostLogsApiParams {
 }
 
 func (opts *DownloadOpts) RunLocal(ctx context.Context) error {
-	if err := compose.New(opts.DeploymentName).Run("logs"); err != nil {
+	if err := compose.New(opts.DeploymentName).Logs(); err != nil {
 		return err
 	}
 	return nil

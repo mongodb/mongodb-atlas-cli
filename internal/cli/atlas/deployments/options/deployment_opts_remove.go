@@ -21,6 +21,7 @@ import (
 
 func (opts *DeploymentOpts) RemoveLocal(ctx context.Context) error {
 	buf, err := ComposeDefinition(&ComposeDefinitionOptions{
+		Name:          opts.DeploymentName,
 		Port:          "27017",
 		MongodVersion: "7.0",
 		BindIp:        "127.0.0.1",
@@ -32,6 +33,6 @@ func (opts *DeploymentOpts) RemoveLocal(ctx context.Context) error {
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = buf
-	cmd.Env = append(os.Environ(), "COMPOSE_PROJECT_NAME="+opts.DeploymentName, "KEY_FILE=keyfile")
+	cmd.Env = append(os.Environ(), "KEY_FILE=keyfile")
 	return cmd.Run()
 }

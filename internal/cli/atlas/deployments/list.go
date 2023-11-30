@@ -16,14 +16,12 @@ package deployments
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -46,7 +44,7 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 	}
 
 	mdbContainers, err := opts.GetLocalDeployments(ctx)
-	if err != nil && !errors.Is(err, podman.ErrPodmanNotFound) {
+	if err != nil {
 		return err
 	}
 

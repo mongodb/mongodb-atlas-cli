@@ -16,14 +16,12 @@ package deployments
 
 import (
 	"context"
-	"runtime"
 
 	"github.com/containers/common/libnetwork/types"
 	"github.com/containers/podman/v4/libpod/define"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/spf13/cobra"
 )
 
@@ -38,8 +36,8 @@ type diagnosticLogs struct {
 	MongoT []string
 }
 type diagnostic struct {
-	Machine    machineDiagnostic
-	Diagnostic *podman.Diagnostic
+	Machine machineDiagnostic
+	// Diagnostic *podman.Diagnostic
 	Containers []*define.InspectContainerData
 	Logs       diagnosticLogs
 	Network    *types.Network
@@ -51,36 +49,39 @@ type machineDiagnostic struct {
 }
 
 func (opts *diagnosticsOpts) Run(ctx context.Context) error {
-	d := &diagnostic{
-		Machine: machineDiagnostic{
-			OS:   runtime.GOOS,
-			Arch: runtime.GOARCH,
-		},
-		Diagnostic: opts.PodmanClient.Diagnostics(ctx),
-	}
+	// TODO fixme
 
-	var err error
-	d.Containers, err = opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname())
-	if err != nil {
-		d.Errors = append(d.Errors, err)
-	}
+	// d := &diagnostic{
+	// 	Machine: machineDiagnostic{
+	// 		OS:   runtime.GOOS,
+	// 		Arch: runtime.GOARCH,
+	// 	},
+	// 	Diagnostic: opts.PodmanClient.Diagnostics(ctx),
+	// }
 
-	n, nErr := opts.PodmanClient.Network(ctx, opts.LocalNetworkName())
-	if nErr != nil {
-		d.Errors = append(d.Errors, nErr)
-	}
-	if len(n) > 0 {
-		d.Network = n[0]
-	}
+	// var err error
+	// d.Containers, err = opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname())
+	// if err != nil {
+	// 	d.Errors = append(d.Errors, err)
+	// }
 
-	if d.Logs.MongoT, err = opts.PodmanClient.ContainerLogs(ctx, opts.LocalMongotHostname()); err != nil {
-		d.Errors = append(d.Errors, err)
-	}
-	if d.Logs.MongoD, err = opts.PodmanClient.ContainerLogs(ctx, opts.LocalMongodHostname()); err != nil {
-		d.Errors = append(d.Errors, err)
-	}
+	// n, nErr := opts.PodmanClient.Network(ctx, opts.LocalNetworkName())
+	// if nErr != nil {
+	// 	d.Errors = append(d.Errors, nErr)
+	// }
+	// if len(n) > 0 {
+	// 	d.Network = n[0]
+	// }
 
-	return opts.Print(d)
+	// if d.Logs.MongoT, err = opts.PodmanClient.ContainerLogs(ctx, opts.LocalMongotHostname()); err != nil {
+	// 	d.Errors = append(d.Errors, err)
+	// }
+	// if d.Logs.MongoD, err = opts.PodmanClient.ContainerLogs(ctx, opts.LocalMongodHostname()); err != nil {
+	// 	d.Errors = append(d.Errors, err)
+	// }
+
+	// return opts.Print(d)
+	return nil
 }
 
 func DiagnosticsBuilder() *cobra.Command {
@@ -93,7 +94,7 @@ func DiagnosticsBuilder() *cobra.Command {
 		Use:     "diagnostics <deploymentName>",
 		Short:   "Fetch detailed information about all your deployments and system processes.",
 		Hidden:  true, // always hidden
-		Aliases: []string{"diagnostic", "diag", "diags"},
+		Aliases: []string{"diagnostic", "diag", "diags", "inspect"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"deploymentNameDesc": "Name of the deployment you want to setup.",

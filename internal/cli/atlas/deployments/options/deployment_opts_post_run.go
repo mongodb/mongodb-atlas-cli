@@ -15,21 +15,12 @@
 package options
 
 import (
-	"errors"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 )
 
 func (opts *DeploymentOpts) PostRunMessages() error {
 	if !opts.IsCliAuthenticated() {
 		if _, err := log.Warningln("\nTo list both local and cloud Atlas deployments, authenticate to your Atlas account using the \"atlas login\" command."); err != nil {
-			return err
-		}
-	}
-
-	if err := podman.Installed(); errors.Is(err, podman.ErrPodmanNotFound) {
-		if _, err = log.Warningln("\nTo get output for both local and Atlas deployments, install Podman."); err != nil {
 			return err
 		}
 	}

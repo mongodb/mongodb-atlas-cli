@@ -15,14 +15,11 @@
 package options
 
 import (
-	"context"
 	"errors"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/containers/podman/v4/libpod/define"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 )
@@ -31,69 +28,6 @@ var errEmptyLocalDeployments = errors.New("currently there are no deployment in 
 var errNoDeployments = errors.New("currently there are no deployments")
 var ErrDeploymentNotFound = errors.New("deployment not found")
 var errDeploymentRequiredOnPipe = fmt.Errorf("deployment name is required  when piping the output of the command")
-
-func (opts *DeploymentOpts) findMongoDContainer(ctx context.Context) (*define.InspectContainerData, error) {
-	containers, err := opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname())
-	if err != nil {
-		return nil, fmt.Errorf("%w: %s", ErrDeploymentNotFound, opts.DeploymentName)
-	}
-
-	return containers[0], nil
-}
-
-func (opts *DeploymentOpts) CheckIfDeploymentExists(ctx context.Context) error {
-	c, err := opts.findMongoDContainer(ctx)
-	if err != nil {
-		return err
-	}
-
-	opts.updateFields(c)
-	return nil
-}
-
-func (opts *DeploymentOpts) DetectLocalDeploymentName(ctx context.Context) error {
-	// before asking for deployment name, check if we are piping the output
-	stat, _ := os.Stdout.Stat()
-	if (stat.Mode()&os.ModeCharDevice) == 0 && opts.DeploymentName == "" {
-		return errDeploymentRequiredOnPipe
-	}
-
-	if opts.DeploymentName != "" {
-		return opts.CheckIfDeploymentExists(ctx)
-	}
-	return opts.SelectLocal(ctx)
-}
-
-func (opts *DeploymentOpts) SelectLocal(ctx context.Context) error {
-	containers, err := opts.PodmanClient.ListContainers(ctx, MongodHostnamePrefix)
-	if err != nil {
-		return err
-	}
-
-	if len(containers) == 0 {
-		return errEmptyLocalDeployments
-	}
-
-	if len(containers) == 1 {
-		opts.DeploymentName = LocalDeploymentName(containers[0].Names[0])
-		return nil
-	}
-
-	names := make([]string, 0, len(containers))
-	for _, c := range containers {
-		name := LocalDeploymentName(c.Names[0])
-		names = append(names, name)
-	}
-
-	return telemetry.TrackAskOne(&survey.Select{
-		Message: "Select a deployment",
-		Options: names,
-		Help:    usage.ClusterName,
-		Description: func(value string, index int) string {
-			return deploymentTypeLocal
-		},
-	}, &opts.DeploymentName, survey.WithValidator(survey.Required))
-}
 
 func (opts *DeploymentOpts) Select(deployments []Deployment) (Deployment, error) {
 	if len(deployments) == 0 {

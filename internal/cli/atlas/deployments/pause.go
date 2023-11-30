@@ -17,6 +17,7 @@ package deployments
 import (
 	"context"
 	"errors"
+	"os"
 	"os/exec"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -89,21 +90,21 @@ func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.De
 	if deployment.StateName != options.IdleState {
 		return errDeploymentIsNotIDLE
 	}
-	opts.StartSpinner()
-	defer opts.StopSpinner()
-
-	// search for a process "java ... mongot", extract the process ID, kill the process with SIGTERM (15)
-	const stopMongot = "grep -l java.*mongot /proc/*/cmdline | awk -F'/' '{print $3; exit}' | while read -r pid; do kill -15 $pid; done"
-	if err := opts.PodmanClient.Exec(ctx, opts.LocalMongotHostname(), "/bin/sh", "-c", stopMongot); err != nil {
+	buf, err := options.ComposeDefinition(&options.ComposeDefinitionOptions{
+		Name:          opts.DeploymentName,
+		Port:          "27017",
+		MongodVersion: "7.0",
+		BindIp:        "127.0.0.1",
+	})
+	if err != nil {
 		return err
 	}
-
-	err := opts.PodmanClient.Exec(ctx, opts.LocalMongodHostname(), "mongod", "--shutdown")
-	var exitErr *exec.ExitError
-	if errors.As(err, &exitErr) && exitErr.ExitCode() == podmanContainerTerminatedExitCode {
-		return nil
-	}
-	return err
+	cmd := exec.Command("docker", "compose", "-f", "/dev/stdin", "pause")
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = buf
+	cmd.Env = append(os.Environ(), "KEY_FILE=keyfile")
+	return cmd.Run()
 }
 
 func (opts *PauseOpts) RunAtlas() error {
@@ -116,10 +117,6 @@ func (opts *PauseOpts) RunAtlas() error {
 	}
 
 	return opts.Print(r)
-}
-
-func (opts *PauseOpts) StopMongoD(ctx context.Context, names string) error {
-	return opts.PodmanClient.Exec(ctx, "-d", names, "mongod", "--shutdown")
 }
 
 func PauseBuilder() *cobra.Command {

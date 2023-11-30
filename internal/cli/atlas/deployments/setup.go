@@ -105,6 +105,7 @@ type SetupOpts struct {
 
 func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	composeOpt := &options.ComposeDefinitionOptions{
+		Name:          opts.DeploymentName,
 		Port:          strconv.Itoa(opts.Port),
 		MongodVersion: opts.MdbVersion,
 		BindIp:        "127.0.0.1",
@@ -114,10 +115,15 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	}
 
 	if opts.IsAuthEnabled() {
-		tempRootUserPassword := base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))
+		if opts.DBUsername == "" && opts.DBUserPassword == "" {
+			tempRootUserPassword := base64.URLEncoding.EncodeToString([]byte(uuid.NewString()))
 
-		composeOpt.Username = tempRootUser
-		composeOpt.Password = tempRootUserPassword
+			opts.DBUsername = tempRootUser
+			opts.DBUserPassword = tempRootUserPassword
+		}
+
+		composeOpt.Username = opts.DBUsername
+		composeOpt.Password = opts.DBUserPassword
 	}
 
 	buf, err := options.ComposeDefinition(composeOpt)
@@ -139,7 +145,7 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = buf
-	cmd.Env = append(os.Environ(), "COMPOSE_PROJECT_NAME="+opts.DeploymentName, "KEY_FILE="+keyFileContents)
+	cmd.Env = append(os.Environ(), "KEY_FILE="+keyFileContents)
 	return cmd.Run()
 }
 

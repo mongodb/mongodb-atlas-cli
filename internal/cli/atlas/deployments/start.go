@@ -17,6 +17,8 @@ package deployments
 import (
 	"context"
 	"errors"
+	"os"
+	"os/exec"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -70,12 +72,21 @@ func (opts *StartOpts) RunLocal(ctx context.Context, deployment options.Deployme
 		return err
 	}
 
-	mongotIPAddress, errIP := opts.MongotIP(ctx)
-	if errIP != nil {
-		return errIP
+	buf, err := options.ComposeDefinition(&options.ComposeDefinitionOptions{
+		Name:          opts.DeploymentName,
+		Port:          "27017",
+		MongodVersion: "7.0",
+		BindIp:        "127.0.0.1",
+	})
+	if err != nil {
+		return err
 	}
-
-	if err := opts.WaitForMongot(ctx, mongotIPAddress); err != nil {
+	cmd := exec.Command("docker", "compose", "-f", "/dev/stdin", "unpause")
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = buf
+	cmd.Env = append(os.Environ(), "KEY_FILE=keyfile")
+	if err := cmd.Run(); err != nil {
 		return err
 	}
 

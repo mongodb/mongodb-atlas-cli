@@ -12,6 +12,7 @@ var composeContent string
 var composeTemplate *template.Template = template.Must(template.New("").Parse(composeContent))
 
 type ComposeDefinitionOptions struct {
+	Name          string
 	Port          string
 	MongodVersion string
 	BindIp        string

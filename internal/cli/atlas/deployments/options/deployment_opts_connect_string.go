@@ -18,30 +18,12 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"strconv"
-
-	"github.com/containers/podman/v4/libpod/define"
 )
 
-const deploymentTypeLocal = "local"
-
-func (opts *DeploymentOpts) updateFields(c *define.InspectContainerData) {
-	opts.DeploymentType = deploymentTypeLocal
-	opts.MdbVersion = c.Config.Labels["version"]
-	portBind, ok := c.HostConfig.PortBindings["27017/tcp"]
-	if ok && len(portBind) > 0 {
-		opts.Port, _ = strconv.Atoi(portBind[0].HostPort)
-	}
-}
-
 func (opts *DeploymentOpts) ConnectionString(ctx context.Context) (string, error) {
-	if opts.Port == 0 {
-		c, err := opts.findMongoDContainer(ctx)
-		if err != nil {
-			return "", err
-		}
-		opts.updateFields(c)
-	}
+	// if opts.Port == 0 {
+	// TODO fixme
+	// }
 	if opts.IsAuthEnabled() {
 		return fmt.Sprintf("mongodb://%s:%s@localhost:%d/?directConnection=true",
 			url.QueryEscape(opts.DBUsername),

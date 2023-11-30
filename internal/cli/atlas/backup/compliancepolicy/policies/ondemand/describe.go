@@ -57,7 +57,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe",
 		Aliases: []string{"get"},
-		Short:   "Return the ondemand policy item of the backup compliance policy for your project.",
+		Short:   "Return the on-demand policy item of the backup compliance policy for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

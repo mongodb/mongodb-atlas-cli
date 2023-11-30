@@ -15,31 +15,17 @@
 package ondemand
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
-func baseCommand() *cobra.Command {
-	const use = "ondemand"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage the on-demand policy item of the backup compliance policy for your project.",
-	}
-
-	return cmd
-}
-
-func Builder() *cobra.Command {
-	cmd := baseCommand()
-
-	cmd.AddCommand(
+func TestUpdateBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
 		CreateBuilder(),
-		UpdateBuilder(),
-		DescribeBuilder(),
-		// delete command not available as once set,
-		// an on-demand policy can only be updated.
+		0,
+		[]string{flag.RetentionUnit, flag.RetentionValue, flag.EnableWatch, flag.ProjectID, flag.Output},
 	)
-
-	return cmd
 }

@@ -20,17 +20,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// todo
-const updateExample = `  # How to create an ondemand policy ....:
-  atlas backups compliancepolicy policies ondemand update ...."
-`
-
 func UpdateBuilder() *cobra.Command {
-	opts := &Opts{}
+	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "update",
-		Short:   "Update the backup compliance ondemand policy for your project.",
-		Example: updateExample,
+		Use:   "update",
+		Short: "Update the on-demand policy of the backup compliance for your project.",
+		Example: `  # Update a backup compliance on-demand policy and set it's retention to one week:
+  atlas backups compliancepolicy policies ondemand update --retentionUnit weeks --retentionValue 1`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

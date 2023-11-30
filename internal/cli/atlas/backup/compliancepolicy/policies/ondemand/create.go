@@ -27,7 +27,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-type Opts struct {
+type CreateOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	store          store.CompliancePolicyOnDemandPolicyCreator
@@ -38,7 +38,7 @@ type Opts struct {
 
 const (
 	active                = "ACTIVE"
-	ondemandFrequencyType = "ondemand"
+	onDemandFrequencyType = "ondemand"
 )
 
 const updateTemplate = `Your backup compliance policy is being updated
@@ -46,19 +46,14 @@ const updateTemplate = `Your backup compliance policy is being updated
 const updateWatchTemplate = `Your backup compliance policy has been updated
 `
 
-// todo
-const example = `  # How to create an ondemand policy ....:
-  atlas backups compliancepolicy policies ondemand create ...."
-`
-
-func (opts *Opts) initStore(ctx context.Context) func() error {
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	return func() (err error) {
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 		return
 	}
 }
 
-func (opts *Opts) watcher() (bool, error) {
+func (opts *CreateOpts) watcher() (bool, error) {
 	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
 	if err != nil {
 		return false, err
@@ -67,9 +62,9 @@ func (opts *Opts) watcher() (bool, error) {
 	return res.GetState() == active, nil
 }
 
-func (opts *Opts) Run() (err error) {
+func (opts *CreateOpts) Run() (err error) {
 	policyItem := &atlasv2.BackupComplianceOnDemandPolicyItem{
-		FrequencyType:  ondemandFrequencyType,
+		FrequencyType:  onDemandFrequencyType,
 		RetentionUnit:  opts.retentionUnit,
 		RetentionValue: opts.retentionValue,
 	}
@@ -88,11 +83,12 @@ func (opts *Opts) Run() (err error) {
 }
 
 func CreateBuilder() *cobra.Command {
-	opts := &Opts{}
+	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "create",
-		Short:   "Create the backup compliance ondemand policy for your project.",
-		Example: example,
+		Use:   "create",
+		Short: "Create the on-demand policy item of the backup compliance policy for your project.",
+		Example: `  # Create a backup compliance on-demand policy with a retention of two weeks:
+  atlas backups compliancepolicy policies ondemand create --retentionUnit weeks --retentionValue 2`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

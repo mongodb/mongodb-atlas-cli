@@ -33,7 +33,7 @@ type DescribeOpts struct {
 }
 
 const describeTemplate = `ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
-{{- range .ScheduledPolicyItems}}
+{{- range .}}
 {{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
 {{- end}}
 `
@@ -52,14 +52,14 @@ func (opts *DescribeOpts) Run() error {
 		return err
 	}
 
-	return opts.Print(raw)
+	return opts.Print(raw.ScheduledPolicyItems)
 }
 
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
 		Use:     "describe",
-		Aliases: []string{"get"},
+		Aliases: []string{"get", "list", "ls"},
 		Short:   "Return the scheduled policy items of the backup compliance policy for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

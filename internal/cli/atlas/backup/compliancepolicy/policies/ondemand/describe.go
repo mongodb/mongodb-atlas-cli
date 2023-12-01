@@ -32,7 +32,7 @@ type DescribeOpts struct {
 }
 
 const describeTemplate = `ID	RETENTION
-{{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
+{{if .}}{{.Id}}	{{.RetentionValue}} {{.RetentionUnit}}{{end}}
 `
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
@@ -49,7 +49,7 @@ func (opts *DescribeOpts) Run() error {
 		return err
 	}
 
-	return opts.Print(raw)
+	return opts.Print(raw.OnDemandPolicyItem)
 }
 
 func DescribeBuilder() *cobra.Command {

@@ -378,4 +378,5 @@ const (
 	FrequencyInterval                         = "frequencyInterval"                         // FrequencyInterval flag
 	RetentionUnit                             = "retentionUnit"                             // RetentionUnit flag
 	RetentionValue                            = "retentionValue"                            // RetentionValue flag
+	ScheduledPolicyID                         = "scheduledPolicyId"                         // ScheduledPolicyID
 )

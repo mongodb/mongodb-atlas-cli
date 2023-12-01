@@ -34,7 +34,12 @@ func Builder() *cobra.Command {
 	cmd := baseCommand()
 
 	cmd.AddCommand(
+		CreateBuilder(),
 		DescribeBuilder(),
+		// UpdateBuilder(),
+		// delete command not available as once set,
+		// an scheduled policy can only be updated.
+
 	)
 
 	return cmd

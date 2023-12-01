@@ -12,7 +12,7 @@ services:
       - MONGODB_INITDB_ROOT_PASSWORD={{ .Password }}
     {{ end }}
     ports:
-      - "{{ .BindIp }}:{{ .Port }}:27017"
+      - "{{ .BindIP }}:{{ .Port }}:27017"
     volumes:
       - mongod-data:/data/db
     networks:

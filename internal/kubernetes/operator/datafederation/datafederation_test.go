@@ -26,9 +26,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
+	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
+	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"go.mongodb.org/atlas-sdk/v20231115002/admin"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -112,7 +112,7 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 
 		dataFederationStore.EXPECT().DataFederation(projectID, dataFederationName).Return(dataFederation, nil)
 
-		expected := &atlasV1.AtlasDataFederation{
+		expected := &akov2.AtlasDataFederation{
 			TypeMeta: v1.TypeMeta{
 				Kind:       "AtlasDataFederation",
 				APIVersion: "atlas.mongodb.com/v1",
@@ -124,28 +124,28 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 					features.ResourceVersion: resourceVersion,
 				},
 			},
-			Spec: atlasV1.DataFederationSpec{
-				Project: common.ResourceRefNamespaced{
+			Spec: akov2.DataFederationSpec{
+				Project: akov2common.ResourceRefNamespaced{
 					Name:      projectName,
 					Namespace: targetNamespace,
 				},
 				Name: dataFederationName,
-				CloudProviderConfig: &atlasV1.CloudProviderConfig{
-					AWS: &atlasV1.AWSProviderConfig{
+				CloudProviderConfig: &akov2.CloudProviderConfig{
+					AWS: &akov2.AWSProviderConfig{
 						RoleID:       dataFederation.CloudProviderConfig.Aws.RoleId,
 						TestS3Bucket: dataFederation.CloudProviderConfig.Aws.TestS3Bucket,
 					},
 				},
-				DataProcessRegion: &atlasV1.DataProcessRegion{
+				DataProcessRegion: &akov2.DataProcessRegion{
 					CloudProvider: dataFederation.DataProcessRegion.CloudProvider,
 					Region:        dataFederation.DataProcessRegion.Region,
 				},
-				Storage: &atlasV1.Storage{
-					Databases: []atlasV1.Database{
+				Storage: &akov2.Storage{
+					Databases: []akov2.Database{
 						{
-							Collections: []atlasV1.Collection{
+							Collections: []akov2.Collection{
 								{
-									DataSources: []atlasV1.DataSource{
+									DataSources: []akov2.DataSource{
 										{
 											AllowInsecure:       true,
 											Collection:          *dataFederation.Storage.Databases[0].Collections[0].DataSources[0].Collection,
@@ -164,7 +164,7 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 							},
 							MaxWildcardCollections: *dataFederation.Storage.Databases[0].MaxWildcardCollections,
 							Name:                   *dataFederation.Storage.Databases[0].Name,
-							Views: []atlasV1.View{
+							Views: []akov2.View{
 								{
 									Name:     *dataFederation.Storage.Databases[0].Views[0].Name,
 									Pipeline: *dataFederation.Storage.Databases[0].Views[0].Pipeline,
@@ -173,7 +173,7 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 							},
 						},
 					},
-					Stores: []atlasV1.Store{
+					Stores: []akov2.Store{
 						{
 							Name:                     *dataFederation.Storage.Stores[0].Name,
 							Provider:                 dataFederation.Storage.Stores[0].Provider,
@@ -188,9 +188,9 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 					},
 				},
 			},
-			Status: status.DataFederationStatus{
-				Common: status.Common{
-					Conditions: []status.Condition{},
+			Status: akov2status.DataFederationStatus{
+				Common: akov2status.Common{
+					Conditions: []akov2status.Condition{},
 				},
 			},
 		}

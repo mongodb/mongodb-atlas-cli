@@ -23,15 +23,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
-	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
+	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
+	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func BuildDBUsers(provider atlas.OperatorDBUsersStore, projectID, projectName, targetNamespace string, dictionary map[string]string, version string) ([]*atlasV1.AtlasDatabaseUser, []*corev1.Secret, error) {
+func BuildDBUsers(provider atlas.OperatorDBUsersStore, projectID, projectName, targetNamespace string, dictionary map[string]string, version string) ([]*akov2.AtlasDatabaseUser, []*corev1.Secret, error) {
 	users, err := provider.DatabaseUsers(projectID, &atlas.ListOptions{})
 	if err != nil {
 		return nil, nil, err
@@ -41,7 +41,7 @@ func BuildDBUsers(provider atlas.OperatorDBUsersStore, projectID, projectName, t
 		return nil, nil, nil
 	}
 
-	mappedUsers := map[string]*atlasV1.AtlasDatabaseUser{}
+	mappedUsers := map[string]*akov2.AtlasDatabaseUser{}
 	relatedSecrets := make([]*corev1.Secret, 0, len(users.Results))
 
 	for i := range users.Results {
@@ -55,7 +55,7 @@ func BuildDBUsers(provider atlas.OperatorDBUsersStore, projectID, projectName, t
 		}
 		scopes := convertUserScopes(user)
 
-		mappedUsers[resourceName] = &atlasV1.AtlasDatabaseUser{
+		mappedUsers[resourceName] = &akov2.AtlasDatabaseUser{
 			TypeMeta: v1.TypeMeta{
 				Kind:       "AtlasDatabaseUser",
 				APIVersion: "atlas.mongodb.com/v1",
@@ -67,8 +67,8 @@ func BuildDBUsers(provider atlas.OperatorDBUsersStore, projectID, projectName, t
 					features.ResourceVersion: version,
 				},
 			},
-			Spec: atlasV1.AtlasDatabaseUserSpec{
-				Project: common.ResourceRefNamespaced{
+			Spec: akov2.AtlasDatabaseUserSpec{
+				Project: akov2common.ResourceRefNamespaced{
 					Name:      resources.NormalizeAtlasName(projectName, dictionary),
 					Namespace: targetNamespace,
 				},
@@ -80,24 +80,24 @@ func BuildDBUsers(provider atlas.OperatorDBUsersStore, projectID, projectName, t
 				Username:        user.Username,
 				X509Type:        *user.X509Type,
 			},
-			Status: status.AtlasDatabaseUserStatus{
-				Common: status.Common{
-					Conditions: []status.Condition{},
+			Status: akov2status.AtlasDatabaseUserStatus{
+				Common: akov2status.Common{
+					Conditions: []akov2status.Condition{},
 				},
 			},
 		}
 
 		if user.GetX509Type() != "MANAGED" {
-			secret := buildUserSecret(resourceName, targetNamespace, dictionary)
+			secret := buildUserSecret(resourceName, targetNamespace, projectID, projectName, dictionary)
 			relatedSecrets = append(relatedSecrets, secret)
 
-			mappedUsers[resourceName].Spec.PasswordSecret = &common.ResourceRef{
+			mappedUsers[resourceName].Spec.PasswordSecret = &akov2common.ResourceRef{
 				Name: resources.NormalizeAtlasName(secret.Name, dictionary),
 			}
 		}
 	}
 
-	result := make([]*atlasV1.AtlasDatabaseUser, 0, len(users.Results))
+	result := make([]*akov2.AtlasDatabaseUser, 0, len(users.Results))
 	for _, mappedUser := range mappedUsers {
 		result = append(result, mappedUser)
 	}
@@ -112,31 +112,32 @@ func getDeleteAfterDate(user *atlasv2.CloudDatabaseUser) string {
 	return ""
 }
 
-func buildUserSecret(resourceName string, targetNamespace string, dictionary map[string]string) *corev1.Secret {
-	secret := secrets.NewAtlasSecret(resourceName, targetNamespace, map[string][]byte{
-		secrets.PasswordField: []byte(""),
-	}, dictionary)
+func buildUserSecret(resourceName, targetNamespace, projectID, projectName string, dictionary map[string]string) *corev1.Secret {
+	secret := secrets.NewAtlasSecretBuilder(resourceName, targetNamespace, dictionary).
+		WithData(map[string][]byte{secrets.PasswordField: []byte("")}).
+		WithProjectLabels(projectID, projectName).
+		Build()
 	return secret
 }
 
-func convertUserScopes(user *atlasv2.CloudDatabaseUser) []atlasV1.ScopeSpec {
-	result := make([]atlasV1.ScopeSpec, 0, len(user.Scopes))
+func convertUserScopes(user *atlasv2.CloudDatabaseUser) []akov2.ScopeSpec {
+	result := make([]akov2.ScopeSpec, 0, len(user.Scopes))
 	for _, scope := range user.Scopes {
-		result = append(result, atlasV1.ScopeSpec{
+		result = append(result, akov2.ScopeSpec{
 			Name: scope.Name,
-			Type: atlasV1.ScopeType(scope.Type),
+			Type: akov2.ScopeType(scope.Type),
 		})
 	}
 	return result
 }
 
-func convertUserRoles(user *atlasv2.CloudDatabaseUser) []atlasV1.RoleSpec {
+func convertUserRoles(user *atlasv2.CloudDatabaseUser) []akov2.RoleSpec {
 	if len(user.Roles) == 0 {
 		return nil
 	}
-	result := make([]atlasV1.RoleSpec, 0, len(user.Roles))
+	result := make([]akov2.RoleSpec, 0, len(user.Roles))
 	for _, role := range user.Roles {
-		result = append(result, atlasV1.RoleSpec{
+		result = append(result, akov2.RoleSpec{
 			RoleName:       role.RoleName,
 			DatabaseName:   role.DatabaseName,
 			CollectionName: pointer.GetOrDefault(role.CollectionName, ""),
@@ -145,10 +146,10 @@ func convertUserRoles(user *atlasv2.CloudDatabaseUser) []atlasV1.RoleSpec {
 	return result
 }
 
-func convertUserLabels(user *atlasv2.CloudDatabaseUser) []common.LabelSpec {
-	result := make([]common.LabelSpec, 0, len(user.Labels))
+func convertUserLabels(user *atlasv2.CloudDatabaseUser) []akov2common.LabelSpec {
+	result := make([]akov2common.LabelSpec, 0, len(user.Labels))
 	for _, label := range user.Labels {
-		result = append(result, common.LabelSpec{
+		result = append(result, akov2common.LabelSpec{
 			Key:   *label.Key,
 			Value: *label.Value,
 		})
@@ -159,7 +160,7 @@ func convertUserLabels(user *atlasv2.CloudDatabaseUser) []common.LabelSpec {
 func suggestResourceName(
 	projectName string,
 	username string,
-	mappedDatabaseUsers map[string]*atlasV1.AtlasDatabaseUser,
+	mappedDatabaseUsers map[string]*akov2.AtlasDatabaseUser,
 	dictionary map[string]string,
 ) string {
 	resourceName := resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, username), dictionary)

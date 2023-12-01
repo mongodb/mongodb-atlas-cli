@@ -55,5 +55,5 @@ func TestDescribeOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	test.VerifyOutputTemplate(t, describeTemplate, expected)
+	test.VerifyOutputTemplate(t, describeTemplate, expected.ScheduledPolicyItems)
 }

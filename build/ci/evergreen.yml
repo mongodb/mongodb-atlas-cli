@@ -210,10 +210,14 @@ functions:
           if [ -n "$(which yum 2>/dev/null)" ]; then
             sudo yum install -y yum-utils
             sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-            sudo yum install -y docker-ce
+            sudo yum install -y docker-ce --allowerasing
+            sudo groupadd -f docker
+            sudo usermod -aG docker $USER
+            exec newgrp docker
+            sudo service docker start
           elif [ -n "$(which apt-get 2>/dev/null)" ]; then
             sudo apt-get update
-            sudo apt-get install lsb-release ca-certificates curl gnupg
+            sudo apt-get install -y lsb-release ca-certificates curl gnupg
             sudo install -m 0755 -d /etc/apt/keyrings
             if lsb_release -a | grep -q Debian; then
               curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
@@ -225,9 +229,16 @@ functions:
             sudo chmod a+r /etc/apt/keyrings/docker.gpg
             sudo apt-get update
             sudo apt-get install -y docker-ce
+            sudo groupadd -f docker
+            sudo usermod -aG docker $USER
+            exec newgrp docker
+            sudo service docker start
           elif [ -n "$(which zypper 2>/dev/null)" ]; then
-            sudo zypper addrepo "https://download.opensuse.org/repositories/security:/SELinux/openSUSE_Factory/security:SELinux.repo"
-            sudo zypper install docker-ce
+            sudo zypper install docker
+            sudo groupadd -f docker
+            sudo usermod -aG docker $USER
+            exec newgrp docker
+            sudo service docker start
           elif [ -n "$(which brew 2>/dev/null)" ]; then
             sudo brew install docker
           fi

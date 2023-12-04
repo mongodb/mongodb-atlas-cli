@@ -43,11 +43,6 @@ func TestList_Run(t *testing.T) {
 	mockPodman := mocks.NewMockClient(ctrl)
 	ctx := context.Background()
 
-	cli.TokenRefreshed = true
-	t.Cleanup(func() {
-		cli.TokenRefreshed = false
-	})
-
 	expectedAtlasClusters := &admin.PaginatedAdvancedClusterDescription{
 		Results: []admin.AdvancedClusterDescription{
 			{

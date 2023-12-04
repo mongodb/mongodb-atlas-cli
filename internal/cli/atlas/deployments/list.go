@@ -52,7 +52,7 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 
 	var atlasClusters []options.Deployment
 	var atlasErr error
-	if opts.IsCliAuthenticated() && cli.TokenRefreshed {
+	if opts.IsCliAuthenticated() {
 		atlasClusters, atlasErr = opts.AtlasDeployments(opts.ProjectID)
 	}
 

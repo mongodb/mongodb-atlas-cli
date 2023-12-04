@@ -21,27 +21,69 @@ import (
 )
 
 const (
-	TypeLabelKey      = "atlas.mongodb.com/type"
-	CredLabelVal      = "credentials"
-	PasswordField     = "password"
-	CredPrivateAPIKey = "privateApiKey"
-	CredPublicAPIKey  = "publicApiKey"
-	CredOrgID         = "orgId"
+	TypeLabelKey         = "atlas.mongodb.com/type"
+	ProjectIDLabelKey    = "atlas.mongodb.com/project-id"
+	ProjectNameLabelKey  = "atlas.mongodb.com/project-name"
+	NotifierIDLabelKey   = "atlas.mongodb.com/notifier-id"
+	NotifierNameLabelKey = "atlas.mongodb.com/notifier-type-name"
+	CredLabelVal         = "credentials"
+	PasswordField        = "password"
+	CredPrivateAPIKey    = "privateApiKey"
+	CredPublicAPIKey     = "publicApiKey"
+	CredOrgID            = "orgId"
 )
 
-func NewAtlasSecret(name, namespace string, data map[string][]byte, dictionary map[string]string) *corev1.Secret {
-	return &corev1.Secret{
-		TypeMeta: v1.TypeMeta{
-			Kind:       "Secret",
-			APIVersion: "v1",
-		},
-		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(name, dictionary),
-			Namespace: namespace,
-			Labels: map[string]string{
-				TypeLabelKey: CredLabelVal,
+type AtlasSecretBuilder func() (*corev1.Secret, map[string]string)
+
+func NewAtlasSecretBuilder(name, namespace string, dictionary map[string]string) AtlasSecretBuilder {
+	return AtlasSecretBuilder(func() (*corev1.Secret, map[string]string) {
+		secret := &corev1.Secret{
+			TypeMeta: v1.TypeMeta{
+				Kind:       "Secret",
+				APIVersion: "v1",
 			},
-		},
-		Data: data,
-	}
+			ObjectMeta: v1.ObjectMeta{
+				Name:      resources.NormalizeAtlasName(name, dictionary),
+				Namespace: namespace,
+				Labels: map[string]string{
+					TypeLabelKey: CredLabelVal,
+				},
+			},
+		}
+		return secret, dictionary
+	})
+}
+
+func (a AtlasSecretBuilder) WithData(data map[string][]byte) AtlasSecretBuilder {
+	return AtlasSecretBuilder(func() (*corev1.Secret, map[string]string) {
+		s, d := a()
+		s.Data = data
+		return s, d
+	})
+}
+
+func (a AtlasSecretBuilder) WithProjectLabels(id, name string) AtlasSecretBuilder {
+	return AtlasSecretBuilder(func() (*corev1.Secret, map[string]string) {
+		s, d := a()
+		s.Labels[ProjectIDLabelKey] = resources.NormalizeAtlasName(id, d)
+		s.Labels[ProjectNameLabelKey] = resources.NormalizeAtlasName(name, d)
+		return s, d
+	})
+}
+
+func (a AtlasSecretBuilder) WithNotifierLabels(id *string, typeName string) AtlasSecretBuilder {
+	return AtlasSecretBuilder(func() (*corev1.Secret, map[string]string) {
+		s, d := a()
+		if id == nil {
+			return s, d
+		}
+		s.Labels[NotifierIDLabelKey] = resources.NormalizeAtlasName(*id, d)
+		s.Labels[NotifierNameLabelKey] = typeName // don't normalize type name, as it is already a short form
+		return s, d
+	})
+}
+
+func (a AtlasSecretBuilder) Build() *corev1.Secret {
+	secret, _ := a()
+	return secret
 }

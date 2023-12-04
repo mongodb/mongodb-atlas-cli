@@ -20,18 +20,16 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrgProjectLister(ctrl)
-
 	expected := &atlasv2.PaginatedAtlasGroup{}
-
-	t.Run("No ConfigOrgID is given", func(t *testing.T) {
+	t.Run("No OrgID is given", func(t *testing.T) {
 		listOpts := &ListOpts{
 			store: mockStore,
 		}
@@ -40,13 +38,9 @@ func TestList_Run(t *testing.T) {
 			Projects(listOpts.NewAtlasListOptions()).
 			Return(expected, nil).
 			Times(1)
-
-		if err := listOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
+		require.NoError(t, listOpts.Run())
 	})
-
-	t.Run("An ConfigOrgID is given for Atlas", func(t *testing.T) {
+	t.Run("An OrgID is given for Atlas", func(t *testing.T) {
 		listOpts := &ListOpts{
 			store: mockStore,
 		}
@@ -57,10 +51,6 @@ func TestList_Run(t *testing.T) {
 			GetOrgProjects(listOpts.OrgID, listOpts.NewAtlasListOptions()).
 			Return(expected, nil).
 			Times(1)
-
-		config.SetService(config.CloudService)
-		if err := listOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
+		require.NoError(t, listOpts.Run())
 	})
 }

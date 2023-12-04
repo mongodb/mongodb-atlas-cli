@@ -31,7 +31,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mongodb-forks/digest v1.0.5
 	github.com/mongodb-labs/cobra2snooty v0.17.0
-	github.com/mongodb/mongodb-atlas-kubernetes v1.9.0
+	github.com/mongodb/mongodb-atlas-kubernetes/v2 v2.0.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
 	github.com/shirou/gopsutil/v3 v3.23.10
@@ -56,6 +56,7 @@ require (
 	k8s.io/api v0.26.4
 	k8s.io/apiextensions-apiserver v0.26.1
 	k8s.io/apimachinery v0.26.4
+	k8s.io/apiserver v0.26.1
 	k8s.io/client-go v0.26.4
 	sigs.k8s.io/controller-runtime v0.14.6
 	sigs.k8s.io/kind v0.20.0
@@ -92,7 +93,7 @@ require (
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gemalto/flume v0.13.0 // indirect
-	github.com/go-logr/logr v1.2.4 // indirect
+	github.com/go-logr/logr v1.3.0 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect

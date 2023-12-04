@@ -23,6 +23,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/go-test/deep"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
@@ -31,31 +32,33 @@ import (
 	atlasmocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
-	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/project"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/provider"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/util/toptr"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
+	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
+	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
+	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
+	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
+	akov2toptr "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/util/toptr"
+	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const orgID = "TestOrgID"
-const projectID = "TestProjectID"
-const teamID = "TestTeamID"
-const resourceVersion = "x.y.z"
+const (
+	orgID           = "TestOrgID"
+	projectID       = "TestProjectID"
+	teamID          = "TestTeamID"
+	resourceVersion = "x.y.z"
+	targetNamespace = "test-namespace"
+)
 
 func TestBuildAtlasProject(t *testing.T) {
 	ctl := gomock.NewController(t)
 	projectStore := atlasmocks.NewMockOperatorProjectStore(ctl)
 	featureValidator := mocks.NewMockFeatureValidator(ctl)
 	t.Run("Can convert Project entity with secrets data", func(t *testing.T) {
-		targetNamespace := "test-namespace"
-
 		p := &atlasv2.Group{
-			Id:                        toptr.MakePtr(projectID),
+			Id:                        akov2toptr.MakePtr(projectID),
 			OrgId:                     orgID,
 			Name:                      "TestProjectName",
 			ClusterCount:              0,
@@ -96,7 +99,7 @@ func TestBuildAtlasProject(t *testing.T) {
 					CreatedDate:                &createDate,
 					FeatureUsages:              nil,
 					IamAssumedRoleArn:          pointer.Get("TestRoleARN"),
-					ProviderName:               string(provider.ProviderAWS),
+					ProviderName:               string(akov2provider.ProviderAWS),
 					RoleId:                     pointer.Get("TestRoleID"),
 				},
 			},
@@ -139,7 +142,7 @@ func TestBuildAtlasProject(t *testing.T) {
 			ContainerId:         "TestContainerID",
 			ErrorStateName:      pointer.Get("TestErrStateName"),
 			Id:                  pointer.Get("TestID"),
-			ProviderName:        pointer.Get(string(provider.ProviderAWS)),
+			ProviderName:        pointer.Get(string(akov2provider.ProviderAWS)),
 			RouteTableCidrBlock: pointer.Get("0.0.0.0/0"),
 			StatusName:          pointer.Get("TestStatusName"),
 			VpcId:               pointer.Get("TestVPCID"),
@@ -149,7 +152,7 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		privateAWSEndpoint := atlasv2.EndpointService{
 			Id:                  pointer.Get("TestID"),
-			CloudProvider:       string(provider.ProviderAWS),
+			CloudProvider:       string(akov2provider.ProviderAWS),
 			RegionName:          pointer.Get("US_WEST_2"),
 			EndpointServiceName: nil,
 			ErrorMessage:        nil,
@@ -184,7 +187,6 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 					Notifications: []atlasv2.AlertsNotificationRootForGroup{
 						{
-							ApiToken:            pointer.Get("TestAPIToken"),
 							ChannelName:         pointer.Get("TestChannelName"),
 							DatadogApiKey:       pointer.Get("TestDatadogAPIKey"),
 							DatadogRegion:       pointer.Get("TestDatadogRegion"),
@@ -247,15 +249,15 @@ func TestBuildAtlasProject(t *testing.T) {
 			Links: nil,
 			Results: []atlasv2.TeamRole{
 				{
-					TeamId:    toptr.MakePtr(teamID),
-					RoleNames: []string{string(atlasV1.TeamRoleClusterManager)},
+					TeamId:    akov2toptr.MakePtr(teamID),
+					RoleNames: []string{string(akov2.TeamRoleClusterManager)},
 				},
 			},
-			TotalCount: toptr.MakePtr(1),
+			TotalCount: akov2toptr.MakePtr(1),
 		}
 		teams := &atlasv2.TeamResponse{
-			Id:   toptr.MakePtr(teamID),
-			Name: toptr.MakePtr("TestTeamName"),
+			Id:   akov2toptr.MakePtr(teamID),
+			Name: akov2toptr.MakePtr("TestTeamName"),
 		}
 
 		teamUsers := &atlasv2.PaginatedApiAppUser{
@@ -263,11 +265,11 @@ func TestBuildAtlasProject(t *testing.T) {
 				{
 					EmailAddress: "testuser@mooooongodb.com",
 					FirstName:    "TestName",
-					Id:           toptr.MakePtr("TestID"),
+					Id:           akov2toptr.MakePtr("TestID"),
 					LastName:     "TestLastName",
 				},
 			},
-			TotalCount: toptr.MakePtr(1),
+			TotalCount: akov2toptr.MakePtr(1),
 		}
 
 		listOption := &atlas.ListOptions{ItemsPerPage: MaxItems}
@@ -275,9 +277,9 @@ func TestBuildAtlasProject(t *testing.T) {
 			GroupId:      projectID,
 			ItemsPerPage: &listOption.ItemsPerPage,
 		}
-		containerListOptionAWS := &atlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(provider.ProviderAWS)}
-		containerListOptionGCP := &atlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(provider.ProviderGCP)}
-		containerListOptionAzure := &atlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(provider.ProviderAzure)}
+		containerListOptionAWS := &atlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderAWS)}
+		containerListOptionGCP := &atlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderGCP)}
+		containerListOptionAzure := &atlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderAzure)}
 		projectStore.EXPECT().Project(projectID).Return(p, nil)
 		projectStore.EXPECT().ProjectIPAccessLists(projectID, listOption).Return(ipAccessLists, nil)
 		projectStore.EXPECT().MaintenanceWindow(projectID).Return(mw, nil)
@@ -285,9 +287,9 @@ func TestBuildAtlasProject(t *testing.T) {
 		projectStore.EXPECT().PeeringConnections(projectID, containerListOptionAWS).Return(peeringConnections, nil)
 		projectStore.EXPECT().PeeringConnections(projectID, containerListOptionGCP).Return(nil, nil)
 		projectStore.EXPECT().PeeringConnections(projectID, containerListOptionAzure).Return(nil, nil)
-		projectStore.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAWS)).Return(privateEndpoints, nil)
-		projectStore.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP)).Return(nil, nil)
-		projectStore.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAzure)).Return(nil, nil)
+		projectStore.EXPECT().PrivateEndpoints(projectID, string(akov2provider.ProviderAWS)).Return(privateEndpoints, nil)
+		projectStore.EXPECT().PrivateEndpoints(projectID, string(akov2provider.ProviderGCP)).Return(nil, nil)
+		projectStore.EXPECT().PrivateEndpoints(projectID, string(akov2provider.ProviderAzure)).Return(nil, nil)
 		projectStore.EXPECT().EncryptionAtRest(projectID).Return(encryptionAtRest, nil)
 		projectStore.EXPECT().CloudProviderAccessRoles(projectID).Return(cpas, nil)
 		projectStore.EXPECT().ProjectSettings(projectID).Return(projectSettings, nil)
@@ -320,43 +322,57 @@ func TestBuildAtlasProject(t *testing.T) {
 		gotTeams := projectResult.Teams
 
 		alertConfigs := alertConfigResult.Results
-		expectedThreshold := &atlasV1.Threshold{
+		expectedThreshold := &akov2.Threshold{
 			Operator:  atlas.StringOrEmpty(alertConfigs[0].Threshold.Operator),
 			Units:     atlas.StringOrEmpty(alertConfigs[0].Threshold.Units),
 			Threshold: fmt.Sprintf("%d", pointer.GetOrDefault(alertConfigs[0].Threshold.Threshold, 0)),
 		}
-		expectedMatchers := []atlasV1.Matcher{
+		expectedMatchers := []akov2.Matcher{
 			{
 				FieldName: (alertConfigs[0].Matchers[0]["FieldName"]).(string),
 				Operator:  (alertConfigs[0].Matchers[0]["Operator"]).(string),
 				Value:     (alertConfigs[0].Matchers[0]["Value"]).(string),
 			},
 		}
-		expectedNotifications := []atlasV1.Notification{
+		expectedNotifications := []akov2.Notification{
 			{
-				APIToken:            atlas.StringOrEmpty(alertConfigs[0].Notifications[0].ApiToken),
-				ChannelName:         atlas.StringOrEmpty(alertConfigs[0].Notifications[0].ChannelName),
-				DatadogAPIKey:       atlas.StringOrEmpty(alertConfigs[0].Notifications[0].DatadogApiKey),
-				DatadogRegion:       atlas.StringOrEmpty(alertConfigs[0].Notifications[0].DatadogRegion),
-				DelayMin:            alertConfigs[0].Notifications[0].DelayMin,
-				EmailAddress:        atlas.StringOrEmpty(alertConfigs[0].Notifications[0].EmailAddress),
-				EmailEnabled:        alertConfigs[0].Notifications[0].EmailEnabled,
-				IntervalMin:         pointer.GetOrDefault(alertConfigs[0].Notifications[0].IntervalMin, 0),
-				MobileNumber:        atlas.StringOrEmpty(alertConfigs[0].Notifications[0].MobileNumber),
-				OpsGenieAPIKey:      atlas.StringOrEmpty(alertConfigs[0].Notifications[0].OpsGenieApiKey),
-				OpsGenieRegion:      atlas.StringOrEmpty(alertConfigs[0].Notifications[0].OpsGenieRegion),
-				ServiceKey:          atlas.StringOrEmpty(alertConfigs[0].Notifications[0].ServiceKey),
-				SMSEnabled:          alertConfigs[0].Notifications[0].SmsEnabled,
-				TeamID:              atlas.StringOrEmpty(alertConfigs[0].Notifications[0].TeamId),
-				TeamName:            atlas.StringOrEmpty(alertConfigs[0].Notifications[0].TeamName),
-				TypeName:            atlas.StringOrEmpty(alertConfigs[0].Notifications[0].TypeName),
-				Username:            atlas.StringOrEmpty(alertConfigs[0].Notifications[0].Username),
-				VictorOpsAPIKey:     atlas.StringOrEmpty(alertConfigs[0].Notifications[0].VictorOpsApiKey),
-				VictorOpsRoutingKey: atlas.StringOrEmpty(alertConfigs[0].Notifications[0].VictorOpsRoutingKey),
-				Roles:               alertConfigs[0].Notifications[0].Roles,
+				APITokenRef: akov2common.ResourceRefNamespaced{
+					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].APITokenRef.Name,
+					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].APITokenRef.Namespace,
+				},
+				ChannelName:   atlas.StringOrEmpty(alertConfigs[0].Notifications[0].ChannelName),
+				DatadogRegion: atlas.StringOrEmpty(alertConfigs[0].Notifications[0].DatadogRegion),
+				DatadogAPIKeyRef: akov2common.ResourceRefNamespaced{
+					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].DatadogAPIKeyRef.Name,
+					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].DatadogAPIKeyRef.Namespace,
+				},
+				DelayMin:       alertConfigs[0].Notifications[0].DelayMin,
+				EmailAddress:   atlas.StringOrEmpty(alertConfigs[0].Notifications[0].EmailAddress),
+				EmailEnabled:   alertConfigs[0].Notifications[0].EmailEnabled,
+				IntervalMin:    pointer.GetOrDefault(alertConfigs[0].Notifications[0].IntervalMin, 0),
+				MobileNumber:   atlas.StringOrEmpty(alertConfigs[0].Notifications[0].MobileNumber),
+				OpsGenieRegion: atlas.StringOrEmpty(alertConfigs[0].Notifications[0].OpsGenieRegion),
+				OpsGenieAPIKeyRef: akov2common.ResourceRefNamespaced{
+					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].OpsGenieAPIKeyRef.Name,
+					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].OpsGenieAPIKeyRef.Namespace,
+				},
+				ServiceKeyRef: akov2common.ResourceRefNamespaced{
+					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].ServiceKeyRef.Name,
+					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].ServiceKeyRef.Namespace,
+				},
+				SMSEnabled: alertConfigs[0].Notifications[0].SmsEnabled,
+				TeamID:     atlas.StringOrEmpty(alertConfigs[0].Notifications[0].TeamId),
+				TeamName:   atlas.StringOrEmpty(alertConfigs[0].Notifications[0].TeamName),
+				TypeName:   atlas.StringOrEmpty(alertConfigs[0].Notifications[0].TypeName),
+				Username:   atlas.StringOrEmpty(alertConfigs[0].Notifications[0].Username),
+				Roles:      alertConfigs[0].Notifications[0].Roles,
+				VictorOpsSecretRef: akov2common.ResourceRefNamespaced{
+					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].VictorOpsSecretRef.Name,
+					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].VictorOpsSecretRef.Namespace,
+				},
 			},
 		}
-		expectedMetricThreshold := &atlasV1.MetricThreshold{
+		expectedMetricThreshold := &akov2.MetricThreshold{
 			MetricName: alertConfigs[0].MetricThreshold.MetricName,
 			Operator:   atlas.StringOrEmpty(alertConfigs[0].MetricThreshold.Operator),
 			Threshold:  fmt.Sprintf("%f", pointer.GetOrDefault(alertConfigs[0].MetricThreshold.Threshold, 0.0)),
@@ -364,7 +380,7 @@ func TestBuildAtlasProject(t *testing.T) {
 			Mode:       atlas.StringOrEmpty(alertConfigs[0].MetricThreshold.Mode),
 		}
 		teamsName := atlas.StringOrEmpty(teams.Name)
-		expectedTeams := []*atlasV1.AtlasTeam{
+		expectedTeams := []*akov2.AtlasTeam{
 			{
 				TypeMeta: v1.TypeMeta{
 					Kind:       "AtlasTeam",
@@ -377,18 +393,18 @@ func TestBuildAtlasProject(t *testing.T) {
 						features.ResourceVersion: resourceVersion,
 					},
 				},
-				Spec: atlasV1.TeamSpec{
+				Spec: akov2.TeamSpec{
 					Name:      teamsName,
-					Usernames: []atlasV1.TeamUser{atlasV1.TeamUser(teamUsers.Results[0].Username)},
+					Usernames: []akov2.TeamUser{akov2.TeamUser(teamUsers.Results[0].Username)},
 				},
-				Status: status.TeamStatus{
-					Common: status.Common{
-						Conditions: []status.Condition{},
+				Status: akov2status.TeamStatus{
+					Common: akov2status.Common{
+						Conditions: []akov2status.Condition{},
 					},
 				},
 			},
 		}
-		expectedProject := &atlasV1.AtlasProject{
+		expectedProject := &akov2.AtlasProject{
 			TypeMeta: v1.TypeMeta{
 				Kind:       "AtlasProject",
 				APIVersion: "atlas.mongodb.com/v1",
@@ -400,12 +416,12 @@ func TestBuildAtlasProject(t *testing.T) {
 					features.ResourceVersion: resourceVersion,
 				},
 			},
-			Spec: atlasV1.AtlasProjectSpec{
+			Spec: akov2.AtlasProjectSpec{
 				Name: p.Name,
-				ConnectionSecret: &common.ResourceRefNamespaced{
+				ConnectionSecret: &akov2common.ResourceRefNamespaced{
 					Name: resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, p.Name), dictionary),
 				},
-				ProjectIPAccessList: []project.IPAccessList{
+				ProjectIPAccessList: []akov2project.IPAccessList{
 					{
 						AwsSecurityGroup: ipAccessLists.Results[0].GetAwsSecurityGroup(),
 						CIDRBlock:        ipAccessLists.Results[0].GetCidrBlock(),
@@ -414,31 +430,31 @@ func TestBuildAtlasProject(t *testing.T) {
 						IPAddress:        ipAccessLists.Results[0].GetIpAddress(),
 					},
 				},
-				MaintenanceWindow: project.MaintenanceWindow{
+				MaintenanceWindow: akov2project.MaintenanceWindow{
 					DayOfWeek: mw.DayOfWeek,
 					HourOfDay: mw.HourOfDay,
 					AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
 					StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
 					Defer:     false,
 				},
-				PrivateEndpoints: []atlasV1.PrivateEndpoint{
+				PrivateEndpoints: []akov2.PrivateEndpoint{
 					{
-						Provider:          provider.ProviderAWS,
+						Provider:          akov2provider.ProviderAWS,
 						Region:            *privateAWSEndpoint.RegionName,
 						ID:                *privateAWSEndpoint.Id,
 						IP:                "",
 						GCPProjectID:      "",
 						EndpointGroupName: "",
-						Endpoints:         atlasV1.GCPEndpoints{},
+						Endpoints:         akov2.GCPEndpoints{},
 					},
 				},
-				CloudProviderAccessRoles: []atlasV1.CloudProviderAccessRole{
+				CloudProviderAccessRoles: []akov2.CloudProviderAccessRole{
 					{
 						ProviderName:      cpas.AwsIamRoles[0].ProviderName,
 						IamAssumedRoleArn: *cpas.AwsIamRoles[0].IamAssumedRoleArn,
 					},
 				},
-				AlertConfigurations: []atlasV1.AlertConfiguration{
+				AlertConfigurations: []akov2.AlertConfiguration{
 					{
 						Enabled:         *alertConfigs[0].Enabled,
 						EventTypeName:   atlas.StringOrEmpty(alertConfigs[0].EventTypeName),
@@ -449,24 +465,24 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 				},
 				AlertConfigurationSyncEnabled: false,
-				NetworkPeers: []atlasV1.NetworkPeer{
+				NetworkPeers: []akov2.NetworkPeer{
 					{
 						AccepterRegionName:  peeringConnectionAWS.GetAccepterRegionName(),
 						ContainerRegion:     "",
 						AWSAccountID:        peeringConnectionAWS.GetAwsAccountId(),
 						ContainerID:         peeringConnectionAWS.ContainerId,
-						ProviderName:        provider.ProviderName(*peeringConnectionAWS.ProviderName),
+						ProviderName:        akov2provider.ProviderName(*peeringConnectionAWS.ProviderName),
 						RouteTableCIDRBlock: peeringConnectionAWS.GetRouteTableCidrBlock(),
 						VpcID:               peeringConnectionAWS.GetVpcId(),
 					},
 				},
 				WithDefaultAlertsSettings: false,
 				X509CertRef:               nil,
-				Integrations: []project.Integration{
+				Integrations: []akov2project.Integration{
 					{
 						Type:     thirdPartyIntegrations.Results[0].GetType(),
 						UserName: thirdPartyIntegrations.Results[0].GetUsername(),
-						PasswordRef: common.ResourceRefNamespaced{
+						PasswordRef: akov2common.ResourceRefNamespaced{
 							Name: fmt.Sprintf("%s-integration-%s",
 								strings.ToLower(projectID),
 								strings.ToLower(thirdPartyIntegrations.Results[0].GetType())),
@@ -475,40 +491,52 @@ func TestBuildAtlasProject(t *testing.T) {
 						ServiceDiscovery: thirdPartyIntegrations.Results[0].GetServiceDiscovery(),
 					},
 				},
-				EncryptionAtRest: &atlasV1.EncryptionAtRest{
-					AwsKms:        atlasV1.AwsKms{},
-					AzureKeyVault: atlasV1.AzureKeyVault{},
-					GoogleCloudKms: atlasV1.GoogleCloudKms{
-						Enabled:              encryptionAtRest.GoogleCloudKms.Enabled,
-						ServiceAccountKey:    encryptionAtRest.GoogleCloudKms.GetServiceAccountKey(),
-						KeyVersionResourceID: encryptionAtRest.GoogleCloudKms.GetKeyVersionResourceID(),
+				EncryptionAtRest: &akov2.EncryptionAtRest{
+					AwsKms: akov2.AwsKms{
+						SecretRef: akov2common.ResourceRefNamespaced{
+							Name:      gotProject.Spec.EncryptionAtRest.AwsKms.SecretRef.Name,
+							Namespace: gotProject.Spec.EncryptionAtRest.AwsKms.SecretRef.Namespace,
+						},
+					},
+					AzureKeyVault: akov2.AzureKeyVault{
+						SecretRef: akov2common.ResourceRefNamespaced{
+							Name:      gotProject.Spec.EncryptionAtRest.AzureKeyVault.SecretRef.Name,
+							Namespace: gotProject.Spec.EncryptionAtRest.AzureKeyVault.SecretRef.Namespace,
+						},
+					},
+					GoogleCloudKms: akov2.GoogleCloudKms{
+						Enabled: encryptionAtRest.GoogleCloudKms.Enabled,
+						SecretRef: akov2common.ResourceRefNamespaced{
+							Name:      gotProject.Spec.EncryptionAtRest.GoogleCloudKms.SecretRef.Name,
+							Namespace: gotProject.Spec.EncryptionAtRest.GoogleCloudKms.SecretRef.Namespace,
+						},
 					},
 				},
-				Auditing: &atlasV1.Auditing{
+				Auditing: &akov2.Auditing{
 					AuditAuthorizationSuccess: pointer.GetOrZero(auditing.AuditAuthorizationSuccess),
 					AuditFilter:               pointer.GetOrZero(auditing.AuditFilter),
 					Enabled:                   pointer.GetOrZero(auditing.Enabled),
 				},
-				Settings: &atlasV1.ProjectSettings{
+				Settings: &akov2.ProjectSettings{
 					IsCollectDatabaseSpecificsStatisticsEnabled: projectSettings.IsCollectDatabaseSpecificsStatisticsEnabled,
 					IsDataExplorerEnabled:                       projectSettings.IsDataExplorerEnabled,
 					IsPerformanceAdvisorEnabled:                 projectSettings.IsPerformanceAdvisorEnabled,
 					IsRealtimePerformancePanelEnabled:           projectSettings.IsRealtimePerformancePanelEnabled,
 					IsSchemaAdvisorEnabled:                      projectSettings.IsSchemaAdvisorEnabled,
 				},
-				CustomRoles: []atlasV1.CustomRole{
+				CustomRoles: []akov2.CustomRole{
 					{
 						Name: customRoles[0].RoleName,
-						InheritedRoles: []atlasV1.Role{
+						InheritedRoles: []akov2.Role{
 							{
 								Name:     customRoles[0].InheritedRoles[0].Role,
 								Database: customRoles[0].InheritedRoles[0].Db,
 							},
 						},
-						Actions: []atlasV1.Action{
+						Actions: []akov2.Action{
 							{
 								Name: customRoles[0].Actions[0].Action,
-								Resources: []atlasV1.Resource{
+								Resources: []akov2.Resource{
 									{
 										Cluster:    &customRoles[0].Actions[0].Resources[0].Cluster,
 										Database:   &customRoles[0].Actions[0].Resources[0].Db,
@@ -519,30 +547,25 @@ func TestBuildAtlasProject(t *testing.T) {
 						},
 					},
 				},
-				Teams: []atlasV1.Team{
+				Teams: []akov2.Team{
 					{
-						TeamRef: common.ResourceRefNamespaced{
+						TeamRef: akov2common.ResourceRefNamespaced{
 							Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(p.Name), strings.ToLower(teamsName)),
 							Namespace: targetNamespace,
 						},
-						Roles: []atlasV1.TeamRole{atlasV1.TeamRole(projectTeams.Results[0].RoleNames[0])},
+						Roles: []akov2.TeamRole{akov2.TeamRole(projectTeams.Results[0].RoleNames[0])},
 					},
 				},
 			},
-			Status: status.AtlasProjectStatus{
-				Common: status.Common{
-					Conditions: []status.Condition{},
+			Status: akov2status.AtlasProjectStatus{
+				Common: akov2status.Common{
+					Conditions: []akov2status.Condition{},
 				},
 			},
 		}
 
-		if !reflect.DeepEqual(expectedProject, gotProject) {
-			t.Fatalf("Project mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expectedProject, gotProject)
-		}
-
-		if !reflect.DeepEqual(expectedTeams, gotTeams) {
-			t.Fatalf("Teams mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expectedTeams, gotTeams)
-		}
+		assert.Equal(t, expectedProject, gotProject)
+		assert.Equal(t, expectedTeams, gotTeams)
 	})
 }
 
@@ -647,7 +670,7 @@ func Test_buildAccessLists(t *testing.T) {
 			t.Errorf("%v", err)
 		}
 
-		expected := []project.IPAccessList{
+		expected := []akov2project.IPAccessList{
 			{
 				AwsSecurityGroup: data.Results[0].GetAwsSecurityGroup(),
 				CIDRBlock:        data.Results[0].GetCidrBlock(),
@@ -682,7 +705,7 @@ func Test_buildAuditing(t *testing.T) {
 			t.Errorf("%v", err)
 		}
 
-		expected := &atlasV1.Auditing{
+		expected := &akov2.Auditing{
 			AuditAuthorizationSuccess: pointer.GetOrZero(data.AuditAuthorizationSuccess),
 			AuditFilter:               pointer.GetOrZero(data.AuditFilter),
 			Enabled:                   pointer.GetOrZero(data.Enabled),
@@ -708,7 +731,7 @@ func Test_buildCloudProviderAccessRoles(t *testing.T) {
 					CreatedDate:                &time.Time{},
 					FeatureUsages:              nil,
 					IamAssumedRoleArn:          pointer.Get("TestAssumedRoleARN"),
-					ProviderName:               string(provider.ProviderAWS),
+					ProviderName:               string(akov2provider.ProviderAWS),
 					RoleId:                     pointer.Get("TestRoleID"),
 				},
 			},
@@ -721,7 +744,7 @@ func Test_buildCloudProviderAccessRoles(t *testing.T) {
 			t.Errorf("%v", err)
 		}
 
-		expected := []atlasV1.CloudProviderAccessRole{
+		expected := []akov2.CloudProviderAccessRole{
 			{
 				ProviderName:      data.AwsIamRoles[0].ProviderName,
 				IamAssumedRoleArn: *data.AwsIamRoles[0].IamAssumedRoleArn,
@@ -738,6 +761,8 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 	ctl := gomock.NewController(t)
 
 	dataProvider := mocks.NewMockEncryptionAtRestDescriber(ctl)
+	dictionary := resources.AtlasNameToKubernetesName()
+	testProjectName := "test-project"
 	t.Run("Can convert Encryption at REST AWS", func(t *testing.T) {
 		data := &atlasv2.EncryptionAtRest{
 			AwsKms: &atlasv2.AWSKMSConfiguration{
@@ -755,27 +780,36 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 
 		dataProvider.EXPECT().EncryptionAtRest(projectID).Return(data, nil)
 
-		got, err := buildEncryptionAtRest(dataProvider, projectID)
+		got, _, err := buildEncryptionAtRest(dataProvider, projectID, testProjectName, targetNamespace, dictionary)
 		if err != nil {
 			t.Errorf("%v", err)
 		}
 
-		expected := &atlasV1.EncryptionAtRest{
-			AwsKms: atlasV1.AwsKms{
-				Enabled:             data.AwsKms.Enabled,
-				AccessKeyID:         data.AwsKms.GetAccessKeyID(),
-				SecretAccessKey:     data.AwsKms.GetSecretAccessKey(),
-				CustomerMasterKeyID: data.AwsKms.GetCustomerMasterKeyID(),
-				Region:              data.AwsKms.GetRegion(),
-				RoleID:              data.AwsKms.GetRoleId(),
-				Valid:               data.AwsKms.Valid,
+		expected := &akov2.EncryptionAtRest{
+			AwsKms: akov2.AwsKms{
+				Enabled: data.AwsKms.Enabled,
+				Region:  data.AwsKms.GetRegion(),
+				Valid:   data.AwsKms.Valid,
+				SecretRef: akov2common.ResourceRefNamespaced{
+					Name:      got.AwsKms.SecretRef.Name,
+					Namespace: got.AwsKms.SecretRef.Namespace,
+				},
 			},
-			AzureKeyVault:  atlasV1.AzureKeyVault{},
-			GoogleCloudKms: atlasV1.GoogleCloudKms{},
+			AzureKeyVault: akov2.AzureKeyVault{
+				SecretRef: akov2common.ResourceRefNamespaced{
+					Name:      got.AzureKeyVault.SecretRef.Name,
+					Namespace: got.AzureKeyVault.SecretRef.Namespace,
+				},
+			},
+			GoogleCloudKms: akov2.GoogleCloudKms{
+				SecretRef: akov2common.ResourceRefNamespaced{
+					Name:      got.GoogleCloudKms.SecretRef.Name,
+					Namespace: got.GoogleCloudKms.SecretRef.Namespace,
+				},
+			},
 		}
-
-		if !reflect.DeepEqual(expected, got) {
-			t.Fatalf("EncryptionAtREST mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expected, got)
+		if diff := deep.Equal(expected, got); diff != nil {
+			t.Fatalf("EncryptionAtREST mismatch: %v", diff)
 		}
 	})
 	t.Run("Can convert Encryption at REST GCP", func(t *testing.T) {
@@ -790,23 +824,35 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 		}
 
 		dataProvider.EXPECT().EncryptionAtRest(projectID).Return(data, nil)
-		got, err := buildEncryptionAtRest(dataProvider, projectID)
+		got, _, err := buildEncryptionAtRest(dataProvider, projectID, testProjectName, targetNamespace, dictionary)
 		if err != nil {
 			t.Errorf("%v", err)
 		}
 
-		expected := &atlasV1.EncryptionAtRest{
-			AwsKms:        atlasV1.AwsKms{},
-			AzureKeyVault: atlasV1.AzureKeyVault{},
-			GoogleCloudKms: atlasV1.GoogleCloudKms{
-				Enabled:              data.GoogleCloudKms.Enabled,
-				ServiceAccountKey:    data.GoogleCloudKms.GetServiceAccountKey(),
-				KeyVersionResourceID: data.GoogleCloudKms.GetKeyVersionResourceID(),
+		expected := &akov2.EncryptionAtRest{
+			AwsKms: akov2.AwsKms{
+				SecretRef: akov2common.ResourceRefNamespaced{
+					Name:      got.AwsKms.SecretRef.Name,
+					Namespace: got.AwsKms.SecretRef.Namespace,
+				},
+			},
+			AzureKeyVault: akov2.AzureKeyVault{
+				SecretRef: akov2common.ResourceRefNamespaced{
+					Name:      got.AzureKeyVault.SecretRef.Name,
+					Namespace: got.AzureKeyVault.SecretRef.Namespace,
+				},
+			},
+			GoogleCloudKms: akov2.GoogleCloudKms{
+				Enabled: data.GoogleCloudKms.Enabled,
+				SecretRef: akov2common.ResourceRefNamespaced{
+					Name:      got.GoogleCloudKms.SecretRef.Name,
+					Namespace: got.GoogleCloudKms.SecretRef.Namespace,
+				},
 			},
 		}
 
-		if !reflect.DeepEqual(expected, got) {
-			t.Fatalf("EncryptionAtREST mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expected, got)
+		if diff := deep.Equal(expected, got); diff != nil {
+			t.Fatalf("EncryptionAtREST mismatch: %v", diff)
 		}
 	})
 	t.Run("Can convert Encryption at REST Azure", func(t *testing.T) {
@@ -827,29 +873,39 @@ func Test_buildEncryptionAtREST(t *testing.T) {
 		}
 
 		dataProvider.EXPECT().EncryptionAtRest(projectID).Return(&data, nil)
-		got, err := buildEncryptionAtRest(dataProvider, projectID)
+		got, _, err := buildEncryptionAtRest(dataProvider, projectID, testProjectName, targetNamespace, dictionary)
 		if err != nil {
 			t.Errorf("%v", err)
 		}
 
-		expected := &atlasV1.EncryptionAtRest{
-			AwsKms: atlasV1.AwsKms{},
-			AzureKeyVault: atlasV1.AzureKeyVault{
+		expected := &akov2.EncryptionAtRest{
+			AwsKms: akov2.AwsKms{
+				SecretRef: akov2common.ResourceRefNamespaced{
+					Name:      got.AwsKms.SecretRef.Name,
+					Namespace: got.AwsKms.SecretRef.Namespace,
+				},
+			},
+			AzureKeyVault: akov2.AzureKeyVault{
 				Enabled:           data.AzureKeyVault.Enabled,
 				ClientID:          data.AzureKeyVault.GetClientID(),
 				AzureEnvironment:  data.AzureKeyVault.GetAzureEnvironment(),
-				SubscriptionID:    data.AzureKeyVault.GetSubscriptionID(),
 				ResourceGroupName: data.AzureKeyVault.GetResourceGroupName(),
-				KeyVaultName:      data.AzureKeyVault.GetKeyVaultName(),
-				KeyIdentifier:     data.AzureKeyVault.GetKeyIdentifier(),
-				Secret:            data.AzureKeyVault.GetSecret(),
 				TenantID:          data.AzureKeyVault.GetTenantID(),
+				SecretRef: akov2common.ResourceRefNamespaced{
+					Name:      got.AzureKeyVault.SecretRef.Name,
+					Namespace: got.AzureKeyVault.SecretRef.Namespace,
+				},
 			},
-			GoogleCloudKms: atlasV1.GoogleCloudKms{},
+			GoogleCloudKms: akov2.GoogleCloudKms{
+				SecretRef: akov2common.ResourceRefNamespaced{
+					Name:      got.GoogleCloudKms.SecretRef.Name,
+					Namespace: got.GoogleCloudKms.SecretRef.Namespace,
+				},
+			},
 		}
 
-		if !reflect.DeepEqual(expected, got) {
-			t.Fatalf("EncryptionAtREST mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expected, got)
+		if diff := deep.Equal(expected, got); diff != nil {
+			t.Fatalf("EncryptionAtREST mismatch: %v", diff)
 		}
 	})
 }
@@ -883,12 +939,12 @@ func Test_buildIntegrations(t *testing.T) {
 			t.Fatalf("%v", err)
 		}
 
-		expected := []project.Integration{
+		expected := []akov2project.Integration{
 			{
 				Type:             ints.Results[0].GetType(),
 				ServiceDiscovery: ints.Results[0].GetServiceDiscovery(),
 				UserName:         ints.Results[0].GetUsername(),
-				PasswordRef: common.ResourceRefNamespaced{
+				PasswordRef: akov2common.ResourceRefNamespaced{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
 						strings.ToLower(ints.Results[0].GetType())),
@@ -948,12 +1004,12 @@ func Test_buildIntegrations(t *testing.T) {
 			t.Fatalf("%v", err)
 		}
 
-		expected := []project.Integration{
+		expected := []akov2project.Integration{
 			{
 				Type:             ints.Results[0].GetType(),
 				ServiceDiscovery: ints.Results[0].GetServiceDiscovery(),
 				UserName:         ints.Results[0].GetUsername(),
-				PasswordRef: common.ResourceRefNamespaced{
+				PasswordRef: akov2common.ResourceRefNamespaced{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
 						strings.ToLower(ints.Results[0].GetType())),
@@ -1012,7 +1068,7 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 			t.Fatalf("%v", err)
 		}
 
-		expected := project.MaintenanceWindow{
+		expected := akov2project.MaintenanceWindow{
 			DayOfWeek: mw.DayOfWeek,
 			HourOfDay: mw.HourOfDay,
 			AutoDefer: *mw.AutoDeferOnceEnabled,
@@ -1038,7 +1094,7 @@ func Test_buildNetworkPeering(t *testing.T) {
 			ContainerId:         "TestContainerID",
 			ErrorStateName:      pointer.Get("TestErrStateName"),
 			Id:                  pointer.Get("TestID"),
-			ProviderName:        pointer.Get(string(provider.ProviderAWS)),
+			ProviderName:        pointer.Get(string(akov2provider.ProviderAWS)),
 			RouteTableCidrBlock: pointer.Get("0.0.0.0/0"),
 			StatusName:          pointer.Get("TestStatusName"),
 			VpcId:               pointer.Get("TestVPCID"),
@@ -1049,9 +1105,9 @@ func Test_buildNetworkPeering(t *testing.T) {
 		}
 
 		listOptions := atlas.ListOptions{ItemsPerPage: MaxItems}
-		containerListOptionAWS := &atlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(provider.ProviderAWS)}
-		containerListOptionGCP := &atlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(provider.ProviderGCP)}
-		containerListOptionAzure := &atlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(provider.ProviderAzure)}
+		containerListOptionAWS := &atlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(akov2provider.ProviderAWS)}
+		containerListOptionGCP := &atlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(akov2provider.ProviderGCP)}
+		containerListOptionAzure := &atlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(akov2provider.ProviderAzure)}
 
 		peerProvider.EXPECT().PeeringConnections(projectID, containerListOptionAWS).Return(peeringConnections, nil)
 		peerProvider.EXPECT().PeeringConnections(projectID, containerListOptionGCP).Return(nil, nil)
@@ -1062,13 +1118,13 @@ func Test_buildNetworkPeering(t *testing.T) {
 			t.Fatalf("%v", err)
 		}
 
-		expected := []atlasV1.NetworkPeer{
+		expected := []akov2.NetworkPeer{
 			{
 				AccepterRegionName:  peeringConnectionAWS.GetAccepterRegionName(),
 				ContainerRegion:     "",
 				AWSAccountID:        peeringConnectionAWS.GetAwsAccountId(),
 				ContainerID:         peeringConnectionAWS.ContainerId,
-				ProviderName:        provider.ProviderName(*peeringConnectionAWS.ProviderName),
+				ProviderName:        akov2provider.ProviderName(*peeringConnectionAWS.ProviderName),
 				RouteTableCIDRBlock: peeringConnectionAWS.GetRouteTableCidrBlock(),
 				VpcID:               peeringConnectionAWS.GetVpcId(),
 			},
@@ -1085,7 +1141,7 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 
 	peProvider := mocks.NewMockPrivateEndpointLister(ctl)
 	t.Run("Can convert PrivateEndpointConnection for AWS", func(t *testing.T) {
-		providerName := provider.ProviderAWS
+		providerName := akov2provider.ProviderAWS
 		privateEndpoint := atlasv2.EndpointService{
 			Id:                  pointer.Get("1"),
 			CloudProvider:       string(providerName),
@@ -1097,15 +1153,15 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 		}
 
 		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName)).Return([]atlasv2.EndpointService{privateEndpoint}, nil)
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAzure)).Return(nil, nil)
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP)).Return(nil, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(akov2provider.ProviderAzure)).Return(nil, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(akov2provider.ProviderGCP)).Return(nil, nil)
 
 		got, err := buildPrivateEndpoints(peProvider, projectID)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
 
-		expected := []atlasV1.PrivateEndpoint{
+		expected := []akov2.PrivateEndpoint{
 			{
 				Provider:          providerName,
 				Region:            *privateEndpoint.RegionName,
@@ -1113,7 +1169,7 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 				IP:                "",
 				GCPProjectID:      "",
 				EndpointGroupName: "",
-				Endpoints:         atlasV1.GCPEndpoints{},
+				Endpoints:         akov2.GCPEndpoints{},
 			},
 		}
 
@@ -1123,7 +1179,7 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 	})
 
 	t.Run("Can convert PrivateEndpointConnection for Azure", func(t *testing.T) {
-		providerName := provider.ProviderAzure
+		providerName := akov2provider.ProviderAzure
 		privateEndpoint := atlasv2.EndpointService{
 			Id:                           pointer.Get("1"),
 			CloudProvider:                string(providerName),
@@ -1136,15 +1192,15 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 		}
 
 		peProvider.EXPECT().PrivateEndpoints(projectID, string(providerName)).Return([]atlasv2.EndpointService{privateEndpoint}, nil)
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderAWS)).Return(nil, nil)
-		peProvider.EXPECT().PrivateEndpoints(projectID, string(provider.ProviderGCP)).Return(nil, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(akov2provider.ProviderAWS)).Return(nil, nil)
+		peProvider.EXPECT().PrivateEndpoints(projectID, string(akov2provider.ProviderGCP)).Return(nil, nil)
 
 		got, err := buildPrivateEndpoints(peProvider, projectID)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
 
-		expected := []atlasV1.PrivateEndpoint{
+		expected := []akov2.PrivateEndpoint{
 			{
 				Provider:          providerName,
 				Region:            *privateEndpoint.RegionName,
@@ -1152,7 +1208,7 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 				IP:                "",
 				GCPProjectID:      "",
 				EndpointGroupName: "",
-				Endpoints:         atlasV1.GCPEndpoints{},
+				Endpoints:         akov2.GCPEndpoints{},
 			},
 		}
 
@@ -1180,7 +1236,7 @@ func Test_buildProjectSettings(t *testing.T) {
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
-		expected := &atlasV1.ProjectSettings{
+		expected := &akov2.ProjectSettings{
 			IsCollectDatabaseSpecificsStatisticsEnabled: projectSettings.IsCollectDatabaseSpecificsStatisticsEnabled,
 			IsDataExplorerEnabled:                       projectSettings.IsDataExplorerEnabled,
 			IsPerformanceAdvisorEnabled:                 projectSettings.IsPerformanceAdvisorEnabled,
@@ -1225,19 +1281,19 @@ func Test_buildCustomRoles(t *testing.T) {
 		rolesProvider.EXPECT().DatabaseRoles(projectID).Return(data, nil)
 
 		role := data[0]
-		expected := []atlasV1.CustomRole{
+		expected := []akov2.CustomRole{
 			{
 				Name: role.RoleName,
-				InheritedRoles: []atlasV1.Role{
+				InheritedRoles: []akov2.Role{
 					{
 						Name:     role.InheritedRoles[0].Role,
 						Database: role.InheritedRoles[0].Db,
 					},
 				},
-				Actions: []atlasV1.Action{
+				Actions: []akov2.Action{
 					{
 						Name: role.Actions[0].Action,
-						Resources: []atlasV1.Resource{
+						Resources: []akov2.Resource{
 							{
 								Cluster:    &role.Actions[0].Resources[0].Cluster,
 								Database:   &role.Actions[0].Resources[0].Db,

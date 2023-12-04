@@ -26,7 +26,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	akov1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
@@ -206,7 +206,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 
 		checkK8sAtlasProject(t, operator, client.ObjectKey{Name: prepareK8sName(projectName), Namespace: operatorNamespace})
 
-		akoProject := &akov1.AtlasProject{}
+		akoProject := &akov2.AtlasProject{}
 		err = operator.getK8sObject(
 			client.ObjectKey{Name: prepareK8sName(projectName), Namespace: operatorNamespace},
 			akoProject,
@@ -291,10 +291,7 @@ func setupCluster(t *testing.T, name string, namespaces ...string) *operatorHelp
 			},
 		}
 		t.Logf("adding namespace %s", namespace)
-		err = operator.createK8sObject(operatorNamespace, false)
-		if err != nil {
-			require.NoError(t, err)
-		}
+		require.NoError(t, operator.createK8sObject(operatorNamespace))
 	}
 
 	return operator
@@ -372,7 +369,7 @@ func checkK8sAtlasProject(t *testing.T, operator *operatorHelper, key client.Obj
 	t.Helper()
 
 	var ready bool
-	project := &akov1.AtlasProject{}
+	project := &akov2.AtlasProject{}
 
 	for i := 0; i < maxAttempts; i++ {
 		ready = true
@@ -402,7 +399,7 @@ func checkK8sAtlasDeployment(t *testing.T, operator *operatorHelper, key client.
 	t.Helper()
 
 	var ready bool
-	deployment := &akov1.AtlasDeployment{}
+	deployment := &akov2.AtlasDeployment{}
 
 	for i := 0; i < deploymentMaxAttempts; i++ {
 		ready = true

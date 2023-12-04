@@ -96,7 +96,7 @@ nfpms:
     - mongodb-atlas-cli
     - mongodb-mongosh
   recommends:
-    - podman
+    - docker-ce
   meta: true
 checksum:
   name_template: checksums.txt

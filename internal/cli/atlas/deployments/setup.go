@@ -19,7 +19,6 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"io"
 	"math/rand"
 	"net"
 	"os"
@@ -96,7 +95,7 @@ type SetupOpts struct {
 	force       bool
 	atlasSetup  *setup.Opts
 	bindIPAll   bool
-	compose     bool
+	attach      bool
 }
 
 func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
@@ -123,20 +122,7 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 
 	c := compose.New(opts.DeploymentName, composeOpt...)
 
-	if opts.compose {
-		buf, err := c.Render()
-		if err != nil {
-			return err
-		}
-
-		if _, err := io.Copy(opts.OutWriter, buf); err != nil {
-			return err
-		}
-
-		return nil
-	}
-
-	return c.Up(ctx)
+	return c.Up(ctx, opts.attach)
 }
 
 func (opts *SetupOpts) promptSettings() error {
@@ -556,7 +542,7 @@ func SetupBuilder() *cobra.Command {
 	// Local only
 	cmd.Flags().IntVar(&opts.Port, flag.Port, 0, usage.MongodPort)
 	cmd.Flags().BoolVar(&opts.bindIPAll, flag.BindIPAll, false, usage.BindIPAll)
-	cmd.Flags().BoolVar(&opts.compose, "compose", false, "output compose definition")
+	cmd.Flags().BoolVar(&opts.attach, "attach", false, "attach to the docker container")
 
 	// Atlas only
 	opts.atlasSetup.SetupAtlasFlags(cmd)

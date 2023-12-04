@@ -17,7 +17,7 @@ var composeTemplate = template.Must(template.New("").Parse(composeContent))
 type Compose interface {
 	Render() (io.Reader, error)
 	Down(context.Context) error
-	Up(context.Context) error
+	Up(context.Context, bool) error
 	Logs(context.Context) error
 	Pause(context.Context) error
 	Unpause(context.Context) error
@@ -114,8 +114,14 @@ func (opt *composeImpl) Down(ctx context.Context) error {
 	return opt.run(ctx, "down", "-v")
 }
 
-func (opt *composeImpl) Up(ctx context.Context) error {
-	return opt.run(ctx, "up", "-d", "--wait")
+func (opt *composeImpl) Up(ctx context.Context, attach bool) error {
+	args := []string{"up"}
+
+	if !attach {
+		args = append(args, "-d", "--wait")
+	}
+
+	return opt.run(ctx, args...)
 }
 
 func (opt *composeImpl) Logs(ctx context.Context) error {

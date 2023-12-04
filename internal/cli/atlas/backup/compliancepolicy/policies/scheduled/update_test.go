@@ -65,3 +65,7 @@ func TestUpdateBuilder(t *testing.T) {
 		[]string{flag.ScheduledPolicyID, flag.FrequencyType, flag.FrequencyInterval, flag.RetentionUnit, flag.RetentionValue, flag.EnableWatch, flag.ProjectID, flag.Output},
 	)
 }
+
+func TestUpdateTemplate(t *testing.T) {
+	test.VerifyOutputTemplate(t, updateTemplate, &atlasv2.DataProtectionSettings20231001{})
+}

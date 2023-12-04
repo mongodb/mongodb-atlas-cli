@@ -60,3 +60,6 @@ func TestCreateBuilder(t *testing.T) {
 		[]string{flag.RetentionUnit, flag.RetentionValue, flag.EnableWatch, flag.ProjectID, flag.Output},
 	)
 }
+func TestCreateTemplate(t *testing.T) {
+	test.VerifyOutputTemplate(t, updateTemplate, &atlasv2.DataProtectionSettings20231001{})
+}

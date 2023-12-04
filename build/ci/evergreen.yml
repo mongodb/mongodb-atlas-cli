@@ -208,12 +208,26 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           if [ -n "$(which yum 2>/dev/null)" ]; then
-            sudo yum install -y docker
+            sudo yum install -y yum-utils
+            sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+            sudo yum install -y docker-ce
           elif [ -n "$(which apt-get 2>/dev/null)" ]; then
             sudo apt-get update
-            sudo apt-get install -y docker
+            sudo apt-get install lsb-release ca-certificates curl gnupg
+            sudo install -m 0755 -d /etc/apt/keyrings
+            if lsb_release -a | grep -q Debian; then
+              curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+              echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list
+            else
+              curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+              echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list
+            fi
+            sudo chmod a+r /etc/apt/keyrings/docker.gpg
+            sudo apt-get update
+            sudo apt-get install -y docker-ce
           elif [ -n "$(which zypper 2>/dev/null)" ]; then
-            sudo zypper install -y docker
+            sudo zypper addrepo "https://download.opensuse.org/repositories/security:/SELinux/openSUSE_Factory/security:SELinux.repo"
+            sudo zypper install docker-ce
           elif [ -n "$(which brew 2>/dev/null)" ]; then
             sudo brew install docker
           fi

@@ -1315,9 +1315,9 @@ func Test_buildCustomRoles(t *testing.T) {
 	})
 }
 
-func TestFirstElementOrEmpty(t *testing.T) {
+func Test_firstElementOrEmpty(t *testing.T) {
 	t.Run("should return zero value when slice is empty", func(t *testing.T) {
-		assert.Equal(t, "", firstElementOrZeroValue([]string{}))
+		assert.Empty(t, firstElementOrZeroValue([]string{}))
 	})
 
 	t.Run("should return first item when slice has a single item", func(t *testing.T) {

@@ -42,11 +42,11 @@ Options
    * - --authorizedUserFirstName
      - string
      - true
-     - First name of the user who authorized to updated the Backup Compliance Policy settings.
+     - First name of the user who is authorized to update the Backup Compliance Policy settings.
    * - --authorizedUserLastName
      - string
      - true
-     - Last name of the user who authorized to updated the Backup Compliance Policy settings.
+     - Last name of the user who is authorized to update the Backup Compliance Policy settings.
    * - --force
      - 
      - false

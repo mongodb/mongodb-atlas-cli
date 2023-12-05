@@ -28,7 +28,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage Encryption at Rest of the backup compliance policy for your project. Encryption at rest enforces all clusters with a Backup Compliance Policy to use Customer Key Management.",
+		Short:   "Manage encryption-at-rest for the backup compliance policy for your project. Encryption-at-rest enforces all clusters with a Backup Compliance Policy to use Customer Key Management.",
 	}
 
 	cmd.AddCommand(

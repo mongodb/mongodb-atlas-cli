@@ -38,7 +38,7 @@ Options
    * - --frequencyInterval
      - int
      - true
-     - Number that indicates the frequency interval for a set of snapshots. A value of 1 specifies the first instance of the corresponding frequencyType. In a monthly policy item, 1 indicates that the monthly snapshot occurs on the first day of the month and 40 indicates the last day of the month. In a weekly policy item, 1 indicates that the weekly snapshot occurs on Monday and 7 indicates Sunday. In an hourly policy item, you can set the frequency interval to 1, 2, 4, 6, 8, or 12. For hourly policy items for NVMe clusters, MongoDB Cloud accepts only 12 as the frequency interval value.
+     - Number that indicates the frequency interval for a set of snapshots. A value of 1 specifies the first instance of the corresponding frequencyType. In a monthly policy item, 1 indicates that the monthly snapshot occurs on the first day of the month and 40 indicates the last day of the month. In a weekly policy item, 1 indicates that the weekly snapshot occurs on Monday and 7 indicates Sunday. In an hourly policy item, you can set the frequency interval to 1, 2, 4, 6, 8, or 12. For hourly policy items for NVMe clusters, Atlas accepts only 12 as the frequency interval value.
    * - --frequencyType
      - string
      - true
@@ -58,11 +58,11 @@ Options
    * - --retentionUnit
      - string
      - true
-     - Unit of time in which MongoDB Cloud measures snapshot retention: 'days' 'weeks' 'months'. 
+     - Unit of time in which Atlas measures snapshot retention: 'days' 'weeks' 'months'. 
    * - --retentionValue
      - int
      - true
-     - Duration in days, weeks, or months that MongoDB Cloud retains the snapshot. For less frequent policy items, MongoDB Cloud requires that you specify a value greater than or equal to the value specified for more frequent policy items.
+     - Duration in days, weeks, or months that Atlas retains the snapshot. For less frequent policy items, Atlas requires that you specify a value greater than or equal to the value specified for more frequent policy items.
    * - -w, --watch
      - 
      - false

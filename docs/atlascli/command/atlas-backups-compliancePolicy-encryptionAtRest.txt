@@ -12,7 +12,7 @@ atlas backups compliancePolicy encryptionAtRest
    :depth: 1
    :class: singlecol
 
-Manage Encryption at Rest of the backup compliance policy for your project. Encryption at rest enforces all clusters with a Backup Compliance Policy to use Customer Key Management.
+Manage encryption-at-rest for the backup compliance policy for your project. Encryption-at-rest enforces all clusters with a Backup Compliance Policy to use Customer Key Management.
 
 Options
 -------
@@ -49,8 +49,8 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-backups-compliancePolicy-encryptionAtRest-disable` - Disable encryption at rest of the backup compliance policy for your project.
-* :ref:`atlas-backups-compliancePolicy-encryptionAtRest-enable` - Enable encryption at rest of the backup compliance policy for your project.
+* :ref:`atlas-backups-compliancePolicy-encryptionAtRest-disable` - Disable encryption-at-rest for the backup compliance policy for your project.
+* :ref:`atlas-backups-compliancePolicy-encryptionAtRest-enable` - Enable encryption-at-rest for the backup compliance policy for your project.
 
 
 .. toctree::

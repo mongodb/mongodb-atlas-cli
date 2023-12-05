@@ -36,7 +36,7 @@ require (
 	github.com/mongodb/mongodb-atlas-kubernetes/v2 v2.0.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
-	github.com/shirou/gopsutil/v3 v3.23.10
+	github.com/shirou/gopsutil/v3 v3.23.11
 	github.com/spf13/afero v1.11.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/pflag v1.0.5

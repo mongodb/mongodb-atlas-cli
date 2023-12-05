@@ -82,7 +82,7 @@ func DisableBuilder() *cobra.Command {
 	use := "disable"
 	cmd := &cobra.Command{
 		Use:   use,
-		Short: "Disable encryption at rest of the backup compliance policy for your project.",
+		Short: "Disable encryption-at-rest for the backup compliance policy for your project.",
 		Args:  require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(

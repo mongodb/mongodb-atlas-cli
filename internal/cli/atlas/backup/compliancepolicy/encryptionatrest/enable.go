@@ -83,7 +83,7 @@ func EnableBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   use,
 		Args:  require.NoArgs,
-		Short: "Enable encryption at rest of the backup compliance policy for your project.",
+		Short: "Enable encryption-at-rest for the backup compliance policy for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

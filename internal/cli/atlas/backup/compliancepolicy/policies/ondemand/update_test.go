@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
-package policies
+package ondemand
 
 import (
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
-func TestBuilder(t *testing.T) {
+func TestUpdateBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		Builder(),
-		3,
-		[]string{},
+		CreateBuilder(),
+		0,
+		[]string{flag.RetentionUnit, flag.RetentionValue, flag.EnableWatch, flag.ProjectID, flag.Output},
 	)
 }

@@ -12,48 +12,54 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package compliancepolicy
+package ondemand
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-func TestDescribeBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DescribeBuilder(),
-		0,
-		[]string{
-			flag.ProjectID,
-			flag.Output,
-		},
-	)
-}
-
-func TestDescribeOpts_Run(t *testing.T) {
+func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicyDescriber(ctrl)
+	mockStore := atlas.NewMockCompliancePolicyOnDemandPolicyCreator(ctrl)
 
-	opts := &DescribeOpts{
-		store: mockStore,
+	createOpts := &CreateOpts{
+		store:          mockStore,
+		retentionUnit:  "days",
+		retentionValue: 30,
 	}
+
+	policyItem := &atlasv2.BackupComplianceOnDemandPolicyItem{
+		FrequencyType:  onDemandFrequencyType,
+		RetentionUnit:  createOpts.retentionUnit,
+		RetentionValue: createOpts.retentionValue,
+	}
+
 	expected := &atlasv2.DataProtectionSettings20231001{}
 
 	mockStore.
 		EXPECT().
-		DescribeCompliancePolicy(opts.ProjectID).
-		Return(expected, nil).
+		CreateOnDemandPolicy("", policyItem).Return(expected, nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
+	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
 
-	test.VerifyOutputTemplate(t, bcpTemplate, expected)
+func TestCreateBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		CreateBuilder(),
+		0,
+		[]string{flag.RetentionUnit, flag.RetentionValue, flag.EnableWatch, flag.ProjectID, flag.Output},
+	)
+}
+func TestCreateTemplate(t *testing.T) {
+	test.VerifyOutputTemplate(t, updateTemplate, &atlasv2.DataProtectionSettings20231001{})
 }

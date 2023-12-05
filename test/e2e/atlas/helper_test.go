@@ -128,7 +128,9 @@ const (
 
 // Backup compliance policy constants.
 const (
-	authorizedEmail = "firstname.lastname@example.com"
+	authorizedUserFirstName = "firstname"
+	authorizedUserLastName  = "lastname"
+	authorizedEmail         = "firstname.lastname@example.com"
 )
 
 func deployServerlessInstanceForProject(projectID string) (string, error) {
@@ -1033,6 +1035,10 @@ func enableCompliancePolicy(projectID string) error {
 		projectID,
 		"--authorizedEmail",
 		authorizedEmail,
+		"--authorizedUserFirstName",
+		authorizedUserFirstName,
+		"--authorizedUserLastName",
+		authorizedUserLastName,
 		"-o=json",
 		"--force",
 		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
@@ -1048,6 +1054,8 @@ func enableCompliancePolicy(projectID string) error {
 func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atlasv2.DataProtectionSettings20231001) (*atlasv2.DataProtectionSettings20231001, error) {
 	t.Helper()
 	compliancePolicy.SetAuthorizedEmail(authorizedEmail)
+	compliancePolicy.SetAuthorizedUserFirstName(authorizedUserFirstName)
+	compliancePolicy.SetAuthorizedUserLastName(authorizedUserLastName)
 	compliancePolicy.SetProjectId(projectID)
 
 	n, err := e2e.RandInt(255)

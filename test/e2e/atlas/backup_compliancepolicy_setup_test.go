@@ -29,9 +29,6 @@ import (
 )
 
 func TestBackupCompliancePolicySetup(t *testing.T) {
-	// TODO remove after CLOUDP-198381
-	t.Skip("reenable tests when CLOUDP-198381 is addressed")
-
 	cliPath, err := e2e.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
@@ -46,9 +43,11 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 		RetentionValue:    1,
 	}
 	policy := &atlasv2.DataProtectionSettings20231001{
-		ScheduledPolicyItems: []atlasv2.BackupComplianceScheduledPolicyItem{scheduledPolicyItem},
-		ProjectId:            &g.projectID,
-		AuthorizedEmail:      authorizedEmail,
+		ScheduledPolicyItems:    []atlasv2.BackupComplianceScheduledPolicyItem{scheduledPolicyItem},
+		ProjectId:               &g.projectID,
+		AuthorizedUserLastName:  authorizedUserLastName,
+		AuthorizedUserFirstName: authorizedUserFirstName,
+		AuthorizedEmail:         authorizedEmail,
 	}
 	path := "./compliancepolicy.json"
 
@@ -76,5 +75,7 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 
 	a := assert.New(t)
 	a.Len(result.GetScheduledPolicyItems(), 1)
+	a.Equal(authorizedUserFirstName, result.GetAuthorizedUserFirstName())
+	a.Equal(authorizedUserLastName, result.GetAuthorizedUserLastName())
 	a.Equal(authorizedEmail, result.GetAuthorizedEmail())
 }

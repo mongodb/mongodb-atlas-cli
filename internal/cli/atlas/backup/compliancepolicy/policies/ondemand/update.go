@@ -12,54 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package compliancepolicy
+package ondemand
 
 import (
-	"context"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-type DescribeOpts struct {
-	cli.GlobalOpts
-	cli.OutputOpts
-
-	store store.CompliancePolicyDescriber
-}
-
-func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
-	return func() error {
-		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
-		return err
-	}
-}
-
-func (opts *DescribeOpts) Run() error {
-	raw, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
-	if err != nil {
-		return err
-	}
-
-	return opts.Print(raw)
-}
-
-func DescribeBuilder() *cobra.Command {
-	opts := new(DescribeOpts)
+func UpdateBuilder() *cobra.Command {
+	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe",
-		Aliases: []string{"get"},
-		Short:   "Return the backup compliance policy for your project.",
+		Use:   "update",
+		Short: "Update the on-demand policy of the backup compliance for your project.",
+		Example: `  # Update a backup compliance on-demand policy and set it's retention to one week:
+  atlas backups compliancepolicy policies ondemand update --retentionUnit weeks --retentionValue 1`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), bcpTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -67,6 +39,12 @@ func DescribeBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.retentionUnit, flag.RetentionUnit, "", usage.RetentionUnit)
+	cmd.Flags().IntVar(&opts.retentionValue, flag.RetentionValue, 0, usage.RetentionValue)
+	_ = cmd.MarkFlagRequired(flag.RetentionUnit)
+	_ = cmd.MarkFlagRequired(flag.RetentionValue)
+
+	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())

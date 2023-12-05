@@ -14,7 +14,7 @@
 
 //go:build unit
 
-package policies
+package ondemand
 
 import (
 	"testing"

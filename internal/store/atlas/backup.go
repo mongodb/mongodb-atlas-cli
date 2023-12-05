@@ -15,14 +15,19 @@
 package atlas
 
 import (
+	"errors"
+	"strings"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
+
+var errTScheduledPolicyItemNotFound = errors.New("scheduled policy item not found")
 
 type CompliancePolicyDescriber interface {
 	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
 }
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicyUpdater,CompliancePolicyEncryptionAtRestEnabler,CompliancePolicyEncryptionAtRestDisabler,CompliancePolicyEnabler,CompliancePolicyCopyProtectionEnabler,CompliancePolicyCopyProtectionDisabler,CompliancePolicyPointInTimeRestoresEnabler
+//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicyUpdater,CompliancePolicyEncryptionAtRestEnabler,CompliancePolicyEncryptionAtRestDisabler,CompliancePolicyEnabler,CompliancePolicyCopyProtectionEnabler,CompliancePolicyCopyProtectionDisabler,CompliancePolicyPointInTimeRestoresEnabler,CompliancePolicyOnDemandPolicyCreator,CompliancePolicyScheduledPolicyCreator,CompliancePolicyScheduledPolicyDeleter,CompliancePolicyScheduledPolicyUpdater
 
 type CompliancePolicyPointInTimeRestoresEnabler interface {
 	EnablePointInTimeRestore(projectID string, restoreWindowDays int) (*atlasv2.DataProtectionSettings20231001, error)
@@ -60,6 +65,26 @@ type CompliancePolicyEncryptionAtRestDisabler interface {
 	CompliancePolicyDescriber
 }
 
+type CompliancePolicyOnDemandPolicyCreator interface {
+	CreateOnDemandPolicy(projectID string, policy *atlasv2.BackupComplianceOnDemandPolicyItem) (*atlasv2.DataProtectionSettings20231001, error)
+	CompliancePolicyDescriber
+}
+
+type CompliancePolicyScheduledPolicyCreator interface {
+	CreateScheduledPolicy(projectID string, policy *atlasv2.BackupComplianceScheduledPolicyItem) (*atlasv2.DataProtectionSettings20231001, error)
+	CompliancePolicyDescriber
+}
+
+type CompliancePolicyScheduledPolicyUpdater interface {
+	UpdateScheduledPolicy(projectID string, policy *atlasv2.BackupComplianceScheduledPolicyItem) (*atlasv2.DataProtectionSettings20231001, error)
+	CompliancePolicyDescriber
+}
+
+type CompliancePolicyScheduledPolicyDeleter interface {
+	DeleteScheduledPolicy(projectID, scheduledPolicyID string) (*atlasv2.DataProtectionSettings20231001, error)
+	CompliancePolicyDescriber
+}
+
 func (s *Store) DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
 	result, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	return result, err
@@ -77,24 +102,16 @@ func (s *Store) EnablePointInTimeRestore(projectID string, restoreWindowDays int
 	}
 	compliancePolicy.SetRestoreWindowDays(restoreWindowDays)
 	compliancePolicy.SetPitEnabled(true)
-	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
 }
+
 func (s *Store) EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, err
 	}
 	compliancePolicy.SetEncryptionAtRestEnabled(true)
-
-	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
 }
 
 func (s *Store) EnableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
@@ -103,12 +120,7 @@ func (s *Store) EnableCopyProtection(projectID string) (*atlasv2.DataProtectionS
 		return nil, err
 	}
 	compliancePolicy.SetCopyProtectionEnabled(true)
-
-	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
 }
 func (s *Store) DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
 	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
@@ -116,12 +128,7 @@ func (s *Store) DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtecti
 		return nil, err
 	}
 	compliancePolicy.SetEncryptionAtRestEnabled(false)
-
-	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
 }
 
 func (s *Store) DisableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
@@ -130,16 +137,75 @@ func (s *Store) DisableCopyProtection(projectID string) (*atlasv2.DataProtection
 		return nil, err
 	}
 	compliancePolicy.SetCopyProtectionEnabled(false)
-
-	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
 }
 func (s *Store) EnableCompliancePolicy(projectID, authorizedEmail, authorizedFirstName, authorizedLastName string) (*atlasv2.DataProtectionSettings20231001, error) {
 	compliancePolicy := newEmptyCompliancePolicy(projectID, authorizedEmail, authorizedFirstName, authorizedLastName)
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
+}
 
+func (s *Store) CreateOnDemandPolicy(projectID string, policy *atlasv2.BackupComplianceOnDemandPolicyItem) (*atlasv2.DataProtectionSettings20231001, error) {
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	if err != nil {
+		return nil, err
+	}
+
+	compliancePolicy.SetOnDemandPolicyItem(*policy)
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
+}
+
+func (s *Store) CreateScheduledPolicy(projectID string, policy *atlasv2.BackupComplianceScheduledPolicyItem) (*atlasv2.DataProtectionSettings20231001, error) {
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	if err != nil {
+		return nil, err
+	}
+
+	compliancePolicy.SetScheduledPolicyItems(append(compliancePolicy.GetScheduledPolicyItems(), *policy))
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
+}
+
+func (s *Store) UpdateScheduledPolicy(projectID string, policy *atlasv2.BackupComplianceScheduledPolicyItem) (*atlasv2.DataProtectionSettings20231001, error) {
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	if err != nil {
+		return nil, err
+	}
+
+	for idx, i := range compliancePolicy.GetScheduledPolicyItems() {
+		if i.Id != nil && strings.EqualFold(*i.Id, *policy.Id) {
+			compliancePolicy.GetScheduledPolicyItems()[idx] = *policy
+			compliancePolicy.SetScheduledPolicyItems(append(compliancePolicy.GetScheduledPolicyItems(), *policy))
+			return s.updateDataProtectionSettings(projectID, compliancePolicy)
+		}
+	}
+
+	return nil, errTScheduledPolicyItemNotFound
+}
+
+func (s *Store) DeleteScheduledPolicy(projectID, scheduledPolicyID string) (*atlasv2.DataProtectionSettings20231001, error) {
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	if err != nil {
+		return nil, err
+	}
+
+	items := []atlasv2.BackupComplianceScheduledPolicyItem{}
+	found := false
+	for _, i := range compliancePolicy.GetScheduledPolicyItems() {
+		if i.Id != nil && strings.EqualFold(*i.Id, scheduledPolicyID) {
+			found = true
+			continue
+		}
+		items = append(items, i)
+	}
+
+	if !found {
+		return nil, errTScheduledPolicyItemNotFound
+	}
+
+	compliancePolicy.SetScheduledPolicyItems(items)
+	return s.updateDataProtectionSettings(projectID, compliancePolicy)
+}
+
+func (s *Store) updateDataProtectionSettings(projectID string, compliancePolicy *atlasv2.DataProtectionSettings20231001) (*atlasv2.DataProtectionSettings20231001, error) {
 	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
 	if err != nil {
 		return nil, err

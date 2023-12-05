@@ -460,6 +460,8 @@ dbName and collection are required only for built-in roles.`
 	ExporterDataFederationName                = "One or more comma separated data federation names to import"
 	DataFederationQueryLimitValue             = "Value given to the query limit."
 	OverrunPolicy                             = "Action to take when the usage limit is exceeded."
+	AuthorizedUserFirstName                   = "First name of the user who authorized to updated the Backup Compliance Policy settings."
+	AuthorizedUserLastName                    = "Last name of the user who authorized to updated the Backup Compliance Policy settings."
 	AuthorizedEmail                           = "Email address of a security or legal representative."
 	DeploymentType                            = "Type of deployment that you want to create. Valid values are ATLAS or LOCAL."
 	MongodPort                                = "Port that the MongoDB server listens to for client connections."
@@ -472,4 +474,13 @@ dbName and collection are required only for built-in roles.`
 	Decompress                                = "Flag that indicates whether to decompress the log files."
 	OnlineArchiveFilename                     = "Path to an optional JSON configuration file that defines online archive settings. To learn more about configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-json-online-archive-config."
 	BindIPAll                                 = "Flag that indicates whether the LOCAL deployment port binding should happen for all IPs or only for the localhost interface 127.0.0.1."
+	FrequencyType                             = "Frequency type associated with the backup policy: 'daily', 'hourly', 'monthly', 'weekly'."
+	FrequencyInterval                         = "Number that indicates the frequency interval for a set of snapshots. " +
+		"A value of 1 specifies the first instance of the corresponding frequencyType. " +
+		"In a monthly policy item, 1 indicates that the monthly snapshot occurs on the first day of the month and 40 indicates the last day of the month. " +
+		"In a weekly policy item, 1 indicates that the weekly snapshot occurs on Monday and 7 indicates Sunday. " +
+		"In an hourly policy item, you can set the frequency interval to 1, 2, 4, 6, 8, or 12. For hourly policy items for NVMe clusters, MongoDB Cloud accepts only 12 as the frequency interval value."
+	RetentionUnit     = "Unit of time in which MongoDB Cloud measures snapshot retention: 'days' 'weeks' 'months'. "
+	RetentionValue    = "Duration in days, weeks, or months that MongoDB Cloud retains the snapshot. For less frequent policy items, MongoDB Cloud requires that you specify a value greater than or equal to the value specified for more frequent policy items."
+	ScheduledPolicyID = "Unique identifier that Atlas assigns to the scheduled policy item."
 )

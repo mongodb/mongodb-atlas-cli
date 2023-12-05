@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package compliancepolicy
+package scheduled
 
 import (
 	"context"
@@ -32,6 +32,12 @@ type DescribeOpts struct {
 	store store.CompliancePolicyDescriber
 }
 
+const describeTemplate = `ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
+{{- range .}}
+{{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
+{{- end}}
+`
+
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
@@ -46,20 +52,20 @@ func (opts *DescribeOpts) Run() error {
 		return err
 	}
 
-	return opts.Print(raw)
+	return opts.Print(raw.ScheduledPolicyItems)
 }
 
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
 		Use:     "describe",
-		Aliases: []string{"get"},
-		Short:   "Return the backup compliance policy for your project.",
+		Aliases: []string{"get", "list", "ls"},
+		Short:   "Return the scheduled policy items of the backup compliance policy for your project.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), bcpTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

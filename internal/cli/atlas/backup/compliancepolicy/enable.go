@@ -34,10 +34,12 @@ import (
 type EnableOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	policy          *atlasv2.DataProtectionSettings20231001
-	store           store.CompliancePolicyEnabler
-	authorizedEmail string
-	confirm         bool
+	policy                  *atlasv2.DataProtectionSettings20231001
+	store                   store.CompliancePolicyEnabler
+	authorizedUserFirstName string
+	authorizedUserLastName  string
+	authorizedEmail         string
+	confirm                 bool
 }
 
 var enableConfirmationMessage = `Backup compliance policy can not be disabled without MongoDB Support. Please confirm that you want to continue.
@@ -90,7 +92,7 @@ func (opts *EnableOpts) Run() error {
 			return errors.New("did not receive confirmation to enable backup compliance policy")
 		}
 	}
-	compliancePolicy, err := opts.store.EnableCompliancePolicy(opts.ConfigProjectID(), opts.authorizedEmail, "", "") // TODO fix when addressing CLOUDP-198381
+	compliancePolicy, err := opts.store.EnableCompliancePolicy(opts.ConfigProjectID(), opts.authorizedEmail, opts.authorizedUserFirstName, opts.authorizedUserLastName)
 	opts.policy = compliancePolicy
 	if err != nil {
 		return fmt.Errorf("couldn't enable compliance policy: %w", err)
@@ -123,6 +125,10 @@ func EnableBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.authorizedUserFirstName, flag.AuthorizedUserFirstName, "", usage.AuthorizedUserFirstName)
+	_ = cmd.MarkFlagRequired(flag.AuthorizedUserFirstName)
+	cmd.Flags().StringVar(&opts.authorizedUserLastName, flag.AuthorizedUserLastName, "", usage.AuthorizedUserLastName)
+	_ = cmd.MarkFlagRequired(flag.AuthorizedUserLastName)
 	cmd.Flags().StringVar(&opts.authorizedEmail, flag.AuthorizedEmail, "", usage.AuthorizedEmail)
 	_ = cmd.MarkFlagRequired(flag.AuthorizedEmail)
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)

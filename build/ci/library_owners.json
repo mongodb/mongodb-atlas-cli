@@ -33,7 +33,6 @@
 	"github.com/spf13/viper": "mongocli",
 	"github.com/stretchr/testify": "mongocli",
 	"github.com/tangzero/inflector": "mongocli",
-	"github.com/withfig/autocomplete-tools/packages/cobra": "mongocli",
 	"go.mongodb.org/atlas": "mongocli",
 	"go.mongodb.org/atlas-sdk/v20231115002": "mongocli",
 	"go.mongodb.org/mongo-driver": "mongocli",

@@ -35,7 +35,7 @@ func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),
-		40,
+		39,
 		[]string{},
 	)
 }
@@ -47,9 +47,9 @@ func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 			config.ToolName = config.AtlasCLI
 			prevVersion := version.Version
 			version.Version = tt.currentVersion
-			defer func() {
+			t.Cleanup(func() {
 				version.Version = prevVersion
-			}()
+			})
 
 			ctrl := gomock.NewController(t)
 			mockDescriber := mocks.NewMockReleaseVersionDescriber(ctrl)
@@ -72,7 +72,7 @@ func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 			}
 
 			if err := notifier.notifyIfApplicable(false); err != nil {
-				t.Errorf("notifyIfApplicable() unexpected error:%v", err)
+				t.Fatalf("notifyIfApplicable() unexpected error:%v", err)
 			}
 
 			v := ""

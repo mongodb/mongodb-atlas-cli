@@ -60,7 +60,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/teams"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/users"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/figautocomplete"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
@@ -248,7 +247,6 @@ Use the --help flag with any command for more info on that command.`,
 		logoutCmd,
 		whoCmd,
 		registerCmd,
-		figautocomplete.Builder(),
 		kubernetes.Builder(),
 		datafederation.Builder(),
 		auditing.Builder(),
@@ -293,7 +291,6 @@ func shouldCheckCredentials(cmd *cobra.Command) AuthRequirements {
 	searchByName := []string{
 		"__complete",
 		"help",
-		figautocomplete.CmdUse,
 	}
 	for _, n := range searchByName {
 		if cmd.Name() == n {

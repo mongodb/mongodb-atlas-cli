@@ -447,8 +447,6 @@ github.com/vbatts/tar-split v0.11.5 h1:3bHCTIheBm1qFTcgh9oPu+nNBtX+XJIupG/vacinC
 github.com/vbatts/tar-split v0.11.5/go.mod h1:yZbwRsSeGjusneWgA781EKej9HF8vme8okylkAeNKLk=
 github.com/vbauerster/mpb/v8 v8.6.1 h1:XbBpIbJxJOO9yMcKPpI4oEFPW6tLAptefNQJNcGWri8=
 github.com/vbauerster/mpb/v8 v8.6.1/go.mod h1:S0tuIjikxlLxCeNijNhwAuD/BB3UE/d2nygG8SOldk0=
-github.com/withfig/autocomplete-tools/packages/cobra v1.2.0 h1:MzD3XeOOSO3mAjOPpF07jFteSKZxsRHvlIcAR9RQzKM=
-github.com/withfig/autocomplete-tools/packages/cobra v1.2.0/go.mod h1:RoXh7+7qknOXL65uTzdzE1mPxqcPwS7FLCE9K5GfmKo=
 github.com/xdg-go/pbkdf2 v1.0.0 h1:Su7DPu48wXMwC3bs7MCNG+z4FhcyEuz5dlvchbq0B0c=
 github.com/xdg-go/pbkdf2 v1.0.0/go.mod h1:jrpuAogTd400dnrH08LKmI/xc1MbPOebTwRqcT5RDeI=
 github.com/xdg-go/scram v1.1.2 h1:FHX5I5B4i4hKRVRBCFRxq1iQRej7WO3hhBuJf+UUySY=

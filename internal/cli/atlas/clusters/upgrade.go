@@ -88,7 +88,7 @@ func (opts *UpgradeOpts) cluster() (*atlas.Cluster, error) {
 }
 
 func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {
-	RemoveReadOnlyAttributesSharedCluster(out)
+	removeReadOnlyAttributesSharedCluster(out)
 	if opts.mdbVersion != "" {
 		out.MongoDBMajorVersion = opts.mdbVersion
 	}
@@ -116,8 +116,6 @@ func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {
 		}
 	}
 	out.Tags = &tags
-
-	AddLabelSharedCluster(out, NewCLILabel())
 }
 
 // mongocli atlas cluster(s) upgrade [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].

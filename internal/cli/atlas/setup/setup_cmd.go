@@ -47,8 +47,6 @@ const (
 	labelKey            = "Infrastructure Tool"
 	DefaultAtlasTier    = "M0"
 	defaultAtlasGovTier = "M30"
-	atlasCLILabelValue  = "Atlas CLI Setup"
-	mongoCLILabelValue  = "MongoDB CLI Setup"
 	atlasAdmin          = "atlasAdmin"
 	replicaSet          = "REPLICASET"
 	defaultProvider     = "AWS"
@@ -111,8 +109,6 @@ type Opts struct {
 	register                    auth.RegisterOpts
 	config                      ProfileReader
 	store                       store.AtlasClusterQuickStarter
-	LabelKey                    string
-	LabelValue                  string
 	defaultName                 string
 	ClusterName                 string
 	Provider                    string
@@ -567,14 +563,7 @@ func (opts *Opts) SetupFlowFlags(cmd *cobra.Command) {
 //	[--password password]
 //	[--skipMongosh skipMongosh]
 func Builder() *cobra.Command {
-	labelValue := atlasCLILabelValue
-	if config.ToolName == config.MongoCLI {
-		labelValue = mongoCLILabelValue
-	}
-	opts := &Opts{
-		LabelKey:   labelKey,
-		LabelValue: labelValue,
-	}
+	opts := &Opts{}
 
 	cmd := &cobra.Command{
 		Use:     "setup",

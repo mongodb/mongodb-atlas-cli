@@ -24,7 +24,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
@@ -92,7 +91,7 @@ func (opts *UpdateOpts) cluster() (*atlasv2.AdvancedClusterDescription, error) {
 }
 
 func (opts *UpdateOpts) patchOpts(out *atlasv2.AdvancedClusterDescription) {
-	RemoveReadOnlyAttributes(out)
+	removeReadOnlyAttributes(out)
 	if opts.mdbVersion != "" {
 		out.MongoDBMajorVersion = &opts.mdbVersion
 	}
@@ -107,13 +106,7 @@ func (opts *UpdateOpts) patchOpts(out *atlasv2.AdvancedClusterDescription) {
 	if len(opts.tag) > 0 {
 		out.Tags = []atlasv2.ResourceTag{}
 	}
-	for k, v := range opts.tag {
-		if k != "" && v != "" {
-			out.Tags = append(out.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
-		}
-	}
-
-	AddLabel(out, NewCLILabel())
+	addTags(out, opts.tag)
 }
 
 func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasv2.AdvancedClusterDescription) {

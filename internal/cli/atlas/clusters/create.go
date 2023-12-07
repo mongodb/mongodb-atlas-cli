@@ -129,7 +129,7 @@ func (opts *CreateOpts) newCluster() (*atlasv2.AdvancedClusterDescription, error
 		if err := file.Load(opts.fs, opts.filename, cluster); err != nil {
 			return nil, err
 		}
-		RemoveReadOnlyAttributes(cluster)
+		removeReadOnlyAttributes(cluster)
 	} else {
 		opts.applyOpts(cluster)
 	}
@@ -137,8 +137,6 @@ func (opts *CreateOpts) newCluster() (*atlasv2.AdvancedClusterDescription, error
 	if opts.name != "" {
 		cluster.Name = &opts.name
 	}
-
-	AddLabel(cluster, NewCLILabel())
 
 	cluster.GroupId = pointer.Get(opts.ConfigProjectID())
 	return cluster, nil
@@ -163,14 +161,7 @@ func (opts *CreateOpts) applyOpts(out *atlasv2.AdvancedClusterDescription) {
 
 	out.ReplicationSpecs = []atlasv2.ReplicationSpec{replicationSpec}
 
-	if len(opts.tag) > 0 {
-		out.Tags = []atlasv2.ResourceTag{}
-	}
-	for k, v := range opts.tag {
-		if k != "" && v != "" {
-			out.Tags = append(out.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
-		}
-	}
+	addTags(out, opts.tag)
 }
 
 func (opts *CreateOpts) isTenant() bool {

@@ -23,17 +23,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/onlinearchive"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/sampledata"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-)
-
-const (
-	labelKey           = "Infrastructure Tool"
-	atlasCLILabelValue = "Atlas CLI"
-	mongoCLILabelValue = "mongoCLI"
 )
 
 // MongoCLIBuilder is to split "mongocli atlas clusters" and "atlas clusters".
@@ -99,36 +91,24 @@ func Builder() *cobra.Command {
 	return cmd
 }
 
-func NewCLILabel() atlasv2.ComponentLabel {
-	labelValue := atlasCLILabelValue
-	if config.ToolName == config.MongoCLI {
-		labelValue = mongoCLILabelValue
+func addTags(out *atlasv2.AdvancedClusterDescription, tags map[string]string) {
+	if len(tags) > 0 {
+		out.Tags = []atlasv2.ResourceTag{}
 	}
-
-	return atlasv2.ComponentLabel{
-		Key:   pointer.Get(labelKey),
-		Value: pointer.Get(labelValue),
-	}
-}
-
-func AddLabel(out *atlasv2.AdvancedClusterDescription, l atlasv2.ComponentLabel) {
-	if LabelExists(out.Labels, l) {
-		return
-	}
-
-	out.Labels = append(out.Labels, l)
-}
-
-func LabelExists(labels []atlasv2.ComponentLabel, l atlasv2.ComponentLabel) bool {
-	for _, v := range labels {
-		if v.GetKey() == l.GetKey() && v.GetValue() == l.GetValue() {
-			return true
+	for k, v := range tags {
+		if k == "" || v == "" {
+			continue
 		}
+		key, value := k, v
+		tag := atlasv2.ResourceTag{
+			Key:   &key,
+			Value: &value,
+		}
+		out.Tags = append(out.Tags, tag)
 	}
-	return false
 }
 
-func RemoveReadOnlyAttributes(out *atlasv2.AdvancedClusterDescription) {
+func removeReadOnlyAttributes(out *atlasv2.AdvancedClusterDescription) {
 	out.Id = nil
 	out.CreateDate = nil
 	out.StateName = nil
@@ -138,9 +118,9 @@ func RemoveReadOnlyAttributes(out *atlasv2.AdvancedClusterDescription) {
 
 	for i, spec := range out.ReplicationSpecs {
 		out.ReplicationSpecs[i].Id = nil
-		for j, config := range spec.RegionConfigs {
-			out.ReplicationSpecs[i].RegionConfigs[j].ProviderName = config.ProviderName
-			if config.GetProviderName() == tenant {
+		for j, c := range spec.RegionConfigs {
+			out.ReplicationSpecs[i].RegionConfigs[j].ProviderName = c.ProviderName
+			if c.GetProviderName() == tenant {
 				isTenant = true
 				break
 			}
@@ -157,7 +137,7 @@ func RemoveReadOnlyAttributes(out *atlasv2.AdvancedClusterDescription) {
 	}
 }
 
-func RemoveReadOnlyAttributesSharedCluster(out *atlas.Cluster) {
+func removeReadOnlyAttributesSharedCluster(out *atlas.Cluster) {
 	out.ID = ""
 	out.CreateDate = ""
 	out.StateName = ""
@@ -174,25 +154,4 @@ func RemoveReadOnlyAttributesSharedCluster(out *atlas.Cluster) {
 	for _, spec := range out.ReplicationSpecs {
 		spec.ID = ""
 	}
-}
-
-func SharedLabelExists(labels []atlas.Label, l atlasv2.ComponentLabel) bool {
-	for _, v := range labels {
-		if v.Key == l.GetKey() && v.Value == l.GetValue() {
-			return true
-		}
-	}
-	return false
-}
-
-func AddLabelSharedCluster(out *atlas.Cluster, l atlasv2.ComponentLabel) {
-	if SharedLabelExists(out.Labels, l) {
-		return
-	}
-
-	l2 := atlas.Label{
-		Key:   l.GetKey(),
-		Value: l.GetValue(),
-	}
-	out.Labels = append(out.Labels, l2)
 }

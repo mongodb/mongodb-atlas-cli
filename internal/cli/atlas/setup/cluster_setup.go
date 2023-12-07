@@ -99,16 +99,10 @@ func defaultDiskSizeGB(provider, tier string) float64 {
 
 func (opts *Opts) newCluster() *atlasv2.AdvancedClusterDescription {
 	cluster := &atlasv2.AdvancedClusterDescription{
-		GroupId:          pointer.Get(opts.ConfigProjectID()),
-		ClusterType:      pointer.Get(replicaSet),
-		ReplicationSpecs: []atlasv2.ReplicationSpec{opts.newAdvanceReplicationSpec()},
-		Name:             &opts.ClusterName,
-		Labels: []atlasv2.ComponentLabel{
-			{
-				Key:   &opts.LabelKey,
-				Value: &opts.LabelValue,
-			},
-		},
+		GroupId:                      pointer.Get(opts.ConfigProjectID()),
+		ClusterType:                  pointer.Get(replicaSet),
+		ReplicationSpecs:             []atlasv2.ReplicationSpec{opts.newAdvanceReplicationSpec()},
+		Name:                         &opts.ClusterName,
 		TerminationProtectionEnabled: &opts.EnableTerminationProtection,
 	}
 

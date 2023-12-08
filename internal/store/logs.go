@@ -19,14 +19,14 @@ import (
 	"io"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LogsDownloader,LogJobsDownloader,LogCollector,LogJobLister,LogJobDeleter
 
 type LogsDownloader interface {
-	DownloadLog(*admin.GetHostLogsApiParams) (io.ReadCloser, error)
+	DownloadLog(*atlasv2.GetHostLogsApiParams) (io.ReadCloser, error)
 }
 
 type LogJobsDownloader interface {
@@ -79,7 +79,7 @@ func (s *Store) Collect(groupID string, newLog *opsmngr.LogCollectionJob) (*opsm
 }
 
 // DownloadLog encapsulates the logic to manage different cloud providers.
-func (s *Store) DownloadLog(params *admin.GetHostLogsApiParams) (io.ReadCloser, error) {
+func (s *Store) DownloadLog(params *atlasv2.GetHostLogsApiParams) (io.ReadCloser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostLogsWithParams(s.ctx, params).Execute()

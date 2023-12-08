@@ -18,7 +18,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 const (
@@ -70,8 +70,8 @@ type ConfigOpts struct {
 	metricThresholdThreshold        float64
 }
 
-func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.GroupAlertsConfig {
-	out := new(admin.GroupAlertsConfig)
+func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *atlasv2.GroupAlertsConfig {
+	out := new(atlasv2.GroupAlertsConfig)
 
 	out.GroupId = &projectID
 	eventType := strings.ToUpper(opts.event)
@@ -87,13 +87,13 @@ func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *admin.GroupAler
 	}
 
 	notification := opts.newNotification()
-	out.Notifications = []admin.AlertsNotificationRootForGroup{*notification}
+	out.Notifications = []atlasv2.AlertsNotificationRootForGroup{*notification}
 
 	return out
 }
 
-func (opts *ConfigOpts) newNotification() *admin.AlertsNotificationRootForGroup {
-	out := new(admin.AlertsNotificationRootForGroup)
+func (opts *ConfigOpts) newNotification() *atlasv2.AlertsNotificationRootForGroup {
+	out := new(atlasv2.AlertsNotificationRootForGroup)
 	notificationType := strings.ToUpper(opts.notificationType)
 	out.TypeName = &notificationType
 	out.DelayMin = &opts.notificationDelayMin
@@ -149,11 +149,11 @@ func (opts *ConfigOpts) newNotification() *admin.AlertsNotificationRootForGroup 
 	return out
 }
 
-func (opts *ConfigOpts) newMetricThreshold() *admin.ServerlessMetricThreshold {
+func (opts *ConfigOpts) newMetricThreshold() *atlasv2.ServerlessMetricThreshold {
 	operator := strings.ToUpper(opts.metricThresholdOperator)
 	mode := strings.ToUpper(opts.metricThresholdMode)
 	units := strings.ToUpper(opts.metricThresholdUnits)
-	result := &admin.ServerlessMetricThreshold{
+	result := &atlasv2.ServerlessMetricThreshold{
 		MetricName: strings.ToUpper(opts.metricThresholdMetricName),
 		Operator:   &operator,
 		Threshold:  &opts.metricThresholdThreshold,

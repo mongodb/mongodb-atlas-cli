@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 type DescribeOpts struct {
@@ -48,7 +48,7 @@ var describeTemplate = `ID	TYPE	METRIC	STATUS
 `
 
 func (opts *DescribeOpts) Run() error {
-	params := &admin.GetAlertApiParams{
+	params := &atlasv2.GetAlertApiParams{
 		GroupId: opts.ConfigProjectID(),
 		AlertId: opts.alertID,
 	}

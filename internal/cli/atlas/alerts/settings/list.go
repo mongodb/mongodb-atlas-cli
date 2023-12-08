@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 type ListOpts struct {
@@ -49,7 +49,7 @@ var settingsListTemplate = `ID	TYPE	ENABLED{{range .Results}}
 `
 
 func (opts *ListOpts) Run() error {
-	params := &admin.ListAlertConfigurationsApiParams{
+	params := &atlasv2.ListAlertConfigurationsApiParams{
 		GroupId: opts.ConfigProjectID(),
 		PageNum: &opts.PageNum,
 	}

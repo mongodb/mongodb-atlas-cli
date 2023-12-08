@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlas "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestProjectSettings(t *testing.T) {
@@ -76,7 +76,7 @@ func TestProjectSettings(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var settings atlas.GroupSettings
+		var settings atlasv2.GroupSettings
 		require.NoError(t, json.Unmarshal(resp, &settings))
 		a := assert.New(t)
 		a.False(settings.GetIsCollectDatabaseSpecificsStatisticsEnabled())

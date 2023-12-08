@@ -26,15 +26,15 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestConfigList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationLister(ctrl)
 
-	expected := &admin.PaginatedAlertConfig{
-		Results: []admin.GroupAlertsConfig{
+	expected := &atlasv2.PaginatedAlertConfig{
+		Results: []atlasv2.GroupAlertsConfig{
 			{
 				Id:              pointer.Get("test"),
 				GroupId:         pointer.Get("test"),
@@ -60,7 +60,7 @@ func TestConfigList_Run(t *testing.T) {
 		},
 	}
 
-	params := &admin.ListAlertConfigurationsApiParams{
+	params := &atlasv2.ListAlertConfigurationsApiParams{
 		GroupId: listOpts.ProjectID,
 		PageNum: &listOpts.PageNum,
 	}

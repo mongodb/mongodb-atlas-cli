@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 type UnacknowledgeOpts struct {
@@ -48,7 +48,7 @@ var unackTemplate = "Alert '{{.Id}}' unacknowledged\n"
 
 func (opts *UnacknowledgeOpts) Run() error {
 	body := opts.newAcknowledgeRequest()
-	params := &admin.AcknowledgeAlertApiParams{
+	params := &atlasv2.AcknowledgeAlertApiParams{
 		GroupId:              opts.ConfigProjectID(),
 		AlertId:              opts.alertID,
 		AlertViewForNdsGroup: body,
@@ -61,8 +61,8 @@ func (opts *UnacknowledgeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UnacknowledgeOpts) newAcknowledgeRequest() *admin.AlertViewForNdsGroup {
-	return &admin.AlertViewForNdsGroup{
+func (opts *UnacknowledgeOpts) newAcknowledgeRequest() *atlasv2.AlertViewForNdsGroup {
+	return &atlasv2.AlertViewForNdsGroup{
 		AcknowledgedUntil:      nil,
 		AcknowledgementComment: &opts.comment,
 	}

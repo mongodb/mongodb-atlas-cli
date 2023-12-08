@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"hash/crc32"
 
-	kms "cloud.google.com/go/kms/apiv1"
+	kmsv1 "cloud.google.com/go/kms/apiv1"
 	"cloud.google.com/go/kms/apiv1/kmspb"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"google.golang.org/api/option"
@@ -40,20 +40,20 @@ type GCPKeyIdentifier struct {
 	// CLI
 	ServiceAccountKey string
 
-	client *kms.KeyManagementClient
+	client *kmsv1.KeyManagementClient
 }
 
 func (ki *GCPKeyIdentifier) ValidateCredentials() error {
 	var err error
 
 	if ki.ServiceAccountKey != "" {
-		ki.client, err = kms.NewKeyManagementClient(context.Background(), option.WithCredentialsFile(ki.ServiceAccountKey))
+		ki.client, err = kmsv1.NewKeyManagementClient(context.Background(), option.WithCredentialsFile(ki.ServiceAccountKey))
 		if err == nil {
 			return nil
 		}
 	}
 
-	ki.client, err = kms.NewKeyManagementClient(context.Background())
+	ki.client, err = kmsv1.NewKeyManagementClient(context.Background())
 	if err != nil {
 		_, _ = log.Warningf(`No credentials found for resource: GCP location="%v" projectID="%v" keyRing="%v" keyName="%v"
 `, ki.Location, ki.ProjectID, ki.KeyRing, ki.KeyName)
@@ -63,7 +63,7 @@ func (ki *GCPKeyIdentifier) ValidateCredentials() error {
 		if err != nil {
 			return err
 		}
-		ki.client, err = kms.NewKeyManagementClient(context.Background(), option.WithCredentialsFile(json))
+		ki.client, err = kmsv1.NewKeyManagementClient(context.Background(), option.WithCredentialsFile(json))
 		if err == nil {
 			return nil
 		}

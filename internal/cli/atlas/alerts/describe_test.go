@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestDescribeBuilder(t *testing.T) {
@@ -48,7 +48,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertDescriber(ctrl)
 
-	expected := &admin.AlertViewForNdsGroup{
+	expected := &atlasv2.AlertViewForNdsGroup{
 		Id:            pointer.Get("test"),
 		EventTypeName: pointer.Get("NO_PRIMARY"),
 		Status:        pointer.Get("test"),
@@ -90,7 +90,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 	test.VerifyOutputTemplate(t, describeTemplate, expected)
 	for _, tt := range tests {
 		cmd := tt.cmd
-		params := &admin.GetAlertApiParams{
+		params := &atlasv2.GetAlertApiParams{
 			GroupId: cmd.ProjectID,
 			AlertId: cmd.alertID,
 		}

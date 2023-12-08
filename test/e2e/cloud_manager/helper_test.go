@@ -64,7 +64,7 @@ func automationServerHostname(cliPath string) (string, error) {
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%w\n %s", err, string(resp))
 	}
 
 	var servers *opsmngr.Agents
@@ -93,7 +93,7 @@ func hostIDs(cliPath string) ([]string, error) {
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w\n %s", err, string(resp))
 	}
 
 	var servers *opsmngr.Hosts

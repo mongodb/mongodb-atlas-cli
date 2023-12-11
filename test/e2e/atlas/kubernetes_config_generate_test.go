@@ -42,9 +42,9 @@ import (
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	k8syaml "k8s.io/apimachinery/pkg/util/yaml"
+	"k8s.io/apimachinery/pkg/util/yaml"
 	"k8s.io/client-go/kubernetes/scheme"
 )
 
@@ -56,7 +56,7 @@ var expectedLabels = map[string]string{
 
 func getK8SEntities(data []byte) ([]runtime.Object, error) {
 	b := bufio.NewReader(bytes.NewReader(data))
-	r := k8syaml.NewYAMLReader(b)
+	r := yaml.NewYAMLReader(b)
 
 	var result []runtime.Object
 
@@ -839,11 +839,11 @@ func referenceTeam(name, namespace string, users []akov2.TeamUser, projectName s
 	dictionary := resources.AtlasNameToKubernetesName()
 
 	return &akov2.AtlasTeam{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: apisv1.TypeMeta{
 			Kind:       "AtlasTeam",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: apisv1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-team-%s", projectName, name), dictionary),
 			Namespace: namespace,
 			Labels:    labels,
@@ -900,11 +900,11 @@ func checkProject(t *testing.T, output []runtime.Object, expected *akov2.AtlasPr
 func referenceProject(name, namespace string, labels map[string]string) *akov2.AtlasProject {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &akov2.AtlasProject{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: apisv1.TypeMeta{
 			Kind:       "AtlasProject",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: apisv1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(name, dictionary),
 			Namespace: namespace,
 			Labels:    labels,
@@ -961,11 +961,11 @@ func referenceProject(name, namespace string, labels map[string]string) *akov2.A
 func referenceAdvancedCluster(name, region, namespace, projectName string, labels map[string]string) *akov2.AtlasDeployment {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &akov2.AtlasDeployment{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: apisv1.TypeMeta{
 			Kind:       "AtlasDeployment",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: apisv1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, name), dictionary),
 			Namespace: namespace,
 			Labels:    labels,
@@ -1057,11 +1057,11 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 func referenceServerless(name, region, namespace, projectName string, labels map[string]string) *akov2.AtlasDeployment {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &akov2.AtlasDeployment{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: apisv1.TypeMeta{
 			Kind:       "AtlasDeployment",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: apisv1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, name), dictionary),
 			Namespace: namespace,
 			Labels:    labels,
@@ -1163,11 +1163,11 @@ func defaultMaintenanceWindowAlertConfigs() []akov2.AlertConfiguration {
 func referenceBackupSchedule(namespace, projectName, clusterName string, labels map[string]string) *akov2.AtlasBackupSchedule {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &akov2.AtlasBackupSchedule{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: apisv1.TypeMeta{
 			Kind:       "AtlasBackupSchedule",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: apisv1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName), dictionary),
 			Namespace: namespace,
 			Labels:    labels,
@@ -1187,11 +1187,11 @@ func referenceBackupSchedule(namespace, projectName, clusterName string, labels 
 func referenceBackupPolicy(namespace, projectName, clusterName string, labels map[string]string) *akov2.AtlasBackupPolicy {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &akov2.AtlasBackupPolicy{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: apisv1.TypeMeta{
 			Kind:       "AtlasBackupPolicy",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: apisv1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName), dictionary),
 			Namespace: namespace,
 			Labels:    labels,
@@ -1565,11 +1565,11 @@ func atlasBackupSchedule(objects []runtime.Object) (*akov2.AtlasBackupSchedule, 
 func referenceDataFederation(name, namespace, projectName string, labels map[string]string) *akov2.AtlasDataFederation {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &akov2.AtlasDataFederation{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: apisv1.TypeMeta{
 			Kind:       "AtlasDataFederation",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: apisv1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, name), dictionary),
 			Namespace: namespace,
 			Labels:    labels,

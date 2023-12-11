@@ -23,10 +23,10 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
-	akov2toptr "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/util/toptr"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
@@ -269,30 +269,30 @@ func referenceExportedProject(projectName, teamName string, expectedProject *ako
 			},
 			WithDefaultAlertsSettings: true,
 			Settings: &akov2.ProjectSettings{
-				IsCollectDatabaseSpecificsStatisticsEnabled: akov2toptr.MakePtr(true),
-				IsDataExplorerEnabled:                       akov2toptr.MakePtr(true),
-				IsPerformanceAdvisorEnabled:                 akov2toptr.MakePtr(true),
-				IsRealtimePerformancePanelEnabled:           akov2toptr.MakePtr(true),
-				IsSchemaAdvisorEnabled:                      akov2toptr.MakePtr(true),
+				IsCollectDatabaseSpecificsStatisticsEnabled: pointer.Get(true),
+				IsDataExplorerEnabled:                       pointer.Get(true),
+				IsPerformanceAdvisorEnabled:                 pointer.Get(true),
+				IsRealtimePerformancePanelEnabled:           pointer.Get(true),
+				IsSchemaAdvisorEnabled:                      pointer.Get(true),
 			},
 			EncryptionAtRest: &akov2.EncryptionAtRest{
 				AwsKms: akov2.AwsKms{
-					Enabled: akov2toptr.MakePtr(false),
-					Valid:   akov2toptr.MakePtr(false),
+					Enabled: pointer.Get(false),
+					Valid:   pointer.Get(false),
 					SecretRef: akov2common.ResourceRefNamespaced{
 						Name:      expectedProject.Spec.EncryptionAtRest.AwsKms.SecretRef.Name,
 						Namespace: expectedProject.Spec.EncryptionAtRest.AwsKms.SecretRef.Namespace,
 					},
 				},
 				AzureKeyVault: akov2.AzureKeyVault{
-					Enabled: akov2toptr.MakePtr(false),
+					Enabled: pointer.Get(false),
 					SecretRef: akov2common.ResourceRefNamespaced{
 						Name:      expectedProject.Spec.EncryptionAtRest.AzureKeyVault.SecretRef.Name,
 						Namespace: expectedProject.Spec.EncryptionAtRest.AzureKeyVault.SecretRef.Namespace,
 					},
 				},
 				GoogleCloudKms: akov2.GoogleCloudKms{
-					Enabled: akov2toptr.MakePtr(false),
+					Enabled: pointer.Get(false),
 					SecretRef: akov2common.ResourceRefNamespaced{
 						Name:      expectedProject.Spec.EncryptionAtRest.GoogleCloudKms.SecretRef.Name,
 						Namespace: expectedProject.Spec.EncryptionAtRest.GoogleCloudKms.SecretRef.Namespace,
@@ -411,9 +411,9 @@ func referenceExportedDeployment(projectName, clusterName, namespace string) *ak
 			},
 			DeploymentSpec: &akov2.AdvancedDeploymentSpec{
 				Name:          clusterName,
-				BackupEnabled: akov2toptr.MakePtr(true),
+				BackupEnabled: pointer.Get(true),
 				BiConnector: &akov2.BiConnectorSpec{
-					Enabled:        akov2toptr.MakePtr(false),
+					Enabled:        pointer.Get(false),
 					ReadPreference: "secondary",
 				},
 				ClusterType:              "REPLICASET",
@@ -424,8 +424,8 @@ func referenceExportedDeployment(projectName, clusterName, namespace string) *ak
 						Value: "Atlas CLI",
 					},
 				},
-				Paused:     akov2toptr.MakePtr(false),
-				PitEnabled: akov2toptr.MakePtr(true),
+				Paused:     pointer.Get(false),
+				PitEnabled: pointer.Get(true),
 				ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
 					{
 						NumShards: 1,
@@ -433,33 +433,33 @@ func referenceExportedDeployment(projectName, clusterName, namespace string) *ak
 						RegionConfigs: []*akov2.AdvancedRegionConfig{
 							{
 								AnalyticsSpecs: &akov2.Specs{
-									DiskIOPS:      akov2toptr.MakePtr(int64(3000)),
+									DiskIOPS:      pointer.Get[int64](3000),
 									EbsVolumeType: "STANDARD",
 									InstanceSize:  "M10",
-									NodeCount:     akov2toptr.MakePtr(0),
+									NodeCount:     pointer.Get(0),
 								},
 								ElectableSpecs: &akov2.Specs{
-									DiskIOPS:      akov2toptr.MakePtr(int64(3000)),
+									DiskIOPS:      pointer.Get[int64](3000),
 									EbsVolumeType: "STANDARD",
 									InstanceSize:  "M10",
-									NodeCount:     akov2toptr.MakePtr(3),
+									NodeCount:     pointer.Get(3),
 								},
 								ReadOnlySpecs: &akov2.Specs{
-									DiskIOPS:      akov2toptr.MakePtr(int64(3000)),
+									DiskIOPS:      pointer.Get[int64](3000),
 									EbsVolumeType: "STANDARD",
 									InstanceSize:  "M10",
-									NodeCount:     akov2toptr.MakePtr(0),
+									NodeCount:     pointer.Get(0),
 								},
 								AutoScaling: &akov2.AdvancedAutoScalingSpec{
 									DiskGB: &akov2.DiskGB{
-										Enabled: akov2toptr.MakePtr(false),
+										Enabled: pointer.Get(false),
 									},
 									Compute: &akov2.ComputeSpec{
-										Enabled:          akov2toptr.MakePtr(false),
-										ScaleDownEnabled: akov2toptr.MakePtr(false),
+										Enabled:          pointer.Get(false),
+										ScaleDownEnabled: pointer.Get(false),
 									},
 								},
-								Priority:     akov2toptr.MakePtr(7),
+								Priority:     pointer.Get(7),
 								ProviderName: "AWS",
 								RegionName:   "US_EAST_1",
 							},
@@ -471,8 +471,8 @@ func referenceExportedDeployment(projectName, clusterName, namespace string) *ak
 			},
 			ProcessArgs: &akov2.ProcessArgs{
 				MinimumEnabledTLSProtocol: "TLS1_2",
-				JavascriptEnabled:         akov2toptr.MakePtr(true),
-				NoTableScan:               akov2toptr.MakePtr(false),
+				JavascriptEnabled:         pointer.Get(true),
+				NoTableScan:               pointer.Get(false),
 			},
 		},
 	}

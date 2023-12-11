@@ -15,7 +15,7 @@
 package cli
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
+	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -36,8 +36,8 @@ func (opts *ListOpts) NewListOptions() *mongodbatlas.ListOptions {
 	}
 }
 
-func (opts *ListOpts) NewAtlasListOptions() *atlas.ListOptions {
-	return &atlas.ListOptions{
+func (opts *ListOpts) NewAtlasListOptions() *store.ListOptions {
+	return &store.ListOptions{
 		PageNum:      opts.PageNum,
 		ItemsPerPage: opts.ItemsPerPage,
 	}

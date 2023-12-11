@@ -32,7 +32,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/cloudproviders"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters"
-	atlasConfig "github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/config"
+	atlasconfig "github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdbroles"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdns"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datafederation"
@@ -212,7 +212,7 @@ Use the --help flag with any command for more info on that command.`,
 	registerCmd.Hidden = true
 
 	rootCmd.AddCommand(
-		atlasConfig.Builder(),
+		atlasconfig.Builder(),
 		auth.Builder(),
 		setup.Builder(),
 		projects.Builder(),

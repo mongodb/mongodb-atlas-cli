@@ -22,7 +22,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestOutputOpts_outputTypeAndValue(t *testing.T) {
@@ -71,10 +71,10 @@ func TestOutputOpts_outputTypeAndValue(t *testing.T) {
 
 func TestOutputOpts_mapReduceResults(t *testing.T) {
 	t.Run("when results present", func(t *testing.T) {
-		input := *admin.NewPaginatedTeam()
+		input := *atlasv2.NewPaginatedTeam()
 		wantID := "123"
 		wantName := "Team A"
-		input.Results = []admin.TeamResponse{
+		input.Results = []atlasv2.TeamResponse{
 			{
 				Id:   pointer.Get(wantID),
 				Name: pointer.Get(wantName),

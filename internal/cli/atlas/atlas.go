@@ -15,8 +15,6 @@
 package atlas
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslists"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/accesslogs"
@@ -41,25 +39,22 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/performanceadvisor"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/serverless"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
 const (
-	Use = "atlas"
+	Use               = "atlas"
+	deprecatedMessage = "There's a new, dedicated Atlas CLI available for Atlas users. Install the Atlas CLI to enjoy the same capabilities and keep getting new features: https://dochub.mongodb.org/core/migrate-to-atlas-cli. Atlas commands for MongoCLI are now deprecated, but you can keep using them for 12 months (until April 30, 2023).\n\n"
 )
 
 func Builder() *cobra.Command {
 	opts := &cli.RefresherOpts{}
 	cmd := &cobra.Command{
-		Use:   Use,
-		Short: "MongoDB Atlas operations.",
-		Long:  deprecatedMessage,
+		Use:        Use,
+		Short:      "MongoDB Atlas operations.",
+		Deprecated: deprecatedMessage,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			log.SetWriter(cmd.ErrOrStderr())
-
-			_, _ = log.Warning(deprecatedMessage)
 			if err := opts.InitFlow(config.Default())(); err != nil {
 				return err
 			}
@@ -99,14 +94,5 @@ func Builder() *cobra.Command {
 		livemigrations.Builder(),
 		accesslogs.Builder(),
 	)
-
-	updateHelpString(cmd, deprecatedMessage)
 	return cmd
-}
-
-// updateHelpString updates the help template to include the deprecated message.
-func updateHelpString(cmd *cobra.Command, deprecatedMessage string) {
-	for _, c := range cmd.Commands() {
-		c.SetHelpTemplate(fmt.Sprintf("%s \n%s", deprecatedMessage, c.HelpTemplate()))
-	}
 }

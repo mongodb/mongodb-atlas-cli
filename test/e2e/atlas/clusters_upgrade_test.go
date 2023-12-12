@@ -26,15 +26,67 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-func TestSharedClusterUpgrade(t *testing.T) {
+func TestSharedClusterUpgradeToSharedTier(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("clustersUpgrade")
+	g.tier = tierM0
+	g.generateCluster()
+	cliPath, err := e2e.AtlasCLIBin()
+	req := require.New(t)
+	req.NoError(err)
+
+	t.Run("Upgrade", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"upgrade",
+			g.clusterName,
+			"--tier", tierM2,
+			"--diskSizeGB=1",
+			"--projectId", g.projectID,
+			"--tag", "env=e2e",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+	})
+
+	t.Run("Watch upgrade", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"watch",
+			g.clusterName,
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		resp, _ := cmd.CombinedOutput()
+		t.Log(string(resp))
+	})
+
+	t.Run("Ensure upgrade", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"get",
+			g.clusterName,
+			"--projectId", g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var clusterResponse *atlasv2.AdvancedClusterDescription
+		req.NoError(json.Unmarshal(resp, &clusterResponse), string(resp))
+
+		ensureCluster(t, clusterResponse, g.clusterName, "6.0", 40, false)
+	})
+}
+
+func TestSharedClusterUpgradeToDedicatedTier(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("clustersUpgrade")
 	g.tier = tierM2
 	g.generateCluster()
 	cliPath, err := e2e.AtlasCLIBin()
 	req := require.New(t)
-	req.NoError(err)
-
 	req.NoError(err)
 
 	t.Run("Upgrade", func(t *testing.T) {
@@ -45,7 +97,6 @@ func TestSharedClusterUpgrade(t *testing.T) {
 			"--tier", tierM10,
 			"--diskSizeGB", diskSizeGB40,
 			"--mdbVersion=6.0",
-			"--disableTerminationProtection",
 			"--projectId", g.projectID,
 			"--tag", "env=e2e",
 			"-o=json")

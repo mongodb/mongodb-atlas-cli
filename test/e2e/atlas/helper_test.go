@@ -975,18 +975,6 @@ func ensureCluster(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, cl
 	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
 }
 
-func ensureSharedCluster(t *testing.T, cluster *atlasv2.LegacyAtlasCluster, clusterName, tier string, diskSizeGB float64, terminationProtection bool) {
-	t.Helper()
-	a := assert.New(t)
-	a.Equal(clusterName, cluster.GetName())
-	a.Equal(e2eSharedMDBVer, cluster.GetMongoDBMajorVersion())
-	if cluster.ProviderSettings != nil {
-		a.Equal(tier, cluster.ProviderSettings.GetInstanceSizeName())
-	}
-	a.InDelta(diskSizeGB, cluster.GetDiskSizeGB(), 0.01)
-	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
-}
-
 func compareStingsWithHiddenPart(expectedSting, actualString string, specialChar uint8) bool {
 	if len(expectedSting) != len(actualString) {
 		return false

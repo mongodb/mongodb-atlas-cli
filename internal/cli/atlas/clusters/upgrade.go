@@ -95,16 +95,19 @@ func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {
 	if opts.diskSizeGB > 0 {
 		out.DiskSizeGB = &opts.diskSizeGB
 	}
-	if opts.tier != "" {
-		if out.ProviderSettings != nil {
-			out.ProviderSettings.InstanceSizeName = opts.tier
-			if opts.tier != "M2" && opts.tier != "M5" {
-				out.ProviderSettings.ProviderName = out.ProviderSettings.BackingProviderName
-				out.ProviderSettings.BackingProviderName = ""
-			}
+	if opts.tier != "" && out.ProviderSettings != nil {
+		out.ProviderSettings.InstanceSizeName = opts.tier
+		if opts.tier == atlasM2 || opts.tier == atlasM5 {
+			out.BiConnector = nil
+		} else {
+			out.ProviderSettings.ProviderName = out.ProviderSettings.BackingProviderName
+			out.ProviderSettings.BackingProviderName = ""
 		}
 	}
-	out.TerminationProtectionEnabled = cli.ReturnValueForSetting(opts.enableTerminationProtection, opts.disableTerminationProtection)
+	out.TerminationProtectionEnabled = cli.ReturnValueForSetting(
+		opts.enableTerminationProtection,
+		opts.disableTerminationProtection,
+	)
 
 	var tags []*atlas.Tag
 	if len(opts.tag) > 0 {
@@ -118,7 +121,7 @@ func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {
 	out.Tags = &tags
 }
 
-// mongocli atlas cluster(s) upgrade [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].
+// UpgradeBuilder atlas cluster(s) upgrade [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].
 func UpgradeBuilder() *cobra.Command {
 	opts := UpgradeOpts{
 		fs: afero.NewOsFs(),

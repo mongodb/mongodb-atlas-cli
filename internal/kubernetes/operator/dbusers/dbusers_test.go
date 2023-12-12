@@ -198,7 +198,7 @@ func TestBuildDBUsers(t *testing.T) {
 					Namespace: targetNamespace,
 				},
 				DatabaseName:    user.DatabaseName,
-				DeleteAfterDate: user.DeleteAfterDate.String(),
+				DeleteAfterDate: user.DeleteAfterDate.Format(timeFormatISO8601),
 				Labels: []akov2common.LabelSpec{
 					{
 						Key:   *user.Labels[0].Key,

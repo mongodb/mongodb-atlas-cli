@@ -31,6 +31,8 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+const timeFormatISO8601 = "2006-01-02T15:04:05.999Z"
+
 func BuildDBUsers(provider atlas.OperatorDBUsersStore, projectID, projectName, targetNamespace string, dictionary map[string]string, version string) ([]*akov2.AtlasDatabaseUser, []*corev1.Secret, error) {
 	users, err := provider.DatabaseUsers(projectID, &atlas.ListOptions{})
 	if err != nil {
@@ -107,7 +109,7 @@ func BuildDBUsers(provider atlas.OperatorDBUsersStore, projectID, projectName, t
 
 func getDeleteAfterDate(user *atlasv2.CloudDatabaseUser) string {
 	if user.DeleteAfterDate != nil {
-		return user.DeleteAfterDate.String()
+		return user.DeleteAfterDate.Format(timeFormatISO8601)
 	}
 	return ""
 }

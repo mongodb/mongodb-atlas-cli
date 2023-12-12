@@ -80,6 +80,7 @@ const (
 	suggestedIndexesEntity       = "suggestedIndexes"
 	slowOperationThresholdEntity = "slowOperationThreshold"
 	tierM10                      = "M10"
+	tierM0                       = "M0"
 	tierM2                       = "M2"
 	diskSizeGB40                 = "40"
 	diskSizeGB30                 = "30"

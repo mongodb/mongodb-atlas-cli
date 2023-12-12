@@ -28,10 +28,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-const (
-	tierM0 = "M0"
-)
-
 func TestClustersM0Flags(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("clustersM0")

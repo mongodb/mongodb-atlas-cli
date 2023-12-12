@@ -47,7 +47,6 @@ Examples
 Related Commands
 ----------------
 
-* :ref:`mongocli-atlas` - MongoDB Atlas operations.
 * :ref:`mongocli-auth` - Manage the CLI's authentication state.
 * :ref:`mongocli-cloud-manager` - MongoDB Cloud Manager operations.
 * :ref:`mongocli-completion` - Generate the autocompletion script for the specified shell
@@ -59,7 +58,6 @@ Related Commands
 .. toctree::
    :titlesonly:
 
-   atlas </command/mongocli-atlas>
    auth </command/mongocli-auth>
    cloud-manager </command/mongocli-cloud-manager>
    completion </command/mongocli-completion>

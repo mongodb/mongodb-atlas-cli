@@ -41,7 +41,7 @@ func TestSharedClusterUpgradeToSharedTier(t *testing.T) {
 			"upgrade",
 			g.clusterName,
 			"--tier", tierM2,
-			"--diskSizeGB=1",
+			"--diskSizeGB=2",
 			"--projectId", g.projectID,
 			"--tag", "env=e2e",
 			"-o=json")
@@ -76,7 +76,7 @@ func TestSharedClusterUpgradeToSharedTier(t *testing.T) {
 		var clusterResponse *atlasv2.AdvancedClusterDescription
 		req.NoError(json.Unmarshal(resp, &clusterResponse), string(resp))
 
-		ensureCluster(t, clusterResponse, g.clusterName, "6.0", 40, false)
+		ensureCluster(t, clusterResponse, g.clusterName, "6.0", 2, false)
 	})
 }
 

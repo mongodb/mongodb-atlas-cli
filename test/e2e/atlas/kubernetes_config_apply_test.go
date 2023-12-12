@@ -418,14 +418,8 @@ func referenceExportedDeployment(projectName, clusterName, namespace string) *ak
 				},
 				ClusterType:              "REPLICASET",
 				EncryptionAtRestProvider: "NONE",
-				Labels: []akov2common.LabelSpec{
-					{
-						Key:   "Infrastructure Tool",
-						Value: "Atlas CLI",
-					},
-				},
-				Paused:     pointer.Get(false),
-				PitEnabled: pointer.Get(true),
+				Paused:                   pointer.Get(false),
+				PitEnabled:               pointer.Get(true),
 				ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
 					{
 						NumShards: 1,

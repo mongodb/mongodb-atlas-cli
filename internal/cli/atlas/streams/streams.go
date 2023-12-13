@@ -26,7 +26,7 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage your Atlas Stream Processing Deployments.",
+		Short:   "Manage your Atlas Stream Processing deployments.",
 		Long:    "The streams command provides access to your Atlas Stream Processing configurations. You can create, edit, and delete streams, as well as change the connection registry.",
 	}
 	cmd.AddCommand(

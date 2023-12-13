@@ -12,7 +12,7 @@ atlas streams
    :depth: 1
    :class: singlecol
 
-Manage your Atlas Stream Processing Deployments.
+Manage your Atlas Stream Processing deployments.
 
 The streams command provides access to your Atlas Stream Processing configurations. You can create, edit, and delete streams, as well as change the connection registry.
 

@@ -95,16 +95,19 @@ func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {
 	if opts.diskSizeGB > 0 {
 		out.DiskSizeGB = &opts.diskSizeGB
 	}
-	if opts.tier != "" {
-		if out.ProviderSettings != nil {
-			out.ProviderSettings.InstanceSizeName = opts.tier
-			if opts.tier != "M2" && opts.tier != "M5" {
-				out.ProviderSettings.ProviderName = out.ProviderSettings.BackingProviderName
-				out.ProviderSettings.BackingProviderName = ""
-			}
+	if opts.tier != "" && out.ProviderSettings != nil {
+		out.ProviderSettings.InstanceSizeName = opts.tier
+		if opts.tier == atlasM2 || opts.tier == atlasM5 {
+			out.BiConnector = nil
+		} else {
+			out.ProviderSettings.ProviderName = out.ProviderSettings.BackingProviderName
+			out.ProviderSettings.BackingProviderName = ""
 		}
 	}
-	out.TerminationProtectionEnabled = cli.ReturnValueForSetting(opts.enableTerminationProtection, opts.disableTerminationProtection)
+	out.TerminationProtectionEnabled = cli.ReturnValueForSetting(
+		opts.enableTerminationProtection,
+		opts.disableTerminationProtection,
+	)
 
 	var tags []*atlas.Tag
 	if len(opts.tag) > 0 {
@@ -118,7 +121,7 @@ func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {
 	out.Tags = &tags
 }
 
-// mongocli atlas cluster(s) upgrade [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].
+// UpgradeBuilder atlas cluster(s) upgrade [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].
 func UpgradeBuilder() *cobra.Command {
 	opts := UpgradeOpts{
 		fs: afero.NewOsFs(),
@@ -130,7 +133,7 @@ func UpgradeBuilder() *cobra.Command {
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"),
 		Example: fmt.Sprintf(`  # Upgrade the tier, disk size, and MongoDB version for the shared cluster named myCluster in the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s cluster upgrade myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50 --diskSizeGB 20 --mdbVersion 4.2 --tag env=dev`,
+  %s cluster upgrade myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50 --diskSizeGB 20 --mdbVersion 7.0 --tag env=dev`,
 			cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

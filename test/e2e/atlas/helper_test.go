@@ -80,6 +80,7 @@ const (
 	suggestedIndexesEntity       = "suggestedIndexes"
 	slowOperationThresholdEntity = "slowOperationThreshold"
 	tierM10                      = "M10"
+	tierM0                       = "M0"
 	tierM2                       = "M2"
 	diskSizeGB40                 = "40"
 	diskSizeGB30                 = "30"
@@ -971,18 +972,6 @@ func ensureCluster(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, cl
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.GetName())
 	a.Equal(version, cluster.GetMongoDBMajorVersion())
-	a.InDelta(diskSizeGB, cluster.GetDiskSizeGB(), 0.01)
-	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
-}
-
-func ensureSharedCluster(t *testing.T, cluster *atlasv2.LegacyAtlasCluster, clusterName, tier string, diskSizeGB float64, terminationProtection bool) {
-	t.Helper()
-	a := assert.New(t)
-	a.Equal(clusterName, cluster.GetName())
-	a.Equal(e2eSharedMDBVer, cluster.GetMongoDBMajorVersion())
-	if cluster.ProviderSettings != nil {
-		a.Equal(tier, cluster.ProviderSettings.GetInstanceSizeName())
-	}
 	a.InDelta(diskSizeGB, cluster.GetDiskSizeGB(), 0.01)
 	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
 }

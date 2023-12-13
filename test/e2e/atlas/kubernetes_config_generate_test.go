@@ -987,15 +987,9 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 				ClusterType:              string(akov2.TypeReplicaSet),
 				DiskSizeGB:               nil,
 				EncryptionAtRestProvider: "NONE",
-				Labels: []akov2common.LabelSpec{
-					{
-						Key:   "Infrastructure Tool",
-						Value: "Atlas CLI",
-					},
-				},
-				Name:       name,
-				Paused:     pointer.Get(false),
-				PitEnabled: pointer.Get(true),
+				Name:                     name,
+				Paused:                   pointer.Get(false),
+				PitEnabled:               pointer.Get(true),
 				ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
 					{
 						NumShards: 1,

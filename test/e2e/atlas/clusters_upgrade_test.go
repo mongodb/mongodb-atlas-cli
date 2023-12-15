@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
@@ -75,8 +76,9 @@ func TestSharedClusterUpgradeToSharedTier(t *testing.T) {
 
 		var clusterResponse *atlasv2.AdvancedClusterDescription
 		req.NoError(json.Unmarshal(resp, &clusterResponse), string(resp))
-
-		ensureCluster(t, clusterResponse, g.clusterName, "6.0", 2, false)
+		req.NotEmpty(clusterResponse.GetReplicationSpecs())
+		req.NotEmpty(clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs())
+		assert.Equal(t, tierM2, clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs()[0].ElectableSpecs.GetInstanceSize())
 	})
 }
 

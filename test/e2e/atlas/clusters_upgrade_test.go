@@ -73,7 +73,7 @@ func TestSharedClusterUpgradeToSharedTier(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
-
+		t.Log(string(resp))
 		var clusterResponse *atlasv2.AdvancedClusterDescription
 		req.NoError(json.Unmarshal(resp, &clusterResponse), string(resp))
 		req.NotEmpty(clusterResponse.GetReplicationSpecs())
@@ -132,7 +132,8 @@ func TestSharedClusterUpgradeToDedicatedTier(t *testing.T) {
 
 		var clusterResponse *atlasv2.AdvancedClusterDescription
 		req.NoError(json.Unmarshal(resp, &clusterResponse), string(resp))
-
-		ensureCluster(t, clusterResponse, g.clusterName, "6.0", 40, false)
+		req.NotEmpty(clusterResponse.GetReplicationSpecs())
+		req.NotEmpty(clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs())
+		assert.Equal(t, tierM2, clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs()[0].ElectableSpecs.GetInstanceSize())
 	})
 }

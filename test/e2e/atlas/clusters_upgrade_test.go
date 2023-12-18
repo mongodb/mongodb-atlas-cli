@@ -134,6 +134,6 @@ func TestSharedClusterUpgradeToDedicatedTier(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &clusterResponse), string(resp))
 		req.NotEmpty(clusterResponse.GetReplicationSpecs())
 		req.NotEmpty(clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs())
-		assert.Equal(t, tierM2, clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs()[0].ElectableSpecs.GetInstanceSize())
+		assert.Equal(t, tierM10, clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs()[0].ElectableSpecs.GetInstanceSize())
 	})
 }

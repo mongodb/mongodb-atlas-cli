@@ -129,7 +129,7 @@ func TestSharedClusterUpgradeToDedicatedTier(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
-
+		t.Log(string(resp))
 		var clusterResponse *atlasv2.AdvancedClusterDescription
 		req.NoError(json.Unmarshal(resp, &clusterResponse), string(resp))
 		req.NotEmpty(clusterResponse.GetReplicationSpecs())

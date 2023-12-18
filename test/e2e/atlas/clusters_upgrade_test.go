@@ -49,6 +49,7 @@ func TestSharedClusterUpgradeToSharedTier(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
+		t.Log(string(resp))
 	})
 
 	t.Run("Watch upgrade", func(t *testing.T) {
@@ -105,6 +106,7 @@ func TestSharedClusterUpgradeToDedicatedTier(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
+		t.Log(string(resp))
 	})
 
 	t.Run("Watch upgrade", func(t *testing.T) {

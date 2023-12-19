@@ -61,17 +61,7 @@ func TestSnapshots(t *testing.T) {
 	t.Cleanup(func() {
 		require.NoError(t, deleteClusterForProject("", clusterName))
 	})
-
-	t.Run("Watch create cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-		)
-		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
-	})
+	require.NoError(t, watchCluster("", clusterName))
 
 	t.Run("Create snapshot", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

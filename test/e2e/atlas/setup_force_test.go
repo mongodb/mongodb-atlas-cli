@@ -18,7 +18,6 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -62,7 +61,9 @@ func TestSetup(t *testing.T) {
 		req.NoError(err, string(resp))
 		assert.Contains(t, string(resp), "Cluster created.", string(resp))
 	})
-
+	t.Cleanup(func() {
+		require.NoError(t, deleteClusterForProject(g.projectID, clusterName))
+	})
 	t.Run("Check accessListIp was correctly added", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			accessListEntity,
@@ -81,18 +82,7 @@ func TestSetup(t *testing.T) {
 		req.Contains(entries.Results[0].GetIpAddress(), arbitraryAccessListIP, "IP from list does not match added IP")
 	})
 
-	t.Run("Watch Cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-		assert.Contains(t, string(resp), "Cluster available")
-	})
+	require.NoError(t, watchCluster(g.projectID, clusterName))
 
 	t.Run("Describe DB User", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -130,35 +120,5 @@ func TestSetup(t *testing.T) {
 		assert.Len(t, cluster.Tags, 1)
 		assert.Equal(t, tagKey, *cluster.Tags[0].Key)
 		assert.Equal(t, tagValue, *cluster.Tags[0].Value)
-	})
-
-	t.Run("Delete Cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"delete",
-			clusterName,
-			"--force",
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
-		assert.Equal(t, expected, string(resp))
-	})
-
-	t.Run("Watch cluster deletion", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		// this command will fail with 404 once the cluster is deleted
-		// we just need to wait for this to close the project
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
 	})
 }

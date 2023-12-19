@@ -91,11 +91,13 @@ func ensureClusterTier(t *testing.T, cliPath, projectID, clusterName, expectedTi
 		req.NoError(json.Unmarshal(resp, &clusterResponse), string(resp))
 		req.NotEmpty(clusterResponse.GetReplicationSpecs())
 		req.NotEmpty(clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs())
-		if expectedTier != clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs()[0].ElectableSpecs.GetInstanceSize() {
-			time.Sleep(time.Duration(backoff) * time.Second)
-			backoff *= 2
+		if expectedTier == clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs()[0].ElectableSpecs.GetInstanceSize() {
+			result = clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs()[0].ElectableSpecs.GetInstanceSize()
+			break
 		}
-		result = clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs()[0].ElectableSpecs.GetInstanceSize()
+		t.Logf("attempt=%d, sleeping for=%ds", attempts, backoff)
+		time.Sleep(time.Duration(backoff) * time.Second)
+		backoff *= 2
 	}
 	assert.Equal(t, expectedTier, result)
 }

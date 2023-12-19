@@ -74,9 +74,9 @@ func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracke
 	}
 
 	if !t.storeSet {
-		options := []store.Option{store.UnauthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry(), store.Service(config.CloudService)}
+		o := []store.Option{store.UnauthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry(), store.Service(config.CloudService)}
 
-		if t.unauthStore, err = store.New(options...); err != nil {
+		if t.unauthStore, err = store.New(o...); err != nil {
 			_, _ = log.Debugf("telemetry: failed to set unauth store: %v\n", err)
 		}
 	}
@@ -101,19 +101,20 @@ func (t *tracker) defaultCommandOptions() []EventOpt {
 		withUserAgent(),
 		withAnonymousID(),
 		withCI(),
+		withSkipUpdateCheck(config.Default()),
 	}
 }
 
 func (t *tracker) trackCommand(data TrackOptions, opt ...EventOpt) error {
-	options := append(t.defaultCommandOptions(), withDuration(t.cmd))
+	o := append(t.defaultCommandOptions(), withDuration(t.cmd))
 	if data.Signal != "" {
-		options = append(options, withSignal(data.Signal))
+		o = append(o, withSignal(data.Signal))
 	}
 	if data.Err != nil {
-		options = append(options, withError(data.Err))
+		o = append(o, withError(data.Err))
 	}
-	options = append(options, opt...)
-	event := newEvent(options...)
+	o = append(o, opt...)
+	event := newEvent(o...)
 	events, err := t.read()
 	if err != nil {
 		_, _ = log.Debugf("telemetry: failed to read cache: %v\n", err)
@@ -194,8 +195,7 @@ func (t *tracker) read() ([]Event, error) {
 		decoder := json.NewDecoder(file)
 		for decoder.More() {
 			var event Event
-			err = decoder.Decode(&event)
-			if err != nil {
+			if err := decoder.Decode(&event); err != nil {
 				return events, err
 			}
 			events = append(events, event)
@@ -247,10 +247,10 @@ func castString(i interface{}) string {
 }
 
 func (t *tracker) trackSurvey(p survey.Prompt, response interface{}, e error) error {
-	options := t.defaultCommandOptions()
+	o := t.defaultCommandOptions()
 
 	if e != nil {
-		options = append(options, withError(e))
+		o = append(o, withError(e))
 	}
 
 	switch v := p.(type) {
@@ -259,18 +259,18 @@ func (t *tracker) trackSurvey(p survey.Prompt, response interface{}, e error) er
 		if castBool(response) {
 			choice = "true"
 		}
-		options = append(options, withPrompt(v.Message, "confirm"), withDefault(castBool(response) == v.Default), withChoice(choice))
+		o = append(o, withPrompt(v.Message, "confirm"), withDefault(castBool(response) == v.Default), withChoice(choice))
 	case *survey.Input:
-		options = append(options, withPrompt(v.Message, "input"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""))
+		o = append(o, withPrompt(v.Message, "input"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""))
 	case *survey.Password:
-		options = append(options, withPrompt(v.Message, "password"), withEmpty(castString(response) == ""))
+		o = append(o, withPrompt(v.Message, "password"), withEmpty(castString(response) == ""))
 	case *survey.Select:
-		options = append(options, withPrompt(v.Message, "select"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""), withChoice(castString(response)))
+		o = append(o, withPrompt(v.Message, "select"), withDefault(castString(response) == v.Default), withEmpty(castString(response) == ""), withChoice(castString(response)))
 	default:
 		return errors.New("unknown survey prompt")
 	}
 
-	event := newEvent(options...)
+	event := newEvent(o...)
 
 	// all sent at once via TrackCommand
 	// assuming there is always a TrackCommand after many TrackAsk

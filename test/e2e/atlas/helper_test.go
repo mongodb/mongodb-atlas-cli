@@ -92,7 +92,7 @@ const (
 	jobsEntity                   = "jobs"
 	snapshotsEntity              = "snapshots"
 	restoresEntity               = "restores"
-	compliancepolicyEntity       = "compliancepolicy"
+	compliancePolicyEntity       = "compliancepolicy"
 	policiesEntity               = "policies"
 	teamsEntity                  = "teams"
 	setupEntity                  = "setup"
@@ -1018,7 +1018,7 @@ func enableCompliancePolicy(projectID string) error {
 	}
 	cmd := exec.Command(cliPath,
 		backupsEntity,
-		compliancepolicyEntity,
+		compliancePolicyEntity,
 		"enable",
 		"--projectId",
 		projectID,
@@ -1060,7 +1060,7 @@ func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atl
 	}
 	cmd := exec.Command(cliPath,
 		backupsEntity,
-		compliancepolicyEntity,
+		compliancePolicyEntity,
 		"setup",
 		"--projectId",
 		projectID,

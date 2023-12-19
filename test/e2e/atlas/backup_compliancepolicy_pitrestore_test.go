@@ -53,7 +53,7 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 		cmd := exec.Command(
 			cliPath,
 			backupsEntity,
-			compliancepolicyEntity,
+			compliancePolicyEntity,
 			"pointintimerestore",
 			"enable",
 			"-o=json",

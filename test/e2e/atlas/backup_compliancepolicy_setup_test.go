@@ -55,7 +55,7 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 
 	cmd := exec.Command(cliPath,
 		backupsEntity,
-		compliancepolicyEntity,
+		compliancePolicyEntity,
 		"setup",
 		"--projectId",
 		g.projectID,

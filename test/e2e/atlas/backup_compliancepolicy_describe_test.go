@@ -39,7 +39,7 @@ func TestBackupCompliancePolicyDescribe(t *testing.T) {
 
 	cmd := exec.Command(cliPath,
 		backupsEntity,
-		compliancepolicyEntity,
+		compliancePolicyEntity,
 		"describe",
 		"--projectId",
 		g.projectID,

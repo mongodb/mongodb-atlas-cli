@@ -41,7 +41,7 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 		cmd := exec.Command(
 			cliPath,
 			backupsEntity,
-			compliancepolicyEntity,
+			compliancePolicyEntity,
 			"copyprotection",
 			"enable",
 			"-o=json",
@@ -65,7 +65,7 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 		cmd := exec.Command(
 			cliPath,
 			backupsEntity,
-			compliancepolicyEntity,
+			compliancePolicyEntity,
 			"copyprotection",
 			"disable",
 			"-o=json",

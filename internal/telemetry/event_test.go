@@ -155,7 +155,9 @@ func TestWithAuthMethod(t *testing.T) {
 		assert.Equal(t, "api_key", e.Properties["auth_method"])
 	})
 	t.Run("Oauth", func(t *testing.T) {
-		e := newEvent(withAuthMethod(&configMock{}))
+		e := newEvent(withAuthMethod(&configMock{
+			accessToken: "test",
+		}))
 		assert.Equal(t, "oauth", e.Properties["auth_method"])
 	})
 }
@@ -201,8 +203,7 @@ func TestWithProjectID(t *testing.T) {
 		require.NoError(t, cmd.Flags().Set(flag.ProjectID, ""))
 		e := newEvent(withProjectID(cmd, &configMock{}))
 		require.NoError(t, cmd.ExecuteContext(NewContext()))
-		_, ok := e.Properties["project_id"]
-		assert.False(t, ok)
+		assert.NotContains(t, e.Properties, "project_id")
 	})
 }
 
@@ -235,8 +236,7 @@ func TestWithOrgID(t *testing.T) {
 		require.NoError(t, cmd.Flags().Set(flag.OrgID, ""))
 		e := newEvent(withOrgID(cmd, &configMock{}))
 		require.NoError(t, cmd.ExecuteContext(NewContext()))
-		_, ok := e.Properties["org_id"]
-		assert.False(t, ok)
+		assert.NotContains(t, e.Properties, "org_id")
 	})
 }
 
@@ -271,9 +271,7 @@ func TestSanitizePrompt(t *testing.T) {
 
 	for _, testCase := range testCases {
 		got := sanitizePrompt(testCase.input)
-		if got != testCase.expected {
-			t.Errorf("expected: %v, got %v", testCase.expected, got)
-		}
+		assert.Equal(t, testCase.expected, got)
 	}
 }
 
@@ -294,9 +292,7 @@ func TestSanitizeSelectOption(t *testing.T) {
 
 	for _, testCase := range testCases {
 		got := sanitizeSelectOption(testCase.input)
-		if got != testCase.expected {
-			t.Errorf("expected: %v, got %v", testCase.expected, got)
-		}
+		assert.Equal(t, testCase.expected, got)
 	}
 }
 
@@ -395,14 +391,17 @@ func TestWithHelpCommand_NotFound(t *testing.T) {
 }
 
 type configMock struct {
-	name       string
-	publicKey  string
-	privateKey string
-	service    string
-	url        string
-	project    string
-	org        string
+	name        string
+	publicKey   string
+	privateKey  string
+	accessToken string
+	service     string
+	url         string
+	project     string
+	org         string
 }
+
+var _ Authenticator = configMock{}
 
 func (c configMock) Name() string {
 	return c.name
@@ -430,4 +429,7 @@ func (c configMock) PublicAPIKey() string {
 
 func (c configMock) PrivateAPIKey() string {
 	return c.privateKey
+}
+func (c configMock) AccessToken() string {
+	return c.accessToken
 }

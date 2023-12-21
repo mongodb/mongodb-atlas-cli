@@ -45,6 +45,8 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	err := opts.Run()
 	require.NoError(t, err)
+
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }
 
 func TestDescribeBuilder(t *testing.T) {

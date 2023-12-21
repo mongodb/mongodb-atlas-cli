@@ -45,6 +45,8 @@ func TestCreate_Run(t *testing.T) {
 
 	err := createOpts.Run()
 	require.NoError(t, err)
+
+	test.VerifyOutputTemplate(t, createTemplate, expected)
 }
 
 func TestCreateBuilder(t *testing.T) {

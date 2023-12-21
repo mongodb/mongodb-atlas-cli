@@ -45,6 +45,8 @@ func TestList_Run(t *testing.T) {
 
 	err := listOpts.Run()
 	require.NoError(t, err)
+
+	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
 func TestListBuilder(t *testing.T) {

@@ -18,7 +18,7 @@ jobs:
           go install github.com/icholy/gomajor@latest 
           make update-atlas-sdk
       - name: Verify Changed files
-        uses: tj-actions/verify-changed-files@08975f08f935b937e16554ebd18f713b5263248a
+        uses: tj-actions/verify-changed-files@2a93ea6f3eef7ba31bb9b4fe83dab787a45356fb
         id: verify-changed-files
         with:
           files: |

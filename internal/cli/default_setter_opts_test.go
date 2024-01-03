@@ -135,4 +135,14 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, expectedOrgs.Results, gotOrgs)
 	})
+
+	t.Run("with no org", func(t *testing.T) {
+		expectedOrgs := &atlas.Organizations{
+			Results: []*atlas.Organization{},
+		}
+		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
+		_, err := opts.orgs("")
+		require.Error(t, err)
+		require.EqualError(t, err, errNoResults.Error())
+	})
 }

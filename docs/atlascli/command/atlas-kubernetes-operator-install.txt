@@ -142,15 +142,15 @@ Examples
 
    # Install and import objects from a specific project:
    atlas kubernetes operator install --targetNamespace=<namespace> --orgID <orgID> --projectName <project> --import
- 	
+
  	
 .. code-block::
 
    # Install the operator and disable deletion protection:
- 	atlas kubernetes operator install --disableResourceDeletionProtection
- 	
+ 	atlas kubernetes operator install --resourceDeletionProtection=false
+
  	
 .. code-block::
 
    # Install the operator and disable deletion protection for sub-resources (Atlas project integrations, private endpoints, etc.):
- 	atlas kubernetes operator install --disableSubResourceDeletionProtection
+ 	atlas kubernetes operator install --subresourceDeletionProtection=false

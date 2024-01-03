@@ -175,12 +175,12 @@ The key is scoped to the project when you specify the --projectName option and t
 
   # Install and import objects from a specific project:
   atlas kubernetes operator install --targetNamespace=<namespace> --orgID <orgID> --projectName <project> --import
-	
+
 	# Install the operator and disable deletion protection:
-	atlas kubernetes operator install --disableResourceDeletionProtection
-	
+	atlas kubernetes operator install --resourceDeletionProtection=false
+
 	# Install the operator and disable deletion protection for sub-resources (Atlas project integrations, private endpoints, etc.):
-	atlas kubernetes operator install --disableSubResourceDeletionProtection`,
+	atlas kubernetes operator install --subresourceDeletionProtection=false`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.versionProvider = version.NewOperatorVersion(github.NewClient(nil))
 

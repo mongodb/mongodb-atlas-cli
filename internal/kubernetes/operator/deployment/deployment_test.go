@@ -76,6 +76,12 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					Value: pointer.Get("TestValue"),
 				},
 			},
+			Tags: []atlasv2.ResourceTag{
+				{
+					Key:   pointer.Get("TestTagKey"),
+					Value: pointer.Get("TestTagValue"),
+				},
+			},
 			MongoDBMajorVersion: pointer.Get("5.0"),
 			MongoDBVersion:      pointer.Get("5.0"),
 			Name:                pointer.Get(clusterName),
@@ -247,6 +253,12 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 						{
 							Key:   *cluster.Labels[0].Key,
 							Value: *cluster.Labels[0].Value,
+						},
+					},
+					Tags: []*akov2.TagSpec{
+						{
+							Key:   *cluster.Tags[0].Key,
+							Value: *cluster.Tags[0].Value,
 						},
 					},
 					Name:       clusterName,

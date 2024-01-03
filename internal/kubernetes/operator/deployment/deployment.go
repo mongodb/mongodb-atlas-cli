@@ -80,6 +80,18 @@ func BuildAtlasAdvancedDeployment(deploymentStore atlas.OperatorClusterStore, va
 		return result
 	}
 
+	convertTags := func(tags []atlasv2.ResourceTag) []*akov2.TagSpec {
+		result := make([]*akov2.TagSpec, 0, len(tags))
+
+		for _, atlasTag := range tags {
+			result = append(result, &akov2.TagSpec{
+				Key:   atlasTag.GetKey(),
+				Value: atlasTag.GetValue(),
+			})
+		}
+		return result
+	}
+
 	replicationSpec := buildReplicationSpec(deployment.GetReplicationSpecs())
 
 	// TODO: DiskSizeGB field skipped on purpose. See https://jira.mongodb.org/browse/CLOUDP-146469
@@ -95,6 +107,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore atlas.OperatorClusterStore, va
 		ReplicationSpecs:         replicationSpec,
 		RootCertType:             deployment.GetRootCertType(),
 		VersionReleaseSystem:     deployment.GetVersionReleaseSystem(),
+		Tags:                     convertTags(deployment.GetTags()),
 	}
 
 	atlasDeployment := &akov2.AtlasDeployment{

@@ -42,9 +42,8 @@ const (
 	credentialsGlobalName         = "mongodb-atlas-operator-api-key" //nolint:gosec
 	credentialsProjectScopedName  = "mongodb-atlas-%s-api-key"       //nolint:gosec
 
-	// TODO: After the 2.0 release, make sure to import these instead of redefining.
-	objectDeletionProtectionEnvVar    = "UNSUPPORTED_OBJECT_DELETION_PROTECTION"
-	subobjectDeletionProtectionEnvVar = "UNSUPPORTED_SUBOBJECT_DELETION_PROTECTION"
+	objectDeletionProtectionEnvVar    = "OBJECT_DELETION_PROTECTION"
+	subobjectDeletionProtectionEnvVar = "SUBOBJECT_DELETION_PROTECTION"
 )
 
 type InstallConfig struct {
@@ -342,14 +341,14 @@ func (ir *InstallResources) addDeployment(ctx context.Context, config map[string
 		if !deletionProtection {
 			obj.Spec.Template.Spec.Containers[0].Env = append(obj.Spec.Template.Spec.Containers[0].Env, corev1.EnvVar{
 				Name:      objectDeletionProtectionEnvVar,
-				Value:     "off",
+				Value:     "false",
 				ValueFrom: nil,
 			})
 		}
 		if !subDeletionProtection {
 			obj.Spec.Template.Spec.Containers[0].Env = append(obj.Spec.Template.Spec.Containers[0].Env, corev1.EnvVar{
 				Name:      subobjectDeletionProtectionEnvVar,
-				Value:     "off",
+				Value:     "false",
 				ValueFrom: nil,
 			})
 		}

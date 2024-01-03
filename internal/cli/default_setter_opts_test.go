@@ -145,4 +145,11 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 		require.Error(t, err)
 		require.EqualError(t, err, errNoResults.Error())
 	})
+
+	t.Run("with nil org", func(t *testing.T) {
+		mockStore.EXPECT().Organizations(gomock.Any()).Return(nil, nil).Times(1)
+		_, err := opts.orgs("")
+		require.Error(t, err)
+		require.EqualError(t, err, errNoResults.Error())
+	})
 }

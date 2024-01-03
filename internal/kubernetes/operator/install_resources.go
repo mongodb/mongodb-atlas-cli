@@ -53,6 +53,7 @@ type InstallConfig struct {
 	Watch                                []string
 	ResourceDeletionProtectionEnabled    bool
 	SubResourceDeletionProtectionEnabled bool
+	AtlasGov                             bool
 }
 
 type Installer interface {
@@ -152,7 +153,7 @@ func (ir *InstallResources) InstallConfiguration(ctx context.Context, installCon
 				return err
 			}
 		case "Deployment":
-			err = ir.addDeployment(ctx, config, installConfig.Namespace, installConfig.Watch, atlasGov, installConfig.ResourceDeletionProtectionEnabled, installConfig.SubResourceDeletionProtectionEnabled)
+			err = ir.addDeployment(ctx, config, installConfig.Namespace, installConfig.Watch, installConfig.ResourceDeletionProtectionEnabled, installConfig.SubResourceDeletionProtectionEnabled, installConfig.AtlasGov)
 			if err != nil {
 				return err
 			}

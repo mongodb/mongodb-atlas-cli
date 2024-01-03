@@ -255,6 +255,7 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 			WithTargetOperatorVersion(crdVersion).
 			WithFeatureValidator(i.featureValidator).
 			WithSecretsData(false)
+
 		err = NewConfigApply(
 			NewConfigApplyParams{
 				OrgID:     orgID,

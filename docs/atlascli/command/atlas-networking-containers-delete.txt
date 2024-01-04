@@ -40,7 +40,7 @@ Arguments
    * - containerId
      - string
      - true
-     - Unique 24-hexadecimal digit string that identifies the network container that you want to remove
+     - Unique 24-hexadecimal digit string that identifies the network container that you want to remove.
 
 Options
 -------

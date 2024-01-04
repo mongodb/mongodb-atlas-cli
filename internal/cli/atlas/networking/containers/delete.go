@@ -53,11 +53,11 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete <containerId>",
 		Aliases: []string{"rm"},
-		Short:   "Remove the specified network peering container from your project.",
+		Short:   "Remove the specified network peering container from your project before creating any clusters. Don't run this command if you have clusters in your project.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
-			"containerIdDesc": "Unique 24-hexadecimal digit string that identifies the network container that you want to remove.",
+			"containerIdDesc": "Unique 24-hexadecimal digit string that identifies the network container that you want to remove",
 			"output":          opts.SuccessMessage(),
 		},
 		Example: fmt.Sprintf(`  # Remove the network peering container with the ID 5e44103f8d614b2f0b6530d8 from the project with the ID 5e2211c17a3e5a48f5497de3:

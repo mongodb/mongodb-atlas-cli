@@ -12,7 +12,7 @@ atlas networking containers delete
    :depth: 1
    :class: singlecol
 
-Remove the specified network peering container from your project.
+Remove the specified network peering container from your project before creating any clusters. Don't run this command if you have clusters in your project.
 
 To use this command, you must authenticate with a user account or an API key that has the Project Owner role.
 
@@ -40,7 +40,7 @@ Arguments
    * - containerId
      - string
      - true
-     - Unique 24-hexadecimal digit string that identifies the network container that you want to remove.
+     - Unique 24-hexadecimal digit string that identifies the network container that you want to remove
 
 Options
 -------

@@ -274,7 +274,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		g.generateProject("k8sOperatorInstall")
 		g.generateCluster()
 
-		clusterName := "install-import"
+		clusterName := "install-import-without-dp"
 		operator := setupCluster(t, clusterName, operatorNamespace)
 		context := fmt.Sprintf("kind-%s", clusterName)
 

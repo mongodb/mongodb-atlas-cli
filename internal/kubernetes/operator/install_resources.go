@@ -41,9 +41,6 @@ const (
 	installationTargetNamespaced  = "namespaced"
 	credentialsGlobalName         = "mongodb-atlas-operator-api-key" //nolint:gosec
 	credentialsProjectScopedName  = "mongodb-atlas-%s-api-key"       //nolint:gosec
-
-	objectDeletionProtectionEnvVar    = "OBJECT_DELETION_PROTECTION"
-	subobjectDeletionProtectionEnvVar = "SUBOBJECT_DELETION_PROTECTION"
 )
 
 type InstallConfig struct {

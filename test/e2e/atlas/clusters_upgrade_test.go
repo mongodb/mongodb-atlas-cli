@@ -20,7 +20,6 @@ import (
 	"os"
 	"os/exec"
 	"testing"
-	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
@@ -74,30 +73,19 @@ func TestSharedClusterUpgrade(t *testing.T) {
 
 func ensureClusterTier(t *testing.T, cliPath, projectID, clusterName, expectedTier string) {
 	t.Helper()
-	var result string
-	backoff := 1
-	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"get",
-			clusterName,
-			"--projectId", projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req := require.New(t)
-		req.NoError(err, string(resp))
-		var clusterResponse *atlasv2.AdvancedClusterDescription
-		req.NoError(json.Unmarshal(resp, &clusterResponse), string(resp))
-		req.NotEmpty(clusterResponse.GetReplicationSpecs())
-		req.NotEmpty(clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs())
-		if expectedTier == clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs()[0].ElectableSpecs.GetInstanceSize() {
-			result = clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs()[0].ElectableSpecs.GetInstanceSize()
-			break
-		}
-		t.Logf("attempt=%d, sleeping for=%ds", attempts, backoff)
-		time.Sleep(time.Duration(backoff) * time.Second)
-		backoff *= 2
-	}
-	assert.Equal(t, expectedTier, result)
+	cmd := exec.Command(cliPath,
+		clustersEntity,
+		"get",
+		clusterName,
+		"--projectId", projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	req := require.New(t)
+	req.NoError(err, string(resp))
+	var clusterResponse *atlasv2.AdvancedClusterDescription
+	req.NoError(json.Unmarshal(resp, &clusterResponse), string(resp))
+	req.NotEmpty(clusterResponse.GetReplicationSpecs())
+	req.NotEmpty(clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs())
+	assert.Equal(t, expectedTier, clusterResponse.GetReplicationSpecs()[0].GetRegionConfigs()[0].ElectableSpecs.GetInstanceSize())
 }

@@ -152,7 +152,7 @@ func (ir *InstallResources) InstallConfiguration(ctx context.Context, installCon
 				return err
 			}
 		case "Deployment":
-			err = ir.addDeployment(ctx, config, installConfig.Namespace, installConfig.Watch, installConfig.ResourceDeletionProtectionEnabled, installConfig.SubResourceDeletionProtectionEnabled, installConfig.AtlasGov)
+			err = ir.addDeployment(ctx, config, installConfig)
 			if err != nil {
 				return err
 			}
@@ -301,20 +301,20 @@ func (ir *InstallResources) addClusterRoleBinding(ctx context.Context, config ma
 	return nil
 }
 
-func (ir *InstallResources) addDeployment(ctx context.Context, config map[string]interface{}, namespace string, watch []string, deletionProtection, subDeletionProtection, atlasGov bool) error {
+func (ir *InstallResources) addDeployment(ctx context.Context, config map[string]interface{}, installConfig *InstallConfig) error {
 	obj := &appsv1.Deployment{}
 	err := ir.objConverter.FromUnstructured(config, obj)
 	if err != nil {
 		return fmt.Errorf("failed to convert Deployment object: %w", err)
 	}
 
-	obj.SetNamespace(namespace)
+	obj.SetNamespace(installConfig.Namespace)
 
 	if len(obj.Spec.Template.Spec.Containers) > 0 {
 		atlasDomain := os.Getenv("MCLI_OPS_MANAGER_URL")
 		if atlasDomain == "" {
 			atlasDomain = "https://cloud.mongodb.com/"
-			if atlasGov {
+			if installConfig.AtlasGov {
 				atlasDomain = "https://cloud.mongodbgov.com/"
 			}
 		}
@@ -325,32 +325,24 @@ func (ir *InstallResources) addDeployment(ctx context.Context, config map[string
 			}
 		}
 
-		if len(watch) > 0 {
+		if len(installConfig.Watch) > 0 {
 			for i := range obj.Spec.Template.Spec.Containers[0].Env {
 				env := obj.Spec.Template.Spec.Containers[0].Env[i]
 
 				if env.Name == "WATCH_NAMESPACE" {
 					env.ValueFrom = nil
-					env.Value = joinNamespaces(namespace, watch)
+					env.Value = joinNamespaces(installConfig.Namespace, installConfig.Watch)
 				}
 
 				obj.Spec.Template.Spec.Containers[0].Env[i] = env
 			}
 		}
 
-		if !deletionProtection {
-			obj.Spec.Template.Spec.Containers[0].Env = append(obj.Spec.Template.Spec.Containers[0].Env, corev1.EnvVar{
-				Name:      objectDeletionProtectionEnvVar,
-				Value:     "false",
-				ValueFrom: nil,
-			})
+		if !installConfig.ResourceDeletionProtectionEnabled {
+			obj.Spec.Template.Spec.Containers[0].Args = append(obj.Spec.Template.Spec.Containers[0].Args, "--object-deletion-protection=false")
 		}
-		if !subDeletionProtection {
-			obj.Spec.Template.Spec.Containers[0].Env = append(obj.Spec.Template.Spec.Containers[0].Env, corev1.EnvVar{
-				Name:      subobjectDeletionProtectionEnvVar,
-				Value:     "false",
-				ValueFrom: nil,
-			})
+		if !installConfig.SubResourceDeletionProtectionEnabled {
+			obj.Spec.Template.Spec.Containers[0].Args = append(obj.Spec.Template.Spec.Containers[0].Args, "--subobject-deletion-protection=false")
 		}
 	}
 

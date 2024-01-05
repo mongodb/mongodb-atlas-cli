@@ -1370,6 +1370,7 @@ tasks:
           shell: bash
           script: |
             set -e
+            cat /proc/sys/fs/inotify/max_user_watches
             cat /proc/sys/fs/inotify/max_user_instances
             echo 256 | sudo tee /proc/sys/fs/inotify/max_user_instances
             cat /proc/sys/fs/inotify/max_user_instances

@@ -1366,6 +1366,13 @@ tasks:
     commands:
       - func: "install gotestsum"
       - func: "install podman"
+      - command: shell.exec
+        type: setup
+        params:
+          shell: bash
+          script: |
+            set -e
+            cat /proc/sys/fs/inotify/max_user_instances
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:

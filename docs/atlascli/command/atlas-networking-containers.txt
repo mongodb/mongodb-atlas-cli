@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-networking-containers-delete` - Remove the specified network peering container from your project.
+* :ref:`atlas-networking-containers-delete` - Remove the specified network peering container from your project before creating any clusters. Don't run this command if you have clusters in your project.
 * :ref:`atlas-networking-containers-list` - Return all network peering containers for your project.
 
 

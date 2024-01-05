@@ -51,7 +51,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		require.NoError(t, watchCluster(g.projectID, g.clusterName))
 		cluster := fetchCluster(t, cliPath, g.projectID, g.clusterName)
-		ensureClusterTier(t, cluster, tierM10)
+		ensureClusterTier(t, cluster, tierM2)
 		assert.Contains(t, cluster.GetTags(), atlasv2.ResourceTag{Key: pointer.Get("env"), Value: pointer.Get("e2e")})
 	})
 

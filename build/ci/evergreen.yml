@@ -201,7 +201,6 @@ functions:
     - command: shell.exec
       type: setup
       params:
-        <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
         shell: bash
         script: |
@@ -1373,6 +1372,7 @@ tasks:
           script: |
             set -e
             cat /proc/sys/fs/inotify/max_user_instances
+            echo 256 | sudo tee /proc/sys/fs/inotify/max_user_instances
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:

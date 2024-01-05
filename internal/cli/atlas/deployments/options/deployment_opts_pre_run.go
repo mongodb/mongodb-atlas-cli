@@ -36,7 +36,7 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 			if opts.IsAtlasDeploymentType() {
 				return Deployment{}, atlasErr
 			}
-			if atlasErr != ErrNotAuthenticated {
+			if !errors.Is(atlasErr, ErrNotAuthenticated) {
 				_, _ = log.Warningf("Warning: failed to retrieve Atlas deployments because %q\n", atlasErr.Error())
 			}
 		}

@@ -201,12 +201,10 @@ functions:
     - command: shell.exec
       type: setup
       params:
-        <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
         shell: bash
         script: |
-          set -Eeou pipefail
-          export PATH="$ADD_PATH:$PATH"
+          set -Eeou pipefail        
           if [ -n "$(which yum 2>/dev/null)" ]; then
             sudo yum install -y podman
           elif [ -n "$(which apt-get 2>/dev/null)" ]; then
@@ -1366,6 +1364,16 @@ tasks:
     commands:
       - func: "install gotestsum"
       - func: "install podman"
+      - command: shell.exec
+        type: setup
+        params:
+          shell: bash
+          script: |
+            set -e
+            cat /proc/sys/fs/inotify/max_user_watches
+            cat /proc/sys/fs/inotify/max_user_instances
+            echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
+            cat /proc/sys/fs/inotify/max_user_instances
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:

@@ -20,7 +20,7 @@ require (
 	github.com/containers/podman/v4 v4.7.2
 	github.com/creack/pty v1.1.21
 	github.com/denisbrodbeck/machineid v1.0.1
-	github.com/evergreen-ci/shrub v0.0.0-20230905131908-6b01f04bb1d2
+	github.com/evergreen-ci/shrub v0.0.0-20231121224157-600e066f9de6
 	github.com/gemalto/kmip-go v0.0.10
 	github.com/go-test/deep v1.1.0
 	github.com/golang-jwt/jwt/v4 v4.5.0
@@ -35,7 +35,7 @@ require (
 	github.com/mongodb-labs/cobra2snooty v0.17.0
 	github.com/mongodb/mongodb-atlas-kubernetes/v2 v2.0.1
 	github.com/pelletier/go-toml v1.9.5
-	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
+	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/shirou/gopsutil/v3 v3.23.12
 	github.com/spf13/afero v1.11.0
 	github.com/spf13/cobra v1.8.0
@@ -48,7 +48,7 @@ require (
 	go.mongodb.org/mongo-driver v1.13.1
 	go.mongodb.org/ops-manager v0.55.3
 	golang.org/x/crypto v0.18.0
-	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
+	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc
 	golang.org/x/mod v0.14.0
 	golang.org/x/tools v0.16.1
 	google.golang.org/api v0.155.0

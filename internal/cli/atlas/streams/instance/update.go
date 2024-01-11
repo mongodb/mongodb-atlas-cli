@@ -96,7 +96,7 @@ func UpdateBuilder() *cobra.Command {
 			"output":   updateTemplate,
 		},
 		Example: fmt.Sprintf(`  # Modify the Atlas Stream Processing instance configuration with the name MyInstance:
-  %s streams instance update MyInstance --provider AWS --provider VIRGINIA_USA`, cli.ExampleAtlasEntryPoint()),
+  %s streams instance update MyInstance --provider AWS --region VIRGINIA_USA`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
 

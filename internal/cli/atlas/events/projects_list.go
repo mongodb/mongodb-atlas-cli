@@ -65,15 +65,20 @@ func (opts *projectListOpts) NewProjectListOptions() admin.ListProjectEventsApiP
 	if len(opts.EventType) > 0 {
 		eventType = &opts.EventType
 	}
-	listEventsAPIParams := admin.ListProjectEventsApiParams{
-		GroupId:      opts.ConfigProjectID(),
-		ItemsPerPage: &opts.ItemsPerPage,
-		PageNum:      &opts.PageNum,
-		EventType:    eventType,
-		MaxDate:      pointer.StringToTimePointer(opts.MaxDate),
-		MinDate:      pointer.StringToTimePointer(opts.MinDate),
+	p := admin.ListProjectEventsApiParams{
+		GroupId:   opts.ConfigProjectID(),
+		EventType: eventType,
+		MaxDate:   pointer.StringToTimePointer(opts.MaxDate),
+		MinDate:   pointer.StringToTimePointer(opts.MinDate),
 	}
-	return listEventsAPIParams
+
+	if opts.ItemsPerPage > 0 {
+		p.ItemsPerPage = &opts.ItemsPerPage
+	}
+	if opts.PageNum > 0 {
+		p.PageNum = &opts.PageNum
+	}
+	return p
 }
 
 // ProjectListBuilder

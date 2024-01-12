@@ -35,7 +35,6 @@ import (
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	akov2toptr "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/util/toptr"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -449,17 +448,17 @@ func TestBuildServerlessDeployments(t *testing.T) {
 		}
 
 		cluster := &atlasv2.ServerlessInstanceDescription{
-			Id:             akov2toptr.MakePtr("TestClusterID"),
-			GroupId:        akov2toptr.MakePtr("TestGroupID"),
-			MongoDBVersion: akov2toptr.MakePtr("5.0"),
-			Name:           akov2toptr.MakePtr(clusterName),
-			CreateDate:     akov2toptr.MakePtr(time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC)),
+			Id:             pointer.Get("TestClusterID"),
+			GroupId:        pointer.Get("TestGroupID"),
+			MongoDBVersion: pointer.Get("5.0"),
+			Name:           pointer.Get(clusterName),
+			CreateDate:     pointer.Get(time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC)),
 			ProviderSettings: atlasv2.ServerlessProviderSettings{
 				BackingProviderName: "AWS",
-				ProviderName:        akov2toptr.MakePtr("AWS"),
+				ProviderName:        pointer.Get("AWS"),
 				RegionName:          "US_EAST_1",
 			},
-			StateName:               akov2toptr.MakePtr(""),
+			StateName:               pointer.Get(""),
 			ServerlessBackupOptions: nil,
 			ConnectionStrings:       nil,
 			Links:                   nil,

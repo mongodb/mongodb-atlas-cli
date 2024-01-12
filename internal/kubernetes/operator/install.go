@@ -22,11 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
-	akov2toptr "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/util/toptr"
 	"go.mongodb.org/atlas-sdk/v20231115002/admin"
 	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -140,8 +140,8 @@ func (i *Install) ensureProject(orgID, projectName string) (*admin.Group, error)
 		Group: &admin.Group{
 			Name:                      projectName,
 			OrgId:                     orgID,
-			RegionUsageRestrictions:   akov2toptr.MakePtr(""),
-			WithDefaultAlertsSettings: akov2toptr.MakePtr(true),
+			RegionUsageRestrictions:   pointer.Get(""),
+			WithDefaultAlertsSettings: pointer.Get(true),
 		},
 	})
 	if err != nil {

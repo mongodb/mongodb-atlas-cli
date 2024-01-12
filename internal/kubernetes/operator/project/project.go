@@ -30,7 +30,6 @@ import (
 	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	akov2toptr "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/util/toptr"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -690,7 +689,7 @@ func buildAuditing(auditingProvider store.AuditingDescriber, projectID string) (
 func buildAlertConfigurations(acProvider atlas.AlertConfigurationLister, projectID, projectName, targetNamespace string, dictionary map[string]string) ([]akov2.AlertConfiguration, []*corev1.Secret, error) {
 	data, err := acProvider.AlertConfigurations(&atlasv2.ListAlertConfigurationsApiParams{
 		GroupId:      projectID,
-		ItemsPerPage: akov2toptr.MakePtr(MaxItems),
+		ItemsPerPage: pointer.Get(MaxItems),
 	})
 	if err != nil {
 		return nil, nil, err

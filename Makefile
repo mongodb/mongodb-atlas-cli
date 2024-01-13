@@ -22,7 +22,7 @@ MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/intern
 ATLAS_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=atlascli -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${ATLAS_VERSION}
 ATLAS_E2E_BINARY?=../../../bin/${ATLAS_BINARY_NAME}
 
-BUILD_TAGS?=containers_image_openpgp
+BUILD_TAGS?=exclude_graphdriver_btrfs btrfs_noversion exclude_graphdriver_devicemapper containers_image_openpgp
 DEBUG_FLAGS=all=-N -l
 
 TEST_CMD?=go test

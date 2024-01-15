@@ -324,7 +324,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,config
+          E2E_TAGS: atlas && config
   - name: brew_e2e
     tags: ["e2e","required"]
     depends_on:
@@ -354,7 +354,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,generic
+          E2E_TAGS: atlas && generic
   - name: atlas_gov_generic_e2e
     tags: ["e2e","generic","atlas"]
     must_have_test_results: true
@@ -372,7 +372,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
-          E2E_TAGS: atlas,generic
+          E2E_TAGS: atlas && generic
   # This is all about cluster which tends to be slow to get a healthy one
   - name: atlas_clusters_flags_e2e
     tags: ["e2e","clusters","atlas"]
@@ -391,7 +391,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,clusters,flags
+          E2E_TAGS: atlas && clusters && flags
   - name: atlas_clusters_file_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -409,7 +409,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,clusters,file
+          E2E_TAGS: atlas && clusters && file
   - name: atlas_clusters_sharded_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -427,7 +427,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,clusters,sharded
+          E2E_TAGS: atlas && clusters && sharded
   - name: atlas_clusters_m0_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -445,7 +445,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,clusters,m0
+          E2E_TAGS: atlas && clusters && m0
   - name: atlas_kubernetes_e2e
     tags: ["e2e","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernetes_atlas"]
     must_have_test_results: true
@@ -464,7 +464,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,cluster,kubernetes
+          E2E_TAGS: atlas && cluster && kubernetes
   - name: atlas_clusters_upgrade_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -482,7 +482,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,clusters,upgrade
+          E2E_TAGS: atlas && clusters && upgrade
   - name: atlas_interactive_e2e
     tags: ["e2e","atlas", "interactive"]
     must_have_test_results: true
@@ -500,7 +500,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,interactive
+          E2E_TAGS: atlas && interactive
   - name: atlas_serverless_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -518,7 +518,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,serverless,instance
+          E2E_TAGS: atlas && serverless && instance
   - name: atlas_gov_clusters_flags_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -536,7 +536,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
-          E2E_TAGS: atlas,clusters,flags
+          E2E_TAGS: atlas && clusters && flags
   - name: atlas_gov_clusters_file_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -554,7 +554,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
-          E2E_TAGS: atlas,clusters,file
+          E2E_TAGS: atlas && clusters && file
   - name: atlas_gov_clusters_sharded_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -572,7 +572,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
-          E2E_TAGS: atlas,clusters,sharded
+          E2E_TAGS: atlas && clusters && sharded
   # LDAP Configuration depends on a cluster running
   - name: atlas_ldap_e2e
     tags: ["e2e","clusters","atlas"]
@@ -591,7 +591,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,ldap
+          E2E_TAGS: atlas && ldap
   # Logs depend on a cluster running to get logs from
   - name: atlas_logs_e2e
     tags: ["e2e","clusters","atlas"]
@@ -610,7 +610,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,logs
+          E2E_TAGS: atlas && logs
   - name: atlas_gov_logs_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -628,7 +628,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
-          E2E_TAGS: atlas,logs
+          E2E_TAGS: atlas && logs
   # Metrics depend on a cluster running to get metrics from
   - name: atlas_metrics_e2e
     tags: ["e2e","clusters","atlas"]
@@ -647,7 +647,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,metrics
+          E2E_TAGS: atlas && metrics
   - name: atlas_gov_metrics_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -665,7 +665,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
-          E2E_TAGS: atlas,metrics
+          E2E_TAGS: atlas && metrics
   # Processes depend on a cluster running
   - name: atlas_processes_e2e
     tags: ["e2e","clusters","atlas"]
@@ -684,7 +684,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,processes
+          E2E_TAGS: atlas && processes
   - name: atlas_gov_processes_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -702,7 +702,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
-          E2E_TAGS: atlas,processes
+          E2E_TAGS: atlas && processes
   # Online archives depend on a cluster to create the archive against
   - name: atlas_online_archive_e2e
     tags: ["e2e","clusters","atlas"]
@@ -721,7 +721,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,onlinearchive
+          E2E_TAGS: atlas && onlinearchive
   # Performance Advisor depend on a cluster
   - name: atlas_performance_advisor_e2e
     tags: ["e2e","clusters","atlas"]
@@ -740,7 +740,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,performanceAdvisor
+          E2E_TAGS: atlas && performanceAdvisor
   - name: atlas_gov_performance_advisor_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -758,7 +758,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
-          E2E_TAGS: atlas,performanceAdvisor
+          E2E_TAGS: atlas && performanceAdvisor
   # Search depend on a cluster to create the indexes against
   - name: atlas_search_e2e
     tags: ["e2e","clusters","atlas"]
@@ -777,7 +777,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,search
+          E2E_TAGS: atlas && search
   - name: atlas_gov_search_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -795,7 +795,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
-          E2E_TAGS: atlas,search
+          E2E_TAGS: atlas && search
   # Private endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
   - name: atlas_private_endpoint_e2e
     tags: ["e2e","networking","atlas"]
@@ -814,7 +814,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,networking
+          E2E_TAGS: atlas && networking
   # datafederation requires cloud provider role authentication and an s3 bucket created
   - name: atlas_datafederation_db_e2e
     tags: ["e2e","datafederation","atlas"]
@@ -833,7 +833,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,datafederation,db
+          E2E_TAGS: atlas && datafederation && db
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # datafederation requires cloud provider role authentication and an s3 bucket created
@@ -854,7 +854,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,datafederation,privatenetwork
+          E2E_TAGS: atlas && datafederation && privatenetwork
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # datafederation requires cloud provider role authentication and an s3 bucket created
@@ -875,7 +875,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,datafederation,querylimits
+          E2E_TAGS: atlas && datafederation && querylimits
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # datalakepipeline requires cloud provider role authentication and an s3 bucket created
@@ -896,7 +896,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,datalakepipeline
+          E2E_TAGS: atlas && datalakepipeline
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # IAM commands tests with an Atlas profile
@@ -917,7 +917,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: iam,atlas
+          E2E_TAGS: iam && atlas
   - name: atlas_gov_iam_e2e
     tags: ["e2e","generic","atlas"]
     must_have_test_results: true
@@ -954,7 +954,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,livemigrations
+          E2E_TAGS: atlas && livemigrations
   # Streams commands tests
   - name: atlas_streams
     tags: ["e2e","generic","atlas", "assigned_to_jira_team_cloudp_atlas_streams"]
@@ -973,7 +973,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,streams
+          E2E_TAGS: atlas && streams
   # Cloud Manager and Ops Manager (indirectly) tests
   - name: cloud_manager_iam_e2e
     tags: ["e2e","generic","cloudmanager"]
@@ -1010,7 +1010,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud-manager
-          E2E_TAGS: cloudmanager,generic
+          E2E_TAGS: cloudmanager && generic
   # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_replica_set_e2e
     tags: ["e2e","clusters","cloudmanager"]
@@ -1028,7 +1028,7 @@ tasks:
       - func: "install automation agent"
       - func: "e2e test"
         vars:
-          E2E_TAGS: cloudmanager,remote,replica
+          E2E_TAGS: cloudmanager && remote && replica
   # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
   - name: cloud_manager_deploy_sharded_cluster_e2e
     tags: ["e2e","clusters","cloudmanager"]
@@ -1046,7 +1046,7 @@ tasks:
       - func: "install automation agent"
       - func: "e2e test"
         vars:
-          E2E_TAGS: cloudmanager,remote,sharded
+          E2E_TAGS: cloudmanager && remote && sharded
   # Deploy ops manager 6.0 and test against it
   - name: ops_manager_6_0_generic_e2e
     tags: [ "e2e","ops-manager-60" ]
@@ -1066,7 +1066,7 @@ tasks:
         - func: "set-up ops manager"
         - func: "e2e test"
           vars:
-            E2E_TAGS: om60,generic
+            E2E_TAGS: om60 && generic
             OM_VERSION: 6.0
   - name: ops_manager_6_0_iam_e2e
     tags: [ "e2e","ops-manager-60" ]
@@ -1086,7 +1086,7 @@ tasks:
       - func: "set-up ops manager"
       - func: "e2e test"
         vars:
-          E2E_TAGS: iam,om60
+          E2E_TAGS: iam && om60
           OM_VERSION: 6.0
   - name: ops_manager_6_0_deploy_replica_set_e2e
     tags: [ "e2e","ops-manager-60" ]
@@ -1107,7 +1107,7 @@ tasks:
       - func: "install automation agent"
       - func: "e2e test"
         vars:
-          E2E_TAGS: om60,remote,replica
+          E2E_TAGS: om60 && remote && replica
   - name: ops_manager_6_0_deploy_sharded_cluster_e2e
     tags: [ "e2e","ops-manager-60" ]
     must_have_test_results: true
@@ -1127,7 +1127,7 @@ tasks:
       - func: "install automation agent"
       - func: "e2e test"
         vars:
-          E2E_TAGS: om60,remote,sharded
+          E2E_TAGS: om60 && remote && sharded
   - name: atlas_decrypt_e2e
     tags: [ "e2e","decrypt" ]
     must_have_test_results: true
@@ -1152,7 +1152,7 @@ tasks:
           AZURE_TENANT_ID: ${logs_decrypt_azure_tenant_id}
           AZURE_CLIENT_ID: ${logs_decrypt_azure_client_id}
           AZURE_CLIENT_SECRET: ${logs_decrypt_azure_client_secret}
-          E2E_TAGS: atlas,decrypt
+          E2E_TAGS: atlas && decrypt
   - name: atlas_backups_snapshots_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
@@ -1170,7 +1170,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,backup,snapshot
+          E2E_TAGS: atlas && backup && snapshot
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
   - name: atlas_backups_schedule_e2e
@@ -1190,7 +1190,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,backup,schedule
+          E2E_TAGS: atlas && backup && schedule
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
   - name: atlas_backups_exports_buckets_e2e
@@ -1210,7 +1210,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,backup,exports,buckets
+          E2E_TAGS: atlas && backup && exports && buckets
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
   - name: atlas_backups_exports_jobs_e2e
@@ -1230,7 +1230,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,backup,exports,jobs
+          E2E_TAGS: atlas && backup && exports && jobs
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
   - name: atlas_backups_serverless_e2e
@@ -1250,7 +1250,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,backup,serverless
+          E2E_TAGS: atlas && backup && serverless
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_SERVERLESS_INSTANCE_NAME: ${e2e_serverless_instance_name}
@@ -1273,7 +1273,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,backup,restores
+          E2E_TAGS: atlas && backup && restores
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_TIMEOUT: 3h
@@ -1296,7 +1296,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,backup,compliancepolicy
+          E2E_TAGS: atlas && backup && compliancepolicy
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_TIMEOUT: 3h
@@ -1320,7 +1320,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,cleanup
+          E2E_TAGS: atlas && cleanup
           E2E_PARALLEL: 16
           E2E_TIMEOUT: 3h
   - name: atlas_gov_cleanup_e2e
@@ -1343,7 +1343,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
-          E2E_TAGS: atlas,cleanup
+          E2E_TAGS: atlas && cleanup
           E2E_TIMEOUT: 3h
           E2E_PARALLEL: 16
   - name: atlas_deployments_local_generate_e2e
@@ -1383,7 +1383,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,deployments,local
+          E2E_TAGS: atlas && deployments && local
           E2E_TIMEOUT: 3h
   - name: atlas_deployments_atlas_clusters_e2e
     tags: ["e2e","deployments","atlas"]
@@ -1404,7 +1404,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,deployments,atlasclusters
+          E2E_TAGS: atlas && deployments && atlasclusters
           E2E_TIMEOUT: 3h
 buildvariants:
   - name: code_health

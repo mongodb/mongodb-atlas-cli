@@ -22,7 +22,7 @@ MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/intern
 ATLAS_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=atlascli -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${ATLAS_VERSION}
 ATLAS_E2E_BINARY?=../../../bin/${ATLAS_BINARY_NAME}
 
-BUILD_TAGS?=exclude_graphdriver_btrfs btrfs_noversion exclude_graphdriver_devicemapper containers_image_openpgp
+BUILD_TAGS?=exclude_graphdriver_btrfs || btrfs_noversion || exclude_graphdriver_devicemapper || containers_image_openpgp
 DEBUG_FLAGS=all=-N -l
 
 TEST_CMD?=go test
@@ -157,22 +157,22 @@ build-atlascli-debug: ## Generate a binary in ./bin for debugging atlascli
 e2e-test: build-all ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI_* environment variables are exported
-	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS) $(BUILD_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
+	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS) || $(BUILD_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
 
 .PHONY: integration-test
 integration-test: ## Run integration tests
 	@echo "==> Running integration tests..."
-	$(TEST_CMD) --tags="$(INTEGRATION_TAGS) $(BUILD_TAGS)" -count=1 ./internal...
+	$(TEST_CMD) --tags="$(INTEGRATION_TAGS) || $(BUILD_TAGS)" -count=1 ./internal...
 
 .PHONY: fuzz-normalizer-test
 fuzz-normalizer-test: ## Run fuzz test
 	@echo "==> Running fuzz test..."
-	$(TEST_CMD) -fuzz=Fuzz -fuzztime 50s --tags="$(UNIT_TAGS) $(BUILD_TAGS)" -race ./internal/kubernetes/operator/resources
+	$(TEST_CMD) -fuzz=Fuzz -fuzztime 50s --tags="$(UNIT_TAGS) || $(BUILD_TAGS)" -race ./internal/kubernetes/operator/resources
 
 .PHONY: unit-test
 unit-test: ## Run unit-tests
 	@echo "==> Running unit tests..."
-	$(TEST_CMD) --tags="$(UNIT_TAGS) $(BUILD_TAGS)" -race -cover -count=1 -coverprofile $(COVERAGE) ./...
+	$(TEST_CMD) --tags="$(UNIT_TAGS) || $(BUILD_TAGS)" -race -cover -count=1 -coverprofile $(COVERAGE) ./...
 
 .PHONY: install
 install: install-mongocli install-atlascli ## Install binaries in $GOPATH/bin for both CLIs

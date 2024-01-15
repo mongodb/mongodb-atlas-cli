@@ -174,6 +174,10 @@ run:
     - e2e
     - unit
     - integration
+    - exclude_graphdriver_btrfs
+    - btrfs_noversion
+    - exclude_graphdriver_devicemapper
+    - containers_image_openpgp
   skip-dirs:
     - internal/mocks
   modules-download-mode: readonly

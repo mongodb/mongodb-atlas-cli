@@ -26,7 +26,7 @@ import (
 func Test_patchConfigHostname(t *testing.T) {
 	type fields struct {
 		containerizedEnv string
-		hostnameEnv      string
+		actionsEnv       string
 	}
 	tests := []struct {
 		name             string
@@ -37,33 +37,33 @@ func Test_patchConfigHostname(t *testing.T) {
 			name: "sets native hostname when no hostname env var is set",
 			fields: fields{
 				containerizedEnv: "",
-				hostnameEnv:      "",
+				actionsEnv:       "",
 			},
 			expectedHostName: config.NativeHostName,
 		},
 		{
-			name: "sets container hostname when legacy containerized env var is set to true",
+			name: "sets container hostname when containerized env var is set",
 			fields: fields{
 				containerizedEnv: "true",
-				hostnameEnv:      "",
+				actionsEnv:       "",
 			},
 			expectedHostName: config.DockerContainerHostName,
 		},
 		{
-			name: "sets action hostname when valid action hostname env var is set",
+			name: "sets action hostname when action env var is set",
 			fields: fields{
 				containerizedEnv: "",
-				hostnameEnv:      config.GitHubActionsHostName,
+				actionsEnv:       "true",
 			},
 			expectedHostName: config.GitHubActionsHostName,
 		},
 		{
-			name: "does not set hostname when invalid hostname env var is set",
+			name: "sets actions and containerized hostnames when both env vars are set",
 			fields: fields{
-				containerizedEnv: "",
-				hostnameEnv:      "nonsense",
+				containerizedEnv: "true",
+				actionsEnv:       "true",
 			},
-			expectedHostName: config.NativeHostName,
+			expectedHostName: config.GitHubActionsHostName + "|" + config.DockerContainerHostName,
 		},
 	}
 	for _, tt := range tests {
@@ -71,9 +71,13 @@ func Test_patchConfigHostname(t *testing.T) {
 		expectedHostName := tt.expectedHostName
 		t.Run(tt.name, func(t *testing.T) {
 			config.HostName = config.NativeHostName
-			t.Setenv("MONGODB_ATLAS_IS_CONTAINERIZED", fields.containerizedEnv)
-			t.Setenv("MONGODB_ATLAS_HOSTNAME", fields.hostnameEnv)
-			patchConfigHostnameFromEnv()
+			if fields.containerizedEnv != "" {
+				t.Setenv(config.ContainerizedHostNameEnv, fields.containerizedEnv)
+			}
+			if fields.actionsEnv != "" {
+				t.Setenv(config.GitHubActionsHostNameEnv, fields.actionsEnv)
+			}
+			patchConfigHostnameFromEnvs()
 
 			assert.Equal(t, expectedHostName, config.HostName)
 		})

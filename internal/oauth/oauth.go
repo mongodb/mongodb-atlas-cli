@@ -47,13 +47,6 @@ var defaultTransport = &http.Transport{
 	ExpectContinueTimeout: expectContinueTimeout,
 }
 
-// Set of allowed hostnames for different tracked CLI hosting modes.
-var validHostnames = map[string]bool{
-	config.NativeHostName:          true,
-	config.DockerContainerHostName: true,
-	config.GitHubActionsHostName:   true,
-}
-
 type ServiceGetter interface {
 	Service() string
 	OpsManagerURL() string
@@ -65,15 +58,22 @@ const (
 	GovClientID = "0oabtyfelbTBdoucy297" // GovClientID for production
 )
 
-// Patches the agent hostname based on set env vars.
-func patchConfigHostnameFromEnv() {
-	hostnameEnvVal := os.Getenv(config.HostNameEnv)
-	legacyContainerizedEnvIsPopulated := os.Getenv(config.LegacyContainerizedHostNameEnv) != ""
-	if hostnameEnvVal == "" && legacyContainerizedEnvIsPopulated {
-		hostnameEnvVal = config.DockerContainerHostName
+// Patches the agent hostname based on set env vars
+func patchConfigHostnameFromEnvs() {
+	_, githubActionsEnvIsPopulated := os.LookupEnv(config.GitHubActionsHostNameEnv)
+	_, containerizedEnvIsPopulated := os.LookupEnv(config.ContainerizedHostNameEnv)
+	hostnameEnvVal := ""
+	if githubActionsEnvIsPopulated {
+		hostnameEnvVal += config.GitHubActionsHostName
+	}
+	if containerizedEnvIsPopulated {
+		if hostnameEnvVal != "" {
+			hostnameEnvVal += "|"
+		}
+		hostnameEnvVal += config.DockerContainerHostName
 	}
 
-	if validHostnames[hostnameEnvVal] && !strings.Contains(config.UserAgent, hostnameEnvVal) {
+	if !strings.Contains(config.UserAgent, hostnameEnvVal) {
 		config.UserAgent = strings.ReplaceAll(config.UserAgent, config.HostName, hostnameEnvVal)
 		config.HostName = hostnameEnvVal
 	}
@@ -89,7 +89,7 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	if c.ClientID() != "" {
 		id = c.ClientID()
 	}
-	patchConfigHostnameFromEnv()
+	patchConfigHostnameFromEnvs()
 
 	authOpts := []auth.ConfigOpt{
 		auth.SetUserAgent(config.UserAgent),

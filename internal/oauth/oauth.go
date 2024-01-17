@@ -58,7 +58,7 @@ const (
 	GovClientID = "0oabtyfelbTBdoucy297" // GovClientID for production
 )
 
-// Patches the agent hostname based on set env vars
+// Patches the agent hostname based on set env vars.
 func patchConfigHostnameFromEnvs() {
 	_, githubActionsEnvIsPopulated := os.LookupEnv(config.GitHubActionsHostNameEnv)
 	_, containerizedEnvIsPopulated := os.LookupEnv(config.ContainerizedHostNameEnv)

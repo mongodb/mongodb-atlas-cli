@@ -95,9 +95,11 @@ func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {
 	if opts.diskSizeGB > 0 {
 		out.DiskSizeGB = &opts.diskSizeGB
 	}
-	if opts.tier != "" && out.ProviderSettings != nil {
-		out.ProviderSettings.InstanceSizeName = opts.tier
-		if opts.tier == atlasM2 || opts.tier == atlasM5 {
+	if out.ProviderSettings != nil {
+		if opts.tier != "" {
+			out.ProviderSettings.InstanceSizeName = opts.tier
+		}
+		if isTenant(out.ProviderSettings.InstanceSizeName) {
 			out.BiConnector = nil
 		} else {
 			out.ProviderSettings.ProviderName = out.ProviderSettings.BackingProviderName
@@ -119,6 +121,12 @@ func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {
 		}
 	}
 	out.Tags = &tags
+}
+
+func isTenant(instanceSizeName string) bool {
+	return instanceSizeName == atlasM0 ||
+		instanceSizeName == atlasM2 ||
+		instanceSizeName == atlasM5
 }
 
 // UpgradeBuilder atlas cluster(s) upgrade [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].

@@ -20,5 +20,12 @@ FILE="dist/windows_windows_amd64_v1/bin/mongocli.exe"
 if [[ -f "$FILE" ]]; then
 	echo "notarizing windows binaries"
 	export NOTARY_SIGNING_KEY=$NOTARY_SIGNING_KEY_MONGOCLI
-	go run ./tools/sign -file "$FILE"
+	docker run \
+		-e "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" \
+		-e "GRS_CONFIG_USER1_USERNAME=${GRS_PASSWORD}" \
+		--rm \
+		-v "$(pwd):$(pwd)" \
+		-w "$(pwd)" \
+		artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-jsign \
+		/bin/bash -c "jsign --tsaurl \"timestamp.url\" -a mongo-authenticode-2021 \"$FILE\""
 fi

@@ -73,6 +73,8 @@ functions:
           NOTARY_SIGNING_COMMENT: "Evergreen Automatic Signing (${tool_name})"
           NOTARY_AUTH_TOKEN: ${signing_auth_token_50}
           NOTARY_URL: ${notary_service_notary_url}
+          GRS_USERNAME: ${garasign_username}
+          GRS_PASSWORD: ${garasign_password}
         include_expansions_in_env:
           - go_base_path
           - workdir
@@ -112,12 +114,9 @@ functions:
         env:
           <<: *go_env
           TOOL_NAME: ${TOOL_NAME}
-          NOTARY_SIGNING_KEY_MONGOCLI: ${notary_service_signing_key_mongocli}
-          NOTARY_SIGNING_KEY_ATLASCLI: ${notary_service_signing_key_atlascli}
-          NOTARY_SIGNING_COMMENT: "Evergreen Automatic Signing (${TOOL_NAME})"
-          NOTARY_AUTH_TOKEN: ${signing_auth_token_50}
-          NOTARY_URL: ${notary_service_notary_url}
           SECRET_API_KEY: ${chocolatey_api_key}
+          GRS_USERNAME: ${garasign_username}
+          GRS_PASSWORD: ${garasign_password}
         command: bash.exe -c build/package/generate-msi.sh
   "update choco":
     - command: subprocess.exec

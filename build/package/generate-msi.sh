@@ -19,7 +19,6 @@ GOCACHE="$(cygpath --mixed "${workdir:?}\.gocache")"
 CGO_ENABLED=0
 export GOCACHE
 export CGO_ENABLED
-export NOTARY_SIGNING_KEY
 
 go-msi check-env
 
@@ -31,10 +30,8 @@ PACKAGE_NAME=mongocli_${VERSION_GIT}_windows_x86_64.msi
 OUTPUT=./bin/mongocli.exe
 LINKER_FLAGS="-s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${VERSION_GIT} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit=${COMMIT} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=${TOOL_NAME:?}"
 WIX_MANIFEST_FILE="./build/package/wix/${TOOL_NAME:?}.json"
-NOTARY_SIGNING_KEY=${NOTARY_SIGNING_KEY_MONGOCLI:?}
 
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-	NOTARY_SIGNING_KEY=${NOTARY_SIGNING_KEY_ATLASCLI:?}
 	SOURCE_FILES=./cmd/atlas
 	PACKAGE_NAME=mongodb-atlas-cli_${VERSION_GIT}_windows_x86_64.msi
 	OUTPUT=./bin/atlas.exe
@@ -45,7 +42,14 @@ env GOOS=windows GOARCH=amd64 go build \
 
 go-msi make --path "${WIX_MANIFEST_FILE}" --msi "dist/${PACKAGE_NAME}" --version "${VERSION_GIT}"
 
-go run ./tools/sign -file "dist/${PACKAGE_NAME}"
+docker run \
+  -e "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" \
+  -e "GRS_CONFIG_USER1_USERNAME=${GRS_PASSWORD}" \
+  --rm \
+  -v "$(pwd):$(pwd)" \
+  -w "$(pwd)" \
+  artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-jsign \
+  /bin/bash -c "jsign --tsaurl \"timestamp.url\" -a mongo-authenticode-2021 \"dist/${PACKAGE_NAME}\""
 
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
 	go run ./tools/chocolateypkg/chocolateypkg.go -version "${VERSION_GIT}"

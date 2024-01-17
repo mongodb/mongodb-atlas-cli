@@ -47,15 +47,15 @@ func Test_patchConfigHostname(t *testing.T) {
 				containerizedEnv: "true",
 				hostnameEnv:      "",
 			},
-			expectedHostName: config.ContainerHostName,
+			expectedHostName: config.DockerContainerHostName,
 		},
 		{
 			name: "sets action hostname when valid action hostname env var is set",
 			fields: fields{
 				containerizedEnv: "",
-				hostnameEnv:      config.ActionsHostName,
+				hostnameEnv:      config.GitHubActionsHostName,
 			},
-			expectedHostName: config.ActionsHostName,
+			expectedHostName: config.GitHubActionsHostName,
 		},
 		{
 			name: "does not set hostname when invalid hostname env var is set",
@@ -73,7 +73,7 @@ func Test_patchConfigHostname(t *testing.T) {
 			config.HostName = config.NativeHostName
 			t.Setenv("MONGODB_ATLAS_IS_CONTAINERIZED", fields.containerizedEnv)
 			t.Setenv("MONGODB_ATLAS_HOSTNAME", fields.hostnameEnv)
-			patchConfigHostname()
+			patchConfigHostnameFromEnv()
 
 			assert.Equal(t, expectedHostName, config.HostName)
 		})

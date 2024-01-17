@@ -38,41 +38,42 @@ import (
 //go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/config SetSaver
 
 const (
-	MongoCLIEnvPrefix            = "MCLI"          // MongoCLIEnvPrefix prefix for MongoCLI ENV variables
-	AtlasCLIEnvPrefix            = "MONGODB_ATLAS" // AtlasCLIEnvPrefix prefix for AtlasCLI ENV variables
-	DefaultProfile               = "default"       // DefaultProfile default
-	CloudService                 = "cloud"         // CloudService setting when using Atlas API
-	CloudGovService              = "cloudgov"      // CloudGovService setting when using Atlas API for Government
-	CloudManagerService          = "cloud-manager" // CloudManagerService settings when using CLoud Manager API
-	OpsManagerService            = "ops-manager"   // OpsManagerService settings when using Ops Manager API
-	JSON                         = "json"          // JSON output format as json
-	projectID                    = "project_id"
-	orgID                        = "org_id"
-	mongoShellPath               = "mongosh_path"
-	configType                   = "toml"
-	service                      = "service"
-	publicAPIKey                 = "public_api_key"
-	privateAPIKey                = "private_api_key"
-	AccessTokenField             = "access_token"
-	RefreshTokenField            = "refresh_token"
-	ClientIDField                = "client_id"
-	OpsManagerURLField           = "ops_manager_url"
-	baseURL                      = "base_url"
-	opsManagerCACertificate      = "ops_manager_ca_certificate"
-	opsManagerSkipVerify         = "ops_manager_skip_verify"
-	opsManagerVersionManifestURL = "ops_manager_version_manifest_url"
-	output                       = "output"
-	fileFlags                    = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
-	configPerm                   = 0600
-	defaultPermissions           = 0700
-	skipUpdateCheck              = "skip_update_check"
-	TelemetryEnabledProperty     = "telemetry_enabled"
-	MongoCLI                     = "mongocli"
-	AtlasCLI                     = "atlascli"
-	HostnameEnv                  = "MONGODB_ATLAS_HOSTNAME"
-	NativeHostName               = "native"
-	ContainerHostName            = "container"
-	ActionsHostName              = "actions"
+	MongoCLIEnvPrefix              = "MCLI"          // MongoCLIEnvPrefix prefix for MongoCLI ENV variables
+	AtlasCLIEnvPrefix              = "MONGODB_ATLAS" // AtlasCLIEnvPrefix prefix for AtlasCLI ENV variables
+	DefaultProfile                 = "default"       // DefaultProfile default
+	CloudService                   = "cloud"         // CloudService setting when using Atlas API
+	CloudGovService                = "cloudgov"      // CloudGovService setting when using Atlas API for Government
+	CloudManagerService            = "cloud-manager" // CloudManagerService settings when using CLoud Manager API
+	OpsManagerService              = "ops-manager"   // OpsManagerService settings when using Ops Manager API
+	JSON                           = "json"          // JSON output format as json
+	projectID                      = "project_id"
+	orgID                          = "org_id"
+	mongoShellPath                 = "mongosh_path"
+	configType                     = "toml"
+	service                        = "service"
+	publicAPIKey                   = "public_api_key"
+	privateAPIKey                  = "private_api_key"
+	AccessTokenField               = "access_token"
+	RefreshTokenField              = "refresh_token"
+	ClientIDField                  = "client_id"
+	OpsManagerURLField             = "ops_manager_url"
+	baseURL                        = "base_url"
+	opsManagerCACertificate        = "ops_manager_ca_certificate"
+	opsManagerSkipVerify           = "ops_manager_skip_verify"
+	opsManagerVersionManifestURL   = "ops_manager_version_manifest_url"
+	output                         = "output"
+	fileFlags                      = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
+	configPerm                     = 0600
+	defaultPermissions             = 0700
+	skipUpdateCheck                = "skip_update_check"
+	TelemetryEnabledProperty       = "telemetry_enabled"
+	MongoCLI                       = "mongocli"
+	AtlasCLI                       = "atlascli"
+	LegacyContainerizedHostNameEnv = "MONGODB_ATLAS_IS_CONTAINERIZED"
+	HostNameEnv                    = "MONGODB_ATLAS_HOSTNAME"
+	NativeHostName                 = "native"
+	DockerContainerHostName        = "container"
+	GitHubActionsHostName          = "actions"
 )
 
 var (

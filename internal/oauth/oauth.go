@@ -47,10 +47,11 @@ var defaultTransport = &http.Transport{
 	ExpectContinueTimeout: expectContinueTimeout,
 }
 
+// Set of allowed hostnames for different tracked CLI hosting modes.
 var validHostnames = map[string]bool{
-	config.NativeHostName:    true,
-	config.ContainerHostName: true,
-	config.ActionsHostName:   true,
+	config.NativeHostName:          true,
+	config.DockerContainerHostName: true,
+	config.GitHubActionsHostName:   true,
 }
 
 type ServiceGetter interface {
@@ -64,11 +65,12 @@ const (
 	GovClientID = "0oabtyfelbTBdoucy297" // GovClientID for production
 )
 
-func patchConfigHostname() {
-	hostnameEnvVal := os.Getenv(config.HostnameEnv)
-
-	if hostnameEnvVal == "" && (os.Getenv("MONGODB_ATLAS_IS_CONTAINERIZED") == "true") {
-		hostnameEnvVal = config.ContainerHostName
+// Patches the agent hostname based on set env vars.
+func patchConfigHostnameFromEnv() {
+	hostnameEnvVal := os.Getenv(config.HostNameEnv)
+	legacyContainerizedEnvIsPopulated := os.Getenv(config.LegacyContainerizedHostNameEnv) != ""
+	if hostnameEnvVal == "" && legacyContainerizedEnvIsPopulated {
+		hostnameEnvVal = config.DockerContainerHostName
 	}
 
 	if validHostnames[hostnameEnvVal] && !strings.Contains(config.UserAgent, hostnameEnvVal) {
@@ -87,7 +89,7 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	if c.ClientID() != "" {
 		id = c.ClientID()
 	}
-	patchConfigHostname()
+	patchConfigHostnameFromEnv()
 
 	authOpts := []auth.ConfigOpt{
 		auth.SetUserAgent(config.UserAgent),

@@ -17,10 +17,10 @@ package oauth
 import (
 	"net"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/envs"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"go.mongodb.org/atlas/auth"
 )
@@ -59,23 +59,31 @@ const (
 )
 
 // Patches the agent hostname based on set env vars.
-func patchConfigHostnameFromEnvs() {
-	_, githubActionsEnvIsPopulated := os.LookupEnv(config.GitHubActionsHostNameEnv)
-	_, containerizedEnvIsPopulated := os.LookupEnv(config.ContainerizedHostNameEnv)
-	hostnameEnvVal := ""
-	if githubActionsEnvIsPopulated {
-		hostnameEnvVal += config.GitHubActionsHostName
+func patchConfigHostnameFromEnvs(checker envs.EnvChecker) {
+	var builder strings.Builder
+	if checker.IsPopulated(config.AtlasActionHostNameEnv) {
+		appendToHostName(&builder, config.AtlasActionHostName)
 	}
-	if containerizedEnvIsPopulated {
-		if hostnameEnvVal != "" {
-			hostnameEnvVal += "|"
-		}
-		hostnameEnvVal += config.DockerContainerHostName
+	if checker.IsPopulated(config.GitHubActionsHostNameEnv) {
+		appendToHostName(&builder, config.GitHubActionsHostName)
 	}
+	if checker.IsPopulated(config.ContainerizedHostNameEnv) {
+		appendToHostName(&builder, config.DockerContainerHostName)
+	}
+	hostnameEnvVal := builder.String()
 
-	if !strings.Contains(config.UserAgent, hostnameEnvVal) {
+	if hostnameEnvVal != "" && !strings.Contains(config.UserAgent, hostnameEnvVal) {
 		config.UserAgent = strings.ReplaceAll(config.UserAgent, config.HostName, hostnameEnvVal)
 		config.HostName = hostnameEnvVal
+	}
+}
+
+func appendToHostName(builder *strings.Builder, configVal string) {
+	if configVal != "" {
+		if builder.Len() > 0 {
+			builder.WriteString("|")
+		}
+		builder.WriteString(configVal)
 	}
 }
 
@@ -89,7 +97,7 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	if c.ClientID() != "" {
 		id = c.ClientID()
 	}
-	patchConfigHostnameFromEnvs()
+	patchConfigHostnameFromEnvs(&envs.NewEnvChecker{})
 
 	authOpts := []auth.ConfigOpt{
 		auth.SetUserAgent(config.UserAgent),

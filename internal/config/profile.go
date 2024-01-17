@@ -71,9 +71,11 @@ const (
 	AtlasCLI                     = "atlascli"
 	ContainerizedHostNameEnv     = "MONGODB_ATLAS_IS_CONTAINERIZED"
 	GitHubActionsHostNameEnv     = "GITHUB_ACTIONS"
+	AtlasActionHostNameEnv       = "ATLAS_GITHUB_ACTION"
 	NativeHostName               = "native"
 	DockerContainerHostName      = "container"
 	GitHubActionsHostName        = "github_actions"
+	AtlasActionHostName          = "atlas_action"
 )
 
 var (

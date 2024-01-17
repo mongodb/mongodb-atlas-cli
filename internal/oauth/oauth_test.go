@@ -25,8 +25,9 @@ import (
 
 func Test_patchConfigHostname(t *testing.T) {
 	type fields struct {
-		containerizedEnv string
-		actionsEnv       string
+		containerizedEnv bool
+		atlasActionEnv   bool
+		ghActionsEnv     bool
 	}
 	tests := []struct {
 		name             string
@@ -36,50 +37,72 @@ func Test_patchConfigHostname(t *testing.T) {
 		{
 			name: "sets native hostname when no hostname env var is set",
 			fields: fields{
-				containerizedEnv: "",
-				actionsEnv:       "",
+				containerizedEnv: false,
+				atlasActionEnv:   false,
+				ghActionsEnv:     false,
 			},
 			expectedHostName: config.NativeHostName,
 		},
 		{
 			name: "sets container hostname when containerized env var is set",
 			fields: fields{
-				containerizedEnv: "true",
-				actionsEnv:       "",
+				containerizedEnv: true,
+				atlasActionEnv:   false,
+				ghActionsEnv:     false,
 			},
 			expectedHostName: config.DockerContainerHostName,
 		},
 		{
-			name: "sets action hostname when action env var is set",
+			name: "sets atlas action hostname when containerized env var is set",
 			fields: fields{
-				containerizedEnv: "",
-				actionsEnv:       "true",
+				containerizedEnv: false,
+				atlasActionEnv:   true,
+				ghActionsEnv:     false,
+			},
+			expectedHostName: config.AtlasActionHostName,
+		},
+		{
+			name: "sets github actions hostname when action env var is set",
+			fields: fields{
+				containerizedEnv: false,
+				atlasActionEnv:   false,
+				ghActionsEnv:     true,
 			},
 			expectedHostName: config.GitHubActionsHostName,
 		},
 		{
 			name: "sets actions and containerized hostnames when both env vars are set",
 			fields: fields{
-				containerizedEnv: "true",
-				actionsEnv:       "true",
+				containerizedEnv: true,
+				atlasActionEnv:   true,
+				ghActionsEnv:     true,
 			},
-			expectedHostName: config.GitHubActionsHostName + "|" + config.DockerContainerHostName,
+			expectedHostName: config.AtlasActionHostName + "|" + config.GitHubActionsHostName + "|" + config.DockerContainerHostName,
 		},
 	}
 	for _, tt := range tests {
 		fields := tt.fields
 		expectedHostName := tt.expectedHostName
 		t.Run(tt.name, func(t *testing.T) {
+			mockValues := map[string]bool{
+				config.AtlasActionHostNameEnv:   fields.atlasActionEnv,
+				config.GitHubActionsHostNameEnv: fields.ghActionsEnv,
+				config.ContainerizedHostNameEnv: fields.containerizedEnv,
+			}
+			mockEnvChecker := envCheckerMock{MockValues: mockValues}
 			config.HostName = config.NativeHostName
-			if fields.containerizedEnv != "" {
-				t.Setenv(config.ContainerizedHostNameEnv, fields.containerizedEnv)
-			}
-			if fields.actionsEnv != "" {
-				t.Setenv(config.GitHubActionsHostNameEnv, fields.actionsEnv)
-			}
-			patchConfigHostnameFromEnvs()
+
+			patchConfigHostnameFromEnvs(mockEnvChecker)
 
 			assert.Equal(t, expectedHostName, config.HostName)
 		})
 	}
+}
+
+type envCheckerMock struct {
+	MockValues map[string]bool
+}
+
+func (e envCheckerMock) IsPopulated(env string) bool {
+	return e.MockValues[env]
 }

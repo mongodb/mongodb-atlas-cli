@@ -194,7 +194,7 @@ func getConfigHostnameFromEnvs() string {
 	}
 
 	for _, envVar := range envVars {
-		if envIsPopulated(envVar.envName) {
+		if envIsTrue(envVar.envName) {
 			appendToHostName(&builder, envVar.hostName)
 		} else {
 			appendToHostName(&builder, "-")
@@ -208,8 +208,8 @@ func getConfigHostnameFromEnvs() string {
 	return configHostName
 }
 
-func envIsPopulated(env string) bool {
-	return os.Getenv(env) == "true"
+func envIsTrue(env string) bool {
+	return IsTrue(os.Getenv(env))
 }
 
 func appendToHostName(builder *strings.Builder, configVal string) {

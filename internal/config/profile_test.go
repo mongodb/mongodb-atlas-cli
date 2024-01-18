@@ -226,9 +226,6 @@ func Test_getConfigHostname(t *testing.T) {
 			t.Setenv(AtlasActionHostNameEnv, fields.atlasActionEnv)
 			t.Setenv(GitHubActionsHostNameEnv, fields.ghActionsEnv)
 			t.Setenv(ContainerizedHostNameEnv, fields.containerizedEnv)
-
-			HostName = NativeHostName
-
 			actualHostName := getConfigHostnameFromEnvs()
 
 			assert.Equal(t, expectedHostName, actualHostName)

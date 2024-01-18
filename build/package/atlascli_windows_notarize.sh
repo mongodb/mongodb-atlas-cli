@@ -22,7 +22,7 @@ if [[ -f "$FILE" ]]; then
 	export NOTARY_SIGNING_KEY=$NOTARY_SIGNING_KEY_ATLASCLI
 	docker run \
 		-e "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" \
-		-e "GRS_CONFIG_USER1_USERNAME=${GRS_PASSWORD}" \
+		-e "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" \
 		--rm \
 		-v "$(pwd):$(pwd)" \
 		-w "$(pwd)" \

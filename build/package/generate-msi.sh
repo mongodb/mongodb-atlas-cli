@@ -44,7 +44,7 @@ go-msi make --path "${WIX_MANIFEST_FILE}" --msi "dist/${PACKAGE_NAME}" --version
 
 docker run \
   -e "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" \
-  -e "GRS_CONFIG_USER1_USERNAME=${GRS_PASSWORD}" \
+  -e "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" \
   --rm \
   -v "$(pwd):$(pwd)" \
   -w "$(pwd)" \

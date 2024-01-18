@@ -58,7 +58,7 @@ const (
 	GovClientID = "0oabtyfelbTBdoucy297" // GovClientID for production
 )
 
-// Patches the agent hostname based on set env vars.
+// patchConfigHostnameFromEnvs patches the agent hostname based on set env vars.
 func patchConfigHostnameFromEnvs(checker envs.EnvChecker) {
 	var builder strings.Builder
 	if checker.IsPopulated(config.AtlasActionHostNameEnv) {
@@ -79,12 +79,13 @@ func patchConfigHostnameFromEnvs(checker envs.EnvChecker) {
 }
 
 func appendToHostName(builder *strings.Builder, configVal string) {
-	if configVal != "" {
-		if builder.Len() > 0 {
-			builder.WriteString("|")
-		}
-		builder.WriteString(configVal)
+	if configVal == "" {
+		return
 	}
+	if builder.Len() > 0 {
+		builder.WriteString("|")
+	}
+	builder.WriteString(configVal)
 }
 
 func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {

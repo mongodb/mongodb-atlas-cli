@@ -74,8 +74,8 @@ const (
 	AtlasActionHostNameEnv       = "ATLAS_GITHUB_ACTION"
 	NativeHostName               = "native"
 	DockerContainerHostName      = "container"
-	GitHubActionsHostName        = "github_actions"
-	AtlasActionHostName          = "atlas_action"
+	GitHubActionsHostName        = "all_github_actions"
+	AtlasActionHostName          = "atlascli_github_action"
 )
 
 var (

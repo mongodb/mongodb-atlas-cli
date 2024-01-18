@@ -323,6 +323,7 @@ tasks:
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
+      - func: "install podman"
       - func: "package"
         vars:
           unstable: -unstable
@@ -423,6 +424,7 @@ tasks:
     commands:
       - func: "generate notices"
       - func: "install goreleaser"
+      - func: "install podman"
       - func: "install macos notarization service"
       - command: subprocess.exec
         type: test
@@ -499,6 +501,7 @@ tasks:
     commands:
       - func: "generate notices"
       - func: "install goreleaser"
+      - func: "install podman"
       - func: "install macos notarization service"
       - command: subprocess.exec
         type: test

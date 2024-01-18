@@ -20,7 +20,7 @@ FILE="dist/windows_windows_amd64_v1/bin/mongocli.exe"
 if [[ -f "$FILE" ]]; then
 	echo "notarizing windows binaries"
 	export NOTARY_SIGNING_KEY=$NOTARY_SIGNING_KEY_MONGOCLI
-	docker run \
+	podman run \
 		-e "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" \
 		-e "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" \
 		--rm \

@@ -69,13 +69,18 @@ const (
 	TelemetryEnabledProperty     = "telemetry_enabled"
 	MongoCLI                     = "mongocli"
 	AtlasCLI                     = "atlascli"
+	ContainerizedHostNameEnv     = "MONGODB_ATLAS_IS_CONTAINERIZED"
+	GitHubActionsHostNameEnv     = "GITHUB_ACTIONS"
+	AtlasActionHostNameEnv       = "ATLAS_GITHUB_ACTION"
 	NativeHostName               = "native"
-	ContainerHostName            = "container"
+	DockerContainerHostName      = "container"
+	GitHubActionsHostName        = "all_github_actions"
+	AtlasActionHostName          = "atlascli_github_action"
 )
 
 var (
 	ToolName       = MongoCLI
-	HostName       = NativeHostName
+	HostName       = getConfigHostnameFromEnvs()
 	UserAgent      = fmt.Sprintf("%s/%s (%s;%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH, HostName)
 	defaultProfile = newProfile()
 )
@@ -173,6 +178,51 @@ func List() []string {
 // Exists returns true if there are any set settings for the profile name.
 func Exists(name string) bool {
 	return search.StringInSlice(List(), name)
+}
+
+// getConfigHostnameFromEnvs patches the agent hostname based on set env vars.
+func getConfigHostnameFromEnvs() string {
+	var builder strings.Builder
+
+	envVars := []struct {
+		envName  string
+		hostName string
+	}{
+		{AtlasActionHostNameEnv, AtlasActionHostName},
+		{GitHubActionsHostNameEnv, GitHubActionsHostName},
+		{ContainerizedHostNameEnv, DockerContainerHostName},
+	}
+
+	for _, envVar := range envVars {
+		if envIsTrue(envVar.envName) {
+			appendToHostName(&builder, envVar.hostName)
+		} else {
+			appendToHostName(&builder, "-")
+		}
+	}
+	configHostName := builder.String()
+
+	if isDefaultHostName(configHostName) {
+		return NativeHostName
+	}
+	return configHostName
+}
+
+func envIsTrue(env string) bool {
+	return IsTrue(os.Getenv(env))
+}
+
+func appendToHostName(builder *strings.Builder, configVal string) {
+	if builder.Len() > 0 {
+		builder.WriteString("|")
+	}
+	builder.WriteString(configVal)
+}
+
+// isDefaultHostName checks if the hostname is the default placeholder.
+func isDefaultHostName(hostname string) bool {
+	// Using strings.Count for a more dynamic approach.
+	return strings.Count(hostname, "-") == strings.Count(hostname, "|")+1
 }
 
 func newProfile() *Profile {

@@ -24,6 +24,5 @@ type NewEnvChecker struct{}
 
 // IsPopulated returns true if provided env var is populated.
 func (*NewEnvChecker) IsPopulated(env string) bool {
-	_, envIsPopulated := os.LookupEnv(env)
-	return envIsPopulated
+	return os.Getenv(env) == "true"
 }

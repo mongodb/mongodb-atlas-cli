@@ -20,6 +20,8 @@ import (
 	"fmt"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestConfig_MongoCLIConfigHome(t *testing.T) {
@@ -158,4 +160,88 @@ func TestConfig_IsTrue(t *testing.T) {
 			t.Errorf("IsTrue() get: %v, want %v", got, tt.want)
 		}
 	}
+}
+
+func Test_patchConfigHostname(t *testing.T) {
+	type fields struct {
+		containerizedEnv bool
+		atlasActionEnv   bool
+		ghActionsEnv     bool
+	}
+	tests := []struct {
+		name             string
+		fields           fields
+		expectedHostName string
+	}{
+		{
+			name: "sets native hostname when no hostname env var is set",
+			fields: fields{
+				containerizedEnv: false,
+				atlasActionEnv:   false,
+				ghActionsEnv:     false,
+			},
+			expectedHostName: NativeHostName,
+		},
+		{
+			name: "sets container hostname when containerized env var is set",
+			fields: fields{
+				containerizedEnv: true,
+				atlasActionEnv:   false,
+				ghActionsEnv:     false,
+			},
+			expectedHostName: "-|-|" + DockerContainerHostName,
+		},
+		{
+			name: "sets atlas action hostname when containerized env var is set",
+			fields: fields{
+				containerizedEnv: false,
+				atlasActionEnv:   true,
+				ghActionsEnv:     false,
+			},
+			expectedHostName: AtlasActionHostName + "|-|-",
+		},
+		{
+			name: "sets github actions hostname when action env var is set",
+			fields: fields{
+				containerizedEnv: false,
+				atlasActionEnv:   false,
+				ghActionsEnv:     true,
+			},
+			expectedHostName: "-|" + GitHubActionsHostName + "|-",
+		},
+		{
+			name: "sets actions and containerized hostnames when both env vars are set",
+			fields: fields{
+				containerizedEnv: true,
+				atlasActionEnv:   true,
+				ghActionsEnv:     true,
+			},
+			expectedHostName: AtlasActionHostName + "|" + GitHubActionsHostName + "|" + DockerContainerHostName,
+		},
+	}
+	for _, tt := range tests {
+		fields := tt.fields
+		expectedHostName := tt.expectedHostName
+		t.Run(tt.name, func(t *testing.T) {
+			mockValues := map[string]bool{
+				AtlasActionHostNameEnv:   fields.atlasActionEnv,
+				GitHubActionsHostNameEnv: fields.ghActionsEnv,
+				ContainerizedHostNameEnv: fields.containerizedEnv,
+			}
+			mockEnvChecker := envCheckerMock{MockValues: mockValues}
+			HostName = NativeHostName
+
+			actualHostName := getConfigHostnameFromEnvs(mockEnvChecker)
+
+			assert.Equal(t, expectedHostName, actualHostName)
+		})
+	}
+}
+
+type envCheckerMock struct {
+	MockValues map[string]bool
+}
+
+func (e envCheckerMock) IsPopulated(env string) bool {
+	return e.MockValues[env]
 }

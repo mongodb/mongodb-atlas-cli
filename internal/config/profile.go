@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/mongodb/mongodb-atlas-cli/internal/envs"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/version"
 	"github.com/pelletier/go-toml"
@@ -80,7 +81,7 @@ const (
 
 var (
 	ToolName       = MongoCLI
-	HostName       = NativeHostName
+	HostName       = getConfigHostnameFromEnvs(&envs.NewEnvChecker{})
 	UserAgent      = fmt.Sprintf("%s/%s (%s;%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH, HostName)
 	defaultProfile = newProfile()
 )
@@ -178,6 +179,47 @@ func List() []string {
 // Exists returns true if there are any set settings for the profile name.
 func Exists(name string) bool {
 	return search.StringInSlice(List(), name)
+}
+
+// getConfigHostnameFromEnvs patches the agent hostname based on set env vars.
+func getConfigHostnameFromEnvs(checker envs.EnvChecker) string {
+	var builder strings.Builder
+
+	envVars := []struct {
+		envName  string
+		hostName string
+	}{
+		{AtlasActionHostNameEnv, AtlasActionHostName},
+		{GitHubActionsHostNameEnv, GitHubActionsHostName},
+		{ContainerizedHostNameEnv, DockerContainerHostName},
+	}
+
+	for _, envVar := range envVars {
+		if checker.IsPopulated(envVar.envName) {
+			appendToHostName(&builder, envVar.hostName)
+		} else {
+			appendToHostName(&builder, "-")
+		}
+	}
+	configHostName := builder.String()
+
+	if isDefaultHostName(configHostName) {
+		return NativeHostName
+	}
+	return configHostName
+}
+
+func appendToHostName(builder *strings.Builder, configVal string) {
+	if builder.Len() > 0 {
+		builder.WriteString("|")
+	}
+	builder.WriteString(configVal)
+}
+
+// isDefaultHostName checks if the hostname is the default placeholder.
+func isDefaultHostName(hostname string) bool {
+	// Using strings.Count for a more dynamic approach.
+	return strings.Count(hostname, "-") == strings.Count(hostname, "|")+1
 }
 
 func newProfile() *Profile {

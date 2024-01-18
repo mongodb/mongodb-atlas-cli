@@ -17,10 +17,8 @@ package oauth
 import (
 	"net"
 	"net/http"
-	"strings"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/envs"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"go.mongodb.org/atlas/auth"
 )
@@ -58,36 +56,6 @@ const (
 	GovClientID = "0oabtyfelbTBdoucy297" // GovClientID for production
 )
 
-// patchConfigHostnameFromEnvs patches the agent hostname based on set env vars.
-func patchConfigHostnameFromEnvs(checker envs.EnvChecker) {
-	var builder strings.Builder
-	if checker.IsPopulated(config.AtlasActionHostNameEnv) {
-		appendToHostName(&builder, config.AtlasActionHostName)
-	}
-	if checker.IsPopulated(config.GitHubActionsHostNameEnv) {
-		appendToHostName(&builder, config.GitHubActionsHostName)
-	}
-	if checker.IsPopulated(config.ContainerizedHostNameEnv) {
-		appendToHostName(&builder, config.DockerContainerHostName)
-	}
-	hostnameEnvVal := builder.String()
-
-	if hostnameEnvVal != "" && !strings.Contains(config.UserAgent, hostnameEnvVal) {
-		config.UserAgent = strings.ReplaceAll(config.UserAgent, config.HostName, hostnameEnvVal)
-		config.HostName = hostnameEnvVal
-	}
-}
-
-func appendToHostName(builder *strings.Builder, configVal string) {
-	if configVal == "" {
-		return
-	}
-	if builder.Len() > 0 {
-		builder.WriteString("|")
-	}
-	builder.WriteString(configVal)
-}
-
 func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	client := http.DefaultClient
 	client.Transport = defaultTransport
@@ -98,7 +66,6 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	if c.ClientID() != "" {
 		id = c.ClientID()
 	}
-	patchConfigHostnameFromEnvs(&envs.NewEnvChecker{})
 
 	authOpts := []auth.ConfigOpt{
 		auth.SetUserAgent(config.UserAgent),

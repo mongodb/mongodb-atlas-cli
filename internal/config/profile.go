@@ -27,7 +27,6 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/mongodb/mongodb-atlas-cli/internal/envs"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/version"
 	"github.com/pelletier/go-toml"
@@ -81,7 +80,7 @@ const (
 
 var (
 	ToolName       = MongoCLI
-	HostName       = getConfigHostnameFromEnvs(&envs.NewEnvChecker{})
+	HostName       = getConfigHostnameFromEnvs()
 	UserAgent      = fmt.Sprintf("%s/%s (%s;%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH, HostName)
 	defaultProfile = newProfile()
 )
@@ -182,7 +181,7 @@ func Exists(name string) bool {
 }
 
 // getConfigHostnameFromEnvs patches the agent hostname based on set env vars.
-func getConfigHostnameFromEnvs(checker envs.EnvChecker) string {
+func getConfigHostnameFromEnvs() string {
 	var builder strings.Builder
 
 	envVars := []struct {
@@ -195,7 +194,7 @@ func getConfigHostnameFromEnvs(checker envs.EnvChecker) string {
 	}
 
 	for _, envVar := range envVars {
-		if checker.IsPopulated(envVar.envName) {
+		if envIsPopulated(envVar.envName) {
 			appendToHostName(&builder, envVar.hostName)
 		} else {
 			appendToHostName(&builder, "-")
@@ -207,6 +206,10 @@ func getConfigHostnameFromEnvs(checker envs.EnvChecker) string {
 		return NativeHostName
 	}
 	return configHostName
+}
+
+func envIsPopulated(env string) bool {
+	return os.Getenv(env) == "true"
 }
 
 func appendToHostName(builder *strings.Builder, configVal string) {

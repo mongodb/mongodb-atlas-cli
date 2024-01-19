@@ -55,7 +55,7 @@ podman run \
   -v "$(pwd):$(pwd)" \
   -w "$(pwd)" \
   artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-jsign \
-  /bin/bash -c "jsign --tsaurl \"timestamp.url\" -a mongo-authenticode-2021 \"dist/${PACKAGE_NAME}\""
+  /bin/bash -c "jsign --tsaurl http://timestamp.digicert.com -a mongo-authenticode-2021 \"dist/${PACKAGE_NAME}\""
 
 rm .env
 

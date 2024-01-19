@@ -216,6 +216,8 @@ functions:
             sudo brew install podman
           elif [ -n "$(which choco 2>/dev/null)" ]; then
             choco install -y podman-cli
+            podman machine init
+            podman machine start
           fi
   "install pykmip":
     - command: subprocess.exec

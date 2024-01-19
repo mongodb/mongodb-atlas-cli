@@ -18,14 +18,19 @@ set -Eeou pipefail
 
 FILE="dist/windows_windows_amd64_v1/bin/mongocli.exe"
 if [[ -f "$FILE" ]]; then
-	echo "notarizing windows binaries"
-	export NOTARY_SIGNING_KEY=$NOTARY_SIGNING_KEY_MONGOCLI
+	echo "signing $FILE"
+	echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
+
+	echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" > .env
+	echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> .env
+
 	podman run \
-		-e "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" \
-		-e "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" \
+		--env-file=.env \
 		--rm \
 		-v "$(pwd):$(pwd)" \
 		-w "$(pwd)" \
 		artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-jsign \
 		/bin/bash -c "jsign --tsaurl \"timestamp.url\" -a mongo-authenticode-2021 \"$FILE\""
+	
+	rm .env
 fi

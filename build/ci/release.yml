@@ -73,6 +73,8 @@ functions:
           NOTARY_SIGNING_COMMENT: "Evergreen Automatic Signing (${tool_name})"
           NOTARY_AUTH_TOKEN: ${signing_auth_token_50}
           NOTARY_URL: ${notary_service_notary_url}
+          ARTIFACTORY_USERNAME: ${artifactory_username}
+          ARTIFACTORY_PASSWORD: ${artifactory_password}
           GRS_USERNAME: ${garasign_username}
           GRS_PASSWORD: ${garasign_password}
         include_expansions_in_env:
@@ -115,6 +117,8 @@ functions:
           <<: *go_env
           TOOL_NAME: ${TOOL_NAME}
           SECRET_API_KEY: ${chocolatey_api_key}
+          ARTIFACTORY_USERNAME: ${artifactory_username}
+          ARTIFACTORY_PASSWORD: ${artifactory_password}
           GRS_USERNAME: ${garasign_username}
           GRS_PASSWORD: ${garasign_password}
         command: bash.exe -c build/package/generate-msi.sh
@@ -278,6 +282,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "install go-msi"
+      - func: "install podman"
       - func: "generate msi"
         vars:
           TOOL_NAME: ${tool_name}
@@ -576,6 +581,7 @@ tasks:
         variant: "code_health"
     commands:
       - func: "install go-msi"
+      - func: "install podman"
       - func: "generate msi"
         vars:
           TOOL_NAME: ${tool_name}

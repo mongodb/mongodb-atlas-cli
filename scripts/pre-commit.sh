@@ -15,6 +15,7 @@
 # limitations under the License.
 
 STAGED_GO_FILES=$(git diff --cached --name-only | grep ".go$" | grep -v "mock")
+BUILD_TAGS="exclude_graphdriver_btrfs || btrfs_noversion || exclude_graphdriver_devicemapper || containers_image_openpgp"
 
 for FILE in ${STAGED_GO_FILES}
 do
@@ -25,7 +26,7 @@ done
 
 if [[ -n "${STAGED_GO_FILES}" ]]; then
     set -o errexit
-    go test --tags="unit integration" -race ./internal...
+    go test --tags="unit || integration || ${BUILD_TAGS}" -race ./internal...
     make fix-lint
     set +o errexit
     for FILE in ${STAGED_GO_FILES}

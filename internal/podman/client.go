@@ -137,7 +137,7 @@ type Version struct {
 	} `json:"Server"`
 }
 
-//go:generate mockgen -destination=../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/podman Client
+//go:generate mockgen -package=mocks -destination ../mocks/mock_podman.go -source client.go
 
 type Client interface {
 	Ready(ctx context.Context) error

@@ -63,7 +63,7 @@ devtools:  ## Install dev tools
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin $(GOLANGCI_VERSION)
 
 .PHONY: setup
-setup: deps devtools ## Set up dev env
+setup: deps devtools link-git-hooks ## Set up dev env
 
 .PHONY: link-git-hooks
 link-git-hooks: ## Install git hooks

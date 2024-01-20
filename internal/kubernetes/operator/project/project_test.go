@@ -37,7 +37,6 @@ import (
 	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	akov2toptr "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/util/toptr"
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	corev1 "k8s.io/api/core/v1"
@@ -58,7 +57,7 @@ func TestBuildAtlasProject(t *testing.T) {
 	featureValidator := mocks.NewMockFeatureValidator(ctl)
 	t.Run("Can convert Project entity with secrets data", func(t *testing.T) {
 		p := &atlasv2.Group{
-			Id:                        akov2toptr.MakePtr(projectID),
+			Id:                        pointer.Get(projectID),
 			OrgId:                     orgID,
 			Name:                      "TestProjectName",
 			ClusterCount:              0,
@@ -249,15 +248,15 @@ func TestBuildAtlasProject(t *testing.T) {
 			Links: nil,
 			Results: []atlasv2.TeamRole{
 				{
-					TeamId:    akov2toptr.MakePtr(teamID),
+					TeamId:    pointer.Get(teamID),
 					RoleNames: []string{string(akov2.TeamRoleClusterManager)},
 				},
 			},
-			TotalCount: akov2toptr.MakePtr(1),
+			TotalCount: pointer.Get(1),
 		}
 		teams := &atlasv2.TeamResponse{
-			Id:   akov2toptr.MakePtr(teamID),
-			Name: akov2toptr.MakePtr("TestTeamName"),
+			Id:   pointer.Get(teamID),
+			Name: pointer.Get("TestTeamName"),
 		}
 
 		teamUsers := &atlasv2.PaginatedApiAppUser{
@@ -265,11 +264,11 @@ func TestBuildAtlasProject(t *testing.T) {
 				{
 					EmailAddress: "testuser@mooooongodb.com",
 					FirstName:    "TestName",
-					Id:           akov2toptr.MakePtr("TestID"),
+					Id:           pointer.Get("TestID"),
 					LastName:     "TestLastName",
 				},
 			},
-			TotalCount: akov2toptr.MakePtr(1),
+			TotalCount: pointer.Get(1),
 		}
 
 		listOption := &atlas.ListOptions{ItemsPerPage: MaxItems}

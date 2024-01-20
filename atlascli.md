@@ -21,7 +21,7 @@ You can place this binary somewhere in your `PATH` for ease of use.
 
 ```bash
 git clone https://github.com/mongodb/mongodb-atlas-cli.git
-cd mongocli
+cd mongodb-atlas-cli
 ```
 
 #### Build

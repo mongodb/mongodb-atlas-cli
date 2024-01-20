@@ -17,8 +17,6 @@ package oauth
 import (
 	"net"
 	"net/http"
-	"os"
-	"strings"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -58,13 +56,6 @@ const (
 	GovClientID = "0oabtyfelbTBdoucy297" // GovClientID for production
 )
 
-func changeHostNameToContainer() {
-	if !strings.Contains(config.UserAgent, config.ContainerHostName) {
-		config.UserAgent = strings.ReplaceAll(config.UserAgent, config.HostName, config.ContainerHostName)
-		config.HostName = config.ContainerHostName
-	}
-}
-
 func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	client := http.DefaultClient
 	client.Transport = defaultTransport
@@ -74,10 +65,6 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	}
 	if c.ClientID() != "" {
 		id = c.ClientID()
-	}
-	runningFromContainer, runningFromContainerIsSet := os.LookupEnv("MONGODB_ATLAS_IS_CONTAINERIZED")
-	if runningFromContainerIsSet && runningFromContainer == "true" {
-		changeHostNameToContainer()
 	}
 
 	authOpts := []auth.ConfigOpt{

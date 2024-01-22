@@ -282,7 +282,6 @@ tasks:
         patch_optional: true
     commands:
       - func: "install go-msi"
-      - func: "install podman"
       - func: "generate msi"
         vars:
           TOOL_NAME: ${tool_name}

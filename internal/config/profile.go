@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -243,6 +244,10 @@ func (p *Profile) Name() string {
 
 func SetName(name string) { Default().SetName(name) }
 func (p *Profile) SetName(name string) {
+	if strings.Contains(name, ".") {
+		log.Fatal("Profile should not contain '.'")
+	}
+
 	p.name = strings.ToLower(name)
 }
 

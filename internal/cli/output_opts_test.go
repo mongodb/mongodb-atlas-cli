@@ -22,7 +22,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 func TestOutputOpts_outputTypeAndValue(t *testing.T) {

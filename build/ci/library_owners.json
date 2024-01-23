@@ -34,7 +34,7 @@
 	"github.com/stretchr/testify": "mongocli",
 	"github.com/tangzero/inflector": "mongocli",
 	"go.mongodb.org/atlas": "mongocli",
-	"go.mongodb.org/atlas-sdk/v20231115002": "mongocli",
+	"go.mongodb.org/atlas-sdk/v20231115004": "mongocli",
 	"go.mongodb.org/mongo-driver": "mongocli",
 	"go.mongodb.org/ops-manager": "mongocli",
 	"golang.org/x/crypto": "mongocli",

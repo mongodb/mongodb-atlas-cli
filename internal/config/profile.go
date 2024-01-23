@@ -18,7 +18,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -242,13 +241,23 @@ func (p *Profile) Name() string {
 	return p.name
 }
 
-func SetName(name string) { Default().SetName(name) }
-func (p *Profile) SetName(name string) {
+func validateName(name string) error {
 	if strings.Contains(name, ".") {
-		log.Fatal("Profile should not contain '.'")
+		return errors.New("Profile should not contain '.'")
+	}
+
+	return nil
+}
+
+func SetName(name string) error { return Default().SetName(name) }
+func (p *Profile) SetName(name string) error {
+	if err := validateName(name); err != nil {
+		return err
 	}
 
 	p.name = strings.ToLower(name)
+
+	return nil
 }
 
 func Set(name string, value interface{}) { Default().Set(name, value) }
@@ -628,6 +637,10 @@ func Filename() string {
 // Rename replaces the Profile to a new Profile name, overwriting any Profile that existed before.
 func Rename(newProfileName string) error { return Default().Rename(newProfileName) }
 func (p *Profile) Rename(newProfileName string) error {
+	if err := validateName(newProfileName); err != nil {
+		return err
+	}
+
 	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
 	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
 	configurationAfterDelete := viper.AllSettings()

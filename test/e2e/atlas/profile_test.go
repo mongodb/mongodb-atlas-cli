@@ -24,13 +24,13 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func verifyProfileValidity(t *testing.T, cliPath string, profile string, profileValid bool) {
+func validateProfile(t *testing.T, cliPath string, profile string, profileValid bool) {
 	t.Helper()
 
 	// Setup the command
 	cmd := exec.Command(cliPath,
-		"auth",
-		"whoami",
+		authEntity,
+		whoami,
 		"--profile", profile)
 
 	cmd.Env = os.Environ()
@@ -57,14 +57,14 @@ func TestProfile(t *testing.T) {
 	require.NoError(t, err)
 
 	t.Run("profile name valid", func(t *testing.T) {
-		verifyProfileValidity(t, cliPath, "default", true)
-		verifyProfileValidity(t, cliPath, "default-123", true)
-		verifyProfileValidity(t, cliPath, "default-test", true)
+		validateProfile(t, cliPath, "default", true)
+		validateProfile(t, cliPath, "default-123", true)
+		validateProfile(t, cliPath, "default-test", true)
 	})
 
 	t.Run("profile name invalid", func(t *testing.T) {
-		verifyProfileValidity(t, cliPath, "d.efault", false)
-		verifyProfileValidity(t, cliPath, "default.123", false)
-		verifyProfileValidity(t, cliPath, "default.test", false)
+		validateProfile(t, cliPath, "d.efault", false)
+		validateProfile(t, cliPath, "default.123", false)
+		validateProfile(t, cliPath, "default.test", false)
 	})
 }

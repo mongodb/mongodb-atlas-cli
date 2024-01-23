@@ -60,8 +60,8 @@ func (opts *InviteOpts) Run() error {
 func (opts *InviteOpts) newInvitation() *atlasv2.OrganizationInvitationRequest {
 	return &atlasv2.OrganizationInvitationRequest{
 		Username: &opts.username,
-		Roles:    opts.roles,
-		TeamIds:  opts.teamIds,
+		Roles:    &opts.roles,
+		TeamIds:  &opts.teamIds,
 	}
 }
 

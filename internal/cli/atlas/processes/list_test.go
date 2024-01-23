@@ -32,7 +32,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockProcessLister(ctrl)
 
 	expected := atlasv2.PaginatedHostViewAtlas{
-		Results: []atlasv2.ApiHostViewAtlas{
+		Results: &[]atlasv2.ApiHostViewAtlas{
 			{
 				Id: pointer.Get("1"),
 			},

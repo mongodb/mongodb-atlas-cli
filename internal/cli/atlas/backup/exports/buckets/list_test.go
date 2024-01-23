@@ -32,7 +32,7 @@ func TestListOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockExportBucketsLister(ctrl)
 
 	expected := &atlasv2.PaginatedBackupSnapshotExportBucket{
-		Results: []atlasv2.DiskBackupSnapshotAWSExportBucket{
+		Results: &[]atlasv2.DiskBackupSnapshotAWSExportBucket{
 			{
 				Id:            pointer.Get("1"),
 				CloudProvider: pointer.Get("AWS"),

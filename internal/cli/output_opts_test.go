@@ -74,7 +74,7 @@ func TestOutputOpts_mapReduceResults(t *testing.T) {
 		input := *atlasv2.NewPaginatedTeam()
 		wantID := "123"
 		wantName := "Team A"
-		input.Results = []atlasv2.TeamResponse{
+		input.Results = &[]atlasv2.TeamResponse{
 			{
 				Id:   pointer.Get(wantID),
 				Name: pointer.Get(wantName),

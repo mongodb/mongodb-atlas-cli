@@ -70,7 +70,7 @@ func TestProcesses(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			processesEntity,
 			"describe",
-			processes.Results[0].GetId(),
+			processes.GetResults()[0].GetId(),
 			"--projectId", g.projectID,
 			"-o=json")
 
@@ -79,6 +79,6 @@ func TestProcesses(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		var p *atlasv2.ApiHostViewAtlas
 		require.NoError(t, json.Unmarshal(resp, &p))
-		assert.Equal(t, *p.Id, *processes.Results[0].Id)
+		assert.Equal(t, *p.Id, *processes.GetResults()[0].Id)
 	})
 }

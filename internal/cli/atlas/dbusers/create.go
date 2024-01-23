@@ -107,8 +107,8 @@ func (opts *CreateOpts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 	}
 
 	return &atlasv2.CloudDatabaseUser{
-		Roles:           convert.BuildAtlasRoles(opts.roles),
-		Scopes:          convert.BuildAtlasScopes(opts.scopes),
+		Roles:           pointer.Get(convert.BuildAtlasRoles(opts.roles)),
+		Scopes:          pointer.Get(convert.BuildAtlasScopes(opts.scopes)),
 		GroupId:         opts.ConfigProjectID(),
 		Username:        opts.username,
 		Password:        pointer.GetStringPointerIfNotEmpty(opts.password),

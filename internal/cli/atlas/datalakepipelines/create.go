@@ -114,19 +114,22 @@ func (opts *CreateOpts) newCreateRequest() (*atlasv2.DataLakeIngestionPipeline, 
 		},
 	}
 
+	partitionFields := []atlasv2.DataLakePipelinesPartitionField{}
 	for i, fieldName := range opts.sinkPartitionField {
-		pipeline.Sink.PartitionFields = append(pipeline.Sink.PartitionFields,
-			*atlasv2.NewDataLakePipelinesPartitionField(fieldName, i))
+		partitionFields = append(partitionFields, *atlasv2.NewDataLakePipelinesPartitionField(fieldName, i))
 	}
+	pipeline.Sink.SetPartitionFields(partitionFields)
 
+	transformations := []atlasv2.FieldTransformation{}
 	for _, entry := range opts.transform {
 		entries := strings.Split(entry, ":")
 		transformType := entries[0]
 		transformFieldNames := strings.Split(entries[1], ",")
 		for i := range transformFieldNames {
-			pipeline.Transformations = append(pipeline.Transformations, atlasv2.FieldTransformation{Field: &transformFieldNames[i], Type: &transformType})
+			transformations = append(transformations, atlasv2.FieldTransformation{Field: &transformFieldNames[i], Type: &transformType})
 		}
 	}
+	pipeline.SetTransformations(transformations)
 
 	if strings.EqualFold(opts.sourceType, periodicCPS) {
 		pipeline.Source = &atlasv2.IngestionSource{

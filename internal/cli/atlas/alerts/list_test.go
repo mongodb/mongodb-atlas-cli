@@ -34,7 +34,7 @@ func TestList_Run(t *testing.T) {
 
 	expected := &atlasv2.PaginatedAlert{
 		Links: nil,
-		Results: []atlasv2.AlertViewForNdsGroup{
+		Results: &[]atlasv2.AlertViewForNdsGroup{
 			{
 				Id:            pointer.Get("test"),
 				EventTypeName: pointer.Get("NO_PRIMARY"),

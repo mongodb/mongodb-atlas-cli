@@ -43,7 +43,7 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 		RetentionValue:    1,
 	}
 	policy := &atlasv2.DataProtectionSettings20231001{
-		ScheduledPolicyItems:    []atlasv2.BackupComplianceScheduledPolicyItem{scheduledPolicyItem},
+		ScheduledPolicyItems:    &[]atlasv2.BackupComplianceScheduledPolicyItem{scheduledPolicyItem},
 		ProjectId:               &g.projectID,
 		AuthorizedUserLastName:  authorizedUserLastName,
 		AuthorizedUserFirstName: authorizedUserFirstName,

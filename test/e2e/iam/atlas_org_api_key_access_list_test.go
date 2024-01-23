@@ -100,7 +100,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		var key atlasv2.PaginatedApiUserAccessList
 		require.NoError(t, json.Unmarshal(resp, &key))
 		assert.NotEmpty(t, key.Results)
-		entry = *key.Results[0].IpAddress
+		entry = *key.GetResults()[0].IpAddress
 	})
 
 	t.Run("Delete", func(t *testing.T) {

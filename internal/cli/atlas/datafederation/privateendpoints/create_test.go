@@ -39,7 +39,7 @@ func TestCreate_Run(t *testing.T) {
 	buf := new(bytes.Buffer)
 	expected := &admin.PaginatedPrivateNetworkEndpointIdEntry{
 		TotalCount: pointer.Get(1),
-		Results: []admin.PrivateNetworkEndpointIdEntry{
+		Results: &[]admin.PrivateNetworkEndpointIdEntry{
 			{
 				EndpointId: "id",
 				Comment:    pointer.Get("comment"),

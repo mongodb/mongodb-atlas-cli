@@ -59,7 +59,7 @@ func (opts *AddOpts) newProjectTeam() []atlasv2.TeamRole {
 	return []atlasv2.TeamRole{
 		{
 			TeamId:    &opts.teamID,
-			RoleNames: opts.roles,
+			RoleNames: &opts.roles,
 		},
 	}
 }

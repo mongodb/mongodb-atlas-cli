@@ -31,7 +31,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockServerlessSnapshotsLister(ctrl)
 
 	expected := &atlasv2.PaginatedApiAtlasServerlessBackupSnapshot{
-		Results: []atlasv2.ServerlessBackupSnapshot{
+		Results: &[]atlasv2.ServerlessBackupSnapshot{
 			{
 				Id: pointer.Get("1"),
 			},

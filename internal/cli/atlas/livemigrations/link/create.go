@@ -56,7 +56,7 @@ func (opts *CreateOpts) Run() error {
 
 func (opts *CreateOpts) newTokenCreateRequest() *atlasv2.TargetOrgRequest {
 	return &atlasv2.TargetOrgRequest{
-		AccessListIps: opts.accessListIP,
+		AccessListIps: &opts.accessListIP,
 	}
 }
 

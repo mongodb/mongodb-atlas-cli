@@ -34,7 +34,7 @@ func TestSlowQueryLogsList_Run(t *testing.T) {
 	mockStore := mocks.NewMockPerformanceAdvisorSlowQueriesLister(ctrl)
 	buf := new(bytes.Buffer)
 	expected := atlasv2.PerformanceAdvisorSlowQueryList{
-		SlowQueries: []atlasv2.PerformanceAdvisorSlowQuery{{
+		SlowQueries: &[]atlasv2.PerformanceAdvisorSlowQuery{{
 			Line:      atlasv2.PtrString("test"),
 			Namespace: atlasv2.PtrString("test"),
 		},

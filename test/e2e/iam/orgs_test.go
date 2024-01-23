@@ -48,7 +48,7 @@ func TestOrgs(t *testing.T) {
 		err = json.Unmarshal(resp, &orgs)
 		require.NoError(t, err, string(resp))
 		assert.NotEmpty(t, orgs.Results)
-		orgID = *orgs.Results[0].Id
+		orgID = *orgs.GetResults()[0].Id
 		require.NotEmpty(t, orgID, "orgID not set, resp: %s", resp)
 	})
 	require.NotEmpty(t, orgID)

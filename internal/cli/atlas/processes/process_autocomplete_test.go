@@ -34,7 +34,7 @@ func Test_autoCompleteOpts_tierSuggestions(t *testing.T) {
 		store: mockStore,
 	}
 	expected := &atlasv2.PaginatedHostViewAtlas{
-		Results: []atlasv2.ApiHostViewAtlas{
+		Results: &[]atlasv2.ApiHostViewAtlas{
 			{
 				Id:       pointer.Get("test.com:27017"),
 				Hostname: pointer.Get("test"),

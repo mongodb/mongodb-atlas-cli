@@ -30,7 +30,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectUsersLister(ctrl)
 
 	expected := atlasv2.PaginatedAppUser{
-		Results: []atlasv2.CloudAppUser{
+		Results: &[]atlasv2.CloudAppUser{
 			{
 				Username: "Test",
 			},

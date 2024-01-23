@@ -33,7 +33,7 @@ func TestListOpts_Run(t *testing.T) {
 	defer ctrl.Finish()
 
 	expected := &atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob{
-		Results: []atlasv2.ServerlessBackupRestoreJob{
+		Results: &[]atlasv2.ServerlessBackupRestoreJob{
 			{
 				Id: pointer.Get("1"),
 			},

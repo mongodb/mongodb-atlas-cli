@@ -104,8 +104,8 @@ func getStorage(storage *admin.DataLakeStorage) *akov2.Storage {
 		return &akov2.Storage{}
 	}
 	return &akov2.Storage{
-		Databases: getDatabases(storage.Databases),
-		Stores:    getStores(storage.Stores),
+		Databases: getDatabases(storage.GetDatabases()),
+		Stores:    getStores(storage.GetStores()),
 	}
 }
 

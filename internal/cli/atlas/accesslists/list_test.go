@@ -35,13 +35,13 @@ func TestWhitelistList_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectIPAccessListLister(ctrl)
 
 	expected := &atlasv2.PaginatedNetworkAccess{
-		Links: []atlasv2.Link{
+		Links: &[]atlasv2.Link{
 			{
 				Rel:  pointer.Get("test"),
 				Href: pointer.Get("test"),
 			},
 		},
-		Results: []atlasv2.NetworkPermissionEntry{
+		Results: &[]atlasv2.NetworkPermissionEntry{
 			{
 				AwsSecurityGroup: pointer.Get("test"),
 				CidrBlock:        pointer.Get("test"),

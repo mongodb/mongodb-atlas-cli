@@ -56,7 +56,7 @@ func TestCleanup(t *testing.T) {
 	var projects admin.PaginatedAtlasGroup
 	req.NoError(json.Unmarshal(resp, &projects), string(resp))
 	t.Logf("projects:\n%s\n", resp)
-	for _, project := range projects.Results {
+	for _, project := range projects.GetResults() {
 		projectID := project.GetId()
 		if projectID == os.Getenv("MCLI_PROJECT_ID") {
 			t.Log("skipping project", projectID)

@@ -66,7 +66,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 		var users atlasv2.PaginatedApiAppUser
 		require.NoError(t, json.Unmarshal(resp, &users))
 		found := false
-		for _, user := range users.Results {
+		for _, user := range users.GetResults() {
 			if user.Username == username {
 				found = true
 				break

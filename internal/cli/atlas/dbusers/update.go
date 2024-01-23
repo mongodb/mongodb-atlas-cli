@@ -82,8 +82,8 @@ func (opts *UpdateOpts) update(out *admin.CloudDatabaseUser) {
 	if opts.password != "" {
 		out.Password = pointer.GetStringPointerIfNotEmpty(opts.password)
 	}
-	out.Scopes = convert.BuildAtlasScopes(opts.scopes)
-	out.Roles = convert.BuildAtlasRoles(opts.roles)
+	out.Scopes = pointer.Get(convert.BuildAtlasScopes(opts.scopes))
+	out.Roles = pointer.Get(convert.BuildAtlasRoles(opts.roles))
 	out.DatabaseName = opts.authDB
 	if opts.authDB == "" {
 		out.DatabaseName = convert.GetAuthDB(out)

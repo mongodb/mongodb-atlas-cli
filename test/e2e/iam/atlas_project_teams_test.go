@@ -101,7 +101,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &roles))
 		a.Len(roles.Results, 1)
 
-		role := roles.Results[0]
+		role := roles.GetResults()[0]
 		a.Equal(teamID, role.GetTeamId())
 		a.Len(role.RoleNames, 2)
 		a.ElementsMatch([]string{roleName1, roleName2}, role.RoleNames)

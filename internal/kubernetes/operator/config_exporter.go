@@ -254,8 +254,7 @@ func fetchClusterNames(clustersProvider atlas.AllClustersLister, projectID strin
 			return nil, ErrNoCloudManagerClusters
 		}
 
-		for i := range clusters.Results {
-			cluster := clusters.Results[i]
+		for _, cluster := range clusters.GetResults() {
 			if reflect.ValueOf(cluster).IsZero() {
 				continue
 			}
@@ -272,8 +271,7 @@ func fetchClusterNames(clustersProvider atlas.AllClustersLister, projectID strin
 		return result, nil
 	}
 
-	for i := range serverlessInstances.Results {
-		cluster := serverlessInstances.Results[i]
+	for _, cluster := range serverlessInstances.GetResults() {
 		result = append(result, *cluster.Name)
 	}
 

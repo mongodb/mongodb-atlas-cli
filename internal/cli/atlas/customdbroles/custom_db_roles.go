@@ -47,7 +47,7 @@ func appendActions(existingActions, newActions []atlasv2.DatabasePrivilegeAction
 	}
 	for _, action := range newActions {
 		if a, ok := actionMap[action.Action]; ok {
-			action.Resources = append(action.Resources, a.Resources...)
+			action.SetResources(append(action.GetResources(), a.GetResources()...))
 			out = append(out, action)
 			delete(actionMap, action.Action)
 			continue
@@ -66,7 +66,7 @@ func joinActions(newActions []atlasv2.DatabasePrivilegeAction) []atlasv2.Databas
 	actionMap := make(map[string]atlasv2.DatabasePrivilegeAction)
 	for _, action := range newActions {
 		if a, ok := actionMap[action.Action]; ok {
-			action.Resources = append(action.Resources, a.Resources...)
+			action.SetResources(append(action.GetResources(), a.GetResources()...))
 		}
 		actionMap[action.Action] = action
 	}

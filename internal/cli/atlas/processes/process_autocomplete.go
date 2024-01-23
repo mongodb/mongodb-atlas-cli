@@ -65,8 +65,8 @@ func (opts *AutoCompleteOpts) processSuggestion(toComplete string) ([]string, er
 	if err != nil {
 		return nil, err
 	}
-	suggestion := make([]string, 0, len(result.Results))
-	for _, p := range result.Results {
+	suggestion := make([]string, 0, len(result.GetResults()))
+	for _, p := range result.GetResults() {
 		if !strings.HasPrefix(p.GetId(), toComplete) {
 			continue
 		}

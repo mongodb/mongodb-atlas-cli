@@ -94,7 +94,7 @@ func (opts *Opts) validateUniqueUsername(val interface{}) error {
 func (opts *Opts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 	var none = "NONE"
 	return &atlasv2.CloudDatabaseUser{
-		Roles:        convert.BuildAtlasRoles([]string{atlasAdmin}),
+		Roles:        pointer.Get(convert.BuildAtlasRoles([]string{atlasAdmin})),
 		GroupId:      opts.ConfigProjectID(),
 		Password:     pointer.GetStringPointerIfNotEmpty(opts.DBUserPassword),
 		X509Type:     &none,

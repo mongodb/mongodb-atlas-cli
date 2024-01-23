@@ -59,7 +59,7 @@ func (opts *UpdateOpts) Run() error {
 func (opts *UpdateOpts) newInvitation() *atlasv2.GroupInvitationRequest {
 	return &atlasv2.GroupInvitationRequest{
 		Username: &opts.username,
-		Roles:    opts.roles,
+		Roles:    &opts.roles,
 	}
 }
 

@@ -38,7 +38,7 @@ func (s *Store) PeeringConnections(projectID string, opts *ContainersListOptions
 		if err != nil {
 			return nil, err
 		}
-		return result.Results, nil
+		return result.GetResults(), nil
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

@@ -112,9 +112,9 @@ func TestStreams(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &instances))
 
 		a.Len(instances.Results, 1)
-		a.Equal(*instances.Results[0].Name, instanceName)
-		a.Equal("AWS", instances.Results[0].DataProcessRegion.CloudProvider)
-		a.Equal("VIRGINIA_USA", instances.Results[0].DataProcessRegion.Region)
+		a.Equal(*instances.GetResults()[0].Name, instanceName)
+		a.Equal("AWS", instances.GetResults()[0].DataProcessRegion.CloudProvider)
+		a.Equal("VIRGINIA_USA", instances.GetResults()[0].DataProcessRegion.Region)
 	})
 
 	t.Run("Describing a streams instance", func(t *testing.T) {
@@ -238,7 +238,7 @@ func TestStreams(t *testing.T) {
 		var response atlasv2.PaginatedApiStreamsConnection
 		req.NoError(json.Unmarshal(resp, &response))
 
-		connections := response.Results
+		connections := response.GetResults()
 		a.Len(connections, 1)
 		a.Equal(connectionName, *connections[0].Name)
 		a.Equal("Kafka", *connections[0].Type)

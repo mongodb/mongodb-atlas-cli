@@ -104,14 +104,14 @@ func (opts *UpdateOpts) patchOpts(out *atlasv2.AdvancedClusterDescription) {
 	out.TerminationProtectionEnabled = cli.ReturnValueForSetting(opts.enableTerminationProtection, opts.disableTerminationProtection)
 
 	if len(opts.tag) > 0 {
-		out.Tags = []atlasv2.ResourceTag{}
+		out.Tags = &[]atlasv2.ResourceTag{}
 	}
 	addTags(out, opts.tag)
 }
 
 func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasv2.AdvancedClusterDescription) {
-	for _, replicationSpec := range out.ReplicationSpecs {
-		for _, regionConf := range replicationSpec.RegionConfigs {
+	for _, replicationSpec := range out.GetReplicationSpecs() {
+		for _, regionConf := range replicationSpec.GetRegionConfigs() {
 			if regionConf.ReadOnlySpecs != nil {
 				regionConf.ReadOnlySpecs.InstanceSize = &opts.tier
 			}

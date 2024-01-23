@@ -269,26 +269,22 @@ func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]
 	for rIdx := range roles {
 		role := &roles[rIdx]
 
-		inhRoles := make([]akov2.Role, 0, len(role.InheritedRoles))
-		for inhRIdx := range role.InheritedRoles {
-			rl := &role.InheritedRoles[inhRIdx]
+		inhRoles := make([]akov2.Role, 0, len(role.GetInheritedRoles()))
+		for _, rl := range role.GetInheritedRoles() {
 			inhRoles = append(inhRoles, akov2.Role{
 				Name:     rl.Role,
 				Database: rl.Db,
 			})
 		}
 
-		actions := make([]akov2.Action, 0, len(role.Actions))
-		for aIdx := range role.Actions {
-			action := &role.Actions[aIdx]
-
-			r := make([]akov2.Resource, 0, len(action.Resources))
-			for resIdx := range action.Resources {
-				res := &action.Resources[resIdx]
+		actions := make([]akov2.Action, 0, len(role.GetActions()))
+		for _, action := range role.GetActions() {
+			r := make([]akov2.Resource, 0, len(action.GetResources()))
+			for _, res := range action.GetResources() {
 				r = append(r, akov2.Resource{
-					Cluster:    &res.Cluster,
-					Database:   &res.Db,
-					Collection: &res.Collection,
+					Cluster:    pointer.Get(res.Cluster),
+					Database:   pointer.Get(res.Db),
+					Collection: pointer.Get(res.Collection),
 				})
 			}
 			actions = append(actions, akov2.Action{
@@ -312,8 +308,8 @@ func buildAccessLists(accessListProvider atlas.ProjectIPAccessListLister, projec
 		return nil, err
 	}
 
-	result := make([]akov2project.IPAccessList, 0, len(accessLists.Results))
-	for _, list := range accessLists.Results {
+	result := make([]akov2project.IPAccessList, 0, len(accessLists.GetResults()))
+	for _, list := range accessLists.GetResults() {
 		if strings.HasSuffix(list.GetCidrBlock(), cidrException) && list.GetIpAddress() != "" {
 			list.CidrBlock = pointer.Get("")
 		}
@@ -352,10 +348,10 @@ func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNam
 	if err != nil {
 		return nil, nil, err
 	}
-	result := make([]akov2project.Integration, 0, len(integrations.Results))
-	intSecrets := make([]*corev1.Secret, 0, len(integrations.Results))
+	result := make([]akov2project.Integration, 0, len(integrations.GetResults()))
+	intSecrets := make([]*corev1.Secret, 0, len(integrations.GetResults()))
 
-	for _, list := range integrations.Results {
+	for _, list := range integrations.GetResults() {
 		iType := list.GetType()
 		secret := secrets.NewAtlasSecretBuilder(
 			fmt.Sprintf("%s-integration-%s", projectID, strings.ToLower(iType)),
@@ -646,9 +642,8 @@ func buildCloudProviderAccessRoles(cpaProvider store.CloudProviderAccessRoleList
 		return nil, err
 	}
 
-	result := make([]akov2.CloudProviderAccessRole, 0, len(data.AwsIamRoles))
-	for i := range data.AwsIamRoles {
-		cpa := &data.AwsIamRoles[i]
+	result := make([]akov2.CloudProviderAccessRole, 0, len(data.GetAwsIamRoles()))
+	for _, cpa := range data.GetAwsIamRoles() {
 		result = append(result, akov2.CloudProviderAccessRole{
 			ProviderName:      cpa.ProviderName,
 			IamAssumedRoleArn: cpa.GetIamAssumedRoleArn(),
@@ -751,7 +746,7 @@ func buildAlertConfigurations(acProvider atlas.AlertConfigurationLister, project
 				TeamName:       atlas.StringOrEmpty(atlasNotification.TeamName),
 				TypeName:       atlas.StringOrEmpty(atlasNotification.TypeName),
 				Username:       atlas.StringOrEmpty(atlasNotification.Username),
-				Roles:          atlasNotification.Roles,
+				Roles:          atlasNotification.GetRoles(),
 			}
 
 			if atlasNotification.TypeName != nil {
@@ -830,17 +825,15 @@ func buildAlertConfigurations(acProvider atlas.AlertConfigurationLister, project
 	}
 
 	secretResults := []*corev1.Secret{}
-	results := make([]akov2.AlertConfiguration, 0, len(data.Results))
-	for i := range data.Results {
-		alertConfig := &data.Results[i]
-
-		notifications, notificationSecrets := convertNotifications(alertConfig.Notifications)
+	results := make([]akov2.AlertConfiguration, 0, len(data.GetResults()))
+	for _, alertConfig := range data.GetResults() {
+		notifications, notificationSecrets := convertNotifications(alertConfig.GetNotifications())
 		secretResults = append(secretResults, notificationSecrets...)
 
 		results = append(results, akov2.AlertConfiguration{
 			EventTypeName:   atlas.StringOrEmpty(alertConfig.EventTypeName),
 			Enabled:         pointer.GetOrDefault(alertConfig.Enabled, false),
-			Matchers:        convertMatchers(alertConfig.Matchers),
+			Matchers:        convertMatchers(alertConfig.GetMatchers()),
 			MetricThreshold: convertMetricThreshold(alertConfig.MetricThreshold),
 			Threshold:       convertThreshold(alertConfig.Threshold),
 			Notifications:   notifications,
@@ -864,8 +857,8 @@ func buildTeams(teamsProvider atlas.OperatorTeamsStore, orgID, projectID, projec
 		if err != nil {
 			return nil, err
 		}
-		result := make([]string, 0, len(users.Results))
-		for _, user := range users.Results {
+		result := make([]string, 0, len(users.GetResults()))
+		for _, user := range users.GetResults() {
 			result = append(result, user.Username)
 		}
 		return result, nil
@@ -894,11 +887,10 @@ func buildTeams(teamsProvider atlas.OperatorTeamsStore, orgID, projectID, projec
 		return result
 	}
 
-	teamsRefs := make([]akov2.Team, 0, len(projectTeams.Results))
-	atlasTeamCRs := make([]*akov2.AtlasTeam, 0, len(projectTeams.Results))
+	teamsRefs := make([]akov2.Team, 0, len(projectTeams.GetResults()))
+	atlasTeamCRs := make([]*akov2.AtlasTeam, 0, len(projectTeams.GetResults()))
 
-	for i := range projectTeams.Results {
-		teamRef := projectTeams.Results[i]
+	for _, teamRef := range projectTeams.GetResults() {
 		teamID := atlas.StringOrEmpty(teamRef.TeamId)
 
 		team, err := teamsProvider.TeamByID(orgID, teamID)
@@ -914,7 +906,7 @@ func buildTeams(teamsProvider atlas.OperatorTeamsStore, orgID, projectID, projec
 				Name:      crName,
 				Namespace: targetNamespace,
 			},
-			Roles: convertRoleNames(teamRef.RoleNames),
+			Roles: convertRoleNames(teamRef.GetRoleNames()),
 		})
 
 		users, err := fetchUsers(atlas.StringOrEmpty(team.Id))

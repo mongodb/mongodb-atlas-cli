@@ -41,7 +41,7 @@ func NewMockAtlasDeploymentOpts(ctrl *gomock.Controller, deploymentName string) 
 
 func (m *MockDeploymentOpts) MockPaginatedAdvancedClusterDescription() *admin.PaginatedAdvancedClusterDescription {
 	return &admin.PaginatedAdvancedClusterDescription{
-		Results: []admin.AdvancedClusterDescription{
+		Results: &[]admin.AdvancedClusterDescription{
 			{
 				Name:           pointer.Get(m.Opts.DeploymentName),
 				Id:             pointer.Get("123"),

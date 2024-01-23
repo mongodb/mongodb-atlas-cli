@@ -32,12 +32,12 @@ func TestNamespacesList_Run(t *testing.T) {
 	mockStore := mocks.NewMockPerformanceAdvisorIndexesLister(ctrl)
 
 	expected := atlasv2.PerformanceAdvisorResponse{
-		Shapes: []atlasv2.PerformanceAdvisorShape{
+		Shapes: &[]atlasv2.PerformanceAdvisorShape{
 			{
 				Id: pointer.Get("1"),
 			},
 		},
-		SuggestedIndexes: []atlasv2.PerformanceAdvisorIndex{
+		SuggestedIndexes: &[]atlasv2.PerformanceAdvisorIndex{
 			{
 				Id: pointer.Get("1"),
 			},

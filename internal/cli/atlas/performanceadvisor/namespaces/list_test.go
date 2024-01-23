@@ -32,7 +32,7 @@ func TestNamespacesList_Run(t *testing.T) {
 	mockStore := mocks.NewMockPerformanceAdvisorNamespacesLister(ctrl)
 
 	expected := atlasv2.Namespaces{
-		Namespaces: []atlasv2.NamespaceObj{
+		Namespaces: &[]atlasv2.NamespaceObj{
 			{
 				Namespace: pointer.Get("test"),
 			},

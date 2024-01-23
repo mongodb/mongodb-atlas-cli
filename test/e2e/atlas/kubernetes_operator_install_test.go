@@ -449,7 +449,7 @@ func cleanUpKeys(t *testing.T, operator *operatorHelper, namespace string, cliPa
 	err = json.Unmarshal(resp, &keys)
 	require.NoError(t, err)
 
-	for _, key := range keys.Results {
+	for _, key := range keys.GetResults() {
 		keyID := *key.Id
 		desc := *key.Desc
 

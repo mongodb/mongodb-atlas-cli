@@ -67,7 +67,7 @@ func (opts *CreateOpts) newExportJob() *atlasv2.DiskBackupExportJobRequest {
 	createRequest := &atlasv2.DiskBackupExportJobRequest{
 		SnapshotId:     opts.snapshotID,
 		ExportBucketId: opts.exportBucketID,
-		CustomData:     customData,
+		CustomData:     &customData,
 	}
 	return createRequest
 }

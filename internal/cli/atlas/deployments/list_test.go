@@ -49,7 +49,7 @@ func TestList_Run(t *testing.T) {
 	})
 
 	expectedAtlasClusters := &admin.PaginatedAdvancedClusterDescription{
-		Results: []admin.AdvancedClusterDescription{
+		Results: &[]admin.AdvancedClusterDescription{
 			{
 				Name:           pointer.Get("atlasCluster2"),
 				Id:             pointer.Get("123"),

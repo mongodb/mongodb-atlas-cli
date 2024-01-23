@@ -46,7 +46,7 @@ func (opts *AssignOpts) initStore(ctx context.Context) func() error {
 
 func (opts *AssignOpts) newAssignAPIKey() *atlasv2.UpdateAtlasProjectApiKey {
 	return &atlasv2.UpdateAtlasProjectApiKey{
-		Roles: opts.roles,
+		Roles: &opts.roles,
 	}
 }
 

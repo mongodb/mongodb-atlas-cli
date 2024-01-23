@@ -32,7 +32,7 @@ func TestListOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockStreamsConnectionLister(ctrl)
 
 	expected := admin.PaginatedApiStreamsConnection{
-		Results: []admin.StreamsConnection{
+		Results: &[]admin.StreamsConnection{
 			{
 				Name:             admin.PtrString("ExampleConn"),
 				Type:             admin.PtrString("Kafka"),

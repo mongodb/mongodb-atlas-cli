@@ -31,7 +31,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectAPIKeyLister(ctrl)
 
 	expected := atlasv2.PaginatedApiApiUser{
-		Results: []atlasv2.ApiKeyUserDetails{
+		Results: &[]atlasv2.ApiKeyUserDetails{
 			{
 				Id: pointer.Get("1"),
 			},

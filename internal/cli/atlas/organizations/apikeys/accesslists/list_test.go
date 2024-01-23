@@ -43,7 +43,7 @@ func TestListOpts_Run(t *testing.T) {
 		ItemsPerPage: pointer.Get(listOpts.ItemsPerPage),
 	}
 	expected := admin.PaginatedApiUserAccessList{
-		Results: []admin.UserAccessList{},
+		Results: &[]admin.UserAccessList{},
 	}
 	mockStore.
 		EXPECT().

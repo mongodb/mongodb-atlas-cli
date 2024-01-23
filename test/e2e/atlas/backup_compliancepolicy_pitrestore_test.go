@@ -42,7 +42,7 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 		RetentionValue:    1,
 	}
 	compliancePolicy := atlasv2.DataProtectionSettings20231001{
-		ScheduledPolicyItems: []atlasv2.BackupComplianceScheduledPolicyItem{initialItem},
+		ScheduledPolicyItems: &[]atlasv2.BackupComplianceScheduledPolicyItem{initialItem},
 	}
 	res, err := setupCompliancePolicy(t, g.projectID, &compliancePolicy)
 	r.NoError(err)

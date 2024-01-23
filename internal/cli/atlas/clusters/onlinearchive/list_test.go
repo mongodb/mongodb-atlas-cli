@@ -51,7 +51,7 @@ func TestList_Run(t *testing.T) {
 	}
 
 	expected := &atlasv2.PaginatedOnlineArchive{
-		Results: []atlasv2.BackupOnlineArchive{
+		Results: &[]atlasv2.BackupOnlineArchive{
 			{
 				Id: pointer.Get(""),
 			},

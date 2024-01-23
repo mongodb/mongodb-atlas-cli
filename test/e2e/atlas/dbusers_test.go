@@ -77,7 +77,7 @@ func TestDBUserWithFlags(t *testing.T) {
 		var users atlasv2.PaginatedApiAtlasDatabaseUser
 		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
 
-		if len(users.Results) == 0 {
+		if len(users.GetResults()) == 0 {
 			t.Fatalf("expected len(users) > 0, got 0")
 		}
 	})
@@ -193,10 +193,10 @@ func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	a := assert.New(t)
 	a.Equal(username, user.Username)
 	if a.Len(user.Scopes, 2) {
-		a.Equal(clusterName0, user.Scopes[0].Name)
-		a.Equal(clusterType, user.Scopes[0].Type)
-		a.Equal(clusterName1, user.Scopes[1].Name)
-		a.Equal(clusterType, user.Scopes[1].Type)
+		a.Equal(clusterName0, user.GetScopes()[0].Name)
+		a.Equal(clusterType, user.GetScopes()[0].Type)
+		a.Equal(clusterName1, user.GetScopes()[1].Name)
+		a.Equal(clusterType, user.GetScopes()[1].Type)
 	}
 }
 
@@ -232,13 +232,13 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	a := assert.New(t)
 	a.Equal(username, user.Username)
 	if a.Len(user.Roles, 1) {
-		a.Equal("admin", user.Roles[0].DatabaseName)
-		a.Equal(roleReadWrite, user.Roles[0].RoleName)
+		a.Equal("admin", user.GetRoles()[0].DatabaseName)
+		a.Equal(roleReadWrite, user.GetRoles()[0].RoleName)
 	}
 
 	a.Len(user.Scopes, 1)
-	a.Equal(clusterName0, user.Scopes[0].Name)
-	a.Equal(clusterType, user.Scopes[0].Type)
+	a.Equal(clusterName0, user.GetScopes()[0].Name)
+	a.Equal(clusterType, user.GetScopes()[0].Type)
 }
 
 func testDeleteUser(t *testing.T, cliPath, dbusersEntity, username string) {

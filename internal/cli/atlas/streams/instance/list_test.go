@@ -54,7 +54,7 @@ func TestListOpts_Run(t *testing.T) {
 	tenant.Name = &name
 	tenant.DataProcessRegion = atlasv2.NewStreamsDataProcessRegion("AWS", "US-EAST-1")
 	expected := atlasv2.NewPaginatedApiStreamsTenant()
-	expected.Results = []atlasv2.StreamsTenant{*tenant}
+	expected.Results = &[]atlasv2.StreamsTenant{*tenant}
 
 	mockStore.
 		EXPECT().

@@ -39,7 +39,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockCloudProviderAccessRoleLister(ctrl)
 
 	expected := &atlasv2.CloudProviderAccessRoles{
-		AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
+		AwsIamRoles: &[]atlasv2.CloudProviderAccessAWSIAMRole{
 			{
 				ProviderName: "AWS",
 				Id:           pointer.Get("123"),

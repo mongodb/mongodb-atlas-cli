@@ -61,8 +61,8 @@ func (s *Store) DeleteInvitation(orgID, invitationID string) error {
 func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitation *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error) {
 	if invitationID != "" {
 		invitationRequest := atlasv2.OrganizationInvitationUpdateRequest{
-			Roles:   invitation.GetRoles(),
-			TeamIds: invitation.GetTeamIds(),
+			Roles:   invitation.Roles,
+			TeamIds: invitation.TeamIds,
 		}
 
 		result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitationById(s.ctx, orgID,

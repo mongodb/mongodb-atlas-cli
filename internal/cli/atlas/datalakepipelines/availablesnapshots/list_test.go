@@ -37,7 +37,7 @@ func TestListOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockPipelineAvailableSnapshotsLister(ctrl)
 
 	expected := &atlasv2.PaginatedBackupSnapshot{
-		Results: []atlasv2.DiskBackupSnapshot{
+		Results: &[]atlasv2.DiskBackupSnapshot{
 			{
 				Id:          pointer.Get("5e4e593f70dfbf1010295836"),
 				Description: pointer.Get("test rs"),

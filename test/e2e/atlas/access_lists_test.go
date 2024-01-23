@@ -62,8 +62,8 @@ func TestAccessList(t *testing.T) {
 		req.NoError(err)
 
 		found := false
-		for i := range entries.Results {
-			if entries.Results[i].GetIpAddress() == entry {
+		for i := range entries.GetResults() {
+			if entries.GetResults()[i].GetIpAddress() == entry {
 				found = true
 				break
 			}
@@ -138,8 +138,8 @@ func TestAccessList(t *testing.T) {
 		req.NoError(err)
 
 		found := false
-		for i := range entries.Results {
-			if entries.Results[i].GetIpAddress() == entry {
+		for i := range entries.GetResults() {
+			if entries.GetResults()[i].GetIpAddress() == entry {
 				found = true
 				break
 			}
@@ -183,7 +183,7 @@ func TestAccessList(t *testing.T) {
 		a.NotEmpty(entries.Results)
 		a.Len(entries.Results, 1)
 
-		currentIPEntry = entries.Results[0].GetIpAddress()
+		currentIPEntry = entries.GetResults()[0].GetIpAddress()
 	})
 
 	t.Run("Delete", func(t *testing.T) {

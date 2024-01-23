@@ -416,11 +416,11 @@ func newAvailableRegion(projectID, tier, provider string) (string, error) {
 		return "", fmt.Errorf("error unmarshaling response %w: %s", err, string(resp))
 	}
 
-	if cloudProviders.GetTotalCount() == 0 || len(cloudProviders.GetResults()[0].InstanceSizes) == 0 {
+	if cloudProviders.GetTotalCount() == 0 || len(cloudProviders.GetResults()[0].GetInstanceSizes()) == 0 {
 		return "", errNoRegions
 	}
 
-	return cloudProviders.Results[0].GetInstanceSizes()[0].GetAvailableRegions()[0].GetName(), nil
+	return cloudProviders.GetResults()[0].GetInstanceSizes()[0].GetAvailableRegions()[0].GetName(), nil
 }
 
 func RandClusterName() (string, error) {
@@ -516,7 +516,7 @@ func MongoDBMajorVersion() (string, error) {
 }
 
 func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedIntegration) bool {
-	services := thirdPartyIntegrations.Results
+	services := thirdPartyIntegrations.GetResults()
 	for i := range services {
 		iType := getIntegrationType(services[i])
 		if iType == name {
@@ -560,7 +560,7 @@ func getFirstOrgUser() (string, error) {
 		return "", fmt.Errorf("no users found")
 	}
 
-	return users.Results[0].Username, nil
+	return users.GetResults()[0].Username, nil
 }
 
 func createTeam(teamName, userName string) (string, error) {
@@ -669,7 +669,7 @@ func listClustersForProject(t *testing.T, cliPath, projectID string) atlasv2.Pag
 func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 	clusters := listClustersForProject(t, cliPath, projectID)
-	for _, cluster := range clusters.Results {
+	for _, cluster := range clusters.GetResults() {
 		func(clusterName, state string) {
 			t.Run(fmt.Sprintf("delete cluster %s\n", clusterName), func(t *testing.T) {
 				t.Parallel()
@@ -937,7 +937,7 @@ func deleteAllServerlessInstances(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
 	serverlessInstances := listServerlessByProject(t, cliPath, projectID)
-	for _, serverless := range serverlessInstances.Results {
+	for _, serverless := range serverlessInstances.GetResults() {
 		func(serverlessInstance, state string) {
 			t.Run(fmt.Sprintf("delete serverless instance %s\n", serverlessInstance), func(t *testing.T) {
 				t.Parallel()

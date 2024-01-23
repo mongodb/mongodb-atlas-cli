@@ -47,7 +47,7 @@ func TestAtlasOrgs(t *testing.T) {
 		err = json.Unmarshal(resp, &orgs)
 		require.NoError(t, err, string(resp))
 		assert.NotEmpty(t, orgs.GetResults())
-		orgID = orgs.Results[0].GetId()
+		orgID = orgs.GetResults()[0].GetId()
 	})
 	require.NotEmpty(t, orgID)
 
@@ -77,7 +77,7 @@ func TestAtlasOrgs(t *testing.T) {
 		var users admin.PaginatedApiAppUser
 		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
 		assert.NotEmpty(t, users.GetResults())
-		userID = users.Results[0].GetId()
+		userID = users.GetResults()[0].GetId()
 	})
 	require.NotEmpty(t, userID)
 

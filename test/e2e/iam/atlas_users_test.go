@@ -51,8 +51,8 @@ func TestAtlasUsers(t *testing.T) {
 		var users atlasv2.PaginatedApiAppUser
 		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
 		require.NotEmpty(t, users.Results)
-		username = users.Results[0].GetUsername()
-		userID = users.Results[0].GetId()
+		username = users.GetResults()[0].GetUsername()
+		userID = users.GetResults()[0].GetId()
 	})
 
 	t.Run("Describe by username", func(t *testing.T) {
@@ -71,7 +71,7 @@ func TestAtlasUsers(t *testing.T) {
 		assert.Equal(t, username, user.GetUsername())
 		for i, item := range user.GetRoles() {
 			if item.HasOrgId() {
-				orgID = user.Roles[i].GetOrgId()
+				orgID = user.GetRoles()[i].GetOrgId()
 				break
 			}
 		}

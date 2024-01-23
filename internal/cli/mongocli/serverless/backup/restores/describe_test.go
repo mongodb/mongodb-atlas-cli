@@ -43,7 +43,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 		TargetClusterName: "ClusterTest",
 		DeliveryType:      "test type",
 		ExpiresAt:         pointer.Get(expiresAt),
-		DeliveryUrl:       []string{"test url"},
+		DeliveryUrl:       &[]string{"test url"},
 	}
 
 	buf := new(bytes.Buffer)

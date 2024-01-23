@@ -34,7 +34,7 @@ func TestAccessLogListClusterName_Run(t *testing.T) {
 	mockStore := mocks.NewMockAccessLogsLister(ctrl)
 
 	expected := &atlasv2.MongoDBAccessLogsList{
-		AccessLogs: []atlasv2.MongoDBAccessLogs{
+		AccessLogs: &[]atlasv2.MongoDBAccessLogs{
 			{
 				GroupId:       pointer.Get("test"),
 				Hostname:      pointer.Get("test"),

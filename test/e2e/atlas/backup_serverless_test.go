@@ -55,7 +55,7 @@ func TestServerlessBackup(t *testing.T) {
 		var r atlasv2.PaginatedApiAtlasServerlessBackupSnapshot
 		require.NoError(t, json.Unmarshal(resp, &r), string(resp))
 		assert.NotEmpty(t, r)
-		snapshotID = r.Results[0].GetId()
+		snapshotID = r.GetResults()[0].GetId()
 		t.Log("snapshotID", snapshotID)
 		require.NotEmpty(t, snapshotID)
 	})

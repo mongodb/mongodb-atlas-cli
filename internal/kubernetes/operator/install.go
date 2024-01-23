@@ -207,7 +207,7 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 			return fmt.Errorf("unable to retrieve list of projects: %w", err)
 		}
 
-		for _, project := range projectsData.Results {
+		for _, project := range projectsData.GetResults() {
 			projectsIDs = append(projectsIDs, atlas.StringOrEmpty(project.Id))
 		}
 	}
@@ -222,7 +222,7 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 			projectID,
 			apiKeyID,
 			&admin.UpdateAtlasProjectApiKey{
-				Roles: []string{roleProjectOwner},
+				Roles: &[]string{roleProjectOwner},
 			},
 		)
 		if err != nil {

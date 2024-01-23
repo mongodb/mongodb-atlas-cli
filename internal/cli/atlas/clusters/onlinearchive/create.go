@@ -88,7 +88,7 @@ func (opts *CreateOpts) newOnlineArchive() (*atlasv2.BackupOnlineArchiveCreate, 
 			ExpireAfterDays: pointer.Get(opts.archiveAfter),
 		},
 		DbName:          opts.dbName,
-		PartitionFields: opts.partitionFields(),
+		PartitionFields: pointer.Get(opts.partitionFields()),
 	}
 
 	if opts.expireAfterDays > 0 {

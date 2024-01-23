@@ -39,16 +39,15 @@ func BuildDBUsers(provider atlas.OperatorDBUsersStore, projectID, projectName, t
 		return nil, nil, err
 	}
 
-	if len(users.Results) == 0 {
+	if len(users.GetResults()) == 0 {
 		return nil, nil, nil
 	}
 
 	mappedUsers := map[string]*akov2.AtlasDatabaseUser{}
-	relatedSecrets := make([]*corev1.Secret, 0, len(users.Results))
+	relatedSecrets := make([]*corev1.Secret, 0, len(users.GetResults()))
 
-	for i := range users.Results {
-		user := &users.Results[i]
-
+	for _, u := range users.GetResults() {
+		user := pointer.Get(u)
 		resourceName := suggestResourceName(projectName, user.Username, mappedUsers, dictionary)
 		labels := convertUserLabels(user)
 		roles := convertUserRoles(user)
@@ -99,7 +98,7 @@ func BuildDBUsers(provider atlas.OperatorDBUsersStore, projectID, projectName, t
 		}
 	}
 
-	result := make([]*akov2.AtlasDatabaseUser, 0, len(users.Results))
+	result := make([]*akov2.AtlasDatabaseUser, 0, len(users.GetResults()))
 	for _, mappedUser := range mappedUsers {
 		result = append(result, mappedUser)
 	}
@@ -123,8 +122,8 @@ func buildUserSecret(resourceName, targetNamespace, projectID, projectName strin
 }
 
 func convertUserScopes(user *atlasv2.CloudDatabaseUser) []akov2.ScopeSpec {
-	result := make([]akov2.ScopeSpec, 0, len(user.Scopes))
-	for _, scope := range user.Scopes {
+	result := make([]akov2.ScopeSpec, 0, len(user.GetScopes()))
+	for _, scope := range user.GetScopes() {
 		result = append(result, akov2.ScopeSpec{
 			Name: scope.Name,
 			Type: akov2.ScopeType(scope.Type),
@@ -134,11 +133,11 @@ func convertUserScopes(user *atlasv2.CloudDatabaseUser) []akov2.ScopeSpec {
 }
 
 func convertUserRoles(user *atlasv2.CloudDatabaseUser) []akov2.RoleSpec {
-	if len(user.Roles) == 0 {
+	if len(user.GetRoles()) == 0 {
 		return nil
 	}
-	result := make([]akov2.RoleSpec, 0, len(user.Roles))
-	for _, role := range user.Roles {
+	result := make([]akov2.RoleSpec, 0, len(user.GetRoles()))
+	for _, role := range user.GetRoles() {
 		result = append(result, akov2.RoleSpec{
 			RoleName:       role.RoleName,
 			DatabaseName:   role.DatabaseName,
@@ -149,8 +148,8 @@ func convertUserRoles(user *atlasv2.CloudDatabaseUser) []akov2.RoleSpec {
 }
 
 func convertUserLabels(user *atlasv2.CloudDatabaseUser) []akov2common.LabelSpec {
-	result := make([]akov2common.LabelSpec, 0, len(user.Labels))
-	for _, label := range user.Labels {
+	result := make([]akov2common.LabelSpec, 0, len(user.GetLabels()))
+	for _, label := range user.GetLabels() {
 		result = append(result, akov2common.LabelSpec{
 			Key:   *label.Key,
 			Value: *label.Value,

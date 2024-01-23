@@ -114,8 +114,8 @@ func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, er
 	}
 	atlasClusters := projectClusters.(*admin.PaginatedAdvancedClusterDescription)
 
-	deployments := make([]Deployment, len(atlasClusters.Results))
-	for i, c := range atlasClusters.Results {
+	deployments := make([]Deployment, len(atlasClusters.GetResults()))
+	for i, c := range atlasClusters.GetResults() {
 		stateName := *c.StateName
 		if *c.Paused {
 			// for paused clusters, Atlas returns stateName IDLE and Paused=true

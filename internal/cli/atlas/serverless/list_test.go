@@ -41,7 +41,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockServerlessInstanceLister(ctrl)
 
 	expected := &atlasv2.PaginatedServerlessInstanceDescription{
-		Results: []atlasv2.ServerlessInstanceDescription{
+		Results: &[]atlasv2.ServerlessInstanceDescription{
 			{
 				Id: pointer.Get("1"),
 			},

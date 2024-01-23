@@ -58,7 +58,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 		var r atlasv2.PaginatedPrivateNetworkEndpointIdEntry
 		require.NoError(t, json.Unmarshal(resp, &r))
 		a.NotEmpty(r.Results)
-		a.Equal(r.Results[0].GetEndpointId(), vpcID)
+		a.Equal(r.GetResults()[0].GetEndpointId(), vpcID)
 	})
 
 	t.Run("Describe", func(t *testing.T) {

@@ -146,7 +146,7 @@ func TestRun_ConnectAtlas(t *testing.T) {
 	}
 
 	expectedAtlasClusters := &admin.PaginatedAdvancedClusterDescription{
-		Results: []admin.AdvancedClusterDescription{
+		Results: &[]admin.AdvancedClusterDescription{
 			{
 				Name:           pointer.Get(expectedAtlasDeployment),
 				Id:             pointer.Get("123"),
@@ -174,7 +174,7 @@ func TestRun_ConnectAtlas(t *testing.T) {
 	mockAtlasClusterDescriber.
 		EXPECT().
 		AtlasCluster(connectOpts.ProjectID, expectedAtlasDeployment).
-		Return(&expectedAtlasClusters.Results[0], nil).
+		Return(&expectedAtlasClusters.GetResults()[0], nil).
 		Times(1)
 
 	mockCredentialsGetter.

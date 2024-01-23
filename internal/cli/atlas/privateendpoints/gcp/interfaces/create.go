@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -84,7 +85,7 @@ func (opts *CreateOpts) newInterfaceEndpointConnection() *atlasv2.CreateEndpoint
 	return &atlasv2.CreateEndpointRequest{
 		EndpointGroupName: &opts.privateEndpointGroupID,
 		GcpProjectId:      &opts.gcpProjectID,
-		Endpoints:         opts.parseEndpoints(),
+		Endpoints:         pointer.Get(opts.parseEndpoints()),
 	}
 }
 

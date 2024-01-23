@@ -159,7 +159,7 @@ func (opts *CreateOpts) applyOpts(out *atlasv2.AdvancedClusterDescription) {
 		out.MongoDBMajorVersion = &opts.mdbVersion
 	}
 
-	out.ReplicationSpecs = []atlasv2.ReplicationSpec{replicationSpec}
+	out.ReplicationSpecs = &[]atlasv2.ReplicationSpec{replicationSpec}
 
 	addTags(out, opts.tag)
 }
@@ -179,7 +179,7 @@ func (opts *CreateOpts) newAdvanceReplicationSpec() atlasv2.ReplicationSpec {
 	return atlasv2.ReplicationSpec{
 		NumShards:     &opts.shards,
 		ZoneName:      pointer.Get(zoneName),
-		RegionConfigs: []atlasv2.CloudRegionConfig{opts.newAdvancedRegionConfig()},
+		RegionConfigs: &[]atlasv2.CloudRegionConfig{opts.newAdvancedRegionConfig()},
 	}
 }
 

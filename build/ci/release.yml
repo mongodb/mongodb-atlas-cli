@@ -500,6 +500,7 @@ tasks:
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.rpm
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tgz
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.json
+            - src/github.com/mongodb/mongodb-atlas-cli/bin/*.msi
           remote_file: mongocli/
           bucket: downloads.mongodb.org
           permissions: public-read

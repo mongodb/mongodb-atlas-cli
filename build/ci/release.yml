@@ -634,17 +634,6 @@ tasks:
           bucket: mongodb-mongocli-build
           permissions: public-read
           content_type: ${content_type|text/plain}
-      - command: s3.put
-        params:
-          aws_key: ${download_center_aws_key}
-          aws_secret: ${download_center_aws_secret}
-          local_files_include_filter:
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
-          remote_file: mongocli/
-          bucket: downloads.mongodb.org
-          permissions: public-read
-          content_type: ${content_type|application/octet-stream}
-          display_name: downloads-center-
   - name: pkg_test_repo_atlascli
     patchable: false
     git_tag_only: true

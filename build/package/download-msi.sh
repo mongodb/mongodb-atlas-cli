@@ -25,12 +25,12 @@ if [[ "${unstable-}" == "-unstable" ]]; then
 	VERSION_NAME="$VERSION_GIT-next"
 fi
 
-PACKAGE_NAME=mongocli_"${VERSION_NAME}"_windows_x86_64.msi
+PACKAGE_NAME="mongocli_${VERSION_NAME}_windows_x86_64.msi"
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-	PACKAGE_NAME=mongodb-atlas-cli_${VERSION_NAME}_windows_x86_64.msi
+	PACKAGE_NAME="mongodb-atlas-cli_${VERSION_NAME}_windows_x86_64.msi"
 fi
 
-pushd dist
+pushd bin
 
-echo "downloading https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${PACKAGE_NAME}"
+echo "downloading https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${PACKAGE_NAME} into $PWD"
 curl "https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${PACKAGE_NAME}" --output "${PACKAGE_NAME}"

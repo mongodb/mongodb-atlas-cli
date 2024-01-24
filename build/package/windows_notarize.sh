@@ -17,10 +17,10 @@
 set -Eeou pipefail
 
 EXE_FILE="dist/windows_windows_amd64_v1/bin/mongocli.exe"
-MSI_FILE="dist/mongocli_${VERSION}_windows_x86_64.msi"
+MSI_FILE="bin/mongocli_${VERSION}_windows_x86_64.msi"
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
 	EXE_FILE="dist/windows_windows_amd64_v1/bin/atlas.exe"
-	MSI_FILE="dist/mongodb-atlas-cli_${VERSION}_windows_x86_64.msi"
+	MSI_FILE="bin/mongodb-atlas-cli_${VERSION}_windows_x86_64.msi"
 fi
 
 if [[ -f "$EXE_FILE" && -f "$MSI_FILE" ]]; then

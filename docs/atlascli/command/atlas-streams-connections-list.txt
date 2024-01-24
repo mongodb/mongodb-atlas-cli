@@ -22,9 +22,25 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas streams connections list [options]
+   atlas streams connections list --instance <instance_name> [options]
 
 .. Code end marker, please don't delete this comment
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - instance_name
+     - string
+     - true
+     - Name of the instance.
 
 Options
 -------

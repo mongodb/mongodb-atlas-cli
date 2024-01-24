@@ -61,11 +61,14 @@ func (opts *ListOpts) Run() error {
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
+		Use:     "list --instance <instance_name>",
 		Short:   "Returns all Atlas Stream Processing connections from your Atlas Stream Processing instance.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(0),
+		Annotations: map[string]string{
+			"instance_nameDesc": "Name of the instance.",
+		},
 		Example: fmt.Sprintf(`# list all connections within ExampleInstance:
 %[1]s streams connection list --instance ExampleInstance
 `, cli.ExampleAtlasEntryPoint()),

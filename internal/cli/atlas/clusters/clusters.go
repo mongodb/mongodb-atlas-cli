@@ -93,7 +93,7 @@ func Builder() *cobra.Command {
 
 func addTags(out *atlasv2.AdvancedClusterDescription, tags map[string]string) {
 	if len(tags) > 0 {
-		t := []atlasv2.ResourceTag{}
+		var t []atlasv2.ResourceTag
 		for k, v := range tags {
 			if k == "" || v == "" {
 				continue

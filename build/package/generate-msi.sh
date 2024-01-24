@@ -48,6 +48,6 @@ env GOOS=windows GOARCH=amd64 go build \
 go-msi make --path "${WIX_MANIFEST_FILE}" --msi "dist/${PACKAGE_NAME}" --version "${VERSION_GIT}"
 
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-	go run ./tools/chocolateypkg/chocolateypkg.go -version "${VERSION_GIT}"
+	go run ./tools/chocolateypkg/chocolateypkg.go -version "${VERSION_NAME}"
 	choco pack dist/mongodb-atlas.nuspec --outputdirectory dist -dv
 fi

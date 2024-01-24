@@ -82,7 +82,7 @@ func (opts *GCPOpts) containerExists() (*atlasv2.CloudProviderContainer, error) 
 func (opts *GCPOpts) newContainer() *atlasv2.CloudProviderContainer {
 	return &atlasv2.CloudProviderContainer{
 		AtlasCidrBlock: &opts.atlasCIDRBlock,
-		Regions:        &opts.regions,
+		Regions:        pointer.GetArrayPointerIfNotEmpty(opts.regions),
 		ProviderName:   pointer.Get("GCP"),
 	}
 }

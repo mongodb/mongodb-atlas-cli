@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas streams connections create [connectionName] [options]
+   atlas streams connections create [connectionName] --instance <instance_name> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -41,6 +41,10 @@ Arguments
      - string
      - false
      - Name of the connection
+   * - instance_name
+     - string
+     - true
+     - Name of the instance.
 
 Options
 -------

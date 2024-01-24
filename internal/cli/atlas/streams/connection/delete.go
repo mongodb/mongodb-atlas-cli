@@ -54,7 +54,7 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Atlas Stream Processing connection '%s' deleted\n", "Atlas Stream Processing connection not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:   "delete <connectionName>",
+		Use:   "delete <connectionName> --instance <instance_name>",
 		Short: "Remove the specified Atlas Stream Processing connection from your project.",
 		Long: `The command prompts you to confirm the operation when you run the command without the --force option.
 
@@ -63,6 +63,7 @@ Before deleting an Atlas Streams Processing connection, you must first stop all 
 		Annotations: map[string]string{
 			"connectionNameDesc": "Name of the connection",
 			"output":             opts.SuccessMessage(),
+			"instance_nameDesc":  "Name of the instance.",
 		},
 		Example: fmt.Sprintf(`# deletes connection 'ExampleConnection' from instance 'ExampleInstance':
   %[1]s streams connection delete ExampleConnection --instance ExampleInstance

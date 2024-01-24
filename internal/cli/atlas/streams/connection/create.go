@@ -90,13 +90,14 @@ func CreateBuilder() *cobra.Command {
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:   "create [connectionName]",
+		Use:   "create [connectionName] --instance <instance_name>",
 		Short: "Creates a connection for an Atlas Stream Processing instance.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"connectionNameDesc": "Name of the connection",
 			"output":             createTemplate,
+			"instance_nameDesc":  "Name of the instance.",
 		},
 		Example: fmt.Sprintf(`# create a new connection for Atlas Stream Processing:
   %[1]s streams connection create kafkaprod -i test01 -f kafkaConfig.json

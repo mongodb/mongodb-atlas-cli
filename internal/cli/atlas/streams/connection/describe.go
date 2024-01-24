@@ -62,12 +62,13 @@ func (opts *DescribeOpts) Run() error {
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:   "describe <streamConnectionName>",
+		Use:   "describe <streamConnectionName> --instance <instance_name>",
 		Short: "Return the details for the specified Atlas Stream Processing connection.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"streamConnectionNameDesc": "Name of the Atlas Stream Processing connection.",
+			"instance_nameDesc":        "Name of the instance.",
 		},
 		Example: fmt.Sprintf(`# retrieves stream connection 'ExampleConnection' in instance 'ExampleInstance':
 %[1]s streams connection describe ExampleConnection --instance ExampleInstance

@@ -82,13 +82,14 @@ func UpdateBuilder() *cobra.Command {
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:   "update <connectionName>",
+		Use:   "update <connectionName> --instance <instance_name>",
 		Short: "Modify the details of the specified connection within your Atlas Stream Processing instance.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"connectionNameDesc": "Name of the connection.",
 			"output":             updateTemplate,
+			"instance_nameDesc":  "Name of the instance.",
 		},
 		Example: fmt.Sprintf(`# update an Atlas Stream Processing connection:
   %[1]s streams connection update kafkaprod --instance test01 -f kafkaConfig.json

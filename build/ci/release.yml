@@ -449,6 +449,7 @@ tasks:
           working_dir: src/github.com/mongodb/mongodb-atlas-cli
           env:
             TOOL_NAME: mongocli
+            BUCKET: mongodb-mongocli-build
           binary: build/package/download-msi.sh
       - func: "package"
         vars:
@@ -526,6 +527,7 @@ tasks:
           working_dir: src/github.com/mongodb/mongodb-atlas-cli
           env:
             TOOL_NAME: atlascli
+            BUCKET: mongodb-mongocli-build
           binary: build/package/download-msi.sh
       - func: "package"
         vars:

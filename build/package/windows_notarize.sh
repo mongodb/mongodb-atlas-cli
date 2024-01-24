@@ -19,9 +19,9 @@ set -Eeou pipefail
 VERSION="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
 EXE_FILE="dist/windows_windows_amd64_v1/bin/mongocli.exe"
-MSI_FILE="dist/mongocli_${VERSION}_windows_x86_64.msi"
+MSI_FILE="bin/mongocli_${VERSION}_windows_x86_64.msi"
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-	MSI_FILE="dist/mongodb-atlas-cli_${VERSION}_windows_x86_64.msi"
+	MSI_FILE="bin/mongodb-atlas-cli_${VERSION}_windows_x86_64.msi"
 	EXE_FILE="dist/windows_windows_amd64_v1/bin/atlas.exe"
 fi
 

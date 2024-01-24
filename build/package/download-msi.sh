@@ -15,14 +15,18 @@
 
 set -Eeou pipefail
 
-VERSION="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
-
-PACKAGE_NAME=mongocli_"${VERSION}"_windows_x86_64.msi
-if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-	PACKAGE_NAME=mongodb-atlas-cli_${VERSION}_windows_x86_64.msi
+VERSION_GIT="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION_NAME="$VERSION_GIT"
+if [[ "${unstable-}" == "-unstable" ]]; then
+	VERSION_NAME="$VERSION_GIT-next"
 fi
 
-pushd bin
+PACKAGE_NAME=mongocli_"${VERSION_NAME}"_windows_x86_64.msi
+if [[ "${TOOL_NAME:?}" == atlascli ]]; then
+	PACKAGE_NAME=mongodb-atlas-cli_${VERSION_NAME}_windows_x86_64.msi
+fi
 
-echo "https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${PACKAGE_NAME}"
+pushd dist
+
+echo "downloading https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${PACKAGE_NAME}"
 curl "https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${PACKAGE_NAME}" --output "${PACKAGE_NAME}"

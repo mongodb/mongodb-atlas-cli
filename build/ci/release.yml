@@ -121,6 +121,7 @@ functions:
           ARTIFACTORY_PASSWORD: ${artifactory_password}
           GRS_USERNAME: ${garasign_username}
           GRS_PASSWORD: ${garasign_password}
+          unstable: ${unstable}
         command: bash.exe -c build/package/generate-msi.sh
   "update choco":
     - command: subprocess.exec
@@ -285,6 +286,7 @@ tasks:
       - func: "generate msi"
         vars:
           TOOL_NAME: ${tool_name}
+          unstable: -unstable
       - func: "uninstall go-msi"
       - command: s3.put
         params:
@@ -339,6 +341,7 @@ tasks:
           env:
             TOOL_NAME: ${tool_name}
             BUCKET: mongodb-mongocli-build
+            unstable: -unstable
           binary: build/package/download-msi.sh
       - func: "package"
         vars:
@@ -447,6 +450,10 @@ tasks:
         type: test
         params:
           working_dir: src/github.com/mongodb/mongodb-atlas-cli
+          include_expansions_in_env:
+            - project
+            - revision
+            - created_at
           env:
             TOOL_NAME: mongocli
             BUCKET: mongodb-mongocli-build
@@ -526,6 +533,10 @@ tasks:
         type: test
         params:
           working_dir: src/github.com/mongodb/mongodb-atlas-cli
+          include_expansions_in_env:
+            - project
+            - revision
+            - created_at
           env:
             TOOL_NAME: atlascli
             BUCKET: mongodb-mongocli-build

@@ -62,9 +62,9 @@ func TestDBRoles(t *testing.T) {
 
 		a := assert.New(t)
 		a.Equal(roleName, role.RoleName)
-		a.Len(role.Actions, 1)
+		a.Len(role.GetActions(), 1)
 		a.Equal(createPrivilege, role.GetActions()[0].Action)
-		a.Len(role.InheritedRoles, 1)
+		a.Len(role.GetInheritedRoles(), 1)
 		a.Equal(enableSharding, role.GetInheritedRoles()[0].Role)
 	})
 
@@ -98,9 +98,9 @@ func TestDBRoles(t *testing.T) {
 
 		a := assert.New(t)
 		a.Equal(roleName, role.RoleName)
-		a.Len(role.Actions, 1)
+		a.Len(role.GetActions(), 1)
 		a.Equal(createPrivilege, role.GetActions()[0].Action)
-		a.Len(role.InheritedRoles, 1)
+		a.Len(role.GetInheritedRoles(), 1)
 		a.Equal(enableSharding, role.GetInheritedRoles()[0].Role)
 	})
 
@@ -122,11 +122,11 @@ func TestDBRoles(t *testing.T) {
 
 		a := assert.New(t)
 		a.Equal(roleName, role.RoleName)
-		a.Len(role.Actions, 2)
+		a.Len(role.GetActions(), 2)
 		a.ElementsMatch(
 			[]string{role.GetActions()[0].Action, role.GetActions()[1].Action},
 			[]string{updatePrivilege, createPrivilege})
-		a.Len(role.InheritedRoles, 1)
+		a.Len(role.GetInheritedRoles(), 1)
 		a.Equal(enableSharding, role.GetInheritedRoles()[0].Role)
 	})
 
@@ -146,7 +146,7 @@ func TestDBRoles(t *testing.T) {
 
 		a := assert.New(t)
 		a.Equal(roleName, role.RoleName)
-		a.Len(role.Actions, 1)
+		a.Len(role.GetActions(), 1)
 		a.Equal(updatePrivilege, role.GetActions()[0].Action)
 	})
 

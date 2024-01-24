@@ -67,6 +67,6 @@ func TestAccessRoles(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		var roles atlasv2.CloudProviderAccessRoles
 		require.NoError(t, json.Unmarshal(resp, &roles))
-		assert.Len(t, roles.AwsIamRoles, 1)
+		assert.Len(t, roles.GetAwsIamRoles(), 1)
 	})
 }

@@ -192,7 +192,7 @@ func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 
 	a := assert.New(t)
 	a.Equal(username, user.Username)
-	if a.Len(user.Scopes, 2) {
+	if a.Len(user.GetScopes(), 2) {
 		a.Equal(clusterName0, user.GetScopes()[0].Name)
 		a.Equal(clusterType, user.GetScopes()[0].Type)
 		a.Equal(clusterName1, user.GetScopes()[1].Name)
@@ -231,12 +231,12 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 
 	a := assert.New(t)
 	a.Equal(username, user.Username)
-	if a.Len(user.Roles, 1) {
+	if a.Len(user.GetRoles(), 1) {
 		a.Equal("admin", user.GetRoles()[0].DatabaseName)
 		a.Equal(roleReadWrite, user.GetRoles()[0].RoleName)
 	}
 
-	a.Len(user.Scopes, 1)
+	a.Len(user.GetScopes(), 1)
 	a.Equal(clusterName0, user.GetScopes()[0].Name)
 	a.Equal(clusterType, user.GetScopes()[0].Type)
 }

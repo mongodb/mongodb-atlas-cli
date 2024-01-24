@@ -111,7 +111,8 @@ func (opts *UpdateOpts) patchOpts(out *atlasv2.AdvancedClusterDescription) {
 
 func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasv2.AdvancedClusterDescription) {
 	for _, replicationSpec := range out.GetReplicationSpecs() {
-		for _, regionConf := range replicationSpec.GetRegionConfigs() {
+		for regionIdx := range replicationSpec.GetRegionConfigs() {
+			regionConf := (*replicationSpec.RegionConfigs)[regionIdx]
 			if regionConf.ReadOnlySpecs != nil {
 				regionConf.ReadOnlySpecs.InstanceSize = &opts.tier
 			}

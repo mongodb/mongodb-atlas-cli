@@ -180,8 +180,8 @@ func TestAccessList(t *testing.T) {
 		err = json.Unmarshal(resp, &entries)
 		req.NoError(err)
 
-		a.NotEmpty(entries.Results)
-		a.Len(entries.Results, 1)
+		a.NotEmpty(entries.GetResults())
+		a.Len(entries.GetResults(), 1)
 
 		currentIPEntry = entries.GetResults()[0].GetIpAddress()
 	})

@@ -111,7 +111,7 @@ func TestStreams(t *testing.T) {
 		var instances atlasv2.PaginatedApiStreamsTenant
 		req.NoError(json.Unmarshal(resp, &instances))
 
-		a.Len(instances.Results, 1)
+		a.Len(instances.GetResults(), 1)
 		a.Equal(*instances.GetResults()[0].Name, instanceName)
 		a.Equal("AWS", instances.GetResults()[0].DataProcessRegion.CloudProvider)
 		a.Equal("VIRGINIA_USA", instances.GetResults()[0].DataProcessRegion.Region)

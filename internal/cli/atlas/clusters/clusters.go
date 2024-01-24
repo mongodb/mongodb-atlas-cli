@@ -117,8 +117,8 @@ func removeReadOnlyAttributes(out *atlasv2.AdvancedClusterDescription) {
 	out.ConnectionStrings = nil
 	isTenant := false
 
-	for _, spec := range out.GetReplicationSpecs() {
-		spec.Id = nil
+	for i, spec := range out.GetReplicationSpecs() {
+		(*out.ReplicationSpecs)[i].Id = nil
 		for _, c := range spec.GetRegionConfigs() {
 			if c.GetProviderName() == tenant {
 				isTenant = true

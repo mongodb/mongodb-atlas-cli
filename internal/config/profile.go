@@ -241,9 +241,10 @@ func (p *Profile) Name() string {
 	return p.name
 }
 
+var ErrProfileNameHasDots = errors.New("profile should not contain '.'")
 func validateName(name string) error {
 	if strings.Contains(name, ".") {
-		return errors.New("Profile should not contain '.'")
+		return fmt.Errorf("%w: %q", ErrProfileNameHasDots, name)
 	}
 
 	return nil

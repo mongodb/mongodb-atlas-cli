@@ -42,21 +42,6 @@ env GOOS=windows GOARCH=amd64 go build \
 
 go-msi make --path "${WIX_MANIFEST_FILE}" --msi "dist/${PACKAGE_NAME}" --version "${VERSION_GIT}"
 
-echo "${ARTIFACTORY_PASSWORD}" | docker login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
-
-echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" > .env
-echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> .env
-
-docker run \
-  --env-file=.env \
-  --rm \
-  -v "$(pwd):$(pwd)" \
-  -w "$(pwd)" \
-  artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-jsign \
-  /bin/bash -c "jsign --tsaurl http://timestamp.digicert.com -a mongo-authenticode-2021 \"dist/${PACKAGE_NAME}\""
-
-rm .env
-
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
 	go run ./tools/chocolateypkg/chocolateypkg.go -version "${VERSION_GIT}"
 	choco pack dist/mongodb-atlas.nuspec --outputdirectory dist -dv

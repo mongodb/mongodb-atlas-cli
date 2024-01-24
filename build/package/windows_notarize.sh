@@ -16,8 +16,16 @@
 
 set -Eeou pipefail
 
-FILE="dist/windows_windows_amd64_v1/bin/atlas.exe"
-if [[ -f "$FILE" ]]; then
+VERSION="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+
+EXE_FILE="dist/windows_windows_amd64_v1/bin/mongocli.exe"
+MSI_FILE="dist/mongocli_${VERSION}_windows_x86_64.msi"
+if [[ "${TOOL_NAME:?}" == atlascli ]]; then
+	MSI_FILE="dist/mongodb-atlas-cli_${VERSION}_windows_x86_64.msi"
+	EXE_FILE="dist/windows_windows_amd64_v1/bin/atlas.exe"
+fi
+
+if [[ -f "$EXE_FILE" && -f "$MSI_FILE" ]]; then
 	echo "signing $FILE"
 	echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
 

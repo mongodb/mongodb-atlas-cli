@@ -24,4 +24,5 @@ fi
 
 pushd bin
 
-curl https://fastdl.mongodb.org/mongocli/"${PACKAGE_NAME}" --output "${PACKAGE_NAME}"
+echo "https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${PACKAGE_NAME}"
+curl "https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${PACKAGE_NAME}" --output "${PACKAGE_NAME}"

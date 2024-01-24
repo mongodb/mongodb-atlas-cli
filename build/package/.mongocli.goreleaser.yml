@@ -32,7 +32,7 @@ builds:
     goos: [windows]
     goarch: [amd64]
     hooks:
-      post: ./build/package/mongocli_windows_notarize.sh
+      post: ./build/package/windows_notarize.sh
 archives:
 - id: linux
   builds: [linux]

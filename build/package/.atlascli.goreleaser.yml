@@ -32,7 +32,7 @@ builds:
     goos: [windows]
     goarch: [amd64]
     hooks:
-      post: ./build/package/atlascli_windows_notarize.sh
+      post: ./build/package/windows_notarize.sh
 archives:
 - id: linux
   name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"

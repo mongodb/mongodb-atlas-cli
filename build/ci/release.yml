@@ -326,13 +326,26 @@ tasks:
     commands:
       - func: "generate notices"
       - func: "install goreleaser"
-      - func: "install macos notarization service"
       - func: "install podman"
+      - func: "install macos notarization service"
+      - command: subprocess.exec
+        type: test
+        params:
+          working_dir: src/github.com/mongodb/mongodb-atlas-cli
+          include_expansions_in_env:
+            - project
+            - revision
+            - created_at
+          env:
+            TOOL_NAME: ${tool_name}
+            BUCKET: mongodb-mongocli-build
+          binary: build/package/download-msi.sh
       - func: "package"
         vars:
           unstable: -unstable
           tool_name: ${tool_name}
           goreleaser_config: ${goreleaser_file}
+          changelog_file: ${changelog_file}
       - func: "rename pkg"
         vars:
           unstable: -unstable
@@ -580,7 +593,6 @@ tasks:
         variant: "code_health"
     commands:
       - func: "install go-msi"
-      - func: "install podman"
       - func: "generate msi"
         vars:
           TOOL_NAME: ${tool_name}
@@ -691,10 +703,14 @@ buildvariants:
       <<: *go_linux_version
       server_version: "4.4.0-rc3"
       goreleaser_file: "build/package/.mongocli.goreleaser.yml"
+      changelog_file: CHANGELOG_MONGOCLI.md
       package_name: "mongocli"
       tool_name: "mongocli"
     tasks:
       - name: package_goreleaser
+        depends_on:
+          - name: package_msi
+            variant: "go_mongocli_msi_snapshot"
   - name: goreleaser_atlascli_snapshot
     display_name: "Packaging AtlasCLI (goreleaser)"
     run_on:
@@ -703,11 +719,15 @@ buildvariants:
       <<: *go_linux_version
       server_version: "4.4.0-rc3"
       goreleaser_file: "build/package/.atlascli.goreleaser.yml"
+      changelog_file: CHANGELOG_ATLASCLI.md
       package_name: "mongodb-atlas-cli"
       meta_package_name: "mongodb-atlas"
       tool_name: "atlascli"
     tasks:
       - name: package_goreleaser
+        depends_on:
+          - name: package_msi
+            variant: "go_atlascli_msi_snapshot"
   - name: publish_mongocli_snapshot
     display_name: "Publish MongoCLI Snapshot"
     run_on:

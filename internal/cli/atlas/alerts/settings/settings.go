@@ -114,7 +114,9 @@ func (opts *ConfigOpts) newNotification() *atlasv2.AlertsNotificationRootForGrou
 	case group, org:
 		out.EmailEnabled = &opts.notificationEmailEnabled
 		out.SmsEnabled = &opts.notificationSmsEnabled
-		out.Roles = &opts.notificationRoles
+		if len(opts.notificationRoles) > 0 {
+			out.Roles = &opts.notificationRoles
+		}
 	case microsoftTeams:
 		out.MicrosoftTeamsWebhookUrl = &opts.notificationWebhookURL
 	case opsGenie:

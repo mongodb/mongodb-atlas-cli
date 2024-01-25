@@ -18,8 +18,6 @@ import (
 	"context"
 	"runtime"
 
-	"github.com/containers/common/libnetwork/types"
-	"github.com/containers/podman/v4/libpod/define"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -40,9 +38,9 @@ type diagnosticLogs struct {
 type diagnostic struct {
 	Machine    machineDiagnostic
 	Diagnostic *podman.Diagnostic
-	Containers []*define.InspectContainerData
+	Containers []*podman.InspectContainerData
 	Logs       diagnosticLogs
-	Network    *types.Network
+	Network    *podman.Network
 	Errors     []error
 }
 type machineDiagnostic struct {

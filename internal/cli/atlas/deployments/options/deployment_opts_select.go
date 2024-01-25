@@ -22,7 +22,7 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/containers/podman/v4/libpod/define"
+	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 )
@@ -32,7 +32,7 @@ var errNoDeployments = errors.New("currently there are no deployments")
 var ErrDeploymentNotFound = errors.New("deployment not found")
 var errDeploymentRequiredOnPipe = fmt.Errorf("deployment name is required  when piping the output of the command")
 
-func (opts *DeploymentOpts) findMongoDContainer(ctx context.Context) (*define.InspectContainerData, error) {
+func (opts *DeploymentOpts) findMongoDContainer(ctx context.Context) (*podman.InspectContainerData, error) {
 	containers, err := opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname())
 	if err != nil {
 		return nil, fmt.Errorf("%w: %s", ErrDeploymentNotFound, opts.DeploymentName)

@@ -19,7 +19,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/containers/podman/v4/libpod/define"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -81,16 +80,16 @@ func TestRun_ConnectLocal(t *testing.T) {
 	mockPodman.
 		EXPECT().
 		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
-		Return([]*define.InspectContainerData{
+		Return([]*podman.InspectContainerData{
 			{
 				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
-				Config: &define.InspectContainerConfig{
+				Config: &podman.InspectContainerConfig{
 					Labels: map[string]string{
 						"version": "7.0.1",
 					},
 				},
-				HostConfig: &define.InspectContainerHostConfig{
-					PortBindings: map[string][]define.InspectHostPort{
+				HostConfig: &podman.InspectContainerHostConfig{
+					PortBindings: map[string][]podman.InspectHostPort{
 						"27017/tcp": {
 							{
 								HostIP:   "127.0.0.1",
@@ -99,7 +98,7 @@ func TestRun_ConnectLocal(t *testing.T) {
 						},
 					},
 				},
-				Mounts: []define.InspectMount{
+				Mounts: []podman.InspectMount{
 					{
 						Name: connectOpts.DeploymentOpts.LocalMongodDataVolume(),
 					},

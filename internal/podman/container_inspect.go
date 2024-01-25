@@ -18,7 +18,7 @@ import (
 	"time"
 )
 
-// file copied from https://github.com/containers/podman/blob/v4.7.2/libpod/define/container_inspect.go due to dependency issues
+// file inspired by https://github.com/containers/podman/blob/v4.7.2/libpod/define/container_inspect.go
 
 type InspectIDMappings struct {
 	UIDMap []string `json:"UidMap"`

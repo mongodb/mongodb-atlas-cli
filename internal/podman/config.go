@@ -16,7 +16,7 @@ package podman
 
 import "time"
 
-// file partially copied from https://github.com/containers/podman/blob/v4.7.2/pkg/machine/config.go
+// file inspired by https://github.com/containers/podman/blob/v4.7.2/pkg/machine/config.go
 
 type InspectInfo struct {
 	ConfigPath         VMFile

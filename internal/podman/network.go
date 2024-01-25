@@ -19,7 +19,7 @@ import (
 	"time"
 )
 
-// file partially copied from https://github.com/containers/common/blob/v0.56.0/libnetwork/types/network.go
+// file partially inspired by from https://github.com/containers/common/blob/v0.56.0/libnetwork/types/network.go
 
 // Network describes the Network attributes.
 type Network struct {

@@ -16,7 +16,7 @@ package podman
 
 import "time"
 
-// file partially copied from https://github.com/containers/image/blob/v5.28.0/manifest/docker_schema2.go#L44-L64
+// file partially inspired by from https://github.com/containers/image/blob/v5.28.0/manifest/docker_schema2.go#L44-L64
 
 // Schema2HealthConfig is a HealthConfig, which holds configuration settings
 // for the HEALTHCHECK feature, from docker/docker/api/types/container.

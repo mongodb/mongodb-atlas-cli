@@ -19,24 +19,26 @@ GOCACHE="$(cygpath --mixed "${workdir:?}\.gocache")"
 CGO_ENABLED=0
 export GOCACHE
 export CGO_ENABLED
-export NOTARY_SIGNING_KEY
 
 go-msi check-env
 
-VERSION_GIT="$(git describe --match "${TOOL_NAME:?}/v*" | cut -d "v" -f 2)"
+VERSION_GIT="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION_NAME="$VERSION_GIT"
+if [[ "${unstable-}" == "-unstable" ]]; then
+	VERSION_NAME="$VERSION_GIT-next"
+fi
+
 COMMIT=$(git log -n1 --format=format:"%H")
 
 SOURCE_FILES=./cmd/mongocli
-PACKAGE_NAME=mongocli_${VERSION_GIT}_windows_x86_64.msi
+PACKAGE_NAME=mongocli_${VERSION_NAME}_windows_x86_64.msi
 OUTPUT=./bin/mongocli.exe
 LINKER_FLAGS="-s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${VERSION_GIT} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit=${COMMIT} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=${TOOL_NAME:?}"
 WIX_MANIFEST_FILE="./build/package/wix/${TOOL_NAME:?}.json"
-NOTARY_SIGNING_KEY=${NOTARY_SIGNING_KEY_MONGOCLI:?}
 
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-	NOTARY_SIGNING_KEY=${NOTARY_SIGNING_KEY_ATLASCLI:?}
 	SOURCE_FILES=./cmd/atlas
-	PACKAGE_NAME=mongodb-atlas-cli_${VERSION_GIT}_windows_x86_64.msi
+	PACKAGE_NAME=mongodb-atlas-cli_${VERSION_NAME}_windows_x86_64.msi
 	OUTPUT=./bin/atlas.exe
 fi
 
@@ -45,9 +47,7 @@ env GOOS=windows GOARCH=amd64 go build \
 
 go-msi make --path "${WIX_MANIFEST_FILE}" --msi "dist/${PACKAGE_NAME}" --version "${VERSION_GIT}"
 
-go run ./tools/sign -file "dist/${PACKAGE_NAME}"
-
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-	go run ./tools/chocolateypkg/chocolateypkg.go -version "${VERSION_GIT}"
+	go run ./tools/chocolateypkg/chocolateypkg.go -version "${VERSION_NAME}"
 	choco pack dist/mongodb-atlas.nuspec --outputdirectory dist -dv
 fi

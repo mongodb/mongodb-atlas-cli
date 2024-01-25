@@ -204,7 +204,7 @@ functions:
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
         shell: bash
         script: |
-          set -Eeou pipefail        
+          set -Eeou pipefail
           if [ -n "$(which yum 2>/dev/null)" ]; then
             sudo yum install -y podman
           elif [ -n "$(which apt-get 2>/dev/null)" ]; then

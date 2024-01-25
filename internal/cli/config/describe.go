@@ -38,7 +38,11 @@ func (opts *describeOpts) Run() error {
 	if !config.Exists(opts.name) {
 		return fmt.Errorf("you don't have a profile named '%s'", opts.name)
 	}
-	config.SetName(opts.name)
+
+	if err := config.SetName(opts.name); err != nil {
+		return err
+	}
+
 	return opts.Print(config.Map())
 }
 

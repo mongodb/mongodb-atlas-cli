@@ -117,7 +117,7 @@ func TestProfile_Get_Default(t *testing.T) {
 
 func TestProfile_Get_NonDefault(t *testing.T) {
 	profile := profileWithOneNonDefaultUser()
-	profile.SetName(atlas)
+	require.NoError(t, profile.SetName(atlas))
 
 	require.NoError(t, profile.LoadMongoCLIConfig(false))
 
@@ -134,7 +134,7 @@ func TestProfile_Delete_NonDefault(t *testing.T) {
 	profile := profileWithOneDefaultUserOneNonDefault()
 	require.NoError(t, profile.LoadMongoCLIConfig(false))
 
-	profile.SetName(atlas)
+	require.NoError(t, profile.SetName(atlas))
 
 	require.NoError(t, profile.Delete())
 	require.NoError(t, profile.LoadMongoCLIConfig(false))
@@ -144,16 +144,16 @@ func TestProfile_Delete_NonDefault(t *testing.T) {
 
 func TestProfile_Rename(t *testing.T) {
 	profile := profileWithOneDefaultUserOneNonDefault()
-	profile.SetName(DefaultProfile)
+	require.NoError(t, profile.SetName(DefaultProfile))
 
 	require.NoError(t, profile.LoadMongoCLIConfig(false))
 	defaultDescription := profile.Map()
 	require.NoError(t, profile.Rename(newProfileName))
 	require.NoError(t, profile.LoadMongoCLIConfig(false))
-	profile.SetName(DefaultProfile)
+	require.NoError(t, profile.SetName(DefaultProfile))
 	a := assert.New(t)
 	a.Empty(profile.Map())
-	profile.SetName(newProfileName)
+	require.NoError(t, profile.SetName(newProfileName))
 	descriptionAfterRename := profile.Map()
 	// after renaming, one Profile should exist
 	a.Equal(defaultDescription, descriptionAfterRename, "descriptions should be equal after renaming")
@@ -161,14 +161,14 @@ func TestProfile_Rename(t *testing.T) {
 
 func TestProfile_Rename_OverwriteExisting(t *testing.T) {
 	profile := profileWithOneDefaultUserOneNonDefault()
-	profile.SetName(DefaultProfile)
+	require.NoError(t, profile.SetName(DefaultProfile))
 
 	require.NoError(t, profile.LoadMongoCLIConfig(false))
 	defaultDescription := profile.Map()
 
 	require.NoError(t, profile.Rename(atlas))
 	require.NoError(t, profile.LoadMongoCLIConfig(false))
-	profile.SetName(atlas)
+	require.NoError(t, profile.SetName(atlas))
 	descriptionAfterRename := profile.Map()
 	// after renaming, one Profile should exist
 	assert.Equal(t, defaultDescription, descriptionAfterRename, "descriptions should be equal after renaming")
@@ -178,7 +178,7 @@ func TestProfile_Set(t *testing.T) {
 	profile := profileWithOneDefaultUserOneNonDefault()
 	require.NoError(t, profile.LoadMongoCLIConfig(false))
 
-	profile.SetName(DefaultProfile)
+	require.NoError(t, profile.SetName(DefaultProfile))
 
 	profile.Set(projectID, "newProjectId")
 

@@ -34,7 +34,10 @@ func (opts *DeleteOpts) Run() error {
 		return nil
 	}
 
-	config.SetName(opts.Entry)
+	if err := config.SetName(opts.Entry); err != nil {
+		return err
+	}
+
 	if err := config.Delete(); err != nil {
 		return err
 	}

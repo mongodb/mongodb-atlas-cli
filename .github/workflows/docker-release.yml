@@ -8,7 +8,7 @@ jobs:
     name: Build and publish docker image
     runs-on: ubuntu-latest
     env:
-      IMAGE_REPOSITORY: mongodb/atlas
+      IMAGE_REPOSITORY: andreaangiolillo22/atlascli_test
       PLATFORMS: linux/amd64,linux/arm64
       QUAY: quay.io
     steps:
@@ -43,12 +43,12 @@ jobs:
         with:
           username: "${{ secrets.DOCKERHUB_USER }}"
           password: "${{ secrets.DOCKERHUB_SECRET }}"
-      - name: Login to Quay
-        uses: docker/login-action@v3
-        with:
-          registry: "${{ env.QUAY }}"
-          username: "${{ secrets.QUAY_USER }}"
-          password: "${{ secrets.QUAY_TOKEN }}"
+      # - name: Login to Quay
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: "${{ env.QUAY }}"
+      #     username: "${{ secrets.QUAY_USER }}"
+      #     password: "${{ secrets.QUAY_TOKEN }}"
       - name: Build and push container to Dockerhub
         uses: docker/build-push-action@v5
         with:
@@ -59,10 +59,10 @@ jobs:
             ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
           file: Dockerfile
           push: true
-      - name: Push container to quay
-        run: |
-          docker buildx imagetools create \
-            --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:latest \
+      # - name: Push container to quay
+      #   run: |
+      #     docker buildx imagetools create \
+      #       --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:latest \
             --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} \
             --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }} \
             ${{ env.IMAGE_REPOSITORY }}:latest

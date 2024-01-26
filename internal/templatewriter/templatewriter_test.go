@@ -67,13 +67,13 @@ func Test_Print(t *testing.T) {
 		{
 			name:     "non empty slice",
 			template: "items: {{range valueOrEmptySlice .Items}}{{.}} {{end}}",
-			data:     struct{ Items *[]string }{Items: &[]string{"AWS", "GCP", "Azure"}},
+			data:     struct{ Items []string }{Items: []string{"AWS", "GCP", "Azure"}},
 			expected: "items: AWS GCP Azure ",
 		},
 		{
 			name:     "empty slice",
 			template: "items: {{range valueOrEmptySlice .Items}}{{.}} {{end}}",
-			data:     struct{ Items *[]string }{Items: &[]string{}},
+			data:     struct{ Items []string }{Items: []string{}},
 			expected: "items: ",
 		},
 	}

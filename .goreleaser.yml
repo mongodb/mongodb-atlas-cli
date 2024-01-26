@@ -25,6 +25,7 @@ builds:
     goos: [linux]
     goarch: [amd64,arm64]
 #    hooks:
+
 #      # This will notarize Linux binaries and replace goreleaser bins with the notarized ones
 #      post:
 #        - cmd: ./build/package/linux_notarize.sh

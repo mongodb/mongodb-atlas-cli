@@ -41,7 +41,6 @@ const (
 	metricsEntity                = "metrics"
 	searchEntity                 = "search"
 	indexEntity                  = "index"
-	datalakeEntity               = "datalake"
 	datafederationEntity         = "datafederation"
 	datalakePipelineEntity       = "datalakepipeline"
 	alertsEntity                 = "alerts"
@@ -98,6 +97,7 @@ const (
 	setupEntity                  = "setup"
 	deploymentEntity             = "deployments"
 	deletingState                = "DELETING"
+	authEntity                   = "auth"
 )
 
 // AlertConfig constants.
@@ -106,6 +106,11 @@ const (
 	eventTypeName = "NO_PRIMARY"
 	intervalMin   = 5
 	delayMin      = 0
+)
+
+// Auth constants.
+const (
+	whoami = "whoami"
 )
 
 // Integration constants.

@@ -25,14 +25,19 @@ builds:
     hooks:
       # This will notarize Apple binaries and replace goreleaser bins with the notarized ones
       post:
-      - cmd: ./build/package/mongocli_mac_notarize.sh
-        output: true
+        - cmd: ./build/package/mongocli_mac_notarize.sh
+          output: true
   - <<: *build_defaults
     id: windows
     goos: [windows]
     goarch: [amd64]
     hooks:
-      post: ./build/package/mongocli_windows_notarize.sh
+      post:
+        - cmd: ./build/package/windows_notarize.sh
+          env:
+            - TOOL_NAME=mongocli
+            - VERSION={{ .Version }}
+          output: true
 archives:
 - id: linux
   builds: [linux]
@@ -85,4 +90,4 @@ release:
   prerelease: auto
   name_template: "MongoDB CLI {{.Version}}"
   extra_files:
-    - glob: ./bin/*.msi
+    - glob: ./dist/*.msi

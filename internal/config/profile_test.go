@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestConfig_MongoCLIConfigHome(t *testing.T) {
@@ -231,4 +232,32 @@ func Test_getConfigHostname(t *testing.T) {
 			assert.Equal(t, expectedHostName, actualHostName)
 		})
 	}
+}
+
+func TestConfig_SetName(t *testing.T) {
+	t.Run("valid", func(t *testing.T) {
+		require.NoError(t, SetName("default"))
+		require.NoError(t, SetName("default-123"))
+		require.NoError(t, SetName("default-test"))
+	})
+
+	t.Run("invalid", func(t *testing.T) {
+		require.Error(t, SetName("d.efault"))
+		require.Error(t, SetName("default.123"))
+		require.Error(t, SetName("default.test"))
+	})
+}
+
+func TestConfig_Rename(t *testing.T) {
+	t.Run("valid", func(t *testing.T) {
+		require.NoError(t, Rename("default"))
+		require.NoError(t, Rename("default-123"))
+		require.NoError(t, Rename("default-test"))
+	})
+
+	t.Run("invalid", func(t *testing.T) {
+		require.Error(t, Rename("d.efault"))
+		require.Error(t, Rename("default.123"))
+		require.Error(t, Rename("default.test"))
+	})
 }

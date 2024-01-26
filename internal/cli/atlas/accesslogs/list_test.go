@@ -72,6 +72,10 @@ func TestAccessLogListClusterName_Run(t *testing.T) {
 	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
+func TestListTemplate(t *testing.T) {
+	test.VerifyOutputTemplate(t, listTemplate, atlasv2.MongoDBAccessLogsList{})
+}
+
 func TestAccessLogListHostname_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAccessLogsLister(ctrl)

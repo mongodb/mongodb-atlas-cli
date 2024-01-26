@@ -47,9 +47,7 @@ func TestCreate_Run(t *testing.T) {
 		CreatePipeline(createOpts.ConfigProjectID(), *request).Return(expected, nil).
 		Times(1)
 
-	if err := createOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, createOpts.Run())
 }
 
 func TestCreateBuilder(t *testing.T) {

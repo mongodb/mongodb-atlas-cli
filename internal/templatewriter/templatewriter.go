@@ -16,6 +16,7 @@ package templatewriter
 
 import (
 	"io"
+	"reflect"
 	"text/tabwriter"
 	"text/template"
 )
@@ -27,6 +28,23 @@ const (
 	tabwriterPadChar  = ' '
 )
 
+var funcMap = template.FuncMap{
+	"valueOrEmptySlice": valueOrEmptySlice,
+}
+
+func valueOrEmptySlice(slice interface{}) (result interface{}) {
+	if slice == nil {
+		return result
+	}
+
+	k := reflect.TypeOf(slice).Kind()
+	if (k == reflect.Slice || k == reflect.Ptr) && reflect.ValueOf(slice).IsNil() {
+		return result
+	}
+
+	return slice
+}
+
 // newTabWriter returns a tabwriter that handles tabs(`\t) to space columns evenly.
 func newTabWriter(output io.Writer) *tabwriter.Writer {
 	return tabwriter.NewWriter(output, tabwriterMinWidth, tabwriterWidth, tabwriterPadding, tabwriterPadChar, 0)
@@ -37,7 +55,7 @@ func newTabWriter(output io.Writer) *tabwriter.Writer {
 // this template will be handled with a tabwriter so you can use tabs (\t)
 // and new lines (\n) to space your content evenly.
 func Print(writer io.Writer, t string, v interface{}) error {
-	tmpl, err := template.New("output").Parse(t)
+	tmpl, err := template.New("output").Funcs(funcMap).Parse(t)
 	if err != nil {
 		return err
 	}

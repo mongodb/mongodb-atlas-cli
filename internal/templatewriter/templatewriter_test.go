@@ -23,11 +23,11 @@ import (
 )
 
 type printTest struct {
-	name        string
-	template    string
-	data        interface{}
-	expected    string
-	expectedErr bool
+	name     string
+	template string
+	data     interface{}
+	expected string
+	wantErr  require.ErrorAssertionFunc
 }
 
 func Test_Print(t *testing.T) {
@@ -39,53 +39,56 @@ func Test_Print(t *testing.T) {
 			template: "name: {{.}}",
 			data:     "Jane",
 			expected: "name: Jane",
+			wantErr:  require.NoError,
 		},
 		{
 			name:     "nil data",
 			template: "name: {{.}}",
 			data:     nil,
 			expected: "name: <no value>",
+			wantErr:  require.NoError,
 		},
 		{
 			name:     "pointer of non empty slice",
 			template: "items: {{range .Items}}{{.}} {{end}}",
 			data:     struct{ Items *[]string }{Items: &[]string{"AWS", "GCP", "Azure"}},
 			expected: "items: AWS GCP Azure ",
+			wantErr:  require.NoError,
 		},
 		{
-			name:        "nil pointer of slice",
-			template:    "items: {{range .Items}}{{.}} {{end}}",
-			data:        struct{ Items *[]string }{Items: nil},
-			expectedErr: true, // expected to fail, as Items is nil
+			name:     "nil pointer of slice",
+			template: "items: {{range .Items}}{{.}} {{end}}",
+			data:     struct{ Items *[]string }{Items: nil},
+			expected: "",
+			wantErr:  require.Error, // expected to fail, as Items is nil
 		},
 		{
 			name:     "nil pointer of slice",
 			template: "items: {{range valueOrEmptySlice .Items}}{{.}} {{end}}",
 			data:     struct{ Items *[]string }{Items: nil},
 			expected: "items: ",
+			wantErr:  require.NoError,
 		},
 		{
 			name:     "non empty slice",
 			template: "items: {{range valueOrEmptySlice .Items}}{{.}} {{end}}",
 			data:     struct{ Items []string }{Items: []string{"AWS", "GCP", "Azure"}},
 			expected: "items: AWS GCP Azure ",
+			wantErr:  require.NoError,
 		},
 		{
 			name:     "empty slice",
 			template: "items: {{range valueOrEmptySlice .Items}}{{.}} {{end}}",
 			data:     struct{ Items []string }{Items: []string{}},
 			expected: "items: ",
+			wantErr:  require.NoError,
 		},
 	}
 
 	for _, conf := range tests {
 		t.Run(conf.name, func(t *testing.T) {
-			if conf.expectedErr {
-				require.Error(t, Print(&buf, conf.template, conf.data))
-			} else {
-				require.NoError(t, Print(&buf, conf.template, conf.data))
-				assert.Equal(t, conf.expected, buf.String())
-			}
+			conf.wantErr(t, Print(&buf, conf.template, conf.data))
+			assert.Equal(t, conf.expected, buf.String())
 		})
 		buf.Reset()
 	}

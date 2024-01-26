@@ -164,12 +164,13 @@ publishers:
     ids:
       - linux_archives
       - linux_package
-    cmd: "./build/package/linux_notarize.sh"
+    cmd: "./build/package/linux_notarize2.sh"
     env:
       - VERSION={{ .Version }}
       - TOOL_NAME=atlascli
       - ARTIFACTORY_USERNAME={{.Env.ARTIFACTORY_USERNAME}}
       - ARTIFACTORY_PASSWORD={{.Env.ARTIFACTORY_PASSWORD}}
+      - FILE={{ abs .ArtifactPath }}
 
 release:
   prerelease: auto

@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
-const listTemplate = `NAMESPACE	TYPE{{range .Namespaces}}
+const listTemplate = `NAMESPACE	TYPE{{range valueOrEmptySlice .Namespaces}}
 {{.Namespace}}	{{.Type}}{{end}}
 `
 

@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `PROJECT ID	CLUSTER ID	STATUS	STORAGE ENGINE{{range .Results}}
+var listTemplate = `PROJECT ID	CLUSTER ID	STATUS	STORAGE ENGINE{{range valueOrEmptySlice .Results}}
 {{.GroupID}}	{{.ClusterID}}	{{.StatusName}}	{{.StorageEngineName}}{{end}}
 `
 

@@ -29,7 +29,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
-var listTemplate = `ID	ENDPOINT PROVIDER	TYPE	COMMENT{{range .Results}}
+var listTemplate = `ID	ENDPOINT PROVIDER	TYPE	COMMENT{{range valueOrEmptySlice .Results}}
 {{.EndpointId}}	{{.Provider}}	{{.Type}}	{{.Comment}}{{end}}
 `
 

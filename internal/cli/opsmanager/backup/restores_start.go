@@ -32,7 +32,7 @@ const (
 	automatedRestore = "AUTOMATED_RESTORE"
 	httpRestore      = "HTTP"
 	onlyFor          = "'%s' can only be used with %s"
-	createTemplate   = `Created restore job(s):{{range .Results}} '{{.ID}}'{{end}}.
+	createTemplate   = `Created restore job(s):{{range valueOrEmptySlice .Results}} '{{.ID}}'{{end}}.
 `
 )
 

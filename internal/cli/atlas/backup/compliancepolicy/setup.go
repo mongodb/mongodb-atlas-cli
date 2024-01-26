@@ -53,9 +53,9 @@ Restore window days:	{{.RestoreWindowDays}}
 
 POLICIES
 ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
-{{if .ScheduledPolicyItems}}{{- range .ScheduledPolicyItems}}
+{{- range valueOrEmptySlice .ScheduledPolicyItems}}
 {{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
-{{- end}}{{end}}
+{{- end}}
 {{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	-	{{.OnDemandPolicyItem.FrequencyType}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}
 `
 

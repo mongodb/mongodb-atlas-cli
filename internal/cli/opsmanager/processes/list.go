@@ -43,7 +43,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	TYPE	HOSTNAME	STATE NAME	PORT{{range .Results}}
+var listTemplate = `ID	TYPE	HOSTNAME	STATE NAME	PORT{{range valueOrEmptySlice .Results}}
 {{.ID}}	{{.TypeName}}	{{.Hostname}}	{{.ReplicaStateName}}	{{.Port}}{{end}}
 `
 

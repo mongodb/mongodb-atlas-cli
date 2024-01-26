@@ -29,7 +29,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
-const listTemplate = `NAMESPACE	LINE{{range .SlowQueries}}
+const listTemplate = `NAMESPACE	LINE{{range valueOrEmptySlice .SlowQueries}}
 {{.Namespace}}	{{.Line}}{{end}}
 `
 

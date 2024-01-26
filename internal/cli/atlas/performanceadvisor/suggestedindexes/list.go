@@ -29,7 +29,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
-const listTemplate = `ID	NAMESPACE	SUGGESTED INDEX{{range .SuggestedIndexes}}  
+const listTemplate = `ID	NAMESPACE	SUGGESTED INDEX{{range valueOrEmptySlice .SuggestedIndexes}}  
 {{ .Id }}	{{ .Namespace}}	{ {{range $i, $element := .Index}}{{range $key, $value := .}}{{if $i}}, {{end}}{{ $key }}: {{ $value }}{{end}}{{end}} }{{end}}
 `
 

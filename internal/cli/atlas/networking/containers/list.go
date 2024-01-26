@@ -45,7 +45,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	PROVIDER	REGION	ATLAS CIDR	PROVISIONED{{range .}}
+var listTemplate = `ID	PROVIDER	REGION	ATLAS CIDR	PROVISIONED{{range valueOrEmptySlice .}}
 {{.Id}}	{{.ProviderName}}	{{if .RegionName}}{{.RegionName}}{{else}}{{.Region}}{{end}}	{{.AtlasCidrBlock}}	{{.Provisioned}}{{end}}
 `
 

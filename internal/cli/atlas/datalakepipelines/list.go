@@ -29,7 +29,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	NAME	STATE{{range .}}
+var listTemplate = `ID	NAME	STATE{{range valueOrEmptySlice .}}
 {{.Id}}	{{.Name}}	{{.State}}
 {{end}}
 `

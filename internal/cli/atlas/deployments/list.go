@@ -35,7 +35,7 @@ type ListOpts struct {
 }
 
 const listTemplate = `NAME	TYPE	MDB VER	STATE
-{{range .}}{{.Name}}	{{.Type}}	{{.MongoDBVersion}}	{{.StateName}}
+{{range valueOrEmptySlice .}}{{.Name}}	{{.Type}}	{{.MongoDBVersion}}	{{.StateName}}
 {{end}}`
 
 const errAtlas = "failed to retrieve Atlas deployments with: %s"

@@ -41,7 +41,7 @@ func (opts *JobsListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	CREATED AT	EXPIRES AT	STATUS	URL	REDACTED{{range .Results}}
+var listTemplate = `ID	CREATED AT	EXPIRES AT	STATUS	URL	REDACTED{{range valueOrEmptySlice .Results}}
 {{.ID}}	{{.CreationDate}}	{{.ExpirationDate}}	{{.Status}}	{{.URL}}	{{.Redacted}}{{end}}
 `
 

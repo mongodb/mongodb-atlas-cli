@@ -33,7 +33,7 @@ type DescribeOpts struct {
 }
 
 var describePoliciesTemplate = `ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
-{{- range .ScheduledPolicyItems}}
+{{- range valueOrEmptySlice .ScheduledPolicyItems}}
 {{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
 {{- end}}
 {{if .OnDemandPolicyItem}}{{.OnDemandPolicyItem.Id}}	-	{{.OnDemandPolicyItem.FrequencyType}}	{{.OnDemandPolicyItem.RetentionValue}} {{.OnDemandPolicyItem.RetentionUnit}}{{end}}

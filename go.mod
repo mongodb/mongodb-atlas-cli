@@ -28,7 +28,6 @@ require (
 	github.com/google/go-github/v50 v50.2.0
 	github.com/google/uuid v1.5.0
 	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02
-	github.com/jba/templatecheck v0.7.0
 	github.com/klauspost/compress v1.17.4
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mongodb-forks/digest v1.0.5
@@ -122,7 +121,6 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
-	github.com/google/safehtml v0.0.2 // indirect
 	github.com/google/safetext v0.0.0-20220905092116-b49f7bc46da2 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect

@@ -36,7 +36,7 @@ type ListOpts struct {
 }
 
 const (
-	listTemplate = `ID	NAME	CLOUD	REGION{{range .Results}}
+	listTemplate = `ID	NAME	CLOUD	REGION{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.Name}}	{{.DataProcessRegion.CloudProvider}}	{{.DataProcessRegion.Region}}{{end}}
 `
 )

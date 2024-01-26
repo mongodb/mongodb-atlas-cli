@@ -29,7 +29,7 @@ import (
 	"go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
-const listTemplate = `IP ADDRESS	CIDR BLOCK	CREATED AT{{range .Results}}
+const listTemplate = `IP ADDRESS	CIDR BLOCK	CREATED AT{{range valueOrEmptySlice .Results}}
 {{.IpAddress}}	{{.CidrBlock}}	{{.Created}}{{end}}
 `
 

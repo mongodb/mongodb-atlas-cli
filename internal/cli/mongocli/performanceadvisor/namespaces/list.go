@@ -28,7 +28,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `NAMESPACE	TYPE{{range .Namespaces}}
+const listTemplate = `NAMESPACE	TYPE{{range valueOrEmptySlice .Namespaces}}
 {{.Namespace}}	{{.Type}}{{end}}
 `
 

@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
-const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range .Results}}
+const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}{{end}}
 `
 

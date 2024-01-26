@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
-const listTemplate = `ID	NAME{{range .Results}}
+const listTemplate = `ID	NAME{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.Name}}{{end}}
 `
 

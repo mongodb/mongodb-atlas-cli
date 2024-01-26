@@ -28,7 +28,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range .}}
+const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range valueOrEmptySlice .}}
 {{.ID}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
 `
 

@@ -18,6 +18,11 @@ builds:
     id: linux
     goos: [linux]
     goarch: [amd64,arm64]
+    hooks:
+      # This will notarize Linux binaries and replace goreleaser bins with the notarized ones
+      post:
+        - cmd: ./build/package/linux_notarize.sh
+          output: true
   - <<: *build_defaults
     id: macos
     goos: [darwin]
@@ -49,6 +54,11 @@ archives:
       amd64: x86_64
   wrap_in_directory: true
   format: tar.gz
+  hooks:
+      # This will notarize Linux binaries and replace goreleaser bins with the notarized ones
+      post:
+        - cmd: ./build/package/linux_notarize.sh
+          output: true
 - id: macos
   name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
   builds: [macos]
@@ -115,3 +125,5 @@ release:
   name_template: "MongoDB Atlas CLI {{.Version}}"
   extra_files:
     - glob: ./bin/*.msi
+    - glob: ./dist/linux_linux_amd64_v1/bin/atlas/*.asc
+    - glob: ./dist/linux_linux_arm64/bin/atlas/*.asc

@@ -1,0 +1,172 @@
+project_name: atlascli
+
+before:
+  hooks:
+    - go mod tidy
+#after:
+#  hooks:
+#    - cmd: ./build/package/linux_notarize.sh
+#      output: true
+#      env:
+#        - VERSION={{ .Version }}
+#        - TOOL_NAME=atlascli
+#        - ARTIFACTORY_USERNAME={{.Env.ARTIFACTORY_USERNAME}}
+#        - ARTIFACTORY_PASSWORD={{.Env.ARTIFACTORY_PASSWORD}}
+
+builds:
+  - <<: &build_defaults
+      env:
+        - CGO_ENABLED=0
+      binary: bin/atlas
+      main: ./cmd/atlas/atlas.go
+      ldflags:
+        - -s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version={{.Version}} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit={{.FullCommit}} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=atlascli
+    id: linux
+    goos: [linux]
+    goarch: [amd64,arm64]
+#    hooks:
+#      # This will notarize Linux binaries and replace goreleaser bins with the notarized ones
+#      post:
+#        - cmd: ./build/package/linux_notarize.sh
+#          output: true
+#          env:
+#            - VERSION={{ .Version }}
+#            - TOOL_NAME="atlascli"
+#            - ARTIFACTORY_USERNAME={{.Env.ARTIFACTORY_USERNAME}}
+#            - ARTIFACTORY_PASSWORD={{.Env.ARTIFACTORY_PASSWORD}}
+  - <<: *build_defaults
+    id: macos
+    goos: [darwin]
+    goarch: [amd64,arm64]
+#    hooks:
+#      # This will notarize Apple binaries and replace goreleaser bins with the notarized ones
+#      post:
+#        - cmd: ./build/package/atlascli_mac_notarize.sh
+#          output: true
+#  - <<: *build_defaults
+#    id: windows
+#    goos: [windows]
+#    goarch: [amd64]
+#    hooks:
+#      post: ./build/package/atlascli_windows_notarize.sh
+nfpms:
+- package_name: mongodb-atlas-cli
+  file_name_template: mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
+  vendor: MongoDB Inc.
+  homepage: https://www.mongodb.com/
+  maintainer: MongoDB Inc. <support@mongodb.com>
+  description: MongoDB Atlas Command Line Interface (atlascli) is a tool for managing your MongoDB Atlas account.
+  license: Apache 2.0
+  bindir: /usr
+  builds: [linux]
+  formats: [deb,rpm]
+  contents:
+    - src: ./build/package/rpm/installer
+      dst: /etc/atlascli/installer
+      type: "config|noreplace"
+      packager: rpm
+    - src: ./build/package/deb/installer
+      dst: /etc/atlascli/installer
+      type: "config|noreplace"
+      packager: deb
+# Templates: allowed (since v1.20)
+  scripts:
+#    preinstall: "./build/package/linux_notarize.sh"
+    postinstall: "./build/package/linux_notarize.sh"
+#    preremove: "./build/package/linux_notarize.sh"
+#    postremove: "./build/package/linux_notarize.sh"
+#  templated_scripts:
+#    preinstall: "scripts/preinstall.sh"
+#    postinstall: "scripts/postinstall.sh"
+#    preremove: "scripts/preremove.sh"
+#    postremove: "./build/package/linux_notarize.sh"
+
+#  rpm:
+#    scripts:
+#      posttrans: "./build/package/linux_notarize.sh"
+  deb:
+    scripts:
+      rules: "./build/package/linux_notarize.sh"
+    # Custom configuration applied only to the RPM packager.
+  rpm:
+      # RPM specific scripts.
+    scripts:
+      posttrans: "./build/package/linux_notarize.sh"
+
+- id: mongodb-atlas
+  package_name: mongodb-atlas
+  file_name_template: mongodb-atlas_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
+  vendor: MongoDB Inc.
+  homepage: https://www.mongodb.com/
+  maintainer: MongoDB Inc. <support@mongodb.com>
+  description: MongoDB Atlas Command Line Interface (atlascli) is a tool for managing your MongoDB Atlas account.
+  license: Apache 2.0
+  formats: [deb,rpm]
+  dependencies:
+    - mongodb-atlas-cli
+    - mongodb-mongosh
+  recommends:
+    - podman
+  meta: true
+
+archives:
+- id: linux
+  name_template: mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
+  builds: [linux]
+  <<: &archive_defaults
+    files:
+      - README.md
+      - atlascli.md
+      - LICENSE
+      - LICENSING-NOTES.txt
+      - third_party_notices/**/*
+  wrap_in_directory: true
+  format: tar.gz
+#  hooks:
+#    after:
+#      - cmd: ./build/package/linux_notarize.sh
+#        output: true
+#        env:
+#          - VERSION={{ .Version }}
+#          - TOOL_NAME=atlascli
+#          - ARTIFACTORY_USERNAME={{.Env.ARTIFACTORY_USERNAME}}
+#          - ARTIFACTORY_PASSWORD={{.Env.ARTIFACTORY_PASSWORD}}
+- id: macos
+  name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  builds: [macos]
+  <<: *archive_defaults
+  format: zip
+  wrap_in_directory: false
+- id: windows
+  name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  builds: [windows]
+  <<: *archive_defaults
+  wrap_in_directory: false
+  format: zip
+checksum:
+  name_template: checksums.txt
+snapshot:
+  name_template: "{{ .Version }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+    - '^task:'
+    - '^build(deps):'
+
+publishers:
+  - name: my-publisher
+    cmd: "./build/package/linux_notarize.sh"
+
+release:
+  prerelease: true
+  github:
+      owner: andreaangiolillo
+      name: mongocli-test
+  name_template: "MongoDB Atlas CLI {{.Version}}"
+  extra_files:
+    - glob: ./bin/*.msi
+    - glob: ./dist/linux_linux_amd64_v1/bin/atlas/*.asc
+    - glob: ./dist/linux_linux_arm64/bin/atlas/*.asc

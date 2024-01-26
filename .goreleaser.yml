@@ -170,7 +170,7 @@ publishers:
       - TOOL_NAME=atlascli
       - ARTIFACTORY_USERNAME={{.Env.ARTIFACTORY_USERNAME}}
       - ARTIFACTORY_PASSWORD={{.Env.ARTIFACTORY_PASSWORD}}
-      - FILE={{ abs .ArtifactPath }}
+      - LINUX_FILE={{ abs .ArtifactPath }}
 
 release:
   prerelease: auto

@@ -29,7 +29,7 @@ func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockTeamUserLister(ctrl)
 
-	var expected *atlasv2.PaginatedApiAppUser
+	expected := &atlasv2.PaginatedApiAppUser{}
 
 	listOpts := &ListOpts{
 		store: mockStore,

@@ -44,7 +44,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 var restoreDescribeTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT	URLs
-{{.Id}}	{{.SnapshotId}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}	{{range $index, $element := .DeliveryUrl}}{{if $index}}; {{end}}{{$element}}{{end}}
+{{.Id}}	{{.SnapshotId}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}	{{range $index, $element := valueOrEmptySlice .DeliveryUrl}}{{if $index}}; {{end}}{{$element}}{{end}}
 `
 
 func (opts *DescribeOpts) Run() error {

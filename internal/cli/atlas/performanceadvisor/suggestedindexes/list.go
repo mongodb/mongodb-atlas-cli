@@ -30,7 +30,7 @@ import (
 )
 
 const listTemplate = `ID	NAMESPACE	SUGGESTED INDEX{{range valueOrEmptySlice .SuggestedIndexes}}  
-{{ .Id }}	{{ .Namespace}}	{ {{range $i, $element := .Index}}{{range $key, $value := .}}{{if $i}}, {{end}}{{ $key }}: {{ $value }}{{end}}{{end}} }{{end}}
+{{ .Id }}	{{ .Namespace}}	{ {{range $i, $element := valueOrEmptySlice .Index}}{{range $key, $value := .}}{{if $i}}, {{end}}{{ $key }}: {{ $value }}{{end}}{{end}} }{{end}}
 `
 
 type ListOpts struct {

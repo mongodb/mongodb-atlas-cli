@@ -9,8 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_REPOSITORY: andreaangiolillo22/atlascli_test
+      PRIVATE_IMAGE_REPOSITORY: andreaangiolillo22/andrea-private
       PLATFORMS: linux/amd64,linux/arm64
       QUAY: quay.io
+      DOCKER_CLI_EXPERIMENTAL: enabled # used for enabling containerd image storage. See https://github.com/docker/setup-buildx-action/issues/257#issuecomment-1722284952
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -30,6 +32,16 @@ jobs:
         run: |
           release_tag=${{ steps.get-latest-tag.outputs.tag }}
           echo "LATEST_VERSION=${release_tag#*/}" >> $GITHUB_ENV
+      - name: Enable containerd image store # See https://github.com/docker/setup-buildx-action/issues/257#issuecomment-1722284952
+        uses: crazy-max/ghaction-setup-docker@v2
+        with:
+          version: v24.0.6
+          daemon-config: |
+            {
+              "features": {
+                "containerd-snapshotter": true
+              }
+            }
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
         with:
@@ -43,14 +55,14 @@ jobs:
         with:
           username: "${{ secrets.DOCKERHUB_USER }}"
           password: "${{ secrets.DOCKERHUB_SECRET }}"
-      - name: Build and push container to Dockerhub
+      - name: Build and push container to Dockerhub private repository
         uses: docker/build-push-action@v5
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
-          tags: ${{ env.IMAGE_REPOSITORY }}:latest ,
-            ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
-            ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
+          tags: ${{ env.PRIVATE_IMAGE_REPOSITORY }}:latest ,
+            ${{ env.PRIVATE_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
+            ${{ env.PRIVATE_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
           file: Dockerfile
           push: true
 

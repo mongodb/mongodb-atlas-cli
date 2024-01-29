@@ -23,7 +23,7 @@ set -Eeou pipefail
 if [[ -f "${LINUX_FILE}" ]]; then
   echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
 
-	echo "notarizing Linux binary ${LINUX_FILE}"
+  echo "notarizing Linux binary ${LINUX_FILE}"
   podman run \
     -e GRS_CONFIG_USER1_USERNAME="${GRS_USERNAME}" \
     -e GRS_CONFIG_USER1_PASSWORD="${GRS_PASSWORD}" \

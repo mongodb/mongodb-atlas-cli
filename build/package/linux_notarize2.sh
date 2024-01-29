@@ -26,7 +26,7 @@ if [[ -f "${LINUX_FILE}" ]]; then
   echo "YESSSSSSSSSSS here2"
   echo "${ARTIFACTORY_PASSWORD}" | docker login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
 
-	echo "notarizing Linux binary ${AMD64_TAR_FILE}"
+	echo "notarizing Linux binary ${LINUX_FILE}"
   docker run \
     -e GRS_CONFIG_USER1_USERNAME="${GRS_USERNAME}" \
     -e GRS_CONFIG_USER1_PASSWORD="${GRS_PASSWORD}" \

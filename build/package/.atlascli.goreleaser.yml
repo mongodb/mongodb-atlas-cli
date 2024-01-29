@@ -40,8 +40,7 @@ builds:
           output: true
 archives:
 - id: linux_archives
-  name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-  file_name_template: mongodb-atlas_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else if eq .Arch "darwin" }}macos{{- else }}{{ .Arch }}{{ end }}
+  name_template: mongodb-atlas_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else if eq .Arch "darwin" }}macos{{- else }}{{ .Arch }}{{ end }}
   builds: [linux]
   <<: &archive_defaults
     files:

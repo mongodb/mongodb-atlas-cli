@@ -164,7 +164,7 @@ publishers:
     ids:
       - linux_archives
       - linux_package
-    cmd: "./build/package/linux_notarize2.sh"
+    cmd: "./build/package/linux_notarize.sh"
     env:
       - VERSION={{ .Version }}
       - TOOL_NAME=atlascli

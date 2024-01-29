@@ -130,6 +130,7 @@ jobs:
           echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> "signing-envfile"
           echo "COSIGN_REPOSITORY=${SIGNATURE_REPO}" >> "signing-envfile"
           
+          docker pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign
           docker run \
             --env-file=signing-envfile \
             --rm \

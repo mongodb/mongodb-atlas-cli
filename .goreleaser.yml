@@ -8,7 +8,7 @@ before:
 #    - cmd: ./build/package/linux_notarize.sh
 #      output: true
 #      env:
-#        - VERSION={{ .Version }}
+#        - VERSION={{  .Version }}
 #        - TOOL_NAME=atlascli
 #        - ARTIFACTORY_USERNAME={{.Env.ARTIFACTORY_USERNAME}}
 #        - ARTIFACTORY_PASSWORD={{.Env.ARTIFACTORY_PASSWORD}}

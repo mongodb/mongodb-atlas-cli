@@ -112,6 +112,14 @@ jobs:
         uses: docker/setup-buildx-action@v3
         with:
           platforms: ${{ env.PLATFORMS }}
+      - name: Download cosign image
+        env:
+          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+          TEST_REGEX: "^TestAccSearchDeployment"
+        run: |
+          echo "${ARTIFACTORY_PASSWORD}" | docker login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
+          docker pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -124,7 +132,7 @@ jobs:
           GRS_USERNAME: ${{ secrets.GRS_USERNAME }}
           SIGNATURE_REPO: ${{ secrets.COSIGN_REPOSITORY_QUAY }}
           TEST_REGEX: "^TestAccSearchDeployment"
-        run: |
+        run: |          
           IMAGE=${{ env.PRIVATE_IMAGE_REPOSITORY }}:latest 
           docker run \
             -e GRS_CONFIG_USER1_USERNAME="${GRS_USERNAME}" \

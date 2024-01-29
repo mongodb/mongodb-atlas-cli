@@ -39,8 +39,9 @@ builds:
             - VERSION={{ .Version }}
           output: true
 archives:
-- id: linux
+- id: linux_archives
   name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  file_name_template: mongodb-atlas_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else if eq .Arch "darwin" }}macos{{- else }}{{ .Arch }}{{ end }}
   builds: [linux]
   <<: &archive_defaults
     files:
@@ -49,9 +50,6 @@ archives:
       - LICENSE
       - LICENSING-NOTES.txt
       - third_party_notices/**/*
-    replacements:
-      darwin: macos
-      amd64: x86_64
   wrap_in_directory: true
   format: tar.gz
 - id: macos
@@ -67,7 +65,9 @@ archives:
   wrap_in_directory: false
   format: zip
 nfpms:
-- package_name: mongodb-atlas-cli
+- id: linux_package
+  package_name: mongodb-atlas-cli
+  file_name_template: mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   vendor: MongoDB Inc.
   homepage: https://www.mongodb.com/
   maintainer: MongoDB Inc. <support@mongodb.com>
@@ -76,8 +76,6 @@ nfpms:
   bindir: /usr
   builds: [linux]
   formats: [deb,rpm]
-  replacements:
-    amd64: x86_64
   contents:
     - src: ./build/package/rpm/installer
       dst: /etc/atlascli/installer
@@ -89,14 +87,13 @@ nfpms:
       packager: deb
 - id: mongodb-atlas
   package_name: mongodb-atlas
+  file_name_template: mongodb-atlas_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   vendor: MongoDB Inc.
   homepage: https://www.mongodb.com/
   maintainer: MongoDB Inc. <support@mongodb.com>
   description: MongoDB Atlas Command Line Interface (atlascli) is a tool for managing your MongoDB Atlas account.
   license: Apache 2.0
   formats: [deb,rpm]
-  replacements:
-    amd64: x86_64
   dependencies:
     - mongodb-atlas-cli
     - mongodb-mongosh
@@ -115,8 +112,23 @@ changelog:
     - '^test:'
     - '^task:'
     - '^build(deps):'
+publishers:
+  - name: sign-linux-artifacts-garasign-gpg
+    ids:  # IDs of the artifacts we want to sign
+      - linux_archives
+      - linux_package
+    cmd: "./build/package/linux_notarize.sh"
+    env:
+      - VERSION={{ .Version }}
+      - TOOL_NAME=atlascli
+      - ARTIFACTORY_USERNAME={{.Env.ARTIFACTORY_USERNAME}}
+      - ARTIFACTORY_PASSWORD={{.Env.ARTIFACTORY_PASSWORD}}
+      - GRS_USERNAME={{.Env.GRS_USERNAME}}
+      - GRS_PASSWORD={{.Env.GRS_PASSWORD}}
+      - LINUX_FILE={{ abs .ArtifactPath }}
 release:
   prerelease: auto
   name_template: "MongoDB Atlas CLI {{.Version}}"
   extra_files:
     - glob: ./dist/*.msi
+    - glob: ./dist/*.asc

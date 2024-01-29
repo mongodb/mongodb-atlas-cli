@@ -161,6 +161,7 @@ changelog:
 publishers:
   - name: my-publisher
   # IDs of the artifacts we want to sign
+  
     ids:
       - linux_archives
       - linux_package

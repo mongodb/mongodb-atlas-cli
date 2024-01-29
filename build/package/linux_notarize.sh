@@ -17,7 +17,7 @@
 set -Eeou pipefail
 
 # Notarize generated binaries with GPG and replace the original binary with the notarized one
-# This depends on binaries being generated in a goreleaser manner and gon being set up.
+# This depends  on binaries being generated in a goreleaser manner and gon being set up.
 # goreleaser should already take care of calling this script as a hook.
 
 

@@ -349,10 +349,10 @@ tasks:
           tool_name: ${tool_name}
           goreleaser_config: ${goreleaser_file}
           changelog_file: ${changelog_file}
-          ARTIFACTORY_USERNAME: ${ARTIFACTORY_USERNAME}
-          ARTIFACTORY_PASSWORD: ${ARTIFACTORY_PASSWORD}
-          GRS_USERNAME: ${GRS_USERNAME}
-          GRS_PASSWORD: ${GRS_PASSWORD}
+          ARTIFACTORY_USERNAME: ${artifactory_username}
+          ARTIFACTORY_PASSWORD: ${artifactory_password}
+          GRS_USERNAME: ${garasign_username}
+          GRS_PASSWORD: ${garasign_password}
       - func: "rename pkg"
         vars:
           unstable: -unstable
@@ -467,10 +467,10 @@ tasks:
           tool_name: "mongocli"
           goreleaser_config: build/package/.mongocli.goreleaser.yml
           changelog_file: CHANGELOG_MONGOCLI.md
-          ARTIFACTORY_USERNAME: ${ARTIFACTORY_USERNAME}
-          ARTIFACTORY_PASSWORD: ${ARTIFACTORY_PASSWORD}
-          GRS_USERNAME: ${GRS_USERNAME}
-          GRS_PASSWORD: ${GRS_PASSWORD}
+          ARTIFACTORY_USERNAME: ${artifactory_username}
+          ARTIFACTORY_PASSWORD: ${artifactory_password}
+          GRS_USERNAME: ${garasign_username}
+          GRS_PASSWORD: ${garasign_password}
       - func: "rename pkg"
         vars:
           package_name: mongocli
@@ -554,10 +554,10 @@ tasks:
           tool_name: "atlascli"
           goreleaser_config: build/package/.atlascli.goreleaser.yml
           changelog_file: CHANGELOG_ATLASCLI.md
-          ARTIFACTORY_USERNAME: ${ARTIFACTORY_USERNAME}
-          ARTIFACTORY_PASSWORD: ${ARTIFACTORY_PASSWORD}
-          GRS_USERNAME: ${GRS_USERNAME}
-          GRS_PASSWORD: ${GRS_PASSWORD}
+          ARTIFACTORY_USERNAME: ${artifactory_username}
+          ARTIFACTORY_PASSWORD: ${artifactory_password}
+          GRS_USERNAME: ${garasign_username}
+          GRS_PASSWORD: ${garasign_password}
       - func: "rename pkg"
         vars:
           package_name: mongodb-atlas-cli

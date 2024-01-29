@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 jobs:
   release_image_to_private_repo:
-    name: Build and publish docker image
+    name: Build and publish docker image to private repo
     runs-on: ubuntu-latest
     env:
       IMAGE_REPOSITORY: andreaangiolillo22/atlascli_test
@@ -66,7 +66,7 @@ jobs:
           file: Dockerfile
           push: true
   release_image_to_public_repo:
-    name: Build and publish docker image
+    name: Sign and Publish docker image
     needs: [ release_image_to_private_repo ]
     runs-on: ubuntu-latest
     env:
@@ -126,13 +126,10 @@ jobs:
           TEST_REGEX: "^TestAccSearchDeployment"
         run: |
           IMAGE=${{ env.PRIVATE_IMAGE_REPOSITORY }}:latest 
-          echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" >> "signing-envfile"
-          echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> "signing-envfile"
-          echo "COSIGN_REPOSITORY=${SIGNATURE_REPO}" >> "signing-envfile"
-          
-          docker pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign
           docker run \
-            --env-file=signing-envfile \
+            -e GRS_CONFIG_USER1_USERNAME="${GRS_USERNAME}" \
+            -e GRS_CONFIG_USER1_PASSWORD="${GRS_PASSWORD}" \
+            -e COSIGN_REPOSITORY="${SIGNATURE_REPO}" \
             --rm \
             -v ~/.docker/config.json:/root/.docker/config.json \
             -v $(pwd):$(pwd) \

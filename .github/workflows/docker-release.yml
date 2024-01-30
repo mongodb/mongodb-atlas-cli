@@ -110,6 +110,6 @@ jobs:
             -v $(pwd):$(pwd) \
             -w $(pwd) \
             artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign \
-            cosign sign --key "${PKCS11_URI}" --tlog-upload=false ${IMAGE}   
+            cosign sign --key "${PKCS11_URI}" --tlog-upload=false "${IMAGE}@{DIGEST}   
         
           ls -al 

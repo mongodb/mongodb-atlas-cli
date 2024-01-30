@@ -426,6 +426,8 @@ dbName and collection are required only for built-in roles.`
 	OperatorAtlasGov                          = "Flag that indicates whether to configure Atlas for Government as a target of the operator."
 	KubernetesClusterConfig                   = "Path to the kubeconfig file to use for CLI requests."
 	KubernetesClusterContext                  = "Name of the kubeconfig context to use."
+	OperatorResourceDeletionProtection        = "Toggle atlas operator deletion protection for resources like Projects, Deployments, etc. Read more: https://dochub.mongodb.org/core/ako-deletion-protection"
+	OperatorSubResourceDeletionProtection     = "Toggle atlas operator deletion protection for subresources like Alerts, Integrations, etc. Read more: https://dochub.mongodb.org/core/ako-deletion-protection"
 	ExportID                                  = "Unique string that identifies the AWS S3 bucket to which you export your snapshots."
 	RequiredRole                              = "To use this command, you must authenticate with a user account or an API key that has the %s role."
 	RestoreJobID                              = "Unique identifier that identifies the Restore Job."

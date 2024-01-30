@@ -22,12 +22,12 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/containers/podman/v4/libpod/define"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -60,12 +60,12 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 	mockPodman.
 		EXPECT().
 		ContainerInspect(ctx, startOpts.LocalMongotHostname()).
-		Return([]*define.InspectContainerData{
+		Return([]*podman.InspectContainerData{
 			{
-				NetworkSettings: &define.InspectNetworkSettings{
-					Networks: map[string]*define.InspectAdditionalNetwork{
+				NetworkSettings: &podman.InspectNetworkSettings{
+					Networks: map[string]*podman.InspectAdditionalNetwork{
 						startOpts.LocalNetworkName(): {
-							InspectBasicNetworkConfig: define.InspectBasicNetworkConfig{
+							InspectBasicNetworkConfig: podman.InspectBasicNetworkConfig{
 								IPAddress: "1.2.3.4",
 							},
 						},
@@ -117,12 +117,12 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 	mockPodman.
 		EXPECT().
 		ContainerInspect(ctx, startOpts.LocalMongotHostname()).
-		Return([]*define.InspectContainerData{
+		Return([]*podman.InspectContainerData{
 			{
-				NetworkSettings: &define.InspectNetworkSettings{
-					Networks: map[string]*define.InspectAdditionalNetwork{
+				NetworkSettings: &podman.InspectNetworkSettings{
+					Networks: map[string]*podman.InspectAdditionalNetwork{
 						startOpts.LocalNetworkName(): {
-							InspectBasicNetworkConfig: define.InspectBasicNetworkConfig{
+							InspectBasicNetworkConfig: podman.InspectBasicNetworkConfig{
 								IPAddress: "1.2.3.4",
 							},
 						},

@@ -22,7 +22,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/containers/podman/v4/libpod/define"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -30,6 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -74,16 +74,16 @@ func TestList_RunLocal(t *testing.T) {
 	mockPodman.
 		EXPECT().
 		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
-		Return([]*define.InspectContainerData{
+		Return([]*podman.InspectContainerData{
 			{
 				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
-				Config: &define.InspectContainerConfig{
+				Config: &podman.InspectContainerConfig{
 					Labels: map[string]string{
 						"version": "7.0.1",
 					},
 				},
-				HostConfig: &define.InspectContainerHostConfig{
-					PortBindings: map[string][]define.InspectHostPort{
+				HostConfig: &podman.InspectContainerHostConfig{
+					PortBindings: map[string][]podman.InspectHostPort{
 						"27017/tcp": {
 							{
 								HostIP:   "127.0.0.1",
@@ -92,7 +92,7 @@ func TestList_RunLocal(t *testing.T) {
 						},
 					},
 				},
-				Mounts: []define.InspectMount{
+				Mounts: []podman.InspectMount{
 					{
 						Name: opts.DeploymentOpts.LocalMongodDataVolume(),
 					},

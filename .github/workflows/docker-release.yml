@@ -1,19 +1,138 @@
-name: Daily build
+name: Daily Release AtlasCLI Docker Image
 on:
   schedule:
     - cron: "0 1 * * *" # Every day at 1:00 AM
   workflow_dispatch:
 jobs:
-#  release_image_to_private_repo:
-#    name: Build and publish docker image to private repo
-#    runs-on: ubuntu-latest
-#    env:
-#      IMAGE_REPOSITORY: andreaangiolillo22/atlascli_test
-#      PRIVATE_IMAGE_REPOSITORY: andreaangiolillo22/andrea-private
-#      PLATFORMS: linux/amd64,linux/arm64
-#      QUAY: quay.io
-#      DOCKER_CLI_EXPERIMENTAL: enabled # used for enabling containerd image storage. See https://github.com/docker/setup-buildx-action/issues/257#issuecomment-1722284952
-#    steps:
+  release_image_to_private_repo:
+    name: Build and publish docker image to staging repo
+    runs-on: ubuntu-latest
+    platform:
+          - linux/amd64
+          - linux/arm64
+    env:
+      STAGING_IMAGE_REPOSITORY: andreaangiolillo22/staging
+      PLATFORMS: linux/amd64,linux/arm64
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Set date
+        id: set-date
+        run: |
+          DATE=$(date +'%Y-%m-%d')
+          echo DATE=${DATE} >> $GITHUB_ENV
+      - name: 'Get latest tag'
+        id: get-latest-tag
+        uses: oprypin/find-latest-tag@v1
+        with:
+          repository: mongodb/mongodb-atlas-cli
+          releases-only: true
+          regex: 'atlascli*'
+      - name: Extract version
+        run: |
+          release_tag=${{ steps.get-latest-tag.outputs.tag }}
+          echo "LATEST_VERSION=${release_tag#*/}" >> $GITHUB_ENV
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: "${{ secrets.DOCKERHUB_USER }}"
+          password: "${{ secrets.DOCKERHUB_SECRET }}"
+      - name: Build and push container to Dockerhub staging repository
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          tags: ${{ env.IMAGE_REPOSITORY }}:latest ,
+            ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
+            ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
+          file: Dockerfile
+          push: true
+          outputs: type=image,name=${{ env.STAGING_IMAGE_REPOSITORY }}, push-by-digest=true,name-canonical=true,push=true
+      - name: Export digest
+            run: |
+              mkdir -p /tmp/digests
+              digest="${{ steps.build.outputs.digest }}"
+              touch "/tmp/digests/${digest#sha256:}"
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ env.PLATFORM_PAIR }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  sign_release_image_to_public_repo:
+    name: Sign and Publish docker image
+    needs: [ release_image_to_private_repo ]
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_REPOSITORY: andreaangiolillo22/atlascli_test
+      STAGING_IMAGE_REPOSITORY: andreaangiolillo22/staging
+      PLATFORMS: linux/amd64,linux/arm64
+      DOCKER_CLI_EXPERIMENTAL: enabled # used for enabling containerd image storage. See https://github.com/docker/setup-buildx-action/issues/257#issuecomment-1722284952
+    steps:
+     - name: Download digests
+       uses: actions/download-artifact@v4
+       with:
+        path: /tmp/digests
+        pattern: digests-*
+        merge-multiple: true
+     - name: Set up Docker Buildx
+       uses: docker/setup-buildx-action@v3
+     - name: Download cosign image
+       env:
+        ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+        ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+       run: |
+        echo "${ARTIFACTORY_PASSWORD}" | docker login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
+        docker pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.STAGING_IMAGE_REPOSITORY }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: "${{ secrets.DOCKERHUB_USER }}"
+          password: "${{ secrets.DOCKERHUB_SECRET }}"
+      - name: Create manifest list and push
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.IMAGE_REPOSITORY }}@sha256:%s ' *)
+      - name: Inspect image
+        run: |
+          docker buildx imagetools inspect ${{ env.IMAGE_REPOSITORY }}:${{ steps.meta.outputs.version }}          
+
+#      - name: Sign docker images with cosign
+#        working-directory: /tmp/digests
+#        env:
+#          PKCS11_URI: ${{ secrets.PKCS11_URI }}
+#          GRS_PASSWORD: ${{ secrets.GRS_PASSWORD }}
+#          GRS_USERNAME: ${{ secrets.GRS_USERNAME }}
+#          SIGNATURE_REPO: ${{ secrets.COSIGN_REPOSITORY_QUAY }}
+#          IMAGE: mongodb/apix_test:latest
+#        run: |
+#          ls -al
+#          cat digests-linux/amd64
+#          DIGEST=$(cat digests-linux/amd64)
+#          docker run \
+#            -e GRS_CONFIG_USER1_USERNAME="${GRS_USERNAME}" \
+#            -e GRS_CONFIG_USER1_PASSWORD="${GRS_PASSWORD}" \
+#            -e COSIGN_REPOSITORY="${SIGNATURE_REPO}" \
+#            --rm \
+#            -v ~/.docker/config.json:/root/.docker/config.json \
+#            -v $(pwd):$(pwd) \
+#            -w $(pwd) \
+#            artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign \
+#            cosign sign --key "${PKCS11_URI}" --tlog-upload=false ${DIGEST}
+            
+            
+        
+
 #      - name: Check out code
 #        uses: actions/checkout@v4
 #      - name: Set date
@@ -50,99 +169,42 @@ jobs:
 #        uses: docker/setup-buildx-action@v3
 #        with:
 #          platforms: ${{ env.PLATFORMS }}
+#      - name: Download cosign image
+#        env:
+#          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+#          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+#          TEST_REGEX: "^TestAccSearchDeployment"
+#        run: |
+#          echo "${ARTIFACTORY_PASSWORD}" | docker login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
+#          docker pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign
+#      - name: Sign docker images with cosign
+#        env:
+#          PKCS11_URI: ${{ secrets.PKCS11_URI }}
+#          GRS_PASSWORD: ${{ secrets.GRS_PASSWORD }}
+#          GRS_USERNAME: ${{ secrets.GRS_USERNAME }}
+#          SIGNATURE_REPO: ${{ secrets.COSIGN_REPOSITORY_QUAY }}
+#          IMAGE: mongodb/apix_test:latest
+#          TEST_REGEX: "^TestAccSearchDeployment"
+#        run: |
+#          IMAGE=${{ env.PRIVATE_IMAGE_REPOSITORY }}:latest
+#          # Get the image digest
+#
+#
+#
+#          docker run \
+#            -e GRS_CONFIG_USER1_USERNAME="${GRS_USERNAME}" \
+#            -e GRS_CONFIG_USER1_PASSWORD="${GRS_PASSWORD}" \
+#            -e COSIGN_REPOSITORY="${SIGNATURE_REPO}" \
+#            --rm \
+#            -v ~/.docker/config.json:/root/.docker/config.json \
+#            -v $(pwd):$(pwd) \
+#            -w $(pwd) \
+#            artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign \
+#            cosign sign --key "${PKCS11_URI}" --tlog-upload=false ${IMAGE}
+#
+#          ls -al
 #      - name: Login to Docker Hub
 #        uses: docker/login-action@v3
 #        with:
 #          username: "${{ secrets.DOCKERHUB_USER }}"
 #          password: "${{ secrets.DOCKERHUB_SECRET }}"
-#      - name: Build and push container to Dockerhub private repository
-#        uses: docker/build-push-action@v5
-#        with:
-#          context: .
-#          platforms: ${{ env.PLATFORMS }}
-#          tags: ${{ env.PRIVATE_IMAGE_REPOSITORY }}:latest ,
-#            ${{ env.PRIVATE_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
-#            ${{ env.PRIVATE_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
-#          file: Dockerfile
-#          push: true
-  release_image_to_public_repo:
-    name: Sign and Publish docker image
-#    needs: [ release_image_to_private_repo ]
-    runs-on: ubuntu-latest
-    env:
-      IMAGE_REPOSITORY: andreaangiolillo22/atlascli_test
-      PRIVATE_IMAGE_REPOSITORY: andreaangiolillo22/andrea-private
-      PLATFORMS: linux/amd64,linux/arm64
-      QUAY: quay.io
-      DOCKER_CLI_EXPERIMENTAL: enabled # used for enabling containerd image storage. See https://github.com/docker/setup-buildx-action/issues/257#issuecomment-1722284952
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-      - name: Set date
-        id: set-date
-        run: |
-          DATE=$(date +'%Y-%m-%d')
-          echo DATE=${DATE} >> $GITHUB_ENV
-      - name: 'Get latest tag'
-        id: get-latest-tag
-        uses: oprypin/find-latest-tag@v1
-        with:
-          repository: mongodb/mongodb-atlas-cli
-          releases-only: true
-          regex: 'atlascli*'
-      - name: Extract version
-        run: |
-          release_tag=${{ steps.get-latest-tag.outputs.tag }}
-          echo "LATEST_VERSION=${release_tag#*/}" >> $GITHUB_ENV
-      - name: Enable containerd image store # See https://github.com/docker/setup-buildx-action/issues/257#issuecomment-1722284952
-        uses: crazy-max/ghaction-setup-docker@v2
-        with:
-          version: v24.0.6
-          daemon-config: |
-            {
-              "features": {
-                "containerd-snapshotter": true
-              }
-            }
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: ${{ env.PLATFORMS }}
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          platforms: ${{ env.PLATFORMS }}
-      - name: Download cosign image
-        env:
-          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-          TEST_REGEX: "^TestAccSearchDeployment"
-        run: |
-          echo "${ARTIFACTORY_PASSWORD}" | docker login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
-          docker pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: "${{ secrets.DOCKERHUB_USER }}"
-          password: "${{ secrets.DOCKERHUB_SECRET }}"
-      - name: Sign docker images with cosign
-        env:
-          PKCS11_URI: ${{ secrets.PKCS11_URI }}
-          GRS_PASSWORD: ${{ secrets.GRS_PASSWORD }}
-          GRS_USERNAME: ${{ secrets.GRS_USERNAME }}
-          SIGNATURE_REPO: ${{ secrets.COSIGN_REPOSITORY_QUAY }}
-          TEST_REGEX: "^TestAccSearchDeployment"
-        run: |          
-          IMAGE=${{ env.PRIVATE_IMAGE_REPOSITORY }}:latest 
-          docker run \
-            -e GRS_CONFIG_USER1_USERNAME="${GRS_USERNAME}" \
-            -e GRS_CONFIG_USER1_PASSWORD="${GRS_PASSWORD}" \
-            -e COSIGN_REPOSITORY="${SIGNATURE_REPO}" \
-            --rm \
-            -v ~/.docker/config.json:/root/.docker/config.json \
-            -v $(pwd):$(pwd) \
-            -w $(pwd) \
-            artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign \
-            cosign sign --key "${PKCS11_URI}" --tlog-upload=false ${IMAGE}
-            
-          ls -al

@@ -41,9 +41,9 @@ jobs:
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
-          tags: ${{ env.IMAGE_REPOSITORY }}:latest ,
-            ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
-            ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
+          tags: ${{ env.STAGING_IMAGE_REPOSITORY }}:latest ,
+            ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
+            ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
           file: Dockerfile
           push: true
   push_images:

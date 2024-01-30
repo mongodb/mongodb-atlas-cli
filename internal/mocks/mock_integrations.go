@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20231115004/admin"
+	admin "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 // MockIntegrationCreator is a mock of IntegrationCreator interface.

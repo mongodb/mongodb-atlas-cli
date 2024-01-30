@@ -19,7 +19,7 @@ import (
 	"io"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 

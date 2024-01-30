@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20231115004/admin"
+	admin "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 // MockDataFederationLister is a mock of DataFederationLister interface.

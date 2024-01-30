@@ -26,10 +26,10 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/golang/mock v1.6.0
 	github.com/google/go-github/v50 v50.2.0
-	github.com/google/uuid v1.5.0
+	github.com/google/uuid v1.6.0
 	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02
 	github.com/jba/templatecheck v0.7.0
-	github.com/klauspost/compress v1.17.4
+	github.com/klauspost/compress v1.17.5
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mongodb-forks/digest v1.0.5
 	github.com/mongodb-labs/cobra2snooty v0.17.0
@@ -51,7 +51,7 @@ require (
 	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc
 	golang.org/x/mod v0.14.0
 	golang.org/x/tools v0.17.0
-	google.golang.org/api v0.157.0
+	google.golang.org/api v0.160.0
 	google.golang.org/protobuf v1.32.0
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.29.1
@@ -177,11 +177,11 @@ require (
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	github.com/yusufpapurcu/wmi v1.2.3 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.46.1 // indirect
-	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.46.1 // indirect
-	go.opentelemetry.io/otel v1.21.0 // indirect
-	go.opentelemetry.io/otel/metric v1.21.0 // indirect
-	go.opentelemetry.io/otel/trace v1.21.0 // indirect
+	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.47.0 // indirect
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.47.0 // indirect
+	go.opentelemetry.io/otel v1.22.0 // indirect
+	go.opentelemetry.io/otel/metric v1.22.0 // indirect
+	go.opentelemetry.io/otel/trace v1.22.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.26.0 // indirect
 	golang.org/x/net v0.20.0 // indirect

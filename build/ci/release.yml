@@ -193,6 +193,7 @@ functions:
           - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tgz
           - src/github.com/mongodb/mongodb-atlas-cli/dist/*.json
           - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
+          - src/github.com/mongodb/mongodb-atlas-cli/dist/*.sig
         remote_file: ${project}/dist/${revision}_${created_at}/
         bucket: mongodb-mongocli-build
         permissions: public-read

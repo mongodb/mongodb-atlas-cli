@@ -46,8 +46,7 @@ jobs:
             ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
           file: Dockerfile
           push: true
-
-  sign_release_image_to_public_repo:
+  push_images:
     name: Sign and Publish docker image
     needs: [ build_image ]
     runs-on: ubuntu-latest

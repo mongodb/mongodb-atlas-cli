@@ -42,14 +42,16 @@ type InstallOpts struct {
 
 	versionProvider version.AtlasOperatorVersionProvider
 
-	operatorVersion string
-	targetNamespace string
-	watchNamespace  []string
-	projectName     string
-	importResources bool
-	atlasGov        bool
-	KubeConfig      string
-	KubeContext     string
+	operatorVersion              string
+	targetNamespace              string
+	watchNamespace               []string
+	projectName                  string
+	importResources              bool
+	atlasGov                     bool
+	KubeConfig                   string
+	KubeContext                  string
+	featureDeletionProtection    bool
+	featureSubDeletionProtection bool
 }
 
 func (opts *InstallOpts) defaults() error {
@@ -106,7 +108,7 @@ func (opts *InstallOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	installer := operator.NewInstaller(opts.versionProvider, kubeCtl)
+	installer := operator.NewInstaller(opts.versionProvider, kubeCtl, opts.featureDeletionProtection, opts.featureSubDeletionProtection)
 
 	profile := config.Default()
 	atlasStore, err := atlas.New(atlas.AuthenticatedPreset(profile), atlas.WithContext(ctx))
@@ -131,6 +133,8 @@ func (opts *InstallOpts) Run(ctx context.Context) error {
 		WithWatchNamespaces(opts.watchNamespace).
 		WithWatchProjectName(opts.projectName).
 		WithImportResources(opts.importResources).
+		WithResourceDeletionProtection(opts.featureDeletionProtection).
+		WithSubResourceDeletionProtection(opts.featureSubDeletionProtection).
 		WithAtlasGov(opts.atlasGov).
 		Run(ctx, opts.OrgID)
 
@@ -170,7 +174,13 @@ The key is scoped to the project when you specify the --projectName option and t
   atlas kubernetes operator install --targetNamespace=<namespace> --orgID <orgID> --import
 
   # Install and import objects from a specific project:
-  atlas kubernetes operator install --targetNamespace=<namespace> --orgID <orgID> --projectName <project> --import`,
+  atlas kubernetes operator install --targetNamespace=<namespace> --orgID <orgID> --projectName <project> --import
+
+	# Install the operator and disable deletion protection:
+	atlas kubernetes operator install --resourceDeletionProtection=false
+
+	# Install the operator and disable deletion protection for sub-resources (Atlas project integrations, private endpoints, etc.):
+	atlas kubernetes operator install --subresourceDeletionProtection=false`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.versionProvider = version.NewOperatorVersion(github.NewClient(nil))
 
@@ -198,6 +208,8 @@ The key is scoped to the project when you specify the --projectName option and t
 	flags.BoolVar(&opts.atlasGov, flag.OperatorAtlasGov, false, usage.OperatorAtlasGov)
 	flags.StringVar(&opts.KubeConfig, flag.KubernetesClusterConfig, "", usage.KubernetesClusterConfig)
 	flags.StringVar(&opts.KubeContext, flag.KubernetesClusterContext, "", usage.KubernetesClusterContext)
+	flags.BoolVar(&opts.featureDeletionProtection, flag.OperatorResourceDeletionProtection, true, usage.OperatorResourceDeletionProtection)
+	flags.BoolVar(&opts.featureSubDeletionProtection, flag.OperatorSubResourceDeletionProtection, true, usage.OperatorSubResourceDeletionProtection)
 
 	return cmd
 }

@@ -320,6 +320,8 @@ const (
 	OperatorVersion                           = "operatorVersion"                           // OperatorVersion flag
 	OperatorProjectName                       = "projectName"                               // OperatorProjectName flag
 	OperatorImport                            = "import"                                    // OperatorImport flag
+	OperatorResourceDeletionProtection        = "resourceDeletionProtection"                // OperatorResourceDeletionProtection flag
+	OperatorSubResourceDeletionProtection     = "subresourceDeletionProtection"             // Operator OperatorSubResourceDeletionProtection flag
 	OperatorAtlasGov                          = "atlasGov"                                  // OperatorAtlasGov flag
 	KubernetesClusterConfig                   = "kubeconfig"                                // Kubeconfig flag
 	KubernetesClusterContext                  = "kubeContext"                               // KubeContext flag

@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115004/admin"
 	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -46,12 +46,14 @@ type Install struct {
 	featureValidator features.FeatureValidator
 	kubectl          *kubernetes.KubeCtl
 
-	version         string
-	namespace       string
-	watch           []string
-	projectName     string
-	importResources bool
-	atlasGov        bool
+	featureDeletionProtection    bool
+	featureSubDeletionProtection bool
+	version                      string
+	namespace                    string
+	watch                        []string
+	projectName                  string
+	importResources              bool
+	atlasGov                     bool
 }
 
 func (i *Install) WithNamespace(namespace string) *Install {
@@ -78,6 +80,18 @@ func (i *Install) WithImportResources(flag bool) *Install {
 	return i
 }
 
+func (i *Install) WithResourceDeletionProtection(flag bool) *Install {
+	i.featureDeletionProtection = flag
+
+	return i
+}
+
+func (i *Install) WithSubResourceDeletionProtection(flag bool) *Install {
+	i.featureSubDeletionProtection = flag
+
+	return i
+}
+
 func (i *Install) WithAtlasGov(flag bool) *Install {
 	i.atlasGov = flag
 
@@ -94,7 +108,14 @@ func (i *Install) Run(ctx context.Context, orgID string) error {
 		return err
 	}
 
-	if err = i.installResources.InstallConfiguration(ctx, i.version, i.namespace, i.watch, i.atlasGov); err != nil {
+	if err = i.installResources.InstallConfiguration(ctx, &InstallConfig{
+		Version:                              i.version,
+		Namespace:                            i.namespace,
+		Watch:                                i.watch,
+		ResourceDeletionProtectionEnabled:    i.featureDeletionProtection,
+		SubResourceDeletionProtectionEnabled: i.featureSubDeletionProtection,
+		AtlasGov:                             i.atlasGov,
+	}); err != nil {
 		return err
 	}
 
@@ -207,7 +228,7 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 			return fmt.Errorf("unable to retrieve list of projects: %w", err)
 		}
 
-		for _, project := range projectsData.Results {
+		for _, project := range projectsData.GetResults() {
 			projectsIDs = append(projectsIDs, atlas.StringOrEmpty(project.Id))
 		}
 	}
@@ -222,7 +243,7 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 			projectID,
 			apiKeyID,
 			&admin.UpdateAtlasProjectApiKey{
-				Roles: []string{roleProjectOwner},
+				Roles: &[]string{roleProjectOwner},
 			},
 		)
 		if err != nil {
@@ -234,6 +255,7 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 			WithTargetOperatorVersion(crdVersion).
 			WithFeatureValidator(i.featureValidator).
 			WithSecretsData(false)
+
 		err = NewConfigApply(
 			NewConfigApplyParams{
 				OrgID:     orgID,

@@ -42,7 +42,7 @@ func (opts *DisksListsOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `{{range .Results}}
+var listTemplate = `{{range valueOrEmptySlice .Results}}
 {{.PartitionName}}{{end}}
 `
 

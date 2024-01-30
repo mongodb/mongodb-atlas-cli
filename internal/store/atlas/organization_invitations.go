@@ -14,7 +14,7 @@
 package atlas
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 //go:generate mockgen -destination=../../mocks/atlas/mock_organization_invitations.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationInvitationLister,OrganizationInvitationDeleter,OrganizationInvitationDescriber,OrganizationInvitationUpdater,OrganizationInviter
@@ -61,8 +61,8 @@ func (s *Store) DeleteInvitation(orgID, invitationID string) error {
 func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitation *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error) {
 	if invitationID != "" {
 		invitationRequest := atlasv2.OrganizationInvitationUpdateRequest{
-			Roles:   invitation.GetRoles(),
-			TeamIds: invitation.GetTeamIds(),
+			Roles:   invitation.Roles,
+			TeamIds: invitation.TeamIds,
 		}
 
 		result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitationById(s.ctx, orgID,

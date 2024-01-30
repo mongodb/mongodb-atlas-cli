@@ -24,10 +24,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 const createTemplate = "Custom database role '{{.RoleName}}' successfully created.\n"
@@ -63,8 +64,8 @@ func (opts *CreateOpts) Run() error {
 func (opts *CreateOpts) newCustomDBRole() *atlasv2.UserCustomDBRole {
 	return &atlasv2.UserCustomDBRole{
 		RoleName:       opts.roleName,
-		Actions:        joinActions(convert.BuildAtlasActions(opts.action)),
-		InheritedRoles: convert.BuildAtlasInheritedRoles(opts.inheritedRoles),
+		Actions:        pointer.Get((convert.BuildAtlasActions(opts.action))),
+		InheritedRoles: pointer.Get(convert.BuildAtlasInheritedRoles(opts.inheritedRoles)),
 	}
 }
 

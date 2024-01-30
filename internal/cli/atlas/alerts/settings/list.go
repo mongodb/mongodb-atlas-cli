@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 type ListOpts struct {
@@ -44,7 +44,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var settingsListTemplate = `ID	TYPE	ENABLED{{range .Results}}
+var settingsListTemplate = `ID	TYPE	ENABLED{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.EventTypeName}}	{{.Enabled}}{{end}}
 `
 

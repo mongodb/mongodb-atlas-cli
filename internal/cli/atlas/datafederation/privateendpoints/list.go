@@ -29,7 +29,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ENDPOINT ID	COMMENT	TYPE{{range .Results}}
+var listTemplate = `ENDPOINT ID	COMMENT	TYPE{{range valueOrEmptySlice .Results}}
 {{.EndpointId}}	{{.Comment}}	{{.Type}}
 {{end}}
 `

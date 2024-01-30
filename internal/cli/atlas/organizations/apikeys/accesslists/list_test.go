@@ -24,7 +24,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -43,7 +43,7 @@ func TestListOpts_Run(t *testing.T) {
 		ItemsPerPage: pointer.Get(listOpts.ItemsPerPage),
 	}
 	expected := admin.PaginatedApiUserAccessList{
-		Results: []admin.UserAccessList{},
+		Results: &[]admin.UserAccessList{},
 	}
 	mockStore.
 		EXPECT().

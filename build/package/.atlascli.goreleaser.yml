@@ -32,7 +32,12 @@ builds:
     goos: [windows]
     goarch: [amd64]
     hooks:
-      post: ./build/package/atlascli_windows_notarize.sh
+      post:
+        - cmd: ./build/package/windows_notarize.sh
+          env:
+            - TOOL_NAME=atlascli
+            - VERSION={{ .Version }}
+          output: true
 archives:
 - id: linux
   name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
@@ -114,4 +119,4 @@ release:
   prerelease: auto
   name_template: "MongoDB Atlas CLI {{.Version}}"
   extra_files:
-    - glob: ./bin/*.msi
+    - glob: ./dist/*.msi

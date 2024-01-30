@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 type AutoCompleteOpts struct {
@@ -70,8 +70,8 @@ func (opts *AutoCompleteOpts) processSuggestion(toComplete string) ([]string, er
 	if err != nil {
 		return nil, err
 	}
-	suggestion := make([]string, 0, len(result.Results))
-	for _, p := range result.Results {
+	suggestion := make([]string, 0, len(result.GetResults()))
+	for _, p := range result.GetResults() {
 		if !strings.HasPrefix(p.GetId(), toComplete) {
 			continue
 		}

@@ -29,7 +29,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS	TYPE{{range .}}
+var listTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS	TYPE{{range valueOrEmptySlice .}}
 {{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}	{{if .Type}}{{.Type}}{{else}}` + search.DefaultType + `{{end}}{{end}}
 `
 

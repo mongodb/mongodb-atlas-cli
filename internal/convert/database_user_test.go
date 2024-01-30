@@ -21,7 +21,7 @@ import (
 
 	"github.com/go-test/deep"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 

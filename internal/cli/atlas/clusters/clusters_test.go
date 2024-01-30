@@ -22,7 +22,7 @@ import (
 
 	"github.com/go-test/deep"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 func TestBuilder(t *testing.T) {
@@ -63,7 +63,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 				Id:             &id,
 				MongoDBVersion: &testVar,
 				StateName:      &testVar,
-				ReplicationSpecs: []atlasv2.ReplicationSpec{
+				ReplicationSpecs: &[]atlasv2.ReplicationSpec{
 					{
 						Id:        &specID,
 						NumShards: &shards,
@@ -73,7 +73,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 				CreateDate: &timeStamp,
 			},
 			want: &atlasv2.AdvancedClusterDescription{
-				ReplicationSpecs: []atlasv2.ReplicationSpec{
+				ReplicationSpecs: &[]atlasv2.ReplicationSpec{
 					{
 						NumShards: &shards,
 						ZoneName:  &zone,
@@ -87,7 +87,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 				Id:             &id,
 				MongoDBVersion: &testVar,
 				StateName:      &testVar,
-				ReplicationSpecs: []atlasv2.ReplicationSpec{
+				ReplicationSpecs: &[]atlasv2.ReplicationSpec{
 					{
 						Id:        &specID,
 						NumShards: &shards,
@@ -107,7 +107,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 				CreateDate: &timeStamp,
 			},
 			want: &atlasv2.AdvancedClusterDescription{
-				ReplicationSpecs: []atlasv2.ReplicationSpec{
+				ReplicationSpecs: &[]atlasv2.ReplicationSpec{
 					{
 						NumShards: &shards,
 						ZoneName:  &zone,
@@ -126,7 +126,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 		{
 			name: "Nothing to remove",
 			args: &atlasv2.AdvancedClusterDescription{
-				ReplicationSpecs: []atlasv2.ReplicationSpec{
+				ReplicationSpecs: &[]atlasv2.ReplicationSpec{
 					{
 						NumShards: &shards,
 						ZoneName:  &zone,
@@ -142,7 +142,7 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 				},
 			},
 			want: &atlasv2.AdvancedClusterDescription{
-				ReplicationSpecs: []atlasv2.ReplicationSpec{
+				ReplicationSpecs: &[]atlasv2.ReplicationSpec{
 					{
 						NumShards: &shards,
 						ZoneName:  &zone,

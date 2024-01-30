@@ -39,7 +39,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `HOSTNAME	ADDRESS	VERSION	DEPRECATED{{range .Entries}}
+var listTemplate = `HOSTNAME	ADDRESS	VERSION	DEPRECATED{{range valueOrEmptySlice .Entries}}
 {{.Hostname}}	{{.Address}}	{{.Version}}	{{.IsVersionDeprecated}}{{end}}
 `
 

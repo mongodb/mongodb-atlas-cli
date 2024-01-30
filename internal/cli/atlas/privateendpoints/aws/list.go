@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range .}}
+var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range valueOrEmptySlice .}}
 {{.Id}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
 `
 

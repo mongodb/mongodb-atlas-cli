@@ -62,7 +62,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	TYPE	CREATED{{range .Results}}
+var listTemplate = `ID	TYPE	CREATED{{range valueOrEmptySlice .Results}}
 {{.ID}}	{{.EventTypeName}}	{{.Created}}{{end}}
 `
 

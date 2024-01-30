@@ -32,7 +32,7 @@ import (
 const (
 	success      = "success"
 	fail         = "fail"
-	listTemplate = `HOSTNAME	AUTH RESULT	LOG LINE {{range .AccessLogs}}
+	listTemplate = `HOSTNAME	AUTH RESULT	LOG LINE {{range valueOrEmptySlice .AccessLogs}}
 {{if .Hostname}}{{.Hostname}} {{else}}N/A{{end}}{{.Hostname}}	{{.AuthResult}}	{{.LogLine}}{{end}}
 `
 	missingClusterNameHostnameErrorMessage = "one between --%s and --%s must be set"

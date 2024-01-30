@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_encryption_at_rest.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store EncryptionAtRestDescriber

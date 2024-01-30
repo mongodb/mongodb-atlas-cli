@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 func TestDatabasesListsOpts_Run(t *testing.T) {
@@ -32,7 +32,7 @@ func TestDatabasesListsOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockProcessDatabaseLister(ctrl)
 
 	expected := &atlasv2.PaginatedDatabase{
-		Results: []atlasv2.MesurementsDatabase{
+		Results: &[]atlasv2.MesurementsDatabase{
 			{
 				DatabaseName: pointer.Get("test"),
 			},

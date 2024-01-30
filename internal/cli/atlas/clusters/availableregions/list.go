@@ -43,8 +43,8 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `PROVIDER	INSTANCE SIZE	REGIONS{{range .Results}}{{ $providerName := .Provider }}{{range .InstanceSizes}}
-{{$providerName}}	{{.Name}}	{{range .AvailableRegions}}{{.Name}} {{end}}{{end}}{{end}}
+var listTemplate = `PROVIDER	INSTANCE SIZE	REGIONS{{range valueOrEmptySlice .Results}}{{ $providerName := .Provider }}{{range valueOrEmptySlice .InstanceSizes}}
+{{$providerName}}	{{.Name}}	{{range valueOrEmptySlice .AvailableRegions}}{{.Name}} {{end}}{{end}}{{end}}
 `
 
 func (opts *ListOpts) Run() error {

@@ -55,7 +55,7 @@ func (opts *ListsOpts) Run() error {
 	return opts.Print(r)
 }
 
-var listTemplate = `PARTITION NAME{{range .Results}}
+var listTemplate = `PARTITION NAME{{range valueOrEmptySlice .Results}}
 {{.PartitionName}}{{end}}
 `
 

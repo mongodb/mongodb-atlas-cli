@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 var createTemplate = "Link-token '{{.LinkToken}}' successfully created.\n"
@@ -56,7 +56,7 @@ func (opts *CreateOpts) Run() error {
 
 func (opts *CreateOpts) newTokenCreateRequest() *atlasv2.TargetOrgRequest {
 	return &atlasv2.TargetOrgRequest{
-		AccessListIps: opts.accessListIP,
+		AccessListIps: &opts.accessListIP,
 	}
 }
 

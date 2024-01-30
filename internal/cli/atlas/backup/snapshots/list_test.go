@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 func TestList_Run(t *testing.T) {
@@ -33,7 +33,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockSnapshotsLister(ctrl)
 	buf := new(bytes.Buffer)
 	expected := &atlasv2.PaginatedCloudBackupReplicaSet{
-		Results: []atlasv2.DiskBackupReplicaSet{
+		Results: &[]atlasv2.DiskBackupReplicaSet{
 			{
 				CloudProvider: pointer.Get("AWS"),
 				Id:            pointer.Get("5f9b0b5e0b5e9d6b6e0b5e9d"),

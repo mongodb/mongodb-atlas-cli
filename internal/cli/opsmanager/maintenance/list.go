@@ -40,7 +40,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	PROJECT ID	START DATE	END DATE{{range .Results}}
+var listTemplate = `ID	PROJECT ID	START DATE	END DATE{{range valueOrEmptySlice .Results}}
 {{.ID}}	{{.GroupID}}	{{.StartDate}}	{{.EndDate}}{{end}}
 `
 

@@ -26,7 +26,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 func TestSlowQueryLogsList_Run(t *testing.T) {
@@ -34,7 +34,7 @@ func TestSlowQueryLogsList_Run(t *testing.T) {
 	mockStore := mocks.NewMockPerformanceAdvisorSlowQueriesLister(ctrl)
 	buf := new(bytes.Buffer)
 	expected := atlasv2.PerformanceAdvisorSlowQueryList{
-		SlowQueries: []atlasv2.PerformanceAdvisorSlowQuery{{
+		SlowQueries: &[]atlasv2.PerformanceAdvisorSlowQuery{{
 			Line:      atlasv2.PtrString("test"),
 			Namespace: atlasv2.PtrString("test"),
 		},

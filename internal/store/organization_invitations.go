@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -97,8 +97,8 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 	case config.CloudService, config.CloudGovService:
 		if invitationID != "" {
 			invitationRequest := atlasv2.OrganizationInvitationUpdateRequest{
-				Roles:   invitation.Roles,
-				TeamIds: invitation.TeamIDs,
+				Roles:   &invitation.Roles,
+				TeamIds: &invitation.TeamIDs,
 			}
 
 			result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitationById(s.ctx, orgID, invitationID, &invitationRequest).Execute()
@@ -139,8 +139,8 @@ func (s *Store) InviteUser(orgID string, invitation *atlas.Invitation) (interfac
 
 func mapInvitation(invitation *atlas.Invitation) atlasv2.OrganizationInvitationRequest {
 	return atlasv2.OrganizationInvitationRequest{
-		Roles:    invitation.Roles,
-		TeamIds:  invitation.TeamIDs,
+		Roles:    &invitation.Roles,
+		TeamIds:  &invitation.TeamIDs,
 		Username: &invitation.Username,
 	}
 }

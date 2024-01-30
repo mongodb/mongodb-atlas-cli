@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `USERNAME	DATABASE{{range .}}
+const listTemplate = `USERNAME	DATABASE{{range valueOrEmptySlice .}}
 {{.Username}}	{{.Database}}{{end}}
 `
 

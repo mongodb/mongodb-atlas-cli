@@ -28,7 +28,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `NAMESPACE	LINE{{range .SlowQuery}}
+const listTemplate = `NAMESPACE	LINE{{range valueOrEmptySlice .SlowQuery}}
 {{.Namespace}}	{{.Line}}{{end}}
 `
 

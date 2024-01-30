@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -33,7 +33,7 @@ func TestListOpts_Run(t *testing.T) {
 	defer ctrl.Finish()
 
 	expected := &atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob{
-		Results: []atlasv2.ServerlessBackupRestoreJob{
+		Results: &[]atlasv2.ServerlessBackupRestoreJob{
 			{
 				Id: pointer.Get("1"),
 			},

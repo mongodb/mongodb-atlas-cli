@@ -29,7 +29,7 @@ import (
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115004/admin"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -58,15 +58,15 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 				CloudProvider: "TestProvider",
 				Region:        "TestRegion",
 			},
-			Hostnames: []string{"TestHostname"},
+			Hostnames: &[]string{"TestHostname"},
 			Name:      pointer.Get(dataFederationName),
 			State:     pointer.Get("TestState"),
 			Storage: &admin.DataLakeStorage{
-				Databases: []admin.DataLakeDatabaseInstance{
+				Databases: &[]admin.DataLakeDatabaseInstance{
 					{
-						Collections: []admin.DataLakeDatabaseCollection{
+						Collections: &[]admin.DataLakeDatabaseCollection{
 							{
-								DataSources: []admin.DataLakeDatabaseDataSourceSettings{
+								DataSources: &[]admin.DataLakeDatabaseDataSourceSettings{
 									{
 										AllowInsecure:       pointer.Get(true),
 										Collection:          pointer.Get("TestCollection"),
@@ -77,7 +77,7 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 										Path:                pointer.Get("TestPath"),
 										ProvenanceFieldName: pointer.Get("TestFieldName"),
 										StoreName:           pointer.Get("TestStoreName"),
-										Urls:                []string{"TestUrl"},
+										Urls:                &[]string{"TestUrl"},
 									},
 								},
 								Name: pointer.Get("TestName"),
@@ -85,7 +85,7 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 						},
 						MaxWildcardCollections: pointer.Get(10),
 						Name:                   pointer.Get("TestName"),
-						Views: []admin.DataLakeApiBase{
+						Views: &[]admin.DataLakeApiBase{
 							{
 								Name:     pointer.Get("TestName"),
 								Pipeline: pointer.Get("TestPipeline"),
@@ -94,11 +94,11 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 						},
 					},
 				},
-				Stores: []admin.DataLakeStoreSettings{
+				Stores: &[]admin.DataLakeStoreSettings{
 					{
 						Name:                     pointer.Get("TestName"),
 						Provider:                 "TestProvider",
-						AdditionalStorageClasses: []string{"TestClasses"},
+						AdditionalStorageClasses: &[]string{"TestClasses"},
 						Bucket:                   pointer.Get("TestBucket"),
 						Delimiter:                pointer.Get("TestDelimiter"),
 						IncludeTags:              pointer.Get(true),
@@ -148,42 +148,42 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 									DataSources: []akov2.DataSource{
 										{
 											AllowInsecure:       true,
-											Collection:          *dataFederation.Storage.Databases[0].Collections[0].DataSources[0].Collection,
-											CollectionRegex:     *dataFederation.Storage.Databases[0].Collections[0].DataSources[0].CollectionRegex,
-											Database:            *dataFederation.Storage.Databases[0].Collections[0].DataSources[0].Database,
-											DatabaseRegex:       *dataFederation.Storage.Databases[0].Collections[0].DataSources[0].DatabaseRegex,
-											DefaultFormat:       *dataFederation.Storage.Databases[0].Collections[0].DataSources[0].DefaultFormat,
-											Path:                *dataFederation.Storage.Databases[0].Collections[0].DataSources[0].Path,
-											ProvenanceFieldName: *dataFederation.Storage.Databases[0].Collections[0].DataSources[0].ProvenanceFieldName,
-											StoreName:           *dataFederation.Storage.Databases[0].Collections[0].DataSources[0].StoreName,
-											Urls:                []string{dataFederation.Storage.Databases[0].Collections[0].DataSources[0].Urls[0]},
+											Collection:          *dataFederation.Storage.GetDatabases()[0].GetCollections()[0].GetDataSources()[0].Collection,
+											CollectionRegex:     *dataFederation.Storage.GetDatabases()[0].GetCollections()[0].GetDataSources()[0].CollectionRegex,
+											Database:            *dataFederation.Storage.GetDatabases()[0].GetCollections()[0].GetDataSources()[0].Database,
+											DatabaseRegex:       *dataFederation.Storage.GetDatabases()[0].GetCollections()[0].GetDataSources()[0].DatabaseRegex,
+											DefaultFormat:       *dataFederation.Storage.GetDatabases()[0].GetCollections()[0].GetDataSources()[0].DefaultFormat,
+											Path:                *dataFederation.Storage.GetDatabases()[0].GetCollections()[0].GetDataSources()[0].Path,
+											ProvenanceFieldName: *dataFederation.Storage.GetDatabases()[0].GetCollections()[0].GetDataSources()[0].ProvenanceFieldName,
+											StoreName:           *dataFederation.Storage.GetDatabases()[0].GetCollections()[0].GetDataSources()[0].StoreName,
+											Urls:                []string{dataFederation.Storage.GetDatabases()[0].GetCollections()[0].GetDataSources()[0].GetUrls()[0]},
 										},
 									},
-									Name: *dataFederation.Storage.Databases[0].Collections[0].Name,
+									Name: *dataFederation.Storage.GetDatabases()[0].GetCollections()[0].Name,
 								},
 							},
-							MaxWildcardCollections: *dataFederation.Storage.Databases[0].MaxWildcardCollections,
-							Name:                   *dataFederation.Storage.Databases[0].Name,
+							MaxWildcardCollections: *dataFederation.Storage.GetDatabases()[0].MaxWildcardCollections,
+							Name:                   *dataFederation.Storage.GetDatabases()[0].Name,
 							Views: []akov2.View{
 								{
-									Name:     *dataFederation.Storage.Databases[0].Views[0].Name,
-									Pipeline: *dataFederation.Storage.Databases[0].Views[0].Pipeline,
-									Source:   *dataFederation.Storage.Databases[0].Views[0].Source,
+									Name:     *dataFederation.Storage.GetDatabases()[0].GetViews()[0].Name,
+									Pipeline: *dataFederation.Storage.GetDatabases()[0].GetViews()[0].Pipeline,
+									Source:   *dataFederation.Storage.GetDatabases()[0].GetViews()[0].Source,
 								},
 							},
 						},
 					},
 					Stores: []akov2.Store{
 						{
-							Name:                     *dataFederation.Storage.Stores[0].Name,
-							Provider:                 dataFederation.Storage.Stores[0].Provider,
-							AdditionalStorageClasses: []string{dataFederation.Storage.Stores[0].AdditionalStorageClasses[0]},
-							Bucket:                   *dataFederation.Storage.Stores[0].Bucket,
-							Delimiter:                *dataFederation.Storage.Stores[0].Delimiter,
-							IncludeTags:              *dataFederation.Storage.Stores[0].IncludeTags,
-							Prefix:                   *dataFederation.Storage.Stores[0].Prefix,
-							Public:                   *dataFederation.Storage.Stores[0].Public,
-							Region:                   *dataFederation.Storage.Stores[0].Region,
+							Name:                     *dataFederation.Storage.GetStores()[0].Name,
+							Provider:                 dataFederation.Storage.GetStores()[0].Provider,
+							AdditionalStorageClasses: []string{dataFederation.Storage.GetStores()[0].GetAdditionalStorageClasses()[0]},
+							Bucket:                   *dataFederation.Storage.GetStores()[0].Bucket,
+							Delimiter:                *dataFederation.Storage.GetStores()[0].Delimiter,
+							IncludeTags:              *dataFederation.Storage.GetStores()[0].IncludeTags,
+							Prefix:                   *dataFederation.Storage.GetStores()[0].Prefix,
+							Public:                   *dataFederation.Storage.GetStores()[0].Public,
+							Region:                   *dataFederation.Storage.GetStores()[0].Region,
 						},
 					},
 				},

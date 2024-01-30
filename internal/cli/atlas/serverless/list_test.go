@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 func TestListBuilder(t *testing.T) {
@@ -41,7 +41,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockServerlessInstanceLister(ctrl)
 
 	expected := &atlasv2.PaginatedServerlessInstanceDescription{
-		Results: []atlasv2.ServerlessInstanceDescription{
+		Results: &[]atlasv2.ServerlessInstanceDescription{
 			{
 				Id: pointer.Get("1"),
 			},

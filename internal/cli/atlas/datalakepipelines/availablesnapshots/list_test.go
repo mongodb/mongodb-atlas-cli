@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -37,7 +37,7 @@ func TestListOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockPipelineAvailableSnapshotsLister(ctrl)
 
 	expected := &atlasv2.PaginatedBackupSnapshot{
-		Results: []atlasv2.DiskBackupSnapshot{
+		Results: &[]atlasv2.DiskBackupSnapshot{
 			{
 				Id:          pointer.Get("5e4e593f70dfbf1010295836"),
 				Description: pointer.Get("test rs"),

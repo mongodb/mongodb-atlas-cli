@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -101,18 +101,19 @@ func (opts *Opts) newCluster() *atlasv2.AdvancedClusterDescription {
 	cluster := &atlasv2.AdvancedClusterDescription{
 		GroupId:                      pointer.Get(opts.ConfigProjectID()),
 		ClusterType:                  pointer.Get(replicaSet),
-		ReplicationSpecs:             []atlasv2.ReplicationSpec{opts.newAdvanceReplicationSpec()},
+		ReplicationSpecs:             &[]atlasv2.ReplicationSpec{opts.newAdvanceReplicationSpec()},
 		Name:                         &opts.ClusterName,
 		TerminationProtectionEnabled: &opts.EnableTerminationProtection,
 	}
 
 	if len(opts.Tag) > 0 {
-		cluster.Tags = []atlasv2.ResourceTag{}
-	}
-	for k, v := range opts.Tag {
-		if k != "" && v != "" {
-			cluster.Tags = append(cluster.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+		tags := []atlasv2.ResourceTag{}
+		for k, v := range opts.Tag {
+			if k != "" && v != "" {
+				tags = append(tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+			}
 		}
+		cluster.Tags = &tags
 	}
 
 	if opts.providerName() != tenant {
@@ -134,7 +135,7 @@ func (opts *Opts) newAdvanceReplicationSpec() atlasv2.ReplicationSpec {
 	return atlasv2.ReplicationSpec{
 		NumShards:     &shards,
 		ZoneName:      &zoneName,
-		RegionConfigs: []atlasv2.CloudRegionConfig{opts.newAdvancedRegionConfig()},
+		RegionConfigs: &[]atlasv2.CloudRegionConfig{opts.newAdvancedRegionConfig()},
 	}
 }
 
@@ -194,11 +195,11 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 		return nil, err
 	}
 
-	if len(cloudProviders.Results) == 0 || len(cloudProviders.Results[0].InstanceSizes) == 0 {
+	if len(cloudProviders.GetResults()) == 0 || len(cloudProviders.GetResults()[0].GetInstanceSizes()) == 0 {
 		return nil, errors.New("no regions available")
 	}
 
-	availableRegions := cloudProviders.Results[0].InstanceSizes[0].GetAvailableRegions()
+	availableRegions := cloudProviders.GetResults()[0].GetInstanceSizes()[0].GetAvailableRegions()
 
 	defaultRegions := make([]string, 0, len(availableRegions))
 	popularRegionIndex := search.DefaultRegion(availableRegions)

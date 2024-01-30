@@ -42,7 +42,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `NAME	SYSTEM ID	POLICY
-{{if .ExternalManagementSystem}}{{- $name := .ExternalManagementSystem.Name }}{{- $systemID := .ExternalManagementSystem.SystemID }}{{- range .Policies}}	
+{{if .ExternalManagementSystem}}{{- $name := .ExternalManagementSystem.Name }}{{- $systemID := .ExternalManagementSystem.SystemID }}{{- range valueOrEmptySlice .Policies}}	
 {{ $name }}	{{ $systemID }}	{{.Policy}}{{end}}{{end}}
 `
 

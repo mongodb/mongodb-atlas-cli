@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `ID{{range .Results}}
+const listTemplate = `ID{{range valueOrEmptySlice .Results}}
 {{.TeamID}}{{end}}
 `
 

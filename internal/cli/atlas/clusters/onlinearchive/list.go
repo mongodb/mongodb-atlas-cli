@@ -43,7 +43,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	DATABASE	COLLECTION	STATE{{range .Results}}
+var listTemplate = `ID	DATABASE	COLLECTION	STATE{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.DbName}}	{{.CollName}}	{{.State}}{{end}}
 `
 

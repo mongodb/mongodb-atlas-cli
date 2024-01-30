@@ -18,7 +18,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 const (
@@ -79,7 +79,7 @@ func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *atlasv2.GroupAl
 	out.Enabled = &opts.enabled
 
 	if opts.matcherFieldName != "" {
-		out.Matchers = []map[string]interface{}{opts.newMatcher()}
+		out.Matchers = &[]map[string]interface{}{opts.newMatcher()}
 	}
 
 	if opts.metricThresholdMetricName != "" {
@@ -87,7 +87,7 @@ func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *atlasv2.GroupAl
 	}
 
 	notification := opts.newNotification()
-	out.Notifications = []atlasv2.AlertsNotificationRootForGroup{*notification}
+	out.Notifications = &[]atlasv2.AlertsNotificationRootForGroup{*notification}
 
 	return out
 }
@@ -114,7 +114,9 @@ func (opts *ConfigOpts) newNotification() *atlasv2.AlertsNotificationRootForGrou
 	case group, org:
 		out.EmailEnabled = &opts.notificationEmailEnabled
 		out.SmsEnabled = &opts.notificationSmsEnabled
-		out.Roles = opts.notificationRoles
+		if len(opts.notificationRoles) > 0 {
+			out.Roles = &opts.notificationRoles
+		}
 	case microsoftTeams:
 		out.MicrosoftTeamsWebhookUrl = &opts.notificationWebhookURL
 	case opsGenie:

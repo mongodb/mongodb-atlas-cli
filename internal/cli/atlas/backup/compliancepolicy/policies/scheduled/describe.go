@@ -33,7 +33,7 @@ type DescribeOpts struct {
 }
 
 const describeTemplate = `ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION
-{{- range .}}
+{{- range valueOrEmptySlice .}}
 {{.Id}}	{{if eq .FrequencyType "hourly"}}{{.FrequencyInterval}}{{else}}-{{end}}	{{.FrequencyType}}	{{.RetentionValue}} {{.RetentionUnit}}
 {{- end}}
 `

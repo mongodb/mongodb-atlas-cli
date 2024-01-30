@@ -45,7 +45,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	NAME	DATABASE	COLLECTION	TYPE{{range .}}
+var listTemplate = `ID	NAME	DATABASE	COLLECTION	TYPE{{range valueOrEmptySlice .}}
 {{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{if .Type }}{{.Type}}{{else}}` + DefaultType + `{{end}}{{end}}
 `
 

@@ -45,7 +45,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 var scheduleDescribeTemplate = `CLUSTER NAME	AUTO EXPORT ENABLED	NEXT SNAPSHOT
 {{.ClusterName}}	{{.AutoExportEnabled}}	{{.NextSnapshot}}
 
-ID	Frequency Interval	Frequency Type	Retention Value	Retention Unit{{range .Policies}}{{range.PolicyItems}}
+ID	Frequency Interval	Frequency Type	Retention Value	Retention Unit{{range valueOrEmptySlice .Policies}}{{range.PolicyItems}}
 {{.Id}}	{{.FrequencyInterval}}	{{.FrequencyType}}	{{.RetentionValue}}	{{.RetentionUnit}}{{end}}{{end}}
 `
 

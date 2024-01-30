@@ -44,7 +44,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `HOSTNAME	TYPE	STATE{{range .Results}}
+var listTemplate = `HOSTNAME	TYPE	STATE{{range valueOrEmptySlice .Results}}
 {{.Hostname}}	{{.TypeName}}	{{.StateName}}{{end}}
 `
 

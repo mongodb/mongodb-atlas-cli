@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 const (
@@ -104,14 +104,15 @@ func (opts *UpdateOpts) patchOpts(out *atlasv2.AdvancedClusterDescription) {
 	out.TerminationProtectionEnabled = cli.ReturnValueForSetting(opts.enableTerminationProtection, opts.disableTerminationProtection)
 
 	if len(opts.tag) > 0 {
-		out.Tags = []atlasv2.ResourceTag{}
+		out.Tags = &[]atlasv2.ResourceTag{}
 	}
 	addTags(out, opts.tag)
 }
 
 func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasv2.AdvancedClusterDescription) {
-	for _, replicationSpec := range out.ReplicationSpecs {
-		for _, regionConf := range replicationSpec.RegionConfigs {
+	for _, replicationSpec := range out.GetReplicationSpecs() {
+		for regionIdx := range replicationSpec.GetRegionConfigs() {
+			regionConf := (*replicationSpec.RegionConfigs)[regionIdx]
 			if regionConf.ReadOnlySpecs != nil {
 				regionConf.ReadOnlySpecs.InstanceSize = &opts.tier
 			}

@@ -9,7 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	atlas "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
-	admin "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	admin "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 // MockClusterLister is a mock of ClusterLister interface.

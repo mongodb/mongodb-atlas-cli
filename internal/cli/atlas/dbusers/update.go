@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 const updateTemplate = "Successfully updated database user '{{.Username}}'.\n"
@@ -82,8 +82,8 @@ func (opts *UpdateOpts) update(out *admin.CloudDatabaseUser) {
 	if opts.password != "" {
 		out.Password = pointer.GetStringPointerIfNotEmpty(opts.password)
 	}
-	out.Scopes = convert.BuildAtlasScopes(opts.scopes)
-	out.Roles = convert.BuildAtlasRoles(opts.roles)
+	out.Scopes = pointer.Get(convert.BuildAtlasScopes(opts.scopes))
+	out.Roles = pointer.Get(convert.BuildAtlasRoles(opts.roles))
 	out.DatabaseName = opts.authDB
 	if opts.authDB == "" {
 		out.DatabaseName = convert.GetAuthDB(out)

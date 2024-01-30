@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 func TestListBuilder(t *testing.T) {
@@ -51,7 +51,7 @@ func TestList_Run(t *testing.T) {
 	}
 
 	expected := &atlasv2.PaginatedOnlineArchive{
-		Results: []atlasv2.BackupOnlineArchive{
+		Results: &[]atlasv2.BackupOnlineArchive{
 			{
 				Id: pointer.Get(""),
 			},

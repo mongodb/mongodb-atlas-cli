@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -254,8 +254,7 @@ func fetchClusterNames(clustersProvider atlas.AllClustersLister, projectID strin
 			return nil, ErrNoCloudManagerClusters
 		}
 
-		for i := range clusters.Results {
-			cluster := clusters.Results[i]
+		for _, cluster := range clusters.GetResults() {
 			if reflect.ValueOf(cluster).IsZero() {
 				continue
 			}
@@ -272,8 +271,7 @@ func fetchClusterNames(clustersProvider atlas.AllClustersLister, projectID strin
 		return result, nil
 	}
 
-	for i := range serverlessInstances.Results {
-		cluster := serverlessInstances.Results[i]
+	for _, cluster := range serverlessInstances.GetResults() {
 		result = append(result, *cluster.Name)
 	}
 

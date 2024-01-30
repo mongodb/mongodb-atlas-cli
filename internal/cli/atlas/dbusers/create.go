@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 type CreateOpts struct {
@@ -107,8 +107,8 @@ func (opts *CreateOpts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 	}
 
 	return &atlasv2.CloudDatabaseUser{
-		Roles:           convert.BuildAtlasRoles(opts.roles),
-		Scopes:          convert.BuildAtlasScopes(opts.scopes),
+		Roles:           pointer.Get(convert.BuildAtlasRoles(opts.roles)),
+		Scopes:          pointer.Get(convert.BuildAtlasScopes(opts.scopes)),
 		GroupId:         opts.ConfigProjectID(),
 		Username:        opts.username,
 		Password:        pointer.GetStringPointerIfNotEmpty(opts.password),

@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `IP ADDRESS	CIDR BLOCK	CREATED AT{{range .Results}}
+const listTemplate = `IP ADDRESS	CIDR BLOCK	CREATED AT{{range valueOrEmptySlice .Results}}
 {{.IPAddress}}	{{.CidrBlock}}	{{.Created}}{{end}}
 `
 

@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 const (
@@ -62,10 +62,10 @@ func TestDBRoles(t *testing.T) {
 
 		a := assert.New(t)
 		a.Equal(roleName, role.RoleName)
-		a.Len(role.Actions, 1)
-		a.Equal(createPrivilege, role.Actions[0].Action)
-		a.Len(role.InheritedRoles, 1)
-		a.Equal(enableSharding, role.InheritedRoles[0].Role)
+		a.Len(role.GetActions(), 1)
+		a.Equal(createPrivilege, role.GetActions()[0].Action)
+		a.Len(role.GetInheritedRoles(), 1)
+		a.Equal(enableSharding, role.GetInheritedRoles()[0].Role)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -98,10 +98,10 @@ func TestDBRoles(t *testing.T) {
 
 		a := assert.New(t)
 		a.Equal(roleName, role.RoleName)
-		a.Len(role.Actions, 1)
-		a.Equal(createPrivilege, role.Actions[0].Action)
-		a.Len(role.InheritedRoles, 1)
-		a.Equal(enableSharding, role.InheritedRoles[0].Role)
+		a.Len(role.GetActions(), 1)
+		a.Equal(createPrivilege, role.GetActions()[0].Action)
+		a.Len(role.GetInheritedRoles(), 1)
+		a.Equal(enableSharding, role.GetInheritedRoles()[0].Role)
 	})
 
 	t.Run("Update with append", func(t *testing.T) {
@@ -122,12 +122,12 @@ func TestDBRoles(t *testing.T) {
 
 		a := assert.New(t)
 		a.Equal(roleName, role.RoleName)
-		a.Len(role.Actions, 2)
+		a.Len(role.GetActions(), 2)
 		a.ElementsMatch(
-			[]string{role.Actions[0].Action, role.Actions[1].Action},
+			[]string{role.GetActions()[0].Action, role.GetActions()[1].Action},
 			[]string{updatePrivilege, createPrivilege})
-		a.Len(role.InheritedRoles, 1)
-		a.Equal(enableSharding, role.InheritedRoles[0].Role)
+		a.Len(role.GetInheritedRoles(), 1)
+		a.Equal(enableSharding, role.GetInheritedRoles()[0].Role)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -146,8 +146,8 @@ func TestDBRoles(t *testing.T) {
 
 		a := assert.New(t)
 		a.Equal(roleName, role.RoleName)
-		a.Len(role.Actions, 1)
-		a.Equal(updatePrivilege, role.Actions[0].Action)
+		a.Len(role.GetActions(), 1)
+		a.Equal(updatePrivilege, role.GetActions()[0].Action)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

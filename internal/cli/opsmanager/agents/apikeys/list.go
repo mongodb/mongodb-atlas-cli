@@ -39,7 +39,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	KEY	DESCRIPTION	CREATED AT{{range .}}
+var listTemplate = `ID	KEY	DESCRIPTION	CREATED AT{{range valueOrEmptySlice .}}
 {{.ID}}	{{.Key}}	{{.Desc}}	{{.CreatedTime}}{{end}}
 `
 

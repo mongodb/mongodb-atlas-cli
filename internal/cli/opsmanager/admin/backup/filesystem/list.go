@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `NAME	PATH	WT COMPRESSION	MMAPV1 COMPRESSION{{range .Results}}
+var listTemplate = `NAME	PATH	WT COMPRESSION	MMAPV1 COMPRESSION{{range valueOrEmptySlice .Results}}
 {{.ID}}	{{.StorePath}}	{{.WTCompressionSetting}}	{{.MMAPV1CompressionSetting}}{{end}}
 `
 

@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
 )
 
 var updateTemplate = "Snapshot backup policy for cluster '{{.ClusterName}}' updated.\n"
@@ -128,7 +128,7 @@ func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) 
 		if err != nil {
 			return nil, err
 		}
-		policies := currentSchedule.Policies
+		policies := currentSchedule.GetPolicies()
 
 		for _, backupPolicy := range opts.backupPolicy {
 			policyItems := strings.Split(backupPolicy, ",")
@@ -154,15 +154,15 @@ func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) 
 				RetentionUnit:     policyItems[4],
 				RetentionValue:    int(retentionValue),
 			}
-			policyItemIndex := findPolicyItemsIndex(policyItems[1], policies[policyIndex].PolicyItems)
+			policyItemIndex := findPolicyItemsIndex(policyItems[1], policies[policyIndex].GetPolicyItems())
 			if policyItemIndex == -1 {
 				return nil, errors.New("incorrect value for parameter policyItemID. Policy item with such ID does not exist")
 			}
 
-			policies[policyIndex].PolicyItems[policyItemIndex] = policyItem
+			policies[policyIndex].GetPolicyItems()[policyItemIndex] = policyItem
 		}
 
-		out.Policies = policies
+		out.Policies = &policies
 	}
 
 	return out, nil

@@ -28,7 +28,7 @@ import (
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
-const listTemplate = `ID	NAME{{range .Results}}
+const listTemplate = `ID	NAME{{range valueOrEmptySlice .Results}}
 {{.ID}}	{{.Name}}{{end}}
 `
 

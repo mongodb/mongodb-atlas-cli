@@ -47,9 +47,9 @@ jobs:
         with:
           context: .
           platforms: ${{ matrix.platform }}
-          tags: ${{ env.STAGING_IMAGE_REPOSITORY }}:latest ,
-            ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
-            ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
+#          tags: ${{ env.STAGING_IMAGE_REPOSITORY }}:latest ,
+#            ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
+#            ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
           file: Dockerfile
           push: true
           outputs: type=image,name=${{ env.STAGING_IMAGE_REPOSITORY }}, push-by-digest=true,name-canonical=true,push=true

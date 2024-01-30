@@ -7,7 +7,10 @@ jobs:
   release_image_to_private_repo:
     name: Build and publish docker image to staging repo
     runs-on: ubuntu-latest
-    platform:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
           - linux/amd64
           - linux/arm64
     env:

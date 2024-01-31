@@ -22,7 +22,7 @@ import (
 
 	"github.com/go-test/deep"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestBuilder(t *testing.T) {

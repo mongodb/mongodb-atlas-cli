@@ -15,5 +15,5 @@ jobs:
     - name: test
       run: |
         wget https://downloads.mongodb.com/compass/mongodb-mongosh_2.1.3_amd64.deb
-        sudo apt install ./mongodb-mongosh-*.deb
+        sudo apt install ./mongodb-mongosh_*.deb
         mongosh "mongodb://localhost:27017?directConnection=true" --eval 'db.adminCommand("ping")'

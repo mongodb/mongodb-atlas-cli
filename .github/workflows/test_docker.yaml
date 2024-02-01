@@ -14,6 +14,6 @@ jobs:
     steps:
     - name: test
       run: |
-        wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2204-x86_64-100.6.1.deb
-        sudo apt install ./mongodb-database-tools-*-100.6.1.deb
+        wget https://downloads.mongodb.com/compass/mongodb-mongosh_2.1.3_amd64.deb
+        sudo apt install ./mongodb-mongosh-*.deb
         mongosh "mongodb://localhost:27017?directConnection=true" --eval 'db.adminCommand("ping")'

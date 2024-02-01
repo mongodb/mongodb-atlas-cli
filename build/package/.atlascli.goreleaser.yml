@@ -12,7 +12,7 @@ builds:
       env:
         - CGO_ENABLED=0
       binary: bin/atlas
-      main: ./cmd/atlas/atlas.go
+      main: cmd/atlas
       ldflags:
         - -s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version={{.Version}} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit={{.FullCommit}} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=atlascli
     id: linux
@@ -38,6 +38,16 @@ builds:
             - TOOL_NAME=atlascli
             - VERSION={{ .Version }}
           output: true
+gomod: # https://goreleaser.com/customization/verifiable_builds/
+  # Proxy a module from proxy.golang.org, making the builds verifiable.
+  # This will only be effective if running against a tag. Snapshots will ignore
+  # this setting.
+  # Notice: for this to work your `build.main` must be a package, not a `.go` file.
+  proxy: true
+  # Sets the `-mod` flag value.
+  #
+  # Since: v1.7
+  mod: mod
 archives:
 - id: linux
   name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"

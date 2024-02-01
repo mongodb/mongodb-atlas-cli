@@ -94,7 +94,7 @@ jobs:
           PKCS11_URI: ${{ secrets.PKCS11_URI }}
           GRS_PASSWORD: ${{ secrets.GRS_PASSWORD }}
           GRS_USERNAME: ${{ secrets.GRS_USERNAME }}
-          SIGNATURE_REPO: ${{ secrets.COSIGN_REPOSITORY_QUAY }}
+#          SIGNATURE_REPO: ${{ secrets.COSIGN_REPOSITORY_QUAY }}
           IMAGE: andreaangiolillo22/staging:latest
         run: |
           docker pull "${IMAGE}"
@@ -104,12 +104,11 @@ jobs:
           docker run \
             -e GRS_CONFIG_USER1_USERNAME="${GRS_USERNAME}" \
             -e GRS_CONFIG_USER1_PASSWORD="${GRS_PASSWORD}" \
-            -e COSIGN_REPOSITORY="${SIGNATURE_REPO}" \
             --rm \
             -v ~/.docker/config.json:/root/.docker/config.json \
             -v $(pwd):$(pwd) \
             -w $(pwd) \
             artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign \
-            cosign sign --key "${PKCS11_URI}" --tlog-upload=false "${IMAGE}@{DIGEST}"   
+            cosign sign --key "${PKCS11_URI}" --tlog-upload=false "${IMAGE}@${DIGEST}"   
         
           ls -al 

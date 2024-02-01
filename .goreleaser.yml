@@ -20,7 +20,7 @@ gomod:
   proxy: true
 
   mod: mod
-  
+
 builds:
   - <<: &build_defaults
       env:

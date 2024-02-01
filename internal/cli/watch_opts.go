@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/andreangiolillo/mongocli-test/internal/watchers"
 	"github.com/briandowns/spinner"
-	"github.com/mongodb/mongodb-atlas-cli/internal/watchers"
 )
 
 type WatchOpts struct {

@@ -17,8 +17,8 @@ package teams
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/teams/users"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/iam/teams/users"
 	"github.com/spf13/cobra"
 )
 

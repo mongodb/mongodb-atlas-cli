@@ -20,7 +20,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
 	atlasauth "go.mongodb.org/atlas/auth"
 )
 

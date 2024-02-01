@@ -15,8 +15,8 @@
 package customdns
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdns/aws"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/customdns/aws"
 	"github.com/spf13/cobra"
 )
 

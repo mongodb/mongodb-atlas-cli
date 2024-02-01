@@ -20,10 +20,10 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/mocks"
+	"github.com/andreangiolillo/mongocli-test/internal/test"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/ops-manager/opsmngr"
 )

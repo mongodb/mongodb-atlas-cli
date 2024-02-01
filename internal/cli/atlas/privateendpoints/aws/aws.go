@@ -15,7 +15,7 @@
 package aws
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints/aws/interfaces"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/privateendpoints/aws/interfaces"
 	"github.com/spf13/cobra"
 )
 

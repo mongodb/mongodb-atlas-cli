@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/flag"
 	"github.com/spf13/cobra"
 )
 

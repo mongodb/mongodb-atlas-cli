@@ -23,9 +23,9 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/mocks"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"

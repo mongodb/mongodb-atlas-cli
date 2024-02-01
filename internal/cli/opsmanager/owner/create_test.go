@@ -20,8 +20,8 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/andreangiolillo/mongocli-test/internal/mocks"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/ops-manager/opsmngr"
 )

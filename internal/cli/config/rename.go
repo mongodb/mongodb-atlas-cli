@@ -17,10 +17,10 @@ package config
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/require"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/prompt"
+	"github.com/andreangiolillo/mongocli-test/internal/telemetry"
 	"github.com/spf13/cobra"
 )
 

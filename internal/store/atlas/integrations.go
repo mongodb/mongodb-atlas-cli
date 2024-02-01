@@ -17,11 +17,11 @@ package atlas
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_integrations.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas IntegrationLister
+//go:generate mockgen -destination=../../mocks/atlas/mock_integrations.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas IntegrationLister
 
 type IntegrationLister interface {
 	Integrations(string) (*atlasv2.PaginatedIntegration, error)

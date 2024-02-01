@@ -17,14 +17,14 @@ package atlas
 import (
 	"errors"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/andreangiolillo/mongocli-test/internal/pointer"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_atlas_operator_cluster_store.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OperatorClusterStore
-//go:generate mockgen -destination=../../mocks/atlas/mock_atlas_operator_project_store.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OperatorProjectStore
-//go:generate mockgen -destination=../../mocks/atlas/mock_atlas_operator_db_users_store.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OperatorDBUsersStore
-//go:generate mockgen -destination=../../mocks/atlas/mock_atlas_operator_org_store.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OperatorOrgStore
-//go:generate mockgen -destination=../../mocks/atlas/mock_atlas_generic_store.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OperatorGenericStore
+//go:generate mockgen -destination=../../mocks/atlas/mock_atlas_operator_cluster_store.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas OperatorClusterStore
+//go:generate mockgen -destination=../../mocks/atlas/mock_atlas_operator_project_store.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas OperatorProjectStore
+//go:generate mockgen -destination=../../mocks/atlas/mock_atlas_operator_db_users_store.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas OperatorDBUsersStore
+//go:generate mockgen -destination=../../mocks/atlas/mock_atlas_operator_org_store.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas OperatorOrgStore
+//go:generate mockgen -destination=../../mocks/atlas/mock_atlas_generic_store.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas OperatorGenericStore
 
 type ListOptions struct {
 	PageNum      int

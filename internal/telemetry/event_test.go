@@ -22,9 +22,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/version"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/flag"
+	"github.com/andreangiolillo/mongocli-test/internal/version"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

@@ -18,10 +18,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
-	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/require"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/prerun"
+	"github.com/andreangiolillo/mongocli-test/internal/validate"
 	"github.com/spf13/cobra"
 	atlasauth "go.mongodb.org/atlas/auth"
 )

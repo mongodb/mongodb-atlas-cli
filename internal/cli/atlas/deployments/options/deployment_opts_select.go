@@ -22,9 +22,9 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/andreangiolillo/mongocli-test/internal/telemetry"
+	"github.com/andreangiolillo/mongocli-test/internal/usage"
 	"github.com/containers/podman/v4/libpod/define"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 )
 
 var errEmptyLocalDeployments = errors.New("currently there are no deployment in your local system")

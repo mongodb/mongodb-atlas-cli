@@ -15,9 +15,9 @@
 package agents
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/agents/apikeys"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/agents/versions"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/agents/apikeys"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/agents/versions"
 	"github.com/spf13/cobra"
 )
 

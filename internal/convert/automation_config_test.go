@@ -19,9 +19,9 @@ package convert
 import (
 	"testing"
 
+	"github.com/andreangiolillo/mongocli-test/internal/pointer"
+	"github.com/andreangiolillo/mongocli-test/internal/test/fixture"
 	"github.com/go-test/deep"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
 )
 
 func TestFromAutomationConfig(t *testing.T) {

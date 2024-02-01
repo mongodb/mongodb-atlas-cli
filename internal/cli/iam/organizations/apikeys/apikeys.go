@@ -15,8 +15,8 @@
 package apikeys
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations/apikeys/accesslists"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/iam/organizations/apikeys/accesslists"
 	"github.com/spf13/cobra"
 )
 

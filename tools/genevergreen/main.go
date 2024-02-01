@@ -21,8 +21,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/andreangiolillo/mongocli-test/tools/genevergreen/generate"
 	"github.com/evergreen-ci/shrub"
-	"github.com/mongodb/mongodb-atlas-cli/tools/genevergreen/generate"
 )
 
 const (

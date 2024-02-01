@@ -19,7 +19,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_teams.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas TeamLister,TeamDescriber,TeamCreator,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
+//go:generate mockgen -destination=../../mocks/atlas/mock_teams.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas TeamLister,TeamDescriber,TeamCreator,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
 
 type TeamLister interface {
 	Teams(string, *atlas.ListOptions) (*atlasv2.PaginatedTeam, error)

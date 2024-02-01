@@ -23,7 +23,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/andreangiolillo/mongocli-test/test/e2e"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 

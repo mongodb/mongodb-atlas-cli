@@ -15,7 +15,7 @@
 package cli
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
 )
 
 type DigestConfigOpts struct {

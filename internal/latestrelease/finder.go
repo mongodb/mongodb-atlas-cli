@@ -19,9 +19,9 @@ import (
 	"time"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/file"
-	"github.com/mongodb/mongodb-atlas-cli/internal/version"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/file"
+	"github.com/andreangiolillo/mongocli-test/internal/version"
 	"github.com/spf13/afero"
 )
 

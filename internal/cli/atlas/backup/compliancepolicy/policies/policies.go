@@ -15,9 +15,9 @@
 package policies
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/policies/ondemand"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/policies/scheduled"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/policies/ondemand"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/policies/scheduled"
 	"github.com/spf13/cobra"
 )
 

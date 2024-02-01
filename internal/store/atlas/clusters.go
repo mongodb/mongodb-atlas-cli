@@ -17,11 +17,11 @@ package atlas
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
 	"go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_clusters.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas ClusterLister,ClusterDescriber,ClusterConfigurationOptionsDescriber
+//go:generate mockgen -destination=../../mocks/atlas/mock_clusters.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas ClusterLister,ClusterDescriber,ClusterConfigurationOptionsDescriber
 
 type ClusterLister interface {
 	ProjectClusters(string, *ListOptions) (interface{}, error)

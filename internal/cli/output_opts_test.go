@@ -21,7 +21,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/andreangiolillo/mongocli-test/internal/pointer"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 

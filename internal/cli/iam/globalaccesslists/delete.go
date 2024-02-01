@@ -17,12 +17,12 @@ package globalaccesslists
 import (
 	"context"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/require"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/flag"
+	"github.com/andreangiolillo/mongocli-test/internal/store"
+	"github.com/andreangiolillo/mongocli-test/internal/usage"
 	"github.com/spf13/cobra"
 )
 

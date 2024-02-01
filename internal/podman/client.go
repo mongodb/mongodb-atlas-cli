@@ -24,10 +24,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/andreangiolillo/mongocli-test/internal/log"
 	"github.com/containers/common/libnetwork/types"
 	"github.com/containers/podman/v4/libpod/define"
 	"github.com/containers/podman/v4/pkg/machine"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/shirou/gopsutil/v3/mem"
 )
 
@@ -137,7 +137,7 @@ type Version struct {
 	} `json:"Server"`
 }
 
-//go:generate mockgen -destination=../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/podman Client
+//go:generate mockgen -destination=../mocks/mock_podman.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/podman Client
 
 type Client interface {
 	Ready(ctx context.Context) error

@@ -19,12 +19,12 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/deployments/options"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/require"
+	"github.com/andreangiolillo/mongocli-test/internal/flag"
+	"github.com/andreangiolillo/mongocli-test/internal/podman"
+	"github.com/andreangiolillo/mongocli-test/internal/usage"
 	"github.com/spf13/cobra"
 )
 

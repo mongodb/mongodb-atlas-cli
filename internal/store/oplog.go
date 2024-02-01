@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_oplogs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OplogsLister,OplogsDescriber,OplogsCreator,OplogsUpdater,OplogsDeleter
+//go:generate mockgen -destination=../mocks/mock_backup_oplogs.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/store OplogsLister,OplogsDescriber,OplogsCreator,OplogsUpdater,OplogsDeleter
 
 type OplogsLister interface {
 	ListOplogs(*opsmngr.ListOptions) (*opsmngr.BackupStores, error)

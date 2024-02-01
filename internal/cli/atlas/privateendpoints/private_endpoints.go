@@ -15,14 +15,14 @@
 package privateendpoints
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints/aws"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints/azure"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints/datalake"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints/gcp"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints/interfaces"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints/onlinearchive"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints/regionalmodes"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/privateendpoints/aws"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/privateendpoints/azure"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/privateendpoints/datalake"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/privateendpoints/gcp"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/privateendpoints/interfaces"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/privateendpoints/onlinearchive"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/privateendpoints/regionalmodes"
 	"github.com/spf13/cobra"
 )
 

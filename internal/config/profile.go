@@ -26,16 +26,16 @@ import (
 	"strings"
 	"time"
 
+	"github.com/andreangiolillo/mongocli-test/internal/search"
+	"github.com/andreangiolillo/mongocli-test/internal/version"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/mongodb/mongodb-atlas-cli/internal/search"
-	"github.com/mongodb/mongodb-atlas-cli/internal/version"
 	"github.com/pelletier/go-toml"
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/config SetSaver
+//go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/config SetSaver
 
 const (
 	MongoCLIEnvPrefix            = "MCLI"          // MongoCLIEnvPrefix prefix for MongoCLI ENV variables

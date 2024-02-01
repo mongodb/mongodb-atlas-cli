@@ -15,9 +15,9 @@
 package onlinearchive
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints/datalake/aws"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/privateendpoints/datalake/aws"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
 	"github.com/spf13/cobra"
 )
 

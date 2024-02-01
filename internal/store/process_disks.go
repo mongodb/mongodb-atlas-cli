@@ -18,12 +18,12 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_process_disks.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessDisksLister
+//go:generate mockgen -destination=../mocks/mock_process_disks.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/store ProcessDisksLister
 
 type ProcessDisksLister interface {
 	ProcessDisks(string, string, int, *atlas.ListOptions) (*atlasv2.PaginatedDiskPartition, error)

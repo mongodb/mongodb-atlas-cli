@@ -22,9 +22,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/andreangiolillo/mongocli-test/internal/decryption/keyproviders"
+	"github.com/andreangiolillo/mongocli-test/internal/pointer"
 	"github.com/go-test/deep"
-	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/keyproviders"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 )
 
 func buildExpectedLog() []*AuditLogLine {

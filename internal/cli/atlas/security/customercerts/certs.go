@@ -15,7 +15,7 @@
 package customercerts
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
 	"github.com/spf13/cobra"
 )
 

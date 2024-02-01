@@ -24,12 +24,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/flag"
+	"github.com/andreangiolillo/mongocli-test/internal/log"
+	"github.com/andreangiolillo/mongocli-test/internal/terminal"
+	"github.com/andreangiolillo/mongocli-test/internal/version"
 	"github.com/denisbrodbeck/machineid"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
-	"github.com/mongodb/mongodb-atlas-cli/internal/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )

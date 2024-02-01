@@ -17,10 +17,10 @@ package organizations
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations/apikeys"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations/invitations"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations/users"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/iam/organizations/apikeys"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/iam/organizations/invitations"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/iam/organizations/users"
 	"github.com/spf13/cobra"
 )
 

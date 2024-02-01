@@ -18,12 +18,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
-	"github.com/mongodb/mongodb-atlas-cli/internal/search"
-	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/require"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/mongosh"
+	"github.com/andreangiolillo/mongocli-test/internal/search"
+	"github.com/andreangiolillo/mongocli-test/internal/validate"
 	"github.com/spf13/cobra"
 )
 

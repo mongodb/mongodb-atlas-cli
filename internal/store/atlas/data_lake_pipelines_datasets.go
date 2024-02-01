@@ -16,7 +16,7 @@
 
 package atlas
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_data_lake_pipelines_datasets.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas PipelineDatasetDeleter
+//go:generate mockgen -destination=../../mocks/atlas/mock_data_lake_pipelines_datasets.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas PipelineDatasetDeleter
 
 type PipelineDatasetDeleter interface {
 	DeletePipelineDataset(string, string, string) error

@@ -20,11 +20,11 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/compass"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/compass"
+	"github.com/andreangiolillo/mongocli-test/internal/log"
+	"github.com/andreangiolillo/mongocli-test/internal/mongosh"
+	"github.com/andreangiolillo/mongocli-test/internal/telemetry"
 )
 
 var (

@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/file"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/andreangiolillo/mongocli-test/internal/file"
+	"github.com/andreangiolillo/mongocli-test/internal/pointer"
 	"github.com/spf13/afero"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )

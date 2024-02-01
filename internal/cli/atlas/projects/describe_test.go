@@ -19,8 +19,8 @@ package projects
 import (
 	"testing"
 
+	mocks "github.com/andreangiolillo/mongocli-test/internal/mocks/atlas"
 	"github.com/golang/mock/gomock"
-	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 

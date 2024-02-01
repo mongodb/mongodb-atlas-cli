@@ -15,18 +15,18 @@
 package iam
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/globalaccesslists"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/globalapikeys"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/teams"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/users"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/iam/globalaccesslists"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/iam/globalapikeys"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/iam/organizations"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/iam/projects"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/iam/teams"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/iam/users"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/flag"
+	"github.com/andreangiolillo/mongocli-test/internal/log"
+	"github.com/andreangiolillo/mongocli-test/internal/usage"
+	"github.com/andreangiolillo/mongocli-test/internal/validate"
 	"github.com/spf13/cobra"
 )
 

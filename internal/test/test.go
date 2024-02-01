@@ -18,8 +18,8 @@ import (
 	"testing"
 	"text/template"
 
+	"github.com/andreangiolillo/mongocli-test/internal/config"
 	"github.com/jba/templatecheck"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

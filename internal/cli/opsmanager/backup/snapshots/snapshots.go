@@ -15,8 +15,8 @@
 package snapshots
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/backup/snapshots/schedule"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/backup/snapshots/schedule"
 	"github.com/spf13/cobra"
 )
 

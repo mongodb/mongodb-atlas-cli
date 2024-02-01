@@ -19,7 +19,7 @@ package convert
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/andreangiolillo/mongocli-test/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/ops-manager/opsmngr"
 )

@@ -19,9 +19,9 @@ package clusters
 import (
 	"testing"
 
+	"github.com/andreangiolillo/mongocli-test/internal/mocks"
+	"github.com/andreangiolillo/mongocli-test/internal/test/fixture"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
 	"github.com/spf13/afero"
 )
 

@@ -18,8 +18,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/andreangiolillo/mongocli-test/internal/flag"
+	"github.com/andreangiolillo/mongocli-test/internal/log"
 )
 
 var GlobalFlagsToArgs = map[string]string{

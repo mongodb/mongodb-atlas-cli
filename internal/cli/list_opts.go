@@ -15,7 +15,7 @@
 package cli
 
 import (
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
+	store "github.com/andreangiolillo/mongocli-test/internal/store/atlas"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 

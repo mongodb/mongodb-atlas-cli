@@ -15,11 +15,11 @@
 package compliancepolicy
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/copyprotection"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/encryptionatrest"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/pointintimerestore"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup/compliancepolicy/policies"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/copyprotection"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/encryptionatrest"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/pointintimerestore"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/policies"
 	"github.com/spf13/cobra"
 )
 

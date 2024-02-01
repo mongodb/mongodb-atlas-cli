@@ -16,10 +16,10 @@ package fixture
 import (
 	"context"
 
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/deployments/options"
+	"github.com/andreangiolillo/mongocli-test/internal/mocks"
+	"github.com/andreangiolillo/mongocli-test/internal/podman"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 )
 
 func NewMockLocalDeploymentOpts(ctrl *gomock.Controller, deploymentName string) MockDeploymentOpts {

@@ -20,7 +20,7 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/andreangiolillo/mongocli-test/test/e2e"
 )
 
 const completionEntity = "completion"

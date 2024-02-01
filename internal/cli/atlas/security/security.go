@@ -15,8 +15,8 @@
 package security
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/security/customercerts"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/security/ldap"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/security/customercerts"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/security/ldap"
 	"github.com/spf13/cobra"
 )
 

@@ -20,11 +20,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/flag"
+	"github.com/andreangiolillo/mongocli-test/internal/store"
+	"github.com/andreangiolillo/mongocli-test/internal/validate"
 	"github.com/spf13/cobra"
 )
 

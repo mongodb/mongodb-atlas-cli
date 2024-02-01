@@ -18,12 +18,12 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/internal/randgen"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/convert"
+	"github.com/andreangiolillo/mongocli-test/internal/flag"
+	"github.com/andreangiolillo/mongocli-test/internal/pointer"
+	"github.com/andreangiolillo/mongocli-test/internal/randgen"
+	"github.com/andreangiolillo/mongocli-test/internal/telemetry"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 

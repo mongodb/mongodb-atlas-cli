@@ -15,12 +15,12 @@
 package admin
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/admin/backup/blockstore"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/admin/backup/filesystem"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/admin/backup/oplog"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/admin/backup/s3"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/admin/backup/sync"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/admin/backup/blockstore"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/admin/backup/filesystem"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/admin/backup/oplog"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/admin/backup/s3"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/admin/backup/sync"
 	"github.com/spf13/cobra"
 )
 

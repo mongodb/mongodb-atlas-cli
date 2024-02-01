@@ -1,4 +1,4 @@
-module github.com/andreangiolillo/mongodbcli-test
+module github.com/andreangiolillo/mongocli-test
 
 go 1.21
 

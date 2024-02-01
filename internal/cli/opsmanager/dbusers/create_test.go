@@ -19,9 +19,9 @@ package dbusers
 import (
 	"testing"
 
+	"github.com/andreangiolillo/mongocli-test/internal/mocks"
+	"github.com/andreangiolillo/mongocli-test/internal/test/fixture"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
 )
 
 func TestCreate_Run(t *testing.T) {

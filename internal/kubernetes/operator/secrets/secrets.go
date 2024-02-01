@@ -15,7 +15,7 @@
 package secrets
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
+	"github.com/andreangiolillo/mongocli-test/internal/kubernetes/operator/resources"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

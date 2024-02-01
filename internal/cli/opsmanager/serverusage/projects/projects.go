@@ -15,9 +15,9 @@
 package projects
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/serverusage/projects/hosts"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/opsmanager/serverusage/projects/servertype"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/serverusage/projects/hosts"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/serverusage/projects/servertype"
 	"github.com/spf13/cobra"
 )
 

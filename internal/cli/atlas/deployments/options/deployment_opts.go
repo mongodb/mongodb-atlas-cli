@@ -25,17 +25,17 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/setup"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/log"
+	"github.com/andreangiolillo/mongocli-test/internal/podman"
+	"github.com/andreangiolillo/mongocli-test/internal/search"
+	"github.com/andreangiolillo/mongocli-test/internal/store"
+	"github.com/andreangiolillo/mongocli-test/internal/telemetry"
+	"github.com/andreangiolillo/mongocli-test/internal/terminal"
+	"github.com/andreangiolillo/mongocli-test/internal/usage"
 	"github.com/briandowns/spinner"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/setup"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
-	"github.com/mongodb/mongodb-atlas-cli/internal/search"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
-	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 )
 
 const (

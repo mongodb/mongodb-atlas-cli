@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/internal/search"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
+	"github.com/andreangiolillo/mongocli-test/internal/search"
+	"github.com/andreangiolillo/mongocli-test/internal/telemetry"
 )
 
 const (

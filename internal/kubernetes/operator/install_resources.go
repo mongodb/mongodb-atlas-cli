@@ -21,9 +21,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes"
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/version"
+	"github.com/andreangiolillo/mongocli-test/internal/kubernetes"
+	"github.com/andreangiolillo/mongocli-test/internal/kubernetes/operator/resources"
+	"github.com/andreangiolillo/mongocli-test/internal/kubernetes/operator/version"
 	"gopkg.in/yaml.v3"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"

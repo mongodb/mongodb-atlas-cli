@@ -17,11 +17,11 @@ package atlas
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_project_ip_access_lists.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas ProjectIPAccessListLister
+//go:generate mockgen -destination=../../mocks/atlas/mock_project_ip_access_lists.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas ProjectIPAccessListLister
 
 type ProjectIPAccessListLister interface {
 	ProjectIPAccessLists(string, *ListOptions) (*atlasv2.PaginatedNetworkAccess, error)

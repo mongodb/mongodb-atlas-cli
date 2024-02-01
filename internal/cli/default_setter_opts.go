@@ -21,19 +21,19 @@ import (
 	"io"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/commonerrors"
+	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreangiolillo/mongocli-test/internal/prompt"
+	"github.com/andreangiolillo/mongocli-test/internal/store"
+	"github.com/andreangiolillo/mongocli-test/internal/telemetry"
+	"github.com/andreangiolillo/mongocli-test/internal/validate"
 	"github.com/briandowns/spinner"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/commonerrors"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
-	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_default_opts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli ProjectOrgsLister
+//go:generate mockgen -destination=../mocks/mock_default_opts.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/cli ProjectOrgsLister
 
 type ProjectOrgsLister interface {
 	Project(id string) (interface{}, error)

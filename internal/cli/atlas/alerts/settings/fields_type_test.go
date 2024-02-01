@@ -19,9 +19,9 @@ package settings
 import (
 	"testing"
 
+	mocks "github.com/andreangiolillo/mongocli-test/internal/mocks/atlas"
+	"github.com/andreangiolillo/mongocli-test/internal/test"
 	"github.com/golang/mock/gomock"
-	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
 func TestFieldsType_Run(t *testing.T) {

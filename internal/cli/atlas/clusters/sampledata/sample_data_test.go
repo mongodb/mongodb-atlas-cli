@@ -19,7 +19,7 @@ package sampledata
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/andreangiolillo/mongocli-test/internal/test"
 )
 
 func TestBuilder(t *testing.T) {

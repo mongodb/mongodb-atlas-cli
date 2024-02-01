@@ -19,9 +19,9 @@ package dbusers
 import (
 	"testing"
 
+	"github.com/andreangiolillo/mongocli-test/internal/convert"
+	"github.com/andreangiolillo/mongocli-test/internal/mocks"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 

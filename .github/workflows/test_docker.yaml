@@ -12,8 +12,10 @@ jobs:
           - 27017:27017
 
     steps:
-    - name: test
+    - name: install mongosh
       run: |
         wget https://downloads.mongodb.com/compass/mongodb-mongosh_2.1.3_amd64.deb
         sudo apt install ./mongodb-mongosh_*.deb
+    - name: test
+      run: |
         mongosh "mongodb://localhost:27017?directConnection=true" --eval 'db.adminCommand("ping")'

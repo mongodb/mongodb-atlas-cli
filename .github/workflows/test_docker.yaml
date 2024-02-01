@@ -1,0 +1,19 @@
+name: Atlas Service Example
+on: push
+
+jobs:
+  runner-job:
+    runs-on: ubuntu-latest
+
+    services:
+      atlas:
+        image: "mongodb/apix_test:atlasdocker"
+        ports:
+          - 27017:27017
+
+    steps:
+    - name: test
+      run: |
+        wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2204-x86_64-100.6.1.deb
+        sudo apt install ./mongodb-database-tools-*-100.6.1.deb
+        mongosh "mongodb://localhost:27017?directConnection=true" --eval 'db.adminCommand("ping")'

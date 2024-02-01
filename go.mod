@@ -1,4 +1,4 @@
-module github.com/mongodb/mongodb-atlas-cli
+module github.com/andreangiolillo/mongodbcli-test
 
 go 1.21
 

@@ -21,10 +21,10 @@ package datasets
 import (
 	"testing"
 
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/flag"
-	mocks "github.com/andreangiolillo/mongocli-test/internal/mocks/atlas"
-	"github.com/andreangiolillo/mongocli-test/internal/test"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	mocks "github.com/andreaangiolillo/mongocli-test/internal/mocks/atlas"
+	"github.com/andreaangiolillo/mongocli-test/internal/test"
 	"github.com/golang/mock/gomock"
 )
 

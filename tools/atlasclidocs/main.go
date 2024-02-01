@@ -18,8 +18,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/andreangiolillo/mongocli-test/internal/cli/root/atlas"
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/root/atlas"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	"github.com/mongodb-labs/cobra2snooty"
 	"github.com/spf13/cobra"
 )

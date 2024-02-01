@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_feature_control_policy.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/store FeatureControlPoliciesLister,FeatureControlPoliciesUpdater
+//go:generate mockgen -destination=../mocks/mock_feature_control_policy.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store FeatureControlPoliciesLister,FeatureControlPoliciesUpdater
 
 type FeatureControlPoliciesLister interface {
 	FeatureControlPolicies(string, *opsmngr.ListOptions) (*opsmngr.FeaturePolicy, error)

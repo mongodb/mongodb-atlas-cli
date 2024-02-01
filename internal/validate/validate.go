@@ -23,8 +23,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
-	"github.com/andreangiolillo/mongocli-test/internal/search"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/search"
 )
 
 const minPasswordLength = 10

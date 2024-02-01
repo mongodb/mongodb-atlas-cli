@@ -20,7 +20,7 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/andreangiolillo/mongocli-test/internal/kubernetes/operator/crds"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/crds"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 )
 

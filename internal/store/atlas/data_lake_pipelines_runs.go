@@ -20,7 +20,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_data_lake_pipelines_runs.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas PipelineRunsLister,PipelineRunsDescriber
+//go:generate mockgen -destination=../../mocks/atlas/mock_data_lake_pipelines_runs.go -package=atlas github.com/andreaangiolillo/mongocli-test/internal/store/atlas PipelineRunsLister,PipelineRunsDescriber
 
 type PipelineRunsLister interface {
 	PipelineRuns(string, string) (*atlasv2.PaginatedPipelineRun, error)

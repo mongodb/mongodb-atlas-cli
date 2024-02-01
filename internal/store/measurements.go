@@ -17,12 +17,12 @@ package store
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_measurements.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/store HostMeasurementLister,HostDiskMeasurementsLister,HostDatabaseMeasurementsLister
+//go:generate mockgen -destination=../mocks/mock_measurements.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store HostMeasurementLister,HostDiskMeasurementsLister,HostDatabaseMeasurementsLister
 
 type HostMeasurementLister interface {
 	HostMeasurements(string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)

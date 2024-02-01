@@ -15,7 +15,7 @@
 package interfaces
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
 	"github.com/spf13/cobra"
 )
 

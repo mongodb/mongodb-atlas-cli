@@ -21,9 +21,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
-	"github.com/andreangiolillo/mongocli-test/internal/mocks"
-	"github.com/andreangiolillo/mongocli-test/internal/version"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/mocks"
+	"github.com/andreaangiolillo/mongocli-test/internal/version"
 	"github.com/golang/mock/gomock"
 	"github.com/google/go-github/v50/github"
 	"github.com/spf13/afero"

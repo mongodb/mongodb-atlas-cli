@@ -18,7 +18,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/andreangiolillo/mongocli-test/internal/cli/root/mongocli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/root/mongocli"
 	"github.com/mongodb-labs/cobra2snooty"
 	"github.com/spf13/cobra"
 )

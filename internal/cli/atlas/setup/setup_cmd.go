@@ -25,19 +25,19 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/auth"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/require"
-	"github.com/andreangiolillo/mongocli-test/internal/config"
-	"github.com/andreangiolillo/mongocli-test/internal/flag"
-	"github.com/andreangiolillo/mongocli-test/internal/log"
-	"github.com/andreangiolillo/mongocli-test/internal/mongosh"
-	"github.com/andreangiolillo/mongocli-test/internal/prerun"
-	"github.com/andreangiolillo/mongocli-test/internal/sighandle"
-	"github.com/andreangiolillo/mongocli-test/internal/store"
-	"github.com/andreangiolillo/mongocli-test/internal/telemetry"
-	"github.com/andreangiolillo/mongocli-test/internal/usage"
-	"github.com/andreangiolillo/mongocli-test/internal/validate"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/auth"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/require"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	"github.com/andreaangiolillo/mongocli-test/internal/log"
+	"github.com/andreaangiolillo/mongocli-test/internal/mongosh"
+	"github.com/andreaangiolillo/mongocli-test/internal/prerun"
+	"github.com/andreaangiolillo/mongocli-test/internal/sighandle"
+	"github.com/andreaangiolillo/mongocli-test/internal/store"
+	"github.com/andreaangiolillo/mongocli-test/internal/telemetry"
+	"github.com/andreaangiolillo/mongocli-test/internal/usage"
+	"github.com/andreaangiolillo/mongocli-test/internal/validate"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"go.mongodb.org/atlas-sdk/v20231115002/admin"
@@ -96,7 +96,7 @@ We could not find your public IP address. To add your IP address run:
 
 `
 
-//go:generate mockgen -destination=../../../mocks/mock_setup.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/cli/atlas/setup ProfileReader
+//go:generate mockgen -destination=../../../mocks/mock_setup.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/setup ProfileReader
 
 type ProfileReader interface {
 	ProjectID() string

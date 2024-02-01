@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/andreangiolillo/mongocli-test/internal/watchers"
+	"github.com/andreaangiolillo/mongocli-test/internal/watchers"
 	"github.com/briandowns/spinner"
 )
 

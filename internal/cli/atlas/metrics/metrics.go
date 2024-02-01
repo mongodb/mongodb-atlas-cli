@@ -15,10 +15,10 @@
 package metrics
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/metrics/databases"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/metrics/disks"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/metrics/processes"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/metrics/databases"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/metrics/disks"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/metrics/processes"
 	"github.com/spf13/cobra"
 )
 

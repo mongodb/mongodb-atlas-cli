@@ -16,7 +16,7 @@ package options
 import (
 	"context"
 
-	"github.com/andreangiolillo/mongocli-test/internal/telemetry"
+	"github.com/andreaangiolillo/mongocli-test/internal/telemetry"
 )
 
 func (opts *ConnectOpts) connectToLocal(ctx context.Context) error {

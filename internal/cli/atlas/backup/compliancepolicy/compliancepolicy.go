@@ -15,11 +15,11 @@
 package compliancepolicy
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/copyprotection"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/encryptionatrest"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/pointintimerestore"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/policies"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/copyprotection"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/encryptionatrest"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/pointintimerestore"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/policies"
 	"github.com/spf13/cobra"
 )
 

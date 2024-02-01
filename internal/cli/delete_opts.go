@@ -18,8 +18,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/prompt"
-	"github.com/andreangiolillo/mongocli-test/internal/telemetry"
+	"github.com/andreaangiolillo/mongocli-test/internal/prompt"
+	"github.com/andreaangiolillo/mongocli-test/internal/telemetry"
 )
 
 const (

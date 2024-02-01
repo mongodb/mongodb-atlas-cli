@@ -15,8 +15,8 @@
 package ondemand
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/flag"
-	"github.com/andreangiolillo/mongocli-test/internal/usage"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	"github.com/andreaangiolillo/mongocli-test/internal/usage"
 	"github.com/spf13/cobra"
 )
 

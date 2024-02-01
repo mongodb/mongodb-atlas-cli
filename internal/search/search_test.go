@@ -19,8 +19,8 @@ package search
 import (
 	"testing"
 
-	"github.com/andreangiolillo/mongocli-test/internal/pointer"
-	"github.com/andreangiolillo/mongocli-test/internal/test/fixture"
+	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
+	"github.com/andreaangiolillo/mongocli-test/internal/test/fixture"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )

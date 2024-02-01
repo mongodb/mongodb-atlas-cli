@@ -20,7 +20,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/andreangiolillo/mongocli-test/internal/mocks"
+	"github.com/andreaangiolillo/mongocli-test/internal/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/spf13/afero"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"

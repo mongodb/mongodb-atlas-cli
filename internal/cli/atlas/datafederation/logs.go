@@ -21,12 +21,12 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/require"
-	"github.com/andreangiolillo/mongocli-test/internal/config"
-	"github.com/andreangiolillo/mongocli-test/internal/flag"
-	store "github.com/andreangiolillo/mongocli-test/internal/store/atlas"
-	"github.com/andreangiolillo/mongocli-test/internal/usage"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/require"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	store "github.com/andreaangiolillo/mongocli-test/internal/store/atlas"
+	"github.com/andreaangiolillo/mongocli-test/internal/usage"
 	"github.com/spf13/cobra"
 )
 

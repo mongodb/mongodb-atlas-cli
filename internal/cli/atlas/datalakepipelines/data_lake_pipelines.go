@@ -17,11 +17,11 @@
 package datalakepipelines
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/datalakepipelines/availableschedules"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/datalakepipelines/availablesnapshots"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/datalakepipelines/datasets"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/datalakepipelines/runs"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/datalakepipelines/availableschedules"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/datalakepipelines/availablesnapshots"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/datalakepipelines/datasets"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/datalakepipelines/runs"
 	"github.com/spf13/cobra"
 )
 

@@ -15,7 +15,7 @@
 package fixture
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/pointer"
+	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 

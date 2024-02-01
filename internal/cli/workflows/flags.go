@@ -18,8 +18,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/andreangiolillo/mongocli-test/internal/flag"
-	"github.com/andreangiolillo/mongocli-test/internal/log"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	"github.com/andreaangiolillo/mongocli-test/internal/log"
 )
 
 var GlobalFlagsToArgs = map[string]string{

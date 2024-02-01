@@ -1,4 +1,4 @@
-module github.com/andreangiolillo/mongocli-test
+module github.com/andreaangiolillo/mongocli-test
 
 go 1.21
 

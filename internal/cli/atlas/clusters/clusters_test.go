@@ -20,7 +20,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/andreangiolillo/mongocli-test/internal/test"
+	"github.com/andreaangiolillo/mongocli-test/internal/test"
 	"github.com/go-test/deep"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )

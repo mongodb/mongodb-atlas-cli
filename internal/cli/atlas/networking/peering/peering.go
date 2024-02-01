@@ -15,7 +15,7 @@
 package peering
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/networking/peering/create"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/networking/peering/create"
 	"github.com/spf13/cobra"
 )
 

@@ -20,9 +20,9 @@ import (
 	"bytes"
 	"testing"
 
-	mocks "github.com/andreangiolillo/mongocli-test/internal/mocks/atlas"
-	"github.com/andreangiolillo/mongocli-test/internal/pointer"
-	"github.com/andreangiolillo/mongocli-test/internal/test"
+	mocks "github.com/andreaangiolillo/mongocli-test/internal/mocks/atlas"
+	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
+	"github.com/andreaangiolillo/mongocli-test/internal/test"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

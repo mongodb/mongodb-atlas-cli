@@ -22,8 +22,8 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/andreangiolillo/mongocli-test/internal/telemetry"
-	"github.com/andreangiolillo/mongocli-test/internal/usage"
+	"github.com/andreaangiolillo/mongocli-test/internal/telemetry"
+	"github.com/andreaangiolillo/mongocli-test/internal/usage"
 	"github.com/containers/podman/v4/libpod/define"
 )
 

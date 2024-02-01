@@ -19,7 +19,7 @@ package alerts
 import (
 	"testing"
 
-	mocks "github.com/andreangiolillo/mongocli-test/internal/mocks/atlas"
+	mocks "github.com/andreaangiolillo/mongocli-test/internal/mocks/atlas"
 	"github.com/golang/mock/gomock"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )

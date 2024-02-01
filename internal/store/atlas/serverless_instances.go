@@ -17,11 +17,11 @@ package atlas
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_serverless_instances.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas ServerlessInstanceLister,ServerlessInstanceDescriber
+//go:generate mockgen -destination=../../mocks/atlas/mock_serverless_instances.go -package=atlas github.com/andreaangiolillo/mongocli-test/internal/store/atlas ServerlessInstanceLister,ServerlessInstanceDescriber
 
 type ServerlessInstanceLister interface {
 	ServerlessInstances(string, *ListOptions) (*atlasv2.PaginatedServerlessInstanceDescription, error)

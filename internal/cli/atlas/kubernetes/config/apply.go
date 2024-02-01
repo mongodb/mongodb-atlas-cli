@@ -20,13 +20,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/require"
-	"github.com/andreangiolillo/mongocli-test/internal/flag"
-	"github.com/andreangiolillo/mongocli-test/internal/kubernetes"
-	"github.com/andreangiolillo/mongocli-test/internal/kubernetes/operator"
-	"github.com/andreangiolillo/mongocli-test/internal/kubernetes/operator/features"
-	"github.com/andreangiolillo/mongocli-test/internal/usage"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/require"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/features"
+	"github.com/andreaangiolillo/mongocli-test/internal/usage"
 	"github.com/spf13/cobra"
 )
 

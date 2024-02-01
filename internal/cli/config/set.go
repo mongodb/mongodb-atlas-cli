@@ -18,12 +18,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/require"
-	"github.com/andreangiolillo/mongocli-test/internal/config"
-	"github.com/andreangiolillo/mongocli-test/internal/mongosh"
-	"github.com/andreangiolillo/mongocli-test/internal/search"
-	"github.com/andreangiolillo/mongocli-test/internal/validate"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/require"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/mongosh"
+	"github.com/andreaangiolillo/mongocli-test/internal/search"
+	"github.com/andreaangiolillo/mongocli-test/internal/validate"
 	"github.com/spf13/cobra"
 )
 

@@ -19,7 +19,7 @@ package decryption
 import (
 	"testing"
 
-	"github.com/andreangiolillo/mongocli-test/internal/test"
+	"github.com/andreaangiolillo/mongocli-test/internal/test"
 )
 
 func TestKeyProvidersBuilder(t *testing.T) {

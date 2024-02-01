@@ -19,8 +19,8 @@ package convert
 import (
 	"testing"
 
-	"github.com/andreangiolillo/mongocli-test/internal/pointer"
-	"github.com/andreangiolillo/mongocli-test/internal/test/fixture"
+	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
+	"github.com/andreaangiolillo/mongocli-test/internal/test/fixture"
 	"github.com/go-test/deep"
 	"go.mongodb.org/ops-manager/opsmngr"
 )

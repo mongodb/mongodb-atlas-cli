@@ -19,8 +19,8 @@ package teams
 import (
 	"testing"
 
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	mocks "github.com/andreangiolillo/mongocli-test/internal/mocks/atlas"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	mocks "github.com/andreaangiolillo/mongocli-test/internal/mocks/atlas"
 	"github.com/golang/mock/gomock"
 )
 

@@ -15,8 +15,8 @@
 package apikeys
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/iam/organizations/apikeys/accesslists"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/iam/organizations/apikeys/accesslists"
 	"github.com/spf13/cobra"
 )
 

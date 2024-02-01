@@ -19,7 +19,7 @@ package customdbroles
 import (
 	"testing"
 
-	"github.com/andreangiolillo/mongocli-test/internal/test"
+	"github.com/andreaangiolillo/mongocli-test/internal/test"
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )

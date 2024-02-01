@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_monitoring.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/store MonitoringStarter,MonitoringStopper
+//go:generate mockgen -destination=../mocks/mock_monitoring.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store MonitoringStarter,MonitoringStopper
 
 type MonitoringStarter interface {
 	StartMonitoring(string, *opsmngr.Host) (*opsmngr.Host, error)

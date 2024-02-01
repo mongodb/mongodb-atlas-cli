@@ -17,7 +17,7 @@ package settings
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/flag"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
 )
 
 func validateConfigOpts(opts *ConfigOpts) error {

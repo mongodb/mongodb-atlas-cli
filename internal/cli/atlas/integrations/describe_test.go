@@ -20,11 +20,11 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/flag"
-	"github.com/andreangiolillo/mongocli-test/internal/mocks"
-	"github.com/andreangiolillo/mongocli-test/internal/pointer"
-	"github.com/andreangiolillo/mongocli-test/internal/test"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	"github.com/andreaangiolillo/mongocli-test/internal/mocks"
+	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
+	"github.com/andreaangiolillo/mongocli-test/internal/test"
 	"github.com/golang/mock/gomock"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )

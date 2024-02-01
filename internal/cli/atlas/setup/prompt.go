@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/andreangiolillo/mongocli-test/internal/usage"
-	"github.com/andreangiolillo/mongocli-test/internal/validate"
+	"github.com/andreaangiolillo/mongocli-test/internal/usage"
+	"github.com/andreaangiolillo/mongocli-test/internal/validate"
 )
 
 func newClusterNameQuestion(clusterName string) *survey.Question {

@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
-	"github.com/andreangiolillo/mongocli-test/internal/flag"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
 	"github.com/spf13/cobra"
 )
 

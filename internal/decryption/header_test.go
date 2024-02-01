@@ -21,8 +21,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/andreangiolillo/mongocli-test/internal/decryption/keyproviders"
-	"github.com/andreangiolillo/mongocli-test/internal/pointer"
+	"github.com/andreaangiolillo/mongocli-test/internal/decryption/keyproviders"
+	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
 )
 
 func Test_validateMAC(t *testing.T) {

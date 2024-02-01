@@ -20,8 +20,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/log"
-	"github.com/andreangiolillo/mongocli-test/internal/search"
+	"github.com/andreaangiolillo/mongocli-test/internal/log"
+	"github.com/andreaangiolillo/mongocli-test/internal/search"
 	"go.mongodb.org/atlas-sdk/v20231115002/admin"
 	"go.mongodb.org/mongo-driver/bson"
 )

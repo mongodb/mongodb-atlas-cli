@@ -21,8 +21,8 @@ import (
 	"reflect"
 	"testing"
 
-	mocks "github.com/andreangiolillo/mongocli-test/internal/mocks/atlas"
-	"github.com/andreangiolillo/mongocli-test/internal/pointer"
+	mocks "github.com/andreaangiolillo/mongocli-test/internal/mocks/atlas"
+	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"

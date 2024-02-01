@@ -19,9 +19,9 @@ import (
 	"time"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/andreangiolillo/mongocli-test/internal/config"
-	"github.com/andreangiolillo/mongocli-test/internal/file"
-	"github.com/andreangiolillo/mongocli-test/internal/version"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/file"
+	"github.com/andreaangiolillo/mongocli-test/internal/version"
 	"github.com/spf13/afero"
 )
 

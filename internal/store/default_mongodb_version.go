@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_default_mongodb_version.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/store DefaultVersionGetter
+//go:generate mockgen -destination=../mocks/mock_default_mongodb_version.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store DefaultVersionGetter
 
 type DefaultVersionGetter interface {
 	DefaultMongoDBVersion() (string, error)

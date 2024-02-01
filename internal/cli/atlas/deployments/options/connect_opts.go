@@ -20,11 +20,11 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/compass"
-	"github.com/andreangiolillo/mongocli-test/internal/log"
-	"github.com/andreangiolillo/mongocli-test/internal/mongosh"
-	"github.com/andreangiolillo/mongocli-test/internal/telemetry"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/compass"
+	"github.com/andreaangiolillo/mongocli-test/internal/log"
+	"github.com/andreaangiolillo/mongocli-test/internal/mongosh"
+	"github.com/andreaangiolillo/mongocli-test/internal/telemetry"
 )
 
 var (

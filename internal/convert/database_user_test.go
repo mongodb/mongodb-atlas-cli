@@ -19,7 +19,7 @@ package convert
 import (
 	"testing"
 
-	"github.com/andreangiolillo/mongocli-test/internal/pointer"
+	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
 	"github.com/go-test/deep"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	"go.mongodb.org/ops-manager/opsmngr"

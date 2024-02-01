@@ -18,7 +18,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/andreangiolillo/mongocli-test/internal/terminal"
+	"github.com/andreaangiolillo/mongocli-test/internal/terminal"
 )
 
 type InputOpts struct {

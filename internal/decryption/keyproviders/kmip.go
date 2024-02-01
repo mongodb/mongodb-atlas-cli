@@ -20,10 +20,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/andreangiolillo/mongocli-test/internal/decryption/aes"
-	"github.com/andreangiolillo/mongocli-test/internal/decryption/kmip"
-	"github.com/andreangiolillo/mongocli-test/internal/decryption/pem"
-	"github.com/andreangiolillo/mongocli-test/internal/log"
+	"github.com/andreaangiolillo/mongocli-test/internal/decryption/aes"
+	"github.com/andreaangiolillo/mongocli-test/internal/decryption/kmip"
+	"github.com/andreaangiolillo/mongocli-test/internal/decryption/pem"
+	"github.com/andreaangiolillo/mongocli-test/internal/log"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

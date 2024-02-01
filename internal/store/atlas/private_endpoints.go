@@ -17,11 +17,11 @@ package atlas
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_private_endpoints.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas PrivateEndpointLister
+//go:generate mockgen -destination=../../mocks/atlas/mock_private_endpoints.go -package=atlas github.com/andreaangiolillo/mongocli-test/internal/store/atlas PrivateEndpointLister
 
 type PrivateEndpointLister interface {
 	PrivateEndpoints(string, string) ([]atlasv2.EndpointService, error)

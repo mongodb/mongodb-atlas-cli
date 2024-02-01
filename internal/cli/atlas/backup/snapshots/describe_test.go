@@ -19,8 +19,8 @@ package snapshots
 import (
 	"testing"
 
-	"github.com/andreangiolillo/mongocli-test/internal/mocks"
-	"github.com/andreangiolillo/mongocli-test/internal/test"
+	"github.com/andreaangiolillo/mongocli-test/internal/mocks"
+	"github.com/andreaangiolillo/mongocli-test/internal/test"
 	"github.com/golang/mock/gomock"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )

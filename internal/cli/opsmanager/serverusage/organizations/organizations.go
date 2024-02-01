@@ -15,9 +15,9 @@
 package organizations
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/serverusage/organizations/hosts"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/serverusage/organizations/servertype"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/opsmanager/serverusage/organizations/hosts"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/opsmanager/serverusage/organizations/servertype"
 	"github.com/spf13/cobra"
 )
 

@@ -24,8 +24,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/andreangiolillo/mongocli-test/internal/kubernetes/operator/features"
-	"github.com/andreangiolillo/mongocli-test/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/features"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

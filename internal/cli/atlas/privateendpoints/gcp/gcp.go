@@ -15,7 +15,7 @@
 package gcp
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/privateendpoints/gcp/interfaces"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/privateendpoints/gcp/interfaces"
 	"github.com/spf13/cobra"
 )
 

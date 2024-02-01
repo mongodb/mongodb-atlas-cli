@@ -21,7 +21,7 @@ import (
 	"github.com/google/go-github/v50/github"
 )
 
-//go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/version ReleaseVersionDescriber
+//go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/version ReleaseVersionDescriber
 
 const (
 	maxWaitTime = 500 * time.Millisecond

@@ -15,8 +15,8 @@
 package cli
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/config"
-	"github.com/andreangiolillo/mongocli-test/internal/store"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/store"
 )
 
 var defaultMongoDBMajorVersion string

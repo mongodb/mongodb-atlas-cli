@@ -17,11 +17,11 @@ package atlas
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_project_settings.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas ProjectSettingsDescriber
+//go:generate mockgen -destination=../../mocks/atlas/mock_project_settings.go -package=atlas github.com/andreaangiolillo/mongocli-test/internal/store/atlas ProjectSettingsDescriber
 
 type ProjectSettingsDescriber interface {
 	ProjectSettings(string) (*atlasv2.GroupSettings, error)

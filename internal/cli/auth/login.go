@@ -21,20 +21,20 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/require"
-	"github.com/andreangiolillo/mongocli-test/internal/config"
-	"github.com/andreangiolillo/mongocli-test/internal/flag"
-	"github.com/andreangiolillo/mongocli-test/internal/log"
-	"github.com/andreangiolillo/mongocli-test/internal/prerun"
-	"github.com/andreangiolillo/mongocli-test/internal/telemetry"
-	"github.com/andreangiolillo/mongocli-test/internal/validate"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/require"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	"github.com/andreaangiolillo/mongocli-test/internal/log"
+	"github.com/andreaangiolillo/mongocli-test/internal/prerun"
+	"github.com/andreaangiolillo/mongocli-test/internal/telemetry"
+	"github.com/andreaangiolillo/mongocli-test/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/cli/auth LoginConfig
+//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/cli/auth LoginConfig
 
 type LoginConfig interface {
 	config.SetSaver

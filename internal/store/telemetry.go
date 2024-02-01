@@ -17,11 +17,11 @@ package store
 import (
 	"net/http"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_telemetry.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/store EventsSender,UnauthEventsSender
+//go:generate mockgen -destination=../mocks/mock_telemetry.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store EventsSender,UnauthEventsSender
 
 type EventsSender interface {
 	SendEvents(body interface{}) error

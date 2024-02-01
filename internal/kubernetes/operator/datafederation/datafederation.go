@@ -17,9 +17,9 @@ package datafederation
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/kubernetes/operator/features"
-	"github.com/andreangiolillo/mongocli-test/internal/kubernetes/operator/resources"
-	"github.com/andreangiolillo/mongocli-test/internal/store/atlas"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/features"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/resources"
+	"github.com/andreaangiolillo/mongocli-test/internal/store/atlas"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"

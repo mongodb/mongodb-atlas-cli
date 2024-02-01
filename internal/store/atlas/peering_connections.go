@@ -17,11 +17,11 @@ package atlas
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_peering_connections.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas PeeringConnectionLister
+//go:generate mockgen -destination=../../mocks/atlas/mock_peering_connections.go -package=atlas github.com/andreaangiolillo/mongocli-test/internal/store/atlas PeeringConnectionLister
 
 type PeeringConnectionLister interface {
 	PeeringConnections(string, *ContainersListOptions) ([]atlasv2.BaseNetworkPeeringConnectionSettings, error)

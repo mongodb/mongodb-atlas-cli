@@ -15,9 +15,9 @@
 package policies
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/policies/ondemand"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/policies/scheduled"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/policies/ondemand"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy/policies/scheduled"
 	"github.com/spf13/cobra"
 )
 

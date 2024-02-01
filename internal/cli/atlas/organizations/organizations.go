@@ -17,10 +17,10 @@ package organizations
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/organizations/apikeys"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/organizations/invitations"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/organizations/users"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/organizations/apikeys"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/organizations/invitations"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/organizations/users"
 	"github.com/spf13/cobra"
 )
 

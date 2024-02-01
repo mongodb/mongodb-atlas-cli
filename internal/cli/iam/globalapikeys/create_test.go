@@ -19,7 +19,7 @@ package globalapikeys
 import (
 	"testing"
 
-	"github.com/andreangiolillo/mongocli-test/internal/mocks"
+	"github.com/andreaangiolillo/mongocli-test/internal/mocks"
 	"github.com/golang/mock/gomock"
 	"go.mongodb.org/ops-manager/opsmngr"
 )

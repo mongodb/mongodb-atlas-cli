@@ -17,12 +17,12 @@ package store
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_service_version.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/store ServiceVersionDescriber
+//go:generate mockgen -destination=../mocks/mock_service_version.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store ServiceVersionDescriber
 
 type ServiceVersionDescriber interface {
 	ServiceVersion() (*opsmngr.ServiceVersion, error)

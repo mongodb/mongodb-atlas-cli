@@ -15,8 +15,8 @@
 package networking
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/networking/containers"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/networking/peering"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/networking/containers"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/networking/peering"
 	"github.com/spf13/cobra"
 )
 

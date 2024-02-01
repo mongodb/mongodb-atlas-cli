@@ -23,7 +23,7 @@ import (
 	"os/exec"
 	"strconv"
 
-	"github.com/andreangiolillo/mongocli-test/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 

@@ -17,7 +17,7 @@ package require
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/validate"
+	"github.com/andreaangiolillo/mongocli-test/internal/validate"
 	"github.com/spf13/cobra"
 	"github.com/tangzero/inflector"
 )

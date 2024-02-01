@@ -15,8 +15,8 @@
 package cloudproviders
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/cloudproviders/accessroles"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/cloudproviders/accessroles"
 	"github.com/spf13/cobra"
 )
 

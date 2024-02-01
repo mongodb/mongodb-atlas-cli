@@ -18,12 +18,12 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_access_logs.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/store AccessLogsListerByClusterName,AccessLogsListerByHostname,AccessLogsLister
+//go:generate mockgen -destination=../mocks/mock_access_logs.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store AccessLogsListerByClusterName,AccessLogsListerByHostname,AccessLogsLister
 
 type AccessLogsListerByClusterName interface {
 	AccessLogsByClusterName(string, string, *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error)

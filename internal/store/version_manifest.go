@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_version_manifest.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/store VersionManifestUpdater,VersionManifestGetter,VersionManifestUpdaterServiceVersionDescriber
+//go:generate mockgen -destination=../mocks/mock_version_manifest.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store VersionManifestUpdater,VersionManifestGetter,VersionManifestUpdaterServiceVersionDescriber
 
 type VersionManifestUpdater interface {
 	UpdateVersionManifest(*opsmngr.VersionManifest) (*opsmngr.VersionManifest, error)

@@ -21,7 +21,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/andreangiolillo/mongocli-test/internal/flag"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
 	"github.com/spf13/cobra"
 )
 
@@ -111,7 +111,7 @@ func generateFile(name, version string) error {
 		ReleaseDate:          time.Now().UTC(),
 		Version:              version,
 		ManualLink:           manualLink,
-		PreviousReleasesLink: "https://github.com/andreangiolillo/mongocli-test/releases",
+		PreviousReleasesLink: "https://github.com/andreaangiolillo/mongocli-test/releases",
 		ReleaseNotesLink:     releaseNotesLink,
 		TutorialLink:         tutorialLink,
 		Platform: []Platform{

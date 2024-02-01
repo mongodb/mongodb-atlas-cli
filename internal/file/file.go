@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/andreangiolillo/mongocli-test/internal/search"
+	"github.com/andreaangiolillo/mongocli-test/internal/search"
 	"github.com/spf13/afero"
 	"gopkg.in/yaml.v3"
 )

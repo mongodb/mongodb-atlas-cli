@@ -19,8 +19,8 @@ import (
 	"errors"
 	"os"
 
-	"github.com/andreangiolillo/mongocli-test/internal/decryption/aes"
-	"github.com/andreangiolillo/mongocli-test/internal/log"
+	"github.com/andreaangiolillo/mongocli-test/internal/decryption/aes"
+	"github.com/andreaangiolillo/mongocli-test/internal/log"
 )
 
 // LocalKeyIdentifier config for the localKey used to encrypt the Log Encryption Key (LEK).

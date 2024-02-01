@@ -15,12 +15,12 @@
 package admin
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/admin/backup/blockstore"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/admin/backup/filesystem"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/admin/backup/oplog"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/admin/backup/s3"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/admin/backup/sync"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/opsmanager/admin/backup/blockstore"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/opsmanager/admin/backup/filesystem"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/opsmanager/admin/backup/oplog"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/opsmanager/admin/backup/s3"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/opsmanager/admin/backup/sync"
 	"github.com/spf13/cobra"
 )
 

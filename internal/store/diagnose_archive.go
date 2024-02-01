@@ -18,11 +18,11 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_diagnose_archive.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/store ArchivesDownloader
+//go:generate mockgen -destination=../mocks/mock_diagnose_archive.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store ArchivesDownloader
 
 type ArchivesDownloader interface {
 	DownloadArchive(string, *opsmngr.DiagnosticsListOpts, io.Writer) error

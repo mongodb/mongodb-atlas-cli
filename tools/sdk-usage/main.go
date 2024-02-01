@@ -23,7 +23,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/andreangiolillo/mongocli-test/internal/search"
+	"github.com/andreaangiolillo/mongocli-test/internal/search"
 )
 
 // StableIds is a struct that holds a list of OpenAPI operation IDs.

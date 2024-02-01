@@ -15,7 +15,7 @@
 package logs
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli/decryption"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/decryption"
 	"github.com/spf13/cobra"
 )
 

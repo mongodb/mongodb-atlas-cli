@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_indexes.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/store IndexCreator
+//go:generate mockgen -destination=../mocks/mock_indexes.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store IndexCreator
 
 type IndexCreator interface {
 	CreateIndex(string, string, *atlasv2.DatabaseRollingIndexRequest) error

@@ -20,9 +20,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/andreangiolillo/mongocli-test/internal/flag"
-	mocks "github.com/andreangiolillo/mongocli-test/internal/mocks/atlas"
-	"github.com/andreangiolillo/mongocli-test/internal/test"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	mocks "github.com/andreaangiolillo/mongocli-test/internal/mocks/atlas"
+	"github.com/andreaangiolillo/mongocli-test/internal/test"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"

@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/andreangiolillo/mongocli-test/tools/genevergreen/generate"
+	"github.com/andreaangiolillo/mongocli-test/tools/genevergreen/generate"
 	"github.com/evergreen-ci/shrub"
 )
 

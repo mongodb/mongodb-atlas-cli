@@ -14,10 +14,10 @@
 package fixture
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/deployments/options"
-	"github.com/andreangiolillo/mongocli-test/internal/config"
-	"github.com/andreangiolillo/mongocli-test/internal/mocks"
-	"github.com/andreangiolillo/mongocli-test/internal/pointer"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/deployments/options"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/mocks"
+	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
 	"github.com/golang/mock/gomock"
 	"go.mongodb.org/atlas-sdk/v20231115002/admin"
 )

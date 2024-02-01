@@ -15,11 +15,11 @@
 package performanceadvisor
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/mongocli/performanceadvisor/namespaces"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/mongocli/performanceadvisor/slowoperationthreshold"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/mongocli/performanceadvisor/slowquerylogs"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/mongocli/performanceadvisor/suggestedindexes"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/mongocli/performanceadvisor/namespaces"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/mongocli/performanceadvisor/slowoperationthreshold"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/mongocli/performanceadvisor/slowquerylogs"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/mongocli/performanceadvisor/suggestedindexes"
 	"github.com/spf13/cobra"
 )
 

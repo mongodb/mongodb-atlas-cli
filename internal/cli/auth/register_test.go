@@ -21,8 +21,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/andreangiolillo/mongocli-test/internal/mocks"
-	"github.com/andreangiolillo/mongocli-test/internal/test"
+	"github.com/andreaangiolillo/mongocli-test/internal/mocks"
+	"github.com/andreaangiolillo/mongocli-test/internal/test"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

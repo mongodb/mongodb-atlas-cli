@@ -20,7 +20,7 @@ import (
 	"io"
 
 	"github.com/PaesslerAG/jsonpath"
-	"github.com/andreangiolillo/mongocli-test/internal/jsonwriter"
+	"github.com/andreaangiolillo/mongocli-test/internal/jsonwriter"
 )
 
 var ErrEmptyPath = errors.New("empty jsonpath")

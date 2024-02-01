@@ -24,7 +24,7 @@ import (
 	"testing"
 
 	"github.com/Netflix/go-expect"
-	"github.com/andreangiolillo/mongocli-test/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	pseudotty "github.com/creack/pty"
 	"github.com/hinshun/vt10x"
 )

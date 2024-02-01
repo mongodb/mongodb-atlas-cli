@@ -15,7 +15,7 @@
 package security
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli/require"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/require"
 	"github.com/spf13/cobra"
 )
 

@@ -15,8 +15,8 @@
 package config
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli/config"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/require"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/require"
 	"github.com/spf13/cobra"
 )
 

@@ -18,7 +18,7 @@ import (
 	"testing"
 	"text/template"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	"github.com/jba/templatecheck"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"

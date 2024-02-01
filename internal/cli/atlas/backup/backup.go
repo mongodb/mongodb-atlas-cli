@@ -15,12 +15,12 @@
 package backup
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/exports"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/restores"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/schedule"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/backup/snapshots"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/backup/compliancepolicy"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/backup/exports"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/backup/restores"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/backup/schedule"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/backup/snapshots"
 	"github.com/spf13/cobra"
 )
 

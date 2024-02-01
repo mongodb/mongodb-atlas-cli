@@ -18,8 +18,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/andreangiolillo/mongocli-test/internal/kubernetes"
-	"github.com/andreangiolillo/mongocli-test/internal/kubernetes/operator/features"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/features"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"

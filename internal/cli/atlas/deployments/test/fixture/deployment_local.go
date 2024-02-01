@@ -16,9 +16,9 @@ package fixture
 import (
 	"context"
 
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/deployments/options"
-	"github.com/andreangiolillo/mongocli-test/internal/mocks"
-	"github.com/andreangiolillo/mongocli-test/internal/podman"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/deployments/options"
+	"github.com/andreaangiolillo/mongocli-test/internal/mocks"
+	"github.com/andreaangiolillo/mongocli-test/internal/podman"
 	"github.com/golang/mock/gomock"
 )
 

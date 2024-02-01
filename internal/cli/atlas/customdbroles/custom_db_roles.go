@@ -15,7 +15,7 @@
 package customdbroles
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )

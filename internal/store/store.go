@@ -14,7 +14,7 @@
 
 package store
 
-//go:generate mockgen -destination=../mocks/mock_store.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/store CredentialsGetter
+//go:generate mockgen -destination=../mocks/mock_store.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store CredentialsGetter
 
 import (
 	"context"
@@ -28,8 +28,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
-	"github.com/andreangiolillo/mongocli-test/internal/log"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/log"
 	"github.com/mongodb-forks/digest"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	atlasauth "go.mongodb.org/atlas/auth"

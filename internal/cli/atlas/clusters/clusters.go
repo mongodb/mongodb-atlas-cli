@@ -15,14 +15,14 @@
 package clusters
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/clusters/advancedsettings"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/clusters/availableregions"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/clusters/connectionstring"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/clusters/indexes"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/clusters/onlinearchive"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/clusters/sampledata"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/search"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/clusters/advancedsettings"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/clusters/availableregions"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/clusters/connectionstring"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/clusters/indexes"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/clusters/onlinearchive"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/clusters/sampledata"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/search"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"

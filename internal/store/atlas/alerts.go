@@ -18,7 +18,7 @@ import (
 	"go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_alerts.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas AlertDescriber,AlertLister,AlertAcknowledger
+//go:generate mockgen -destination=../../mocks/atlas/mock_alerts.go -package=atlas github.com/andreaangiolillo/mongocli-test/internal/store/atlas AlertDescriber,AlertLister,AlertAcknowledger
 
 type AlertDescriber interface {
 	Alert(*admin.GetAlertApiParams) (*admin.AlertViewForNdsGroup, error)

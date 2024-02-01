@@ -22,8 +22,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
-	"github.com/andreangiolillo/mongocli-test/internal/file"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/file"
 	"github.com/spf13/afero"
 )
 

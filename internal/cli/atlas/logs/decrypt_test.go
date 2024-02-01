@@ -19,8 +19,8 @@ package logs
 import (
 	"testing"
 
-	"github.com/andreangiolillo/mongocli-test/internal/flag"
-	"github.com/andreangiolillo/mongocli-test/internal/test"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	"github.com/andreaangiolillo/mongocli-test/internal/test"
 	"github.com/spf13/afero"
 )
 

@@ -15,9 +15,9 @@
 package serverusage
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/serverusage/organizations"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/opsmanager/serverusage/projects"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/opsmanager/serverusage/organizations"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/opsmanager/serverusage/projects"
 	"github.com/spf13/cobra"
 )
 

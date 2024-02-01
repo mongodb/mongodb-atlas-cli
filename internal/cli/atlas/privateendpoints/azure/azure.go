@@ -15,7 +15,7 @@
 package azure
 
 import (
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/privateendpoints/azure/interfaces"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/privateendpoints/azure/interfaces"
 	"github.com/spf13/cobra"
 )
 

@@ -17,9 +17,9 @@ package validation
 import (
 	"context"
 
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/livemigrations/options"
-	"github.com/andreangiolillo/mongocli-test/internal/config"
-	"github.com/andreangiolillo/mongocli-test/internal/store"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/livemigrations/options"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/store"
 	"github.com/spf13/cobra"
 )
 

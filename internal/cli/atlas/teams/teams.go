@@ -17,8 +17,8 @@ package teams
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/cli"
-	"github.com/andreangiolillo/mongocli-test/internal/cli/atlas/teams/users"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/teams/users"
 	"github.com/spf13/cobra"
 )
 

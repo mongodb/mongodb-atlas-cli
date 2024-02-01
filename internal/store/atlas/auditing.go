@@ -17,11 +17,11 @@ package atlas
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_auditing.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas AuditingDescriber
+//go:generate mockgen -destination=../../mocks/atlas/mock_auditing.go -package=atlas github.com/andreaangiolillo/mongocli-test/internal/store/atlas AuditingDescriber
 
 type AuditingDescriber interface {
 	Auditing(string) (*atlasv2.AuditLog, error)

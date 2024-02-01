@@ -18,7 +18,7 @@ import (
 	"go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_events.go -package=atlas github.com/andreangiolillo/mongocli-test/internal/store/atlas OrganizationEventLister,ProjectEventLister,EventLister
+//go:generate mockgen -destination=../../mocks/atlas/mock_events.go -package=atlas github.com/andreaangiolillo/mongocli-test/internal/store/atlas OrganizationEventLister,ProjectEventLister,EventLister
 
 type OrganizationEventLister interface {
 	OrganizationEvents(opts *admin.ListOrganizationEventsApiParams) (*admin.OrgPaginatedEvent, error)

@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_sync.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/store SyncsLister,SyncsDescriber,SyncsCreator,SyncsUpdater,SyncsDeleter
+//go:generate mockgen -destination=../mocks/mock_backup_sync.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store SyncsLister,SyncsDescriber,SyncsCreator,SyncsUpdater,SyncsDeleter
 
 type SyncsLister interface {
 	ListSyncs(*opsmngr.ListOptions) (*opsmngr.BackupStores, error)

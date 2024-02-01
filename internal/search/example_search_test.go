@@ -19,7 +19,7 @@ package search
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/test/fixture"
+	"github.com/andreaangiolillo/mongocli-test/internal/test/fixture"
 )
 
 // This example demonstrates searching a cluster in an automation config.

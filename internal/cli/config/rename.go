@@ -17,10 +17,10 @@ package config
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/cli/require"
-	"github.com/andreangiolillo/mongocli-test/internal/config"
-	"github.com/andreangiolillo/mongocli-test/internal/prompt"
-	"github.com/andreangiolillo/mongocli-test/internal/telemetry"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/require"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/prompt"
+	"github.com/andreaangiolillo/mongocli-test/internal/telemetry"
 	"github.com/spf13/cobra"
 )
 

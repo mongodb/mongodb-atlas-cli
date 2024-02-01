@@ -17,8 +17,8 @@ package options
 import (
 	"errors"
 
-	"github.com/andreangiolillo/mongocli-test/internal/log"
-	"github.com/andreangiolillo/mongocli-test/internal/podman"
+	"github.com/andreaangiolillo/mongocli-test/internal/log"
+	"github.com/andreaangiolillo/mongocli-test/internal/podman"
 )
 
 func (opts *DeploymentOpts) PostRunMessages() error {

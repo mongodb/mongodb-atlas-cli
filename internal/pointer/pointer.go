@@ -17,7 +17,7 @@ package pointer
 import (
 	"time"
 
-	customTime "github.com/andreangiolillo/mongocli-test/internal/time"
+	customTime "github.com/andreaangiolillo/mongocli-test/internal/time"
 	"golang.org/x/exp/constraints"
 )
 

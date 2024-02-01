@@ -17,12 +17,12 @@ package store
 import (
 	"fmt"
 
-	"github.com/andreangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen  -destination=../mocks/mock_global_alerts.go -package=mocks github.com/andreangiolillo/mongocli-test/internal/store GlobalAlertLister
+//go:generate mockgen  -destination=../mocks/mock_global_alerts.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store GlobalAlertLister
 
 type GlobalAlertLister interface {
 	GlobalAlerts(*atlas.AlertsListOptions) (*opsmngr.GlobalAlerts, error)

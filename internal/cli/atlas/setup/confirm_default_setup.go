@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/andreangiolillo/mongocli-test/internal/telemetry"
+	"github.com/andreaangiolillo/mongocli-test/internal/telemetry"
 )
 
 func (opts *Opts) askConfirmDefaultQuestion(values *clusterSettings) error {

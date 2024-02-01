@@ -23,11 +23,11 @@ import (
 	"strings"
 
 	"github.com/PaesslerAG/jsonpath"
-	"github.com/andreangiolillo/mongocli-test/internal/config"
-	"github.com/andreangiolillo/mongocli-test/internal/jsonpathwriter"
-	"github.com/andreangiolillo/mongocli-test/internal/jsonwriter"
-	"github.com/andreangiolillo/mongocli-test/internal/templatewriter"
-	"github.com/andreangiolillo/mongocli-test/internal/terminal"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/jsonpathwriter"
+	"github.com/andreaangiolillo/mongocli-test/internal/jsonwriter"
+	"github.com/andreaangiolillo/mongocli-test/internal/templatewriter"
+	"github.com/andreaangiolillo/mongocli-test/internal/terminal"
 	"github.com/spf13/cobra"
 )
 

@@ -26,7 +26,7 @@ builds:
       env:
         - CGO_ENABLED=0
       binary: bin/atlas
-      main: cmd/atlas
+      main: ./cmd/atlas/atlas.go
       ldflags:
         - -s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version={{.Version}} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit={{.FullCommit}} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=atlascli
     id: linux

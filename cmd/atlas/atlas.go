@@ -24,10 +24,10 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/AlecAivazis/survey/v2/core"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/root/atlas"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
-	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
+	"github.com/andreangiolillo/mongodbcli-test/internal/cli/root/atlas"
+	"github.com/andreangiolillo/mongodbcli-test/internal/config"
+	"github.com/andreangiolillo/mongodbcli-test/internal/telemetry"
+	"github.com/andreangiolillo/mongodbcli-test/internal/terminal"
 	"github.com/spf13/cobra"
 )
 

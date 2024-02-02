@@ -65,7 +65,7 @@ archives:
   wrap_in_directory: true
   format: tar.gz
 - id: macos
-  name_template: mongodb-atlas-cli_{{ .Version }}_{{- if eq .Os "darwin" }}macos{{- else }}{{ .Os }}{{ end }}_{{ .Arch }}
+  name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
   builds: [macos]
   <<: *archive_defaults
   format: zip
@@ -77,7 +77,7 @@ archives:
   wrap_in_directory: false
   format: zip
 nfpms:
-- id: mongodb-atlas-cli
+- package_name: mongodb-atlas-cli
   vendor: MongoDB Inc.
   homepage: https://www.mongodb.com/
   maintainer: MongoDB Inc. <support@mongodb.com>

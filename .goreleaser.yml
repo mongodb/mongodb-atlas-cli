@@ -52,12 +52,12 @@ builds:
       post:
         - cmd: ./build/package/atlascli_mac_notarize.sh
           output: true
-  - <<: *build_defaults
-    id: windows
-    goos: [windows]
-    goarch: [amd64]
-    hooks:
-      post: ./build/package/atlascli_windows_notarize.sh
+#  - <<: *build_defaults
+#    id: windows
+#    goos: [windows]
+#    goarch: [amd64]
+#    hooks:
+#      post: ./build/package/atlascli_windows_notarize.sh
 nfpms:
 - id: linux_package
   package_name: mongodb-atlas-cli

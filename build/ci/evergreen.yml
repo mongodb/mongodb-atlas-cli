@@ -202,21 +202,21 @@ functions:
       type: setup
       params:
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
-        shell: bash
-        script: |
-          set -Eeou pipefail
-          if [ -n "$(which yum 2>/dev/null)" ]; then
-            sudo yum update --skip-broken
-            sudo yum install -y podman-4.9.1
-          elif [ -n "$(which apt-get 2>/dev/null)" ]; then
-            sudo apt-get update
-            sudo apt-get install -y podman
-          elif [ -n "$(which zypper 2>/dev/null)" ]; then
-            sudo zypper install -y podman
-          elif [ -n "$(which brew 2>/dev/null)" ]; then
-            sudo brew install podman
-          fi
-          podman --version
+        binary: ./build/ci/install_podman.sh
+    "setup operator":
+      command: subprocess.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
+        env:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+        include_expansions_in_env:
+          - workdir
+        binary: ./build/ci/setup_operator.sh
+
   "install pykmip":
     - command: subprocess.exec
       type: setup

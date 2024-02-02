@@ -199,26 +199,11 @@ functions:
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
 
   "install podman":
-      command: shell.exec
+    - command: subprocess.exec
       type: setup
       params:
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
         binary: ./build/ci/install_podman.sh
-
-    "setup operator":
-      command: subprocess.exec
-      type: setup
-      params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        env:
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-        include_expansions_in_env:
-          - workdir
-        binary: ./build/ci/setup_operator.sh
-
   "install pykmip":
     - command: subprocess.exec
       type: setup

@@ -98,7 +98,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"list",
-			"--type=local",
+			"--type",
+			"local",
 		)
 
 		cmd.Env = os.Environ()
@@ -170,7 +171,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"create",
-			indexName,
+			searchIndexName,
 			"--type",
 			"local",
 			"--deploymentName",
@@ -221,7 +222,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		cmd.Env = os.Environ()
 		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
-		assert.Contains(t, o, indexName)
+		assert.Contains(t, o, searchIndexName)
 
 		lines := strings.Split(o, "\n")
 		cols := strings.Fields(lines[1])
@@ -255,7 +256,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		c, err := myCol.Aggregate(ctx, bson.A{
 			bson.M{
 				"$search": bson.M{
-					"index": indexName,
+					"index": searchIndexName,
 					"text": bson.M{
 						"query": "test1",
 						"path":  "name",
@@ -302,7 +303,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			deploymentEntity,
 			"pause",
 			deploymentName,
-			"--type=LOCAL",
+			"--type",
+			"local",
 			"--debug",
 		)
 
@@ -320,7 +322,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			deploymentEntity,
 			"start",
 			deploymentName,
-			"--type=LOCAL",
+			"--type",
+			"local",
 			"--debug",
 		)
 		cmd.Env = os.Environ()

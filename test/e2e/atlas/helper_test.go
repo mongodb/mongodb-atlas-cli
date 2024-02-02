@@ -142,9 +142,11 @@ const (
 
 // Local Development constants.
 const (
-	collectionName = "myCol"
-	databaseName   = "myDB"
-	indexName      = "indexTest"
+	collectionName  = "myCol"
+	databaseName    = "myDB"
+	searchIndexName = "indexTest"
+	vectorSearchDB  = "sample_mflix"
+	vectorSearchCol = "embedded_movies"
 )
 
 func splitOutput(cmd *exec.Cmd) (string, string, error) {

@@ -331,5 +331,5 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 	//	out := string(r)
 	//	req.NoError(err, out)
 	//	assert.Contains(t, out, fmt.Sprintf("Starting deployment '%s'", deploymentName))
-	//})
+	// })
 }

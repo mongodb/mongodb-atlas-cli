@@ -32,20 +32,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const (
-	collectionName = "myCol"
-	databaseName   = "myDB"
-	indexName      = "indexTest"
-)
-
-func splitOutput(cmd *exec.Cmd) (string, string, error) {
-	var o, e bytes.Buffer
-	cmd.Stdout = &o
-	cmd.Stderr = &e
-	err := cmd.Run()
-	return o.String(), e.String(), err
-}
-
 func TestDeploymentsLocal(t *testing.T) {
 	const deploymentName = "test"
 

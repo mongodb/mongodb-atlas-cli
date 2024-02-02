@@ -16,6 +16,7 @@
 package atlas_test
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -138,6 +139,21 @@ const (
 	authorizedUserLastName  = "lastname"
 	authorizedEmail         = "firstname.lastname@example.com"
 )
+
+// Local Development constants.
+const (
+	collectionName = "myCol"
+	databaseName   = "myDB"
+	indexName      = "indexTest"
+)
+
+func splitOutput(cmd *exec.Cmd) (string, string, error) {
+	var o, e bytes.Buffer
+	cmd.Stdout = &o
+	cmd.Stderr = &e
+	err := cmd.Run()
+	return o.String(), e.String(), err
+}
 
 func deployServerlessInstanceForProject(projectID string) (string, error) {
 	cliPath, err := e2e.AtlasCLIBin()

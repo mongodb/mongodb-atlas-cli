@@ -26,10 +26,12 @@ if [[ -f "${LINUX_FILE}" ]]; then
 #  echo "YESSSSSSSSSSS here2"
   echo "${ARTIFACTORY_PASSWORD}" | docker login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
 
+  echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" >> "signing-envfile"
+	echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> "signing-envfile"
+
 	echo "notarizing Linux binary ${LINUX_FILE}"
   docker run \
-    -e GRS_CONFIG_USER1_USERNAME="${GRS_USERNAME}" \
-    -e GRS_CONFIG_USER1_PASSWORD="${GRS_PASSWORD}" \
+    --env-file=signing-envfile \
     --rm \
     -v "$(pwd)":"$(pwd)" \
     -w "$(pwd)" \

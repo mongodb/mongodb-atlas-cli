@@ -34,3 +34,4 @@ gon_arm64.json
 *.idea
 *.vscode
 
+signing-envfile

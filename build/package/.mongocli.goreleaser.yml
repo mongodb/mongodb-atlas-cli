@@ -105,8 +105,8 @@ publishers:
       - TOOL_NAME=mongocli
       - ARTIFACTORY_USERNAME={{.Env.ARTIFACTORY_USERNAME}}
       - ARTIFACTORY_PASSWORD={{.Env.ARTIFACTORY_PASSWORD}}
-      - GRS_USERNAME={{.Env.GRS_USERNAME}}
-      - GRS_PASSWORD={{.Env.GRS_PASSWORD}}
+      - GRS_USERNAME={{.Env.GRS_USERNAME_MONGOCLI}}
+      - GRS_PASSWORD={{.Env.GRS_PASSWORD_MONGOCLI}}
       - LINUX_FILE={{ abs .ArtifactPath }}
 release:
   prerelease: auto

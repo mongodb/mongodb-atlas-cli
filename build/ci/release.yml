@@ -77,6 +77,8 @@ functions:
           ARTIFACTORY_PASSWORD: ${artifactory_password}
           GRS_USERNAME: ${garasign_username}
           GRS_PASSWORD: ${garasign_password}
+          GRS_USERNAME_MONGOCLI: ${garasign_username_mongocli}
+          GRS_PASSWORD_MONGOCLI: ${garasign_password_mongocli}
         include_expansions_in_env:
           - go_base_path
           - workdir
@@ -354,6 +356,8 @@ tasks:
           ARTIFACTORY_PASSWORD: ${artifactory_password}
           GRS_USERNAME: ${garasign_username}
           GRS_PASSWORD: ${garasign_password}
+          GRS_USERNAME_MONGOCLI: ${garasign_username_mongocli}
+          GRS_PASSWORD_MONGOCLI: ${garasign_password_mongocli}
       - func: "rename pkg"
         vars:
           unstable: -unstable
@@ -470,8 +474,8 @@ tasks:
           changelog_file: CHANGELOG_MONGOCLI.md
           ARTIFACTORY_USERNAME: ${artifactory_username}
           ARTIFACTORY_PASSWORD: ${artifactory_password}
-          GRS_USERNAME: ${garasign_username}
-          GRS_PASSWORD: ${garasign_password}
+          GRS_USERNAME_MONGOCLI: ${garasign_username_mongocli}
+          GRS_PASSWORD_MONGOCLI: ${garasign_password_mongocli}
       - func: "rename pkg"
         vars:
           package_name: mongocli

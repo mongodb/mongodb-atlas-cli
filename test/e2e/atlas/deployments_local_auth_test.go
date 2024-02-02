@@ -317,19 +317,19 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		a.Contains(out, fmt.Sprintf("Pausing deployment '%s'", deploymentName))
 	})
 
-	// t.Run("Start Deployment", func(t *testing.T) {  // This test will be reintroduced in https://jira.mongodb.org/browse/CLOUDP-227576
-	//	cmd := exec.Command(cliPath,
-	//		deploymentEntity,
-	//		"start",
-	//		deploymentName,
-	//		"--type",
-	//		"local",
-	//		"--debug",
-	//	)
-	//	cmd.Env = os.Environ()
-	//	r, err := cmd.CombinedOutput()
-	//	out := string(r)
-	//	req.NoError(err, out)
-	//	assert.Contains(t, out, fmt.Sprintf("Starting deployment '%s'", deploymentName))
-	// })
+	t.Run("Start Deployment", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			"start",
+			deploymentName,
+			"--type",
+			"local",
+			"--debug",
+		)
+		cmd.Env = os.Environ()
+		r, err := cmd.CombinedOutput()
+		out := string(r)
+		req.NoError(err, out)
+		assert.Contains(t, out, fmt.Sprintf("Starting deployment '%s'", deploymentName))
+	})
 }

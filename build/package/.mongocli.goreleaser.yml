@@ -50,7 +50,7 @@ gomod: # https://goreleaser.com/customization/verifiable_builds/
   mod: mod
 archives:
 - id: linux_archives
-  name_template: mongodbcli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else if eq .Arch "darwin" }}macos{{- else }}{{ .Arch }}{{ end }}
+  name_template: mongodbcli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [linux]
   <<: &archive_defaults
     files:
@@ -61,6 +61,7 @@ archives:
   wrap_in_directory: true
   format: tar.gz
 - id: macos
+  name_template: mongodbcli_{{ .Version }}_{{- if eq .Os "darwin" }}macos{{- else }}{{ .Os }}{{ end }}_{{ .Arch }}{{ end }}
   builds: [macos]
   <<: *archive_defaults
   format: zip
@@ -73,7 +74,7 @@ archives:
 nfpms:
 - id: linux_package
   package_name: mongocli
-  file_name_template: mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
+  file_name_template: mongodbcli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   vendor: MongoDB Inc.
   homepage: https://www.mongodb.com/
   maintainer: MongoDB Inc. <support@mongodb.com>

@@ -50,7 +50,7 @@ gomod: # https://goreleaser.com/customization/verifiable_builds/
   mod: mod
 archives:
 - id: linux_archives
-  name_template: mongodb-atlas_{{ .Version }}_{{- if eq .Os "darwin" }}macos{{- else }}{{ .Os }}{{ end }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
+  name_template: mongodb-atlas_{{ .Version }}_{{ .Os }}{{ end }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [linux]
   <<: &archive_defaults
     files:
@@ -62,7 +62,7 @@ archives:
   wrap_in_directory: true
   format: tar.gz
 - id: macos
-  name_template: mongodb-atlas_{{ .Version }}_{{- if eq .Os "darwin" }}macos{{- else }}{{ .Os }}{{ end }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
+  name_template: mongodb-atlas_{{ .Version }}_{{- if eq .Os "darwin" }}macos{{- else }}{{ .Os }}{{ end }}_{{ .Arch }}{{ end }}
   builds: [macos]
   <<: *archive_defaults
   format: zip

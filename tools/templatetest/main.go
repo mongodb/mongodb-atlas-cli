@@ -4,20 +4,16 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-	"strings"
 	"text/template"
 	"text/template/parse"
-	"time"
 )
 
 var templateFuncs = template.FuncMap{
-	"Year": func() int {
-		return time.Now().Year()
-	},
-	"Now": func() string {
-		return time.Now().Format(time.RFC3339)
-	},
-	"Join": strings.Join,
+	// Defined in our codebase, expand if required.
+	// The template parser in the standard library will fail if the function is not defined here
+	"Year": nop,
+	"Now":  nop,
+	"Join": nop,
 
 	// BUILDIN
 	"and":      nop,
@@ -150,8 +146,10 @@ func (c *TemplateCallTreeEntry) Fprint(depth int) string {
 	return out
 }
 
+const spacesPerDepth = 4
+
 func ident(value string, depth int) string {
-	return fmt.Sprintf("%*s%s", depth*4, "", value)
+	return fmt.Sprintf("%*s%s", depth*spacesPerDepth, "", value)
 }
 
 func main() {
@@ -178,6 +176,7 @@ func inner() error {
 	return nil
 }
 
+//nolint:gocyclo
 func buildTree(root *TemplateCallTree, node parse.Node) error {
 	if IsNil(node) {
 		return nil

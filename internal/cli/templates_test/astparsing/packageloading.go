@@ -45,7 +45,7 @@ func LoadPackagesRecursive(path string) ([]*packages.Package, error) {
 		pkgs = append(pkgs, pkgsInDir...)
 	}
 
-	return pkgs, err
+	return pkgs, nil
 }
 
 // Returns all .go files per directory (recursively)
@@ -53,7 +53,7 @@ func LoadPackagesRecursive(path string) ([]*packages.Package, error) {
 //
 // Example:
 // - root/child1/ : [ "file1.go" ]
-// - root/child2/ : [ "file2.go", "file3.go" ]
+// - root/child2/ : [ "file2.go", "file3.go" ].
 func getSourceFilesPerDirectory(sourcePath string) (sourceFiles map[string][]string, err error) {
 	sourceFiles = make(map[string][]string)
 

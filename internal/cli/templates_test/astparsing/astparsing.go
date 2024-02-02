@@ -4,9 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"go/ast"
-	"go/token"
 	"go/types"
-	"slices"
 	"strings"
 
 	"golang.org/x/tools/go/packages"
@@ -36,11 +34,6 @@ type CommandBuilderInfo struct {
 	TemplateValue     string
 }
 
-type NamedStructInfo struct {
-	namedStruct *types.Named
-	structInfo  *types.Struct
-}
-
 func LoadCommandBuilderInfos(packages []*packages.Package) []*CommandBuilderInfo {
 	commandBuilderFuncDecls := findCommandBuilderFuncDecl(packages)
 
@@ -59,7 +52,9 @@ func LoadCommandBuilderInfos(packages []*packages.Package) []*CommandBuilderInfo
 	return builderFuncs
 }
 
-// Iterate through all to find all command builder functions
+// Iterate through all to find all command builder functions.
+//
+
 func findCommandBuilderFuncDecl(packages []*packages.Package) []*CommandBuilderFunc {
 	builderFuncs := make([]*CommandBuilderFunc, 0)
 
@@ -156,12 +151,15 @@ func newCmdBuilderInfo(commandBuilderFunc *CommandBuilderFunc) (*CommandBuilderI
 		return nil, fmt.Errorf("err getting template ident: %w, %v", err, pkg.Fset.Position(fun.Pos()))
 	}
 
+	// Find the template type that's being passed to the opts.run method
+	// In the example this would be the type of the variable `r` we pass to `opts.Print` in `opts.Run`
 	relatedTemplateType, err := getRelatedTemplateType(pkg, commandOptsStruct)
 	if err != nil {
 		return nil, errors.New("could not determine related template type")
 	}
 
-	templateValue, err := getStringIdentValue(pkg, templateIdent)
+	// Get the string value of the template
+	templateValue, err := getStringIdentValue(templateIdent)
 	if err != nil {
 		return nil, fmt.Errorf("could not find template value: %w, %v", err, pkg.Fset.Position(fun.Pos()))
 	}
@@ -178,7 +176,9 @@ func newCmdBuilderInfo(commandBuilderFunc *CommandBuilderFunc) (*CommandBuilderI
 // Find to the opts struct which is used in this command
 //
 // Example:
-// In `internal/cli/atlas/accesslists/list.go`, this would be `ListOpts`
+// In `internal/cli/atlas/accesslists/list.go`, this would be `ListOpts`.
+//
+//nolint:gocyclo
 func getCommandOpts(fun *ast.FuncDecl) (*ast.Ident, *ast.TypeSpec, error) {
 	// Search for all asignment statements which assign a variable which implements the OutputOpts interface
 	for _, stmt := range fun.Body.List {
@@ -262,7 +262,7 @@ func getCommandOpts(fun *ast.FuncDecl) (*ast.Ident, *ast.TypeSpec, error) {
 			}
 
 			// Verify that the struct has "cli.OutputOpts" as a composite field, if not: continue
-			if structHasComposite(typeStructType, "cli", "OutputOpts") {
+			if !structHasComposite(typeStructType, "cli", "OutputOpts") {
 				continue
 			}
 
@@ -276,7 +276,6 @@ func getCommandOpts(fun *ast.FuncDecl) (*ast.Ident, *ast.TypeSpec, error) {
 	return nil, nil, errors.New("no command opts found")
 }
 
-//nolint:gocyclo
 func getRelatedTemplate(pkg *packages.Package, fun *ast.FuncDecl, argsIdent *ast.Ident) (*ast.Ident, error) {
 	templateIdents := make([]*ast.Ident, 0)
 	var err error
@@ -284,85 +283,137 @@ func getRelatedTemplate(pkg *packages.Package, fun *ast.FuncDecl, argsIdent *ast
 	ast.Inspect(fun, func(n ast.Node) bool {
 		switch t := n.(type) {
 		case *ast.CallExpr:
-			args := t.Args
-			funExpr, ok := t.Fun.(*ast.SelectorExpr)
-			if !ok || funExpr.Sel.Name != "InitOutput" || len(args) != 2 {
-				return true
+			// Get the ident to the template based on a method call to opts.InitOutput.
+			ident, e := getRelatedTemplateFromCallExpr(pkg, t, argsIdent)
+
+			if e != nil {
+				err = nil
 			}
 
-			funIdent, ok := funExpr.X.(*ast.Ident)
-			if !ok {
-				return true
-			}
+			if ident != nil {
+				templateIdents = append(templateIdents, ident)
 
-			if funIdent.Obj != argsIdent.Obj {
-				return true
-			}
-
-			ok = false
-
-			switch templateArg := args[1].(type) {
-			case *ast.Ident:
-				templateIdents = append(templateIdents, templateArg)
-				ok = true
-			case *ast.BasicLit:
-				if !(strings.Contains(templateArg.Value, "{{") && strings.Contains(templateArg.Value, "}}")) {
-					ok = true
-				}
-			}
-
-			if !ok {
-				err = fmt.Errorf("unsupported argument in package: %v", pkg.Fset.Position(args[1].Pos()))
-				return true
+				// stop looking deeper in this specific node (call node)
+				return false
 			}
 
 		case *ast.AssignStmt:
-			for n, lhs := range t.Lhs {
-				selectorExpr, ok := lhs.(*ast.SelectorExpr)
-				if !ok || selectorExpr.Sel == nil || selectorExpr.Sel.Name != "Template" {
-					continue
-				}
+			// Get the idents to the template based on an asignment.
+			// Example: opt.Template = template;
+			idents, e := getRelatedTemplateFromAssignStmt(pkg, t, argsIdent)
 
-				lhsIdent, ok := selectorExpr.X.(*ast.Ident)
-				if !ok {
-					continue
-				}
-
-				if lhsIdent.Obj != argsIdent.Obj {
-					continue
-				}
-
-				rhs := t.Rhs[n]
-				rhsIdent, ok := rhs.(*ast.Ident)
-				if !ok {
-					err = fmt.Errorf("unsupported argument in package: %v", pkg.Fset.Position(rhs.Pos()))
-					continue
-				}
-
-				templateIdents = append(templateIdents, rhsIdent)
+			if e != nil {
+				err = nil
 			}
+
+			templateIdents = append(templateIdents, idents...)
 		}
 
 		return true
 	})
 
 	templateIdentsLen := len(templateIdents)
+
+	// When there's not exactly one tempate, throw and error
 	if templateIdentsLen != 1 {
+		// If there's an error, throw that one
 		if err != nil {
 			fmt.Println(err)
 		}
 
+		// If there's no error, show the templates that are not matching
 		return nil, fmt.Errorf("expected 1 template, got %v", templateIdentsLen)
 	}
 
+	// Return the ident
 	return templateIdents[0], nil
 }
 
-func getRelatedTemplateFromCallExpr(*ast.CallExpr) (*ast.Ident, error) {
+// Get the ident to the template based on a method call to opts.InitOutput.
+func getRelatedTemplateFromCallExpr(pkg *packages.Package, callExpr *ast.CallExpr, argsIdent *ast.Ident) (*ast.Ident, error) {
+	args := callExpr.Args
+	funExpr, ok := callExpr.Fun.(*ast.SelectorExpr)
 
+	// make sure the function is called `InitOutput`
+	// make sure the function takes 2 arguments
+	if !ok || funExpr.Sel.Name != "InitOutput" || len(args) != 2 {
+		return nil, nil
+	}
+
+	// try to get X as an ident, if that fails, return nil
+	funIdent, ok := funExpr.X.(*ast.Ident)
+	if !ok {
+		return nil, nil
+	}
+
+	// make sure that the ident matches the argument ident
+	// we're basically testing that we call InitOutput on the variable `argsIdent`
+	if funIdent.Obj != argsIdent.Obj {
+		return nil, nil
+	}
+
+	// Take the second argument that's passed to the method
+	// that is the argument that contains the template
+	switch templateArg := args[1].(type) {
+	// If it's an ident (variable/constant), return the ident
+	case *ast.Ident:
+		return templateArg, nil
+
+	// If there's a string literal that's not a template ignore it
+	case *ast.BasicLit:
+		if !(strings.Contains(templateArg.Value, "{{") && strings.Contains(templateArg.Value, "}}")) {
+			return nil, nil
+		}
+	}
+
+	// Any other argument is not supported, return an error
+	return nil, fmt.Errorf("unsupported argument in package: %v", pkg.Fset.Position(args[1].Pos()))
 }
 
-// Look for all methods on commandOptsStruct which call `Run` and get the type of that parameter
+// Get the ident to the template based on a method call to opts.InitOutput.
+func getRelatedTemplateFromAssignStmt(pkg *packages.Package, t *ast.AssignStmt, argsIdent *ast.Ident) ([]*ast.Ident, error) {
+	templateIdents := make([]*ast.Ident, 0)
+	var err error
+
+	// An asignment can be multiple things being assigned to multiple variables
+	// we only care what's being assigned to arg.Template
+	for n, lhs := range t.Lhs {
+		// Make sure the left hand side of the assignment is a selector expression (aka variable.field)
+		// Verify that the field that's being selected is called "Template"
+		selectorExpr, ok := lhs.(*ast.SelectorExpr)
+		if !ok || selectorExpr.Sel == nil || selectorExpr.Sel.Name != "Template" {
+			continue
+		}
+
+		// Make sure that X is an ident
+		lhsIdent, ok := selectorExpr.X.(*ast.Ident)
+		if !ok {
+			continue
+		}
+
+		// Make sure that the variable that we're selecting the template field from is the argument ident we're searching for
+		if lhsIdent.Obj != argsIdent.Obj {
+			continue
+		}
+
+		// Get the matching right hand side and make sure it's an ident
+		rhs := t.Rhs[n]
+		rhsIdent, ok := rhs.(*ast.Ident)
+		if !ok {
+			err = fmt.Errorf("unsupported argument in package: %v", pkg.Fset.Position(rhs.Pos()))
+			continue
+		}
+
+		// In this case, add the ident
+		templateIdents = append(templateIdents, rhsIdent)
+	}
+
+	return templateIdents, err
+}
+
+// Look for all methods on commandOptsStruct which call `Run` and get the type of that parameter.
+//
+//nolint:gocyclo
 func getRelatedTemplateType(pkg *packages.Package, commandOptsStruct *ast.TypeSpec) (*NamedStructInfo, error) {
 	// Find all methods on commands
 	methods := getStructMethods(pkg, commandOptsStruct)
@@ -422,20 +473,23 @@ func getRelatedTemplateType(pkg *packages.Package, commandOptsStruct *ast.TypeSp
 
 			switch arg := callExpr.Args[0].(type) {
 			case *ast.Ident:
+				// Make sure the declaration is not null
 				if arg.Obj == nil || arg.Obj.Decl == nil {
 					errs = append(errs, fmt.Errorf("found ident but obj declaration is nil"))
 					return true
 				}
 
+				// Make sure that the declaration is assign statement
 				argAssignStmt, ok := arg.Obj.Decl.(*ast.AssignStmt)
 				if !ok {
 					errs = append(errs, fmt.Errorf("found ident but obj declaration is not of the type *ast.AssignStmt"))
 					return true
 				}
 
+				// For now we only support assignments which come from a function returning a tuple (typeWeNeed, error)
 				argType, err := getReturnTypeOfMethodReturningErrorTuple(pkg, argAssignStmt)
 				if err != nil {
-					errs = append(errs, fmt.Errorf("failed to find return type: %v", err))
+					errs = append(errs, fmt.Errorf("failed to find return type: %w", err))
 					return true
 				}
 
@@ -448,136 +502,10 @@ func getRelatedTemplateType(pkg *packages.Package, commandOptsStruct *ast.TypeSp
 		})
 	}
 
+	// If there's no return type and we do have an error, return the error
 	if s == nil && len(errs) > 0 {
 		return nil, errs[0]
 	}
 
 	return s, nil
-}
-
-func getStringIdentValue(pkg *packages.Package, ident *ast.Ident) (string, error) {
-
-	if ident.Obj == nil || ident.Obj.Decl == nil {
-		return "", errors.New("ident.Obj.Decl == nil")
-	}
-
-	valueSpec, ok := ident.Obj.Decl.(*ast.ValueSpec)
-	if !ok {
-		return "", errors.New("ident.Obj.Decl is not a *ast.ValueSpec")
-	}
-
-	if len(valueSpec.Values) != 1 {
-		return "", errors.New("ident.Obj.Decl.Values expecting exactly 1 value")
-	}
-
-	basicLit, ok := valueSpec.Values[0].(*ast.BasicLit)
-	if !ok {
-		return "", errors.New("ident.Obj.Decl.Values[0] is not an *ast.BasicLit")
-	}
-
-	if basicLit.Kind != token.STRING {
-		return "", errors.New("ident.Obj.Decl.Values[0] is not a string literal")
-	}
-
-	templateValue := strings.TrimFunc(basicLit.Value, func(r rune) bool {
-		return slices.Contains(stringDelimiters, r)
-	})
-
-	return templateValue, nil
-}
-
-func getReturnTypeOfMethodReturningErrorTuple(pkg *packages.Package, argAssignStmt *ast.AssignStmt) (*NamedStructInfo, error) {
-	// For now support something in the form of:
-	// args, err := foo.bar.Method(args...)
-	if len(argAssignStmt.Lhs) == 2 && len(argAssignStmt.Rhs) == 1 {
-		callExpr, ok := argAssignStmt.Rhs[0].(*ast.CallExpr)
-		if !ok {
-			return nil, errors.New("not a call expression statement")
-		}
-
-		selectorExpr, ok := callExpr.Fun.(*ast.SelectorExpr)
-		if !ok {
-			return nil, errors.New("not a call selector expression statement")
-		}
-
-		selection, ok := pkg.TypesInfo.Selections[selectorExpr]
-		if !ok {
-			return nil, errors.New("selection not found")
-		}
-
-		methodSignature, ok := selection.Type().(*types.Signature)
-		if !ok {
-			return nil, errors.New("was expecting to find a method signature")
-		}
-
-		results := methodSignature.Results()
-		if results.Len() != 2 {
-			return nil, errors.New("expecting 2 return parameters")
-		}
-
-		returnType, err := getUnderlyingStruct(results.At(0).Type())
-		if err != nil {
-			return nil, err
-		}
-
-		return returnType, nil
-	}
-
-	return nil, nil
-}
-
-func getUnderlyingStruct(v types.Type) (*NamedStructInfo, error) {
-	switch returnType := v.(type) {
-	case *types.Pointer:
-		return getUnderlyingStruct(returnType.Elem())
-	case *types.Named:
-		underlyingStruct, ok := returnType.Underlying().(*types.Struct)
-		if !ok {
-			return nil, errors.New("underlying type of named type is not a struct")
-		}
-
-		return &NamedStructInfo{
-			namedStruct: returnType,
-			structInfo:  underlyingStruct,
-		}, nil
-	default:
-		return nil, fmt.Errorf("unsupported type: %v",
-			returnType.String())
-	}
-}
-
-func getStructMethods(pkg *packages.Package, commandOptsStruct *ast.TypeSpec) []*ast.FuncDecl {
-	methods := make([]*ast.FuncDecl, 0)
-
-	for _, file := range pkg.Syntax {
-		ast.Inspect(file, func(n ast.Node) bool {
-			funcDecl, ok := n.(*ast.FuncDecl)
-			if !ok || funcDecl.Recv == nil || funcDecl.Recv.List == nil {
-				return true
-			}
-
-			receivers := funcDecl.Recv.List
-			if len(receivers) != 1 {
-				return true
-			}
-
-			receiver, ok := receivers[0].Type.(*ast.StarExpr)
-			if !ok {
-				return true
-			}
-
-			receiverTypeIdent, ok := receiver.X.(*ast.Ident)
-			if !ok {
-				return true
-			}
-
-			if receiverTypeIdent.Obj == commandOptsStruct.Name.Obj {
-				methods = append(methods, funcDecl)
-			}
-
-			return true
-		})
-	}
-
-	return methods
 }

@@ -12,11 +12,14 @@ func TestTemplates(t *testing.T) {
 	if err := inner(); err != nil {
 		log.Fatalf("Error: %v", err)
 	}
+
+	// use later
+	println(t)
 }
 
 func inner() error {
 	pkgs, err := astparsing.LoadPackagesRecursive("../atlas/accesslists/list.go")
-	//pkgs, err := astparsing.LoadPackagesRecursive("..")
+	// pkgs, err := astparsing.LoadPackagesRecursive("..")
 	if err != nil {
 		return err
 	}

@@ -21,7 +21,7 @@ func inner() error {
 		return err
 	}
 
-	builderFuncs := astparsing.FindBuilderFuncs(pkgs)
+	builderFuncs := astparsing.LoadCommandBuilderInfos(pkgs)
 
 	for _, builderFunc := range builderFuncs {
 		fmt.Printf("%v\n", builderFunc.TemplateValue)

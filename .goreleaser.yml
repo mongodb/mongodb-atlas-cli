@@ -160,7 +160,7 @@ signs:
   - id: test
     signature: "${artifact}_sig"
     cmd: "docker"
-    args: ["run", "--env-file=signing-envfile", "--rm", "-v $(pwd) : $(pwd)", "-w $(pwd)", "artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg", "/bin/bash", "-c", "\"gpgloader && gpg --yes -v --armor --detach-sign\""]
+    args: ["run", "--env-file=signing-envfile", "--rm", "-v dist/ : dist/", "-w dist/", "artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg", "/bin/bash", "-c", "\"gpgloader && gpg --yes -v --armor --detach-sign\""]
     ids:
       - linux_archives
       - linux_package

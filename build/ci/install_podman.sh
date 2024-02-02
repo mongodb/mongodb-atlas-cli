@@ -17,7 +17,7 @@
 set -Eeou pipefail
 if [ -n "$(which yum 2>/dev/null)" ]; then
   sudo yum update
-  sudo yum install -y podman-4.8.0
+  sudo yum install -y podman
 elif [ -n "$(which apt-get 2>/dev/null)" ]; then
   sudo apt-get update
   sudo apt-get install -y podman

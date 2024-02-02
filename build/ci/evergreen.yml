@@ -1386,7 +1386,7 @@ tasks:
           E2E_TAGS: atlas,deployments,local
           E2E_TIMEOUT: 3h
   - name: atlas_deployments_local_auth_e2e
-    tags: ["e2e","required","deployments","local","run"]
+    tags: ["e2e","required","deployments","local","auth", "run"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:

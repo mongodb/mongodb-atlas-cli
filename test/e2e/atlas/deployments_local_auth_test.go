@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,30 +32,19 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const (
-	collectionName = "myCol"
-	databaseName   = "myDB"
-	indexName      = "indexTest"
-)
-
-func splitOutput(cmd *exec.Cmd) (string, string, error) {
-	var o, e bytes.Buffer
-	cmd.Stdout = &o
-	cmd.Stderr = &e
-	err := cmd.Run()
-	return o.String(), e.String(), err
-}
-
-func TestDeploymentsLocal(t *testing.T) {
-	const deploymentName = "test"
+func TestDeploymentsLocalWithAuth(t *testing.T) {
+	const (
+		deploymentName = "test-auth"
+		dbUsername     = "admin"
+		dbUserPassword = "testpwd"
+	)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
 	t.Run("Setup", func(t *testing.T) {
-		defer func(t *testing.T) {
-			t.Helper()
+		t.Cleanup(func() {
 			cmd := exec.Command(cliPath,
 				deploymentEntity,
 				"diagnostics",
@@ -67,7 +56,7 @@ func TestDeploymentsLocal(t *testing.T) {
 			r, errDiag := cmd.CombinedOutput()
 			t.Log("Diagnostics")
 			t.Log(errDiag, string(r))
-		}(t)
+		})
 
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
@@ -75,6 +64,11 @@ func TestDeploymentsLocal(t *testing.T) {
 			deploymentName,
 			"--type",
 			"local",
+			"--username",
+			dbUsername,
+			"--password",
+			dbUserPassword,
+			"--bindIpAll",
 			"--force",
 		)
 
@@ -113,7 +107,7 @@ func TestDeploymentsLocal(t *testing.T) {
 		req.NoError(err, e)
 
 		outputLines := strings.Split(o, "\n")
-		req.Equal(`NAME   TYPE    MDB VER   STATE`, outputLines[0])
+		req.Equal(`NAME        TYPE    MDB VER   STATE`, outputLines[0])
 
 		cols := strings.Fields(outputLines[1])
 		req.Equal(deploymentName, cols[0])
@@ -134,6 +128,10 @@ func TestDeploymentsLocal(t *testing.T) {
 			deploymentName,
 			"--type",
 			"local",
+			"--username",
+			dbUsername,
+			"--password",
+			dbUserPassword,
 			"--connectWith",
 			"connectionString",
 		)
@@ -158,8 +156,7 @@ func TestDeploymentsLocal(t *testing.T) {
 		ids, err := myCol.InsertMany(ctx, []interface{}{
 			bson.M{
 				"name": "test1",
-			},
-			bson.M{
+			}, bson.M{
 				"name": "test2",
 			},
 		})
@@ -182,7 +179,12 @@ func TestDeploymentsLocal(t *testing.T) {
 			databaseName,
 			"--collection",
 			collectionName,
-			"--type=LOCAL",
+			"--username",
+			dbUsername,
+			"--password",
+			dbUserPassword,
+			"--type",
+			"LOCAL",
 			"-w",
 		)
 
@@ -191,8 +193,7 @@ func TestDeploymentsLocal(t *testing.T) {
 		r, err := cmd.CombinedOutput()
 		out := string(r)
 		req.NoError(err, out)
-		a := assert.New(t)
-		a.Contains(out, "Search index created with ID:")
+		assert.Contains(t, out, "Search index created with ID:")
 	})
 
 	var indexID string
@@ -209,15 +210,18 @@ func TestDeploymentsLocal(t *testing.T) {
 			databaseName,
 			"--collection",
 			collectionName,
-			"--type=LOCAL",
+			"--type",
+			"LOCAL",
+			"--username",
+			dbUsername,
+			"--password",
+			dbUserPassword,
 		)
 
 		cmd.Env = os.Environ()
-
 		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
-		a := assert.New(t)
-		a.Contains(o, indexName)
+		assert.Contains(t, o, indexName)
 
 		lines := strings.Split(o, "\n")
 		cols := strings.Fields(lines[1])
@@ -233,7 +237,12 @@ func TestDeploymentsLocal(t *testing.T) {
 			indexID,
 			"--deploymentName",
 			deploymentName,
-			"--type=LOCAL",
+			"--type",
+			"LOCAL",
+			"--username",
+			dbUsername,
+			"--password",
+			dbUserPassword,
 		)
 
 		cmd.Env = os.Environ()
@@ -270,7 +279,12 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--deploymentName",
 			deploymentName,
 			"--force",
-			"--type=LOCAL",
+			"--type",
+			"LOCAL",
+			"--username",
+			dbUsername,
+			"--password",
+			dbUserPassword,
 			"--debug",
 		)
 
@@ -279,10 +293,8 @@ func TestDeploymentsLocal(t *testing.T) {
 		var o, e bytes.Buffer
 		cmd.Stdout = &o
 		cmd.Stderr = &e
-		err := cmd.Run()
-		req.NoError(err, e.String())
-		a := assert.New(t)
-		a.Contains(o.String(), fmt.Sprintf("Index '%s' deleted", indexID))
+		req.NoError(cmd.Run(), e.String())
+		assert.Contains(t, o.String(), fmt.Sprintf("Index '%s' deleted", indexID))
 	})
 
 	t.Run("Pause Deployment", func(t *testing.T) {
@@ -299,7 +311,8 @@ func TestDeploymentsLocal(t *testing.T) {
 		r, err := cmd.CombinedOutput()
 		out := string(r)
 		req.NoError(err, out)
-		assert.Contains(t, out, fmt.Sprintf("Pausing deployment '%s'", deploymentName))
+		a := assert.New(t)
+		a.Contains(out, fmt.Sprintf("Pausing deployment '%s'", deploymentName))
 	})
 
 	t.Run("Start Deployment", func(t *testing.T) {
@@ -310,7 +323,6 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--type=LOCAL",
 			"--debug",
 		)
-
 		cmd.Env = os.Environ()
 		r, err := cmd.CombinedOutput()
 		out := string(r)

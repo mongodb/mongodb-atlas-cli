@@ -215,6 +215,7 @@ functions:
           elif [ -n "$(which brew 2>/dev/null)" ]; then
             sudo brew install podman
           fi
+          podman --version
   "install pykmip":
     - command: subprocess.exec
       type: setup

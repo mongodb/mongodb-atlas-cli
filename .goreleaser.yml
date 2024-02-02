@@ -156,31 +156,31 @@ changelog:
     - '^test:'
     - '^task:'
     - '^build(deps):'
-signs:
-  - id: test
-    signature: "${artifact}_sig"
-    cmd: "docker"
-    args: ["run", "--env-file=signing-envfile", "--rm", "-v dist/ : dist/", "-w dist/", "artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg", "/bin/bash", "-c", "\"gpgloader && gpg --yes -v --armor --detach-sign\""]
-    ids:
-      - linux_archives
-      - linux_package
-    output: true
-    artifacts: all
-#publishers:
-#  - name: my-publisher
-#  # IDs of the artifacts we want to sign
+#signs:
+#  - id: test
+#    signature: "${artifact}_sig"
+#    cmd: "docker"
+#    args: ["run", "--env-file=signing-envfile", "--rm", "-v dist/ : dist/", "-w $(pwd)", "artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg", "/bin/bash", "-c", "\"gpgloader && gpg --yes -v --armor --detach-sign\""]
 #    ids:
 #      - linux_archives
 #      - linux_package
-#    cmd: "./build/package/linux_notarize.sh"
-#    env:
-#      - VERSION={{ .Version }}
-#      - TOOL_NAME=atlascli
-#      - ARTIFACTORY_USERNAME={{.Env.ARTIFACTORY_USERNAME}}
-#      - ARTIFACTORY_PASSWORD={{.Env.ARTIFACTORY_PASSWORD}}
-#      - GRS_USERNAME={{.Env.GRS_USERNAME}}
-#      - GRS_PASSWORD={{.Env.GRS_PASSWORD}}
-#      - LINUX_FILE={{ abs .ArtifactPath }}
+#    output: true
+#    artifacts: all
+publishers:
+  - name: my-publisher
+  # IDs of the artifacts we want to sign
+    ids:
+      - linux_archives
+      - linux_package
+    cmd: "./build/package/linux_notarize.sh"
+    env:
+      - VERSION={{ .Version }}
+      - TOOL_NAME=atlascli
+      - ARTIFACTORY_USERNAME={{.Env.ARTIFACTORY_USERNAME}}
+      - ARTIFACTORY_PASSWORD={{.Env.ARTIFACTORY_PASSWORD}}
+      - GRS_USERNAME={{.Env.GRS_USERNAME}}
+      - GRS_PASSWORD={{.Env.GRS_PASSWORD}}
+      - LINUX_FILE={{ abs .ArtifactPath }}
 
 release:
   prerelease: auto

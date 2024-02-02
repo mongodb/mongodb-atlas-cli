@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestAtlasProjectTeams(t *testing.T) {
@@ -99,12 +99,12 @@ func TestAtlasProjectTeams(t *testing.T) {
 
 		var roles atlasv2.PaginatedTeamRole
 		require.NoError(t, json.Unmarshal(resp, &roles))
-		a.Len(roles.Results, 1)
+		a.Len(roles.GetResults(), 1)
 
-		role := roles.Results[0]
+		role := roles.GetResults()[0]
 		a.Equal(teamID, role.GetTeamId())
-		a.Len(role.RoleNames, 2)
-		a.ElementsMatch([]string{roleName1, roleName2}, role.RoleNames)
+		a.Len(role.GetRoleNames(), 2)
+		a.ElementsMatch([]string{roleName1, roleName2}, role.GetRoleNames())
 	})
 
 	t.Run("List", func(t *testing.T) {

@@ -42,7 +42,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 // listTemplate used when project ID is given.
-var listTemplate = `ID	NAME	TYPE	REPLICASET NAME{{range .Results}}
+var listTemplate = `ID	NAME	TYPE	REPLICASET NAME{{range valueOrEmptySlice .Results}}
 {{.ID}}	{{.ClusterName}}	{{.TypeName}}	{{.ReplicaSetName}}{{end}}
 `
 

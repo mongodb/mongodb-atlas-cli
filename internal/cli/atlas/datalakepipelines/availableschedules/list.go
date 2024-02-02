@@ -29,7 +29,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION UNIT	RETENTION VALUE{{range .}}
+var listTemplate = `ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION UNIT	RETENTION VALUE{{range valueOrEmptySlice .}}
 {{ .Id }}	{{ .FrequencyInterval }}	{{ .FrequencyType }}	{{ .RetentionUnit }}	{{ .RetentionValue }}{{end}}`
 
 type ListOpts struct {

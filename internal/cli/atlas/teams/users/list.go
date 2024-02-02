@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `ID	FIRST NAME	LAST NAME	USERNAME	EMAIL{{range .Results}}
+const listTemplate = `ID	FIRST NAME	LAST NAME	USERNAME	EMAIL{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.FirstName}}	{{.LastName}}	{{.Username}}	{{.EmailAddress}}{{end}}
 `
 

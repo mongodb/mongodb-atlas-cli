@@ -29,7 +29,7 @@ import (
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -487,7 +487,7 @@ func cleanUpKeys(t *testing.T, operator *operatorHelper, namespace string, cliPa
 	err = json.Unmarshal(resp, &keys)
 	require.NoError(t, err)
 
-	for _, key := range keys.Results {
+	for _, key := range keys.GetResults() {
 		keyID := *key.Id
 		desc := *key.Desc
 

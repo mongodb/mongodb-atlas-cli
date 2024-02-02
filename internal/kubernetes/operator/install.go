@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115005/admin"
 	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -228,7 +228,7 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 			return fmt.Errorf("unable to retrieve list of projects: %w", err)
 		}
 
-		for _, project := range projectsData.Results {
+		for _, project := range projectsData.GetResults() {
 			projectsIDs = append(projectsIDs, atlas.StringOrEmpty(project.Id))
 		}
 	}
@@ -243,7 +243,7 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 			projectID,
 			apiKeyID,
 			&admin.UpdateAtlasProjectApiKey{
-				Roles: []string{roleProjectOwner},
+				Roles: &[]string{roleProjectOwner},
 			},
 		)
 		if err != nil {

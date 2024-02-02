@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestCreate_Run(t *testing.T) {
@@ -39,7 +39,7 @@ func TestCreate_Run(t *testing.T) {
 	buf := new(bytes.Buffer)
 	expected := &admin.PaginatedPrivateNetworkEndpointIdEntry{
 		TotalCount: pointer.Get(1),
-		Results: []admin.PrivateNetworkEndpointIdEntry{
+		Results: &[]admin.PrivateNetworkEndpointIdEntry{
 			{
 				EndpointId: "id",
 				Comment:    pointer.Get("comment"),

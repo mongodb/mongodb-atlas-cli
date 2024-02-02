@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const describeTemplate = "{{.CustomerX509.Cas}}\n"
+const describeTemplate = "{{if .CustomerX509}}{{.CustomerX509.Cas}}{{end}}\n"
 
 type DescribeOpts struct {
 	cli.GlobalOpts

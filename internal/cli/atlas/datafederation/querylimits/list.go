@@ -29,7 +29,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `TENANT NAME	NAME	VALUE{{range .}}
+var listTemplate = `TENANT NAME	NAME	VALUE{{range valueOrEmptySlice .}}
 {{.TenantName}}	{{.Name}}	{{.Value}}
 {{end}}
 `

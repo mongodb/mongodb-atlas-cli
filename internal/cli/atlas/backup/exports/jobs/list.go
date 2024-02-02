@@ -43,7 +43,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	EXPORT BUCKET ID	STATE	SNAPSHOT ID{{range .Results}}
+var listTemplate = `ID	EXPORT BUCKET ID	STATE	SNAPSHOT ID{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.ExportBucketId}}	{{.State}}	{{.SnapshotId}}{{end}}
 `
 

@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -54,7 +54,7 @@ func TestListOpts_Run(t *testing.T) {
 	tenant.Name = &name
 	tenant.DataProcessRegion = atlasv2.NewStreamsDataProcessRegion("AWS", "US-EAST-1")
 	expected := atlasv2.NewPaginatedApiStreamsTenant()
-	expected.Results = []atlasv2.StreamsTenant{*tenant}
+	expected.Results = &[]atlasv2.StreamsTenant{*tenant}
 
 	mockStore.
 		EXPECT().

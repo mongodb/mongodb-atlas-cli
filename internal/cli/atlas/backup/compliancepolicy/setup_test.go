@@ -23,7 +23,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestSetupBuilder(t *testing.T) {
@@ -80,21 +80,37 @@ func TestSetupOpts_Run(t *testing.T) {
 		policy:  new(atlasv2.DataProtectionSettings20231001),
 	}
 
-	expected := &atlasv2.DataProtectionSettings20231001{
-		State: &state,
+	tests := map[string]*atlasv2.DataProtectionSettings20231001{
+		"no policy": {
+			State: &state,
+		},
+		"with scheduled policy": {
+			State: &state,
+			ScheduledPolicyItems: &[]atlasv2.BackupComplianceScheduledPolicyItem{
+				*atlasv2.NewBackupComplianceScheduledPolicyItem(1, "daily", "weeks", 1),
+			},
+		},
+		"with ondemand policy": {
+			State:              &state,
+			OnDemandPolicyItem: atlasv2.NewBackupComplianceOnDemandPolicyItem(1, "ondemand", "weeks", 1),
+		},
 	}
 
-	mockStore.
-		EXPECT().
-		UpdateCompliancePolicy(opts.ProjectID, opts.policy).
-		Return(expected, nil).
-		Times(1)
+	for name, expected := range tests {
+		t.Run(name, func(t *testing.T) {
+			mockStore.
+				EXPECT().
+				UpdateCompliancePolicy(opts.ProjectID, opts.policy).
+				Return(expected, nil).
+				Times(1)
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("run() unexpected error: %v", err)
+			if err := opts.Run(); err != nil {
+				t.Fatalf("run() unexpected error: %v", err)
+			}
+
+			test.VerifyOutputTemplate(t, setupTemplate, expected)
+		})
 	}
-
-	test.VerifyOutputTemplate(t, setupTemplate, expected)
 }
 
 // Verifies the output template when using --watch.

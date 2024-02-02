@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `CIDR BLOCK	AWS SECURITY GROUP{{range .Results}}
+const listTemplate = `CIDR BLOCK	AWS SECURITY GROUP{{range valueOrEmptySlice .Results}}
 {{.CidrBlock}}	{{if .AwsSecurityGroup}}{{.AwsSecurityGroup}} {{else}}N/A{{end}}{{end}}
 `
 

@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 type CreateOpts struct {
@@ -68,7 +68,7 @@ func (opts *CreateOpts) newIndex() (*atlasv2.DatabaseRollingIndexRequest, error)
 	i := new(atlasv2.DatabaseRollingIndexRequest)
 	i.Db = opts.db
 	i.Collection = opts.collection
-	i.Keys = keys
+	i.Keys = &keys
 	i.Options = opts.newIndexOptions()
 	return i, nil
 }

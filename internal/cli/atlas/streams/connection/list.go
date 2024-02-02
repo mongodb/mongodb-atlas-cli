@@ -29,7 +29,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `NAME	TYPE	SERVERS{{range .Results}}
+var listTemplate = `NAME	TYPE	SERVERS{{range valueOrEmptySlice .Results}}
 {{.Name}}	{{.Type}}	{{if .ClusterName}}{{.ClusterName}}{{else if .BootstrapServers}}{{.BootstrapServers}}{{else}}nil{{end}}{{end}}
 `
 

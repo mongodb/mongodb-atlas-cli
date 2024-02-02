@@ -42,7 +42,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var settingsListTemplate = `ID	TYPE	ENABLED{{range .}}
+var settingsListTemplate = `ID	TYPE	ENABLED{{range valueOrEmptySlice .}}
 {{.ID}}	{{.EventTypeName}}	{{.Enabled}}{{end}}
 `
 

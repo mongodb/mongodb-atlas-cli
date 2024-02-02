@@ -52,7 +52,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-var listTemplate = `ID SUBJECT CREATED AT{{range .Results}}
+var listTemplate = `ID SUBJECT CREATED AT{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.Subject}}	{{.CreatedAt}}{{end}}
 `
 

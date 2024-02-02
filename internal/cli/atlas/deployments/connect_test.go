@@ -19,7 +19,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/containers/podman/v4/libpod/define"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/options"
@@ -30,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115005/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -81,16 +80,16 @@ func TestRun_ConnectLocal(t *testing.T) {
 	mockPodman.
 		EXPECT().
 		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
-		Return([]*define.InspectContainerData{
+		Return([]*podman.InspectContainerData{
 			{
 				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
-				Config: &define.InspectContainerConfig{
+				Config: &podman.InspectContainerConfig{
 					Labels: map[string]string{
 						"version": "7.0.1",
 					},
 				},
-				HostConfig: &define.InspectContainerHostConfig{
-					PortBindings: map[string][]define.InspectHostPort{
+				HostConfig: &podman.InspectContainerHostConfig{
+					PortBindings: map[string][]podman.InspectHostPort{
 						"27017/tcp": {
 							{
 								HostIP:   "127.0.0.1",
@@ -99,7 +98,7 @@ func TestRun_ConnectLocal(t *testing.T) {
 						},
 					},
 				},
-				Mounts: []define.InspectMount{
+				Mounts: []podman.InspectMount{
 					{
 						Name: connectOpts.DeploymentOpts.LocalMongodDataVolume(),
 					},
@@ -146,7 +145,7 @@ func TestRun_ConnectAtlas(t *testing.T) {
 	}
 
 	expectedAtlasClusters := &admin.PaginatedAdvancedClusterDescription{
-		Results: []admin.AdvancedClusterDescription{
+		Results: &[]admin.AdvancedClusterDescription{
 			{
 				Name:           pointer.Get(expectedAtlasDeployment),
 				Id:             pointer.Get("123"),
@@ -174,7 +173,7 @@ func TestRun_ConnectAtlas(t *testing.T) {
 	mockAtlasClusterDescriber.
 		EXPECT().
 		AtlasCluster(connectOpts.ProjectID, expectedAtlasDeployment).
-		Return(&expectedAtlasClusters.Results[0], nil).
+		Return(&expectedAtlasClusters.GetResults()[0], nil).
 		Times(1)
 
 	mockCredentialsGetter.

@@ -77,8 +77,6 @@ functions:
           ARTIFACTORY_PASSWORD: ${artifactory_password}
           GRS_USERNAME: ${garasign_username}
           GRS_PASSWORD: ${garasign_password}
-          GRS_USERNAME_MONGOCLI: ${garasign_username_mongocli}
-          GRS_PASSWORD_MONGOCLI: ${garasign_password_mongocli}
         include_expansions_in_env:
           - go_base_path
           - workdir
@@ -195,7 +193,6 @@ functions:
           - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tgz
           - src/github.com/mongodb/mongodb-atlas-cli/dist/*.json
           - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
-          - src/github.com/mongodb/mongodb-atlas-cli/dist/*.sig
         remote_file: ${project}/dist/${revision}_${created_at}/
         bucket: mongodb-mongocli-build
         permissions: public-read
@@ -353,12 +350,6 @@ tasks:
           tool_name: ${tool_name}
           goreleaser_config: ${goreleaser_file}
           changelog_file: ${changelog_file}
-          ARTIFACTORY_USERNAME: ${artifactory_username}
-          ARTIFACTORY_PASSWORD: ${artifactory_password}
-          GRS_USERNAME: ${garasign_username}
-          GRS_PASSWORD: ${garasign_password}
-          GRS_USERNAME_MONGOCLI: ${garasign_username_mongocli}
-          GRS_PASSWORD_MONGOCLI: ${garasign_password_mongocli}
       - func: "rename pkg"
         vars:
           unstable: -unstable
@@ -473,10 +464,6 @@ tasks:
           tool_name: "mongocli"
           goreleaser_config: build/package/.mongocli.goreleaser.yml
           changelog_file: CHANGELOG_MONGOCLI.md
-          ARTIFACTORY_USERNAME: ${artifactory_username}
-          ARTIFACTORY_PASSWORD: ${artifactory_password}
-          GRS_USERNAME_MONGOCLI: ${garasign_username_mongocli}
-          GRS_PASSWORD_MONGOCLI: ${garasign_password_mongocli}
       - func: "rename pkg"
         vars:
           package_name: mongocli
@@ -522,7 +509,6 @@ tasks:
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tgz
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.json
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.sig
           remote_file: mongocli/
           bucket: downloads.mongodb.org
           permissions: public-read
@@ -561,10 +547,6 @@ tasks:
           tool_name: "atlascli"
           goreleaser_config: build/package/.atlascli.goreleaser.yml
           changelog_file: CHANGELOG_ATLASCLI.md
-          ARTIFACTORY_USERNAME: ${artifactory_username}
-          ARTIFACTORY_PASSWORD: ${artifactory_password}
-          GRS_USERNAME: ${garasign_username}
-          GRS_PASSWORD: ${garasign_password}
       - func: "rename pkg"
         vars:
           package_name: mongodb-atlas-cli
@@ -611,7 +593,6 @@ tasks:
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tgz
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.json
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.sig
           remote_file: mongocli/
           bucket: downloads.mongodb.org
           permissions: public-read

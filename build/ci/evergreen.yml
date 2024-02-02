@@ -1415,7 +1415,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,deployments,local,auth
+          E2E_TAGS: atlas,deployments,auth,local
           E2E_TIMEOUT: 3h
   - name: atlas_deployments_atlas_clusters_e2e
     tags: ["e2e","deployments","atlas"]

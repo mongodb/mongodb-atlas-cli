@@ -18,6 +18,7 @@ package atlas_test
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -33,9 +34,11 @@ import (
 )
 
 const (
-	collectionName = "myCol"
-	databaseName   = "myDB"
-	indexName      = "indexTest"
+	collectionName  = "myCol"
+	databaseName    = "myDB"
+	searchIndexName = "indexTest"
+	vectorSearchDB  = "sample_mflix"
+	vectorSearchCol = "embedded_movies"
 )
 
 func splitOutput(cmd *exec.Cmd) (string, string, error) {
@@ -104,7 +107,8 @@ func TestDeploymentsLocal(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"list",
-			"--type=local",
+			"--type",
+			"local",
 		)
 
 		cmd.Env = os.Environ()
@@ -165,6 +169,17 @@ func TestDeploymentsLocal(t *testing.T) {
 		})
 		req.NoError(err)
 		t.Log(ids)
+
+		b, err := os.ReadFile("sample_embedded_movies.json")
+		req.NoError(err)
+
+		var movies []interface{}
+		err = json.Unmarshal(b, &movies)
+		req.NoError(err)
+
+		ids, err = client.Database(vectorSearchDB).Collection(vectorSearchCol).InsertMany(ctx, movies)
+		req.NoError(err)
+		t.Log(ids)
 	})
 
 	t.Run("Create Search Index", func(t *testing.T) {
@@ -173,7 +188,7 @@ func TestDeploymentsLocal(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"create",
-			indexName,
+			searchIndexName,
 			"--type",
 			"local",
 			"--deploymentName",
@@ -182,7 +197,6 @@ func TestDeploymentsLocal(t *testing.T) {
 			databaseName,
 			"--collection",
 			collectionName,
-			"--type=LOCAL",
 			"-w",
 		)
 
@@ -209,7 +223,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			databaseName,
 			"--collection",
 			collectionName,
-			"--type=LOCAL",
+			"--type",
+			"local",
 		)
 
 		cmd.Env = os.Environ()
@@ -217,7 +232,7 @@ func TestDeploymentsLocal(t *testing.T) {
 		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
 		a := assert.New(t)
-		a.Contains(o, indexName)
+		a.Contains(o, searchIndexName)
 
 		lines := strings.Split(o, "\n")
 		cols := strings.Fields(lines[1])
@@ -233,7 +248,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			indexID,
 			"--deploymentName",
 			deploymentName,
-			"--type=LOCAL",
+			"--type",
+			"local",
 		)
 
 		cmd.Env = os.Environ()
@@ -246,7 +262,7 @@ func TestDeploymentsLocal(t *testing.T) {
 		c, err := myCol.Aggregate(ctx, bson.A{
 			bson.M{
 				"$search": bson.M{
-					"index": indexName,
+					"index": searchIndexName,
 					"text": bson.M{
 						"query": "test1",
 						"path":  "name",
@@ -270,7 +286,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--deploymentName",
 			deploymentName,
 			"--force",
-			"--type=LOCAL",
+			"--type",
+			"local",
 			"--debug",
 		)
 
@@ -285,12 +302,80 @@ func TestDeploymentsLocal(t *testing.T) {
 		a.Contains(o.String(), fmt.Sprintf("Index '%s' deleted", indexID))
 	})
 
+	t.Run("Create vectorSearch Index", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
+			"create",
+			"--deploymentName",
+			deploymentName,
+			"--type",
+			"local",
+			"--file",
+			"sample_vector_search.json",
+			"-w",
+		)
+
+		cmd.Env = os.Environ()
+
+		r, err := cmd.CombinedOutput()
+		out := string(r)
+		req.NoError(err, out)
+		a := assert.New(t)
+		a.Contains(out, "Search index created with ID:")
+	})
+
+	t.Run("Index List vectorSearch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
+			"ls",
+			"--deploymentName",
+			deploymentName,
+			"--db",
+			vectorSearchDB,
+			"--collection",
+			vectorSearchCol,
+			"--type",
+			"local",
+		)
+
+		cmd.Env = os.Environ()
+
+		o, e, err := splitOutput(cmd)
+		req.NoError(err, e)
+		a := assert.New(t)
+		a.Contains(o, "sampleVectorSearch")
+	})
+
+	t.Run("Test vectorSearch Index", func(t *testing.T) {
+		b, err := os.ReadFile("sample_vector_search_pipeline.json")
+		req.NoError(err)
+
+		var pipeline []map[string]interface{}
+		err = json.Unmarshal(b, &pipeline)
+		req.NoError(err)
+
+		c, err := client.Database(vectorSearchDB).Collection(vectorSearchCol).Aggregate(ctx, pipeline)
+		req.NoError(err)
+		var results []bson.M
+		req.NoError(c.All(ctx, &results))
+		t.Log(results)
+		req.Len(results, 3)
+		for _, v := range results {
+			req.Greater(v["score"], float64(0))
+		}
+	})
+
 	t.Run("Pause Deployment", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"pause",
 			deploymentName,
-			"--type=LOCAL",
+			"--type",
+			"local",
 			"--debug",
 		)
 
@@ -307,7 +392,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			deploymentEntity,
 			"start",
 			deploymentName,
-			"--type=LOCAL",
+			"--type",
+			"local",
 			"--debug",
 		)
 
@@ -385,7 +471,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"list",
-			"--type=local",
+			"--type",
+			"local",
 		)
 
 		cmd.Env = os.Environ()
@@ -457,7 +544,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"create",
-			indexName,
+			searchIndexName,
 			"--type",
 			"local",
 			"--deploymentName",
@@ -508,7 +595,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		cmd.Env = os.Environ()
 		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
-		assert.Contains(t, o, indexName)
+		assert.Contains(t, o, searchIndexName)
 
 		lines := strings.Split(o, "\n")
 		cols := strings.Fields(lines[1])
@@ -542,7 +629,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		c, err := myCol.Aggregate(ctx, bson.A{
 			bson.M{
 				"$search": bson.M{
-					"index": indexName,
+					"index": searchIndexName,
 					"text": bson.M{
 						"query": "test1",
 						"path":  "name",
@@ -589,7 +676,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			deploymentEntity,
 			"pause",
 			deploymentName,
-			"--type=LOCAL",
+			"--type",
+			"local",
 			"--debug",
 		)
 
@@ -607,7 +695,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			deploymentEntity,
 			"start",
 			deploymentName,
-			"--type=LOCAL",
+			"--type",
+			"local",
 			"--debug",
 		)
 		cmd.Env = os.Environ()

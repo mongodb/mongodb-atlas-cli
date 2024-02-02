@@ -262,6 +262,7 @@ functions:
           - revision
           - created_at
           - tool_name
+          - unstable
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/
         binary: Powershell -File ./build/package/powershell/windows_post_package_test.ps1
   "docker build repo":
@@ -834,7 +835,9 @@ buildvariants:
       - name: .smoke-test .atlascli .pkg
   - name: pkg_smoke_tests_windows_atlascli
     display_name: "Post packaging smoke tests (Windows / AtlasCLI)"
-    run_on: windows-vsCurrent-2022-small
+    run_on: windows-vsCurrent-small
+    expansions:
+      unstable: -unstable
     tasks:
       - name: .smoke-test .windows
   - name: release_atlascli_repo_test

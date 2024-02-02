@@ -203,7 +203,7 @@ functions:
       type: setup
       params:
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
-        binary: ./build/ci/install_podman.sh
+        binary: ../build/ci/install_podman.sh
   "install pykmip":
     - command: subprocess.exec
       type: setup

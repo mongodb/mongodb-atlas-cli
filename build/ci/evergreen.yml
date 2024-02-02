@@ -206,6 +206,7 @@ functions:
         script: |
           set -Eeou pipefail
           if [ -n "$(which yum 2>/dev/null)" ]; then
+            yum --showduplicates list podman | expand
             sudo yum install -y podman
           elif [ -n "$(which apt-get 2>/dev/null)" ]; then
             sudo apt-get update

@@ -121,7 +121,7 @@ nfpms:
 
 archives:
 - id: linux_archives
-  name_template: mongodb-atlas_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else if eq .Arch "darwin" }}macos{{- else }}{{ .Arch }}{{ end }}
+  name_template: mongodb-atlas_{{ .Version }}_{{- if eq .Os "darwin" }}macos{{- else }}{{ .Os }}{{ end }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [linux]
   <<: &archive_defaults
     files:
@@ -158,6 +158,7 @@ changelog:
     - '^build(deps):'
 signs:
   - signature: "${artifact}_sig"
+    id: test
     cmd: docker run
     args: ["--env-file=signing-envfile", "--rm", "-v", "\"$(pwd)\":\"$(pwd)\"", "-w \"$(pwd)\"", "artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg", "/bin/bash", "-c", "\"gpgloader && gpg --yes -v --armor --detach-sign\""]
     ids:

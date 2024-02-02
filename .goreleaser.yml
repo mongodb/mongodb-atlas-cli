@@ -133,7 +133,7 @@ archives:
   wrap_in_directory: true
   format: tar.gz
 - id: macos
-  name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  name_template: mongodb-atlas_{{ .Version }}_{{- if eq .Os "darwin" }}macos{{- else }}{{ .Os }}{{ end }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [macos]
   <<: *archive_defaults
   format: zip
@@ -157,10 +157,11 @@ changelog:
     - '^task:'
     - '^build(deps):'
 signs:
-  - signature: "${artifact}_sig"
-    id: test
-    cmd: docker run
+  - id: test
+    signature: "${artifact}_sig"
+    cmd: "docker run"
     args: ["--env-file=signing-envfile", "--rm", "-v", "\"$(pwd)\":\"$(pwd)\"", "-w \"$(pwd)\"", "artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg", "/bin/bash", "-c", "\"gpgloader && gpg --yes -v --armor --detach-sign\""]
+    artifacts: all
     ids:
       - linux_archives
       - linux_package

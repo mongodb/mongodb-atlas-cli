@@ -1385,6 +1385,38 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,deployments,local
           E2E_TIMEOUT: 3h
+  - name: atlas_deployments_local_auth_e2e
+    tags: ["e2e","required","deployments","local","run"]
+    must_have_test_results: true
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "install podman"
+      - command: shell.exec
+        type: setup
+        params:
+          shell: bash
+          script: |
+            set -e
+            cat /proc/sys/fs/inotify/max_user_watches
+            cat /proc/sys/fs/inotify/max_user_instances
+            echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
+            cat /proc/sys/fs/inotify/max_user_instances
+      - func: "e2e test"
+        timeout_secs: 11400 # 3 hours 10 minutes
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,deployments,local,auth
+          E2E_TIMEOUT: 3h
   - name: atlas_deployments_atlas_clusters_e2e
     tags: ["e2e","deployments","atlas"]
     must_have_test_results: true

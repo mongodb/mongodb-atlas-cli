@@ -159,8 +159,8 @@ changelog:
 signs:
   - id: test
     signature: "${artifact}_sig"
-    cmd: "docker run"
-    args: ["--env-file=signing-envfile", "--rm", "-v", "\"$(pwd)\":\"$(pwd)\"", "-w \"$(pwd)\"", "artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg", "/bin/bash", "-c", "\"gpgloader && gpg --yes -v --armor --detach-sign\""]
+    cmd: "docker"
+    args: ["run", "--env-file=signing-envfile", "--rm", "-v", "\"$(pwd)\":\"$(pwd)\"", "-w \"$(pwd)\"", "artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg", "/bin/bash", "-c", "\"gpgloader && gpg --yes -v --armor --detach-sign\""]
     artifacts: all
     ids:
       - linux_archives

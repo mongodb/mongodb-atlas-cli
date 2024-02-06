@@ -26,8 +26,8 @@ fi
 if [[ -f "$EXE_FILE" && -f "$MSI_FILE" ]]; then
 	echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
 
-	echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME_MONGOCLI}" > .env
-	echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD_MONGOCLI}" >> .env
+	echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" > .env
+	echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> .env
 
 	echo "signing $EXE_FILE"
 	podman run \

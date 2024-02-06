@@ -1,4 +1,6 @@
-package cli
+//go:build e2e || generic
+
+package e2e
 
 import (
 	"fmt"
@@ -6,20 +8,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/templates_test/astparsing"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/templates_test/templateparsing"
+	"github.com/mongodb/mongodb-atlas-cli/test/e2e/templates_test/astparsing"
+	"github.com/mongodb/mongodb-atlas-cli/test/e2e/templates_test/templateparsing"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestTemplates(t *testing.T) {
-	//pkgs, err := astparsing.LoadPackagesRecursive("../atlas/metrics/databases/describe.go")
-	//pkgs, err := astparsing.LoadPackagesRecursive("../mongocli/performanceadvisor/suggestedindexes/list.go")
-
-	// Still broken
-	//pkgs, err := astparsing.LoadPackagesRecursive("../atlas/privateendpoints/datalake/aws/create.go")
-	//pkgs, err := astparsing.LoadPackagesRecursive("../atlas/datafederation/privateendpoints/create.go")
-
-	pkgs, err := astparsing.LoadPackagesRecursive("..")
+	pkgs, err := astparsing.LoadPackagesRecursive("../../../internal/cli/")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -57,5 +52,5 @@ func TestTemplates(t *testing.T) {
 		}
 	}
 
-	assert.True(t, len(templateValidationErrors) == 0, strings.Join(templateValidationErrors, "\n\n"))
+	assert.Empty(t, templateValidationErrors, strings.Join(templateValidationErrors, "\n\n"))
 }

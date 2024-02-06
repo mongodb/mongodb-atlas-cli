@@ -7,8 +7,12 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/templates_test/astparsing"
+	"github.com/mongodb/mongodb-atlas-cli/test/e2e/templates_test/astparsing"
 	"golang.org/x/tools/go/packages"
+)
+
+const (
+	arrayBreadCrumb = "[]"
 )
 
 type ValidationResult struct {
@@ -40,15 +44,15 @@ func (c *TemplateCallTree) Validate(pkg *packages.Package, typeInfo types.Type) 
 	result := NewValidationResult()
 	if err := c.validateInner(pkg, result, "", typeInfo); err != nil {
 		return nil, err
-	} else {
-		return result, nil
 	}
+
+	return result, nil
 }
 
 func (c *TemplateCallTree) validateInner(pkg *packages.Package, result *ValidationResult, breadCrumb string, typeInfo types.Type) error {
 	switch typeInfo := typeInfo.(type) {
 	case (*types.Basic):
-		return c.validateBasic(result, breadCrumb, typeInfo)
+		return c.validateBasic(result, breadCrumb)
 	case (*types.Map):
 		return c.validateMap(pkg, result, breadCrumb, typeInfo)
 	case (*types.Named):
@@ -63,9 +67,9 @@ func (c *TemplateCallTree) validateInner(pkg *packages.Package, result *Validati
 	}
 }
 
-func (c *TemplateCallTree) validateBasic(result *ValidationResult, breadCrumb string, sliceInfo *types.Basic) error {
+func (c *TemplateCallTree) validateBasic(result *ValidationResult, breadCrumb string) error {
 	if c.listType != nil || (c.structType != nil && len(c.structType.fields) != 0) {
-		result.AddErrorMessage(breadCrumb, "expecting a complext type, but received a basic type")
+		result.AddErrorMessage(breadCrumb, "expecting a complexity type, but received a basic type")
 	}
 
 	return nil
@@ -84,15 +88,11 @@ func (c *TemplateCallTree) validateMap(pkg *packages.Package, result *Validation
 	}
 
 	// Validate both keys and values recursively
-	if err := c.listType.validateInner(pkg, result, breadCrumb+"[]", sliceInfo.Key()); err != nil {
+	if err := c.listType.validateInner(pkg, result, breadCrumb+arrayBreadCrumb, sliceInfo.Key()); err != nil {
 		return err
 	}
 
-	if err := c.listType.validateInner(pkg, result, breadCrumb+"[]", sliceInfo.Elem()); err != nil {
-		return err
-	}
-
-	return nil
+	return c.listType.validateInner(pkg, result, breadCrumb+arrayBreadCrumb, sliceInfo.Elem())
 }
 
 func (c *TemplateCallTree) validateSlice(pkg *packages.Package, result *ValidationResult, breadCrumb string, sliceInfo *types.Slice) error {
@@ -108,7 +108,7 @@ func (c *TemplateCallTree) validateSlice(pkg *packages.Package, result *Validati
 	}
 
 	// Validate recursively
-	return c.listType.validateInner(pkg, result, breadCrumb+"[]", sliceInfo.Elem())
+	return c.listType.validateInner(pkg, result, breadCrumb+arrayBreadCrumb, sliceInfo.Elem())
 }
 
 func (c *TemplateCallTree) validateStruct(pkg *packages.Package, result *ValidationResult, breadCrumb string, namedTypeInfo *types.Named) error {
@@ -124,7 +124,7 @@ func (c *TemplateCallTree) validateStruct(pkg *packages.Package, result *Validat
 	}
 
 	// Get template fields on struct
-	structStructure, err := getTemplateFields(pkg, namedTypeInfo)
+	structStructure, err := getTemplateFields(namedTypeInfo)
 	if err != nil {
 		return err
 	}
@@ -132,19 +132,19 @@ func (c *TemplateCallTree) validateStruct(pkg *packages.Package, result *Validat
 	// Check if all fields are valid
 	for key, field := range c.structType.fields {
 		// Templates ignore cases
-		key := strings.ToLower(key)
+		lowerCaseKey := strings.ToLower(key)
 
 		// Get the field on the struct
-		structField := structStructure[key]
+		structField := structStructure[lowerCaseKey]
 
 		// If we don't find the field the tempalate and struct don't match
 		if structField == nil {
-			result.AddErrorMessage(breadCrumb, fmt.Sprintf("field '%v' is missing", key))
+			result.AddErrorMessage(breadCrumb, fmt.Sprintf("field '%v' is missing", lowerCaseKey))
 			return nil
 		}
 
 		// In case we find it, validate the field
-		err := field.validateInner(pkg, result, breadCrumb+"."+key, structField)
+		err := field.validateInner(pkg, result, breadCrumb+"."+lowerCaseKey, structField)
 		if err != nil {
 			return err
 		}
@@ -153,7 +153,7 @@ func (c *TemplateCallTree) validateStruct(pkg *packages.Package, result *Validat
 	return nil
 }
 
-func getTemplateFields(pkg *packages.Package, namedTypeInfo *types.Named) (map[string]types.Type, error) {
+func getTemplateFields(namedTypeInfo *types.Named) (map[string]types.Type, error) {
 	structInfo, ok := namedTypeInfo.Underlying().(*types.Struct)
 	if !ok {
 		return nil, errors.New("expecting underlying type to be a struct")
@@ -172,7 +172,7 @@ func getTemplateFields(pkg *packages.Package, namedTypeInfo *types.Named) (map[s
 				return nil, err
 			}
 
-			subStructure, err := getTemplateFields(pkg, ty.NamedStruct)
+			subStructure, err := getTemplateFields(ty.NamedStruct)
 			if err != nil {
 				return nil, err
 			}
@@ -180,12 +180,10 @@ func getTemplateFields(pkg *packages.Package, namedTypeInfo *types.Named) (map[s
 			for k, v := range subStructure {
 				structStructure[k] = v
 			}
-		} else {
+		} else if firstRuneIsCapitalized(fieldName) {
 			// Only check public fields
-			if firstRuneIsCapitalized(fieldName) {
-				lowerCaseFieldName := strings.ToLower(fieldName)
-				structStructure[lowerCaseFieldName] = field.Type()
-			}
+			lowerCaseFieldName := strings.ToLower(fieldName)
+			structStructure[lowerCaseFieldName] = field.Type()
 		}
 	}
 

@@ -187,9 +187,3 @@ func getStructMethods(pkg *packages.Package, commandOptsStruct *ast.TypeSpec) []
 
 	return methods
 }
-
-type StructMethod struct {
-	funcDecl          *ast.FuncDecl
-	ident             *ast.Ident
-	isPointerReceiver bool
-}

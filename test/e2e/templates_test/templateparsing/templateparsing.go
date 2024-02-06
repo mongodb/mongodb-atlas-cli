@@ -163,7 +163,7 @@ func ParseTemplate(template string) (*TemplateCallTree, error) {
 type TreeBuilder func(*TemplateCallTree, parse.Node) error
 
 func buildTreeRecursive(root *TemplateCallTree, node parse.Node) error {
-	var nextInner TreeBuilder = nil
+	var nextInner TreeBuilder
 
 	nextInner = buildTreeFunc(func(r *TemplateCallTree, n parse.Node) error {
 		return nextInner(r, n)
@@ -172,7 +172,6 @@ func buildTreeRecursive(root *TemplateCallTree, node parse.Node) error {
 	return nextInner(root, node)
 }
 
-//nolint:gocyclo
 func buildTreeFunc(next TreeBuilder) TreeBuilder {
 	return func(root *TemplateCallTree, node parse.Node) error {
 		if IsNil(node) {

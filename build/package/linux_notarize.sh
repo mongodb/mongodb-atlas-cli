@@ -20,22 +20,25 @@ set -Eeou pipefail
 # This depends  on binaries being generated in a goreleaser manner and gon being set up.
 # goreleaser should already take care of calling this script as a hook.
 
-
-#echo "here2 ${LINUX_FILE}"
-if [[ -f "${LINUX_FILE}" ]]; then
-  echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
-
+if [ "${TOOL_NAME}" == "atlascli" ]; then
   echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" >> "signing-envfile"
-	echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> "signing-envfile"
+  echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> "signing-envfile"
+else
+  echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME_MONGOCLI}" >> "signing-envfile"
+  echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD_MONGOCLI}" >> "signing-envfile"
+fi
 
-	echo "notarizing Linux binary ${LINUX_FILE}"
-  podman run \
-    --env-file=signing-envfile \
-    --rm \
-    -v "$(pwd)":"$(pwd)" \
-    -w "$(pwd)" \
-    artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg \
-    /bin/bash -c "gpgloader && gpg --yes -v --armor --detach-sign ${LINUX_FILE}"
+if [[ -f "${artifact:?}" ]]; then
+  echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
+  touch "${artifact:?}.sig"
+	echo "notarizing Linux binary ${artifact}"
+#  podman run \
+#    --env-file=signing-envfile \
+#    --rm \
+#    -v "$(pwd)":"$(pwd)" \
+#    -w "$(pwd)" \
+#    artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg \
+#    /bin/bash -c "gpgloader && gpg --yes -v --armor --detach-sign ${artifact}"
 fi
 
 echo "Signing completed."

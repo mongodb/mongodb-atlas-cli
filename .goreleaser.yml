@@ -159,16 +159,11 @@ changelog:
 signs:
   - id: linux_artifacts
     cmd: "./build/package/linux_notarize.sh"
-#    args: ["run", "--env-file=signing-envfile", "--rm", "-v ${VOLUME}:${VOLUME}", "-w ${VOLUME}", "artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg", "/bin/bash", "-c", "\"gpgloader && gpg --yes -v --armor --detach-sign\""]
     ids:
       - linux_archives
       - linux_package
     env:
-      - VERSION={{ .Version }}
-      - TOOL_NAME="atlascli"
-#      - ARTIFACTORY_USERNAME={{.Env.ARTIFACTORY_USERNAME}}
-#      - ARTIFACTORY_PASSWORD={{.Env.ARTIFACTORY_PASSWORD}}
-      - LINUX_FILE="${artifact}"
+      - TOOL_NAME=atlascli
     artifacts: all
     output: true
 #publishers:

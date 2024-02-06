@@ -61,12 +61,13 @@ archives:
   wrap_in_directory: true
   format: tar.gz
 - id: macos
-  name_template: mongocli_{{ .Version }}_{{- if eq .Os "darwin" }}macos{{- else }}{{ .Os }}{{ end }}_{{ .Arch }}
+  name_template: mongocli_{{ .Version }}_{{- if eq .Os "darwin" }}macos{{- else }}{{ .Os }}{{ end }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [macos]
   <<: *archive_defaults
   format: zip
   wrap_in_directory: false
 - id: windows
+  name_template: mongocli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [windows]
   <<: *archive_defaults
   wrap_in_directory: false

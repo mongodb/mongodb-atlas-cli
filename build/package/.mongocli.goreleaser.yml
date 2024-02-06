@@ -114,5 +114,5 @@ release:
   prerelease: auto
   name_template: "MongoDB CLI {{.Version}}"
   extra_files:
-    - glob: ./dist/*.msi
+    - glob: ./bin/*.msi
     - glob: ./dist/*.asc

@@ -2,6 +2,7 @@ package templateparsing
 
 import (
 	"errors"
+	"fmt"
 	"go/types"
 	"strings"
 	"unicode"
@@ -10,77 +11,122 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
-func (c *TemplateCallTree) Validate(pkg *packages.Package, typeInfo types.Type) (bool, error) {
-	switch typeInfo := typeInfo.(type) {
-	case (*types.Basic):
-		return c.validateBasic(typeInfo)
-	case (*types.Map):
-		return c.validateMap(pkg, typeInfo)
-	case (*types.Named):
-		return c.validateStruct(pkg, typeInfo)
-	case (*types.Pointer):
-		return c.Validate(pkg, typeInfo.Elem())
-	case (*types.Slice):
-		return c.validateSlice(pkg, typeInfo)
+type ValidationResult struct {
+	isValid       bool
+	errorMessages []string
+}
 
-	default:
-		return false, errors.New("unsupported type")
+func NewValidationResult() *ValidationResult {
+	return &ValidationResult{
+		isValid:       true,
+		errorMessages: make([]string, 0),
 	}
 }
 
-func (c *TemplateCallTree) validateBasic(sliceInfo *types.Basic) (bool, error) {
-	return c.listType == nil || c.structType == nil || (c.structType != nil && len(c.structType.fields) == 0), nil
+func (r *ValidationResult) AddErrorMessage(breadCrumb string, message string) {
+	r.errorMessages = append(r.errorMessages, fmt.Sprintf("path: '%v', error: %v", breadCrumb, message))
+	r.isValid = false
 }
 
-func (c *TemplateCallTree) validateMap(pkg *packages.Package, sliceInfo *types.Map) (bool, error) {
-	// We expected a list, got a struct
+func (r *ValidationResult) IsValid() bool {
+	return r.isValid
+}
+
+func (r *ValidationResult) ErrorMessages() []string {
+	return r.errorMessages
+}
+
+func (c *TemplateCallTree) Validate(pkg *packages.Package, typeInfo types.Type) (*ValidationResult, error) {
+	result := NewValidationResult()
+	if err := c.validateInner(pkg, result, "", typeInfo); err != nil {
+		return nil, err
+	} else {
+		return result, nil
+	}
+}
+
+func (c *TemplateCallTree) validateInner(pkg *packages.Package, result *ValidationResult, breadCrumb string, typeInfo types.Type) error {
+	switch typeInfo := typeInfo.(type) {
+	case (*types.Basic):
+		return c.validateBasic(result, breadCrumb, typeInfo)
+	case (*types.Map):
+		return c.validateMap(pkg, result, breadCrumb, typeInfo)
+	case (*types.Named):
+		return c.validateStruct(pkg, result, breadCrumb, typeInfo)
+	case (*types.Pointer):
+		return c.validateInner(pkg, result, breadCrumb, typeInfo.Elem())
+	case (*types.Slice):
+		return c.validateSlice(pkg, result, breadCrumb, typeInfo)
+
+	default:
+		return errors.New("unsupported type")
+	}
+}
+
+func (c *TemplateCallTree) validateBasic(result *ValidationResult, breadCrumb string, sliceInfo *types.Basic) error {
+	if c.listType != nil || (c.structType != nil && len(c.structType.fields) != 0) {
+		result.AddErrorMessage(breadCrumb, "expecting a complext type, but received a basic type")
+	}
+
+	return nil
+}
+
+func (c *TemplateCallTree) validateMap(pkg *packages.Package, result *ValidationResult, breadCrumb string, sliceInfo *types.Map) error {
+	// We expected a struct, did not get a struct
 	if c.structType != nil {
-		return false, nil
+		result.AddErrorMessage(breadCrumb, "expecting a struct, did not get a struct")
+		return nil
 	}
 
 	// We don't need to drill any deeper, which means our list is valid
 	if c.listType == nil {
-		return true, nil
+		return nil
 	}
 
 	// Validate both keys and values recursively
-	if valid, err := c.listType.Validate(pkg, sliceInfo.Key()); !valid || err != nil {
-		return valid, err
+	if err := c.listType.validateInner(pkg, result, breadCrumb+"[]", sliceInfo.Key()); err != nil {
+		return err
 	}
 
-	return c.listType.Validate(pkg, sliceInfo.Elem())
+	if err := c.listType.validateInner(pkg, result, breadCrumb+"[]", sliceInfo.Elem()); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (c *TemplateCallTree) validateSlice(pkg *packages.Package, sliceInfo *types.Slice) (bool, error) {
+func (c *TemplateCallTree) validateSlice(pkg *packages.Package, result *ValidationResult, breadCrumb string, sliceInfo *types.Slice) error {
 	// We expected a list, got a struct
 	if c.structType != nil {
-		return false, nil
+		result.AddErrorMessage(breadCrumb, "expecting a list, got a struct instead")
+		return nil
 	}
 
 	// We don't need to drill any deeper, which means our list is valid
 	if c.listType == nil {
-		return true, nil
+		return nil
 	}
 
 	// Validate recursively
-	return c.listType.Validate(pkg, sliceInfo.Elem())
+	return c.listType.validateInner(pkg, result, breadCrumb+"[]", sliceInfo.Elem())
 }
 
-func (c *TemplateCallTree) validateStruct(pkg *packages.Package, namedTypeInfo *types.Named) (bool, error) {
+func (c *TemplateCallTree) validateStruct(pkg *packages.Package, result *ValidationResult, breadCrumb string, namedTypeInfo *types.Named) error {
 	// We expected a struct, got a list
 	if c.listType != nil {
-		return false, nil
+		result.AddErrorMessage(breadCrumb, "expecting a struct, got a list instead")
+		return nil
 	}
 
 	// We don't need to drill any deeper, which means our struct is valid
 	if c.structType == nil || len(c.structType.fields) == 0 {
-		return true, nil
+		return nil
 	}
 
 	// Get template fields on struct
 	structStructure, err := getTemplateFields(pkg, namedTypeInfo)
 	if err != nil {
-		return false, err
+		return err
 	}
 
 	// Check if all fields are valid
@@ -93,17 +139,18 @@ func (c *TemplateCallTree) validateStruct(pkg *packages.Package, namedTypeInfo *
 
 		// If we don't find the field the tempalate and struct don't match
 		if structField == nil {
-			return false, nil
+			result.AddErrorMessage(breadCrumb, fmt.Sprintf("field '%v' is missing", key))
+			return nil
 		}
 
 		// In case we find it, validate the field
-		valid, err := field.Validate(pkg, structField)
-		if !valid || err != nil {
-			return valid, err
+		err := field.validateInner(pkg, result, breadCrumb+"."+key, structField)
+		if err != nil {
+			return err
 		}
 	}
 
-	return true, nil
+	return nil
 }
 
 func getTemplateFields(pkg *packages.Package, namedTypeInfo *types.Named) (map[string]types.Type, error) {

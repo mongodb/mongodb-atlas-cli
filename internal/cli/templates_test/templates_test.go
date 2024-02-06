@@ -3,10 +3,12 @@ package cli
 import (
 	"fmt"
 	"log"
+	"strings"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/templates_test/astparsing"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/templates_test/templateparsing"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTemplates(t *testing.T) {
@@ -23,6 +25,7 @@ func TestTemplates(t *testing.T) {
 	}
 
 	builderFuncs := astparsing.LoadCommandBuilderInfos(pkgs)
+	templateValidationErrors := make([]string, 0)
 
 	for _, builderFunc := range builderFuncs {
 		templateTree, err := templateparsing.ParseTemplate(builderFunc.TemplateValue)
@@ -30,24 +33,29 @@ func TestTemplates(t *testing.T) {
 			log.Fatal(err)
 		}
 
-		valid, err := templateTree.Validate(builderFunc.Pkg, builderFunc.TemplateType.NamedStruct)
+		validationResult, err := templateTree.Validate(builderFunc.Pkg, builderFunc.TemplateType.NamedStruct)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		errorMessage := "Template and struct don't match:\n"
-		errorMessage += "struct:\n"
+
+		errorMessage += "Error messages:\n"
+		for _, message := range validationResult.ErrorMessages() {
+			errorMessage += fmt.Sprintf("- %v\n", message)
+		}
+
+		errorMessage += "\nStruct:\n"
 		errorMessage += fmt.Sprintf("- location: %v\n", builderFunc.Pkg.Fset.Position(builderFunc.TemplateType.NamedStruct.Obj().Pos()))
 
-		errorMessage += "template:\n"
+		errorMessage += "\nTemplate:\n"
 		errorMessage += fmt.Sprintf("- location: %v\n", builderFunc.Pkg.Fset.Position(builderFunc.CommandOptsStruct.Pos()))
 		errorMessage += fmt.Sprintf("- value: %v\n", builderFunc.TemplateValue)
 
-		errorMessage += fmt.Sprintf("- parsed representation:\n%v\n", templateTree.Fprint(1))
-
-		if !valid {
-			log.Println(errorMessage)
+		if !validationResult.IsValid() {
+			templateValidationErrors = append(templateValidationErrors, errorMessage)
 		}
-		//assert.True(t, valid, errorMessage)
 	}
+
+	assert.True(t, len(templateValidationErrors) == 0, strings.Join(templateValidationErrors, "\n\n"))
 }

@@ -98,12 +98,13 @@ changelog:
     - '^build(deps):'
 signs:
   - id: linux_artifacts
+    signature: "${artifact}.asc"
     cmd: "./build/package/linux_notarize.sh"
     ids:
       - linux_archives
       - linux_package
     env:
-      - TOOL_NAME=atlascli
+      - TOOL_NAME=mongocli
     artifacts: all
     output: true
 release:

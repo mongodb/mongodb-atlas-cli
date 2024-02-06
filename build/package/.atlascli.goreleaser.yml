@@ -123,7 +123,7 @@ changelog:
     - '^build(deps):'
 signs:
   - id: linux_artifacts
-    signature: "${artifact}.asc"
+    signature: "${artifact}.sig"
     cmd: "./build/package/linux_notarize.sh"
     ids:
       - linux_archives
@@ -138,4 +138,4 @@ release:
   name_template: "MongoDB Atlas CLI {{.Version}}"
   extra_files:
     - glob: ./bin/*.msi
-    - glob: ./dist/*.asc
+    - glob: ./dist/*.sig

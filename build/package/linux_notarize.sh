@@ -39,7 +39,7 @@ if [[ -f "${artifact:?}" ]]; then
     -v "$(pwd)":"$(pwd)" \
     -w "$(pwd)" \
     artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg \
-    /bin/bash -c "gpgloader && gpg --yes -v --armor --detach-sign ${artifact}"
+    /bin/bash -c "gpgloader && gpg --yes -v --armor -o ${artifact}.sig --detach-sign ${artifact}"
 fi
 
 echo "Signing of ${artifact} completed."

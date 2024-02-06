@@ -31,13 +31,13 @@ builds:
     id: windows
     goos: [windows]
     goarch: [amd64]
-#    hooks:
-#      post:
-#        - cmd: ./build/package/windows_notarize.sh
-#          env:
-#            - TOOL_NAME=mongocli
-#            - VERSION={{ .Version }}
-#          output: true
+    hooks:
+      post:
+        - cmd: ./build/package/windows_notarize.sh
+          env:
+            - TOOL_NAME=mongocli
+            - VERSION={{ .Version }}
+          output: true
 gomod: # https://goreleaser.com/customization/verifiable_builds/
   # Proxy a module from proxy.golang.org, making the builds verifiable.
   # This will only be effective if running against a tag. Snapshots will ignore

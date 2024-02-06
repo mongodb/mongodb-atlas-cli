@@ -57,7 +57,7 @@ require (
 	k8s.io/apiserver v0.29.1
 	k8s.io/client-go v0.29.1
 	sigs.k8s.io/controller-runtime v0.17.0
-	sigs.k8s.io/kind v0.20.0
+	sigs.k8s.io/kind v0.21.0
 	sigs.k8s.io/yaml v1.4.0
 )
 

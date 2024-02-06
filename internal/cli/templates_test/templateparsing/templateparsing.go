@@ -153,103 +153,134 @@ func ParseTemplate(template string) (*TemplateCallTree, error) {
 	templ := parseTree["templ"]
 	root := NewTemplateCallTree()
 
-	if err := buildTree(root, templ.Root); err != nil {
+	if err := buildTreeRecursive(root, templ.Root); err != nil {
 		return nil, err
 	}
 
 	return root, nil
 }
 
+type TreeBuilder func(*TemplateCallTree, parse.Node) error
+
+func buildTreeRecursive(root *TemplateCallTree, node parse.Node) error {
+	var nextInner TreeBuilder = nil
+
+	nextInner = buildTreeFunc(func(r *TemplateCallTree, n parse.Node) error {
+		return nextInner(r, n)
+	})
+
+	return nextInner(root, node)
+}
+
 //nolint:gocyclo
-func buildTree(root *TemplateCallTree, node parse.Node) error {
-	if IsNil(node) {
-		return nil
-	}
+func buildTreeFunc(next TreeBuilder) TreeBuilder {
+	return func(root *TemplateCallTree, node parse.Node) error {
+		if IsNil(node) {
+			return nil
+		}
 
-	buildAndMergeTrees := func(nodes ...parse.Node) error {
-		for _, node := range nodes {
-			if err := buildTree(root, node); err != nil {
+		buildAndMergeTrees := func(nodes ...parse.Node) error {
+			for _, node := range nodes {
+				if err := next(root, node); err != nil {
+					return err
+				}
+			}
+
+			return nil
+		}
+
+		switch node := node.(type) {
+		case *parse.ListNode:
+			return buildAndMergeTrees(node.Nodes...)
+		case *parse.RangeNode:
+			mainRoot, err := buildRangeNodeMainRoot(root, node)
+			if err != nil {
 				return err
 			}
+
+			if err := next(mainRoot, node.List); err != nil {
+				return err
+			}
+
+			if err := next(root, node.ElseList); err != nil {
+				return err
+			}
+		case *parse.BranchNode:
+			return buildAndMergeTrees(node.Pipe, node.List, node.ElseList)
+		case *parse.PipeNode:
+			indexCommandFields, err := parseIndexCommand(node)
+			if err == nil {
+				return buildTreeFunc(func(r *TemplateCallTree, n parse.Node) error {
+					return next(r.List(), nil)
+				})(root, indexCommandFields)
+			}
+
+			for _, n := range node.Cmds {
+				if err := buildAndMergeTrees(n); err != nil {
+					return err
+				}
+			}
+
+			for _, n := range node.Decl {
+				if err := buildAndMergeTrees(n); err != nil {
+					return err
+				}
+			}
+		case *parse.ActionNode:
+			return next(root, node.Pipe)
+		case *parse.IfNode:
+			return buildAndMergeTrees(&node.BranchNode)
+		case *parse.CommandNode:
+			return buildAndMergeTrees(node.Args...)
+		case *parse.FieldNode:
+			// Build the structure from a string array
+			return next(buildFieldStructure(root, node.Ident), nil)
+		case *parse.ChainNode:
+			// Get the result of the first part of the chain and then chain the fields to it
+			// Example: (index .field1.field2).chain1.chain2
+			return buildTreeFunc(func(newRoot *TemplateCallTree, n parse.Node) error {
+				return next(buildFieldStructure(newRoot, node.Field), nil)
+			})(root, node.Node)
+		case *parse.DotNode:
+			// NOOP outside of range
+			return nil
+		case *parse.TextNode:
+			// we don't care about text nodes (plain text)
+			return nil
+		case *parse.StringNode:
+			// we don't care about string nodes (string constants)
+			return nil
+		case *parse.IdentifierNode:
+			// we don't care about identifier nodes, they always contain function names
+			return nil
+		case *parse.VariableNode:
+			// this is the left side of an assignment, we don't care about variable names
+			return nil
+		case *parse.NumberNode:
+			// we don't care about number constants nodes (string constants)
+			return nil
+		default:
+			return errors.New("unsupported node type")
 		}
 
 		return nil
 	}
+}
 
-	switch node := node.(type) {
-	case *parse.ListNode:
-		return buildAndMergeTrees(node.Nodes...)
-	case *parse.RangeNode:
-		mainRoot, err := buildRangeNodeMainRoot(root, node)
-		if err != nil {
-			return err
+func buildFieldStructure(root *TemplateCallTree, fields []string) *TemplateCallTree {
+	c := root
+
+	for _, ident := range fields {
+		if c.Struct().fields[ident] == nil {
+			t := NewTemplateCallTree()
+			c.Struct().fields[ident] = t
+			c = t
+		} else {
+			c = c.Struct().fields[ident]
 		}
-
-		if err := buildTree(mainRoot, node.List); err != nil {
-			return err
-		}
-
-		if err := buildTree(root, node.ElseList); err != nil {
-			return err
-		}
-	case *parse.BranchNode:
-		return buildAndMergeTrees(node.Pipe, node.List, node.ElseList)
-	case *parse.PipeNode:
-		for _, n := range node.Cmds {
-			if err := buildAndMergeTrees(n); err != nil {
-				return err
-			}
-		}
-
-		for _, n := range node.Decl {
-			if err := buildAndMergeTrees(n); err != nil {
-				return err
-			}
-		}
-	case *parse.ActionNode:
-		return buildTree(root, node.Pipe)
-	case *parse.IfNode:
-		return buildAndMergeTrees(&node.BranchNode)
-	case *parse.CommandNode:
-		return buildAndMergeTrees(node.Args...)
-	case *parse.DotNode:
-		// NOOP outside of range
-		return nil
-	case *parse.FieldNode:
-		c := root
-
-		for _, ident := range node.Ident {
-			if c.Struct().fields[ident] == nil {
-				t := NewTemplateCallTree()
-				c.Struct().fields[ident] = t
-				c = t
-			} else {
-				c = c.Struct().fields[ident]
-			}
-		}
-
-		return nil
-
-	case *parse.TextNode:
-		// we don't care about text nodes (plain text)
-		return nil
-	case *parse.StringNode:
-		// we don't care about string nodes (string constants)
-		return nil
-	case *parse.IdentifierNode:
-		// we don't care about identifier nodes, they always contain function names
-		return nil
-	case *parse.VariableNode:
-		// this is the left side of an assignment, we don't care about variable names
-		return nil
-	case *parse.NumberNode:
-		// we don't care about number constants nodes (string constants)
-		return nil
-	default:
-		return errors.New("unsupported node type")
 	}
 
-	return nil
+	return c
 }
 
 func buildRangeNodeMainRoot(root *TemplateCallTree, node *parse.RangeNode) (*TemplateCallTree, error) {
@@ -291,4 +322,36 @@ func pipelineToIdentifiers(pipeline *parse.PipeNode) ([]string, error) {
 
 func IsNil(i interface{}) bool {
 	return i == nil || (reflect.ValueOf(i).Kind() == reflect.Ptr && reflect.ValueOf(i).IsNil())
+}
+
+func parseIndexCommand(pipeNode *parse.PipeNode) (*parse.FieldNode, error) {
+	const indexCmdNumber = 1
+	const indexCmdArgsNumber = 3
+
+	if len(pipeNode.Decl) != 0 {
+		return nil, errors.New("expected 0 decls")
+	}
+
+	if len(pipeNode.Cmds) != indexCmdNumber {
+		return nil, errors.New("expected 3 cmds")
+	}
+
+	cmd := pipeNode.Cmds[0]
+	if len(cmd.Args) != indexCmdArgsNumber {
+		return nil, errors.New("expected 3 cmds")
+	}
+
+	indexIdentifier, identifierOk := cmd.Args[0].(*parse.IdentifierNode)
+	fieldNode, fieldNodeOk := cmd.Args[1].(*parse.FieldNode)
+	_, numberNodeOk := cmd.Args[2].(*parse.NumberNode)
+
+	if !identifierOk || !fieldNodeOk || !numberNodeOk {
+		return nil, errors.New("not the required arguments")
+	}
+
+	if indexIdentifier.Ident != "index" {
+		return nil, errors.New("not a call to index")
+	}
+
+	return fieldNode, nil
 }

@@ -13,8 +13,8 @@ import (
 )
 
 type NamedStructInfo struct {
-	namedStruct *types.Named
-	structInfo  *types.Struct
+	NamedStruct *types.Named
+	StructInfo  *types.Struct
 }
 
 // Checks if a struct has a composite field
@@ -121,7 +121,7 @@ func getReturnTypeOfMethodReturningErrorTuple(pkg *packages.Package, argAssignSt
 			return nil, errors.New("expecting 2 return parameters")
 		}
 
-		returnType, err := getUnderlyingStruct(results.At(0).Type())
+		returnType, err := GetUnderlyingStruct(results.At(0).Type())
 		if err != nil {
 			return nil, err
 		}
@@ -132,10 +132,10 @@ func getReturnTypeOfMethodReturningErrorTuple(pkg *packages.Package, argAssignSt
 	return nil, nil
 }
 
-func getUnderlyingStruct(v types.Type) (*NamedStructInfo, error) {
+func GetUnderlyingStruct(v types.Type) (*NamedStructInfo, error) {
 	switch returnType := v.(type) {
 	case *types.Pointer:
-		return getUnderlyingStruct(returnType.Elem())
+		return GetUnderlyingStruct(returnType.Elem())
 	case *types.Named:
 		underlyingStruct, ok := returnType.Underlying().(*types.Struct)
 		if !ok {
@@ -143,8 +143,8 @@ func getUnderlyingStruct(v types.Type) (*NamedStructInfo, error) {
 		}
 
 		return &NamedStructInfo{
-			namedStruct: returnType,
-			structInfo:  underlyingStruct,
+			NamedStruct: returnType,
+			StructInfo:  underlyingStruct,
 		}, nil
 	default:
 		return nil, fmt.Errorf("unsupported type: %v",
@@ -186,4 +186,10 @@ func getStructMethods(pkg *packages.Package, commandOptsStruct *ast.TypeSpec) []
 	}
 
 	return methods
+}
+
+type StructMethod struct {
+	funcDecl          *ast.FuncDecl
+	ident             *ast.Ident
+	isPointerReceiver bool
 }

@@ -23,7 +23,6 @@ set -Eeou pipefail
 
 #echo "here2 ${LINUX_FILE}"
 if [[ -f "${LINUX_FILE}" ]]; then
-#  echo "YESSSSSSSSSSS here2"
   echo "${ARTIFACTORY_PASSWORD}" | docker login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
 
   echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" >> "signing-envfile"

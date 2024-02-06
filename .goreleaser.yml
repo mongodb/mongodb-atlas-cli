@@ -160,13 +160,13 @@ signs:
   - id: test
     signature: "${artifact}_sig"
     cmd: "podman"
-    args: ["run", "--env-file=signing-envfile", "--rm", "-v \"$(pwd)\":\"$(pwd)\", -w \"$(pwd)\"", "artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg", "/bin/bash", "-c", "\"gpgloader && gpg --yes -v --armor --detach-sign\""]
+    args: ["run", "--env-file=signing-envfile", "--rm", "-v ${VOLUME}:${VOLUME}", "-w ${VOLUME}", "artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg", "/bin/bash", "-c", "\"gpgloader && gpg --yes -v --armor --detach-sign\""]
     ids:
       - linux_archives
       - linux_package
     output: true
     env:
-      - VOLUME=pwd
+      - VOLUME=$(pwd)
     artifacts: all
 #publishers:
 #  - name: my-publisher

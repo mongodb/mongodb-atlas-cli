@@ -159,8 +159,8 @@ changelog:
 signs:
   - id: test
     signature: "${artifact}_sig"
-    cmd: "podman"
-    args: ["run", "--env-file=signing-envfile", "--rm", "-v ${VOLUME}:${VOLUME}", "-w ${VOLUME}", "artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg", "/bin/bash", "-c", "\"gpgloader && gpg --yes -v --armor --detach-sign\""]
+    cmd: "./build/package/linux_notarize.sh"
+#    args: ["run", "--env-file=signing-envfile", "--rm", "-v ${VOLUME}:${VOLUME}", "-w ${VOLUME}", "artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg", "/bin/bash", "-c", "\"gpgloader && gpg --yes -v --armor --detach-sign\""]
     ids:
       - linux_archives
       - linux_package

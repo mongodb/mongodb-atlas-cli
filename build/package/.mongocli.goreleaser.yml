@@ -96,20 +96,16 @@ changelog:
     - '^test:'
     - '^task:'
     - '^build(deps):'
-publishers:
-  - name: sign-linux-artifacts-garasign-gpg
-    ids:  # IDs of the artifacts we want to sign
+signs:
+  - id: linux_artifacts
+    cmd: "./build/package/linux_notarize.sh"
+    ids:
       - linux_archives
       - linux_package
-    cmd: "./build/package/linux_notarize.sh"
     env:
-      - VERSION={{ .Version }}
-      - TOOL_NAME=mongocli
-      - ARTIFACTORY_USERNAME={{.Env.ARTIFACTORY_USERNAME}}
-      - ARTIFACTORY_PASSWORD={{.Env.ARTIFACTORY_PASSWORD}}
-      - GRS_USERNAME={{.Env.GRS_USERNAME_MONGOCLI}}
-      - GRS_PASSWORD={{.Env.GRS_PASSWORD_MONGOCLI}}
-      - LINUX_FILE={{ abs .ArtifactPath }}
+      - TOOL_NAME=atlascli
+    artifacts: all
+    output: true
 release:
   prerelease: auto
   name_template: "MongoDB CLI {{.Version}}"

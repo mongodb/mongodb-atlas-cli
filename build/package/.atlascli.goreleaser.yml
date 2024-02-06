@@ -121,20 +121,17 @@ changelog:
     - '^test:'
     - '^task:'
     - '^build(deps):'
-publishers:
-  - name: sign-linux-artifacts-garasign-gpg
-    ids:  # IDs of the artifacts we want to sign
+signs:
+  - id: linux_artifacts
+    cmd: "./build/package/linux_notarize.sh"
+    ids:
       - linux_archives
       - linux_package
-    cmd: "./build/package/linux_notarize.sh"
+      - mongodb-atlas
     env:
-      - VERSION={{ .Version }}
       - TOOL_NAME=atlascli
-      - ARTIFACTORY_USERNAME={{.Env.ARTIFACTORY_USERNAME}}
-      - ARTIFACTORY_PASSWORD={{.Env.ARTIFACTORY_PASSWORD}}
-      - GRS_USERNAME={{.Env.GRS_USERNAME}}
-      - GRS_PASSWORD={{.Env.GRS_PASSWORD}}
-      - LINUX_FILE={{ abs .ArtifactPath }}
+    artifacts: all
+    output: true
 release:
   prerelease: auto
   name_template: "MongoDB Atlas CLI {{.Version}}"

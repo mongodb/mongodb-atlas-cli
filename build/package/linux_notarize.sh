@@ -20,13 +20,18 @@ set -Eeou pipefail
 # This depends on binaries being generated in a goreleaser manner and gon being set up.
 # goreleaser should already take care of calling this script as a part of a custom publisher.
 
-if [[ -f "${LINUX_FILE}" ]]; then
-  echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
-
-  echo "notarizing Linux binary ${LINUX_FILE}"
-
+if [ "${TOOL_NAME}" == "atlascli" ]; then
   echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" >> "signing-envfile"
   echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> "signing-envfile"
+else
+  echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME_MONGOCLI}" >> "signing-envfile"
+  echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD_MONGOCLI}" >> "signing-envfile"
+fi
+
+if [[ -f "${artifact:?}" ]]; then
+  echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
+
+  echo "notarizing Linux binary ${artifact}"
 
   podman run \
     --env-file=signing-envfile \
@@ -34,8 +39,8 @@ if [[ -f "${LINUX_FILE}" ]]; then
     -v "$(pwd)":"$(pwd)" \
     -w "$(pwd)" \
     artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg \
-    /bin/bash -c "gpgloader && gpg --yes -v --armor --detach-sign ${LINUX_FILE}"
+    /bin/bash -c "gpgloader && gpg --yes -v --armor --detach-sign ${artifact}"
 fi
 
-echo "Signing of ${LINUX_FILE} completed."
+echo "Signing of ${artifact} completed."
 

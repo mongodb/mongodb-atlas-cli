@@ -30,7 +30,7 @@ fi
 
 if [[ -f "${artifact:?}" ]]; then
   echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
-  touch "${artifact:?}.sig"
+  echo "ANDREA" > touch "${artifact:?}.sig"
 	echo "notarizing Linux binary ${artifact}"
 #  podman run \
 #    --env-file=signing-envfile \

@@ -160,14 +160,12 @@ signs:
   - id: test
     signature: "${artifact}_sig"
     cmd: "docker"
-    args: ["run", "--env-file=signing-envfile", "--rm", "-v $(${VOLUME}):$(${VOLUME})", "-w ${VOLUME}", "artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg", "/bin/bash", "-c", "\"gpgloader && gpg --yes -v --armor --detach-sign\""]
+    args: ["run", "--env-file=signing-envfile", "--rm", "-v $(pwd):/dist", "-w ${VOLUME}", "artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg", "/bin/bash", "-c", "\"gpgloader && gpg --yes -v --armor --detach-sign\""]
     ids:
       - linux_archives
       - linux_package
     output: true
     artifacts: all
-    env:
-        - VOLUME=pwd
 #publishers:
 #  - name: my-publisher
 #  # IDs of the artifacts we want to sign

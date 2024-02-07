@@ -105,8 +105,8 @@ func TestAtlasTeams(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			"rename",
-
-			"--id",
+			teamName,
+			"--teamId",
 			teamID,
 			"-o=json")
 		cmd.Env = os.Environ()

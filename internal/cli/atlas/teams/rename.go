@@ -66,7 +66,7 @@ func RenameBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "rename <newName>",
 		Aliases: []string{"update"},
-		Short:   "Rename a team for your organization.",
+		Short:   "Rename a team in your organization.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Owner"),
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{

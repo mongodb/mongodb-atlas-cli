@@ -12,7 +12,7 @@ atlas teams rename
    :depth: 1
    :class: singlecol
 
-Rename a team for your organization.
+Rename a team in your organization.
 
 To use this command, you must authenticate with a user account or an API key that has the Organization Owner role.
 

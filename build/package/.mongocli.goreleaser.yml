@@ -49,7 +49,8 @@ gomod: # https://goreleaser.com/customization/verifiable_builds/
   # Since: v1.7
   mod: mod
 archives:
-- id: linux
+- id: linux_archives
+  name_template: mongocli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [linux]
   <<: &archive_defaults
     files:
@@ -57,23 +58,24 @@ archives:
       - mongocli.md
       - LICENSE
       - third_party_notices/**/*
-    replacements:
-      darwin: macos
-      amd64: x86_64
   wrap_in_directory: true
   format: tar.gz
 - id: macos
+  name_template: mongocli_{{ .Version }}_{{- if eq .Os "darwin" }}macos{{- else }}{{ .Os }}{{ end }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [macos]
   <<: *archive_defaults
   format: zip
   wrap_in_directory: false
 - id: windows
+  name_template: mongocli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [windows]
   <<: *archive_defaults
   wrap_in_directory: false
   format: zip
 nfpms:
-- package_name: mongocli
+- id: linux_package
+  package_name: mongocli
+  file_name_template: mongocli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   vendor: MongoDB Inc.
   homepage: https://www.mongodb.com/
   maintainer: MongoDB Inc. <support@mongodb.com>
@@ -82,8 +84,6 @@ nfpms:
   bindir: /usr
   builds: [linux]
   formats: [deb,rpm]
-  replacements:
-    amd64: x86_64
 checksum:
   name_template: checksums.txt
 snapshot:
@@ -96,8 +96,20 @@ changelog:
     - '^test:'
     - '^task:'
     - '^build(deps):'
+signs:
+  - id: linux_artifacts
+    signature: "${artifact}.sig"
+    cmd: "./build/package/linux_notarize.sh"
+    ids:
+      - linux_archives
+      - linux_package
+    env:
+      - TOOL_NAME=mongocli
+    artifacts: all
+    output: true
 release:
   prerelease: auto
   name_template: "MongoDB CLI {{.Version}}"
   extra_files:
     - glob: ./bin/*.msi
+    - glob: ./dist/*.sig

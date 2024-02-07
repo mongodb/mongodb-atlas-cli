@@ -1,7 +1,7 @@
-.. _atlas-teams-update:
+.. _atlas-teams-rename:
 
 ==================
-atlas teams update
+atlas teams rename
 ==================
 
 .. default-domain:: mongodb
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas teams update <newName> [options]
+   atlas teams rename <newName> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -56,7 +56,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for update
+     - help for rename
    * - --orgId
      - string
      - false

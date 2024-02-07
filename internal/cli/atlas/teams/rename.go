@@ -64,10 +64,11 @@ func (opts *renameOpts) newTeam() *atlasv2.Team {
 func RenameBuilder() *cobra.Command {
 	opts := &renameOpts{}
 	cmd := &cobra.Command{
-		Use:   "update <newName>",
-		Short: "Rename a team for your organization.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Organization Owner"),
-		Args:  require.ExactArgs(1),
+		Use:     "rename <newName>",
+		Aliases: []string{"update"},
+		Short:   "Rename a team for your organization.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Owner"),
+		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"newNameDesc": "New label that identifies the team.",
 			"output":      renameTemplate,

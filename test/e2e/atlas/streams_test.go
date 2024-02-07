@@ -245,6 +245,7 @@ func TestStreams(t *testing.T) {
 		a.Equal(connectionName, *connection.Name)
 		a.Equal("Kafka", *connection.Type)
 		a.Equal("example.com:8080,fraud.example.com:8000", *connection.BootstrapServers)
+		a.Equal("atlasAdmin", *connections[0].DbRoleToExecute.Role)
 	})
 
 	t.Run("Listing streams connections", func(t *testing.T) {
@@ -272,7 +273,6 @@ func TestStreams(t *testing.T) {
 		a.Equal(connectionName, connections[0].GetName())
 		a.Equal("Kafka", connections[0].GetType())
 		a.Equal("example.com:8080,fraud.example.com:8000", *connections[0].BootstrapServers)
-		a.Equal("atlasAdmin", *connections[0].DbRoleToExecute.Role)
 	})
 
 	t.Run("Updating a streams connection", func(t *testing.T) {

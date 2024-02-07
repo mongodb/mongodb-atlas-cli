@@ -19,7 +19,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_teams.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas TeamLister,TeamDescriber,TeamCreator,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
+//go:generate mockgen -destination=../../mocks/atlas/mock_teams.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas TeamLister,TeamDescriber,TeamCreator,TeamRenamer,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
 
 type TeamLister interface {
 	Teams(string, *atlas.ListOptions) (*atlasv2.PaginatedTeam, error)
@@ -32,6 +32,10 @@ type TeamDescriber interface {
 
 type TeamCreator interface {
 	CreateTeam(string, *atlasv2.Team) (*atlasv2.Team, error)
+}
+
+type TeamRenamer interface {
+	RenameTeam(string, string, *atlasv2.Team) (*atlasv2.TeamResponse, error)
 }
 
 type TeamDeleter interface {
@@ -74,6 +78,11 @@ func (s *Store) Teams(orgID string, opts *atlas.ListOptions) (*atlasv2.Paginated
 
 func (s *Store) CreateTeam(orgID string, team *atlasv2.Team) (*atlasv2.Team, error) {
 	result, _, err := s.clientv2.TeamsApi.CreateTeam(s.ctx, orgID, team).Execute()
+	return result, err
+}
+
+func (s *Store) RenameTeam(orgID, teamID string, team *atlasv2.Team) (*atlasv2.TeamResponse, error) {
+	result, _, err := s.clientv2.TeamsApi.RenameTeam(s.ctx, orgID, teamID, team).Execute()
 	return result, err
 }
 

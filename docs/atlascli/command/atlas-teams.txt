@@ -55,6 +55,7 @@ Related Commands
 * :ref:`atlas-teams-delete` - Remove the specified team from your organization.
 * :ref:`atlas-teams-describe` - Return the details for the specified team for your organization.
 * :ref:`atlas-teams-list` - Return all teams for your organization.
+* :ref:`atlas-teams-rename` - Rename a team in your organization.
 * :ref:`atlas-teams-users` - Manage your Atlas users.
 
 
@@ -65,5 +66,6 @@ Related Commands
    delete </command/atlas-teams-delete>
    describe </command/atlas-teams-describe>
    list </command/atlas-teams-list>
+   rename </command/atlas-teams-rename>
    users </command/atlas-teams-users>
 

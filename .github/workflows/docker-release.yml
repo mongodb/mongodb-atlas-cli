@@ -1,16 +1,16 @@
-name: Daily build
+# See RELEASING.md to understand the logic of this action.
+name: Daily Release AtlasCLI Docker Image
 on:
   schedule:
     - cron: "0 1 * * *" # Every day at 1:00 AM
-  workflow_dispatch:
+  workflow_dispatch: # Run the action manually
 jobs:
-  release_image:
-    name: Build and publish docker image
+  build_images:
+    name: Build and publish docker image to staging repo
     runs-on: ubuntu-latest
     env:
-      IMAGE_REPOSITORY: mongodb/atlas
+      STAGING_IMAGE_REPOSITORY: mongodb/apix_test
       PLATFORMS: linux/amd64,linux/arm64
-      QUAY: quay.io
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -30,36 +30,109 @@ jobs:
         run: |
           release_tag=${{ steps.get-latest-tag.outputs.tag }}
           echo "LATEST_VERSION=${release_tag#*/}" >> $GITHUB_ENV
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: ${{ env.PLATFORMS }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        with:
-          platforms: ${{ env.PLATFORMS }}
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: "${{ secrets.DOCKERHUB_USER }}"
           password: "${{ secrets.DOCKERHUB_SECRET }}"
-      - name: Login to Quay
-        uses: docker/login-action@v3
-        with:
-          registry: "${{ env.QUAY }}"
-          username: "${{ secrets.QUAY_USER }}"
-          password: "${{ secrets.QUAY_TOKEN }}"
       - name: Build and push container to Dockerhub
         uses: docker/build-push-action@v5
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
-          tags: ${{ env.IMAGE_REPOSITORY }}:latest ,
-            ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
-            ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
+          tags: ${{ env.STAGING_IMAGE_REPOSITORY }}:latest ,
+            ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
+            ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
           file: Dockerfile
           push: true
-      - name: Push container to quay
+  publish_images:
+    name: Sign and Publish docker image
+    needs: [ build_images ]
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_REPOSITORY: mongodb/atlas
+      STAGING_IMAGE_REPOSITORY: mongodb/apix_test
+      PLATFORMS: linux/amd64,linux/arm64
+      QUAY: quay.io
+      DOCKER_CLI_EXPERIMENTAL: enabled # used for enabling containerd image storage. See https://github.com/docker/setup-buildx-action/issues/257#issuecomment-1722284952
+    steps:
+      - name: Set date
+        id: set-date
+        run: |
+          DATE=$(date +'%Y-%m-%d')
+          echo DATE=${DATE} >> $GITHUB_ENV
+      - name: 'Get latest tag'
+        id: get-latest-tag
+        uses: oprypin/find-latest-tag@v1
+        with:
+          repository: mongodb/mongodb-atlas-cli
+          releases-only: true
+          regex: 'atlascli*'
+      - name: Extract version
+        run: |
+          release_tag=${{ steps.get-latest-tag.outputs.tag }}
+          echo "LATEST_VERSION=${release_tag#*/}" >> $GITHUB_ENV
+      - name: Enable containerd image store # See https://github.com/docker/setup-buildx-action/issues/257#issuecomment-1722284952
+        uses: crazy-max/ghaction-setup-docker@v2
+        with:
+          version: v24.0.6
+          daemon-config: |
+            {
+              "features": {
+                "containerd-snapshotter": true
+              }
+            }
+      - name: Download cosign image
+        env:
+          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+        run: |
+          echo "${ARTIFACTORY_PASSWORD}" | docker login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
+          docker pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign
+      - name: Sign docker images with cosign
+        env:
+          PKCS11_URI: ${{ secrets.PKCS11_URI }}
+          GRS_USERNAME: ${{ secrets.GRS_USERNAME }}
+          GRS_PASSWORD: ${{ secrets.GRS_PASSWORD }}
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+          DOCKERHUB_SECRET: ${{ secrets.DOCKERHUB_SECRET }}
+          SIGNATURE_REPO: ${{ secrets.SIGNATURE_REPO }}
+          IMAGE: ${{ env.STAGING_IMAGE_REPOSITORY }}:latest
+        run: |
+          docker pull "${IMAGE}"
+          
+          # DIGESTS contains a list of three digests separated by a comma.
+          DIGESTS=$(docker buildx imagetools inspect $IMAGE --format '{{- range .Manifest.Manifests}}{{- if eq .Platform.OS "linux" }}{{ .Digest }},{{- end }}{{- end }}{{- .Manifest.Digest }}
+          ')
+          echo "These are the Docker image DIGESTS: ${DIGESTS}"
+          
+          echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" >> "signing-envfile"
+          echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> "signing-envfile"
+          echo "COSIGN_REPOSITORY=${SIGNATURE_REPO}" >> "signing-envfile"
+          
+          for DIGEST in $(echo "$DIGESTS" | tr ',' ' '); do
+            echo "Signing ${DIGEST}"
+          
+            echo "${DOCKERHUB_SECRET}" | docker login --password-stdin --username "${DOCKERHUB_USER}"
+            docker run \
+              --env-file=signing-envfile \
+              --rm \
+              -v ~/.docker/config.json:/root/.docker/config.json \
+              -v $(pwd):$(pwd) \
+              -w $(pwd) \
+              artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign \
+              cosign sign --key "${PKCS11_URI}" --tlog-upload=false "${IMAGE}@${DIGEST}"  
+          done
+      - name: Push container to Docker Hub public registry
+        run: |
+          docker buildx imagetools create \
+            --tag ${{ env.IMAGE_REPOSITORY }}:latest \
+            --tag ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} \
+            --tag ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }} \
+            ${{ env.STAGING_IMAGE_REPOSITORY }}:latest
+      - name: Push container to Quay public registry
         run: |
           docker buildx imagetools create \
             --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:latest \

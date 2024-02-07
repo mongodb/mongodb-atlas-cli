@@ -37,7 +37,7 @@ jobs:
         with:
           username: "${{ secrets.DOCKERHUB_USER }}"
           password: "${{ secrets.DOCKERHUB_SECRET }}"
-      - name: Build and push container to Dockerhub staging registry
+      - name: Build and push image to dockerhub staging registry
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -125,7 +125,7 @@ jobs:
               artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign \
               cosign sign --key "${PKCS11_URI}" --tlog-upload=false "${IMAGE}@${DIGEST}"  
           done
-      - name: Push image to Docker Hub public registry
+      - name: Push image to dockerhub public registry
         run: |
           docker buildx imagetools create \
             --tag ${{ env.IMAGE_REPOSITORY }}:latest \

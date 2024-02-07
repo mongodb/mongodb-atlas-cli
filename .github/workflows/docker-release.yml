@@ -4,7 +4,7 @@ on:
     - cron: "0 1 * * *" # Every day at 1:00 AM
   workflow_dispatch:
 jobs:
-  build_image:
+  build_images:
     name: Build and publish docker image to staging repo
     runs-on: ubuntu-latest
     env:
@@ -46,7 +46,7 @@ jobs:
             ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
           file: Dockerfile
           push: true
-  push_images:
+  publish_images:
     name: Sign and Publish docker image
     needs: [ build_image ]
     runs-on: ubuntu-latest
@@ -96,23 +96,37 @@ jobs:
           GRS_PASSWORD: ${{ secrets.GRS_PASSWORD }}
           DOCKERHUB_USER: "${{ secrets.DOCKERHUB_USER }}"
           DOCKERHUB_SECRET: "${{ secrets.DOCKERHUB_SECRET }}"
-#          SIGNATURE_REPO: ${{ secrets.COSIGN_REPOSITORY_QUAY }}
+          SIGNATURE_REPO: "andreaangiolillo22/atlascli_test"
           IMAGE: andreaangiolillo22/staging:latest
         run: |
           docker pull "${IMAGE}"
-          DIGEST=$(docker inspect --format='{{index .ID}}' ${IMAGE})
-          echo "This is the image DIGEST: ${DIGEST}"
-            
           
-          echo "${DOCKERHUB_SECRET}" | docker login --password-stdin --username "${DOCKERHUB_USER}"
-          docker run \
-            -e GRS_CONFIG_USER1_USERNAME="${GRS_USERNAME}" \
-            -e GRS_CONFIG_USER1_PASSWORD="${GRS_PASSWORD}" \
-            --rm \
-            -v ~/.docker/config.json:/root/.docker/config.json \
-            -v $(pwd):$(pwd) \
-            -w $(pwd) \
-            artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign \
-            cosign sign --key "${PKCS11_URI}" --tlog-upload=false "${IMAGE}@${DIGEST}"   
-        
-          ls -al 
+          # DIGESTS contains a list of three digests separated by a comma.
+          DIGESTS=$(docker buildx imagetools inspect $IMAGE --format '{{- range .Manifest.Manifests}}{{- if eq .Platform.OS "linux" }}{{ .Digest }},{{- end }}{{- end }}{{- .Manifest.Digest }}
+          ')
+          echo "These are the Docker image DIGESTS: ${DIGESTS}"
+          
+          echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" >> "signing-envfile"
+          echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> "signing-envfile"
+          echo "COSIGN_REPOSITORY=${SIGNATURE_REPO}" >> "signing-envfile"
+          
+          for DIGEST in $(echo "$DIGESTS" | tr ',' ' '); do
+            echo "Signing ${DIGEST}"
+          
+            echo "${DOCKERHUB_SECRET}" | docker login --password-stdin --username "${DOCKERHUB_USER}"
+            docker run \
+              --env-file=signing-envfile \
+              --rm \
+              -v ~/.docker/config.json:/root/.docker/config.json \
+              -v $(pwd):$(pwd) \
+              -w $(pwd) \
+              artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign \
+              cosign sign --key "${PKCS11_URI}" --tlog-upload=false "${IMAGE}@${DIGEST}"  
+          done
+      - name: Push container to Docker Hub Public Repo
+        run: |
+          docker buildx imagetools create \
+            --tag ${{ env.IMAGE_REPOSITORY }}:latest \
+            --tag ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} \
+            --tag ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }} \
+            ${{ env.STAGING_IMAGE_REPOSITORY }}:latest

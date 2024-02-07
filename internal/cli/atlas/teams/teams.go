@@ -15,21 +15,17 @@
 package teams
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/teams/users"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	description := "Create, list and manage your Atlas teams."
-
 	const use = "teams"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   fmt.Sprintf("Manage your %s teams.", cli.DescriptionServiceName()),
-		Long:    description,
+		Short:   "Manage your Atlas teams.",
+		Long:    "Create, list and manage your Atlas teams.",
 		Aliases: cli.GenerateAliases(use),
 	}
 
@@ -37,6 +33,7 @@ func Builder() *cobra.Command {
 		ListBuilder(),
 		DescribeBuilder(),
 		CreateBuilder(),
+		RenameBuilder(),
 		users.Builder(),
 		DeleteBuilder(),
 	)

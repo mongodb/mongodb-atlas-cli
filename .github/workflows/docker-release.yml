@@ -104,7 +104,7 @@ jobs:
           echo "This is the image DIGEST: ${DIGEST}"
             
           
-          echo "${DOCKERHUB_SECRET}" | docker login --password-stdin --username "${DOCKERHUB_USER}
+          echo "${DOCKERHUB_SECRET}" | docker login --password-stdin --username "${DOCKERHUB_USER}"
           docker run \
             -e GRS_CONFIG_USER1_USERNAME="${GRS_USERNAME}" \
             -e GRS_CONFIG_USER1_PASSWORD="${GRS_PASSWORD}" \

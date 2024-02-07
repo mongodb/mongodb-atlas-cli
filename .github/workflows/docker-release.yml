@@ -125,14 +125,14 @@ jobs:
               artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign \
               cosign sign --key "${PKCS11_URI}" --tlog-upload=false "${IMAGE}@${DIGEST}"  
           done
-      - name: Push container to Docker Hub public registry
+      - name: Push image to Docker Hub public registry
         run: |
           docker buildx imagetools create \
             --tag ${{ env.IMAGE_REPOSITORY }}:latest \
             --tag ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} \
             --tag ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }} \
             ${{ env.STAGING_IMAGE_REPOSITORY }}:latest
-      - name: Push container to Quay public registry
+      - name: Push image to Quay public registry
         run: |
           docker buildx imagetools create \
             --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:latest \

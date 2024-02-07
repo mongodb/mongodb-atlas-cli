@@ -48,7 +48,7 @@ jobs:
           push: true
   publish_images:
     name: Sign and Publish docker image
-    needs: [ build_image ]
+    needs: [ build_images ]
     runs-on: ubuntu-latest
     env:
       IMAGE_REPOSITORY: andreaangiolillo22/atlascli_test

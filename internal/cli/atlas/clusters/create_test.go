@@ -19,6 +19,7 @@ package clusters
 import (
 	"bytes"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -122,8 +123,9 @@ func TestCreateOpts_PostRun(t *testing.T) {
 
 	createOpts := &CreateOpts{
 		WatchOpts: cli.WatchOpts{
+			EnableWatch: false,
 			OutputOpts: cli.OutputOpts{
-				Template:  createWatchTmpl,
+				Template:  createTemplate,
 				OutWriter: buf,
 			},
 		},
@@ -134,8 +136,83 @@ func TestCreateOpts_PostRun(t *testing.T) {
 	cluster, _ := createOpts.newCluster()
 	mockStore.
 		EXPECT().
-		CreateCluster(cluster).Return(expected, nil).
+		CreateCluster(cluster).
+		Return(expected, nil).
 		Times(1)
+
+	if err := createOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+
+	if err := createOpts.PostRun(); err != nil {
+		t.Fatalf("PostRun() unexpected error: %v", err)
+	}
+	assert.Contains(t, `Cluster 'ProjectBar' is being created.
+`, buf.String())
+	t.Log(buf.String())
+}
+
+type MockClusterCreatorAndDescriber struct {
+	*mocks.MockClusterCreator
+	*mocks.MockAtlasClusterDescriber
+}
+
+func TestCreateOpts_PostRun_EnableWatch(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := &MockClusterCreatorAndDescriber{
+		mocks.NewMockClusterCreator(ctrl),
+		mocks.NewMockAtlasClusterDescriber(ctrl),
+	}
+
+	expected := &atlasv2.AdvancedClusterDescription{
+		Name:      pointer.Get("ProjectBar"),
+		StateName: pointer.Get("CREATING"),
+	}
+	expectedIdle := &atlasv2.AdvancedClusterDescription{
+		Name:      expected.Name,
+		StateName: pointer.Get("IDLE"),
+	}
+
+	buf := new(bytes.Buffer)
+
+	createOpts := &CreateOpts{
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: "aaaa1e7e0f2912c554080abc",
+		},
+		WatchOpts: cli.WatchOpts{
+			EnableWatch: true,
+			DefaultWait: pointer.Get(time.Duration(0)),
+			OutputOpts: cli.OutputOpts{
+				Template:  createTemplate,
+				OutWriter: buf,
+			},
+		},
+		name:  "ProjectBar",
+		store: mockStore,
+	}
+
+	cluster, _ := createOpts.newCluster()
+	mockStore.
+		MockClusterCreator.
+		EXPECT().
+		CreateCluster(cluster).
+		Return(expected, nil).
+		Times(1)
+
+	gomock.InOrder(
+		mockStore.
+			MockAtlasClusterDescriber.
+			EXPECT().
+			AtlasCluster(createOpts.ProjectID, expected.GetName()).
+			Return(expected, nil).
+			Times(1),
+		mockStore.
+			MockAtlasClusterDescriber.
+			EXPECT().
+			AtlasCluster(createOpts.ProjectID, expected.GetName()).
+			Return(expectedIdle, nil).
+			Times(1),
+	)
 
 	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
@@ -157,4 +234,9 @@ func TestCreateBuilder(t *testing.T) {
 		[]string{flag.Provider, flag.Region, flag.Members, flag.Tier, flag.DiskSizeGB, flag.MDBVersion, flag.Backup,
 			flag.File, flag.TypeFlag, flag.Shards, flag.ProjectID, flag.Output, flag.EnableTerminationProtection, flag.Tag},
 	)
+}
+
+func TestCreateTemplates(t *testing.T) {
+	test.VerifyOutputTemplate(t, createTemplate, &atlasv2.AdvancedClusterDescription{})
+	test.VerifyOutputTemplate(t, createWatchTemplate, &atlasv2.AdvancedClusterDescription{})
 }

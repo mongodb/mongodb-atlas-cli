@@ -112,10 +112,10 @@ jobs:
           echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> "signing-envfile"
           echo "COSIGN_REPOSITORY=${SIGNATURE_REPO}" >> "signing-envfile"
           
+          echo "${DOCKERHUB_SECRET}" | docker login --password-stdin --username "${DOCKERHUB_USER}"
           for DIGEST in $(echo "$DIGESTS" | tr ',' ' '); do
             echo "Signing ${DIGEST}"
           
-            echo "${DOCKERHUB_SECRET}" | docker login --password-stdin --username "${DOCKERHUB_USER}"
             docker run \
               --env-file=signing-envfile \
               --rm \

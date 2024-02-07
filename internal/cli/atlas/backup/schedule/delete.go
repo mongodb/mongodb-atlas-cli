@@ -66,14 +66,14 @@ func DeleteBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  # Remove all backup schedules for the cluster named Cluster0:
   %s backup schedule delete Cluster0`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
-				return err
-			}
 			opts.Entry = args[0]
-			return opts.Prompt()
+			return opts.PreRunE(
+				opts.ValidateProjectID,
+				opts.initStore(cmd.Context()),
+			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := opts.PromptWithMessage(fmt.Sprintf(confirmationMessage, opts.Entry)); err != nil {
+			if err := opts.PromptWithMessage(confirmationMessage); err != nil {
 				return err
 			}
 			return opts.Run()

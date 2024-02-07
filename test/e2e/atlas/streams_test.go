@@ -272,6 +272,7 @@ func TestStreams(t *testing.T) {
 		a.Equal(connectionName, connections[0].GetName())
 		a.Equal("Kafka", connections[0].GetType())
 		a.Equal("example.com:8080,fraud.example.com:8000", *connections[0].BootstrapServers)
+		a.Equal("atlasAdmin", *connections[0].DbRoleToExecute.Role)
 	})
 
 	t.Run("Updating a streams connection", func(t *testing.T) {
@@ -298,6 +299,7 @@ func TestStreams(t *testing.T) {
 		a := assert.New(t)
 		a.Equal(*connection.Name, connectionName)
 		a.Equal("SSL", connection.Security.GetProtocol())
+		a.Equal("readWriteAnyDatabase", *connections[0].DbRoleToExecute.Role)
 	})
 
 	t.Run("Deleting a streams connection", func(t *testing.T) {

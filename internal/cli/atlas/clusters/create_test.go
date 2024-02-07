@@ -152,14 +152,12 @@ func TestCreateOpts_PostRun(t *testing.T) {
 	t.Log(buf.String())
 }
 
-type MockClusterCreatorAndDescriber struct {
-	*mocks.MockClusterCreator
-	*mocks.MockAtlasClusterDescriber
-}
-
 func TestCreateOpts_PostRun_EnableWatch(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := &MockClusterCreatorAndDescriber{
+	mockStore := &struct {
+		*mocks.MockClusterCreator
+		*mocks.MockAtlasClusterDescriber
+	}{
 		mocks.NewMockClusterCreator(ctrl),
 		mocks.NewMockAtlasClusterDescriber(ctrl),
 	}

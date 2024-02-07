@@ -6,7 +6,7 @@ on:
   workflow_dispatch: # Run the action manually
 jobs:
   build_images:
-    name: Build and publish docker image to staging repo
+    name: Build and publish docker image to staging registry
     runs-on: ubuntu-latest
     env:
       STAGING_IMAGE_REPOSITORY: mongodb/apix_test

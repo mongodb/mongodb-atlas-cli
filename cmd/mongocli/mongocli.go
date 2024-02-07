@@ -24,9 +24,9 @@ import (
 	"strings"
 
 	survey "github.com/AlecAivazis/survey/v2/core"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/root/mongocli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/spf13/cobra"
 )
 
@@ -106,12 +106,8 @@ func initConfig() {
 		log.Fatalf("Error loading config: %v", err)
 	}
 
-	if profile != "" {
-		config.SetName(profile)
-	} else if profile = config.GetString(flag.Profile); profile != "" {
-		config.SetName(profile)
-	} else if availableProfiles := config.List(); len(availableProfiles) == 1 {
-		config.SetName(availableProfiles[0])
+	if err := cli.InitProfile(profile); err != nil {
+		log.Fatalf("Error loading profile: %v", err)
 	}
 }
 

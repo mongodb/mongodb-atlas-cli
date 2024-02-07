@@ -12,7 +12,7 @@ builds:
       env:
         - CGO_ENABLED=0
       binary: bin/mongocli
-      main: ./cmd/mongocli/mongocli.go
+      main: ./cmd/mongocli
       ldflags:
         - -s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version={{.Version}} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit={{.FullCommit}}
     id: linux
@@ -25,14 +25,29 @@ builds:
     hooks:
       # This will notarize Apple binaries and replace goreleaser bins with the notarized ones
       post:
-      - cmd: ./build/package/mongocli_mac_notarize.sh
-        output: true
+        - cmd: ./build/package/mongocli_mac_notarize.sh
+          output: true
   - <<: *build_defaults
     id: windows
     goos: [windows]
     goarch: [amd64]
     hooks:
-      post: ./build/package/mongocli_windows_notarize.sh
+      post:
+        - cmd: ./build/package/windows_notarize.sh
+          env:
+            - TOOL_NAME=mongocli
+            - VERSION={{ .Version }}
+          output: true
+gomod: # https://goreleaser.com/customization/verifiable_builds/
+  # Proxy a module from proxy.golang.org, making the builds verifiable.
+  # This will only be effective if running against a tag. Snapshots will ignore
+  # this setting.
+  # Notice: for this to work your `build.main` must be a package, not a `.go` file.
+  proxy: true
+  # Sets the `-mod` flag value.
+  #
+  # Since: v1.7
+  mod: mod
 archives:
 - id: linux
   builds: [linux]

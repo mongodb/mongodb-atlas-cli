@@ -22,7 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestList_Run(t *testing.T) {
@@ -30,7 +30,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectUsersLister(ctrl)
 
 	expected := atlasv2.PaginatedAppUser{
-		Results: []atlasv2.CloudAppUser{
+		Results: &[]atlasv2.CloudAppUser{
 			{
 				Username: "Test",
 			},

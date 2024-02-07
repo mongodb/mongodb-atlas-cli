@@ -29,6 +29,8 @@ META_FILENAME_ARM="${meta_package_name-}_${VERSION}_linux_arm64"
 
 pushd dist
 
+mv ../bin/*.msi . # move msi
+
 mkdir -p yum/x86_64 yum/arm64 apt/x86_64 apt/arm64
 
 function rename {

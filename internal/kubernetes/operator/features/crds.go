@@ -27,7 +27,7 @@ import (
 const (
 	LatestOperatorMajorVersion  = "2.0.0"
 	maxDepth                    = 100
-	ResourceVersion             = "app.kubernetes.io/version"
+	ResourceVersion             = "mongodb.com/atlas-resource-version"
 	ResourceAtlasProject        = "atlasprojects"
 	ResourceAtlasDeployment     = "atlasdeployments"
 	ResourceAtlasDatabaseUser   = "atlasdatabaseusers"

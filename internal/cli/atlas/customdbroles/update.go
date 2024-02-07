@@ -24,10 +24,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 const updateTemplate = "Custom database role '{{.RoleName}}' successfully updated.\n"
@@ -69,15 +70,17 @@ func (opts *UpdateOpts) Run() error {
 
 func (opts *UpdateOpts) newCustomDBRole(existingRole *atlasv2.UserCustomDBRole) *atlasv2.UserCustomDBRole {
 	out := &atlasv2.UserCustomDBRole{
-		InheritedRoles: convert.BuildAtlasInheritedRoles(opts.inheritedRoles),
+		InheritedRoles: pointer.Get(convert.BuildAtlasInheritedRoles(opts.inheritedRoles)),
 	}
 	actions := joinActions(convert.BuildAtlasActions(opts.action))
+	inheritedRoles := []atlasv2.DatabaseInheritedRole{}
 
 	if opts.append {
-		actions = appendActions(existingRole.Actions, actions)
-		out.InheritedRoles = append(out.InheritedRoles, existingRole.InheritedRoles...)
+		actions = appendActions(existingRole.GetActions(), actions)
+		inheritedRoles = append(inheritedRoles, existingRole.GetInheritedRoles()...)
 	}
-	out.Actions = actions
+	out.SetActions(actions)
+	out.SetInheritedRoles(inheritedRoles)
 
 	return out
 }

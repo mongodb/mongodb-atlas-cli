@@ -22,19 +22,20 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterLister(ctrl)
 
-	expected := mongodbatlas.AdvancedClustersResponse{
-		Results: []*mongodbatlas.AdvancedCluster{
+	expected := admin.PaginatedAdvancedClusterDescription{
+		Results: &[]admin.AdvancedClusterDescription{
 			{
-				Name: "test",
-				ID:   "123",
+				Name: pointer.Get("test"),
+				Id:   pointer.Get("123"),
 			},
 		},
 	}
@@ -52,6 +53,10 @@ func TestList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestListTemplate(t *testing.T) {
+	test.VerifyOutputTemplate(t, listTemplate, admin.PaginatedAdvancedClusterDescription{})
 }
 
 func TestListBuilder(t *testing.T) {

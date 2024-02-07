@@ -26,7 +26,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestCreate_Run(t *testing.T) {
@@ -47,9 +47,7 @@ func TestCreate_Run(t *testing.T) {
 		CreatePipeline(createOpts.ConfigProjectID(), *request).Return(expected, nil).
 		Times(1)
 
-	if err := createOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, createOpts.Run())
 }
 
 func TestCreateBuilder(t *testing.T) {

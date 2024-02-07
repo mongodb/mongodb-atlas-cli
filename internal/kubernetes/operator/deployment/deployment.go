@@ -26,7 +26,7 @@ import (
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -80,6 +80,18 @@ func BuildAtlasAdvancedDeployment(deploymentStore atlas.OperatorClusterStore, va
 		return result
 	}
 
+	convertTags := func(tags []atlasv2.ResourceTag) []*akov2.TagSpec {
+		result := make([]*akov2.TagSpec, 0, len(tags))
+
+		for _, atlasTag := range tags {
+			result = append(result, &akov2.TagSpec{
+				Key:   atlasTag.GetKey(),
+				Value: atlasTag.GetValue(),
+			})
+		}
+		return result
+	}
+
 	replicationSpec := buildReplicationSpec(deployment.GetReplicationSpecs())
 
 	// TODO: DiskSizeGB field skipped on purpose. See https://jira.mongodb.org/browse/CLOUDP-146469
@@ -95,6 +107,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore atlas.OperatorClusterStore, va
 		ReplicationSpecs:         replicationSpec,
 		RootCertType:             deployment.GetRootCertType(),
 		VersionReleaseSystem:     deployment.GetVersionReleaseSystem(),
+		Tags:                     convertTags(deployment.GetTags()),
 	}
 
 	atlasDeployment := &akov2.AtlasDeployment{
@@ -152,7 +165,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore atlas.OperatorClusterStore, va
 	}
 
 	if validator.FeatureExist(features.ResourceAtlasDeployment, featureGlobalDeployments) {
-		customZoneMapping, managedNamespaces, err := buildGlobalDeployment(deployment.ReplicationSpecs, deploymentStore, projectID, clusterID)
+		customZoneMapping, managedNamespaces, err := buildGlobalDeployment(deployment.GetReplicationSpecs(), deploymentStore, projectID, clusterID)
 		if err != nil {
 			return nil, err
 		}
@@ -189,8 +202,8 @@ func buildGlobalDeployment(atlasRepSpec []atlasv2.ReplicationSpec, globalDeploym
 		return customZoneMapping, nil, nil
 	}
 
-	managedNamespace := make([]akov2.ManagedNamespace, len(globalCluster.ManagedNamespaces))
-	for i, ns := range globalCluster.ManagedNamespaces {
+	managedNamespace := make([]akov2.ManagedNamespace, len(globalCluster.GetManagedNamespaces()))
+	for i, ns := range globalCluster.GetManagedNamespaces() {
 		managedNamespace[i] = akov2.ManagedNamespace{
 			Db:                     ns.Db,
 			Collection:             ns.Collection,
@@ -246,10 +259,10 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectName, projectI
 	}
 
 	// Although we have a for loop here, there should be only one policy per schedule. See Atlas API implementation
-	policies := make([]*akov2.AtlasBackupPolicy, 0, len(bs.Policies))
-	for _, p := range bs.Policies {
-		items := make([]akov2.AtlasBackupPolicyItem, 0, len(p.PolicyItems))
-		for _, pItem := range p.PolicyItems {
+	policies := make([]*akov2.AtlasBackupPolicy, 0, len(bs.GetPolicies()))
+	for _, p := range bs.GetPolicies() {
+		items := make([]akov2.AtlasBackupPolicyItem, 0, len(p.GetPolicyItems()))
+		for _, pItem := range p.GetPolicyItems() {
 			items = append(items, akov2.AtlasBackupPolicyItem{
 				FrequencyType:     pItem.FrequencyType,
 				FrequencyInterval: pItem.FrequencyInterval,
@@ -312,17 +325,17 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectName, projectI
 		Status: akov2status.BackupScheduleStatus{},
 	}
 
-	if len(bs.CopySettings) > 0 {
-		copySettings := make([]akov2.CopySetting, 0, len(bs.CopySettings))
+	if len(bs.GetCopySettings()) > 0 {
+		copySettings := make([]akov2.CopySetting, 0, len(bs.GetCopySettings()))
 
-		for _, copySetting := range bs.CopySettings {
+		for _, copySetting := range bs.GetCopySettings() {
 			copySettings = append(
 				copySettings,
 				akov2.CopySetting{
 					CloudProvider:    copySetting.CloudProvider,
 					RegionName:       copySetting.RegionName,
 					ShouldCopyOplogs: copySetting.ShouldCopyOplogs,
-					Frequencies:      copySetting.Frequencies,
+					Frequencies:      copySetting.GetFrequencies(),
 				},
 			)
 		}
@@ -348,7 +361,7 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*akov2.Advan
 		}
 
 		replicationSpec.RegionConfigs = make([]*akov2.AdvancedRegionConfig, 0, len(replicationSpec.RegionConfigs))
-		for _, rc := range rs.RegionConfigs {
+		for _, rc := range rs.GetRegionConfigs() {
 			var analyticsSpecs *akov2.Specs
 			if rc.AnalyticsSpecs != nil {
 				analyticsSpecs = &akov2.Specs{

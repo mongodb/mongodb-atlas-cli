@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -37,7 +37,7 @@ func TestListOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockPipelineRunsLister(ctrl)
 
 	expected := &atlasv2.PaginatedPipelineRun{
-		Results: []atlasv2.IngestionPipelineRun{
+		Results: &[]atlasv2.IngestionPipelineRun{
 			{
 				Id:          pointer.Get("507f1f77bcf86cd799439011"),
 				DatasetName: pointer.Get("dataset"),

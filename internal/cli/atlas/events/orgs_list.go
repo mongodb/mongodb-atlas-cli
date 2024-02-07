@@ -26,7 +26,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 type orgListOpts struct {
@@ -61,15 +61,19 @@ func (opts *orgListOpts) NewOrgListOptions() admin.ListOrganizationEventsApiPara
 	if len(opts.EventType) > 0 {
 		eventType = &opts.EventType
 	}
-	listEventsAPIParams := admin.ListOrganizationEventsApiParams{
-		OrgId:        opts.ConfigOrgID(),
-		ItemsPerPage: &opts.ItemsPerPage,
-		PageNum:      &opts.PageNum,
-		EventType:    eventType,
-		MaxDate:      pointer.StringToTimePointer(opts.MaxDate),
-		MinDate:      pointer.StringToTimePointer(opts.MinDate),
+	p := admin.ListOrganizationEventsApiParams{
+		OrgId:     opts.ConfigOrgID(),
+		EventType: eventType,
+		MaxDate:   pointer.StringToTimePointer(opts.MaxDate),
+		MinDate:   pointer.StringToTimePointer(opts.MinDate),
 	}
-	return listEventsAPIParams
+	if opts.ItemsPerPage > 0 {
+		p.ItemsPerPage = &opts.ItemsPerPage
+	}
+	if opts.PageNum > 0 {
+		p.PageNum = &opts.PageNum
+	}
+	return p
 }
 
 // OrgListBuilder

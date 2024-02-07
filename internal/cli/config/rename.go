@@ -47,7 +47,10 @@ func (opts *RenameOpts) Run() error {
 		}
 	}
 
-	config.SetName(opts.oldName)
+	if err := config.SetName(opts.oldName); err != nil {
+		return err
+	}
+
 	if err := config.Rename(opts.newName); err != nil {
 		return err
 	}

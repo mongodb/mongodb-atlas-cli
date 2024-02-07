@@ -107,16 +107,6 @@ func handleSignal() {
 	}, os.Interrupt, syscall.SIGTERM)
 }
 
-func initProfile(profile string) {
-	if profile != "" {
-		config.SetName(profile)
-	} else if profile = config.GetString(flag.Profile); profile != "" {
-		config.SetName(profile)
-	} else if availableProfiles := config.List(); len(availableProfiles) == 1 {
-		config.SetName(availableProfiles[0])
-	}
-}
-
 // Builder conditionally adds children commands as needed.
 func Builder() *cobra.Command {
 	var (
@@ -144,7 +134,9 @@ Use the --help flag with any command for more info on that command.`,
 				log.SetLevel(log.DebugLevel)
 			}
 
-			initProfile(profile)
+			if err := cli.InitProfile(profile); err != nil {
+				return err
+			}
 
 			telemetry.StartTrackingCommand(cmd, args)
 

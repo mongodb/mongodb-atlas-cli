@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
@@ -43,7 +43,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 		TargetClusterName: "ClusterTest",
 		DeliveryType:      "test type",
 		ExpiresAt:         pointer.Get(expiresAt),
-		DeliveryUrl:       []string{"test url"},
+		DeliveryUrl:       &[]string{"test url"},
 	}
 
 	buf := new(bytes.Buffer)

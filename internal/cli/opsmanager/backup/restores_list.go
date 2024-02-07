@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const restoresTemplate = `ID	TIMESTAMP	STATUS{{range .Results}}
+const restoresTemplate = `ID	TIMESTAMP	STATUS{{range valueOrEmptySlice .Results}}
 {{.ID}}	{{.Timestamp.Date}}	{{.StatusName}}{{end}}
 `
 

@@ -16,6 +16,7 @@ package clusters
 
 import (
 	"context"
+	"fmt"
 	"sort"
 	"strings"
 
@@ -38,7 +39,11 @@ type autoCompleteOpts struct {
 
 func (opts *autoCompleteOpts) autocompleteTier() cli.AutoFunc {
 	return func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		opts.parseFlags(cmd)
+		if err := opts.parseFlags(cmd); err != nil {
+			cobra.CompErrorln(fmt.Sprintf("failed to parse flags: %v", err))
+			return nil, cobra.ShellCompDirectiveError
+		}
+
 		if err := validate.Credentials(); err != nil {
 			cobra.CompErrorln("no credentials")
 			return nil, cobra.ShellCompDirectiveError
@@ -67,8 +72,8 @@ func (opts *autoCompleteOpts) tierSuggestions(toComplete string) ([]string, erro
 		return nil, err
 	}
 	availableTiers := map[string]bool{}
-	for _, p := range result.Results {
-		for _, i := range p.InstanceSizes {
+	for _, p := range result.GetResults() {
+		for _, i := range p.GetInstanceSizes() {
 			if _, ok := availableTiers[i.GetName()]; !ok && strings.HasPrefix(i.GetName(), strings.ToUpper(toComplete)) {
 				availableTiers[i.GetName()] = true
 			}
@@ -86,7 +91,11 @@ func (opts *autoCompleteOpts) tierSuggestions(toComplete string) ([]string, erro
 
 func (opts *autoCompleteOpts) autocompleteRegion() cli.AutoFunc {
 	return func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		opts.parseFlags(cmd)
+		if err := opts.parseFlags(cmd); err != nil {
+			cobra.CompErrorln(fmt.Sprintf("failed to parse flags: %v", err))
+			return nil, cobra.ShellCompDirectiveError
+		}
+
 		if err := validate.Credentials(); err != nil {
 			cobra.CompErrorln("no credentials")
 			return nil, cobra.ShellCompDirectiveError
@@ -114,9 +123,9 @@ func (opts *autoCompleteOpts) regionSuggestions(toComplete string) ([]string, er
 		return nil, err
 	}
 	availableRegions := map[string]bool{}
-	for _, p := range result.Results {
-		for _, i := range p.InstanceSizes {
-			for _, r := range i.AvailableRegions {
+	for _, p := range result.GetResults() {
+		for _, i := range p.GetInstanceSizes() {
+			for _, r := range i.GetAvailableRegions() {
 				if _, ok := availableRegions[r.GetName()]; !ok && strings.HasPrefix(r.GetName(), strings.ToUpper(toComplete)) {
 					availableRegions[r.GetName()] = true
 				}
@@ -139,15 +148,13 @@ func (opts *autoCompleteOpts) initStore(ctx context.Context) error {
 	return err
 }
 
-func (opts *autoCompleteOpts) parseFlags(cmd *cobra.Command) {
+func (opts *autoCompleteOpts) parseFlags(cmd *cobra.Command) error {
 	profile := cmd.Flag(flag.Profile).Value.String()
-	if profile != "" {
-		config.SetName(profile)
-	} else if profile = config.GetString(flag.Profile); profile != "" {
-		config.SetName(profile)
-	} else if availableProfiles := config.List(); len(availableProfiles) == 1 {
-		config.SetName(availableProfiles[0])
+
+	if err := cli.InitProfile(profile); err != nil {
+		return err
 	}
+
 	if project := cmd.Flag(flag.ProjectID).Value.String(); project != "" {
 		opts.ProjectID = project
 	}
@@ -159,4 +166,6 @@ func (opts *autoCompleteOpts) parseFlags(cmd *cobra.Command) {
 	if tier := cmd.Flag(flag.Tier).Value.String(); tier != "" {
 		opts.tier = tier
 	}
+
+	return nil
 }

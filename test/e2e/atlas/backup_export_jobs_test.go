@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestExportJobs(t *testing.T) {
@@ -69,17 +69,7 @@ func TestExportJobs(t *testing.T) {
 	t.Cleanup(func() {
 		require.NoError(t, deleteClusterForProject("", clusterName))
 	})
-
-	t.Run("Watch create cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-		)
-		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
-	})
+	require.NoError(t, watchCluster("", clusterName))
 
 	t.Run("Create bucket", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

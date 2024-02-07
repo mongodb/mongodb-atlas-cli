@@ -31,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115005/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -49,7 +49,7 @@ func TestList_Run(t *testing.T) {
 	})
 
 	expectedAtlasClusters := &admin.PaginatedAdvancedClusterDescription{
-		Results: []admin.AdvancedClusterDescription{
+		Results: &[]admin.AdvancedClusterDescription{
 			{
 				Name:           pointer.Get("atlasCluster2"),
 				Id:             pointer.Get("123"),

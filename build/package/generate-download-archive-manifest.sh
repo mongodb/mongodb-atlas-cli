@@ -17,4 +17,8 @@ set -Eeou pipefail
 
 VERSION="$(git tag --list "${TOOL_NAME}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
-go run ../tools/release/main.go --file "${FEED_FILE_NAME}" --version "${VERSION}"
+if [[ ${VERSION} =~ "-pre" ]]; then
+  echo "Skipping generate download center manifest for pre-release version: ${VERSION}"
+else
+  go run ../tools/release/main.go --file "${FEED_FILE_NAME}" --version "${VERSION}"
+fi

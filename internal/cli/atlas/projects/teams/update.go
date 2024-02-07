@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 const updateTemplate = "Team's roles updated.\n"
@@ -57,7 +57,7 @@ func (opts *UpdateOpts) Run() error {
 
 func (opts *UpdateOpts) newTeamUpdateRoles() *atlasv2.TeamRole {
 	return &atlasv2.TeamRole{
-		RoleNames: opts.roles,
+		RoleNames: &opts.roles,
 	}
 }
 

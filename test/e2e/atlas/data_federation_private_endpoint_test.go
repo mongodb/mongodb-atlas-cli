@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
@@ -58,7 +58,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 		var r atlasv2.PaginatedPrivateNetworkEndpointIdEntry
 		require.NoError(t, json.Unmarshal(resp, &r))
 		a.NotEmpty(r.Results)
-		a.Equal(r.Results[0].GetEndpointId(), vpcID)
+		a.Equal(r.GetResults()[0].GetEndpointId(), vpcID)
 	})
 
 	t.Run("Describe", func(t *testing.T) {

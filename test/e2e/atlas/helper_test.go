@@ -16,6 +16,7 @@
 package atlas_test
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -30,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -41,7 +42,6 @@ const (
 	metricsEntity                = "metrics"
 	searchEntity                 = "search"
 	indexEntity                  = "index"
-	datalakeEntity               = "datalake"
 	datafederationEntity         = "datafederation"
 	datalakePipelineEntity       = "datalakepipeline"
 	alertsEntity                 = "alerts"
@@ -92,12 +92,13 @@ const (
 	jobsEntity                   = "jobs"
 	snapshotsEntity              = "snapshots"
 	restoresEntity               = "restores"
-	compliancepolicyEntity       = "compliancepolicy"
+	compliancePolicyEntity       = "compliancepolicy"
 	policiesEntity               = "policies"
 	teamsEntity                  = "teams"
 	setupEntity                  = "setup"
 	deploymentEntity             = "deployments"
 	deletingState                = "DELETING"
+	authEntity                   = "auth"
 )
 
 // AlertConfig constants.
@@ -106,6 +107,11 @@ const (
 	eventTypeName = "NO_PRIMARY"
 	intervalMin   = 5
 	delayMin      = 0
+)
+
+// Auth constants.
+const (
+	whoami = "whoami"
 )
 
 // Integration constants.
@@ -133,6 +139,23 @@ const (
 	authorizedUserLastName  = "lastname"
 	authorizedEmail         = "firstname.lastname@example.com"
 )
+
+// Local Development constants.
+const (
+	collectionName  = "myCol"
+	databaseName    = "myDB"
+	searchIndexName = "indexTest"
+	vectorSearchDB  = "sample_mflix"
+	vectorSearchCol = "embedded_movies"
+)
+
+func splitOutput(cmd *exec.Cmd) (string, string, error) {
+	var o, e bytes.Buffer
+	cmd.Stdout = &o
+	cmd.Stderr = &e
+	err := cmd.Run()
+	return o.String(), e.String(), err
+}
 
 func deployServerlessInstanceForProject(projectID string) (string, error) {
 	cliPath, err := e2e.AtlasCLIBin()
@@ -416,11 +439,11 @@ func newAvailableRegion(projectID, tier, provider string) (string, error) {
 		return "", fmt.Errorf("error unmarshaling response %w: %s", err, string(resp))
 	}
 
-	if cloudProviders.GetTotalCount() == 0 || len(cloudProviders.GetResults()[0].InstanceSizes) == 0 {
+	if cloudProviders.GetTotalCount() == 0 || len(cloudProviders.GetResults()[0].GetInstanceSizes()) == 0 {
 		return "", errNoRegions
 	}
 
-	return cloudProviders.Results[0].GetInstanceSizes()[0].GetAvailableRegions()[0].GetName(), nil
+	return cloudProviders.GetResults()[0].GetInstanceSizes()[0].GetAvailableRegions()[0].GetName(), nil
 }
 
 func RandClusterName() (string, error) {
@@ -516,7 +539,7 @@ func MongoDBMajorVersion() (string, error) {
 }
 
 func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedIntegration) bool {
-	services := thirdPartyIntegrations.Results
+	services := thirdPartyIntegrations.GetResults()
 	for i := range services {
 		iType := getIntegrationType(services[i])
 		if iType == name {
@@ -560,7 +583,7 @@ func getFirstOrgUser() (string, error) {
 		return "", fmt.Errorf("no users found")
 	}
 
-	return users.Results[0].Username, nil
+	return users.GetResults()[0].Username, nil
 }
 
 func createTeam(teamName, userName string) (string, error) {
@@ -669,7 +692,7 @@ func listClustersForProject(t *testing.T, cliPath, projectID string) atlasv2.Pag
 func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 	clusters := listClustersForProject(t, cliPath, projectID)
-	for _, cluster := range clusters.Results {
+	for _, cluster := range clusters.GetResults() {
 		func(clusterName, state string) {
 			t.Run(fmt.Sprintf("delete cluster %s\n", clusterName), func(t *testing.T) {
 				t.Parallel()
@@ -937,7 +960,7 @@ func deleteAllServerlessInstances(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
 	serverlessInstances := listServerlessByProject(t, cliPath, projectID)
-	for _, serverless := range serverlessInstances.Results {
+	for _, serverless := range serverlessInstances.GetResults() {
 		func(serverlessInstance, state string) {
 			t.Run(fmt.Sprintf("delete serverless instance %s\n", serverlessInstance), func(t *testing.T) {
 				t.Parallel()
@@ -1018,7 +1041,7 @@ func enableCompliancePolicy(projectID string) error {
 	}
 	cmd := exec.Command(cliPath,
 		backupsEntity,
-		compliancepolicyEntity,
+		compliancePolicyEntity,
 		"enable",
 		"--projectId",
 		projectID,
@@ -1060,7 +1083,7 @@ func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atl
 	}
 	cmd := exec.Command(cliPath,
 		backupsEntity,
-		compliancepolicyEntity,
+		compliancePolicyEntity,
 		"setup",
 		"--projectId",
 		projectID,

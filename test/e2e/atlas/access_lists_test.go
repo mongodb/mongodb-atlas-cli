@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestAccessList(t *testing.T) {
@@ -62,8 +62,8 @@ func TestAccessList(t *testing.T) {
 		req.NoError(err)
 
 		found := false
-		for i := range entries.Results {
-			if entries.Results[i].GetIpAddress() == entry {
+		for i := range entries.GetResults() {
+			if entries.GetResults()[i].GetIpAddress() == entry {
 				found = true
 				break
 			}
@@ -138,8 +138,8 @@ func TestAccessList(t *testing.T) {
 		req.NoError(err)
 
 		found := false
-		for i := range entries.Results {
-			if entries.Results[i].GetIpAddress() == entry {
+		for i := range entries.GetResults() {
+			if entries.GetResults()[i].GetIpAddress() == entry {
 				found = true
 				break
 			}
@@ -180,10 +180,10 @@ func TestAccessList(t *testing.T) {
 		err = json.Unmarshal(resp, &entries)
 		req.NoError(err)
 
-		a.NotEmpty(entries.Results)
-		a.Len(entries.Results, 1)
+		a.NotEmpty(entries.GetResults())
+		a.Len(entries.GetResults(), 1)
 
-		currentIPEntry = entries.Results[0].GetIpAddress()
+		currentIPEntry = entries.GetResults()[0].GetIpAddress()
 	})
 
 	t.Run("Delete", func(t *testing.T) {

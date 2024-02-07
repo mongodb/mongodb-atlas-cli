@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestBackupCompliancePolicyEnable(t *testing.T) {
@@ -38,7 +38,7 @@ func TestBackupCompliancePolicyEnable(t *testing.T) {
 
 	cmd := exec.Command(cliPath,
 		backupsEntity,
-		compliancepolicyEntity,
+		compliancePolicyEntity,
 		"enable",
 		"--projectId",
 		g.projectID,

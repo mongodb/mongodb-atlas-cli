@@ -24,7 +24,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestNamespacesList_Run(t *testing.T) {
@@ -32,12 +32,12 @@ func TestNamespacesList_Run(t *testing.T) {
 	mockStore := mocks.NewMockPerformanceAdvisorIndexesLister(ctrl)
 
 	expected := atlasv2.PerformanceAdvisorResponse{
-		Shapes: []atlasv2.PerformanceAdvisorShape{
+		Shapes: &[]atlasv2.PerformanceAdvisorShape{
 			{
 				Id: pointer.Get("1"),
 			},
 		},
-		SuggestedIndexes: []atlasv2.PerformanceAdvisorIndex{
+		SuggestedIndexes: &[]atlasv2.PerformanceAdvisorIndex{
 			{
 				Id: pointer.Get("1"),
 			},

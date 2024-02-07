@@ -34,7 +34,7 @@
 	"github.com/stretchr/testify": "mongocli",
 	"github.com/tangzero/inflector": "mongocli",
 	"go.mongodb.org/atlas": "mongocli",
-	"go.mongodb.org/atlas-sdk/v20231115002": "mongocli",
+	"go.mongodb.org/atlas-sdk/v20231115005": "mongocli",
 	"go.mongodb.org/mongo-driver": "mongocli",
 	"go.mongodb.org/ops-manager": "mongocli",
 	"golang.org/x/crypto": "mongocli",
@@ -43,7 +43,6 @@
 	"google.golang.org/protobuf": "mongocli",
 	"golang.org/x/mod": "mongocli",
 	"gopkg.in/yaml.v3": "mongocli",
-	"github.com/jba/templatecheck": "mongocli",
 	"github.com/mongodb/mongodb-atlas-kubernetes/v2": "atlas_kubernetes_team",
 	"k8s.io/api": "atlas_kubernetes_team",
 	"k8s.io/apimachinery": "atlas_kubernetes_team",
@@ -54,8 +53,6 @@
 	"sigs.k8s.io/controller-runtime": "atlas_kubernetes_team",
 	"sigs.k8s.io/kind": "atlas_kubernetes_team",
 	"golang.org/x/exp": "atlas_kubernetes_team",
-	"github.com/containers/podman/v4": "mongocli",
 	"github.com/shirou/gopsutil/v3": "mongocli",
-	"github.com/denisbrodbeck/machineid": "mongocli",
-	"github.com/containers/common": "mongocli"
+	"github.com/denisbrodbeck/machineid": "mongocli"
 }

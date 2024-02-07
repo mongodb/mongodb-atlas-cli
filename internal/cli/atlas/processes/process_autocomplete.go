@@ -16,6 +16,7 @@ package processes
 
 import (
 	"context"
+	"fmt"
 	"sort"
 	"strings"
 
@@ -25,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 type AutoCompleteOpts struct {
@@ -35,7 +36,11 @@ type AutoCompleteOpts struct {
 
 func (opts *AutoCompleteOpts) AutocompleteProcesses() cli.AutoFunc {
 	return func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		opts.parseFlags(cmd)
+		if err := opts.parseFlags(cmd); err != nil {
+			cobra.CompErrorln(fmt.Sprintf("failed to parse flags: %v", err))
+			return nil, cobra.ShellCompDirectiveError
+		}
+
 		if err := validate.Credentials(); err != nil {
 			cobra.CompErrorln("no credentials")
 			return nil, cobra.ShellCompDirectiveError
@@ -65,8 +70,8 @@ func (opts *AutoCompleteOpts) processSuggestion(toComplete string) ([]string, er
 	if err != nil {
 		return nil, err
 	}
-	suggestion := make([]string, 0, len(result.Results))
-	for _, p := range result.Results {
+	suggestion := make([]string, 0, len(result.GetResults()))
+	for _, p := range result.GetResults() {
 		if !strings.HasPrefix(p.GetId(), toComplete) {
 			continue
 		}
@@ -82,16 +87,16 @@ func (opts *AutoCompleteOpts) initStore(ctx context.Context) error {
 	return err
 }
 
-func (opts *AutoCompleteOpts) parseFlags(cmd *cobra.Command) {
+func (opts *AutoCompleteOpts) parseFlags(cmd *cobra.Command) error {
 	profile := cmd.Flag(flag.Profile).Value.String()
-	if profile != "" {
-		config.SetName(profile)
-	} else if profile = config.GetString(flag.Profile); profile != "" {
-		config.SetName(profile)
-	} else if availableProfiles := config.List(); len(availableProfiles) == 1 {
-		config.SetName(availableProfiles[0])
+
+	if err := cli.InitProfile(profile); err != nil {
+		return err
 	}
+
 	if project := cmd.Flag(flag.ProjectID).Value.String(); project != "" {
 		opts.ProjectID = project
 	}
+
+	return nil
 }

@@ -84,19 +84,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 		connectionString = strings.TrimSpace(o.String())
 		connectionString = strings.Replace(connectionString, "Your connection string: ", "", 1)
 	})
-
-	t.Run("Watch Cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-		assert.Contains(t, string(resp), "Cluster available")
-	})
+	require.NoError(t, watchCluster(g.projectID, clusterName))
 
 	t.Run("Connect to database", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -128,7 +116,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 	})
 
 	t.Cleanup(func() {
-		_ = client.Disconnect(ctx)
+		require.NoError(t, client.Disconnect(ctx))
 	})
 
 	t.Run("Pause Cluster", func(t *testing.T) {
@@ -142,8 +130,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
-		a := assert.New(t)
-		a.Contains(string(resp), fmt.Sprintf("Pausing deployment '%s'", clusterName))
+		assert.Contains(t, string(resp), fmt.Sprintf("Pausing deployment '%s'", clusterName))
 	})
 
 	t.Run("Start Cluster", func(t *testing.T) {
@@ -160,19 +147,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 		a := assert.New(t)
 		a.Contains(string(resp), fmt.Sprintf("Starting deployment '%s'", clusterName))
 	})
-
-	t.Run("Watch Cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-		assert.Contains(t, string(resp), "Cluster available")
-	})
+	require.NoError(t, watchCluster(g.projectID, clusterName))
 
 	t.Run("Create Index", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -195,8 +170,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 		r, err := cmd.CombinedOutput()
 		out := string(r)
 		req.NoError(err, out)
-		a := assert.New(t)
-		a.Contains(out, "Search index created")
+		assert.Contains(t, out, "Search index created")
 	})
 
 	t.Run("Delete Cluster", func(t *testing.T) {
@@ -217,19 +191,5 @@ func TestDeploymentsAtlas(t *testing.T) {
 
 		expected := fmt.Sprintf("Deployment '" + clusterName + "' deleted\n<nil>\n")
 		assert.Equal(t, expected, string(resp))
-	})
-
-	t.Run("Watch cluster deletion", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		// this command will fail with 404 once the cluster is deleted
-		// we just need to wait for this to close the project
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
 	})
 }

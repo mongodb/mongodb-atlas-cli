@@ -29,7 +29,7 @@ import (
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -267,6 +267,44 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 
 		cleanUpKeys(t, operator, operatorNamespace, cliPath)
 	})
+
+	t.Run("should install operator with deletion protection and sub resource protection disabled", func(t *testing.T) {
+		g := newAtlasE2ETestGenerator(t)
+		g.enableBackup = true
+		g.generateProject("k8sOperatorInstall")
+		g.generateCluster()
+
+		clusterName := "install-import-without-dp"
+		operator := setupCluster(t, clusterName, operatorNamespace)
+		context := fmt.Sprintf("kind-%s", clusterName)
+
+		cmd := exec.Command(cliPath,
+			"kubernetes",
+			"operator",
+			"install",
+			"--resourceDeletionProtection=false",
+			"--subresourceDeletionProtection=false",
+			"--targetNamespace", operatorNamespace,
+			"--kubeContext", context)
+		cmd.Env = os.Environ()
+		resp, inErr := cmd.CombinedOutput()
+		req.NoError(inErr, string(resp))
+		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
+
+		checkDeployment(t, operator, operatorNamespace)
+
+		deployment := &appsv1.Deployment{}
+		err := operator.getK8sObject(
+			client.ObjectKey{Name: "mongodb-atlas-operator", Namespace: operatorNamespace},
+			deployment,
+			false,
+		)
+		require.NoError(t, err)
+		assert.Contains(t, deployment.Spec.Template.Spec.Containers[0].Args, "--resourceDeletionProtection=false")
+		assert.Contains(t, deployment.Spec.Template.Spec.Containers[0].Args, "--subresourceDeletionProtection=false")
+
+		cleanUpKeys(t, operator, operatorNamespace, cliPath)
+	})
 }
 
 func setupCluster(t *testing.T, name string, namespaces ...string) *operatorHelper {
@@ -449,7 +487,7 @@ func cleanUpKeys(t *testing.T, operator *operatorHelper, namespace string, cliPa
 	err = json.Unmarshal(resp, &keys)
 	require.NoError(t, err)
 
-	for _, key := range keys.Results {
+	for _, key := range keys.GetResults() {
 		keyID := *key.Id
 		desc := *key.Desc
 

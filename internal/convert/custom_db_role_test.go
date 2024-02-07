@@ -20,7 +20,7 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestBuildAtlasInheritedRoles(t *testing.T) {
@@ -94,7 +94,7 @@ func TestBuildAtlasActions(t *testing.T) {
 			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "clusterName",
-					Resources: []atlasv2.DatabasePermittedNamespaceResource{
+					Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Cluster: cluster,
 						},
@@ -107,7 +107,7 @@ func TestBuildAtlasActions(t *testing.T) {
 			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "clusterName",
-					Resources: []atlasv2.DatabasePermittedNamespaceResource{
+					Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Db:         testdb,
 							Collection: collection,
@@ -121,7 +121,7 @@ func TestBuildAtlasActions(t *testing.T) {
 			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "clusterName",
-					Resources: []atlasv2.DatabasePermittedNamespaceResource{
+					Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Cluster: cluster,
 						},
@@ -129,7 +129,7 @@ func TestBuildAtlasActions(t *testing.T) {
 				},
 				{
 					Action: "name",
-					Resources: []atlasv2.DatabasePermittedNamespaceResource{
+					Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
 						{
 							Db: datalake,
 						},

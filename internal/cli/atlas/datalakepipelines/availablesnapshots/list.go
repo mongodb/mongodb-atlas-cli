@@ -32,7 +32,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	DESCRIPTION	STATUS{{range .Results}}
+var listTemplate = `ID	DESCRIPTION	STATUS{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.Description}}	{{.Status}}{{end}}`
 
 type ListOpts struct {

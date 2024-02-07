@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -151,10 +151,10 @@ func (opts *DefaultSetterOpts) orgs(filter string) (results interface{}, err err
 	}
 	switch r := orgs.(type) {
 	case *atlasv2.PaginatedOrganization:
-		if *r.TotalCount == 0 {
+		if r.GetTotalCount() == 0 {
 			return nil, errNoResults
 		}
-		if *r.TotalCount > resultsLimit {
+		if r.GetTotalCount() > resultsLimit {
 			return nil, errTooManyResults
 		}
 		results = r.Results

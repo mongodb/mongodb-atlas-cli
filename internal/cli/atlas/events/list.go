@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package events
 
 import (
@@ -25,7 +26,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 type EventListOpts struct {
@@ -51,7 +52,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `ID	TYPE	CREATED{{range .Results}}
+var listTemplate = `ID	TYPE	CREATED{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.EventTypeName}}	{{.Created}}{{end}}
 `
 
@@ -78,16 +79,19 @@ func (opts *ListOpts) NewOrgListOptions() admin.ListOrganizationEventsApiParams 
 	if len(opts.EventType) > 0 {
 		eventType = &opts.EventType
 	}
-	listEventsAPIParams := admin.ListOrganizationEventsApiParams{
-		OrgId:        opts.orgID,
-		ItemsPerPage: &opts.ItemsPerPage,
-		PageNum:      &opts.PageNum,
-		EventType:    eventType,
-		IncludeRaw:   new(bool),
-		MaxDate:      pointer.StringToTimePointer(opts.MaxDate),
-		MinDate:      pointer.StringToTimePointer(opts.MinDate),
+	p := admin.ListOrganizationEventsApiParams{
+		OrgId:     opts.orgID,
+		EventType: eventType,
+		MaxDate:   pointer.StringToTimePointer(opts.MaxDate),
+		MinDate:   pointer.StringToTimePointer(opts.MinDate),
 	}
-	return listEventsAPIParams
+	if opts.ItemsPerPage > 0 {
+		p.ItemsPerPage = &opts.ItemsPerPage
+	}
+	if opts.PageNum > 0 {
+		p.PageNum = &opts.PageNum
+	}
+	return p
 }
 
 func (opts *ListOpts) NewProjectListOptions() admin.ListProjectEventsApiParams {
@@ -95,15 +99,19 @@ func (opts *ListOpts) NewProjectListOptions() admin.ListProjectEventsApiParams {
 	if len(opts.EventType) > 0 {
 		eventType = &opts.EventType
 	}
-	listEventsAPIParams := admin.ListProjectEventsApiParams{
-		GroupId:      opts.projectID,
-		ItemsPerPage: &opts.ItemsPerPage,
-		PageNum:      &opts.PageNum,
-		EventType:    eventType,
-		MaxDate:      pointer.StringToTimePointer(opts.MaxDate),
-		MinDate:      pointer.StringToTimePointer(opts.MinDate),
+	p := admin.ListProjectEventsApiParams{
+		GroupId:   opts.projectID,
+		EventType: eventType,
+		MaxDate:   pointer.StringToTimePointer(opts.MaxDate),
+		MinDate:   pointer.StringToTimePointer(opts.MinDate),
 	}
-	return listEventsAPIParams
+	if opts.ItemsPerPage > 0 {
+		p.ItemsPerPage = &opts.ItemsPerPage
+	}
+	if opts.PageNum > 0 {
+		p.PageNum = &opts.PageNum
+	}
+	return p
 }
 
 // ListBuilder
@@ -125,10 +133,10 @@ func ListBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Deprecated: `  
   To return project events prefer
-  mongocli atlas|ops-manager|cloud-manager events projects list [--projectId <projectId>]
+  atlas events projects list [--projectId <projectId>]
 
   To return organization events prefer
-  mongocli atlas|ops-manager|cloud-manager events organizations list [--orgId <orgId>]
+  atlas events organizations list [--orgId <orgId>]
 `,
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,

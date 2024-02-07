@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestListTemplate_Run(t *testing.T) {
@@ -39,7 +39,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockCloudProviderAccessRoleLister(ctrl)
 
 	expected := &atlasv2.CloudProviderAccessRoles{
-		AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
+		AwsIamRoles: &[]atlasv2.CloudProviderAccessAWSIAMRole{
 			{
 				ProviderName: "AWS",
 				Id:           pointer.Get("123"),

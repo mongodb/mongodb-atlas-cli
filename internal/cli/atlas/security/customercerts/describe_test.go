@@ -21,8 +21,9 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestDescribe_Run(t *testing.T) {
@@ -32,8 +33,7 @@ func TestDescribe_Run(t *testing.T) {
 	describeOpts := &DescribeOpts{
 		store: mockStore,
 	}
-
-	expected := &atlasv2.UserSecurity{}
+	expected := &atlasv2.UserSecurity{CustomerX509: &atlasv2.DBUserTLSX509Settings{Cas: pointer.Get("123")}}
 
 	mockStore.
 		EXPECT().

@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -76,7 +76,7 @@ func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListO
 		if err != nil {
 			return nil, err
 		}
-		return result.Results, nil
+		return result.GetResults(), nil
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -127,7 +127,7 @@ func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersLis
 		if err != nil {
 			return nil, err
 		}
-		return result.Results, nil
+		return result.GetResults(), nil
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -147,7 +147,7 @@ func (s *Store) AzureContainers(projectID string) ([]atlasv2.CloudProviderContai
 		if err != nil {
 			return nil, err
 		}
-		return result.Results, nil
+		return result.GetResults(), nil
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -166,7 +166,7 @@ func (s *Store) AWSContainers(projectID string) ([]atlasv2.CloudProviderContaine
 		if err != nil {
 			return nil, err
 		}
-		return result.Results, nil
+		return result.GetResults(), nil
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -184,7 +184,7 @@ func (s *Store) GCPContainers(projectID string) ([]atlasv2.CloudProviderContaine
 		if err != nil {
 			return nil, err
 		}
-		return result.Results, nil
+		return result.GetResults(), nil
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -202,7 +202,7 @@ func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atla
 		if err != nil {
 			return nil, err
 		}
-		return result.Results, nil
+		return result.GetResults(), nil
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

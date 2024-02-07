@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestWhitelistList_Run(t *testing.T) {
@@ -35,13 +35,13 @@ func TestWhitelistList_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectIPAccessListLister(ctrl)
 
 	expected := &atlasv2.PaginatedNetworkAccess{
-		Links: []atlasv2.Link{
+		Links: &[]atlasv2.Link{
 			{
 				Rel:  pointer.Get("test"),
 				Href: pointer.Get("test"),
 			},
 		},
-		Results: []atlasv2.NetworkPermissionEntry{
+		Results: &[]atlasv2.NetworkPermissionEntry{
 			{
 				AwsSecurityGroup: pointer.Get("test"),
 				CidrBlock:        pointer.Get("test"),

@@ -23,14 +23,14 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestEvents(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 	t.Run("List Project Events", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			eventsEntity,
@@ -41,18 +41,10 @@ func TestEvents(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
+		require.NoError(t, err)
 		var events admin.GroupPaginatedEvent
-		if err := json.Unmarshal(resp, &events); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(events.Results) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(events.Results))
-		}
+		require.NoError(t, json.Unmarshal(resp, &events))
+		assert.NotEmpty(t, events.Results)
 	})
 
 	t.Run("List Organization Events", func(t *testing.T) {
@@ -66,17 +58,9 @@ func TestEvents(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-		}
-
+		require.NoError(t, err)
 		var events admin.OrgPaginatedEvent
-		if err := json.Unmarshal(resp, &events); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		if len(events.Results) == 0 {
-			t.Errorf("got=%#v\nwant>0\n", len(events.Results))
-		}
+		require.NoError(t, json.Unmarshal(resp, &events))
+		assert.NotEmpty(t, events.Results)
 	})
 }

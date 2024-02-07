@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 type CreateOpts struct {
@@ -43,7 +43,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Private endpoint '{{.ID}}' created.\n"
+var createTemplate = "Private endpoint '{{.Id}}' created.\n"
 
 func (opts *CreateOpts) Run() error {
 	createRequest := opts.newPrivateEndpointConnection()

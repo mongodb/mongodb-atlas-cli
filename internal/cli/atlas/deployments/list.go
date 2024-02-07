@@ -35,7 +35,7 @@ type ListOpts struct {
 }
 
 const listTemplate = `NAME	TYPE	MDB VER	STATE
-{{range .}}{{.Name}}	{{.Type}}	{{.MongoDBVersion}}	{{.StateName}}
+{{range valueOrEmptySlice .}}{{.Name}}	{{.Type}}	{{.MongoDBVersion}}	{{.StateName}}
 {{end}}`
 
 const errAtlas = "failed to retrieve Atlas deployments with: %s"
@@ -45,22 +45,24 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	mdbContainers, err := opts.GetLocalDeployments(ctx)
-	if err != nil && !errors.Is(err, podman.ErrPodmanNotFound) {
-		return err
+	var mdbContainers []options.Deployment
+	if opts.IsLocalDeploymentType() || opts.NoDeploymentTypeSet() {
+		var err error
+		mdbContainers, err = opts.GetLocalDeployments(ctx)
+		if err != nil && !errors.Is(err, podman.ErrPodmanNotFound) {
+			return err
+		}
 	}
-
 	var atlasClusters []options.Deployment
 	var atlasErr error
-	if opts.IsCliAuthenticated() && cli.TokenRefreshed {
-		atlasClusters, atlasErr = opts.AtlasDeployments(opts.ProjectID)
+	if opts.IsAtlasDeploymentType() || opts.NoDeploymentTypeSet() {
+		if opts.IsCliAuthenticated() && cli.TokenRefreshed {
+			atlasClusters, atlasErr = opts.AtlasDeployments(opts.ProjectID)
+		}
 	}
-
-	err = opts.Print(append(atlasClusters, mdbContainers...))
-	if err != nil {
+	if err := opts.Print(append(atlasClusters, mdbContainers...)); err != nil {
 		return err
 	}
-
 	if atlasErr != nil {
 		return fmt.Errorf(errAtlas, atlasErr.Error())
 	}
@@ -68,11 +70,11 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 	return nil
 }
 
-func (opts *ListOpts) PostRun(_ context.Context) error {
+func (opts *ListOpts) PostRun() error {
 	return opts.PostRunMessages()
 }
 
-// atlas deployments list.
+// ListBuilder atlas deployments list.
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
@@ -93,11 +95,17 @@ func ListBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 		PostRunE: func(cmd *cobra.Command, args []string) error {
-			return opts.PostRun(cmd.Context())
+			return opts.PostRun()
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
+
+	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return options.DeploymentTypeOptions, cobra.ShellCompDirectiveDefault
+	})
+	_ = cmd.Flags().MarkHidden(flag.TypeFlag)
 
 	return cmd
 }

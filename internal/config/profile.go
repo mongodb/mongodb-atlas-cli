@@ -69,13 +69,18 @@ const (
 	TelemetryEnabledProperty     = "telemetry_enabled"
 	MongoCLI                     = "mongocli"
 	AtlasCLI                     = "atlascli"
+	ContainerizedHostNameEnv     = "MONGODB_ATLAS_IS_CONTAINERIZED"
+	GitHubActionsHostNameEnv     = "GITHUB_ACTIONS"
+	AtlasActionHostNameEnv       = "ATLAS_GITHUB_ACTION"
 	NativeHostName               = "native"
-	ContainerHostName            = "container"
+	DockerContainerHostName      = "container"
+	GitHubActionsHostName        = "all_github_actions"
+	AtlasActionHostName          = "atlascli_github_action"
 )
 
 var (
 	ToolName       = MongoCLI
-	HostName       = NativeHostName
+	HostName       = getConfigHostnameFromEnvs()
 	UserAgent      = fmt.Sprintf("%s/%s (%s;%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH, HostName)
 	defaultProfile = newProfile()
 )
@@ -175,6 +180,51 @@ func Exists(name string) bool {
 	return search.StringInSlice(List(), name)
 }
 
+// getConfigHostnameFromEnvs patches the agent hostname based on set env vars.
+func getConfigHostnameFromEnvs() string {
+	var builder strings.Builder
+
+	envVars := []struct {
+		envName  string
+		hostName string
+	}{
+		{AtlasActionHostNameEnv, AtlasActionHostName},
+		{GitHubActionsHostNameEnv, GitHubActionsHostName},
+		{ContainerizedHostNameEnv, DockerContainerHostName},
+	}
+
+	for _, envVar := range envVars {
+		if envIsTrue(envVar.envName) {
+			appendToHostName(&builder, envVar.hostName)
+		} else {
+			appendToHostName(&builder, "-")
+		}
+	}
+	configHostName := builder.String()
+
+	if isDefaultHostName(configHostName) {
+		return NativeHostName
+	}
+	return configHostName
+}
+
+func envIsTrue(env string) bool {
+	return IsTrue(os.Getenv(env))
+}
+
+func appendToHostName(builder *strings.Builder, configVal string) {
+	if builder.Len() > 0 {
+		builder.WriteString("|")
+	}
+	builder.WriteString(configVal)
+}
+
+// isDefaultHostName checks if the hostname is the default placeholder.
+func isDefaultHostName(hostname string) bool {
+	// Using strings.Count for a more dynamic approach.
+	return strings.Count(hostname, "-") == strings.Count(hostname, "|")+1
+}
+
 func newProfile() *Profile {
 	configDir, err := CLIConfigHome()
 	np := &Profile{
@@ -191,9 +241,25 @@ func (p *Profile) Name() string {
 	return p.name
 }
 
-func SetName(name string) { Default().SetName(name) }
-func (p *Profile) SetName(name string) {
+var ErrProfileNameHasDots = errors.New("profile should not contain '.'")
+
+func validateName(name string) error {
+	if strings.Contains(name, ".") {
+		return fmt.Errorf("%w: %q", ErrProfileNameHasDots, name)
+	}
+
+	return nil
+}
+
+func SetName(name string) error { return Default().SetName(name) }
+func (p *Profile) SetName(name string) error {
+	if err := validateName(name); err != nil {
+		return err
+	}
+
 	p.name = strings.ToLower(name)
+
+	return nil
 }
 
 func Set(name string, value interface{}) { Default().Set(name, value) }
@@ -573,6 +639,10 @@ func Filename() string {
 // Rename replaces the Profile to a new Profile name, overwriting any Profile that existed before.
 func Rename(newProfileName string) error { return Default().Rename(newProfileName) }
 func (p *Profile) Rename(newProfileName string) error {
+	if err := validateName(newProfileName); err != nil {
+		return err
+	}
+
 	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
 	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
 	configurationAfterDelete := viper.AllSettings()

@@ -19,11 +19,16 @@ package commonerrors
 import (
 	"errors"
 	"testing"
+
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestCheck(t *testing.T) {
 	dummyErr := errors.New("dummy error")
 
+	skderr := &admin.GenericOpenAPIError{}
+	skderr.SetModel(admin.ApiError{ErrorCode: pointer.Get("TENANT_CLUSTER_UPDATE_UNSUPPORTED")})
 	testCases := []struct {
 		name string
 		err  error
@@ -34,14 +39,11 @@ func TestCheck(t *testing.T) {
 			err:  nil,
 			want: nil,
 		},
-		// TODO: Update the err object to test errors.go file
-		/* {
+		{
 			name: "unsupported cluster update",
-			err: &atlas.ErrorResponse{
-				ErrorCode: "TENANT_CLUSTER_UPDATE_UNSUPPORTED",
-			},
+			err:  skderr,
 			want: errClusterUnsupported,
-		},*/
+		},
 		{
 			name: "arbitrary error",
 			err:  dummyErr,

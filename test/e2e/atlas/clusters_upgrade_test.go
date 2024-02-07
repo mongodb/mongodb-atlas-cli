@@ -21,21 +21,22 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
-func TestSharedClusterUpgradeToSharedTier(t *testing.T) {
+func TestSharedClusterUpgrade(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("clustersUpgrade")
 	g.tier = tierM0
 	g.generateCluster()
 	cliPath, err := e2e.AtlasCLIBin()
-	req := require.New(t)
-	req.NoError(err)
+	require.NoError(t, err)
 
-	t.Run("Upgrade", func(t *testing.T) {
+	t.Run("Upgrade to shared cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"upgrade",
@@ -47,90 +48,55 @@ func TestSharedClusterUpgradeToSharedTier(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
+		require.NoError(t, watchCluster(g.projectID, g.clusterName))
+		cluster := fetchCluster(t, cliPath, g.projectID, g.clusterName)
+		ensureClusterTier(t, cluster, tierM2)
+		assert.Contains(t, cluster.GetTags(), atlasv2.ResourceTag{Key: pointer.Get("env"), Value: pointer.Get("e2e")})
 	})
 
-	t.Run("Watch upgrade", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			g.clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
-	})
-
-	t.Run("Ensure upgrade", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"get",
-			g.clusterName,
-			"--projectId", g.projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		var clusterResponse *atlasv2.AdvancedClusterDescription
-		req.NoError(json.Unmarshal(resp, &clusterResponse), string(resp))
-
-		ensureCluster(t, clusterResponse, g.clusterName, "6.0", 2, false)
-	})
-}
-
-func TestSharedClusterUpgradeToDedicatedTier(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
-	g.generateProject("clustersUpgrade")
-	g.tier = tierM2
-	g.generateCluster()
-	cliPath, err := e2e.AtlasCLIBin()
-	req := require.New(t)
-	req.NoError(err)
-
-	t.Run("Upgrade", func(t *testing.T) {
+	t.Run("Upgrade to dedicated tier", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"upgrade",
 			g.clusterName,
 			"--tier", tierM10,
 			"--diskSizeGB", diskSizeGB40,
-			"--mdbVersion=6.0",
 			"--projectId", g.projectID,
 			"--tag", "env=e2e",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
+		require.NoError(t, watchCluster(g.projectID, g.clusterName))
+		cluster := fetchCluster(t, cliPath, g.projectID, g.clusterName)
+		ensureClusterTier(t, cluster, tierM10)
+		assert.InDelta(t, 40, cluster.GetDiskSizeGB(), 0.01)
+		assert.Contains(t, cluster.GetTags(), atlasv2.ResourceTag{Key: pointer.Get("env"), Value: pointer.Get("e2e")})
 	})
+}
 
-	t.Run("Watch upgrade", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			g.clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
-	})
+func fetchCluster(t *testing.T, cliPath, projectID, clusterName string) *atlasv2.AdvancedClusterDescription {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		clustersEntity,
+		"get",
+		clusterName,
+		"--projectId", projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	req := require.New(t)
+	req.NoError(err, string(resp))
+	var c *atlasv2.AdvancedClusterDescription
+	req.NoError(json.Unmarshal(resp, &c), string(resp))
+	return c
+}
 
-	t.Run("Ensure upgrade", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"get",
-			g.clusterName,
-			"--projectId", g.projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		var clusterResponse *atlasv2.AdvancedClusterDescription
-		req.NoError(json.Unmarshal(resp, &clusterResponse), string(resp))
-
-		ensureCluster(t, clusterResponse, g.clusterName, "6.0", 40, false)
-	})
+func ensureClusterTier(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, expected string) {
+	t.Helper()
+	req := require.New(t)
+	req.NotEmpty(cluster.GetReplicationSpecs())
+	req.NotEmpty(cluster.GetReplicationSpecs()[0].GetRegionConfigs())
+	assert.Equal(t, expected, cluster.GetReplicationSpecs()[0].GetRegionConfigs()[0].ElectableSpecs.GetInstanceSize())
 }

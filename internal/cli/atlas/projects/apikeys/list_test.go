@@ -23,7 +23,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestList_Run(t *testing.T) {
@@ -31,7 +31,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectAPIKeyLister(ctrl)
 
 	expected := atlasv2.PaginatedApiApiUser{
-		Results: []atlasv2.ApiKeyUserDetails{
+		Results: &[]atlasv2.ApiKeyUserDetails{
 			{
 				Id: pointer.Get("1"),
 			},

@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/shirou/gopsutil/v3/host"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115005/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -36,7 +36,7 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 			if opts.IsAtlasDeploymentType() {
 				return Deployment{}, atlasErr
 			}
-			if atlasErr != ErrNotAuthenticated {
+			if !errors.Is(atlasErr, ErrNotAuthenticated) {
 				_, _ = log.Warningf("Warning: failed to retrieve Atlas deployments because %q\n", atlasErr.Error())
 			}
 		}
@@ -114,8 +114,8 @@ func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, er
 	}
 	atlasClusters := projectClusters.(*admin.PaginatedAdvancedClusterDescription)
 
-	deployments := make([]Deployment, len(atlasClusters.Results))
-	for i, c := range atlasClusters.Results {
+	deployments := make([]Deployment, len(atlasClusters.GetResults()))
+	for i, c := range atlasClusters.GetResults() {
 		stateName := *c.StateName
 		if *c.Paused {
 			// for paused clusters, Atlas returns stateName IDLE and Paused=true

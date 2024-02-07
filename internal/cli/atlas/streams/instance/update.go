@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 type UpdateOpts struct {
@@ -96,7 +96,7 @@ func UpdateBuilder() *cobra.Command {
 			"output":   updateTemplate,
 		},
 		Example: fmt.Sprintf(`  # Modify the Atlas Stream Processing instance configuration with the name MyInstance:
-  %s streams instance update MyInstance --provider AWS --provider VIRGINIA_USA`, cli.ExampleAtlasEntryPoint()),
+  %s streams instance update MyInstance --provider AWS --region VIRGINIA_USA`, cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
 

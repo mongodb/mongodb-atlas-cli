@@ -92,7 +92,7 @@ func TestClustersFile(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &cluster))
 		t.Logf("%v\n", cluster)
 		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 40, false)
-		assert.Empty(t, cluster.Tags)
+		assert.Empty(t, cluster.GetTags())
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {

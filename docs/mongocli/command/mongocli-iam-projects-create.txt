@@ -16,7 +16,7 @@ Create a project in your organization.
 
 Projects group clusters into logical collections that support an application environment, workload, or both. Each project can have its own users, teams, security, and alert settings.
 
-To use this command, you must authenticate with a user account or an API key that has the Project Data Access Read/Write role.
+To use this command, you must authenticate with a user account or an API key with the Project Data Access Read/Write role.
 
 Syntax
 ------
@@ -70,7 +70,7 @@ Options
    * - -o, --output
      - string
      - false
-     - Output format. Valid values are json, json-path, go-template, or go-template-file. To see full output, use the -o json option.
+     - Output format. Valid values are json, json-path, go-template, or go-template-file. To see the full output, use the -o json option.
    * - --ownerId
      - string
      - false

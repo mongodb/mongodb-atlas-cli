@@ -37,7 +37,7 @@ jobs:
         with:
           username: "${{ secrets.DOCKERHUB_USER }}"
           password: "${{ secrets.DOCKERHUB_SECRET }}"
-      - name: Build and push container to Dockerhub
+      - name: Build and push container to Dockerhub staging registry
         uses: docker/build-push-action@v5
         with:
           context: .

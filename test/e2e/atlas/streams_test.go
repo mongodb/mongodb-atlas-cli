@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && streams)
+//go:build e2e || (atlas && debug)
 
 package atlas_test
 
@@ -299,7 +299,7 @@ func TestStreams(t *testing.T) {
 		a := assert.New(t)
 		a.Equal(*connection.Name, connectionName)
 		a.Equal("SSL", connection.Security.GetProtocol())
-		a.Equal("readWriteAnyDatabase", *connections[0].DbRoleToExecute.Role)
+		a.Equal("readWriteAnyDatabase", *connection.DbRoleToExecute.Role)
 	})
 
 	t.Run("Deleting a streams connection", func(t *testing.T) {

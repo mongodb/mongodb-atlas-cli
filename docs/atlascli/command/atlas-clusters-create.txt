@@ -174,7 +174,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   Cluster '<Name>' created successfully.
+   Cluster '<Name>' is being created.
    
 
 Examples

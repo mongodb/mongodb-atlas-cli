@@ -56,7 +56,8 @@ func LoadCommandBuilderInfos(packages []*packages.Package) []*CommandBuilderInfo
 	for _, commandBuilderFunc := range commandBuilderFuncDecls {
 		fun, err := newCmdBuilderInfo(commandBuilderFunc)
 		if err != nil {
-			fmt.Printf("Error: %v\n", err)
+			// the method returns an error when the command is not compatible
+			// if we get an error it means we can ignore this function
 			continue
 		}
 

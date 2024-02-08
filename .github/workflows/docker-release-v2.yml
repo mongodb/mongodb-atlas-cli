@@ -146,7 +146,7 @@ jobs:
             --tag ${{ env.QUAY }}/andreaangiolillo/atlascli_test:${{ env.LATEST_VERSION }}-${{ env.DATE }} \
             ${{ env.IMAGE_REPOSITORY }}:latest
   verify_docker_image:
-    name: Verify Docker Image
+    name: Verify Signature Docker Image
     needs: [ publish_images ]
     runs-on: ubuntu-latest
     env:
@@ -180,7 +180,7 @@ jobs:
             exit 1
           fi
   verify_quay_image:
-    name: Verify Quay Image
+    name: Verify Signature Quay Image
     needs: [ publish_images ]
     runs-on: ubuntu-latest
     env:

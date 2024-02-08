@@ -43,7 +43,7 @@ gomod: # https://goreleaser.com/customization/verifiable_builds/
   # This will only be effective if running against a tag. Snapshots will ignore
   # this setting.
   # Notice: for this to work your `build.main` must be a package, not a `.go` file.
-  proxy: true
+  proxy: false # it will be enabled in CLOUDP-228737
   # Sets the `-mod` flag value.
   #
   # Since: v1.7

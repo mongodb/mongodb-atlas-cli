@@ -141,9 +141,9 @@ jobs:
       - name: Push image to Quay public registry
         run: |
           docker buildx imagetools create \
-            --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:latest \
-            --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} \
-            --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }} \
+            --tag ${{ env.QUAY }}/andreaangiolillo/atlascli_test:latest \
+            --tag ${{ env.QUAY }}/andreaangiolillo/atlascli_test:${{ env.LATEST_VERSION }} \
+            --tag ${{ env.QUAY }}/andreaangiolillo/atlascli_test:${{ env.LATEST_VERSION }}-${{ env.DATE }} \
             ${{ env.IMAGE_REPOSITORY }}:latest
   verify_docker_image:
     name: Verify Docker Image
@@ -184,7 +184,7 @@ jobs:
     needs: [ publish_images ]
     runs-on: ubuntu-latest
     env:
-      IMAGE_REPOSITORY: andreaangiolillo22/atlascli_test
+      IMAGE_REPOSITORY: andreaangiolillo/atlascli_test
       QUAY: quay.io
     steps:
       - name: Login to Quay

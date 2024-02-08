@@ -15,16 +15,17 @@ Stable releases are now managed by internal tooling (PCT)
 Use the instructions bellow as a fallback.
 
 ## Docker Image
-We use [docker-release.yml](.github/workflows/docker-release.yml) to release the AtlasCLI Docker image.
+Our Docker image release for AtlasCLI is managed through the [docker-release.yml](.github/workflows/docker-release.yml)  workflow. This process is automated to run daily, ensuring the latest versions of the image dependencies are updated.
 ![githubaction](https://github.com/mongodb/mongodb-atlas-cli/assets/5663078/08da2575-b10d-4469-8604-0302d557c349)
-The release process runs daily and use the follow logic: 
-- Step 1: Build and publish docker image to staging registry:
-  In this step, we generate the AtlasCLI docker image ([Dockerfile](Dockerfile)) with 3 tags: `latest`, `vX.Y.Z` (this is the latest AtlasCLI release version, ie `v1.22.0`) and `vX.Y.Z-date` (this is the latest AtlasCLI release version with the today date, ie `v1.22.0-2024-01-01`).
-  We need to release to the staging registry first to allow us to sign all the different digests generated in the [OCI index](https://github.com/opencontainers/image-spec/blob/main/image-index.md) in the Step 2.
-- Step 2: Sign and Publish docker image: TO BE CONTINUED
-  
-  
+### Release Steps
+##### Step 1: Build and Stage
+The AtlasCLI Docker image is built from the ([Dockerfile](Dockerfile)) and tagged in three ways: `latest`, `vX.Y.Z` (reflecting the latest release version, e.g., `v1.22.0`), and `vX.Y.Z-date` (adding the current date, e.g., `v1.22.0-2024-01-01`). This image is initially published to a staging registry to prepare for signature in the next step.
 
+##### Step 2: Sign and Publish
+We retrieve the image from the staging registry and use its [OCI index](https://github.com/opencontainers/image-spec/blob/main/image-index.md) to identify the three relevant digests. Each digest is signed using [cosign](https://github.com/sigstore/cosign), and the corresponding signature is stored in the MongoDB cosign repository. The signed image is then pushed to the public repository.
+
+##### Step 3: Verify Signature
+The final step involves verifying the Docker image's signature to confirm its authenticity.
 
 ### Deprecated
 _**Note:** This action will only publish a release for [maintainers of the cli](https://github.com/orgs/mongodb/teams/mongocli)_

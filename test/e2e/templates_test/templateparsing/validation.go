@@ -179,6 +179,7 @@ func getTemplateFields(namedTypeInfo *types.Named) (map[string]types.Type, error
 	for i := 0; i < structInfo.NumFields(); i++ {
 		field := structInfo.Field(i)
 		fieldName := field.Name()
+		lowerCaseFieldName := strings.ToLower(fieldName)
 
 		if field.Embedded() {
 			ty, err := astparsing.GetUnderlyingStruct(field.Type())
@@ -194,9 +195,10 @@ func getTemplateFields(namedTypeInfo *types.Named) (map[string]types.Type, error
 			for k, v := range subStructure {
 				structStructure[k] = v
 			}
+
+			structStructure[lowerCaseFieldName] = field.Type()
 		} else if firstRuneIsCapitalized(fieldName) {
 			// Only check public fields
-			lowerCaseFieldName := strings.ToLower(fieldName)
 			structStructure[lowerCaseFieldName] = field.Type()
 		}
 	}

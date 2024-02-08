@@ -138,4 +138,3 @@ release:
   name_template: "MongoDB Atlas CLI {{.Version}}"
   extra_files:
     - glob: ./bin/*.msi
-    - glob: ./dist/*.sig

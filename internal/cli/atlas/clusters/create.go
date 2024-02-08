@@ -73,7 +73,11 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createWatchTmpl = "Cluster '{{.Name}}' created successfully.\n"
+const (
+	createTemplate      = "Cluster '{{.Name}}' is being created.\n"
+	createWatchTemplate = "Cluster '{{.Name}}' created successfully.\n"
+)
+
 var clusterObj *atlasv2.AdvancedClusterDescription
 
 func (opts *CreateOpts) Run() error {
@@ -106,13 +110,16 @@ func (opts *CreateOpts) PostRun() error {
 		return opts.Print(clusterObj)
 	}
 
-	watcher := watchers.NewWatcher(
+	opts.Template = createWatchTemplate
+
+	watcher := watchers.NewWatcherWithDefaultWait(
 		*watchers.ClusterCreated,
 		watchers.NewAtlasClusterStateDescriber(
 			opts.store.(store.AtlasClusterDescriber),
 			opts.ProjectID,
 			opts.name,
 		),
+		opts.GetDefaultWait(),
 	)
 
 	watcher.Timeout = time.Duration(opts.Timeout)
@@ -259,7 +266,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), createWatchTmpl),
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -270,7 +277,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 		},
 		Annotations: map[string]string{
 			"nameDesc": "Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphens. You must specify the cluster name argument if you don't use the --file option.",
-			"output":   createWatchTmpl,
+			"output":   createTemplate,
 		},
 	}
 

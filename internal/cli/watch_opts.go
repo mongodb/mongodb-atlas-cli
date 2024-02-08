@@ -20,6 +20,7 @@ import (
 	"time"
 
 	"github.com/briandowns/spinner"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/watchers"
 )
 
@@ -27,6 +28,7 @@ type WatchOpts struct {
 	OutputOpts
 	s              *spinner.Spinner
 	EnableWatch    bool
+	DefaultWait    *time.Duration
 	Timeout        uint
 	IsRetryableErr func(err error) bool
 }
@@ -55,22 +57,22 @@ func (opts *WatchOpts) Watch(f Watcher) error {
 				return err
 			}
 		}
-		time.Sleep(defaultWait)
+		time.Sleep(opts.GetDefaultWait())
 	}
 }
 
-var backoffTimes = []time.Duration{2 * time.Second, 4 * time.Second, 8 * time.Second}
+var backoffCoefficients = []float32{0.5, 1, 2}
 
 func (opts *WatchOpts) exponentialBackoff(f Watcher) (bool, error) {
 	if opts.IsRetryableErr == nil {
 		return f()
 	}
 
-	for _, backoffTime := range backoffTimes {
+	for _, coefficient := range backoffCoefficients {
 		if done, err := f(); err == nil || !opts.IsRetryableErr(err) {
 			return done, err
 		}
-		time.Sleep(backoffTime)
+		time.Sleep(time.Duration(coefficient) * opts.GetDefaultWait())
 	}
 	// Should only happen after trying three times (>14 seconds)
 	return f()
@@ -98,4 +100,8 @@ func (opts *WatchOpts) stop() {
 	if opts.IsTerminal() {
 		opts.s.Stop()
 	}
+}
+
+func (opts *WatchOpts) GetDefaultWait() time.Duration {
+	return pointer.GetOrDefault(opts.DefaultWait, defaultWait)
 }

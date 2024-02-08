@@ -112,4 +112,3 @@ release:
   name_template: "MongoDB CLI {{.Version}}"
   extra_files:
     - glob: ./bin/*.msi
-    - glob: ./dist/*.sig

@@ -68,8 +68,6 @@ func LoadCommandBuilderInfos(packages []*packages.Package) []*CommandBuilderInfo
 }
 
 // Iterate through all to find all command builder functions.
-//
-
 func findCommandBuilderFuncDecl(packages []*packages.Package) []*CommandBuilderFunc {
 	builderFuncs := make([]*CommandBuilderFunc, 0)
 
@@ -192,8 +190,6 @@ func newCmdBuilderInfo(commandBuilderFunc *CommandBuilderFunc) (*CommandBuilderI
 //
 // Example:
 // In `internal/cli/atlas/accesslists/list.go`, this would be `ListOpts`.
-//
-
 func getCommandOpts(fun *ast.FuncDecl) (*ast.Ident, *ast.TypeSpec, error) {
 	// Search for all asignment statements which assign a variable which implements the OutputOpts interface
 	for _, stmt := range fun.Body.List {
@@ -427,8 +423,6 @@ func getRelatedTemplateFromAssignStmt(pkg *packages.Package, t *ast.AssignStmt, 
 }
 
 // Look for all methods on commandOptsStruct which call `Run` and get the type of that parameter.
-//
-
 func getRelatedTemplateType(pkg *packages.Package, commandOptsStruct *ast.TypeSpec) (*NamedStructInfo, error) {
 	// Find all methods on commands
 	methods := getStructMethods(pkg, commandOptsStruct)

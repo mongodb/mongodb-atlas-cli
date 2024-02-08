@@ -67,8 +67,6 @@ func structHasComposite(structType *ast.StructType, module string, name string) 
 }
 
 // Get the string value of an ident.
-//
-
 func getStringIdentValue(ident *ast.Ident) (string, error) {
 	// Make sure the declaration is not nil
 	if ident.Obj == nil || ident.Obj.Decl == nil {

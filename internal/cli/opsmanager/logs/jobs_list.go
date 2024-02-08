@@ -42,7 +42,7 @@ func (opts *JobsListOpts) initStore(ctx context.Context) func() error {
 }
 
 var listTemplate = `ID	CREATED AT	EXPIRES AT	STATUS	URL	REDACTED{{range valueOrEmptySlice .Results}}
-{{.ID}}	{{.CreationDate}}	{{.ExpirationDate}}	{{.Status}}	{{.URL}}	{{.Redacted}}{{end}}
+{{.ID}}	{{.CreationDate}}	{{.ExpirationDate}}	{{.Status}}	{{.DownloadURL}}	{{.Redacted}}{{end}}
 `
 
 func (opts *JobsListOpts) Run() error {

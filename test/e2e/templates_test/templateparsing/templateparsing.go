@@ -25,9 +25,10 @@ import (
 var templateFuncs = template.FuncMap{
 	// Defined in our codebase, expand if required.
 	// The template parser in the standard library will fail if the function is not defined here
-	"Year": nop,
-	"Now":  nop,
-	"Join": nop,
+	"Year":              nop,
+	"Now":               nop,
+	"Join":              nop,
+	"valueOrEmptySlice": nop,
 
 	// BUILDIN
 	"and":      nop,
@@ -313,17 +314,31 @@ func buildRangeNodeMainRoot(root *TemplateCallTree, node *parse.RangeNode) (*Tem
 }
 
 func pipelineToIdentifiers(pipeline *parse.PipeNode) ([]string, error) {
+	const noFuncSliceCmdCount = 1
+	const funcWith1ArgCmdCount = 2
+
 	if len(pipeline.Cmds) != 1 {
 		return nil, errors.New("unsupported number of cmds, expected 1")
 	}
 
 	cmd := pipeline.Cmds[0]
 
-	if len(cmd.Args) != 1 {
-		return nil, errors.New("unsupported number of cmd args, expected 1")
+	var arg parse.Node
+	switch len(cmd.Args) {
+	case noFuncSliceCmdCount:
+		arg = cmd.Args[0]
+	case funcWith1ArgCmdCount:
+		funcIdent, ok := cmd.Args[0].(*parse.IdentifierNode)
+		if !ok || funcIdent.Ident != "valueOrEmptySlice" {
+			return nil, errors.New("only supporting calls to 'valueOrEmptySlice'")
+		}
+
+		arg = cmd.Args[1]
+	default:
+		return nil, errors.New("unsupported number of cmd args, expected 1. Or 2 when 'valueOrEmptySlice' is used")
 	}
 
-	switch arg := cmd.Args[0].(type) {
+	switch arg := arg.(type) {
 	case (*parse.DotNode):
 		return make([]string, 0), nil
 	case (*parse.FieldNode):

@@ -17,7 +17,7 @@ package commonerrors
 import (
 	"errors"
 
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 var (
@@ -32,10 +32,10 @@ func Check(err error) error {
 
 	apiError, ok := admin.AsError(err)
 	if ok {
-		if apiError.GetErrorCode() == "TENANT_CLUSTER_UPDATE_UNSUPPORTED" {
+		switch apiError.GetErrorCode() {
+		case "TENANT_CLUSTER_UPDATE_UNSUPPORTED":
 			return errClusterUnsupported
-		}
-		if apiError.GetErrorCode() == "GLOBAL_USER_OUTSIDE_SUBNET" {
+		case "GLOBAL_USER_OUTSIDE_SUBNET":
 			return errOutsideVPN
 		}
 	}

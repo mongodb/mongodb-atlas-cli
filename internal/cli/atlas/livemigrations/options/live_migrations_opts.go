@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 type LiveMigrationsOpts struct {
@@ -60,7 +60,7 @@ func (opts *LiveMigrationsOpts) NewCreateRequest() *atlasv2.LiveMigrationRequest
 			ClusterName: opts.DestinationClusterName,
 			GroupId:     opts.ConfigProjectID(),
 		},
-		MigrationHosts: opts.MigrationHosts,
+		MigrationHosts: &opts.MigrationHosts,
 		DropEnabled:    opts.DestinationDropEnabled,
 	}
 }

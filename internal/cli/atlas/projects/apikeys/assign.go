@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 type AssignOpts struct {
@@ -46,7 +46,7 @@ func (opts *AssignOpts) initStore(ctx context.Context) func() error {
 
 func (opts *AssignOpts) newAssignAPIKey() *atlasv2.UpdateAtlasProjectApiKey {
 	return &atlasv2.UpdateAtlasProjectApiKey{
-		Roles: opts.roles,
+		Roles: &opts.roles,
 	}
 }
 

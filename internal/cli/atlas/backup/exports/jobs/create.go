@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 type CreateOpts struct {
@@ -67,7 +67,7 @@ func (opts *CreateOpts) newExportJob() *atlasv2.DiskBackupExportJobRequest {
 	createRequest := &atlasv2.DiskBackupExportJobRequest{
 		SnapshotId:     opts.snapshotID,
 		ExportBucketId: opts.exportBucketID,
-		CustomData:     customData,
+		CustomData:     &customData,
 	}
 	return createRequest
 }

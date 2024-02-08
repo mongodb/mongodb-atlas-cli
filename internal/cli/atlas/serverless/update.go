@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 type UpdateOpts struct {
@@ -72,12 +72,13 @@ func (opts *UpdateOpts) newServerlessUpdateRequestParams() *atlasv2.ServerlessIn
 	}
 
 	if len(opts.tag) > 0 {
-		params.Tags = []atlasv2.ResourceTag{}
-	}
-	for k, v := range opts.tag {
-		if k != "" && v != "" {
-			params.Tags = append(params.Tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+		tags := []atlasv2.ResourceTag{}
+		for k, v := range opts.tag {
+			if k != "" && v != "" {
+				tags = append(tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+			}
 		}
+		params.Tags = &tags
 	}
 
 	return params

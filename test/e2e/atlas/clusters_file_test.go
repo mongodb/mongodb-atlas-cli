@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestClustersFile(t *testing.T) {
@@ -58,8 +58,7 @@ func TestClustersFile(t *testing.T) {
 		req.NoError(err, string(resp))
 
 		var cluster atlasv2.AdvancedClusterDescription
-		err = json.Unmarshal(resp, &cluster)
-		req.NoError(err)
+		req.NoError(json.Unmarshal(resp, &cluster))
 
 		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 30, false)
 	})
@@ -74,9 +73,7 @@ func TestClustersFile(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
-
-		a := assert.New(t)
-		a.Contains(string(resp), "Cluster available")
+		assert.Contains(t, string(resp), "Cluster available")
 	})
 
 	t.Run("Update via file", func(t *testing.T) {
@@ -92,21 +89,26 @@ func TestClustersFile(t *testing.T) {
 		req.NoError(err, string(resp))
 
 		var cluster atlasv2.AdvancedClusterDescription
-		err = json.Unmarshal(resp, &cluster)
-		req.NoError(err)
-
+		req.NoError(json.Unmarshal(resp, &cluster))
+		t.Logf("%v\n", cluster)
 		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 40, false)
+		assert.Empty(t, cluster.GetTags())
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {
-		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterFileName, "--projectId", g.projectID, "--force")
+		cmd := exec.Command(
+			cliPath,
+			clustersEntity,
+			"delete",
+			clusterFileName,
+			"--projectId", g.projectID,
+			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("Deleting cluster '%s'", clusterFileName)
-		a := assert.New(t)
-		a.Equal(expected, string(resp))
+		assert.Equal(t, expected, string(resp))
 	})
 
 	t.Run("Watch deletion", func(t *testing.T) {

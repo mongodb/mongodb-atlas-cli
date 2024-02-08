@@ -27,9 +27,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `NAME	ACTION	INHERITED ROLES	DB	COLLECTION	CLUSTER{{range .}}{{- $roleName := .RoleName }} {{range .Actions}} 
-{{- $actionName := .Action }} {{- range .Resources}}
-{{ $roleName }}	{{ $actionName }}	N/A{{if .Db }}	{{ .Db }}{{else}}	N/A{{end}}{{if .Collection }}	{{ .Collection }}{{else if .Cluster}}	N/A{{else}}	ALL COLLECTIONS{{end}}{{if .Cluster}}	{{ .Cluster }}{{else}}	N/A	{{end}}{{end}}{{end}}{{range .InheritedRoles}}
+const listTemplate = `NAME	ACTION	INHERITED ROLES	DB	COLLECTION	CLUSTER{{range valueOrEmptySlice .}}{{- $roleName := .RoleName }} {{range valueOrEmptySlice .Actions}} 
+{{- $actionName := .Action }} {{- range valueOrEmptySlice .Resources}}
+{{ $roleName }}	{{ $actionName }}	N/A{{if .Db }}	{{ .Db }}{{else}}	N/A{{end}}{{if .Collection }}	{{ .Collection }}{{else if .Cluster}}	N/A{{else}}	ALL COLLECTIONS{{end}}{{if .Cluster}}	{{ .Cluster }}{{else}}	N/A	{{end}}{{end}}{{end}}{{range valueOrEmptySlice .InheritedRoles}}
 {{ $roleName }}	N/A	{{ .Role }}	{{ .Db}}	N/A	N/A{{end}}{{end}}
 `
 

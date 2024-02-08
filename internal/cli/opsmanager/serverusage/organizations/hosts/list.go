@@ -44,7 +44,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var listTemplate = `HOSTNAME	SERVER TYPE	MEM SIZE MB	CHARGEABLE{{- range .Results}}	
+var listTemplate = `HOSTNAME	SERVER TYPE	MEM SIZE MB	CHARGEABLE{{- range valueOrEmptySlice .Results}}	
 {{.Hostname}}	{{.ServerType.Name}}	{{.MemSizeMB}}	{{.IsChargeable}}{{end}}
 `
 

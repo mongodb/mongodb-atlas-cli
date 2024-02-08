@@ -8,8 +8,6 @@ import (
 	context "context"
 	reflect "reflect"
 
-	types "github.com/containers/common/libnetwork/types"
-	define "github.com/containers/podman/v4/libpod/define"
 	gomock "github.com/golang/mock/gomock"
 	podman "github.com/mongodb/mongodb-atlas-cli/internal/podman"
 )
@@ -38,14 +36,14 @@ func (m *MockClient) EXPECT() *MockClientMockRecorder {
 }
 
 // ContainerInspect mocks base method.
-func (m *MockClient) ContainerInspect(arg0 context.Context, arg1 ...string) ([]*define.InspectContainerData, error) {
+func (m *MockClient) ContainerInspect(arg0 context.Context, arg1 ...string) ([]*podman.InspectContainerData, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0}
 	for _, a := range arg1 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "ContainerInspect", varargs...)
-	ret0, _ := ret[0].([]*define.InspectContainerData)
+	ret0, _ := ret[0].([]*podman.InspectContainerData)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -196,14 +194,14 @@ func (mr *MockClientMockRecorder) Logs(arg0 interface{}) *gomock.Call {
 }
 
 // Network mocks base method.
-func (m *MockClient) Network(arg0 context.Context, arg1 ...string) ([]*types.Network, error) {
+func (m *MockClient) Network(arg0 context.Context, arg1 ...string) ([]*podman.Network, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0}
 	for _, a := range arg1 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "Network", varargs...)
-	ret0, _ := ret[0].([]*types.Network)
+	ret0, _ := ret[0].([]*podman.Network)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

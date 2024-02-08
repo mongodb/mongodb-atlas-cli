@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/sampledata"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -93,18 +93,19 @@ func Builder() *cobra.Command {
 
 func addTags(out *atlasv2.AdvancedClusterDescription, tags map[string]string) {
 	if len(tags) > 0 {
-		out.Tags = []atlasv2.ResourceTag{}
-	}
-	for k, v := range tags {
-		if k == "" || v == "" {
-			continue
+		var t []atlasv2.ResourceTag
+		for k, v := range tags {
+			if k == "" || v == "" {
+				continue
+			}
+			key, value := k, v
+			tag := atlasv2.ResourceTag{
+				Key:   &key,
+				Value: &value,
+			}
+			t = append(t, tag)
 		}
-		key, value := k, v
-		tag := atlasv2.ResourceTag{
-			Key:   &key,
-			Value: &value,
-		}
-		out.Tags = append(out.Tags, tag)
+		out.Tags = &t
 	}
 }
 
@@ -116,10 +117,9 @@ func removeReadOnlyAttributes(out *atlasv2.AdvancedClusterDescription) {
 	out.ConnectionStrings = nil
 	isTenant := false
 
-	for i, spec := range out.ReplicationSpecs {
-		out.ReplicationSpecs[i].Id = nil
-		for j, c := range spec.RegionConfigs {
-			out.ReplicationSpecs[i].RegionConfigs[j].ProviderName = c.ProviderName
+	for i, spec := range out.GetReplicationSpecs() {
+		(*out.ReplicationSpecs)[i].Id = nil
+		for _, c := range spec.GetRegionConfigs() {
 			if c.GetProviderName() == tenant {
 				isTenant = true
 				break

@@ -41,7 +41,6 @@ import (
 	"log"
 	"os"
 	"path"
-	"strings"
 	"text/template"
 )
 
@@ -69,14 +68,8 @@ func checkError(err error) {
 var atlasNuSpec string
 
 func generateNuspec(dir, version string) error {
-	segments := strings.Split(version, "-")
-	v := segments[0]
-	if len(segments) > 1 {
-		v += "-next"
-	}
-
 	newVersion := NuspecDetails{
-		Version: v,
+		Version: version,
 	}
 	tmpl, err := template.New("NuspecTemplate").Parse(atlasNuSpec)
 	if err != nil {

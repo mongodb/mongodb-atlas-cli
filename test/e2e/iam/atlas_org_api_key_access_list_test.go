@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
@@ -100,7 +100,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		var key atlasv2.PaginatedApiUserAccessList
 		require.NoError(t, json.Unmarshal(resp, &key))
 		assert.NotEmpty(t, key.Results)
-		entry = *key.Results[0].IpAddress
+		entry = *key.GetResults()[0].IpAddress
 	})
 
 	t.Run("Delete", func(t *testing.T) {

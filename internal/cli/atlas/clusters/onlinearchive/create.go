@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 type CreateOpts struct {
@@ -88,7 +88,7 @@ func (opts *CreateOpts) newOnlineArchive() (*atlasv2.BackupOnlineArchiveCreate, 
 			ExpireAfterDays: pointer.Get(opts.archiveAfter),
 		},
 		DbName:          opts.dbName,
-		PartitionFields: opts.partitionFields(),
+		PartitionFields: pointer.Get(opts.partitionFields()),
 	}
 
 	if opts.expireAfterDays > 0 {

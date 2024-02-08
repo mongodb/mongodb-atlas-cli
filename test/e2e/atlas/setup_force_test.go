@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestSetup(t *testing.T) {
@@ -78,8 +78,8 @@ func TestSetup(t *testing.T) {
 		var entries *atlasv2.PaginatedNetworkAccess
 		err = json.Unmarshal(resp, &entries)
 		req.NoError(err)
-		req.Len(entries.Results, 1, "Expected 1 IP in list of IP's")
-		req.Contains(entries.Results[0].GetIpAddress(), arbitraryAccessListIP, "IP from list does not match added IP")
+		req.Len(entries.GetResults(), 1, "Expected 1 IP in list of IP's")
+		req.Contains(entries.GetResults()[0].GetIpAddress(), arbitraryAccessListIP, "IP from list does not match added IP")
 	})
 
 	require.NoError(t, watchCluster(g.projectID, clusterName))
@@ -117,8 +117,8 @@ func TestSetup(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &cluster), string(resp))
 		assert.Equal(t, clusterName, *cluster.Name)
 
-		assert.Len(t, cluster.Tags, 1)
-		assert.Equal(t, tagKey, *cluster.Tags[0].Key)
-		assert.Equal(t, tagValue, *cluster.Tags[0].Value)
+		assert.Len(t, cluster.GetTags(), 1)
+		assert.Equal(t, tagKey, *cluster.GetTags()[0].Key)
+		assert.Equal(t, tagValue, *cluster.GetTags()[0].Value)
 	})
 }

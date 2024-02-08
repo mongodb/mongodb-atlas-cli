@@ -24,7 +24,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `PROFILE NAME{{range .}}
+var listTemplate = `PROFILE NAME{{range valueOrEmptySlice .}}
 {{.}}{{end}}
 `
 

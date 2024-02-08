@@ -40,7 +40,7 @@ func (opts *FieldsTypeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var matcherFieldsTemplate = "{{range .}}{{.}}\n{{end}}"
+var matcherFieldsTemplate = "{{range valueOrEmptySlice .}}{{.}}\n{{end}}"
 
 func (opts *FieldsTypeOpts) Run() error {
 	r, err := opts.store.MatcherFields()

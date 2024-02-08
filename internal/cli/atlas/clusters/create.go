@@ -32,7 +32,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/watchers"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 const (
@@ -73,7 +73,11 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createWatchTmpl = "Cluster '{{.Name}}' created successfully.\n"
+const (
+	createTemplate      = "Cluster '{{.Name}}' is being created.\n"
+	createWatchTemplate = "Cluster '{{.Name}}' created successfully.\n"
+)
+
 var clusterObj *atlasv2.AdvancedClusterDescription
 
 func (opts *CreateOpts) Run() error {
@@ -106,13 +110,16 @@ func (opts *CreateOpts) PostRun() error {
 		return opts.Print(clusterObj)
 	}
 
-	watcher := watchers.NewWatcher(
+	opts.Template = createWatchTemplate
+
+	watcher := watchers.NewWatcherWithDefaultWait(
 		*watchers.ClusterCreated,
 		watchers.NewAtlasClusterStateDescriber(
 			opts.store.(store.AtlasClusterDescriber),
 			opts.ProjectID,
 			opts.name,
 		),
+		opts.GetDefaultWait(),
 	)
 
 	watcher.Timeout = time.Duration(opts.Timeout)
@@ -159,7 +166,7 @@ func (opts *CreateOpts) applyOpts(out *atlasv2.AdvancedClusterDescription) {
 		out.MongoDBMajorVersion = &opts.mdbVersion
 	}
 
-	out.ReplicationSpecs = []atlasv2.ReplicationSpec{replicationSpec}
+	out.ReplicationSpecs = &[]atlasv2.ReplicationSpec{replicationSpec}
 
 	addTags(out, opts.tag)
 }
@@ -179,7 +186,7 @@ func (opts *CreateOpts) newAdvanceReplicationSpec() atlasv2.ReplicationSpec {
 	return atlasv2.ReplicationSpec{
 		NumShards:     &opts.shards,
 		ZoneName:      pointer.Get(zoneName),
-		RegionConfigs: []atlasv2.CloudRegionConfig{opts.newAdvancedRegionConfig()},
+		RegionConfigs: &[]atlasv2.CloudRegionConfig{opts.newAdvancedRegionConfig()},
 	}
 }
 
@@ -259,7 +266,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), createWatchTmpl),
+				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -270,7 +277,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 		},
 		Annotations: map[string]string{
 			"nameDesc": "Name of the cluster. The cluster name cannot be changed after the cluster is created. Cluster name can contain ASCII letters, numbers, and hyphens. You must specify the cluster name argument if you don't use the --file option.",
-			"output":   createWatchTmpl,
+			"output":   createTemplate,
 		},
 	}
 

@@ -21,17 +21,19 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115005/admin"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 const (
-	listSearchIndexes = "$listSearchIndexes"
-	addFields         = "$addFields"
-	idField           = "id"
-	collectionField   = "collection"
-	databaseField     = "database"
+	listSearchIndexes      = "$listSearchIndexes"
+	addFields              = "$addFields"
+	idField                = "id"
+	collectionField        = "collection"
+	databaseField          = "database"
+	defaultSearchIndexType = "search"
 )
 
 var ErrSearchIndexNotFound = errors.New("search Index not found")
@@ -84,6 +86,10 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 					{
 						Key:   "name",
 						Value: idx.Name,
+					},
+					{
+						Key:   "type",
+						Value: pointer.GetOrDefault(idx.Type, defaultSearchIndexType),
 					},
 					{
 						Key:   "definition",

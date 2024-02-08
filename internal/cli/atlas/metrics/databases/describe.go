@@ -46,8 +46,8 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var databasesMetricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range .Measurements}}  {{if .DataPoints}}
-{{- $name := .Name }}{{- $unit := .Units }}{{- range .DataPoints}}	
+var databasesMetricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range valueOrEmptySlice .Measurements}}  {{if .DataPoints}}
+{{- $name := .Name }}{{- $unit := .Units }}{{- range valueOrEmptySlice .DataPoints}}	
 {{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}	{{ .Value }}{{else}}	N/A {{end}}{{end}}{{end}}{{end}}
 `
 

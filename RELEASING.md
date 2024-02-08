@@ -14,6 +14,28 @@ Stable releases are now managed by internal tooling (PCT)
 
 Use the instructions bellow as a fallback.
 
+## Generate the SBOM
+The Software Bill of Materials (SBOM) is a description of the components that make up a software artifact.
+
+### Atlas CLI Binary
+We use `go version` to generate the SBOM for Atlas CLI binaries. You can generate the SBOM via the following command:
+```bash
+go version -m <path_to_atlasCLI_binary>
+```
+
+### MongoCLI Binary
+We use `go version` to generate the SBOM for MongoCLI binaries. You can generate the SBOM via the following command:
+```bash
+go version -m <path_to_mongoCLI_binary>
+```
+
+### Atlas CLI Docker image
+We use `docker sbom` to generate the SBOM for the AtlasCLI docker image. You can generate the SBOM via the following command:
+```bash
+docker sbom mongodb/atlas:latest
+```
+
+
 ### Deprecated
 _**Note:** This action will only publish a release for [maintainers of the cli](https://github.com/orgs/mongodb/teams/mongocli)_
 

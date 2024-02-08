@@ -25,7 +25,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestList_Run(t *testing.T) {
@@ -34,7 +34,7 @@ func TestList_Run(t *testing.T) {
 
 	expected := &atlasv2.PaginatedAlert{
 		Links: nil,
-		Results: []atlasv2.AlertViewForNdsGroup{
+		Results: &[]atlasv2.AlertViewForNdsGroup{
 			{
 				Id:            pointer.Get("test"),
 				EventTypeName: pointer.Get("NO_PRIMARY"),

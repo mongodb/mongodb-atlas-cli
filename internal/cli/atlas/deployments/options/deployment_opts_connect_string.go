@@ -20,12 +20,12 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/containers/podman/v4/libpod/define"
+	"github.com/mongodb/mongodb-atlas-cli/internal/podman"
 )
 
 const deploymentTypeLocal = "local"
 
-func (opts *DeploymentOpts) updateFields(c *define.InspectContainerData) {
+func (opts *DeploymentOpts) updateFields(c *podman.InspectContainerData) {
 	opts.DeploymentType = deploymentTypeLocal
 	opts.MdbVersion = c.Config.Labels["version"]
 	portBind, ok := c.HostConfig.PortBindings["27017/tcp"]

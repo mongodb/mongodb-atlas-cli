@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `ID	REGION	STATUS	ERROR{{range .}}
+var listTemplate = `ID	REGION	STATUS	ERROR{{range valueOrEmptySlice .}}
 {{.Id}}	{{.RegionName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
 `
 

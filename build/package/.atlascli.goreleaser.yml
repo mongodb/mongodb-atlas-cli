@@ -12,7 +12,7 @@ builds:
       env:
         - CGO_ENABLED=0
       binary: bin/atlas
-      main: ./cmd/atlas/atlas.go
+      main: ./cmd/atlas
       ldflags:
         - -s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version={{.Version}} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit={{.FullCommit}} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=atlascli
     id: linux
@@ -32,10 +32,25 @@ builds:
     goos: [windows]
     goarch: [amd64]
     hooks:
-      post: ./build/package/atlascli_windows_notarize.sh
+      post:
+        - cmd: ./build/package/windows_notarize.sh
+          env:
+            - TOOL_NAME=atlascli
+            - VERSION={{ .Version }}
+          output: true
+gomod: # https://goreleaser.com/customization/verifiable_builds/
+  # Proxy a module from proxy.golang.org, making the builds verifiable.
+  # This will only be effective if running against a tag. Snapshots will ignore
+  # this setting.
+  # Notice: for this to work your `build.main` must be a package, not a `.go` file.
+  proxy: true
+  # Sets the `-mod` flag value.
+  #
+  # Since: v1.7
+  mod: mod
 archives:
-- id: linux
-  name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+- id: linux_archives
+  name_template: mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [linux]
   <<: &archive_defaults
     files:
@@ -44,25 +59,24 @@ archives:
       - LICENSE
       - LICENSING-NOTES.txt
       - third_party_notices/**/*
-    replacements:
-      darwin: macos
-      amd64: x86_64
   wrap_in_directory: true
   format: tar.gz
 - id: macos
-  name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  name_template: mongodb-atlas-cli_{{ .Version }}_{{- if eq .Os "darwin" }}macos{{- else }}{{ .Os }}{{ end }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [macos]
   <<: *archive_defaults
   format: zip
   wrap_in_directory: false
 - id: windows
-  name_template: "mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  name_template: mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [windows]
   <<: *archive_defaults
   wrap_in_directory: false
   format: zip
 nfpms:
-- package_name: mongodb-atlas-cli
+- id: linux_package
+  package_name: mongodb-atlas-cli
+  file_name_template: mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   vendor: MongoDB Inc.
   homepage: https://www.mongodb.com/
   maintainer: MongoDB Inc. <support@mongodb.com>
@@ -71,8 +85,6 @@ nfpms:
   bindir: /usr
   builds: [linux]
   formats: [deb,rpm]
-  replacements:
-    amd64: x86_64
   contents:
     - src: ./build/package/rpm/installer
       dst: /etc/atlascli/installer
@@ -84,14 +96,13 @@ nfpms:
       packager: deb
 - id: mongodb-atlas
   package_name: mongodb-atlas
+  file_name_template: mongodb-atlas_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   vendor: MongoDB Inc.
   homepage: https://www.mongodb.com/
   maintainer: MongoDB Inc. <support@mongodb.com>
   description: MongoDB Atlas Command Line Interface (atlascli) is a tool for managing your MongoDB Atlas account.
   license: Apache 2.0
   formats: [deb,rpm]
-  replacements:
-    amd64: x86_64
   dependencies:
     - mongodb-atlas-cli
     - mongodb-mongosh
@@ -110,8 +121,21 @@ changelog:
     - '^test:'
     - '^task:'
     - '^build(deps):'
+signs:
+  - id: linux_artifacts
+    signature: "${artifact}.sig"
+    cmd: "./build/package/linux_notarize.sh"
+    ids:
+      - linux_archives
+      - linux_package
+      - mongodb-atlas
+    env:
+      - TOOL_NAME=atlascli
+    artifacts: all
+    output: true
 release:
   prerelease: auto
   name_template: "MongoDB Atlas CLI {{.Version}}"
   extra_files:
     - glob: ./bin/*.msi
+    - glob: ./dist/*.sig

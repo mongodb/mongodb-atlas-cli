@@ -1,6 +1,6 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-# Copyright 2022 MongoDB Inc
+# Copyright 2024 MongoDB Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,10 +15,15 @@
 # limitations under the License.
 
 set -Eeou pipefail
-
-FILE="dist/windows_windows_amd64_v1/bin/mongocli.exe"
-if [[ -f "$FILE" ]]; then
-	echo "notarizing windows binaries"
-	export NOTARY_SIGNING_KEY=$NOTARY_SIGNING_KEY_MONGOCLI
-	go run ./tools/sign -file "$FILE"
+if [ -n "$(which yum 2>/dev/null)" ]; then
+  sudo yum install -y podman
+elif [ -n "$(which apt-get 2>/dev/null)" ]; then
+  sudo apt-get update
+  sudo apt-get install -y podman
+elif [ -n "$(which zypper 2>/dev/null)" ]; then
+  sudo zypper install -y podman
+elif [ -n "$(which brew 2>/dev/null)" ]; then
+  sudo brew install podman
 fi
+
+podman --version

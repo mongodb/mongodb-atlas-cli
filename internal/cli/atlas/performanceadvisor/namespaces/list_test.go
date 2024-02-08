@@ -24,7 +24,7 @@ import (
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
 
 func TestNamespacesList_Run(t *testing.T) {
@@ -32,7 +32,7 @@ func TestNamespacesList_Run(t *testing.T) {
 	mockStore := mocks.NewMockPerformanceAdvisorNamespacesLister(ctrl)
 
 	expected := atlasv2.Namespaces{
-		Namespaces: []atlasv2.NamespaceObj{
+		Namespaces: &[]atlasv2.NamespaceObj{
 			{
 				Namespace: pointer.Get("test"),
 			},

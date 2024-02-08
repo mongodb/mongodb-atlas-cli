@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const listTemplate = `ID	DESCRIPTION	PUBLIC KEY	PRIVATE KEY{{range .}}
+const listTemplate = `ID	DESCRIPTION	PUBLIC KEY	PRIVATE KEY{{range valueOrEmptySlice .}}
 {{.ID}}	{{.Desc}}	{{.PublicKey}}	{{.PrivateKey}}{{end}}
 `
 

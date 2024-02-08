@@ -16,7 +16,7 @@ Use the instructions bellow as a fallback.
 
 ## Docker Image
 Our Docker image release for AtlasCLI is managed through the [docker-release.yml](.github/workflows/docker-release.yml)  workflow. This process is automated to run daily, ensuring the latest versions of the image dependencies are updated.
-![githubaction](https://github.com/mongodb/mongodb-atlas-cli/assets/5663078/08da2575-b10d-4469-8604-0302d557c349)
+![github_action](https://github.com/mongodb/mongodb-atlas-cli/assets/5663078/fd54ccda-7794-4139-af92-dbde0c278e78)
 ### Release Steps
 #### Step 1: Build and Stage
 The AtlasCLI Docker image is built from the ([Dockerfile](Dockerfile)) and tagged in three ways: `latest`, `vX.Y.Z` (reflecting the latest release version, e.g., `v1.22.0`), and `vX.Y.Z-date` (adding the current date, e.g., `v1.22.0-2024-01-01`). This image is initially published to a staging registry to prepare for signature in the next step.

@@ -1,4 +1,4 @@
-# See RELEASING.md to understand the logic of this action.
+# See RELEASING.md#DockerImage for more details about the steps in this workflow.
 name: Daily Release AtlasCLI Docker Image
 on:
   schedule:
@@ -47,6 +47,13 @@ jobs:
             ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
           file: Dockerfile
           push: true
+      - name: Create Issue
+        if: ${{ failure() }}
+        uses: imjohnbo/issue-bot@572eed14422c4d6ca37e870f97e7da209422f5bd
+        with:
+          labels: failed-release
+          title: Release Failure for Atlas CLI Docker Image v${{ steps.extract-version.outputs.VERSION }}
+          body: See https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
   publish_images:
     name: Sign and Publish docker image
     needs: [ build_images ]
@@ -145,8 +152,15 @@ jobs:
             --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} \
             --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }} \
             ${{ env.IMAGE_REPOSITORY }}:latest
+      - name: Create Issue
+        if: ${{ failure() }}
+        uses: imjohnbo/issue-bot@572eed14422c4d6ca37e870f97e7da209422f5bd
+        with:
+          labels: failed-release
+          title: Release Failure for Atlas CLI Docker Image v${{ steps.extract-version.outputs.VERSION }}
+          body: See https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
   verify_docker_image:
-    name: Verify Docker Image
+    name: Verify Signature Docker Image
     needs: [ publish_images ]
     runs-on: ubuntu-latest
     env:
@@ -161,7 +175,7 @@ jobs:
         uses: sigstore/cosign-installer@e1523de7571e31dbe865fd2e80c5c7c23ae71eb4
         with:
           cosign-release: 'v2.2.3'
-      - name: Verify Docker Image
+      - name: Verify Signature Docker Image
         env:
           IMAGE: ${{ env.IMAGE_REPOSITORY }}:latest
         run: |
@@ -179,8 +193,15 @@ jobs:
             echo "Error: Signature verification for ${IMAGE} failed."
             exit 1
           fi
+      - name: Create Issue
+        if: ${{ failure() }}
+        uses: imjohnbo/issue-bot@572eed14422c4d6ca37e870f97e7da209422f5bd
+        with:
+          labels: failed-release
+          title: Signature Verification Failure for Atlas CLI Docker Image v${{ steps.extract-version.outputs.VERSION }} on Docker Hub
+          body: See https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
   verify_quay_image:
-    name: Verify Quay Image
+    name: Verify Signature Quay Image
     needs: [ publish_images ]
     runs-on: ubuntu-latest
     env:
@@ -197,7 +218,7 @@ jobs:
         uses: sigstore/cosign-installer@e1523de7571e31dbe865fd2e80c5c7c23ae71eb4
         with:
           cosign-release: 'v2.2.3'
-      - name: Verify Quay Image
+      - name: Verify Signature Quay Image
         env:
           IMAGE: ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:latest
         run: |
@@ -215,3 +236,10 @@ jobs:
             echo "Error: Signature verification for ${IMAGE} failed."
             exit 1
           fi
+      - name: Create Issue
+        if: ${{ failure() }}
+        uses: imjohnbo/issue-bot@572eed14422c4d6ca37e870f97e7da209422f5bd
+        with:
+          labels: failed-release
+          title: Signature Verification Failure for Atlas CLI Docker Image v${{ steps.extract-version.outputs.VERSION }} on Quay.io
+          body: See https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}

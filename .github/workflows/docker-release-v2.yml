@@ -47,6 +47,13 @@ jobs:
             ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
           file: Dockerfile
           push: true
+      - name: Create Issue
+        if: ${{ failure() }}
+        uses: imjohnbo/issue-bot@572eed14422c4d6ca37e870f97e7da209422f5bd
+        with:
+          labels: failed-release
+          title: Release Failure for Atlas CLI Docker Image v${{ steps.extract-version.outputs.VERSION }}
+          body: See https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
   publish_images:
     name: Sign and Publish docker image
     needs: [ build_images ]
@@ -145,6 +152,13 @@ jobs:
             --tag ${{ env.QUAY }}/andreaangiolillo/atlascli_test:${{ env.LATEST_VERSION }} \
             --tag ${{ env.QUAY }}/andreaangiolillo/atlascli_test:${{ env.LATEST_VERSION }}-${{ env.DATE }} \
             ${{ env.IMAGE_REPOSITORY }}:latest
+      - name: Create Issue
+        if: ${{ failure() }}
+        uses: imjohnbo/issue-bot@572eed14422c4d6ca37e870f97e7da209422f5bd
+        with:
+          labels: failed-release
+          title: Release Failure for Atlas CLI Docker Image v${{ steps.extract-version.outputs.VERSION }}
+          body: See https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
   verify_docker_image:
     name: Verify Signature Docker Image
     needs: [ publish_images ]
@@ -179,6 +193,13 @@ jobs:
             echo "Error: Signature verification for ${IMAGE} failed."
             exit 1
           fi
+      - name: Create Issue
+        if: ${{ failure() }}
+        uses: imjohnbo/issue-bot@572eed14422c4d6ca37e870f97e7da209422f5bd
+        with:
+          labels: failed-release
+          title: Signature Verification Failure for Atlas CLI Docker Image v${{ steps.extract-version.outputs.VERSION }} on Docker Hub
+          body: See https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
   verify_quay_image:
     name: Verify Signature Quay Image
     needs: [ publish_images ]
@@ -215,3 +236,10 @@ jobs:
             echo "Error: Signature verification for ${IMAGE} failed."
             exit 1
           fi
+      - name: Create Issue
+        if: ${{ failure() }}
+        uses: imjohnbo/issue-bot@572eed14422c4d6ca37e870f97e7da209422f5bd
+        with:
+          labels: failed-release
+          title: Signature Verification Failure for Atlas CLI Docker Image v${{ steps.extract-version.outputs.VERSION }} on Quay.io
+          body: See https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}

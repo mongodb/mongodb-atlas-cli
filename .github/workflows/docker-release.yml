@@ -130,3 +130,4 @@ jobs:
             --tag ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} \
             --tag ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }} \
             ${{ env.STAGING_IMAGE_REPOSITORY }}:latest
+

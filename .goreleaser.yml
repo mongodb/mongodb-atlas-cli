@@ -79,21 +79,6 @@ nfpms:
       dst: /etc/atlascli/installer
       type: "config|noreplace"
       packager: deb
-# Templates: allowed (since v1.20)
-#  scripts:
-##    preinstall: "./build/package/linux_notarize.sh"
-#    postinstall: "./build/package/linux_notarize.sh"
-#    preremove: "./build/package/linux_notarize.sh"
-#    postremove: "./build/package/linux_notarize.sh"
-#  templated_scripts:
-#    preinstall: "scripts/preinstall.sh"
-#    postinstall: "scripts/postinstall.sh"
-#    preremove: "scripts/preremove.sh"
-#    postremove: "./build/package/linux_notarize.sh"
-
-#  rpm:
-#    scripts:
-#      posttrans: "./build/package/linux_notarize.sh"
   deb:
     scripts:
       rules: "./build/package/linux_notarize.sh"
@@ -158,10 +143,12 @@ changelog:
     - '^build(deps):'
 signs:
   - id: linux_artifacts
+    signature: "${artifact}.sig"
     cmd: "./build/package/linux_notarize.sh"
     ids:
       - linux_archives
       - linux_package
+      - mongodb-atlas
     env:
       - TOOL_NAME=atlascli
     artifacts: all
@@ -190,4 +177,4 @@ release:
   name_template: "MongoDB Atlas CLI {{.Version}}"
   extra_files:
     - glob: ./bin/*.msi
-    - glob: ./dist/*.asc
+    - glob: ./dist/*.sig

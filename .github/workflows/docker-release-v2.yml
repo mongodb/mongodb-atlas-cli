@@ -1,0 +1,217 @@
+# See RELEASING.md#DockerImage for more details about the steps in this workflow.
+name: Daily Release AtlasCLI Docker Image V2
+on:
+  schedule:
+    - cron: "0 1 * * *" # Every day at 1:00 AM
+  workflow_dispatch: # Run the action manually
+jobs:
+  build_images:
+    name: Build and publish docker image to staging registry
+    runs-on: ubuntu-latest
+    env:
+      STAGING_IMAGE_REPOSITORY: andreaangiolillo22/staging
+      PLATFORMS: linux/amd64,linux/arm64
+    steps:
+      - name: Check out code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - name: Set date
+        id: set-date
+        run: |
+          DATE=$(date +'%Y-%m-%d')
+          echo DATE=${DATE} >> $GITHUB_ENV
+      - name: 'Get latest tag'
+        id: get-latest-tag
+        uses: oprypin/find-latest-tag@e1e0e606cc7e9ede25140a5a139b3a5a1b717ece
+        with:
+          repository: mongodb/mongodb-atlas-cli
+          releases-only: true
+          regex: 'atlascli*'
+      - name: Extract version
+        run: |
+          release_tag=${{ steps.get-latest-tag.outputs.tag }}
+          echo "LATEST_VERSION=${release_tag#*/}" >> $GITHUB_ENV
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226
+      - name: Login to Docker Hub
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d
+        with:
+          username: "${{ secrets.DOCKERHUB_USER }}"
+          password: "${{ secrets.DOCKERHUB_SECRET }}"
+      - name: Build and push image to dockerhub staging registry
+        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56
+        with:
+          context: .
+          platforms: ${{ env.PLATFORMS }}
+          tags: ${{ env.STAGING_IMAGE_REPOSITORY }}:latest ,
+            ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
+            ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
+          file: Dockerfile
+          push: true
+  publish_images:
+    name: Sign and Publish docker image
+    needs: [ build_images ]
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_REPOSITORY: andreaangiolillo22/atlascli_test
+      STAGING_IMAGE_REPOSITORY: andreaangiolillo22/staging
+      PLATFORMS: linux/amd64,linux/arm64
+      QUAY: quay.io
+      DOCKER_CLI_EXPERIMENTAL: enabled # used for enabling containerd image storage. See https://github.com/docker/setup-buildx-action/issues/257#issuecomment-1722284952
+    steps:
+      - name: Set date
+        id: set-date
+        run: |
+          DATE=$(date +'%Y-%m-%d')
+          echo DATE=${DATE} >> $GITHUB_ENV
+      - name: 'Get latest tag'
+        id: get-latest-tag
+        uses: oprypin/find-latest-tag@e1e0e606cc7e9ede25140a5a139b3a5a1b717ece
+        with:
+          repository: mongodb/mongodb-atlas-cli
+          releases-only: true
+          regex: 'atlascli*'
+      - name: Extract version
+        run: |
+          release_tag=${{ steps.get-latest-tag.outputs.tag }}
+          echo "LATEST_VERSION=${release_tag#*/}" >> $GITHUB_ENV
+      - name: Enable containerd image store # See https://github.com/docker/setup-buildx-action/issues/257#issuecomment-1722284952
+        uses: crazy-max/ghaction-setup-docker@d9be6cade441568ba10037bce5221b8f564981f1
+        with:
+          version: v24.0.6
+          daemon-config: |
+            {
+              "features": {
+                "containerd-snapshotter": true
+              }
+            }
+      - name: Download cosign image
+        env:
+          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+        run: |
+          echo "${ARTIFACTORY_PASSWORD}" | docker login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
+          docker pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign
+      - name: Sign docker images with cosign
+        env:
+          PKCS11_URI: ${{ secrets.PKCS11_URI }}
+          GRS_USERNAME: ${{ secrets.GRS_USERNAME }}
+          GRS_PASSWORD: ${{ secrets.GRS_PASSWORD }}
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+          DOCKERHUB_SECRET: ${{ secrets.DOCKERHUB_SECRET }}
+          SIGNATURE_REPO: docker.io/andreaangiolillo22/atlascli_test
+          IMAGE: ${{ env.STAGING_IMAGE_REPOSITORY }}:latest
+        run: |
+          docker pull "${IMAGE}"
+          
+          # DIGESTS contains a list of three digests separated by a comma.
+          DIGESTS=$(docker buildx imagetools inspect $IMAGE --format '{{- range .Manifest.Manifests}}{{- if eq .Platform.OS "linux" }}{{ .Digest }},{{- end }}{{- end }}{{- .Manifest.Digest }}
+          ')
+          echo "These are the Docker image DIGESTS: ${DIGESTS}"
+          
+          echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" >> "signing-envfile"
+          echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> "signing-envfile"
+          echo "COSIGN_REPOSITORY=${SIGNATURE_REPO}" >> "signing-envfile"
+          
+          echo "${DOCKERHUB_SECRET}" | docker login --password-stdin --username "${DOCKERHUB_USER}"
+          for DIGEST in $(echo "$DIGESTS" | tr ',' ' '); do
+            echo "Signing ${DIGEST}"
+          
+            docker run \
+              --env-file=signing-envfile \
+              --rm \
+              -v ~/.docker/config.json:/root/.docker/config.json \
+              -v $(pwd):$(pwd) \
+              -w $(pwd) \
+              artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign \
+              cosign sign --key "${PKCS11_URI}" --tlog-upload=false "${IMAGE}@${DIGEST}"  
+          done
+      - name: Push image to dockerhub public registry
+        run: |
+          docker buildx imagetools create \
+            --tag ${{ env.IMAGE_REPOSITORY }}:latest \
+            --tag ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} \
+            --tag ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }} \
+            ${{ env.STAGING_IMAGE_REPOSITORY }}:latest
+      - name: Login to Quay
+        uses: docker/login-action@v3
+        with:
+          registry: "${{ env.QUAY }}"
+          username: "${{ secrets.QUAY_USER }}"
+          password: "${{ secrets.QUAY_TOKEN }}"
+      - name: Push image to Quay public registry
+        run: |
+          docker buildx imagetools create \
+            --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:latest \
+            --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} \
+            --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }} \
+            ${{ env.IMAGE_REPOSITORY }}:latest
+  verify_docker_image:
+    name: Verify Docker Image
+    needs: [ publish_images ]
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_REPOSITORY: andreaangiolillo22/atlascli_test
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d
+        with:
+          username: "${{ secrets.DOCKERHUB_USER }}"
+          password: "${{ secrets.DOCKERHUB_SECRET }}"
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@e1523de7571e31dbe865fd2e80c5c7c23ae71eb4
+        with:
+          cosign-release: 'v2.2.3'
+      - name: Verify Docker Image
+        env:
+          IMAGE: ${{ env.IMAGE_REPOSITORY }}:latest
+        run: |
+          # Download MongoDB Atlas CLI Public Key
+          curl https://cosign.mongodb.com/atlas-cli.pem > atlas-cli.pem
+          
+          # Download Docker Image
+          docker pull "${IMAGE}"
+          
+          # Verify the signature
+          COSIGN_REPOSITORY=docker.io/mongodb/signatures cosign verify --private-infrastructure --key=./atlas-cli.pem "docker.io/${IMAGE}"
+          
+          # Check the exit status of cosign verify
+          if [ $? -ne 0 ]; then
+            echo "Error: Signature verification for ${IMAGE} failed."
+            exit 1
+          fi
+  verify_quay_image:
+    name: Verify Quay Image
+    needs: [ publish_images ]
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_REPOSITORY: andreaangiolillo22/atlascli_test
+      QUAY: quay.io
+    steps:
+      - name: Login to Quay
+        uses: docker/login-action@v3
+        with:
+          registry: "${{ env.QUAY }}"
+          username: "${{ secrets.QUAY_USER }}"
+          password: "${{ secrets.QUAY_TOKEN }}"
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@e1523de7571e31dbe865fd2e80c5c7c23ae71eb4
+        with:
+          cosign-release: 'v2.2.3'
+      - name: Verify Quay Image
+        env:
+          IMAGE: ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:latest
+        run: |
+          # Download MongoDB Atlas CLI Public Key
+          curl https://cosign.mongodb.com/atlas-cli.pem > atlas-cli.pem
+          
+          # Download Quay Image
+          docker pull "${IMAGE}"
+          
+          # Verify the signature
+          COSIGN_REPOSITORY=docker.io/andreaangiolillo22/atlascli_test cosign verify --private-infrastructure --key=./atlas-cli.pem "${IMAGE}"
+          
+          # Check the exit status of cosign verify
+          if [ $? -ne 0 ]; then
+            echo "Error: Signature verification for ${IMAGE} failed."
+            exit 1
+          fi

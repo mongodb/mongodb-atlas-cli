@@ -172,7 +172,7 @@ jobs:
           docker pull "${IMAGE}"
           
           # Verify the signature
-          COSIGN_REPOSITORY=docker.io/mongodb/signatures cosign verify --private-infrastructure --key=./atlas-cli.pem "docker.io/${IMAGE}"
+          COSIGN_REPOSITORY=docker.io/andreaangiolillo22/atlascli_test cosign verify --private-infrastructure --key=./atlas-cli.pem "docker.io/${IMAGE}"
           
           # Check the exit status of cosign verify
           if [ $? -ne 0 ]; then

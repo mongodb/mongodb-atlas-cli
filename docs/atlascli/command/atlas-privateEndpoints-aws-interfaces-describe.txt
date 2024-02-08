@@ -93,8 +93,8 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   ID                      STATUS                  ERROR
-   <InterfaceEndpointId>   <AwsConnectionStatus>   <ErrorMessage>
+   ID                      STATUS               ERROR
+   <InterfaceEndpointId>   <ConnectionStatus>   <ErrorMessage>
    
 
 Examples

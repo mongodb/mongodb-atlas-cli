@@ -61,18 +61,21 @@ archives:
       - third_party_notices/**/*
   wrap_in_directory: true
   format: tar.gz
+  rlcp: false
 - id: macos
   name_template: mongodb-atlas-cli_{{ .Version }}_{{- if eq .Os "darwin" }}macos{{- else }}{{ .Os }}{{ end }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [macos]
   <<: *archive_defaults
   format: zip
   wrap_in_directory: false
+  rlcp: false
 - id: windows
   name_template: mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [windows]
   <<: *archive_defaults
   wrap_in_directory: false
   format: zip
+  rlcp: false
 nfpms:
 - id: linux_package
   package_name: mongodb-atlas-cli

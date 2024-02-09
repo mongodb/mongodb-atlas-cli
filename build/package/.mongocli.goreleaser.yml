@@ -60,6 +60,7 @@ archives:
       - third_party_notices/**/*
   wrap_in_directory: true
   format: tar.gz
+  rlcp: false
 - id: macos
   name_template: mongocli_{{ .Version }}_{{- if eq .Os "darwin" }}macos{{- else }}{{ .Os }}{{ end }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [macos]
@@ -72,6 +73,7 @@ archives:
   <<: *archive_defaults
   wrap_in_directory: false
   format: zip
+  rlcp: false
 nfpms:
 - id: linux_package
   package_name: mongocli

@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package options
 
 import (
@@ -49,7 +50,7 @@ func (opts *DeploymentOpts) PromptConnectWith() (string, error) {
 	p := &survey.Select{
 		Message: fmt.Sprintf("How would you like to connect to %s?", opts.DeploymentName),
 		Options: ConnectWithOptions,
-		Description: func(value string, index int) string {
+		Description: func(value string, _ int) string {
 			return connectWithDescription[value]
 		},
 	}

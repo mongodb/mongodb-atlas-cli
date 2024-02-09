@@ -60,7 +60,7 @@ func EnableBuilder() *cobra.Command {
 		Use:   "enable <alertConfigId>",
 		Short: "Enables one alert configuration for the specified project.",
 		Args:  require.ExactArgs(1),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
@@ -73,7 +73,7 @@ func EnableBuilder() *cobra.Command {
 			"alertConfigIdDesc": "ID of the alert you want to enable.",
 			"output":            enableTemplate,
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.alertID = args[0]
 			return opts.Run()
 		},

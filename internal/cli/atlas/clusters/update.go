@@ -168,7 +168,7 @@ You can't change the name of the cluster or downgrade the MongoDB version of you
 				opts.InitOutput(cmd.OutOrStdout(), updateTmpl),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 		Annotations: map[string]string{

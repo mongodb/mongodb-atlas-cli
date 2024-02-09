@@ -73,7 +73,7 @@ func RenameBuilder() *cobra.Command {
 			"newProfileNameDesc": "New name of the profile.",
 		},
 		Args: require.ExactArgs(argsN),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			o.oldName = args[0]
 			o.newName = args[1]
 			return o.Run()

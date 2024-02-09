@@ -106,10 +106,10 @@ func InitBuilder() *cobra.Command {
 
   # To configure the tool to work with Atlas for Government:
   atlas config init --gov`,
-		PreRun: func(cmd *cobra.Command, args []string) {
+		PreRun: func(cmd *cobra.Command, _ []string) {
 			opts.OutWriter = cmd.OutOrStdout()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd.Context())
 		},
 		Args: require.NoArgs,

@@ -83,14 +83,14 @@ func CreateBuilder() *cobra.Command {
 			"clusterNameDesc": "Name of the Atlas cluster whose snapshot you want to restore.",
 			"output":          createTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.clusterName = args[0]
 			return opts.Run()
 		},

@@ -143,10 +143,10 @@ Deleting a Local deployment also deletes any local data volumes.
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd.Context())
 		},
-		PostRunE: func(cmd *cobra.Command, args []string) error {
+		PostRunE: func(_ *cobra.Command, _ []string) error {
 			return opts.PostRun()
 		},
 	}

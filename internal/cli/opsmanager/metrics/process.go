@@ -70,7 +70,7 @@ func ProcessBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"hostIdDesc": "Process identifier. You can use mongocli ops-manager processes list to get the ID.",
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.ValidatePeriodStartEnd,
@@ -78,7 +78,7 @@ func ProcessBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), metricTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.hostID = args[0]
 			return opts.Run()
 		},

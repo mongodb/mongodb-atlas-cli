@@ -269,10 +269,10 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
-		PostRunE: func(cmd *cobra.Command, args []string) error {
+		PostRunE: func(_ *cobra.Command, _ []string) error {
 			return opts.PostRun()
 		},
 		Annotations: map[string]string{
@@ -322,11 +322,11 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Shards)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tag)
 
-	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return []string{"REPLICASET", "SHARDED", "GEOSHARDED"}, cobra.ShellCompDirectiveDefault
 	})
 
-	_ = cmd.RegisterFlagCompletionFunc(flag.Provider, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	_ = cmd.RegisterFlagCompletionFunc(flag.Provider, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return []string{"AWS", "AZURE", "GCP"}, cobra.ShellCompDirectiveDefault
 	})
 

@@ -117,7 +117,7 @@ func CreateBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			if len(args) > 0 {
 				opts.Name = args[0]
 			}

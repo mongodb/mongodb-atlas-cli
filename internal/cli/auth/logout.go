@@ -80,12 +80,12 @@ func LogoutBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  # To log out from the CLI:
   %s auth logout
 `, config.BinName()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			opts.config = config.Default()
 			return opts.initFlow()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			if config.RefreshToken() == "" {
 				return ErrUnauthenticated
 			}

@@ -96,7 +96,7 @@ func DescribeBuilder() *cobra.Command {
 
 ` + fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Args: require.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
 				opts.initStore(cmd.Context()),
@@ -104,7 +104,7 @@ func DescribeBuilder() *cobra.Command {
 				opts.validate,
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

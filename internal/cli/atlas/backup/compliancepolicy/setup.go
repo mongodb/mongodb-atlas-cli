@@ -86,7 +86,7 @@ func (opts *SetupOpts) setupWatcher() (bool, error) {
 	if res.GetState() == "" {
 		return false, errors.New("could not access State field")
 	}
-	return (res.GetState() == active), nil
+	return res.GetState() == active, nil
 }
 
 func newSetupConfirmationQuestion() survey.Prompt {
@@ -131,14 +131,14 @@ func SetupBuilder() *cobra.Command {
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Setup the backup compliance policy for your project with a configuration file.",
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), setupTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			if err := file.Load(opts.fs, opts.path, opts.policy); err != nil {
 				return err
 			}

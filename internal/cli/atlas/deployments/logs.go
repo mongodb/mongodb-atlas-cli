@@ -196,13 +196,13 @@ func LogsBuilder() *cobra.Command {
 		Aliases: []string{"log"},
 		Args:    require.NoArgs,
 		GroupID: "local",
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ""))
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}

@@ -72,14 +72,14 @@ func AuthorizeBuilder() *cobra.Command {
 			"roleIdDesc": "Unique ID of the role to authorize.",
 			"output":     authorizeTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), authorizeTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.roleID = args[0]
 			return opts.Run()
 		},

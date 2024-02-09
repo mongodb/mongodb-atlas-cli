@@ -75,7 +75,7 @@ func ListBuilder() *cobra.Command {
 
   # List available regions by tier for a given provider:
   atlas cluster availableRegions list --provider GCP`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			if opts.tier != "" && opts.provider == "" {
 				return fmt.Errorf("tier search also requires a %s flag", flag.Provider)
 			}
@@ -86,7 +86,7 @@ func ListBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

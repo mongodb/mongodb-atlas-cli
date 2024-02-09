@@ -113,7 +113,7 @@ func DeleteBuilder() *cobra.Command {
 			"indexIdDesc": "ID of the index.",
 			"output":      opts.SuccessMessage(),
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initStore(cmd.Context()),

@@ -67,14 +67,14 @@ func ListBuilder() *cobra.Command {
   %s alerts settings list --projectId 5df90590f10fab5e33de2305 --output json`, cli.ExampleAtlasEntryPoint()),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), settingsListTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

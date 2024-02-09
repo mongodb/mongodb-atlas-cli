@@ -68,11 +68,11 @@ func GlobalListBuilder() *cobra.Command {
 		Short:   "Returns all global alerts for the specified Ops Manager project.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

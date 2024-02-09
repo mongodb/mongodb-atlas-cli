@@ -77,10 +77,10 @@ func EnableBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"MONGODB-CR|SCRAM-SHA-256Desc": "Authentication mechanism.",
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.mechanisms = args
 			return opts.Run()
 		},

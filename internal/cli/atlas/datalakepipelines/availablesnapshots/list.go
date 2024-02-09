@@ -91,7 +91,7 @@ func ListBuilder() *cobra.Command {
 		Example: `# list available backup schedules for data lake pipeline called 'Pipeline1':
   atlas dataLakePipelines availableSnapshots list Pipeline1
 `,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
@@ -99,7 +99,7 @@ func ListBuilder() *cobra.Command {
 				opts.validate,
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

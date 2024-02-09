@@ -91,14 +91,14 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create a scheduled policy item for the backup compliance policy for your project.",
 		Example: `  # Create a backup compliance schedule policy with a weekly frequency, where the snapshot occurs on Monday and has a retention of two months:
   atlas backups compliancepolicy policies scheduled create --frequencyType weekly --frequencyInterval 1 --retentionUnit months --retentionValue 2`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

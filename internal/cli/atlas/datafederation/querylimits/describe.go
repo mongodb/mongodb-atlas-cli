@@ -72,14 +72,14 @@ func DescribeBuilder() *cobra.Command {
 		Example: `# retrieves data federation query limits "bytesProcessed.query" for 'DataFederation1':
   atlas dataFederation queryLimits describe bytesProcessed.query --tenantName DataFederation1
 `,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.limitName = args[0]
 
 			return opts.Run()

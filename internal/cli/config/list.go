@@ -45,10 +45,10 @@ func ListBuilder() *cobra.Command {
 		Short:   "Return a list of available profiles by name.",
 		Long:    `If you did not specify a name for your profile, it displays as the default profile.`,
 		Example: fmt.Sprintf("  %s config ls", config.BinName()),
-		PreRun: func(cmd *cobra.Command, args []string) {
+		PreRun: func(cmd *cobra.Command, _ []string) {
 			o.OutWriter = cmd.OutOrStdout()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return o.Run()
 		},
 	}

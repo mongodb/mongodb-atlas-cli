@@ -451,7 +451,7 @@ func (opts *SetupOpts) promptSettings() error {
 		Message: "How do you want to set up your local Atlas deployment?",
 		Options: settingOptions,
 		Default: opts.settings,
-		Description: func(value string, index int) string {
+		Description: func(value string, _ int) string {
 			return settingsDescription[value]
 		},
 	}
@@ -644,13 +644,15 @@ func (opts *SetupOpts) setDefaultSettings() error {
 	}
 
 	if defaultValuesSet {
-		templatewriter.Print(os.Stderr, `
+		if err := templatewriter.Print(os.Stderr, `
 [Default Settings]
 Deployment Name	{{.DeploymentName}}
 MongoDB Version	{{.MdbVersion}}
 Port	{{.Port}}
 
-`, opts)
+`, opts); err != nil {
+			return err
+		}
 		if !opts.force {
 			if err := opts.promptSettings(); err != nil {
 				return err
@@ -665,7 +667,7 @@ func (opts *SetupOpts) promptConnect() error {
 	p := &survey.Select{
 		Message: fmt.Sprintf("How would you like to connect to %s?", opts.DeploymentName),
 		Options: connectWithOptions,
-		Description: func(value string, index int) string {
+		Description: func(value string, _ int) string {
 			return connectWithDescription[value]
 		},
 	}
@@ -686,7 +688,7 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 
 	switch opts.connectWith {
 	case skipConnect:
-		fmt.Fprintln(os.Stderr, "connection skipped")
+		_, _ = fmt.Fprintln(os.Stderr, "connection skipped")
 	case options.CompassConnect:
 		if !compass.Detect() {
 			return options.ErrCompassNotInstalled
@@ -851,7 +853,7 @@ func SetupBuilder() *cobra.Command {
 				opts.initMongoDBClient(cmd.Context()),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
@@ -875,13 +877,13 @@ func SetupBuilder() *cobra.Command {
 	cmd.Flags().Lookup(flag.SkipSampleData).Usage = usage.SkipSampleDataDeployment
 	cmd.Flags().Lookup(flag.Force).Usage = usage.ForceDeploymentsSetup
 
-	_ = cmd.RegisterFlagCompletionFunc(flag.MDBVersion, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	_ = cmd.RegisterFlagCompletionFunc(flag.MDBVersion, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return mdbVersions, cobra.ShellCompDirectiveDefault
 	})
-	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return options.DeploymentTypeOptions, cobra.ShellCompDirectiveDefault
 	})
-	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return connectWithOptions, cobra.ShellCompDirectiveDefault
 	})
 	return cmd

@@ -145,7 +145,7 @@ func SaveBuilder() *cobra.Command {
   --hostname atlas-ldaps-01.ldap.myteam.com --bindUsername 
   "CN=Administrator,CN=Users,DC=atlas-ldaps-01,DC=myteam,DC=com" 
   --bindPassword changeMe`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
@@ -153,7 +153,7 @@ func SaveBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), saveTemplate),
 				opts.InitInput(cmd.InOrStdin()))
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

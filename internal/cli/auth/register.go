@@ -102,7 +102,7 @@ func RegisterBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  # To start the interactive setup:
   %s auth register
 `, config.BinName()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			defaultProfile := config.Default()
 			return prerun.ExecuteE(
@@ -112,7 +112,7 @@ func RegisterBuilder() *cobra.Command {
 				validate.NoAPIKeys,
 				validate.NoAccessToken)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
 
 			return opts.RegisterRun(cmd.Context())

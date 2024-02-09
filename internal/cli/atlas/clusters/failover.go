@@ -70,7 +70,7 @@ func FailoverBuilder() *cobra.Command {
 			opts.Entry = args[0]
 			return opts.PromptWithMessage("Are you sure you want to start a failover test for %q")
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

@@ -84,10 +84,10 @@ func DeauthorizeBuilder() *cobra.Command {
 			"roleIdDesc": "Unique ID of the role to authorize.",
 			"output":     deauthorizeSuccess,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.Entry = args[0]
 			if err := opts.PromptWithMessage(confirmationMessage); err != nil {
 				return err

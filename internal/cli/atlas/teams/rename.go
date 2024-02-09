@@ -75,14 +75,14 @@ func RenameBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Rename a team in the organization with ID 5e2211c17a3e5a48f5497de3:
   %s teams rename newName --teamId 5e1234c17a3e5a48f5497de3 --orgId 5e1234c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), renameTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.Run()
 		},

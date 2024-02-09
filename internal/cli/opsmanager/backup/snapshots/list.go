@@ -68,14 +68,14 @@ func ListBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"clusterIdDesc": "ID of the cluster.",
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), snapshotsTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			if err := validate.ObjectID(args[0]); err != nil {
 				return err
 			}

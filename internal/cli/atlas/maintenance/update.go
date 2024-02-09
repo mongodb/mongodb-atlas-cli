@@ -74,7 +74,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Update the maintenance window to midnight on Saturdays for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s maintenanceWindows update --dayOfWeek 7 --hourOfDay 0 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			if !opts.startASAP {
 				_ = cmd.MarkFlagRequired(flag.DayOfWeek)
 				_ = cmd.MarkFlagRequired(flag.HourOfDay)
@@ -85,7 +85,7 @@ func UpdateBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

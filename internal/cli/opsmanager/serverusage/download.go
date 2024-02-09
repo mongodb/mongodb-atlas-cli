@@ -87,11 +87,11 @@ func DownloadBuilder() *cobra.Command {
 		Use:     "download",
 		Short:   "Download the server usage report.",
 		Example: `  mongocli ops-manager serverUsage download --endDate 2022-12-12 --startDate 2022-01-01`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.initDefaultOut()
 			return opts.initStore(cmd.Context())()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

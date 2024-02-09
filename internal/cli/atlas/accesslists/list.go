@@ -68,14 +68,14 @@ func ListBuilder() *cobra.Command {
 		Args:    require.NoArgs,
 		Example: `  # Return a JSON-formatted list of all access list entries for the project with ID 5e1234c17a3e5a48f5497de3:		
   atlas accessLists list --output json --projectId 5e1234c17a3e5a48f5497de3`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

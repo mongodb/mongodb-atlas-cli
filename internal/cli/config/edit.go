@@ -51,7 +51,7 @@ func EditBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  # To open the config
   %s config edit
 `, config.BinName()),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opt.Run()
 		},
 		Annotations: map[string]string{

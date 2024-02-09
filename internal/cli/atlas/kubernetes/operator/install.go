@@ -181,7 +181,7 @@ The key is scoped to the project when you specify the --projectName option and t
 
 	# Install the operator and disable deletion protection for sub-resources (Atlas project integrations, private endpoints, etc.):
 	atlas kubernetes operator install --subresourceDeletionProtection=false`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(_ *cobra.Command, _ []string) error {
 			opts.versionProvider = version.NewOperatorVersion(github.NewClient(nil))
 
 			return opts.PreRunE(
@@ -192,7 +192,7 @@ The key is scoped to the project when you specify the --projectName option and t
 				opts.ValidateWatchNamespace,
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}

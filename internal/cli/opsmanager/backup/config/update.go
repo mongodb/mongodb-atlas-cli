@@ -107,11 +107,11 @@ func UpdateBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"clusterIdDesc": "ID of the cluster.",
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.clusterID = args[0]
 			return opts.Run()
 		},

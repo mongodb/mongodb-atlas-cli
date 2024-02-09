@@ -72,14 +72,14 @@ func ListBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Return all continuous backup restore jobs for the cluster Cluster0:
   %s backup restore list Cluster0`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), restoreListTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.clusterName = args[0]
 
 			return opts.Run()

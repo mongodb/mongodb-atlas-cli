@@ -66,13 +66,13 @@ func CreateBuilder() *cobra.Command {
 		},
 		Example: `  # Create an Ops Manager organization with the name myOrg:
   mongocli iam organizations create myOrg --output json`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return prerun.ExecuteE(
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 				opts.initStore(cmd.Context()),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.name = args[0]
 
 			return opts.Run()

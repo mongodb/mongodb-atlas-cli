@@ -96,7 +96,7 @@ func AcknowledgeBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Aliases: []string{"ack"},
 		Args:    require.ExactArgs(1),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			if opts.forever && opts.until != "" {
 				return fmt.Errorf("--%s and --%s are exclusive", flag.Forever, flag.Until)
 			}
@@ -112,7 +112,7 @@ func AcknowledgeBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Acknowledge an alert with the ID 5d1113b25a115342acc2d1aa in the project with the ID 5e2211c17a3e5a48f5497de3 until January 1 2028:
   %s alerts acknowledge 5d1113b25a115342acc2d1aa --until 2028-01-01T20:24:26Z --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.alertID = args[0]
 			return opts.Run()
 		},

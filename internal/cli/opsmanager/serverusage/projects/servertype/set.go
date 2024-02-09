@@ -70,13 +70,13 @@ func SetBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"typeDesc": "Server type to set.",
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.serverType = args[0]
 			return opts.Run()
 		},

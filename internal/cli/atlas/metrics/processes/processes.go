@@ -79,7 +79,7 @@ func Builder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted process metrics for the host atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
   %s metrics processes atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 --output json`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.ValidatePeriodStartEnd,
@@ -87,7 +87,7 @@ func Builder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), metricTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			var err error
 			opts.host, opts.port, err = cli.GetHostnameAndPort(args[0])
 			if err != nil {

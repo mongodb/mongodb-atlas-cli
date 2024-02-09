@@ -70,14 +70,14 @@ func TriggerBuilder() *cobra.Command {
 		Example: `# trigger pipeline 'Pipeline1':
   atlas dataLakePipelines trigger Pipeline1
 `,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), triggerTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.id = args[0]
 
 			return opts.Run()

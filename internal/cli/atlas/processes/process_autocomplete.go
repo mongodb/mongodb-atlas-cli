@@ -35,7 +35,7 @@ type AutoCompleteOpts struct {
 }
 
 func (opts *AutoCompleteOpts) AutocompleteProcesses() cli.AutoFunc {
-	return func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	return func(cmd *cobra.Command, _ []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		if err := opts.parseFlags(cmd); err != nil {
 			cobra.CompErrorln(fmt.Sprintf("failed to parse flags: %v", err))
 			return nil, cobra.ShellCompDirectiveError

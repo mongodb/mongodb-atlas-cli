@@ -72,7 +72,7 @@ func DescribeBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 		Deprecated: "Please use atlas privateEndpoints aws describe <ID> [--projectId projectId]",

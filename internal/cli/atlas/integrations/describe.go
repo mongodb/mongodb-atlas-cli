@@ -117,7 +117,7 @@ func DescribeBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), opts.template()),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

@@ -114,7 +114,7 @@ func DescribeBuilder() *cobra.Command {
 			"indexIdDesc": "ID of the index.",
 			"output":      describeTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			w := cmd.OutOrStdout()
 			return opts.PreRunE(
 				opts.InitOutput(w, describeTemplate),

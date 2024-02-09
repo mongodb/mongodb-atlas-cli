@@ -117,7 +117,7 @@ func UpdateBuilder() *cobra.Command {
 			"usernameDesc": "Username to update in the MongoDB database.",
 			"output":       updateTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.validateAuthDB,
@@ -125,7 +125,7 @@ func UpdateBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.currentUsername = args[0]
 			return opts.Run()
 		},

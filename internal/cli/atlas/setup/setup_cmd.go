@@ -574,7 +574,7 @@ func Builder() *cobra.Command {
   atlas setup --clusterName Test --provider GCP --username dbuserTest`,
 		Hidden: false,
 		Args:   require.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			defaultProfile := config.Default()
 			opts.config = defaultProfile
 			opts.OutWriter = cmd.OutOrStdout()
@@ -605,7 +605,7 @@ func Builder() *cobra.Command {
 
 			return opts.PreRunE(preRun...)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			opts.flags = cmd.Flags()
 			return opts.Run(cmd.Context())
 		},

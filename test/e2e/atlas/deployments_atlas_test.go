@@ -51,7 +51,6 @@ func TestDeploymentsAtlas(t *testing.T) {
 
 	dbUserPassword := dbUserUsername + "~PwD"
 
-	var connectionString string
 	var client *mongo.Client
 	ctx := context.Background()
 
@@ -79,10 +78,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 		cmd.Stdout = &o
 		cmd.Stderr = &e
 		err = cmd.Run()
-		req.NoError(err, e.String())
-
-		connectionString = strings.TrimSpace(o.String())
-		connectionString = strings.Replace(connectionString, "Your connection string: ", "", 1)
+		require.NoError(t, err, e.String())
 	})
 	require.NoError(t, watchCluster(g.projectID, clusterName))
 
@@ -112,7 +108,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 					Password:      dbUserPassword,
 				}),
 		)
-		req.NoError(err)
+		require.NoError(t, err)
 	})
 
 	t.Cleanup(func() {
@@ -129,7 +125,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 		assert.Contains(t, string(resp), fmt.Sprintf("Pausing deployment '%s'", clusterName))
 	})
 
@@ -143,9 +139,8 @@ func TestDeploymentsAtlas(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-		a := assert.New(t)
-		a.Contains(string(resp), fmt.Sprintf("Starting deployment '%s'", clusterName))
+		require.NoError(t, err, string(resp))
+		assert.Contains(t, string(resp), fmt.Sprintf("Starting deployment '%s'", clusterName))
 	})
 	require.NoError(t, watchCluster(g.projectID, clusterName))
 
@@ -169,7 +164,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 
 		r, err := cmd.CombinedOutput()
 		out := string(r)
-		req.NoError(err, out)
+		require.NoError(t, err, out)
 		assert.Contains(t, out, "Search index created")
 	})
 

@@ -824,7 +824,7 @@ func TestProjectAndTeams(t *testing.T) {
 		})
 
 		checkProject(t, objects, expectedProject, assertions)
-		t.Run("Team is created", func(t *testing.T) {
+		t.Run("Team is created", func(_ *testing.T) {
 			for _, obj := range objects {
 				if team, ok := obj.(*akov2.AtlasTeam); ok {
 					assertions.Equal(expectedTeam, team)

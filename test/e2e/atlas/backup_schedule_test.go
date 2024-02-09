@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
@@ -49,12 +50,10 @@ func TestSchedule(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		r.NoError(err)
+		require.NoError(t, err)
+		require.NoError(t, json.Unmarshal(resp, &policy))
 
-		err = json.Unmarshal(resp, &policy)
-		r.NoError(err)
-
-		r.Equal(g.clusterName, policy.GetClusterName())
+		assert.Equal(t, g.clusterName, policy.GetClusterName())
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -71,7 +70,7 @@ func TestSchedule(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -86,6 +85,6 @@ func TestSchedule(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 }

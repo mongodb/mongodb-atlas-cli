@@ -36,13 +36,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-const operatorNamespace = "atlas-operator"
-const maxAttempts = 12
-const deploymentMaxAttempts = 36
-const poolInterval = 10 * time.Second
+const (
+	operatorNamespace     = "atlas-operator"
+	maxAttempts           = 12
+	deploymentMaxAttempts = 36
+	poolInterval          = 10 * time.Second
+)
 
 func TestKubernetesOperatorInstall(t *testing.T) {
-	a := assert.New(t)
 	req := require.New(t)
 
 	cliPath, err := e2e.AtlasCLIBin()
@@ -57,8 +58,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--operatorVersion", "1.1.0")
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
-		req.Error(inErr, string(resp))
-		a.Equal("Error: version 1.1.0 is not supported\n", string(resp))
+		require.Error(t, inErr, string(resp))
+		assert.Equal(t, "Error: version 1.1.0 is not supported\n", string(resp))
 	})
 
 	t.Run("should failed to install a non-existing version of the operator", func(t *testing.T) {
@@ -69,8 +70,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--operatorVersion", "100.0.0")
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
-		req.Error(inErr, string(resp))
-		a.Equal("Error: version 100.0.0 is not supported\n", string(resp))
+		require.Error(t, inErr, string(resp))
+		assert.Equal(t, "Error: version 100.0.0 is not supported\n", string(resp))
 	})
 
 	t.Run("should failed when unable to setup connection to the cluster", func(t *testing.T) {
@@ -81,8 +82,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--kubeconfig", "/path/to/non/existing/config")
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
-		req.Error(inErr, string(resp))
-		a.Equal("Error: unable to prepare client configuration: invalid configuration: no configuration has been provided, try setting KUBERNETES_MASTER environment variable\n", string(resp))
+		require.Error(t, inErr, string(resp))
+		assert.Equal(t, "Error: unable to prepare client configuration: invalid configuration: no configuration has been provided, try setting KUBERNETES_MASTER environment variable\n", string(resp))
 	})
 
 	t.Run("should install operator with default options", func(t *testing.T) {
@@ -97,8 +98,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
-		req.NoError(inErr, string(resp))
-		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
+		require.NoError(t, inErr, string(resp))
+		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
 		checkDeployment(t, operator, "default")
 	})
@@ -117,8 +118,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
-		req.NoError(inErr, string(resp))
-		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
+		require.NoError(t, inErr, string(resp))
+		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
 		checkDeployment(t, operator, operatorNamespace)
 	})
@@ -141,8 +142,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
 		req.NoError(inErr, string(resp))
-		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
-
+		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 		checkDeployment(t, operator, operatorNamespace)
 	})
 
@@ -162,7 +162,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
 		req.NoError(inErr, string(resp))
-		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
+		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
 		checkDeployment(t, operator, operatorNamespace)
 	})
@@ -183,8 +183,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
-		req.NoError(inErr, string(resp))
-		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
+		require.NoError(t, inErr, string(resp))
+		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
 		checkDeployment(t, operator, operatorNamespace)
 
@@ -194,7 +194,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			projectSecret,
 			false,
 		)
-		req.NoError(inErr)
+		require.NoError(t, inErr)
 
 		orgSecret := &corev1.Secret{}
 		inErr = operator.getK8sObject(
@@ -202,7 +202,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			orgSecret,
 			false,
 		)
-		req.Error(inErr)
+		require.Error(t, inErr)
 
 		checkK8sAtlasProject(t, operator, client.ObjectKey{Name: prepareK8sName(projectName), Namespace: operatorNamespace})
 
@@ -259,7 +259,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
 		req.NoError(inErr, string(resp))
-		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
+		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
 		checkDeployment(t, operator, operatorNamespace)
 		checkK8sAtlasProject(t, operator, client.ObjectKey{Name: prepareK8sName(g.projectName), Namespace: operatorNamespace})
@@ -288,18 +288,17 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
-		req.NoError(inErr, string(resp))
-		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
+		require.NoError(t, inErr, string(resp))
+		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
 		checkDeployment(t, operator, operatorNamespace)
 
 		deployment := &appsv1.Deployment{}
-		err := operator.getK8sObject(
+		require.NoError(t, operator.getK8sObject(
 			client.ObjectKey{Name: "mongodb-atlas-operator", Namespace: operatorNamespace},
 			deployment,
 			false,
-		)
-		require.NoError(t, err)
+		))
 		assert.Contains(t, deployment.Spec.Template.Spec.Containers[0].Args, "--resourceDeletionProtection=false")
 		assert.Contains(t, deployment.Spec.Template.Spec.Containers[0].Args, "--subresourceDeletionProtection=false")
 

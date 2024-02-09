@@ -56,10 +56,9 @@ func TestExportBuckets(t *testing.T) {
 
 		r.NoError(err, string(resp))
 
-		a := assert.New(t)
 		var exportBucket atlasv2.DiskBackupSnapshotAWSExportBucket
 		r.NoError(json.Unmarshal(resp, &exportBucket))
-		a.Equal(bucketName, exportBucket.GetBucketName())
+		assert.Equal(t, bucketName, exportBucket.GetBucketName())
 		bucketID = exportBucket.GetId()
 	})
 
@@ -107,6 +106,6 @@ func TestExportBuckets(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 }

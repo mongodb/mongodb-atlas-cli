@@ -34,7 +34,6 @@ func TestAccessList(t *testing.T) {
 	g.generateProject("accessList")
 
 	n, err := e2e.RandInt(255)
-	a := assert.New(t)
 	req := require.New(t)
 	req.NoError(err)
 
@@ -55,11 +54,10 @@ func TestAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		require.NoError(t, err)
 
 		var entries *atlasv2.PaginatedNetworkAccess
-		err = json.Unmarshal(resp, &entries)
-		req.NoError(err)
+		require.NoError(t, json.Unmarshal(resp, &entries))
 
 		found := false
 		for i := range entries.GetResults() {
@@ -69,7 +67,7 @@ func TestAccessList(t *testing.T) {
 			}
 		}
 
-		a.True(found)
+		assert.True(t, found)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -81,10 +79,9 @@ func TestAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		require.NoError(t, err, string(resp))
 		var entries *atlasv2.PaginatedNetworkAccess
-		err = json.Unmarshal(resp, &entries)
-		req.NoError(err)
+		require.NoError(t, json.Unmarshal(resp, &entries))
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -97,10 +94,9 @@ func TestAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		require.NoError(t, err, string(resp))
 		var entry *atlasv2.NetworkPermissionEntry
-		err = json.Unmarshal(resp, &entry)
-		req.NoError(err)
+		require.NoError(t, json.Unmarshal(resp, &entry))
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -113,10 +109,10 @@ func TestAccessList(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", entry)
-		a.Equal(expected, string(resp))
+		assert.Equal(t, expected, string(resp))
 	})
 
 	t.Run("Create Delete After", func(t *testing.T) {
@@ -131,11 +127,10 @@ func TestAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		require.NoError(t, err, string(resp))
 
 		var entries *atlasv2.PaginatedNetworkAccess
-		err = json.Unmarshal(resp, &entries)
-		req.NoError(err)
+		require.NoError(t, json.Unmarshal(resp, &entries))
 
 		found := false
 		for i := range entries.GetResults() {
@@ -144,7 +139,7 @@ func TestAccessList(t *testing.T) {
 				break
 			}
 		}
-		a.True(found)
+		assert.True(t, found)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -157,10 +152,10 @@ func TestAccessList(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", entry)
-		a.Equal(expected, string(resp))
+		assert.Equal(t, expected, string(resp))
 	})
 
 	t.Run("Create with CurrentIp", func(t *testing.T) {
@@ -174,12 +169,12 @@ func TestAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		require.NoError(t, err, string(resp))
 
 		var entries *atlasv2.PaginatedNetworkAccess
-		err = json.Unmarshal(resp, &entries)
-		req.NoError(err)
+		require.NoError(t, json.Unmarshal(resp, &entries))
 
+		a := assert.New(t)
 		a.NotEmpty(entries.GetResults())
 		a.Len(entries.GetResults(), 1)
 
@@ -196,9 +191,9 @@ func TestAccessList(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", currentIPEntry)
-		a.Equal(expected, string(resp))
+		assert.Equal(t, expected, string(resp))
 	})
 }

@@ -9,7 +9,7 @@ jobs:
     name: Build and publish docker image to staging registry
     runs-on: ubuntu-latest
     env:
-      STAGING_IMAGE_REPOSITORY: andreaangiolillo22/staging
+      STAGING_IMAGE_REPOSITORY: mongodb/apix_test
       PLATFORMS: linux/amd64,linux/arm64
     steps:
       - name: Check out code
@@ -35,8 +35,8 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d
         with:
-          username: "${{ secrets.DOCKERHUB_USER }}"
-          password: "${{ secrets.DOCKERHUB_SECRET }}"
+          username: "${{ secrets.DOCKERHUB_USER_STAGING }}"
+          password: "${{ secrets.DOCKERHUB_SECRET_STAGING }}"
       - name: Build and push image to dockerhub staging registry
         uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56
         with:
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_REPOSITORY: andreaangiolillo22/atlascli_test
-      STAGING_IMAGE_REPOSITORY: andreaangiolillo22/staging
+      STAGING_IMAGE_REPOSITORY: mongodb/apix_test
       PLATFORMS: linux/amd64,linux/arm64
       QUAY: quay.io
       DOCKER_CLI_EXPERIMENTAL: enabled # used for enabling containerd image storage. See https://github.com/docker/setup-buildx-action/issues/257#issuecomment-1722284952

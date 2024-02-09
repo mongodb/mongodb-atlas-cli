@@ -79,7 +79,7 @@ func AtlasBackupsCheckpointsListBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), checkpointsTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.clusterID = args[0]
 			return opts.Run()
 		},

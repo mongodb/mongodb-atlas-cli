@@ -38,7 +38,7 @@ type autoCompleteOpts struct {
 }
 
 func (opts *autoCompleteOpts) autocompleteTier() cli.AutoFunc {
-	return func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	return func(cmd *cobra.Command, _ []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		if err := opts.parseFlags(cmd); err != nil {
 			cobra.CompErrorln(fmt.Sprintf("failed to parse flags: %v", err))
 			return nil, cobra.ShellCompDirectiveError
@@ -90,7 +90,7 @@ func (opts *autoCompleteOpts) tierSuggestions(toComplete string) ([]string, erro
 }
 
 func (opts *autoCompleteOpts) autocompleteRegion() cli.AutoFunc {
-	return func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	return func(cmd *cobra.Command, _ []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		if err := opts.parseFlags(cmd); err != nil {
 			cobra.CompErrorln(fmt.Sprintf("failed to parse flags: %v", err))
 			return nil, cobra.ShellCompDirectiveError

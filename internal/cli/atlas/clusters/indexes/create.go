@@ -117,10 +117,10 @@ func CreateBuilder() *cobra.Command {
   # Create a compound index named property_room_bedrooms on the
   listings collection of the realestate database:
   %[1]s clusters indexes create property_room_bedrooms --clusterName Cluster0 --collection listings --db realestate --key property_type:1 --key room_type:1 --key bedrooms:1`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			if len(args) == 1 {
 				opts.name = args[0]
 			}

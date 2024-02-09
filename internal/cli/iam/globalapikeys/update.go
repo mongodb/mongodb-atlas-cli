@@ -74,11 +74,11 @@ func UpdateBuilder() *cobra.Command {
 		},
 		Example: `  # Modify the roles and description for the global API key with the ID 5f5bad7a57aef32b04ed0210:
   mongocli iam globalApiKeys update 5f5bad7a57aef32b04ed0210 --desc "My Sample Global API Key" --role GLOBAL_MONITORING_ADMIN --output json`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.Run()
 		},

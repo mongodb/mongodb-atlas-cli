@@ -111,10 +111,10 @@ func DecryptBuilder() *cobra.Command {
   # Decrypt using Azure credentials:
   atlas logs decrypt --file /path/to/logFile.json --azureClientId <clientId> --azureTenantId <tenantId> --azureSecret <secret>
 `,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(_ *cobra.Command, _ []string) error {
 			return opts.PreRunE(opts.initDefaultOut)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

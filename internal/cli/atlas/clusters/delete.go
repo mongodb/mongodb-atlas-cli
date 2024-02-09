@@ -106,10 +106,10 @@ Deleting a cluster also deletes any backup snapshots for that cluster.
 			opts.Entry = args[0]
 			return opts.Prompt()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
-		PostRunE: func(cmd *cobra.Command, args []string) error {
+		PostRunE: func(_ *cobra.Command, _ []string) error {
 			return opts.PostRun()
 		},
 	}

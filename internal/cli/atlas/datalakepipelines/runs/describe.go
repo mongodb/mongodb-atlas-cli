@@ -72,14 +72,14 @@ func DescribeBuilder() *cobra.Command {
 		Example: `# retrieves pipeline run '507f1f77bcf86cd799439011':
   atlas dataLakePipelines runs describe 507f1f77bcf86cd799439011
 `,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.id = args[0]
 
 			return opts.Run()

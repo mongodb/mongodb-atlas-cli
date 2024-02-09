@@ -63,10 +63,10 @@ func DeleteBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Remove the AWS private endpoint interface with the ID vpce-00713b5e644e830a3 in AWS from the project with the ID 5e2211c17a3e5a48f5497de3:
   %s privateEndpoints aws interfaces delete vpce-00713b5e644e830a3 --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.Entry = args[0]
 			if err := opts.Prompt(); err != nil {
 				return err

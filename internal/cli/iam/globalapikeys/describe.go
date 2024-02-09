@@ -67,11 +67,11 @@ func DescribeBuilder() *cobra.Command {
 		},
 		Example: `  # Return the JSON-formatted details for the global API key with the ID 5f5bad7a57aef32b04ed0210:
   mongocli iam globalApiKeys describe 5f5bad7a57aef32b04ed0210 --output json`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.Run()
 		},

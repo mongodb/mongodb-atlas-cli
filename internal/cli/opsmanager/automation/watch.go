@@ -74,14 +74,14 @@ If you run the command in the terminal, it blocks the terminal session until the
 You can interrupt the command's polling at any time with CTRL-C.`,
 		Example: `  mongocli ops-manager automation watch`,
 		Args:    require.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), "\nChanges deployed successfully\n"),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

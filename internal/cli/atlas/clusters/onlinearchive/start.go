@@ -72,14 +72,14 @@ func StartBuilder() *cobra.Command {
 			"archiveIdDesc": "Unique identifier of the online archive to start.",
 			"output":        startTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), startTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.Run()
 		},

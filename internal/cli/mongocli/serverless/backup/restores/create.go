@@ -167,7 +167,7 @@ func CreateBuilder() *cobra.Command {
          --deliveryType download \
          --clusterName myDemo \
          --snapshotId 5e7e00128f8ce03996a47179`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			set := false
 
 			if opts.isAutomatedRestore() {
@@ -201,7 +201,7 @@ func CreateBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

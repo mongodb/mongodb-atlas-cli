@@ -215,7 +215,7 @@ func (opts *DeploymentOpts) promptDeploymentType() error {
 		Message: PromptTypeMessage,
 		Options: DeploymentTypeOptions,
 		Help:    usage.DeploymentType,
-		Description: func(value string, index int) string {
+		Description: func(value string, _ int) string {
 			return deploymentTypeDescription[value]
 		},
 	}

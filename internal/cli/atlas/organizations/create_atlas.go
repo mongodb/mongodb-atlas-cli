@@ -134,7 +134,7 @@ func CreateAtlasBuilder() *cobra.Command {
 		},
 		Example: `  # Create an Atlas organization with the name myOrg:
   atlas organizations create myOrg --output json`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			if len(opts.apiKeyRole) > 0 {
 				createAtlasTemplate += `API Key '{{.APIKey.ID}}' created.
 Public API Key '{{.APIKey.PublicKey}}'
@@ -147,7 +147,7 @@ Private API Key '{{.APIKey.PrivateKey}}'
 				opts.initStore(cmd.Context()),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.name = args[0]
 
 			return opts.Run()

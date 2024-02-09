@@ -63,7 +63,7 @@ func DeleteBuilder() *cobra.Command {
 			"nameDesc": "Name of the profile.",
 			"output":   opts.SuccessMessage(),
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(_ *cobra.Command, args []string) error {
 			opts.Entry = args[0]
 			if !config.Exists(opts.Entry) {
 				return fmt.Errorf("profile %v does not exist", opts.Entry)
@@ -71,7 +71,7 @@ func DeleteBuilder() *cobra.Command {
 
 			return opts.Prompt()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

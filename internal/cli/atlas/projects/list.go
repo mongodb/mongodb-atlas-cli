@@ -76,11 +76,11 @@ func ListBuilder() *cobra.Command {
 		Args:  require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all projects:
   %s projects list --output json`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

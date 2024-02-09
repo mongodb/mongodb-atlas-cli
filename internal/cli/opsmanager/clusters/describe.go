@@ -95,7 +95,7 @@ When using an output format please provide the cluster name.`,
 		Annotations: map[string]string{
 			"id|nameDesc": "Name or ID of the cluster.",
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.validateArg,
@@ -103,7 +103,7 @@ When using an output format please provide the cluster name.`,
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.Run()
 		},

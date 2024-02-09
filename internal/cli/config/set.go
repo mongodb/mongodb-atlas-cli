@@ -101,7 +101,7 @@ func SetBuilder() *cobra.Command {
 			"valueDesc":        "Value for the property to set in the profile.",
 		},
 		ValidArgs: config.Properties(),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts := &SetOpts{
 				store: config.Default(),
 				prop:  args[0],

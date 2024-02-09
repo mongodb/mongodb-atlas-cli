@@ -123,7 +123,7 @@ func ListBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": listTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			w := cmd.OutOrStdout()
 			return opts.PreRunE(
 				opts.InitOutput(w, listTemplate),
@@ -132,7 +132,7 @@ func ListBuilder() *cobra.Command {
 				opts.initMongoDBClient,
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}

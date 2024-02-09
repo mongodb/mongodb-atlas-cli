@@ -78,14 +78,14 @@ func ListBuilder() *cobra.Command {
   %s metrics databases list atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 --output json`,
 			cli.ExampleAtlasEntryPoint()),
 		Args: require.ExactArgs(1),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), databasesListTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			var err error
 			if opts.host, opts.port, err = cli.GetHostnameAndPort(args[0]); err != nil {
 				return err

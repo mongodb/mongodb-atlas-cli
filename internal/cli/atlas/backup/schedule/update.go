@@ -346,7 +346,7 @@ func UpdateBuilder() *cobra.Command {
   
   # Update a snapshot backup policy for a cluster named Cluster0 to export snapshots monthly to an S3 bucket:
   %[1]s backup schedule update --clusterName Cluster0 --exportBucketId 62c569f85b7a381c093cc539 --exportFrequencyType monthly`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
@@ -358,7 +358,7 @@ func UpdateBuilder() *cobra.Command {
 				opts.validateBackupPolicy(cmd),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd)
 		},
 	}

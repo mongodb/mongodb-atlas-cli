@@ -72,11 +72,11 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create a global API key for your Ops Manager instance.",
 		Example: `  # Create a global API key that grants GLOBAL_READ_ONLY and GLOBAL_USER_ADMIN access for your Ops Manager instance:
   mongocli iam globalApiKeys create --desc "My Global API key" --role "GLOBAL_READ_ONLY","GLOBAL_USER_ADMIN" --output json`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

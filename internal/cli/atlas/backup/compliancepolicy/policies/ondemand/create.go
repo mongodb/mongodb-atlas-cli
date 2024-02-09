@@ -89,14 +89,14 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create the on-demand policy item of the backup compliance policy for your project.",
 		Example: `  # Create a backup compliance on-demand policy with a retention of two weeks:
   atlas backups compliancepolicy policies ondemand create --retentionUnit weeks --retentionValue 2`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

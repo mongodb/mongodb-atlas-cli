@@ -69,14 +69,14 @@ func DescribeBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the sample data load job:
   %s clusters sampleData describe 5e98249d937cfc52efdc2a9f --output json`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.Run()
 		},

@@ -92,7 +92,7 @@ func EnableBuilder() *cobra.Command {
 		Use:   use,
 		Args:  require.NoArgs,
 		Short: "Enable Point-in-Time restores of the backup compliance policy for your project.",
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.validateRestoreWindowDays,
@@ -100,7 +100,7 @@ func EnableBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), enableTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

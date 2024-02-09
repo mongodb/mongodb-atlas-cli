@@ -105,7 +105,7 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create the first user for Ops Manager.",
 		Long:  "Create the first user for Ops Manager. Use this command to automate Ops Manager Installations.",
 		Args:  require.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			if err := opts.PreRunE(
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
@@ -115,7 +115,7 @@ func CreateBuilder() *cobra.Command {
 
 			return opts.Prompt()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

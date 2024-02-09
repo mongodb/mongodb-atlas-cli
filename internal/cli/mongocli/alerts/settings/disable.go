@@ -60,7 +60,7 @@ func DisableBuilder() *cobra.Command {
 		Use:   "disable <alertConfigId>",
 		Short: "Disables one alert configuration for the specified project.",
 		Args:  require.ExactArgs(1),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
@@ -72,7 +72,7 @@ func DisableBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"alertConfigIdDesc": "ID of the alert configuration you want to disable.",
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.alertID = args[0]
 			return opts.Run()
 		},

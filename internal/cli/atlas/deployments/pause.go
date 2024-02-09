@@ -134,7 +134,7 @@ func PauseBuilder() *cobra.Command {
 			"deploymentNameDesc": "Name of the deployment.",
 			"output":             pauseTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.config = config.Default()
 			opts.CredStore = config.Default()
 
@@ -150,7 +150,7 @@ func PauseBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 
-		PostRunE: func(cmd *cobra.Command, args []string) error {
+		PostRunE: func(_ *cobra.Command, _ []string) error {
 			return opts.PostRunMessages()
 		},
 	}

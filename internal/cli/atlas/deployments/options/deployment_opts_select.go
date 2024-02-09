@@ -89,7 +89,7 @@ func (opts *DeploymentOpts) SelectLocal(ctx context.Context) error {
 		Message: "Select a deployment",
 		Options: names,
 		Help:    usage.ClusterName,
-		Description: func(value string, index int) string {
+		Description: func(_ string, _ int) string {
 			return deploymentTypeLocal
 		},
 	}, &opts.DeploymentName, survey.WithValidator(survey.Required))

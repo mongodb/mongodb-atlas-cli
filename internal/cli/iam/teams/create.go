@@ -75,14 +75,14 @@ func CreateBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Create a team named myTeam in the organization with ID 5e2211c17a3e5a48f5497de3:
   %s teams create myTeam --username user1@example.com,user2@example.com --orgId 5e1234c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.Run()
 		},

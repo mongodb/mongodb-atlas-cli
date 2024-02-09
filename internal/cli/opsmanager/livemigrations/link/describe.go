@@ -58,14 +58,14 @@ func DescribeBuilder() *cobra.Command {
 		Use:     "describe",
 		Aliases: []string{"get"},
 		Short:   "Return the status of the connection between the specified source organization and the target MongoDB Atlas organization.",
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

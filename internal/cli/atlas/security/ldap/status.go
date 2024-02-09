@@ -67,13 +67,13 @@ func StatusBuilder() *cobra.Command {
 			"requestIdDesc": "ID of the request to verify an LDAP configuration.",
 			"output":        verifyStatusTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), verifyStatusTemplate))
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.Run()
 		},

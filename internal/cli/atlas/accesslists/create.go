@@ -177,7 +177,7 @@ The command doesn't overwrite existing entries in the access list. Instead, it a
 				opts.validateCurrentIPFlag(cmd, args),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			var err error
 			if len(args) == 0 {
 				opts.entry, err = IPAddress()

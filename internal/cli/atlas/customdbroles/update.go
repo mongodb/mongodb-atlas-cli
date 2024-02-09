@@ -104,7 +104,7 @@ func UpdateBuilder() *cobra.Command {
 			"output":       updateTemplate,
 		},
 		Args: require.ExactArgs(1),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
@@ -112,7 +112,7 @@ func UpdateBuilder() *cobra.Command {
 				opts.validate,
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.roleName = args[0]
 			return opts.Run()
 		},

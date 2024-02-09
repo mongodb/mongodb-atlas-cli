@@ -27,14 +27,14 @@ func UpdateBuilder() *cobra.Command {
 		Short: "Update the on-demand policy of the backup compliance for your project.",
 		Example: `  # Update a backup compliance on-demand policy and set it's retention to one week:
   atlas backups compliancepolicy policies ondemand update --retentionUnit weeks --retentionValue 1`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

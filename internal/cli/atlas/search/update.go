@@ -99,7 +99,7 @@ func UpdateBuilder() *cobra.Command {
 		Args: require.ExactArgs(1),
 		Example: fmt.Sprintf(`  # Modify the search index with the ID 5f2099cd683fc55fbb30bef6 for the cluster named myCluster:
   %s clusters search indexes update 5f2099cd683fc55fbb30bef6 --clusterName myCluster --output json`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			if opts.Filename == "" {
 				_ = cmd.MarkFlagRequired(flag.IndexName)
 				_ = cmd.MarkFlagRequired(flag.Database)
@@ -113,7 +113,7 @@ func UpdateBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.Run()
 		},

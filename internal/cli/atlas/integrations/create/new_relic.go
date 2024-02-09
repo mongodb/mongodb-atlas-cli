@@ -80,14 +80,14 @@ func NewRelicBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": createTemplateNewRelic,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplateNewRelic),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 		Deprecated: "The NEW_RELIC integration is deprecated and no longer supported",

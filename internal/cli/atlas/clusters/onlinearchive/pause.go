@@ -74,14 +74,14 @@ func PauseBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Pause the online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
   %s clusters onlineArchives pause 5f189832e26ec075e10c32d3 --clusterName myCluster --output json`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), pauseTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.Run()
 		},

@@ -97,7 +97,7 @@ func CreateBuilder() *cobra.Command {
 			"roleNameDesc": "Name of the custom role to create.",
 			"output":       createTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
@@ -105,7 +105,7 @@ func CreateBuilder() *cobra.Command {
 				opts.validate,
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.roleName = args[0]
 			return opts.Run()
 		},

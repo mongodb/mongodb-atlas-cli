@@ -145,7 +145,7 @@ func ApplyBuilder() *cobra.Command {
 
   # Export and apply all supported resources of a specific project to a specific namespace restricting the version of the Atlas Kubernetes Operator:
   atlas kubernetes config apply --projectId=<projectId> --targetNamespace=<namespace> --operatorVersion=1.5.1`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.ValidateOrgID,
@@ -154,7 +154,7 @@ func ApplyBuilder() *cobra.Command {
 				opts.initStores(cmd.Context()),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

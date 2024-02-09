@@ -57,10 +57,10 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"nameDesc": "Label that identifies the profile.",
 		},
-		PreRun: func(cmd *cobra.Command, args []string) {
+		PreRun: func(cmd *cobra.Command, _ []string) {
 			opts.OutWriter = cmd.OutOrStdout()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.Run()
 		},

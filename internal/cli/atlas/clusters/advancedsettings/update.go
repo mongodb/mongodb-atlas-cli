@@ -148,7 +148,7 @@ Atlas supports this command only for M10+ clusters.
 				opts.InitOutput(cmd.OutOrStdout(), updateTmpl),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 		Annotations: map[string]string{

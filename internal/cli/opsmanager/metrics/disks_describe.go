@@ -72,7 +72,7 @@ func DisksDescribeBuilder() *cobra.Command {
 			"hostIdDesc": "Process identifier. You can use mongocli ops-manager processes list to get the ID.",
 			"nameDesc":   "Partition name.",
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.ValidatePeriodStartEnd,
@@ -80,7 +80,7 @@ func DisksDescribeBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), diskMetricTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.hostID = args[0]
 			opts.name = args[1]
 

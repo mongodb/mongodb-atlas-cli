@@ -78,14 +78,14 @@ func ListBuilder() *cobra.Command {
 		Long: `When listing clusters with no output format the information provided is defined by monitoring.
 When using an output format the information will be provided by automation.`,
 		Args: require.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 				opts.initStore(cmd.Context()),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

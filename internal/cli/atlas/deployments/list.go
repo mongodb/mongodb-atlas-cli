@@ -86,15 +86,15 @@ func ListBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": listTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate))
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd.Context())
 		},
-		PostRunE: func(cmd *cobra.Command, args []string) error {
+		PostRunE: func(_ *cobra.Command, _ []string) error {
 			return opts.PostRun()
 		},
 	}
@@ -102,7 +102,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 
-	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return options.DeploymentTypeOptions, cobra.ShellCompDirectiveDefault
 	})
 	_ = cmd.Flags().MarkHidden(flag.TypeFlag)

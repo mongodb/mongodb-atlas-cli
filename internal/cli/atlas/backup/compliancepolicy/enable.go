@@ -68,7 +68,7 @@ func (opts *EnableOpts) enableWatcher() (bool, error) {
 	if res.GetState() == "" {
 		return false, fmt.Errorf("could not access State field")
 	}
-	return (res.GetState() == active), nil
+	return res.GetState() == active, nil
 }
 
 func newEnableConfirmationQuestion() survey.Prompt {
@@ -112,14 +112,14 @@ func EnableBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "enable",
 		Short: "Enable Backup Compliance Policy without any configuration.",
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), enableTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

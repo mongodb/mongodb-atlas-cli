@@ -102,14 +102,14 @@ func CreateBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": createTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			if opts.currentIP {
 				publicIP := storeHelper.IPAddress()
 				if publicIP == "" {

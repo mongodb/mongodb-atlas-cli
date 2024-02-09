@@ -82,7 +82,7 @@ func CreateBuilder() *cobra.Command {
 			"bucketNameDesc": "Name of the existing S3 bucket that the provided role ID is authorized to access.",
 			"output":         createTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				func() error {
@@ -92,7 +92,7 @@ func CreateBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.bucketName = args[0]
 			return opts.Run()
 		},

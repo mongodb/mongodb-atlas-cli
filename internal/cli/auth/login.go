@@ -300,7 +300,7 @@ func LoginBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  # Log in to your MongoDB %s account in interactive mode:
   %s auth login
 `, tool(), config.BinName()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			defaultProfile := config.Default()
 			return prerun.ExecuteE(
@@ -311,7 +311,7 @@ func LoginBuilder() *cobra.Command {
 				validate.NoAccessToken,
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.LoginRun(cmd.Context())
 		},
 		Args: require.NoArgs,

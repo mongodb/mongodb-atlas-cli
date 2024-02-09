@@ -155,14 +155,14 @@ func CreateBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Create a project in the organization with the ID 5e2211c17a3e5a48f5497de3 using default alert settings:
   %s projects create --orgId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			if !config.IsCloud() {
 				opts.Template += "Agent API Key: '{{.AgentAPIKey}}'\n"
 			}
 			return opts.PreRunE(opts.initStore(cmd.Context()), opts.initServiceVersion, opts.validateOwnerID, opts.validateWithoutDefaultAlertSettings)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.Run()
 		},

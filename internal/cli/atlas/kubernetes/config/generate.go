@@ -126,7 +126,7 @@ func GenerateBuilder() *cobra.Command {
 
   # Export Project, DatabaseUsers, Clusters and specific DataFederation resources for a specific project to a specific namespace:
   atlas kubernetes config generate --projectId=<projectId> --dataFederationName=<data-federation-name-1, data-federation-name-2> --targetNamespace=<namespace>`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.ValidateOrgID,
@@ -135,7 +135,7 @@ func GenerateBuilder() *cobra.Command {
 				opts.initStores(cmd.Context()),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

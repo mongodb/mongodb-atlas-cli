@@ -154,7 +154,7 @@ func UpgradeBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), upgradeTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 		Annotations: map[string]string{

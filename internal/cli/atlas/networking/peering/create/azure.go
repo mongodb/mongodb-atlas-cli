@@ -147,14 +147,14 @@ To learn more about network peering connections, see https://www.mongodb.com/doc
 		Example: fmt.Sprintf(`  # Create a network peering connection between the Atlas VPC in CIDR block 192.168.0.0/24 and your Azure VNet named atlascli-test in in US_EAST_2:
   %s networking peering create azure --atlasCidrBlock 192.168.0.0/24 --directoryId 56657fdb-ca45-40dc-fr56-77fd8b6d2b37 --subscriptionId 345654f3-77cf-4084-9e06-8943a079ed75 --resourceGroup atlascli-test --region US_EAST_2 --vnet atlascli-test`, cli.ExampleAtlasEntryPoint()),
 		Args: require.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

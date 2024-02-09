@@ -88,9 +88,9 @@ type Notifier struct {
 type AuthRequirements int64
 
 const (
-	// command does not require authentication.
+	// NoAuth command does not require authentication.
 	NoAuth AuthRequirements = 0
-	// command requires authentication.
+	// RequiredAuth command requires authentication.
 	RequiredAuth AuthRequirements = 1
 	// command can work with or without authentication,
 	// and if access token token is found, try to refresh it.
@@ -168,7 +168,7 @@ Use the --help flag with any command for more info on that command.`,
 
 			return nil
 		},
-		PersistentPostRun: func(cmd *cobra.Command, args []string) {
+		PersistentPostRun: func(cmd *cobra.Command, _ []string) {
 			// we don't run the release alert feature on the completion command
 			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "completion")) {
 				return
@@ -249,7 +249,7 @@ Use the --help flag with any command for more info on that command.`,
 	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)
 	_ = rootCmd.PersistentFlags().MarkHidden(flag.Debug)
 
-	_ = rootCmd.RegisterFlagCompletionFunc(flag.Profile, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	_ = rootCmd.RegisterFlagCompletionFunc(flag.Profile, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return config.List(), cobra.ShellCompDirectiveDefault
 	})
 	return rootCmd

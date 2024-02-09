@@ -70,14 +70,14 @@ func ListBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"AUTOMATION|MONITORING|BACKUPDesc": "Agent type",
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.agentType = strings.ToUpper(args[0])
 			return opts.Run()
 		},

@@ -77,14 +77,14 @@ You can interrupt the command's polling at any time with CTRL-C.
 		Annotations: map[string]string{
 			"snapshotIdDesc": "Unique identifier of the snapshot you want to watch.",
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), "\nSnapshot changes completed.\n"),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.Run()
 		},

@@ -53,10 +53,10 @@ func WhoAmIBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  # See the logged account:
   %s auth whoami
 `, config.BinName()),
-		PreRun: func(cmd *cobra.Command, args []string) {
+		PreRun: func(cmd *cobra.Command, _ []string) {
 			opts.OutWriter = cmd.OutOrStdout()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			var err error
 			if opts.account, err = AccountWithAccessToken(); err != nil {
 				return err

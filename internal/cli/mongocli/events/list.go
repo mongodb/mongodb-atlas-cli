@@ -113,7 +113,7 @@ func ListBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": listTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			if opts.orgID != "" && opts.projectID != "" {
 				return fmt.Errorf("both --%s and --%s set", flag.ProjectID, flag.OrgID)
 			}
@@ -123,7 +123,7 @@ func ListBuilder() *cobra.Command {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

@@ -53,14 +53,14 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete",
 		Aliases: []string{"rm"},
 		Short:   "Delete one link-token.",
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
 				opts.initStore(cmd.Context()),
 				opts.Prompt,
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			opts.Entry = opts.ConfigOrgID()
 			return opts.Run()
 		},

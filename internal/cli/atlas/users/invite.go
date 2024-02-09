@@ -186,13 +186,13 @@ func InviteBuilder() *cobra.Command {
   
   # Create the MongoDB user with the username user@example.com and invite them to the project with the ID 5f71e5255afec75a3d0f96dc with GROUP_READ_ONLY access:
   %[1]s users invite --email user@example.com --username user@example.com --projectRole 5f71e5255afec75a3d0f96dc:GROUP_READ_ONLY --firstName Example --lastName User --country US --output json`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return prerun.ExecuteE(
 				opts.InitOutput(cmd.OutOrStdout(), inviteTemplate),
 				opts.InitInput(cmd.InOrStdin()),
 				opts.initStore(cmd.Context()))
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			if err := opts.Prompt(); err != nil {
 				return err
 			}

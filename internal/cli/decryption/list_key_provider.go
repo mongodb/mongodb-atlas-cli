@@ -57,12 +57,12 @@ func KeyProvidersListBuilder() *cobra.Command {
 		Short:   "Lists all key provider configurations found in the encrypted audit log file.",
 		Example: `
   mongocli ops-manager listKeyProvider --file log.gz`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), listTmpl),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

@@ -82,14 +82,14 @@ func CreateBuilder() *cobra.Command {
 		Example: fmt.Sprintf(`  # Create a new interface for an Azure private endpoint with the ID 5f4fc14da2b47835a58c63a2 in Atlas and the ID /subscriptions/4e133d35-e734-4385-a565-c0945567ae346/resourceGroups/rg_95847a959b876e255dbb9b33_dfragd7w/providers/Microsoft.Network/privateEndpoints/test-endpoint in Azure for the project with the ID 5e2211c17a3e5a48f5497de3:
   %s privateEndpoints azure interfaces create 5f4fc14da2b47835a58c63a2 --privateEndpointId /subscriptions/4e133d35-e734-4385-a565-c0945567ae346/resourceGroups/rg_95847a959b876e255dbb9b33_dfragd7w/providers/Microsoft.Network/privateEndpoints/test-endpoint --projectId 5e2211c17a3e5a48f5497de3 --privateEndpointIpAddress 192.0.2.5
   --output json`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.interfaceEndpointID = args[0]
 			return opts.Run()
 		},

@@ -62,7 +62,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 		Annotations: map[string]string{
 			"toc": "true",
 		},
-		PersistentPostRun: func(cmd *cobra.Command, args []string) {
+		PersistentPostRun: func(cmd *cobra.Command, _ []string) {
 			// we don't run the release alert feature on the completion command
 			if strings.HasPrefix(cmd.CommandPath(), "mongocli completion") {
 				return
@@ -122,7 +122,7 @@ func Builder(profile *string, argsWithoutProg []string) *cobra.Command {
 	)
 
 	rootCmd.PersistentFlags().StringVarP(profile, flag.Profile, flag.ProfileShort, "", usage.Profile)
-	_ = rootCmd.RegisterFlagCompletionFunc(flag.Profile, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	_ = rootCmd.RegisterFlagCompletionFunc(flag.Profile, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return config.List(), cobra.ShellCompDirectiveDefault
 	})
 	return rootCmd

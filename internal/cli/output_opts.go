@@ -57,7 +57,7 @@ func (opts *OutputOpts) InitOutput(w io.Writer, t string) func() error {
 }
 
 func (*OutputOpts) AutoCompleteOutputFlag() func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-	return func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	return func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return []string{"json", "json-path", "go-template", "go-template-file"}, cobra.ShellCompDirectiveDefault
 	}
 }

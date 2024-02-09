@@ -104,7 +104,7 @@ func ReclaimFreeSpaceBuilder() *cobra.Command {
 			opts.clusterName = args[0]
 			return opts.Confirm()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

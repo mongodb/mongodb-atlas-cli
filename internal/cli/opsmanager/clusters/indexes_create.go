@@ -174,10 +174,10 @@ func IndexesCreateBuilder() *cobra.Command {
   mongocli om clusters indexes create bedrooms_1 \
     --collectionName listings --db realestate --key bedrooms:1 \
     --rsName repl1`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			if len(args) == 1 {
 				opts.name = args[0]
 			}

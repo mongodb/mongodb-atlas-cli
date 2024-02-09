@@ -79,14 +79,14 @@ func CreateBuilder() *cobra.Command {
 		Args: require.NoArgs,
 		Example: fmt.Sprintf(`  # Save the file named ca.pem stored in the files directory to the project with the ID 5e2211c17a3e5a48f5497de3:
   %s security customerCerts create --casFile files/ca.pem --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

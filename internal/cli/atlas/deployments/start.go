@@ -133,7 +133,7 @@ func StartBuilder() *cobra.Command {
 			"deploymentNameDesc": "Name of the deployment.",
 			"output":             startTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.initStore(cmd.Context()),
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
@@ -145,7 +145,7 @@ func StartBuilder() *cobra.Command {
 			}
 			return opts.Run(cmd.Context())
 		},
-		PostRunE: func(cmd *cobra.Command, args []string) error {
+		PostRunE: func(_ *cobra.Command, _ []string) error {
 			return opts.PostRunMessages()
 		},
 	}

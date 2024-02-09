@@ -58,10 +58,10 @@ func DeleteBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": opts.SuccessMessage(),
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.Entry = args[0]
 			if err := opts.Prompt(); err != nil {
 				return err

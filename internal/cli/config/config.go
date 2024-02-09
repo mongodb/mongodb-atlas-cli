@@ -133,12 +133,12 @@ To find out more, see the documentation: https://docs.mongodb.com/mongocli/stabl
   # Configure a profile to interact with Ops Manager:
   mongocli config --service ops-manager
 `,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opt.OutWriter = cmd.OutOrStdout()
 			return opt.validateService()
 		},
 
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opt.Run(cmd.Context())
 		},
 		Annotations: map[string]string{

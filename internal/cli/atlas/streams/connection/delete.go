@@ -81,7 +81,7 @@ Before deleting an Atlas Streams Processing connection, you must first stop all 
 			opts.Entry = args[0]
 			return opts.Prompt()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

@@ -96,14 +96,14 @@ func UpdateBuilder() *cobra.Command {
 			"instanceNameDesc": "Human-readable label that identifies your serverless instance.",
 			"output":           updateTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.instanceName = args[0]
 			return opts.Run()
 		},

@@ -68,11 +68,11 @@ func ListBuilder() *cobra.Command {
 		Short: "Return all IP access list entries for your global API key.",
 		Example: `  # Return a JSON-formatted list of all access list entries for the global API key:
   mongocli iam globalAccessLists list --output json`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

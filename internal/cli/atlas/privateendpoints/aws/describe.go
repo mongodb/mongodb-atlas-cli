@@ -65,9 +65,11 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "describe <privateEndpointId>",
 		Aliases: []string{"get"},
-		Args: cobra.MatchAll(require.ExactArgs(1), func(cmd *cobra.Command, args []string) error {
-			return validate.ObjectID(args[0])
-		}),
+		Args: cobra.MatchAll(
+			require.ExactArgs(1),
+			func(_ *cobra.Command, args []string) error {
+				return validate.ObjectID(args[0])
+			}),
 		Short: "Return the details for the specified AWS private endpoints for your project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{
@@ -84,7 +86,7 @@ func DescribeBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

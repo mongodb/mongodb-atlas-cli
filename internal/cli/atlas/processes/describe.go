@@ -80,14 +80,14 @@ func DescribeBuilder() *cobra.Command {
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",
 			"output":            describeTemplate,
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			var err error
 			opts.host, opts.port, err = cli.GetHostnameAndPort(args[0])
 			if err != nil {

@@ -48,7 +48,7 @@ func Builder() *cobra.Command {
 		Use:     "cloud-manager",
 		Aliases: []string{"cm"},
 		Short:   "MongoDB Cloud Manager operations.",
-		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 			log.SetWriter(cmd.ErrOrStderr())
 			if debugLevel {
 				log.SetLevel(log.DebugLevel)

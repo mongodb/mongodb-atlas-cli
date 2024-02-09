@@ -112,13 +112,13 @@ func CreateBuilder() *cobra.Command {
   # Create a user with readWriteAnyDatabase and clusterMonitor access
   mongocli om dbuser create --username <username>  --role readWriteAnyDatabase,clusterMonitor --mechanisms SCRAM-SHA-256 --projectId <projectId>`,
 		Args: require.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.InitInput(cmd.InOrStdin()),
 				opts.initStore(cmd.Context()))
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			if err := opts.Prompt(); err != nil {
 				return err
 			}

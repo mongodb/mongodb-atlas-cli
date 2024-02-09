@@ -66,13 +66,13 @@ func DeleteBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # The following deletes the continuous backup export bucket specified by ID:
   %s backup exports buckets delete --bucketId dbdb00ca12345678f901a234`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			if err := opts.Prompt(); err != nil {
 				return err
 			}

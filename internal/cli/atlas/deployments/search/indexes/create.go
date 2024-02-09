@@ -242,7 +242,7 @@ func CreateBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"indexNameDesc": "Name of the index.",
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			w := cmd.OutOrStdout()
 			opts.WatchOpts.OutWriter = w
 
@@ -267,7 +267,7 @@ func CreateBuilder() *cobra.Command {
 			}
 			return opts.Run(cmd.Context())
 		},
-		PostRunE: func(cmd *cobra.Command, args []string) error {
+		PostRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PostRun(cmd.Context())
 		},
 	}

@@ -72,7 +72,7 @@ func DeleteBuilder() *cobra.Command {
 				opts.initStore(cmd.Context()),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			if err := opts.PromptWithMessage(confirmationMessage); err != nil {
 				return err
 			}

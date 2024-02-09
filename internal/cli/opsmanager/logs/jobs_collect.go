@@ -91,14 +91,14 @@ func JobsCollectOptsBuilder() *cobra.Command {
 			"resourceTypeDesc": "Type of resource to collect logs from.",
 			"resourceNameDesc": "Name of the resource to collect logs from.",
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), collectTemplate),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.resourceType = args[0]
 			opts.resourceName = args[1]
 			return opts.Run()

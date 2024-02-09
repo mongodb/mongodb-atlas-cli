@@ -72,7 +72,7 @@ Once the endpoint reaches the expected state, the command prints "Private endpoi
 If you run the command in the terminal, it blocks the terminal session until the resource becomes available or fails.
 You can interrupt the command's polling at any time with CTRL-C.`,
 		Args: require.ExactArgs(1),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
@@ -83,7 +83,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 			"output": watchTemplate,
 		},
 		Example: fmt.Sprintf(`  %s privateEndpoint watch vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.Run()
 		},

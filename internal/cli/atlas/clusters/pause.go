@@ -68,14 +68,14 @@ func PauseBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Pause the cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
   %s clusters pause myCluster --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), pauseTmpl),
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.Run()
 		},

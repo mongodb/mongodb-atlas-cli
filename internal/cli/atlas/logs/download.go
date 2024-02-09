@@ -173,7 +173,7 @@ To find the hostnames for an Atlas project, use the process list command.
 			opts.name = args[1]
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()), opts.initDefaultOut)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 

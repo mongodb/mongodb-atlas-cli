@@ -61,11 +61,11 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   "List versions of MongoDB Agent, MongoDB Tools, and BI Connector in your environment.",
 		Args:    require.NoArgs,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

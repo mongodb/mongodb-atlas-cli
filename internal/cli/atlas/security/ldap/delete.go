@@ -59,14 +59,14 @@ func DeleteBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Remove the current LDAP configuration in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s security ldap delete --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.Prompt,
 			)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			opts.Entry = opts.ConfigProjectID()
 			return opts.Run()
 		},

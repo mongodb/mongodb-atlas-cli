@@ -93,6 +93,10 @@ fix-lint: ## Fix linting errors
 .PHONY: check
 check: test fix-lint ## Run tests and linters
 
+.PHONY: check-templates
+check-templates:
+	go run ./tools/templates-checker
+
 .PHONY: addcopy
 addcopy:
 	@scripts/add-copy.sh

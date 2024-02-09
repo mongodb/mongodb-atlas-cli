@@ -187,6 +187,7 @@ func buildTreeRecursive(root *TemplateCallTree, node parse.Node) error {
 	return nextInner(root, node)
 }
 
+//nolint:gocyclo
 func buildTreeFunc(next TreeBuilder) TreeBuilder {
 	return func(root *TemplateCallTree, node parse.Node) error {
 		if IsNil(node) {

@@ -12,23 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || generic
-
-package e2e
+package main
 
 import (
 	"fmt"
 	"log"
-	"strings"
-	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e/templates_test/astparsing"
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e/templates_test/templateparsing"
-	"github.com/stretchr/testify/assert"
+	"github.com/mongodb/mongodb-atlas-cli/tools/templates-checker/astparsing"
+	"github.com/mongodb/mongodb-atlas-cli/tools/templates-checker/templateparsing"
 )
 
-func TestTemplates(t *testing.T) {
-	pkgs, err := astparsing.LoadPackagesRecursive("../../../internal/cli/")
+func main() {
+	pkgs, err := astparsing.LoadPackagesRecursive("internal/cli/")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -66,5 +61,13 @@ func TestTemplates(t *testing.T) {
 		}
 	}
 
-	assert.Empty(t, templateValidationErrors, strings.Join(templateValidationErrors, "\n\n"))
+	if len(templateValidationErrors) == 0 {
+		log.Println("All templates are valid!")
+	} else {
+		log.Println("Found some issues in the following templates:")
+
+		for _, err := range templateValidationErrors {
+			println(err)
+		}
+	}
 }

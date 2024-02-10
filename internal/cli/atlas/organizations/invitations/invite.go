@@ -35,7 +35,7 @@ type InviteOpts struct {
 	cli.GlobalOpts
 	username string
 	roles    []string
-	teamIds  []string
+	teamIDs  []string
 	store    store.OrganizationInviter
 }
 
@@ -61,7 +61,7 @@ func (opts *InviteOpts) newInvitation() *atlasv2.OrganizationInvitationRequest {
 	return &atlasv2.OrganizationInvitationRequest{
 		Username: &opts.username,
 		Roles:    &opts.roles,
-		TeamIds:  &opts.teamIds,
+		TeamIds:  &opts.teamIDs,
 	}
 }
 
@@ -81,18 +81,18 @@ func InviteBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Invite the MongoDB user with the email user@example.com to the organization with the ID 5f71e5255afec75a3d0f96dc with ORG_OWNER access:
   %s organizations invitations invite user@example.com --orgId 5f71e5255afec75a3d0f96dc --role ORG_OWNER --output json`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.PreRunE(opts.ValidateOrgID, opts.initStore(cmd.Context()))
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.username = args[0]
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole)
-	cmd.Flags().StringSliceVar(&opts.teamIds, flag.TeamID, []string{}, usage.TeamID)
+	cmd.Flags().StringSliceVar(&opts.teamIDs, flag.TeamID, []string{}, usage.TeamID)
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

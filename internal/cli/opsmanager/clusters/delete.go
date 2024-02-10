@@ -50,7 +50,7 @@ func (opts *DeleteOpts) Run() error {
 		return nil
 	}
 
-	hostIds, err := opts.hostIDs()
+	hostIDs, err := opts.hostIDs()
 	if err != nil {
 		return err
 	}
@@ -68,7 +68,7 @@ func (opts *DeleteOpts) Run() error {
 	}
 
 	// Stop monitoring
-	err = opts.stopMonitoring(hostIds)
+	err = opts.stopMonitoring(hostIDs)
 	if err != nil {
 		return err
 	}
@@ -87,22 +87,22 @@ func (opts *DeleteOpts) hostIDs() ([]string, error) {
 	replicaSetHostNames(current, hostnameMap, opts.Entry)
 	opts.shardClusterHostNames(current, hostnameMap)
 
-	var hostIds []string
+	var hostIDs []string
 	for k, ports := range hostnameMap {
 		for _, port := range ports {
 			host, err := opts.store.HostByHostname(opts.ConfigProjectID(), k, port)
 			if err != nil {
 				return nil, err
 			}
-			hostIds = append(hostIds, host.ID)
+			hostIDs = append(hostIDs, host.ID)
 		}
 	}
 
-	if len(hostIds) == 0 {
+	if len(hostIDs) == 0 {
 		return nil, fmt.Errorf("cluster '%s' doesn't exist", opts.Entry)
 	}
 
-	return hostIds, nil
+	return hostIDs, nil
 }
 
 func replicaSetHostNames(automationConfig *opsmngr.AutomationConfig, hostnameMap map[string][]int, name string) {
@@ -126,8 +126,8 @@ func (opts *DeleteOpts) shardClusterHostNames(automationConfig *opsmngr.Automati
 	}
 }
 
-func (opts *DeleteOpts) stopMonitoring(hostIds []string) error {
-	for _, id := range hostIds {
+func (opts *DeleteOpts) stopMonitoring(hostIDs []string) error {
+	for _, id := range hostIDs {
 		if err := opts.store.StopMonitoring(opts.ConfigProjectID(), id); err != nil {
 			return err
 		}
@@ -205,7 +205,7 @@ func DeleteBuilder() *cobra.Command {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.Prompt()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

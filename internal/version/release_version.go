@@ -54,7 +54,7 @@ func (s *releaseVersionFetcher) LatestWithCriteria(n int, matchCriteria Criteria
 	opt := &github.ListOptions{PerPage: n}
 
 	if matchCriteria == nil {
-		matchCriteria = func(tag, tool string) bool {
+		matchCriteria = func(_, _ string) bool {
 			return true
 		}
 	}

@@ -85,7 +85,7 @@ func TestWithDuration(t *testing.T) {
 
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 			time.Sleep(10 * time.Millisecond)
 		},
 	}
@@ -100,7 +100,7 @@ func TestWithFlags(t *testing.T) {
 
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 			time.Sleep(10 * time.Millisecond)
 		},
 	}
@@ -180,7 +180,7 @@ func TestWithProjectID(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(cmd *cobra.Command, args []string) {},
+		Run: func(_ *cobra.Command, _ []string) {},
 	}
 	var p string
 	cmd.Flags().StringVarP(&p, flag.ProjectID, "", "", "")
@@ -212,7 +212,7 @@ func TestWithOrgID(t *testing.T) {
 
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(cmd *cobra.Command, args []string) {},
+		Run: func(_ *cobra.Command, _ []string) {},
 	}
 
 	const orgID = "test"

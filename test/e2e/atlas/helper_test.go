@@ -799,8 +799,7 @@ func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider st
 	t.Log(string(resp))
 	require.NoError(t, err, string(resp))
 	var privateEndpoints []atlasv2.EndpointService
-	err = json.Unmarshal(resp, &privateEndpoints)
-	require.NoError(t, err)
+	require.NoError(t, json.Unmarshal(resp, &privateEndpoints))
 
 	return privateEndpoints
 }

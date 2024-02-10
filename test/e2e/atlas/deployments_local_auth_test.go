@@ -313,7 +313,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		r, err := cmd.CombinedOutput()
 		out := string(r)
 		require.NoError(t, err, out)
-		assert.Contains(t, fmt.Sprintf("Pausing deployment '%s'", deploymentName), out)
+		assert.Contains(t, out, fmt.Sprintf("Pausing deployment '%s'", deploymentName))
 	})
 
 	t.Run("Start Deployment", func(t *testing.T) {

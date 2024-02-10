@@ -694,13 +694,13 @@ func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 	clusters := listClustersForProject(t, cliPath, projectID)
 	for _, cluster := range clusters.GetResults() {
 		func(clusterName, state string) {
-			t.Run(fmt.Sprintf("delete cluster %s\n", clusterName), func(t *testing.T) {
+			t.Run("delete cluster "+clusterName, func(t *testing.T) {
 				t.Parallel()
 				if state == deletingState {
 					_ = watchCluster(projectID, clusterName)
 					return
 				}
-				assert.NoError(t, deleteClusterForProject(projectID, clusterName))
+				assert.NoError(t, deleteClusterForProject(projectID, clusterName)) //nolint: testifylint // we want to check all instead of failing early
 			})
 		}(cluster.GetName(), cluster.GetStateName())
 	}
@@ -720,7 +720,7 @@ func deleteDatapipelinesForProject(t *testing.T, cliPath, projectID string) {
 	var pipelines []atlasv2.DataLakeIngestionPipeline
 	require.NoError(t, json.Unmarshal(resp, &pipelines))
 	for _, p := range pipelines {
-		assert.NoError(t, deleteDatalakeForProject(cliPath, projectID, p.GetName()))
+		assert.NoError(t, deleteDatalakeForProject(cliPath, projectID, p.GetName())) //nolint: testifylint // we want to check all instead of failing early
 	}
 }
 
@@ -756,7 +756,7 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 		)
 		cmd.Env = os.Environ()
 		resp, err = cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		assert.NoError(t, err, string(resp)) //nolint: testifylint // we want to check all instead of failing early
 	}
 }
 

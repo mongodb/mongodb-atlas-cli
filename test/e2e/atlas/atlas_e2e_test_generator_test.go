@@ -282,7 +282,7 @@ func deleteOrgTeams(t *testing.T, cliPath string) {
 	var teams atlasv2.PaginatedTeam
 	require.NoError(t, json.Unmarshal(resp, &teams), string(resp))
 	for _, team := range teams.GetResults() {
-		assert.NoError(t, deleteTeam(team.GetId()))
+		assert.NoError(t, deleteTeam(team.GetId())) //nolint: testifylint // try to delete all
 	}
 }
 

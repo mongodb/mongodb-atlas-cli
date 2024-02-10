@@ -113,7 +113,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		cols := strings.Fields(outputLines[1])
 		assert.Equal(t, deploymentName, cols[0])
 		assert.Equal(t, "LOCAL", cols[1])
-		assert.Equal(t, "7.0.", cols[2])
+		assert.Contains(t, cols[2], "7.0.")
 		assert.Equal(t, "IDLE", cols[3])
 	})
 

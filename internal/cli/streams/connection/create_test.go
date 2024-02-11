@@ -49,11 +49,6 @@ func TestCreate_Run(t *testing.T) {
   },
   "configuration": {
     "auto.offset.reset": "earliest"
-  },
-  "dbRoleToExecute": {
-	"links": [],
-	"role": "atlasAdmin",
-	"type": "BUILT_IN"
   }
 }
 `

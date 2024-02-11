@@ -217,7 +217,6 @@ func TestStreams(t *testing.T) {
 		a.Equal(connectionName, *connection.Name)
 		a.Equal("Kafka", *connection.Type)
 		a.Equal("example.com:8080,fraud.example.com:8000", *connection.BootstrapServers)
-		a.Equal("atlasAdmin", *connection.GetDbRoleToExecute().Role)
 	})
 
 	t.Run("Listing streams connections", func(t *testing.T) {
@@ -243,6 +242,7 @@ func TestStreams(t *testing.T) {
 		a.Len(connections, 1)
 		a.Equal(connectionName, *connections[0].Name)
 		a.Equal("Kafka", *connections[0].Type)
+		a.Equal("example.com:8080,fraud.example.com:8000", *connections[0].BootstrapServers)
 	})
 
 	t.Run("Updating a streams connection", func(t *testing.T) {
@@ -269,7 +269,6 @@ func TestStreams(t *testing.T) {
 
 		a.Equal(*connection.Name, connectionName)
 		a.Equal("SSL", *connection.Security.Protocol)
-		// a.Equal("readWriteAnyDatabase", *connection.DbRoleToExecute.Role)
 	})
 
 	t.Run("Deleting a streams connection", func(t *testing.T) {
@@ -293,8 +292,61 @@ func TestStreams(t *testing.T) {
 		a.Equal(expected, string(resp))
 	})
 
-	// Runs last after the connection work
+	t.Run("Creating a streams connection with atlas cluster", func(t *testing.T) {
+		clusterName := "Cluster1"
+		req.NoError(err)
 
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"create",
+			clusterName,
+			"--backup",
+			"--tier", tierM10,
+			"--region=US_EAST_1",
+			"--provider", e2eClusterProvider,
+			"--mdbVersion", e2eSharedMDBVer,
+			"--projectId",
+			g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var cluster *atlasv2.AdvancedClusterDescription
+		req.NoError(json.Unmarshal(resp, &cluster))
+		ensureCluster(t, cluster, clusterName, e2eSharedMDBVer, 10, false)
+
+		cmd1 := exec.Command(cliPath,
+			"streams",
+			"connection",
+			"create",
+			g.clusterName,
+			"-f",
+			"create_streams_connection_atlas_test.json",
+			"-i",
+			instanceName,
+			"-o=json",
+			"--projectId",
+			g.projectID,
+		)
+
+		cmd1.Env = os.Environ()
+		resp1, err1 := cmd1.CombinedOutput()
+		req.NoError(err1, string(resp1))
+
+		var connection1 atlasv2.StreamsConnection
+		req.NoError(json.Unmarshal(resp1, &connection1))
+
+		// Assert on config from create_streams_connection_atlas_test.json
+		a.Equal(*connection1.Name, "ClusterConn")
+		a.Equal(*connection1.DbRoleToExecute.Role, "atlasAdmin")
+
+		t.Cleanup(func() {
+			require.NoError(t, deleteClusterForProject(g.projectID, clusterName))
+		})
+	})
+
+	// Runs last after the connection work
 	t.Run("Deleting a streams instance", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			"streams",

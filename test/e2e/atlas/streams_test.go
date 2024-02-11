@@ -39,14 +39,14 @@ func TestStreams(t *testing.T) {
 	a := assert.New(t)
 	req := require.New(t)
 
-	cliPath, err := e2e.AtlasCLIBin()
-	req.NoError(err)
+	cliPath, cliErr := e2e.AtlasCLIBin()
+	req.NoError(cliErr)
 
-	instanceName, err := RandEntityWithRevision("instance")
-	req.NoError(err)
+	instanceName, instanceErr := RandEntityWithRevision("instance")
+	req.NoError(instanceErr)
 
-	connectionName, err := RandEntityWithRevision("connection")
-	req.NoError(err)
+	connectionName, connErr := RandEntityWithRevision("connection")
+	req.NoError(connErr)
 
 	t.Run("List all streams in the e2e project", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -294,7 +294,6 @@ func TestStreams(t *testing.T) {
 
 	t.Run("Creating a streams connection with atlas cluster", func(t *testing.T) {
 		clusterName := "Cluster1"
-		req.NoError(err)
 
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -338,8 +337,8 @@ func TestStreams(t *testing.T) {
 		req.NoError(json.Unmarshal(resp1, &connection1))
 
 		// Assert on config from create_streams_connection_atlas_test.json
-		a.Equal(*connection1.Name, "ClusterConn")
-		a.Equal(*connection1.DbRoleToExecute.Role, "atlasAdmin")
+		a.Equal("ClusterConn", *connection1.Name)
+		a.Equal("atlasAdmin", *connection1.DbRoleToExecute.Role)
 
 		t.Cleanup(func() {
 			require.NoError(t, deleteClusterForProject(g.projectID, clusterName))

@@ -694,7 +694,7 @@ func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 	clusters := listClustersForProject(t, cliPath, projectID)
 	for _, cluster := range clusters.GetResults() {
 		func(clusterName, state string) {
-			t.Run(fmt.Sprintf("delete cluster %s\n", clusterName), func(t *testing.T) {
+			t.Run("delete cluster "+clusterName, func(t *testing.T) {
 				t.Parallel()
 				if state == deletingState {
 					_ = watchCluster(projectID, clusterName)
@@ -799,8 +799,7 @@ func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider st
 	t.Log(string(resp))
 	require.NoError(t, err, string(resp))
 	var privateEndpoints []atlasv2.EndpointService
-	err = json.Unmarshal(resp, &privateEndpoints)
-	require.NoError(t, err)
+	require.NoError(t, json.Unmarshal(resp, &privateEndpoints))
 
 	return privateEndpoints
 }

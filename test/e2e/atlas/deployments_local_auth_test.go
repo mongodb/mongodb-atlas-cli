@@ -75,7 +75,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		cmd.Env = os.Environ()
 
 		r, setupErr := cmd.CombinedOutput()
-		req.NoError(setupErr, string(r))
+		require.NoError(t, setupErr, string(r))
 	})
 
 	t.Cleanup(func() {
@@ -91,7 +91,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		cmd.Env = os.Environ()
 
 		r, delErr := cmd.CombinedOutput()
-		req.NoError(delErr, string(r))
+		require.NoError(t, delErr, string(r))
 	})
 
 	t.Run("List deployments", func(t *testing.T) {
@@ -105,16 +105,16 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		cmd.Env = os.Environ()
 
 		o, e, err := splitOutput(cmd)
-		req.NoError(err, e)
+		require.NoError(t, err, e)
 
 		outputLines := strings.Split(o, "\n")
-		req.Equal(`NAME        TYPE    MDB VER   STATE`, outputLines[0])
+		assert.Equal(t, `NAME        TYPE    MDB VER   STATE`, outputLines[0])
 
 		cols := strings.Fields(outputLines[1])
-		req.Equal(deploymentName, cols[0])
-		req.Equal("LOCAL", cols[1])
-		req.Contains(cols[2], "7.0.")
-		req.Equal("IDLE", cols[3])
+		assert.Equal(t, deploymentName, cols[0])
+		assert.Equal(t, "LOCAL", cols[1])
+		assert.Contains(t, cols[2], "7.0.")
+		assert.Equal(t, "IDLE", cols[3])
 	})
 
 	ctx := context.Background()
@@ -140,7 +140,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		cmd.Env = os.Environ()
 
 		r, err := cmd.CombinedOutput()
-		req.NoError(err, string(r))
+		require.NoError(t, err, string(r))
 
 		connectionString := strings.TrimSpace(string(r))
 		client, err = mongo.Connect(ctx, options.Client().ApplyURI(connectionString))
@@ -249,7 +249,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		cmd.Env = os.Environ()
 
 		r, err := cmd.CombinedOutput()
-		req.NoError(err, string(r))
+		require.NoError(t, err, string(r))
 	})
 
 	t.Run("Test Search Index", func(t *testing.T) {
@@ -264,10 +264,10 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 				},
 			},
 		})
-		req.NoError(err)
+		require.NoError(t, err)
 		var results []bson.M
-		req.NoError(c.All(ctx, &results))
-		req.Len(results, 1)
+		require.NoError(t, c.All(ctx, &results))
+		assert.Len(t, results, 1)
 	})
 
 	t.Run("Delete Index", func(t *testing.T) {
@@ -294,7 +294,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		var o, e bytes.Buffer
 		cmd.Stdout = &o
 		cmd.Stderr = &e
-		req.NoError(cmd.Run(), e.String())
+		require.NoError(t, cmd.Run(), e.String())
 		assert.Contains(t, o.String(), fmt.Sprintf("Index '%s' deleted", indexID))
 	})
 
@@ -312,9 +312,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 
 		r, err := cmd.CombinedOutput()
 		out := string(r)
-		req.NoError(err, out)
-		a := assert.New(t)
-		a.Contains(out, fmt.Sprintf("Pausing deployment '%s'", deploymentName))
+		require.NoError(t, err, out)
+		assert.Contains(t, out, fmt.Sprintf("Pausing deployment '%s'", deploymentName))
 	})
 
 	t.Run("Start Deployment", func(t *testing.T) {
@@ -329,7 +328,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		cmd.Env = os.Environ()
 		r, err := cmd.CombinedOutput()
 		out := string(r)
-		req.NoError(err, out)
+		require.NoError(t, err, out)
 		assert.Contains(t, out, fmt.Sprintf("Starting deployment '%s'", deploymentName))
 	})
 }

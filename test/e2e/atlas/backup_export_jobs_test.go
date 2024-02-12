@@ -143,10 +143,9 @@ func TestExportJobs(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		r.NoError(err, string(resp))
-		a := assert.New(t)
 		var job atlasv2.DiskBackupExportJob
 		r.NoError(json.Unmarshal(resp, &job))
-		a.Equal(job.GetExportBucketId(), bucketID)
+		assert.Equal(t, job.GetExportBucketId(), bucketID)
 		exportJobID = job.GetId()
 	})
 
@@ -180,10 +179,9 @@ func TestExportJobs(t *testing.T) {
 
 		r.NoError(err, string(resp))
 
-		a := assert.New(t)
 		var job atlasv2.DiskBackupExportJob
 		r.NoError(json.Unmarshal(resp, &job))
-		a.Equal(job.GetExportBucketId(), bucketID)
+		assert.Equal(t, job.GetExportBucketId(), bucketID)
 	})
 
 	t.Run("List jobs", func(t *testing.T) {
@@ -199,9 +197,8 @@ func TestExportJobs(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		var jobs atlasv2.PaginatedApiAtlasDiskBackupExportJob
-		a := assert.New(t)
 		r.NoError(json.Unmarshal(resp, &jobs))
-		a.NotEmpty(jobs)
+		assert.NotEmpty(t, jobs)
 	})
 
 	t.Run("Delete snapshot", func(t *testing.T) {
@@ -215,7 +212,7 @@ func TestExportJobs(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch snapshot deletion", func(t *testing.T) {

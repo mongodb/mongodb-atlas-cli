@@ -47,10 +47,9 @@ func TestAccessLogs(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		require.NoError(t, err, string(resp))
 		var entries *atlasv2.MongoDBAccessLogsList
-		err = json.Unmarshal(resp, &entries)
-		req.NoError(err)
+		require.NoError(t, json.Unmarshal(resp, &entries))
 	})
 
 	t.Run("List by hostname", func(t *testing.T) {
@@ -62,9 +61,8 @@ func TestAccessLogs(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		require.NoError(t, err, string(resp))
 		var entries *atlasv2.MongoDBAccessLogsList
-		err = json.Unmarshal(resp, &entries)
-		req.NoError(err)
+		require.NoError(t, json.Unmarshal(resp, &entries))
 	})
 }

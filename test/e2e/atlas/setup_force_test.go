@@ -58,7 +58,7 @@ func TestSetup(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 		assert.Contains(t, string(resp), "Cluster created.", string(resp))
 	})
 	t.Cleanup(func() {
@@ -73,13 +73,13 @@ func TestSetup(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		require.NoError(t, err, string(resp))
 
 		var entries *atlasv2.PaginatedNetworkAccess
-		err = json.Unmarshal(resp, &entries)
-		req.NoError(err)
-		req.Len(entries.GetResults(), 1, "Expected 1 IP in list of IP's")
-		req.Contains(entries.GetResults()[0].GetIpAddress(), arbitraryAccessListIP, "IP from list does not match added IP")
+		require.NoError(t, json.Unmarshal(resp, &entries))
+
+		assert.Len(t, entries.GetResults(), 1, "Expected 1 IP in list of IP's")
+		assert.Contains(t, entries.GetResults()[0].GetIpAddress(), arbitraryAccessListIP, "IP from list does not match added IP")
 	})
 
 	require.NoError(t, watchCluster(g.projectID, clusterName))

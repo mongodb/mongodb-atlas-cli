@@ -33,7 +33,6 @@ func TestShardedCluster(t *testing.T) {
 	g.generateProject("shardedClusters")
 
 	cliPath, err := e2e.AtlasCLIBin()
-	a := assert.New(t)
 	req := require.New(t)
 	req.NoError(err)
 
@@ -65,8 +64,7 @@ func TestShardedCluster(t *testing.T) {
 		req.NoError(err, string(resp))
 
 		var cluster atlasv2.AdvancedClusterDescription
-		err = json.Unmarshal(resp, &cluster)
-		req.NoError(err)
+		req.NoError(json.Unmarshal(resp, &cluster))
 
 		ensureCluster(t, &cluster, shardedClusterName, e2eMDBVer, 30, false)
 	})
@@ -78,7 +76,7 @@ func TestShardedCluster(t *testing.T) {
 		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("Deleting cluster '%s'", shardedClusterName)
-		a.Equal(expected, string(resp))
+		assert.Equal(t, expected, string(resp))
 	})
 
 	t.Run("Watch deletion", func(t *testing.T) {

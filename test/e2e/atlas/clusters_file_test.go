@@ -16,7 +16,6 @@
 package atlas_test
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -86,8 +85,6 @@ func TestClustersFile(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 
-		var e bytes.Buffer
-		cmd.Stderr = &e
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
@@ -97,8 +94,25 @@ func TestClustersFile(t *testing.T) {
 		t.Logf("%v\n", cluster)
 		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 40, false)
 		assert.Empty(t, cluster.GetTags())
-		assert.Contains(t, e.String(), "Ignoring `connectionStrings` field...")
-		assert.Contains(t, e.String(), "Ignoring `name` field...")
+	})
+
+	t.Run("Update via file with warning", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"update",
+			clusterFileName,
+			"--file=update_cluster_test_warnings.json",
+			"--projectId", g.projectID,
+			"-o=json")
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err)
+
+		require.NotEmpty(t, string(resp))
+		assert.Contains(t, string(resp), "Ignoring `connectionStrings` field...")
+		assert.Contains(t, string(resp), "Ignoring `name` field...")
+		assert.Contains(t, string(resp), "Updating cluster")
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {

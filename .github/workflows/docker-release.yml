@@ -52,7 +52,7 @@ jobs:
         uses: imjohnbo/issue-bot@572eed14422c4d6ca37e870f97e7da209422f5bd
         with:
           labels: failed-release
-          title: Release Failure for Atlas CLI Docker Image v${{ env.LATEST_VERSION }}
+          title: Release Failure for Atlas CLI Docker Image ${{ env.LATEST_VERSION }}
           body: See https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
   publish_images:
     name: Sign and Publish docker image
@@ -157,7 +157,7 @@ jobs:
         uses: imjohnbo/issue-bot@572eed14422c4d6ca37e870f97e7da209422f5bd
         with:
           labels: failed-release
-          title: Release Failure for Atlas CLI Docker Image v${{ env.LATEST_VERSION }}
+          title: Release Failure for Atlas CLI Docker Image ${{ env.LATEST_VERSION }}
           body: See https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
   verify_docker_image:
     name: Verify Signature Docker Image

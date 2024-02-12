@@ -225,7 +225,7 @@ func buildTreeFunc(next TreeBuilder) TreeBuilder {
 		case *parse.PipeNode:
 			indexCommandFields, err := parseIndexCommand(node)
 			if err == nil {
-				return buildTreeFunc(func(r *TemplateCallTree, n parse.Node) error {
+				return buildTreeFunc(func(r *TemplateCallTree, _ parse.Node) error {
 					return next(r.List(), nil)
 				})(root, indexCommandFields)
 			}
@@ -253,7 +253,7 @@ func buildTreeFunc(next TreeBuilder) TreeBuilder {
 		case *parse.ChainNode:
 			// Get the result of the first part of the chain and then chain the fields to it
 			// Example: (index .field1.field2).chain1.chain2
-			return buildTreeFunc(func(newRoot *TemplateCallTree, n parse.Node) error {
+			return buildTreeFunc(func(newRoot *TemplateCallTree, _ parse.Node) error {
 				return next(buildFieldStructure(newRoot, node.Field), nil)
 			})(root, node.Node)
 		case *parse.DotNode:

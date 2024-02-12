@@ -71,7 +71,7 @@ func LoadPackagesRecursive(path string) ([]*packages.Package, error) {
 func getSourceFilesPerDirectory(sourcePath string) (sourceFiles map[string][]string, err error) {
 	sourceFiles = make(map[string][]string)
 
-	err = filepath.WalkDir(sourcePath, func(s string, d fs.DirEntry, err error) error {
+	err = filepath.WalkDir(sourcePath, func(s string, _ fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}

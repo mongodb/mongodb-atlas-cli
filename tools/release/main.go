@@ -139,12 +139,12 @@ func Builder() *cobra.Command {
 		Example: `
   # Generate the download center json file for mongocli
   $ main --version 1.23.0 --file mongocli.json`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			fmt.Printf("Generating JSON: %s\n", opts.fileName)
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			cmd.Printf("Generating JSON: %s\n", opts.fileName)
 			return generateFile(opts.fileName, opts.version)
 		},
-		PostRun: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("File %s has been generated\n", opts.fileName)
+		PostRun: func(cmd *cobra.Command, _ []string) {
+			cmd.Printf("File %s has been generated\n", opts.fileName)
 		},
 	}
 

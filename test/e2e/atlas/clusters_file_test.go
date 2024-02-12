@@ -120,7 +120,7 @@ func TestClustersFile(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		req.NoError(err, string(resp))
 
 		require.NotEmpty(t, string(resp))
 		assert.Contains(t, string(resp), "Ignoring `connectionStrings` field...")

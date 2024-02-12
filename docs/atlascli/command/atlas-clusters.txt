@@ -58,12 +58,12 @@ Related Commands
 * :ref:`atlas-clusters-delete` - Remove the specified cluster from your project.
 * :ref:`atlas-clusters-describe` - Return the details for the specified cluster for your project.
 * :ref:`atlas-clusters-failover` - Starts a failover test for the specified cluster in the specified project.
-* :ref:`atlas-clusters-indexes` - Manage Atlas Search indexes for your cluster.
 * :ref:`atlas-clusters-indexes` - Manage cluster rolling indexes for your project.
 * :ref:`atlas-clusters-list` - Return all clusters for your project.
 * :ref:`atlas-clusters-onlineArchives` - Manage online archives for your cluster.
 * :ref:`atlas-clusters-pause` - Pause the specified running MongoDB cluster.
 * :ref:`atlas-clusters-sampleData` - Manage sample data for your cluster.
+* :ref:`atlas-clusters-search` - Manage Atlas Search for your cluster.
 * :ref:`atlas-clusters-start` - Start the specified paused MongoDB cluster.
 * :ref:`atlas-clusters-update` - Modify the settings of the specified cluster.
 * :ref:`atlas-clusters-upgrade` - Upgrade a shared cluster's tier, disk size, and/or MongoDB version.
@@ -81,11 +81,11 @@ Related Commands
    describe </command/atlas-clusters-describe>
    failover </command/atlas-clusters-failover>
    indexes </command/atlas-clusters-indexes>
-   indexes </command/atlas-clusters-indexes>
    list </command/atlas-clusters-list>
    onlineArchives </command/atlas-clusters-onlineArchives>
    pause </command/atlas-clusters-pause>
    sampleData </command/atlas-clusters-sampleData>
+   search </command/atlas-clusters-search>
    start </command/atlas-clusters-start>
    update </command/atlas-clusters-update>
    upgrade </command/atlas-clusters-upgrade>

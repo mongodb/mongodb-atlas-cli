@@ -1,8 +1,8 @@
-.. _atlas-clusters-indexes-describe:
+.. _atlas-clusters-search-indexes-list:
 
-===============================
-atlas clusters indexes describe
-===============================
+==================================
+atlas clusters search indexes list
+==================================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,7 @@ atlas clusters indexes describe
    :depth: 1
    :class: singlecol
 
-Return the details for the search index for a cluster.
+List all Atlas Search indexes for a cluster.
 
 To use this command, you must authenticate with a user account or an API key with the Project Data Access Read/Write role.
 
@@ -22,25 +22,9 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas clusters indexes describe <indexId> [options]
+   atlas clusters search indexes list [options]
 
 .. Code end marker, please don't delete this comment
-
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - indexId
-     - string
-     - true
-     - ID of the index.
 
 Options
 -------
@@ -57,10 +41,18 @@ Options
      - string
      - true
      - Name of the cluster.
+   * - --collection
+     - string
+     - true
+     - Name of the collection.
+   * - --db
+     - string
+     - true
+     - Name of the database.
    * - -h, --help
      - 
      - false
-     - help for describe
+     - help for list
    * - -o, --output
      - string
      - false
@@ -102,5 +94,5 @@ Examples
 
 .. code-block::
 
-   # Return the JSON-formatted details for the search index with the ID 5f1f40842f2ac35f49190c20 for the cluster named myCluster:
-   atlas clusters search indexes describe 5f1f40842f2ac35f49190c20 --clusterName myCluster --output json
+   # Return the JSON-formatted list of Atlas search indexes on the sample_mflix.movies database in the cluster named myCluster:
+   atlas clusters search indexes list --clusterName myCluster --db sample_mflix --collection movies --output json

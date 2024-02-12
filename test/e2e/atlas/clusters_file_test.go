@@ -115,8 +115,7 @@ func TestClustersFile(t *testing.T) {
 			"update",
 			clusterFileName,
 			"--file=update_cluster_test_warnings.json",
-			"--projectId", g.projectID,
-			"-o=json")
+			"--projectId", g.projectID)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()

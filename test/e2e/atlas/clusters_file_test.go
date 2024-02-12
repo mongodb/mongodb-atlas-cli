@@ -96,6 +96,19 @@ func TestClustersFile(t *testing.T) {
 		assert.Empty(t, cluster.GetTags())
 	})
 
+	t.Run("Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"watch",
+			"--projectId", g.projectID,
+			clusterFileName,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+		assert.Contains(t, string(resp), "Cluster available")
+	})
+
 	t.Run("Update via file with warning", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,

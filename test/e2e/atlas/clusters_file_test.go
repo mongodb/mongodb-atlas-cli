@@ -122,7 +122,7 @@ func TestClustersFile(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		require.NotEmpty(t, string(resp))
+		req.NotEmpty(string(resp))
 		assert.Contains(t, string(resp), "Ignoring `connectionStrings` field...")
 		assert.Contains(t, string(resp), "Ignoring `name` field...")
 		assert.Contains(t, string(resp), "Updating cluster")

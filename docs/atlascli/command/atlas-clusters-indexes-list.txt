@@ -1,8 +1,8 @@
-.. _atlas-clusters-search-indexes-create:
+.. _atlas-clusters-indexes-list:
 
-====================================
-atlas clusters search indexes create
-====================================
+===========================
+atlas clusters indexes list
+===========================
 
 .. default-domain:: mongodb
 
@@ -12,9 +12,9 @@ atlas clusters search indexes create
    :depth: 1
    :class: singlecol
 
-Create a search index for a cluster.
+List all Atlas Search indexes for a cluster.
 
-To use this command, you must authenticate with a user account or an API key with the Project Data Access Admin role.
+To use this command, you must authenticate with a user account or an API key with the Project Data Access Read/Write role.
 
 Syntax
 ------
@@ -22,25 +22,9 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas clusters search indexes create [indexName] [options]
+   atlas clusters indexes list [options]
 
 .. Code end marker, please don't delete this comment
-
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - indexName
-     - string
-     - false
-     - Name of the index.
 
 Options
 -------
@@ -57,14 +41,18 @@ Options
      - string
      - true
      - Name of the cluster.
-   * - -f, --file
+   * - --collection
      - string
-     - false
-     - Name of the JSON index configuration file to use. To learn about the Atlas Search index configuration file, see https://dochub.mongodb.org/core/search-index-config-file-atlascli. To learn about the Atlas Search index syntax and options that you can define in your configuration file, see https://dochub.mongodb.org/core/index-definitions-fts.
+     - true
+     - Name of the collection.
+   * - --db
+     - string
+     - true
+     - Name of the database.
    * - -h, --help
      - 
      - false
-     - help for create
+     - help for list
    * - -o, --output
      - string
      - false
@@ -97,7 +85,8 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   Index <Name> created.
+   ID          NAME     DATABASE     COLLECTION         TYPE
+   <IndexID>   <Name>   <Database>   <CollectionName>   <Type>
    
 
 Examples
@@ -105,5 +94,5 @@ Examples
 
 .. code-block::
 
-   # Create a search index for the cluster named myCluster using a JSON index configuration file named search-config.json:
-   atlas clusters search indexes create --clusterName myCluster --file search-config.json --output json
+   # Return the JSON-formatted list of Atlas search indexes on the sample_mflix.movies database in the cluster named myCluster:
+   atlas clusters search indexes list --clusterName myCluster --db sample_mflix --collection movies --output json

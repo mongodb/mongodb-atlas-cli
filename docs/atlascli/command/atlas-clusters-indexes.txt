@@ -12,7 +12,7 @@ atlas clusters indexes
    :depth: 1
    :class: singlecol
 
-Manage cluster rolling indexes for your project.
+Manage Atlas Search indexes for your cluster.
 
 Options
 -------
@@ -49,11 +49,19 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-clusters-indexes-create` - Create a rolling index for the specified cluster for your project.
+* :ref:`atlas-clusters-indexes-create` - Create a search index for a cluster.
+* :ref:`atlas-clusters-indexes-delete` - Delete the specified search index from the specified cluster.
+* :ref:`atlas-clusters-indexes-describe` - Return the details for the search index for a cluster.
+* :ref:`atlas-clusters-indexes-list` - List all Atlas Search indexes for a cluster.
+* :ref:`atlas-clusters-indexes-update` - Modify a search index for a cluster.
 
 
 .. toctree::
    :titlesonly:
 
    create </command/atlas-clusters-indexes-create>
+   delete </command/atlas-clusters-indexes-delete>
+   describe </command/atlas-clusters-indexes-describe>
+   list </command/atlas-clusters-indexes-list>
+   update </command/atlas-clusters-indexes-update>
 

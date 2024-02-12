@@ -12,7 +12,7 @@ atlas clusters indexes create
    :depth: 1
    :class: singlecol
 
-Create a rolling index for the specified cluster for your project.
+Create a search index for a cluster.
 
 To use this command, you must authenticate with a user account or an API key with the Project Data Access Admin role.
 
@@ -57,30 +57,22 @@ Options
      - string
      - true
      - Name of the cluster.
-   * - --collection
+   * - -f, --file
      - string
-     - true
-     - Name of the collection.
-   * - --db
-     - string
-     - true
-     - Name of the database.
+     - false
+     - Name of the JSON index configuration file to use. To learn about the Atlas Search index configuration file, see https://dochub.mongodb.org/core/search-index-config-file-atlascli. To learn about the Atlas Search index syntax and options that you can define in your configuration file, see https://dochub.mongodb.org/core/index-definitions-fts.
    * - -h, --help
      - 
      - false
      - help for create
-   * - --key
-     - strings
-     - true
-     - Field to be indexed and the type of index in the following format: field:type.
+   * - -o, --output
+     - string
+     - false
+     - Output format. Valid values are json, json-path, go-template, or go-template-file. To see the full output, use the -o json option.
    * - --projectId
      - string
      - false
      - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
-   * - --sparse
-     - 
-     - false
-     - Flag that creates a sparse index. To learn more, see https://dochub.mongodb.org/core/index-sparse-manual.
 
 Inherited Options
 -----------------
@@ -98,17 +90,20 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Output
+------
+
+If the command succeeds, the CLI returns output similar to the following sample. Values in brackets represent your values.
+
+.. code-block::
+
+   Index <Name> created.
+   
+
 Examples
 --------
 
 .. code-block::
 
-   # Create an index named bedrooms_1 on the listings collection of the realestate database:
-   atlas clusters indexes create bedrooms_1 --clusterName Cluster0 --collection listings --db realestate --key bedrooms:1
-   
-   
-.. code-block::
-
-   # Create a compound index named property_room_bedrooms on the
-   listings collection of the realestate database:
-   atlas clusters indexes create property_room_bedrooms --clusterName Cluster0 --collection listings --db realestate --key property_type:1 --key room_type:1 --key bedrooms:1
+   # Create a search index for the cluster named myCluster using a JSON index configuration file named search-config.json:
+   atlas clusters search indexes create --clusterName myCluster --file search-config.json --output json

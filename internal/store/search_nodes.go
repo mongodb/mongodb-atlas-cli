@@ -24,7 +24,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_search_nodes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store SearchNodesLister
 
 type SearchNodesLister interface {
-	SearchIndexes(string, string) (*atlasv2.ApiSearchDeploymentResponse, error)
+	SearchNodes(string, string) (*atlasv2.ApiSearchDeploymentResponse, error)
 }
 
 // SearchNodes encapsulate the logic to manage different cloud providers.

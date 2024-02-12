@@ -34,17 +34,17 @@ func (m *MockSearchNodesLister) EXPECT() *MockSearchNodesListerMockRecorder {
 	return m.recorder
 }
 
-// SearchIndexes mocks base method.
-func (m *MockSearchNodesLister) SearchIndexes(arg0, arg1 string) (*admin.ApiSearchDeploymentResponse, error) {
+// SearchNodes mocks base method.
+func (m *MockSearchNodesLister) SearchNodes(arg0, arg1 string) (*admin.ApiSearchDeploymentResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchIndexes", arg0, arg1)
+	ret := m.ctrl.Call(m, "SearchNodes", arg0, arg1)
 	ret0, _ := ret[0].(*admin.ApiSearchDeploymentResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SearchIndexes indicates an expected call of SearchIndexes.
-func (mr *MockSearchNodesListerMockRecorder) SearchIndexes(arg0, arg1 interface{}) *gomock.Call {
+// SearchNodes indicates an expected call of SearchNodes.
+func (mr *MockSearchNodesListerMockRecorder) SearchNodes(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndexes", reflect.TypeOf((*MockSearchNodesLister)(nil).SearchIndexes), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchNodes", reflect.TypeOf((*MockSearchNodesLister)(nil).SearchNodes), arg0, arg1)
 }

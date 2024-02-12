@@ -15,6 +15,8 @@
 package search
 
 import (
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search/indexes"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search/nodes"
 	"github.com/spf13/cobra"
 )
 
@@ -24,7 +26,8 @@ func Builder() *cobra.Command {
 		Aliases: []string{"fts"},
 		Short:   "Manage Atlas Search for your cluster.",
 	}
-	cmd.AddCommand(IndexesBuilder())
+	cmd.AddCommand(indexes.Builder())
+	cmd.AddCommand(nodes.Builder())
 
 	return cmd
 }

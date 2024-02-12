@@ -16,6 +16,7 @@
 package atlas_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -84,6 +85,9 @@ func TestClustersFile(t *testing.T) {
 			"--file=update_cluster_test.json",
 			"--projectId", g.projectID,
 			"-o=json")
+
+		var e bytes.Buffer
+		cmd.Stderr = &e
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
@@ -93,6 +97,8 @@ func TestClustersFile(t *testing.T) {
 		t.Logf("%v\n", cluster)
 		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 40, false)
 		assert.Empty(t, cluster.GetTags())
+		assert.Contains(t, e.String(), "Ignoring `connectionStrings` field...")
+		assert.Contains(t, e.String(), "Ignoring `name` field...")
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {

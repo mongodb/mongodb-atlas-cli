@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
@@ -85,6 +86,19 @@ func (opts *UpdateOpts) cluster() (*atlasv2.AdvancedClusterDescription, error) {
 		if opts.name == "" {
 			opts.name = cluster.GetName()
 		}
+
+		// The connection string cannot be updated by the Update operation
+		if cluster.ConnectionStrings != nil {
+			cluster.ConnectionStrings = nil
+			_, _ = log.Warning("\nthe `connectionStrings` field cannot be updated by the update operation`. Ignoring `connectionStrings` field...\n")
+		}
+
+		// The cluster name cannot be updated by the Update operation
+		if opts.name != cluster.GetName() {
+			cluster.Name = nil
+			_, _ = log.Warning("the `name` field cannot be updated by the update operation. Ignoring `name` field...\n")
+		}
+
 		return cluster, nil
 	}
 	return opts.store.AtlasCluster(opts.ProjectID, opts.name)

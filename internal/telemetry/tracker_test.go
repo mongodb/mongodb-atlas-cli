@@ -39,7 +39,7 @@ func TestTrackCommand(t *testing.T) {
 	config.ToolName = config.AtlasCLI
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 		},
 	}
 	_ = cmd.ExecuteContext(NewContext())
@@ -71,7 +71,7 @@ func TestTrackCommandWithError(t *testing.T) {
 
 	cmd := &cobra.Command{
 		Use: "test-command",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return errors.New("test command error")
 		},
 	}
@@ -110,7 +110,7 @@ func TestTrackCommandWithSendError(t *testing.T) {
 
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 		},
 	}
 	errCmd := cmd.ExecuteContext(NewContext())
@@ -240,7 +240,7 @@ func TestTrackSurvey(t *testing.T) {
 
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 		},
 	}
 	errCmd := cmd.ExecuteContext(NewContext())

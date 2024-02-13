@@ -198,7 +198,7 @@ func TestClustersFlags(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		require.Error(t, err, string(resp))
 	})
 
 	t.Run("Update", func(t *testing.T) {

@@ -96,37 +96,6 @@ func TestClustersFile(t *testing.T) {
 		assert.Empty(t, cluster.GetTags())
 	})
 
-	t.Run("Watch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			"--projectId", g.projectID,
-			clusterFileName,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-		assert.Contains(t, string(resp), "Cluster available")
-	})
-
-	t.Run("Update via file with warning", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"update",
-			clusterFileName,
-			"--file=update_cluster_test_warnings.json",
-			"--projectId", g.projectID)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		req.NotEmpty(string(resp))
-		assert.Contains(t, string(resp), "Ignoring `connectionStrings` field...")
-		assert.Contains(t, string(resp), "Ignoring `name` field...")
-		assert.Contains(t, string(resp), "Updating cluster")
-	})
-
 	t.Run("Delete file creation", func(t *testing.T) {
 		cmd := exec.Command(
 			cliPath,

@@ -700,7 +700,7 @@ func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 					_ = watchCluster(projectID, clusterName)
 					return
 				}
-				require.NoError(t, deleteClusterForProject(projectID, clusterName))
+				assert.NoError(t, deleteClusterForProject(projectID, clusterName))
 			})
 		}(cluster.GetName(), cluster.GetStateName())
 	}

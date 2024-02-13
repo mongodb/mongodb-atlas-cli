@@ -336,9 +336,9 @@ func buildMaintenanceWindows(mwProvider store.MaintenanceWindowDescriber, projec
 
 	return akov2project.MaintenanceWindow{
 		DayOfWeek: mw.DayOfWeek,
-		HourOfDay: mw.HourOfDay,
-		AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
-		StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
+		HourOfDay: mw.GetHourOfDay(),
+		AutoDefer: mw.GetAutoDeferOnceEnabled(),
+		StartASAP: mw.GetAutoDeferOnceEnabled(),
 		Defer:     false,
 	}, nil
 }

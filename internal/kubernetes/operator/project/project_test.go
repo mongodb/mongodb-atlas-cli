@@ -129,7 +129,7 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		mw := &atlasv2.GroupMaintenanceWindow{
 			DayOfWeek:            1,
-			HourOfDay:            10,
+			HourOfDay:            pointer.Get(10),
 			StartASAP:            pointer.Get(false),
 			AutoDeferOnceEnabled: pointer.Get(false),
 		}
@@ -431,9 +431,9 @@ func TestBuildAtlasProject(t *testing.T) {
 				},
 				MaintenanceWindow: akov2project.MaintenanceWindow{
 					DayOfWeek: mw.DayOfWeek,
-					HourOfDay: mw.HourOfDay,
-					AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
-					StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
+					HourOfDay: mw.GetHourOfDay(),
+					AutoDefer: mw.GetAutoDeferOnceEnabled(),
+					StartASAP: mw.GetStartASAP(),
 					Defer:     false,
 				},
 				PrivateEndpoints: []akov2.PrivateEndpoint{
@@ -1055,7 +1055,7 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 	t.Run("Can convert maintenance window", func(t *testing.T) {
 		mw := &atlasv2.GroupMaintenanceWindow{
 			DayOfWeek:            3,
-			HourOfDay:            10,
+			HourOfDay:            pointer.Get(10),
 			StartASAP:            pointer.Get(false),
 			AutoDeferOnceEnabled: pointer.Get(false),
 		}
@@ -1069,9 +1069,9 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 
 		expected := akov2project.MaintenanceWindow{
 			DayOfWeek: mw.DayOfWeek,
-			HourOfDay: mw.HourOfDay,
-			AutoDefer: *mw.AutoDeferOnceEnabled,
-			StartASAP: *mw.StartASAP,
+			HourOfDay: mw.GetHourOfDay(),
+			AutoDefer: mw.GetAutoDeferOnceEnabled(),
+			StartASAP: mw.GetStartASAP(),
 			Defer:     false,
 		}
 

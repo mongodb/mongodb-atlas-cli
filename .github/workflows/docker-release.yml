@@ -130,7 +130,7 @@ jobs:
               -v $(pwd):$(pwd) \
               -w $(pwd) \
               artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign \
-              cosign sign --key "${PKCS11_URI}" --tlog-upload=false "${IMAGE}@${DIGEST}"  
+              cosign sign --key "${PKCS11_URI}" --sign-container-identity=index.docker.io/mongodb/atlas --tlog-upload=false "${IMAGE}@${DIGEST}"  
           done
       - name: Push image to dockerhub public registry
         run: |

@@ -31,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -700,7 +700,7 @@ func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 					_ = watchCluster(projectID, clusterName)
 					return
 				}
-				assert.NoError(t, deleteClusterForProject(projectID, clusterName)) //nolint: testifylint // we want to check all instead of failing early
+				assert.NoError(t, deleteClusterForProject(projectID, clusterName))
 			})
 		}(cluster.GetName(), cluster.GetStateName())
 	}
@@ -720,7 +720,7 @@ func deleteDatapipelinesForProject(t *testing.T, cliPath, projectID string) {
 	var pipelines []atlasv2.DataLakeIngestionPipeline
 	require.NoError(t, json.Unmarshal(resp, &pipelines))
 	for _, p := range pipelines {
-		assert.NoError(t, deleteDatalakeForProject(cliPath, projectID, p.GetName())) //nolint: testifylint // we want to check all instead of failing early
+		assert.NoError(t, deleteDatalakeForProject(cliPath, projectID, p.GetName()))
 	}
 }
 
@@ -756,7 +756,7 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 		)
 		cmd.Env = os.Environ()
 		resp, err = cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp)) //nolint: testifylint // we want to check all instead of failing early
+		assert.NoError(t, err, string(resp))
 	}
 }
 

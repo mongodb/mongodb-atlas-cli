@@ -17,14 +17,17 @@
 package clusters
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/spf13/afero"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
+	"github.com/stretchr/testify/assert"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
 )
 
 func TestUpdate_Run(t *testing.T) {
@@ -67,6 +70,10 @@ func TestUpdate_Run(t *testing.T) {
   "name": "ProjectBar",
   "diskSizeGB": 10,
   "numShards": 1,
+  "connectionStrings": {
+    "standard": "mongodb://clusterm10-shard-00-00.85xn1.mongodb.net:27017,clusterm10-shard-00-01.85xn1.mongodb.net:27017,clusterm10-shard-00-02.85xn1.mongodb.net:27017/?ssl=true\u0026authSource=admin\u0026replicaSet=atlas-zzw0ln-shard-0",
+    "standardSrv": "mongodb+srv://clusterm10.85xn1.mongodb.net"
+  },
   "providerSettings": {
     "providerName": "AWS",
     "instanceSizeName": "M2",
@@ -92,22 +99,31 @@ func TestUpdate_Run(t *testing.T) {
 		fileName := "atlas_cluster_update_test.json"
 		_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
 
+		buf := new(bytes.Buffer)
 		updateOpts := &UpdateOpts{
 			filename: fileName,
 			fs:       appFS,
 			store:    mockStore,
+			name:     "ProjectBar",
+			OutputOpts: cli.OutputOpts{
+				Template:  updateTmpl,
+				OutWriter: buf,
+			},
 		}
 
 		cluster, _ := updateOpts.cluster()
+		removeReadOnlyAttributes(cluster)
 		mockStore.
 			EXPECT().
-			UpdateCluster(updateOpts.ConfigProjectID(), "ProjectBar", cluster).
+			UpdateCluster(updateOpts.ConfigProjectID(), updateOpts.name, cluster).
 			Return(expected, nil).
 			Times(1)
 
 		if err := updateOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
+
+		assert.Contains(t, buf.String(), "Updating cluster")
 	})
 }
 

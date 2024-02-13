@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
 )
 
 const (
@@ -63,6 +63,9 @@ func (opts *UpdateOpts) Run() error {
 	if err != nil {
 		return err
 	}
+
+	removeReadOnlyAttributes(cluster)
+
 	if opts.filename == "" {
 		opts.patchOpts(cluster)
 	}
@@ -85,13 +88,18 @@ func (opts *UpdateOpts) cluster() (*atlasv2.AdvancedClusterDescription, error) {
 		if opts.name == "" {
 			opts.name = cluster.GetName()
 		}
+
+		// The cluster name cannot be updated by the Update operation
+		if cluster.GetName() != "" && opts.name != cluster.GetName() {
+			cluster.Name = nil
+		}
+
 		return cluster, nil
 	}
 	return opts.store.AtlasCluster(opts.ProjectID, opts.name)
 }
 
 func (opts *UpdateOpts) patchOpts(out *atlasv2.AdvancedClusterDescription) {
-	removeReadOnlyAttributes(out)
 	if opts.mdbVersion != "" {
 		out.MongoDBMajorVersion = &opts.mdbVersion
 	}

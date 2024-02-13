@@ -38,7 +38,7 @@ import (
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -129,7 +129,7 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		mw := &atlasv2.GroupMaintenanceWindow{
 			DayOfWeek:            1,
-			HourOfDay:            10,
+			HourOfDay:            pointer.Get(10),
 			StartASAP:            pointer.Get(false),
 			AutoDeferOnceEnabled: pointer.Get(false),
 		}
@@ -431,9 +431,9 @@ func TestBuildAtlasProject(t *testing.T) {
 				},
 				MaintenanceWindow: akov2project.MaintenanceWindow{
 					DayOfWeek: mw.DayOfWeek,
-					HourOfDay: mw.HourOfDay,
-					AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
-					StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
+					HourOfDay: mw.GetHourOfDay(),
+					AutoDefer: mw.GetAutoDeferOnceEnabled(),
+					StartASAP: mw.GetStartASAP(),
 					Defer:     false,
 				},
 				PrivateEndpoints: []akov2.PrivateEndpoint{
@@ -1055,7 +1055,7 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 	t.Run("Can convert maintenance window", func(t *testing.T) {
 		mw := &atlasv2.GroupMaintenanceWindow{
 			DayOfWeek:            3,
-			HourOfDay:            10,
+			HourOfDay:            pointer.Get(10),
 			StartASAP:            pointer.Get(false),
 			AutoDeferOnceEnabled: pointer.Get(false),
 		}
@@ -1069,9 +1069,9 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 
 		expected := akov2project.MaintenanceWindow{
 			DayOfWeek: mw.DayOfWeek,
-			HourOfDay: mw.HourOfDay,
-			AutoDefer: *mw.AutoDeferOnceEnabled,
-			StartASAP: *mw.StartASAP,
+			HourOfDay: mw.GetHourOfDay(),
+			AutoDefer: mw.GetAutoDeferOnceEnabled(),
+			StartASAP: mw.GetStartASAP(),
 			Defer:     false,
 		}
 

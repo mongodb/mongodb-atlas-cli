@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
 )
 
 func TestClustersFile(t *testing.T) {
@@ -84,6 +84,7 @@ func TestClustersFile(t *testing.T) {
 			"--file=update_cluster_test.json",
 			"--projectId", g.projectID,
 			"-o=json")
+
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))

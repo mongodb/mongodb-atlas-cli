@@ -75,14 +75,14 @@ func CreateBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Create a search node for the cluster named myCluster using a JSON node spec configuration file named spec.json:
   %s clusters search nodes create --clusterName myCluster --file spec.json --output json`, cli.ExampleAtlasEntryPoint()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 			)
 		},
-		RunE: func(_ *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

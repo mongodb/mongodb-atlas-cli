@@ -19,6 +19,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
 )
@@ -31,7 +32,17 @@ func TestList_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &atlasv2.ApiSearchDeploymentResponse{}
+	expected := &atlasv2.ApiSearchDeploymentResponse{
+		GroupId: pointer.Get("32b6e34b3d91647abb20e111"),
+		Id:      pointer.Get("32b6e34b3d91647abb20e222"),
+		Specs: &[]atlasv2.ApiSearchDeploymentSpec{
+			{
+				InstanceSize: "S20_HIGHCPU_NVME",
+				NodeCount:    2,
+			},
+		},
+		StateName: pointer.Get("IDLE"),
+	}
 
 	mockStore.
 		EXPECT().

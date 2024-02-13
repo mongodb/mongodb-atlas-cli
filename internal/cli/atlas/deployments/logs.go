@@ -192,10 +192,10 @@ func LogsBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:     "logs",
-		Short:   "Get deployments logs.",
+		Short:   "Get deployment logs.",
 		Aliases: []string{"log"},
 		Args:    require.NoArgs,
-		GroupID: "local",
+		GroupID: "all",
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),

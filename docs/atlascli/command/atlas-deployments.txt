@@ -52,7 +52,7 @@ Related Commands
 * :ref:`atlas-deployments-connect` - Connect to a deployment that is running locally or in Atlas. If the deployment is paused, make sure to run atlas deployments start first.
 * :ref:`atlas-deployments-delete` - Delete a deployment.
 * :ref:`atlas-deployments-list` - Return all deployments.
-* :ref:`atlas-deployments-logs` - Get deployments logs.
+* :ref:`atlas-deployments-logs` - Get deployment logs.
 * :ref:`atlas-deployments-pause` - Pause a deployment.
 * :ref:`atlas-deployments-search` - Manage search for cloud and local deployments.
 * :ref:`atlas-deployments-setup` - Create a local deployment.

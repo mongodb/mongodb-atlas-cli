@@ -42,6 +42,7 @@ jobs:
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
+          provenance: false
           tags: ${{ env.STAGING_IMAGE_REPOSITORY }}:latest ,
             ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
             ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}

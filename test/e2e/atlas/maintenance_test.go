@@ -46,11 +46,9 @@ func TestMaintenanceWindows(t *testing.T) {
 			g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		expected := "Maintenance window updated.\n"
-		a.Equal(expected, string(resp))
+		assert.Equal(t, expected, string(resp))
 	})
 
 	t.Run("describe", func(t *testing.T) {
@@ -63,14 +61,13 @@ func TestMaintenanceWindows(t *testing.T) {
 			g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
 		var maintenanceWindow atlasv2.GroupMaintenanceWindow
 		require.NoError(t, json.Unmarshal(resp, &maintenanceWindow))
-		a.Equal(1, maintenanceWindow.DayOfWeek)
-		a.Equal(1, maintenanceWindow.HourOfDay)
+		a := assert.New(t)
+		a.Equal(1, maintenanceWindow.GetDayOfWeek())
+		a.Equal(1, maintenanceWindow.GetHourOfDay())
 	})
 
 	t.Run("clear", func(t *testing.T) {
@@ -82,10 +79,8 @@ func TestMaintenanceWindows(t *testing.T) {
 			g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		expected := "Maintenance window removed.\n"
-		a.Equal(expected, string(resp))
+		assert.Equal(t, expected, string(resp))
 	})
 }

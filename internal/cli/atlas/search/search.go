@@ -25,8 +25,10 @@ func Builder() *cobra.Command {
 		Aliases: []string{"fts"},
 		Short:   "Manage Atlas Search for your cluster.",
 	}
-	cmd.AddCommand(IndexesBuilder())
-	cmd.AddCommand(nodes.Builder())
+	cmd.AddCommand(
+		IndexesBuilder(),
+		nodes.Builder()
+	)
 
 	return cmd
 }

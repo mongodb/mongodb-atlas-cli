@@ -112,6 +112,7 @@ func TestUpdate_Run(t *testing.T) {
 		}
 
 		cluster, _ := updateOpts.cluster()
+		removeReadOnlyAttributes(cluster)
 		mockStore.
 			EXPECT().
 			UpdateCluster(updateOpts.ConfigProjectID(), updateOpts.name, cluster).

@@ -63,6 +63,9 @@ func (opts *UpdateOpts) Run() error {
 	if err != nil {
 		return err
 	}
+
+	removeReadOnlyAttributes(cluster)
+
 	if opts.filename == "" {
 		opts.patchOpts(cluster)
 	}
@@ -86,7 +89,6 @@ func (opts *UpdateOpts) cluster() (*atlasv2.AdvancedClusterDescription, error) {
 			opts.name = cluster.GetName()
 		}
 
-		removeReadOnlyAttributes(cluster)
 		// The cluster name cannot be updated by the Update operation
 		if cluster.GetName() != "" && opts.name != cluster.GetName() {
 			cluster.Name = nil
@@ -98,7 +100,6 @@ func (opts *UpdateOpts) cluster() (*atlasv2.AdvancedClusterDescription, error) {
 }
 
 func (opts *UpdateOpts) patchOpts(out *atlasv2.AdvancedClusterDescription) {
-	removeReadOnlyAttributes(out)
 	if opts.mdbVersion != "" {
 		out.MongoDBMajorVersion = &opts.mdbVersion
 	}

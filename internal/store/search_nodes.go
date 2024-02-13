@@ -27,7 +27,7 @@ type SearchNodesLister interface {
 	SearchNodes(string, string) (*atlasv2.ApiSearchDeploymentResponse, error)
 }
 
-type SearchNodseCreator interface {
+type SearchNodesCreator interface {
 	CreateSearchNodes(string, string, *[]atlasv2.ApiSearchDeploymentSpec) (*atlasv2.ApiSearchDeploymentResponse, error)
 }
 

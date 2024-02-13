@@ -21,7 +21,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_search_nodes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store SearchNodesLister,SearchNodseCreator
+//go:generate mockgen -destination=../mocks/mock_search_nodes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store SearchNodesLister, SearchNodesCreator
 
 type SearchNodesLister interface {
 	SearchNodes(string, string) (*atlasv2.ApiSearchDeploymentResponse, error)

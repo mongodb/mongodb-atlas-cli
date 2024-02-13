@@ -30,7 +30,7 @@ import (
 	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8snames "k8s.io/apiserver/pkg/storage/names"
@@ -336,9 +336,9 @@ func buildMaintenanceWindows(mwProvider store.MaintenanceWindowDescriber, projec
 
 	return akov2project.MaintenanceWindow{
 		DayOfWeek: mw.DayOfWeek,
-		HourOfDay: mw.HourOfDay,
-		AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
-		StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
+		HourOfDay: mw.GetHourOfDay(),
+		AutoDefer: mw.GetAutoDeferOnceEnabled(),
+		StartASAP: mw.GetStartASAP(),
 		Defer:     false,
 	}, nil
 }

@@ -15,7 +15,7 @@
 package atlas
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

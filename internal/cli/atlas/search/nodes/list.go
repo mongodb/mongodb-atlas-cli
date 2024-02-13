@@ -62,7 +62,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "List all Atlas Search nodes for a cluster.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{
 			"output": listTemplate,
 		},

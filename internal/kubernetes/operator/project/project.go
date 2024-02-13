@@ -338,7 +338,7 @@ func buildMaintenanceWindows(mwProvider store.MaintenanceWindowDescriber, projec
 		DayOfWeek: mw.DayOfWeek,
 		HourOfDay: mw.GetHourOfDay(),
 		AutoDefer: mw.GetAutoDeferOnceEnabled(),
-		StartASAP: mw.GetAutoDeferOnceEnabled(),
+		StartASAP: mw.GetStartASAP(),
 		Defer:     false,
 	}, nil
 }

@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20231115005/admin"
+	admin "go.mongodb.org/atlas-sdk/v20231115006/admin"
 )
 
 // MockCloudProviderAccessRoleLister is a mock of CloudProviderAccessRoleLister interface.

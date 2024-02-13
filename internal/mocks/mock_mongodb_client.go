@@ -10,7 +10,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbclient "github.com/mongodb/mongodb-atlas-cli/internal/mongodbclient"
-	admin "go.mongodb.org/atlas-sdk/v20231115005/admin"
+	admin "go.mongodb.org/atlas-sdk/v20231115006/admin"
 )
 
 // MockMongoDBClient is a mock of MongoDBClient interface.

@@ -18,7 +18,7 @@ import (
 	"errors"
 	"strings"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
 )
 
 var errTScheduledPolicyItemNotFound = errors.New("scheduled policy item not found")

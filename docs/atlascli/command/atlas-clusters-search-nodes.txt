@@ -1,8 +1,8 @@
-.. _atlas-clusters-search:
+.. _atlas-clusters-search-nodes:
 
-=====================
-atlas clusters search
-=====================
+===========================
+atlas clusters search nodes
+===========================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,7 @@ atlas clusters search
    :depth: 1
    :class: singlecol
 
-Manage Atlas Search for your cluster.
+Manage Atlas Search nodes for your cluster.
 
 Options
 -------
@@ -28,7 +28,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for search
+     - help for nodes
 
 Inherited Options
 -----------------
@@ -49,13 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-clusters-search-indexes` - Manage Atlas Search indexes for your cluster.
-* :ref:`atlas-clusters-search-nodes` - Manage Atlas Search nodes for your cluster.
+* :ref:`atlas-clusters-search-nodes-list` - List all Atlas Search nodes for a cluster.
 
 
 .. toctree::
    :titlesonly:
 
-   indexes </command/atlas-clusters-search-indexes>
-   nodes </command/atlas-clusters-search-nodes>
+   list </command/atlas-clusters-search-nodes-list>
 

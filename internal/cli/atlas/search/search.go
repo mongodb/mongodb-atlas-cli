@@ -27,7 +27,7 @@ func Builder() *cobra.Command {
 	}
 	cmd.AddCommand(
 		IndexesBuilder(),
-		nodes.Builder()
+		nodes.Builder(),
 	)
 
 	return cmd

@@ -21,7 +21,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"go.mongodb.org/atlas-sdk/v20231115006/admin"
+	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 func TestCheck(t *testing.T) {

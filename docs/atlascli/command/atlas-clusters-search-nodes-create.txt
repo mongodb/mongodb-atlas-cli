@@ -64,7 +64,7 @@ Options
    * - --watchTimeout
      - uint
      - false
-     - Time in seconds until a watch times out. After a watch times out, the CLI no longer watches the command. This value defaults to 600.
+     - Time in seconds until a watch times out. After a watch times out, the CLI no longer watches the command.
 
 Inherited Options
 -----------------

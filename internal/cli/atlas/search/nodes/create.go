@@ -38,8 +38,7 @@ type CreateOpts struct {
 }
 
 const (
-	defaultWatchTimeoutSeconds = 600 // 10 minutes
-	stateIdle                  = "IDLE"
+	stateIdle = "IDLE"
 )
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -116,7 +115,7 @@ func CreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.File)
 
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
-	cmd.Flags().UintVar(&opts.Timeout, flag.WatchTimeout, defaultWatchTimeoutSeconds, usage.WatchTimeout)
+	cmd.Flags().UintVar(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 
 	// Global flags
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

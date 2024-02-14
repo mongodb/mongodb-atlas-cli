@@ -55,12 +55,12 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 var createTemplate = "Created new search nodes.\n"
 
 func (opts *CreateOpts) Run() error {
-	spec, err := LoadAPISearchDeploymentSpec(opts.fs, opts.filename)
+	spec, err := loadAPISearchDeploymentSpec(opts.fs, opts.filename)
 	if err != nil {
 		return err
 	}
 
-	r, err := opts.store.CreateSearchNodes(opts.ConfigProjectID(), opts.clusterName, &spec)
+	r, err := opts.store.CreateSearchNodes(opts.ConfigProjectID(), opts.clusterName, spec)
 	if err != nil {
 		return err
 	}

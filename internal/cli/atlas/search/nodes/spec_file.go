@@ -22,33 +22,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
 )
 
-type SpecFile []SpecFileEntry
-
-type SpecFileEntry struct {
-	InstanceSize string
-	NodeCount    int
-}
-
 // Load []atlasv2.ApiSearchDeploymentSpec from a given file.
-func LoadAPISearchDeploymentSpec(fs afero.Fs, filename string) ([]atlasv2.ApiSearchDeploymentSpec, error) {
-	spec := new(SpecFile)
+func loadAPISearchDeploymentSpec(fs afero.Fs, filename string) (*[]atlasv2.ApiSearchDeploymentSpec, error) {
+	spec := new([]atlasv2.ApiSearchDeploymentSpec)
 	if err := file.Load(fs, filename, spec); err != nil {
 		return nil, fmt.Errorf("failed to parse JSON file due to: %w", err)
 	}
 
-	return asAPISearchDeploymentSpec(*spec), nil
-}
-
-// Convert SpecFile into []atlasv2.ApiSearchDeploymentSpec.
-func asAPISearchDeploymentSpec(s SpecFile) []atlasv2.ApiSearchDeploymentSpec {
-	out := make([]atlasv2.ApiSearchDeploymentSpec, len(s))
-
-	for i, entry := range s {
-		out[i] = atlasv2.ApiSearchDeploymentSpec{
-			InstanceSize: entry.InstanceSize,
-			NodeCount:    entry.NodeCount,
-		}
-	}
-
-	return out
+	return spec, nil
 }

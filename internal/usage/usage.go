@@ -130,7 +130,7 @@ dbName and collection are required only for built-in roles.`
 	BackupFilename                            = "Path to an optional JSON configuration file that defines backup schedule settings."
 	PoliciesFilename                          = "File name that identifies an optional file with a json policy configuration."
 	SearchFilename                            = "Name of the JSON index configuration file to use. To learn about the Atlas Search index configuration file, see https://dochub.mongodb.org/core/search-index-config-file-atlascli. To learn about the Atlas Search index syntax and options that you can define in your configuration file, see https://dochub.mongodb.org/core/index-definitions-fts."
-	SearchNodesFilename                       = "Name of the JSON index configuration file to use. Expected JSON format: [{instanceSize: string, nodeCount: number}, …]. For more details about instance sizes see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Atlas-Search/operation/createAtlasSearchDeployment"
+	SearchNodesFilename                       = "Name of the JSON index configuration file to use."
 	AccessListIps                             = "IP addresses to add to the new user's access list."
 	StartDate                                 = "Timestamp in ISO 8601 date and time format in UTC when the maintenance window starts."
 	EndDate                                   = "Timestamp in ISO 8601 date and time format in UTC when the maintenance window ends."

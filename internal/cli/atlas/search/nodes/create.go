@@ -61,6 +61,7 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
+// atlas clusters search nodes create [--clusterName] [--file].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.fs = afero.NewOsFs()

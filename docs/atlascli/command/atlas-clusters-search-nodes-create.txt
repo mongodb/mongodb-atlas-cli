@@ -44,7 +44,7 @@ Options
    * - -f, --file
      - string
      - true
-     - Name of the JSON index configuration file to use. To learn about the Atlas Search index configuration file, see https://dochub.mongodb.org/core/search-index-config-file-atlascli. To learn about the Atlas Search index syntax and options that you can define in your configuration file, see https://dochub.mongodb.org/core/index-definitions-fts.
+     - Name of the JSON index configuration file to use. Expected JSON format: [{instanceSize: string, nodeCount: number}, …]. For more details about instance sizes see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Atlas-Search/operation/createAtlasSearchDeployment
    * - -h, --help
      - 
      - false

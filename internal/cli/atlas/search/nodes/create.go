@@ -92,7 +92,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
-	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.SearchFilename)
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.SearchNodesFilename)
 	_ = cmd.MarkFlagFilename(flag.File)
 	_ = cmd.MarkFlagRequired(flag.File)
 

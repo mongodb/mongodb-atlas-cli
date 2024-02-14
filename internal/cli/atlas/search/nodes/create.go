@@ -49,7 +49,8 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var createTemplate = "Created new search nodes.\n"
+var createTemplate = "Search nodes are being created.\n"
+var createWatchTemplate = "Created new search nodes.\n"
 
 func (opts *CreateOpts) Run() error {
 	spec, err := loadAPISearchDeploymentSpec(opts.fs, opts.filename)
@@ -66,6 +67,7 @@ func (opts *CreateOpts) Run() error {
 		if err := opts.Watch(opts.watcher); err != nil {
 			return err
 		}
+		opts.Template = createWatchTemplate
 	}
 
 	return opts.Print(r)

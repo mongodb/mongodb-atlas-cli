@@ -55,8 +55,8 @@ func (opts *PagerDutyOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *PagerDutyOpts) newPagerDutyIntegration() *atlasv2.ThridPartyIntegration {
-	return &atlasv2.ThridPartyIntegration{
+func (opts *PagerDutyOpts) newPagerDutyIntegration() *atlasv2.ThirdPartyIntegration {
+	return &atlasv2.ThirdPartyIntegration{
 		Type:       &pagerDutyIntegrationType,
 		ServiceKey: &opts.serviceKey,
 	}

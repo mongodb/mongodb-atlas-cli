@@ -24,7 +24,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store IntegrationCreator,IntegrationLister,IntegrationDeleter,IntegrationDescriber
 
 type IntegrationCreator interface {
-	CreateIntegration(string, string, *atlasv2.ThridPartyIntegration) (*atlasv2.PaginatedIntegration, error)
+	CreateIntegration(string, string, *atlasv2.ThirdPartyIntegration) (*atlasv2.PaginatedIntegration, error)
 }
 
 type IntegrationLister interface {
@@ -36,11 +36,11 @@ type IntegrationDeleter interface {
 }
 
 type IntegrationDescriber interface {
-	Integration(string, string) (*atlasv2.ThridPartyIntegration, error)
+	Integration(string, string) (*atlasv2.ThirdPartyIntegration, error)
 }
 
 // CreateIntegration encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateIntegration(projectID, integrationType string, integration *atlasv2.ThridPartyIntegration) (*atlasv2.PaginatedIntegration, error) {
+func (s *Store) CreateIntegration(projectID, integrationType string, integration *atlasv2.ThirdPartyIntegration) (*atlasv2.PaginatedIntegration, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.CreateThirdPartyIntegration(s.ctx,
@@ -74,7 +74,7 @@ func (s *Store) DeleteIntegration(projectID, integrationType string) error {
 }
 
 // Integration encapsulates the logic to manage different cloud providers.
-func (s *Store) Integration(projectID, integrationType string) (*atlasv2.ThridPartyIntegration, error) {
+func (s *Store) Integration(projectID, integrationType string) (*atlasv2.ThirdPartyIntegration, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.GetThirdPartyIntegration(s.ctx, projectID, integrationType).Execute()

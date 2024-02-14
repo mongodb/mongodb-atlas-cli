@@ -549,7 +549,7 @@ func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedInte
 	return false
 }
 
-func getIntegrationType(val atlasv2.ThridPartyIntegration) string {
+func getIntegrationType(val atlasv2.ThirdPartyIntegration) string {
 	return val.GetType()
 }
 

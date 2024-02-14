@@ -58,8 +58,8 @@ func (opts *NewRelicOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *NewRelicOpts) newNewRelicIntegration() *atlasv2.ThridPartyIntegration {
-	return &atlasv2.ThridPartyIntegration{
+func (opts *NewRelicOpts) newNewRelicIntegration() *atlasv2.ThirdPartyIntegration {
+	return &atlasv2.ThirdPartyIntegration{
 		Type:       &newRelicIntegrationType,
 		LicenseKey: &opts.licenseKey,
 		AccountId:  &opts.accountID,

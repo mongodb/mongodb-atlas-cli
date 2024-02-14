@@ -193,7 +193,7 @@ func TestIntegrations(t *testing.T) {
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
-		var thirdPartyIntegration atlasv2.ThridPartyIntegration
+		var thirdPartyIntegration atlasv2.ThirdPartyIntegration
 		require.NoError(t, json.Unmarshal(resp, &thirdPartyIntegration))
 		a.Equal(webhookEntity, thirdPartyIntegration.GetType())
 	})

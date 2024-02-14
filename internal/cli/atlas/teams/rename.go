@@ -54,8 +54,8 @@ func (opts *renameOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *renameOpts) newTeam() *atlasv2.Team {
-	return &atlasv2.Team{
+func (opts *renameOpts) newTeam() *atlasv2.TeamUpdate {
+	return &atlasv2.TeamUpdate{
 		Name: opts.name,
 	}
 }

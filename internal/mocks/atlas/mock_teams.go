@@ -165,7 +165,7 @@ func (m *MockTeamRenamer) EXPECT() *MockTeamRenamerMockRecorder {
 }
 
 // RenameTeam mocks base method.
-func (m *MockTeamRenamer) RenameTeam(arg0, arg1 string, arg2 *admin.Team) (*admin.TeamResponse, error) {
+func (m *MockTeamRenamer) RenameTeam(arg0, arg1 string, arg2 *admin.TeamUpdate) (*admin.TeamResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RenameTeam", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.TeamResponse)

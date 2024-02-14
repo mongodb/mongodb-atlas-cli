@@ -116,7 +116,7 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		thirdPartyIntegrations := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: &[]atlasv2.ThridPartyIntegration{
+			Results: &[]atlasv2.ThirdPartyIntegration{
 				{
 					Type:             pointer.Get("PROMETHEUS"),
 					Username:         pointer.Get("TestPrometheusUserName"),
@@ -920,7 +920,7 @@ func Test_buildIntegrations(t *testing.T) {
 		const includeSecrets = true
 		ints := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: &[]atlasv2.ThridPartyIntegration{
+			Results: &[]atlasv2.ThirdPartyIntegration{
 				{
 					Type:             pointer.Get("PROMETHEUS"),
 					Password:         pointer.Get("PrometheusTestPassword"),
@@ -986,7 +986,7 @@ func Test_buildIntegrations(t *testing.T) {
 		const includeSecrets = false
 		ints := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: &[]atlasv2.ThridPartyIntegration{
+			Results: &[]atlasv2.ThirdPartyIntegration{
 				{
 
 					Type:             pointer.Get("PROMETHEUS"),

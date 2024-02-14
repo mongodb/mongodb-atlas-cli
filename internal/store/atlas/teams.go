@@ -35,7 +35,7 @@ type TeamCreator interface {
 }
 
 type TeamRenamer interface {
-	RenameTeam(string, string, *atlasv2.Team) (*atlasv2.TeamResponse, error)
+	RenameTeam(string, string, *atlasv2.TeamUpdate) (*atlasv2.TeamResponse, error)
 }
 
 type TeamDeleter interface {
@@ -81,7 +81,7 @@ func (s *Store) CreateTeam(orgID string, team *atlasv2.Team) (*atlasv2.Team, err
 	return result, err
 }
 
-func (s *Store) RenameTeam(orgID, teamID string, team *atlasv2.Team) (*atlasv2.TeamResponse, error) {
+func (s *Store) RenameTeam(orgID, teamID string, team *atlasv2.TeamUpdate) (*atlasv2.TeamResponse, error) {
 	result, _, err := s.clientv2.TeamsApi.RenameTeam(s.ctx, orgID, teamID, team).Execute()
 	return result, err
 }

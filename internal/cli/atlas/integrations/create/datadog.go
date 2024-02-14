@@ -56,8 +56,8 @@ func (opts *DatadogOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *DatadogOpts) newDatadogIntegration() *atlasv2.ThridPartyIntegration {
-	return &atlasv2.ThridPartyIntegration{
+func (opts *DatadogOpts) newDatadogIntegration() *atlasv2.ThirdPartyIntegration {
+	return &atlasv2.ThirdPartyIntegration{
 		Type:   &datadogType,
 		ApiKey: &opts.apiKey,
 		Region: &opts.region,

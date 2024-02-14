@@ -56,8 +56,8 @@ func (opts *VictorOpsOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *VictorOpsOpts) newVictorOpsIntegration() *atlasv2.ThridPartyIntegration {
-	return &atlasv2.ThridPartyIntegration{
+func (opts *VictorOpsOpts) newVictorOpsIntegration() *atlasv2.ThirdPartyIntegration {
+	return &atlasv2.ThirdPartyIntegration{
 		Type:       &victorOpsIntegrationType,
 		ApiKey:     &opts.apiKey,
 		RoutingKey: &opts.routingKey,

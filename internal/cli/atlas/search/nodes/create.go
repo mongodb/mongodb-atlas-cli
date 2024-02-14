@@ -80,7 +80,7 @@ func (opts *CreateOpts) watcher() (bool, error) {
 	return *res.StateName == stateIdle, nil
 }
 
-// atlas clusters search nodes create [--clusterName] [--file].
+// atlas clusters search nodes create [--clusterName clusterName] [--file filePath].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.fs = afero.NewOsFs()

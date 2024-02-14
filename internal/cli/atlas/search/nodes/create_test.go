@@ -40,7 +40,7 @@ var testJSONParsed = []atlasv2.ApiSearchDeploymentSpec{
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSearchNodseCreator(ctrl)
+	mockStore := mocks.NewMockSearchNodesCreator(ctrl)
 
 	t.Run("valid file run", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()

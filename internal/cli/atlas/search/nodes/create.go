@@ -17,11 +17,13 @@ package nodes
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
@@ -30,12 +32,17 @@ import (
 
 type CreateOpts struct {
 	cli.GlobalOpts
-	cli.OutputOpts
+	cli.WatchOpts
 	clusterName string
 	filename    string
 	fs          afero.Fs
 	store       store.SearchNodesCreator
 }
+
+const (
+	defaultWait = 10 * time.Minute
+	stateIdle   = "IDLE"
+)
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -58,13 +65,28 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
+	if opts.EnableWatch {
+		if err := opts.Watch(opts.watcher); err != nil {
+			return err
+		}
+	}
+
 	return opts.Print(r)
+}
+
+func (opts *CreateOpts) watcher() (bool, error) {
+	res, err := opts.store.SearchNodes(opts.ConfigProjectID(), opts.clusterName)
+	if err != nil {
+		return false, err
+	}
+	return *res.StateName == stateIdle, nil
 }
 
 // atlas clusters search nodes create [--clusterName] [--file].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.fs = afero.NewOsFs()
+	opts.DefaultWait = pointer.Get(defaultWait)
 
 	cmd := &cobra.Command{
 		Use:   "create",
@@ -95,6 +117,8 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.SearchNodesFilename)
 	_ = cmd.MarkFlagFilename(flag.File)
 	_ = cmd.MarkFlagRequired(flag.File)
+
+	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
 
 	// Global flags
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

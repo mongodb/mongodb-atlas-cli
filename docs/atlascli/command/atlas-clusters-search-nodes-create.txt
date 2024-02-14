@@ -44,7 +44,7 @@ Options
    * - -f, --file
      - string
      - true
-     - Name of the JSON index configuration file to use. Expected JSON format: [{instanceSize: string, nodeCount: number}, …]. For more details about instance sizes see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Atlas-Search/operation/createAtlasSearchDeployment
+     - Name of the JSON index configuration file to use.
    * - -h, --help
      - 
      - false
@@ -57,6 +57,10 @@ Options
      - string
      - false
      - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
+   * - -w, --watch
+     - 
+     - false
+     - Flag that indicates whether to watch the command until it completes its execution or the watch times out.
 
 Inherited Options
 -----------------

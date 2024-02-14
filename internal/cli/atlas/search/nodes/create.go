@@ -17,13 +17,11 @@ package nodes
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
@@ -40,8 +38,8 @@ type CreateOpts struct {
 }
 
 const (
-	defaultWait = 10 * time.Minute
-	stateIdle   = "IDLE"
+	defaultWatchTimeoutSeconds = 600 // 10 minutes
+	stateIdle                  = "IDLE"
 )
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -86,7 +84,6 @@ func (opts *CreateOpts) watcher() (bool, error) {
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	opts.fs = afero.NewOsFs()
-	opts.DefaultWait = pointer.Get(defaultWait)
 
 	cmd := &cobra.Command{
 		Use:   "create",
@@ -119,6 +116,7 @@ func CreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.File)
 
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
+	cmd.Flags().UintVar(&opts.Timeout, flag.WatchTimeout, defaultWatchTimeoutSeconds, usage.WatchTimeout)
 
 	// Global flags
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

@@ -34,7 +34,7 @@ type CreateOpts struct {
 	clusterName string
 	filename    string
 	fs          afero.Fs
-	store       store.SearchNodseCreator
+	store       store.SearchNodesCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {

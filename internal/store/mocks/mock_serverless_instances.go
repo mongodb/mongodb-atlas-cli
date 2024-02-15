@@ -9,7 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	atlas "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
-	admin "go.mongodb.org/atlas-sdk/v20231115006/admin"
+	admin "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 // MockServerlessInstanceLister is a mock of ServerlessInstanceLister interface.

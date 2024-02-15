@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 var victorOpsIntegrationType = "VICTOR_OPS"
@@ -56,8 +56,8 @@ func (opts *VictorOpsOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *VictorOpsOpts) newVictorOpsIntegration() *atlasv2.ThridPartyIntegration {
-	return &atlasv2.ThridPartyIntegration{
+func (opts *VictorOpsOpts) newVictorOpsIntegration() *atlasv2.ThirdPartyIntegration {
+	return &atlasv2.ThirdPartyIntegration{
 		Type:       &victorOpsIntegrationType,
 		ApiKey:     &opts.apiKey,
 		RoutingKey: &opts.routingKey,

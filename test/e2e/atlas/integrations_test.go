@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 func TestIntegrations(t *testing.T) {
@@ -193,7 +193,7 @@ func TestIntegrations(t *testing.T) {
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
-		var thirdPartyIntegration atlasv2.ThridPartyIntegration
+		var thirdPartyIntegration atlasv2.ThirdPartyIntegration
 		require.NoError(t, json.Unmarshal(resp, &thirdPartyIntegration))
 		a.Equal(webhookEntity, thirdPartyIntegration.GetType())
 	})

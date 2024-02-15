@@ -25,7 +25,7 @@ import (
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 var renameTemplate = "Team '{{.Name}}' updated.\n"
@@ -54,8 +54,8 @@ func (opts *renameOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *renameOpts) newTeam() *atlasv2.Team {
-	return &atlasv2.Team{
+func (opts *renameOpts) newTeam() *atlasv2.TeamUpdate {
+	return &atlasv2.TeamUpdate{
 		Name: opts.name,
 	}
 }

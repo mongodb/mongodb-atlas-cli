@@ -73,7 +73,7 @@ func (m *MockSearchNodesCreator) EXPECT() *MockSearchNodesCreatorMockRecorder {
 }
 
 // CreateSearchNodes mocks base method.
-func (m *MockSearchNodesCreator) CreateSearchNodes(arg0, arg1 string, arg2 *[]admin.ApiSearchDeploymentSpec) (*admin.ApiSearchDeploymentResponse, error) {
+func (m *MockSearchNodesCreator) CreateSearchNodes(arg0, arg1 string, arg2 *admin.ApiSearchDeploymentRequest) (*admin.ApiSearchDeploymentResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateSearchNodes", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.ApiSearchDeploymentResponse)

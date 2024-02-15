@@ -28,7 +28,7 @@ type SearchNodesLister interface {
 }
 
 type SearchNodesCreator interface {
-	CreateSearchNodes(string, string, *[]atlasv2.ApiSearchDeploymentSpec) (*atlasv2.ApiSearchDeploymentResponse, error)
+	CreateSearchNodes(string, string, *atlasv2.ApiSearchDeploymentRequest) (*atlasv2.ApiSearchDeploymentResponse, error)
 	SearchNodes(string, string) (*atlasv2.ApiSearchDeploymentResponse, error)
 }
 
@@ -43,12 +43,10 @@ func (s *Store) SearchNodes(projectID, clusterName string) (*atlasv2.ApiSearchDe
 	}
 }
 
-func (s *Store) CreateSearchNodes(projectID, clusterName string, specs *[]atlasv2.ApiSearchDeploymentSpec) (*atlasv2.ApiSearchDeploymentResponse, error) {
+func (s *Store) CreateSearchNodes(projectID, clusterName string, spec *atlasv2.ApiSearchDeploymentRequest) (*atlasv2.ApiSearchDeploymentResponse, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.AtlasSearchApi.CreateAtlasSearchDeployment(s.ctx, projectID, clusterName, &atlasv2.ApiSearchDeploymentRequest{
-			Specs: specs,
-		}).Execute()
+		result, _, err := s.clientv2.AtlasSearchApi.CreateAtlasSearchDeployment(s.ctx, projectID, clusterName, spec).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

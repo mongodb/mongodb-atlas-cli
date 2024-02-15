@@ -23,8 +23,8 @@ import (
 )
 
 // Load []atlasv2.ApiSearchDeploymentSpec from a given file.
-func loadAPISearchDeploymentSpec(fs afero.Fs, filename string) (*[]atlasv2.ApiSearchDeploymentSpec, error) {
-	spec := new([]atlasv2.ApiSearchDeploymentSpec)
+func loadAPISearchDeploymentSpec(fs afero.Fs, filename string) (*atlasv2.ApiSearchDeploymentRequest, error) {
+	spec := new(atlasv2.ApiSearchDeploymentRequest)
 	if err := file.Load(fs, filename, spec); err != nil {
 		return nil, fmt.Errorf("failed to parse JSON file due to: %w", err)
 	}

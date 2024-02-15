@@ -31,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20231115006/admin"
+	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )

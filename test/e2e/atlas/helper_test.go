@@ -31,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -549,7 +549,7 @@ func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedInte
 	return false
 }
 
-func getIntegrationType(val atlasv2.ThridPartyIntegration) string {
+func getIntegrationType(val atlasv2.ThirdPartyIntegration) string {
 	return val.GetType()
 }
 

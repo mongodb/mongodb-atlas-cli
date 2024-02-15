@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 // Create Array of templates.
@@ -54,7 +54,7 @@ func TestDescribe_Run(t *testing.T) {
 		},
 	}
 
-	expected := &atlasv2.ThridPartyIntegration{
+	expected := &atlasv2.ThirdPartyIntegration{
 		ApiToken: pointer.Get("testToken"),
 		TeamName: pointer.Get("testTeam"),
 		Type:     pointer.Get("SLACK"),

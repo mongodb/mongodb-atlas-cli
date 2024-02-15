@@ -38,7 +38,7 @@ import (
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -116,7 +116,7 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		thirdPartyIntegrations := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: &[]atlasv2.ThridPartyIntegration{
+			Results: &[]atlasv2.ThirdPartyIntegration{
 				{
 					Type:             pointer.Get("PROMETHEUS"),
 					Username:         pointer.Get("TestPrometheusUserName"),
@@ -920,7 +920,7 @@ func Test_buildIntegrations(t *testing.T) {
 		const includeSecrets = true
 		ints := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: &[]atlasv2.ThridPartyIntegration{
+			Results: &[]atlasv2.ThirdPartyIntegration{
 				{
 					Type:             pointer.Get("PROMETHEUS"),
 					Password:         pointer.Get("PrometheusTestPassword"),
@@ -986,7 +986,7 @@ func Test_buildIntegrations(t *testing.T) {
 		const includeSecrets = false
 		ints := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: &[]atlasv2.ThridPartyIntegration{
+			Results: &[]atlasv2.ThirdPartyIntegration{
 				{
 
 					Type:             pointer.Get("PROMETHEUS"),

@@ -18,10 +18,11 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 func TestList_Run(t *testing.T) {
@@ -54,4 +55,16 @@ func TestList_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	test.VerifyOutputTemplate(t, listTemplate, expected)
+}
+
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		ListBuilder(),
+		0,
+		[]string{
+			flag.ClusterName,
+			flag.ProjectID,
+		},
+	)
 }

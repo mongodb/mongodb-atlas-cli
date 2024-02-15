@@ -15,20 +15,16 @@
 package nodes
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/spf13/cobra"
+	"testing"
+
+	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 )
 
-func Builder() *cobra.Command {
-	const use = "nodes"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage Atlas Search nodes for your cluster.",
-	}
-	cmd.AddCommand(
-		ListBuilder(),
-		DeleteBuilder(),
+func TestBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		Builder(),
+		2,
+		[]string{},
 	)
-	return cmd
 }

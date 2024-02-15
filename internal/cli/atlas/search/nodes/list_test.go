@@ -57,7 +57,7 @@ func TestList_Run(t *testing.T) {
 	test.VerifyOutputTemplate(t, listTemplate, expected)
 }
 
-func TestBuilder(t *testing.T) {
+func TestListBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		ListBuilder(),

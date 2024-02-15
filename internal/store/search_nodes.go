@@ -21,9 +21,14 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_search_nodes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store SearchNodesLister
+//go:generate mockgen -destination=../mocks/mock_search_nodes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store SearchNodesLister,SearchNodesDeleter
 
 type SearchNodesLister interface {
+	SearchNodes(string, string) (*atlasv2.ApiSearchDeploymentResponse, error)
+}
+
+type SearchNodesDeleter interface {
+	DeleteSearchNodes(string, string) error
 	SearchNodes(string, string) (*atlasv2.ApiSearchDeploymentResponse, error)
 }
 
@@ -35,5 +40,15 @@ func (s *Store) SearchNodes(projectID, clusterName string) (*atlasv2.ApiSearchDe
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+func (s *Store) DeleteSearchNodes(projectID, clusterName string) error {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		_, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchDeployment(s.ctx, projectID, clusterName).Execute()
+		return err
+	default:
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }

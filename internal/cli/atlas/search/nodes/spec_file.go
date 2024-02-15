@@ -22,7 +22,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-// Load []atlasv2.ApiSearchDeploymentSpec from a given file.
+// Load *atlasv2.ApiSearchDeploymentRequest from a given file.
 func loadAPISearchDeploymentSpec(fs afero.Fs, filename string) (*atlasv2.ApiSearchDeploymentRequest, error) {
 	spec := new(atlasv2.ApiSearchDeploymentRequest)
 	if err := file.Load(fs, filename, spec); err != nil {

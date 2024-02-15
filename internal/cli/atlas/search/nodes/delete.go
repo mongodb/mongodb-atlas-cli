@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
@@ -33,7 +32,6 @@ type DeleteOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	*cli.DeleteOpts
-	fs    afero.Fs
 	store store.SearchNodesDeleter
 }
 
@@ -92,7 +90,6 @@ func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts(deleteTemplate, "Search node not deleted."),
 	}
-	opts.fs = afero.NewOsFs()
 
 	cmd := &cobra.Command{
 		Use:   "delete",

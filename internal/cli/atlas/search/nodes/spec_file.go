@@ -15,20 +15,19 @@
 package nodes
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/spf13/cobra"
+	"fmt"
+
+	"github.com/mongodb/mongodb-atlas-cli/internal/file"
+	"github.com/spf13/afero"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-func Builder() *cobra.Command {
-	const use = "nodes"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage Atlas Search nodes for your cluster.",
+// Load []atlasv2.ApiSearchDeploymentSpec from a given file.
+func loadAPISearchDeploymentSpec(fs afero.Fs, filename string) (*atlasv2.ApiSearchDeploymentRequest, error) {
+	spec := new(atlasv2.ApiSearchDeploymentRequest)
+	if err := file.Load(fs, filename, spec); err != nil {
+		return nil, fmt.Errorf("failed to parse JSON file due to: %w", err)
 	}
-	cmd.AddCommand(
-		ListBuilder(),
-		CreateBuilder(),
-	)
-	return cmd
+
+	return spec, nil
 }

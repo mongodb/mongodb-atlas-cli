@@ -21,9 +21,14 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_search_nodes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store SearchNodesLister
+//go:generate mockgen -destination=../mocks/mock_search_nodes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store SearchNodesLister,SearchNodesCreator
 
 type SearchNodesLister interface {
+	SearchNodes(string, string) (*atlasv2.ApiSearchDeploymentResponse, error)
+}
+
+type SearchNodesCreator interface {
+	CreateSearchNodes(string, string, *atlasv2.ApiSearchDeploymentRequest) (*atlasv2.ApiSearchDeploymentResponse, error)
 	SearchNodes(string, string) (*atlasv2.ApiSearchDeploymentResponse, error)
 }
 
@@ -32,6 +37,16 @@ func (s *Store) SearchNodes(projectID, clusterName string) (*atlasv2.ApiSearchDe
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.AtlasSearchApi.GetAtlasSearchDeployment(s.ctx, projectID, clusterName).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+}
+
+func (s *Store) CreateSearchNodes(projectID, clusterName string, spec *atlasv2.ApiSearchDeploymentRequest) (*atlasv2.ApiSearchDeploymentResponse, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.AtlasSearchApi.CreateAtlasSearchDeployment(s.ctx, projectID, clusterName, spec).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

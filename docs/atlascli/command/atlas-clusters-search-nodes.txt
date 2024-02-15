@@ -49,11 +49,13 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`atlas-clusters-search-nodes-create` - Create a search node for a cluster.
 * :ref:`atlas-clusters-search-nodes-list` - List all Atlas Search nodes for a cluster.
 
 
 .. toctree::
    :titlesonly:
 
+   create </command/atlas-clusters-search-nodes-create>
    list </command/atlas-clusters-search-nodes-list>
 

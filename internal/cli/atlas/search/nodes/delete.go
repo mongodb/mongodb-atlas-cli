@@ -64,8 +64,6 @@ func (opts *DeleteOpts) Run() error {
 			return err
 		}
 		opts.Template = deleteWatchTemplate
-	} else {
-		opts.Template = deleteTemplate
 	}
 
 	return opts.Print(opts.Entry)

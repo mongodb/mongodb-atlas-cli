@@ -15,16 +15,19 @@
 package nodes
 
 import (
-	"testing"
+	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/internal/file"
+	"github.com/spf13/afero"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		4,
-		[]string{},
-	)
+// Load *atlasv2.ApiSearchDeploymentRequest from a given file.
+func loadAPISearchDeploymentSpec(fs afero.Fs, filename string) (*atlasv2.ApiSearchDeploymentRequest, error) {
+	spec := new(atlasv2.ApiSearchDeploymentRequest)
+	if err := file.Load(fs, filename, spec); err != nil {
+		return nil, fmt.Errorf("failed to parse JSON file due to: %w", err)
+	}
+
+	return spec, nil
 }

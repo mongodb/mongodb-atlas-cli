@@ -14,6 +14,16 @@ Stable releases are now managed by internal tooling (PCT)
 
 Use the instructions bellow as a fallback.
 
+## Package Managers
+
+Package Managers are published after a stable release happens, in which binaries are stored in github releases and also uploaded to our download center (https://www.mongodb.com/try/download/atlascli and https://www.mongodb.com/try/download/mongocli).
+
+* [Chocolatey](http://chocolatey.org) release is triggered in https://github.com/mongodb-forks/chocolatey-packages/, the Github Action will trigger every weekday at 4pm (UTC) to check if there are any new releases in https://github.com/mongodb/mongodb-atlas-cli/releases/.
+
+* [Homebrew](http://brew.sh/) release is triggered in https://github.com/Homebrew/homebrew-core/, which is not maintained by MongoDB rather by homebrew community.
+
+* Yum and Apt are handled internally via evergreen tasks `push_stable_atlascli_generate` and `push_stable_mongocli_generate`.
+
 ## Docker Image
 Our Docker image release for AtlasCLI is managed through the [docker-release.yml](.github/workflows/docker-release.yml)  workflow. This process is automated to run daily, ensuring the latest versions of the image dependencies are updated.
 ![github_action](https://github.com/mongodb/mongodb-atlas-cli/assets/5663078/fd54ccda-7794-4139-af92-dbde0c278e78)

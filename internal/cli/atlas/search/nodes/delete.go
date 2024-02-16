@@ -16,7 +16,6 @@ package nodes
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -27,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 type DeleteOpts struct {
@@ -83,8 +82,8 @@ func (opts *DeleteOpts) watcher() (bool, error) {
 	}
 
 	// Fallback case in case the backend starts returning 404 instead of the 400 it's returning currently
-	var atlasErr *atlas.ErrorResponse
-	if errors.As(err, &atlasErr) && atlasErr.HTTPCode == 404 {
+	target, ok := atlasv2.AsError(err)
+	if ok && target.GetError() == 404 {
 		return true, nil
 	}
 

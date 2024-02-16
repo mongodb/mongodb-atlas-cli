@@ -42,6 +42,7 @@ const (
 	metricsEntity                = "metrics"
 	searchEntity                 = "search"
 	indexEntity                  = "index"
+	nodesEntity                  = "nodes"
 	datafederationEntity         = "datafederation"
 	datalakePipelineEntity       = "datalakepipeline"
 	alertsEntity                 = "alerts"

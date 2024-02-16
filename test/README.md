@@ -94,6 +94,10 @@
 | `cluster search index describe`             | Y         |           |           | Y         | N     | N     |
 | `cluster search index list`                 | Y         |           |           | Y         | N     | N     |
 | `cluster search index update`               | Y         |           |           | Y         | N     | N     |
+| `cluster search index list`                 | N         |           |           | Y         | N     | N     |
+| `cluster search nodes create`               | N         |           |           | Y         | N     | N     |
+| `cluster search nodes update`               | N         |           |           | Y         | N     | N     |
+| `cluster search nodes delete`               | N         |           |           | Y         | N     | N     |
 | `cluster advancedSettings describe`         | Y         |           |           | Y         | N     | N     |
 | `cluster advancedSettings update`           | Y         |           |           | Y         | N     | N     |
 | `dbrole create`                             | Y         |           |           | Y         |       |       |

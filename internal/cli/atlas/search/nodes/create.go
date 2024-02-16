@@ -64,10 +64,15 @@ func (opts *CreateOpts) Run() error {
 	}
 
 	if opts.EnableWatch {
-		if err := opts.Watch(opts.watcher); err != nil {
+		if err = opts.Watch(opts.watcher); err != nil {
 			return err
 		}
 		opts.Template = createWatchTemplate
+
+		r, err = opts.store.CreateSearchNodes(opts.ConfigProjectID(), opts.clusterName, spec)
+		if err != nil {
+			return err
+		}
 	}
 
 	return opts.Print(r)

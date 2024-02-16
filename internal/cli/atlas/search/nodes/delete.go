@@ -17,7 +17,6 @@ package nodes
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -35,6 +34,8 @@ type DeleteOpts struct {
 	*cli.DeleteOpts
 	store store.SearchNodesDeleter
 }
+
+const atlasFtsDeploymentDoesNotExist = "ATLAS_FTS_DEPLOYMENT_DOES_NOT_EXIST"
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -77,13 +78,9 @@ func (opts *DeleteOpts) watcher() (bool, error) {
 		return false, nil
 	}
 
-	if strings.Contains(err.Error(), "ATLAS_FTS_DEPLOYMENT_DOES_NOT_EXIST") {
-		return true, nil
-	}
-
 	// Fallback case in case the backend starts returning 404 instead of the 400 it's returning currently
 	target, ok := atlasv2.AsError(err)
-	if ok && target.GetError() == 404 {
+	if ok && (target.GetErrorCode() == atlasFtsDeploymentDoesNotExist || target.GetError() == 404) {
 		return true, nil
 	}
 

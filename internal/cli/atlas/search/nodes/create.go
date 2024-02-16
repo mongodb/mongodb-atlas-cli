@@ -68,6 +68,11 @@ func (opts *CreateOpts) Run() error {
 			return err
 		}
 		opts.Template = createWatchTemplate
+
+		r, err = opts.store.SearchNodes(opts.ConfigProjectID(), opts.clusterName)
+		if err != nil {
+			return err
+		}
 	}
 
 	return opts.Print(r)

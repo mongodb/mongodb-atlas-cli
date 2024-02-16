@@ -64,6 +64,10 @@ func (opts *UpdateOpts) Run() error {
 			return err
 		}
 		opts.Template = updateWatchTemplate
+		r, err = opts.store.SearchNodes(opts.ConfigProjectID(), opts.clusterName)
+		if err != nil {
+			return err
+		}
 	}
 
 	return opts.Print(r)

@@ -50,7 +50,7 @@ var deleteWatchTemplate = "Search nodes for cluster '{{.}}' are deleted.\n"
 
 func (opts *DeleteOpts) Run() error {
 	if err := opts.Prompt(); err != nil {
-		return nil
+		return err
 	}
 
 	if !opts.Confirm {

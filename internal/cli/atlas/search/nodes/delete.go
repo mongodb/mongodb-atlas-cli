@@ -73,11 +73,6 @@ func (opts *DeleteOpts) Run() error {
 
 func (opts *DeleteOpts) watcher() (bool, error) {
 	_, err := opts.store.SearchNodes(opts.ConfigProjectID(), opts.Entry)
-	// searchNodes returns an error when there are no search nodes available
-	if err == nil {
-		return false, nil
-	}
-
 	// Fallback case in case the backend starts returning 404 instead of the 400 it's returning currently
 	target, ok := atlasv2.AsError(err)
 	if ok && (target.GetErrorCode() == atlasFtsDeploymentDoesNotExist || target.GetError() == 404) {

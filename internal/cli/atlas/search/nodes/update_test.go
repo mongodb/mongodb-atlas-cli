@@ -29,26 +29,15 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-const testJSON = `{"Specs":[{"instanceSize": "S20_HIGHCPU_NVME", "nodeCount": 2}, {"instanceSize": "S110_LOWCPU_NVME", "nodeCount": 42}]}`
-const testInvalidJSON = `(╯°□°)╯︵ ┻━┻`
-const fileName = "spec.json"
-
-var testJSONParsed = atlasv2.ApiSearchDeploymentRequest{
-	Specs: &[]atlasv2.ApiSearchDeploymentSpec{
-		{InstanceSize: "S20_HIGHCPU_NVME", NodeCount: 2},
-		{InstanceSize: "S110_LOWCPU_NVME", NodeCount: 42},
-	},
-}
-
-func TestCreateOpts_Run(t *testing.T) {
+func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSearchNodesCreator(ctrl)
+	mockStore := mocks.NewMockSearchNodesUpdater(ctrl)
 
 	t.Run("valid file run", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		_ = afero.WriteFile(appFS, fileName, []byte(testJSON), 0600)
 
-		opts := &CreateOpts{
+		opts := &UpdateOpts{
 			store: mockStore,
 		}
 		opts.filename = fileName
@@ -66,7 +55,7 @@ func TestCreateOpts_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			CreateSearchNodes(opts.ProjectID, opts.clusterName, &testJSONParsed).Return(expected, nil).
+			UpdateSearchNodes(opts.ProjectID, opts.clusterName, &testJSONParsed).Return(expected, nil).
 			Times(1)
 
 		if err := opts.Run(); err != nil {
@@ -78,7 +67,7 @@ func TestCreateOpts_Run(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		_ = afero.WriteFile(appFS, fileName, []byte(testInvalidJSON), 0600)
 
-		opts := &CreateOpts{
+		opts := &UpdateOpts{
 			store: mockStore,
 		}
 		opts.filename = fileName
@@ -96,10 +85,10 @@ func TestCreateOpts_Run(t *testing.T) {
 	})
 }
 
-func TestCreateBuilder(t *testing.T) {
+func TestUpdateBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		CreateBuilder(),
+		UpdateBuilder(),
 		0,
 		[]string{
 			flag.ClusterName,

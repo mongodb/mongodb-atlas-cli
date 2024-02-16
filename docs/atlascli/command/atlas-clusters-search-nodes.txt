@@ -51,6 +51,7 @@ Related Commands
 
 * :ref:`atlas-clusters-search-nodes-create` - Create a search node for a cluster.
 * :ref:`atlas-clusters-search-nodes-list` - List all Atlas Search nodes for a cluster.
+* :ref:`atlas-clusters-search-nodes-update` - Update a search node for a cluster.
 
 
 .. toctree::
@@ -58,4 +59,5 @@ Related Commands
 
    create </command/atlas-clusters-search-nodes-create>
    list </command/atlas-clusters-search-nodes-list>
+   update </command/atlas-clusters-search-nodes-update>
 

@@ -59,6 +59,7 @@ devtools:  ## Install dev tools
 	go install github.com/google/go-licenses@latest
 	go install mvdan.cc/sh/v3/cmd/shfmt@latest
 	go install github.com/icholy/gomajor@latest
+	go install go.uber.org/nilaway/cmd/nilaway@latest
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin $(GOLANGCI_VERSION)
 
 .PHONY: setup
@@ -96,6 +97,10 @@ check: test fix-lint ## Run tests and linters
 .PHONY: check-templates
 check-templates:
 	go run ./tools/templates-checker
+
+.PHONY: check-nilaway
+check-nilaway:
+	nilaway -include-pkgs="github.com/mongodb/mongodb-atlas-cli" ./...
 
 .PHONY: addcopy
 addcopy:

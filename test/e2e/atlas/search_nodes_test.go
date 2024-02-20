@@ -55,7 +55,11 @@ func TestSearchNodes(t *testing.T) {
 			"-o=json",
 		)
 
-		require.Error(t, cmd.Run())
+		resp, err := cmd.CombinedOutput()
+		respStr := string(resp)
+
+		require.Error(t, err, respStr)
+		require.Contains(t, respStr, "ATLAS_FTS_DEPLOYMENT_DOES_NOT_EXIST", respStr)
 	})
 
 	t.Run("Create search node", func(t *testing.T) {

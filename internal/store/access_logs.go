@@ -42,32 +42,33 @@ type AccessLogsLister interface {
 func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result := s.clientv2.AccessTrackingApi.ListAccessLogsByHostname(s.ctx, groupID, hostname)
-
+		params := &atlasv2.ListAccessLogsByHostnameApiParams{
+			GroupId:  groupID,
+			Hostname: hostname,
+		}
 		if opts != nil {
 			if opts.Start != "" {
 				startTime, _ := strconv.ParseInt(opts.Start, 10, 64)
-				result = result.Start(startTime)
+				params.Start = &startTime
 			}
 			if opts.End != "" {
 				endTime, _ := strconv.ParseInt(opts.End, 10, 64)
-				result = result.End(endTime)
+				params.End = &endTime
 			}
 
 			if opts.NLogs > 0 {
-				result = result.NLogs(opts.NLogs)
+				params.NLogs = &opts.NLogs
 			}
 
 			if opts.IPAddress != "" {
-				result = result.IpAddress(opts.IPAddress)
+				params.IpAddress = &opts.IPAddress
 			}
 
 			if opts.AuthResult != nil {
-				result = result.AuthResult(*opts.AuthResult)
+				params.AuthResult = opts.AuthResult
 			}
 		}
-
-		res, _, err := result.Execute()
+		res, _, err := s.clientv2.AccessTrackingApi.ListAccessLogsByHostnameWithParams(s.ctx, params).Execute()
 		return res, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -78,31 +79,33 @@ func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *atlas.Acces
 func (s *Store) AccessLogsByClusterName(groupID, clusterName string, opts *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result := s.clientv2.AccessTrackingApi.ListAccessLogsByClusterName(s.ctx, groupID, clusterName)
-
+		params := &atlasv2.ListAccessLogsByClusterNameApiParams{
+			GroupId:     groupID,
+			ClusterName: clusterName,
+		}
 		if opts != nil {
 			if opts.Start != "" {
 				startTime, _ := strconv.ParseInt(opts.Start, 10, 64)
-				result = result.Start(startTime)
+				params.Start = &startTime
 			}
 			if opts.End != "" {
 				endTime, _ := strconv.ParseInt(opts.End, 10, 64)
-				result = result.End(endTime)
+				params.End = &endTime
 			}
 
 			if opts.NLogs > 0 {
-				result = result.NLogs(opts.NLogs)
+				params.NLogs = &opts.NLogs
 			}
 
 			if opts.IPAddress != "" {
-				result = result.IpAddress(opts.IPAddress)
+				params.IpAddress = &opts.IPAddress
 			}
 
 			if opts.AuthResult != nil {
-				result = result.AuthResult(*opts.AuthResult)
+				params.AuthResult = opts.AuthResult
 			}
 		}
-		res, _, err := result.Execute()
+		res, _, err := s.clientv2.AccessTrackingApi.ListAccessLogsByClusterNameWithParams(s.ctx, params).Execute()
 
 		return res, err
 	default:

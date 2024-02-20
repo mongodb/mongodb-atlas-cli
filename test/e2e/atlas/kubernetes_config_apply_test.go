@@ -333,6 +333,8 @@ func referenceExportedDBUser(projectName, dbUser, namespace string) *akov2.Atlas
 				},
 			},
 			Username:     dbUser,
+			OIDCAuthType: "NONE",
+			AWSIAMType:   "NONE",
 			X509Type:     "MANAGED",
 			DatabaseName: "$external",
 		},

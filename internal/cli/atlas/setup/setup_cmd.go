@@ -226,23 +226,23 @@ func (opts *Opts) newDefaultValues() (*clusterSettings, error) {
 	return values, nil
 }
 
-func (opts *Opts) clusterCreationWatcher() (bool, error) {
+func (opts *Opts) clusterCreationWatcher() (any, bool, error) {
 	result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
-	return result.GetStateName() == "IDLE", nil
+	return nil, result.GetStateName() == "IDLE", nil
 }
 
-func (opts *Opts) sampleDataWatcher() (bool, error) {
+func (opts *Opts) sampleDataWatcher() (any, bool, error) {
 	result, err := opts.store.SampleDataStatus(opts.ConfigProjectID(), opts.SampleDataJobID)
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 	if result.GetState() == "FAILED" {
-		return false, fmt.Errorf("failed to load data: %s", result.GetErrorMessage())
+		return nil, false, fmt.Errorf("failed to load data: %s", result.GetErrorMessage())
 	}
-	return result.GetState() == "COMPLETED", nil
+	return nil, result.GetState() == "COMPLETED", nil
 }
 
 func (opts *Opts) loadSampleData() error {
@@ -261,7 +261,8 @@ Loading sample data into your cluster... [It's safe to 'Ctrl + C']
 
 	opts.SampleDataJobID = sampleDataJob.GetId()
 
-	return opts.Watch(opts.sampleDataWatcher)
+	_, err = opts.Watch(opts.sampleDataWatcher)
+	return err
 }
 
 func (opts *Opts) createResources() error {
@@ -464,7 +465,7 @@ func (opts *Opts) setupCluster() error {
 	fmt.Print(setupTemplateCluster)
 
 	// Watch cluster creation
-	if er := opts.Watch(opts.clusterCreationWatcher); er != nil {
+	if _, er := opts.Watch(opts.clusterCreationWatcher); er != nil {
 		return er
 	}
 

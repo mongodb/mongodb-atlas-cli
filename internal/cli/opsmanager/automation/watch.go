@@ -40,22 +40,22 @@ func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *WatchOpts) watcher() (bool, error) {
+func (opts *WatchOpts) watcher() (any, bool, error) {
 	result, err := opts.store.GetAutomationStatus(opts.ConfigProjectID())
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 
 	for _, p := range result.Processes {
 		if p.LastGoalVersionAchieved != result.GoalVersion {
-			return false, nil
+			return nil, false, nil
 		}
 	}
-	return true, nil
+	return nil, true, nil
 }
 
 func (opts *WatchOpts) Run() error {
-	if err := opts.Watch(opts.watcher); err != nil {
+	if _, err := opts.Watch(opts.watcher); err != nil {
 		return err
 	}
 

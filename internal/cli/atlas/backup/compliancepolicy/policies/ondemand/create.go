@@ -53,13 +53,13 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *CreateOpts) watcher() (bool, error) {
+func (opts *CreateOpts) watcher() (any, bool, error) {
 	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 	opts.policy = res
-	return res.GetState() == active, nil
+	return nil, res.GetState() == active, nil
 }
 
 func (opts *CreateOpts) Run() (err error) {
@@ -74,7 +74,7 @@ func (opts *CreateOpts) Run() (err error) {
 	}
 
 	if opts.EnableWatch {
-		if errW := opts.Watch(opts.watcher); errW != nil {
+		if _, errW := opts.Watch(opts.watcher); errW != nil {
 			return fmt.Errorf("received an error while watching for completion: %w", errW)
 		}
 		opts.Template = updateWatchTemplate

@@ -44,17 +44,17 @@ func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *WatchOpts) watcher() (bool, error) {
+func (opts *WatchOpts) watcher() (any, bool, error) {
 	result, err := opts.store.GetServerlessInstance(opts.ConfigProjectID(), opts.name)
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 	const desiredState = "IDLE"
-	return *result.StateName == desiredState, nil
+	return nil, *result.StateName == desiredState, nil
 }
 
 func (opts *WatchOpts) Run() error {
-	if err := opts.Watch(opts.watcher); err != nil {
+	if _, err := opts.Watch(opts.watcher); err != nil {
 		return err
 	}
 

@@ -61,7 +61,7 @@ func TestSetupOpts_Watcher(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	res, err := opts.setupWatcher()
+	_, res, err := opts.setupWatcher()
 	if err != nil {
 		t.Fatalf("setupWatcher() unexpected error: %v", err)
 	}

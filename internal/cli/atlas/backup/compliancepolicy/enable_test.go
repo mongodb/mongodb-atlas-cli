@@ -67,7 +67,7 @@ func TestEnableOpts_Watcher(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	res, err := opts.enableWatcher()
+	_, res, err := opts.enableWatcher()
 	if err != nil {
 		t.Fatalf("enableWatcher() unexpected error: %v", err)
 	}

@@ -64,7 +64,7 @@ func (opts *CreateOpts) Run() error {
 	}
 
 	if opts.EnableWatch {
-		if err := opts.Watch(opts.watcher); err != nil {
+		if _, err := opts.Watch(opts.watcher); err != nil {
 			return err
 		}
 		opts.Template = createWatchTemplate
@@ -73,12 +73,12 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) watcher() (bool, error) {
+func (opts *CreateOpts) watcher() (any, bool, error) {
 	res, err := opts.store.SearchNodes(opts.ConfigProjectID(), opts.clusterName)
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
-	return *res.StateName == stateIdle, nil
+	return nil, *res.StateName == stateIdle, nil
 }
 
 // atlas clusters search nodes create [--clusterName clusterName] [--file filePath].

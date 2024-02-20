@@ -59,16 +59,16 @@ func (opts *EnableOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *EnableOpts) enableWatcher() (bool, error) {
+func (opts *EnableOpts) enableWatcher() (any, bool, error) {
 	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 	opts.policy = res
 	if res.GetState() == "" {
-		return false, fmt.Errorf("could not access State field")
+		return nil, false, fmt.Errorf("could not access State field")
 	}
-	return res.GetState() == active, nil
+	return nil, res.GetState() == active, nil
 }
 
 func newEnableConfirmationQuestion() survey.Prompt {
@@ -98,7 +98,7 @@ func (opts *EnableOpts) Run() error {
 		return fmt.Errorf("couldn't enable compliance policy: %w", err)
 	}
 	if opts.EnableWatch {
-		if err := opts.Watch(opts.enableWatcher); err != nil {
+		if _, err := opts.Watch(opts.enableWatcher); err != nil {
 			return err
 		}
 		opts.Template = enableWatchTemplate

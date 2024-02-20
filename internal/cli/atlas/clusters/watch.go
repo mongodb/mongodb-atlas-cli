@@ -50,19 +50,19 @@ func isRetryable(err error) bool {
 	return ok && atlasErr.GetErrorCode() == "CLUSTER_NOT_FOUND"
 }
 
-func (opts *WatchOpts) watcher() (bool, error) {
+func (opts *WatchOpts) watcher() (any, bool, error) {
 	result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 	if result.GetStateName() == "UPDATING" {
 		opts.IsRetryableErr = isRetryable
 	}
-	return result.GetStateName() == "IDLE", nil
+	return nil, result.GetStateName() == "IDLE", nil
 }
 
 func (opts *WatchOpts) Run() error {
-	if err := opts.Watch(opts.watcher); err != nil {
+	if _, err := opts.Watch(opts.watcher); err != nil {
 		return err
 	}
 

@@ -43,16 +43,16 @@ func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *WatchOpts) watcher() (bool, error) {
+func (opts *WatchOpts) watcher() (any, bool, error) {
 	result, err := opts.store.Snapshot(opts.ConfigProjectID(), opts.clusterName, opts.id)
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
-	return result.GetStatus() == "completed" || result.GetStatus() == "failed", nil
+	return nil, result.GetStatus() == "completed" || result.GetStatus() == "failed", nil
 }
 
 func (opts *WatchOpts) Run() error {
-	if err := opts.Watch(opts.watcher); err != nil {
+	if _, err := opts.Watch(opts.watcher); err != nil {
 		return err
 	}
 

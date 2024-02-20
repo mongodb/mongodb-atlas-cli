@@ -163,15 +163,15 @@ func (opts *CreateOpts) status(ctx context.Context) (string, error) {
 	return status, nil
 }
 
-func (opts *CreateOpts) watch(ctx context.Context) (bool, error) {
+func (opts *CreateOpts) watch(ctx context.Context) (any, bool, error) {
 	state, err := opts.status(ctx)
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 	if state == "READY" {
-		return true, nil
+		return nil, true, nil
 	}
-	return false, nil
+	return nil, false, nil
 }
 
 func (opts *CreateOpts) PostRun(ctx context.Context) error {
@@ -179,7 +179,7 @@ func (opts *CreateOpts) PostRun(ctx context.Context) error {
 		return opts.Print(opts.index)
 	}
 
-	if err := opts.Watch(func() (bool, error) {
+	if _, err := opts.Watch(func() (any, bool, error) {
 		return opts.watch(ctx)
 	}); err != nil {
 		return err

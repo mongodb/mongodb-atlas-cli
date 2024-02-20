@@ -62,7 +62,7 @@ func (opts *DeleteOpts) Run() error {
 	}
 
 	if opts.EnableWatch {
-		if err := opts.Watch(opts.watcher); err != nil {
+		if _, err := opts.Watch(opts.watcher); err != nil {
 			return err
 		}
 		opts.Template = deleteWatchTemplate
@@ -71,15 +71,15 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Print(opts.Entry)
 }
 
-func (opts *DeleteOpts) watcher() (bool, error) {
+func (opts *DeleteOpts) watcher() (any, bool, error) {
 	_, err := opts.store.SearchNodes(opts.ConfigProjectID(), opts.Entry)
 	// Fallback case in case the backend starts returning 404 instead of the 400 it's returning currently
 	target, ok := atlasv2.AsError(err)
 	if ok && (target.GetErrorCode() == atlasFtsDeploymentDoesNotExist || target.GetError() == 404) {
-		return true, nil
+		return nil, true, nil
 	}
 
-	return false, err
+	return nil, false, err
 }
 
 // atlas clusters search nodes delete [--clusterName clusterName].

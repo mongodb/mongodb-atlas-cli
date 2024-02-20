@@ -50,16 +50,16 @@ func (opts *EnableOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *EnableOpts) watcher() (bool, error) {
+func (opts *EnableOpts) watcher() (any, bool, error) {
 	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 	opts.policy = res
 	if res.GetState() == "" {
-		return false, errors.New("could not access State field")
+		return nil, false, errors.New("could not access State field")
 	}
-	return res.GetState() == active, nil
+	return nil, res.GetState() == active, nil
 }
 
 func (opts *EnableOpts) Run() error {
@@ -69,7 +69,7 @@ func (opts *EnableOpts) Run() error {
 	}
 	opts.policy = res
 	if opts.EnableWatch {
-		if err := opts.Watch(opts.watcher); err != nil {
+		if _, err := opts.Watch(opts.watcher); err != nil {
 			return err
 		}
 		opts.Template = enableWatchTemplate

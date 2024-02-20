@@ -52,21 +52,21 @@ const (
 	pendingAcceptance = "PENDING_ACCEPTANCE"
 )
 
-func (opts *WatchOpts) watcher() (bool, error) {
+func (opts *WatchOpts) watcher() (any, bool, error) {
 	result, err := opts.store.PeeringConnection(opts.ConfigProjectID(), opts.id)
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 	switch v := result.GetProviderName(); v {
 	case "AWS":
-		return watcherAWS(result), nil
+		return nil, watcherAWS(result), nil
 	case "AZURE":
-		return watcherAzure(result), nil
+		return nil, watcherAzure(result), nil
 	case "GCP":
-		return watcherGCP(result), nil
+		return nil, watcherGCP(result), nil
 	}
 	fmt.Print("Network peering changes completed.\n")
-	return false, nil
+	return nil, false, nil
 }
 
 func watcherGCP(peer *atlasv2.BaseNetworkPeeringConnectionSettings) bool {
@@ -82,7 +82,7 @@ func watcherAWS(peer *atlasv2.BaseNetworkPeeringConnectionSettings) bool {
 }
 
 func (opts *WatchOpts) Run() error {
-	if err := opts.Watch(opts.watcher); err != nil {
+	if _, err := opts.Watch(opts.watcher); err != nil {
 		return err
 	}
 

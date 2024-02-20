@@ -31,10 +31,13 @@ type PeeringConnectionLister interface {
 func (s *Store) PeeringConnections(projectID string, opts *ContainersListOptions) ([]atlasv2.BaseNetworkPeeringConnectionSettings, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnections(s.ctx, projectID).
-			ItemsPerPage(opts.ItemsPerPage).
-			PageNum(opts.PageNum).
-			ProviderName(opts.ProviderName).Execute()
+		params := &atlasv2.ListPeeringConnectionsApiParams{
+			GroupId:      projectID,
+			ProviderName: &opts.ProviderName,
+			ItemsPerPage: &opts.ItemsPerPage,
+			PageNum:      &opts.PageNum,
+		}
+		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnectionsWithParams(s.ctx, params).Execute()
 		if err != nil {
 			return nil, err
 		}

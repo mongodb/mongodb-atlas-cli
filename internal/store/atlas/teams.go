@@ -68,11 +68,14 @@ func (s *Store) TeamByName(orgID, teamName string) (*atlasv2.TeamResponse, error
 
 // Teams encapsulates the logic to manage different cloud providers.
 func (s *Store) Teams(orgID string, opts *atlas.ListOptions) (*atlasv2.PaginatedTeam, error) {
-	res := s.clientv2.TeamsApi.ListOrganizationTeams(s.ctx, orgID)
-	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+	params := &atlasv2.ListOrganizationTeamsApiParams{
+		OrgId: orgID,
 	}
-	result, _, err := res.Execute()
+	if opts != nil {
+		params.ItemsPerPage = &opts.ItemsPerPage
+		params.PageNum = &opts.PageNum
+	}
+	result, _, err := s.clientv2.TeamsApi.ListOrganizationTeamsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 

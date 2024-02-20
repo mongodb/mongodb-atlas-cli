@@ -58,11 +58,14 @@ func (s *Store) UserByName(username string) (*atlasv2.CloudAppUser, error) {
 
 // OrganizationUsers encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions) (*atlasv2.PaginatedAppUser, error) {
-	res := s.clientv2.OrganizationsApi.ListOrganizationUsers(s.ctx, organizationID)
-	if opts != nil {
-		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)
+	params := &atlasv2.ListOrganizationUsersApiParams{
+		OrgId: organizationID,
 	}
-	result, _, err := res.Execute()
+	if opts != nil {
+		params.ItemsPerPage = &opts.ItemsPerPage
+		params.PageNum = &opts.PageNum
+	}
+	result, _, err := s.clientv2.OrganizationsApi.ListOrganizationUsersWithParams(s.ctx, params).Execute()
 	return result, err
 }
 

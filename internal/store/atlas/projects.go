@@ -111,11 +111,14 @@ func (s *Store) DeleteProject(projectID string) error {
 
 // ProjectUsers lists all IAM users in a project.
 func (s *Store) ProjectUsers(projectID string, opts *ListOptions) (*atlasv2.PaginatedAppUser, error) {
-	res := s.clientv2.ProjectsApi.ListProjectUsers(s.ctx, projectID)
-	if opts != nil {
-		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)
+	params := &atlasv2.ListProjectUsersApiParams{
+		GroupId: projectID,
 	}
-	result, _, err := res.Execute()
+	if opts != nil {
+		params.ItemsPerPage = &opts.ItemsPerPage
+		params.PageNum = &opts.PageNum
+	}
+	result, _, err := s.clientv2.ProjectsApi.ListProjectUsersWithParams(s.ctx, params).Execute()
 	return result, err
 }
 

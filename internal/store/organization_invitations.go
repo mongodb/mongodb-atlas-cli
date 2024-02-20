@@ -49,11 +49,13 @@ type OrganizationInvitationUpdater interface {
 func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.OrganizationsApi.ListOrganizationInvitations(s.ctx, orgID)
-		if opts != nil {
-			res = res.Username(opts.Username)
+		params := &atlasv2.ListOrganizationInvitationsApiParams{
+			OrgId: orgID,
 		}
-		result, _, err := res.Execute()
+		if opts != nil {
+			params.Username = &opts.Username
+		}
+		result, _, err := s.clientv2.OrganizationsApi.ListOrganizationInvitationsWithParams(s.ctx, params).Execute()
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitations(s.ctx, orgID, opts)

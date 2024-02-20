@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -48,11 +49,12 @@ type OrganizationDeleter interface {
 func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.OrganizationsApi.ListOrganizations(s.ctx)
+		params := new(atlasv2.ListOrganizationsApiParams)
 		if opts != nil {
-			res = res.Name(opts.Name).PageNum(opts.PageNum)
+			params.Name = &opts.Name
+			params.PageNum = &opts.PageNum
 		}
-		result, _, err := res.Execute()
+		result, _, err := s.clientv2.OrganizationsApi.ListOrganizationsWithParams(s.ctx, params).Execute()
 		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.List(s.ctx, opts)

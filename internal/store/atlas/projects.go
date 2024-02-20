@@ -64,21 +64,25 @@ type ProjectTeamDeleter interface {
 
 // Projects encapsulates the logic to manage different cloud providers.
 func (s *Store) Projects(opts *ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
-	res := s.clientv2.ProjectsApi.ListProjects(s.ctx)
+	params := new(atlasv2.ListProjectsApiParams)
 	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		params.ItemsPerPage = &opts.ItemsPerPage
+		params.PageNum = &opts.PageNum
 	}
-	result, _, err := res.Execute()
+	result, _, err := s.clientv2.ProjectsApi.ListProjectsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // GetOrgProjects encapsulates the logic to manage different cloud providers.
 func (s *Store) GetOrgProjects(orgID string, opts *ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
-	res := s.clientv2.OrganizationsApi.ListOrganizationProjects(s.ctx, orgID)
-	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+	params := &atlasv2.ListOrganizationProjectsApiParams{
+		OrgId: orgID,
 	}
-	result, _, err := res.Execute()
+	if opts != nil {
+		params.ItemsPerPage = &opts.ItemsPerPage
+		params.PageNum = &opts.PageNum
+	}
+	result, _, err := s.clientv2.OrganizationsApi.ListOrganizationProjectsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 

@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -69,10 +70,13 @@ type ContainersDeleter interface {
 func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListOptions) ([]atlasv2.BaseNetworkPeeringConnectionSettings, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnections(s.ctx, projectID).
-			ItemsPerPage(opts.ItemsPerPage).
-			PageNum(opts.PageNum).
-			ProviderName(opts.ProviderName).Execute()
+		params := &atlasv2.ListPeeringConnectionsApiParams{
+			GroupId:      projectID,
+			ProviderName: &opts.ProviderName,
+			ItemsPerPage: &opts.ItemsPerPage,
+			PageNum:      &opts.PageNum,
+		}
+		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnectionsWithParams(s.ctx, params).Execute()
 		if err != nil {
 			return nil, err
 		}
@@ -139,11 +143,13 @@ const maxPerPage = 100
 func (s *Store) AzureContainers(projectID string) ([]atlasv2.CloudProviderContainer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
-			PageNum(0).
-			ItemsPerPage(maxPerPage).
-			ProviderName("Azure").
-			Execute()
+		params := &atlasv2.ListPeeringContainerByCloudProviderApiParams{
+			GroupId:      projectID,
+			ProviderName: pointer.Get("Azure"),
+			ItemsPerPage: pointer.Get(maxPerPage),
+			PageNum:      pointer.Get(0),
+		}
+		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProviderWithParams(s.ctx, params).Execute()
 		if err != nil {
 			return nil, err
 		}
@@ -157,12 +163,13 @@ func (s *Store) AzureContainers(projectID string) ([]atlasv2.CloudProviderContai
 func (s *Store) AWSContainers(projectID string) ([]atlasv2.CloudProviderContainer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
-			PageNum(0).
-			ItemsPerPage(maxPerPage).
-			ProviderName("AWS").
-			Execute()
-
+		params := &atlasv2.ListPeeringContainerByCloudProviderApiParams{
+			GroupId:      projectID,
+			ProviderName: pointer.Get("AWS"),
+			ItemsPerPage: pointer.Get(maxPerPage),
+			PageNum:      pointer.Get(0),
+		}
+		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProviderWithParams(s.ctx, params).Execute()
 		if err != nil {
 			return nil, err
 		}
@@ -176,11 +183,13 @@ func (s *Store) AWSContainers(projectID string) ([]atlasv2.CloudProviderContaine
 func (s *Store) GCPContainers(projectID string) ([]atlasv2.CloudProviderContainer, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
-			PageNum(0).
-			ItemsPerPage(maxPerPage).
-			ProviderName("GCP").
-			Execute()
+		params := &atlasv2.ListPeeringContainerByCloudProviderApiParams{
+			GroupId:      projectID,
+			ProviderName: pointer.Get("GCP"),
+			ItemsPerPage: pointer.Get(maxPerPage),
+			PageNum:      pointer.Get(0),
+		}
+		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProviderWithParams(s.ctx, params).Execute()
 		if err != nil {
 			return nil, err
 		}
@@ -194,11 +203,14 @@ func (s *Store) GCPContainers(projectID string) ([]atlasv2.CloudProviderContaine
 func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atlasv2.CloudProviderContainer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.NetworkPeeringApi.ListPeeringContainers(s.ctx, projectID)
-		if opts != nil {
-			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		params := &atlasv2.ListPeeringContainersApiParams{
+			GroupId: projectID,
 		}
-		result, _, err := res.Execute()
+		if opts != nil {
+			params.ItemsPerPage = &opts.ItemsPerPage
+			params.PageNum = &opts.PageNum
+		}
+		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainersWithParams(s.ctx, params).Execute()
 		if err != nil {
 			return nil, err
 		}

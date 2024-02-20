@@ -59,11 +59,14 @@ type OrganizationAPIKeyDeleter interface {
 
 // OrganizationAPIKeys encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiApiUser, error) {
-	res := s.clientv2.ProgrammaticAPIKeysApi.ListApiKeys(s.ctx, orgID)
-	if opts != nil {
-		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)
+	params := &atlasv2.ListApiKeysApiParams{
+		OrgId: orgID,
 	}
-	result, _, err := res.Execute()
+	if opts != nil {
+		params.ItemsPerPage = &opts.ItemsPerPage
+		params.PageNum = &opts.PageNum
+	}
+	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.ListApiKeysWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
@@ -93,11 +96,14 @@ func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
 
 // ProjectAPIKeys returns the API Keys for a specific project.
 func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiApiUser, error) {
-	res := s.clientv2.ProgrammaticAPIKeysApi.ListProjectApiKeys(s.ctx, projectID)
-	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+	params := &atlasv2.ListProjectApiKeysApiParams{
+		GroupId: projectID,
 	}
-	result, _, err := res.Execute()
+	if opts != nil {
+		params.ItemsPerPage = &opts.ItemsPerPage
+		params.PageNum = &opts.PageNum
+	}
+	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.ListProjectApiKeysWithParams(s.ctx, params).Execute()
 	return result, err
 }
 

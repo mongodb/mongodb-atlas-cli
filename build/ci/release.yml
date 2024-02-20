@@ -307,6 +307,34 @@ tasks:
           bucket: mongodb-mongocli-build
           permissions: public-read
           content_type: ${content_type|text/plain}
+  - name: upload_download_center
+    tags: ["packaging"]
+    commands:
+      - command: s3.get
+        params:
+          aws_key: ${aws_key}
+          aws_secret: ${aws_secret}
+          remote_file: ${project}/dist/${revision}_${created_at}/*
+          bucket: mongodb-mongocli-build
+          extract_to: src/github.com/mongodb/mongodb-atlas-cli/dist/
+      # - command: s3.put
+      #   params:
+      #     aws_key: ${aws_key}
+      #     aws_secret: ${aws_secret}
+      #     local_files_include_filter:
+      #       - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tar.gz
+      #       - src/github.com/mongodb/mongodb-atlas-cli/dist/*.zip
+      #       - src/github.com/mongodb/mongodb-atlas-cli/dist/*.deb
+      #       - src/github.com/mongodb/mongodb-atlas-cli/dist/*.rpm
+      #       - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tgz
+      #       - src/github.com/mongodb/mongodb-atlas-cli/dist/*.json
+      #       - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
+      #       - src/github.com/mongodb/mongodb-atlas-cli/dist/*.sig
+      #     remote_file: ${project}/dist/${revision}_${created_at}/
+      #     bucket: mongodb-mongocli-build
+      #     permissions: public-read
+      #     content_type: ${content_type|application/x-gzip}
+      #     display_name: internal-bucket
   - name: package_goreleaser
     tags: ["packaging"]
     depends_on:
@@ -716,6 +744,7 @@ buildvariants:
         depends_on:
           - name: package_msi
             variant: "go_mongocli_msi_snapshot"
+      - name: upload_download_center
   - name: goreleaser_atlascli_snapshot
     display_name: "Packaging AtlasCLI (goreleaser)"
     run_on:
@@ -733,6 +762,7 @@ buildvariants:
         depends_on:
           - name: package_msi
             variant: "go_atlascli_msi_snapshot"
+      - name: upload_download_center
   - name: publish_mongocli_snapshot
     display_name: "Publish MongoCLI Snapshot"
     run_on:

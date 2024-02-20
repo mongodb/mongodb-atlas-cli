@@ -93,7 +93,7 @@ func (opts *ApplyOpts) Run() error {
 		return err
 	}
 
-	featureValidator, err := features.NewAtlasCRDs(opts.crdsProvider, opts.operatorVersion)
+	atlasCRDs, err := features.NewAtlasCRDs(opts.crdsProvider, opts.operatorVersion)
 	if err != nil {
 		return err
 	}
@@ -103,7 +103,8 @@ func (opts *ApplyOpts) Run() error {
 		WithTargetNamespace(opts.targetNamespace).
 		WithTargetOperatorVersion(opts.operatorVersion).
 		WithSecretsData(true).
-		WithFeatureValidator(featureValidator)
+		WithFeatureValidator(atlasCRDs).
+		WithPatcher(atlasCRDs)
 	err = operator.NewConfigApply(
 		operator.NewConfigApplyParams{
 			OrgID:     opts.OrgID,

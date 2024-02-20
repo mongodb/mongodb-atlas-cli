@@ -20,6 +20,11 @@ import (
 	"fmt"
 	"reflect"
 
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/serializer/json"
+	"k8s.io/client-go/kubernetes/scheme"
+
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/datafederation"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/dbusers"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/deployment"
@@ -28,10 +33,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
-	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/runtime/serializer/json"
-	"k8s.io/client-go/kubernetes/scheme"
 )
 
 const (
@@ -52,6 +53,11 @@ type ConfigExporter struct {
 	orgID                   string
 	dictionaryForAtlasNames map[string]string
 	dataFederationNames     []string
+	patcher                 Patcher
+}
+
+type Patcher interface {
+	Patch(obj runtime.Object) error
 }
 
 var (
@@ -103,6 +109,11 @@ func (e *ConfigExporter) WithDataFederationNames(dataFederations []string) *Conf
 	return e
 }
 
+func (e *ConfigExporter) WithPatcher(p Patcher) *ConfigExporter {
+	e.patcher = p
+	return e
+}
+
 func (e *ConfigExporter) Run() (string, error) {
 	// TODO: Add REST to OPERATOR entities matcher
 	output := bytes.NewBufferString(yamlSeparator)
@@ -134,6 +145,13 @@ func (e *ConfigExporter) Run() (string, error) {
 	r = append(r, dataFederationResource...)
 
 	for _, res := range r {
+		if e.patcher != nil {
+			err = e.patcher.Patch(res)
+			if err != nil {
+				return "", fmt.Errorf("error patching %v: %w", res.GetObjectKind().GroupVersionKind(), err)
+			}
+		}
+
 		err = serializer.Encode(res, output)
 		if err != nil {
 			return "", err

@@ -103,15 +103,18 @@ func (s *Store) PipelineAvailableSchedules(projectID, pipelineName string) ([]at
 
 // PipelineAvailableSnapshots encapsulates the logic to manage different cloud providers.
 func (s *Store) PipelineAvailableSnapshots(projectID, pipelineName string, completedAfter *time.Time, listOps *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshot, error) {
-	request := s.clientv2.DataLakePipelinesApi.ListPipelineSnapshots(s.ctx, projectID, pipelineName)
+	params := &atlasv2.ListPipelineSnapshotsApiParams{
+		GroupId:      projectID,
+		PipelineName: pipelineName,
+	}
 	if completedAfter != nil {
-		request = request.CompletedAfter(*completedAfter)
+		params.CompletedAfter = completedAfter
 	}
 	if listOps != nil {
-		request = request.ItemsPerPage(listOps.ItemsPerPage)
-		request = request.PageNum(listOps.PageNum)
+		params.ItemsPerPage = &listOps.ItemsPerPage
+		params.PageNum = &listOps.PageNum
 	}
-	result, _, err := request.Execute()
+	result, _, err := s.clientv2.DataLakePipelinesApi.ListPipelineSnapshotsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 

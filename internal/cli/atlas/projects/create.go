@@ -37,6 +37,7 @@ type CreateOpts struct {
 	projectOwnerID              string
 	regionUsageRestrictions     bool
 	withoutDefaultAlertSettings bool
+	tag                         map[string]string
 	store                       store.ProjectCreator
 }
 
@@ -57,12 +58,38 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
+func (opts *CreateOpts) newCreateProjectGroupTags() *[]atlasv2.ResourceTag {
+	if len(opts.tag) == 0 {
+		return nil
+	}
+
+	tags := make([]atlasv2.ResourceTag, 0)
+	for key, value := range opts.tag {
+		if key == "" || value == "" {
+			continue
+		}
+
+		// Capture key and value by value
+		key := key
+		value := value
+
+		resourceTag := *atlasv2.NewResourceTag()
+		resourceTag.Key = &key
+		resourceTag.Value = &value
+
+		tags = append(tags, resourceTag)
+	}
+
+	return &tags
+}
+
 func (opts *CreateOpts) newCreateProjectGroup() *atlasv2.Group {
 	return &atlasv2.Group{
 		Name:                      opts.name,
 		OrgId:                     opts.ConfigOrgID(),
 		WithDefaultAlertsSettings: opts.defaultAlertSettings(),
 		RegionUsageRestrictions:   opts.newRegionUsageRestrictions(),
+		Tags:                      opts.newCreateProjectGroupTags(),
 	}
 }
 
@@ -123,6 +150,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.projectOwnerID, flag.OwnerID, "", usage.ProjectOwnerID)
 	cmd.Flags().BoolVar(&opts.regionUsageRestrictions, flag.GovCloudRegionsOnly, false, usage.GovCloudRegionsOnly)
 	cmd.Flags().BoolVar(&opts.withoutDefaultAlertSettings, flag.WithoutDefaultAlertSettings, false, usage.WithoutDefaultAlertSettings)
+	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.Tag)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 

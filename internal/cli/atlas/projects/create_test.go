@@ -22,6 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
@@ -31,11 +32,20 @@ func TestCreate_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectCreator(ctrl)
 
 	opts := CreateOpts{}
-	expected := &atlasv2.Group{}
+	expected := &atlasv2.Group{
+		Tags: &[]atlasv2.ResourceTag{
+			{Key: pointer.Get("environment"), Value: pointer.Get("unit-testing")},
+			{Key: pointer.Get("production"), Value: pointer.Get("false")},
+		},
+	}
 
 	createOpts := &CreateOpts{
 		store: mockStore,
 		name:  "ProjectBar",
+		tag: map[string]string{
+			"environment": "unit-testing",
+			"production":  "false",
+		},
 	}
 	createOpts.OrgID = "5a0a1e7e0f2912c554080adc"
 	params := &atlasv2.CreateProjectApiParams{

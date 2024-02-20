@@ -143,12 +143,13 @@ func (opts *DeleteOpts) removeClusterFromAutomation() error {
 	}
 
 	atmcfg.RemoveByClusterName(current, opts.Entry)
-	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
+	if err = opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
 		return err
 	}
 
 	// Wait for changes being deployed on automation
-	return opts.Watch(opts.watcher)
+	_, err = opts.Watch(opts.watcher)
+	return err
 }
 
 func (opts *DeleteOpts) shutdownCluster() error {
@@ -162,26 +163,27 @@ func (opts *DeleteOpts) shutdownCluster() error {
 
 	// Shutdown Cluster
 	atmcfg.Shutdown(current, opts.Entry)
-	if err := opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
+	if err = opts.store.UpdateAutomationConfig(opts.ConfigProjectID(), current); err != nil {
 		return err
 	}
 
 	// Wait for changes being deployed on automation
-	return opts.Watch(opts.watcher)
+	_, err = opts.Watch(opts.watcher)
+	return err
 }
 
-func (opts *DeleteOpts) watcher() (bool, error) {
+func (opts *DeleteOpts) watcher() (any, bool, error) {
 	result, err := opts.store.GetAutomationStatus(opts.ConfigProjectID())
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 
 	for _, p := range result.Processes {
 		if p.LastGoalVersionAchieved != result.GoalVersion {
-			return false, nil
+			return nil, false, nil
 		}
 	}
-	return true, nil
+	return nil, true, nil
 }
 
 // mongocli cloud-manager cluster(s) delete <name> --projectId projectId [--force].

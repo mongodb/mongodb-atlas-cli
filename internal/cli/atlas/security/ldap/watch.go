@@ -44,17 +44,17 @@ func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *WatchOpts) watcher() (bool, error) {
+func (opts *WatchOpts) watcher() (any, bool, error) {
 	result, err := opts.store.GetStatusLDAPConfiguration(opts.ConfigProjectID(), opts.id)
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 	status := *result.Status
-	return status == "FAILED" || status == "SUCCESS", nil
+	return nil, status == "FAILED" || status == "SUCCESS", nil
 }
 
 func (opts *WatchOpts) Run() error {
-	if err := opts.Watch(opts.watcher); err != nil {
+	if _, err := opts.Watch(opts.watcher); err != nil {
 		return err
 	}
 

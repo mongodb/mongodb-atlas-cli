@@ -68,7 +68,7 @@ func TestEnableOpts_Watcher(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	res, err := opts.watcher()
+	_, res, err := opts.watcher()
 	require.NoError(t, err)
 	assert.True(t, res)
 }

@@ -77,16 +77,16 @@ func (opts *SetupOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *SetupOpts) setupWatcher() (bool, error) {
+func (opts *SetupOpts) setupWatcher() (any, bool, error) {
 	res, err := opts.store.DescribeCompliancePolicy(opts.ConfigProjectID())
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 	opts.policy = res
 	if res.GetState() == "" {
-		return false, errors.New("could not access State field")
+		return nil, false, errors.New("could not access State field")
 	}
-	return res.GetState() == active, nil
+	return nil, res.GetState() == active, nil
 }
 
 func newSetupConfirmationQuestion() survey.Prompt {
@@ -112,7 +112,7 @@ func (opts *SetupOpts) Run() error {
 		return err
 	}
 	if opts.EnableWatch {
-		if err := opts.Watch(opts.setupWatcher); err != nil {
+		if _, err := opts.Watch(opts.setupWatcher); err != nil {
 			return err
 		}
 		opts.Template = setupWatchTemplate

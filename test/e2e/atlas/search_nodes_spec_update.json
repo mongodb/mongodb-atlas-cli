@@ -1,5 +1,5 @@
 {
-    "Specs": [
+    "specs": [
         {
             "instanceSize": "S20_HIGHCPU_NVME",
             "nodeCount": 3

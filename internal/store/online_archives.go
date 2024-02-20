@@ -48,8 +48,13 @@ type OnlineArchiveDeleter interface {
 func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.ListOptions) (*atlasv2.PaginatedOnlineArchive, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.OnlineArchiveApi.ListOnlineArchives(s.ctx, projectID, clusterName).
-			PageNum(lstOpt.PageNum).ItemsPerPage(lstOpt.ItemsPerPage).Execute()
+		params := &atlasv2.ListOnlineArchivesApiParams{
+			GroupId:      projectID,
+			ClusterName:  clusterName,
+			PageNum:      &lstOpt.PageNum,
+			ItemsPerPage: &lstOpt.ItemsPerPage,
+		}
+		result, _, err := s.clientv2.OnlineArchiveApi.ListOnlineArchivesWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

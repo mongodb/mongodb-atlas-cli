@@ -19,7 +19,6 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -207,7 +206,7 @@ func (s *Store) UpgradeCluster(projectID string, cluster *atlas.Cluster) (*atlas
 func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		params := &atlasv2.ListClustersApiParams{
+		params := &admin.ListClustersApiParams{
 			GroupId: projectID,
 		}
 		if opts != nil {

@@ -34,8 +34,13 @@ func (s *Store) ProcessDisks(groupID, host string, port int, opts *atlas.ListOpt
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		processID := host + ":" + strconv.Itoa(port)
-		result, _, err := s.clientv2.MonitoringAndLogsApi.ListDiskPartitions(s.ctx, groupID, processID).
-			ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).Execute()
+		params := &atlasv2.ListDiskPartitionsApiParams{
+			GroupId:      groupID,
+			ProcessId:    processID,
+			PageNum:      &opts.PageNum,
+			ItemsPerPage: &opts.ItemsPerPage,
+		}
+		result, _, err := s.clientv2.MonitoringAndLogsApi.ListDiskPartitionsWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -49,11 +49,12 @@ type ServerlessInstanceUpdater interface {
 func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions) (*atlasv2.PaginatedServerlessInstanceDescription, error) {
 	switch s.service {
 	case config.CloudService:
-		result, _, err := s.clientv2.ServerlessInstancesApi.ListServerlessInstances(s.ctx, projectID).
-			ItemsPerPage(listOps.ItemsPerPage).
-			PageNum(listOps.PageNum).
-			Execute()
-
+		params := &atlasv2.ListServerlessInstancesApiParams{
+			GroupId:      projectID,
+			PageNum:      &listOps.PageNum,
+			ItemsPerPage: &listOps.ItemsPerPage,
+		}
+		result, _, err := s.clientv2.ServerlessInstancesApi.ListServerlessInstancesWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

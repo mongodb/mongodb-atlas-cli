@@ -123,11 +123,15 @@ func (s *Store) CreatePeeringConnection(projectID string, peer *atlasv2.BaseNetw
 func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersListOptions) ([]atlasv2.CloudProviderContainer, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID)
-		if opts != nil {
-			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).ProviderName(opts.ProviderName)
+		params := &atlasv2.ListPeeringContainerByCloudProviderApiParams{
+			GroupId: projectID,
 		}
-		result, _, err := res.Execute()
+		if opts != nil {
+			params.ItemsPerPage = &opts.ItemsPerPage
+			params.PageNum = &opts.PageNum
+			params.ProviderName = &opts.ProviderName
+		}
+		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProviderWithParams(s.ctx, params).Execute()
 		if err != nil {
 			return nil, err
 		}

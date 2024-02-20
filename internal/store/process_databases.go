@@ -34,8 +34,13 @@ func (s *Store) ProcessDatabases(groupID, host string, port int, opts *atlas.Lis
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
 		process := host + ":" + strconv.Itoa(port)
-		result, _, err := s.clientv2.MonitoringAndLogsApi.ListDatabases(s.ctx, groupID, process).
-			PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).Execute()
+		params := &atlasv2.ListDatabasesApiParams{
+			GroupId:      groupID,
+			ProcessId:    process,
+			PageNum:      &opts.PageNum,
+			ItemsPerPage: &opts.ItemsPerPage,
+		}
+		result, _, err := s.clientv2.MonitoringAndLogsApi.ListDatabasesWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

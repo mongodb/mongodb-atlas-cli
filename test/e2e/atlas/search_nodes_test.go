@@ -25,7 +25,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -80,13 +79,13 @@ func TestSearchNodes(t *testing.T) {
 		var searchNode atlasv2.ApiSearchDeploymentResponse
 		require.NoError(t, json.Unmarshal(resp, &searchNode))
 
-		assert.Equal(t, *searchNode.GroupId, g.projectID)
-		assert.Equal(t, searchNode.Specs, pointer.Get([]atlasv2.ApiSearchDeploymentSpec{
+		assert.Equal(t, g.projectID, searchNode.GetGroupId())
+		assert.Equal(t, []atlasv2.ApiSearchDeploymentSpec{
 			{
 				InstanceSize: "S30_LOWCPU_NVME",
 				NodeCount:    2,
 			},
-		}))
+		}, searchNode.GetSpecs())
 	})
 
 	t.Run("List + verify created", func(t *testing.T) {
@@ -108,13 +107,13 @@ func TestSearchNodes(t *testing.T) {
 		var searchNode atlasv2.ApiSearchDeploymentResponse
 		require.NoError(t, json.Unmarshal(resp, &searchNode))
 
-		assert.Equal(t, *searchNode.GroupId, g.projectID)
-		assert.Equal(t, searchNode.Specs, pointer.Get([]atlasv2.ApiSearchDeploymentSpec{
+		assert.Equal(t, g.projectID, searchNode.GetGroupId())
+		assert.Equal(t, []atlasv2.ApiSearchDeploymentSpec{
 			{
 				InstanceSize: "S30_LOWCPU_NVME",
 				NodeCount:    2,
 			},
-		}))
+		}, searchNode.GetSpecs())
 	})
 
 	t.Run("Update search node", func(t *testing.T) {
@@ -138,13 +137,13 @@ func TestSearchNodes(t *testing.T) {
 		var searchNode atlasv2.ApiSearchDeploymentResponse
 		require.NoError(t, json.Unmarshal(resp, &searchNode))
 
-		assert.Equal(t, *searchNode.GroupId, g.projectID)
-		assert.Equal(t, searchNode.Specs, pointer.Get([]atlasv2.ApiSearchDeploymentSpec{
+		assert.Equal(t, g.projectID, searchNode.GetGroupId())
+		assert.Equal(t, []atlasv2.ApiSearchDeploymentSpec{
 			{
 				InstanceSize: "S20_HIGHCPU_NVME",
 				NodeCount:    3,
 			},
-		}))
+		}, searchNode.GetSpecs())
 	})
 
 	t.Run("List + verify updated", func(t *testing.T) {
@@ -166,13 +165,13 @@ func TestSearchNodes(t *testing.T) {
 		var searchNode atlasv2.ApiSearchDeploymentResponse
 		require.NoError(t, json.Unmarshal(resp, &searchNode))
 
-		assert.Equal(t, *searchNode.GroupId, g.projectID)
-		assert.Equal(t, searchNode.Specs, pointer.Get([]atlasv2.ApiSearchDeploymentSpec{
+		assert.Equal(t, g.projectID, searchNode.GetGroupId())
+		assert.Equal(t, []atlasv2.ApiSearchDeploymentSpec{
 			{
 				InstanceSize: "S20_HIGHCPU_NVME",
 				NodeCount:    3,
 			},
-		}))
+		}, searchNode.GetSpecs())
 	})
 
 	t.Run("Delete search nodes", func(t *testing.T) {
@@ -190,11 +189,11 @@ func TestSearchNodes(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		resp_str := strings.TrimLeft(string(resp), ".")
+		respStr := strings.TrimLeft(string(resp), ".")
 
-		require.NoError(t, err, resp_str)
+		require.NoError(t, err, respStr)
 
 		expected := fmt.Sprintf("\"%s\"\n", g.clusterName)
-		assert.Equal(t, expected, resp_str)
+		assert.Equal(t, expected, respStr)
 	})
 }

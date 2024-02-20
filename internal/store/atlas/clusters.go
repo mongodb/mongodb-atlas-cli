@@ -39,11 +39,14 @@ type ClusterConfigurationOptionsDescriber interface {
 func (s *Store) ProjectClusters(projectID string, opts *ListOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.ClustersApi.ListClusters(s.ctx, projectID)
-		if opts != nil {
-			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		params := &admin.ListClustersApiParams{
+			GroupId: projectID,
 		}
-		result, _, err := res.Execute()
+		if opts != nil {
+			params.ItemsPerPage = &opts.ItemsPerPage
+			params.PageNum = &opts.PageNum
+		}
+		result, _, err := s.clientv2.ClustersApi.ListClustersWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

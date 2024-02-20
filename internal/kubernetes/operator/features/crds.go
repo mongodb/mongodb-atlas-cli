@@ -60,6 +60,16 @@ var (
 			resource{ResourceAtlasDataFederation, NopPatcher()},
 			resource{ResourceAtlasFederatedAuth, NopPatcher()},
 		},
+		"2.1.0": {
+			resource{ResourceAtlasDatabaseUser, NopPatcher()},
+			resource{ResourceAtlasProject, NopPatcher()},
+			resource{ResourceAtlasDeployment, NopPatcher()},
+			resource{ResourceAtlasBackupSchedule, NopPatcher()},
+			resource{ResourceAtlasBackupPolicy, UnknownBackupPolicyFrequencyTypesPruner()},
+			resource{ResourceAtlasTeam, NopPatcher()},
+			resource{ResourceAtlasDataFederation, NopPatcher()},
+			resource{ResourceAtlasFederatedAuth, NopPatcher()},
+		},
 	}
 )
 

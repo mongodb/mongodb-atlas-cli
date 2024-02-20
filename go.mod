@@ -48,7 +48,7 @@ require (
 	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc
 	golang.org/x/mod v0.15.0
 	golang.org/x/tools v0.18.0
-	google.golang.org/api v0.164.0
+	google.golang.org/api v0.165.0
 	google.golang.org/protobuf v1.32.0
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.29.1

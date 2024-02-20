@@ -19,6 +19,7 @@ package atlas
 import (
 	"io"
 
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
@@ -68,13 +69,24 @@ func (s *Store) DataFederation(projectID, id string) (*admin.DataLakeTenant, err
 
 // CreateDataFederation encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateDataFederation(projectID string, opts *admin.DataLakeTenant) (*admin.DataLakeTenant, error) {
-	result, _, err := s.clientv2.DataFederationApi.CreateFederatedDatabase(s.ctx, projectID, opts).SkipRoleValidation(false).Execute()
+	params := &admin.CreateFederatedDatabaseApiParams{
+		GroupId:            projectID,
+		DataLakeTenant:     opts,
+		SkipRoleValidation: pointer.Get(false),
+	}
+	result, _, err := s.clientv2.DataFederationApi.CreateFederatedDatabaseWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // UpdateDataFederation encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateDataFederation(projectID, id string, opts *admin.DataLakeTenant) (*admin.DataLakeTenant, error) {
-	result, _, err := s.clientv2.DataFederationApi.UpdateFederatedDatabase(s.ctx, projectID, id, opts).SkipRoleValidation(false).Execute()
+	params := &admin.UpdateFederatedDatabaseApiParams{
+		GroupId:            projectID,
+		TenantName:         id,
+		DataLakeTenant:     opts,
+		SkipRoleValidation: pointer.Get(false),
+	}
+	result, _, err := s.clientv2.DataFederationApi.UpdateFederatedDatabaseWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
@@ -86,13 +98,16 @@ func (s *Store) DeleteDataFederation(projectID, id string) error {
 
 // DataFederationLogs encapsulates the logic to manage different cloud providers.
 func (s *Store) DataFederationLogs(projectID, id string, startDate, endDate int64) (io.ReadCloser, error) {
-	req := s.clientv2.DataFederationApi.DownloadFederatedDatabaseQueryLogs(s.ctx, projectID, id)
+	params := &admin.DownloadFederatedDatabaseQueryLogsApiParams{
+		GroupId:    projectID,
+		TenantName: id,
+	}
 	if startDate != 0 {
-		req = req.StartDate(startDate)
+		params.StartDate = &startDate
 	}
 	if endDate != 0 {
-		req = req.EndDate(endDate)
+		params.EndDate = &endDate
 	}
-	result, _, err := req.Execute()
+	result, _, err := s.clientv2.DataFederationApi.DownloadFederatedDatabaseQueryLogsWithParams(s.ctx, params).Execute()
 	return result, err
 }

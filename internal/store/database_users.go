@@ -77,11 +77,14 @@ func (s *Store) DeleteDatabaseUser(authDB, groupID, username string) error {
 func (s *Store) DatabaseUsers(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.DatabaseUsersApi.ListDatabaseUsers(s.ctx, projectID)
-		if opts != nil {
-			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		params := &atlasv2.ListDatabaseUsersApiParams{
+			GroupId: projectID,
 		}
-		result, _, err := res.Execute()
+		if opts != nil {
+			params.ItemsPerPage = &opts.ItemsPerPage
+			params.PageNum = &opts.PageNum
+		}
+		result, _, err := s.clientv2.DatabaseUsersApi.ListDatabaseUsersWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -112,11 +115,15 @@ func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlasv2.CloudDa
 func (s *Store) DBUserCertificates(projectID, username string, opts *atlas.ListOptions) (*atlasv2.PaginatedUserCert, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.X509AuthenticationApi.ListDatabaseUserCertificates(s.ctx, projectID, username)
-		if opts != nil {
-			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		params := &atlasv2.ListDatabaseUserCertificatesApiParams{
+			GroupId:  projectID,
+			Username: username,
 		}
-		result, _, err := res.Execute()
+		if opts != nil {
+			params.ItemsPerPage = &opts.ItemsPerPage
+			params.PageNum = &opts.PageNum
+		}
+		result, _, err := s.clientv2.X509AuthenticationApi.ListDatabaseUserCertificatesWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

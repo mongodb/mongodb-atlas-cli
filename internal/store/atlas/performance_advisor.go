@@ -41,57 +41,64 @@ type PerformanceAdvisorSlowOperationThresholdDisabler interface {
 
 // PerformanceAdvisorNamespaces encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorNamespaces(opts *atlasv2.ListSlowQueryNamespacesApiParams) (*atlasv2.Namespaces, error) {
-	request := s.clientv2.PerformanceAdvisorApi.
-		ListSlowQueryNamespaces(s.ctx, opts.GroupId, opts.ProcessId)
+	params := &atlasv2.ListSlowQueryNamespacesApiParams{
+		GroupId:   opts.GroupId,
+		ProcessId: opts.ProcessId,
+	}
 	if opts.Duration != nil {
-		request = request.Duration(*opts.Duration)
+		params.Duration = opts.Duration
 	}
 	if opts.Since != nil {
-		request = request.Since(*opts.Since)
+		params.Since = opts.Since
 	}
-	result, _, err := request.Execute()
+	result, _, err := s.clientv2.PerformanceAdvisorApi.ListSlowQueryNamespacesWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // PerformanceAdvisorSlowQueries encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorSlowQueries(opts *atlasv2.ListSlowQueriesApiParams) (*atlasv2.PerformanceAdvisorSlowQueryList, error) {
-	request := s.clientv2.PerformanceAdvisorApi.ListSlowQueries(s.ctx, opts.GroupId, opts.ProcessId)
+	params := &atlasv2.ListSlowQueriesApiParams{
+		GroupId:   opts.GroupId,
+		ProcessId: opts.ProcessId,
+	}
 	if opts.Duration != nil {
-		request = request.Duration(*opts.Duration)
+		params.Duration = opts.Duration
 	}
 	if opts.Since != nil {
-		request = request.Since(*opts.Since)
+		params.Since = opts.Since
 	}
 	if opts.Namespaces != nil {
-		request = request.Namespaces(*opts.Namespaces)
+		params.Namespaces = opts.Namespaces
 	}
 	if opts.NLogs != nil {
-		request = request.NLogs(*opts.NLogs)
+		params.NLogs = opts.NLogs
 	}
-	result, _, err := request.Execute()
+	result, _, err := s.clientv2.PerformanceAdvisorApi.ListSlowQueriesWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // PerformanceAdvisorIndexes encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorIndexes(opts *atlasv2.ListSuggestedIndexesApiParams) (*atlasv2.PerformanceAdvisorResponse, error) {
-	request := s.clientv2.PerformanceAdvisorApi.
-		ListSuggestedIndexes(s.ctx, opts.GroupId, opts.ProcessId)
+	params := &atlasv2.ListSuggestedIndexesApiParams{
+		GroupId:   opts.GroupId,
+		ProcessId: opts.ProcessId,
+	}
 	if opts.Namespaces != nil {
-		request = request.Namespaces(*opts.Namespaces)
+		params.Namespaces = opts.Namespaces
 	}
 	if opts.Duration != nil {
-		request = request.Duration(*opts.Duration)
+		params.Duration = opts.Duration
 	}
 	if opts.Since != nil {
-		request = request.Since(*opts.Since)
+		params.Since = opts.Since
 	}
 	if opts.NExamples != nil {
-		request = request.NExamples(*opts.NExamples)
+		params.NExamples = opts.NExamples
 	}
 	if opts.NIndexes != nil {
-		request = request.NIndexes(*opts.NIndexes)
+		params.NIndexes = opts.NIndexes
 	}
-	result, _, err := request.Execute()
+	result, _, err := s.clientv2.PerformanceAdvisorApi.ListSuggestedIndexesWithParams(s.ctx, params).Execute()
 	return result, err
 }
 

@@ -53,6 +53,7 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (interface{}
 		if opts != nil {
 			params.Name = &opts.Name
 			params.PageNum = &opts.PageNum
+			params.ItemsPerPage = &opts.ItemsPerPage
 		}
 		result, _, err := s.clientv2.OrganizationsApi.ListOrganizationsWithParams(s.ctx, params).Execute()
 		return result, err

@@ -31,7 +31,12 @@ type CloudProviderRegionsLister interface {
 func (s *Store) CloudProviderRegions(projectID, tier string, providerName []string) (*atlasv2.PaginatedApiAtlasProviderRegions, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.ClustersApi.ListCloudProviderRegions(s.ctx, projectID).Providers(providerName).Tier(tier).Execute()
+		params := &atlasv2.ListCloudProviderRegionsApiParams{
+			GroupId:   projectID,
+			Providers: &providerName,
+			Tier:      &tier,
+		}
+		result, _, err := s.clientv2.ClustersApi.ListCloudProviderRegionsWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

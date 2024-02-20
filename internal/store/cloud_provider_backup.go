@@ -97,11 +97,15 @@ type ScheduleDeleter interface {
 func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.CloudBackupsApi.ListBackupRestoreJobs(s.ctx, projectID, clusterName)
-		if opts != nil {
-			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		params := &atlasv2.ListBackupRestoreJobsApiParams{
+			GroupId:     projectID,
+			ClusterName: clusterName,
 		}
-		result, _, err := res.Execute()
+		if opts != nil {
+			params.ItemsPerPage = &opts.ItemsPerPage
+			params.PageNum = &opts.PageNum
+		}
+		result, _, err := s.clientv2.CloudBackupsApi.ListBackupRestoreJobsWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -145,11 +149,15 @@ func (s *Store) CreateSnapshot(projectID, clusterName string, request *atlasv2.D
 func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupReplicaSet, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.CloudBackupsApi.ListReplicaSetBackups(s.ctx, projectID, clusterName)
-		if opts != nil {
-			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		params := &atlasv2.ListReplicaSetBackupsApiParams{
+			GroupId:     projectID,
+			ClusterName: clusterName,
 		}
-		result, _, err := res.Execute()
+		if opts != nil {
+			params.ItemsPerPage = &opts.ItemsPerPage
+			params.PageNum = &opts.PageNum
+		}
+		result, _, err := s.clientv2.CloudBackupsApi.ListReplicaSetBackupsWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -182,11 +190,15 @@ func (s *Store) DeleteSnapshot(projectID, clusterName, snapshotID string) error 
 func (s *Store) ExportJobs(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDiskBackupExportJob, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.CloudBackupsApi.ListBackupExportJobs(s.ctx, projectID, clusterName)
-		if opts != nil {
-			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		params := &atlasv2.ListBackupExportJobsApiParams{
+			GroupId:     projectID,
+			ClusterName: clusterName,
 		}
-		result, _, err := res.Execute()
+		if opts != nil {
+			params.ItemsPerPage = &opts.ItemsPerPage
+			params.PageNum = &opts.PageNum
+		}
+		result, _, err := s.clientv2.CloudBackupsApi.ListBackupExportJobsWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -219,11 +231,14 @@ func (s *Store) CreateExportJob(projectID, clusterName string, job *atlasv2.Disk
 func (s *Store) ExportBuckets(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshotExportBucket, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.CloudBackupsApi.ListExportBuckets(s.ctx, projectID)
-		if opts != nil {
-			res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)
+		params := &atlasv2.ListExportBucketsApiParams{
+			GroupId: projectID,
 		}
-		result, _, err := res.Execute()
+		if opts != nil {
+			params.ItemsPerPage = &opts.ItemsPerPage
+			params.PageNum = &opts.PageNum
+		}
+		result, _, err := s.clientv2.CloudBackupsApi.ListExportBucketsWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -48,11 +48,15 @@ type ServerlessRestoreJobsCreator interface {
 func (s *Store) ServerlessSnapshots(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasServerlessBackupSnapshot, error) {
 	switch s.service {
 	case config.CloudService:
-		res := s.clientv2.CloudBackupsApi.ListServerlessBackups(s.ctx, projectID, clusterName)
-		if opts != nil {
-			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		params := &atlasv2.ListServerlessBackupsApiParams{
+			GroupId:     projectID,
+			ClusterName: clusterName,
 		}
-		result, _, err := res.Execute()
+		if opts != nil {
+			params.ItemsPerPage = &opts.ItemsPerPage
+			params.PageNum = &opts.PageNum
+		}
+		result, _, err := s.clientv2.CloudBackupsApi.ListServerlessBackupsWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -74,11 +78,15 @@ func (s *Store) ServerlessSnapshot(projectID, instanceName, snapshotID string) (
 func (s *Store) ServerlessRestoreJobs(projectID, instanceName string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob, error) {
 	switch s.service {
 	case config.CloudService:
-		res := s.clientv2.CloudBackupsApi.ListServerlessBackupRestoreJobs(s.ctx, projectID, instanceName)
-		if opts != nil {
-			res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)
+		params := &atlasv2.ListServerlessBackupRestoreJobsApiParams{
+			GroupId:     projectID,
+			ClusterName: instanceName,
 		}
-		result, _, err := res.Execute()
+		if opts != nil {
+			params.ItemsPerPage = &opts.ItemsPerPage
+			params.PageNum = &opts.PageNum
+		}
+		result, _, err := s.clientv2.CloudBackupsApi.ListServerlessBackupRestoreJobsWithParams(s.ctx, params).Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

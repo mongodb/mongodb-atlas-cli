@@ -20,8 +20,11 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/crds"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	"k8s.io/apimachinery/pkg/api/meta"
+	"k8s.io/apimachinery/pkg/runtime"
+
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/crds"
 )
 
 const (
@@ -46,25 +49,50 @@ var (
 	ErrDocumentHasNoSchema       = errors.New("document contains no Schema")
 	ErrDocumentHasNoSpec         = errors.New("document contains no Spec")
 
-	versionsToResourcesMap = map[string][]string{
+	versionsToResourcesMap = map[string][]resource{
 		"2.0.0": {
-			ResourceAtlasDatabaseUser,
-			ResourceAtlasProject,
-			ResourceAtlasDeployment,
-			ResourceAtlasBackupSchedule,
-			ResourceAtlasBackupPolicy,
-			ResourceAtlasTeam,
-			ResourceAtlasDataFederation,
-			ResourceAtlasFederatedAuth,
+			resource{ResourceAtlasDatabaseUser, NopPatcher()},
+			resource{ResourceAtlasProject, NopPatcher()},
+			resource{ResourceAtlasDeployment, NopPatcher()},
+			resource{ResourceAtlasBackupSchedule, NopPatcher()},
+			resource{ResourceAtlasBackupPolicy, UnknownBackupPolicyFrequencyTypesPruner()},
+			resource{ResourceAtlasTeam, NopPatcher()},
+			resource{ResourceAtlasDataFederation, NopPatcher()},
+			resource{ResourceAtlasFederatedAuth, NopPatcher()},
+		},
+		"2.1.0": {
+			resource{ResourceAtlasDatabaseUser, NopPatcher()},
+			resource{ResourceAtlasProject, NopPatcher()},
+			resource{ResourceAtlasDeployment, NopPatcher()},
+			resource{ResourceAtlasBackupSchedule, NopPatcher()},
+			resource{ResourceAtlasBackupPolicy, UnknownBackupPolicyFrequencyTypesPruner()},
+			resource{ResourceAtlasTeam, NopPatcher()},
+			resource{ResourceAtlasDataFederation, NopPatcher()},
+			resource{ResourceAtlasFederatedAuth, NopPatcher()},
 		},
 	}
 )
 
-func GetResourcesForVersion(version string) ([]string, bool) {
+type resource struct {
+	name    string
+	patcher Patcher
+}
+
+func majorVersion(version string) string {
 	v := semver.MustParse(version)
-	majorVersion := semver.New(v.Major(), v.Minor(), 0, "", "").String()
-	resources, ok := versionsToResourcesMap[majorVersion]
-	return resources, ok
+	return semver.New(v.Major(), v.Minor(), 0, "", "").String()
+}
+
+func GetResourcesForVersion(version string) ([]string, bool) {
+	resources, ok := versionsToResourcesMap[majorVersion(version)]
+	if !ok {
+		return nil, false
+	}
+	result := make([]string, 0, len(resources))
+	for i := range resources {
+		result = append(result, resources[i].name)
+	}
+	return result, true
 }
 
 func SupportedVersions() []string {
@@ -100,18 +128,37 @@ func CRDCompatibleVersion(operatorVersion string) (string, error) {
 
 type AtlasCRDs struct {
 	resources map[string]*apiextensions.JSONSchemaProps
+	patchers  map[string]Patcher
+}
+
+func (a *AtlasCRDs) Patch(obj runtime.Object) error {
+	// Despite marked as unsafe this pluralizer works well on our types.
+	plural, _ := meta.UnsafeGuessKindToResource(obj.GetObjectKind().GroupVersionKind())
+
+	crdSpec, ok := a.resources[plural.Resource]
+	if !ok {
+		return nil
+	}
+	patcher, ok := a.patchers[plural.Resource]
+	if !ok {
+		return nil
+	}
+	return patcher.Patch(crdSpec, obj)
 }
 
 func NewAtlasCRDs(crdProvider crds.AtlasOperatorCRDProvider, version string) (*AtlasCRDs, error) {
-	resources, versionFound := GetResourcesForVersion(version)
+	resources, versionFound := versionsToResourcesMap[majorVersion(version)]
 	if !versionFound {
 		return nil, fmt.Errorf(ErrVersionNotSupportedFmt, version)
 	}
 
-	result := &AtlasCRDs{resources: map[string]*apiextensions.JSONSchemaProps{}}
+	result := &AtlasCRDs{
+		resources: map[string]*apiextensions.JSONSchemaProps{},
+		patchers:  map[string]Patcher{},
+	}
 
 	for _, resource := range resources {
-		crd, err := crdProvider.GetAtlasOperatorResource(resource, version)
+		crd, err := crdProvider.GetAtlasOperatorResource(resource.name, version)
 		if err != nil {
 			return nil, fmt.Errorf(ErrDownloadResourceFailedFmt, resource, err)
 		}
@@ -120,7 +167,8 @@ func NewAtlasCRDs(crdProvider crds.AtlasOperatorCRDProvider, version string) (*A
 		if err != nil {
 			return nil, fmt.Errorf("failed to process CRD '%s:%s'. err: %w", resource, version, err)
 		}
-		result.resources[resource] = root
+		result.resources[resource.name] = root
+		result.patchers[resource.name] = resource.patcher
 	}
 
 	return result, nil

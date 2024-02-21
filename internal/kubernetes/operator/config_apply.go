@@ -17,6 +17,7 @@ package operator
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
@@ -82,6 +83,13 @@ func (apply *ConfigApply) Run() error {
 
 	for _, objects := range sortedResources {
 		for _, object := range objects {
+			if apply.exporter.patcher != nil {
+				err = apply.exporter.patcher.Patch(object)
+				if err != nil {
+					return fmt.Errorf("error patching %v: %w", object.GetObjectKind().GroupVersionKind(), err)
+				}
+			}
+
 			ctrlObj, ok := object.(client.Object)
 			if !ok {
 				return errors.New("unable to apply resource")

@@ -79,7 +79,7 @@ func (opts *GenerateOpts) initStores(ctx context.Context) func() error {
 }
 
 func (opts *GenerateOpts) Run() error {
-	featureValidator, err := features.NewAtlasCRDs(opts.crdsProvider, opts.operatorVersion)
+	atlasCRDs, err := features.NewAtlasCRDs(opts.crdsProvider, opts.operatorVersion)
 	if err != nil {
 		return err
 	}
@@ -88,7 +88,8 @@ func (opts *GenerateOpts) Run() error {
 		WithTargetNamespace(opts.targetNamespace).
 		WithSecretsData(opts.includeSecrets).
 		WithTargetOperatorVersion(opts.operatorVersion).
-		WithFeatureValidator(featureValidator).
+		WithFeatureValidator(atlasCRDs).
+		WithPatcher(atlasCRDs).
 		WithDataFederationNames(opts.dataFederationName).
 		Run()
 	if err != nil {

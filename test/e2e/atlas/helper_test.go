@@ -623,8 +623,6 @@ func createProject(projectName string) (string, error) {
 		projectEntity,
 		"create",
 		projectName,
-		"--tag", "env=e2e",
-		"--tag", "prod=false",
 		"-o=json",
 	}
 	if IsGov() {

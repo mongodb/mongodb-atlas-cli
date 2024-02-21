@@ -63,7 +63,7 @@ func TestProjects(t *testing.T) {
 		for _, tag := range project.GetTags() {
 			expectedValue, ok := expectedTags[tag.GetKey()]
 			if !ok {
-				t.Errorf("expected %v, to have key %s\n", project.Tags, tag.GetKey())
+				t.Errorf("unexpected tag key %s in tags: %v, expected tags: %v\n", tag.GetKey(), project.Tags, expectedTags)
 			}
 
 			require.Equal(t, expectedValue, tag.GetValue())

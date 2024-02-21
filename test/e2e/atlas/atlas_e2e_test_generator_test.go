@@ -46,6 +46,7 @@ type atlasE2ETestGenerator struct {
 	teamUser       string
 	dbUser         string
 	tier           string
+	mDBVer         string
 	dataFedName    string
 	enableBackup   bool
 	firstProcess   *atlasv2.ApiHostViewAtlas
@@ -333,7 +334,11 @@ func (g *atlasE2ETestGenerator) generateCluster() {
 		g.tier = e2eTier()
 	}
 
-	g.clusterName, g.clusterRegion, err = deployClusterForProject(g.projectID, g.tier, g.enableBackup)
+	if g.mDBVer == "" {
+		g.mDBVer = e2eMDBVer
+	}
+
+	g.clusterName, g.clusterRegion, err = deployClusterForProject(g.projectID, g.tier, g.mDBVer, g.enableBackup)
 	if err != nil {
 		g.Logf("projectID=%q, clusterName=%q", g.projectID, g.clusterName)
 		g.t.Errorf("unexpected error deploying cluster: %v", err)

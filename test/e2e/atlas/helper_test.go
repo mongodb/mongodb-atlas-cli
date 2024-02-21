@@ -42,6 +42,7 @@ const (
 	metricsEntity                = "metrics"
 	searchEntity                 = "search"
 	indexEntity                  = "index"
+	nodesEntity                  = "nodes"
 	datafederationEntity         = "datafederation"
 	datalakePipelineEntity       = "datalakepipeline"
 	alertsEntity                 = "alerts"
@@ -246,7 +247,7 @@ func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, cluste
 	_ = watchServerlessInstanceForProject(projectID, clusterName)
 }
 
-func deployClusterForProject(projectID, tier string, enableBackup bool) (string, string, error) {
+func deployClusterForProject(projectID, tier, mDBVersion string, enableBackup bool) (string, string, error) {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return "", "", err
@@ -263,7 +264,7 @@ func deployClusterForProject(projectID, tier string, enableBackup bool) (string,
 		clustersEntity,
 		"create",
 		clusterName,
-		"--mdbVersion", e2eMDBVer,
+		"--mdbVersion", mDBVersion,
 		"--region", region,
 		"--tier", tier,
 		"--provider", e2eClusterProvider,

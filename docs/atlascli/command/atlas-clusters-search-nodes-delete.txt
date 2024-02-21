@@ -41,6 +41,10 @@ Options
      - string
      - true
      - Name of the cluster.
+   * - --force
+     - 
+     - false
+     - Flag that indicates whether to skip the confirmation prompt before proceeding with the requested action.
    * - -h, --help
      - 
      - false

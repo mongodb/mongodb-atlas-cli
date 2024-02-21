@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 type CreateOpts struct {
@@ -64,10 +65,12 @@ func (opts *CreateOpts) Run() error {
 	}
 
 	if opts.EnableWatch {
-		if _, err := opts.Watch(opts.watcher); err != nil {
+		watchResult, err := opts.Watch(opts.watcher)
+		if err != nil {
 			return err
 		}
 		opts.Template = createWatchTemplate
+		r = watchResult.(*admin.ApiSearchDeploymentResponse)
 	}
 
 	return opts.Print(r)
@@ -78,7 +81,7 @@ func (opts *CreateOpts) watcher() (any, bool, error) {
 	if err != nil {
 		return nil, false, err
 	}
-	return nil, *res.StateName == stateIdle, nil
+	return res, *res.StateName == stateIdle, nil
 }
 
 // atlas clusters search nodes create [--clusterName clusterName] [--file filePath].

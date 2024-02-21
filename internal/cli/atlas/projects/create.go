@@ -17,11 +17,13 @@ package projects
 import (
 	"context"
 	"fmt"
+	"sort"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -64,18 +66,22 @@ func (opts *CreateOpts) newCreateProjectGroupTags() *[]atlasv2.ResourceTag {
 	}
 
 	tags := make([]atlasv2.ResourceTag, 0)
-	for key, value := range opts.tag {
+
+	keys := make([]string, 0)
+	for k := range opts.tag {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	for _, key := range keys {
+		value := opts.tag[key]
 		if key == "" || value == "" {
 			continue
 		}
 
-		// Capture key and value by value
-		key := key
-		value := value
-
 		resourceTag := *atlasv2.NewResourceTag()
-		resourceTag.Key = &key
-		resourceTag.Value = &value
+		resourceTag.Key = pointer.Get(key)
+		resourceTag.Value = pointer.Get(value)
 
 		tags = append(tags, resourceTag)
 	}

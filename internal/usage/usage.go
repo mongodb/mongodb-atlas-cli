@@ -450,6 +450,7 @@ dbName and collection are required only for built-in roles.`
 	CompletedAfter                            = "Date filter for when the backup snapshots were completed. You must use the YYYY-MM-DD format."
 	Tag                                       = "List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the cluster."
 	DeploymentTag                             = "List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the deployment."
+	ProjectTag                                = "List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the project."
 	ServerlessTag                             = "List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the serverless instance."
 	UpdateWarning                             = " Passing this flag replaces preexisting data."
 	EnableWatch                               = "Flag that indicates whether to watch the command until it completes its execution or the watch times out. To set the time that the watch times out, use the --watchTimeout option."

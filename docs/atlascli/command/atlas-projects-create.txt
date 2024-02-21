@@ -78,7 +78,7 @@ Options
    * - --tag
      - stringToString
      - false
-     - List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the cluster. This value defaults to [].
+     - List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the project. This value defaults to [].
    * - --withoutDefaultAlertSettings
      - 
      - false

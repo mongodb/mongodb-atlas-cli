@@ -47,6 +47,8 @@ func TestAtlasProjects(t *testing.T) {
 			projectsEntity,
 			"create",
 			projectName,
+			"--tag", "env=e2e",
+			"--tag", "prod=false",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -82,6 +84,33 @@ func TestAtlasProjects(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		require.NoError(t, err, string(resp))
+	})
+
+	t.Run("Tags", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			projectsEntity,
+			"describe",
+			projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+		var project admin.Group
+		if err := json.Unmarshal(resp, &project); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		require.Len(t, project.GetTags(), 2)
+
+		expectedTags := map[string]string{"env": "e2e", "prod": "false"}
+		for _, tag := range project.GetTags() {
+			expectedValue, ok := expectedTags[tag.GetKey()]
+			if !ok {
+				t.Errorf("unexpected tag key %s in tags: %v, expected tags: %v\n", tag.GetKey(), project.Tags, expectedTags)
+			}
+
+			require.Equal(t, expectedValue, tag.GetValue())
+		}
 	})
 
 	t.Run("Users", func(t *testing.T) {

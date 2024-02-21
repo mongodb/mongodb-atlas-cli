@@ -75,6 +75,10 @@ Options
      - string
      - false
      - Unique 24-digit string that identifies the Atlas user to be granted the Project Owner role on the specified project. If unspecified, this value defaults to the user ID of the oldest Organization Owner.
+   * - --tag
+     - stringToString
+     - false
+     - List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the project. This value defaults to [].
    * - --withoutDefaultAlertSettings
      - 
      - false

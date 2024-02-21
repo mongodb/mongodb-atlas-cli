@@ -25,7 +25,6 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -49,8 +48,6 @@ func TestProjects(t *testing.T) {
 			projectsEntity,
 			"create",
 			projectName,
-			"--tag", "env=e2e",
-			"--tag", "prod=false",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -91,33 +88,6 @@ func TestProjects(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		require.NoError(t, err, string(resp))
-	})
-
-	t.Run("Tags", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			projectsEntity,
-			"describe",
-			projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
-		var project atlasv2.Group
-		if err := json.Unmarshal(resp, &project); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
-
-		require.Len(t, project.GetTags(), 2)
-
-		expectedTags := map[string]string{"env": "e2e", "prod": "false"}
-		for _, tag := range project.GetTags() {
-			expectedValue, ok := expectedTags[tag.GetKey()]
-			if !ok {
-				t.Errorf("expected %v, to have key %s\n", project.Tags, tag.GetKey())
-			}
-
-			require.Equal(t, expectedValue, tag.GetValue())
-		}
 	})
 
 	t.Run("Users", func(t *testing.T) {

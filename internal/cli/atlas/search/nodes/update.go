@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 type UpdateOpts struct {
@@ -60,14 +61,12 @@ func (opts *UpdateOpts) Run() error {
 	}
 
 	if opts.EnableWatch {
-		if _, err := opts.Watch(opts.watcher); err != nil {
-			return err
-		}
-		opts.Template = updateWatchTemplate
-		r, err = opts.store.SearchNodes(opts.ConfigProjectID(), opts.clusterName)
+		watchResult, err := opts.Watch(opts.watcher)
 		if err != nil {
 			return err
 		}
+		opts.Template = updateWatchTemplate
+		r = watchResult.(*admin.ApiSearchDeploymentResponse)
 	}
 
 	return opts.Print(r)

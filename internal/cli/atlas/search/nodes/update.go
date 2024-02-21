@@ -77,7 +77,7 @@ func (opts *UpdateOpts) watcher() (any, bool, error) {
 	if err != nil {
 		return nil, false, err
 	}
-	return nil, *res.StateName == stateIdle, nil
+	return res, *res.StateName == stateIdle, nil
 }
 
 // atlas clusters search nodes update [--clusterName clusterName] [--file filePath].

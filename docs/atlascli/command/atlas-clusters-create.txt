@@ -125,11 +125,11 @@ Options
 
        Mutually exclusive with --file. This value defaults to 1.
    * - --tag
-     - stringToString
+     - key=value
      - false
      - List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the cluster.
 
-       Mutually exclusive with --file. This value defaults to [].
+       Mutually exclusive with --file.
    * - --tier
      - string
      - false

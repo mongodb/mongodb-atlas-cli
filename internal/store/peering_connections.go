@@ -175,7 +175,7 @@ func (s *Store) AWSContainers(projectID string) ([]atlasv2.CloudProviderContaine
 // GCPContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) GCPContainers(projectID string) ([]atlasv2.CloudProviderContainer, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
 			PageNum(0).
 			ItemsPerPage(maxPerPage).

@@ -168,7 +168,7 @@ func (s *Store) DataLakeDeletePrivateEndpoint(projectID, endpointID string) erro
 // CreateInterfaceEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateInterfaceEndpoint(projectID, provider, endpointServiceID string, createRequest *atlasv2.CreateEndpointRequest) (*atlasv2.PrivateLinkEndpoint, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.PrivateEndpointServicesApi.CreatePrivateEndpoint(s.ctx, projectID, provider,
 			endpointServiceID, createRequest).Execute()
 		return result, err
@@ -180,7 +180,7 @@ func (s *Store) CreateInterfaceEndpoint(projectID, provider, endpointServiceID s
 // InterfaceEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) InterfaceEndpoint(projectID, cloudProvider, endpointServiceID, privateEndpointID string) (*atlasv2.PrivateLinkEndpoint, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.PrivateEndpointServicesApi.GetPrivateEndpoint(s.ctx, projectID, cloudProvider, endpointServiceID, privateEndpointID).Execute()
 		return result, err
 	default:
@@ -191,7 +191,7 @@ func (s *Store) InterfaceEndpoint(projectID, cloudProvider, endpointServiceID, p
 // DeleteInterfaceEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteInterfaceEndpoint(projectID, provider, endpointServiceID, privateEndpointID string) error {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		_, _, err := s.clientv2.PrivateEndpointServicesApi.DeletePrivateEndpoint(s.ctx, projectID, provider, privateEndpointID, endpointServiceID).Execute()
 		return err
 	default:
@@ -202,7 +202,7 @@ func (s *Store) DeleteInterfaceEndpoint(projectID, provider, endpointServiceID, 
 // UpdateRegionalizedPrivateEndpointSetting encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateRegionalizedPrivateEndpointSetting(projectID string, enabled bool) (*atlasv2.ProjectSettingItem, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		setting := atlasv2.ProjectSettingItem{
 			Enabled: enabled,
 		}
@@ -217,7 +217,7 @@ func (s *Store) UpdateRegionalizedPrivateEndpointSetting(projectID string, enabl
 // RegionalizedPrivateEndpointSetting encapsulates the logic to manage different cloud providers.
 func (s *Store) RegionalizedPrivateEndpointSetting(projectID string) (*atlasv2.ProjectSettingItem, error) {
 	switch s.service {
-	case config.CloudService:
+	case config.CloudService, config.CloudGovService:
 		result, _, err := s.clientv2.PrivateEndpointServicesApi.GetRegionalizedPrivateEndpointSetting(s.ctx, projectID).Execute()
 		return result, err
 	default:

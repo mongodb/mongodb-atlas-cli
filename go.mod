@@ -29,7 +29,7 @@ require (
 	github.com/klauspost/compress v1.17.6
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mongodb-forks/digest v1.0.5
-	github.com/mongodb-labs/cobra2snooty v0.18.0
+	github.com/mongodb-labs/cobra2snooty v0.18.1
 	github.com/mongodb/mongodb-atlas-kubernetes/v2 v2.1.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c

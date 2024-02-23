@@ -50,7 +50,7 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (interface{}
 	case config.CloudService, config.CloudGovService:
 		res := s.clientv2.OrganizationsApi.ListOrganizations(s.ctx)
 		if opts != nil {
-			res = res.Name(opts.Name).PageNum(opts.PageNum)
+			res = res.Name(opts.Name).PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 		}
 		result, _, err := res.Execute()
 		return result, err

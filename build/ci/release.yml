@@ -363,8 +363,8 @@ tasks:
       - func: "upload dist"
       - command: s3.put
         params:
-          aws_key: ${download_center_aws_key}
-          aws_secret: ${download_center_aws_secret}
+          aws_key: ${aws_key}
+          aws_secret: ${aws_secret}
           local_files_include_filter:
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tar.gz
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.zip
@@ -374,14 +374,14 @@ tasks:
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.json
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.sig
-          remote_file: mongocli/
+          remote_file: ${project}/dist/${revision}_${created_at}/
+          bucket: mongodb-mongocli-build
+          permissions: public-read
+          content_type: ${content_type|application/x-gzip}
+          display_name: internal-bucket
           build_variants:
             - release_mongocli_github
             - release_atlascli_github
-          bucket: downloads.mongodb.org.fsdafdosafbhjdshfakshbdsj
-          permissions: public-read
-          content_type: ${content_type|application/x-gzip}
-          display_name: downloads-center-
       - func: "send slack notification"
         vars:
           TOOL_NAME: atlascli

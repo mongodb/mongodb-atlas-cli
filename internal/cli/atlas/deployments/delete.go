@@ -58,8 +58,11 @@ func (opts *DeleteOpts) Run(ctx context.Context) error {
 		return err
 	}
 	opts.Entry = opts.DeploymentName
-
-	if err := opts.PromptWithMessage("Are you sure you want to terminate %s, this action cannot be undone?"); err != nil {
+	message := "Confirm your backup settings before terminating your cluster.\nAre you sure you want to terminate %s, this action cannot be undone?"
+	if opts.IsLocalDeploymentType() {
+		message = "This operation will delete the deployment, and all of its data\nAre you sure you want to terminate %s, this action cannot be undone?"
+	}
+	if err := opts.PromptWithMessage(message); err != nil {
 		return err
 	}
 

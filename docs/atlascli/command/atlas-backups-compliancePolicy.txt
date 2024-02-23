@@ -12,8 +12,7 @@ atlas backups compliancePolicy
    :depth: 1
    :class: singlecol
 
-Manage cloud backup compliance policy for your project. Use "atlas backups compliancepolicy setup" to enable backup compliance policy
-with a full configuration. Use "atlas backups compliancepolicy enable" to enable backup compliance policy without any configuration.
+Manage cloud backup compliance policy for your project. Use "atlas backups compliancepolicy setup" to enable backup compliance policy with a full configuration. Use "atlas backups compliancepolicy enable" to enable backup compliance policy without any configuration.
 
 Options
 -------

@@ -49,8 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-backups-compliancePolicy` - Manage cloud backup compliance policy for your project. Use "atlas backups compliancepolicy setup" to enable backup compliance policy
-with a full configuration. Use "atlas backups compliancepolicy enable" to enable backup compliance policy without any configuration.
+* :ref:`atlas-backups-compliancePolicy` - Manage cloud backup compliance policy for your project. Use "atlas backups compliancepolicy setup" to enable backup compliance policy with a full configuration. Use "atlas backups compliancepolicy enable" to enable backup compliance policy without any configuration.
 * :ref:`atlas-backups-exports` - Manage cloud backup export jobs for your project.
 * :ref:`atlas-backups-restores` - Manage cloud backup restore jobs for your project.
 * :ref:`atlas-backups-schedule` - Return a cloud backup schedule for the cluster you specify.

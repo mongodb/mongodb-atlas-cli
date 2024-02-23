@@ -435,7 +435,7 @@ tasks:
     patchable: false
     git_tag_only: true
     depends_on:
-        - name: release_atlascli
+        - name: package_goreleaser
           variant: "release_atlascli_github"
     tags: [ "smoke-test", "generate", "repo", "atlascli" ]
     commands:
@@ -447,7 +447,7 @@ tasks:
     patchable: false
     git_tag_only: true
     depends_on:
-        - name: release_mongocli
+        - name: package_goreleaser
           variant: "release_mongocli_github"
     tags: [ "smoke-test", "generate", "repo", "mongocli" ]
     commands:

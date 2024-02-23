@@ -546,16 +546,17 @@ buildvariants:
     display_name: "Release MongoCLI (go-msi)"
     run_on:
       - windows-vsCurrent-small
+    git_tag_only: true
     expansions:
       <<: *go_windows_version
       tool_name: "mongocli"
-      unstable: -unstable
     tasks:
       - name: package_msi
   - name: release_mongocli_github
     display_name: "Release MongoCLI (goreleaser)"
     run_on:
       - rhel80-small
+    git_tag_only: true
     expansions:
       <<: *go_linux_version
       server_version: "4.4.0-rc3"
@@ -570,6 +571,7 @@ buildvariants:
             variant: release_mongocli_msi
   - name: release_atlascli_github
     display_name: "Release AtlasCLI (goreleaser)"
+    git_tag_only: true
     run_on:
       - rhel80-small
     expansions:
@@ -589,6 +591,7 @@ buildvariants:
     display_name: "Release AtlasCLI (go-msi)"
     run_on:
       - windows-vsCurrent-small
+    git_tag_only: true
     expansions:
       <<: *go_windows_version
       tool_name: "atlascli"

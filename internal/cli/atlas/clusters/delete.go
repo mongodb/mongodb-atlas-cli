@@ -104,7 +104,7 @@ Deleting a cluster also deletes any backup snapshots for that cluster.
 				return err
 			}
 			opts.Entry = args[0]
-			return opts.PromptWithMessage("Confirm your backup settings before terminating your cluster.\nAre you sure you want to terminate %s, this action cannot be undone?")
+			return opts.PromptWithMessage("Confirm your backup settings before terminating your cluster. This action cannot be undone.\nAre you sure you want to terminate %s?")
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()

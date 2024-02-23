@@ -558,6 +558,11 @@ buildvariants:
       - rhel80-small
     expansions:
       <<: *go_linux_version
+      server_version: "4.4.0-rc3"
+      goreleaser_file: "build/package/.mongocli.goreleaser.yml"
+      changelog_file: CHANGELOG_MONGOCLI.md
+      package_name: "mongocli"
+      tool_name: "mongocli"
     tasks:
       - name: package_goreleaser
         depends_on:

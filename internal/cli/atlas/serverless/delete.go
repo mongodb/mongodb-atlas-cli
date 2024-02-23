@@ -65,7 +65,7 @@ func DeleteBuilder() *cobra.Command {
 				return err
 			}
 			opts.Entry = args[0]
-			return opts.Prompt()
+			return opts.PromptWithMessage("This operation will delete the instance, all of its data, and any associated backups. This action cannot be undone.\nAre you sure you want to terminate %s?")
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()

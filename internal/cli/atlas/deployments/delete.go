@@ -59,7 +59,7 @@ func (opts *DeleteOpts) Run(ctx context.Context) error {
 	}
 	opts.Entry = opts.DeploymentName
 
-	if err := opts.Prompt(); err != nil {
+	if err := opts.PromptWithMessage("Are you sure you want to terminate %s, this action cannot be undone?"); err != nil {
 		return err
 	}
 

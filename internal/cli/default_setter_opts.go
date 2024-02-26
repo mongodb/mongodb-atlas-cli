@@ -157,7 +157,7 @@ func (opts *DefaultSetterOpts) orgs(filter string) (results interface{}, err err
 		if r.GetTotalCount() > resultsLimit {
 			return nil, errTooManyResults
 		}
-		results = r.Results
+		results = *r.Results
 	case *atlas.Organizations:
 		if r.TotalCount == 0 {
 			return nil, errNoResults

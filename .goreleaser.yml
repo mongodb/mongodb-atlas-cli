@@ -141,18 +141,18 @@ changelog:
     - '^test:'
     - '^task:'
     - '^build(deps):'
-signs:
-  - id: linux_artifacts
-    signature: "${artifact}.sig"
-    cmd: "./build/package/linux_notarize.sh"
-    ids:
-      - linux_archives
-      - linux_package
-      - mongodb-atlas
-    env:
-      - TOOL_NAME=atlascli
-    artifacts: all
-    output: true
+#signs:
+#  - id: linux_artifacts
+#    signature: "${artifact}.sig"
+#    cmd: "./build/package/linux_notarize.sh"
+#    ids:
+#      - linux_archives
+#      - linux_package
+#      - mongodb-atlas
+#    env:
+#      - TOOL_NAME=atlascli
+#    artifacts: all
+#    output: true
 #publishers:
 #  - name: my-publisher
 #  # IDs of the artifacts we want to sign

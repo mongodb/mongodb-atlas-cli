@@ -15,6 +15,11 @@
 
 set -Eeou pipefail
 
+if [[ "${unstable-}" == "-unstable" ]]; then
+  echo "skip notification"
+  exit 0
+fi
+
 VERSION="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
 TOOL_NAME_MESSAGE="MongoDB CLI"

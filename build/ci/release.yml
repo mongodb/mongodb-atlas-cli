@@ -153,6 +153,7 @@ functions:
           - revision
           - created_at
           - TOOL_NAME
+          - unstable
         binary: build/package/send-slack-notification.sh
   "generate download archive json":
     - command: subprocess.exec
@@ -274,7 +275,7 @@ tasks:
       - func: "generate msi"
         vars:
           TOOL_NAME: ${tool_name}
-          unstable: -unstable
+          unstable: ${unstable}
       - func: "uninstall go-msi"
       - command: s3.put
         params:
@@ -282,31 +283,10 @@ tasks:
           aws_secret: ${aws_secret}
           local_files_include_filter:
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.nupkg
           remote_file: ${project}/dist/${revision}_${created_at}/
           bucket: mongodb-mongocli-build
           permissions: public-read
           content_type: ${content_type|application/octet-stream}
-      - command: s3.put
-        params:
-          aws_key: ${aws_key}
-          aws_secret: ${aws_secret}
-          local_files_include_filter:
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.nuspec
-          remote_file: ${project}/dist/${revision}_${created_at}/
-          bucket: mongodb-mongocli-build
-          permissions: public-read
-          content_type: ${content_type|text/xml}
-      - command: s3.put
-        params:
-          aws_key: ${aws_key}
-          aws_secret: ${aws_secret}
-          local_files_include_filter:
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/tools/*.ps1
-          remote_file: ${project}/dist/${revision}_${created_at}/
-          bucket: mongodb-mongocli-build
-          permissions: public-read
-          content_type: ${content_type|text/plain}
   - name: package_goreleaser
     tags: ["packaging"]
     depends_on:
@@ -329,11 +309,11 @@ tasks:
           env:
             TOOL_NAME: ${tool_name}
             BUCKET: mongodb-mongocli-build
-            unstable: -unstable
+            unstable: ${unstable}
           binary: build/package/download-msi.sh
       - func: "package"
         vars:
-          unstable: -unstable
+          unstable: ${unstable}
           tool_name: ${tool_name}
           goreleaser_config: ${goreleaser_file}
           changelog_file: ${changelog_file}
@@ -345,9 +325,9 @@ tasks:
           GRS_PASSWORD_MONGOCLI: ${garasign_password_mongocli}
       - func: "rename pkg"
         vars:
-          unstable: -unstable
-          latest_deb: ~latest
-          latest_rpm: .latest
+          unstable: ${unstable}
+          latest_deb: ${latest_deb}
+          latest_rpm: ${latest_rpm}
           package_name: ${package_name}
           meta_package_name: ${meta_package_name}
           tool_name: ${tool_name}
@@ -381,6 +361,30 @@ tasks:
           FEED_FILE_NAME: "${package_name}.json"
           TOOL_NAME: ${tool_name}
       - func: "upload dist"
+      - command: s3.put
+        params:
+          aws_key: ${download_center_aws_key}
+          aws_secret: ${download_center_aws_secret}
+          local_files_include_filter:
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tar.gz
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.zip
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.deb
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.rpm
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tgz
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.json
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
+            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.sig
+          remote_file: mongocli/
+          build_variants:
+            - release_mongocli_github
+            - release_atlascli_github
+          bucket: downloads.mongodb.org
+          permissions: public-read
+          content_type: ${content_type|application/x-gzip}
+          display_name: downloads-center-
+      - func: "send slack notification"
+        vars:
+          TOOL_NAME: atlascli
   - name: push_mongocli_generate
     patchable: false
     stepback: false
@@ -427,231 +431,11 @@ tasks:
         vars:
           tool_name: atlascli
           task_type: postpkg
-  - name: release_mongocli
-    stepback: false
-    git_tag_only: true
-    depends_on:
-      - name: compile_mongocli
-        variant: "code_health"
-      - name: release_msi
-        variant: "release_mongocli_msi"
-    commands:
-      - func: "generate notices"
-      - func: "install goreleaser"
-      - func: "install podman"
-      - func: "install macos notarization service"
-      - command: subprocess.exec
-        type: test
-        params:
-          working_dir: src/github.com/mongodb/mongodb-atlas-cli
-          include_expansions_in_env:
-            - project
-            - revision
-            - created_at
-          env:
-            TOOL_NAME: mongocli
-            BUCKET: mongodb-mongocli-build
-          binary: build/package/download-msi.sh
-      - func: "package"
-        vars:
-          tool_name: "mongocli"
-          goreleaser_config: build/package/.mongocli.goreleaser.yml
-          changelog_file: CHANGELOG_MONGOCLI.md
-          ARTIFACTORY_USERNAME: ${artifactory_username}
-          ARTIFACTORY_PASSWORD: ${artifactory_password}
-          GRS_USERNAME_MONGOCLI: ${garasign_username_mongocli}
-          GRS_PASSWORD_MONGOCLI: ${garasign_password_mongocli}
-      - func: "rename pkg"
-        vars:
-          package_name: mongocli
-          tool_name: mongocli
-      - command: archive.targz_pack
-        params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-deb-x86_64.tgz
-          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt/x86_64
-          include:
-            - "*.deb"
-      - command: archive.targz_pack
-        params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-deb-arm64.tgz
-          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt/arm64
-          include:
-            - "*.deb"
-      - command: archive.targz_pack
-        params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-rpm-x86_64.tgz
-          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum/x86_64
-          include:
-            - "*.rpm"
-      - command: archive.targz_pack
-        params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-rpm-aarch64.tgz
-          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum/arm64
-          include:
-            - "*.rpm"
-      - func: "generate download archive json"
-        vars:
-          FEED_FILE_NAME: mongocli.json
-          TOOL_NAME: mongocli
-      - func: "upload dist"
-      - command: s3.put
-        params:
-          aws_key: ${download_center_aws_key}
-          aws_secret: ${download_center_aws_secret}
-          local_files_include_filter:
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tar.gz
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.zip
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.deb
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.rpm
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tgz
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.json
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.sig
-          remote_file: mongocli/
-          bucket: downloads.mongodb.org
-          permissions: public-read
-          content_type: ${content_type|application/x-gzip}
-          display_name: downloads-center-
-      - func: "send slack notification"
-        vars:
-          TOOL_NAME: mongocli
-  - name: release_atlascli
-    stepback: false
-    git_tag_only: true
-    depends_on:
-      - name: compile_atlascli
-        variant: "code_health"
-      - name: release_msi
-        variant: "release_atlascli_msi"
-    commands:
-      - func: "generate notices"
-      - func: "install goreleaser"
-      - func: "install podman"
-      - func: "install macos notarization service"
-      - command: subprocess.exec
-        type: test
-        params:
-          working_dir: src/github.com/mongodb/mongodb-atlas-cli
-          include_expansions_in_env:
-            - project
-            - revision
-            - created_at
-          env:
-            TOOL_NAME: atlascli
-            BUCKET: mongodb-mongocli-build
-          binary: build/package/download-msi.sh
-      - func: "package"
-        vars:
-          tool_name: "atlascli"
-          goreleaser_config: build/package/.atlascli.goreleaser.yml
-          changelog_file: CHANGELOG_ATLASCLI.md
-          ARTIFACTORY_USERNAME: ${artifactory_username}
-          ARTIFACTORY_PASSWORD: ${artifactory_password}
-          GRS_USERNAME: ${garasign_username}
-          GRS_PASSWORD: ${garasign_password}
-      - func: "rename pkg"
-        vars:
-          package_name: mongodb-atlas-cli
-          meta_package_name: mongodb-atlas
-          tool_name: atlascli
-      - command: archive.targz_pack
-        params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/atlascli-deb-x86_64.tgz
-          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt/x86_64
-          include:
-            - "*.deb"
-      - command: archive.targz_pack
-        params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/atlascli-deb-arm64.tgz
-          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt/arm64
-          include:
-            - "*.deb"
-      - command: archive.targz_pack
-        params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/atlascli-rpm-x86_64.tgz
-          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum/x86_64
-          include:
-            - "*.rpm"
-      - command: archive.targz_pack
-        params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/atlascli-rpm-aarch64.tgz
-          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum/arm64
-          include:
-            - "*.rpm"
-      - func: "generate download archive json"
-        vars:
-          FEED_FILE_NAME: mongodb-atlas-cli.json
-          TOOL_NAME: atlascli
-      - func: "upload dist"
-      - command: s3.put
-        params:
-          aws_key: ${download_center_aws_key}
-          aws_secret: ${download_center_aws_secret}
-          local_files_include_filter:
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tar.gz
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.zip
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.deb
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.rpm
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tgz
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.json
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.sig
-          remote_file: mongocli/
-          bucket: downloads.mongodb.org
-          permissions: public-read
-          content_type: ${content_type|application/x-gzip}
-          display_name: downloads-center-
-      - func: "send slack notification"
-        vars:
-          TOOL_NAME: atlascli
-  - name: release_msi
-    stepback: false
-    git_tag_only: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-    commands:
-      - func: "install go-msi"
-      - func: "generate msi"
-        vars:
-          TOOL_NAME: ${tool_name}
-      - func: "uninstall go-msi"
-      - command: s3.put
-        params:
-          aws_key: ${aws_key}
-          aws_secret: ${aws_secret}
-          local_files_include_filter:
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.nupkg
-          remote_file: ${project}/dist/${revision}_${created_at}/
-          bucket: mongodb-mongocli-build
-          permissions: public-read
-          content_type: ${content_type|application/octet-stream}
-      - command: s3.put
-        params:
-          aws_key: ${aws_key}
-          aws_secret: ${aws_secret}
-          local_files_include_filter:
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.nuspec
-          remote_file: ${project}/dist/${revision}_${created_at}/
-          bucket: mongodb-mongocli-build
-          permissions: public-read
-          content_type: ${content_type|text/xml}
-      - command: s3.put
-        params:
-          aws_key: ${aws_key}
-          aws_secret: ${aws_secret}
-          local_files_include_filter:
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.ps1
-          remote_file: ${project}/dist/${revision}_${created_at}/
-          bucket: mongodb-mongocli-build
-          permissions: public-read
-          content_type: ${content_type|text/plain}
   - name: pkg_test_repo_atlascli
     patchable: false
     git_tag_only: true
     depends_on:
-        - name: release_atlascli
+        - name: package_goreleaser
           variant: "release_atlascli_github"
     tags: [ "smoke-test", "generate", "repo", "atlascli" ]
     commands:
@@ -663,7 +447,7 @@ tasks:
     patchable: false
     git_tag_only: true
     depends_on:
-        - name: release_mongocli
+        - name: package_goreleaser
           variant: "release_mongocli_github"
     tags: [ "smoke-test", "generate", "repo", "mongocli" ]
     commands:
@@ -689,6 +473,7 @@ buildvariants:
     expansions:
       <<: *go_windows_version
       tool_name: "mongocli"
+      unstable: -unstable
     tasks:
       - name: package_msi
   - name: go_atlascli_msi_snapshot
@@ -698,6 +483,7 @@ buildvariants:
     expansions:
       <<: *go_windows_version
       tool_name: "atlascli"
+      unstable: -unstable
     tasks:
       - name: package_msi
   - name: goreleaser_mongocli_snapshot
@@ -711,6 +497,9 @@ buildvariants:
       changelog_file: CHANGELOG_MONGOCLI.md
       package_name: "mongocli"
       tool_name: "mongocli"
+      latest_deb: ~latest
+      latest_rpm: .latest
+      unstable: -unstable
     tasks:
       - name: package_goreleaser
         depends_on:
@@ -728,6 +517,9 @@ buildvariants:
       package_name: "mongodb-atlas-cli"
       meta_package_name: "mongodb-atlas"
       tool_name: "atlascli"
+      latest_deb: ~latest
+      latest_rpm: .latest
+      unstable: -unstable
     tasks:
       - name: package_goreleaser
         depends_on:
@@ -754,36 +546,57 @@ buildvariants:
     display_name: "Release MongoCLI (go-msi)"
     run_on:
       - windows-vsCurrent-small
+    git_tag_only: true
     expansions:
       <<: *go_windows_version
       tool_name: "mongocli"
     tasks:
-      - name: release_msi
+      - name: package_msi
   - name: release_mongocli_github
     display_name: "Release MongoCLI (goreleaser)"
     run_on:
       - rhel80-small
+    git_tag_only: true
     expansions:
       <<: *go_linux_version
+      server_version: "4.4.0-rc3"
+      goreleaser_file: "build/package/.mongocli.goreleaser.yml"
+      changelog_file: CHANGELOG_MONGOCLI.md
+      package_name: "mongocli"
+      tool_name: "mongocli"
     tasks:
-      - name: release_mongocli
+      - name: package_goreleaser
+        depends_on:
+          - name: package_msi
+            variant: release_mongocli_msi
   - name: release_atlascli_github
     display_name: "Release AtlasCLI (goreleaser)"
+    git_tag_only: true
     run_on:
       - rhel80-small
     expansions:
       <<: *go_linux_version
+      server_version: "4.4.0-rc3"
+      goreleaser_file: "build/package/.atlascli.goreleaser.yml"
+      changelog_file: CHANGELOG_ATLASCLI.md
+      package_name: "mongodb-atlas-cli"
+      meta_package_name: "mongodb-atlas"
+      tool_name: "atlascli"
     tasks:
-      - name: release_atlascli
+      - name: package_goreleaser
+        depends_on:
+          - name: package_msi
+            variant: release_atlascli_msi
   - name: release_atlascli_msi
     display_name: "Release AtlasCLI (go-msi)"
     run_on:
       - windows-vsCurrent-small
+    git_tag_only: true
     expansions:
       <<: *go_windows_version
       tool_name: "atlascli"
     tasks:
-      - name: release_msi
+      - name: package_msi
   - name: release_mongocli_publish
     display_name: "Publish MongoCLI Generator"
     run_on:

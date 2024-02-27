@@ -26,7 +26,7 @@ require (
 	github.com/google/go-github/v50 v50.2.0
 	github.com/google/uuid v1.6.0
 	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02
-	github.com/klauspost/compress v1.17.6
+	github.com/klauspost/compress v1.17.7
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mongodb-forks/digest v1.0.5
 	github.com/mongodb-labs/cobra2snooty v0.18.1

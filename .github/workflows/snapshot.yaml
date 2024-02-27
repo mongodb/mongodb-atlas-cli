@@ -1,0 +1,26 @@
+---
+name: Snapshot
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+      - name: Install goreleaser
+        run: |
+          echo 'deb [trusted=yes] https://repo.goreleaser.com/apt/ /' | sudo tee /etc/apt/sources.list.d/goreleaser.list
+          sudo apt update
+          sudo apt install goreleaser
+      - run: |
+          ./build/package/generate-notices.sh
+          export VERSION_GIT="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+          goreleaser --config "build/package/.atlascli.goreleaser.yml" --rm-dist --release-notes "CHANGELOG_ATLASCLI.md" --snapshot -p 1

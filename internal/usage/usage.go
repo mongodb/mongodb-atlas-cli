@@ -301,7 +301,7 @@ dbName and collection are required only for built-in roles.`
 	GCPProjectID                              = "Unique identifier of the GCP project in which the network peer resides."
 	Network                                   = "Unique identifier of the Network Peering connection in the Atlas project."
 	APIRegion                                 = "Code that indicates which regional URL MongoDB uses to access the third-party API. Valid values are US and EU."
-	DatadogAPIRegion                          = "Code that indicates which regional URL MongoDB uses to access the Datadog API. Valid values are US, EU, US3, and US5."
+	DatadogAPIRegion                          = "Code that indicates which regional URL MongoDB uses to access the Datadog API. Valid values are US, EU, US3, US5, and AP1."
 	SkipMongosh                               = "Flag that indicates whether to skip accessing your deployment with MongoDB Shell."
 	SkipSampleData                            = "Flag that indicates whether to skip loading sample data into your MongoDB cluster."
 	SkipSampleDataDeployment                  = "Flag that indicates whether to skip loading sample data into your MongoDB deployment."

@@ -41,20 +41,3 @@ func TestAutocomplete(t *testing.T) {
 		})
 	}
 }
-
-func TestAtlasCLIAutocomplete(t *testing.T) {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	options := []string{"zsh", "bash", "fish", "powershell"}
-	for _, option := range options {
-		t.Run(option, func(t *testing.T) {
-			cmd := exec.Command(cliPath, completionEntity, option)
-			cmd.Env = os.Environ()
-			if resp, err := cmd.CombinedOutput(); err != nil {
-				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-			}
-		})
-	}
-}

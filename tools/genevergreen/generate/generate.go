@@ -185,7 +185,7 @@ func PublishStableTasks(c *shrub.Configuration, toolName string) {
 			Variant: "code_health",
 		},
 		{
-			Name:    fmt.Sprintf("release_%s", toolName),
+			Name:    "package_goreleaser",
 			Variant: fmt.Sprintf("release_%s_github", toolName),
 		},
 	}

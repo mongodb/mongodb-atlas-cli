@@ -282,6 +282,7 @@ tasks:
           aws_key: ${aws_key}
           aws_secret: ${aws_secret}
           local_files_include_filter:
+            - src/github.com/mongodb/mongodb-atlas-cli/bin/*.exe
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
           remote_file: ${project}/dist/${revision}_${created_at}/
           bucket: mongodb-mongocli-build
@@ -311,6 +312,19 @@ tasks:
             BUCKET: mongodb-mongocli-build
             unstable: ${unstable}
           binary: build/package/download-msi.sh
+      - command: subprocess.exec
+        type: test
+        params:
+          working_dir: src/github.com/mongodb/mongodb-atlas-cli
+          include_expansions_in_env:
+            - project
+            - revision
+            - created_at
+          env:
+            TOOL_NAME: ${tool_name}
+            BUCKET: mongodb-mongocli-build
+            unstable: ${unstable}
+          binary: build/package/download-exe.sh
       - func: "package"
         vars:
           unstable: ${unstable}

@@ -376,7 +376,6 @@ tasks:
           remote_file: mongocli/
           build_variants:
             - release_mongocli_github
-            - release_atlascli_github
           bucket: downloads.mongodb.org
           permissions: public-read
           content_type: ${content_type|application/x-gzip}
@@ -392,14 +391,6 @@ tasks:
         vars:
           tool_name: mongocli
           task_type: snapshot
-  - name: push_atlascli_generate
-    patchable: false
-    stepback: false
-    commands:
-      - func: "generate evergreen"
-        vars:
-          tool_name: atlascli
-          task_type: snapshot
   - name: push_stable_mongocli_generate
     git_tag_only: true
     stepback: false
@@ -408,14 +399,6 @@ tasks:
         vars:
           tool_name: mongocli
           task_type: publish
-  - name: push_stable_atlascli_generate
-    git_tag_only: true
-    stepback: false
-    commands:
-      - func: "generate evergreen"
-        vars:
-          tool_name: atlascli
-          task_type: publish
   - name: pkg_test_mongocli_generate
     tags: [ "smoke-test", "mongocli", "pkg" ]
     commands:
@@ -423,25 +406,6 @@ tasks:
         vars:
           tool_name: mongocli
           task_type: postpkg
-  - name: pkg_test_atlascli_generate
-    tags: [ "smoke-test", "atlascli", "pkg" ]
-    commands:
-      - func: "generate evergreen"
-        vars:
-          tool_name: atlascli
-          task_type: postpkg
-  - name: pkg_test_repo_atlascli
-    patchable: false
-    git_tag_only: true
-    depends_on:
-        - name: package_goreleaser
-          variant: "release_atlascli_github"
-    tags: [ "smoke-test", "generate", "repo", "atlascli" ]
-    commands:
-      - func: "generate evergreen"
-        vars:
-          tool_name: atlascli
-          task_type: repo
   - name: pkg_test_repo_mongocli
     patchable: false
     git_tag_only: true
@@ -454,16 +418,6 @@ tasks:
         vars:
           tool_name: mongocli
           task_type: repo
-  - name: pkg_test_windows
-    tags: [ "smoke-test", "windows" ]
-    depends_on:
-      - name: package_msi
-        variant: go_atlascli_msi_snapshot
-    commands:
-      - func: "powershell build"
-        vars:
-          file: windows_post_package_test
-          tool_name: atlascli
 buildvariants:
   - name: go_mongocli_msi_snapshot
     display_name: "Packaging MongoCLI (go-msi)"
@@ -472,16 +426,6 @@ buildvariants:
     expansions:
       <<: *go_windows_version
       tool_name: "mongocli"
-      unstable: -unstable
-    tasks:
-      - name: package_msi
-  - name: go_atlascli_msi_snapshot
-    display_name: "Packaging AtlasCLI (go-msi)"
-    run_on:
-      - windows-vsCurrent-small
-    expansions:
-      <<: *go_windows_version
-      tool_name: "atlascli"
       unstable: -unstable
     tasks:
       - name: package_msi
@@ -504,26 +448,6 @@ buildvariants:
         depends_on:
           - name: package_msi
             variant: "go_mongocli_msi_snapshot"
-  - name: goreleaser_atlascli_snapshot
-    display_name: "Packaging AtlasCLI (goreleaser)"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-      server_version: "4.4.0-rc3"
-      goreleaser_file: "build/package/.atlascli.goreleaser.yml"
-      changelog_file: CHANGELOG_ATLASCLI.md
-      package_name: "mongodb-atlas-cli"
-      meta_package_name: "mongodb-atlas"
-      tool_name: "atlascli"
-      latest_deb: ~latest
-      latest_rpm: .latest
-      unstable: -unstable
-    tasks:
-      - name: package_goreleaser
-        depends_on:
-          - name: package_msi
-            variant: "go_atlascli_msi_snapshot"
   - name: publish_mongocli_snapshot
     display_name: "Publish MongoCLI Snapshot"
     run_on:
@@ -533,14 +457,6 @@ buildvariants:
       server_version: "4.4.0-rc3"
     tasks:
       - name: push_mongocli_generate
-  - name: publish_atlascli_snapshot
-    display_name: "Publish AtlasCLI Snapshot"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: push_atlascli_generate
   - name: release_mongocli_msi
     display_name: "Release MongoCLI (go-msi)"
     run_on:
@@ -568,34 +484,6 @@ buildvariants:
         depends_on:
           - name: package_msi
             variant: release_mongocli_msi
-  - name: release_atlascli_github
-    display_name: "Release AtlasCLI (goreleaser)"
-    git_tag_only: true
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-      server_version: "4.4.0-rc3"
-      goreleaser_file: "build/package/.atlascli.goreleaser.yml"
-      changelog_file: CHANGELOG_ATLASCLI.md
-      package_name: "mongodb-atlas-cli"
-      meta_package_name: "mongodb-atlas"
-      tool_name: "atlascli"
-    tasks:
-      - name: package_goreleaser
-        depends_on:
-          - name: package_msi
-            variant: release_atlascli_msi
-  - name: release_atlascli_msi
-    display_name: "Release AtlasCLI (go-msi)"
-    run_on:
-      - windows-vsCurrent-small
-    git_tag_only: true
-    expansions:
-      <<: *go_windows_version
-      tool_name: "atlascli"
-    tasks:
-      - name: package_msi
   - name: release_mongocli_publish
     display_name: "Publish MongoCLI Generator"
     run_on:
@@ -604,14 +492,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: push_stable_mongocli_generate
-  - name: release_atlascli_publish
-    display_name: "Publish AtlasCLI Generator"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: push_stable_atlascli_generate
   - name: pkg_smoke_tests_docker_mongocli
     display_name: "Post packaging smoke tests (Docker / MongoCLI)"
     run_on: ubuntu2004-small
@@ -619,28 +499,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: .smoke-test .mongocli .pkg
-  - name: pkg_smoke_tests_docker_atlascli
-    display_name: "Post packaging smoke tests (Docker / AtlasCLI)"
-    run_on: ubuntu2004-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: .smoke-test .atlascli .pkg
-  - name: pkg_smoke_tests_windows_atlascli
-    display_name: "Post packaging smoke tests (Windows / AtlasCLI)"
-    run_on: windows-vsCurrent-small
-    expansions:
-      unstable: -unstable
-    tasks:
-      - name: .smoke-test .windows
-  - name: release_atlascli_repo_test
-    display_name: "Test AtlasCLI repo"
-    expansions:
-      <<: *go_linux_version
-    run_on:
-      - ubuntu2004-small
-    tasks:
-      - name: .smoke-test .generate .repo .atlascli
   - name: release_mongocli_repo_test
     display_name: "Test MongoCLI repo"
     expansions:

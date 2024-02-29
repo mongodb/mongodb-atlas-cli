@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright 2024 MongoDB Inc
+# Copyright 2021 MongoDB Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,12 +25,20 @@ if [[ "${unstable-}" == "-unstable" ]]; then
 	VERSION_NAME="$VERSION_GIT-next"
 fi
 
+PACKAGE_NAME="mongocli_${VERSION_NAME}_windows_x86_64.msi"
+if [[ "${TOOL_NAME:?}" == atlascli ]]; then
+	PACKAGE_NAME="mongodb-atlas-cli_${VERSION_NAME}_windows_x86_64.msi"
+fi
+
 BINARY_NAME="mongocli.exe"
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
 	BINARY_NAME="atlas.exe"
 fi
 
 pushd bin
+
+echo "downloading https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${PACKAGE_NAME} into $PWD"
+curl "https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${PACKAGE_NAME}" --output "${PACKAGE_NAME}"
 
 echo "downloading https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${BINARY_NAME} into $PWD"
 curl "https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${BINARY_NAME}" --output "${BINARY_NAME}"

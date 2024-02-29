@@ -311,20 +311,7 @@ tasks:
             TOOL_NAME: ${tool_name}
             BUCKET: mongodb-mongocli-build
             unstable: ${unstable}
-          binary: build/package/download-msi.sh
-      - command: subprocess.exec
-        type: test
-        params:
-          working_dir: src/github.com/mongodb/mongodb-atlas-cli
-          include_expansions_in_env:
-            - project
-            - revision
-            - created_at
-          env:
-            TOOL_NAME: ${tool_name}
-            BUCKET: mongodb-mongocli-build
-            unstable: ${unstable}
-          binary: build/package/download-exe.sh
+          binary: build/package/download-win-binaries.sh
       - func: "package"
         vars:
           unstable: ${unstable}

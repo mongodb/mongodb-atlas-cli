@@ -26,11 +26,16 @@ if [[ "${unstable-}" == "-unstable" ]]; then
 fi
 
 PACKAGE_NAME="mongocli_${VERSION_NAME}_windows_x86_64.msi"
+BINARY_NAME="mongocli.exe"
 if [[ "${TOOL_NAME:?}" == atlascli ]]; then
 	PACKAGE_NAME="mongodb-atlas-cli_${VERSION_NAME}_windows_x86_64.msi"
+	BINARY_NAME="atlas.exe"
 fi
 
 pushd bin
 
 echo "downloading https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${PACKAGE_NAME} into $PWD"
 curl "https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${PACKAGE_NAME}" --output "${PACKAGE_NAME}"
+
+echo "downloading https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${BINARY_NAME} into $PWD"
+curl "https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${BINARY_NAME}" --output "${BINARY_NAME}"

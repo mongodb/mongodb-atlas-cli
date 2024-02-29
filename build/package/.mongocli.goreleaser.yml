@@ -28,9 +28,13 @@ builds:
         - cmd: ./build/package/mongocli_mac_notarize.sh
           output: true
   - <<: *build_defaults
+    builder: prebuilt
     id: windows
     goos: [windows]
     goarch: [amd64]
+    goamd64: [v1]
+    prebuilt:
+      path: ./bin/mongocli.exe
     hooks:
       post:
         - cmd: ./build/package/windows_notarize.sh

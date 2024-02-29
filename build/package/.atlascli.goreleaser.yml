@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
 project_name: atlascli
 
 monorepo:
@@ -28,9 +29,13 @@ builds:
         - cmd: ./build/package/atlascli_mac_notarize.sh
           output: true
   - <<: *build_defaults
+    builder: prebuilt
     id: windows
     goos: [windows]
     goarch: [amd64]
+    goamd64: [v1]
+    prebuilt:
+      path: ./bin/atlas.exe
     hooks:
       post:
         - cmd: ./build/package/windows_notarize.sh

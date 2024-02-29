@@ -269,7 +269,6 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-        patch_optional: true
     commands:
       - func: "install go-msi"
       - func: "generate msi"
@@ -293,7 +292,6 @@ tasks:
     depends_on:
       - name: compile
         variant: "code_health"
-        patch_optional: true
     commands:
       - func: "generate notices"
       - func: "install goreleaser"

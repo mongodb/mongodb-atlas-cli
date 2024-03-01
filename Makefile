@@ -111,26 +111,17 @@ gen-docs: ## Generate docs for mongocli commands
 	go run -ldflags "$(MCLI_LINKER_FLAGS)" ./tools/mongoclidocs/main.go
 
 .PHONY: build
-build: build-mongocli ## Generate a binary for mongocli
-
-.PHONY: build-all
-build-all: build-mongocli ## Generate a binary for both CLIs
-
-.PHONY: build-mongocli
-build-mongocli: ## Generate a mongocli binary in ./bin
+build: ## Generate a mongocli binary in ./bin
 	@echo "==> Building $(MCLI_BINARY_NAME) binary"
 	go build -ldflags "$(MCLI_LINKER_FLAGS)" -o $(MCLI_DESTINATION) $(MCLI_SOURCE_FILES)
 
 .PHONY: build-debug
-build-debug: build-mongocli-debug ## Generate binaries in ./bin for debugging both CLIs
-
-.PHONY: build-mongocli-debug
-build-mongocli-debug: ## Generate a binary in ./bin for debugging mongocli
+build-debug: ## Generate a binary in ./bin for debugging mongocli
 	@echo "==> Building $(MCLI_BINARY_NAME) binary for debugging"
 	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(MCLI_LINKER_FLAGS)" -o $(MCLI_DESTINATION) $(MCLI_SOURCE_FILES)
 
 .PHONY: e2e-test
-e2e-test: build-all ## Run E2E tests
+e2e-test: build ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI_* environment variables are exported
 	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
@@ -151,10 +142,7 @@ unit-test: ## Run unit-tests
 	$(TEST_CMD) --tags="$(UNIT_TAGS)" -race -cover -count=1 -coverprofile $(COVERAGE) ./...
 
 .PHONY: install
-install: install-mongocli ## Install binaries in $GOPATH/bin for both CLIs
-
-.PHONY: install-mongocli
-install-mongocli: ## Install mongocli binary in $GOPATH/bin
+install: ## Install mongocli binary in $GOPATH/bin
 	@echo "==> Installing $(MCLI_BINARY_NAME) to $(MCLI_INSTALL_PATH)"
 	go install -ldflags "$(MCLI_LINKER_FLAGS)" $(MCLI_SOURCE_FILES)
 	@echo "==> Done..."

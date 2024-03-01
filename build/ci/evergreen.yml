@@ -52,13 +52,7 @@ functions:
       type: test
       params:
         <<: *go_options
-        command: make build-all
-  "build mongocli":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        command: make build-mongocli
+        command: make build
   "e2e test":
     - command: subprocess.exec
       type: test

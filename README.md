@@ -29,7 +29,7 @@ cd mongodb-atlas-cli
 To build `atlascli`, run:
 
 ```bash
-make build-atlascli
+make build
 ```
 
 The resulting `atlas` binary is placed in `./bin`.
@@ -39,10 +39,10 @@ The resulting `atlas` binary is placed in `./bin`.
 To install the `atlas` binary in `$GOPATH/bin`, run:
 
 ```bash
-make install-atlascli
+make install
 ```
 
-**Note:** running `make build-atlascli` is not needed when running `make install-atlascli`.
+**Note:** running `make build` is not needed when running `make install`.
 
 
 ## Usage

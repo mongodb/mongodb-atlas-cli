@@ -187,8 +187,3 @@ issues:
     - path: internal/test/fixture # Don't check for magic numbers on fixtures.
       linters:
         - gomnd
-    - path: internal/kubernetes/*
-      linters:
-        - nolintlint
-        - gci
-        - gocyclo

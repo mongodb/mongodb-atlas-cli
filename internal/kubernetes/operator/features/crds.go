@@ -20,11 +20,10 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
+	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/crds"
 	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/runtime"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/crds"
 )
 
 const (

@@ -73,7 +73,7 @@ type AtlasProjectResult struct {
 	Teams   []*akov2.AtlasTeam
 }
 
-func BuildAtlasProject(projectStore atlas.OperatorProjectStore, validator features.FeatureValidator, orgID, projectID, targetNamespace string, includeSecret bool, dictionary map[string]string, version string) (*AtlasProjectResult, error) {
+func BuildAtlasProject(projectStore atlas.OperatorProjectStore, validator features.FeatureValidator, orgID, projectID, targetNamespace string, includeSecret bool, dictionary map[string]string, version string) (*AtlasProjectResult, error) { //nolint:gocyclo
 	data, err := projectStore.Project(projectID)
 	if err != nil {
 		return nil, err
@@ -84,43 +84,7 @@ func BuildAtlasProject(projectStore atlas.OperatorProjectStore, validator featur
 		return nil, ErrAtlasProject
 	}
 
-	projectResult := &akov2.AtlasProject{
-		TypeMeta: v1.TypeMeta{
-			Kind:       "AtlasProject",
-			APIVersion: "atlas.mongodb.com/v1",
-		},
-		ObjectMeta: v1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(project.Name, dictionary),
-			Namespace: targetNamespace,
-			Labels: map[string]string{
-				features.ResourceVersion: version,
-			},
-		},
-		Spec: akov2.AtlasProjectSpec{
-			Name:                          project.Name,
-			ConnectionSecret:              nil,
-			ProjectIPAccessList:           nil,
-			PrivateEndpoints:              nil,
-			CloudProviderAccessRoles:      nil,
-			AlertConfigurations:           nil,
-			AlertConfigurationSyncEnabled: false,
-			NetworkPeers:                  nil,
-			WithDefaultAlertsSettings:     pointer.GetOrDefault(project.WithDefaultAlertsSettings, false),
-			X509CertRef:                   nil, // not available for import
-			Integrations:                  nil,
-			EncryptionAtRest:              nil,
-			Auditing:                      nil,
-			Settings:                      nil,
-			CustomRoles:                   nil,
-			Teams:                         nil,
-			RegionUsageRestrictions:       atlas.StringOrEmpty(project.RegionUsageRestrictions),
-		},
-		Status: akov2status.AtlasProjectStatus{
-			Common: akov2status.Common{
-				Conditions: []akov2status.Condition{},
-			},
-		},
-	}
+	projectResult := newAtlasProject(project, dictionary, targetNamespace, version)
 
 	result := &AtlasProjectResult{
 		Project: projectResult,
@@ -237,6 +201,46 @@ func BuildAtlasProject(projectStore atlas.OperatorProjectStore, validator featur
 	return result, err
 }
 
+func newAtlasProject(project *atlasv2.Group, dictionary map[string]string, targetNamespace string, version string) *akov2.AtlasProject {
+	return &akov2.AtlasProject{
+		TypeMeta: v1.TypeMeta{
+			Kind:       "AtlasProject",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: v1.ObjectMeta{
+			Name:      resources.NormalizeAtlasName(project.Name, dictionary),
+			Namespace: targetNamespace,
+			Labels: map[string]string{
+				features.ResourceVersion: version,
+			},
+		},
+		Spec: akov2.AtlasProjectSpec{
+			Name:                          project.Name,
+			ConnectionSecret:              nil,
+			ProjectIPAccessList:           nil,
+			PrivateEndpoints:              nil,
+			CloudProviderAccessRoles:      nil,
+			AlertConfigurations:           nil,
+			AlertConfigurationSyncEnabled: false,
+			NetworkPeers:                  nil,
+			WithDefaultAlertsSettings:     pointer.GetOrDefault(project.WithDefaultAlertsSettings, false),
+			X509CertRef:                   nil, // not available for import
+			Integrations:                  nil,
+			EncryptionAtRest:              nil,
+			Auditing:                      nil,
+			Settings:                      nil,
+			CustomRoles:                   nil,
+			Teams:                         nil,
+			RegionUsageRestrictions:       atlas.StringOrEmpty(project.RegionUsageRestrictions),
+		},
+		Status: akov2status.AtlasProjectStatus{
+			Common: akov2status.Common{
+				Conditions: []akov2status.Condition{},
+			},
+		},
+	}
+}
+
 func BuildProjectConnectionSecret(credsProvider store.CredentialsGetter, name, namespace, orgID string, includeCreds bool, dictionary map[string]string) *corev1.Secret {
 	secret := secrets.NewAtlasSecretBuilder(fmt.Sprintf("%s-credentials", name), namespace, dictionary).
 		WithData(map[string][]byte{
@@ -343,7 +347,7 @@ func buildMaintenanceWindows(mwProvider store.MaintenanceWindowDescriber, projec
 	}, nil
 }
 
-func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNamespace string, includeSecrets bool, dictionary map[string]string) ([]akov2project.Integration, []*corev1.Secret, error) {
+func buildIntegrations(intProvider store.IntegrationLister, projectID, targetNamespace string, includeSecrets bool, dictionary map[string]string) ([]akov2project.Integration, []*corev1.Secret, error) { //nolint:gocyclo
 	integrations, err := intProvider.Integrations(projectID)
 	if err != nil {
 		return nil, nil, err

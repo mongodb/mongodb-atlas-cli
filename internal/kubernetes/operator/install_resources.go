@@ -122,42 +122,29 @@ func (ir *InstallResources) InstallConfiguration(ctx context.Context, installCon
 	}
 
 	for _, config := range configData {
-		switch config["kind"] {
-		case "ServiceAccount":
-			err = ir.addServiceAccount(ctx, config, installConfig.Namespace)
-			if err != nil {
-				return err
-			}
-		case "Role":
-			err = ir.addRoles(ctx, config, installConfig.Namespace, installConfig.Watch)
-			if err != nil {
-				return err
-			}
-		case "ClusterRole":
-			err = ir.addClusterRole(ctx, config, installConfig.Namespace)
-			if err != nil {
-				return err
-			}
-		case "RoleBinding":
-			err = ir.addRoleBindings(ctx, config, installConfig.Namespace, installConfig.Watch)
-			if err != nil {
-				return err
-			}
-		case "ClusterRoleBinding":
-			err = ir.addClusterRoleBinding(ctx, config, installConfig.Namespace)
-			if err != nil {
-				return err
-			}
-		case "Deployment":
-			err = ir.addDeployment(ctx, config, installConfig)
-			if err != nil {
-				return err
-			}
-		default:
-			continue
+		if err2 := ir.handleKind(ctx, installConfig, config); err2 != nil {
+			return err2
 		}
 	}
 
+	return nil
+}
+
+func (ir *InstallResources) handleKind(ctx context.Context, installConfig *InstallConfig, config map[string]interface{}) error {
+	switch config["kind"] {
+	case "ServiceAccount":
+		return ir.addServiceAccount(ctx, config, installConfig.Namespace)
+	case "Role":
+		return ir.addRoles(ctx, config, installConfig.Namespace, installConfig.Watch)
+	case "ClusterRole":
+		return ir.addClusterRole(ctx, config, installConfig.Namespace)
+	case "RoleBinding":
+		return ir.addRoleBindings(ctx, config, installConfig.Namespace, installConfig.Watch)
+	case "ClusterRoleBinding":
+		return ir.addClusterRoleBinding(ctx, config, installConfig.Namespace)
+	case "Deployment":
+		return ir.addDeployment(ctx, config, installConfig)
+	}
 	return nil
 }
 

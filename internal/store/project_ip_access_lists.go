@@ -74,11 +74,16 @@ func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedNetworkAccess, error) {
 	switch s.service {
 	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.ProjectIPAccessListApi.ListProjectIpAccessLists(s.ctx, projectID)
-		if opts != nil {
-			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		params := &atlasv2.ListProjectIpAccessListsApiParams{
+			GroupId: projectID,
 		}
-		result, _, err := res.Execute()
+		if opts != nil {
+			params.PageNum = &opts.PageNum
+			params.ItemsPerPage = &opts.ItemsPerPage
+		}
+		result, _, err := s.clientv2.ProjectIPAccessListApi.
+			ListProjectIpAccessListsWithParams(s.ctx, params).
+			Execute()
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

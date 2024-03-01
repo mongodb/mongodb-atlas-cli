@@ -26,7 +26,7 @@ import (
 
 const (
 	operatorRepositoryOrg = "mongodb"
-	//nolint:gosec
+
 	operatorRepository        = "mongodb-atlas-kubernetes"
 	maxMajorVersionsSupported = 3
 )

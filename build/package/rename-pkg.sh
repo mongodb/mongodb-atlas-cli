@@ -24,8 +24,6 @@ fi
 
 FILENAME="${package_name-}_${VERSION}_linux_x86_64"
 FILENAME_ARM="${package_name-}_${VERSION}_linux_arm64"
-META_FILENAME="${meta_package_name-}_${VERSION}_linux_x86_64"
-META_FILENAME_ARM="${meta_package_name-}_${VERSION}_linux_arm64"
 
 pushd dist
 

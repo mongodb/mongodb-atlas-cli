@@ -31,13 +31,13 @@ func setDisableAutoGenTag(cmd *cobra.Command) {
 }
 
 func main() {
-	if err := os.RemoveAll("./docs/mongocli/command"); err != nil {
+	if err := os.RemoveAll("./docs/command"); err != nil {
 		log.Fatal(err)
 	}
 
 	var profile string
 	const docsPermissions = 0766
-	if err := os.MkdirAll("./docs/mongocli/command", docsPermissions); err != nil {
+	if err := os.MkdirAll("./docs/command", docsPermissions); err != nil {
 		log.Fatal(err)
 	}
 
@@ -46,7 +46,7 @@ func main() {
 	removeDeprecateStringAtlasCommand(mongocliBuilder)
 	setDisableAutoGenTag(mongocliBuilder)
 
-	if err := cobra2snooty.GenTreeDocs(mongocliBuilder, "./docs/mongocli/command"); err != nil {
+	if err := cobra2snooty.GenTreeDocs(mongocliBuilder, "./docs/command"); err != nil {
 		log.Fatal(err)
 	}
 }

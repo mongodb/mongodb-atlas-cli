@@ -106,10 +106,7 @@ gen-mocks: ## Generate mocks
 	go generate ./internal...
 
 .PHONY: gen-docs
-gen-docs: gen-docs-mongocli ## Generate docs for commands
-
-.PHONY: gen-docs-mongocli
-gen-docs-mongocli: ## Generate docs for mongocli commands
+gen-docs: ## Generate docs for mongocli commands
 	@echo "==> Generating docs for mongocli"
 	go run -ldflags "$(MCLI_LINKER_FLAGS)" ./tools/mongoclidocs/main.go
 

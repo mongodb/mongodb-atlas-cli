@@ -52,7 +52,7 @@ functions:
       type: test
       params:
         <<: *go_options
-        command: make build-all
+        command: make build
   "e2e test":
     - command: subprocess.exec
       type: test

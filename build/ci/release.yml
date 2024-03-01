@@ -87,8 +87,6 @@ functions:
           - notary_service_url
           - goreleaser_key
           - tool_name
-          - goreleaser_config
-          - changelog_file
           - github_token
           - unstable
         binary: build/package/package.sh
@@ -314,8 +312,6 @@ tasks:
         vars:
           unstable: ${unstable}
           tool_name: ${tool_name}
-          goreleaser_config: ${goreleaser_file}
-          changelog_file: ${changelog_file}
           ARTIFACTORY_USERNAME: ${artifactory_username}
           ARTIFACTORY_PASSWORD: ${artifactory_password}
           GRS_USERNAME: ${garasign_username}
@@ -447,8 +443,6 @@ buildvariants:
     expansions:
       <<: *go_linux_version
       server_version: "4.4.0-rc3"
-      goreleaser_file: "build/package/.atlascli.goreleaser.yml"
-      changelog_file: CHANGELOG_ATLASCLI.md
       package_name: "mongodb-atlas-cli"
       meta_package_name: "mongodb-atlas"
       tool_name: "atlascli"
@@ -476,8 +470,6 @@ buildvariants:
     expansions:
       <<: *go_linux_version
       server_version: "4.4.0-rc3"
-      goreleaser_file: "build/package/.atlascli.goreleaser.yml"
-      changelog_file: CHANGELOG_ATLASCLI.md
       package_name: "mongodb-atlas-cli"
       meta_package_name: "mongodb-atlas"
       tool_name: "atlascli"

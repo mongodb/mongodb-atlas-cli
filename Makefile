@@ -109,7 +109,7 @@ gen-mocks: ## Generate mocks
 .PHONY: gen-docs
 gen-docs:
 	@echo "==> Generating docs"
-	go run -ldflags "$(ATLAS_LINKER_FLAGS)" ./tools/atlasclidocs/main.go
+	go run -ldflags "$(ATLAS_LINKER_FLAGS)" ./tools/docs/main.go
 
 .PHONY: build
 build:

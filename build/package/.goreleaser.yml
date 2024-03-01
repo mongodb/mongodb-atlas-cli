@@ -26,7 +26,7 @@ builds:
     hooks:
       # This will notarize Apple binaries and replace goreleaser bins with the notarized ones
       post:
-        - cmd: ./build/package/atlascli_mac_notarize.sh
+        - cmd: ./build/package/mac_notarize.sh
           output: true
   - <<: *build_defaults
     builder: prebuilt
@@ -60,7 +60,6 @@ archives:
   <<: &archive_defaults
     files:
       - README.md
-      - atlascli.md
       - LICENSE
       - LICENSING-NOTES.txt
       - third_party_notices/**/*

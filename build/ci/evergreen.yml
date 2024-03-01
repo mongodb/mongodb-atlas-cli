@@ -970,7 +970,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "build mongocli"
+      - func: "build"
       - func: "e2e test"
         vars:
           MCLI_ORG_ID: ${atlas_org_id}
@@ -1355,14 +1355,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .backup .atlas"
-  - name: e2e_cloud_manager_remote
-    display_name: "E2E Cloud Manager Remote Host Tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .clusters .cloudmanager"
   - name: e2e_cleanup
     display_name: "E2E Cleanup Resources"
     run_on:
@@ -1372,14 +1364,6 @@ buildvariants:
     tasks:
       - name: ".e2e .cleanup"
         cron: "0 2 * * *" # 2am daily
-  - name: e2e_ops_manager_60
-    display_name: "E2E Ops Manager 6.0 Tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".ops-manager-60"
   - name: e2e_atlas_deployments
     display_name: "E2E Atlas Deployments Tests"
     run_on:

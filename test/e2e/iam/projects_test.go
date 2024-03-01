@@ -29,7 +29,7 @@ import (
 )
 
 func TestProjects(t *testing.T) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -44,7 +44,6 @@ func TestProjects(t *testing.T) {
 	t.Run("Create", func(t *testing.T) {
 		// This depends on a ORG_ID ENV
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			"create",
 			projectName,
@@ -67,7 +66,6 @@ func TestProjects(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			"ls",
 			"-o=json")
@@ -79,7 +77,6 @@ func TestProjects(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			"describe",
 			projectID,
@@ -92,7 +89,6 @@ func TestProjects(t *testing.T) {
 
 	t.Run("Users", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			usersEntity,
 			"ls",
@@ -106,7 +102,6 @@ func TestProjects(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			"delete",
 			projectID,

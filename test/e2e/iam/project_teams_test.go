@@ -30,7 +30,7 @@ import (
 )
 
 func TestProjectTeams(t *testing.T) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	n, err := e2e.RandInt(1000)
@@ -53,7 +53,6 @@ func TestProjectTeams(t *testing.T) {
 
 	t.Run("Add", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			teamsEntity,
 			"add",
@@ -84,7 +83,6 @@ func TestProjectTeams(t *testing.T) {
 		roleName1 := "GROUP_READ_ONLY"
 		roleName2 := "GROUP_DATA_ACCESS_READ_ONLY"
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			teamsEntity,
 			"update",
@@ -113,7 +111,6 @@ func TestProjectTeams(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			teamsEntity,
 			"ls",
@@ -132,7 +129,6 @@ func TestProjectTeams(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			teamsEntity,
 			"delete",

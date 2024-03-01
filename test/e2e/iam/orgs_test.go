@@ -29,7 +29,7 @@ import (
 )
 
 func TestOrgs(t *testing.T) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	var orgID string
@@ -37,7 +37,6 @@ func TestOrgs(t *testing.T) {
 	// This test must run first to grab the ID of the org to later describe
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			orgEntity,
 			"ls",
 			"-o=json")
@@ -55,7 +54,6 @@ func TestOrgs(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			orgEntity,
 			"describe",
 			orgID,
@@ -67,7 +65,6 @@ func TestOrgs(t *testing.T) {
 
 	t.Run("List Org Users", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			orgEntity,
 			usersEntity,
 			"ls",

@@ -30,7 +30,7 @@ import (
 )
 
 func TestTeams(t *testing.T) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	n, err := e2e.RandInt(1000)
@@ -44,7 +44,6 @@ func TestTeams(t *testing.T) {
 		require.NoError(t, err)
 
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			teamsEntity,
 			"create",
 			teamName,
@@ -66,7 +65,6 @@ func TestTeams(t *testing.T) {
 
 	t.Run("Describe By ID", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			teamsEntity,
 			"describe",
 			"--id",
@@ -85,7 +83,6 @@ func TestTeams(t *testing.T) {
 
 	t.Run("Describe By Name", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			teamsEntity,
 			"describe",
 			"--name",
@@ -104,7 +101,6 @@ func TestTeams(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			teamsEntity,
 			"ls",
 			"-o=json")
@@ -121,7 +117,6 @@ func TestTeams(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			teamsEntity,
 			"delete",
 			teamID,

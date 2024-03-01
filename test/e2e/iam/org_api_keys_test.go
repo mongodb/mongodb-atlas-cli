@@ -29,7 +29,7 @@ import (
 )
 
 func TestOrgAPIKeys(t *testing.T) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -39,7 +39,7 @@ func TestOrgAPIKeys(t *testing.T) {
 	// This test must run first to grab the ID of the org to later describe
 	t.Run("Create", func(t *testing.T) {
 		desc := "e2e-test-org"
-		cmd := exec.Command(cliPath, iamEntity,
+		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
 			"create",
@@ -62,7 +62,6 @@ func TestOrgAPIKeys(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			orgEntity,
 			apiKeysEntity,
 			"ls",
@@ -82,7 +81,7 @@ func TestOrgAPIKeys(t *testing.T) {
 
 	t.Run("Update", func(t *testing.T) {
 		newDesc := "e2e-test-org-updated"
-		cmd := exec.Command(cliPath, iamEntity,
+		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
 			"updates",
@@ -102,7 +101,6 @@ func TestOrgAPIKeys(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			orgEntity,
 			apiKeysEntity,
 			"describe",
@@ -120,7 +118,6 @@ func TestOrgAPIKeys(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			orgEntity,
 			apiKeysEntity,
 			"rm",

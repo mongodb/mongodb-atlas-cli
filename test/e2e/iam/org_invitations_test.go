@@ -29,7 +29,7 @@ import (
 )
 
 func TestOrgInvitations(t *testing.T) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -42,7 +42,6 @@ func TestOrgInvitations(t *testing.T) {
 
 	t.Run("Invite", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			orgEntity,
 			invitationsEntity,
 			"invite",
@@ -64,7 +63,6 @@ func TestOrgInvitations(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			orgEntity,
 			invitationsEntity,
 			"ls",
@@ -82,7 +80,6 @@ func TestOrgInvitations(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			orgEntity,
 			invitationsEntity,
 			"get",
@@ -101,7 +98,6 @@ func TestOrgInvitations(t *testing.T) {
 
 	t.Run("Update by email", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			orgEntity,
 			invitationsEntity,
 			"update",
@@ -124,7 +120,6 @@ func TestOrgInvitations(t *testing.T) {
 
 	t.Run("Update by ID", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			orgEntity,
 			invitationsEntity,
 			"update",
@@ -145,7 +140,6 @@ func TestOrgInvitations(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			orgEntity,
 			invitationsEntity,
 			"delete",

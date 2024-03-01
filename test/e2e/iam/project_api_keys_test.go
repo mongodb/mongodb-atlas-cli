@@ -30,7 +30,7 @@ import (
 )
 
 func TestProjectAPIKeys(t *testing.T) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	var ID string
@@ -38,7 +38,7 @@ func TestProjectAPIKeys(t *testing.T) {
 	// This test must run first to grab the ID of the project to later describe
 	t.Run("Create", func(t *testing.T) {
 		const desc = "e2e-test"
-		cmd := exec.Command(cliPath, iamEntity,
+		cmd := exec.Command(cliPath,
 			projectsEntity,
 			apiKeysEntity,
 			"create",
@@ -67,7 +67,7 @@ func TestProjectAPIKeys(t *testing.T) {
 	}()
 
 	t.Run("Assign", func(t *testing.T) {
-		cmd := exec.Command(cliPath, iamEntity,
+		cmd := exec.Command(cliPath,
 			projectsEntity,
 			apiKeysEntity,
 			"assign",
@@ -81,7 +81,6 @@ func TestProjectAPIKeys(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			apiKeysEntity,
 			"ls",
@@ -96,7 +95,6 @@ func TestProjectAPIKeys(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			apiKeysEntity,
 			"rm",

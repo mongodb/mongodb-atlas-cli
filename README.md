@@ -81,7 +81,6 @@ To set up your credentials, run `mongocli config`, or use [env variables](https:
 
 If you're working with Atlas Gov, Ops Manager or Cloud Manager you need to define the service using `--service`
 
-- For Atlas Gov, `mongocli config --service cloudgov`
 - For Ops Manager, `mongocli config --service ops-manager`
 - For Cloud Manager, `mongocli config --service cloud-manager`
 
@@ -101,4 +100,4 @@ See our [CONTRIBUTING.md](CONTRIBUTING.md) guide.
 
 ## License
 
-MongoDB CLI and Atlas CLI are released under the Apache 2.0 license. See [LICENSE](LICENSE)
+MongoDB CLI is released under the Apache 2.0 license. See [LICENSE](LICENSE)

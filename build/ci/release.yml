@@ -409,7 +409,7 @@ buildvariants:
     expansions:
       <<: *go_linux_version
       server_version: "4.4.0-rc3"
-      goreleaser_file: "build/package/.mongocli.goreleaser.yml"
+      goreleaser_file: "build/package/.goreleaser.yml"
       changelog_file: CHANGELOG_MONGOCLI.md
       package_name: "mongocli"
       tool_name: "mongocli"
@@ -448,7 +448,7 @@ buildvariants:
     expansions:
       <<: *go_linux_version
       server_version: "4.4.0-rc3"
-      goreleaser_file: "build/package/.mongocli.goreleaser.yml"
+      goreleaser_file: "build/package/.goreleaser.yml"
       changelog_file: CHANGELOG_MONGOCLI.md
       package_name: "mongocli"
       tool_name: "mongocli"

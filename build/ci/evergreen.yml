@@ -262,10 +262,6 @@ tasks:
     tags: ["code_health"]
     commands:
       - func: "build"
-  - name: compile_mongocli
-    tags: [ "code_health" ]
-    commands:
-      - func: "build mongocli"
   - name: config_e2e
     tags: ["e2e","required"]
     must_have_test_results: true
@@ -356,7 +352,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "build mongocli"
+      - func: "build"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "set-up cloud manager"
@@ -374,7 +370,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "build mongocli"
+      - func: "build"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "set-up cloud manager"
@@ -392,7 +388,7 @@ tasks:
           patch_optional: true
     commands:
         - func: "install gotestsum"
-        - func: "build mongocli"
+        - func: "build"
         - func: "deploy spawn host"
         - func: ssh-ready
         - func: "install ops manager"
@@ -412,7 +408,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "build mongocli"
+      - func: "build"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "install ops manager"
@@ -432,7 +428,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "build mongocli"
+      - func: "build"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "install ops manager"
@@ -452,7 +448,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "build mongocli"
+      - func: "build"
       - func: "deploy spawn host"
       - func: ssh-ready
       - func: "install ops manager"

@@ -24,10 +24,6 @@ VERSION="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut 
 
 TOOL_NAME_MESSAGE="MongoDB CLI"
 
-if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-	TOOL_NAME_MESSAGE="MongoDB Atlas CLI"
-fi
-
 curl --header "Api-User:${evergreen_user:?}" \
 	--header "Api-Key:${evergreen_api_key:?}" \
 	--request POST "https://evergreen.mongodb.com/rest/v2/notifications/slack" \

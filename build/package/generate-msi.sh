@@ -36,12 +36,6 @@ OUTPUT=./bin/mongocli.exe
 LINKER_FLAGS="-s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${VERSION_GIT} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit=${COMMIT} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=${TOOL_NAME:?}"
 WIX_MANIFEST_FILE="./build/package/wix/${TOOL_NAME:?}.json"
 
-if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-	SOURCE_FILES=./cmd/atlas
-	PACKAGE_NAME=mongodb-atlas-cli_${VERSION_NAME}_windows_x86_64.msi
-	OUTPUT=./bin/atlas.exe
-fi
-
 env GOOS=windows GOARCH=amd64 go build \
 	-ldflags "${LINKER_FLAGS}" -o ${OUTPUT} "${SOURCE_FILES}"
 

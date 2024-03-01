@@ -108,7 +108,7 @@ gen-mocks: ## Generate mocks
 .PHONY: gen-docs
 gen-docs: ## Generate docs for mongocli commands
 	@echo "==> Generating docs for mongocli"
-	go run -ldflags "$(MCLI_LINKER_FLAGS)" ./tools/mongoclidocs/main.go
+	go run -ldflags "$(MCLI_LINKER_FLAGS)" ./tools/clidocs/main.go
 
 .PHONY: build
 build: ## Generate a mongocli binary in ./bin

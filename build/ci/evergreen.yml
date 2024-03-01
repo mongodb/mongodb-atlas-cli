@@ -90,90 +90,6 @@ functions:
           MCLI_SKIP_UPDATE_CHECK: "yes"
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make e2e-test
-  "deploy spawn host":
-    - command: shell.exec
-      type: setup
-      params:
-        shell: bash
-        silent: true
-        script: |
-          set -e
-          keyfile="src/github.com/mongodb/mongodb-atlas-cli/build/ci/ssh_id"
-          echo '${__project_aws_ssh_key_value}' > "$keyfile"
-          chmod 600 "$keyfile"
-    - command: host.create
-      type: system
-      params:
-        provider: ec2
-        distro: ubuntu2004-large
-        num_hosts: 1
-        security_group_ids: [sg-097bff6dd0d1d31d0] # Allows hosts to talk to each other for MongoDB
-    - command: host.list
-      params:
-        wait: true
-        timeout_seconds: 300
-        num_hosts: 1
-        path: src/github.com/mongodb/mongodb-atlas-cli/build/ci/hosts.json
-  ssh-ready:
-    - command: subprocess.exec
-      type: setup
-      params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
-        binary: ./ssh-ready.sh
-        args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
-  "install automation agent":
-    - command: subprocess.exec
-      type: setup
-      params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
-        binary: ./install-agent-spawn-host.sh
-        env:
-          LC_AGENT_KEY: ${automation_agent_mms_api_key}
-          LC_GROUP_ID: ${automation_agent_mms_group_id}
-          BASE_URL: ${mcli_ops_manager_url}
-        args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
-  "install ops manager":
-    - command: subprocess.exec
-      type: setup
-      params:
-        include_expansions_in_env:
-          - ARCHIVE
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
-        binary: ./install-ops-manager-spawn-host.sh
-        args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
-  "set-up ops manager":
-    - command: subprocess.exec
-      type: setup
-      params:
-        <<: *go_options
-        include_expansions_in_env:
-          - go_base_path
-          - workdir
-          - ops_manager_service
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
-        binary: ./set-up-ops-manager.sh
-        args: ['-h', 'hosts.json']
-  "set-up cloud manager":
-    - command: subprocess.exec
-      type: setup
-      params:
-        <<: *go_options
-        include_expansions_in_env:
-          - go_base_path
-          - workdir
-          - cloud_manager_service
-          - revision
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
-        binary: ./set-up-cloud-manager.sh
-        args: ['-h', 'hosts.json']
-        env:
-          <<: *go_env
-          MCLI_ORG_ID: ${cloud_manager_org_id}
-          MCLI_PROJECT_ID: ${cloud_manager_project_id}
-          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud-manager
   "install gotestsum":
     - command: shell.exec
       type: setup
@@ -185,25 +101,12 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
-
   "install podman":
     - command: subprocess.exec
       type: setup
       params:
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
         binary: ../build/ci/install_podman.sh
-  "install pykmip":
-    - command: subprocess.exec
-      type: setup
-      params:
-        <<: *go_options
-        working_dir: /src/github.com/mongodb/mongodb-atlas-cli/build/ci/kmip
-        binary: ./install.sh
-        args: ["-h", "hosts.json"]
-        env:
-          <<: *go_env
-          KMIP_CA: ${logs_decrypt_kmip_ca}
-          KMIP_CERT: ${logs_decrypt_kmip_cert}
   "setup operator":
     command: subprocess.exec
     type: setup
@@ -243,17 +146,9 @@ functions:
       params:
         files:
           - tasks.json
-
 pre:
   - func: "clone"
 post:
-  - command: subprocess.exec
-    type: setup
-    params:
-      <<: *go_options
-      working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
-      binary: ./clean-up-cloud-manager.sh
-      args: ['-h', 'hosts.json']
   - command: attach.xunit_results
     params:
       files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]

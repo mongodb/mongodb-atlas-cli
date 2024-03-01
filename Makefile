@@ -107,17 +107,17 @@ gen-mocks: ## Generate mocks
 	go generate ./internal...
 
 .PHONY: gen-docs
-gen-docs:
+gen-docs: ## Generate docs for atlascli commands
 	@echo "==> Generating docs"
 	go run -ldflags "$(ATLAS_LINKER_FLAGS)" ./tools/docs/main.go
 
 .PHONY: build
-build:
+build: ## Generate an atlas binary in ./bin
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary"
 	go build -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: build-debug
-build-debug:
+build-debug: ## Generate a binary in ./bin for debugging atlascli
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary for debugging"
 	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 

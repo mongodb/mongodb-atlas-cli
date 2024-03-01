@@ -3,6 +3,8 @@
 GOLANGCI_VERSION=v1.56.1
 COVERAGE=coverage.out
 
+MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
+
 ATLAS_SOURCE_FILES?=./cmd/atlas
 ATLAS_BINARY_NAME=atlas
 ATLAS_VERSION?=$(shell git describe --match "atlascli/v*" | cut -d "v" -f 2)
@@ -105,14 +107,17 @@ gen-mocks: ## Generate mocks
 	go generate ./internal...
 
 .PHONY: gen-docs
+gen-docs:
 	@echo "==> Generating docs"
 	go run -ldflags "$(ATLAS_LINKER_FLAGS)" ./tools/atlasclidocs/main.go
 
 .PHONY: build
+build:
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary"
 	go build -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: build-debug
+build-debug:
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary for debugging"
 	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 

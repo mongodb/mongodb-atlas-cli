@@ -29,10 +29,12 @@ import (
 )
 
 const (
-	createPrivilege = "UPDATE"
-	updatePrivilege = "LIST_SESSIONS"
-	inheritedRole   = "enableSharding@admin"
-	enableSharding  = "enableSharding"
+	createPrivilege             = "UPDATE"
+	updatePrivilege             = "LIST_SESSIONS"
+	enableShardingRole          = "enableSharding"
+	enableShardingInheritedRole = "enableSharding@admin"
+	readRole                    = "read"
+	readInheritedRole           = "read@mydb"
 )
 
 func TestDBRoles(t *testing.T) {
@@ -50,7 +52,7 @@ func TestDBRoles(t *testing.T) {
 			"create",
 			roleName,
 			"--privilege", fmt.Sprintf("%s@db.collection", createPrivilege),
-			"--inheritedRole", inheritedRole,
+			"--inheritedRole", enableShardingInheritedRole,
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
@@ -65,7 +67,7 @@ func TestDBRoles(t *testing.T) {
 		a.Len(role.GetActions(), 1)
 		a.Equal(createPrivilege, role.GetActions()[0].Action)
 		a.Len(role.GetInheritedRoles(), 1)
-		a.Equal(enableSharding, role.GetInheritedRoles()[0].Role)
+		a.Equal(enableShardingRole, role.GetInheritedRoles()[0].Role)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -101,7 +103,7 @@ func TestDBRoles(t *testing.T) {
 		a.Len(role.GetActions(), 1)
 		a.Equal(createPrivilege, role.GetActions()[0].Action)
 		a.Len(role.GetInheritedRoles(), 1)
-		a.Equal(enableSharding, role.GetInheritedRoles()[0].Role)
+		a.Equal(enableShardingRole, role.GetInheritedRoles()[0].Role)
 	})
 
 	t.Run("Update with append", func(t *testing.T) {
@@ -109,6 +111,7 @@ func TestDBRoles(t *testing.T) {
 			customDBRoleEntity,
 			"update",
 			roleName,
+			"--inheritedRole", readInheritedRole,
 			"--privilege", updatePrivilege,
 			"--privilege", fmt.Sprintf("%s@db2.collection", createPrivilege),
 			"--append",
@@ -126,8 +129,9 @@ func TestDBRoles(t *testing.T) {
 		a.ElementsMatch(
 			[]string{role.GetActions()[0].Action, role.GetActions()[1].Action},
 			[]string{updatePrivilege, createPrivilege})
-		a.Len(role.GetInheritedRoles(), 1)
-		a.Equal(enableSharding, role.GetInheritedRoles()[0].Role)
+		a.ElementsMatch(
+			[]string{enableShardingRole, readRole},
+			[]string{role.GetInheritedRoles()[0].Role, role.GetInheritedRoles()[1].Role})
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -135,6 +139,7 @@ func TestDBRoles(t *testing.T) {
 			customDBRoleEntity,
 			"update",
 			roleName,
+			"--inheritedRole", enableShardingInheritedRole,
 			"--privilege", updatePrivilege,
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -148,6 +153,8 @@ func TestDBRoles(t *testing.T) {
 		a.Equal(roleName, role.RoleName)
 		a.Len(role.GetActions(), 1)
 		a.Equal(updatePrivilege, role.GetActions()[0].Action)
+		a.Len(role.GetInheritedRoles(), 1)
+		a.Equal(enableShardingRole, role.GetInheritedRoles()[0].Role)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

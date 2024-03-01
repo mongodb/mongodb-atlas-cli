@@ -36,7 +36,6 @@ const (
 	projectsEntity         = "projects"
 	teamsEntity            = "teams"
 	invitationsEntity      = "invitations"
-	customDBRoles          = "customDbRoles"
 )
 
 const (

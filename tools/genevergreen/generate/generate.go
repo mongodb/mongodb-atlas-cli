@@ -181,7 +181,7 @@ func PostPkgMetaTasks(c *shrub.Configuration, toolName string) {
 func PublishStableTasks(c *shrub.Configuration, toolName string) {
 	dependency := []shrub.TaskDependency{
 		{
-			Name:    fmt.Sprintf("compile_%s", toolName),
+			Name:    "compile",
 			Variant: "code_health",
 		},
 		{
@@ -210,7 +210,7 @@ func PublishStableTasks(c *shrub.Configuration, toolName string) {
 func PublishSnapshotTasks(c *shrub.Configuration, toolName string) {
 	dependency := []shrub.TaskDependency{
 		{
-			Name:    fmt.Sprintf("compile_%s", toolName),
+			Name:    "compile",
 			Variant: "code_health",
 		},
 		{

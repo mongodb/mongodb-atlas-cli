@@ -24,7 +24,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
@@ -69,20 +68,18 @@ func (opts *UpdateOpts) Run() error {
 }
 
 func (opts *UpdateOpts) newCustomDBRole(existingRole *atlasv2.UserCustomDBRole) *atlasv2.UserCustomDBRole {
-	out := &atlasv2.UserCustomDBRole{
-		InheritedRoles: pointer.Get(convert.BuildAtlasInheritedRoles(opts.inheritedRoles)),
-	}
+	inheritedRoles := convert.BuildAtlasInheritedRoles(opts.inheritedRoles)
 	actions := joinActions(convert.BuildAtlasActions(opts.action))
-	inheritedRoles := []atlasv2.DatabaseInheritedRole{}
 
 	if opts.append {
 		actions = appendActions(existingRole.GetActions(), actions)
 		inheritedRoles = append(inheritedRoles, existingRole.GetInheritedRoles()...)
 	}
-	out.SetActions(actions)
-	out.SetInheritedRoles(inheritedRoles)
 
-	return out
+	return &atlasv2.UserCustomDBRole{
+		Actions:        &actions,
+		InheritedRoles: &inheritedRoles,
+	}
 }
 
 func (opts *UpdateOpts) validate() error {

@@ -225,18 +225,6 @@ functions:
           - tool_name
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker
         binary: ./docker-build.sh
-  "powershell build":
-    - command: subprocess.exec
-      type: test
-      params:
-        include_expansions_in_env:
-          - project
-          - revision
-          - created_at
-          - tool_name
-          - unstable
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/
-        binary: Powershell -File ./build/package/powershell/windows_post_package_test.ps1
   "docker build repo":
     - command: subprocess.exec
       type: test

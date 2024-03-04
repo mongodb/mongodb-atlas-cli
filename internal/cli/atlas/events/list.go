@@ -34,6 +34,7 @@ type EventListOpts struct {
 	EventType []string
 	MinDate   string
 	MaxDate   string
+	OmitCount bool
 }
 
 type ListOpts struct {
@@ -111,6 +112,11 @@ func (opts *ListOpts) NewProjectListOptions() admin.ListProjectEventsApiParams {
 	if opts.PageNum > 0 {
 		p.PageNum = &opts.PageNum
 	}
+
+	if opts.OmitCount {
+		p.IncludeCount = pointer.Get(false)
+	}
+
 	return p
 }
 
@@ -157,6 +163,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
+	cmd.Flags().BoolVar(&opts.OmitCount, flag.OmitCount, cli.OmitCountDefault, usage.OmitCount)
 
 	cmd.Flags().StringSliceVar(&opts.EventType, flag.TypeFlag, nil, usage.Event)
 	cmd.Flags().StringVar(&opts.MaxDate, flag.MaxDate, "", usage.MaxDate)

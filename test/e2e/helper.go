@@ -26,17 +26,15 @@ import (
 )
 
 const (
-	iamEntity      = "iam"
 	projectsEntity = "projects"
 )
 
 func CreateProject(projectName string) (string, error) {
-	cliPath, err := Bin()
+	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		return "", err
 	}
 	cmd := exec.Command(cliPath,
-		iamEntity,
 		projectsEntity,
 		"create",
 		projectName,
@@ -56,12 +54,11 @@ func CreateProject(projectName string) (string, error) {
 }
 
 func deleteProject(projectID string) error {
-	cliPath, err := Bin()
+	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		return err
 	}
 	cmd := exec.Command(cliPath,
-		iamEntity,
 		projectsEntity,
 		"delete",
 		projectID,

@@ -49,7 +49,7 @@ To manually generate a new stable release you can run:
 ./scripts/release.sh atlascli/v1.0.0
 ```
 
-**Note:** Please use the `atlascli/vX.Y.Z` or `mongocli/vX.Y.Z` format for the version to release 
+**Note:** Please use the `atlascli/vX.Y.Z` format for the version to release 
 
 This will do the following things:
 1. Tag a new version, ie: `git tag -a -s atlascli/v1.0.0 -m "atlascli/v1.0.0"`
@@ -65,12 +65,6 @@ The Software Bill of Materials (SBOM) is a description of the components that ma
 We use `go version` to generate the SBOM for Atlas CLI binaries. You can generate the SBOM via the following command:
 ```bash
 go version -m <path_to_atlasCLI_binary>
-```
-
-## MongoCLI Binary
-We use `go version` to generate the SBOM for MongoCLI binaries. You can generate the SBOM via the following command:
-```bash
-go version -m <path_to_mongoCLI_binary>
 ```
 
 ## Atlas CLI Docker image

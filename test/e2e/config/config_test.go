@@ -35,7 +35,7 @@ const (
 )
 
 func TestConfig(t *testing.T) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -59,7 +59,7 @@ func TestConfig(t *testing.T) {
 		}
 		defer c.Close()
 
-		cmd := exec.Command(cliPath, configEntity, "-P", "e2e-expect")
+		cmd := exec.Command(cliPath, configEntity, "init", "-P", "e2e-expect")
 		cmd.Stdin = c.Tty()
 		cmd.Stdout = c.Tty()
 		cmd.Stderr = c.Tty()

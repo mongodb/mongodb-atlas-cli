@@ -28,18 +28,14 @@ VERSION_GIT="$(git tag --list "${tool_name:?}/v*" --sort=taggerdate | tail -1 | 
 
 if [[ "${unstable-}" == "-unstable" ]]; then
 	# avoid race conditions on the notarization step by using `-p 1`
-	./bin/goreleaser --config "${goreleaser_config:?}" --rm-dist --release-notes "${changelog_file:?}" --snapshot -p 1
+	./bin/goreleaser --config "build/package/.goreleaser.yml" --rm-dist --release-notes "CHANGELOG.md" --snapshot -p 1
 else
 	# avoid race conditions on the notarization step by using `-p 1`
-	./bin/goreleaser --config "${goreleaser_config:?}" --rm-dist --release-notes "${changelog_file:?}" -p 1
+	./bin/goreleaser --config "build/package/.goreleaser.yml" --rm-dist --release-notes "CHANGELOG.md" -p 1
 fi
 
 # check that the notarization service signed the mac binaries
-SIGNED_FILE_NAME=mongocli_macos_signed.zip
-if [[ "${tool_name-}" == "atlascli" ]]; then
-	SIGNED_FILE_NAME=mongodb-atlas-cli_macos_signed.zip
-fi
-
+SIGNED_FILE_NAME=mongodb-atlas-cli_macos_signed.zip
 if [[ -f "dist/$SIGNED_FILE_NAME" ]]; then
 	echo "$SIGNED_FILE_NAME exists. The Mac notarization service has run."
 else

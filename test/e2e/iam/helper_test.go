@@ -28,7 +28,6 @@ import (
 )
 
 const (
-	iamEntity              = "iam"
 	orgEntity              = "orgs"
 	apiKeysEntity          = "apikeys"
 	apiKeyAccessListEntity = "accessLists"
@@ -47,12 +46,12 @@ const (
 var errNoAPIKey = errors.New("the apiKey ID is empty")
 
 func createOrgAPIKey() (string, error) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return "", err
 	}
 
-	cmd := exec.Command(cliPath, iamEntity,
+	cmd := exec.Command(cliPath,
 		orgEntity,
 		apiKeysEntity,
 		"create",
@@ -79,12 +78,11 @@ func createOrgAPIKey() (string, error) {
 }
 
 func deleteOrgAPIKey(id string) error {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return err
 	}
 	cmd := exec.Command(cliPath,
-		iamEntity,
 		orgEntity,
 		apiKeysEntity,
 		"rm",
@@ -95,7 +93,7 @@ func deleteOrgAPIKey(id string) error {
 }
 
 func createTeam(teamName string) (string, error) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return "", err
 	}
@@ -105,7 +103,6 @@ func createTeam(teamName string) (string, error) {
 		return "", err
 	}
 	cmd := exec.Command(cliPath,
-		iamEntity,
 		teamsEntity,
 		"create",
 		teamName,
@@ -127,12 +124,11 @@ func createTeam(teamName string) (string, error) {
 }
 
 func deleteTeam(teamID string) error {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return err
 	}
 	cmd := exec.Command(cliPath,
-		iamEntity,
 		teamsEntity,
 		"delete",
 		teamID,
@@ -147,12 +143,11 @@ var errInvalidIndex = errors.New("invalid index")
 // We need to pass the userIndex because the command iam teams users add would not work
 // if the user is already in the team.
 func OrgNUser(n int) (username, userID string, err error) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return "", "", err
 	}
 	cmd := exec.Command(cliPath,
-		iamEntity,
 		orgEntity,
 		usersEntity,
 		"list",

@@ -52,19 +52,7 @@ functions:
       type: test
       params:
         <<: *go_options
-        command: make build-all
-  "build mongocli":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        command: make build-mongocli
-  "build atlascli":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        command: make build-atlascli
+        command: make build
   "e2e test":
     - command: subprocess.exec
       type: test
@@ -102,90 +90,6 @@ functions:
           MCLI_SKIP_UPDATE_CHECK: "yes"
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make e2e-test
-  "deploy spawn host":
-    - command: shell.exec
-      type: setup
-      params:
-        shell: bash
-        silent: true
-        script: |
-          set -e
-          keyfile="src/github.com/mongodb/mongodb-atlas-cli/build/ci/ssh_id"
-          echo '${__project_aws_ssh_key_value}' > "$keyfile"
-          chmod 600 "$keyfile"
-    - command: host.create
-      type: system
-      params:
-        provider: ec2
-        distro: ubuntu2004-large
-        num_hosts: 1
-        security_group_ids: [sg-097bff6dd0d1d31d0] # Allows hosts to talk to each other for MongoDB
-    - command: host.list
-      params:
-        wait: true
-        timeout_seconds: 300
-        num_hosts: 1
-        path: src/github.com/mongodb/mongodb-atlas-cli/build/ci/hosts.json
-  ssh-ready:
-    - command: subprocess.exec
-      type: setup
-      params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
-        binary: ./ssh-ready.sh
-        args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
-  "install automation agent":
-    - command: subprocess.exec
-      type: setup
-      params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
-        binary: ./install-agent-spawn-host.sh
-        env:
-          LC_AGENT_KEY: ${automation_agent_mms_api_key}
-          LC_GROUP_ID: ${automation_agent_mms_group_id}
-          BASE_URL: ${mcli_ops_manager_url}
-        args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
-  "install ops manager":
-    - command: subprocess.exec
-      type: setup
-      params:
-        include_expansions_in_env:
-          - ARCHIVE
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
-        binary: ./install-ops-manager-spawn-host.sh
-        args: ['-u', 'ubuntu', '-i', 'ssh_id', '-h', 'hosts.json']
-  "set-up ops manager":
-    - command: subprocess.exec
-      type: setup
-      params:
-        <<: *go_options
-        include_expansions_in_env:
-          - go_base_path
-          - workdir
-          - ops_manager_service
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
-        binary: ./set-up-ops-manager.sh
-        args: ['-h', 'hosts.json']
-  "set-up cloud manager":
-    - command: subprocess.exec
-      type: setup
-      params:
-        <<: *go_options
-        include_expansions_in_env:
-          - go_base_path
-          - workdir
-          - cloud_manager_service
-          - revision
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
-        binary: ./set-up-cloud-manager.sh
-        args: ['-h', 'hosts.json']
-        env:
-          <<: *go_env
-          MCLI_ORG_ID: ${cloud_manager_org_id}
-          MCLI_PROJECT_ID: ${cloud_manager_project_id}
-          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud-manager
   "install gotestsum":
     - command: shell.exec
       type: setup
@@ -197,25 +101,12 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
-
   "install podman":
     - command: subprocess.exec
       type: setup
       params:
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
         binary: ../build/ci/install_podman.sh
-  "install pykmip":
-    - command: subprocess.exec
-      type: setup
-      params:
-        <<: *go_options
-        working_dir: /src/github.com/mongodb/mongodb-atlas-cli/build/ci/kmip
-        binary: ./install.sh
-        args: ["-h", "hosts.json"]
-        env:
-          <<: *go_env
-          KMIP_CA: ${logs_decrypt_kmip_ca}
-          KMIP_CERT: ${logs_decrypt_kmip_cert}
   "setup operator":
     command: subprocess.exec
     type: setup
@@ -255,17 +146,9 @@ functions:
       params:
         files:
           - tasks.json
-
 pre:
   - func: "clone"
 post:
-  - command: subprocess.exec
-    type: setup
-    params:
-      <<: *go_options
-      working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
-      binary: ./clean-up-cloud-manager.sh
-      args: ['-h', 'hosts.json']
   - command: attach.xunit_results
     params:
       files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
@@ -274,14 +157,6 @@ tasks:
     tags: ["code_health"]
     commands:
       - func: "build"
-  - name: compile_mongocli
-    tags: [ "code_health" ]
-    commands:
-      - func: "build mongocli"
-  - name: compile_atlascli
-    tags: [ "code_health" ]
-    commands:
-      - func: "build atlascli"
   - name: config_e2e
     tags: ["e2e","required"]
     must_have_test_results: true
@@ -981,160 +856,6 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,streams
-  # Cloud Manager and Ops Manager (indirectly) tests
-  - name: cloud_manager_iam_e2e
-    tags: ["e2e","generic","cloudmanager"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "e2e test"
-        vars:
-          MCLI_ORG_ID: ${cloud_manager_org_id}
-          MCLI_PROJECT_ID: ${cloud_manager_project_id}
-          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud-manager
-          E2E_TAGS: iam
-  - name: cloud_manager_generic_e2e
-    tags: ["e2e","generic","cloudmanager"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "e2e test"
-        vars:
-          MCLI_ORG_ID: ${cloud_manager_org_id}
-          MCLI_PROJECT_ID: ${cloud_manager_project_id}
-          MCLI_PRIVATE_API_KEY: ${cloud_manager_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${cloud_manager_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud-manager
-          E2E_TAGS: cloudmanager,generic
-  # Deploy a replica set, we need to be careful on running parallel modifications to the automation config
-  - name: cloud_manager_deploy_replica_set_e2e
-    tags: ["e2e","clusters","cloudmanager"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "build mongocli"
-      - func: "deploy spawn host"
-      - func: ssh-ready
-      - func: "set-up cloud manager"
-      - func: "install automation agent"
-      - func: "e2e test"
-        vars:
-          E2E_TAGS: cloudmanager,remote,replica
-  # Deploy a sharded cluster, we need to be careful on running parallel modifications to the automation config
-  - name: cloud_manager_deploy_sharded_cluster_e2e
-    tags: ["e2e","clusters","cloudmanager"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "build mongocli"
-      - func: "deploy spawn host"
-      - func: ssh-ready
-      - func: "set-up cloud manager"
-      - func: "install automation agent"
-      - func: "e2e test"
-        vars:
-          E2E_TAGS: cloudmanager,remote,sharded
-  # Deploy ops manager 6.0 and test against it
-  - name: ops_manager_6_0_generic_e2e
-    tags: [ "e2e","ops-manager-60" ]
-    must_have_test_results: true
-    depends_on:
-        - name: compile
-          variant: "code_health"
-          patch_optional: true
-    commands:
-        - func: "install gotestsum"
-        - func: "build mongocli"
-        - func: "deploy spawn host"
-        - func: ssh-ready
-        - func: "install ops manager"
-          vars:
-            ARCHIVE: ${ops_manager_6_0_archive}
-        - func: "set-up ops manager"
-        - func: "e2e test"
-          vars:
-            E2E_TAGS: om60,generic
-            OM_VERSION: 6.0
-  - name: ops_manager_6_0_iam_e2e
-    tags: [ "e2e","ops-manager-60" ]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "build mongocli"
-      - func: "deploy spawn host"
-      - func: ssh-ready
-      - func: "install ops manager"
-        vars:
-          ARCHIVE: ${ops_manager_6_0_archive}
-      - func: "set-up ops manager"
-      - func: "e2e test"
-        vars:
-          E2E_TAGS: iam,om60
-          OM_VERSION: 6.0
-  - name: ops_manager_6_0_deploy_replica_set_e2e
-    tags: [ "e2e","ops-manager-60" ]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "build mongocli"
-      - func: "deploy spawn host"
-      - func: ssh-ready
-      - func: "install ops manager"
-        vars:
-          ARCHIVE: ${ops_manager_6_0_archive}
-      - func: "set-up ops manager"
-      - func: "install automation agent"
-      - func: "e2e test"
-        vars:
-          E2E_TAGS: om60,remote,replica
-  - name: ops_manager_6_0_deploy_sharded_cluster_e2e
-    tags: [ "e2e","ops-manager-60" ]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "build mongocli"
-      - func: "deploy spawn host"
-      - func: ssh-ready
-      - func: "install ops manager"
-        vars:
-          ARCHIVE: ${ops_manager_6_0_archive}
-      - func: "set-up ops manager"
-      - func: "install automation agent"
-      - func: "e2e test"
-        vars:
-          E2E_TAGS: om60,remote,sharded
   - name: atlas_decrypt_e2e
     tags: [ "e2e","decrypt" ]
     must_have_test_results: true
@@ -1144,7 +865,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "build mongocli"
+      - func: "build"
       - func: "e2e test"
         vars:
           MCLI_ORG_ID: ${atlas_org_id}
@@ -1529,14 +1250,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .backup .atlas"
-  - name: e2e_cloud_manager_remote
-    display_name: "E2E Cloud Manager Remote Host Tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .clusters .cloudmanager"
   - name: e2e_cleanup
     display_name: "E2E Cleanup Resources"
     run_on:
@@ -1546,14 +1259,6 @@ buildvariants:
     tasks:
       - name: ".e2e .cleanup"
         cron: "0 2 * * *" # 2am daily
-  - name: e2e_ops_manager_60
-    display_name: "E2E Ops Manager 6.0 Tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".ops-manager-60"
   - name: e2e_atlas_deployments
     display_name: "E2E Atlas Deployments Tests"
     run_on:

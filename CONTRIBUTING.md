@@ -158,8 +158,8 @@ For example please edit `./root/atlas/builder.go` to add your command builder me
 
 ### Adding a New Command
 
-`atlascli` and `mongocli` have defined a basic structure for individual commands that should be followed.
-For a `mongocli scope newCommand` command, a file `internal/cli/scope/new_command.go` should implement:
+`atlascli` have defined a basic structure for individual commands that should be followed.
+For a `atlas scope newCommand` command, a file `internal/cli/scope/new_command.go` should implement:
 
 - A `ScopeNewCommandOpts` struct which handles the different options for the command.
 - At least a `func (opts *ScopeNewCommandOpts) Run() error` function with the main command logic.

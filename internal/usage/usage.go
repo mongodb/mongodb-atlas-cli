@@ -50,7 +50,7 @@ const (
 	Until                                    = "ISO 8601-formatted time until which the alert is acknowledged. This command returns this value if a MongoDB user previously acknowledged the alert. After this date, the alert becomes unacknowledged."
 	ConnectionStringType                     = "Type of connection string. If you specify 'private', this option retrieves the connection string for the network peering endpoint. This value defaults to 'standard'."
 	Limit                                    = "Number of items per results page, up to a maximum of 500. If you have more than 500 results, specify the --page option to change the results page."
-	OmitCount                                = "Flag that indicates whether the response returns the total number of items (totalCount) in the JSON response."
+	OmitCount                                = "Flag that indicates whether the JSON response returns the total number of items (totalCount) in the JSON response."
 	Username                                 = "Name that identifies the user. You must specify a valid email address."
 	BackupStatus                             = "Status of the backup configuration."
 	StorageEngine                            = "Storage engine for the backup."

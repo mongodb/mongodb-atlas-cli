@@ -35,6 +35,10 @@ Options
      - Type
      - Required
      - Description
+   * - --OmitCount
+     - 
+     - false
+     - Flag that indicates whether the JSON response returns the total number of items (totalCount) in the JSON response.
    * - -h, --help
      - 
      - false

@@ -34,7 +34,6 @@ type EventListOpts struct {
 	EventType []string
 	MinDate   string
 	MaxDate   string
-	OmitCount bool
 }
 
 type ListOpts struct {

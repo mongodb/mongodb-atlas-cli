@@ -53,6 +53,7 @@ func TestProjectListBuilder(t *testing.T) {
 			flag.Limit,
 			flag.Page,
 			flag.Output,
+			flag.OmitCount,
 			flag.ProjectID,
 			flag.TypeFlag,
 			flag.MaxDate,

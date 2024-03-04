@@ -35,10 +35,6 @@ Options
      - Type
      - Required
      - Description
-   * - --OmitCount
-     - 
-     - false
-     - Flag that indicates whether the JSON response returns the total number of items (totalCount) in the JSON response.
    * - -h, --help
      - 
      - false
@@ -55,6 +51,10 @@ Options
      - string
      - false
      - Minimum created date. This option returns events whose created date is greater than or equal to the specified value.
+   * - --omitCount
+     - 
+     - false
+     - Flag that indicates whether the JSON response returns the total number of items (totalCount) in the JSON response.
    * - -o, --output
      - string
      - false

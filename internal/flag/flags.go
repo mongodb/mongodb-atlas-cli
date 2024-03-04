@@ -113,7 +113,7 @@ const (
 	Until                                     = "until"                                     // Until flag
 	Page                                      = "page"                                      // Page flag
 	Limit                                     = "limit"                                     // Limit flag
-	OmitCount                                 = "OmitCount"                                 // OmitCount flag
+	OmitCount                                 = "omitCount"                                 // OmitCount flag
 	File                                      = "file"                                      // File flag
 	FileShort                                 = "f"                                         // File flag
 	Force                                     = "force"                                     // Force flag

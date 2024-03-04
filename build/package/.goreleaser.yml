@@ -25,7 +25,7 @@ builds:
     hooks:
       # This will notarize Apple binaries and replace goreleaser bins with the notarized ones
       post:
-        - cmd: ./build/package/mongocli_mac_notarize.sh
+        - cmd: ./build/package/mac_notarize.sh
           output: true
   - <<: *build_defaults
     builder: prebuilt
@@ -59,7 +59,6 @@ archives:
   <<: &archive_defaults
     files:
       - README.md
-      - mongocli.md
       - LICENSE
       - third_party_notices/**/*
   wrap_in_directory: true

@@ -1074,15 +1074,8 @@ tasks:
           E2E_TAGS: atlas,cleanup
           E2E_TIMEOUT: 3h
           E2E_PARALLEL: 16
-  - name: atlas_deployments_local_generate_e2e
-    tags: ["e2e","deployments","local","generate"]
-    commands:
-      - func: "generate evergreen"
-        vars:
-          tool_name: atlascli
-          task_type: local
-  - name: atlas_deployments_local_e2e
-    tags: ["e2e","required","deployments","local","run"]
+  - name: atlas_deployments_local_noauth_e2e
+    tags: ["e2e","deployments","local","noauth"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
@@ -1111,8 +1104,29 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,deployments,local
+          E2E_TAGS: atlas,deployments,local,noauth
           E2E_TIMEOUT: 3h
+  - name: atlas_deployments_local_auth_e2e
+    tags: ["e2e","deployments","local","auth"]
+    must_have_test_results: true
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "install podman"
+      - command: shell.exec
+        type: setup
+        params:
+          shell: bash
+          script: |
+            set -e
+            cat /proc/sys/fs/inotify/max_user_watches
+            cat /proc/sys/fs/inotify/max_user_instances
+            echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
+            cat /proc/sys/fs/inotify/max_user_instances
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1122,7 +1136,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,deployments,auth,local
+          E2E_TAGS: atlas,deployments,local,auth
           E2E_TIMEOUT: 3h
   - name: atlas_deployments_atlas_clusters_e2e
     tags: ["e2e","deployments","atlas"]
@@ -1274,6 +1288,6 @@ buildvariants:
     expansions:
       <<: *go_linux_version
     tasks:
-      - name: ".e2e .deployments .local .generate"
+      - name: ".e2e .deployments .local"
 include:
   - filename: build/ci/release.yml

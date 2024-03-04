@@ -229,35 +229,3 @@ func PublishSnapshotTasks(c *shrub.Configuration, toolName string) {
 		false,
 	)
 }
-
-func LocalDeploymentTasks(c *shrub.Configuration, toolName string) {
-	if toolName != atlascli {
-		return
-	}
-
-	for _, runOn := range []string{
-		"rhel8.7-small",
-		"rhel8.8-small",
-		"rhel90-small",
-		"rhel91-small",
-	} {
-		v := &shrub.Variant{
-			BuildName:        fmt.Sprintf("e2e_generated_local_deployments_%v", strings.ReplaceAll(runOn, ".", "_")),
-			BuildDisplayName: fmt.Sprintf("Generated local deployments tests (%s)", runOn),
-			DistroRunOn:      []string{runOn},
-			Expansions:       expansions(),
-		}
-
-		v.AddTasks(".e2e .deployments .local .run")
-
-		c.Variants = append(c.Variants, v)
-	}
-}
-
-func expansions() map[string]interface{} {
-	return map[string]interface{}{
-		"go_root":      "/opt/golang/go1.21",
-		"go_bin":       "/opt/golang/go1.21/bin",
-		"go_base_path": "",
-	}
-}

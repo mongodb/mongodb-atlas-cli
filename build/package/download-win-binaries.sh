@@ -27,10 +27,6 @@ fi
 
 PACKAGE_NAME="mongocli_${VERSION_NAME}_windows_x86_64.msi"
 BINARY_NAME="mongocli.exe"
-if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-	PACKAGE_NAME="mongodb-atlas-cli_${VERSION_NAME}_windows_x86_64.msi"
-	BINARY_NAME="atlas.exe"
-fi
 
 pushd bin
 

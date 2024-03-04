@@ -68,7 +68,6 @@ functions:
         <<: *go_options
         env:
           <<: *go_env
-          NOTARY_SIGNING_KEY_ATLASCLI: ${notary_service_signing_key_atlascli}
           NOTARY_SIGNING_KEY_MONGOCLI: ${notary_service_signing_key_mongocli}
           NOTARY_SIGNING_COMMENT: "Evergreen Automatic Signing (${tool_name})"
           NOTARY_AUTH_TOKEN: ${signing_auth_token_50}
@@ -226,30 +225,6 @@ functions:
           - tool_name
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker
         binary: ./docker-build.sh
-  "docker build meta":
-    - command: subprocess.exec
-      type: test
-      params:
-        include_expansions_in_env:
-          - project
-          - revision
-          - created_at
-          - image
-          - tool_name
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/meta
-        binary: ./docker-build.sh
-  "powershell build":
-    - command: subprocess.exec
-      type: test
-      params:
-        include_expansions_in_env:
-          - project
-          - revision
-          - created_at
-          - tool_name
-          - unstable
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/
-        binary: Powershell -File ./build/package/powershell/windows_post_package_test.ps1
   "docker build repo":
     - command: subprocess.exec
       type: test
@@ -381,8 +356,6 @@ tasks:
           content_type: ${content_type|application/x-gzip}
           display_name: downloads-center-
       - func: "send slack notification"
-        vars:
-          TOOL_NAME: atlascli
   - name: push_mongocli_generate
     patchable: false
     stepback: false
@@ -436,8 +409,8 @@ buildvariants:
     expansions:
       <<: *go_linux_version
       server_version: "4.4.0-rc3"
-      goreleaser_file: "build/package/.mongocli.goreleaser.yml"
-      changelog_file: CHANGELOG_MONGOCLI.md
+      goreleaser_file: "build/package/.goreleaser.yml"
+      changelog_file: CHANGELOG.md
       package_name: "mongocli"
       tool_name: "mongocli"
       latest_deb: ~latest
@@ -475,8 +448,8 @@ buildvariants:
     expansions:
       <<: *go_linux_version
       server_version: "4.4.0-rc3"
-      goreleaser_file: "build/package/.mongocli.goreleaser.yml"
-      changelog_file: CHANGELOG_MONGOCLI.md
+      goreleaser_file: "build/package/.goreleaser.yml"
+      changelog_file: CHANGELOG.md
       package_name: "mongocli"
       tool_name: "mongocli"
     tasks:

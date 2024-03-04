@@ -20,13 +20,9 @@ set -Eeou pipefail
 # This depends on binaries being generated in a goreleaser manner and gon being set up.
 # goreleaser should already take care of calling this script as a part of a custom publisher.
 
-if [ "${TOOL_NAME}" == "atlascli" ]; then
-  echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" >> "signing-envfile"
-  echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> "signing-envfile"
-else
-  echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME_MONGOCLI}" >> "signing-envfile"
-  echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD_MONGOCLI}" >> "signing-envfile"
-fi
+
+echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME_MONGOCLI}" >> "signing-envfile"
+echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD_MONGOCLI}" >> "signing-envfile"
 
 if [[ -f "${artifact:?}" ]]; then
   echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com

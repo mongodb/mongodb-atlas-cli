@@ -22,11 +22,7 @@ fi
 
 VERSION="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
-TOOL_NAME_MESSAGE="MongoDB CLI"
-
-if [[ "${TOOL_NAME:?}" == atlascli ]]; then
-	TOOL_NAME_MESSAGE="MongoDB Atlas CLI"
-fi
+TOOL_NAME_MESSAGE="MongoDB Atlas CLI"
 
 curl --header "Api-User:${evergreen_user:?}" \
 	--header "Api-Key:${evergreen_api_key:?}" \

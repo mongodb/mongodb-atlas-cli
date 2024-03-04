@@ -1,4 +1,4 @@
-# Atlas CLI
+## MongoDB Atlas CLI
 
 The MongoDB Atlas CLI is a modern command line interface that enables you to manage MongoDB Atlas from the terminal.
 

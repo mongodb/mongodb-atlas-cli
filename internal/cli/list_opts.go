@@ -15,7 +15,6 @@
 package cli
 
 import (
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -31,13 +30,6 @@ type ListOpts struct {
 
 func (opts *ListOpts) NewListOptions() *mongodbatlas.ListOptions {
 	return &mongodbatlas.ListOptions{
-		PageNum:      opts.PageNum,
-		ItemsPerPage: opts.ItemsPerPage,
-	}
-}
-
-func (opts *ListOpts) NewAtlasListOptions() *store.ListOptions {
-	return &store.ListOptions{
 		PageNum:      opts.PageNum,
 		ItemsPerPage: opts.ItemsPerPage,
 	}

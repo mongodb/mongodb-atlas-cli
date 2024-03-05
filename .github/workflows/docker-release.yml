@@ -223,7 +223,7 @@ jobs:
           curl https://cosign.mongodb.com/atlas-cli.pem > atlas-cli.pem          
           docker pull "${IMAGE}"          
           # Verify the signature
-          if ! cosign verify --private-infrastructure --key=./atlas-cli.pem "${IMAGE}" 
+          if ! cosign verify --private-infrastructure --key=./atlas-cli.pem "${IMAGE}";
           then
             echo "Error: Signature verification for ${IMAGE} failed."
             exit 1

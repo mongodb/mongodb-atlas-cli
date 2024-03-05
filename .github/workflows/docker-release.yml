@@ -29,7 +29,7 @@ jobs:
       - name: Extract version
         run: |
           release_tag=${{ steps.get-latest-tag.outputs.tag }}
-          echo "LATEST_VERSION=${release_tag#*/}" >> $GITHUB_ENV
+          echo "LATEST_VERSION=${release_tag#*/}" >> "$GITHUB_ENV"
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226
       - name: Login to Docker Hub

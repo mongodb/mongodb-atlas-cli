@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 const (
@@ -45,12 +45,12 @@ func CreateProject(projectName string) (string, error) {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 
-	var project mongodbatlas.Project
+	var project atlasv2.Group
 	if err := json.Unmarshal(resp, &project); err != nil {
 		return "", fmt.Errorf("%w: %s", err, resp)
 	}
 
-	return project.ID, nil
+	return project.GetId(), nil
 }
 
 func deleteProject(projectID string) error {

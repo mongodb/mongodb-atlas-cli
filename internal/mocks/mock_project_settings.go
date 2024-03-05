@@ -9,7 +9,6 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	admin "go.mongodb.org/atlas-sdk/v20231115007/admin"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 // MockProjectSettingsDescriber is a mock of ProjectSettingsDescriber interface.
@@ -74,7 +73,7 @@ func (m *MockProjectSettingsUpdater) EXPECT() *MockProjectSettingsUpdaterMockRec
 }
 
 // UpdateProjectSettings mocks base method.
-func (m *MockProjectSettingsUpdater) UpdateProjectSettings(arg0 string, arg1 *mongodbatlas.ProjectSettings) (*admin.GroupSettings, error) {
+func (m *MockProjectSettingsUpdater) UpdateProjectSettings(arg0 string, arg1 *admin.GroupSettings) (*admin.GroupSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateProjectSettings", arg0, arg1)
 	ret0, _ := ret[0].(*admin.GroupSettings)

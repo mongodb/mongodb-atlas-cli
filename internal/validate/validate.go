@@ -21,10 +21,10 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 )
 
 const minPasswordLength = 10
@@ -159,7 +159,7 @@ func Token() error {
 }
 
 func FlagInSlice(value, flag string, validValues []string) error {
-	if search.StringInSlice(validValues, value) {
+	if slices.Contains(validValues, value) {
 		return nil
 	}
 

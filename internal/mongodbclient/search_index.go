@@ -19,10 +19,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"slices"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -112,7 +112,7 @@ func removeFields(doc bson.D, fields ...string) bson.D {
 	cleanedDoc := bson.D{}
 
 	for _, elem := range doc {
-		if search.StringInSlice(fields, elem.Key) {
+		if slices.Contains(fields, elem.Key) {
 			continue
 		}
 

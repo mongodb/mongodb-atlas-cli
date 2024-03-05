@@ -24,6 +24,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"slices"
 	"strconv"
 	"strings"
 	"testing"
@@ -31,7 +32,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
@@ -1226,14 +1226,14 @@ func checkClustersData(t *testing.T, deployments []*akov2.AtlasDeployment, clust
 	var entries []string
 	for _, deployment := range deployments {
 		if deployment.Spec.ServerlessSpec != nil {
-			if ok := search.StringInSlice(clusterNames, deployment.Spec.ServerlessSpec.Name); ok {
+			if ok := slices.Contains(clusterNames, deployment.Spec.ServerlessSpec.Name); ok {
 				name := deployment.Spec.ServerlessSpec.Name
 				expectedDeployment := referenceServerless(name, region, namespace, projectName, expectedLabels)
 				assert.Equal(t, expectedDeployment, deployment)
 				entries = append(entries, name)
 			}
 		} else if deployment.Spec.DeploymentSpec != nil {
-			if ok := search.StringInSlice(clusterNames, deployment.Spec.DeploymentSpec.Name); ok {
+			if ok := slices.Contains(clusterNames, deployment.Spec.DeploymentSpec.Name); ok {
 				name := deployment.Spec.DeploymentSpec.Name
 				expectedDeployment := referenceAdvancedCluster(name, region, namespace, projectName, expectedLabels)
 				assert.Equal(t, expectedDeployment, deployment)
@@ -1746,7 +1746,7 @@ func checkDataFederationData(t *testing.T, dataFederations []*akov2.AtlasDataFed
 	assert.Len(t, dataFederations, len(dataFedNames))
 	var entries []string
 	for _, instance := range dataFederations {
-		if ok := search.StringInSlice(dataFedNames, instance.Spec.Name); ok {
+		if ok := slices.Contains(dataFedNames, instance.Spec.Name); ok {
 			name := instance.Spec.Name
 			expectedDeployment := referenceDataFederation(name, namespace, projectName, expectedLabels)
 			assert.Equal(t, expectedDeployment, instance)

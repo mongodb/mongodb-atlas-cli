@@ -22,12 +22,12 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
+	"slices"
 	"sort"
 	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/version"
 	"github.com/pelletier/go-toml"
 	"github.com/spf13/afero"
@@ -148,7 +148,7 @@ func GlobalProperties() []string {
 }
 
 func IsTrue(s string) bool {
-	return search.StringInSlice([]string{"t", "T", "true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES", "1"}, s)
+	return slices.Contains([]string{"t", "T", "true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES", "1"}, s)
 }
 
 func Default() *Profile {
@@ -161,7 +161,7 @@ func List() []string {
 
 	keys := make([]string, 0, len(m))
 	for k := range m {
-		if !search.StringInSlice(Properties(), k) {
+		if !slices.Contains(Properties(), k) {
 			keys = append(keys, k)
 		}
 	}
@@ -172,7 +172,7 @@ func List() []string {
 
 // Exists returns true if there are any set settings for the profile name.
 func Exists(name string) bool {
-	return search.StringInSlice(List(), name)
+	return slices.Contains(List(), name)
 }
 
 // getConfigHostnameFromEnvs patches the agent hostname based on set env vars.

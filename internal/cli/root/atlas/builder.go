@@ -32,7 +32,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/backup"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/cloudproviders"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters"
-	atlasconfig "github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdbroles"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/customdns"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/datafederation"
@@ -60,6 +59,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/teams"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/users"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/auth"
+	cliconfig "github.com/mongodb/mongodb-atlas-cli/internal/cli/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/homebrew"
@@ -92,8 +92,8 @@ const (
 	NoAuth AuthRequirements = 0
 	// RequiredAuth command requires authentication.
 	RequiredAuth AuthRequirements = 1
-	// command can work with or without authentication,
-	// and if access token token is found, try to refresh it.
+	// OptionalAuth command can work with or without authentication,
+	// and if access token is found, try to refresh it.
 	OptionalAuth AuthRequirements = 2
 )
 
@@ -204,7 +204,7 @@ Use the --help flag with any command for more info on that command.`,
 	registerCmd.Hidden = true
 
 	rootCmd.AddCommand(
-		atlasconfig.Builder(),
+		cliconfig.Builder(),
 		auth.Builder(),
 		setup.Builder(),
 		projects.Builder(),

@@ -139,7 +139,7 @@ jobs:
         run: go install github.com/golang/mock/mockgen@latest
       - name: Generate mocks
         run: make gen-mocks
-      - name: Check for uncommited files
+      - name: Check for uncommitted files
         run: |
           export FILES=
           FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)
@@ -170,7 +170,7 @@ jobs:
           go-version-file: 'go.mod'
       - name: Run 'go mod tidy'
         run: go mod tidy
-      - name: Check for uncommited files
+      - name: Check for uncommitted files
         run: |
           export FILES=
           FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)

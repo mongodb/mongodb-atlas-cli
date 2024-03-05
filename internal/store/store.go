@@ -18,13 +18,10 @@ package store
 
 import (
 	"context"
-	"crypto/tls"
-	"crypto/x509"
 	"errors"
 	"fmt"
 	"net"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
@@ -38,8 +35,6 @@ import (
 )
 
 const (
-	yes                       = "yes"
-	responseHeaderTimeout     = 1 * time.Minute
 	telemetryTimeout          = 1 * time.Second
 	tlsHandshakeTimeout       = 5 * time.Second
 	timeout                   = 5 * time.Second
@@ -81,21 +76,6 @@ var defaultTransport = &http.Transport{
 	ExpectContinueTimeout: expectContinueTimeout,
 }
 
-var skipVerifyTransport = &http.Transport{
-	ResponseHeaderTimeout: responseHeaderTimeout,
-	TLSHandshakeTimeout:   tlsHandshakeTimeout,
-	DialContext: (&net.Dialer{
-		Timeout:   timeout,
-		KeepAlive: keepAlive,
-	}).DialContext,
-	MaxIdleConns:          maxIdleConns,
-	MaxIdleConnsPerHost:   maxIdleConnsPerHost,
-	Proxy:                 http.ProxyFromEnvironment,
-	IdleConnTimeout:       idleConnTimeout,
-	ExpectContinueTimeout: expectContinueTimeout,
-	TLSClientConfig:       &tls.Config{InsecureSkipVerify: true}, //nolint:gosec // this is optional for some users,
-}
-
 var telemetryTransport = &http.Transport{
 	DialContext: (&net.Dialer{
 		Timeout:   telemetryTimeout,
@@ -106,29 +86,6 @@ var telemetryTransport = &http.Transport{
 	Proxy:                 http.ProxyFromEnvironment,
 	IdleConnTimeout:       idleConnTimeout,
 	ExpectContinueTimeout: expectContinueTimeout,
-}
-
-func customCATransport(ca []byte) *http.Transport {
-	caCertPool := x509.NewCertPool()
-	caCertPool.AppendCertsFromPEM(ca)
-	tlsClientConfig := &tls.Config{ //nolint:gosec // we let users set custom certificates
-		InsecureSkipVerify: false,
-		RootCAs:            caCertPool,
-	}
-	return &http.Transport{
-		ResponseHeaderTimeout: responseHeaderTimeout,
-		TLSHandshakeTimeout:   tlsHandshakeTimeout,
-		DialContext: (&net.Dialer{
-			Timeout:   timeout,
-			KeepAlive: keepAlive,
-		}).DialContext,
-		MaxIdleConns:          maxIdleConns,
-		MaxIdleConnsPerHost:   maxIdleConnsPerHost,
-		Proxy:                 http.ProxyFromEnvironment,
-		IdleConnTimeout:       idleConnTimeout,
-		ExpectContinueTimeout: expectContinueTimeout,
-		TLSClientConfig:       tlsClientConfig,
-	}
 }
 
 func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error) {
@@ -162,20 +119,12 @@ func (tr *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 	return tr.base.RoundTrip(req)
 }
 
-func (s *Store) transport() (*http.Transport, error) {
+func (s *Store) transport() *http.Transport {
 	switch {
-	case s.caCertificate != "":
-		dat, err := os.ReadFile(s.caCertificate)
-		if err != nil {
-			return nil, err
-		}
-		return customCATransport(dat), nil
 	case s.telemetry:
-		return telemetryTransport, nil
-	case s.skipVerify:
-		return skipVerifyTransport, nil
+		return telemetryTransport
 	default:
-		return defaultTransport, nil
+		return defaultTransport
 	}
 }
 
@@ -360,24 +309,6 @@ response:
 	return nil
 }
 
-// TransportConfigGetter interface for Ops Manager custom network settings.
-type TransportConfigGetter interface {
-	OpsManagerCACertificate() string
-	OpsManagerSkipVerify() string
-}
-
-// NetworkPresets is the default Option to set custom network preference.
-func NetworkPresets(c TransportConfigGetter) Option {
-	options := make([]Option, 0)
-	if caCertificate := c.OpsManagerCACertificate(); caCertificate != "" {
-		options = append(options, WithCACertificate(caCertificate))
-	}
-	if skipVerify := c.OpsManagerSkipVerify(); skipVerify != yes {
-		options = append(options, SkipVerify())
-	}
-	return Options(options...)
-}
-
 // ServiceGetter is a basic interface for service and base url settings.
 type ServiceGetter interface {
 	Service() string
@@ -387,7 +318,6 @@ type ServiceGetter interface {
 // AuthenticatedConfig an interface of the methods needed to set up a Store.
 type AuthenticatedConfig interface {
 	CredentialsGetter
-	TransportConfigGetter
 	ServiceGetter
 }
 
@@ -397,7 +327,6 @@ func AuthenticatedPreset(c AuthenticatedConfig) Option {
 	if baseURLOpt := baseURLOption(c); baseURLOpt != nil {
 		options = append(options, baseURLOpt)
 	}
-	options = append(options, NetworkPresets(c))
 	return Options(options...)
 }
 
@@ -410,18 +339,12 @@ func baseURLOption(c ServiceGetter) Option {
 	return nil
 }
 
-type BasicConfig interface {
-	TransportConfigGetter
-	ServiceGetter
-}
-
 // UnauthenticatedPreset is the default Option when connecting to the public API without authentication.
-func UnauthenticatedPreset(c BasicConfig) Option {
+func UnauthenticatedPreset(c ServiceGetter) Option {
 	options := []Option{Service(c.Service())}
 	if option := baseURLOption(c); option != nil {
 		options = append(options, option)
 	}
-	options = append(options, NetworkPresets(c))
 	return Options(options...)
 }
 
@@ -447,11 +370,7 @@ func New(opts ...Option) (*Store, error) {
 		}
 	}
 
-	httpTransport, err := store.transport()
-	if err != nil {
-		return nil, err
-	}
-	client, err := store.httpClient(httpTransport)
+	client, err := store.httpClient(store.transport())
 	if err != nil {
 		return nil, err
 	}
@@ -473,28 +392,4 @@ func New(opts ...Option) (*Store, error) {
 	}
 
 	return store, nil
-}
-
-type ManifestGetter interface {
-	Service() string
-	OpsManagerVersionManifestURL() string
-}
-
-// NewVersionManifest ets the appropriate client for the manifest version page.
-func NewVersionManifest(ctx context.Context, c ManifestGetter) (*Store, error) {
-	s := new(Store)
-	s.ctx = ctx
-	s.service = c.Service()
-	if s.service != config.OpsManagerService {
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-	s.baseURL = versionManifestStaticPath
-	if baseURL := c.OpsManagerVersionManifestURL(); baseURL != "" {
-		s.baseURL = baseURL
-	}
-	if err := s.setOpsManagerClient(http.DefaultClient); err != nil {
-		return nil, err
-	}
-
-	return s, nil
 }

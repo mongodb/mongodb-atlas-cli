@@ -15,7 +15,6 @@
 package cli
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
@@ -70,10 +69,6 @@ func (opts *GlobalOpts) ValidateOrgID() error {
 		return ErrMissingOrgID
 	}
 	return validate.ObjectID(opts.ConfigOrgID())
-}
-
-func DeploymentStatus(baseURL, projectID string) string {
-	return fmt.Sprintf("Changes are being applied, please check %sv2/%s#deployment/topology for status\n", baseURL, projectID)
 }
 
 // GenerateAliases return aliases for use such that they are:

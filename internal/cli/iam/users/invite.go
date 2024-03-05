@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -173,7 +172,7 @@ func (opts *InviteOpts) Prompt() error {
 	prompt := &survey.Password{
 		Message: "Password:",
 	}
-	return telemetry.TrackAskOne(prompt, &opts.password)
+	return survey.AskOne(prompt, &opts.password)
 }
 
 func splitRole(role string) ([]string, error) {

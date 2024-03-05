@@ -27,7 +27,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
@@ -257,7 +256,7 @@ func shouldRetryAuthenticate(err error, p survey.Prompt) (retry bool, errSurvey 
 	if err == nil || !auth.IsTimeoutErr(err) {
 		return false, nil
 	}
-	err = telemetry.TrackAskOne(p, &retry)
+	err = survey.AskOne(p, &retry)
 	return retry, err
 }
 

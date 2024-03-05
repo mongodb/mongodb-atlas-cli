@@ -18,7 +18,6 @@ import (
 	"os"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 )
 
 type KeyStoreProvider string
@@ -46,7 +45,7 @@ func provideInput(m, d string) (string, error) {
 	}
 
 	var input string
-	err := telemetry.TrackAskOne(&survey.Input{
+	err := survey.AskOne(&survey.Input{
 		Message: m,
 		Default: d,
 	}, &input)

@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/ops-manager/atmcfg"
@@ -88,7 +87,7 @@ func (opts *ShutdownOpts) Confirm() error {
 	prompt := &survey.Confirm{
 		Message: fmt.Sprintf("Are you sure you want to shutdown: %s", shutdownProcess),
 	}
-	return telemetry.TrackAskOne(prompt, &opts.confirm)
+	return survey.AskOne(prompt, &opts.confirm)
 }
 
 // mongocli cloud-manager cluster(s) shutdown <clusterName> --projectId projectId --processName hostname:port,hostname:port[--force].

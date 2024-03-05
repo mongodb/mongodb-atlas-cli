@@ -22,7 +22,6 @@ import (
 const (
 	DefaultPage      = 1
 	DefaultPageLimit = 100
-	OmitCountDefault = false
 )
 
 type ListOpts struct {

@@ -22,7 +22,6 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/briandowns/spinner"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
@@ -100,7 +99,6 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 		projects, err = opts.Store.GetOrgProjects(opts.OrgID, list)
 	}
 	if err != nil {
-		err = commonerrors.Check(err)
 		var atlasErr *atlas.ErrorResponse
 		if errors.As(err, &atlasErr) && atlasErr.HTTPCode == 404 {
 			return nil, nil, errNoResults
@@ -143,7 +141,7 @@ func (opts *DefaultSetterOpts) orgs(filter string) (results interface{}, err err
 		if errors.As(err, &atlasErr) && atlasErr.HTTPCode == 404 {
 			return nil, errNoResults
 		}
-		return nil, commonerrors.Check(err)
+		return nil, err
 	}
 	if orgs == nil {
 		return nil, errNoResults

@@ -15,10 +15,8 @@
 package store
 
 import (
-	"fmt"
 	"strconv"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -31,13 +29,8 @@ type ProcessDisksLister interface {
 
 // ProcessDisks encapsulates the logic to manage different cloud providers.
 func (s *Store) ProcessDisks(groupID, host string, port int, opts *atlas.ListOptions) (*atlasv2.PaginatedDiskPartition, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		processID := host + ":" + strconv.Itoa(port)
-		result, _, err := s.clientv2.MonitoringAndLogsApi.ListDiskPartitions(s.ctx, groupID, processID).
-			ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	processID := host + ":" + strconv.Itoa(port)
+	result, _, err := s.clientv2.MonitoringAndLogsApi.ListDiskPartitions(s.ctx, groupID, processID).
+		ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).Execute()
+	return result, err
 }

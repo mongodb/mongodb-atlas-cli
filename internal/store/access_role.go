@@ -15,9 +15,6 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -43,51 +40,31 @@ type CloudProviderAccessRoleAuthorizer interface {
 
 // CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlasv2.CloudProviderAccessRole, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		req := atlasv2.CloudProviderAccessRole{
-			ProviderName: provider,
-		}
-		result, _, err := s.clientv2.CloudProviderAccessApi.CreateCloudProviderAccessRole(s.ctx, groupID, &req).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	req := atlasv2.CloudProviderAccessRole{
+		ProviderName: provider,
 	}
+	result, _, err := s.clientv2.CloudProviderAccessApi.CreateCloudProviderAccessRole(s.ctx, groupID, &req).Execute()
+	return result, err
 }
 
 // CloudProviderAccessRoles encapsulates the logic to manage different cloud providers.
 func (s *Store) CloudProviderAccessRoles(groupID string) (*atlasv2.CloudProviderAccessRoles, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.CloudProviderAccessApi.ListCloudProviderAccessRoles(s.ctx, groupID).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.CloudProviderAccessApi.ListCloudProviderAccessRoles(s.ctx, groupID).Execute()
+	return result, err
 }
 
 // DeauthorizeCloudProviderAccessRoles encapsulates the logic to manage different cloud providers.
 func (s *Store) DeauthorizeCloudProviderAccessRoles(req *atlas.CloudProviderDeauthorizationRequest) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.CloudProviderAccessApi.DeauthorizeCloudProviderAccessRole(s.ctx, req.GroupID, req.ProviderName, req.RoleID).Execute()
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	_, err := s.clientv2.CloudProviderAccessApi.DeauthorizeCloudProviderAccessRole(s.ctx, req.GroupID, req.ProviderName, req.RoleID).Execute()
+	return err
 }
 
 // AuthorizeCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *atlas.CloudProviderAccessRoleRequest) (*atlasv2.CloudProviderAccessRole, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		role := atlasv2.CloudProviderAccessRole{
-			ProviderName:      req.ProviderName,
-			IamAssumedRoleArn: req.IAMAssumedRoleARN,
-		}
-		result, _, err := s.clientv2.CloudProviderAccessApi.AuthorizeCloudProviderAccessRole(s.ctx, groupID, roleID, &role).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	role := atlasv2.CloudProviderAccessRole{
+		ProviderName:      req.ProviderName,
+		IamAssumedRoleArn: req.IAMAssumedRoleARN,
 	}
+	result, _, err := s.clientv2.CloudProviderAccessApi.AuthorizeCloudProviderAccessRole(s.ctx, groupID, roleID, &role).Execute()
+	return result, err
 }

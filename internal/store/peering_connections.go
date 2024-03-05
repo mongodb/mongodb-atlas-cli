@@ -15,9 +15,6 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -67,176 +64,116 @@ type ContainersDeleter interface {
 
 // PeeringConnections encapsulates the logic to manage different cloud providers.
 func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListOptions) ([]atlasv2.BaseNetworkPeeringConnectionSettings, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnections(s.ctx, projectID).
-			ItemsPerPage(opts.ItemsPerPage).
-			PageNum(opts.PageNum).
-			ProviderName(opts.ProviderName).Execute()
-		if err != nil {
-			return nil, err
-		}
-		return result.GetResults(), nil
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnections(s.ctx, projectID).
+		ItemsPerPage(opts.ItemsPerPage).
+		PageNum(opts.PageNum).
+		ProviderName(opts.ProviderName).Execute()
+	if err != nil {
+		return nil, err
 	}
+	return result.GetResults(), nil
 }
 
 // PeeringConnections encapsulates the logic to manage different cloud providers.
 func (s *Store) PeeringConnection(projectID, peerID string) (*atlasv2.BaseNetworkPeeringConnectionSettings, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.GetPeeringConnection(s.ctx, projectID, peerID).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.NetworkPeeringApi.GetPeeringConnection(s.ctx, projectID, peerID).Execute()
+	return result, err
 }
 
 // DeletePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, _, err := s.clientv2.NetworkPeeringApi.DeletePeeringConnection(s.ctx, projectID, peerID).Execute()
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	_, _, err := s.clientv2.NetworkPeeringApi.DeletePeeringConnection(s.ctx, projectID, peerID).Execute()
+	return err
 }
 
 // CreatePeeringConnection encapsulates the logic to manage different cloud providers.
 func (s *Store) CreatePeeringConnection(projectID string, peer *atlasv2.BaseNetworkPeeringConnectionSettings) (*atlasv2.BaseNetworkPeeringConnectionSettings, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringConnection(s.ctx, projectID, peer).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringConnection(s.ctx, projectID, peer).Execute()
+	return result, err
 }
 
 // ContainersByProvider encapsulates the logic to manage different cloud providers.
 func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersListOptions) ([]atlasv2.CloudProviderContainer, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID)
-		if opts != nil {
-			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).ProviderName(opts.ProviderName)
-		}
-		result, _, err := res.Execute()
-		if err != nil {
-			return nil, err
-		}
-		return result.GetResults(), nil
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	res := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID)
+	if opts != nil {
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).ProviderName(opts.ProviderName)
 	}
+	result, _, err := res.Execute()
+	if err != nil {
+		return nil, err
+	}
+	return result.GetResults(), nil
 }
 
 const maxPerPage = 100
 
 // AzureContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) AzureContainers(projectID string) ([]atlasv2.CloudProviderContainer, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
-			PageNum(0).
-			ItemsPerPage(maxPerPage).
-			ProviderName("Azure").
-			Execute()
-		if err != nil {
-			return nil, err
-		}
-		return result.GetResults(), nil
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
+		PageNum(0).
+		ItemsPerPage(maxPerPage).
+		ProviderName("Azure").
+		Execute()
+	if err != nil {
+		return nil, err
 	}
+	return result.GetResults(), nil
 }
 
 // AWSContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) AWSContainers(projectID string) ([]atlasv2.CloudProviderContainer, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
-			PageNum(0).
-			ItemsPerPage(maxPerPage).
-			ProviderName("AWS").
-			Execute()
+	result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
+		PageNum(0).
+		ItemsPerPage(maxPerPage).
+		ProviderName("AWS").
+		Execute()
 
-		if err != nil {
-			return nil, err
-		}
-		return result.GetResults(), nil
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	if err != nil {
+		return nil, err
 	}
+	return result.GetResults(), nil
 }
 
 // GCPContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) GCPContainers(projectID string) ([]atlasv2.CloudProviderContainer, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
-			PageNum(0).
-			ItemsPerPage(maxPerPage).
-			ProviderName("GCP").
-			Execute()
-		if err != nil {
-			return nil, err
-		}
-		return result.GetResults(), nil
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
+		PageNum(0).
+		ItemsPerPage(maxPerPage).
+		ProviderName("GCP").
+		Execute()
+	if err != nil {
+		return nil, err
 	}
+	return result.GetResults(), nil
 }
 
 // AllContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atlasv2.CloudProviderContainer, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.NetworkPeeringApi.ListPeeringContainers(s.ctx, projectID)
-		if opts != nil {
-			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
-		}
-		result, _, err := res.Execute()
-		if err != nil {
-			return nil, err
-		}
-		return result.GetResults(), nil
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	res := s.clientv2.NetworkPeeringApi.ListPeeringContainers(s.ctx, projectID)
+	if opts != nil {
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 	}
+	result, _, err := res.Execute()
+	if err != nil {
+		return nil, err
+	}
+	return result.GetResults(), nil
 }
 
 // DeleteContainer encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteContainer(projectID, containerID string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, _, err := s.clientv2.NetworkPeeringApi.DeletePeeringContainer(s.ctx, projectID, containerID).Execute()
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	_, _, err := s.clientv2.NetworkPeeringApi.DeletePeeringContainer(s.ctx, projectID, containerID).Execute()
+	return err
 }
 
 // Container encapsulates the logic to manage different cloud providers.
 func (s *Store) Container(projectID, containerID string) (interface{}, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.GetPeeringContainer(s.ctx, projectID, containerID).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.NetworkPeeringApi.GetPeeringContainer(s.ctx, projectID, containerID).Execute()
+	return result, err
 }
 
 // CreateContainer encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateContainer(projectID string, container *atlasv2.CloudProviderContainer) (*atlasv2.CloudProviderContainer, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringContainer(s.ctx, projectID, container).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringContainer(s.ctx, projectID, container).Execute()
+	return result, err
 }

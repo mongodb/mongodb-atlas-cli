@@ -49,13 +49,12 @@ var (
 type LoginOpts struct {
 	cli.DefaultSetterOpts
 	cli.RefresherOpts
-	AccessToken    string
-	RefreshToken   string
-	IsGov          bool
-	isCloudManager bool
-	NoBrowser      bool
-	SkipConfig     bool
-	config         LoginConfig
+	AccessToken  string
+	RefreshToken string
+	IsGov        bool
+	NoBrowser    bool
+	SkipConfig   bool
+	config       LoginConfig
 }
 
 // SyncWithOAuthAccessProfile returns a function that is synchronizing the oauth settings
@@ -67,8 +66,6 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 		switch {
 		case opts.IsGov:
 			opts.Service = config.CloudGovService
-		case opts.isCloudManager:
-			opts.Service = config.CloudManagerService
 		default:
 			opts.Service = config.CloudService
 		}

@@ -15,9 +15,6 @@
 package atlas
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
@@ -29,17 +26,12 @@ type PeeringConnectionLister interface {
 
 // PeeringConnections encapsulates the logic to manage different cloud providers.
 func (s *Store) PeeringConnections(projectID string, opts *ContainersListOptions) ([]atlasv2.BaseNetworkPeeringConnectionSettings, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnections(s.ctx, projectID).
-			ItemsPerPage(opts.ItemsPerPage).
-			PageNum(opts.PageNum).
-			ProviderName(opts.ProviderName).Execute()
-		if err != nil {
-			return nil, err
-		}
-		return result.GetResults(), nil
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnections(s.ctx, projectID).
+		ItemsPerPage(opts.ItemsPerPage).
+		PageNum(opts.PageNum).
+		ProviderName(opts.ProviderName).Execute()
+	if err != nil {
+		return nil, err
 	}
+	return result.GetResults(), nil
 }

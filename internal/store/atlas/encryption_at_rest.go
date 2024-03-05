@@ -15,9 +15,6 @@
 package atlas
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
@@ -28,11 +25,6 @@ type EncryptionAtRestDescriber interface {
 }
 
 func (s *Store) EncryptionAtRest(projectID string) (*atlasv2.EncryptionAtRest, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.EncryptionAtRestUsingCustomerKeyManagementApi.GetEncryptionAtRest(s.ctx, projectID).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.EncryptionAtRestUsingCustomerKeyManagementApi.GetEncryptionAtRest(s.ctx, projectID).Execute()
+	return result, err
 }

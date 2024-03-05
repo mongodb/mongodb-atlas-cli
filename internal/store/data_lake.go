@@ -53,55 +53,45 @@ type DataLakeStore interface {
 
 // CreateDataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateDataLake(projectID string, dataLake *atlas.DataLakeCreateRequest) (*atlas.DataLake, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DataLakes.Create(s.ctx, projectID, dataLake)
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.client.(*atlas.Client).DataLakes.Create(s.ctx, projectID, dataLake)
+	return result, err
 }
 
 // UpdateDataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateDataLake(projectID, name string, dataLake *atlas.DataLakeUpdateRequest) (*atlas.DataLake, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DataLakes.Update(s.ctx, projectID, name, dataLake)
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.client.(*atlas.Client).DataLakes.Update(s.ctx, projectID, name, dataLake)
+	return result, err
 }
 
 // DeleteDataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteDataLake(projectID, name string) error {
-	switch s.service {
-	case config.CloudService:
-		_, err := s.client.(*atlas.Client).DataLakes.Delete(s.ctx, projectID, name)
-		return err
-	default:
+	if s.service == config.CloudGovService {
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	_, err := s.client.(*atlas.Client).DataLakes.Delete(s.ctx, projectID, name)
+	return err
 }
 
 // DataLakes encapsulate the logic to manage different cloud providers.
 func (s *Store) DataLakes(projectID string) ([]atlas.DataLake, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DataLakes.List(s.ctx, projectID)
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.client.(*atlas.Client).DataLakes.List(s.ctx, projectID)
+	return result, err
 }
 
 // DataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) DataLake(projectID, name string) (*atlas.DataLake, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DataLakes.Get(s.ctx, projectID, name)
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.client.(*atlas.Client).DataLakes.Get(s.ctx, projectID, name)
+	return result, err
 }

@@ -15,9 +15,6 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
@@ -29,11 +26,6 @@ type ProcessMeasurementLister interface {
 
 // ProcessMeasurements encapsulate the logic to manage different cloud providers.
 func (s *Store) ProcessMeasurements(params *atlasv2.GetHostMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostMeasurementsWithParams(s.ctx, params).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostMeasurementsWithParams(s.ctx, params).Execute()
+	return result, err
 }

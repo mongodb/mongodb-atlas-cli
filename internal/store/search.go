@@ -15,9 +15,6 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
@@ -45,55 +42,30 @@ type SearchIndexDeleter interface {
 
 // SearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string) ([]atlasv2.ClusterSearchIndex, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.AtlasSearchApi.ListAtlasSearchIndexes(s.ctx, projectID, clusterName, collName, dbName).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.AtlasSearchApi.ListAtlasSearchIndexes(s.ctx, projectID, clusterName, collName, dbName).Execute()
+	return result, err
 }
 
 // CreateSearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.AtlasSearchApi.CreateAtlasSearchIndex(s.ctx, projectID, clusterName, index).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.AtlasSearchApi.CreateAtlasSearchIndex(s.ctx, projectID, clusterName, index).Execute()
+	return result, err
 }
 
 // SearchIndex encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlasv2.ClusterSearchIndex, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		index, _, err := s.clientv2.AtlasSearchApi.GetAtlasSearchIndex(s.ctx, projectID, clusterName, indexID).Execute()
-		return index, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	index, _, err := s.clientv2.AtlasSearchApi.GetAtlasSearchIndex(s.ctx, projectID, clusterName, indexID).Execute()
+	return index, err
 }
 
 // UpdateSearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, index *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.AtlasSearchApi.UpdateAtlasSearchIndex(s.ctx, projectID, clusterName, indexID, index).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.AtlasSearchApi.UpdateAtlasSearchIndex(s.ctx, projectID, clusterName, indexID, index).Execute()
+	return result, err
 }
 
 // DeleteSearchIndex encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteSearchIndex(projectID, clusterName, indexID string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, _, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchIndex(s.ctx, projectID, clusterName, indexID).Execute()
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	_, _, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchIndex(s.ctx, projectID, clusterName, indexID).Execute()
+	return err
 }

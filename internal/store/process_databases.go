@@ -15,10 +15,8 @@
 package store
 
 import (
-	"fmt"
 	"strconv"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -31,13 +29,8 @@ type ProcessDatabaseLister interface {
 
 // ProcessDatabases encapsulate the logic to manage different cloud providers.
 func (s *Store) ProcessDatabases(groupID, host string, port int, opts *atlas.ListOptions) (*atlasv2.PaginatedDatabase, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		process := host + ":" + strconv.Itoa(port)
-		result, _, err := s.clientv2.MonitoringAndLogsApi.ListDatabases(s.ctx, groupID, process).
-			PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	process := host + ":" + strconv.Itoa(port)
+	result, _, err := s.clientv2.MonitoringAndLogsApi.ListDatabases(s.ctx, groupID, process).
+		PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).Execute()
+	return result, err
 }

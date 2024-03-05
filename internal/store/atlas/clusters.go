@@ -15,9 +15,6 @@
 package atlas
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
@@ -37,37 +34,22 @@ type ClusterConfigurationOptionsDescriber interface {
 
 // ProjectClusters encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectClusters(projectID string, opts *ListOptions) (interface{}, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.ClustersApi.ListClusters(s.ctx, projectID)
-		if opts != nil {
-			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
-		}
-		result, _, err := res.Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	res := s.clientv2.ClustersApi.ListClusters(s.ctx, projectID)
+	if opts != nil {
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 	}
+	result, _, err := res.Execute()
+	return result, err
 }
 
 // AtlasCluster encapsulates the logic to manage different cloud providers.
 func (s *Store) AtlasCluster(projectID, name string) (*admin.AdvancedClusterDescription, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.ClustersApi.GetCluster(s.ctx, projectID, name).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.ClustersApi.GetCluster(s.ctx, projectID, name).Execute()
+	return result, err
 }
 
 // AtlasClusterConfigurationOptions encapsulates the logic to manage different cloud providers.
 func (s *Store) AtlasClusterConfigurationOptions(projectID, name string) (*admin.ClusterDescriptionProcessArgs, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.ClustersApi.GetClusterAdvancedConfiguration(s.ctx, projectID, name).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.ClustersApi.GetClusterAdvancedConfiguration(s.ctx, projectID, name).Execute()
+	return result, err
 }

@@ -15,9 +15,6 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -34,29 +31,19 @@ type ProjectSettingsUpdater interface {
 
 // ProjectSettings encapsulates the logic of getting settings of a particular project.
 func (s *Store) ProjectSettings(projectID string) (*atlasv2.GroupSettings, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.ProjectsApi.GetProjectSettings(s.ctx, projectID).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.ProjectsApi.GetProjectSettings(s.ctx, projectID).Execute()
+	return result, err
 }
 
 // UpdateProjectSettings encapsulates the logic of updating settings of a particular project.
 func (s *Store) UpdateProjectSettings(projectID string, projectSettings *atlas.ProjectSettings) (*atlasv2.GroupSettings, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		groupSettings := atlasv2.GroupSettings{
-			IsCollectDatabaseSpecificsStatisticsEnabled: projectSettings.IsCollectDatabaseSpecificsStatisticsEnabled,
-			IsDataExplorerEnabled:                       projectSettings.IsDataExplorerEnabled,
-			IsPerformanceAdvisorEnabled:                 projectSettings.IsPerformanceAdvisorEnabled,
-			IsRealtimePerformancePanelEnabled:           projectSettings.IsRealtimePerformancePanelEnabled,
-			IsSchemaAdvisorEnabled:                      projectSettings.IsSchemaAdvisorEnabled,
-		}
-		result, _, err := s.clientv2.ProjectsApi.UpdateProjectSettings(s.ctx, projectID, &groupSettings).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	groupSettings := atlasv2.GroupSettings{
+		IsCollectDatabaseSpecificsStatisticsEnabled: projectSettings.IsCollectDatabaseSpecificsStatisticsEnabled,
+		IsDataExplorerEnabled:                       projectSettings.IsDataExplorerEnabled,
+		IsPerformanceAdvisorEnabled:                 projectSettings.IsPerformanceAdvisorEnabled,
+		IsRealtimePerformancePanelEnabled:           projectSettings.IsRealtimePerformancePanelEnabled,
+		IsSchemaAdvisorEnabled:                      projectSettings.IsSchemaAdvisorEnabled,
 	}
+	result, _, err := s.clientv2.ProjectsApi.UpdateProjectSettings(s.ctx, projectID, &groupSettings).Execute()
+	return result, err
 }

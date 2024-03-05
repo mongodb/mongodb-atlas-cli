@@ -66,14 +66,6 @@ func (opts *DefaultSetterOpts) InitStore(ctx context.Context) error {
 	return err
 }
 
-func (opts *DefaultSetterOpts) IsCloud() bool {
-	return opts.Service == config.CloudService || opts.Service == config.CloudGovService
-}
-
-func (opts *DefaultSetterOpts) IsOpsManager() bool {
-	return opts.Service == config.OpsManagerService
-}
-
 const resultsLimit = 500
 
 var (

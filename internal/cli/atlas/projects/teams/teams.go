@@ -15,8 +15,6 @@
 package teams
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 )
@@ -25,7 +23,7 @@ func Builder() *cobra.Command {
 	const use = "teams"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   fmt.Sprintf("Manage your %s teams.", cli.DescriptionServiceName()),
+		Short:   "Manage your Atlas teams.",
 		Aliases: cli.GenerateAliases(use),
 	}
 

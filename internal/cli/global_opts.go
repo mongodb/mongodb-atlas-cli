@@ -107,11 +107,6 @@ func ExampleAtlasEntryPoint() string {
 	return exampleBin
 }
 
-// DescriptionServiceName returns the name of the service that uses a given IAM command.
-func DescriptionServiceName() string {
-	return "Atlas"
-}
-
 // ReturnValueForSetting returns a boolean value that is useful when working with boolean flags to inform
 // whether the given option should be active or inactive.
 func ReturnValueForSetting(enableFlag, disableFlag bool) *bool {

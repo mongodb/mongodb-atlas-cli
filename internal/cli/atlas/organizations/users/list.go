@@ -99,9 +99,8 @@ func ListBuilder() *cobra.Command {
 func Builder() *cobra.Command {
 	const use = "users"
 	cmd := &cobra.Command{
-		Use: use,
-		Short: fmt.Sprintf("Manage your %s users.",
-			cli.DescriptionServiceName()),
+		Use:     use,
+		Short:   "Manage your Atlas users.",
 		Aliases: cli.GenerateAliases(use),
 	}
 

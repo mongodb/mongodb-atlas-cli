@@ -22,7 +22,6 @@ import (
 	"github.com/go-test/deep"
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestBuildAtlasRoles(t *testing.T) {
@@ -91,59 +90,6 @@ func TestBuildAtlasRoles(t *testing.T) {
 		t.Run("", func(t *testing.T) {
 			t.Parallel()
 			got := BuildAtlasRoles(input)
-			if err := deep.Equal(want, got); err != nil {
-				t.Fatalf("expected: %v, got: %v", want, got)
-			}
-		})
-	}
-}
-
-func TestBuildOMRoles(t *testing.T) {
-	type test struct {
-		input []string
-		want  []*opsmngr.Role
-	}
-
-	tests := []test{
-		{
-			input: []string{"admin"},
-			want: []*opsmngr.Role{
-				{
-					Role:     "admin",
-					Database: "admin",
-				},
-			},
-		},
-		{
-			input: []string{"admin@test"},
-			want: []*opsmngr.Role{
-				{
-					Role:     "admin",
-					Database: "test",
-				},
-			},
-		},
-		{
-			input: []string{"admin@test", "something"},
-			want: []*opsmngr.Role{
-				{
-					Role:     "admin",
-					Database: "test",
-				},
-				{
-					Role:     "something",
-					Database: "admin",
-				},
-			},
-		},
-	}
-
-	for _, tc := range tests {
-		input := tc.input
-		want := tc.want
-		t.Run("", func(t *testing.T) {
-			t.Parallel()
-			got := BuildOMRoles(input)
 			if err := deep.Equal(want, got); err != nil {
 				t.Fatalf("expected: %v, got: %v", want, got)
 			}

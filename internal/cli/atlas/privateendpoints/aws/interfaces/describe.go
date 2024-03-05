@@ -70,10 +70,10 @@ func DescribeBuilder() *cobra.Command {
 			"interfaceEndpointIdDesc": "Unique string that identifies the AWS private endpoint interface in AWS.",
 			"output":                  describeTemplate,
 		},
-		Example: fmt.Sprintf(`  # Return the JSON-formatted details of the AWS private endpoint interface with the ID 	
+		Example: `  # Return the JSON-formatted details of the AWS private endpoint interface with the ID 	
 		vpce-00713b5e644e830a3 in AWS for an AWS private endpoint with the ID 5f4fc14da2b47835a58c63a2 in Atlas:
-  %s privateEndpoints aws interfaces describe 	
-  vpce-00713b5e644e830a3 --endpointServiceId 5f4fc14da2b47835a58c63a2`, cli.ExampleAtlasEntryPoint()),
+  atlas privateEndpoints aws interfaces describe 	
+  vpce-00713b5e644e830a3 --endpointServiceId 5f4fc14da2b47835a58c63a2`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.privateEndpointID = args[0]
 			return opts.PreRunE(

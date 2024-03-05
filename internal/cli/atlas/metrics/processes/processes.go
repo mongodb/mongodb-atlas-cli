@@ -68,17 +68,17 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "processes <hostname:port>",
 		Short: "Return the process measurements for the specified host.",
-		Long: fmt.Sprintf(`To return the hostname and port needed for this command, run
-%s processes list
+		Long: `To return the hostname and port needed for this command, run
+atlas processes list
 
-`, cli.ExampleAtlasEntryPoint()) + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
+` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"process"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"hostname:portDesc": "Hostname and port number of the instance running the MongoDB process.",
 		},
-		Example: fmt.Sprintf(`  # Return the JSON-formatted process metrics for the host atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
-  %s metrics processes atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the JSON-formatted process metrics for the host atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
+  atlas metrics processes atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

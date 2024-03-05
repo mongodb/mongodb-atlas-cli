@@ -16,7 +16,6 @@ package processes
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -73,8 +72,8 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "describe <hostname:port>",
 		Short: "Return the details for the specified MongoDB process for your project.",
-		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the MongoDB process with hostname and port atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
-  %s process describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the JSON-formatted details for the MongoDB process with hostname and port atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017
+  atlas process describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 --output json`,
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"hostname:portDesc": "Hostname and port number of the instance running the Atlas MongoDB process.",

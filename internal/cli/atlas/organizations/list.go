@@ -80,11 +80,11 @@ func ListBuilder() *cobra.Command {
 		Short: "Return all organizations.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Args:  require.NoArgs,
-		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all organizations:
-  %[1]s organizations list --output json
+		Example: `  # Return a JSON-formatted list of all organizations:
+  atlas organizations list --output json
   
   # Return a JSON-formatted list that includes the organizations named org1 and Org1, but doesn't return org123:
-  %[1]s organizations list --name org1 --output json`, cli.ExampleAtlasEntryPoint()),
+  atlas organizations list --name org1 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.initStore(cmd.Context()),

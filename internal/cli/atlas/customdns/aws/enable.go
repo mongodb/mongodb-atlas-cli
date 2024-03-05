@@ -60,8 +60,8 @@ func EnableBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": enableTemplate,
 		},
-		Example: fmt.Sprintf(`  # Enable the custom DNS configuration deployed to AWS in the project with ID 618d48e05277a606ed2496fe:		
-  %s customDns aws enable --projectId 618d48e05277a606ed2496fe `, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Enable the custom DNS configuration deployed to AWS in the project with ID 618d48e05277a606ed2496fe:		
+  atlas customDns aws enable --projectId 618d48e05277a606ed2496fe `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

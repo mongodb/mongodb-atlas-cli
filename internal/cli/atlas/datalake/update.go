@@ -17,7 +17,6 @@ package datalake
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -96,8 +95,8 @@ func UpdateBuilder() *cobra.Command {
 			"nameDesc": "Name of the federated database instance to update.",
 			"output":   updateTemplate,
 		},
-		Example: fmt.Sprintf(`  # Modify the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3 to route client connections to OREGON_USA:
-  %s dataLakes update myFDI --region OREGON_USA --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Modify the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3 to route client connections to OREGON_USA:
+  atlas dataLakes update myFDI --region OREGON_USA --projectId 5e2211c17a3e5a48f5497de3 --output json`,
 		Deprecated: "Please use 'atlas datafederation update'",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

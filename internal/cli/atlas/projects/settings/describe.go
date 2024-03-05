@@ -16,7 +16,6 @@ package settings
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -61,8 +60,8 @@ func DescribeBuilder() *cobra.Command {
 		Aliases:     []string{"get"},
 		Short:       "Retrieve details for settings to the specified project.",
 		Annotations: map[string]string{"output": describeTemplate},
-		Example: fmt.Sprintf(`  # This example uses the profile named "myprofile" for accessing Atlas.
-  %s projects settings describe -P myprofile --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # This example uses the profile named "myprofile" for accessing Atlas.
+  atlas projects settings describe -P myprofile --projectId 5e2211c17a3e5a48f5497de3`,
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

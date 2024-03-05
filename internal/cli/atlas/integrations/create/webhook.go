@@ -77,8 +77,8 @@ func WebhookBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": createTemplateWebhook,
 		},
-		Example: fmt.Sprintf(`  # Integrate a webhook with Atlas that uses the secret mySecret for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s integrations create WEBHOOK --url http://9b4ac7aa.abc.io/payload --secret mySecret --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Integrate a webhook with Atlas that uses the secret mySecret for the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas integrations create WEBHOOK --url http://9b4ac7aa.abc.io/payload --secret mySecret --projectId 5e2211c17a3e5a48f5497de3 --output json`,
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

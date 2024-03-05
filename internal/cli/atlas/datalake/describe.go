@@ -16,7 +16,6 @@ package datalake
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -67,8 +66,8 @@ func DescribeBuilder() *cobra.Command {
 			"nameDesc": "Name of the federated database instance to retrieve.",
 			"output":   describeTemplate,
 		},
-		Example: fmt.Sprintf(`  # Return the details for the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s dataLakes describe myFDI --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the details for the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas dataLakes describe myFDI --projectId 5e2211c17a3e5a48f5497de3 --output json`,
 		Deprecated: "Please use 'atlas datafederation describe'",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]

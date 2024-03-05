@@ -90,9 +90,9 @@ func UpdateBuilder() *cobra.Command {
 			"connectionNameDesc": "Name of the connection.",
 			"output":             updateTemplate,
 		},
-		Example: fmt.Sprintf(`# update an Atlas Stream Processing connection:
-  %[1]s streams connection update kafkaprod --instance test01 -f kafkaConfig.json
-`, cli.ExampleAtlasEntryPoint()),
+		Example: `# update an Atlas Stream Processing connection:
+  atlas streams connection update kafkaprod --instance test01 -f kafkaConfig.json
+`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.PreRunE(

@@ -70,8 +70,8 @@ func ListBuilder() *cobra.Command {
 		Short:   "Return all API keys for your organization.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Args:    require.NoArgs,
-		Example: fmt.Sprintf(`  # Return a JSON-formatted list of organization API keys for the organization with the ID 5a1b39eec902201990f12345:
-  %s organizations apiKeys list --orgId 5a1b39eec902201990f12345 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return a JSON-formatted list of organization API keys for the organization with the ID 5a1b39eec902201990f12345:
+  atlas organizations apiKeys list --orgId 5a1b39eec902201990f12345 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

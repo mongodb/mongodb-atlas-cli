@@ -16,7 +16,6 @@ package certs
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -70,8 +69,8 @@ The user you specify must authenticate using X.509 certificates.`,
 		Annotations: map[string]string{
 			"usernameDesc": "Username of the database user for whom you want to list Atlas-managed certificates.",
 		},
-		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all Atlas-managed X.509 certificates for a MongoDB user named dbuser for the project with ID 5e2211c17a3e5a48f5497de3:
-  %s dbusers certs list dbuser --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return a JSON-formatted list of all Atlas-managed X.509 certificates for a MongoDB user named dbuser for the project with ID 5e2211c17a3e5a48f5497de3:
+  atlas dbusers certs list dbuser --projectId 5e2211c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.username = args[0]
 

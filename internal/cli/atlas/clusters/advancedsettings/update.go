@@ -16,7 +16,6 @@ package advancedsettings
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/commonerrors"
@@ -131,12 +130,11 @@ func UpdateBuilder() *cobra.Command {
 		Long: `Updates the advanced configuration details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. Advanced configuration details include the read/write concern, index and oplog limits, and other database settings.
 Atlas supports this command only for M10+ clusters.
 `,
-		Example: fmt.Sprintf(`  # Update the minimum oplog size for a cluster:
-  %[1]s cluster advancedSettings update <clusterName> --projectId <projectId> --oplogSizeMB 1000
+		Example: `  # Update the minimum oplog size for a cluster:
+  atlas cluster advancedSettings update <clusterName> --projectId <projectId> --oplogSizeMB 1000
 
   # Update the minimum TLS protocol version for a cluster:
-  %[1]s cluster advancedSettings update <clusterName> --projectId <projectId> --minimumEnabledTLSProtocol "TLS1_2"`,
-			cli.ExampleAtlasEntryPoint()),
+  atlas cluster advancedSettings update <clusterName> --projectId <projectId> --minimumEnabledTLSProtocol "TLS1_2"`,
 		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 0 {

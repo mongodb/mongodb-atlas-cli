@@ -81,8 +81,8 @@ func DisableBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": disableTemplate,
 		},
-		Example: fmt.Sprintf(`  # Disable the customer-managed X.509 configuration in the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s security customerCerts disable --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Disable the customer-managed X.509 configuration in the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas security customerCerts disable --projectId 5e2211c17a3e5a48f5497de3`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

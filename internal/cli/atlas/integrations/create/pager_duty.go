@@ -75,8 +75,8 @@ func PagerDutyBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": createTemplatePagerDuty,
 		},
-		Example: fmt.Sprintf(`  # Integrate PagerDuty with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s integrations create PAGER_DUTY --serviceKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Integrate PagerDuty with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas integrations create PAGER_DUTY --serviceKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`,
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

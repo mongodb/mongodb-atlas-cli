@@ -92,7 +92,7 @@ Creating your cluster... [It's safe to 'Ctrl + C']
 `
 const setupTemplateIPNotFound = `
 We could not find your public IP address. To add your IP address run:
-  %s accesslist create
+  atlas accesslist create
 
 `
 
@@ -215,7 +215,7 @@ func (opts *Opts) newDefaultValues() (*clusterSettings, error) {
 		if publicIP := store.IPAddress(); publicIP != "" {
 			values.IPAddresses = []string{publicIP}
 		} else {
-			_, _ = log.Warningf(setupTemplateIPNotFound, cli.ExampleAtlasEntryPoint())
+			_, _ = log.Warning(setupTemplateIPNotFound)
 		}
 	}
 
@@ -431,7 +431,7 @@ func (opts *Opts) setupCluster() error {
 		if publicIP := store.IPAddress(); publicIP != "" {
 			opts.IPAddresses = []string{publicIP}
 		} else {
-			_, _ = log.Warningf(setupTemplateIPNotFound, cli.ExampleAtlasEntryPoint())
+			_, _ = log.Warning(setupTemplateIPNotFound)
 		}
 	}
 

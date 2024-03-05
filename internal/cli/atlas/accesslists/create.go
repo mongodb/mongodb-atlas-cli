@@ -157,18 +157,18 @@ The command doesn't overwrite existing entries in the access list. Instead, it a
 			"entryDesc": "IP address, CIDR address, or AWS security group ID that you want to add to the access list.",
 			"output":    createTemplate,
 		},
-		Example: fmt.Sprintf(`  # Create an IP access list entry using the current IP address:
-  %[1]s accessList create --currentIp
+		Example: `  # Create an IP access list entry using the current IP address:
+  atlas accessList create --currentIp
   
   # Create an access list entry for the IP address 192.0.2.15 in the project with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s accessList create 192.0.2.15 --type ipAddress --projectId 5e2211c17a3e5a48f5497de3 --comment "IP address for app server 2" --output json
+  atlas accessList create 192.0.2.15 --type ipAddress --projectId 5e2211c17a3e5a48f5497de3 --comment "IP address for app server 2" --output json
   
   # Create an access list entry in CIDR notation for 73.231.201.205/24 in the project with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s accessList create 73.231.201.205/24 --type cidrBlock --projectId 5e2211c17a3e5a48f5497de3 --output json --comment "CIDR block for servers C - F"
+  atlas accessList create 73.231.201.205/24 --type cidrBlock --projectId 5e2211c17a3e5a48f5497de3 --output json --comment "CIDR block for servers C - F"
   
   # Create an access list entry for the AWS security group sg-903004f8 in the project with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s accessList create sg-903004f8 --type awsSecurityGroup
-  --projectId 5e2211c17a3e5a48f5497de3 --output json --comment "AWS Security Group"`, cli.ExampleAtlasEntryPoint()),
+  atlas accessList create sg-903004f8 --type awsSecurityGroup
+  --projectId 5e2211c17a3e5a48f5497de3 --output json --comment "AWS Security Group"`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

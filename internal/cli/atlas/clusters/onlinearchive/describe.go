@@ -69,8 +69,8 @@ func DescribeBuilder() *cobra.Command {
 			"archiveIdDesc": "Unique identifier of the online archive to retrieve.",
 			"output":        describeTemplate,
 		},
-		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
-  %s clusters onlineArchives describe 5f189832e26ec075e10c32d3 --clusterName myCluster --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the JSON-formatted details for the online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
+  atlas clusters onlineArchives describe 5f189832e26ec075e10c32d3 --clusterName myCluster --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

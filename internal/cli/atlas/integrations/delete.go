@@ -58,8 +58,8 @@ func DeleteBuilder() *cobra.Command {
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args: require.ExactValidArgs(1),
-		Example: fmt.Sprintf(`  # Remove the Datadog integration for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s integrations delete DATADOG --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Remove the Datadog integration for the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas integrations delete DATADOG --projectId 5e2211c17a3e5a48f5497de3`,
 		ValidArgs: []string{"PAGER_DUTY", "MICROSOFT_TEAMS", "SLACK", "DATADOG", "NEW_RELIC", "OPS_GENIE", "VICTOR_OPS", "WEBHOOK", "PROMETHEUS"},
 		Annotations: map[string]string{
 			"integrationTypeDesc": "Human-readable label that identifies the service integration to delete. Valid values are PAGER_DUTY, MICROSOFT_TEAMS, SLACK, DATADOG, NEW_RELIC, OPS_GENIE, VICTOR_OPS, WEBHOOK, PROMETHEUS.",

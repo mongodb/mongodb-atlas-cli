@@ -93,8 +93,8 @@ func UpdateBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": updateTemplate,
 		},
-		Example: fmt.Sprintf(`  # Update a search node for the cluster named myCluster using a JSON node spec configuration file named spec.json:
-  %s clusters search nodes update --clusterName myCluster --file spec.json --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Update a search node for the cluster named myCluster using a JSON node spec configuration file named spec.json:
+  atlas clusters search nodes update --clusterName myCluster --file spec.json --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -64,8 +64,8 @@ func DeleteBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": opts.SuccessMessage(),
 		},
-		Example: fmt.Sprintf(`  # The following deletes the continuous backup export bucket specified by ID:
-  %s backup exports buckets delete --bucketId dbdb00ca12345678f901a234`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # The following deletes the continuous backup export bucket specified by ID:
+  atlas backup exports buckets delete --bucketId dbdb00ca12345678f901a234`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

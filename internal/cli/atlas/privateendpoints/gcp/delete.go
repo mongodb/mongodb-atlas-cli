@@ -62,7 +62,7 @@ func DeleteBuilder() *cobra.Command {
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 			"output":                successDeleteTemplate,
 		},
-		Example: fmt.Sprintf(`  %s privateEndpoint gcp delete vpce-abcdefg0123456789 --force`, cli.ExampleAtlasEntryPoint()),
+		Example: `  atlas privateEndpoint gcp delete vpce-abcdefg0123456789 --force`,
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {

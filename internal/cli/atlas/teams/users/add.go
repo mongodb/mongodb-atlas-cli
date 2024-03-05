@@ -79,8 +79,8 @@ func AddBuilder() *cobra.Command {
 			"userIdDesc": "Unique 24-digit string that identifies the user. You can add more than one user at a time by specifying multiple user IDs separated by a space.",
 			"output":     addTemplate,
 		},
-		Example: fmt.Sprintf(`  # Add the users with the IDs 5dd58c647a3e5a6c5bce46c7 and 5dd56c847a3e5a1f363d424d to the team with the ID 5f6a5c6c713184005d72fe6e for the organization with ID 5e2211c17a3e5a48f5497de3:
-  %s teams users add 5dd58c647a3e5a6c5bce46c7 5dd56c847a3e5a1f363d424d --teamId 5f6a5c6c713184005d72fe6e --orgId 5e1234c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Add the users with the IDs 5dd58c647a3e5a6c5bce46c7 and 5dd56c847a3e5a1f363d424d to the team with the ID 5f6a5c6c713184005d72fe6e for the organization with ID 5e2211c17a3e5a48f5497de3:
+  atlas teams users add 5dd58c647a3e5a6c5bce46c7 5dd56c847a3e5a1f363d424d --teamId 5f6a5c6c713184005d72fe6e --orgId 5e1234c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.users = args
 			return opts.PreRunE(

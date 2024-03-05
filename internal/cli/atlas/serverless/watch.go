@@ -73,7 +73,7 @@ If you run the command in the terminal, it blocks the terminal session until the
 You can interrupt the command's polling at any time with CTRL-C.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Example: fmt.Sprintf(`  %s serverless watch instanceNameSample`, cli.ExampleAtlasEntryPoint()),
+		Example: `  atlas serverless watch instanceNameSample`,
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"instanceNameDesc": "Name of the instance to watch.",

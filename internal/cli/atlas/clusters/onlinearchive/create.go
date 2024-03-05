@@ -125,11 +125,11 @@ To learn more about online archives, see https://www.mongodb.com/docs/atlas/onli
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Data Access Admin"),
 		Args: require.NoArgs,
-		Example: fmt.Sprintf(`  # Create an online archive for the sample_mflix.movies collection in a cluster named myTestCluster when the current date is greater than the value of released date plus 2 days:
-  %[1]s clusters onlineArchive create --clusterName myTestCluster --db sample_mflix --collection movies --dateField released --archiveAfter 2 --output json
+		Example: `  # Create an online archive for the sample_mflix.movies collection in a cluster named myTestCluster when the current date is greater than the value of released date plus 2 days:
+  atlas clusters onlineArchive create --clusterName myTestCluster --db sample_mflix --collection movies --dateField released --archiveAfter 2 --output json
   
   # Create an online archive for the sample_mflix.movies collection in a cluster named myTestCluster using a profile named egAtlasProfile when the current date is greater than the value of the released date plus 2 days. Data is partitioned based on the title field, year field, and released field from the documents in the collection:
-  %[1]s clusters onlineArchive create --clusterName myTestCluster --db sample_mflix --collection movies --dateField released --archiveAfter 2 --partition title,year --output json -P egAtlasProfile `, cli.ExampleAtlasEntryPoint()),
+  atlas clusters onlineArchive create --clusterName myTestCluster --db sample_mflix --collection movies --dateField released --archiveAfter 2 --partition title,year --output json -P egAtlasProfile `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

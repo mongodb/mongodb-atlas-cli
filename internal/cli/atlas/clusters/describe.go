@@ -67,8 +67,8 @@ func DescribeBuilder() *cobra.Command {
 			"clusterNameDesc": "Name of the cluster to retrieve.",
 			"output":          describeTemplate,
 		},
-		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the cluster named myCluster:
-  %s clusters describe myCluster --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the JSON-formatted details for the cluster named myCluster:
+  atlas clusters describe myCluster --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

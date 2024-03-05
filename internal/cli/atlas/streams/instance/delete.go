@@ -59,11 +59,11 @@ func DeleteBuilder() *cobra.Command {
 
 Before deleting an Atlas Streams Processing instance, you must first stop all processes associated with it.
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Example: fmt.Sprintf(`  # Remove an Atlas Stream Processing instance after prompting for a confirmation:
-  %[1]s streams instance delete myProcessorInstance
+		Example: `  # Remove an Atlas Stream Processing instance after prompting for a confirmation:
+  atlas streams instance delete myProcessorInstance
 
   # Remove an Atlas Stream Processing instance named myProcessorInstance without requiring confirmation:
-  %[1]s streams instance delete myProcessorInstance --force`, cli.ExampleAtlasEntryPoint()),
+  atlas streams instance delete myProcessorInstance --force`,
 		Aliases: []string{"rm"},
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{

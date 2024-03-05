@@ -67,8 +67,8 @@ func DescribeBuilder() *cobra.Command {
 			"idDesc": "Unique identifier of the sample data job.",
 			"output": describeTemplate,
 		},
-		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the sample data load job:
-  %s clusters sampleData describe 5e98249d937cfc52efdc2a9f --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the JSON-formatted details for the sample data load job:
+  atlas clusters sampleData describe 5e98249d937cfc52efdc2a9f --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

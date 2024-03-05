@@ -16,7 +16,6 @@ package privateendpoints
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -82,7 +81,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 		Annotations: map[string]string{
 			"output": watchTemplate,
 		},
-		Example: fmt.Sprintf(`  %s privateEndpoint watch vpce-abcdefg0123456789`, cli.ExampleAtlasEntryPoint()),
+		Example: `  atlas privateEndpoint watch vpce-abcdefg0123456789`,
 		RunE: func(_ *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.Run()

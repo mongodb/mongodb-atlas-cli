@@ -60,8 +60,8 @@ func DisableBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": disableTemplate,
 		},
-		Example: fmt.Sprintf(`  # Disable the custom DNS configuration deployed to AWS in the project with ID 618d48e05277a606ed2496fe:		
-  %s customDns aws disable --projectId 618d48e05277a606ed2496fe `, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Disable the custom DNS configuration deployed to AWS in the project with ID 618d48e05277a606ed2496fe:		
+  atlas customDns aws disable --projectId 618d48e05277a606ed2496fe `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

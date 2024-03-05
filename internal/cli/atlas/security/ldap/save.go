@@ -140,11 +140,11 @@ func SaveBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": saveTemplate,
 		},
-		Example: fmt.Sprintf(`  # Save an LDAP server configuration to authenticate and authorize MongoDB users for the host atlas-ldaps-01.ldap.myteam.com: 
-  %s security ldap save --authenticationEnabled --authorizationEnabled 
+		Example: `  # Save an LDAP server configuration to authenticate and authorize MongoDB users for the host atlas-ldaps-01.ldap.myteam.com: 
+  atlas security ldap save --authenticationEnabled --authorizationEnabled 
   --hostname atlas-ldaps-01.ldap.myteam.com --bindUsername 
   "CN=Administrator,CN=Users,DC=atlas-ldaps-01,DC=myteam,DC=com" 
-  --bindPassword changeMe`, cli.ExampleAtlasEntryPoint()),
+  --bindPassword changeMe`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

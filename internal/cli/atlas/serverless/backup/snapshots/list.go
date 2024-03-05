@@ -69,8 +69,8 @@ func ListBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"clusterNameDesc": "Label that identifies the Atlas serverless instance that contains the snapshots you want to return.",
 		},
-		Example: fmt.Sprintf(`  # Return a JSON-formatted list of snapshots for the instance named myDemo 
-  %s serverless backups snapshots list myDemo --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return a JSON-formatted list of snapshots for the instance named myDemo 
+  atlas serverless backups snapshots list myDemo --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -16,7 +16,6 @@ package datalake
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -60,8 +59,8 @@ func DeleteBuilder() *cobra.Command {
 			"nameDesc": "Name of the federated database instance to delete.",
 			"output":   opts.SuccessMessage(),
 		},
-		Example: fmt.Sprintf(`  # Remove the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s dataLakes delete myFDI --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Remove the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas dataLakes delete myFDI --projectId 5e2211c17a3e5a48f5497de3`,
 		Deprecated: "Please use 'atlas datafederation delete'",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {

@@ -70,8 +70,8 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   "Return all teams for your organization.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Member"),
-		Example: fmt.Sprintf(`  # Return a JSON-formatted list of the teams for the organization with ID 5e2211c17a3e5a48f5497de3:
-  %s teams list --orgId 5e1234c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return a JSON-formatted list of the teams for the organization with ID 5e2211c17a3e5a48f5497de3:
+  atlas teams list --orgId 5e1234c17a3e5a48f5497de3 --output json`,
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

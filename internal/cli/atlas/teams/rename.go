@@ -73,8 +73,8 @@ func RenameBuilder() *cobra.Command {
 			"newNameDesc": "New label that identifies the team.",
 			"output":      renameTemplate,
 		},
-		Example: fmt.Sprintf(`  # Rename a team in the organization with ID 5e2211c17a3e5a48f5497de3:
-  %s teams rename newName --teamId 5e1234c17a3e5a48f5497de3 --orgId 5e1234c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Rename a team in the organization with ID 5e2211c17a3e5a48f5497de3:
+  atlas teams rename newName --teamId 5e1234c17a3e5a48f5497de3 --orgId 5e1234c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

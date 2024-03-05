@@ -16,7 +16,6 @@ package restores
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -80,8 +79,8 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 			"restoreJobIdDesc": "ID of the restore job.",
 			"output":           watchTemplate,
 		},
-		Example: fmt.Sprintf(`  # Watch the continuous backup restore job with the ID 507f1f77bcf86cd799439011 for the restore source cluster named Cluster0 until it becomes available:
-  %s backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Watch the continuous backup restore job with the ID 507f1f77bcf86cd799439011 for the restore source cluster named Cluster0 until it becomes available:
+  atlas backup restore watch 507f1f77bcf86cd799439011 --clusterName Cluster0`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

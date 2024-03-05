@@ -69,8 +69,8 @@ func ListBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"clusterNameDesc": "Label that identifies the Atlas serverless instance for which you want to return restore jobs.",
 		},
-		Example: fmt.Sprintf(`  # Return all continuous backup restore jobs for the serverless instance Instance0:
-  %s serverless backup restore list Instance0`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return all continuous backup restore jobs for the serverless instance Instance0:
+  atlas serverless backup restore list Instance0`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

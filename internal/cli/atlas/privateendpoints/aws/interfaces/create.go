@@ -78,8 +78,8 @@ func CreateBuilder() *cobra.Command {
 			"endpointServiceIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.",
 			"output":                createTemplate,
 		},
-		Example: fmt.Sprintf(`  # Create a new interface for an AWS private endpoint with the ID 5f4fc14da2b47835a58c63a2 in Atlas and the ID vpce-00713b5e644e830a3 in AWS for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s privateEndpoints aws interfaces create 5f4fc14da2b47835a58c63a2 --privateEndpointId vpce-00713b5e644e830a3 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Create a new interface for an AWS private endpoint with the ID 5f4fc14da2b47835a58c63a2 in Atlas and the ID vpce-00713b5e644e830a3 in AWS for the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas privateEndpoints aws interfaces create 5f4fc14da2b47835a58c63a2 --privateEndpointId vpce-00713b5e644e830a3 --projectId 5e2211c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

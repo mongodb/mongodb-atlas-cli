@@ -56,8 +56,8 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Remove the specified peering connection from your project.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.ExactArgs(1),
-		Example: fmt.Sprintf(`  # Remove the network peering connection with the ID 5f60c5bd0948295c093565ba in the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s networking peering delete 5f60c5bd0948295c093565ba --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Remove the network peering connection with the ID 5f60c5bd0948295c093565ba in the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas networking peering delete 5f60c5bd0948295c093565ba --projectId 5e2211c17a3e5a48f5497de3`,
 		Annotations: map[string]string{
 			"peerIdDesc": "Unique ID of the network peering connection that you want to delete.",
 			"output":     opts.SuccessMessage(),

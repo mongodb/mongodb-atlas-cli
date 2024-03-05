@@ -70,8 +70,8 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"clusterNameDesc": "Human-readable label for the cluster.",
 		},
-		Example: fmt.Sprintf(`  # Return the cloud backup schedule for the cluster named Cluster0:
-  %s backup schedule describe Cluster0`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the cloud backup schedule for the cluster named Cluster0:
+  atlas backup schedule describe Cluster0`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

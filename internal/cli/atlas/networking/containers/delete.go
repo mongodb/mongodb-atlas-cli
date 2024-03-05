@@ -60,8 +60,8 @@ func DeleteBuilder() *cobra.Command {
 			"containerIdDesc": "Unique 24-hexadecimal digit string that identifies the network container that you want to remove.",
 			"output":          opts.SuccessMessage(),
 		},
-		Example: fmt.Sprintf(`  # Remove the network peering container with the ID 5e44103f8d614b2f0b6530d8 from the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s networking containers delete 5e44103f8d614b2f0b6530d8 --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Remove the network peering container with the ID 5e44103f8d614b2f0b6530d8 from the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas networking containers delete 5e44103f8d614b2f0b6530d8 --projectId 5e2211c17a3e5a48f5497de3`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

@@ -73,7 +73,7 @@ If you run the command in the terminal, it blocks the terminal session until the
 You can interrupt the command's polling at any time with CTRL-C.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Example: fmt.Sprintf(`  %s security ldap status watch requestIdSample`, cli.ExampleAtlasEntryPoint()),
+		Example: `  atlas security ldap status watch requestIdSample`,
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"requestIdDesc": "ID of the request to verify an LDAP configuration.",

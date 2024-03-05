@@ -69,9 +69,9 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"streamConnectionNameDesc": "Name of the Atlas Stream Processing connection.",
 		},
-		Example: fmt.Sprintf(`# retrieves stream connection 'ExampleConnection' in instance 'ExampleInstance':
-%[1]s streams connection describe ExampleConnection --instance ExampleInstance
-`, cli.ExampleAtlasEntryPoint()),
+		Example: `# retrieves stream connection 'ExampleConnection' in instance 'ExampleInstance':
+atlas streams connection describe ExampleConnection --instance ExampleInstance
+`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

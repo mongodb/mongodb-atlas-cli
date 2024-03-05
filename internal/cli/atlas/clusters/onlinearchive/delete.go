@@ -62,8 +62,8 @@ func DeleteBuilder() *cobra.Command {
 			"archiveIdDesc": "Unique identifier of the online archive to delete.",
 			"output":        opts.SuccessMessage(),
 		},
-		Example: fmt.Sprintf(`  # Remove an online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
-  %s clusters onlineArchives delete 5f189832e26ec075e10c32d3 --clusterName myCluster`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Remove an online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
+  atlas clusters onlineArchives delete 5f189832e26ec075e10c32d3 --clusterName myCluster`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

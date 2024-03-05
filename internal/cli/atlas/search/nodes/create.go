@@ -97,8 +97,8 @@ func CreateBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": createTemplate,
 		},
-		Example: fmt.Sprintf(`  # Create a search node for the cluster named myCluster using a JSON node spec configuration file named spec.json:
-  %s clusters search nodes create --clusterName myCluster --file spec.json --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Create a search node for the cluster named myCluster using a JSON node spec configuration file named spec.json:
+  atlas clusters search nodes create --clusterName myCluster --file spec.json --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

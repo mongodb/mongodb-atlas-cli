@@ -86,11 +86,11 @@ func DescribeBuilder() *cobra.Command {
 		Use:         "describe",
 		Aliases:     []string{"get"},
 		Annotations: map[string]string{"output": describeTemplate},
-		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the the team with the ID 5e44445ef10fab20b49c0f31 in the organization with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s teams describe --id 5e44445ef10fab20b49c0f31 --projectId 5e1234c17a3e5a48f5497de3 --output json
+		Example: `  # Return the JSON-formatted details for the the team with the ID 5e44445ef10fab20b49c0f31 in the organization with ID 5e2211c17a3e5a48f5497de3:
+  atlas teams describe --id 5e44445ef10fab20b49c0f31 --projectId 5e1234c17a3e5a48f5497de3 --output json
   
   # Return the JSON-formatted details for the the team with the name myTeam in the organization with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s teams describe --name myTeam --projectId 5e1234c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+  atlas teams describe --name myTeam --projectId 5e1234c17a3e5a48f5497de3 --output json`,
 		Short: "Return the details for the specified team for your organization.",
 		Long: `You can return the details for a team using the team's ID or the team's name. You must specify either the id option or the name option.
 

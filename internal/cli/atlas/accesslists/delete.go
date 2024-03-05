@@ -62,10 +62,10 @@ func DeleteBuilder() *cobra.Command {
 			"entryDesc": "The IP address, CIDR address, or AWS security group ID that you want to remove from the access list.",
 			"output":    opts.SuccessMessage(),
 		},
-		Example: fmt.Sprintf(`  # Remove the IP address 192.0.2.0 from the access list for the project with the ID 5e2211c17a3e5a48f5497de3 after prompting for a confirmation:
-  %[1]s accessLists delete 192.0.2.0 --projectId 5e2211c17a3e5a48f5497de3
+		Example: `  # Remove the IP address 192.0.2.0 from the access list for the project with the ID 5e2211c17a3e5a48f5497de3 after prompting for a confirmation:
+  atlas accessLists delete 192.0.2.0 --projectId 5e2211c17a3e5a48f5497de3
   # Remove the IP address 192.0.2.0 from the access list for the project with the ID 5e2211c17a3e5a48f5497de3 without requiring confirmation:
-  %[1]s accessLists delete 192.0.2.0 --projectId 5e2211c17a3e5a48f5497de3 --force`, cli.ExampleAtlasEntryPoint()),
+  atlas accessLists delete 192.0.2.0 --projectId 5e2211c17a3e5a48f5497de3 --force`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

@@ -16,7 +16,6 @@ package events
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -92,8 +91,8 @@ func OrgListBuilder() *cobra.Command {
 		Short:   "Return all events for the specified organization.",
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
-		Example: fmt.Sprintf(`  # Return a JSON-formatted list of events for the organization with the ID 5dd5a6b6f10fab1d71a58495:
-  %s events organizations list --orgId 5dd5a6b6f10fab1d71a58495 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return a JSON-formatted list of events for the organization with the ID 5dd5a6b6f10fab1d71a58495:
+  atlas events organizations list --orgId 5dd5a6b6f10fab1d71a58495 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

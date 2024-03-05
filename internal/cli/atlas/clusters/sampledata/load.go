@@ -65,8 +65,8 @@ func LoadBuilder() *cobra.Command {
 			"clusterNameDesc": "Name of the cluster for which you want to load sample data.",
 			"output":          addTmpl,
 		},
-		Example: fmt.Sprintf(`  # Load sample data into the cluster named myCluster:
-  %s clusters sampleData load myCluster --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Load sample data into the cluster named myCluster:
+  atlas clusters sampleData load myCluster --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

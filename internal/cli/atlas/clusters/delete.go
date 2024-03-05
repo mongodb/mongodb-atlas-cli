@@ -86,11 +86,11 @@ func DeleteBuilder() *cobra.Command {
 Deleting a cluster also deletes any backup snapshots for that cluster.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Example: fmt.Sprintf(`  # Remove a cluster named myCluster after prompting for a confirmation:
-  %[1]s clusters delete myCluster
+		Example: `  # Remove a cluster named myCluster after prompting for a confirmation:
+  atlas clusters delete myCluster
   
   # Remove a cluster named myCluster without requiring confirmation:
-  %[1]s clusters delete myCluster --force`, cli.ExampleAtlasEntryPoint()),
+  atlas clusters delete myCluster --force`,
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster to delete.",

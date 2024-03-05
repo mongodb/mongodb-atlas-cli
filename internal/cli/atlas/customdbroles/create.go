@@ -84,14 +84,14 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create <roleName>",
 		Short: "Create a custom database role for your project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Example: fmt.Sprintf(`# Create a custom database role
-  %[1]s customDbRoles create customRole --privilege FIND@databaseName,UPDATE@databaseName.collectionName
+		Example: `# Create a custom database role
+  atlas customDbRoles create customRole --privilege FIND@databaseName,UPDATE@databaseName.collectionName
 
   # Create a customer database role with granted action on the cluster resource
-  %[1]s customDbRoles create customRole --privilege GET_CMD_LINE_OPTS
+  atlas customDbRoles create customRole --privilege GET_CMD_LINE_OPTS
 
   # Use an inherited role
-  %[1]s customDbRoles create customRole --inheritedRole read@databaseName`, cli.ExampleAtlasEntryPoint()),
+  atlas customDbRoles create customRole --inheritedRole read@databaseName`,
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"roleNameDesc": "Name of the custom role to create.",

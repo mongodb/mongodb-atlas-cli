@@ -61,8 +61,8 @@ func DescribeBuilder() *cobra.Command {
 		Short:       "Return the maintenance window details for your project.",
 		Long:        longDesc + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{"output": describeTemplate},
-		Example: fmt.Sprintf(`  # Return the maintenance window for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s maintenanceWindows describe --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the maintenance window for the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas maintenanceWindows describe --projectId 5e2211c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

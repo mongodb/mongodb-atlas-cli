@@ -18,7 +18,7 @@ jobs:
         id: set-date
         run: |
           DATE=$(date +'%Y-%m-%d')
-          echo DATE=${DATE} >> $GITHUB_ENV
+          echo "DATE=${DATE}" >> "$GITHUB_ENV"
       - name: 'Get latest tag'
         id: get-latest-tag
         uses: oprypin/find-latest-tag@e1e0e606cc7e9ede25140a5a139b3a5a1b717ece

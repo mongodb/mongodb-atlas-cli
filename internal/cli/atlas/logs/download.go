@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"io"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -32,7 +33,6 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
-	"k8s.io/utils/strings/slices"
 )
 
 var errEmptyLog = errors.New("log is empty")

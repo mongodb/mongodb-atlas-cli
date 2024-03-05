@@ -344,7 +344,7 @@ func (n *Notifier) notifyIfApplicable(isHb bool) error {
 
 	var upgradeInstructions string
 	if isHb {
-		upgradeInstructions = fmt.Sprintf(`To upgrade, run "brew update && brew upgrade %s".`, homebrew.FormulaName())
+		upgradeInstructions = `To upgrade, run "brew update && brew upgrade mongodb-atlas-cli".`
 	} else {
 		upgradeInstructions = "To upgrade, see: https://dochub.mongodb.org/core/install-atlas-cli."
 	}

@@ -28,8 +28,7 @@ import (
 )
 
 const (
-	atlasFormulaName = "mongodb-atlas-cli"
-	brewFileSubPath  = "/brew.yaml"
+	brewFileSubPath = "/brew.yaml"
 )
 
 type Checker struct {
@@ -45,10 +44,6 @@ func NewChecker(fileSystem afero.Fs) (*Checker, error) {
 	return &Checker{fs: fileSystem, path: filePath}, nil
 }
 
-func FormulaName() string {
-	return atlasFormulaName
-}
-
 // IsHomebrew checks if the cli was installed with homebrew.
 func (s Checker) IsHomebrew() bool {
 	// Load from cache
@@ -57,9 +52,8 @@ func (s Checker) IsHomebrew() bool {
 		return strings.HasPrefix(h.ExecutablePath, h.FormulaPath)
 	}
 
-	formula := FormulaName()
 	cmdResult := new(bytes.Buffer)
-	cmd := exec.Command("brew", "--prefix", formula)
+	cmd := exec.Command("brew", "--prefix", "mongodb-atlas-cli")
 
 	if err = cmd.Start(); err != nil {
 		return false

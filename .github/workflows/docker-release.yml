@@ -178,18 +178,14 @@ jobs:
       - name: Verify Signature Docker Image
         env:
           IMAGE: ${{ env.IMAGE_REPOSITORY }}:latest
+          COSIGN_REPOSITORY: docker:io/mongodb/signatures
         run: |
           # Download MongoDB Atlas CLI Public Key
-          curl https://cosign.mongodb.com/atlas-cli.pem > atlas-cli.pem
-          
-          # Download Docker Image
-          docker pull "${IMAGE}"
-          
+          curl https://cosign.mongodb.com/atlas-cli.pem > atlas-cli.pem          
+          docker pull "${IMAGE}"          
           # Verify the signature
-          COSIGN_REPOSITORY=docker.io/mongodb/signatures cosign verify --private-infrastructure --key=./atlas-cli.pem "docker.io/${IMAGE}"
-          
-          # Check the exit status of cosign verify
-          if [ $? -ne 0 ]; then
+          if cosign verify --private-infrastructure --key=./atlas-cli.pem "docker.io/${IMAGE}";
+          then
             echo "Error: Signature verification for ${IMAGE} failed."
             exit 1
           fi
@@ -221,18 +217,14 @@ jobs:
       - name: Verify Signature Quay Image
         env:
           IMAGE: ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:latest
+          COSIGN_REPOSITORY: docker:io/mongodb/signatures
         run: |
           # Download MongoDB Atlas CLI Public Key
-          curl https://cosign.mongodb.com/atlas-cli.pem > atlas-cli.pem
-          
-          # Download Quay Image
-          docker pull "${IMAGE}"
-          
+          curl https://cosign.mongodb.com/atlas-cli.pem > atlas-cli.pem          
+          docker pull "${IMAGE}"          
           # Verify the signature
-          COSIGN_REPOSITORY=docker.io/mongodb/signatures cosign verify --private-infrastructure --key=./atlas-cli.pem "${IMAGE}"
-          
-          # Check the exit status of cosign verify
-          if [ $? -ne 0 ]; then
+          if ! cosign verify --private-infrastructure --key=./atlas-cli.pem "${IMAGE}" 
+          then
             echo "Error: Signature verification for ${IMAGE} failed."
             exit 1
           fi

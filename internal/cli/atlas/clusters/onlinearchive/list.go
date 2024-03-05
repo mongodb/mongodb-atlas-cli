@@ -69,8 +69,8 @@ func ListBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": listTemplate,
 		},
-		Example: fmt.Sprintf(`  # Return a JSON-formatted list of online archives for the cluster named myCluster:
-  %s clusters onlineArchives list --clusterName myCluster --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return a JSON-formatted list of online archives for the cluster named myCluster:
+  atlas clusters onlineArchives list --clusterName myCluster --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

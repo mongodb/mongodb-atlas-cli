@@ -115,8 +115,8 @@ func GCPBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": createTemplate,
 		},
-		Example: fmt.Sprintf(`  # Create a network peering connection between the Atlas VPC in CIDR block 192.168.0.0/24 and your GCP VPC with the GCP project ID grandiose-branch-256701 in the network named cli-test:
-  %s networking peering create gcp --atlasCidrBlock 192.168.0.0/24 --gcpProjectId grandiose-branch-256701 --network cli-test --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Create a network peering connection between the Atlas VPC in CIDR block 192.168.0.0/24 and your GCP VPC with the GCP project ID grandiose-branch-256701 in the network named cli-test:
+  atlas networking peering create gcp --atlasCidrBlock 192.168.0.0/24 --gcpProjectId grandiose-branch-256701 --network cli-test --output json`,
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

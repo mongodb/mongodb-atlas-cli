@@ -93,8 +93,8 @@ func DeleteBuilder() *cobra.Command {
 		Short: "Delete a search node for a cluster.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Organization Owner or Project Owner"),
 		Args:  require.NoArgs,
-		Example: fmt.Sprintf(`  # Delete a search node for the cluster named myCluster:
-  %s clusters search nodes delete --clusterName myCluster`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Delete a search node for the cluster named myCluster:
+  atlas clusters search nodes delete --clusterName myCluster`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

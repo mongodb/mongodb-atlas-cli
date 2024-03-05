@@ -341,11 +341,11 @@ func UpdateBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": updateTemplate,
 		},
-		Example: fmt.Sprintf(`  # Update a snapshot backup policy for a cluster named Cluster0 to back up snapshots every 6 hours and, retain for 7 days, and update retention of previously-taken snapshots:
-  %[1]s backup schedule update --clusterName Cluster0 --updateSnapshots --policy 62da8faac84a2721e448d767,62da8faac84a2721e448d768,hourly,6,days,7
+		Example: `  # Update a snapshot backup policy for a cluster named Cluster0 to back up snapshots every 6 hours and, retain for 7 days, and update retention of previously-taken snapshots:
+  atlas backup schedule update --clusterName Cluster0 --updateSnapshots --policy 62da8faac84a2721e448d767,62da8faac84a2721e448d768,hourly,6,days,7
   
   # Update a snapshot backup policy for a cluster named Cluster0 to export snapshots monthly to an S3 bucket:
-  %[1]s backup schedule update --clusterName Cluster0 --exportBucketId 62c569f85b7a381c093cc539 --exportFrequencyType monthly`, cli.ExampleAtlasEntryPoint()),
+  atlas backup schedule update --clusterName Cluster0 --exportBucketId 62c569f85b7a381c093cc539 --exportFrequencyType monthly`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

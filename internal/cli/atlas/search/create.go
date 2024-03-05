@@ -96,8 +96,8 @@ func CreateBuilder() *cobra.Command {
 			"indexNameDesc": "Name of the index.",
 			"output":        createTemplate,
 		},
-		Example: fmt.Sprintf(`  # Create a search index for the cluster named myCluster using a JSON index configuration file named search-config.json:
-  %s clusters search indexes create --clusterName myCluster --file search-config.json --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Create a search index for the cluster named myCluster using a JSON index configuration file named search-config.json:
+  atlas clusters search indexes create --clusterName myCluster --file search-config.json --output json`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.Filename == "" {
 				_ = cmd.MarkFlagRequired(flag.Database)

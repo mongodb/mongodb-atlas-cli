@@ -149,24 +149,24 @@ func StartBuilder() *cobra.Command {
 			"automated|download|pointInTimeDesc": "Type of restore job to create. Valid values include: automated, download, pointInTime. To learn more about types of restore jobs, see https://www.mongodb.com/docs/atlas/backup-restore-cluster/.",
 			"output":                             startTemplate,
 		},
-		Example: fmt.Sprintf(`  # Create an automated restore:
-  %[1]s backup restore start automated \
+		Example: `  # Create an automated restore:
+  atlas backup restore start automated \
          --clusterName myDemo \
          --snapshotId 5e7e00128f8ce03996a47179 \
          --targetClusterName myDemo2 \
          --targetProjectId 1a2345b67c8e9a12f3456de7
 
   # Create a point-in-time restore:
-  %[1]s backup restore start pointInTime \
+  atlas backup restore start pointInTime \
          --clusterName myDemo \
          --pointInTimeUTCSeconds 1588523147 \
          --targetClusterName myDemo2 \
          --targetProjectId 1a2345b67c8e9a12f3456de7
   
   # Create a download restore:
-  %[1]s backup restore start download \
+  atlas backup restore start download \
          --clusterName myDemo \
-         --snapshotId 5e7e00128f8ce03996a47179`, cli.ExampleAtlasEntryPoint()),
+         --snapshotId 5e7e00128f8ce03996a47179`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.method = args[0]
 

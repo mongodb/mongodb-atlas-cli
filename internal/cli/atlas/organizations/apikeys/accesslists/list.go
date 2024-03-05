@@ -72,14 +72,14 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return all IP access list entries for your API Key.",
-		Long: fmt.Sprintf(`To view possible values for the apiKeyID argument, run %s organizations apiKeys list.
+		Long: `To view possible values for the apiKeyID argument, run atlas organizations apiKeys list.
 
-`+fmt.Sprintf(usage.RequiredRole, "Organization Member"), cli.ExampleAtlasEntryPoint()),
+` + fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Annotations: map[string]string{
 			"apiKeyIDDesc": "Unique 24-digit string that identifies your API key.",
 		},
-		Example: fmt.Sprintf(`  # Return a JSON-formatted list of access list entries for the API key with the ID 5f24084d8dbffa3ad3f21234 in the organization with the ID 5a1b39eec902201990f12345:
-  %s organizations apiKeys accessLists list --apiKey 5f24084d8dbffa3ad3f21234 --orgId 5a1b39eec902201990f12345 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return a JSON-formatted list of access list entries for the API key with the ID 5f24084d8dbffa3ad3f21234 in the organization with the ID 5a1b39eec902201990f12345:
+  atlas organizations apiKeys accessLists list --apiKey 5f24084d8dbffa3ad3f21234 --orgId 5a1b39eec902201990f12345 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

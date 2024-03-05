@@ -16,7 +16,6 @@ package clusters
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -56,8 +55,8 @@ func FailoverBuilder() *cobra.Command {
 		Use:   "failover <clusterName>",
 		Short: "Starts a failover test for the specified cluster in the specified project.",
 		Long:  `Clusters contain a group of hosts that maintain the same data set. A failover test checks how MongoDB Cloud handles the failure of the cluster's primary node. During the test, MongoDB Cloud shuts down the primary node and elects a new primary.`,
-		Example: fmt.Sprintf(`  # Test failover for a cluster named myCluster:
-  %s clusters failover myCluster`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Test failover for a cluster named myCluster:
+  atlas clusters failover myCluster`,
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Human-readable label that identifies the cluster to start a failover test for.",

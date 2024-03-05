@@ -63,8 +63,8 @@ func DeleteBuilder() *cobra.Command {
 			"clusterNameDesc": "Name of the cluster.",
 			"output":          opts.SuccessMessage(),
 		},
-		Example: fmt.Sprintf(`  # Remove all backup schedules for the cluster named Cluster0:
-  %s backup schedule delete Cluster0`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Remove all backup schedules for the cluster named Cluster0:
+  atlas backup schedule delete Cluster0`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]
 			return opts.PreRunE(

@@ -15,8 +15,6 @@
 package users
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/spf13/cobra"
 )
@@ -25,7 +23,7 @@ func Builder() *cobra.Command {
 	const use = "users"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   fmt.Sprintf("Manage your %s users.", cli.DescriptionServiceName()),
+		Short:   "Manage your Atlas users.",
 		Long:    "Create, list and manage your users.",
 		Aliases: cli.GenerateAliases(use),
 	}

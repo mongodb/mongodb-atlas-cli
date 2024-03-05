@@ -70,8 +70,8 @@ func ListBuilder() *cobra.Command {
 		},
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
-		Example: fmt.Sprintf(`  # Return the JSON-formatted list of Atlas search indexes on the sample_mflix.movies database in the cluster named myCluster:
-  %s clusters search indexes list --clusterName myCluster --db sample_mflix --collection movies --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the JSON-formatted list of Atlas search indexes on the sample_mflix.movies database in the cluster named myCluster:
+  atlas clusters search indexes list --clusterName myCluster --db sample_mflix --collection movies --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

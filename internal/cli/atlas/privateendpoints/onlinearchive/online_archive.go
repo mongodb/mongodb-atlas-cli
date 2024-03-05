@@ -17,20 +17,16 @@ package onlinearchive
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/privateendpoints/datalake/aws"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	const use = "onlineArchive"
 	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage Online Archive private endpoints.",
-	}
-
-	if config.ToolName == config.AtlasCLI {
-		cmd.Deprecated = "Please use 'atlas datafederation privateendpoints'"
+		Use:        use,
+		Aliases:    cli.GenerateAliases(use),
+		Short:      "Manage Online Archive private endpoints.",
+		Deprecated: "Please use 'atlas datafederation privateendpoints'",
 	}
 
 	cmd.AddCommand(aws.Builder())

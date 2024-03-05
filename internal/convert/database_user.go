@@ -21,7 +21,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	customTime "github.com/mongodb/mongodb-atlas-cli/internal/time"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const (
@@ -77,21 +76,6 @@ func splitRoleAndDBName(roleAndDBNAme string) (role, dbName string) {
 		dbName = rd[1]
 	}
 	return
-}
-
-// BuildOMRoles converts the roles inside the array of string in an array of opsmngr.DatabaseUserRole structs.
-// r contains roles in the format roleName@dbName.
-func BuildOMRoles(r []string) []*opsmngr.Role {
-	roles := make([]*opsmngr.Role, len(r))
-	for i, roleP := range r {
-		roleName, databaseName := splitRoleAndDBName(roleP)
-
-		roles[i] = &opsmngr.Role{
-			Role:     roleName,
-			Database: databaseName,
-		}
-	}
-	return roles
 }
 
 // BuildAtlasScopes converts the scopes inside the array of string in an array of mongodbatlas.Scope structs.

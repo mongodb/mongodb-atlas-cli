@@ -65,8 +65,8 @@ func DescribeBuilder() *cobra.Command {
 		Long:        fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:        require.NoArgs,
 		Annotations: map[string]string{"output": describeTemplate},
-		Example: fmt.Sprintf(`  # Return the details for the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 for the instance named myDemo:
-  %s serverless backups snapshots describe --snapshotId 5f4007f327a3bd7b6f4103c5 --clusterName myDemo`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the details for the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 for the instance named myDemo:
+  atlas serverless backups snapshots describe --snapshotId 5f4007f327a3bd7b6f4103c5 --clusterName myDemo`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

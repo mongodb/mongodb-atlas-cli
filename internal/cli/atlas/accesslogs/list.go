@@ -119,8 +119,8 @@ func ListBuilder() *cobra.Command {
 		Short:   "Retrieve the access logs of a cluster identified by the cluster's name or hostname.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Monitoring Admin"),
 		Args:    require.NoArgs,
-		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all authentication requests made against the cluster named Cluster0 for the project with ID 618d48e05277a606ed2496fe:		
-  %s accesslogs list --output json --projectId 618d48e05277a606ed2496fe --clusterName Cluster0`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return a JSON-formatted list of all authentication requests made against the cluster named Cluster0 for the project with ID 618d48e05277a606ed2496fe:		
+  atlas accesslogs list --output json --projectId 618d48e05277a606ed2496fe --clusterName Cluster0`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateInput,

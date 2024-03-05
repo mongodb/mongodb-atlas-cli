@@ -177,18 +177,17 @@ func CreateBuilder() *cobra.Command {
 		Long: `If you set --ldapType, --x509Type, and --awsIAMType to NONE, Atlas authenticates this user through SCRAM-SHA. To learn more, see https://www.mongodb.com/docs/manual/core/security-scram/.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Example: fmt.Sprintf(`  # Create an Atlas database admin user named myAdmin for the project with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s dbusers create atlasAdmin --username myAdmin  --projectId 5e2211c17a3e5a48f5497de3
+		Example: `  # Create an Atlas database admin user named myAdmin for the project with ID 5e2211c17a3e5a48f5497de3:
+  atlas dbusers create atlasAdmin --username myAdmin  --projectId 5e2211c17a3e5a48f5497de3
 
   # Create a database user named myUser with read/write access to any database for the project with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s dbusers create readWriteAnyDatabase --username myUser --projectId 5e2211c17a3e5a48f5497de3
+  atlas dbusers create readWriteAnyDatabase --username myUser --projectId 5e2211c17a3e5a48f5497de3
 
   # Create a database user named myUser with multiple roles for the project with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s dbusers create --username myUser --role clusterMonitor,backup --projectId 5e2211c17a3e5a48f5497de3
+  atlas dbusers create --username myUser --role clusterMonitor,backup --projectId 5e2211c17a3e5a48f5497de3
 
   # Create a database user named myUser with multiple scopes for the project with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s dbusers create --username myUser --role clusterMonitor --scope <REPLICA-SET ID>,<storeName> --projectId 5e2211c17a3e5a48f5497de3`,
-			cli.ExampleAtlasEntryPoint()),
+  atlas dbusers create --username myUser --role clusterMonitor --scope <REPLICA-SET ID>,<storeName> --projectId 5e2211c17a3e5a48f5497de3`,
 		Args: cobra.OnlyValidArgs,
 		Annotations: map[string]string{
 			"builtInRoleDesc": "Atlas built-in role that you want to assign to the user.",

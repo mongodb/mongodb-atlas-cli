@@ -71,8 +71,8 @@ If you run the command in the terminal, it blocks the terminal session until the
 You can interrupt the command's polling at any time with CTRL-C.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
-		Example: fmt.Sprintf(`  # Watch for the sample data job with ID 5e2211c17a3e5a48f5497de3 to complete:
-  %s clusters sampledata watch 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Watch for the sample data job with ID 5e2211c17a3e5a48f5497de3 to complete:
+  atlas clusters sampledata watch 5e2211c17a3e5a48f5497de3`,
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"idDesc": "Unique identifier of the sample data job.",

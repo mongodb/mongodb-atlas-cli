@@ -121,14 +121,14 @@ Deleting an Atlas deployment also deletes any backup snapshots for that cluster.
 Deleting a Local deployment also deletes any local data volumes.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Example: fmt.Sprintf(`  # Remove an Atlas deployment named myDeployment after prompting for a confirmation:
-  %[1]s deployments delete myDeployment --type ATLAS
+		Example: `  # Remove an Atlas deployment named myDeployment after prompting for a confirmation:
+  atlas deployments delete myDeployment --type ATLAS
   
   # Remove an Atlas deployment named myDeployment without requiring confirmation:
-  %[1]s deployments delete myDeployment --type ATLAS --force
+  atlas deployments delete myDeployment --type ATLAS --force
 
   # Remove an Local deployment named myDeployment without requiring confirmation:
-  %[1]s deployments delete myDeployment --type LOCAL --force`, cli.ExampleAtlasEntryPoint()),
+  atlas deployments delete myDeployment --type LOCAL --force`,
 		Aliases: []string{"rm"},
 		GroupID: "all",
 		Args:    require.MaximumNArgs(1),

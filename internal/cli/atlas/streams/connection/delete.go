@@ -64,12 +64,12 @@ Before deleting an Atlas Streams Processing connection, you must first stop all 
 			"connectionNameDesc": "Name of the connection",
 			"output":             opts.SuccessMessage(),
 		},
-		Example: fmt.Sprintf(`# deletes connection 'ExampleConnection' from instance 'ExampleInstance':
-  %[1]s streams connection delete ExampleConnection --instance ExampleInstance
+		Example: `# deletes connection 'ExampleConnection' from instance 'ExampleInstance':
+  atlas streams connection delete ExampleConnection --instance ExampleInstance
 
 # deletes connection 'ExampleConnection' from instance 'ExampleInstance' without requiring confirmation:
-  %[1]s streams connection delete ExampleConnection --instance ExampleInstance --force
-`, cli.ExampleAtlasEntryPoint()),
+  atlas streams connection delete ExampleConnection --instance ExampleInstance --force
+`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(
 				cmd.ValidateRequiredFlags,

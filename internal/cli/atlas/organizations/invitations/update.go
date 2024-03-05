@@ -85,11 +85,11 @@ func UpdateBuilder() *cobra.Command {
 			"invitationIdDesc": "Unique 24-digit string that identifies the invitation.",
 			"output":           updateTemplate,
 		},
-		Example: fmt.Sprintf(`  # Modify the pending invitation with the ID 5dd56c847a3e5a1f363d424d to grant ORG_OWNER access the organization with the ID 5f71e5255afec75a3d0f96dc:
-  %[1]s organizations invitations update 5dd56c847a3e5a1f363d424d --orgId 5f71e5255afec75a3d0f96dc --role ORG_OWNER --output json
+		Example: `  # Modify the pending invitation with the ID 5dd56c847a3e5a1f363d424d to grant ORG_OWNER access the organization with the ID 5f71e5255afec75a3d0f96dc:
+  atlas organizations invitations update 5dd56c847a3e5a1f363d424d --orgId 5f71e5255afec75a3d0f96dc --role ORG_OWNER --output json
 		
   # Modify the invitation for the user with the email address user@example.com to grant ORG_OWNER access the organization with the ID 5f71e5255afec75a3d0f96dc:
-  %[1]s organizations invitations update --email user@example.com --orgId 5f71e5255afec75a3d0f96dc --role ORG_OWNER --output json`, cli.ExampleAtlasEntryPoint()),
+  atlas organizations invitations update --email user@example.com --orgId 5f71e5255afec75a3d0f96dc --role ORG_OWNER --output json`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
 				opts.invitationID = args[0]

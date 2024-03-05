@@ -62,8 +62,8 @@ func DeleteBuilder() *cobra.Command {
 			"indexIdDesc": "ID of the index.",
 			"output":      opts.SuccessMessage(),
 		},
-		Example: fmt.Sprintf(`  # Delete the search index with the ID 5f2099cd683fc55fbb30bef6 for the cluster named myCluster without requiring confirmation:
-  %s clusters search indexes delete 5f2099cd683fc55fbb30bef6 --clusterName myCluster --force`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Delete the search index with the ID 5f2099cd683fc55fbb30bef6 for the cluster named myCluster without requiring confirmation:
+  atlas clusters search indexes delete 5f2099cd683fc55fbb30bef6 --clusterName myCluster --force`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

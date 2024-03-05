@@ -97,8 +97,8 @@ func UpdateBuilder() *cobra.Command {
 			"output":      updateTemplate,
 		},
 		Args: require.ExactArgs(1),
-		Example: fmt.Sprintf(`  # Modify the search index with the ID 5f2099cd683fc55fbb30bef6 for the cluster named myCluster:
-  %s clusters search indexes update 5f2099cd683fc55fbb30bef6 --clusterName myCluster --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Modify the search index with the ID 5f2099cd683fc55fbb30bef6 for the cluster named myCluster:
+  atlas clusters search indexes update 5f2099cd683fc55fbb30bef6 --clusterName myCluster --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			if opts.Filename == "" {
 				_ = cmd.MarkFlagRequired(flag.IndexName)

@@ -284,22 +284,15 @@ func (opts *LoginOpts) LoginPreRun(ctx context.Context) func() error {
 	}
 }
 
-func tool() string {
-	if config.ToolName == config.MongoCLI {
-		return "Atlas or Cloud Manager"
-	}
-	return "Atlas"
-}
-
 func LoginBuilder() *cobra.Command {
 	opts := &LoginOpts{}
 
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
-		Example: fmt.Sprintf(`  # Log in to your MongoDB %s account in interactive mode:
+		Example: fmt.Sprintf(`  # Log in to your MongoDB Atlas account in interactive mode:
   %s auth login
-`, tool(), config.BinName()),
+`, config.BinName()),
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			defaultProfile := config.Default()
@@ -315,10 +308,6 @@ func LoginBuilder() *cobra.Command {
 			return opts.LoginRun(cmd.Context())
 		},
 		Args: require.NoArgs,
-	}
-
-	if config.ToolName == config.MongoCLI {
-		cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
 	}
 
 	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
@@ -340,11 +329,8 @@ func Builder() *cobra.Command {
 		LoginBuilder(),
 		WhoAmIBuilder(),
 		LogoutBuilder(),
+		RegisterBuilder(),
 	)
-
-	if config.ToolName == config.AtlasCLI {
-		cmd.AddCommand(RegisterBuilder())
-	}
 
 	return cmd
 }

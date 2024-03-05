@@ -16,7 +16,6 @@ package databases
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -69,18 +68,16 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use: "describe <hostname:port> <databaseName>",
-		Long: fmt.Sprintf(`To return the hostname and port needed for this command, run
-%s process list`, cli.ExampleAtlasEntryPoint()),
+		Long: `To return the hostname and port needed for this command, run
+atlas process list`,
 		Short: "Return the measurements of a database on the specified host.",
 		Args:  require.ExactArgs(argsN),
 		Annotations: map[string]string{
 			"hostname:portDesc": "Hostname and port number of the instance running the MongoDB process.",
 			"databaseNameDesc":  "Label that identifies the database from which you want to retrieve metrics.",
 		},
-		Example: fmt.Sprintf(
-			`  # Return the JSON-formatted database metrics from the last 36 hours with 5-minute granularity for the database named testDB in the host atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 
-  %s metrics databases describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H --output json`,
-			cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the JSON-formatted database metrics from the last 36 hours with 5-minute granularity for the database named testDB in the host atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 
+  atlas metrics databases describe atlas-lnmtkm-shard-00-00.ajlj3.mongodb.net:27017 testDB --granularity PT1M --period P1DT12H --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

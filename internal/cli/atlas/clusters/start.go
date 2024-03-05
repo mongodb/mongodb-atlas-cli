@@ -66,8 +66,8 @@ func StartBuilder() *cobra.Command {
 			"clusterNameDesc": "Name of the cluster to start.",
 			"output":          startTmpl,
 		},
-		Example: fmt.Sprintf(`  # Start a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
-  %s clusters start myCluster --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Start a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+  atlas clusters start myCluster --projectId 5e2211c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -67,7 +67,6 @@ const (
 	defaultPermissions           = 0700
 	skipUpdateCheck              = "skip_update_check"
 	TelemetryEnabledProperty     = "telemetry_enabled"
-	MongoCLI                     = "mongocli"
 	AtlasCLI                     = "atlascli"
 	ContainerizedHostNameEnv     = "MONGODB_ATLAS_IS_CONTAINERIZED"
 	GitHubActionsHostNameEnv     = "GITHUB_ACTIONS"
@@ -79,17 +78,13 @@ const (
 )
 
 var (
-	ToolName       = MongoCLI
 	HostName       = getConfigHostnameFromEnvs()
-	UserAgent      = fmt.Sprintf("%s/%s (%s;%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH, HostName)
+	UserAgent      = fmt.Sprintf("%s/%s (%s;%s;%s)", AtlasCLI, version.Version, runtime.GOOS, runtime.GOARCH, HostName)
 	defaultProfile = newProfile()
 )
 
 func BinName() string {
-	if ToolName == AtlasCLI {
-		return "atlas"
-	}
-	return ToolName
+	return "atlas"
 }
 
 type Setter interface {
@@ -534,9 +529,8 @@ func boolEnv(key string) bool {
 }
 
 func isTelemetryFeatureAllowed() bool {
-	tool := ToolName == AtlasCLI
 	doNotTrack := boolEnv("DO_NOT_TRACK")
-	return tool && !doNotTrack
+	return !doNotTrack
 }
 
 // Output get configured output format.
@@ -789,10 +783,7 @@ func AtlasCLIConfigHome() (string, error) {
 
 // CLIConfigHome retrieves configHome path.
 func CLIConfigHome() (string, error) {
-	if ToolName == AtlasCLI {
-		return AtlasCLIConfigHome()
-	}
-	return MongoCLIConfigHome()
+	return AtlasCLIConfigHome()
 }
 
 func Path(f string) (string, error) {

@@ -66,8 +66,8 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": describeTemplate,
 		},
-		Example: fmt.Sprintf(`  # Return the details for the continuous backup export bucket with the ID dbdb00ca12345678f901a234:
-  %s backup exports buckets describe dbdb00ca12345678f901a234`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the details for the continuous backup export bucket with the ID dbdb00ca12345678f901a234:
+  atlas backup exports buckets describe dbdb00ca12345678f901a234`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

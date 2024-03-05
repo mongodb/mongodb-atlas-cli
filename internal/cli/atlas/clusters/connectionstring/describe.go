@@ -71,8 +71,8 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve connection strings.",
 		},
-		Example: fmt.Sprintf(`  # Return the JSON-formatted connection strings for the cluster named myCluster:
-  %s clusters connectionStrings describe myCluster --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the JSON-formatted connection strings for the cluster named myCluster:
+  atlas clusters connectionStrings describe myCluster --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

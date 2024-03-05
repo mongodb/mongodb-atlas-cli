@@ -16,7 +16,6 @@ package datalake
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
@@ -82,8 +81,9 @@ func CreateBuilder() *cobra.Command {
 			"nameDesc": "Name of the federated database instance to create.",
 			"output":   createTemplate,
 		},
-		Example: fmt.Sprintf(`  # Create a federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s dataLakes create myFDI --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Create a federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas dataLakes create myFDI --projectId 5e2211c17a3e5a48f5497de3 --output json`,
+		Deprecated: "Please use 'atlas datafederation create'",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.PreRunE(
@@ -95,10 +95,6 @@ func CreateBuilder() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
-	}
-
-	if config.ToolName == config.AtlasCLI {
-		cmd.Deprecated = "Please use 'atlas datafederation create'"
 	}
 
 	cmd.Flags().StringVar(&opts.awsRoleID, flag.Role, "", usage.DataLakeRole)

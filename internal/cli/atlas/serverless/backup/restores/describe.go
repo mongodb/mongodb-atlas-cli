@@ -64,8 +64,8 @@ func DescribeBuilder() *cobra.Command {
 		Short: "Describe a cloud backup restore job.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.NoArgs,
-		Example: fmt.Sprintf(`  # Return the details for the continuous backup restore job with the ID 507f1f77bcf86cd799439011 for the serverless isntance named Cluster0:
-  %s serverless backup restore describe --restoreJobId 507f1f77bcf86cd799439011 --clusterName Cluster0`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the details for the continuous backup restore job with the ID 507f1f77bcf86cd799439011 for the serverless isntance named Cluster0:
+  atlas serverless backup restore describe --restoreJobId 507f1f77bcf86cd799439011 --clusterName Cluster0`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

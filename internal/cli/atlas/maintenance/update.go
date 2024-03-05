@@ -72,8 +72,8 @@ func UpdateBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": updateTemplate,
 		},
-		Example: fmt.Sprintf(`  # Update the maintenance window to midnight on Saturdays for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s maintenanceWindows update --dayOfWeek 7 --hourOfDay 0 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Update the maintenance window to midnight on Saturdays for the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas maintenanceWindows update --dayOfWeek 7 --hourOfDay 0 --projectId 5e2211c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			if !opts.startASAP {
 				_ = cmd.MarkFlagRequired(flag.DayOfWeek)

@@ -79,8 +79,8 @@ func InviteBuilder() *cobra.Command {
 			"emailDesc": "Email address that belongs to the user that you want to invite to the organization.",
 			"output":    createTemplate,
 		},
-		Example: fmt.Sprintf(`  # Invite the MongoDB user with the email user@example.com to the organization with the ID 5f71e5255afec75a3d0f96dc with ORG_OWNER access:
-  %s organizations invitations invite user@example.com --orgId 5f71e5255afec75a3d0f96dc --role ORG_OWNER --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Invite the MongoDB user with the email user@example.com to the organization with the ID 5f71e5255afec75a3d0f96dc with ORG_OWNER access:
+  atlas organizations invitations invite user@example.com --orgId 5f71e5255afec75a3d0f96dc --role ORG_OWNER --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.PreRunE(opts.ValidateOrgID, opts.initStore(cmd.Context()))

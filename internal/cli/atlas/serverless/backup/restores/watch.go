@@ -79,8 +79,8 @@ You can interrupt the command's polling at any time with CTRL-C.
 		Annotations: map[string]string{
 			"output": watchTemplate,
 		},
-		Example: fmt.Sprintf(`  # Watch the continuous backup restore job with the ID 507f1f77bcf86cd799439011 for the cluster named Cluster0 until it becomes available:
-  %s serverless backup restore watch --restoreJobId 507f1f77bcf86cd799439011 --clusterName Cluster0`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Watch the continuous backup restore job with the ID 507f1f77bcf86cd799439011 for the cluster named Cluster0 until it becomes available:
+  atlas serverless backup restore watch --restoreJobId 507f1f77bcf86cd799439011 --clusterName Cluster0`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

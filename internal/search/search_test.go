@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -36,26 +35,6 @@ func TestStringInSlice(t *testing.T) {
 	t.Run("value not exists", func(t *testing.T) {
 		if StringInSlice(s, "d") {
 			t.Error("StringInSlice() should not find the value")
-		}
-	})
-}
-
-func TestClusterExists(t *testing.T) {
-	t.Run("replica set exists", func(t *testing.T) {
-		if !ClusterExists(fixture.AutomationConfig(), "myReplicaSet") {
-			t.Error("ClusterExists() should find the value")
-		}
-	})
-
-	t.Run("sharded cluster exists", func(t *testing.T) {
-		if !ClusterExists(fixture.AutomationConfigWithOneShardedCluster("myCluster", false), "myCluster") {
-			t.Error("ClusterExists() should find the value")
-		}
-	})
-
-	t.Run("value not exists", func(t *testing.T) {
-		if ClusterExists(fixture.AutomationConfig(), "X") {
-			t.Error("ClusterExists() should not find the value")
 		}
 	})
 }

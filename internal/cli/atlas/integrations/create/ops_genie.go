@@ -77,8 +77,8 @@ func OpsGenieBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": createTemplateOpsGenie,
 		},
-		Example: fmt.Sprintf(`  # Integrate Opsgenie with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s integrations create OPS_GENIE --apiKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Integrate Opsgenie with Atlas for the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas integrations create OPS_GENIE --apiKey a1a23bcdef45ghijk6789 --projectId 5e2211c17a3e5a48f5497de3 --output json`,
 		Args: require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

@@ -60,8 +60,8 @@ func DeleteBuilder() *cobra.Command {
 			"privateEndpointIdDesc": "Unique 24-character alphanumeric string that identifies the private endpoint in Atlas.",
 			"output":                opts.SuccessMessage(),
 		},
-		Example: fmt.Sprintf(`  # Remove the Azure private endpoint with the ID 5f4fc14da2b47835a58c63a2 from the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s privateEndpoints azure delete 5f4fc14da2b47835a58c63a2 --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Remove the Azure private endpoint with the ID 5f4fc14da2b47835a58c63a2 from the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas privateEndpoints azure delete 5f4fc14da2b47835a58c63a2 --projectId 5e2211c17a3e5a48f5497de3`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err

@@ -74,8 +74,8 @@ func UpdateBuilder() *cobra.Command {
 			"teamIdDesc": "Unique 24-digit string that identifies the team.",
 			"output":     updateTemplate,
 		},
-		Example: fmt.Sprintf(`  # Modify the roles for the team with the ID 5dd56c847a3e5a1f363d424d to grant GROUP_READ_ONLY access to the project with the ID 5f71e5255afec75a3d0f96dc:
-  %s projects teams update 5dd56c847a3e5a1f363d424d --projectId 5f71e5255afec75a3d0f96dc --role GROUP_READ_ONLY --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Modify the roles for the team with the ID 5dd56c847a3e5a1f363d424d to grant GROUP_READ_ONLY access to the project with the ID 5f71e5255afec75a3d0f96dc:
+  atlas projects teams update 5dd56c847a3e5a1f363d424d --projectId 5f71e5255afec75a3d0f96dc --role GROUP_READ_ONLY --output json`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.teamID = args[0]
 			return opts.PreRunE(

@@ -27,10 +27,10 @@ const (
 	maxWaitTime = 500 * time.Millisecond
 )
 
-type Criteria func(tag string, tool string) bool
+type Criteria func(tag string) bool
 
 type ReleaseVersionDescriber interface {
-	LatestWithCriteria(n int, matchCriteria Criteria, toolName string) (*github.RepositoryRelease, error)
+	LatestWithCriteria(n int, matchCriteria Criteria) (*github.RepositoryRelease, error)
 }
 
 func NewReleaseVersionDescriber() ReleaseVersionDescriber {
@@ -47,14 +47,14 @@ const (
 )
 
 // LatestWithCriteria retrieves the first release version that matches the criteria. We assume that ListReleases returns releases sorted by created_at value.
-func (s *releaseVersionFetcher) LatestWithCriteria(n int, matchCriteria Criteria, toolName string) (*github.RepositoryRelease, error) {
+func (s *releaseVersionFetcher) LatestWithCriteria(n int, matchCriteria Criteria) (*github.RepositoryRelease, error) {
 	startTime := time.Now()
 	client := github.NewClient(nil)
 
 	opt := &github.ListOptions{PerPage: n}
 
 	if matchCriteria == nil {
-		matchCriteria = func(_, _ string) bool {
+		matchCriteria = func(_ string) bool {
 			return true
 		}
 	}
@@ -66,7 +66,7 @@ func (s *releaseVersionFetcher) LatestWithCriteria(n int, matchCriteria Criteria
 		}
 		// Returns as soon as criteria is matched
 		for _, release := range releases {
-			if matchCriteria(release.GetTagName(), toolName) && !release.GetPrerelease() {
+			if matchCriteria(release.GetTagName()) && !release.GetPrerelease() {
 				return release, nil
 			}
 		}

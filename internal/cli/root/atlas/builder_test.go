@@ -44,7 +44,6 @@ func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 	tests := testCases()
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("%v/%v", tt.currentVersion, tt.release), func(t *testing.T) {
-			config.ToolName = config.AtlasCLI
 			prevVersion := version.Version
 			version.Version = tt.currentVersion
 			t.Cleanup(func() {
@@ -56,7 +55,7 @@ func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 
 			mockDescriber.
 				EXPECT().
-				LatestWithCriteria(gomock.Any(), gomock.Any(), gomock.Any()).
+				LatestWithCriteria(gomock.Any(), gomock.Any()).
 				Return(tt.release, nil).
 				Times(1)
 
@@ -65,7 +64,7 @@ func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 			finder, _ := latestrelease.NewVersionFinder(fs, mockDescriber)
 
 			notifier := &Notifier{
-				currentVersion: latestrelease.VersionFromTag(version.Version, config.ToolName),
+				currentVersion: latestrelease.VersionFromTag(version.Version),
 				finder:         finder,
 				filesystem:     fs,
 				writer:         bufOut,
@@ -77,17 +76,17 @@ func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 
 			v := ""
 			if tt.release != nil {
-				v = latestrelease.VersionFromTag(tt.release.GetTagName(), config.ToolName)
+				v = latestrelease.VersionFromTag(tt.release.GetTagName())
 			}
 
 			want := ""
 			if tt.expectNewVersion {
 				want = fmt.Sprintf(`
-A new version of %s is available '%v'!
+A new version of atlascli is available '%v'!
 To upgrade, see: https://dochub.mongodb.org/core/install-atlas-cli.
 
 To disable this alert, run "%s config set skip_update_check true".
-`, config.ToolName, v, config.BinName())
+`, v, config.BinName())
 			}
 
 			if got := bufOut.String(); got != want {

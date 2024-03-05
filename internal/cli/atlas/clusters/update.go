@@ -147,24 +147,23 @@ func UpdateBuilder() *cobra.Command {
 You can't change the name of the cluster or downgrade the MongoDB version of your cluster.
 
 ` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"), "Atlas supports this command only for M10+ clusters"),
-		Example: fmt.Sprintf(`  # Update the tier for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50
+		Example: `  # Update the tier for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
+  atlas cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50
 
   # Replace tags cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tag key1=value1
+  atlas cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tag key1=value1
 
   # Remove all tags from cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tag =
+  atlas cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tag =
 
   # Update the disk size for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --diskSizeGB 20
+  atlas cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --diskSizeGB 20
 
   # Update the MongoDB version for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --mdbVersion 5.0
+  atlas cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --mdbVersion 5.0
   
   # Use a configuration file named cluster-config.json to update a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
-  %[1]s cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --file cluster-config.json --output json`,
-			cli.ExampleAtlasEntryPoint()),
+  atlas cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --file cluster-config.json --output json`,
 		Args: require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 0 {

@@ -75,7 +75,7 @@ func CreateBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": createTemplate,
 		},
-		Example: fmt.Sprintf(`  %s privateEndpoints gcp create --region CENTRAL_US`, cli.ExampleAtlasEntryPoint()),
+		Example: `  atlas privateEndpoints gcp create --region CENTRAL_US`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

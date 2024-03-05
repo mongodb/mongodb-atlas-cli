@@ -73,8 +73,8 @@ If you run the command in the terminal, it blocks the terminal session until the
 You can interrupt the command's polling at any time with CTRL-C.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
-		Example: fmt.Sprintf(`  # Watch the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 in the cluster named myDemo until it becomes available:
-  %s backups snapshots watch 5f4007f327a3bd7b6f4103c5 --clusterName myDemo`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Watch the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 in the cluster named myDemo until it becomes available:
+  atlas backups snapshots watch 5f4007f327a3bd7b6f4103c5 --clusterName myDemo`,
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"snapshotIdDesc": "Unique identifier of the snapshot you want to watch.",

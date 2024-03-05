@@ -1,5 +1,5 @@
 # Install current version of MongoDB Atlas CLI
-$NewestVersion = git tag --list "${Env:TOOL_NAME}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2
+$NewestVersion = git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2
 $PackageName = "mongodb-atlas-cli_${NewestVersion}_windows_x86_64.msi"
 if("${Env:UNSTABLE}" -eq "-unstable") {
     $PackageName = "mongodb-atlas-cli_${NewestVersion}-next_windows_x86_64.msi"

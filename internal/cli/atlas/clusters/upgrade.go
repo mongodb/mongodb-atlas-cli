@@ -140,9 +140,8 @@ func UpgradeBuilder() *cobra.Command {
 		Long: `This command is unavailable for dedicated clusters.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"),
-		Example: fmt.Sprintf(`  # Upgrade the tier, disk size, and MongoDB version for the shared cluster named myCluster in the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s cluster upgrade myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50 --diskSizeGB 20 --mdbVersion 7.0 --tag env=dev`,
-			cli.ExampleAtlasEntryPoint()),
+		Example: `  # Upgrade the tier, disk size, and MongoDB version for the shared cluster named myCluster in the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas cluster upgrade myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50 --diskSizeGB 20 --mdbVersion 7.0 --tag env=dev`,
 		Args: require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 0 {

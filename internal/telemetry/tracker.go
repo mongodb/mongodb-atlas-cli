@@ -56,7 +56,7 @@ func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracke
 		return nil, err
 	}
 
-	cacheDir = filepath.Join(cacheDir, config.ToolName)
+	cacheDir = filepath.Join(cacheDir, config.AtlasCLI)
 
 	t := &tracker{
 		fs:               afero.NewOsFs(),

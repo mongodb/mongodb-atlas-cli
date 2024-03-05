@@ -70,11 +70,12 @@ func (opts *ListOpts) newDatalakePrivateEndpointsListOpts() *atlasv2.ListDataFed
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{
-		Use:     "list",
-		Aliases: []string{"ls"},
-		Short:   "List Data Lake private endpoints for your project.",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
-		Args:    require.NoArgs,
+		Use:        "list",
+		Aliases:    []string{"ls"},
+		Short:      "List Data Lake private endpoints for your project.",
+		Long:       fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
+		Args:       require.NoArgs,
+		Deprecated: "Please use 'atlas datafederation privateendpoints list'",
 		Annotations: map[string]string{
 			"output": listTemplate,
 		},
@@ -88,10 +89,6 @@ func ListBuilder() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
-	}
-
-	if config.ToolName == config.AtlasCLI {
-		cmd.Deprecated = "Please use 'atlas datafederation privateendpoints list'"
 	}
 
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)

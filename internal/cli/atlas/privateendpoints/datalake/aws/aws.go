@@ -15,7 +15,6 @@
 package aws
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -27,8 +26,9 @@ const (
 func Builder() *cobra.Command {
 	const use = "aws"
 	cmd := &cobra.Command{
-		Use:   use,
-		Short: "Manage AWS private endpoints.",
+		Use:        use,
+		Short:      "Manage AWS private endpoints.",
+		Deprecated: "Please use 'atlas datafederation privateendpoints'",
 	}
 	cmd.AddCommand(
 		CreateBuilder(),
@@ -36,10 +36,6 @@ func Builder() *cobra.Command {
 		DescribeBuilder(),
 		DeleteBuilder(),
 	)
-
-	if config.ToolName == config.AtlasCLI {
-		cmd.Deprecated = "Please use 'atlas datafederation privateendpoints'"
-	}
 
 	return cmd
 }

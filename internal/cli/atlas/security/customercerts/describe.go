@@ -61,8 +61,8 @@ func DescribeBuilder() *cobra.Command {
 		Short: "Return the details for the current customer-managed X.509 configuration for your project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.NoArgs,
-		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the customer-managed X.509 configuration in the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s security customerCerts describe --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the JSON-formatted details for the customer-managed X.509 configuration in the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas security customerCerts describe --projectId 5e2211c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

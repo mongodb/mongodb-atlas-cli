@@ -68,8 +68,8 @@ func ListBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": listTemplate,
 		},
-		Example: fmt.Sprintf(`  # Return all continuous backup export buckets for your project:
-  %s backup exports buckets list`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return all continuous backup export buckets for your project:
+  atlas backup exports buckets list`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

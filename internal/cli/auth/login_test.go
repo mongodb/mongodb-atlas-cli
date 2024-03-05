@@ -25,7 +25,6 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -35,29 +34,12 @@ import (
 )
 
 func TestBuilder(t *testing.T) {
-	type testCase struct {
-		name string
-		want int
-	}
-	tests := []testCase{
-		{name: config.MongoCLI, want: 3},
-		{name: config.AtlasCLI, want: 4},
-	}
-	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			prevTool := config.ToolName
-			t.Cleanup(func() {
-				config.ToolName = prevTool
-			})
-			config.ToolName = tc.name
-			test.CmdValidator(
-				t,
-				Builder(),
-				tc.want,
-				[]string{},
-			)
-		})
-	}
+	test.CmdValidator(
+		t,
+		Builder(),
+		4,
+		[]string{},
+	)
 }
 
 func TestLoginBuilder(t *testing.T) {
@@ -65,7 +47,7 @@ func TestLoginBuilder(t *testing.T) {
 		t,
 		LoginBuilder(),
 		0,
-		[]string{"gov", "cm", "noBrowser"},
+		[]string{"gov", "noBrowser"},
 	)
 }
 
@@ -192,6 +174,7 @@ func (confirmMock) Error(_ *survey.PromptConfig, err error) error {
 }
 
 func Test_shouldRetryAuthenticate(t *testing.T) {
+	t.Setenv("DO_NOT_TRACK", "1")
 	type args struct {
 		err error
 		p   survey.Prompt

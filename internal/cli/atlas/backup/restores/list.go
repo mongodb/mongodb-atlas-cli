@@ -70,8 +70,8 @@ func ListBuilder() *cobra.Command {
 			"clusterNameDesc": "Name of the Atlas cluster for which you want to retrieve restore jobs.",
 			"output":          restoreListTemplate,
 		},
-		Example: fmt.Sprintf(`  # Return all continuous backup restore jobs for the cluster Cluster0:
-  %s backup restore list Cluster0`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return all continuous backup restore jobs for the cluster Cluster0:
+  atlas backup restore list Cluster0`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -65,8 +65,8 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": describeTemplate,
 		},
-		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the default project:
-  %s auditing describe --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the JSON-formatted details for the default project:
+  atlas auditing describe --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

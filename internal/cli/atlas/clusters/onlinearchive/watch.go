@@ -75,7 +75,7 @@ If you run the command in the terminal, it blocks the terminal session until the
 You can interrupt the command's polling at any time with CTRL-C.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
-		Example: fmt.Sprintf(`  %s cluster onlineArchive watch archiveIdSample --clusterName clusterNameSample`, cli.ExampleAtlasEntryPoint()),
+		Example: `  atlas cluster onlineArchive watch archiveIdSample --clusterName clusterNameSample`,
 		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"archiveIdDesc": "Unique identifier of the online archive to watch.",

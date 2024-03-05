@@ -106,12 +106,11 @@ func UpdateBuilder() *cobra.Command {
 		Use:   "update <username>",
 		Short: "Modify the details of a database user in your project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Example: fmt.Sprintf(`  # Update roles for a database user named myUser for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %[1]s dbuser update myUser --role readWriteAnyDatabase --projectId 5e2211c17a3e5a48f5497de3
+		Example: `  # Update roles for a database user named myUser for the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas dbuser update myUser --role readWriteAnyDatabase --projectId 5e2211c17a3e5a48f5497de3
 
   # Update scopes for a database user named myUser for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %[1]s dbuser update myUser --scope resourceName:resourceType --projectId 5e2211c17a3e5a48f5497de3`,
-			cli.ExampleAtlasEntryPoint()),
+  atlas dbuser update myUser --scope resourceName:resourceType --projectId 5e2211c17a3e5a48f5497de3`,
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"usernameDesc": "Username to update in the MongoDB database.",

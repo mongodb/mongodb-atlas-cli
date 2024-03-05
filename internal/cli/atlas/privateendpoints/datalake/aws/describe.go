@@ -67,9 +67,10 @@ func DescribeBuilder() *cobra.Command {
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 			"output":                describeTemplate,
 		},
-		Example: fmt.Sprintf(`  # This example uses the profile named "myprofile" for accessing Atlas.
-  %s privateEndpoint dataLake aws describe vpce-abcdefg0123456789 -P myprofile`, cli.ExampleAtlasEntryPoint()),
-		Args: require.ExactArgs(1),
+		Example: `  # This example uses the profile named "myprofile" for accessing Atlas.
+  atlas privateEndpoint dataLake aws describe vpce-abcdefg0123456789 -P myprofile`,
+		Args:       require.ExactArgs(1),
+		Deprecated: "Please use 'atlas datafederation privateendpoints describe'",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.privateEndpointID = args[0]
 			return opts.PreRunE(
@@ -81,10 +82,6 @@ func DescribeBuilder() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
-	}
-
-	if config.ToolName == config.AtlasCLI {
-		cmd.Deprecated = "Please use 'atlas datafederation privateendpoints describe'"
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

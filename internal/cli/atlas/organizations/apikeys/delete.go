@@ -55,16 +55,16 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <ID>",
 		Aliases: []string{"rm"},
 		Short:   "Remove the specified API key for your organization.",
-		Long: fmt.Sprintf(`To view possible values for the ID argument, run %s organizations apiKeys list.
+		Long: fmt.Sprintf(`To view possible values for the ID argument, run atlas organizations apiKeys list.
 
-%s`, cli.ExampleAtlasEntryPoint(), fmt.Sprintf(usage.RequiredRole, "Organization User Admin")),
+%s`, fmt.Sprintf(usage.RequiredRole, "Organization User Admin")),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies the organization's API key.",
 			"output": opts.SuccessMessage(),
 		},
-		Example: fmt.Sprintf(`  # Remove the organization API key with the ID 5f24084d8dbffa3ad3f21234 for the organization with the ID 5a1b39eec902201990f12345:
-  %s organizations apiKeys delete 5f24084d8dbffa3ad3f21234 --orgId 5a1b39eec902201990f12345`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Remove the organization API key with the ID 5f24084d8dbffa3ad3f21234 for the organization with the ID 5a1b39eec902201990f12345:
+  atlas organizations apiKeys delete 5f24084d8dbffa3ad3f21234 --orgId 5a1b39eec902201990f12345`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateOrgID, opts.initStore(cmd.Context())); err != nil {
 				return err

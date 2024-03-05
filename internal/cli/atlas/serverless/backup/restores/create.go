@@ -146,8 +146,8 @@ func CreateBuilder() *cobra.Command {
 
 ` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Owner"), "Atlas supports this command only for M10+ clusters."),
 		Args: require.NoArgs,
-		Example: fmt.Sprintf(`  # Create an automated restore:
-  %[1]s serverless backup restore create \
+		Example: `  # Create an automated restore:
+  atlas serverless backup restore create \
          --deliveryType automated \
          --clusterName myDemo \
          --snapshotId 5e7e00128f8ce03996a47179 \
@@ -155,7 +155,7 @@ func CreateBuilder() *cobra.Command {
          --targetProjectId 1a2345b67c8e9a12f3456de7
 
   # Create a point-in-time restore:
-  %[1]s serverless backup restore create \
+  atlas serverless backup restore create \
          --deliveryType pointInTime \
          --clusterName myDemo \
          --pointInTimeUTCSeconds 1588523147 \
@@ -163,10 +163,10 @@ func CreateBuilder() *cobra.Command {
          --targetProjectId 1a2345b67c8e9a12f3456de7
   
   # Create a download restore:
-  %[1]s serverless backup restore create \
+  atlas serverless backup restore create \
          --deliveryType download \
          --clusterName myDemo \
-         --snapshotId 5e7e00128f8ce03996a47179`, cli.ExampleAtlasEntryPoint()),
+         --snapshotId 5e7e00128f8ce03996a47179`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			set := false
 

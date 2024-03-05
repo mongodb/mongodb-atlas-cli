@@ -65,8 +65,8 @@ func DescribeBuilder() *cobra.Command {
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{"output": describeTemplate},
-		Example: fmt.Sprintf(`  # Return the regionalized private endpoint setting for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s privateEndpoints regionalModes describe --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the regionalized private endpoint setting for the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas privateEndpoints regionalModes describe --projectId 5e2211c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

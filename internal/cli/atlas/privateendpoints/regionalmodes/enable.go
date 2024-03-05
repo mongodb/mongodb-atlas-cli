@@ -63,8 +63,8 @@ func EnableBuilder() *cobra.Command {
 			"output": enableTemplate,
 		},
 
-		Example: fmt.Sprintf(`  # Enable the regionalied private endpoint setting in the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s privateEndpoints regionalModes enable --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Enable the regionalied private endpoint setting in the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas privateEndpoints regionalModes enable --projectId 5e2211c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

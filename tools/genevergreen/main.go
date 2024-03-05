@@ -25,30 +25,16 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/tools/genevergreen/generate"
 )
 
-const (
-	atlascli = "atlascli"
-	mongocli = "mongocli"
-)
-
 var (
 	ErrMissingOption = errors.New("missing option")
 )
 
 func run() error {
-	var toolName, taskType string
+	var taskType string
 
 	flag.StringVar(&taskType, "tasks", "", "type of task to be generated")
-	flag.StringVar(&toolName, "tool_name", "", fmt.Sprintf("Tool to generate tasks for (%s or %s)", atlascli, mongocli))
 
 	flag.Parse()
-
-	if toolName == "" {
-		return fmt.Errorf("%w: %s", ErrMissingOption, "tool_name")
-	}
-
-	if toolName != atlascli && toolName != mongocli {
-		return fmt.Errorf("-tool_name must be either %q or %q", atlascli, mongocli)
-	}
 
 	if taskType == "" {
 		return fmt.Errorf("%w: %s", ErrMissingOption, "tasks")
@@ -58,14 +44,14 @@ func run() error {
 
 	switch taskType {
 	case "repo":
-		generate.RepoTasks(c, toolName)
+		generate.RepoTasks(c)
 	case "postpkg":
-		generate.PostPkgTasks(c, toolName)
-		generate.PostPkgMetaTasks(c, toolName)
+		generate.PostPkgTasks(c)
+		generate.PostPkgMetaTasks(c)
 	case "snapshot":
-		generate.PublishSnapshotTasks(c, toolName)
+		generate.PublishSnapshotTasks(c)
 	case "publish":
-		generate.PublishStableTasks(c, toolName)
+		generate.PublishStableTasks(c)
 	default:
 		return errors.New("-tasks is invalid")
 	}

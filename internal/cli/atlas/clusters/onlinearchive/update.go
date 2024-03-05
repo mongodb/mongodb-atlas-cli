@@ -106,8 +106,8 @@ func UpdateBuilder() *cobra.Command {
 			"archiveIdDesc": "Unique identifier of the online archive to update.",
 			"output":        updateTemplate,
 		},
-		Example: fmt.Sprintf(`  # Update the archiving rule to archive after 5 days for the online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
-  %s clusters onlineArchives update 5f189832e26ec075e10c32d3 --clusterName --archiveAfter 5 myCluster --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Update the archiving rule to archive after 5 days for the online archive with the ID 5f189832e26ec075e10c32d3 for the cluster named myCluster:
+  atlas clusters onlineArchives update 5f189832e26ec075e10c32d3 --clusterName --archiveAfter 5 myCluster --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

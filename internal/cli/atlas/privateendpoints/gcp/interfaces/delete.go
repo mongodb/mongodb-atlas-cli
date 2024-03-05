@@ -61,10 +61,8 @@ func DeleteBuilder() *cobra.Command {
 			"idDesc": "Unique identifier for the endpoint group.",
 			"output": opts.SuccessMessage(),
 		},
-		Example: fmt.Sprintf(
-			`  %s privateEndpoints gcp interfaces delete endpoint-1 \
+		Example: `  atlas privateEndpoints gcp interfaces delete endpoint-1 \
   --endpointServiceId 61eaca605af86411903de1dd`,
-			cli.ExampleAtlasEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},

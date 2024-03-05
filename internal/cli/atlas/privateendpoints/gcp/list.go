@@ -66,7 +66,7 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   "List GCP private endpoints for your project.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
-		Example: fmt.Sprintf(`  %s privateEndpoint gcp ls`, cli.ExampleAtlasEntryPoint()),
+		Example: `  atlas privateEndpoint gcp ls`,
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

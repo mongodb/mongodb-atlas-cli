@@ -15,7 +15,6 @@
 package convert
 
 import (
-	"fmt"
 	"strconv"
 
 	"go.mongodb.org/ops-manager/opsmngr"
@@ -38,26 +37,6 @@ type ClusterConfig struct {
 	Shards   []*RSConfig      `yaml:"shards,omitempty" json:"shards,omitempty"`
 	Config   *RSConfig        `yaml:"config,omitempty" json:"config,omitempty"`
 	Mongos   []*ProcessConfig `yaml:"mongos,omitempty" json:"mongos,omitempty"`
-}
-
-// newReplicaSetCluster when config is a replicaset.
-func newReplicaSetCluster(name string, s int) *ClusterConfig {
-	rs := &ClusterConfig{}
-	rs.Name = name
-	rs.Processes = make([]*ProcessConfig, s)
-
-	return rs
-}
-
-// newShardedCluster when config is a sharded cluster.
-func newShardedCluster(s *opsmngr.ShardingConfig) *ClusterConfig {
-	rs := &ClusterConfig{}
-	rs.Name = s.Name
-	rs.Shards = make([]*RSConfig, len(s.Shards))
-	rs.Mongos = make([]*ProcessConfig, 0, 1)
-	rs.Tags = s.Tags
-
-	return rs
 }
 
 // PatchAutomationConfig adds the ClusterConfig to a opsmngr.AutomationConfig
@@ -108,14 +87,6 @@ func (c *ClusterConfig) patchSharding(out *opsmngr.AutomationConfig) error {
 	patchProcesses(out, newCluster.Name, newProcesses)
 	patchSharding(out, newCluster)
 	return nil
-}
-
-func (c *ClusterConfig) addToMongoURI(p *opsmngr.Process) {
-	if c.MongoURI == "" {
-		c.MongoURI = fmt.Sprintf("mongodb://%s:%d", p.Hostname, p.Args26.NET.Port)
-	} else {
-		c.MongoURI = fmt.Sprintf("%s,%s:%d", c.MongoURI, p.Hostname, p.Args26.NET.Port)
-	}
 }
 
 func newShard(rsConfig *RSConfig) *opsmngr.Shard {

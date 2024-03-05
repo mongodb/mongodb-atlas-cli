@@ -19,7 +19,6 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"go.mongodb.org/ops-manager/opsmngr"
-	"go.mongodb.org/ops-manager/search"
 )
 
 // RSConfig shared properties of replica sets, config servers, and sharded clusters.
@@ -116,31 +115,4 @@ func newReplicaSet(c *RSConfig) (*opsmngr.ReplicaSet, error) {
 	}
 
 	return rs, nil
-}
-
-// newRSConfig.
-func newRSConfig(in *opsmngr.AutomationConfig, id string) *RSConfig {
-	rsi, found := search.ReplicaSets(in.ReplicaSets, func(rs *opsmngr.ReplicaSet) bool {
-		return rs.ID == id
-	})
-	if !found {
-		return nil
-	}
-	rs := in.ReplicaSets[rsi]
-	out := &RSConfig{
-		Name:      rs.ID,
-		Processes: make([]*ProcessConfig, len(rs.Members)),
-	}
-
-	for i, m := range rs.Members {
-		for l, p := range in.Processes {
-			if p.Name == m.Host {
-				out.Processes[i] = newReplicaSetProcessConfig(&rs.Members[i], p)
-				in.Processes = append(in.Processes[:l], in.Processes[l+1:]...)
-				break
-			}
-		}
-	}
-	in.ReplicaSets = append(in.ReplicaSets[:rsi], in.ReplicaSets[rsi+1:]...)
-	return out
 }

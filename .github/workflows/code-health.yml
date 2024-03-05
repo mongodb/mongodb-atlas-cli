@@ -106,7 +106,7 @@ jobs:
           FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)
           export LINES=
           LINES=$(echo "$FILES" | awk 'NF' | wc -l)
-          if [ $LINES -ne 0 ]; then
+          if [ "$LINES" -ne 0 ]; then
             echo "Detected files that need to be committed:"
             echo "$FILES" | sed -e "s/^/  /"
             echo ""
@@ -141,8 +141,10 @@ jobs:
         run: make gen-mocks
       - name: Check for uncommited files
         run: |
-          export FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)
-          export LINES=$(echo "$FILES" | awk 'NF' | wc -l)
+          export FILES=
+          FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)
+          export LINES=
+          LINES=$(echo "$FILES" | awk 'NF' | wc -l)
           if [ "$LINES" -ne 0 ]; then
             echo "Detected files that need to be committed:"
             echo "$FILES" | sed -e "s/^/  /"

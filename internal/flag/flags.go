@@ -15,7 +15,6 @@
 package flag
 
 const (
-	Service                                   = "service"                                   // Service flag to set service
 	Profile                                   = "profile"                                   // Profile flag to use a profile
 	ProfileShort                              = "P"                                         // ProfileShort flag to use a profile
 	OrgID                                     = "orgId"                                     // OrgID flag to use an Organization ID
@@ -61,14 +60,6 @@ const (
 	EnableTerminationProtection               = "enableTerminationProtection"               // EnableTerminationProtection flag
 	DisableTerminationProtection              = "disableTerminationProtection"              // DisableTerminationProtection flag
 	Username                                  = "username"                                  // Username flag
-	StorageEngine                             = "storageEngine"                             // StorageEngine flag
-	AuthMechanism                             = "authMechanism"                             // AuthMechanism flag
-	Provisioned                               = "provisioned"                               // Provisioned flag
-	Encryption                                = "encryption"                                // Encryption flag
-	SSL                                       = "ssl"                                       // SSL flag
-	SyncSource                                = "syncSource"                                // SyncSource flag
-	ExcludedNamespace                         = "excludedNamespace"                         // ExcludedNamespace flag
-	IncludedNamespace                         = "includedNamespace"                         // IncludedNamespace flag
 	UsernameShort                             = "u"                                         // UsernameShort flag
 	Password                                  = "password"                                  // Password flag
 	SkipMongosh                               = "skipMongosh"                               // SkipMongosh flag
@@ -86,7 +77,6 @@ const (
 	Out                                       = "out"                                       // Out flag
 	Output                                    = "output"                                    // Output flag
 	OutputShort                               = "o"                                         // OutputShort flag
-	Minutes                                   = "minutes"                                   // Minutes flag
 	Status                                    = "status"                                    // Status flag
 	Start                                     = "start"                                     // Start flag
 	End                                       = "end"                                       // End flag
@@ -97,11 +87,6 @@ const (
 	Scope                                     = "scope"                                     // Scope flag
 	IAMAssumedRoleARN                         = "iamAssumedRoleArn"                         // IAMAssumedRoleARN flag
 	Description                               = "desc"                                      // Description flag
-	StartDate                                 = "startDate"                                 // StartDate flag
-	EndDate                                   = "endDate"                                   // EndDate flag
-	Format                                    = "format"                                    // Format flag
-	AlertType                                 = "alertType"                                 // AlertType flag
-	Mechanisms                                = "mechanisms"                                // Mechanisms flag
 	TypeFlag                                  = "type"                                      // TypeFlag flag
 	Comment                                   = "comment"                                   // Comment flag
 	DeleteAfter                               = "deleteAfter"                               // DeleteAfter flag
@@ -117,7 +102,6 @@ const (
 	File                                      = "file"                                      // File flag
 	FileShort                                 = "f"                                         // File flag
 	Force                                     = "force"                                     // Force flag
-	WhitelistIP                               = "whitelistIp"                               // WhitelistIP flag
 	AccessListIP                              = "accessListIp"                              // AccessListIP flag
 	Event                                     = "event"                                     // EventTypeName flag
 	Enabled                                   = "enabled"                                   // Enabled flag
@@ -153,18 +137,12 @@ const (
 	SnapshotID                                = "snapshotId"                                // SnapshotID flag
 	IndexName                                 = "indexName"                                 // IndexName flag
 	ClusterName                               = "clusterName"                               // ClusterName flag
-	ClusterID                                 = "clusterId"                                 // ClusterID flag
 	TargetProjectID                           = "targetProjectId"                           // TargetProjectID flag
-	TargetClusterID                           = "targetClusterId"                           // TargetClusterID flag
 	TargetClusterName                         = "targetClusterName"                         // TargetClusterName flag
-	CheckpointID                              = "checkpointId"                              // CheckpointID flag
 	OplogTS                                   = "oplogTs"                                   // OplogTS flag
 	OplogInc                                  = "oplogInc"                                  // OplogInc flag
 	PointInTimeUTCMillis                      = "pointInTimeUTCMillis"                      // PointInTimeUTCMillis flag
 	PointInTimeUTCSeconds                     = "pointInTimeUTCSeconds"                     // PointInTimeUTCSeconds flag
-	Expires                                   = "expires"                                   // Expires flag
-	MaxDownloads                              = "maxDownloads"                              // MaxDownloads flag
-	ExpirationHours                           = "expirationHours"                           // ExpirationHours flag
 	MaxDate                                   = "maxDate"                                   // MaxDate flag
 	MinDate                                   = "minDate"                                   // MinDate flag
 	Granularity                               = "granularity"                               // Granularity flag
@@ -176,21 +154,7 @@ const (
 	CollectionName                            = "collectionName"                            // CollectionName flag
 	Database                                  = "db"                                        // Database flag
 	Unique                                    = "unique"                                    // Unique flag
-	RSName                                    = "rsName"                                    // RSName flag
 	Sparse                                    = "sparse"                                    // Sparse flag
-	Locale                                    = "locale"                                    // Locale flag
-	CaseLevel                                 = "caseLevel"                                 // CaseLevel flag
-	CaseFirst                                 = "caseFirst"                                 // CaseFirst flag
-	Alternate                                 = "alternate"                                 // Alternate flag
-	MaxVariable                               = "MaxVariable"                               // MaxVariable flag
-	NumericOrdering                           = "numericOrdering"                           // NumericOrdering flag
-	Normalization                             = "normalization"                             // Normalization flag
-	Backwards                                 = "backwards"                                 // Backwards flag
-	Strength                                  = "strength"                                  // Strength flag
-	SizeRequestedPerFileBytes                 = "sizeRequestedPerFileBytes"                 // SizeRequestedPerFileBytes flag
-	Redacted                                  = "redacted"                                  // Redacted flag
-	SkipRedaction                             = "skipRedaction"                             // SkipRedaction flag
-	Verbose                                   = "verbose"                                   // Verbose flag
 	TestBucket                                = "testBucket"                                // TestBucket flag
 	Partition                                 = "partition"                                 // Partition flag
 	DateField                                 = "dateField"                                 // DateField flag
@@ -223,15 +187,7 @@ const (
 	ServiceKey                                = "serviceKey"                                // ServiceKey flag
 	WriteToken                                = "writeToken"                                // WriteToken flag
 	ReadToken                                 = "readToken"                                 // ReadToken flag
-	Assignment                                = "assignment"                                // Assignment flag
-	EncryptedCredentials                      = "encryptedCredentials"                      // EncryptedCredentials flag
 	Label                                     = "label"                                     // Label flag
-	LoadFactor                                = "loadFactor"                                // LoadFactor flag
-	MMAPV1CompressionSetting                  = "mmapv1CompressionSetting"                  // MMAPV1CompressionSetting flag
-	WTCompressionSetting                      = "wtCompressionSetting"                      // WTCompressionSetting flag
-	StorePath                                 = "storePath"                                 // StorePath flag
-	MaxCapacityGB                             = "maxCapacityGB"                             // MaxCapacityGB flag
-	URI                                       = "uri"                                       // URI flag
 	WriteConcern                              = "writeConcern"                              // WriteConcern flag
 	ReadConcern                               = "readConcern"                               // ReadConcern flag
 	DisableFailIndexKeyTooLong                = "disableFailIndexKeyTooLong"                // DisableFailIndexKeyTooLong flag
@@ -248,28 +204,10 @@ const (
 	IncludeDeleted                            = "includeDeleted"                            // IncludeDeleted flag
 	AWSAccessKey                              = "awsAccessKey"                              // AWSAccessKey flag
 	AWSSecretKey                              = "awsSecretKey"                              // AWSSecretKey fag
-	S3AuthMethod                              = "s3AuthMethod"                              // S3AuthMethod flag
-	S3BucketEndpoint                          = "s3BucketEndpoint"                          // S3BucketEndpoint flag
-	S3BucketName                              = "s3BucketName"                              // S3BucketName flag
-	S3MaxConnections                          = "s3MaxConnections"                          // S3MaxConnections flag
-	DisableProxyS3                            = "disableProxyS3"                            // DisableProxyS3 flag
-	AcceptedTos                               = "acceptedTos"                               // AcceptedTos flag
-	SSEEnabled                                = "sseEnabled"                                // SSEEnabled flag
-	PathStyleAccessEnabled                    = "pathStyleAccessEnabled"                    // PathStyleAccessEnabled flag
-	ReferenceTimeZoneOffset                   = "referenceTimeZoneOffset"                   // ReferenceTimeZoneOffset flag
-	DailySnapshotRetentionDays                = "dailySnapshotRetentionDays"                // DailySnapshotRetentionDays flag
-	ClusterCheckpointIntervalMin              = "clusterCheckpointIntervalMin"              // ClusterCheckpointIntervalMin flag
-	SnapshotIntervalHours                     = "snapshotIntervalHours"                     // SnapshotIntervalHours flag
-	SnapshotRetentionDays                     = "snapshotRetentionDays"                     // SnapshotRetentionDays flag
-	WeeklySnapshotRetentionWeeks              = "weeklySnapshotRetentionWeeks"              // WeeklySnapshotRetentionWeeks flag
-	PointInTimeWindowHours                    = "pointInTimeWindowHours"                    // PointInTimeWindowHours flag
 	ReferenceHourOfDay                        = "referenceHourOfDay"                        // ReferenceHourOfDay flag
 	ReferenceMinuteOfHour                     = "referenceMinuteOfHour"                     // ReferenceMinuteOfHour flag
-	MonthlySnapshotRetentionMonths            = "monthlySnapshotRetentionMonths"            // MonthlySnapshotRetentionMonths flag
 	Policy                                    = "policy"                                    // Policy flag
-	SystemID                                  = "systemId"                                  // SystemID flag
 	Default                                   = "default"                                   // Default flag
-	Timestamp                                 = "timestamp"                                 // Timestamp flag
 	LiveMigrationHost                         = "migrationHost"                             // LiveMigrationHost flag
 	LiveMigrationSourceClusterName            = "sourceClusterName"                         // LiveMigrationSourceClusterName flag
 	LiveMigrationSourceProjectID              = "sourceProjectId"                           // LiveMigrationSourceProjectID flag
@@ -283,14 +221,10 @@ const (
 	GovCloudRegionsOnly                       = "govCloudRegionsOnly"                       // GovCloudRegionsOnly flag
 	LiveMigrationID                           = "liveMigrationId"                           // LiveMigrationID flag
 	LiveMigrationValidationID                 = "validationId"                              // LiveMigrationDropCollections flag
-	LinkToken                                 = "linkToken"                                 // LinkToken flag
 	WithoutDefaultAlertSettings               = "withoutDefaultAlertSettings"               // WithoutDefaultAlertSettings flag
 	CurrentIP                                 = "currentIp"                                 // CurrentIP flag
 	Gov                                       = "gov"                                       // Gov flag
 	Version                                   = "version"                                   // Version flag
-	LocalKeyFile                              = "localKeyFile"                              // LocalKeyFile flag
-	KMIPServerCAFile                          = "kmipServerCAFile"                          // KMIPServerCAFile flag
-	KMIPClientCertificateFile                 = "kmipClientCertificateFile"                 // KMIPClientCertificateFile flag
 	EnableCollectDatabaseSpecificsStatistics  = "enableCollectDatabaseSpecificsStatistics"  // EnableCollectDatabaseSpecificsStatistics flag
 	DisableCollectDatabaseSpecificsStatistics = "disableCollectDatabaseSpecificsStatistics" // DisableCollectDatabaseSpecificsStatistics flag
 	EnableDataExplorer                        = "enableDataExplorer"                        // EnableDataExplorer flag
@@ -329,9 +263,6 @@ const (
 	ExportID                                  = "exportId"                                  // ExportID flag
 	Debug                                     = "debug"                                     // Debug flag to set debug log level
 	DebugShort                                = "D"                                         // DebugShort flag to set debug log level
-	KMIPClientCertificatePassword             = "kmipClientCertificatePassword"             //nolint:gosec // KMIPClientCertificatePassword flag
-	KMIPUsername                              = "kmipUsername"                              // KMIPUsername flag
-	KMIPPassword                              = "kmipPassword"                              // KMIPPassword flag
 	GCPServiceAccountKey                      = "gcpServiceAccountKey"                      // GCPServiceAccountKey flag
 	AzureClientID                             = "azureClientId"                             // AzureClientID flag
 	AzureTenantID                             = "azureTenantId"                             // AzureTenantID flag
@@ -381,5 +312,4 @@ const (
 	FrequencyInterval                         = "frequencyInterval"                         // FrequencyInterval flag
 	RetentionUnit                             = "retentionUnit"                             // RetentionUnit flag
 	RetentionValue                            = "retentionValue"                            // RetentionValue flag
-	ScheduledPolicyID                         = "scheduledPolicyId"                         // ScheduledPolicyID
 )

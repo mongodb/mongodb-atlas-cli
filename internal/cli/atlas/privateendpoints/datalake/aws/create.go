@@ -79,6 +79,7 @@ func CreateBuilder() *cobra.Command {
 Your API key must have the GROUP_ATLAS_ADMIN (Project Owner) role to create a private endpoint.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Deprecated: "Please use 'atlas datafederation privateendpoints create'",
 		Annotations: map[string]string{
 			"output": createTemplate,
 		},
@@ -93,10 +94,6 @@ Your API key must have the GROUP_ATLAS_ADMIN (Project Owner) role to create a pr
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
-	}
-
-	if config.ToolName == config.AtlasCLI {
-		cmd.Deprecated = "Please use 'atlas datafederation privateendpoints create'"
 	}
 
 	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointID)

@@ -62,6 +62,7 @@ func DeleteBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Remove the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s dataLakes delete myFDI --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+		Deprecated: "Please use 'atlas datafederation delete'",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context())); err != nil {
 				return err
@@ -72,10 +73,6 @@ func DeleteBuilder() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
-	}
-
-	if config.ToolName == config.AtlasCLI {
-		cmd.Deprecated = "Please use 'atlas datafederation delete'"
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)

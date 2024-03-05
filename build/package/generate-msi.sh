@@ -22,7 +22,7 @@ export CGO_ENABLED
 
 go-msi check-env
 
-VERSION_GIT="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION_GIT="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 VERSION_NAME="$VERSION_GIT"
 if [[ "${unstable-}" == "-unstable" ]]; then
 	VERSION_NAME="$VERSION_GIT-next"
@@ -33,8 +33,8 @@ COMMIT=$(git log -n1 --format=format:"%H")
 SOURCE_FILES=./cmd/atlas
 PACKAGE_NAME=mongodb-atlas-cli_${VERSION_NAME}_windows_x86_64.msi
 OUTPUT=./bin/atlas.exe
-LINKER_FLAGS="-s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${VERSION_GIT} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit=${COMMIT} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=${TOOL_NAME:?}"
-WIX_MANIFEST_FILE="./build/package/wix/${TOOL_NAME:?}.json"
+LINKER_FLAGS="-s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${VERSION_GIT} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit=${COMMIT}"
+WIX_MANIFEST_FILE="./build/package/wix/atlascli.json"
 
 env GOOS=windows GOARCH=amd64 go build \
 	-ldflags "${LINKER_FLAGS}" -o ${OUTPUT} "${SOURCE_FILES}"

@@ -16,21 +16,17 @@ package datalake
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	const use = "dataLakes"
 	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage Atlas Data Lakes for your project.",
-		Long:    `The datalakes command provides access to your project data lakes. You can create, edit, and delete data lakes.`,
-	}
-
-	if config.ToolName == config.AtlasCLI {
-		cmd.Deprecated = "Please use 'atlas datafederation'"
+		Use:        use,
+		Aliases:    cli.GenerateAliases(use),
+		Short:      "Manage Atlas Data Lakes for your project.",
+		Long:       `The datalakes command provides access to your project data lakes. You can create, edit, and delete data lakes.`,
+		Deprecated: "Please use 'atlas datafederation'",
 	}
 
 	cmd.AddCommand(

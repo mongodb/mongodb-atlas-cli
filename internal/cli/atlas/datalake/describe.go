@@ -69,6 +69,7 @@ func DescribeBuilder() *cobra.Command {
 		},
 		Example: fmt.Sprintf(`  # Return the details for the federated database instance named myFDI in the project with the ID 5e2211c17a3e5a48f5497de3:
   %s dataLakes describe myFDI --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Deprecated: "Please use 'atlas datafederation describe'",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.PreRunE(
@@ -80,10 +81,6 @@ func DescribeBuilder() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
-	}
-
-	if config.ToolName == config.AtlasCLI {
-		cmd.Deprecated = "Please use 'atlas datafederation describe'"
 	}
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

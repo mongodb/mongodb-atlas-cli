@@ -152,7 +152,7 @@ func withCI() EventOpt {
 
 func withAnonymousID() EventOpt {
 	return func(event Event) {
-		id, err := machineid.ProtectedID(config.ToolName)
+		id, err := machineid.ProtectedID(config.AtlasCLI)
 		if err != nil {
 			event.Properties["device_id_err"] = err.Error()
 			_, _ = log.Debugf("error generating machine id: %v\n", err)
@@ -329,7 +329,7 @@ func withUserAgent() EventOpt {
 func newEvent(opts ...EventOpt) Event {
 	var event = Event{
 		Timestamp: time.Now(),
-		Source:    config.ToolName,
+		Source:    config.AtlasCLI,
 		Properties: map[string]interface{}{
 			"result": "SUCCESS",
 		},

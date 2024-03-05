@@ -179,7 +179,7 @@ Use the --help flag with any command for more info on that command.`,
 			f, _ := latestrelease.NewVersionFinder(fs, version.NewReleaseVersionDescriber())
 
 			notifier := &Notifier{
-				currentVersion: latestrelease.VersionFromTag(version.Version, config.ToolName),
+				currentVersion: latestrelease.VersionFromTag(version.Version),
 				finder:         f,
 				filesystem:     fs,
 				writer:         w,
@@ -255,7 +255,7 @@ Use the --help flag with any command for more info on that command.`,
 	return rootCmd
 }
 
-const verTemplate = `%s version: %s
+const verTemplate = `atlascli version: %s
 git version: %s
 Go version: %s
    os: %s
@@ -309,7 +309,6 @@ func shouldCheckCredentials(cmd *cobra.Command) AuthRequirements {
 
 func formattedVersion() string {
 	return fmt.Sprintf(verTemplate,
-		config.ToolName,
 		version.Version,
 		version.GitCommit,
 		runtime.Version(),
@@ -345,18 +344,18 @@ func (n *Notifier) notifyIfApplicable(isHb bool) error {
 
 	var upgradeInstructions string
 	if isHb {
-		upgradeInstructions = fmt.Sprintf(`To upgrade, run "brew update && brew upgrade %s".`, homebrew.FormulaName(config.ToolName))
+		upgradeInstructions = fmt.Sprintf(`To upgrade, run "brew update && brew upgrade %s".`, homebrew.FormulaName())
 	} else {
 		upgradeInstructions = "To upgrade, see: https://dochub.mongodb.org/core/install-atlas-cli."
 	}
 
 	newVersionTemplate := `
-A new version of %s is available '%s'!
+A new version of atlascli is available '%s'!
 %s
 
 To disable this alert, run "%s config set skip_update_check true".
 `
-	_, err = fmt.Fprintf(n.writer, newVersionTemplate, config.ToolName, release.Version, upgradeInstructions, config.BinName())
+	_, err = fmt.Fprintf(n.writer, newVersionTemplate, release.Version, upgradeInstructions, config.BinName())
 	return err
 }
 

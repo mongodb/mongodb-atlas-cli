@@ -45,11 +45,8 @@ func NewChecker(fileSystem afero.Fs) (*Checker, error) {
 	return &Checker{fs: fileSystem, path: filePath}, nil
 }
 
-func FormulaName(tool string) string {
-	if strings.Contains(tool, "atlas") {
-		return atlasFormulaName
-	}
-	return tool
+func FormulaName() string {
+	return atlasFormulaName
 }
 
 // IsHomebrew checks if the cli was installed with homebrew.
@@ -60,7 +57,7 @@ func (s Checker) IsHomebrew() bool {
 		return strings.HasPrefix(h.ExecutablePath, h.FormulaPath)
 	}
 
-	formula := FormulaName(config.BinName())
+	formula := FormulaName()
 	cmdResult := new(bytes.Buffer)
 	cmd := exec.Command("brew", "--prefix", formula)
 

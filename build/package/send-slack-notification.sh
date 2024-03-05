@@ -20,9 +20,7 @@ if [[ "${unstable-}" == "-unstable" ]]; then
   exit 0
 fi
 
-VERSION="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
-
-TOOL_NAME_MESSAGE="MongoDB Atlas CLI"
+VERSION="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
 curl --header "Api-User:${evergreen_user:?}" \
 	--header "Api-Key:${evergreen_api_key:?}" \
@@ -30,7 +28,7 @@ curl --header "Api-User:${evergreen_user:?}" \
 	--data '
      {
        "target" : "'"${release_slack_channel:?}"'",
-       "msg" : ":mcli: '"${TOOL_NAME_MESSAGE}"' v'"${VERSION}"' has been released! :tada:",
+       "msg" : ":mcli: '"MongoDB Atlas CLI"' v'"${VERSION}"' has been released! :tada:",
        "attachments" : [
        {
        	"title": "v'"${VERSION}"'",

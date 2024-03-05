@@ -15,7 +15,7 @@ builds:
       binary: bin/atlas
       main: ./cmd/atlas
       ldflags:
-        - -s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version={{.Version}} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit={{.FullCommit}} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=atlascli
+        - -s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version={{.Version}} -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit={{.FullCommit}}
     id: linux
     goos: [linux]
     goarch: [amd64,arm64]
@@ -40,7 +40,6 @@ builds:
       post:
         - cmd: ./build/package/windows_notarize.sh
           env:
-            - TOOL_NAME=atlascli
             - VERSION={{ .Version }}
           output: true
 gomod: # https://goreleaser.com/customization/verifiable_builds/
@@ -136,8 +135,6 @@ signs:
       - linux_archives
       - linux_package
       - mongodb-atlas
-    env:
-      - TOOL_NAME=atlascli
     artifacts: all
     output: true
 release:

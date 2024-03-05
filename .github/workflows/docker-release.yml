@@ -110,8 +110,8 @@ jobs:
         run: |
           docker pull "${IMAGE}"
           # DIGESTS contains a list of three digests separated by a comma.
-            DIGESTS=$(docker buildx imagetools inspect "${IMAGE}" --format '{{- range .Manifest.Manifests}}{{- if eq .Platform.OS "linux" }}{{ .Digest }},{{- end }}{{- end }}{{- .Manifest.Digest }}
-            ')
+          DIGESTS=$(docker buildx imagetools inspect "${IMAGE}" --format '{{- range .Manifest.Manifests}}{{- if eq .Platform.OS "linux" }}{{ .Digest }},{{- end }}{{- end }}{{- .Manifest.Digest }}
+          ')
           echo "These are the Docker image DIGESTS: ${DIGESTS}"
           
           {

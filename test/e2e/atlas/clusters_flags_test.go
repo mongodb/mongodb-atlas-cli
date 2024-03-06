@@ -17,10 +17,12 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -44,6 +46,12 @@ func TestClustersFlags(t *testing.T) {
 	region, err := g.newAvailableRegion(tier, e2eClusterProvider)
 	req.NoError(err)
 
+	mdbVersion, err := MongoDBMajorVersion()
+	req.NoError(err)
+
+	previousMdbVersion, err := getPreviousMajorVersion(mdbVersion)
+	req.NoError(err)
+
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -53,7 +61,7 @@ func TestClustersFlags(t *testing.T) {
 			"--members=3",
 			"--tier", tier,
 			"--provider", e2eClusterProvider,
-			"--mdbVersion", e2eMDBVer,
+			"--mdbVersion", previousMdbVersion,
 			"--diskSizeGB", diskSizeGB30,
 			"--enableTerminationProtection",
 			"--projectId", g.projectID,
@@ -66,7 +74,7 @@ func TestClustersFlags(t *testing.T) {
 		var cluster *atlasv2.AdvancedClusterDescription
 		require.NoError(t, json.Unmarshal(resp, &cluster))
 
-		ensureCluster(t, cluster, clusterName, e2eMDBVer, 30, true)
+		ensureCluster(t, cluster, clusterName, previousMdbVersion, 30, true)
 	})
 
 	t.Run("Load Sample Data", func(t *testing.T) {
@@ -207,7 +215,7 @@ func TestClustersFlags(t *testing.T) {
 			"update",
 			clusterName,
 			"--diskSizeGB", diskSizeGB40,
-			"--mdbVersion=5.0",
+			"--mdbVersion", mdbVersion,
 			"--disableTerminationProtection",
 			"--projectId", g.projectID,
 			"-o=json")
@@ -218,7 +226,7 @@ func TestClustersFlags(t *testing.T) {
 		var cluster atlasv2.AdvancedClusterDescription
 		require.NoError(t, json.Unmarshal(resp, &cluster))
 
-		ensureCluster(t, &cluster, clusterName, "5.0", 40, false)
+		ensureCluster(t, &cluster, clusterName, mdbVersion, 40, false)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -230,4 +238,13 @@ func TestClustersFlags(t *testing.T) {
 		expected := "Cluster deleted"
 		assert.Contains(t, string(resp), expected)
 	})
+}
+
+func getPreviousMajorVersion(version string) (string, error) {
+	v, err := semver.NewVersion(version)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%d.%d", v.Major()-1, v.Minor()), nil
 }

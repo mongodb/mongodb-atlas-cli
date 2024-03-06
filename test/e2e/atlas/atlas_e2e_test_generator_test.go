@@ -335,7 +335,10 @@ func (g *atlasE2ETestGenerator) generateCluster() {
 	}
 
 	if g.mDBVer == "" {
-		g.mDBVer = e2eMDBVer
+		mdbVersion, e := MongoDBMajorVersion()
+		require.NoError(g.t, e)
+
+		g.mDBVer = mdbVersion
 	}
 
 	g.clusterName, g.clusterRegion, err = deployClusterForProject(g.projectID, g.tier, g.mDBVer, g.enableBackup)

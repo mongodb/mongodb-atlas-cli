@@ -16,11 +16,13 @@
 package atlas_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
 	"testing"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
@@ -40,10 +42,15 @@ func TestClustersFile(t *testing.T) {
 	clusterFileName, err := RandClusterName()
 	req.NoError(err)
 
-	clusterFile := "create_cluster_test.json"
-	if service := os.Getenv("MCLI_SERVICE"); service == config.CloudGovService {
-		clusterFile = "create_cluster_gov_test.json"
-	}
+	mdbVersion, err := MongoDBMajorVersion()
+	req.NoError(err)
+
+	clusterFile, err := generateClusterFile(mdbVersion)
+	req.NoError(err)
+
+	t.Cleanup(func() {
+		os.Remove(clusterFile)
+	})
 
 	t.Run("Create via file", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -60,7 +67,7 @@ func TestClustersFile(t *testing.T) {
 		var cluster atlasv2.AdvancedClusterDescription
 		req.NoError(json.Unmarshal(resp, &cluster))
 
-		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 30, false)
+		ensureCluster(t, &cluster, clusterFileName, mdbVersion, 30, false)
 	})
 
 	t.Run("Watch", func(t *testing.T) {
@@ -92,7 +99,7 @@ func TestClustersFile(t *testing.T) {
 		var cluster atlasv2.AdvancedClusterDescription
 		req.NoError(json.Unmarshal(resp, &cluster))
 		t.Logf("%v\n", cluster)
-		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 40, false)
+		ensureCluster(t, &cluster, clusterFileName, mdbVersion, 40, false)
 		assert.Empty(t, cluster.GetTags())
 	})
 
@@ -125,4 +132,37 @@ func TestClustersFile(t *testing.T) {
 		resp, _ := cmd.CombinedOutput()
 		t.Log(string(resp))
 	})
+}
+
+func generateClusterFile(mdbVersion string) (string, error) {
+	data := struct {
+		MongoDBMajorVersion string
+	}{
+		MongoDBMajorVersion: mdbVersion,
+	}
+
+	templateFile := "create_cluster_test.json"
+	if service := os.Getenv("MCLI_SERVICE"); service == config.CloudGovService {
+		templateFile = "create_cluster_gov_test.json"
+	}
+
+	tmpl, err := template.ParseFiles(templateFile)
+	if err != nil {
+		return "", err
+	}
+
+	var tempBuffer bytes.Buffer
+	if err = tmpl.Execute(&tempBuffer, data); err != nil {
+		return "", err
+	}
+
+	const clusterFile = "create_cluster.json"
+	file, err := os.Create(clusterFile)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	_, err = tempBuffer.WriteTo(file)
+	return clusterFile, err
 }

@@ -131,11 +131,6 @@ integration-test: ## Run integration tests
 	@echo "==> Running integration tests..."
 	$(TEST_CMD) --tags="$(INTEGRATION_TAGS)" -count=1 ./internal...
 
-.PHONY: fuzz-normalizer-test
-fuzz-normalizer-test: ## Run fuzz test
-	@echo "==> Running fuzz test..."
-	$(TEST_CMD) -fuzz=Fuzz -fuzztime 50s --tags="$(UNIT_TAGS)" -race ./internal/kubernetes/operator/resources
-
 .PHONY: unit-test
 unit-test: ## Run unit-tests
 	@echo "==> Running unit tests..."

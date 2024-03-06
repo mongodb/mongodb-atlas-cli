@@ -666,12 +666,12 @@ func createProjectWithoutAlertSettings(projectName string) (string, error) {
 		return "", fmt.Errorf("%s (%w)", string(resp), err)
 	}
 
-	var project mongodbatlas.Project
+	var project atlasv2.Group
 	if err := json.Unmarshal(resp, &project); err != nil {
 		return "", fmt.Errorf("invalid response: %s (%w)", string(resp), err)
 	}
 
-	return project.ID, nil
+	return project.GetId(), nil
 }
 
 func listClustersForProject(t *testing.T, cliPath, projectID string) atlasv2.PaginatedAdvancedClusterDescription {

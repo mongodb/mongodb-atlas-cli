@@ -16,7 +16,6 @@ package store
 
 import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_project_settings.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectSettingsDescriber,ProjectSettingsUpdater
@@ -26,7 +25,7 @@ type ProjectSettingsDescriber interface {
 }
 
 type ProjectSettingsUpdater interface {
-	UpdateProjectSettings(string, *atlas.ProjectSettings) (*atlasv2.GroupSettings, error)
+	UpdateProjectSettings(string, *atlasv2.GroupSettings) (*atlasv2.GroupSettings, error)
 }
 
 // ProjectSettings encapsulates the logic of getting settings of a particular project.
@@ -36,14 +35,7 @@ func (s *Store) ProjectSettings(projectID string) (*atlasv2.GroupSettings, error
 }
 
 // UpdateProjectSettings encapsulates the logic of updating settings of a particular project.
-func (s *Store) UpdateProjectSettings(projectID string, projectSettings *atlas.ProjectSettings) (*atlasv2.GroupSettings, error) {
-	groupSettings := atlasv2.GroupSettings{
-		IsCollectDatabaseSpecificsStatisticsEnabled: projectSettings.IsCollectDatabaseSpecificsStatisticsEnabled,
-		IsDataExplorerEnabled:                       projectSettings.IsDataExplorerEnabled,
-		IsPerformanceAdvisorEnabled:                 projectSettings.IsPerformanceAdvisorEnabled,
-		IsRealtimePerformancePanelEnabled:           projectSettings.IsRealtimePerformancePanelEnabled,
-		IsSchemaAdvisorEnabled:                      projectSettings.IsSchemaAdvisorEnabled,
-	}
-	result, _, err := s.clientv2.ProjectsApi.UpdateProjectSettings(s.ctx, projectID, &groupSettings).Execute()
+func (s *Store) UpdateProjectSettings(projectID string, projectSettings *atlasv2.GroupSettings) (*atlasv2.GroupSettings, error) {
+	result, _, err := s.clientv2.ProjectsApi.UpdateProjectSettings(s.ctx, projectID, projectSettings).Execute()
 	return result, err
 }

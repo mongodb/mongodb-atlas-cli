@@ -24,7 +24,7 @@ import (
 	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 const (
@@ -65,13 +65,13 @@ func createOrgAPIKey() (string, error) {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 
-	var key mongodbatlas.APIKey
+	var key atlasv2.ApiKeyUserDetails
 	if err := json.Unmarshal(resp, &key); err != nil {
 		return "", err
 	}
 
-	if key.ID != "" {
-		return key.ID, nil
+	if key.GetId() != "" {
+		return key.GetId(), nil
 	}
 
 	return "", errNoAPIKey
@@ -115,12 +115,12 @@ func createTeam(teamName string) (string, error) {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 
-	var team mongodbatlas.Team
+	var team atlasv2.Team
 	if err := json.Unmarshal(resp, &team); err != nil {
 		return "", err
 	}
 
-	return team.ID, nil
+	return team.GetId(), nil
 }
 
 func deleteTeam(teamID string) error {
@@ -160,14 +160,14 @@ func OrgNUser(n int) (username, userID string, err error) {
 		return "", "", fmt.Errorf("error loading org users: %w (%s)", err, string(resp))
 	}
 
-	var users mongodbatlas.AtlasUsersResponse
+	var users atlasv2.PaginatedAppUser
 	if err := json.Unmarshal(resp, &users); err != nil {
 		return "", "", err
 	}
 
-	if len(users.Results) <= n {
-		return "", "", fmt.Errorf("%w: %d for %d users", errInvalidIndex, n, len(users.Results))
+	if len(users.GetResults()) <= n {
+		return "", "", fmt.Errorf("%w: %d for %d users", errInvalidIndex, n, len(users.GetResults()))
 	}
 
-	return users.Results[n].Username, users.Results[n].ID, nil
+	return users.GetResults()[n].Username, users.GetResults()[n].GetId(), nil
 }

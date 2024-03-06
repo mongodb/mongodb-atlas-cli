@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 const updateTemplate = "Project settings updated.\n"
@@ -61,8 +61,8 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newProjectSettings() *atlas.ProjectSettings {
-	return &atlas.ProjectSettings{
+func (opts *UpdateOpts) newProjectSettings() *atlasv2.GroupSettings {
+	return &atlasv2.GroupSettings{
 		IsCollectDatabaseSpecificsStatisticsEnabled: cli.ReturnValueForSetting(opts.enableCollectDatabaseSpecificsStatistics, opts.disableCollectDatabaseSpecificsStatistics),
 		IsDataExplorerEnabled:                       cli.ReturnValueForSetting(opts.enableDataExplorer, opts.disableDataExplorer),
 		IsPerformanceAdvisorEnabled:                 cli.ReturnValueForSetting(opts.enablePerformanceAdvisor, opts.disablePerformanceAdvisor),

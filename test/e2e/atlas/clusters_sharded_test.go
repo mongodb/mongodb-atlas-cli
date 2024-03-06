@@ -43,6 +43,9 @@ func TestShardedCluster(t *testing.T) {
 	region, err := g.newAvailableRegion(tier, e2eClusterProvider)
 	req.NoError(err)
 
+	mdbVersion, err := MongoDBMajorVersion()
+	req.NoError(err)
+
 	t.Run("Create sharded cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -54,7 +57,7 @@ func TestShardedCluster(t *testing.T) {
 			"--members=3",
 			"--tier", tier,
 			"--provider", e2eClusterProvider,
-			"--mdbVersion", e2eMDBVer,
+			"--mdbVersion", mdbVersion,
 			"--diskSizeGB", diskSizeGB30,
 			"--projectId", g.projectID,
 			"-o=json")
@@ -66,7 +69,7 @@ func TestShardedCluster(t *testing.T) {
 		var cluster atlasv2.AdvancedClusterDescription
 		req.NoError(json.Unmarshal(resp, &cluster))
 
-		ensureCluster(t, &cluster, shardedClusterName, e2eMDBVer, 30, false)
+		ensureCluster(t, &cluster, shardedClusterName, mdbVersion, 30, false)
 	})
 
 	t.Run("Delete sharded cluster", func(t *testing.T) {

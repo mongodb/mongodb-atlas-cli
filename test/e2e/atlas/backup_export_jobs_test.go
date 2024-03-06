@@ -38,6 +38,9 @@ func TestExportJobs(t *testing.T) {
 	fmt.Println(clusterName)
 	r.NoError(err)
 
+	mdbVersion, err := MongoDBMajorVersion()
+	r.NoError(err)
+
 	const cloudProvider = "AWS"
 	iamRoleID := os.Getenv("E2E_CLOUD_ROLE_ID")
 	bucketName := os.Getenv("E2E_TEST_BUCKET")
@@ -56,7 +59,7 @@ func TestExportJobs(t *testing.T) {
 			"--tier", tierM10,
 			"--region=US_EAST_1",
 			"--provider", e2eClusterProvider,
-			"--mdbVersion", e2eSharedMDBVer,
+			"--mdbVersion", mdbVersion,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -64,7 +67,7 @@ func TestExportJobs(t *testing.T) {
 
 		var cluster *atlasv2.AdvancedClusterDescription
 		r.NoError(json.Unmarshal(resp, &cluster))
-		ensureCluster(t, cluster, clusterName, e2eSharedMDBVer, 10, false)
+		ensureCluster(t, cluster, clusterName, mdbVersion, 10, false)
 	})
 	t.Cleanup(func() {
 		require.NoError(t, deleteClusterForProject("", clusterName))

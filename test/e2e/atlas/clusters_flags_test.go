@@ -44,6 +44,9 @@ func TestClustersFlags(t *testing.T) {
 	region, err := g.newAvailableRegion(tier, e2eClusterProvider)
 	req.NoError(err)
 
+	mdbVersion, err := MongoDBMajorVersion()
+	req.NoError(err)
+
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -53,7 +56,7 @@ func TestClustersFlags(t *testing.T) {
 			"--members=3",
 			"--tier", tier,
 			"--provider", e2eClusterProvider,
-			"--mdbVersion", e2eMDBVer,
+			"--mdbVersion", mdbVersion,
 			"--diskSizeGB", diskSizeGB30,
 			"--enableTerminationProtection",
 			"--projectId", g.projectID,
@@ -66,7 +69,7 @@ func TestClustersFlags(t *testing.T) {
 		var cluster *atlasv2.AdvancedClusterDescription
 		require.NoError(t, json.Unmarshal(resp, &cluster))
 
-		ensureCluster(t, cluster, clusterName, e2eMDBVer, 30, true)
+		ensureCluster(t, cluster, clusterName, mdbVersion, 30, true)
 	})
 
 	t.Run("Load Sample Data", func(t *testing.T) {

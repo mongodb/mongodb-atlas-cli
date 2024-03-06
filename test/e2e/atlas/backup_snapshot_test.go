@@ -35,6 +35,9 @@ func TestSnapshots(t *testing.T) {
 	clusterName, err := RandClusterName()
 	r.NoError(err)
 
+	mdbVersion, err := MongoDBMajorVersion()
+	r.NoError(err)
+
 	var snapshotID string
 
 	t.Run("Create cluster", func(t *testing.T) {
@@ -46,7 +49,7 @@ func TestSnapshots(t *testing.T) {
 			"--tier", tierM10,
 			"--region=US_EAST_1",
 			"--provider", e2eClusterProvider,
-			"--mdbVersion", e2eSharedMDBVer,
+			"--mdbVersion", mdbVersion,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -54,7 +57,7 @@ func TestSnapshots(t *testing.T) {
 
 		var cluster *atlasv2.AdvancedClusterDescription
 		require.NoError(t, json.Unmarshal(resp, &cluster))
-		ensureCluster(t, cluster, clusterName, e2eSharedMDBVer, 10, false)
+		ensureCluster(t, cluster, clusterName, mdbVersion, 10, false)
 	})
 	t.Cleanup(func() {
 		require.NoError(t, deleteClusterForProject("", clusterName))

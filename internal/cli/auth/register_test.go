@@ -91,7 +91,7 @@ func Test_registerOpts_Run(t *testing.T) {
 		Return(expectedToken, nil, nil).
 		Times(1)
 
-	mockConfig.EXPECT().Set("service", "cloud").Times(1)
+	mockConfig.EXPECT().Set("service", "cloud-manager").Times(1)
 	mockConfig.EXPECT().Set("access_token", "asdf").Times(1)
 	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)

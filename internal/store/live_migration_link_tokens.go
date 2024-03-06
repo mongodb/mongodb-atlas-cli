@@ -18,42 +18,18 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_live_migration_link_tokens.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LinkTokenCreator,LinkTokenDeleter
 
-type LinkTokenCreator interface {
-	CreateLinkToken(string, *atlasv2.TargetOrgRequest) (*atlasv2.TargetOrg, error)
-}
-
 type LinkTokenDeleter interface {
 	DeleteLinkToken(string) error
-}
-
-type LinkTokenStore interface {
-	LinkTokenCreator
-	LinkTokenDeleter
-}
-
-// CreateLinkToken encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateLinkToken(orgID string, linkToken *atlasv2.TargetOrgRequest) (*atlasv2.TargetOrg, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.clientv2.CloudMigrationServiceApi.CreateLinkToken(s.ctx, orgID, linkToken).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
 }
 
 // DeleteLinkToken encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteLinkToken(orgID string) error {
 	switch s.service {
-	case config.CloudService:
-		_, _, err := s.clientv2.CloudMigrationServiceApi.DeleteLinkToken(s.ctx, orgID).Execute()
-		return err
 	case config.OpsManagerService, config.CloudManagerService:
 		_, err := s.client.(*opsmngr.Client).LiveMigration.DeleteConnection(s.ctx, orgID)
 		return err

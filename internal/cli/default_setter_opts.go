@@ -65,7 +65,7 @@ func (opts *DefaultSetterOpts) InitStore(ctx context.Context) error {
 }
 
 func (opts *DefaultSetterOpts) IsCloud() bool {
-	return opts.Service == config.CloudService || opts.Service == config.CloudGovService
+	return opts.Service != config.OpsManagerService && opts.Service != config.CloudManagerService
 }
 
 func (opts *DefaultSetterOpts) IsOpsManager() bool {

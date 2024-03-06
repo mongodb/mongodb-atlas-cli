@@ -36,10 +36,6 @@ type OrganizationCreator interface {
 	CreateOrganization(string) (*atlas.Organization, error)
 }
 
-type AtlasOrganizationCreator interface {
-	CreateAtlasOrganization(*atlas.CreateOrganizationRequest) (*atlas.CreateOrganizationResponse, error)
-}
-
 type OrganizationDeleter interface {
 	DeleteOrganization(string) error
 }
@@ -47,13 +43,6 @@ type OrganizationDeleter interface {
 // Organizations encapsulate the logic to manage different cloud providers.
 func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (interface{}, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.OrganizationsApi.ListOrganizations(s.ctx)
-		if opts != nil {
-			res = res.Name(opts.Name).PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
-		}
-		result, _, err := res.Execute()
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.List(s.ctx, opts)
 		return result, err
@@ -65,9 +54,6 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (interface{}
 // Organization encapsulate the logic to manage different cloud providers.
 func (s *Store) Organization(id string) (interface{}, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Get(s.ctx, id)
 		return result, err
@@ -88,23 +74,9 @@ func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
 	}
 }
 
-// CreateAtlasOrganization encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateAtlasOrganization(o *atlas.CreateOrganizationRequest) (*atlas.CreateOrganizationResponse, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).Organizations.Create(s.ctx, o)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
 // DeleteOrganization encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteOrganization(id string) error {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Organizations.Delete(s.ctx, id)
-		return err
 	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Organizations.Delete(s.ctx, id)
 		return err

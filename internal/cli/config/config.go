@@ -86,15 +86,6 @@ Enter [?] on any option to get help.
 }
 
 func (opts *opts) validateService() error {
-	if opts.Service == config.CloudService {
-		return nil
-	}
-
-	if opts.Service == "gov" {
-		opts.Service = config.CloudGovService
-		return nil
-	}
-
 	if opts.Service == "cloudmanager" || opts.Service == "cm" {
 		opts.Service = config.CloudManagerService
 		return nil
@@ -105,7 +96,7 @@ func (opts *opts) validateService() error {
 		return nil
 	}
 
-	if opts.Service != config.OpsManagerService && opts.Service != config.CloudManagerService && opts.Service != config.CloudGovService {
+	if opts.Service != config.OpsManagerService && opts.Service != config.CloudManagerService {
 		return fmt.Errorf("the '%s' service is not supported. Please run 'mongocli config --help' to see the list of available services", opts.Service)
 	}
 
@@ -146,7 +137,7 @@ To find out more, see the documentation: https://docs.mongodb.com/mongocli/stabl
 		},
 		Args: require.NoArgs,
 	}
-	cmd.Flags().StringVar(&opt.Service, flag.Service, config.CloudService, usage.Service)
+	cmd.Flags().StringVar(&opt.Service, flag.Service, config.CloudManagerService, usage.Service)
 	cmd.AddCommand(
 		SetBuilder(),
 		ListBuilder(),

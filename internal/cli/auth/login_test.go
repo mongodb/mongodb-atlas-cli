@@ -65,41 +65,8 @@ func TestLoginBuilder(t *testing.T) {
 		t,
 		LoginBuilder(),
 		0,
-		[]string{"gov", "cm", "noBrowser"},
+		[]string{"noBrowser"},
 	)
-}
-
-func Test_loginOpts_SyncWithOAuthAccessProfile(t *testing.T) {
-	ctrl := gomock.NewController(t)
-
-	tests := []struct {
-		name            string
-		isGov           bool
-		expectedService string
-	}{
-		{name: "cloud service run", isGov: false, expectedService: "cloud"},
-		{name: "cloudgov service run", isGov: true, expectedService: "cloudgov"},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			mockConfig := mocks.NewMockLoginConfig(ctrl)
-			opts := &LoginOpts{
-				NoBrowser:    true,
-				AccessToken:  "at",
-				RefreshToken: "rt",
-				IsGov:        tt.isGov,
-			}
-			opts.OutWriter = new(bytes.Buffer)
-
-			mockConfig.EXPECT().Set("service", tt.expectedService).Times(1)
-			mockConfig.EXPECT().Set("access_token", opts.AccessToken).Times(1)
-			mockConfig.EXPECT().Set("refresh_token", opts.RefreshToken).Times(1)
-			mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
-
-			require.NoError(t, opts.SyncWithOAuthAccessProfile(mockConfig)())
-		})
-	}
 }
 
 func Test_loginOpts_Run(t *testing.T) {
@@ -146,7 +113,7 @@ func Test_loginOpts_Run(t *testing.T) {
 		Return(expectedToken, nil, nil).
 		Times(1)
 
-	mockConfig.EXPECT().Set("service", "cloud").Times(1)
+	mockConfig.EXPECT().Set("service", "cloud-manager").Times(1)
 	mockConfig.EXPECT().Set("access_token", "asdf").Times(1)
 	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)

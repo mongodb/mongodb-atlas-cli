@@ -47,9 +47,6 @@ func Builder() *cobra.Command {
 			if err := opts.RefreshAccessToken(cmd.Context()); err != nil {
 				return err
 			}
-			if config.Service() == "" {
-				config.SetService(config.CloudService)
-			}
 			return validate.Credentials()
 		},
 		Short: "Organization and projects operations.",

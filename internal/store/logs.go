@@ -19,15 +19,10 @@ import (
 	"io"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LogsDownloader,LogJobsDownloader,LogCollector,LogJobLister,LogJobDeleter
-
-type LogsDownloader interface {
-	DownloadLog(*atlasv2.GetHostLogsApiParams) (io.ReadCloser, error)
-}
 
 type LogJobsDownloader interface {
 	DownloadLogJob(string, string, io.Writer) error
@@ -73,23 +68,6 @@ func (s *Store) Collect(groupID string, newLog *opsmngr.LogCollectionJob) (*opsm
 	case config.OpsManagerService, config.CloudManagerService:
 		log, _, err := s.client.(*opsmngr.Client).LogCollections.Create(s.ctx, groupID, newLog)
 		return log, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
-// DownloadLog encapsulates the logic to manage different cloud providers.
-func (s *Store) DownloadLog(params *atlasv2.GetHostLogsApiParams) (io.ReadCloser, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostLogsWithParams(s.ctx, params).Execute()
-		if err != nil {
-			return nil, err
-		}
-		if result == nil {
-			return nil, fmt.Errorf("returned file is empty")
-		}
-		return result, nil
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

@@ -17,7 +17,6 @@ package performanceadvisor
 import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/performanceadvisor/namespaces"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/performanceadvisor/slowoperationthreshold"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/performanceadvisor/slowquerylogs"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/mongocli/performanceadvisor/suggestedindexes"
 	"github.com/spf13/cobra"
@@ -33,8 +32,7 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(
 		namespaces.Builder(),
 		slowquerylogs.Builder(),
-		suggestedindexes.Builder(),
-		slowoperationthreshold.Builder())
+		suggestedindexes.Builder())
 
 	return cmd
 }

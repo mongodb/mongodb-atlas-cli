@@ -271,43 +271,6 @@ func WithContext(ctx context.Context) Option {
 	}
 }
 
-// setAtlasClient sets the internal client to use an Atlas client and methods.
-func (s *Store) setAtlasClient(client *http.Client) error {
-	opts := []atlas.ClientOpt{atlas.SetUserAgent(config.UserAgent)}
-	if s.baseURL != "" {
-		opts = append(opts, atlas.SetBaseURL(s.baseURL))
-	}
-	if log.IsDebugLevel() {
-		opts = append(opts, atlas.SetWithRaw())
-	}
-	c, err := atlas.New(client, opts...)
-	if err != nil {
-		return err
-	}
-
-	err = s.createV2Client(client)
-	if err != nil {
-		return err
-	}
-
-	c.OnResponseProcessed(func(resp *atlas.Response) {
-		respHeaders := ""
-		for key, value := range resp.Header {
-			respHeaders += fmt.Sprintf("%v: %v\n", key, strings.Join(value, " "))
-		}
-
-		_, _ = log.Debugf(`request:
-%v %v
-response:
-%v %v
-%v
-%v
-`, resp.Request.Method, resp.Request.URL.String(), resp.Proto, resp.Status, respHeaders, string(resp.Raw))
-	})
-	s.client = c
-	return nil
-}
-
 /**
 * Creates client for v2 generated API.
  */
@@ -404,8 +367,6 @@ func AuthenticatedPreset(c AuthenticatedConfig) Option {
 func baseURLOption(c ServiceGetter) Option {
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		return WithBaseURL(configURL)
-	} else if c.Service() == config.CloudGovService {
-		return WithBaseURL(cloudGovServiceURL)
 	}
 	return nil
 }
@@ -457,8 +418,6 @@ func New(opts ...Option) (*Store, error) {
 	}
 
 	switch store.service {
-	case config.CloudService, config.CloudGovService:
-		err = store.setAtlasClient(client)
 	case config.CloudManagerService, config.OpsManagerService:
 		err = store.setOpsManagerClient(client)
 	default:

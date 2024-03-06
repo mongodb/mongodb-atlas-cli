@@ -48,13 +48,6 @@ type OrganizationInvitationUpdater interface {
 // OrganizationInvitations encapsulate the logic to manage different cloud providers.
 func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOptions) (interface{}, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.OrganizationsApi.ListOrganizationInvitations(s.ctx, orgID)
-		if opts != nil {
-			res = res.Username(opts.Username)
-		}
-		result, _, err := res.Execute()
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitations(s.ctx, orgID, opts)
 		return result, err
@@ -66,9 +59,6 @@ func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOpti
 // OrganizationInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) OrganizationInvitation(orgID, invitationID string) (interface{}, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.OrganizationsApi.GetOrganizationInvitation(s.ctx, orgID, invitationID).Execute()
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitation(s.ctx, orgID, invitationID)
 		return result, err
@@ -80,9 +70,6 @@ func (s *Store) OrganizationInvitation(orgID, invitationID string) (interface{},
 // DeleteInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteInvitation(orgID, invitationID string) error {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Organizations.DeleteInvitation(s.ctx, orgID, invitationID)
-		return err
 	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Organizations.DeleteInvitation(s.ctx, orgID, invitationID)
 		return err
@@ -94,21 +81,6 @@ func (s *Store) DeleteInvitation(orgID, invitationID string) error {
 // UpdateOrganizationInvitation encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitation *atlas.Invitation) (interface{}, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		if invitationID != "" {
-			invitationRequest := atlasv2.OrganizationInvitationUpdateRequest{
-				Roles:   &invitation.Roles,
-				TeamIds: &invitation.TeamIDs,
-			}
-
-			result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitationById(s.ctx, orgID, invitationID, &invitationRequest).Execute()
-			return result, err
-		}
-		invitationRequest := mapInvitation(invitation)
-		result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitation(s.ctx, orgID, &invitationRequest).Execute()
-
-		return result, err
-
 	case config.CloudManagerService, config.OpsManagerService:
 		if invitationID != "" {
 			result, _, err := s.client.(*opsmngr.Client).Organizations.UpdateInvitationByID(s.ctx, orgID, invitationID, invitation)
@@ -124,11 +96,6 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 // InviteUser encapsulates the logic to manage different cloud providers.
 func (s *Store) InviteUser(orgID string, invitation *atlas.Invitation) (interface{}, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		invitationRequest := mapInvitation(invitation)
-		result, _, err := s.clientv2.OrganizationsApi.CreateOrganizationInvitation(s.ctx, orgID, &invitationRequest).Execute()
-
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.InviteUser(s.ctx, orgID, invitation)
 		return result, err

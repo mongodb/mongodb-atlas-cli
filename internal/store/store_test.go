@@ -59,18 +59,18 @@ func (a auth) AuthType() config.AuthMechanism {
 var _ CredentialsGetter = &auth{}
 
 func TestService(t *testing.T) {
-	c, err := New(Service(config.CloudService))
+	c, err := New(Service(config.CloudManagerService))
 	if err != nil {
 		t.Fatalf("New() unexpected error: %v", err)
 	}
 
-	if c.service != config.CloudService {
+	if c.service != config.CloudManagerService {
 		t.Errorf("New() service = %s; expected %s", c.service, "cloud")
 	}
 }
 
 func TestWithBaseURL(t *testing.T) {
-	c, err := New(Service(config.CloudService), WithBaseURL("http://test"))
+	c, err := New(Service(config.CloudManagerService), WithBaseURL("http://test"))
 	if err != nil {
 		t.Fatalf("New() unexpected error: %v", err)
 	}
@@ -81,7 +81,7 @@ func TestWithBaseURL(t *testing.T) {
 }
 
 func TestSkipVerify(t *testing.T) {
-	c, err := New(Service(config.CloudService), SkipVerify())
+	c, err := New(Service(config.CloudManagerService), SkipVerify())
 	if err != nil {
 		t.Fatalf("New() unexpected error: %v", err)
 	}
@@ -105,7 +105,7 @@ func (testConfig) OpsManagerSkipVerify() string {
 }
 
 func (testConfig) Service() string {
-	return config.CloudService
+	return config.CloudManagerService
 }
 
 func (c testConfig) OpsManagerURL() string {
@@ -119,7 +119,7 @@ func TestWithAuthentication(t *testing.T) {
 		username: "username",
 		password: "password",
 	}
-	c, err := New(Service("cloud"), WithAuthentication(a))
+	c, err := New(Service("cloud-manager"), WithAuthentication(a))
 
 	if err != nil {
 		t.Fatalf("New() unexpected error: %v", err)
@@ -134,7 +134,7 @@ func TestWithAuthentication(t *testing.T) {
 }
 
 func TestWithContext(t *testing.T) {
-	c, err := New(Service(config.CloudService))
+	c, err := New(Service(config.CloudManagerService))
 	if err != nil {
 		t.Fatalf("New() unexpected error: %v", err)
 	}
@@ -148,7 +148,7 @@ func TestWithContext(t *testing.T) {
 
 	ctx := context.WithValue(context.Background(), k, v)
 
-	c, err = New(Service(config.CloudService), WithContext(ctx))
+	c, err = New(Service(config.CloudManagerService), WithContext(ctx))
 	if err != nil {
 		t.Fatalf("New() unexpected error: %v", err)
 	}

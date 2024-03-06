@@ -41,8 +41,6 @@ const (
 	MongoCLIEnvPrefix            = "MCLI"          // MongoCLIEnvPrefix prefix for MongoCLI ENV variables
 	AtlasCLIEnvPrefix            = "MONGODB_ATLAS" // AtlasCLIEnvPrefix prefix for AtlasCLI ENV variables
 	DefaultProfile               = "default"       // DefaultProfile default
-	CloudService                 = "cloud"         // CloudService setting when using Atlas API
-	CloudGovService              = "cloudgov"      // CloudGovService setting when using Atlas API for Government
 	CloudManagerService          = "cloud-manager" // CloudManagerService settings when using CLoud Manager API
 	OpsManagerService            = "ops-manager"   // OpsManagerService settings when using Ops Manager API
 	JSON                         = "json"          // JSON output format as json
@@ -321,7 +319,7 @@ func (p *Profile) Service() string {
 
 func IsCloud() bool {
 	profile := Default()
-	return profile.Service() == "" || profile.Service() == CloudService || profile.Service() == CloudGovService
+	return profile.Service() != OpsManagerService && profile.Service() != CloudManagerService
 }
 
 // SetService set configured service.

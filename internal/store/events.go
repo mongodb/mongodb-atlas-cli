@@ -40,9 +40,6 @@ type EventLister interface {
 // ProjectEvents encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Events.ListProjectEvents(s.ctx, projectID, opts)
-		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Events.ListProjectEvents(s.ctx, projectID, opts)
 		return result, err
@@ -54,9 +51,6 @@ func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*
 // OrganizationEvents encapsulate the logic to manage different cloud providers.
 func (s *Store) OrganizationEvents(orgID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Events.ListOrganizationEvents(s.ctx, orgID, opts)
-		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Events.ListOrganizationEvents(s.ctx, orgID, opts)
 		return result, err

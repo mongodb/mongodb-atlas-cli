@@ -18,27 +18,10 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_maintenance.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store MaintenanceWindowUpdater,MaintenanceWindowClearer,MaintenanceWindowDeferrer,MaintenanceWindowDescriber,OpsManagerMaintenanceWindowCreator,OpsManagerMaintenanceWindowLister,OpsManagerMaintenanceWindowDeleter,OpsManagerMaintenanceWindowDescriber,OpsManagerMaintenanceWindowUpdater
-
-type MaintenanceWindowUpdater interface {
-	UpdateMaintenanceWindow(string, *atlasv2.GroupMaintenanceWindow) error
-}
-
-type MaintenanceWindowClearer interface {
-	ClearMaintenanceWindow(string) error
-}
-
-type MaintenanceWindowDeferrer interface {
-	DeferMaintenanceWindow(string) error
-}
-
-type MaintenanceWindowDescriber interface {
-	MaintenanceWindow(string) (*atlasv2.GroupMaintenanceWindow, error)
-}
 
 type OpsManagerMaintenanceWindowCreator interface {
 	CreateOpsManagerMaintenanceWindow(string, *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error)
@@ -58,50 +41,6 @@ type OpsManagerMaintenanceWindowDescriber interface {
 
 type OpsManagerMaintenanceWindowUpdater interface {
 	UpdateOpsManagerMaintenanceWindow(string, *opsmngr.MaintenanceWindow) (*opsmngr.MaintenanceWindow, error)
-}
-
-// UpdateMaintenanceWindow encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atlasv2.GroupMaintenanceWindow) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, _, err := s.clientv2.MaintenanceWindowsApi.UpdateMaintenanceWindow(s.ctx, projectID, maintenanceWindow).Execute()
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
-// ClearMaintenanceWindow encapsulates the logic to manage different cloud providers.
-func (s *Store) ClearMaintenanceWindow(projectID string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.MaintenanceWindowsApi.ResetMaintenanceWindow(s.ctx, projectID).Execute()
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
-// DeferMaintenanceWindow encapsulates the logic to manage different cloud providers.
-func (s *Store) DeferMaintenanceWindow(projectID string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.MaintenanceWindowsApi.DeferMaintenanceWindow(s.ctx, projectID).Execute()
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
-// MaintenanceWindow encapsulates the logic to manage different cloud providers.
-func (s *Store) MaintenanceWindow(projectID string) (*atlasv2.GroupMaintenanceWindow, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.clientv2.MaintenanceWindowsApi.GetMaintenanceWindow(s.ctx, projectID).Execute()
-		return resp, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
 }
 
 // CreateOpsManagerMaintenanceWindow encapsulates the logic to manage different cloud providers.

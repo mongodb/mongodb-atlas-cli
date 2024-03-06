@@ -18,10 +18,8 @@ package atlas
 
 import (
 	"context"
-	"fmt"
 	"net"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/mongodb-forks/digest"
@@ -29,7 +27,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlasauth "go.mongodb.org/atlas/auth"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
@@ -52,7 +49,6 @@ type Store struct {
 	username    string
 	password    string
 	accessToken *atlasauth.Token
-	client      *atlas.Client
 	clientv2    *atlasv2.APIClient
 	ctx         context.Context
 }
@@ -187,43 +183,6 @@ func WithContext(ctx context.Context) Option {
 	}
 }
 
-// setAtlasClient sets the internal client to use an Atlas client and methods.
-func (s *Store) setAtlasClient(client *http.Client) error {
-	opts := []atlas.ClientOpt{atlas.SetUserAgent(config.UserAgent)}
-	if s.baseURL != "" {
-		opts = append(opts, atlas.SetBaseURL(s.baseURL))
-	}
-	if log.IsDebugLevel() {
-		opts = append(opts, atlas.SetWithRaw())
-	}
-	c, err := atlas.New(client, opts...)
-	if err != nil {
-		return err
-	}
-
-	err = s.createV2Client(client)
-	if err != nil {
-		return err
-	}
-
-	c.OnResponseProcessed(func(resp *atlas.Response) {
-		respHeaders := ""
-		for key, value := range resp.Header {
-			respHeaders += fmt.Sprintf("%v: %v\n", key, strings.Join(value, " "))
-		}
-
-		_, _ = log.Debugf(`request:
-%v %v
-response:
-%v %v
-%v
-%v
-`, resp.Request.Method, resp.Request.URL.String(), resp.Proto, resp.Status, respHeaders, string(resp.Raw))
-	})
-	s.client = c
-	return nil
-}
-
 /**
 * Creates client for v2 generated API.
  */
@@ -318,7 +277,7 @@ func New(opts ...Option) (*Store, error) {
 		return nil, err
 	}
 
-	err = store.setAtlasClient(client)
+	err = store.createV2Client(client)
 	if err != nil {
 		return nil, err
 	}

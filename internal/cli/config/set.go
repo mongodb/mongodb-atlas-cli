@@ -16,13 +16,13 @@ package config
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mongosh"
-	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/spf13/cobra"
 )
@@ -46,10 +46,10 @@ func (opts *SetOpts) Run() error {
 	}
 	var value interface{}
 	value = opts.val
-	if search.StringInSlice(config.BooleanProperties(), opts.prop) {
+	if slices.Contains(config.BooleanProperties(), opts.prop) {
 		value = config.IsTrue(opts.val)
 	}
-	if search.StringInSlice(config.GlobalProperties(), opts.prop) {
+	if slices.Contains(config.GlobalProperties(), opts.prop) {
 		opts.store.SetGlobal(opts.prop, value)
 	} else {
 		opts.store.Set(opts.prop, value)
@@ -78,7 +78,7 @@ func SetBuilder() *cobra.Command {
 			if err := require.ExactArgs(argsN)(cmd, args); err != nil {
 				return err
 			}
-			if !search.StringInSlice(cmd.ValidArgs, args[0]) {
+			if !slices.Contains(cmd.ValidArgs, args[0]) {
 				return fmt.Errorf("invalid property: %q", args[0])
 			}
 			return nil

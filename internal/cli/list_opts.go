@@ -27,6 +27,7 @@ const (
 type ListOpts struct {
 	PageNum      int
 	ItemsPerPage int
+	OmitCount    bool
 }
 
 func (opts *ListOpts) NewListOptions() *mongodbatlas.ListOptions {

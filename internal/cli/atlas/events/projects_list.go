@@ -77,6 +77,11 @@ func (opts *projectListOpts) NewProjectListOptions() admin.ListProjectEventsApiP
 	if opts.PageNum > 0 {
 		p.PageNum = &opts.PageNum
 	}
+
+	if opts.OmitCount {
+		p.IncludeCount = pointer.Get(false)
+	}
+
 	return p
 }
 
@@ -111,6 +116,7 @@ func ProjectListBuilder() *cobra.Command {
 
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
+	cmd.Flags().BoolVar(&opts.OmitCount, flag.OmitCount, false, usage.OmitCount)
 
 	cmd.Flags().StringSliceVar(&opts.EventType, flag.TypeFlag, nil, usage.Event)
 	cmd.Flags().StringVar(&opts.MaxDate, flag.MaxDate, "", usage.MaxDate)

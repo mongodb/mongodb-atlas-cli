@@ -15,7 +15,6 @@
 package config
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/spf13/cobra"
 )
@@ -38,12 +37,12 @@ To find out more, see the documentation: https://dochub.mongodb.org/core/atlas-c
 
 	cmd.AddCommand(
 		InitBuilder(),
-		config.SetBuilder(),
-		config.ListBuilder(),
-		config.DescribeBuilder(),
-		config.RenameBuilder(),
-		config.DeleteBuilder(),
-		config.EditBuilder(),
+		SetBuilder(),
+		ListBuilder(),
+		DescribeBuilder(),
+		RenameBuilder(),
+		DeleteBuilder(),
+		EditBuilder(),
 	)
 
 	return cmd

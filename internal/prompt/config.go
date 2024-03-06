@@ -43,7 +43,6 @@ func NewProjectIDInput() survey.Prompt {
 
 func AccessQuestions() []*survey.Question {
 	helpLink := "Please provide your API keys. To create new keys, see the documentation: https://docs.atlas.mongodb.com/configure-api-access/"
-
 	q := []*survey.Question{
 		{
 			Name: "publicAPIKey",

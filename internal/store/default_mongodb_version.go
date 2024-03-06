@@ -20,7 +20,7 @@ type DefaultVersionGetter interface {
 	DefaultMongoDBVersion() (string, error)
 }
 
-// CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
+// DefaultMongoDBVersion encapsulates the logic to manage different cloud providers.
 func (s *Store) DefaultMongoDBVersion() (string, error) {
 	result, _, err := s.client.DefaultMongoDBMajorVersion.Get(s.ctx)
 	return result, err

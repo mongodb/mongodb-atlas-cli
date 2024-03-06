@@ -142,7 +142,6 @@ func (i *Install) Run(ctx context.Context, orgID string) error {
 
 func (i *Install) ensureProject(orgID, projectName string) (*admin.Group, error) {
 	project, err := i.atlasStore.ProjectByName(projectName)
-
 	if err == nil {
 		return project, nil
 	}

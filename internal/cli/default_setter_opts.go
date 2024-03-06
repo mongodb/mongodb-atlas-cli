@@ -148,7 +148,7 @@ func (opts *DefaultSetterOpts) ProjectExists(id string) bool {
 }
 
 // AskProject will try to construct a select based on fetched projects.
-// If it fails or there are no projects to show we fallback to ask for project by ID.
+// If it fails or there are no projects to show we fall back to ask for project by ID.
 // If only one project, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskProject() error {
 	ids, names, err := opts.projects()

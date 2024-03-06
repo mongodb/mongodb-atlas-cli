@@ -34,7 +34,7 @@ func TestDescribe_Run(t *testing.T) {
 	}
 	mockStore.
 		EXPECT().
-		Project(gomock.Eq("5a0a1e7e0f2912c554080adc")).
+		Project("5a0a1e7e0f2912c554080adc").
 		Return(expected, nil).
 		Times(1)
 

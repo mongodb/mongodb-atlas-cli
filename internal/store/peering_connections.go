@@ -74,13 +74,13 @@ func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListO
 	return result.GetResults(), nil
 }
 
-// PeeringConnections encapsulates the logic to manage different cloud providers.
+// PeeringConnection encapsulates the logic to manage different cloud providers.
 func (s *Store) PeeringConnection(projectID, peerID string) (*atlasv2.BaseNetworkPeeringConnectionSettings, error) {
 	result, _, err := s.clientv2.NetworkPeeringApi.GetPeeringConnection(s.ctx, projectID, peerID).Execute()
 	return result, err
 }
 
-// DeletePrivateEndpoint encapsulates the logic to manage different cloud providers.
+// DeletePeeringConnection encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
 	_, _, err := s.clientv2.NetworkPeeringApi.DeletePeeringConnection(s.ctx, projectID, peerID).Execute()
 	return err

@@ -19,8 +19,8 @@ import (
 	"errors"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/aes"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/decryption/aes"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 )
 
 // LocalKeyIdentifier config for the localKey used to encrypt the Log Encryption Key (LEK).

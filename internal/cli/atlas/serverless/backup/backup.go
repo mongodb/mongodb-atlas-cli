@@ -15,9 +15,9 @@
 package backup
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless/backup/restores"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/serverless/backup/snapshots"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/serverless/backup/restores"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/serverless/backup/snapshots"
 	"github.com/spf13/cobra"
 )
 

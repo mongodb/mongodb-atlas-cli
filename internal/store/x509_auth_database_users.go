@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_x509_certificate_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store X509CertificateConfDescriber,X509CertificateConfSaver,X509CertificateConfDisabler
+//go:generate mockgen -destination=../mocks/mock_x509_certificate_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store X509CertificateConfDescriber,X509CertificateConfSaver,X509CertificateConfDisabler
 
 type X509CertificateConfDescriber interface {
 	X509Configuration(string) (*atlasv2.UserSecurity, error)

@@ -24,7 +24,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/shirou/gopsutil/v3/mem"
 )
 
@@ -132,7 +132,7 @@ type Version struct {
 	} `json:"Server"`
 }
 
-//go:generate mockgen -destination=../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/podman Client
+//go:generate mockgen -destination=../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman Client
 
 type Client interface {
 	Ready(ctx context.Context) error

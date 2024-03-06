@@ -15,7 +15,7 @@
 package search
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/deployments/search/indexes"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/deployments/search/indexes"
 	"github.com/spf13/cobra"
 )
 

@@ -14,7 +14,7 @@
 
 package store
 
-//go:generate mockgen -destination=../mocks/mock_default_mongodb_version.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store DefaultVersionGetter
+//go:generate mockgen -destination=../mocks/mock_default_mongodb_version.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DefaultVersionGetter
 
 type DefaultVersionGetter interface {
 	DefaultMongoDBVersion() (string, error)

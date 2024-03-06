@@ -26,7 +26,7 @@ import (
 	"github.com/Netflix/go-expect"
 	pseudotty "github.com/creack/pty"
 	"github.com/hinshun/vt10x"
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 )
 
 const (

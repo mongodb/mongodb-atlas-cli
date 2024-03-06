@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_cloud_provider_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas ScheduleDescriber
+//go:generate mockgen -destination=../../mocks/atlas/mock_cloud_provider_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas ScheduleDescriber
 
 type ScheduleDescriber interface {
 	DescribeSchedule(string, string) (*atlasv2.DiskBackupSnapshotSchedule, error)

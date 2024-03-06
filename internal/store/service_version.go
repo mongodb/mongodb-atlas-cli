@@ -27,6 +27,6 @@ type ServiceVersionDescriber interface {
 
 // ServiceVersion encapsulates the logic to manage different cloud providers.
 func (s *Store) ServiceVersion() (*atlas.ServiceVersion, error) {
-	result, _, err := s.client.(*atlas.Client).ServiceVersion.Get(s.ctx)
+	result, _, err := s.client.ServiceVersion.Get(s.ctx)
 	return result, err
 }

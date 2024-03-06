@@ -166,12 +166,6 @@ func (s *Store) DeleteContainer(projectID, containerID string) error {
 	return err
 }
 
-// Container encapsulates the logic to manage different cloud providers.
-func (s *Store) Container(projectID, containerID string) (interface{}, error) {
-	result, _, err := s.clientv2.NetworkPeeringApi.GetPeeringContainer(s.ctx, projectID, containerID).Execute()
-	return result, err
-}
-
 // CreateContainer encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateContainer(projectID string, container *atlasv2.CloudProviderContainer) (*atlasv2.CloudProviderContainer, error) {
 	result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringContainer(s.ctx, projectID, container).Execute()

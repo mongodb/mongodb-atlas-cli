@@ -37,7 +37,7 @@ type DataLakePrivateEndpointDescriber interface {
 }
 
 type PrivateEndpointCreator interface {
-	CreatePrivateEndpoint(string, *atlasv2.CloudProviderEndpointServiceRequest) (interface{}, error)
+	CreatePrivateEndpoint(string, *atlasv2.CloudProviderEndpointServiceRequest) (*atlasv2.EndpointService, error)
 }
 
 type DataLakePrivateEndpointCreator interface {
@@ -97,7 +97,7 @@ func (s *Store) DataLakePrivateEndpoint(projectID, privateLinkID string) (*atlas
 }
 
 // CreatePrivateEndpoint encapsulates the logic to manage different cloud providers.
-func (s *Store) CreatePrivateEndpoint(projectID string, r *atlasv2.CloudProviderEndpointServiceRequest) (interface{}, error) {
+func (s *Store) CreatePrivateEndpoint(projectID string, r *atlasv2.CloudProviderEndpointServiceRequest) (*atlasv2.EndpointService, error) {
 	result, _, err := s.clientv2.PrivateEndpointServicesApi.CreatePrivateEndpointService(s.ctx, projectID, r).
 		Execute()
 	return result, err

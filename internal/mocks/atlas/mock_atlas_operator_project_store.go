@@ -216,10 +216,10 @@ func (mr *MockOperatorProjectStoreMockRecorder) PrivateEndpoints(arg0, arg1 inte
 }
 
 // Project mocks base method.
-func (m *MockOperatorProjectStore) Project(arg0 string) (interface{}, error) {
+func (m *MockOperatorProjectStore) Project(arg0 string) (*admin.Group, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Project", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*admin.Group)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -231,10 +231,10 @@ func (mr *MockOperatorProjectStoreMockRecorder) Project(arg0 interface{}) *gomoc
 }
 
 // ProjectByName mocks base method.
-func (m *MockOperatorProjectStore) ProjectByName(arg0 string) (interface{}, error) {
+func (m *MockOperatorProjectStore) ProjectByName(arg0 string) (*admin.Group, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectByName", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*admin.Group)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

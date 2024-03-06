@@ -50,42 +50,42 @@ type InterfaceEndpointDeleterDeprecated interface {
 
 // PrivateEndpointsDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpointsDeprecated(projectID string, opts *atlas.ListOptions) ([]atlas.PrivateEndpointConnectionDeprecated, error) {
-	result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.List(s.ctx, projectID, opts)
+	result, _, err := s.client.PrivateEndpointsDeprecated.List(s.ctx, projectID, opts)
 	return result, err
 }
 
 // PrivateEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpointDeprecated(projectID, privateLinkID string) (*atlas.PrivateEndpointConnectionDeprecated, error) {
-	result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Get(s.ctx, projectID, privateLinkID)
+	result, _, err := s.client.PrivateEndpointsDeprecated.Get(s.ctx, projectID, privateLinkID)
 	return result, err
 }
 
 // DeletePrivateEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePrivateEndpointDeprecated(projectID, privateLinkID string) error {
-	_, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Delete(s.ctx, projectID, privateLinkID)
+	_, err := s.client.PrivateEndpointsDeprecated.Delete(s.ctx, projectID, privateLinkID)
 	return err
 }
 
 // CreateInterfaceEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateInterfaceEndpointDeprecated(projectID, privateLinkID, interfaceEndpointID string) (*atlas.InterfaceEndpointConnectionDeprecated, error) {
-	result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.AddOneInterfaceEndpoint(s.ctx, projectID, privateLinkID, interfaceEndpointID)
+	result, _, err := s.client.PrivateEndpointsDeprecated.AddOneInterfaceEndpoint(s.ctx, projectID, privateLinkID, interfaceEndpointID)
 	return result, err
 }
 
 // CreatePrivateEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) CreatePrivateEndpointDeprecated(projectID string, r *atlas.PrivateEndpointConnectionDeprecated) (*atlas.PrivateEndpointConnectionDeprecated, error) {
-	result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.Create(s.ctx, projectID, r)
+	result, _, err := s.client.PrivateEndpointsDeprecated.Create(s.ctx, projectID, r)
 	return result, err
 }
 
 // InterfaceEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) InterfaceEndpointDeprecated(projectID, privateLinkID, interfaceEndpointID string) (*atlas.InterfaceEndpointConnectionDeprecated, error) {
-	result, _, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.GetOneInterfaceEndpoint(s.ctx, projectID, privateLinkID, interfaceEndpointID)
+	result, _, err := s.client.PrivateEndpointsDeprecated.GetOneInterfaceEndpoint(s.ctx, projectID, privateLinkID, interfaceEndpointID)
 	return result, err
 }
 
 // DeleteInterfaceEndpointDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteInterfaceEndpointDeprecated(projectID, privateLinkID, interfaceEndpointID string) error {
-	_, err := s.client.(*atlas.Client).PrivateEndpointsDeprecated.DeleteOneInterfaceEndpoint(s.ctx, projectID, privateLinkID, interfaceEndpointID)
+	_, err := s.client.PrivateEndpointsDeprecated.DeleteOneInterfaceEndpoint(s.ctx, projectID, privateLinkID, interfaceEndpointID)
 	return err
 }

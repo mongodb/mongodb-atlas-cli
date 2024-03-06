@@ -28,7 +28,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -261,22 +260,20 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 
 func fetchClusterNames(clustersProvider atlas.AllClustersLister, projectID string) ([]string, error) {
 	result := make([]string, 0, DefaultClustersCount)
-	response, err := clustersProvider.ProjectClusters(projectID, &atlas.ListOptions{ItemsPerPage: maxClusters})
+	clusters, err := clustersProvider.ProjectClusters(projectID, &atlas.ListOptions{ItemsPerPage: maxClusters})
 	if err != nil {
 		return nil, err
 	}
 
-	if clusters, ok := response.(*atlasv2.PaginatedAdvancedClusterDescription); ok {
-		if clusters == nil {
-			return nil, ErrNoCloudManagerClusters
-		}
+	if clusters == nil {
+		return nil, ErrNoCloudManagerClusters
+	}
 
-		for _, cluster := range clusters.GetResults() {
-			if reflect.ValueOf(cluster).IsZero() {
-				continue
-			}
-			result = append(result, cluster.GetName())
+	for _, cluster := range clusters.GetResults() {
+		if reflect.ValueOf(cluster).IsZero() {
+			continue
 		}
+		result = append(result, cluster.GetName())
 	}
 
 	serverlessInstances, err := clustersProvider.ServerlessInstances(projectID, &atlas.ListOptions{ItemsPerPage: maxClusters})

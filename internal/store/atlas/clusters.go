@@ -21,7 +21,7 @@ import (
 //go:generate mockgen -destination=../../mocks/atlas/mock_clusters.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas ClusterLister,ClusterDescriber,ClusterConfigurationOptionsDescriber
 
 type ClusterLister interface {
-	ProjectClusters(string, *ListOptions) (interface{}, error)
+	ProjectClusters(string, *ListOptions) (*admin.PaginatedAdvancedClusterDescription, error)
 }
 
 type ClusterDescriber interface {
@@ -33,7 +33,7 @@ type ClusterConfigurationOptionsDescriber interface {
 }
 
 // ProjectClusters encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectClusters(projectID string, opts *ListOptions) (interface{}, error) {
+func (s *Store) ProjectClusters(projectID string, opts *ListOptions) (*admin.PaginatedAdvancedClusterDescription, error) {
 	res := s.clientv2.ClustersApi.ListClusters(s.ctx, projectID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)

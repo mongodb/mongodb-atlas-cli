@@ -23,7 +23,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/shirou/gopsutil/v3/host"
-	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -108,11 +107,10 @@ func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, er
 		ItemsPerPage: MaxItemsPerPage,
 	}
 
-	projectClusters, err := opts.AtlasClusterListStore.ProjectClusters(projectID, listOpts)
+	atlasClusters, err := opts.AtlasClusterListStore.ProjectClusters(projectID, listOpts)
 	if err != nil {
 		return nil, err
 	}
-	atlasClusters := projectClusters.(*admin.PaginatedAdvancedClusterDescription)
 
 	deployments := make([]Deployment, len(atlasClusters.GetResults()))
 	for i, c := range atlasClusters.GetResults() {

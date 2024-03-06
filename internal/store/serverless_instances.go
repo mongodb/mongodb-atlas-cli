@@ -72,7 +72,7 @@ func (s *Store) ServerlessInstance(projectID, clusterName string) (*atlas.Cluste
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.client.(*atlas.Client).ServerlessInstances.Get(s.ctx, projectID, clusterName)
+	result, _, err := s.client.ServerlessInstances.Get(s.ctx, projectID, clusterName)
 	return result, err
 }
 

@@ -22,7 +22,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ClusterLister,AtlasClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber,AtlasClusterConfigurationOptionsDescriber,AtlasSharedClusterDescriber,ClusterUpgrader,AtlasSharedClusterGetterUpgrader,AtlasClusterConfigurationOptionsUpdater,ClusterTester
 
 type ClusterLister interface {
-	ProjectClusters(string, *atlas.ListOptions) (interface{}, error)
+	ProjectClusters(string, *atlas.ListOptions) (*admin.PaginatedAdvancedClusterDescription, error)
 }
 
 type AtlasClusterDescriber interface {
@@ -149,18 +149,18 @@ func (s *Store) DeleteCluster(projectID, name string) error {
 
 // AtlasSharedCluster encapsulates the logic to fetch details of one shared cluster.
 func (s *Store) AtlasSharedCluster(projectID, name string) (*atlas.Cluster, error) {
-	result, _, err := s.client.(*atlas.Client).Clusters.Get(s.ctx, projectID, name)
+	result, _, err := s.client.Clusters.Get(s.ctx, projectID, name)
 	return result, err
 }
 
 // UpgradeCluster encapsulate the logic to upgrade shared clusters in a project.
 func (s *Store) UpgradeCluster(projectID string, cluster *atlas.Cluster) (*atlas.Cluster, error) {
-	result, _, err := s.client.(*atlas.Client).Clusters.Upgrade(s.ctx, projectID, cluster)
+	result, _, err := s.client.Clusters.Upgrade(s.ctx, projectID, cluster)
 	return result, err
 }
 
 // ProjectClusters encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (interface{}, error) {
+func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (*admin.PaginatedAdvancedClusterDescription, error) {
 	res := s.clientv2.ClustersApi.ListClusters(s.ctx, projectID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)

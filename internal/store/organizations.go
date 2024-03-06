@@ -18,17 +18,18 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OrganizationLister,OrganizationDeleter,OrganizationDescriber,AtlasOrganizationCreator
 
 type OrganizationLister interface {
-	Organizations(*atlas.OrganizationsListOptions) (interface{}, error)
+	Organizations(*atlas.OrganizationsListOptions) (*admin.PaginatedOrganization, error)
 }
 
 type OrganizationDescriber interface {
-	Organization(string) (interface{}, error)
+	Organization(string) (*admin.AtlasOrganization, error)
 }
 
 type AtlasOrganizationCreator interface {
@@ -40,7 +41,7 @@ type OrganizationDeleter interface {
 }
 
 // Organizations encapsulate the logic to manage different cloud providers.
-func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (interface{}, error) {
+func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*admin.PaginatedOrganization, error) {
 	res := s.clientv2.OrganizationsApi.ListOrganizations(s.ctx)
 	if opts != nil {
 		res = res.Name(opts.Name).PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
@@ -50,7 +51,7 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (interface{}
 }
 
 // Organization encapsulate the logic to manage different cloud providers.
-func (s *Store) Organization(id string) (interface{}, error) {
+func (s *Store) Organization(id string) (*admin.AtlasOrganization, error) {
 	result, _, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()
 	return result, err
 }
@@ -60,12 +61,12 @@ func (s *Store) CreateAtlasOrganization(o *atlas.CreateOrganizationRequest) (*at
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.client.(*atlas.Client).Organizations.Create(s.ctx, o)
+	result, _, err := s.client.Organizations.Create(s.ctx, o)
 	return result, err
 }
 
 // DeleteOrganization encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteOrganization(id string) error {
-	_, err := s.client.(*atlas.Client).Organizations.Delete(s.ctx, id)
+	_, err := s.client.Organizations.Delete(s.ctx, id)
 	return err
 }

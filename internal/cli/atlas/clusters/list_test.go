@@ -31,7 +31,7 @@ func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterLister(ctrl)
 
-	expected := admin.PaginatedAdvancedClusterDescription{
+	expected := &admin.PaginatedAdvancedClusterDescription{
 		Results: &[]admin.AdvancedClusterDescription{
 			{
 				Name: pointer.Get("test"),

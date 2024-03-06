@@ -110,9 +110,9 @@ func NewProfileReplaceConfirm(entry string) survey.Prompt {
 }
 
 // NewOrgSelect create a prompt to choice the organization.
-func NewOrgSelect(options []atlasv2.AtlasOrganization) survey.Prompt {
-	opt := make([]string, len(options))
-	for i, o := range options {
+func NewOrgSelect(options *[]atlasv2.AtlasOrganization) survey.Prompt {
+	opt := make([]string, len(*options))
+	for i, o := range *options {
 		opt[i] = *o.Id
 	}
 
@@ -120,11 +120,11 @@ func NewOrgSelect(options []atlasv2.AtlasOrganization) survey.Prompt {
 		Message: "Choose a default organization:",
 		Options: opt,
 		Description: func(_ string, i int) string {
-			return options[i].Name
+			return (*options)[i].Name
 		},
 		Filter: func(filter string, _ string, i int) bool {
 			filter = strings.ToLower(filter)
-			return strings.HasPrefix(strings.ToLower(options[i].Name), filter) || strings.HasPrefix(*options[i].Id, filter)
+			return strings.HasPrefix(strings.ToLower((*options)[i].Name), filter) || strings.HasPrefix(*(*options)[i].Id, filter)
 		},
 	}
 }

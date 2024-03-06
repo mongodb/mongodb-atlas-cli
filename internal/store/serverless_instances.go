@@ -58,7 +58,7 @@ func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions
 	return result, err
 }
 
-// ServerlessInstance encapsulates the logic to manage different cloud providers.
+// GetServerlessInstance encapsulates the logic to manage different cloud providers.
 func (s *Store) GetServerlessInstance(projectID, clusterName string) (*atlasv2.ServerlessInstanceDescription, error) {
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -67,7 +67,7 @@ func (s *Store) GetServerlessInstance(projectID, clusterName string) (*atlasv2.S
 	return result, err
 }
 
-// Used by Kubernetes v1 ServerlessInstance encapsulates the logic to manage different cloud providers.
+// ServerlessInstance Used by Kubernetes v1 ServerlessInstance encapsulates the logic to manage different cloud providers.
 func (s *Store) ServerlessInstance(projectID, clusterName string) (*atlas.Cluster, error) {
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

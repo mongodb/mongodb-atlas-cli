@@ -100,7 +100,7 @@ func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) ([]atlas
 	return result, err
 }
 
-// DeleteProject encapsulates the logic to manage different cloud providers.
+// DeleteUserFromProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 	_, err := s.client.Projects.RemoveUserFromProject(s.ctx, projectID, userID)
 	return err

@@ -34,16 +34,15 @@ import (
 )
 
 const (
-	telemetryTimeout          = 1 * time.Second
-	tlsHandshakeTimeout       = 5 * time.Second
-	timeout                   = 5 * time.Second
-	keepAlive                 = 30 * time.Second
-	maxIdleConns              = 5
-	maxIdleConnsPerHost       = 4
-	idleConnTimeout           = 30 * time.Second
-	expectContinueTimeout     = 1 * time.Second
-	versionManifestStaticPath = "https://opsmanager.mongodb.com/"
-	cloudGovServiceURL        = "https://cloud.mongodbgov.com/"
+	telemetryTimeout      = 1 * time.Second
+	tlsHandshakeTimeout   = 5 * time.Second
+	timeout               = 5 * time.Second
+	keepAlive             = 30 * time.Second
+	maxIdleConns          = 5
+	maxIdleConnsPerHost   = 4
+	idleConnTimeout       = 30 * time.Second
+	expectContinueTimeout = 1 * time.Second
+	cloudGovServiceURL    = "https://cloud.mongodbgov.com/"
 )
 
 var errUnsupportedService = errors.New("unsupported service")

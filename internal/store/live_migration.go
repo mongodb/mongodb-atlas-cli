@@ -45,7 +45,7 @@ func (s *Store) CreateValidation(groupID string, liveMigration *atlasv2.LiveMigr
 	return result, err
 }
 
-// StartLiveMigrationCutover encapsulate the logic to manage different cloud providers.
+// CreateLiveMigrationCutover encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateLiveMigrationCutover(groupID, liveMigrationID string) error {
 	if s.service == config.CloudGovService {
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

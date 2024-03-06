@@ -104,6 +104,7 @@ gen-code: ## Generate code
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
 	@echo "==> Generating mocks"
+	rm -rf ./internal/mocks
 	go generate ./internal...
 
 .PHONY: gen-docs

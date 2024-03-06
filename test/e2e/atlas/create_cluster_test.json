@@ -2,7 +2,7 @@
   "backupEnabled":false,
   "diskSizeGB":30,
   "numShards":1,
-  "mongoDBMajorVersion":"4.4",
+  "mongoDBMajorVersion":"7.0",
   "providerSettings":{
     "providerName":"GCP",
     "instanceSizeName":"M10"

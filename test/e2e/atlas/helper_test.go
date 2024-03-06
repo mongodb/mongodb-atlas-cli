@@ -130,8 +130,8 @@ const (
 	e2eGovClusterTier    = "M20"
 	e2eSharedClusterTier = "M2"
 	e2eClusterProvider   = "AWS" // e2eClusterProvider preferred provider for e2e testing.
-	e2eMDBVer            = "4.4"
-	e2eSharedMDBVer      = "6.0"
+	e2eMDBVer            = "7.0"
+	e2eSharedMDBVer      = "7.0"
 )
 
 // Backup compliance policy constants.

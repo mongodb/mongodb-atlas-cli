@@ -271,26 +271,6 @@ func WithContext(ctx context.Context) Option {
 	}
 }
 
-/**
-* Creates client for v2 generated API.
- */
-func (s *Store) createV2Client(client *http.Client) error {
-	opts := []atlasv2.ClientModifier{
-		atlasv2.UseHTTPClient(client),
-		atlasv2.UseUserAgent(config.UserAgent),
-		atlasv2.UseDebug(log.IsDebugLevel())}
-
-	if s.baseURL != "" {
-		opts = append(opts, atlasv2.UseBaseURL(s.baseURL))
-	}
-	c, err := atlasv2.NewClient(opts...)
-	if err != nil {
-		return err
-	}
-	s.clientv2 = c
-	return nil
-}
-
 // setOpsManagerClient sets the internal client to use an Ops Manager client and methods.
 func (s *Store) setOpsManagerClient(client *http.Client) error {
 	opts := []opsmngr.ClientOpt{opsmngr.SetUserAgent(config.UserAgent)}

@@ -43,16 +43,5 @@
 	"google.golang.org/protobuf": "mongocli",
 	"golang.org/x/mod": "mongocli",
 	"gopkg.in/yaml.v3": "mongocli",
-	"github.com/mongodb/mongodb-atlas-kubernetes/v2": "atlas_kubernetes_team",
-	"k8s.io/api": "atlas_kubernetes_team",
-	"k8s.io/apimachinery": "atlas_kubernetes_team",
-	"k8s.io/apiserver": "atlas_kubernetes_team",
-	"k8s.io/client-go": "atlas_kubernetes_team",
-	"k8s.io/apiextensions-apiserver": "atlas_kubernetes_team",
-	"sigs.k8s.io/yaml": "atlas_kubernetes_team",
-	"sigs.k8s.io/controller-runtime": "atlas_kubernetes_team",
-	"sigs.k8s.io/kind": "atlas_kubernetes_team",
-	"golang.org/x/exp": "atlas_kubernetes_team",
-	"github.com/shirou/gopsutil/v3": "mongocli",
-	"github.com/denisbrodbeck/machineid": "mongocli"
+	"golang.org/x/exp": "atlas_kubernetes_team"
 }

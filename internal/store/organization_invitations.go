@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -101,13 +100,5 @@ func (s *Store) InviteUser(orgID string, invitation *atlas.Invitation) (interfac
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
-func mapInvitation(invitation *atlas.Invitation) atlasv2.OrganizationInvitationRequest {
-	return atlasv2.OrganizationInvitationRequest{
-		Roles:    &invitation.Roles,
-		TeamIds:  &invitation.TeamIDs,
-		Username: &invitation.Username,
 	}
 }

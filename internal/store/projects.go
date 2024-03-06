@@ -34,7 +34,7 @@ type OrgProjectLister interface {
 }
 
 type ProjectCreator interface {
-	CreateProject(string, string, string, *bool, *atlas.CreateProjectOptions) (interface{}, error)
+	CreateProject(string, string, *bool, *atlas.CreateProjectOptions) (interface{}, error)
 	ServiceVersionDescriber
 }
 
@@ -111,7 +111,7 @@ func (s *Store) ProjectByName(name string) (interface{}, error) {
 }
 
 // CreateProject encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateProject(name, orgID, regionUsageRestrictions string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (interface{}, error) {
+func (s *Store) CreateProject(name, orgID string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		project := &opsmngr.Project{Name: name, OrgID: orgID, WithDefaultAlertsSettings: defaultAlertSettings}

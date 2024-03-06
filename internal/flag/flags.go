@@ -279,7 +279,6 @@ const (
 	LiveMigrationSourcePassword               = "sourcePassword"                            // LiveMigrationSourcePassword flag
 	LiveMigrationDropCollections              = "drop"                                      // LiveMigrationDropCollections flag
 	OwnerID                                   = "ownerId"                                   // OwnerID flag
-	GovCloudRegionsOnly                       = "govCloudRegionsOnly"                       // GovCloudRegionsOnly flag
 	LiveMigrationID                           = "liveMigrationId"                           // LiveMigrationID flag
 	LiveMigrationValidationID                 = "validationId"                              // LiveMigrationDropCollections flag
 	LinkToken                                 = "linkToken"                                 // LinkToken flag

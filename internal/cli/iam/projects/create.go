@@ -39,7 +39,6 @@ type CreateOpts struct {
 	cli.OutputOpts
 	name                        string
 	projectOwnerID              string
-	regionUsageRestrictions     bool
 	withoutDefaultAlertSettings bool
 	serviceVersion              *semver.Version
 	store                       store.ProjectCreator
@@ -64,22 +63,13 @@ func (opts *CreateOpts) Run() error {
 		defaultAlertSettings = &f
 	}
 
-	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(),
-		opts.newRegionUsageRestrictions(), defaultAlertSettings, opts.newCreateProjectOptions())
+	r, err := opts.store.CreateProject(opts.name, opts.ConfigOrgID(), defaultAlertSettings, opts.newCreateProjectOptions())
 
 	if err != nil {
 		return err
 	}
 
 	return opts.Print(r)
-}
-
-func (opts *CreateOpts) newRegionUsageRestrictions() string {
-	if opts.regionUsageRestrictions {
-		return govRegionOnly
-	}
-
-	return ""
 }
 
 func (opts *CreateOpts) newCreateProjectOptions() *atlas.CreateProjectOptions {
@@ -169,7 +159,6 @@ func CreateBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVar(&opts.projectOwnerID, flag.OwnerID, "", usage.ProjectOwnerID)
-	cmd.Flags().BoolVar(&opts.regionUsageRestrictions, flag.GovCloudRegionsOnly, false, usage.GovCloudRegionsOnly)
 	cmd.Flags().BoolVar(&opts.withoutDefaultAlertSettings, flag.WithoutDefaultAlertSettings, false, usage.WithoutDefaultAlertSettings)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())

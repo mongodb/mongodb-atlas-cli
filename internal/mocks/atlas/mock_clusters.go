@@ -36,10 +36,10 @@ func (m *MockClusterLister) EXPECT() *MockClusterListerMockRecorder {
 }
 
 // ProjectClusters mocks base method.
-func (m *MockClusterLister) ProjectClusters(arg0 string, arg1 *atlas.ListOptions) (interface{}, error) {
+func (m *MockClusterLister) ProjectClusters(arg0 string, arg1 *atlas.ListOptions) (*admin.PaginatedAdvancedClusterDescription, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectClusters", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*admin.PaginatedAdvancedClusterDescription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

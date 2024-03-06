@@ -33,10 +33,8 @@ import (
 )
 
 const (
-	roleOrgGroupCreator       = "ORG_GROUP_CREATOR"
-	roleProjectOwner          = "GROUP_OWNER"
-	atlasErrorProjectNotFound = "GROUP_NAME_NOT_FOUND"
-	atlasErrorNotInGroup      = "NOT_IN_GROUP"
+	roleOrgGroupCreator = "ORG_GROUP_CREATOR"
+	roleProjectOwner    = "GROUP_OWNER"
 )
 
 type Install struct {
@@ -143,13 +141,9 @@ func (i *Install) Run(ctx context.Context, orgID string) error {
 }
 
 func (i *Install) ensureProject(orgID, projectName string) (*admin.Group, error) {
-	data, err := i.atlasStore.ProjectByName(projectName)
-	if err == nil {
-		project, ok := data.(*admin.Group)
-		if !ok {
-			return nil, fmt.Errorf("failed to decode project: %w", err)
-		}
+	project, err := i.atlasStore.ProjectByName(projectName)
 
+	if err == nil {
 		return project, nil
 	}
 
@@ -157,7 +151,7 @@ func (i *Install) ensureProject(orgID, projectName string) (*admin.Group, error)
 		return nil, fmt.Errorf("failed to retrieve project: %w", err)
 	}
 
-	data, err = i.atlasStore.CreateProject(&admin.CreateProjectApiParams{
+	project, err = i.atlasStore.CreateProject(&admin.CreateProjectApiParams{
 		Group: &admin.Group{
 			Name:                      projectName,
 			OrgId:                     orgID,
@@ -167,11 +161,6 @@ func (i *Install) ensureProject(orgID, projectName string) (*admin.Group, error)
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to create project: %w", err)
-	}
-
-	project, ok := data.(*admin.Group)
-	if !ok {
-		return nil, fmt.Errorf("failed to decode created project: %w", err)
 	}
 
 	return project, nil

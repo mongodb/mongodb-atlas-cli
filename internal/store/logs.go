@@ -18,90 +18,23 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LogsDownloader,LogJobsDownloader,LogCollector,LogJobLister,LogJobDeleter
+//go:generate mockgen -destination=../mocks/mock_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LogsDownloader
 
 type LogsDownloader interface {
 	DownloadLog(*atlasv2.GetHostLogsApiParams) (io.ReadCloser, error)
 }
 
-type LogJobsDownloader interface {
-	DownloadLogJob(string, string, io.Writer) error
-}
-
-type LogCollector interface {
-	Collect(string, *opsmngr.LogCollectionJob) (*opsmngr.LogCollectionJob, error)
-}
-
-type LogJobLister interface {
-	LogCollectionJobs(string, *opsmngr.LogListOptions) (*opsmngr.LogCollectionJobs, error)
-}
-
-type LogJobDeleter interface {
-	DeleteCollectionJob(string, string) error
-}
-
-// LogCollectionJobs encapsulate the logic to manage different cloud providers.
-func (s *Store) LogCollectionJobs(groupID string, opts *opsmngr.LogListOptions) (*opsmngr.LogCollectionJobs, error) {
-	switch s.service {
-	case config.OpsManagerService, config.CloudManagerService:
-		log, _, err := s.client.(*opsmngr.Client).LogCollections.List(s.ctx, groupID, opts)
-		return log, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
-// DeleteCollectionJob encapsulate the logic to manage different cloud providers.
-func (s *Store) DeleteCollectionJob(groupID, logID string) error {
-	switch s.service {
-	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*opsmngr.Client).LogCollections.Delete(s.ctx, groupID, logID)
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
-// Collect encapsulate the logic to manage different cloud providers.
-func (s *Store) Collect(groupID string, newLog *opsmngr.LogCollectionJob) (*opsmngr.LogCollectionJob, error) {
-	switch s.service {
-	case config.OpsManagerService, config.CloudManagerService:
-		log, _, err := s.client.(*opsmngr.Client).LogCollections.Create(s.ctx, groupID, newLog)
-		return log, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
 // DownloadLog encapsulates the logic to manage different cloud providers.
 func (s *Store) DownloadLog(params *atlasv2.GetHostLogsApiParams) (io.ReadCloser, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostLogsWithParams(s.ctx, params).Execute()
-		if err != nil {
-			return nil, err
-		}
-		if result == nil {
-			return nil, fmt.Errorf("returned file is empty")
-		}
-		return result, nil
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostLogsWithParams(s.ctx, params).Execute()
+	if err != nil {
+		return nil, err
 	}
-}
-
-// DownloadLogJob encapsulate the logic to manage different cloud providers.
-func (s *Store) DownloadLogJob(groupID, jobID string, out io.Writer) error {
-	switch s.service {
-	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*opsmngr.Client).Logs.Download(s.ctx, groupID, jobID, out)
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	if result == nil {
+		return nil, fmt.Errorf("returned file is empty")
 	}
+	return result, nil
 }

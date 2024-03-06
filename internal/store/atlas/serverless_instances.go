@@ -33,26 +33,22 @@ type ServerlessInstanceDescriber interface {
 
 // ServerlessInstances encapsulates the logic to manage different cloud providers.
 func (s *Store) ServerlessInstances(projectID string, listOps *ListOptions) (*atlasv2.PaginatedServerlessInstanceDescription, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.clientv2.ServerlessInstancesApi.ListServerlessInstances(s.ctx, projectID).
-			ItemsPerPage(listOps.ItemsPerPage).
-			PageNum(listOps.PageNum).
-			Execute()
-
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.clientv2.ServerlessInstancesApi.ListServerlessInstances(s.ctx, projectID).
+		ItemsPerPage(listOps.ItemsPerPage).
+		PageNum(listOps.PageNum).
+		Execute()
+
+	return result, err
 }
 
 // ServerlessInstance encapsulates the logic to manage different cloud providers.
 func (s *Store) GetServerlessInstance(projectID, clusterName string) (*atlasv2.ServerlessInstanceDescription, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.clientv2.ServerlessInstancesApi.GetServerlessInstance(s.ctx, projectID, clusterName).Execute()
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.clientv2.ServerlessInstancesApi.GetServerlessInstance(s.ctx, projectID, clusterName).Execute()
+	return result, err
 }

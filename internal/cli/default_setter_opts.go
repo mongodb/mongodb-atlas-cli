@@ -30,17 +30,16 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_default_opts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli ProjectOrgsLister
 
 type ProjectOrgsLister interface {
-	Project(id string) (interface{}, error)
-	Projects(*atlas.ListOptions) (interface{}, error)
-	Organization(id string) (interface{}, error)
-	Organizations(*atlas.OrganizationsListOptions) (interface{}, error)
-	GetOrgProjects(string, *atlas.ProjectsListOptions) (interface{}, error)
+	Project(id string) (*atlas.Project, error)
+	Projects(*atlas.ListOptions) (*atlas.Projects, error)
+	Organization(id string) (*atlasv2.AtlasOrganization, error)
+	Organizations(*atlas.OrganizationsListOptions) (*atlasv2.PaginatedOrganization, error)
+	GetOrgProjects(string, *atlas.ProjectsListOptions) (*atlas.Projects, error)
 }
 
 type DefaultSetterOpts struct {
@@ -66,14 +65,6 @@ func (opts *DefaultSetterOpts) InitStore(ctx context.Context) error {
 	return err
 }
 
-func (opts *DefaultSetterOpts) IsCloud() bool {
-	return opts.Service == config.CloudService || opts.Service == config.CloudGovService
-}
-
-func (opts *DefaultSetterOpts) IsOpsManager() bool {
-	return opts.Service == config.OpsManagerService
-}
-
 const resultsLimit = 500
 
 var (
@@ -92,7 +83,7 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 	spin.Start()
 	defer spin.Stop()
 
-	var projects interface{}
+	var projects *atlas.Projects
 	if opts.OrgID == "" {
 		projects, err = opts.Store.Projects(&atlas.ListOptions{ItemsPerPage: resultsLimit})
 	} else {
@@ -108,30 +99,19 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 		}
 		return nil, nil, err
 	}
-	switch r := projects.(type) {
-	case *atlas.Projects:
-		if r.TotalCount == 0 {
-			return nil, nil, errNoResults
-		}
-		if r.TotalCount > resultsLimit {
-			return nil, nil, errTooManyResults
-		}
-		ids, names = atlasProjects(r.Results)
-	case *opsmngr.Projects:
-		if r.TotalCount == 0 {
-			return nil, nil, errNoResults
-		}
-		if r.TotalCount > resultsLimit {
-			return nil, nil, errTooManyResults
-		}
-		ids, names = omProjects(r.Results)
+	if projects.TotalCount == 0 {
+		return nil, nil, errNoResults
 	}
+	if projects.TotalCount > resultsLimit {
+		return nil, nil, errTooManyResults
+	}
+	ids, names = atlasProjects(projects.Results)
 
 	return ids, names, nil
 }
 
 // Orgs fetches organizations, filtering by name.
-func (opts *DefaultSetterOpts) orgs(filter string) (results interface{}, err error) {
+func (opts *DefaultSetterOpts) orgs(filter string) (results *[]atlasv2.AtlasOrganization, err error) {
 	spin := newSpinner()
 	spin.Start()
 	defer spin.Stop()
@@ -149,27 +129,14 @@ func (opts *DefaultSetterOpts) orgs(filter string) (results interface{}, err err
 	if orgs == nil {
 		return nil, errNoResults
 	}
-	switch r := orgs.(type) {
-	case *atlasv2.PaginatedOrganization:
-		if r.GetTotalCount() == 0 {
-			return nil, errNoResults
-		}
-		if r.GetTotalCount() > resultsLimit {
-			return nil, errTooManyResults
-		}
-		results = *r.Results
-	case *atlas.Organizations:
-		if r.TotalCount == 0 {
-			return nil, errNoResults
-		}
-		if r.TotalCount > resultsLimit {
-			return nil, errTooManyResults
-		}
-		results = r.Results
-	default:
+
+	if orgs.GetTotalCount() == 0 {
 		return nil, errNoResults
 	}
-	return results, nil
+	if orgs.GetTotalCount() > resultsLimit {
+		return nil, errTooManyResults
+	}
+	return orgs.Results, nil
 }
 
 // ProjectExists checks if the project exists and the current user has access to it.
@@ -289,13 +256,7 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 		return opts.manualOrgID()
 	}
 
-	switch o := orgs.(type) {
-	case []atlasv2.AtlasOrganization:
-		return opts.selectOrg(o)
-	case []*atlas.Organization:
-		return opts.selectOnPremOrg(o)
-	}
-	return nil
+	return opts.selectOrg(orgs)
 }
 
 func (opts *DefaultSetterOpts) manualOrgID() error {
@@ -315,32 +276,15 @@ func (opts *DefaultSetterOpts) manualOrgID() error {
 	return nil
 }
 
-func (opts *DefaultSetterOpts) selectOrg(orgs []atlasv2.AtlasOrganization) error {
-	if len(orgs) == 1 {
-		opts.OrgID = *orgs[0].Id
+func (opts *DefaultSetterOpts) selectOrg(orgs *[]atlasv2.AtlasOrganization) error {
+	if orgs != nil && len(*orgs) == 1 {
+		opts.OrgID = *(*orgs)[0].Id
 		return nil
 	}
 
 	opts.runOnMultipleOrgsOrProjects()
 
 	p := prompt.NewOrgSelect(orgs)
-	if err := telemetry.TrackAskOne(p, &opts.OrgID); err != nil {
-		return err
-	}
-	opts.AskedOrgsOrProjects = true
-
-	return nil
-}
-
-func (opts *DefaultSetterOpts) selectOnPremOrg(orgs []*atlas.Organization) error {
-	if len(orgs) == 1 {
-		opts.OrgID = orgs[0].ID
-		return nil
-	}
-
-	opts.runOnMultipleOrgsOrProjects()
-
-	p := prompt.NewOnPremOrgSelect(orgs)
 	if err := telemetry.TrackAskOne(p, &opts.OrgID); err != nil {
 		return err
 	}
@@ -367,17 +311,6 @@ func (opts *DefaultSetterOpts) SetUpOutput() {
 
 // atlasProjects transform []*atlas.Project to a []string of ids and another for names.
 func atlasProjects(projects []*atlas.Project) (ids, names []string) {
-	names = make([]string, len(projects))
-	ids = make([]string, len(projects))
-	for i, p := range projects {
-		ids[i] = p.ID
-		names[i] = p.Name
-	}
-	return ids, names
-}
-
-// omProjects transform []*opsmngr.Project to a []string of ids and another for names.
-func omProjects(projects []*opsmngr.Project) (ids, names []string) {
 	names = make([]string, len(projects))
 	ids = make([]string, len(projects))
 	for i, p := range projects {

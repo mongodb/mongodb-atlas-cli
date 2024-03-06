@@ -21,20 +21,21 @@ import (
 
 	"github.com/golang/mock/gomock"
 	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	"go.mongodb.org/ops-manager/opsmngr"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectDescriber(ctrl)
-	expected := opsmngr.Project{
+	expected := &admin.Group{
 		Name: "test",
-		ID:   "5a0a1e7e0f2912c554080adc",
+		Id:   pointer.Get("5a0a1e7e0f2912c554080adc"),
 	}
 	mockStore.
 		EXPECT().
 		Project(gomock.Eq("5a0a1e7e0f2912c554080adc")).
-		Return(&expected, nil).
+		Return(expected, nil).
 		Times(1)
 
 	opts := &DescribeOpts{

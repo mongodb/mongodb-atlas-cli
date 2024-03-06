@@ -21,8 +21,10 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -115,20 +117,20 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 		Store:   mockStore,
 	}
 	t.Run("empty", func(t *testing.T) {
-		expectedOrgs := &atlas.Organizations{}
+		expectedOrgs := &admin.PaginatedOrganization{}
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
 		_, err := opts.orgs("")
 		require.Error(t, err)
 	})
 	t.Run("with one org", func(t *testing.T) {
-		expectedOrgs := &atlas.Organizations{
-			Results: []*atlas.Organization{
+		expectedOrgs := &admin.PaginatedOrganization{
+			Results: &[]admin.AtlasOrganization{
 				{
-					ID:   "1",
+					Id:   pointer.Get("1"),
 					Name: "Org 1",
 				},
 			},
-			TotalCount: 1,
+			TotalCount: pointer.Get(1),
 		}
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
 		gotOrgs, err := opts.orgs("")
@@ -137,8 +139,8 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 	})
 
 	t.Run("with no org", func(t *testing.T) {
-		expectedOrgs := &atlas.Organizations{
-			Results: []*atlas.Organization{},
+		expectedOrgs := &admin.PaginatedOrganization{
+			Results: &[]admin.AtlasOrganization{},
 		}
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
 		_, err := opts.orgs("")

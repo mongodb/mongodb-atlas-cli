@@ -15,9 +15,6 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
@@ -28,11 +25,6 @@ type GlobalClusterDescriber interface {
 }
 
 func (s *Store) GlobalCluster(projectID, instanceName string) (*atlasv2.GeoSharding, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.GlobalClustersApi.GetManagedNamespace(s.ctx, projectID, instanceName).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.GlobalClustersApi.GetManagedNamespace(s.ctx, projectID, instanceName).Execute()
+	return result, err
 }

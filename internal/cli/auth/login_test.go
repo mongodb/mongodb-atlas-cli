@@ -26,9 +26,11 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 	"go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -134,10 +136,10 @@ func Test_loginOpts_Run(t *testing.T) {
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
 	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
 	mockConfig.EXPECT().Save().Return(nil).Times(2)
-	expectedOrgs := &atlas.Organizations{
-		TotalCount: 1,
-		Results: []*atlas.Organization{
-			{ID: "o1", Name: "Org1"},
+	expectedOrgs := &admin.PaginatedOrganization{
+		TotalCount: pointer.Get(1),
+		Results: &[]admin.AtlasOrganization{
+			{Id: pointer.Get("o1"), Name: "Org1"},
 		},
 	}
 	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)

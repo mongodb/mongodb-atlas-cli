@@ -43,7 +43,6 @@ require (
 	go.mongodb.org/atlas v0.36.0
 	go.mongodb.org/atlas-sdk/v20231115007 v20231115007.1.0
 	go.mongodb.org/mongo-driver v1.14.0
-	go.mongodb.org/ops-manager v0.55.3
 	golang.org/x/crypto v0.21.0
 	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc
 	golang.org/x/mod v0.16.0

@@ -34,22 +34,18 @@ type LiveMigrationDescriber interface {
 
 // LiveMigrationCreate encapsulates the logic to manage different cloud providers.
 func (s *Store) LiveMigrationCreate(groupID string, liveMigrationRequest *atlasv2.LiveMigrationRequest) (*atlasv2.LiveMigrationResponse, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.clientv2.CloudMigrationServiceApi.CreatePushMigration(context.Background(), groupID, liveMigrationRequest).Execute()
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.clientv2.CloudMigrationServiceApi.CreatePushMigration(context.Background(), groupID, liveMigrationRequest).Execute()
+	return result, err
 }
 
 // LiveMigrationDescribe encapsulates the logic to manage different cloud providers.
 func (s *Store) LiveMigrationDescribe(groupID, migrationID string) (*atlasv2.LiveMigrationResponse, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.clientv2.CloudMigrationServiceApi.GetPushMigration(context.Background(), groupID, migrationID).Execute()
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.clientv2.CloudMigrationServiceApi.GetPushMigration(context.Background(), groupID, migrationID).Execute()
+	return result, err
 }

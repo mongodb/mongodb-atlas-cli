@@ -38,8 +38,8 @@ type ProjectDeleter interface {
 }
 
 type ProjectDescriber interface {
-	Project(string) (interface{}, error)
-	ProjectByName(string) (interface{}, error)
+	Project(string) (*atlasv2.Group, error)
+	ProjectByName(string) (*atlasv2.Group, error)
 }
 
 type ProjectUsersLister interface {
@@ -83,12 +83,12 @@ func (s *Store) GetOrgProjects(orgID string, opts *ListOptions) (*atlasv2.Pagina
 }
 
 // Project encapsulates the logic to manage different cloud providers.
-func (s *Store) Project(id string) (interface{}, error) {
+func (s *Store) Project(id string) (*atlasv2.Group, error) {
 	result, _, err := s.clientv2.ProjectsApi.GetProject(s.ctx, id).Execute()
 	return result, err
 }
 
-func (s *Store) ProjectByName(name string) (interface{}, error) {
+func (s *Store) ProjectByName(name string) (*atlasv2.Group, error) {
 	result, _, err := s.clientv2.ProjectsApi.GetProjectByName(s.ctx, name).Execute()
 	return result, err
 }

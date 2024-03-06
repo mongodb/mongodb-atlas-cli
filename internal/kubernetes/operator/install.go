@@ -33,10 +33,8 @@ import (
 )
 
 const (
-	roleOrgGroupCreator       = "ORG_GROUP_CREATOR"
-	roleProjectOwner          = "GROUP_OWNER"
-	atlasErrorProjectNotFound = "GROUP_NAME_NOT_FOUND"
-	atlasErrorNotInGroup      = "NOT_IN_GROUP"
+	roleOrgGroupCreator = "ORG_GROUP_CREATOR"
+	roleProjectOwner    = "GROUP_OWNER"
 )
 
 type Install struct {

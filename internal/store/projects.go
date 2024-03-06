@@ -27,7 +27,6 @@ type ProjectLister interface {
 
 type ProjectCreator interface {
 	CreateProject(string, string, string, *bool, *atlas.CreateProjectOptions) (*atlas.Project, error)
-	ServiceVersionDescriber
 }
 
 type ProjectDeleter interface {

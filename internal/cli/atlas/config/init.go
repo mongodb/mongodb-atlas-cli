@@ -53,7 +53,7 @@ Enter [?] on any option to get help.
 
 `, atlas)
 
-	q := prompt.AccessQuestions(false)
+	q := prompt.AccessQuestions()
 	if err := telemetry.TrackAsk(q, opts); err != nil {
 		return err
 	}

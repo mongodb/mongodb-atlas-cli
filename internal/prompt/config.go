@@ -25,14 +25,6 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-func NewOMURLInput() survey.Prompt {
-	return &survey.Input{
-		Message: "URL to Access Ops Manager:",
-		Help:    "FQDN and port number of the Ops Manager Application.",
-		Default: config.OpsManagerURL(),
-	}
-}
-
 func NewOrgIDInput() survey.Prompt {
 	return &survey.Input{
 		Message: "Default Org ID:",
@@ -49,11 +41,8 @@ func NewProjectIDInput() survey.Prompt {
 	}
 }
 
-func AccessQuestions(isOM bool) []*survey.Question {
+func AccessQuestions() []*survey.Question {
 	helpLink := "Please provide your API keys. To create new keys, see the documentation: https://docs.atlas.mongodb.com/configure-api-access/"
-	if isOM {
-		helpLink = "Please provide your API keys. To create new keys, see the documentation: https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/"
-	}
 
 	q := []*survey.Question{
 		{
@@ -71,16 +60,6 @@ func AccessQuestions(isOM bool) []*survey.Question {
 				Help:    helpLink,
 			},
 		},
-	}
-	if isOM {
-		omQuestions := []*survey.Question{
-			{
-				Name:     "opsManagerURL",
-				Prompt:   NewOMURLInput(),
-				Validate: validate.OptionalURL,
-			},
-		}
-		q = append(omQuestions, q...)
 	}
 	return q
 }

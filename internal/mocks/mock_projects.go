@@ -102,21 +102,6 @@ func (mr *MockProjectCreatorMockRecorder) CreateProject(arg0, arg1, arg2, arg3, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProject", reflect.TypeOf((*MockProjectCreator)(nil).CreateProject), arg0, arg1, arg2, arg3, arg4)
 }
 
-// ServiceVersion mocks base method.
-func (m *MockProjectCreator) ServiceVersion() (*mongodbatlas.ServiceVersion, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ServiceVersion")
-	ret0, _ := ret[0].(*mongodbatlas.ServiceVersion)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ServiceVersion indicates an expected call of ServiceVersion.
-func (mr *MockProjectCreatorMockRecorder) ServiceVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServiceVersion", reflect.TypeOf((*MockProjectCreator)(nil).ServiceVersion))
-}
-
 // MockProjectDeleter is a mock of ProjectDeleter interface.
 type MockProjectDeleter struct {
 	ctrl     *gomock.Controller

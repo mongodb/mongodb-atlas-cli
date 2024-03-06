@@ -19,13 +19,13 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterLister,AtlasClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber,AtlasClusterConfigurationOptionsDescriber,AtlasSharedClusterDescriber,ClusterUpgrader,AtlasSharedClusterGetterUpgrader,AtlasClusterConfigurationOptionsUpdater,ClusterTester
+//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterLister,ClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber,AtlasClusterConfigurationOptionsDescriber,AtlasSharedClusterDescriber,ClusterUpgrader,AtlasSharedClusterGetterUpgrader,AtlasClusterConfigurationOptionsUpdater,ClusterTester
 
 type ClusterLister interface {
-	ProjectClusters(string, *atlas.ListOptions) (*admin.PaginatedAdvancedClusterDescription, error)
+	ProjectClusters(string, *ListOptions) (*admin.PaginatedAdvancedClusterDescription, error)
 }
 
-type AtlasClusterDescriber interface {
+type ClusterDescriber interface {
 	AtlasCluster(string, string) (*admin.AdvancedClusterDescription, error)
 }
 
@@ -78,7 +78,7 @@ type ClusterTester interface {
 }
 
 type AtlasClusterGetterUpdater interface {
-	AtlasClusterDescriber
+	ClusterDescriber
 	ClusterUpdater
 }
 
@@ -95,7 +95,7 @@ type AtlasClusterQuickStarter interface {
 	DatabaseUserCreator
 	DatabaseUserDescriber
 	ProjectIPAccessListCreator
-	AtlasClusterDescriber
+	ClusterDescriber
 	ClusterCreator
 }
 
@@ -160,7 +160,7 @@ func (s *Store) UpgradeCluster(projectID string, cluster *atlas.Cluster) (*atlas
 }
 
 // ProjectClusters encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (*admin.PaginatedAdvancedClusterDescription, error) {
+func (s *Store) ProjectClusters(projectID string, opts *ListOptions) (*admin.PaginatedAdvancedClusterDescription, error) {
 	res := s.clientv2.ClustersApi.ListClusters(s.ctx, projectID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)

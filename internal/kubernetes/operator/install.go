@@ -24,7 +24,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
@@ -39,7 +38,7 @@ const (
 
 type Install struct {
 	installResources Installer
-	atlasStore       atlas.OperatorGenericStore
+	atlasStore       store.OperatorGenericStore
 	credStore        store.CredentialsGetter
 	featureValidator features.FeatureValidator
 	kubectl          *kubernetes.KubeCtl
@@ -121,14 +120,14 @@ func (i *Install) Run(ctx context.Context, orgID string) error {
 		ctx,
 		i.namespace,
 		orgID,
-		atlas.StringOrEmpty(keys.PublicKey),
-		atlas.StringOrEmpty(keys.PrivateKey),
+		store.StringOrEmpty(keys.PublicKey),
+		store.StringOrEmpty(keys.PrivateKey),
 		i.projectName); err != nil {
 		return err
 	}
 
 	if i.importResources {
-		if err = i.importAtlasResources(orgID, atlas.StringOrEmpty(keys.Id)); err != nil {
+		if err = i.importAtlasResources(orgID, store.StringOrEmpty(keys.Id)); err != nil {
 			return err
 		}
 
@@ -142,6 +141,7 @@ func (i *Install) Run(ctx context.Context, orgID string) error {
 
 func (i *Install) ensureProject(orgID, projectName string) (*admin.Group, error) {
 	project, err := i.atlasStore.ProjectByName(projectName)
+
 	if err == nil {
 		return project, nil
 	}
@@ -192,7 +192,7 @@ func (i *Install) generateKeys(orgID string) (*admin.ApiKeyUserDetails, error) {
 			roleProjectOwner,
 		},
 	}
-	keys, err := i.atlasStore.CreateProjectAPIKey(atlas.StringOrEmpty(project.Id), input)
+	keys, err := i.atlasStore.CreateProjectAPIKey(store.StringOrEmpty(project.Id), input)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate project keys: %w", err)
 	}
@@ -209,15 +209,15 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 			return err
 		}
 
-		projectsIDs = append(projectsIDs, atlas.StringOrEmpty(project.Id))
+		projectsIDs = append(projectsIDs, store.StringOrEmpty(project.Id))
 	} else {
-		projectsData, err := i.atlasStore.GetOrgProjects(orgID, &atlas.ListOptions{})
+		projectsData, err := i.atlasStore.GetOrgProjects(orgID, &store.ListOptions{})
 		if err != nil {
 			return fmt.Errorf("unable to retrieve list of projects: %w", err)
 		}
 
 		for _, project := range projectsData.GetResults() {
-			projectsIDs = append(projectsIDs, atlas.StringOrEmpty(project.Id))
+			projectsIDs = append(projectsIDs, store.StringOrEmpty(project.Id))
 		}
 	}
 
@@ -310,7 +310,7 @@ func (i *Install) deleteSecret(ctx context.Context, key client.ObjectKey) error 
 
 func NewInstall(
 	installer Installer,
-	atlasStore atlas.OperatorGenericStore,
+	atlasStore store.OperatorGenericStore,
 	credStore store.CredentialsGetter,
 	featureValidator features.FeatureValidator,
 	kubectl *kubernetes.KubeCtl,

@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package options
 
 import (
@@ -30,7 +31,7 @@ type ConnectToAtlasOpts struct {
 	cli.GlobalOpts
 	cli.InputOpts
 	ConnectionStringType string
-	Store                store.AtlasClusterDescriber
+	Store                store.ClusterDescriber
 }
 
 func (opts *ConnectToAtlasOpts) InitAtlasStore(ctx context.Context) func() error {

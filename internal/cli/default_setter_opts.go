@@ -24,6 +24,7 @@ import (
 	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
@@ -35,11 +36,11 @@ import (
 //go:generate mockgen -destination=../mocks/mock_default_opts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli ProjectOrgsLister
 
 type ProjectOrgsLister interface {
-	Project(id string) (*atlas.Project, error)
-	Projects(*atlas.ListOptions) (*atlas.Projects, error)
+	Project(id string) (*atlasv2.Group, error)
+	Projects(*store.ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
 	Organization(id string) (*atlasv2.AtlasOrganization, error)
-	Organizations(*atlas.OrganizationsListOptions) (*atlasv2.PaginatedOrganization, error)
-	GetOrgProjects(string, *atlas.ProjectsListOptions) (*atlas.Projects, error)
+	Organizations(*atlasv2.ListOrganizationsApiParams) (*atlasv2.PaginatedOrganization, error)
+	GetOrgProjects(string, *store.ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
 }
 
 type DefaultSetterOpts struct {
@@ -83,12 +84,11 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 	spin.Start()
 	defer spin.Stop()
 
-	var projects *atlas.Projects
+	var projects *atlasv2.PaginatedAtlasGroup
 	if opts.OrgID == "" {
-		projects, err = opts.Store.Projects(&atlas.ListOptions{ItemsPerPage: resultsLimit})
+		projects, err = opts.Store.Projects(&store.ListOptions{ItemsPerPage: resultsLimit})
 	} else {
-		list := &atlas.ProjectsListOptions{}
-		list.ItemsPerPage = resultsLimit
+		list := &store.ListOptions{ItemsPerPage: resultsLimit}
 		projects, err = opts.Store.GetOrgProjects(opts.OrgID, list)
 	}
 	if err != nil {
@@ -99,13 +99,13 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 		}
 		return nil, nil, err
 	}
-	if projects.TotalCount == 0 {
+	if projects.GetTotalCount() == 0 {
 		return nil, nil, errNoResults
 	}
-	if projects.TotalCount > resultsLimit {
+	if projects.GetTotalCount() > resultsLimit {
 		return nil, nil, errTooManyResults
 	}
-	ids, names = atlasProjects(projects.Results)
+	ids, names = atlasProjects(projects.GetResults())
 
 	return ids, names, nil
 }
@@ -115,9 +115,7 @@ func (opts *DefaultSetterOpts) orgs(filter string) (results *[]atlasv2.AtlasOrga
 	spin := newSpinner()
 	spin.Start()
 	defer spin.Stop()
-	includeDeleted := false
-	pagination := &atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted, Name: filter}
-	pagination.ItemsPerPage = resultsLimit
+	pagination := &atlasv2.ListOrganizationsApiParams{Name: &filter, ItemsPerPage: pointer.Get(resultsLimit)}
 	orgs, err := opts.Store.Organizations(pagination)
 	if err != nil {
 		var atlasErr *atlas.ErrorResponse
@@ -148,7 +146,7 @@ func (opts *DefaultSetterOpts) ProjectExists(id string) bool {
 }
 
 // AskProject will try to construct a select based on fetched projects.
-// If it fails or there are no projects to show we fall back to ask for project by ID.
+// If it fails or there are no projects to show we fallback to ask for project by ID.
 // If only one project, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskProject() error {
 	ids, names, err := opts.projects()
@@ -310,12 +308,12 @@ func (opts *DefaultSetterOpts) SetUpOutput() {
 }
 
 // atlasProjects transform []*atlas.Project to a []string of ids and another for names.
-func atlasProjects(projects []*atlas.Project) (ids, names []string) {
+func atlasProjects(projects []atlasv2.Group) (ids, names []string) {
 	names = make([]string, len(projects))
 	ids = make([]string, len(projects))
 	for i, p := range projects {
-		ids[i] = p.ID
-		names[i] = p.Name
+		ids[i] = p.GetId()
+		names[i] = p.GetName()
 	}
 	return ids, names
 }

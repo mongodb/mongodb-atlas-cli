@@ -18,7 +18,6 @@ import (
 	"errors"
 
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_project_ip_access_lists.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectIPAccessListDescriber,ProjectIPAccessListLister,ProjectIPAccessListCreator,ProjectIPAccessListDeleter
@@ -27,7 +26,7 @@ type ProjectIPAccessListDescriber interface {
 	IPAccessList(string, string) (*atlasv2.NetworkPermissionEntry, error)
 }
 type ProjectIPAccessListLister interface {
-	ProjectIPAccessLists(string, *atlas.ListOptions) (*atlasv2.PaginatedNetworkAccess, error)
+	ProjectIPAccessLists(string, *ListOptions) (*atlasv2.PaginatedNetworkAccess, error)
 }
 
 type ProjectIPAccessListCreator interface {
@@ -60,17 +59,12 @@ func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
 }
 
 // ProjectIPAccessLists encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedNetworkAccess, error) {
-	params := &atlasv2.ListProjectIpAccessListsApiParams{
-		GroupId: projectID,
-	}
+func (s *Store) ProjectIPAccessLists(projectID string, opts *ListOptions) (*atlasv2.PaginatedNetworkAccess, error) {
+	res := s.clientv2.ProjectIPAccessListApi.ListProjectIpAccessLists(s.ctx, projectID)
 	if opts != nil {
-		params.PageNum = &opts.PageNum
-		params.ItemsPerPage = &opts.ItemsPerPage
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 	}
-	result, _, err := s.clientv2.ProjectIPAccessListApi.
-		ListProjectIpAccessListsWithParams(s.ctx, params).
-		Execute()
+	result, _, err := res.Execute()
 	return result, err
 }
 

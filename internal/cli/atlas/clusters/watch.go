@@ -32,7 +32,7 @@ type WatchOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
 	name  string
-	store store.AtlasClusterDescriber
+	store store.ClusterDescriber
 }
 
 var watchTemplate = "\nCluster available.\n"

@@ -28,7 +28,7 @@ import (
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasClusterDescriber(ctrl)
+	mockStore := mocks.NewMockClusterDescriber(ctrl)
 
 	expected := &atlasv2.AdvancedClusterDescription{}
 

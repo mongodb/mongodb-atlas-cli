@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package store
 
 import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_teams.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas TeamLister,TeamDescriber,TeamCreator,TeamRenamer,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
+//go:generate mockgen -destination=../mocks/mock_teams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store TeamLister,TeamDescriber,TeamCreator,TeamRenamer,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
 
 type TeamLister interface {
 	Teams(string, *atlas.ListOptions) (*atlasv2.PaginatedTeam, error)

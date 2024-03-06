@@ -47,7 +47,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
+	listOpts := opts.NewAtlasListOptions()
 	r, err := opts.store.ProjectIPAccessLists(opts.ConfigProjectID(), listOpts)
 
 	if err != nil {

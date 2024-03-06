@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_data_lake.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DataLakeLister,DataLakeDescriber,DataLakeCreator,DataLakeDeleter,DataLakeUpdater,DataLakeStore
+//go:generate mockgen -destination=../mocks/mock_data_lake.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DataLakeLister,DataLakeDescriber,DataLakeCreator,DataLakeDeleter,DataLakeUpdater
 
 type DataLakeLister interface {
 	DataLakes(string) ([]atlas.DataLake, error)
@@ -41,14 +41,6 @@ type DataLakeDeleter interface {
 
 type DataLakeUpdater interface {
 	UpdateDataLake(string, string, *atlas.DataLakeUpdateRequest) (*atlas.DataLake, error)
-}
-
-type DataLakeStore interface {
-	DataLakeLister
-	DataLakeDescriber
-	DataLakeCreator
-	DataLakeDeleter
-	DataLakeUpdater
 }
 
 // CreateDataLake encapsulate the logic to manage different cloud providers.

@@ -12,19 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package store
 
 import (
-	"errors"
-
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_atlas_operator_cluster_store.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas OperatorClusterStore
-//go:generate mockgen -destination=../../mocks/atlas/mock_atlas_operator_project_store.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas OperatorProjectStore
-//go:generate mockgen -destination=../../mocks/atlas/mock_atlas_operator_db_users_store.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas OperatorDBUsersStore
-//go:generate mockgen -destination=../../mocks/atlas/mock_atlas_operator_org_store.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas OperatorOrgStore
-//go:generate mockgen -destination=../../mocks/atlas/mock_atlas_generic_store.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas OperatorGenericStore
+//go:generate mockgen -destination=../mocks/mock_atlas_operator_cluster_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OperatorClusterStore
+//go:generate mockgen -destination=../mocks/mock_atlas_operator_project_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OperatorProjectStore
+//go:generate mockgen -destination=../mocks/mock_atlas_operator_db_users_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OperatorDBUsersStore
+//go:generate mockgen -destination=../mocks/mock_atlas_operator_org_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OperatorOrgStore
+//go:generate mockgen -destination=../mocks/mock_atlas_generic_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OperatorGenericStore
 
 type ListOptions struct {
 	PageNum      int
@@ -35,8 +33,6 @@ type ContainersListOptions struct {
 	ListOptions
 	ProviderName string
 }
-
-var errUnsupportedService = errors.New("unsupported service")
 
 func StringOrEmpty(s *string) string {
 	return pointer.GetOrDefault(s, "")
@@ -69,7 +65,7 @@ type OperatorDBUsersStore interface {
 type OperatorClusterStore interface {
 	AllClustersLister
 	ClusterDescriber
-	ClusterConfigurationOptionsDescriber
+	AtlasClusterConfigurationOptionsDescriber
 	ScheduleDescriber
 	ServerlessInstanceDescriber
 	ServerlessPrivateEndpointsLister

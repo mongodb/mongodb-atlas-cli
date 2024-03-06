@@ -27,7 +27,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/project"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -41,7 +40,7 @@ const (
 
 type ConfigExporter struct {
 	featureValidator        features.FeatureValidator
-	dataProvider            atlas.OperatorGenericStore
+	dataProvider            store.OperatorGenericStore
 	credsProvider           store.CredentialsGetter
 	projectID               string
 	clusterNames            []string
@@ -63,7 +62,7 @@ var (
 	ErrNoCloudManagerClusters = errors.New("can not get 'advanced clusters' object")
 )
 
-func NewConfigExporter(dataProvider atlas.OperatorGenericStore, credsProvider store.CredentialsGetter, projectID, orgID string) *ConfigExporter {
+func NewConfigExporter(dataProvider store.OperatorGenericStore, credsProvider store.CredentialsGetter, projectID, orgID string) *ConfigExporter {
 	return &ConfigExporter{
 		dataProvider:            dataProvider,
 		credsProvider:           credsProvider,
@@ -258,9 +257,9 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 	return result, nil
 }
 
-func fetchClusterNames(clustersProvider atlas.AllClustersLister, projectID string) ([]string, error) {
+func fetchClusterNames(clustersProvider store.AllClustersLister, projectID string) ([]string, error) {
 	result := make([]string, 0, DefaultClustersCount)
-	clusters, err := clustersProvider.ProjectClusters(projectID, &atlas.ListOptions{ItemsPerPage: maxClusters})
+	clusters, err := clustersProvider.ProjectClusters(projectID, &store.ListOptions{ItemsPerPage: maxClusters})
 	if err != nil {
 		return nil, err
 	}
@@ -276,7 +275,7 @@ func fetchClusterNames(clustersProvider atlas.AllClustersLister, projectID strin
 		result = append(result, cluster.GetName())
 	}
 
-	serverlessInstances, err := clustersProvider.ServerlessInstances(projectID, &atlas.ListOptions{ItemsPerPage: maxClusters})
+	serverlessInstances, err := clustersProvider.ServerlessInstances(projectID, &store.ListOptions{ItemsPerPage: maxClusters})
 	if err != nil {
 		return nil, err
 	}

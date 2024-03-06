@@ -20,11 +20,10 @@ import (
 )
 
 const (
-	clusterDeleting  = "DELETING"
-	clusterUpdating  = "UPDATING"
-	clusterIdle      = "IDLE"
-	clusterCreating  = "CREATING"
-	clusterRepairing = "REPAIRING"
+	clusterDeleting = "DELETING"
+	clusterUpdating = "UPDATING"
+	clusterIdle     = "IDLE"
+	clusterCreating = "CREATING"
 
 	clusterNotFound = "CLUSTER_NOT_FOUND"
 )
@@ -51,7 +50,7 @@ var ClusterUpgraded = &StateTransition{
 }
 
 type AtlasClusterStateDescriber struct {
-	store       store.AtlasClusterDescriber
+	store       store.ClusterDescriber
 	projectID   string
 	clusterName string
 }
@@ -65,7 +64,7 @@ func (describer *AtlasClusterStateDescriber) GetState() (string, error) {
 	return "", err
 }
 
-func NewAtlasClusterStateDescriber(s store.AtlasClusterDescriber, projectID, clusterName string) *AtlasClusterStateDescriber {
+func NewAtlasClusterStateDescriber(s store.ClusterDescriber, projectID, clusterName string) *AtlasClusterStateDescriber {
 	return &AtlasClusterStateDescriber{
 		store:       s,
 		projectID:   projectID,

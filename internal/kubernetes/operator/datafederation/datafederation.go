@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
@@ -32,7 +32,7 @@ const (
 	DeletedState  = "DELETED"
 )
 
-func BuildAtlasDataFederation(dataFederationStore atlas.DataFederationStore, dataFederationName, projectID, projectName, operatorVersion, targetNamespace string, dictionary map[string]string) (*akov2.AtlasDataFederation, error) {
+func BuildAtlasDataFederation(dataFederationStore store.DataFederationStore, dataFederationName, projectID, projectName, operatorVersion, targetNamespace string, dictionary map[string]string) (*akov2.AtlasDataFederation, error) {
 	dataFederation, err := dataFederationStore.DataFederation(projectID, dataFederationName)
 	if err != nil {
 		return nil, err

@@ -32,7 +32,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 	"go.mongodb.org/atlas/auth"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestBuilder(t *testing.T) {
@@ -143,9 +142,9 @@ func Test_loginOpts_Run(t *testing.T) {
 		},
 	}
 	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
-	expectedProjects := &atlas.Projects{TotalCount: 1,
-		Results: []*atlas.Project{
-			{ID: "p1", Name: "Project1"},
+	expectedProjects := &admin.PaginatedAtlasGroup{TotalCount: pointer.Get(1),
+		Results: &[]admin.Group{
+			{Id: pointer.Get("p1"), Name: "Project1"},
 		},
 	}
 	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)

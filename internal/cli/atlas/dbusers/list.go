@@ -48,7 +48,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
+	listOpts := opts.NewAtlasListOptions()
 	r, err := opts.store.DatabaseUsers(opts.ConfigProjectID(), listOpts)
 	if err != nil {
 		return err

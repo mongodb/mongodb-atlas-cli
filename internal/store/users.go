@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package store
 
 import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_users.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas UserCreator,UserDescriber,UserLister,TeamUserLister
+//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store UserCreator,UserDescriber,UserLister,TeamUserLister
 
 type UserCreator interface {
 	CreateUser(user *atlasv2.CloudAppUser) (*atlasv2.CloudAppUser, error)

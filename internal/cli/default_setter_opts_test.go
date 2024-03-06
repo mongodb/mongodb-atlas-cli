@@ -24,8 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20231115007/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 func TestDefaultOpts_DefaultQuestions(t *testing.T) {
@@ -51,20 +50,6 @@ func TestDefaultOpts_DefaultQuestions(t *testing.T) {
 			},
 			want: 1,
 		},
-		{
-			name: "cloud manager",
-			fields: fields{
-				Service: "cloud-manager",
-			},
-			want: 1,
-		},
-		{
-			name: "ops manager",
-			fields: fields{
-				Service: "ops-manager",
-			},
-			want: 1,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -85,20 +70,20 @@ func TestDefaultOpts_Projects(t *testing.T) {
 		Store:   mockStore,
 	}
 	t.Run("empty", func(t *testing.T) {
-		expectedProjects := &atlas.Projects{}
+		expectedProjects := &atlasv2.PaginatedAtlasGroup{}
 		mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(1)
 		_, _, err := opts.projects()
 		require.Error(t, err)
 	})
 	t.Run("with one project", func(t *testing.T) {
-		expectedProjects := &atlas.Projects{
-			Results: []*atlas.Project{
+		expectedProjects := &atlasv2.PaginatedAtlasGroup{
+			Results: &[]atlasv2.Group{
 				{
-					ID:   "1",
+					Id:   pointer.Get("1"),
 					Name: "Project 1",
 				},
 			},
-			TotalCount: 1,
+			TotalCount: pointer.Get(1),
 		}
 		mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(1)
 		gotIDs, gotNames, err := opts.projects()
@@ -117,14 +102,14 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 		Store:   mockStore,
 	}
 	t.Run("empty", func(t *testing.T) {
-		expectedOrgs := &admin.PaginatedOrganization{}
+		expectedOrgs := &atlasv2.PaginatedOrganization{}
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
 		_, err := opts.orgs("")
 		require.Error(t, err)
 	})
 	t.Run("with one org", func(t *testing.T) {
-		expectedOrgs := &admin.PaginatedOrganization{
-			Results: &[]admin.AtlasOrganization{
+		expectedOrgs := &atlasv2.PaginatedOrganization{
+			Results: &[]atlasv2.AtlasOrganization{
 				{
 					Id:   pointer.Get("1"),
 					Name: "Org 1",
@@ -139,8 +124,8 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 	})
 
 	t.Run("with no org", func(t *testing.T) {
-		expectedOrgs := &admin.PaginatedOrganization{
-			Results: &[]admin.AtlasOrganization{},
+		expectedOrgs := &atlasv2.PaginatedOrganization{
+			Results: &[]atlasv2.AtlasOrganization{},
 		}
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
 		_, err := opts.orgs("")

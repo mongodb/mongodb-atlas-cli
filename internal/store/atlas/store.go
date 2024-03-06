@@ -144,13 +144,6 @@ func WithBaseURL(configURL string) Option {
 	}
 }
 
-func Telemetry() Option {
-	return func(s *Store) error {
-		s.telemetry = true
-		return nil
-	}
-}
-
 // CredentialsGetter interface for how to get credentials when Store must be authenticated.
 type CredentialsGetter interface {
 	PublicAPIKey() string
@@ -211,7 +204,8 @@ type AuthenticatedConfig interface {
 
 type ServiceGetter interface {
 	Service() string
-	// Name of the config value for custom service URL. Named opsmanager for legacy reasons.
+	// OpsManagerURL config value for custom service URL.
+	// Named OpsManagerURL for legacy reasons.
 	OpsManagerURL() string
 }
 

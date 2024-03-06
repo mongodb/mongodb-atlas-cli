@@ -36,10 +36,10 @@ func (m *MockClusterLister) EXPECT() *MockClusterListerMockRecorder {
 }
 
 // ProjectClusters mocks base method.
-func (m *MockClusterLister) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
+func (m *MockClusterLister) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) (*opsmngr.Clusters, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectClusters", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*opsmngr.Clusters)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -33,7 +33,7 @@ func InitProfile(profile string) error {
 		return config.SetName(availableProfiles[0])
 	}
 
-	if config.Service() != config.CloudService && config.Service() != config.CloudGovService {
+	if !config.IsCloud() {
 		return fmt.Errorf("%w: %s", errUnsupportedService, config.Service())
 	}
 

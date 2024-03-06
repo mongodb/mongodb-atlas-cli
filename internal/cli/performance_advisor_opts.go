@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/spf13/cobra"
 )
@@ -45,10 +44,7 @@ func (opts *PerformanceAdvisorOpts) validateProcessName() error {
 // OM/CM: hostId is required.
 func (*PerformanceAdvisorOpts) MarkRequiredFlagsByService(cmd *cobra.Command) func() error {
 	return func() error {
-		if config.IsCloud() {
-			return cmd.MarkFlagRequired(flag.ProcessName)
-		}
-		return cmd.MarkFlagRequired(flag.HostID)
+		return cmd.MarkFlagRequired(flag.ProcessName)
 	}
 }
 

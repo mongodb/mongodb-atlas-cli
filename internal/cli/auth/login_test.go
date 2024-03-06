@@ -65,7 +65,7 @@ func TestLoginBuilder(t *testing.T) {
 		t,
 		LoginBuilder(),
 		0,
-		[]string{"noBrowser"},
+		[]string{"cm", "noBrowser"},
 	)
 }
 
@@ -78,8 +78,9 @@ func Test_loginOpts_Run(t *testing.T) {
 	buf := new(bytes.Buffer)
 
 	opts := &LoginOpts{
-		config:    mockConfig,
-		NoBrowser: true,
+		config:         mockConfig,
+		NoBrowser:      true,
+		isCloudManager: true,
 	}
 	opts.WithFlow(mockFlow)
 

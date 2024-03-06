@@ -56,6 +56,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	opts.config = mockConfig
 	opts.OutWriter = buf
 	opts.Store = mockStore
+	opts.isCloudManager = true
 	opts.WithFlow(mockFlow)
 
 	expectedCode := &auth.DeviceCode{

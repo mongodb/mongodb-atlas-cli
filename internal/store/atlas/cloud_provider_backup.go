@@ -15,9 +15,6 @@
 package atlas
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
@@ -29,11 +26,6 @@ type ScheduleDescriber interface {
 
 // DescribeSchedule encapsulates the logic to manage different cloud providers.
 func (s *Store) DescribeSchedule(projectID, clusterName string) (*atlasv2.DiskBackupSnapshotSchedule, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.CloudBackupsApi.GetBackupSchedule(s.ctx, projectID, clusterName).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.CloudBackupsApi.GetBackupSchedule(s.ctx, projectID, clusterName).Execute()
+	return result, err
 }

@@ -15,9 +15,6 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
@@ -33,22 +30,12 @@ type ProcessDatabaseMeasurementsLister interface {
 
 // ProcessDiskMeasurements encapsulate the logic to manage different cloud providers.
 func (s *Store) ProcessDiskMeasurements(params *atlasv2.GetDiskMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.MonitoringAndLogsApi.GetDiskMeasurementsWithParams(s.ctx, params).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.MonitoringAndLogsApi.GetDiskMeasurementsWithParams(s.ctx, params).Execute()
+	return result, err
 }
 
 // ProcessDatabaseMeasurements encapsulate the logic to manage different cloud providers.
 func (s *Store) ProcessDatabaseMeasurements(args *atlasv2.GetDatabaseMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.MonitoringAndLogsApi.GetDatabaseMeasurementsWithParams(s.ctx, args).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.MonitoringAndLogsApi.GetDatabaseMeasurementsWithParams(s.ctx, args).Execute()
+	return result, err
 }

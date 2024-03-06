@@ -36,7 +36,6 @@
 	"go.mongodb.org/atlas": "mongocli",
 	"go.mongodb.org/atlas-sdk/v20231115007": "mongocli",
 	"go.mongodb.org/mongo-driver": "mongocli",
-	"go.mongodb.org/ops-manager": "mongocli",
 	"golang.org/x/crypto": "mongocli",
 	"golang.org/x/tools": "mongocli",
 	"google.golang.org/api": "mongocli",

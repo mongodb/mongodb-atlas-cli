@@ -21,13 +21,13 @@ import (
 	"fmt"
 	"io"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/afero"
@@ -155,7 +155,7 @@ To find the hostnames for an Atlas project, use the process list command.
 		Args: cobra.MatchAll(
 			require.ExactArgs(argsN),
 			func(cmd *cobra.Command, args []string) error {
-				if !search.StringInSlice(cmd.ValidArgs, args[1]) {
+				if !slices.Contains(cmd.ValidArgs, args[1]) {
 					return fmt.Errorf("<logname> must be one of %s", cmd.ValidArgs)
 				}
 				return nil

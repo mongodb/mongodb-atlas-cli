@@ -15,8 +15,6 @@
 package store
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -27,13 +25,8 @@ type IPInfoDescriber interface {
 
 // IPInfo encapsulates the logic to manage different cloud providers.
 func (s *Store) IPInfo() (*atlas.IPInfo, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.client.(*atlas.Client).IPInfo.Get(s.ctx)
-		return resp, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	resp, _, err := s.client.IPInfo.Get(s.ctx)
+	return resp, err
 }
 
 // IPAddress gets the client's public ip by calling the atlas private endpoint.

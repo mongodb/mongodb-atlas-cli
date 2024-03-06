@@ -15,7 +15,6 @@
 package project
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
@@ -63,10 +62,6 @@ const (
 	prometheusIntegrationType       = "PROMETHEUS"
 )
 
-var (
-	ErrAtlasProject = errors.New("can not get 'atlas project' resource")
-)
-
 type AtlasProjectResult struct {
 	Project *akov2.AtlasProject
 	Secrets []*corev1.Secret
@@ -74,14 +69,9 @@ type AtlasProjectResult struct {
 }
 
 func BuildAtlasProject(projectStore atlas.OperatorProjectStore, validator features.FeatureValidator, orgID, projectID, targetNamespace string, includeSecret bool, dictionary map[string]string, version string) (*AtlasProjectResult, error) { //nolint:gocyclo
-	data, err := projectStore.Project(projectID)
+	project, err := projectStore.Project(projectID)
 	if err != nil {
 		return nil, err
-	}
-
-	project, ok := data.(*atlasv2.Group)
-	if !ok {
-		return nil, ErrAtlasProject
 	}
 
 	projectResult := newAtlasProject(project, dictionary, targetNamespace, version)

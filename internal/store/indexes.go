@@ -15,9 +15,6 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
@@ -29,11 +26,6 @@ type IndexCreator interface {
 
 // CreateIndex encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateIndex(projectID, clusterName string, index *atlasv2.DatabaseRollingIndexRequest) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.clientv2.RollingIndexApi.CreateRollingIndex(s.ctx, projectID, clusterName, index).Execute()
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	_, err := s.clientv2.RollingIndexApi.CreateRollingIndex(s.ctx, projectID, clusterName, index).Execute()
+	return err
 }

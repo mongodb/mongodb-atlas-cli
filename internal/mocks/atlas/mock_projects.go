@@ -202,10 +202,10 @@ func (m *MockProjectDescriber) EXPECT() *MockProjectDescriberMockRecorder {
 }
 
 // Project mocks base method.
-func (m *MockProjectDescriber) Project(arg0 string) (interface{}, error) {
+func (m *MockProjectDescriber) Project(arg0 string) (*admin.Group, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Project", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*admin.Group)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -217,10 +217,10 @@ func (mr *MockProjectDescriberMockRecorder) Project(arg0 interface{}) *gomock.Ca
 }
 
 // ProjectByName mocks base method.
-func (m *MockProjectDescriber) ProjectByName(arg0 string) (interface{}, error) {
+func (m *MockProjectDescriber) ProjectByName(arg0 string) (*admin.Group, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectByName", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*admin.Group)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

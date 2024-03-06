@@ -178,13 +178,13 @@ jobs:
       - name: Verify Signature Docker Image
         env:
           IMAGE: ${{ env.IMAGE_REPOSITORY }}:latest
-          COSIGN_REPOSITORY: docker:io/mongodb/signatures
+          COSIGN_REPOSITORY: docker.io/mongodb/signatures
         run: |
           # Download MongoDB Atlas CLI Public Key
           curl https://cosign.mongodb.com/atlas-cli.pem > atlas-cli.pem          
           docker pull "${IMAGE}"          
           # Verify the signature
-          if cosign verify --private-infrastructure --key=./atlas-cli.pem "docker.io/${IMAGE}";
+          if ! cosign verify --private-infrastructure --key=./atlas-cli.pem "docker.io/${IMAGE}";
           then
             echo "Error: Signature verification for ${IMAGE} failed."
             exit 1
@@ -217,7 +217,7 @@ jobs:
       - name: Verify Signature Quay Image
         env:
           IMAGE: ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:latest
-          COSIGN_REPOSITORY: docker:io/mongodb/signatures
+          COSIGN_REPOSITORY: docker.io/mongodb/signatures
         run: |
           # Download MongoDB Atlas CLI Public Key
           curl https://cosign.mongodb.com/atlas-cli.pem > atlas-cli.pem          

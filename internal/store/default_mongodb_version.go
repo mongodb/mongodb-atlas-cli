@@ -14,13 +14,6 @@
 
 package store
 
-import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
-)
-
 //go:generate mockgen -destination=../mocks/mock_default_mongodb_version.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store DefaultVersionGetter
 
 type DefaultVersionGetter interface {
@@ -29,11 +22,6 @@ type DefaultVersionGetter interface {
 
 // CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 func (s *Store) DefaultMongoDBVersion() (string, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).DefaultMongoDBMajorVersion.Get(s.ctx)
-		return result, err
-	default:
-		return "", fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.client.DefaultMongoDBMajorVersion.Get(s.ctx)
+	return result, err
 }

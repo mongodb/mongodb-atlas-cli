@@ -15,9 +15,6 @@
 package atlas
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
@@ -29,11 +26,6 @@ type MaintenanceWindowDescriber interface {
 
 // MaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) MaintenanceWindow(projectID string) (*atlasv2.GroupMaintenanceWindow, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		resp, _, err := s.clientv2.MaintenanceWindowsApi.GetMaintenanceWindow(s.ctx, projectID).Execute()
-		return resp, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	resp, _, err := s.clientv2.MaintenanceWindowsApi.GetMaintenanceWindow(s.ctx, projectID).Execute()
+	return resp, err
 }

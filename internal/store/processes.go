@@ -15,9 +15,6 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
@@ -33,22 +30,12 @@ type ProcessDescriber interface {
 
 // Process encapsulate the logic to manage different cloud providers.
 func (s *Store) Process(params *atlasv2.GetAtlasProcessApiParams) (*atlasv2.ApiHostViewAtlas, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.MonitoringAndLogsApi.GetAtlasProcessWithParams(s.ctx, params).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.MonitoringAndLogsApi.GetAtlasProcessWithParams(s.ctx, params).Execute()
+	return result, err
 }
 
 // Processes encapsulate the logic to manage different cloud providers.
 func (s *Store) Processes(params *atlasv2.ListAtlasProcessesApiParams) (*atlasv2.PaginatedHostViewAtlas, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.MonitoringAndLogsApi.ListAtlasProcessesWithParams(s.ctx, params).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.MonitoringAndLogsApi.ListAtlasProcessesWithParams(s.ctx, params).Execute()
+	return result, err
 }

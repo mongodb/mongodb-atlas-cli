@@ -18,17 +18,7 @@ import (
 	"strings"
 
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
-
-func StringInSlice(a []string, x string) bool {
-	for _, b := range a {
-		if b == x {
-			return true
-		}
-	}
-	return false
-}
 
 func StringInSliceFold(a []string, x string) bool {
 	for _, b := range a {
@@ -36,17 +26,6 @@ func StringInSliceFold(a []string, x string) bool {
 			return true
 		}
 	}
-	return false
-}
-
-// AtlasClusterExists returns true if a cluster exists for the given name.
-func AtlasClusterExists(clusters []atlas.Cluster, name string) bool {
-	for i := range clusters {
-		if clusters[i].Name == name {
-			return true
-		}
-	}
-
 	return false
 }
 

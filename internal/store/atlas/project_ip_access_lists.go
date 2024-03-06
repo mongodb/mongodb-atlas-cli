@@ -15,9 +15,6 @@
 package atlas
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
@@ -29,15 +26,10 @@ type ProjectIPAccessListLister interface {
 
 // ProjectIPAccessLists encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectIPAccessLists(projectID string, opts *ListOptions) (*atlasv2.PaginatedNetworkAccess, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.ProjectIPAccessListApi.ListProjectIpAccessLists(s.ctx, projectID)
-		if opts != nil {
-			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
-		}
-		result, _, err := res.Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	res := s.clientv2.ProjectIPAccessListApi.ListProjectIpAccessLists(s.ctx, projectID)
+	if opts != nil {
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 	}
+	result, _, err := res.Execute()
+	return result, err
 }

@@ -20,10 +20,9 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"sort"
 	"strings"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/search"
 )
 
 // StableIDs is a struct that holds a list of OpenAPI operation IDs.
@@ -101,7 +100,7 @@ func walkFiles(folderPath string, regex *regexp.Regexp) (*StableIDs, error) {
 					value = strings.TrimSuffix(value, "WithParams")
 					value = strings.TrimSpace(value)
 					value = strings.ToLower(value[:1]) + value[1:]
-					if !search.StringInSlice(stableIDs.StableIDs, value) {
+					if !slices.Contains(stableIDs.StableIDs, value) {
 						stableIDs.StableIDs = append(stableIDs.StableIDs, value)
 					}
 				}

@@ -48,7 +48,7 @@ Options
    * - --service
      - string
      - false
-     - Type of MongoDB service. Valid values are cloud, cloudgov, cloud-manager, or ops-manager. This value defaults to "cloud-manager".
+     - Type of MongoDB service. Valid values are cloud-manager or ops-manager. This value defaults to "cloud-manager".
 
 Inherited Options
 -----------------

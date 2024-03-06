@@ -333,7 +333,7 @@ dbName and collection are required only for built-in roles.`
 	MaxDownloads                              = "Number of times the download URL can be used. This value must be 1 or greater. For use only with download restore jobs."
 	Mechanisms                                = "Authentication mechanism. Valid values are SCRAM-SHA-1 or SCRAM-SHA-256."
 	AccessListType                            = "Type of access list entry. Valid values are cidrBlock, ipAddress, or awsSecurityGroup."
-	Service                                   = "Type of MongoDB service. Valid values are cloud, cloudgov, cloud-manager, or ops-manager."
+	Service                                   = "Type of MongoDB service. Valid values are cloud-manager or ops-manager."
 	Provider                                  = "Name of your cloud service provider. Valid values are AWS, AZURE, or GCP."
 	CreateProvider                            = "Name of your cloud service provider. Valid values are AWS, AZURE, or GCP. You must specify the provider option if you don't use the --file option."
 	ClusterTypes                              = "Type of the cluster that you want to create. Valid values are REPLICASET or SHARDED."

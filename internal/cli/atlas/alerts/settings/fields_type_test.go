@@ -20,8 +20,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	mocks "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
 func TestFieldsType_Run(t *testing.T) {

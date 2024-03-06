@@ -22,13 +22,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	store "github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
-	customTime "github.com/mongodb/mongodb-atlas-cli/internal/time"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas"
+	customTime "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/time"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 )
 

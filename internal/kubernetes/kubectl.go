@@ -19,7 +19,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"

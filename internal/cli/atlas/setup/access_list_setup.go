@@ -19,10 +19,10 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 

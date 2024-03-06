@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_projects.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter
+//go:generate mockgen -destination=../../mocks/atlas/mock_projects.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter
 
 type ProjectLister interface {
 	Projects(*ListOptions) (*atlasv2.PaginatedAtlasGroup, error)

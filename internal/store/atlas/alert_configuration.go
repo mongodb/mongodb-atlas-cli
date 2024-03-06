@@ -15,11 +15,11 @@
 package atlas
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_alert_configuration.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas AlertConfigurationLister,AlertConfigurationCreator,AlertConfigurationDeleter,AlertConfigurationUpdater,MatcherFieldsLister,AlertConfigurationEnabler,AlertConfigurationDisabler,AlertConfigurationDescriber
+//go:generate mockgen -destination=../../mocks/atlas/mock_alert_configuration.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas AlertConfigurationLister,AlertConfigurationCreator,AlertConfigurationDeleter,AlertConfigurationUpdater,MatcherFieldsLister,AlertConfigurationEnabler,AlertConfigurationDisabler,AlertConfigurationDescriber
 
 type AlertConfigurationLister interface {
 	AlertConfigurations(*admin.ListAlertConfigurationsApiParams) (*admin.PaginatedAlertConfig, error)

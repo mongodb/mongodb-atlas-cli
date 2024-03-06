@@ -15,14 +15,14 @@
 package clusters
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/advancedsettings"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/availableregions"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/connectionstring"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/indexes"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/onlinearchive"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/clusters/sampledata"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/search"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/clusters/advancedsettings"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/clusters/availableregions"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/clusters/connectionstring"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/clusters/indexes"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/clusters/onlinearchive"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/clusters/sampledata"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/search"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"

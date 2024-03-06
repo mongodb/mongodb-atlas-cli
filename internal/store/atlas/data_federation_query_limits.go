@@ -20,7 +20,7 @@ import (
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_data_federation_query_limits.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas DataFederationQueryLimitLister,DataFederationQueryLimitDescriber,DataFederationQueryLimitCreator,DataFederationQueryLimitDeleter
+//go:generate mockgen -destination=../../mocks/atlas/mock_data_federation_query_limits.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas DataFederationQueryLimitLister,DataFederationQueryLimitDescriber,DataFederationQueryLimitCreator,DataFederationQueryLimitDeleter
 
 type DataFederationQueryLimitLister interface {
 	DataFederationQueryLimits(string, string) ([]admin.DataFederationTenantQueryLimit, error)

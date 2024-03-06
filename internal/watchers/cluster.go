@@ -15,8 +15,8 @@
 package watchers
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 )
 
 const (

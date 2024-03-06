@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"

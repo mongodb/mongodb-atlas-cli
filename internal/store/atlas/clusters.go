@@ -18,7 +18,7 @@ import (
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_clusters.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas ClusterLister,ClusterDescriber,ClusterConfigurationOptionsDescriber
+//go:generate mockgen -destination=../../mocks/atlas/mock_clusters.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas ClusterLister,ClusterDescriber,ClusterConfigurationOptionsDescriber
 
 type ClusterLister interface {
 	ProjectClusters(string, *ListOptions) (*admin.PaginatedAdvancedClusterDescription, error)

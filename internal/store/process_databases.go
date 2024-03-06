@@ -21,7 +21,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_process_databases.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProcessDatabaseLister
+//go:generate mockgen -destination=../mocks/mock_process_databases.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProcessDatabaseLister
 
 type ProcessDatabaseLister interface {
 	ProcessDatabases(string, string, int, *atlas.ListOptions) (*atlasv2.PaginatedDatabase, error)

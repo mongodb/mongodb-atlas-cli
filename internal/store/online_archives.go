@@ -17,12 +17,12 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_online_archives.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OnlineArchiveLister,OnlineArchiveDescriber,OnlineArchiveCreator,OnlineArchiveUpdater,OnlineArchiveDeleter
+//go:generate mockgen -destination=../mocks/mock_online_archives.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OnlineArchiveLister,OnlineArchiveDescriber,OnlineArchiveCreator,OnlineArchiveUpdater,OnlineArchiveDeleter
 
 type OnlineArchiveLister interface {
 	OnlineArchives(string, string, *atlas.ListOptions) (*atlasv2.PaginatedOnlineArchive, error)

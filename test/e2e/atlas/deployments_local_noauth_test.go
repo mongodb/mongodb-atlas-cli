@@ -25,7 +25,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"

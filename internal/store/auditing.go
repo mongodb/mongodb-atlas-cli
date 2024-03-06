@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_auditing.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AuditingDescriber,AuditingUpdater
+//go:generate mockgen -destination=../mocks/mock_auditing.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store AuditingDescriber,AuditingUpdater
 
 type AuditingDescriber interface {
 	Auditing(string) (*atlasv2.AuditLog, error)

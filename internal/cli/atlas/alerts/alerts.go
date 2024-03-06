@@ -15,8 +15,8 @@
 package alerts
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/alerts/settings"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/alerts/settings"
 	"github.com/spf13/cobra"
 )
 

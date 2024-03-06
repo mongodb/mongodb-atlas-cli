@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_global_cluster.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas GlobalClusterDescriber
+//go:generate mockgen -destination=../../mocks/atlas/mock_global_cluster.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas GlobalClusterDescriber
 
 type GlobalClusterDescriber interface {
 	GlobalCluster(string, string) (*atlasv2.GeoSharding, error)

@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_peering_connections.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas PeeringConnectionLister
+//go:generate mockgen -destination=../../mocks/atlas/mock_peering_connections.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas PeeringConnectionLister
 
 type PeeringConnectionLister interface {
 	PeeringConnections(string, *ContainersListOptions) ([]atlasv2.BaseNetworkPeeringConnectionSettings, error)

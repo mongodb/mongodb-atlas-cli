@@ -21,7 +21,7 @@ package datalakepipelines
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
 func TestBuilder(t *testing.T) {

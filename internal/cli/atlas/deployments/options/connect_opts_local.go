@@ -16,7 +16,7 @@ package options
 import (
 	"context"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 )
 
 func (opts *ConnectOpts) connectToLocal(ctx context.Context) error {

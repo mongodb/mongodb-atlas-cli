@@ -18,7 +18,7 @@ import (
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_api_keys_access_list.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
+//go:generate mockgen -destination=../../mocks/atlas/mock_api_keys_access_list.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
 
 type OrganizationAPIKeyAccessListLister interface {
 	OrganizationAPIKeyAccessLists(*admin.ListApiKeyAccessListsEntriesApiParams) (*admin.PaginatedApiUserAccessList, error)

@@ -18,8 +18,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	customTime "github.com/mongodb/mongodb-atlas-cli/internal/time"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	customTime "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/time"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 

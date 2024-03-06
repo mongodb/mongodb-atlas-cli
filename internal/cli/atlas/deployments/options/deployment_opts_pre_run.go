@@ -20,8 +20,8 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/shirou/gopsutil/v3/host"
 	"go.mongodb.org/atlas/mongodbatlas"
 )

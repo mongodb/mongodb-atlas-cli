@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migration_link_tokens.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store LinkTokenCreator,LinkTokenDeleter
+//go:generate mockgen -destination=../mocks/mock_live_migration_link_tokens.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store LinkTokenCreator,LinkTokenDeleter
 
 type LinkTokenCreator interface {
 	CreateLinkToken(string, *atlasv2.TargetOrgRequest) (*atlasv2.TargetOrg, error)

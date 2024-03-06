@@ -19,8 +19,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes"
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"

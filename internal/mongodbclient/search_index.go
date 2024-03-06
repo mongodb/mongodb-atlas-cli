@@ -21,8 +21,8 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 	"go.mongodb.org/mongo-driver/bson"
 )

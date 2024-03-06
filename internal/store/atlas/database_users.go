@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_database_users.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas DatabaseUserLister
+//go:generate mockgen -destination=../../mocks/atlas/mock_database_users.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas DatabaseUserLister
 
 type DatabaseUserLister interface {
 	DatabaseUsers(groupID string, opts *ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error)

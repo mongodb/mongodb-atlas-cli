@@ -15,12 +15,12 @@
 package projects
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects/apikeys"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects/invitations"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects/settings"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects/teams"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/projects/users"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/projects/apikeys"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/projects/invitations"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/projects/settings"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/projects/teams"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/projects/users"
 	"github.com/spf13/cobra"
 )
 

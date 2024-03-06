@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_access_role.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CloudProviderAccessRoleLister
+//go:generate mockgen -destination=../../mocks/atlas/mock_access_role.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas CloudProviderAccessRoleLister
 
 type CloudProviderAccessRoleLister interface {
 	CloudProviderAccessRoles(string) (*atlasv2.CloudProviderAccessRoles, error)

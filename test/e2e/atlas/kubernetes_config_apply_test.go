@@ -22,9 +22,9 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	"github.com/stretchr/testify/assert"

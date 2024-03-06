@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_project_settings.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas ProjectSettingsDescriber
+//go:generate mockgen -destination=../../mocks/atlas/mock_project_settings.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas ProjectSettingsDescriber
 
 type ProjectSettingsDescriber interface {
 	ProjectSettings(string) (*atlasv2.GroupSettings, error)

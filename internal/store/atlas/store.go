@@ -14,7 +14,7 @@
 
 package atlas
 
-//go:generate mockgen -destination=../../mocks/atlas/store.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas CredentialsGetter
+//go:generate mockgen -destination=../../mocks/atlas/store.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas CredentialsGetter
 
 import (
 	"context"
@@ -25,8 +25,8 @@ import (
 	"time"
 
 	"github.com/mongodb-forks/digest"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"

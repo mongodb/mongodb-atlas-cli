@@ -15,12 +15,12 @@
 package store
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_database_users.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store DatabaseUserLister,DatabaseUserCreator,DatabaseUserDeleter,DatabaseUserUpdater,DatabaseUserDescriber,DBUserCertificateLister,DBUserCertificateCreator
+//go:generate mockgen -destination=../mocks/mock_database_users.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DatabaseUserLister,DatabaseUserCreator,DatabaseUserDeleter,DatabaseUserUpdater,DatabaseUserDescriber,DBUserCertificateLister,DBUserCertificateCreator
 
 type DatabaseUserLister interface {
 	DatabaseUsers(groupID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error)

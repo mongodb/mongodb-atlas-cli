@@ -17,12 +17,12 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OrganizationLister,OrganizationDeleter,OrganizationDescriber,AtlasOrganizationCreator
+//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OrganizationLister,OrganizationDeleter,OrganizationDescriber,AtlasOrganizationCreator
 
 type OrganizationLister interface {
 	Organizations(*atlas.OrganizationsListOptions) (*admin.PaginatedOrganization, error)

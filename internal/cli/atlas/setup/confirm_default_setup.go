@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 )
 
 func (opts *Opts) askConfirmDefaultQuestion(values *clusterSettings) error {

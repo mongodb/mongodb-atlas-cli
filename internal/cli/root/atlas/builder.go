@@ -346,7 +346,7 @@ func (n *Notifier) notifyIfApplicable(isHb bool) error {
 	if isHb {
 		upgradeInstructions = `To upgrade, run "brew update && brew upgrade mongodb-atlas-cli".`
 	} else {
-		upgradeInstructions = "To upgrade, see: https://dochub.mongodb.org/core/install-atlas-cli."
+		upgradeInstructions = "To upgrade, see: https://dochub.mongodb.org/core/install-atlas-cli"
 	}
 
 	newVersionTemplate := `

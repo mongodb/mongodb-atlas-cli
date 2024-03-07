@@ -21,11 +21,11 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
-	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/test/fixture"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/ops-manager/opsmngr"
 )

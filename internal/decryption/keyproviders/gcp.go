@@ -21,7 +21,7 @@ import (
 
 	kmsv1 "cloud.google.com/go/kms/apiv1"
 	"cloud.google.com/go/kms/apiv1/kmspb"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/log"
 	"google.golang.org/api/option"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )

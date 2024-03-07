@@ -20,9 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/test/fixture"
 )
 
 func TestDelete_Run(t *testing.T) {

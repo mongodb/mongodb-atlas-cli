@@ -26,8 +26,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/convert"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/pointer"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/ops-manager/opsmngr"
 )

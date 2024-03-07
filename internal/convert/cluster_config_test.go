@@ -20,8 +20,8 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/internal/test/fixture"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/test/fixture"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 

@@ -22,7 +22,7 @@ import (
 	"path"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/test/e2e"
 )
 
 func TestKeyProviders(t *testing.T) {

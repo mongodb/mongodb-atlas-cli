@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_config.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store BackupConfigGetter,BackupConfigLister,BackupConfigUpdater
+//go:generate mockgen -destination=../mocks/mock_backup_config.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store BackupConfigGetter,BackupConfigLister,BackupConfigUpdater
 
 type BackupConfigGetter interface {
 	GetBackupConfig(string, string) (*opsmngr.BackupConfig, error)

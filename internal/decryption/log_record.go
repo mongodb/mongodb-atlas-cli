@@ -20,7 +20,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/aes"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/decryption/aes"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

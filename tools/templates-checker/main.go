@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/mongodb/mongodb-atlas-cli/tools/templates-checker/astparsing"
-	"github.com/mongodb/mongodb-atlas-cli/tools/templates-checker/templateparsing"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/tools/templates-checker/astparsing"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/tools/templates-checker/templateparsing"
 )
 
 func main() {

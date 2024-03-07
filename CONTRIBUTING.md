@@ -123,7 +123,6 @@ Review and replace command name and arguments depending on the command you are u
             "mode": "auto",
             "program": "${workspaceFolder}/cmd/atlas",
             "env": {},
-            "buildFlags": "-ldflags '-X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=atlascli'",
             "args": [
               "login"
             ]

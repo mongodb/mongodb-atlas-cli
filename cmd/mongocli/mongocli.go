@@ -24,9 +24,9 @@ import (
 	"strings"
 
 	survey "github.com/AlecAivazis/survey/v2/core"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/root/mongocli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/root/mongocli"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"github.com/spf13/cobra"
 )
 

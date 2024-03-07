@@ -21,8 +21,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/keyproviders"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/decryption/keyproviders"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/pointer"
 )
 
 func Test_validateMAC(t *testing.T) {

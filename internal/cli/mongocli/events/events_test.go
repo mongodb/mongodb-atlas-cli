@@ -17,7 +17,7 @@ package events
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/test"
 )
 
 func TestBuilder(t *testing.T) {

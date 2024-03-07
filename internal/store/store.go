@@ -371,7 +371,7 @@ func UnauthenticatedPreset(c BasicConfig) Option {
 // Usage:
 //
 //	// get a new Store for Atlas
-//	store := store.New(Service("cloud"))
+//	store := store.New(Service("cloud-manager"))
 //
 //	// get a new Store for the public API based on a Config interface
 //	store := store.New(AuthenticatedPreset(config))

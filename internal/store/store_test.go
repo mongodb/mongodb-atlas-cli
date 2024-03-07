@@ -65,7 +65,7 @@ func TestService(t *testing.T) {
 	}
 
 	if c.service != config.CloudManagerService {
-		t.Errorf("New() service = %s; expected %s", c.service, "cloud")
+		t.Errorf("New() service = %s; expected %s", c.service, "cloud-manager")
 	}
 }
 

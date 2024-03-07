@@ -283,7 +283,7 @@ tasks:
             [e2e]
               org_id = "5e429e7706822c6eac4d5971"
               public_api_key = "AAUMGJXA"
-              service = "cloud"
+              service = "cloud-manager"
             EOF
       - func: "e2e test"
         vars:
@@ -292,7 +292,7 @@ tasks:
           MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud
+          MCLI_SERVICE: cloud-manager
           E2E_TAGS: config
   - name: brew_e2e
     tags: ["e2e","required"]

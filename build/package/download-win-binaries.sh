@@ -19,7 +19,7 @@ export project
 export revision
 export created_at
 
-VERSION_GIT="$(git tag --list "${TOOL_NAME:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION_GIT="$(git tag --list "mongocli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 VERSION_NAME="$VERSION_GIT"
 if [[ "${unstable-}" == "-unstable" ]]; then
 	VERSION_NAME="$VERSION_GIT-next"

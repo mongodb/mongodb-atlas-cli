@@ -39,7 +39,6 @@ builds:
       post:
         - cmd: ./build/package/windows_notarize.sh
           env:
-            - TOOL_NAME=mongocli
             - VERSION={{ .Version }}
           output: true
 gomod: # https://goreleaser.com/customization/verifiable_builds/
@@ -108,8 +107,6 @@ signs:
     ids:
       - linux_archives
       - linux_package
-    env:
-      - TOOL_NAME=mongocli
     artifacts: all
     output: true
 release:

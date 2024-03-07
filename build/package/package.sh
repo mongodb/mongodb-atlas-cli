@@ -24,7 +24,7 @@ export MACOS_NOTARY_SECRET=${notary_service_secret:?}
 export GORELEASER_KEY=${goreleaser_key:?}
 export VERSION_GIT
 
-VERSION_GIT="$(git tag --list "${tool_name:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION_GIT="$(git tag --list "mongocli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
 if [[ "${unstable-}" == "-unstable" ]]; then
 	# avoid race conditions on the notarization step by using `-p 1`

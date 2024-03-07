@@ -35,29 +35,14 @@ import (
 )
 
 func TestBuilder(t *testing.T) {
-	type testCase struct {
-		name string
-		want int
-	}
-	tests := []testCase{
-		{name: config.MongoCLI, want: 3},
-		{name: config.AtlasCLI, want: 4},
-	}
-	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			prevTool := config.ToolName
-			t.Cleanup(func() {
-				config.ToolName = prevTool
-			})
-			config.ToolName = tc.name
-			test.CmdValidator(
-				t,
-				Builder(),
-				tc.want,
-				[]string{},
-			)
-		})
-	}
+	t.Run(config.MongoCLI, func(t *testing.T) {
+		test.CmdValidator(
+			t,
+			Builder(),
+			3,
+			[]string{},
+		)
+	})
 }
 
 func TestLoginBuilder(t *testing.T) {

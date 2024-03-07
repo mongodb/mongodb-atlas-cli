@@ -16,7 +16,7 @@
 
 set -Eeou pipefail
 
-VERSION="$(git tag --list "${tool_name:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION="$(git tag --list "mongocli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
 FILE_EXT=deb
 if [[ "${image-}" =~ "rpm" ]]; then
@@ -29,5 +29,5 @@ ENTRYPOINT=mongocli
 docker build \
 	--build-arg url="${URL-}" \
 	--build-arg entrypoint="${ENTRYPOINT-}" \
-	-t "${tool_name-}-${image-}" \
+	-t "mongocli-${image-}" \
 	-f "${image-}.Dockerfile" .

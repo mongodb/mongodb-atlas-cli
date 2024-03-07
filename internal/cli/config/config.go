@@ -39,7 +39,7 @@ All values are optional and you can use environment variables (MCLI_*) instead.
 
 Enter [?] on any option to get help.
 
-`, config.ToolName)
+`, config.MongoCLI)
 
 	q := prompt.AccessQuestions(opts.IsOpsManager())
 	if err := survey.Ask(q, opts); err != nil {
@@ -79,7 +79,7 @@ Enter [?] on any option to get help.
 	if config.Name() != config.DefaultProfile {
 		_, _ = fmt.Fprintf(opts.OutWriter, "\nYour profile is now configured.\n")
 		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
-		_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.ToolName)
+		_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", config.MongoCLI)
 	}
 
 	return nil

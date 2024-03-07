@@ -276,10 +276,7 @@ func (opts *LoginOpts) LoginPreRun(ctx context.Context) func() error {
 }
 
 func tool() string {
-	if config.ToolName == config.MongoCLI {
-		return "Atlas or Cloud Manager"
-	}
-	return "Atlas"
+	return "Cloud Manager"
 }
 
 func LoginBuilder() *cobra.Command {
@@ -327,10 +324,6 @@ func Builder() *cobra.Command {
 		WhoAmIBuilder(),
 		LogoutBuilder(),
 	)
-
-	if config.ToolName == config.AtlasCLI {
-		cmd.AddCommand(RegisterBuilder())
-	}
 
 	return cmd
 }

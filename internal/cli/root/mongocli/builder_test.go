@@ -146,7 +146,7 @@ func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 
 			mockDescriber.
 				EXPECT().
-				LatestWithCriteria(gomock.Any(), gomock.Any(), gomock.Any()).
+				LatestWithCriteria(gomock.Any(), gomock.Any()).
 				Return(tt.release, nil).
 				Times(1)
 
@@ -155,7 +155,7 @@ func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 			finder, _ := latestrelease.NewVersionFinder(fs, mockDescriber)
 
 			notifier := &Notifier{
-				currentVersion: latestrelease.VersionFromTag(version.Version, config.ToolName),
+				currentVersion: latestrelease.VersionFromTag(version.Version),
 				finder:         finder,
 				filesystem:     fs,
 				writer:         bufOut,
@@ -167,7 +167,7 @@ func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 
 			v := ""
 			if tt.release != nil {
-				v = latestrelease.VersionFromTag(tt.release.GetTagName(), config.ToolName)
+				v = latestrelease.VersionFromTag(tt.release.GetTagName())
 			}
 
 			want := ""
@@ -177,7 +177,7 @@ A new version of %s is available '%v'!
 To upgrade, see: https://dochub.mongodb.org/core/install-%s.
 
 To disable this alert, run "%s config set skip_update_check true".
-`, config.ToolName, v, config.ToolName, config.BinName())
+`, config.MongoCLI, v, config.MongoCLI, config.BinName())
 			}
 
 			if got := bufOut.String(); got != want {

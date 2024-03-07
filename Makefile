@@ -12,7 +12,7 @@ MCLI_INSTALL_PATH="${GOPATH}/bin/$(MCLI_BINARY_NAME)"
 MCLI_E2E_BINARY?=../../../bin/${MCLI_BINARY_NAME}
 
 LINKER_FLAGS=-s -w -X github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/version.GitCommit=${MCLI_GIT_SHA}
-MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config.ToolName=$(MCLI_BINARY_NAME) -X github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/version.Version=${MCLI_VERSION}
+MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/version.Version=${MCLI_VERSION}
 
 DEBUG_FLAGS=all=-N -l
 

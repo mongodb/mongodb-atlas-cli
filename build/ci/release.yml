@@ -81,7 +81,6 @@ functions:
           - notary_service_secret
           - notary_service_url
           - goreleaser_key
-          - tool_name
           - goreleaser_config
           - changelog_file
           - github_token
@@ -112,7 +111,6 @@ functions:
           - "/cygdrive/c/wixtools/bin"
         env:
           <<: *go_env
-          TOOL_NAME: ${TOOL_NAME}
           SECRET_API_KEY: ${chocolatey_api_key}
           ARTIFACTORY_USERNAME: ${artifactory_username}
           ARTIFACTORY_PASSWORD: ${artifactory_password}
@@ -133,7 +131,6 @@ functions:
           - latest_rpm
           - package_name
           - meta_package_name
-          - tool_name
         binary: build/package/rename-pkg.sh
   "send slack notification":
     - command: subprocess.exec
@@ -147,7 +144,6 @@ functions:
           - release_slack_channel
           - revision
           - created_at
-          - TOOL_NAME
           - unstable
         binary: build/package/send-slack-notification.sh
   "generate download archive json":
@@ -160,7 +156,6 @@ functions:
           - go_base_path
           - workdir
           - FEED_FILE_NAME
-          - TOOL_NAME
         binary: ../build/package/generate-download-archive-manifest.sh
   "upload dist":
     - command: s3.put
@@ -201,7 +196,6 @@ functions:
           - signing_auth_token_46
           - signing_auth_token_50
           - signing_auth_token_60
-          - tool_name
           - arch
         env:
           <<: *go_env
@@ -218,7 +212,6 @@ functions:
           - revision
           - created_at
           - image
-          - tool_name
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker
         binary: ./docker-build.sh
   "docker build repo":
@@ -244,7 +237,6 @@ tasks:
       - func: "install go-msi"
       - func: "generate msi"
         vars:
-          TOOL_NAME: ${tool_name}
           unstable: ${unstable}
       - func: "uninstall go-msi"
       - command: s3.put
@@ -277,14 +269,12 @@ tasks:
             - revision
             - created_at
           env:
-            TOOL_NAME: ${tool_name}
             BUCKET: mongodb-mongocli-build
             unstable: ${unstable}
           binary: build/package/download-win-binaries.sh
       - func: "package"
         vars:
           unstable: ${unstable}
-          tool_name: ${tool_name}
           goreleaser_config: ${goreleaser_file}
           changelog_file: ${changelog_file}
           ARTIFACTORY_USERNAME: ${artifactory_username}
@@ -300,28 +290,27 @@ tasks:
           latest_rpm: ${latest_rpm}
           package_name: ${package_name}
           meta_package_name: ${meta_package_name}
-          tool_name: ${tool_name}
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-deb-x86_64.tgz
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-deb-x86_64.tgz
           source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt/x86_64
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-deb-arm64.tgz
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-deb-arm64.tgz
           source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt/arm64
           include:
             - "*.deb"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-rpm-x86_64.tgz
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-rpm-x86_64.tgz
           source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum/x86_64
           include:
             - "*.rpm"
       - command: archive.targz_pack
         params:
-          target: src/github.com/mongodb/mongodb-atlas-cli/dist/${tool_name}-rpm-aarch64.tgz
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/mongocli-rpm-aarch64.tgz
           source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum/arm64
           include:
             - "*.rpm"
@@ -329,7 +318,6 @@ tasks:
         vars:
           package_name: ${package_name}
           FEED_FILE_NAME: "${package_name}.json"
-          TOOL_NAME: ${tool_name}
       - func: "upload dist"
       - command: s3.put
         params:
@@ -358,7 +346,6 @@ tasks:
     commands:
       - func: "generate evergreen"
         vars:
-          tool_name: mongocli
           task_type: snapshot
   - name: push_stable_mongocli_generate
     git_tag_only: true
@@ -366,14 +353,12 @@ tasks:
     commands:
       - func: "generate evergreen"
         vars:
-          tool_name: mongocli
           task_type: publish
   - name: pkg_test_mongocli_generate
     tags: [ "smoke-test", "mongocli", "pkg" ]
     commands:
       - func: "generate evergreen"
         vars:
-          tool_name: mongocli
           task_type: postpkg
   - name: pkg_test_repo_mongocli
     patchable: false
@@ -385,7 +370,6 @@ tasks:
     commands:
       - func: "generate evergreen"
         vars:
-          tool_name: mongocli
           task_type: repo
 buildvariants:
   - name: go_mongocli_msi_snapshot
@@ -394,7 +378,6 @@ buildvariants:
       - windows-vsCurrent-small
     expansions:
       <<: *go_windows_version
-      tool_name: "mongocli"
       unstable: -unstable
     tasks:
       - name: package_msi
@@ -408,7 +391,6 @@ buildvariants:
       goreleaser_file: "build/package/.goreleaser.yml"
       changelog_file: CHANGELOG.md
       package_name: "mongocli"
-      tool_name: "mongocli"
       latest_deb: ~latest
       latest_rpm: .latest
       unstable: -unstable
@@ -433,7 +415,6 @@ buildvariants:
     git_tag_only: true
     expansions:
       <<: *go_windows_version
-      tool_name: "mongocli"
     tasks:
       - name: package_msi
   - name: release_mongocli_github
@@ -447,7 +428,6 @@ buildvariants:
       goreleaser_file: "build/package/.goreleaser.yml"
       changelog_file: CHANGELOG.md
       package_name: "mongocli"
-      tool_name: "mongocli"
     tasks:
       - name: package_goreleaser
         depends_on:

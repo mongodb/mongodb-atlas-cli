@@ -41,10 +41,10 @@ func TestEvents(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		require.NoError(t, err, string(resp))
 		var events admin.GroupPaginatedEvent
 		require.NoError(t, json.Unmarshal(resp, &events))
-		assert.NotEmpty(t, events.Results)
+		assert.NotEmpty(t, events.GetResults())
 	})
 
 	t.Run("List Organization Events", func(t *testing.T) {
@@ -52,15 +52,16 @@ func TestEvents(t *testing.T) {
 			eventsEntity,
 			orgEntity,
 			"list",
+			"--omitCount",
 			"--minDate="+time.Now().Add(-time.Hour*time.Duration(24)).Format("2006-01-02"),
 			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		require.NoError(t, err, string(resp))
 		var events admin.OrgPaginatedEvent
 		require.NoError(t, json.Unmarshal(resp, &events))
-		assert.NotEmpty(t, events.Results)
+		assert.NotEmpty(t, events.GetResults())
 	})
 }

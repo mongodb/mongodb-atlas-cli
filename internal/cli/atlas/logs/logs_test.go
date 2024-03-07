@@ -30,12 +30,3 @@ func TestBuilder(t *testing.T) {
 		[]string{},
 	)
 }
-
-func TestMongoCLIBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		MongoCLIBuilder(),
-		1,
-		[]string{},
-	)
-}

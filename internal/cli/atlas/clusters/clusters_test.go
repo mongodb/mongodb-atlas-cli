@@ -34,15 +34,6 @@ func TestBuilder(t *testing.T) {
 	)
 }
 
-func TestMongoCLIBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		MongoCLIBuilder(),
-		13,
-		[]string{},
-	)
-}
-
 func TestRemoveReadOnlyAttributes(t *testing.T) {
 	var (
 		id        = "Test"

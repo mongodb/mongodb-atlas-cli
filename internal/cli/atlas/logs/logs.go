@@ -20,19 +20,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// MongoCLIBuilder is to split "mongocli atlas logs" and "atlas logs".
-func MongoCLIBuilder() *cobra.Command {
-	const use = "logs"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Download host logs for your project.",
-	}
-	cmd.AddCommand(DownloadBuilder())
-
-	return cmd
-}
-
 // Builder is the up-to-date builder used by atlascli.
 func Builder() *cobra.Command {
 	const use = "logs"

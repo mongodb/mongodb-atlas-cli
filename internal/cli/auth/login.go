@@ -48,12 +48,11 @@ var (
 type LoginOpts struct {
 	cli.DefaultSetterOpts
 	cli.RefresherOpts
-	AccessToken    string
-	RefreshToken   string
-	isCloudManager bool
-	NoBrowser      bool
-	SkipConfig     bool
-	config         LoginConfig
+	AccessToken  string
+	RefreshToken string
+	NoBrowser    bool
+	SkipConfig   bool
+	config       LoginConfig
 }
 
 // SyncWithOAuthAccessProfile returns a function that is synchronizing the oauth settings
@@ -62,10 +61,9 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 	return func() error {
 		opts.config = c
 
-		if opts.isCloudManager {
-			opts.Service = config.CloudManagerService
+		if opts.Service != config.CloudManagerService {
+			return fmt.Errorf("this command is only supported for cloud-manager, not %q", opts.Service)
 		}
-		opts.config.Set("service", opts.Service)
 
 		if opts.AccessToken != "" {
 			opts.config.Set(config.AccessTokenField, opts.AccessToken)
@@ -310,7 +308,6 @@ func LoginBuilder() *cobra.Command {
 		Args: require.NoArgs,
 	}
 
-	cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
 	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 	_ = cmd.Flags().MarkDeprecated("skipConfig", "if you configured a profile, the command skips the config step by default.")

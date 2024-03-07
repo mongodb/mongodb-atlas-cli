@@ -62,7 +62,7 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 		opts.config = c
 
 		if opts.Service != config.CloudManagerService {
-			return fmt.Errorf("this command is only supported for cloud-manager, not %v", opts.Service)
+			return fmt.Errorf("this command is only supported for cloud-manager, not %q", opts.Service)
 		}
 
 		if opts.AccessToken != "" {

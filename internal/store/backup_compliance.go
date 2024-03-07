@@ -12,23 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package store
 
 import (
 	"errors"
-	"strings"
 
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 var errTScheduledPolicyItemNotFound = errors.New("scheduled policy item not found")
 
+//go:generate mockgen -destination=../mocks/mock_backup_compliance.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store CompliancePolicyDescriber,CompliancePolicyUpdater,CompliancePolicyEncryptionAtRestEnabler,CompliancePolicyEncryptionAtRestDisabler,CompliancePolicyEnabler,CompliancePolicyCopyProtectionEnabler,CompliancePolicyCopyProtectionDisabler,CompliancePolicyPointInTimeRestoresEnabler,CompliancePolicyOnDemandPolicyCreator,CompliancePolicyScheduledPolicyCreator,CompliancePolicyScheduledPolicyDeleter,CompliancePolicyScheduledPolicyUpdater
+
 type CompliancePolicyDescriber interface {
 	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
 }
-
-//go:generate mockgen -destination=../../mocks/atlas/mock_backup.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas CompliancePolicyDescriber,CompliancePolicyUpdater,CompliancePolicyEncryptionAtRestEnabler,CompliancePolicyEncryptionAtRestDisabler,CompliancePolicyEnabler,CompliancePolicyCopyProtectionEnabler,CompliancePolicyCopyProtectionDisabler,CompliancePolicyPointInTimeRestoresEnabler,CompliancePolicyOnDemandPolicyCreator,CompliancePolicyScheduledPolicyCreator,CompliancePolicyScheduledPolicyDeleter,CompliancePolicyScheduledPolicyUpdater
-
 type CompliancePolicyPointInTimeRestoresEnabler interface {
 	EnablePointInTimeRestore(projectID string, restoreWindowDays int) (*atlasv2.DataProtectionSettings20231001, error)
 	CompliancePolicyDescriber
@@ -171,7 +169,7 @@ func (s *Store) UpdateScheduledPolicy(projectID string, policy *atlasv2.BackupCo
 	}
 
 	for idx, i := range compliancePolicy.GetScheduledPolicyItems() {
-		if i.Id != nil && strings.EqualFold(*i.Id, *policy.Id) {
+		if i.GetId() == policy.GetId() {
 			compliancePolicy.GetScheduledPolicyItems()[idx] = *policy
 			compliancePolicy.SetScheduledPolicyItems(append(compliancePolicy.GetScheduledPolicyItems(), *policy))
 			return s.updateDataProtectionSettings(projectID, compliancePolicy)
@@ -187,10 +185,10 @@ func (s *Store) DeleteScheduledPolicy(projectID, scheduledPolicyID string) (*atl
 		return nil, err
 	}
 
-	items := []atlasv2.BackupComplianceScheduledPolicyItem{}
+	items := make([]atlasv2.BackupComplianceScheduledPolicyItem, 0, len(compliancePolicy.GetScheduledPolicyItems()))
 	found := false
 	for _, i := range compliancePolicy.GetScheduledPolicyItems() {
-		if i.Id != nil && strings.EqualFold(*i.Id, scheduledPolicyID) {
+		if i.GetId() == scheduledPolicyID {
 			found = true
 			continue
 		}

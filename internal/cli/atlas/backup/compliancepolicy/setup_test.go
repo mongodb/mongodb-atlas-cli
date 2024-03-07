@@ -20,9 +20,10 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	mocks "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
@@ -62,9 +63,7 @@ func TestSetupOpts_Watcher(t *testing.T) {
 		Times(1)
 
 	_, res, err := opts.setupWatcher()
-	if err != nil {
-		t.Fatalf("setupWatcher() unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 	assert.True(t, res)
 }
 
@@ -104,10 +103,7 @@ func TestSetupOpts_Run(t *testing.T) {
 				Return(expected, nil).
 				Times(1)
 
-			if err := opts.Run(); err != nil {
-				t.Fatalf("run() unexpected error: %v", err)
-			}
-
+			require.NoError(t, opts.Run())
 			test.VerifyOutputTemplate(t, setupTemplate, expected)
 		})
 	}
@@ -143,9 +139,6 @@ func TestSetupOpts_WatchRun(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("run() unexpected error: %v", err)
-	}
-
+	require.NoError(t, opts.Run())
 	test.VerifyOutputTemplate(t, setupWatchTemplate, expected)
 }

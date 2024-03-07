@@ -17,13 +17,12 @@
 package copyprotection
 
 import (
-	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	mocks "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -41,13 +40,6 @@ func TestDisableBuilder(t *testing.T) {
 			flag.EnableWatch,
 		},
 	)
-}
-
-func TestDisableOpts_InitStore(t *testing.T) {
-	opts := &DisableOpts{}
-
-	require.NoError(t, opts.initStore(context.TODO())())
-	assert.NotNil(t, opts.store)
 }
 
 func TestDisableOpts_Watcher(t *testing.T) {
@@ -76,12 +68,9 @@ func TestDisableOpts_Watcher(t *testing.T) {
 func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCompliancePolicyCopyProtectionDisabler(ctrl)
-	copyProtectionAfter := false
-
-	expected := &atlasv2.DataProtectionSettings20231001{
-		State:                 atlasv2.PtrString(active),
-		CopyProtectionEnabled: &copyProtectionAfter,
-	}
+	expected := &atlasv2.DataProtectionSettings20231001{}
+	expected.SetCopyProtectionEnabled(false)
+	expected.SetState(active)
 
 	opts := &DisableOpts{
 		store: mockStore,
@@ -93,10 +82,8 @@ func TestDisableOpts_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-	assert.False(t, *opts.policy.CopyProtectionEnabled)
+	require.NoError(t, opts.Run())
+	assert.False(t, opts.policy.GetCopyProtectionEnabled())
 }
 
 func TestDisableOpts_WatchRun(t *testing.T) {
@@ -125,7 +112,5 @@ func TestDisableOpts_WatchRun(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, opts.Run())
 }

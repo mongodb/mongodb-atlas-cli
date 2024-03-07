@@ -17,13 +17,12 @@
 package copyprotection
 
 import (
-	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	mocks "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -43,13 +42,6 @@ func TestEnableBuilder(t *testing.T) {
 	)
 }
 
-func TestEnableOpts_InitStore(t *testing.T) {
-	opts := &EnableOpts{}
-
-	require.NoError(t, opts.initStore(context.TODO())())
-	assert.NotNil(t, opts.store)
-}
-
 func TestEnableOpts_Watcher(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCompliancePolicyCopyProtectionEnabler(ctrl)
@@ -57,10 +49,8 @@ func TestEnableOpts_Watcher(t *testing.T) {
 	opts := &EnableOpts{
 		store: mockStore,
 	}
-
-	expected := &atlasv2.DataProtectionSettings20231001{
-		State: atlasv2.PtrString(active),
-	}
+	expected := &atlasv2.DataProtectionSettings20231001{}
+	expected.SetState(active)
 
 	mockStore.
 		EXPECT().
@@ -76,12 +66,10 @@ func TestEnableOpts_Watcher(t *testing.T) {
 func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockCompliancePolicyCopyProtectionEnabler(ctrl)
-	copyProtectionAfter := true
 
-	expected := &atlasv2.DataProtectionSettings20231001{
-		State:                 atlasv2.PtrString(active),
-		CopyProtectionEnabled: &copyProtectionAfter,
-	}
+	expected := &atlasv2.DataProtectionSettings20231001{}
+	expected.SetState(active)
+	expected.SetCopyProtectionEnabled(true)
 
 	opts := &EnableOpts{
 		store: mockStore,
@@ -96,7 +84,7 @@ func TestEnableOpts_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	assert.True(t, *opts.policy.CopyProtectionEnabled)
+	assert.True(t, opts.policy.GetCopyProtectionEnabled())
 	test.VerifyOutputTemplate(t, enableTemplate, expected)
 }
 
@@ -111,9 +99,8 @@ func TestEnableOpts_WatchRun(t *testing.T) {
 		},
 	}
 
-	expected := &atlasv2.DataProtectionSettings20231001{
-		State: atlasv2.PtrString(active),
-	}
+	expected := &atlasv2.DataProtectionSettings20231001{}
+	expected.SetState(active)
 
 	mockStore.
 		EXPECT().

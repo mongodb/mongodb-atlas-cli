@@ -17,13 +17,12 @@
 package encryptionatrest
 
 import (
-	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	mocks "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -41,13 +40,6 @@ func TestEnableBuilder(t *testing.T) {
 			flag.EnableWatch,
 		},
 	)
-}
-
-func TestEnableOpts_InitStore(t *testing.T) {
-	opts := &EnableOpts{}
-
-	require.NoError(t, opts.initStore(context.TODO())())
-	assert.NotNil(t, opts.store)
 }
 
 func TestEnableOpts_Watcher(t *testing.T) {

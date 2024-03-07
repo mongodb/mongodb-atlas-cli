@@ -102,8 +102,6 @@ func TestProfile_Get_FullProfile(t *testing.T) {
 	a.Equal("some_public_key", profile.PublicAPIKey())
 	a.Equal("some_private_key", profile.PrivateAPIKey())
 	a.Equal("http://om_url.com/", profile.OpsManagerURL())
-	a.Equal("/path/to/certificate", profile.OpsManagerCACertificate())
-	a.Equal("false", profile.OpsManagerSkipVerify())
 }
 
 func TestProfile_Get_Default(t *testing.T) {

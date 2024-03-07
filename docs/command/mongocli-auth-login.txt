@@ -39,10 +39,6 @@ Options
      - 
      - false
      - Log in to Cloud Manager.
-   * - --gov
-     - 
-     - false
-     - Log in to Atlas for Government.
    * - -h, --help
      - 
      - false

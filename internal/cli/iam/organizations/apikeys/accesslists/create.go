@@ -16,7 +16,6 @@ package accesslists
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
@@ -33,11 +32,10 @@ const createTemplate = "Created new access list entry(s).\n"
 type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	apyKey    string
-	ips       []string
-	cidrs     []string
-	currentIP bool
-	store     store.OrganizationAPIKeyAccessListCreator
+	apyKey string
+	ips    []string
+	cidrs  []string
+	store  store.OrganizationAPIKeyAccessListCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -107,13 +105,6 @@ func CreateBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
-			if opts.currentIP {
-				publicIP := store.IPAddress()
-				if publicIP == "" {
-					return errors.New("unable to find your public IP address. Specify the public IP address for this command")
-				}
-				opts.ips = append(opts.ips, publicIP)
-			}
 			return opts.Run()
 		},
 	}
@@ -125,8 +116,6 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
-
-	cmd.Flags().BoolVar(&opts.currentIP, flag.CurrentIP, false, usage.CurrentIP)
 
 	_ = cmd.MarkFlagRequired(flag.APIKey)
 

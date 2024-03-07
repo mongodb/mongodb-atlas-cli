@@ -22,11 +22,9 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/briandowns/spinner"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/atlas/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -67,7 +65,7 @@ func (opts *DefaultSetterOpts) InitStore(ctx context.Context) error {
 }
 
 func (opts *DefaultSetterOpts) IsCloud() bool {
-	return opts.Service == config.CloudService || opts.Service == config.CloudGovService
+	return opts.Service != config.OpsManagerService && opts.Service != config.CloudManagerService
 }
 
 func (opts *DefaultSetterOpts) IsOpsManager() bool {
@@ -101,7 +99,6 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 		projects, err = opts.Store.GetOrgProjects(opts.OrgID, list)
 	}
 	if err != nil {
-		err = commonerrors.Check(err)
 		var atlasErr *atlas.ErrorResponse
 		if errors.As(err, &atlasErr) && atlasErr.HTTPCode == 404 {
 			return nil, nil, errNoResults
@@ -144,7 +141,7 @@ func (opts *DefaultSetterOpts) orgs(filter string) (results interface{}, err err
 		if errors.As(err, &atlasErr) && atlasErr.HTTPCode == 404 {
 			return nil, errNoResults
 		}
-		return nil, commonerrors.Check(err)
+		return nil, err
 	}
 	if orgs == nil {
 		return nil, errNoResults
@@ -201,13 +198,13 @@ func (opts *DefaultSetterOpts) AskProject() error {
 			Message: "Do you want to enter the Project ID manually?",
 		}
 		manually := true
-		if err2 := telemetry.TrackAskOne(p, &manually); err2 != nil {
+		if err2 := survey.AskOne(p, &manually); err2 != nil {
 			return err2
 		}
 		opts.AskedOrgsOrProjects = true
 		if manually {
 			p := prompt.NewProjectIDInput()
-			return telemetry.TrackAskOne(p, &opts.ProjectID, survey.WithValidator(validate.OptionalObjectID))
+			return survey.AskOne(p, &opts.ProjectID, survey.WithValidator(validate.OptionalObjectID))
 		}
 		_, _ = fmt.Fprint(opts.OutWriter, "Skipping default project setting\n")
 		return nil
@@ -219,7 +216,7 @@ func (opts *DefaultSetterOpts) AskProject() error {
 		opts.runOnMultipleOrgsOrProjects()
 		p := prompt.NewProjectSelect(ids, names)
 		var projectID string
-		if err := telemetry.TrackAskOne(p, &projectID); err != nil {
+		if err := survey.AskOne(p, &projectID); err != nil {
 			return err
 		}
 		opts.ProjectID = projectID
@@ -272,7 +269,7 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 				Message: "Organization filter:",
 				Help:    "Enter the 24 digit ID or type from the beginning of the name to filter.",
 			}
-			filterErr := telemetry.TrackAskOne(filterPrompt, &filter)
+			filterErr := survey.AskOne(filterPrompt, &filter)
 			if filterErr != nil {
 				return filterErr
 			}
@@ -303,13 +300,13 @@ func (opts *DefaultSetterOpts) manualOrgID() error {
 		Message: "Do you want to enter the Organization ID manually?",
 	}
 	manually := true
-	if err := telemetry.TrackAskOne(p, &manually); err != nil {
+	if err := survey.AskOne(p, &manually); err != nil {
 		return err
 	}
 	opts.AskedOrgsOrProjects = true
 	if manually {
 		p := prompt.NewOrgIDInput()
-		return telemetry.TrackAskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
+		return survey.AskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
 	}
 	_, _ = fmt.Fprint(opts.OutWriter, "Skipping default organization setting\n")
 	return nil
@@ -324,7 +321,7 @@ func (opts *DefaultSetterOpts) selectOrg(orgs []atlasv2.AtlasOrganization) error
 	opts.runOnMultipleOrgsOrProjects()
 
 	p := prompt.NewOrgSelect(orgs)
-	if err := telemetry.TrackAskOne(p, &opts.OrgID); err != nil {
+	if err := survey.AskOne(p, &opts.OrgID); err != nil {
 		return err
 	}
 	opts.AskedOrgsOrProjects = true
@@ -341,7 +338,7 @@ func (opts *DefaultSetterOpts) selectOnPremOrg(orgs []*atlas.Organization) error
 	opts.runOnMultipleOrgsOrProjects()
 
 	p := prompt.NewOnPremOrgSelect(orgs)
-	if err := telemetry.TrackAskOne(p, &opts.OrgID); err != nil {
+	if err := survey.AskOne(p, &opts.OrgID); err != nil {
 		return err
 	}
 	opts.AskedOrgsOrProjects = true

@@ -18,10 +18,12 @@ package config_test
 
 import (
 	"encoding/json"
+	"log"
 	"os"
 	"os/exec"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/Netflix/go-expect"
 	pseudotty "github.com/creack/pty"
@@ -53,7 +55,8 @@ func TestConfig(t *testing.T) {
 
 		term := vt10x.New(vt10x.WithWriter(tty))
 		// To debug add os.Stdout to expect.WithStdout
-		c, err := expect.NewConsole(expect.WithStdin(pty), expect.WithStdout(term), expect.WithCloser(pty, tty))
+		c, err := expect.NewConsole(expect.WithStdin(pty), expect.WithStdout(term), expect.WithCloser(pty, tty),
+			expect.WithLogger(log.Default()), expect.WithDefaultTimeout(5*time.Minute))
 		if err != nil {
 			t.Fatalf("failed to create console: %v", err)
 		}

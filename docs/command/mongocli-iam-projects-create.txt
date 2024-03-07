@@ -55,10 +55,6 @@ Options
      - Type
      - Required
      - Description
-   * - --govCloudRegionsOnly
-     - 
-     - false
-     - Flag that designates that the project uses only the AWS GovCloud region. Use this option only for Atlas for Government projects. If unspecified, the project uses only the AWS Standard region for AWS deployments. You can't deploy clusters across AWS GovCloud and AWS Standard regions in the same project.
    * - -h, --help
      - 
      - false

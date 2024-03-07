@@ -64,22 +64,4 @@ func TestList_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
-
-	t.Run("An ConfigOrgID is given for Atlas", func(t *testing.T) {
-		listOpts := &ListOpts{
-			store: mockStore,
-		}
-		listOpts.OrgID = "1"
-
-		mockStore.
-			EXPECT().
-			Projects(listOpts.NewListOptions()).
-			Return(expected, nil).
-			Times(1)
-
-		config.SetService(config.CloudService)
-		if err := listOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
-	})
 }

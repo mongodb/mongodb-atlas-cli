@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/ops-manager/atmcfg"
@@ -99,7 +98,7 @@ func (opts *CreateOpts) Prompt() error {
 	surveyPrompt := &survey.Password{
 		Message: "Password:",
 	}
-	return telemetry.TrackAskOne(surveyPrompt, &opts.password)
+	return survey.AskOne(surveyPrompt, &opts.password)
 }
 
 // mongocli atlas dbuser(s) create --username username --password password --role roleName@dbName [--projectId projectId].

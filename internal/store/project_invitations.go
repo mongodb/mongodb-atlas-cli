@@ -47,9 +47,6 @@ type ProjectInvitationUpdater interface {
 // ProjectInvitations encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectInvitations(groupID string, opts *atlas.InvitationOptions) ([]*atlas.Invitation, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.Invitations(s.ctx, groupID, opts)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Projects.Invitations(s.ctx, groupID, opts)
 		return result, err
@@ -61,9 +58,6 @@ func (s *Store) ProjectInvitations(groupID string, opts *atlas.InvitationOptions
 // ProjectInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectInvitation(groupID, invitationID string) (*atlas.Invitation, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.Invitation(s.ctx, groupID, invitationID)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Projects.Invitation(s.ctx, groupID, invitationID)
 		return result, err
@@ -75,9 +69,6 @@ func (s *Store) ProjectInvitation(groupID, invitationID string) (*atlas.Invitati
 // DeleteProjectInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteProjectInvitation(groupID, invitationID string) error {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Projects.DeleteInvitation(s.ctx, groupID, invitationID)
-		return err
 	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Projects.DeleteInvitation(s.ctx, groupID, invitationID)
 		return err
@@ -89,9 +80,6 @@ func (s *Store) DeleteProjectInvitation(groupID, invitationID string) error {
 // InviteUserToProject encapsulate the logic to manage different cloud providers.
 func (s *Store) InviteUserToProject(groupID string, invitation *atlas.Invitation) (*atlas.Invitation, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.InviteUser(s.ctx, groupID, invitation)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Projects.InviteUser(s.ctx, groupID, invitation)
 		return result, err
@@ -103,14 +91,6 @@ func (s *Store) InviteUserToProject(groupID string, invitation *atlas.Invitation
 // UpdateProjectInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateProjectInvitation(groupID, invitationID string, invitation *atlas.Invitation) (*atlas.Invitation, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		if invitationID != "" {
-			result, _, err := s.client.(*atlas.Client).Projects.UpdateInvitationByID(s.ctx, groupID, invitationID, invitation)
-			return result, err
-		}
-		result, _, err := s.client.(*atlas.Client).Projects.UpdateInvitation(s.ctx, groupID, invitation)
-		return result, err
-
 	case config.CloudManagerService, config.OpsManagerService:
 		if invitationID != "" {
 			result, _, err := s.client.(*opsmngr.Client).Projects.UpdateInvitationByID(s.ctx, groupID, invitationID, invitation)

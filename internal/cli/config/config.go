@@ -18,12 +18,12 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -42,7 +42,7 @@ Enter [?] on any option to get help.
 `, config.ToolName)
 
 	q := prompt.AccessQuestions(opts.IsOpsManager())
-	if err := telemetry.TrackAsk(q, opts); err != nil {
+	if err := survey.Ask(q, opts); err != nil {
 		return err
 	}
 	opts.SetUpDigestAccess()
@@ -60,14 +60,14 @@ Enter [?] on any option to get help.
 		}
 	} else {
 		q = prompt.TenantQuestions()
-		if err := telemetry.TrackAsk(q, opts); err != nil {
+		if err := survey.Ask(q, opts); err != nil {
 			return err
 		}
 	}
 	opts.SetUpProject()
 	opts.SetUpOrg()
 
-	if err := telemetry.TrackAsk(opts.DefaultQuestions(), opts); err != nil {
+	if err := survey.Ask(opts.DefaultQuestions(), opts); err != nil {
 		return err
 	}
 	opts.SetUpOutput()
@@ -86,15 +86,6 @@ Enter [?] on any option to get help.
 }
 
 func (opts *opts) validateService() error {
-	if opts.Service == config.CloudService {
-		return nil
-	}
-
-	if opts.Service == "gov" {
-		opts.Service = config.CloudGovService
-		return nil
-	}
-
 	if opts.Service == "cloudmanager" || opts.Service == "cm" {
 		opts.Service = config.CloudManagerService
 		return nil
@@ -105,7 +96,7 @@ func (opts *opts) validateService() error {
 		return nil
 	}
 
-	if opts.Service != config.OpsManagerService && opts.Service != config.CloudManagerService && opts.Service != config.CloudGovService {
+	if opts.Service != config.OpsManagerService && opts.Service != config.CloudManagerService {
 		return fmt.Errorf("the '%s' service is not supported. Please run 'mongocli config --help' to see the list of available services", opts.Service)
 	}
 
@@ -146,7 +137,7 @@ To find out more, see the documentation: https://docs.mongodb.com/mongocli/stabl
 		},
 		Args: require.NoArgs,
 	}
-	cmd.Flags().StringVar(&opt.Service, flag.Service, config.CloudService, usage.Service)
+	cmd.Flags().StringVar(&opt.Service, flag.Service, config.CloudManagerService, usage.Service)
 	cmd.AddCommand(
 		SetBuilder(),
 		ListBuilder(),

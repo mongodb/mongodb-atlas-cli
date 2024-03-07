@@ -56,9 +56,6 @@ type TeamRolesUpdater interface {
 // TeamByID encapsulates the logic to manage different cloud providers.
 func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Teams.Get(s.ctx, orgID, teamID)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Teams.Get(s.ctx, orgID, teamID)
 		return result, err
@@ -70,9 +67,6 @@ func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
 // TeamByName encapsulates the logic to manage different cloud providers.
 func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Teams.GetOneTeamByName(s.ctx, orgID, teamName)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Teams.GetOneTeamByName(s.ctx, orgID, teamName)
 		return result, err
@@ -84,9 +78,6 @@ func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
 // Teams encapsulates the logic to manage different cloud providers.
 func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Teams.List(s.ctx, orgID, opts)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Teams.List(s.ctx, orgID, opts)
 		return result, err
@@ -98,9 +89,6 @@ func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, erro
 // CreateTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Teams.Create(s.ctx, orgID, team)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Teams.Create(s.ctx, orgID, team)
 		return result, err
@@ -112,9 +100,6 @@ func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) 
 // DeleteTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteTeam(orgID, teamID string) error {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Teams.RemoveTeamFromOrganization(s.ctx, orgID, teamID)
-		return err
 	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromOrganization(s.ctx, orgID, teamID)
 		return err
@@ -126,9 +111,6 @@ func (s *Store) DeleteTeam(orgID, teamID string) error {
 // AddUsersToTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) (interface{}, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Teams.AddUsersToTeam(s.ctx, orgID, teamID, users)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Teams.AddUsersToTeam(s.ctx, orgID, teamID, users)
 		return result, err
@@ -140,9 +122,6 @@ func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) (interface{
 // RemoveUserFromTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Teams.RemoveUserToTeam(s.ctx, orgID, teamID, userID)
-		return err
 	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Teams.RemoveUserToTeam(s.ctx, orgID, teamID, userID)
 		return err
@@ -154,9 +133,6 @@ func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
 // UpdateProjectTeamRoles encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateProjectTeamRoles(projectID, teamID string, team *atlas.TeamUpdateRoles) ([]atlas.TeamRoles, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Teams.UpdateTeamRoles(s.ctx, projectID, teamID, team)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Teams.UpdateTeamRoles(s.ctx, projectID, teamID, team)
 		return result, err

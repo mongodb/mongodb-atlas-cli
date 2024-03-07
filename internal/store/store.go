@@ -271,63 +271,6 @@ func WithContext(ctx context.Context) Option {
 	}
 }
 
-// setAtlasClient sets the internal client to use an Atlas client and methods.
-func (s *Store) setAtlasClient(client *http.Client) error {
-	opts := []atlas.ClientOpt{atlas.SetUserAgent(config.UserAgent)}
-	if s.baseURL != "" {
-		opts = append(opts, atlas.SetBaseURL(s.baseURL))
-	}
-	if log.IsDebugLevel() {
-		opts = append(opts, atlas.SetWithRaw())
-	}
-	c, err := atlas.New(client, opts...)
-	if err != nil {
-		return err
-	}
-
-	err = s.createV2Client(client)
-	if err != nil {
-		return err
-	}
-
-	c.OnResponseProcessed(func(resp *atlas.Response) {
-		respHeaders := ""
-		for key, value := range resp.Header {
-			respHeaders += fmt.Sprintf("%v: %v\n", key, strings.Join(value, " "))
-		}
-
-		_, _ = log.Debugf(`request:
-%v %v
-response:
-%v %v
-%v
-%v
-`, resp.Request.Method, resp.Request.URL.String(), resp.Proto, resp.Status, respHeaders, string(resp.Raw))
-	})
-	s.client = c
-	return nil
-}
-
-/**
-* Creates client for v2 generated API.
- */
-func (s *Store) createV2Client(client *http.Client) error {
-	opts := []atlasv2.ClientModifier{
-		atlasv2.UseHTTPClient(client),
-		atlasv2.UseUserAgent(config.UserAgent),
-		atlasv2.UseDebug(log.IsDebugLevel())}
-
-	if s.baseURL != "" {
-		opts = append(opts, atlasv2.UseBaseURL(s.baseURL))
-	}
-	c, err := atlasv2.NewClient(opts...)
-	if err != nil {
-		return err
-	}
-	s.clientv2 = c
-	return nil
-}
-
 // setOpsManagerClient sets the internal client to use an Ops Manager client and methods.
 func (s *Store) setOpsManagerClient(client *http.Client) error {
 	opts := []opsmngr.ClientOpt{opsmngr.SetUserAgent(config.UserAgent)}
@@ -404,8 +347,6 @@ func AuthenticatedPreset(c AuthenticatedConfig) Option {
 func baseURLOption(c ServiceGetter) Option {
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		return WithBaseURL(configURL)
-	} else if c.Service() == config.CloudGovService {
-		return WithBaseURL(cloudGovServiceURL)
 	}
 	return nil
 }
@@ -430,7 +371,7 @@ func UnauthenticatedPreset(c BasicConfig) Option {
 // Usage:
 //
 //	// get a new Store for Atlas
-//	store := store.New(Service("cloud"))
+//	store := store.New(Service("cloud-manager"))
 //
 //	// get a new Store for the public API based on a Config interface
 //	store := store.New(AuthenticatedPreset(config))
@@ -457,8 +398,6 @@ func New(opts ...Option) (*Store, error) {
 	}
 
 	switch store.service {
-	case config.CloudService, config.CloudGovService:
-		err = store.setAtlasClient(client)
 	case config.CloudManagerService, config.OpsManagerService:
 		err = store.setOpsManagerClient(client)
 	default:

@@ -84,7 +84,7 @@ func profileWithFullDescription() *Profile {
   private_api_key = "some_private_key"
   org_id = "5cac6a2179358edabd12b572"
   profile_id = "5cac6a2179358edabd12b572"
-  service = "cloud"
+  service = "cloud-manager"
 `
 	return testProfile(contents)
 }
@@ -98,7 +98,7 @@ func TestProfile_Get_FullProfile(t *testing.T) {
 	a := assert.New(t)
 	a.Equal("default", profile.Name())
 	a.Len(desc, 9)
-	a.Equal("cloud", profile.Service())
+	a.Equal("cloud-manager", profile.Service())
 	a.Equal("some_public_key", profile.PublicAPIKey())
 	a.Equal("some_private_key", profile.PrivateAPIKey())
 	a.Equal("http://om_url.com/", profile.OpsManagerURL())

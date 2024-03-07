@@ -34,7 +34,7 @@ type OrgProjectLister interface {
 }
 
 type ProjectCreator interface {
-	CreateProject(string, string, string, *bool, *atlas.CreateProjectOptions) (interface{}, error)
+	CreateProject(string, string, *bool, *atlas.CreateProjectOptions) (interface{}, error)
 	ServiceVersionDescriber
 }
 
@@ -70,9 +70,6 @@ type ProjectTeamDeleter interface {
 // Projects encapsulates the logic to manage different cloud providers.
 func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetAllProjects(s.ctx, opts)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Projects.List(s.ctx, opts)
 		return result, err
@@ -84,9 +81,6 @@ func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 // GetOrgProjects encapsulates the logic to manage different cloud providers.
 func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (interface{}, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Organizations.Projects(s.ctx, orgID, opts)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Organizations.Projects(s.ctx, orgID, opts)
 		return result, err
@@ -98,9 +92,6 @@ func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (i
 // Project encapsulates the logic to manage different cloud providers.
 func (s *Store) Project(id string) (interface{}, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetOneProject(s.ctx, id)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Projects.Get(s.ctx, id)
 		return result, err
@@ -111,9 +102,6 @@ func (s *Store) Project(id string) (interface{}, error) {
 
 func (s *Store) ProjectByName(name string) (interface{}, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetOneProjectByName(s.ctx, name)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Projects.GetByName(s.ctx, name)
 		return result, err
@@ -123,12 +111,8 @@ func (s *Store) ProjectByName(name string) (interface{}, error) {
 }
 
 // CreateProject encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateProject(name, orgID, regionUsageRestrictions string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (interface{}, error) {
+func (s *Store) CreateProject(name, orgID string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (interface{}, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		project := &atlas.Project{Name: name, OrgID: orgID, RegionUsageRestrictions: regionUsageRestrictions, WithDefaultAlertsSettings: defaultAlertSettings}
-		result, _, err := s.client.(*atlas.Client).Projects.Create(s.ctx, project, opts)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		project := &opsmngr.Project{Name: name, OrgID: orgID, WithDefaultAlertsSettings: defaultAlertSettings}
 		result, _, err := s.client.(*opsmngr.Client).Projects.Create(s.ctx, project, opts)
@@ -141,9 +125,6 @@ func (s *Store) CreateProject(name, orgID, regionUsageRestrictions string, defau
 // DeleteProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteProject(projectID string) error {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Projects.Delete(s.ctx, projectID)
-		return err
 	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Projects.Delete(s.ctx, projectID)
 		return err
@@ -155,9 +136,6 @@ func (s *Store) DeleteProject(projectID string) error {
 // ProjectUsers lists all IAM users in a project.
 func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interface{}, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AtlasUsers.List(s.ctx, projectID, opts)
-		return result, err
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Projects.ListUsers(s.ctx, projectID, opts)
 		return result, err
@@ -169,9 +147,6 @@ func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interfa
 // DeleteProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Projects.RemoveUserFromProject(s.ctx, projectID, userID)
-		return err
 	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Projects.RemoveUser(s.ctx, projectID, userID)
 		return err
@@ -183,9 +158,6 @@ func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 // ProjectTeams encapsulates the logic to manage different cloud providers.
 func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetProjectTeamsAssigned(s.ctx, projectID)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Projects.GetTeams(s.ctx, projectID, nil)
 		return result, err
@@ -197,9 +169,6 @@ func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
 // AddTeamsToProject encapsulates the logic to manage different cloud providers.
 func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error) {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.AddTeamsToProject(s.ctx, projectID, teams)
-		return result, err
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.(*opsmngr.Client).Projects.AddTeamsToProject(s.ctx, projectID, teams)
 		return result, err
@@ -211,9 +180,6 @@ func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) 
 // DeleteTeamFromProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteTeamFromProject(projectID, teamID string) error {
 	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Teams.RemoveTeamFromProject(s.ctx, projectID, teamID)
-		return err
 	case config.CloudManagerService, config.OpsManagerService:
 		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromProject(s.ctx, projectID, teamID)
 		return err

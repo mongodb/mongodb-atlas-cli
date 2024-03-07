@@ -68,10 +68,6 @@ functions:
         <<: *go_options
         env:
           <<: *go_env
-          NOTARY_SIGNING_KEY_MONGOCLI: ${notary_service_signing_key_mongocli}
-          NOTARY_SIGNING_COMMENT: "Evergreen Automatic Signing (${tool_name})"
-          NOTARY_AUTH_TOKEN: ${signing_auth_token_50}
-          NOTARY_URL: ${notary_service_notary_url}
           ARTIFACTORY_USERNAME: ${artifactory_username}
           ARTIFACTORY_PASSWORD: ${artifactory_password}
           GRS_USERNAME: ${garasign_username}

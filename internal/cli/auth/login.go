@@ -27,7 +27,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
@@ -51,7 +50,6 @@ type LoginOpts struct {
 	cli.RefresherOpts
 	AccessToken    string
 	RefreshToken   string
-	IsGov          bool
 	isCloudManager bool
 	NoBrowser      bool
 	SkipConfig     bool
@@ -64,13 +62,8 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 	return func() error {
 		opts.config = c
 
-		switch {
-		case opts.IsGov:
-			opts.Service = config.CloudGovService
-		case opts.isCloudManager:
+		if opts.isCloudManager {
 			opts.Service = config.CloudManagerService
-		default:
-			opts.Service = config.CloudService
 		}
 		opts.config.Set("service", opts.Service)
 
@@ -257,7 +250,7 @@ func shouldRetryAuthenticate(err error, p survey.Prompt) (retry bool, errSurvey 
 	if err == nil || !auth.IsTimeoutErr(err) {
 		return false, nil
 	}
-	err = telemetry.TrackAskOne(p, &retry)
+	err = survey.AskOne(p, &retry)
 	return retry, err
 }
 
@@ -317,11 +310,7 @@ func LoginBuilder() *cobra.Command {
 		Args: require.NoArgs,
 	}
 
-	if config.ToolName == config.MongoCLI {
-		cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
-	}
-
-	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
+	cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
 	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 	_ = cmd.Flags().MarkDeprecated("skipConfig", "if you configured a profile, the command skips the config step by default.")

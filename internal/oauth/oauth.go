@@ -60,9 +60,6 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	client := http.DefaultClient
 	client.Transport = defaultTransport
 	id := ClientID
-	if c.Service() == config.CloudGovService {
-		id = GovClientID
-	}
 	if c.ClientID() != "" {
 		id = c.ClientID()
 	}
@@ -74,8 +71,6 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	}
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		authOpts = append(authOpts, auth.SetAuthURL(c.OpsManagerURL()))
-	} else if c.Service() == config.CloudGovService {
-		authOpts = append(authOpts, auth.SetAuthURL(cloudGovServiceURL))
 	}
 	return auth.NewConfigWithOptions(client, authOpts...)
 }

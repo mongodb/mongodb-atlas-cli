@@ -17,10 +17,10 @@ package config
 import (
 	"fmt"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/prompt"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +37,7 @@ func (opts *RenameOpts) Run() error {
 	if config.Exists(opts.newName) {
 		replaceExistingProfile := false
 		p := prompt.NewProfileReplaceConfirm(opts.newName)
-		if err := telemetry.TrackAskOne(p, &replaceExistingProfile); err != nil {
+		if err := survey.AskOne(p, &replaceExistingProfile); err != nil {
 			return err
 		}
 

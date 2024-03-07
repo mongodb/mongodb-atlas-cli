@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/ops-manager/atmcfg"
@@ -81,7 +80,7 @@ func (opts *resyncOpts) Confirm() error {
 	prompt := &survey.Confirm{
 		Message: fmt.Sprintf("Are you sure you want to reclaim free space for: %s", process),
 	}
-	return telemetry.TrackAskOne(prompt, &opts.confirm)
+	return survey.AskOne(prompt, &opts.confirm)
 }
 
 // ResyncBuilder mongocli cloud-manager cluster(s) resync <clusterName> [--processName process1,process2...][--timestamp timestamp] [--force].

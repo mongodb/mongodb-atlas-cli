@@ -36,20 +36,6 @@ func TestDefaultOpts_DefaultQuestions(t *testing.T) {
 		want   int
 	}{
 		{
-			name: "cloud",
-			fields: fields{
-				Service: "cloud",
-			},
-			want: 1,
-		},
-		{
-			name: "cloud gov",
-			fields: fields{
-				Service: "cloudgov",
-			},
-			want: 1,
-		},
-		{
 			name: "cloud manager",
 			fields: fields{
 				Service: "cloud-manager",
@@ -79,7 +65,7 @@ func TestDefaultOpts_Projects(t *testing.T) {
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 
 	opts := &DefaultSetterOpts{
-		Service: "cloud",
+		Service: "cloud-manager",
 		Store:   mockStore,
 	}
 	t.Run("empty", func(t *testing.T) {
@@ -111,7 +97,7 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 
 	opts := &DefaultSetterOpts{
-		Service: "cloud",
+		Service: "cloud-manager",
 		Store:   mockStore,
 	}
 	t.Run("empty", func(t *testing.T) {

@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_automation.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store AutomationGetter,AutomationUpdater,AutomationStatusGetter,AutomationPatcher,CloudManagerClustersLister,CloudManagerClustersDescriber,CloudManagerClustersDeleter
+//go:generate mockgen -destination=../mocks/mock_automation.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store AutomationGetter,AutomationUpdater,AutomationStatusGetter,AutomationPatcher,CloudManagerClustersLister,CloudManagerClustersDescriber,CloudManagerClustersDeleter
 
 type AutomationGetter interface {
 	GetAutomationConfig(string) (*opsmngr.AutomationConfig, error)

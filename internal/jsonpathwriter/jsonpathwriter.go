@@ -20,7 +20,7 @@ import (
 	"io"
 
 	"github.com/PaesslerAG/jsonpath"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/jsonwriter"
 )
 
 var ErrEmptyPath = errors.New("empty jsonpath")

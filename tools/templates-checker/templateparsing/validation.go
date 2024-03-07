@@ -21,7 +21,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/mongodb/mongodb-atlas-cli/tools/templates-checker/astparsing"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/tools/templates-checker/astparsing"
 	"golang.org/x/tools/go/packages"
 )
 

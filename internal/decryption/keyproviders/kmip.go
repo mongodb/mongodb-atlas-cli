@@ -20,10 +20,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/aes"
-	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/kmip"
-	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/pem"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/decryption/aes"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/decryption/kmip"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/decryption/pem"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/log"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

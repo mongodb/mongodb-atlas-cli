@@ -20,8 +20,8 @@ import (
 	"time"
 
 	"github.com/briandowns/spinner"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/internal/watchers"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/watchers"
 )
 
 type WatchOpts struct {

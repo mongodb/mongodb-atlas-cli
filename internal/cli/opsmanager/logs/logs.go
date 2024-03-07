@@ -15,7 +15,7 @@
 package logs
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/decryption"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/decryption"
 	"github.com/spf13/cobra"
 )
 

@@ -15,18 +15,18 @@
 package iam
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/globalaccesslists"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/globalapikeys"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/organizations"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/projects"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/teams"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/iam/users"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
-	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/iam/globalaccesslists"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/iam/globalapikeys"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/iam/organizations"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/iam/projects"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/iam/teams"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/iam/users"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/validate"
 	"github.com/spf13/cobra"
 )
 

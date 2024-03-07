@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_owners.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OwnerCreator
+//go:generate mockgen -destination=../mocks/mock_owners.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store OwnerCreator
 
 type OwnerCreator interface {
 	CreateOwner(*opsmngr.User, []string) (*opsmngr.CreateUserResponse, error)

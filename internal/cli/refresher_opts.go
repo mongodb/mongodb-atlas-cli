@@ -19,8 +19,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/oauth"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/oauth"
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -31,7 +31,7 @@ type RefresherOpts struct {
 	flow Refresher
 }
 
-//go:generate mockgen -destination=../mocks/mock_refresher.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli Refresher
+//go:generate mockgen -destination=../mocks/mock_refresher.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli Refresher
 type Refresher interface {
 	RequestCode(context.Context) (*atlasauth.DeviceCode, *atlas.Response, error)
 	PollToken(context.Context, *atlasauth.DeviceCode) (*atlasauth.Token, *atlas.Response, error)

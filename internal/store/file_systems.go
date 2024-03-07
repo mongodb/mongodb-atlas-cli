@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_backup_file_systems.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store FileSystemsLister,FileSystemsDescriber,FileSystemsDeleter,FileSystemsCreator,FileSystemsUpdater
+//go:generate mockgen -destination=../mocks/mock_backup_file_systems.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store FileSystemsLister,FileSystemsDescriber,FileSystemsDeleter,FileSystemsCreator,FileSystemsUpdater
 
 type FileSystemsLister interface {
 	ListFileSystems(*opsmngr.ListOptions) (*opsmngr.FileSystemStoreConfigurations, error)

@@ -19,7 +19,7 @@ package backup
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/test"
 )
 
 func TestListBuilder(t *testing.T) {

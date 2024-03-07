@@ -15,7 +15,7 @@
 package fixture
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/pointer"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 

@@ -36,6 +36,7 @@ func TestEvents(t *testing.T) {
 			eventsEntity,
 			projectEntity,
 			"list",
+			"--omitCount",
 			"-o=json",
 		)
 

@@ -31,12 +31,12 @@ func setDisableAutoGenTag(cmd *cobra.Command) {
 }
 
 func main() {
-	if err := os.RemoveAll("./docs/atlascli/command"); err != nil {
+	if err := os.RemoveAll("./docs/command"); err != nil {
 		log.Fatal(err)
 	}
 
 	const docsPermissions = 0766
-	if err := os.MkdirAll("./docs/atlascli/command", docsPermissions); err != nil {
+	if err := os.MkdirAll("./docs/command", docsPermissions); err != nil {
 		log.Fatal(err)
 	}
 
@@ -45,7 +45,7 @@ func main() {
 
 	setDisableAutoGenTag(atlasBuilder)
 
-	if err := cobra2snooty.GenTreeDocs(atlasBuilder, "./docs/atlascli/command"); err != nil {
+	if err := cobra2snooty.GenTreeDocs(atlasBuilder, "./docs/command"); err != nil {
 		log.Fatal(err)
 	}
 }

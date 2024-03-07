@@ -14,7 +14,7 @@
 
 //go:build unit
 
-package time
+package convert
 
 import (
 	"testing"

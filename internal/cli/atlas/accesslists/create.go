@@ -22,10 +22,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/time"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
@@ -79,7 +79,7 @@ func (opts *CreateOpts) newProjectIPAccessList() ([]*atlasv2.NetworkPermissionEn
 		Comment: &opts.comment,
 	}
 	if opts.deleteAfter != "" {
-		deleteAfterDate, err := time.ParseTimestamp(opts.deleteAfter)
+		deleteAfterDate, err := convert.ParseTimestamp(opts.deleteAfter)
 		if err != nil {
 			return nil, err
 		}

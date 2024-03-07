@@ -22,7 +22,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
@@ -80,11 +79,14 @@ func (opts *GCPOpts) containerExists() (*atlasv2.CloudProviderContainer, error) 
 }
 
 func (opts *GCPOpts) newContainer() *atlasv2.CloudProviderContainer {
-	return &atlasv2.CloudProviderContainer{
+	c := &atlasv2.CloudProviderContainer{
 		AtlasCidrBlock: &opts.atlasCIDRBlock,
-		Regions:        pointer.GetArrayPointerIfNotEmpty(opts.regions),
-		ProviderName:   pointer.Get("GCP"),
 	}
+	c.SetProviderName("GCP")
+	if len(opts.regions) > 0 {
+		c.Regions = &opts.regions
+	}
+	return c
 }
 
 func (opts *GCPOpts) newPeer(containerID string) *atlasv2.BaseNetworkPeeringConnectionSettings {

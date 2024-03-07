@@ -24,7 +24,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
@@ -106,18 +105,29 @@ func (opts *CreateOpts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 		authDB = convert.ExternalAuthDB
 	}
 
-	return &atlasv2.CloudDatabaseUser{
-		Roles:           pointer.Get(convert.BuildAtlasRoles(opts.roles)),
-		Scopes:          pointer.Get(convert.BuildAtlasScopes(opts.scopes)),
+	roles := convert.BuildAtlasRoles(opts.roles)
+	scopes := convert.BuildAtlasScopes(opts.scopes)
+	u := &atlasv2.CloudDatabaseUser{
+		Roles:           &roles,
+		Scopes:          &scopes,
 		GroupId:         opts.ConfigProjectID(),
 		Username:        opts.username,
-		Password:        pointer.GetStringPointerIfNotEmpty(opts.password),
-		X509Type:        pointer.GetStringPointerIfNotEmpty(opts.x509Type),
-		AwsIAMType:      pointer.GetStringPointerIfNotEmpty(opts.awsIamType),
-		LdapAuthType:    pointer.GetStringPointerIfNotEmpty(opts.ldapType),
 		DeleteAfterDate: convert.ParseDeleteAfter(opts.deleteAfter),
 		DatabaseName:    authDB,
 	}
+	if opts.password != "" {
+		u.Password = &opts.password
+	}
+	if opts.x509Type != "" {
+		u.X509Type = &opts.x509Type
+	}
+	if opts.awsIamType != "" {
+		u.AwsIAMType = &opts.awsIamType
+	}
+	if opts.ldapType != "" {
+		u.LdapAuthType = &opts.ldapType
+	}
+	return u
 }
 
 func (opts *CreateOpts) Prompt() error {

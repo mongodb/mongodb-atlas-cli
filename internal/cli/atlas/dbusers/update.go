@@ -23,7 +23,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
@@ -80,15 +79,20 @@ func (opts *UpdateOpts) update(out *admin.CloudDatabaseUser) {
 		out.Username = opts.currentUsername
 	}
 	if opts.password != "" {
-		out.Password = pointer.GetStringPointerIfNotEmpty(opts.password)
+		out.Password = &opts.password
 	}
-	out.Scopes = pointer.Get(convert.BuildAtlasScopes(opts.scopes))
-	out.Roles = pointer.Get(convert.BuildAtlasRoles(opts.roles))
+
+	roles := convert.BuildAtlasRoles(opts.roles)
+	out.Roles = &roles
+	scopes := convert.BuildAtlasScopes(opts.scopes)
+	out.Scopes = &scopes
 	out.DatabaseName = opts.authDB
 	if opts.authDB == "" {
 		out.DatabaseName = convert.GetAuthDB(out)
 	}
-	out.X509Type = pointer.GetStringPointerIfNotEmpty(opts.x509Type)
+	if opts.x509Type != "" {
+		out.X509Type = &opts.x509Type
+	}
 }
 
 func (opts *UpdateOpts) validateAuthDB() error {

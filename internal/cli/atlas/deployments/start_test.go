@@ -177,7 +177,7 @@ func TestStart_RunAtlas(t *testing.T) {
 		StartCluster(projectID, deploymentName).
 		Return(
 			&admin.AdvancedClusterDescription{
-				Name: pointer.GetStringPointerIfNotEmpty(deploymentName),
+				Name: pointer.Get(deploymentName),
 			}, nil).
 		Times(1)
 

@@ -22,9 +22,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas"
-	customTime "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/time"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
@@ -76,12 +76,12 @@ func (opts *AcknowledgeOpts) newAcknowledgeRequest() (*admin.AlertViewForNdsGrou
 		const years = 100
 		opts.until = time.Now().AddDate(years, 1, 1).Format(time.RFC3339)
 	}
-	time, err := customTime.ParseTimestamp(opts.until)
+	until, err := convert.ParseTimestamp(opts.until)
 	if err != nil {
 		return nil, err
 	}
 	return &admin.AlertViewForNdsGroup{
-		AcknowledgedUntil:      &time,
+		AcknowledgedUntil:      &until,
 		AcknowledgementComment: &opts.comment,
 	}, nil
 }

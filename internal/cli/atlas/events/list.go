@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
@@ -82,14 +83,21 @@ func (opts *ListOpts) NewOrgListOptions() admin.ListOrganizationEventsApiParams 
 	p := admin.ListOrganizationEventsApiParams{
 		OrgId:     opts.orgID,
 		EventType: eventType,
-		MaxDate:   pointer.StringToTimePointer(opts.MaxDate),
-		MinDate:   pointer.StringToTimePointer(opts.MinDate),
+	}
+	if maxDate, err := convert.ParseTimestamp(opts.MaxDate); err == nil {
+		p.MaxDate = pointer.Get(maxDate)
+	}
+	if minDate, err := convert.ParseTimestamp(opts.MinDate); err == nil {
+		p.MinDate = pointer.Get(minDate)
 	}
 	if opts.ItemsPerPage > 0 {
 		p.ItemsPerPage = &opts.ItemsPerPage
 	}
 	if opts.PageNum > 0 {
 		p.PageNum = &opts.PageNum
+	}
+	if opts.OmitCount {
+		p.IncludeCount = pointer.Get(false)
 	}
 	return p
 }
@@ -102,8 +110,12 @@ func (opts *ListOpts) NewProjectListOptions() admin.ListProjectEventsApiParams {
 	p := admin.ListProjectEventsApiParams{
 		GroupId:   opts.projectID,
 		EventType: eventType,
-		MaxDate:   pointer.StringToTimePointer(opts.MaxDate),
-		MinDate:   pointer.StringToTimePointer(opts.MinDate),
+	}
+	if maxDate, err := convert.ParseTimestamp(opts.MaxDate); err == nil {
+		p.MaxDate = pointer.Get(maxDate)
+	}
+	if minDate, err := convert.ParseTimestamp(opts.MinDate); err == nil {
+		p.MinDate = pointer.Get(minDate)
 	}
 	if opts.ItemsPerPage > 0 {
 		p.ItemsPerPage = &opts.ItemsPerPage
@@ -111,7 +123,6 @@ func (opts *ListOpts) NewProjectListOptions() admin.ListProjectEventsApiParams {
 	if opts.PageNum > 0 {
 		p.PageNum = &opts.PageNum
 	}
-
 	if opts.OmitCount {
 		p.IncludeCount = pointer.Get(false)
 	}

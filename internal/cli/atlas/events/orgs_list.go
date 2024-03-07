@@ -20,6 +20,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
@@ -56,15 +57,13 @@ func (opts *orgListOpts) Run() error {
 }
 
 func (opts *orgListOpts) NewOrgListOptions() admin.ListOrganizationEventsApiParams {
-	var eventType *[]string
+	var eventType []string
 	if len(opts.EventType) > 0 {
-		eventType = &opts.EventType
+		eventType = opts.EventType
 	}
 	p := admin.ListOrganizationEventsApiParams{
 		OrgId:     opts.ConfigOrgID(),
-		EventType: eventType,
-		MaxDate:   pointer.StringToTimePointer(opts.MaxDate),
-		MinDate:   pointer.StringToTimePointer(opts.MinDate),
+		EventType: &eventType,
 	}
 	if opts.ItemsPerPage > 0 {
 		p.ItemsPerPage = &opts.ItemsPerPage
@@ -74,6 +73,12 @@ func (opts *orgListOpts) NewOrgListOptions() admin.ListOrganizationEventsApiPara
 	}
 	if opts.OmitCount {
 		p.IncludeCount = pointer.Get(false)
+	}
+	if maxDate, err := convert.ParseTimestamp(opts.MaxDate); err == nil {
+		p.MaxDate = pointer.Get(maxDate)
+	}
+	if minDate, err := convert.ParseTimestamp(opts.MinDate); err == nil {
+		p.MinDate = pointer.Get(minDate)
 	}
 	return p
 }

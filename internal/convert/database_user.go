@@ -18,8 +18,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	customTime "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/time"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
@@ -52,16 +50,15 @@ func BuildAtlasRoles(r []string) []atlasv2.DatabaseUserRole {
 }
 
 func buildCollectionName(dbCollection []string) *string {
-	var collectionName string
 	if len(dbCollection) > 1 {
-		collectionName = strings.Join(dbCollection[1:], ".")
+		c := strings.Join(dbCollection[1:], ".")
+		return &c
 	}
-	return pointer.GetStringPointerIfNotEmpty(collectionName)
+	return nil
 }
 
 func ParseDeleteAfter(deleteAfter string) *time.Time {
-	deleteAfterDate, err := customTime.ParseTimestamp(deleteAfter)
-
+	deleteAfterDate, err := ParseTimestamp(deleteAfter)
 	if err == nil {
 		return &deleteAfterDate
 	}
@@ -102,8 +99,8 @@ func BuildAtlasScopes(r []string) []atlasv2.UserScope {
 // SCRAM-SHA should use admin.
 func GetAuthDB(user *atlasv2.CloudDatabaseUser) string {
 	// base documentation https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/resources/database_user
-	_, isX509 := adminX509Type[pointer.GetOrDefault(user.X509Type, "")]
-	_, isIAM := awsIAMType[pointer.GetOrDefault(user.AwsIAMType, "")]
+	_, isX509 := adminX509Type[user.GetX509Type()]
+	_, isIAM := awsIAMType[user.GetAwsIAMType()]
 
 	// just USER is external
 	isLDAP := user.LdapAuthType != nil && *user.LdapAuthType == userLdapAuthType

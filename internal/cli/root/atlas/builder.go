@@ -344,7 +344,7 @@ func (n *Notifier) notifyIfApplicable(isHb bool) error {
 
 	var upgradeInstructions string
 	if isHb {
-		upgradeInstructions = `To upgrade, run "brew update && brew upgrade mongodb-atlas-cli".`
+		upgradeInstructions = `To upgrade, run "brew update && brew upgrade mongodb-atlas-cli"`
 	} else {
 		upgradeInstructions = "To upgrade, see: https://dochub.mongodb.org/core/install-atlas-cli"
 	}
@@ -353,7 +353,7 @@ func (n *Notifier) notifyIfApplicable(isHb bool) error {
 A new version of atlascli is available '%s'!
 %s
 
-To disable this alert, run "%s config set skip_update_check true".
+To disable this alert, run "%s config set skip_update_check true"
 `
 	_, err = fmt.Fprintf(n.writer, newVersionTemplate, release.Version, upgradeInstructions, config.BinName())
 	return err

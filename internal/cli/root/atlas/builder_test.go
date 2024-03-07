@@ -85,7 +85,7 @@ func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 A new version of atlascli is available '%v'!
 To upgrade, see: https://dochub.mongodb.org/core/install-atlas-cli
 
-To disable this alert, run "%s config set skip_update_check true".
+To disable this alert, run "%s config set skip_update_check true"
 `, v, config.BinName())
 			}
 

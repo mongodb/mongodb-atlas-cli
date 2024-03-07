@@ -65,7 +65,7 @@ func TestLoginBuilder(t *testing.T) {
 		t,
 		LoginBuilder(),
 		0,
-		[]string{"cm", "noBrowser"},
+		[]string{"noBrowser"},
 	)
 }
 
@@ -78,14 +78,14 @@ func Test_loginOpts_Run(t *testing.T) {
 	buf := new(bytes.Buffer)
 
 	opts := &LoginOpts{
-		config:         mockConfig,
-		NoBrowser:      true,
-		isCloudManager: true,
+		config:    mockConfig,
+		NoBrowser: true,
 	}
 	opts.WithFlow(mockFlow)
 
 	opts.OutWriter = buf
 	opts.Store = mockStore
+	opts.Service = config.CloudManagerService
 	expectedCode := &auth.DeviceCode{
 		UserCode:        "12345678",
 		VerificationURI: "http://localhost",
@@ -114,7 +114,6 @@ func Test_loginOpts_Run(t *testing.T) {
 		Return(expectedToken, nil, nil).
 		Times(1)
 
-	mockConfig.EXPECT().Set("service", "cloud-manager").Times(1)
 	mockConfig.EXPECT().Set("access_token", "asdf").Times(1)
 	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)

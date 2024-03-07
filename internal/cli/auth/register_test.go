@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -56,7 +57,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	opts.config = mockConfig
 	opts.OutWriter = buf
 	opts.Store = mockStore
-	opts.isCloudManager = true
+	opts.Service = config.CloudManagerService
 	opts.WithFlow(mockFlow)
 
 	expectedCode := &auth.DeviceCode{
@@ -92,7 +93,6 @@ func Test_registerOpts_Run(t *testing.T) {
 		Return(expectedToken, nil, nil).
 		Times(1)
 
-	mockConfig.EXPECT().Set("service", "cloud-manager").Times(1)
 	mockConfig.EXPECT().Set("access_token", "asdf").Times(1)
 	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)

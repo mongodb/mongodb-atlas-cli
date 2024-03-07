@@ -35,10 +35,6 @@ Options
      - Type
      - Required
      - Description
-   * - --cm
-     - 
-     - false
-     - Log in to Cloud Manager.
    * - -h, --help
      - 
      - false

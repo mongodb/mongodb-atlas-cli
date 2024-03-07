@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type ListOpts struct {
@@ -57,9 +56,9 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newPeeringConnectionsListOptions() *atlas.ContainersListOptions {
-	return &atlas.ContainersListOptions{
-		ListOptions:  *opts.NewListOptions(),
+func (opts *ListOpts) newPeeringConnectionsListOptions() *store.ContainersListOptions {
+	return &store.ContainersListOptions{
+		ListOptions:  *opts.NewAtlasListOptions(),
 		ProviderName: opts.provider,
 	}
 }

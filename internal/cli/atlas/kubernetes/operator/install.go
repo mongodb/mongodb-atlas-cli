@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/crds"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/version"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	"k8s.io/apimachinery/pkg/util/validation"
@@ -111,7 +111,7 @@ func (opts *InstallOpts) Run(ctx context.Context) error {
 	installer := operator.NewInstaller(opts.versionProvider, kubeCtl, opts.featureDeletionProtection, opts.featureSubDeletionProtection)
 
 	profile := config.Default()
-	atlasStore, err := atlas.New(atlas.AuthenticatedPreset(profile), atlas.WithContext(ctx))
+	atlasStore, err := store.New(store.AuthenticatedPreset(profile), store.WithContext(ctx))
 	if err != nil {
 		return err
 	}

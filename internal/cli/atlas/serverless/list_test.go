@@ -54,7 +54,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ServerlessInstances(listOpts.ProjectID, listOpts.NewListOptions()).
+		ServerlessInstances(listOpts.ProjectID, listOpts.NewAtlasListOptions()).
 		Return(expected, nil).
 		Times(1)
 

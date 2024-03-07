@@ -33,7 +33,7 @@ type CloudProviderAccessRoleDeauthorizer interface {
 	DeauthorizeCloudProviderAccessRoles(*atlas.CloudProviderDeauthorizationRequest) error
 }
 
-// CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
+// CloudProviderAccessRoleAuthorizer encapsulates the logic to manage different cloud providers.
 type CloudProviderAccessRoleAuthorizer interface {
 	AuthorizeCloudProviderAccessRole(string, string, *atlas.CloudProviderAccessRoleRequest) (*atlasv2.CloudProviderAccessRole, error)
 }

@@ -20,7 +20,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	mocks "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
@@ -34,7 +34,7 @@ func TestDescribe_Run(t *testing.T) {
 	}
 	mockStore.
 		EXPECT().
-		Project("5a0a1e7e0f2912c554080adc").
+		Project(gomock.Eq("5a0a1e7e0f2912c554080adc")).
 		Return(expected, nil).
 		Times(1)
 

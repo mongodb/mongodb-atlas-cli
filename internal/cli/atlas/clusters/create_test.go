@@ -156,10 +156,10 @@ func TestCreateOpts_PostRun_EnableWatch(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := &struct {
 		*mocks.MockClusterCreator
-		*mocks.MockAtlasClusterDescriber
+		*mocks.MockClusterDescriber
 	}{
 		mocks.NewMockClusterCreator(ctrl),
-		mocks.NewMockAtlasClusterDescriber(ctrl),
+		mocks.NewMockClusterDescriber(ctrl),
 	}
 
 	expected := &atlasv2.AdvancedClusterDescription{
@@ -199,13 +199,13 @@ func TestCreateOpts_PostRun_EnableWatch(t *testing.T) {
 
 	gomock.InOrder(
 		mockStore.
-			MockAtlasClusterDescriber.
+			MockClusterDescriber.
 			EXPECT().
 			AtlasCluster(createOpts.ProjectID, expected.GetName()).
 			Return(expected, nil).
 			Times(1),
 		mockStore.
-			MockAtlasClusterDescriber.
+			MockClusterDescriber.
 			EXPECT().
 			AtlasCluster(createOpts.ProjectID, expected.GetName()).
 			Return(expectedIdle, nil).

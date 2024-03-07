@@ -19,17 +19,15 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_serverless_instances.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ServerlessInstanceLister,ServerlessInstanceDescriber,ServerlessInstanceDeleter,ServerlessInstanceCreator,ServerlessInstanceUpdater
 
 type ServerlessInstanceLister interface {
-	ServerlessInstances(string, *atlas.ListOptions) (*atlasv2.PaginatedServerlessInstanceDescription, error)
+	ServerlessInstances(string, *ListOptions) (*atlasv2.PaginatedServerlessInstanceDescription, error)
 }
 
 type ServerlessInstanceDescriber interface {
-	ServerlessInstance(string, string) (*atlas.Cluster, error)
 	GetServerlessInstance(string, string) (*atlasv2.ServerlessInstanceDescription, error)
 }
 
@@ -46,7 +44,7 @@ type ServerlessInstanceUpdater interface {
 }
 
 // ServerlessInstances encapsulates the logic to manage different cloud providers.
-func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions) (*atlasv2.PaginatedServerlessInstanceDescription, error) {
+func (s *Store) ServerlessInstances(projectID string, listOps *ListOptions) (*atlasv2.PaginatedServerlessInstanceDescription, error) {
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -64,15 +62,6 @@ func (s *Store) GetServerlessInstance(projectID, clusterName string) (*atlasv2.S
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 	result, _, err := s.clientv2.ServerlessInstancesApi.GetServerlessInstance(s.ctx, projectID, clusterName).Execute()
-	return result, err
-}
-
-// ServerlessInstance Used by Kubernetes v1 ServerlessInstance encapsulates the logic to manage different cloud providers.
-func (s *Store) ServerlessInstance(projectID, clusterName string) (*atlas.Cluster, error) {
-	if s.service == config.CloudGovService {
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-	result, _, err := s.client.ServerlessInstances.Get(s.ctx, projectID, clusterName)
 	return result, err
 }
 

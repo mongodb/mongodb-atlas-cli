@@ -22,7 +22,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_peering_connections.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store PeeringConnectionLister,PeeringConnectionDescriber,PeeringConnectionDeleter,AzurePeeringConnectionCreator,AWSPeeringConnectionCreator,GCPPeeringConnectionCreator,PeeringConnectionCreator,ContainersLister,ContainersDeleter
 
 type PeeringConnectionLister interface {
-	PeeringConnections(string, *atlas.ContainersListOptions) ([]atlasv2.BaseNetworkPeeringConnectionSettings, error)
+	PeeringConnections(string, *ContainersListOptions) ([]atlasv2.BaseNetworkPeeringConnectionSettings, error)
 }
 
 type PeeringConnectionDescriber interface {
@@ -63,7 +63,7 @@ type ContainersDeleter interface {
 }
 
 // PeeringConnections encapsulates the logic to manage different cloud providers.
-func (s *Store) PeeringConnections(projectID string, opts *atlas.ContainersListOptions) ([]atlasv2.BaseNetworkPeeringConnectionSettings, error) {
+func (s *Store) PeeringConnections(projectID string, opts *ContainersListOptions) ([]atlasv2.BaseNetworkPeeringConnectionSettings, error) {
 	result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnections(s.ctx, projectID).
 		ItemsPerPage(opts.ItemsPerPage).
 		PageNum(opts.PageNum).

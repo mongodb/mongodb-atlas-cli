@@ -56,7 +56,7 @@ func (opts *DeleteOpts) PostRun() error {
 	watcher := watchers.NewWatcher(
 		*watchers.ClusterDeleted,
 		watchers.NewAtlasClusterStateDescriber(
-			opts.store.(store.AtlasClusterDescriber),
+			opts.store.(store.ClusterDescriber),
 			opts.ProjectID,
 			opts.Entry,
 		),

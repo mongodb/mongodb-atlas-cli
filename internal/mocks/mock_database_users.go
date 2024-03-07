@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -36,7 +37,7 @@ func (m *MockDatabaseUserLister) EXPECT() *MockDatabaseUserListerMockRecorder {
 }
 
 // DatabaseUsers mocks base method.
-func (m *MockDatabaseUserLister) DatabaseUsers(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedApiAtlasDatabaseUser, error) {
+func (m *MockDatabaseUserLister) DatabaseUsers(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedApiAtlasDatabaseUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseUsers", arg0, arg1)
 	ret0, _ := ret[0].(*admin.PaginatedApiAtlasDatabaseUser)

@@ -21,7 +21,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
@@ -31,7 +30,6 @@ import (
 )
 
 const (
-	MaxItems                          = 500
 	featureProcessArgs                = "processArgs"
 	featureBackupSchedule             = "backupRef"
 	featureServerlessPrivateEndpoints = "serverlessSpec.privateEndpoints"
@@ -46,7 +44,7 @@ type AtlasDeploymentResult struct {
 	BackupPolicies []*akov2.AtlasBackupPolicy
 }
 
-func BuildAtlasAdvancedDeployment(deploymentStore atlas.OperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*AtlasDeploymentResult, error) {
+func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*AtlasDeploymentResult, error) {
 	deployment, err := deploymentStore.AtlasCluster(projectID, clusterID)
 	if err != nil {
 		return nil, err
@@ -245,7 +243,7 @@ func isAdvancedDeploymentExportable(deployments *atlasv2.AdvancedClusterDescript
 }
 
 func isServerlessExportable(deployment *atlasv2.ServerlessInstanceDescription) bool {
-	stateName := atlas.StringOrEmpty(deployment.StateName)
+	stateName := store.StringOrEmpty(deployment.StateName)
 	if stateName == DeletingState || stateName == DeletedState {
 		return false
 	}
@@ -428,7 +426,7 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*akov2.Advan
 	return result
 }
 
-func BuildServerlessDeployments(deploymentStore atlas.OperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*akov2.AtlasDeployment, error) {
+func BuildServerlessDeployments(deploymentStore store.OperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*akov2.AtlasDeployment, error) {
 	deployment, err := deploymentStore.GetServerlessInstance(projectID, clusterID)
 	if err != nil {
 		return nil, err
@@ -440,16 +438,16 @@ func BuildServerlessDeployments(deploymentStore atlas.OperatorClusterStore, vali
 
 	providerSettings := &akov2.ProviderSettingsSpec{
 		BackingProviderName: deployment.ProviderSettings.BackingProviderName,
-		ProviderName:        akov2provider.ProviderName(atlas.StringOrEmpty(deployment.ProviderSettings.ProviderName)),
+		ProviderName:        akov2provider.ProviderName(store.StringOrEmpty(deployment.ProviderSettings.ProviderName)),
 		RegionName:          deployment.ProviderSettings.RegionName,
 	}
 
 	serverlessSpec := &akov2.ServerlessSpec{
-		Name:             atlas.StringOrEmpty(deployment.Name),
+		Name:             store.StringOrEmpty(deployment.Name),
 		ProviderSettings: providerSettings,
 	}
 
-	atlasName := fmt.Sprintf("%s-%s", projectName, atlas.StringOrEmpty(deployment.Name))
+	atlasName := fmt.Sprintf("%s-%s", projectName, store.StringOrEmpty(deployment.Name))
 	atlasDeployment := &akov2.AtlasDeployment{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AtlasDeployment",
@@ -479,7 +477,7 @@ func BuildServerlessDeployments(deploymentStore atlas.OperatorClusterStore, vali
 	}
 
 	if validator.FeatureExist(features.ResourceAtlasDeployment, featureServerlessPrivateEndpoints) {
-		privateEndpoints, err := buildServerlessPrivateEndpoints(deploymentStore, projectID, atlas.StringOrEmpty(deployment.Name))
+		privateEndpoints, err := buildServerlessPrivateEndpoints(deploymentStore, projectID, store.StringOrEmpty(deployment.Name))
 		if err != nil {
 			return nil, err
 		}

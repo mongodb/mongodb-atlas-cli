@@ -27,10 +27,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas-sdk/v20231115007/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
@@ -122,7 +122,7 @@ func TestRun_ConnectAtlas(t *testing.T) {
 
 	mockAtlasClusterListStore := mocks.NewMockClusterLister(ctrl)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
-	mockAtlasClusterDescriber := mocks.NewMockAtlasClusterDescriber(ctrl)
+	mockAtlasClusterDescriber := mocks.NewMockClusterDescriber(ctrl)
 
 	connectOpts := &options.ConnectOpts{
 		ConnectWith: "connectionString",
@@ -162,7 +162,7 @@ func TestRun_ConnectAtlas(t *testing.T) {
 	mockAtlasClusterListStore.
 		EXPECT().
 		ProjectClusters(connectOpts.ProjectID,
-			&mongodbatlas.ListOptions{
+			&store.ListOptions{
 				PageNum:      cli.DefaultPage,
 				ItemsPerPage: options.MaxItemsPerPage,
 			},

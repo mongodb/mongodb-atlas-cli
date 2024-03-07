@@ -27,10 +27,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
-	mocks "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	atlasmocks "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
@@ -43,7 +42,7 @@ const resourceVersion = "x.y.z"
 
 func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 	ctl := gomock.NewController(t)
-	clusterStore := atlasmocks.NewMockOperatorClusterStore(ctl)
+	clusterStore := mocks.NewMockOperatorClusterStore(ctl)
 	dictionary := resources.AtlasNameToKubernetesName()
 	featureValidator := mocks.NewMockFeatureValidator(ctl)
 
@@ -426,7 +425,7 @@ func TestBuildServerlessDeployments(t *testing.T) {
 	const targetNamespace = "test-namespace-2"
 
 	ctl := gomock.NewController(t)
-	clusterStore := atlasmocks.NewMockOperatorClusterStore(ctl)
+	clusterStore := mocks.NewMockOperatorClusterStore(ctl)
 	dictionary := resources.AtlasNameToKubernetesName()
 
 	featureValidator := mocks.NewMockFeatureValidator(ctl)
@@ -486,10 +485,10 @@ func TestBuildServerlessDeployments(t *testing.T) {
 				},
 				BackupScheduleRef: akov2common.ResourceRefNamespaced{},
 				ServerlessSpec: &akov2.ServerlessSpec{
-					Name: atlas.StringOrEmpty(cluster.Name),
+					Name: store.StringOrEmpty(cluster.Name),
 					ProviderSettings: &akov2.ProviderSettingsSpec{
 						BackingProviderName: cluster.ProviderSettings.BackingProviderName,
-						ProviderName:        akov2provider.ProviderName(atlas.StringOrEmpty(cluster.ProviderSettings.ProviderName)),
+						ProviderName:        akov2provider.ProviderName(store.StringOrEmpty(cluster.ProviderSettings.ProviderName)),
 						RegionName:          cluster.ProviderSettings.RegionName,
 					},
 					PrivateEndpoints: []akov2.ServerlessPrivateEndpoint{

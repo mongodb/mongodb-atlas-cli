@@ -22,8 +22,8 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/shirou/gopsutil/v3/host"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID string) (Deployment, error) {
@@ -102,7 +102,7 @@ func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, er
 		projectID = opts.DefaultSetter.ProjectID
 	}
 
-	listOpts := &mongodbatlas.ListOptions{
+	listOpts := &store.ListOptions{
 		PageNum:      cli.DefaultPage,
 		ItemsPerPage: MaxItemsPerPage,
 	}

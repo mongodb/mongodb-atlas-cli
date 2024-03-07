@@ -31,7 +31,7 @@ type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	name  string
-	store store.AtlasClusterDescriber
+	store store.ClusterDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

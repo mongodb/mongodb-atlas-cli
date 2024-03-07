@@ -23,7 +23,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_database_users.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DatabaseUserLister,DatabaseUserCreator,DatabaseUserDeleter,DatabaseUserUpdater,DatabaseUserDescriber,DBUserCertificateLister,DBUserCertificateCreator
 
 type DatabaseUserLister interface {
-	DatabaseUsers(groupID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error)
+	DatabaseUsers(groupID string, opts *ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error)
 }
 
 type DatabaseUserCreator interface {
@@ -61,7 +61,7 @@ func (s *Store) DeleteDatabaseUser(authDB, groupID, username string) error {
 	return err
 }
 
-func (s *Store) DatabaseUsers(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error) {
+func (s *Store) DatabaseUsers(projectID string, opts *ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error) {
 	res := s.clientv2.DatabaseUsersApi.ListDatabaseUsers(s.ctx, projectID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)

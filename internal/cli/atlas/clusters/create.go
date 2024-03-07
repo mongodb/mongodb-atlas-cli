@@ -115,7 +115,7 @@ func (opts *CreateOpts) PostRun() error {
 	watcher := watchers.NewWatcherWithDefaultWait(
 		*watchers.ClusterCreated,
 		watchers.NewAtlasClusterStateDescriber(
-			opts.store.(store.AtlasClusterDescriber),
+			opts.store.(store.ClusterDescriber),
 			opts.ProjectID,
 			opts.name,
 		),

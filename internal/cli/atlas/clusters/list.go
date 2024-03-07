@@ -47,7 +47,7 @@ var listTemplate = `ID	NAME	MDB VER	STATE{{range valueOrEmptySlice .Results}}
 `
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
+	listOpts := opts.NewAtlasListOptions()
 	r, err := opts.store.ProjectClusters(opts.ConfigProjectID(), listOpts)
 	if err != nil {
 		return err

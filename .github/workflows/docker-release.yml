@@ -117,6 +117,7 @@ jobs:
           {
            echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}"
            echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}"
+           echo "COSIGN_REPOSITORY=${SIGNATURE_REPO}"
           } >> "signing-envfile"
           
           echo "${DOCKERHUB_SECRET}" | docker login --password-stdin --username "${DOCKERHUB_USER}"

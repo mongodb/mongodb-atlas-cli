@@ -72,6 +72,9 @@ func (opts *orgListOpts) NewOrgListOptions() admin.ListOrganizationEventsApiPara
 	if opts.PageNum > 0 {
 		p.PageNum = &opts.PageNum
 	}
+	if opts.OmitCount {
+		p.IncludeCount = pointer.Get(false)
+	}
 	return p
 }
 

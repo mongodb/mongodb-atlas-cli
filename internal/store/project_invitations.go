@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package atlas
+package store
 
 import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_project_invitations.go -package=atlas github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store/atlas ProjectInvitationLister,ProjectInvitationDescriber,ProjectInvitationDeleter,ProjectInviter,ProjectInvitationUpdater
+//go:generate mockgen -destination=../mocks/mock_project_invitations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectInvitationLister,ProjectInvitationDescriber,ProjectInvitationDeleter,ProjectInviter,ProjectInvitationUpdater
 
 type ProjectInvitationLister interface {
 	ProjectInvitations(*atlasv2.ListProjectInvitationsApiParams) ([]atlasv2.GroupInvitation, error)

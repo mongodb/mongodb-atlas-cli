@@ -66,7 +66,6 @@ const (
 	skipUpdateCheck              = "skip_update_check"
 	TelemetryEnabledProperty     = "telemetry_enabled"
 	MongoCLI                     = "mongocli"
-	AtlasCLI                     = "atlascli"
 	ContainerizedHostNameEnv     = "MONGODB_ATLAS_IS_CONTAINERIZED"
 	GitHubActionsHostNameEnv     = "GITHUB_ACTIONS"
 	AtlasActionHostNameEnv       = "ATLAS_GITHUB_ACTION"
@@ -77,17 +76,13 @@ const (
 )
 
 var (
-	ToolName       = MongoCLI
 	HostName       = getConfigHostnameFromEnvs()
-	UserAgent      = fmt.Sprintf("%s/%s (%s;%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH, HostName)
+	UserAgent      = fmt.Sprintf("%s/%s (%s;%s;%s)", MongoCLI, version.Version, runtime.GOOS, runtime.GOARCH, HostName)
 	defaultProfile = newProfile()
 )
 
 func BinName() string {
-	if ToolName == AtlasCLI {
-		return "atlas"
-	}
-	return ToolName
+	return MongoCLI
 }
 
 type Setter interface {
@@ -504,39 +499,6 @@ func (*Profile) SetSkipUpdateCheck(v bool) {
 	SetGlobal(skipUpdateCheck, v)
 }
 
-// IsTelemetryEnabledSet return true if telemetry_enabled has been set.
-func IsTelemetryEnabledSet() bool { return Default().IsTelemetryEnabledSet() }
-func (*Profile) IsTelemetryEnabledSet() bool {
-	return viper.IsSet(TelemetryEnabledProperty)
-}
-
-// TelemetryEnabled get the configured telemetry enabled value.
-func TelemetryEnabled() bool { return Default().TelemetryEnabled() }
-func (p *Profile) TelemetryEnabled() bool {
-	return isTelemetryFeatureAllowed() && p.GetBoolWithDefault(TelemetryEnabledProperty, true)
-}
-
-// SetTelemetryEnabled sets the telemetry enabled value.
-func SetTelemetryEnabled(v bool) { Default().SetTelemetryEnabled(v) }
-
-func (*Profile) SetTelemetryEnabled(v bool) {
-	if !isTelemetryFeatureAllowed() {
-		return
-	}
-	SetGlobal(TelemetryEnabledProperty, v)
-}
-
-func boolEnv(key string) bool {
-	value, ok := os.LookupEnv(key)
-	return ok && IsTrue(value)
-}
-
-func isTelemetryFeatureAllowed() bool {
-	tool := ToolName == AtlasCLI
-	doNotTrack := boolEnv("DO_NOT_TRACK")
-	return tool && !doNotTrack
-}
-
 // Output get configured output format.
 func Output() string { return Default().Output() }
 func (p *Profile) Output() string {
@@ -787,9 +749,6 @@ func AtlasCLIConfigHome() (string, error) {
 
 // CLIConfigHome retrieves configHome path.
 func CLIConfigHome() (string, error) {
-	if ToolName == AtlasCLI {
-		return AtlasCLIConfigHome()
-	}
 	return MongoCLIConfigHome()
 }
 

@@ -22,7 +22,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func NewOrgIDInput() survey.Prompt {
@@ -88,41 +87,21 @@ func NewProfileReplaceConfirm(entry string) survey.Prompt {
 }
 
 // NewOrgSelect create a prompt to choice the organization.
-func NewOrgSelect(options *[]atlasv2.AtlasOrganization) survey.Prompt {
-	opt := make([]string, len(*options))
-	for i, o := range *options {
-		opt[i] = *o.Id
-	}
-
-	return &survey.Select{
-		Message: "Choose a default organization:",
-		Options: opt,
-		Description: func(_ string, i int) string {
-			return (*options)[i].Name
-		},
-		Filter: func(filter string, _ string, i int) bool {
-			filter = strings.ToLower(filter)
-			return strings.HasPrefix(strings.ToLower((*options)[i].Name), filter) || strings.HasPrefix(*(*options)[i].Id, filter)
-		},
-	}
-}
-
-// NewOnPremOrgSelect create a prompt to choice the organization.
-func NewOnPremOrgSelect(options []*atlas.Organization) survey.Prompt {
+func NewOrgSelect(options []atlasv2.AtlasOrganization) survey.Prompt {
 	opt := make([]string, len(options))
 	for i, o := range options {
-		opt[i] = o.ID
+		opt[i] = o.GetId()
 	}
 
 	return &survey.Select{
 		Message: "Choose a default organization:",
 		Options: opt,
 		Description: func(_ string, i int) string {
-			return options[i].Name
+			return options[i].GetName()
 		},
 		Filter: func(filter string, _ string, i int) bool {
 			filter = strings.ToLower(filter)
-			return strings.HasPrefix(strings.ToLower(options[i].Name), filter) || strings.HasPrefix(options[i].ID, filter)
+			return strings.HasPrefix(strings.ToLower(options[i].GetName()), filter) || strings.HasPrefix(options[i].GetId(), filter)
 		},
 	}
 }

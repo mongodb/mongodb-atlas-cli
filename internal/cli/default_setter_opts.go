@@ -111,7 +111,7 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 }
 
 // Orgs fetches organizations, filtering by name.
-func (opts *DefaultSetterOpts) orgs(filter string) (results *[]atlasv2.AtlasOrganization, err error) {
+func (opts *DefaultSetterOpts) orgs(filter string) (results []atlasv2.AtlasOrganization, err error) {
 	spin := newSpinner()
 	spin.Start()
 	defer spin.Stop()
@@ -134,7 +134,7 @@ func (opts *DefaultSetterOpts) orgs(filter string) (results *[]atlasv2.AtlasOrga
 	if orgs.GetTotalCount() > resultsLimit {
 		return nil, errTooManyResults
 	}
-	return orgs.Results, nil
+	return orgs.GetResults(), nil
 }
 
 // ProjectExists checks if the project exists and the current user has access to it.
@@ -146,7 +146,7 @@ func (opts *DefaultSetterOpts) ProjectExists(id string) bool {
 }
 
 // AskProject will try to construct a select based on fetched projects.
-// If it fails or there are no projects to show we fallback to ask for project by ID.
+// If it fails or there are no projects to show we fall back to ask for project by ID.
 // If only one project, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskProject() error {
 	ids, names, err := opts.projects()
@@ -203,7 +203,7 @@ func (opts *DefaultSetterOpts) OrgExists(id string) bool {
 }
 
 // AskOrg will try to construct a select based on fetched organizations.
-// If it fails or there are no organizations to show we fallback to ask for org by ID.
+// If it fails or there are no organizations to show we fall back to ask for org by ID.
 // If only one organization, select it by default without prompting the user.
 func (opts *DefaultSetterOpts) AskOrg() error {
 	return opts.askOrgWithFilter("")
@@ -274,9 +274,9 @@ func (opts *DefaultSetterOpts) manualOrgID() error {
 	return nil
 }
 
-func (opts *DefaultSetterOpts) selectOrg(orgs *[]atlasv2.AtlasOrganization) error {
-	if orgs != nil && len(*orgs) == 1 {
-		opts.OrgID = *(*orgs)[0].Id
+func (opts *DefaultSetterOpts) selectOrg(orgs []atlasv2.AtlasOrganization) error {
+	if len(orgs) == 1 {
+		opts.OrgID = orgs[0].GetId()
 		return nil
 	}
 

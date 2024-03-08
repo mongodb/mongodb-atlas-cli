@@ -19,10 +19,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 type MetricsOpts struct {
@@ -35,54 +35,74 @@ type MetricsOpts struct {
 }
 
 func (opts *MetricsOpts) NewProcessMeasurementsAPIParams(groupID string, processID string) *atlasv2.GetHostMeasurementsApiParams {
-	return &atlasv2.GetHostMeasurementsApiParams{
-		GroupId:     groupID,
-		ProcessId:   processID,
-		Granularity: pointer.GetStringPointerIfNotEmpty(opts.Granularity),
-		M:           pointer.GetArrayPointerIfNotEmpty(opts.MeasurementType),
-		Period:      pointer.GetStringPointerIfNotEmpty(opts.Period),
-		Start:       pointer.StringToTimePointer(opts.Start),
-		End:         pointer.StringToTimePointer(opts.End),
+	p := &atlasv2.GetHostMeasurementsApiParams{
+		GroupId:   groupID,
+		ProcessId: processID,
 	}
+	if opts.Granularity != "" {
+		p.Granularity = &opts.Granularity
+	}
+	if len(opts.MeasurementType) > 0 {
+		p.M = &opts.MeasurementType
+	}
+	if opts.Period != "" {
+		p.Period = &opts.Period
+	}
+	if start, err := convert.ParseTimestamp(opts.Start); err == nil {
+		p.Start = pointer.Get(start)
+	}
+	if end, err := convert.ParseTimestamp(opts.End); err == nil {
+		p.End = pointer.Get(end)
+	}
+	return p
 }
 
 func (opts *MetricsOpts) NewDiskMeasurementsAPIParams(groupID string, processID string, partitionName string) *atlasv2.GetDiskMeasurementsApiParams {
-	return &atlasv2.GetDiskMeasurementsApiParams{
+	p := &atlasv2.GetDiskMeasurementsApiParams{
 		GroupId:       groupID,
 		ProcessId:     processID,
 		PartitionName: partitionName,
-		Granularity:   pointer.GetStringPointerIfNotEmpty(opts.Granularity),
-		M:             pointer.GetArrayPointerIfNotEmpty(opts.MeasurementType),
-		Period:        pointer.GetStringPointerIfNotEmpty(opts.Period),
-		Start:         pointer.StringToTimePointer(opts.Start),
-		End:           pointer.StringToTimePointer(opts.End),
 	}
+	if opts.Granularity != "" {
+		p.Granularity = &opts.Granularity
+	}
+	if len(opts.MeasurementType) > 0 {
+		p.M = &opts.MeasurementType
+	}
+	if opts.Period != "" {
+		p.Period = &opts.Period
+	}
+	if start, err := convert.ParseTimestamp(opts.Start); err == nil {
+		p.Start = pointer.Get(start)
+	}
+	if end, err := convert.ParseTimestamp(opts.End); err == nil {
+		p.End = pointer.Get(end)
+	}
+	return p
 }
 
 func (opts *MetricsOpts) NewDatabaseMeasurementsAPIParams(groupID string, processID string, dbName string) *atlasv2.GetDatabaseMeasurementsApiParams {
-	return &atlasv2.GetDatabaseMeasurementsApiParams{
+	p := &atlasv2.GetDatabaseMeasurementsApiParams{
 		GroupId:      groupID,
 		ProcessId:    processID,
 		DatabaseName: dbName,
-		Granularity:  pointer.GetStringPointerIfNotEmpty(opts.Granularity),
-		M:            pointer.GetArrayPointerIfNotEmpty(opts.MeasurementType),
-		Period:       pointer.GetStringPointerIfNotEmpty(opts.Period),
-		Start:        pointer.StringToTimePointer(opts.Start),
-		End:          pointer.StringToTimePointer(opts.End),
 	}
-}
-
-func (opts *MetricsOpts) NewProcessMetricsListOptions() *atlas.ProcessMeasurementListOptions {
-	o := &atlas.ProcessMeasurementListOptions{
-		ListOptions: opts.NewListOptions(),
+	if opts.Granularity != "" {
+		p.Granularity = &opts.Granularity
 	}
-	o.Granularity = opts.Granularity
-	o.Period = opts.Period
-	o.Start = opts.Start
-	o.End = opts.End
-	o.M = opts.MeasurementType
-
-	return o
+	if len(opts.MeasurementType) > 0 {
+		p.M = &opts.MeasurementType
+	}
+	if opts.Period != "" {
+		p.Period = &opts.Period
+	}
+	if start, err := convert.ParseTimestamp(opts.Start); err == nil {
+		p.Start = pointer.Get(start)
+	}
+	if end, err := convert.ParseTimestamp(opts.End); err == nil {
+		p.End = pointer.Get(end)
+	}
+	return p
 }
 
 // ValidatePeriodStartEnd validates period, start and end flags.

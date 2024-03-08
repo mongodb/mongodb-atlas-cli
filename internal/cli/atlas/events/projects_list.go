@@ -20,6 +20,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
@@ -67,17 +68,19 @@ func (opts *projectListOpts) NewProjectListOptions() admin.ListProjectEventsApiP
 	p := admin.ListProjectEventsApiParams{
 		GroupId:   opts.ConfigProjectID(),
 		EventType: eventType,
-		MaxDate:   pointer.StringToTimePointer(opts.MaxDate),
-		MinDate:   pointer.StringToTimePointer(opts.MinDate),
 	}
-
+	if maxDate, err := convert.ParseTimestamp(opts.MaxDate); err == nil {
+		p.MaxDate = pointer.Get(maxDate)
+	}
+	if minDate, err := convert.ParseTimestamp(opts.MinDate); err == nil {
+		p.MinDate = pointer.Get(minDate)
+	}
 	if opts.ItemsPerPage > 0 {
 		p.ItemsPerPage = &opts.ItemsPerPage
 	}
 	if opts.PageNum > 0 {
 		p.PageNum = &opts.PageNum
 	}
-
 	if opts.OmitCount {
 		p.IncludeCount = pointer.Get(false)
 	}

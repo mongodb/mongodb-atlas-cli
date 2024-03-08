@@ -96,7 +96,7 @@ func (opts *Opts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 	return &atlasv2.CloudDatabaseUser{
 		Roles:        pointer.Get(convert.BuildAtlasRoles([]string{atlasAdmin})),
 		GroupId:      opts.ConfigProjectID(),
-		Password:     pointer.GetStringPointerIfNotEmpty(opts.DBUserPassword),
+		Password:     &opts.DBUserPassword,
 		X509Type:     &none,
 		AwsIAMType:   &none,
 		LdapAuthType: &none,

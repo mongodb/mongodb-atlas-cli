@@ -141,7 +141,12 @@ func GlobalProperties() []string {
 }
 
 func IsTrue(s string) bool {
-	return slices.Contains([]string{"t", "T", "true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES", "1"}, s)
+	switch s {
+	case "t", "T", "true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES", "1":
+		return true
+	default:
+		return false
+	}
 }
 
 func Default() *Profile {

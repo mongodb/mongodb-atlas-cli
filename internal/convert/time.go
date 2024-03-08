@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package time
+package convert
 
 import "time"
 
@@ -28,9 +28,8 @@ func ParseTimestamp(timestamp string) (time.Time, error) {
 	for _, layout := range layouts {
 		parsedTime, err = time.Parse(layout, timestamp)
 		if err == nil {
-			break
+			return parsedTime, err
 		}
 	}
-
 	return parsedTime, err
 }

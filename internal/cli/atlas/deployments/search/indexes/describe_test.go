@@ -41,10 +41,7 @@ func TestDescribe_RunLocal(t *testing.T) {
 	ctx := context.Background()
 
 	const (
-		expectedIndexName       = "idx1"
 		expectedLocalDeployment = "localDeployment1"
-		expectedDB              = "db1"
-		expectedCollection      = "col1"
 		expectedStatus          = "STEADY"
 		expectedType            = "search"
 	)
@@ -108,11 +105,11 @@ func TestDescribe_RunLocal(t *testing.T) {
 
 	expected := &atlasv2.ClusterSearchIndex{
 		Name:           "name",
-		IndexID:        pointer.GetStringPointerIfNotEmpty("test"),
+		IndexID:        pointer.Get("test"),
 		CollectionName: "coll",
 		Database:       "db",
-		Status:         pointer.GetStringPointerIfNotEmpty(expectedStatus),
-		Type:           pointer.GetStringPointerIfNotEmpty(expectedType),
+		Status:         pointer.Get(expectedStatus),
+		Type:           pointer.Get(expectedType),
 	}
 
 	mockMongodbClient.
@@ -170,13 +167,13 @@ func TestDescribe_RunAtlas(t *testing.T) {
 			Name:           "name",
 			Database:       "db",
 			CollectionName: "coll",
-			IndexID:        pointer.GetStringPointerIfNotEmpty("test"),
+			IndexID:        pointer.Get("test"),
 		}, nil).
 		Times(1)
 
 	expected := &atlasv2.ClusterSearchIndex{
 		Name:           "name",
-		IndexID:        pointer.GetStringPointerIfNotEmpty("test"),
+		IndexID:        pointer.Get("test"),
 		CollectionName: "coll",
 		Database:       "db",
 	}

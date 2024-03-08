@@ -120,11 +120,11 @@ func TestList_RunLocal(t *testing.T) {
 	expected := []*atlasv2.ClusterSearchIndex{
 		{
 			Name:           expectedName,
-			IndexID:        pointer.GetStringPointerIfNotEmpty(expectedID),
+			IndexID:        pointer.Get(expectedID),
 			CollectionName: expectedCollection,
 			Database:       expectedDB,
-			Status:         pointer.GetStringPointerIfNotEmpty(expectedStatus),
-			Type:           pointer.GetStringPointerIfNotEmpty(expectedType),
+			Status:         pointer.Get(expectedStatus),
+			Type:           pointer.Get(expectedType),
 		},
 	}
 
@@ -189,7 +189,7 @@ func TestList_RunAtlas(t *testing.T) {
 				Name:           expectedName,
 				Database:       expectedDB,
 				CollectionName: expectedCollection,
-				IndexID:        pointer.GetStringPointerIfNotEmpty(expectedID),
+				IndexID:        pointer.Get(expectedID),
 			},
 		}, nil).
 		Times(1)
@@ -197,7 +197,7 @@ func TestList_RunAtlas(t *testing.T) {
 	expected := []*atlasv2.ClusterSearchIndex{
 		{
 			Name:           expectedName,
-			IndexID:        pointer.GetStringPointerIfNotEmpty(expectedID),
+			IndexID:        pointer.Get(expectedID),
 			CollectionName: expectedCollection,
 			Database:       expectedDB,
 		},

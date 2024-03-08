@@ -109,7 +109,7 @@ func TestPause_RunAtlas(t *testing.T) {
 		PauseCluster(projectID, deploymentName).
 		Return(
 			&admin.AdvancedClusterDescription{
-				Name: pointer.GetStringPointerIfNotEmpty(deploymentName),
+				Name: pointer.Get(deploymentName),
 			}, nil).
 		Times(1)
 

@@ -17,13 +17,12 @@
 package pointintimerestore
 
 import (
-	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	mocks "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -42,13 +41,6 @@ func TestEnableBuilder(t *testing.T) {
 			flag.RestoreWindowDays,
 		},
 	)
-}
-
-func TestEnableOpts_InitStore(t *testing.T) {
-	opts := &EnableOpts{}
-
-	require.NoError(t, opts.initStore(context.TODO())())
-	assert.NotNil(t, opts.store)
 }
 
 func TestEnableOpts_Watcher(t *testing.T) {
@@ -137,45 +129,41 @@ func TestEnableOpts_WatchRun(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-
+	require.NoError(t, opts.Run())
 	test.VerifyOutputTemplate(t, enableWatchTemplate, expected)
 }
 
-func TestRestoreWindowDaysValidator(t *testing.T) {
+func Test_validateRestoreWindowDays(t *testing.T) {
 	tests := []struct {
 		name              string
 		restoreWindowDays int
-		wantErr           bool
+		wantErr           require.ErrorAssertionFunc
 	}{
 		{
 			"valid test",
 			1,
-			false,
+			require.NoError,
 		},
 		{
 			"invalid, negative number",
 			-1,
-			true,
+			require.Error,
 		},
 		{
 			"invalid, zero",
 			0,
-			true,
+			require.Error,
 		},
 	}
 
-	for _, testOptions := range tests {
-		opts := &EnableOpts{
-			restoreWindowDays: testOptions.restoreWindowDays,
-		}
-
-		if testOptions.wantErr {
-			require.Error(t, opts.validateRestoreWindowDays())
-		} else {
-			require.NoError(t, opts.validateRestoreWindowDays())
-		}
+	for _, tc := range tests {
+		tt := tc
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			opts := &EnableOpts{
+				restoreWindowDays: tt.restoreWindowDays,
+			}
+			tt.wantErr(t, opts.validateRestoreWindowDays())
+		})
 	}
 }

@@ -19,16 +19,17 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := atlas.NewMockCompliancePolicyOnDemandPolicyCreator(ctrl)
+	mockStore := mocks.NewMockCompliancePolicyOnDemandPolicyCreator(ctrl)
 
-	createOpts := &CreateOpts{
+	opts := &CreateOpts{
 		store:          mockStore,
 		retentionUnit:  "days",
 		retentionValue: 30,
@@ -36,8 +37,8 @@ func TestCreateOpts_Run(t *testing.T) {
 
 	policyItem := &atlasv2.BackupComplianceOnDemandPolicyItem{
 		FrequencyType:  onDemandFrequencyType,
-		RetentionUnit:  createOpts.retentionUnit,
-		RetentionValue: createOpts.retentionValue,
+		RetentionUnit:  opts.retentionUnit,
+		RetentionValue: opts.retentionValue,
 	}
 
 	expected := &atlasv2.DataProtectionSettings20231001{}
@@ -46,10 +47,7 @@ func TestCreateOpts_Run(t *testing.T) {
 		EXPECT().
 		CreateOnDemandPolicy("", policyItem).Return(expected, nil).
 		Times(1)
-
-	if err := createOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, opts.Run())
 }
 
 func TestCreateBuilder(t *testing.T) {

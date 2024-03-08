@@ -19,14 +19,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := atlas.NewMockCompliancePolicyScheduledPolicyCreator(ctrl)
+	mockStore := mocks.NewMockCompliancePolicyScheduledPolicyCreator(ctrl)
 
 	createOpts := &CreateOpts{
 		store:             mockStore,

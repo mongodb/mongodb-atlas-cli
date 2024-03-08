@@ -74,6 +74,14 @@ fmt-all: ### Format all go files with goimports and gofmt
 .PHONY: test
 test: unit-test integration-test fuzz-normalizer-test
 
+.PHONY: build-unusedlinter
+build-unusedlinter: ## Build unusedlinter
+	go build -C ./tools/unused -o ../../bin/unusedlinter ./cmd/linter
+
+.PHONY: run-unusedlinter
+run-unusedlinter: build-unusedlinter ## Run unusedlinter linter
+	unusedlinter ./...
+
 .PHONY: lint
 lint: ## Run linter
 	golangci-lint run

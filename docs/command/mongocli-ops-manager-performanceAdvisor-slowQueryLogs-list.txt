@@ -51,7 +51,7 @@ Options
      - help for list
    * - --hostId
      - string
-     - false
+     - true
      - Unique identifier for the host of a MongoDB process.
    * - --nLog
      - int
@@ -65,10 +65,6 @@ Options
      - string
      - false
      - Output format. Valid values are json, json-path, go-template, or go-template-file. To see the full output, use the -o json option.
-   * - --processName
-     - string
-     - false
-     - Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}.
    * - --projectId
      - string
      - false

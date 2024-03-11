@@ -478,7 +478,7 @@ buildvariants:
   - name: e2e_required
     display_name: "E2E Tests Required"
     run_on:
-      - rhel8.9-small
+      - rhel80-small
     expansions:
       <<: *go_linux_version
     tasks:

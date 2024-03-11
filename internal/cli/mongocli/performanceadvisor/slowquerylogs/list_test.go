@@ -38,7 +38,7 @@ func TestSlowQueryLogsList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		PerformanceAdvisorSlowQueries(listOpts.ProjectID, listOpts.ProcessName, listOpts.newSlowQueryOptions()).
+		PerformanceAdvisorSlowQueries(listOpts.ProjectID, listOpts.HostID, listOpts.newSlowQueryOptions()).
 		Return(expected, nil).
 		Times(1)
 
@@ -52,6 +52,6 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Duration, flag.Since, flag.HostID, flag.ProcessName, flag.Namespaces, flag.NLog},
+		[]string{flag.ProjectID, flag.Duration, flag.Since, flag.HostID, flag.Namespaces, flag.NLog},
 	)
 }

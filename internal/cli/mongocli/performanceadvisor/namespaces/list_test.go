@@ -38,7 +38,7 @@ func TestNamespacesList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		PerformanceAdvisorNamespaces(listOpts.ProjectID, listOpts.ProcessName, listOpts.newNamespaceOptions()).
+		PerformanceAdvisorNamespaces(listOpts.ProjectID, listOpts.HostID, listOpts.newNamespaceOptions()).
 		Return(expected, nil).
 		Times(1)
 
@@ -52,6 +52,6 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Duration, flag.Since, flag.ProcessName, flag.HostID},
+		[]string{flag.ProjectID, flag.Duration, flag.Since, flag.HostID},
 	)
 }

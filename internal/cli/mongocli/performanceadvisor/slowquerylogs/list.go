@@ -35,7 +35,7 @@ const listTemplate = `NAMESPACE	LINE{{range valueOrEmptySlice .SlowQuery}}
 type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	cli.PerformanceAdvisorOpts
+	HostID     string
 	store      store.PerformanceAdvisorSlowQueriesLister
 	since      int64
 	duration   int64
@@ -52,11 +52,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	host, err := opts.Host()
-	if err != nil {
-		return err
-	}
-	r, err := opts.store.PerformanceAdvisorSlowQueries(opts.ConfigProjectID(), host, opts.newSlowQueryOptions())
+	r, err := opts.store.PerformanceAdvisorSlowQueries(opts.ConfigProjectID(), opts.HostID, opts.newSlowQueryOptions())
 	if err != nil {
 		return err
 	}
@@ -96,7 +92,6 @@ If you don't set the duration option or the since option, this command returns d
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
-				opts.MarkRequiredFlagsByService(cmd),
 			)
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
@@ -107,7 +102,6 @@ If you don't set the duration option or the since option, this command returns d
 	const defaultLogLines = 20000
 
 	cmd.Flags().StringVar(&opts.HostID, flag.HostID, "", usage.HostID)
-	cmd.Flags().StringVar(&opts.ProcessName, flag.ProcessName, "", usage.ProcessName)
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
 	cmd.Flags().Int64Var(&opts.nLog, flag.NLog, defaultLogLines, usage.NLog)
@@ -116,6 +110,7 @@ If you don't set the duration option or the since option, this command returns d
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	_ = cmd.MarkFlagRequired(flag.HostID)
 
 	return cmd
 }

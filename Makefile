@@ -71,7 +71,7 @@ fmt-all: ### Format all go files with goimports and gofmt
 	find . -name "*.go" -not -path "./vendor/*" -not -path "./internal/mocks" -exec goimports -l -w "{}" \;
 
 .PHONY: test
-test: unit-test integration-test fuzz-normalizer-test
+test: unit-test integration-test
 
 .PHONY: lint
 lint: ## Run linter

@@ -96,7 +96,7 @@ func (s *Store) CreatePeeringConnection(projectID string, peer *atlasv2.BaseNetw
 func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersListOptions) ([]atlasv2.CloudProviderContainer, error) {
 	res := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID)
 	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).ProviderName(opts.ProviderName)
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount).ProviderName(opts.ProviderName)
 	}
 	result, _, err := res.Execute()
 	if err != nil {

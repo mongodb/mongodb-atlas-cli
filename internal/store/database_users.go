@@ -64,7 +64,7 @@ func (s *Store) DeleteDatabaseUser(authDB, groupID, username string) error {
 func (s *Store) DatabaseUsers(projectID string, opts *ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error) {
 	res := s.clientv2.DatabaseUsersApi.ListDatabaseUsers(s.ctx, projectID)
 	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
 	result, _, err := res.Execute()
 	return result, err

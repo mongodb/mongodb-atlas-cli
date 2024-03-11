@@ -27,6 +27,7 @@ import (
 type ListOptions struct {
 	PageNum      int
 	ItemsPerPage int
+	IncludeCount bool
 }
 
 type ContainersListOptions struct {

@@ -9,7 +9,7 @@ require (
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/briandowns/spinner v1.23.0
 	github.com/creack/pty v1.1.21
-	github.com/evergreen-ci/shrub v0.0.0-20231121224157-600e066f9de6
+	github.com/evergreen-ci/shrub v0.0.0-20240215220116-3f233ddeff2a
 	github.com/gemalto/kmip-go v0.0.10
 	github.com/go-test/deep v1.1.0
 	github.com/golang-jwt/jwt/v4 v4.5.0
@@ -25,14 +25,14 @@ require (
 	github.com/spf13/afero v1.11.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.18.2
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	github.com/tangzero/inflector v1.0.0
 	go.mongodb.org/atlas v0.36.0
 	go.mongodb.org/mongo-driver v1.14.0
 	go.mongodb.org/ops-manager v0.55.3
-	golang.org/x/crypto v0.20.0
-	golang.org/x/mod v0.15.0
-	golang.org/x/tools v0.18.0
+	golang.org/x/crypto v0.21.0
+	golang.org/x/mod v0.16.0
+	golang.org/x/tools v0.19.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -72,8 +72,8 @@ require (
 	go.uber.org/zap v1.26.0 // indirect
 	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc // indirect
 	golang.org/x/oauth2 v0.17.0 // indirect
-	golang.org/x/sys v0.17.0 // indirect
-	golang.org/x/term v0.17.0 // indirect
+	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/term v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/protobuf v1.32.0 // indirect

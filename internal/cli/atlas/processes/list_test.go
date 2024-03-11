@@ -42,7 +42,9 @@ func TestList_Run(t *testing.T) {
 	listOpts := &ListOpts{
 		store: mockStore,
 	}
-	params := atlasv2.ListAtlasProcessesApiParams{}
+	params := atlasv2.ListAtlasProcessesApiParams{
+		IncludeCount: pointer.Get(true),
+	}
 
 	mockStore.
 		EXPECT().
@@ -61,6 +63,6 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Limit},
+		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Limit, flag.OmitCount},
 	)
 }

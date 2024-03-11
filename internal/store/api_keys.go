@@ -61,7 +61,7 @@ type OrganizationAPIKeyDeleter interface {
 func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiApiUser, error) {
 	res := s.clientv2.ProgrammaticAPIKeysApi.ListApiKeys(s.ctx, orgID)
 	if opts != nil {
-		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)
+		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
 	}
 	result, _, err := res.Execute()
 	return result, err
@@ -95,7 +95,7 @@ func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
 func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiApiUser, error) {
 	res := s.clientv2.ProgrammaticAPIKeysApi.ListProjectApiKeys(s.ctx, projectID)
 	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
 	result, _, err := res.Execute()
 	return result, err

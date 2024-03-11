@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
@@ -54,4 +55,13 @@ func TestList_Run(t *testing.T) {
 
 func TestListTemplate(t *testing.T) {
 	test.VerifyOutputTemplate(t, listTemplate, atlasv2.PaginatedAppUser{})
+}
+
+func TestListBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		ListBuilder(),
+		0,
+		[]string{flag.Page, flag.Limit, flag.OmitCount, flag.ProjectID, flag.Output},
+	)
 }

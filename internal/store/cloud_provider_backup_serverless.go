@@ -51,7 +51,7 @@ func (s *Store) ServerlessSnapshots(projectID, clusterName string, opts *atlas.L
 	}
 	res := s.clientv2.CloudBackupsApi.ListServerlessBackups(s.ctx, projectID, clusterName)
 	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
 	result, _, err := res.Execute()
 	return result, err
@@ -73,7 +73,7 @@ func (s *Store) ServerlessRestoreJobs(projectID, instanceName string, opts *atla
 	}
 	res := s.clientv2.CloudBackupsApi.ListServerlessBackupRestoreJobs(s.ctx, projectID, instanceName)
 	if opts != nil {
-		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)
+		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
 	}
 	result, _, err := res.Execute()
 	return result, err

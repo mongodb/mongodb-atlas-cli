@@ -41,6 +41,7 @@ func TestListOpts_Run(t *testing.T) {
 		ApiUserId:    opts.id,
 		PageNum:      pointer.Get(listOpts.PageNum),
 		ItemsPerPage: pointer.Get(listOpts.ItemsPerPage),
+		IncludeCount: pointer.Get(listOpts.IncludeCount),
 	}
 	expected := admin.PaginatedApiUserAccessList{
 		Results: &[]admin.UserAccessList{},
@@ -62,6 +63,6 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.OrgID, flag.Output, flag.Page, flag.Limit},
+		[]string{flag.OrgID, flag.Output, flag.Page, flag.Limit, flag.OmitCount},
 	)
 }

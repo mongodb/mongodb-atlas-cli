@@ -60,7 +60,7 @@ func (s *Store) UserByName(username string) (*atlasv2.CloudAppUser, error) {
 func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions) (*atlasv2.PaginatedAppUser, error) {
 	res := s.clientv2.OrganizationsApi.ListOrganizationUsers(s.ctx, organizationID)
 	if opts != nil {
-		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)
+		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
 	}
 	result, _, err := res.Execute()
 	return result, err

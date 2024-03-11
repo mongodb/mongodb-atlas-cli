@@ -1280,13 +1280,14 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .atlas"
-  - name: e2e_local_deployments
-    display_name: "E2E Local Deployments Tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .deployments .local"
+# This variant will be enabled in CLOUDP-237038
+#  - name: e2e_local_deployments
+#    display_name: "E2E Local Deployments Tests"
+#    run_on:
+#      - rhel80-small
+#    expansions:
+#      <<: *go_linux_version
+#    tasks:
+#      - name: ".e2e .deployments .local"
 include:
   - filename: build/ci/release.yml

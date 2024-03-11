@@ -15,14 +15,12 @@
 package cli
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"os"
 	"strings"
 
-	"github.com/PaesslerAG/jsonpath"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/jsonpathwriter"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/jsonwriter"
@@ -129,48 +127,6 @@ func (opts *OutputOpts) Print(o interface{}) error {
 	}
 	_, err = fmt.Fprintln(opts.ConfigWriter(), o)
 	return err
-}
-
-func (opts *OutputOpts) PrintForCompactResultsResponse(o interface{}) error {
-	if opts.ConfigOutput() == jsonFormat {
-		compactResponse, err := mapReduceResults(o)
-		if err == nil {
-			return jsonwriter.Print(opts.ConfigWriter(), compactResponse)
-		}
-	}
-
-	outputType, val := opts.outputTypeAndValue()
-	if outputType == jsonPath {
-		compactResponse, err := mapReduceResults(o)
-		if err == nil {
-			return jsonpathwriter.Print(opts.ConfigWriter(), val, compactResponse)
-		}
-	}
-
-	t, err := template(outputType, val)
-	if err != nil {
-		return err
-	}
-
-	if t != "" {
-		return templatewriter.Print(opts.ConfigWriter(), t, o)
-	}
-	_, err = fmt.Fprintln(opts.ConfigWriter(), o)
-	return err
-}
-
-func mapReduceResults(o interface{}) (interface{}, error) {
-	jsonString, err := json.Marshal(o)
-	if err != nil {
-		return nil, err
-	}
-
-	var val interface{}
-	if e := json.Unmarshal(jsonString, &val); e != nil {
-		return nil, e
-	}
-
-	return jsonpath.Get("results", val)
 }
 
 // outputTypeAndValue returns the output type and the associated value

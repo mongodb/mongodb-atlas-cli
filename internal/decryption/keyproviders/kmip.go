@@ -34,7 +34,7 @@ const (
 	KMIPKeyWrapMethodEncrypt KMIPKeyWrapMethod = "encrypt"
 )
 
-// LocalKeyIdentifier config for the KMIP speaking server used to encrypt the Log Encryption Key (LEK).
+// KMIPKeyIdentifier config for the KMIP speaking server used to encrypt the Log Encryption Key (LEK).
 type KMIPKeyIdentifier struct {
 	KeyStoreIdentifier
 
@@ -132,7 +132,7 @@ func (ki *KMIPKeyIdentifier) DecryptKey(encryptedKey []byte) ([]byte, error) {
 
 func (ki *KMIPKeyIdentifier) validateUsernameAndPassword() error {
 	if ki.Username != "" && ki.Password == "" {
-		p, err := provideInput("Provide password for \""+ki.Username+"\":", "")
+		p, err := provideInput("Provide password for \"" + ki.Username + "\":")
 		if err != nil {
 			return err
 		}
@@ -146,7 +146,7 @@ func (ki *KMIPKeyIdentifier) validateUsernameAndPassword() error {
 
 func (ki *KMIPKeyIdentifier) validateServerCA() error {
 	if ki.ServerCAFileName == "" {
-		f, err := provideInput("Provide server CA filename:", "")
+		f, err := provideInput("Provide server CA filename:")
 		if err != nil {
 			return err
 		}
@@ -164,7 +164,7 @@ func (ki *KMIPKeyIdentifier) validateServerCA() error {
 
 func (ki *KMIPKeyIdentifier) validateClientCert() error {
 	if ki.ClientCertificateFileName == "" {
-		f, err := provideInput("Provide client certificate filename:", "")
+		f, err := provideInput("Provide client certificate filename:")
 		if err != nil {
 			return err
 		}
@@ -180,7 +180,7 @@ func (ki *KMIPKeyIdentifier) validateClientCert() error {
 	}
 
 	if isEncrypted && ki.ClientCertificatePassword == "" {
-		p, err := provideInput("Provide password for client certificate:", "")
+		p, err := provideInput("Provide password for client certificate:")
 		if err != nil {
 			return err
 		}

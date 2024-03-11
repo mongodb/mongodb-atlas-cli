@@ -39,20 +39,6 @@ type AuditLogLineKeyStoreIdentifier struct {
 	KMIPServerName []string                       `json:"kmipServerName,omitempty"`
 	KMIPPort       int                            `json:"kmipPort,omitempty"`
 	KeyWrapMethod  keyproviders.KMIPKeyWrapMethod `json:"keyWrapMethod,omitempty"`
-	// aws
-	Key      string `json:"key,omitempty"`
-	Region   string `json:"region,omitempty"`
-	Endpoint string `json:"endpoint,omitempty"`
-	// azure & gcp
-	KeyName string `json:"keyName,omitempty"`
-	// azure
-	Environment      string `json:"environment,omitempty"`
-	KeyVaultEndpoint string `json:"keyVaultEndpoint,omitempty"`
-	KeyVersion       string `json:"keyVersion,omitempty"`
-	// gcp
-	ProjectID string `json:"projectId,omitempty"`
-	Location  string `json:"location,omitempty"`
-	KeyRing   string `json:"keyRing,omitempty"`
 }
 
 type AuditLogLine struct {
@@ -98,42 +84,6 @@ func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.Key
 			ClientCertificatePassword: opts.KMIP.ClientCertificatePassword,
 			Username:                  opts.KMIP.Username,
 			Password:                  opts.KMIP.Password,
-		}, nil
-	case keyproviders.AWS:
-		if opts.AWS == nil {
-			return nil, fmt.Errorf("%w: %s", ErrKeyProviderNotSupported, *logLine.KeyStoreIdentifier.Provider)
-		}
-		return &keyproviders.AWSKeyIdentifier{
-			Key:             logLine.KeyStoreIdentifier.Key,
-			Region:          logLine.KeyStoreIdentifier.Region,
-			Endpoint:        logLine.KeyStoreIdentifier.Endpoint,
-			AccessKey:       opts.AWS.AccessKey,
-			SecretAccessKey: opts.AWS.SecretAccessKey,
-			SessionToken:    opts.AWS.SessionToken,
-		}, nil
-	case keyproviders.GCP:
-		if opts.GCP == nil {
-			return nil, fmt.Errorf("%w: %s", ErrKeyProviderNotSupported, *logLine.KeyStoreIdentifier.Provider)
-		}
-		return &keyproviders.GCPKeyIdentifier{
-			KeyName:           logLine.KeyStoreIdentifier.KeyName,
-			ProjectID:         logLine.KeyStoreIdentifier.ProjectID,
-			Location:          logLine.KeyStoreIdentifier.Location,
-			KeyRing:           logLine.KeyStoreIdentifier.KeyRing,
-			ServiceAccountKey: opts.GCP.ServiceAccountKey,
-		}, nil
-	case keyproviders.Azure:
-		if opts.Azure == nil {
-			return nil, fmt.Errorf("%w: %s", ErrKeyProviderNotSupported, *logLine.KeyStoreIdentifier.Provider)
-		}
-		return &keyproviders.AzureKeyIdentifier{
-			KeyName:          logLine.KeyStoreIdentifier.KeyName,
-			Environment:      logLine.KeyStoreIdentifier.Environment,
-			KeyVaultEndpoint: logLine.KeyStoreIdentifier.KeyVaultEndpoint,
-			KeyVersion:       logLine.KeyStoreIdentifier.KeyVersion,
-			ClientID:         opts.Azure.ClientID,
-			TenantID:         opts.Azure.TenantID,
-			Secret:           opts.Azure.Secret,
 		}, nil
 	default:
 		return nil, fmt.Errorf("%w: %s", ErrKeyProviderNotSupported, *logLine.KeyStoreIdentifier.Provider)

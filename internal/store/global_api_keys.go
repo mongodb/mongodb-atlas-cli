@@ -48,7 +48,7 @@ type GlobalAPIKeyDeleter interface {
 func (s *Store) GlobalAPIKeys(opts *opsmngr.ListOptions) ([]opsmngr.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeys.List(s.ctx, opts)
+		result, _, err := s.client.GlobalAPIKeys.List(s.ctx, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -59,7 +59,7 @@ func (s *Store) GlobalAPIKeys(opts *opsmngr.ListOptions) ([]opsmngr.APIKey, erro
 func (s *Store) GlobalAPIKey(apiKeyID string) (*opsmngr.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeys.Get(s.ctx, apiKeyID)
+		result, _, err := s.client.GlobalAPIKeys.Get(s.ctx, apiKeyID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -70,7 +70,7 @@ func (s *Store) GlobalAPIKey(apiKeyID string) (*opsmngr.APIKey, error) {
 func (s *Store) UpdateGlobalAPIKey(apiKeyID string, input *atlas.APIKeyInput) (*opsmngr.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeys.Update(s.ctx, apiKeyID, input)
+		result, _, err := s.client.GlobalAPIKeys.Update(s.ctx, apiKeyID, input)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -81,7 +81,7 @@ func (s *Store) UpdateGlobalAPIKey(apiKeyID string, input *atlas.APIKeyInput) (*
 func (s *Store) CreateGlobalAPIKey(input *opsmngr.APIKeyInput) (*opsmngr.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeys.Create(s.ctx, input)
+		result, _, err := s.client.GlobalAPIKeys.Create(s.ctx, input)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -92,7 +92,7 @@ func (s *Store) CreateGlobalAPIKey(input *opsmngr.APIKeyInput) (*opsmngr.APIKey,
 func (s *Store) DeleteGlobalAPIKey(id string) error {
 	switch s.service {
 	case config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).GlobalAPIKeys.Delete(s.ctx, id)
+		_, err := s.client.GlobalAPIKeys.Delete(s.ctx, id)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

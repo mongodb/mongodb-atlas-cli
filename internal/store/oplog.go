@@ -47,7 +47,7 @@ type OplogsDeleter interface {
 func (s *Store) ListOplogs(options *opsmngr.ListOptions) (*opsmngr.BackupStores, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).OplogStoreConfig.List(s.ctx, options)
+		result, _, err := s.client.OplogStoreConfig.List(s.ctx, options)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -58,7 +58,7 @@ func (s *Store) ListOplogs(options *opsmngr.ListOptions) (*opsmngr.BackupStores,
 func (s *Store) GetOplog(oplogID string) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).OplogStoreConfig.Get(s.ctx, oplogID)
+		result, _, err := s.client.OplogStoreConfig.Get(s.ctx, oplogID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -69,7 +69,7 @@ func (s *Store) GetOplog(oplogID string) (*opsmngr.BackupStore, error) {
 func (s *Store) CreateOplog(oplog *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).OplogStoreConfig.Create(s.ctx, oplog)
+		result, _, err := s.client.OplogStoreConfig.Create(s.ctx, oplog)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -80,7 +80,7 @@ func (s *Store) CreateOplog(oplog *opsmngr.BackupStore) (*opsmngr.BackupStore, e
 func (s *Store) UpdateOplog(oplogID string, oplog *opsmngr.BackupStore) (*opsmngr.BackupStore, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).OplogStoreConfig.Update(s.ctx, oplogID, oplog)
+		result, _, err := s.client.OplogStoreConfig.Update(s.ctx, oplogID, oplog)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -91,7 +91,7 @@ func (s *Store) UpdateOplog(oplogID string, oplog *opsmngr.BackupStore) (*opsmng
 func (s *Store) DeleteOplog(oplogID string) error {
 	switch s.service {
 	case config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).OplogStoreConfig.Delete(s.ctx, oplogID)
+		_, err := s.client.OplogStoreConfig.Delete(s.ctx, oplogID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

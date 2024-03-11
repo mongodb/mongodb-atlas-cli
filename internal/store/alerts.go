@@ -40,7 +40,7 @@ type AlertAcknowledger interface {
 func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Alerts.Get(s.ctx, projectID, alertID)
+		result, _, err := s.client.Alerts.Get(s.ctx, projectID, alertID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -51,18 +51,18 @@ func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
 func (s *Store) Alerts(projectID string, opts *opsmngr.AlertsListOptions) (*opsmngr.AlertsResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Alerts.List(s.ctx, projectID, opts)
+		result, _, err := s.client.Alerts.List(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// Acknowledge encapsulate the logic to manage different cloud providers.
+// AcknowledgeAlert encapsulate the logic to manage different cloud providers.
 func (s *Store) AcknowledgeAlert(projectID, alertID string, body *opsmngr.AcknowledgeRequest) (*atlas.Alert, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Alerts.Acknowledge(s.ctx, projectID, alertID, body)
+		result, _, err := s.client.Alerts.Acknowledge(s.ctx, projectID, alertID, body)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

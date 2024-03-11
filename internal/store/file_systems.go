@@ -47,7 +47,7 @@ type FileSystemsUpdater interface {
 func (s *Store) ListFileSystems(options *opsmngr.ListOptions) (*opsmngr.FileSystemStoreConfigurations, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.List(s.ctx, options)
+		result, _, err := s.client.FileSystemStoreConfig.List(s.ctx, options)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -58,7 +58,7 @@ func (s *Store) ListFileSystems(options *opsmngr.ListOptions) (*opsmngr.FileSyst
 func (s *Store) DescribeFileSystem(fileSystemID string) (*opsmngr.FileSystemStoreConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Get(s.ctx, fileSystemID)
+		result, _, err := s.client.FileSystemStoreConfig.Get(s.ctx, fileSystemID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -69,7 +69,7 @@ func (s *Store) DescribeFileSystem(fileSystemID string) (*opsmngr.FileSystemStor
 func (s *Store) DeleteFileSystem(fileSystemID string) error {
 	switch s.service {
 	case config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Delete(s.ctx, fileSystemID)
+		_, err := s.client.FileSystemStoreConfig.Delete(s.ctx, fileSystemID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -80,7 +80,7 @@ func (s *Store) DeleteFileSystem(fileSystemID string) error {
 func (s *Store) CreateFileSystems(fileSystem *opsmngr.FileSystemStoreConfiguration) (*opsmngr.FileSystemStoreConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Create(s.ctx, fileSystem)
+		result, _, err := s.client.FileSystemStoreConfig.Create(s.ctx, fileSystem)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -91,7 +91,7 @@ func (s *Store) CreateFileSystems(fileSystem *opsmngr.FileSystemStoreConfigurati
 func (s *Store) UpdateFileSystems(fileSystem *opsmngr.FileSystemStoreConfiguration) (*opsmngr.FileSystemStoreConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).FileSystemStoreConfig.Update(s.ctx, fileSystem.ID, fileSystem)
+		result, _, err := s.client.FileSystemStoreConfig.Update(s.ctx, fileSystem.ID, fileSystem)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

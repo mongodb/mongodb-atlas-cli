@@ -19,7 +19,6 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_organization_invitations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store OrganizationInvitationLister,OrganizationInvitationDeleter,OrganizationInvitationDescriber,OrganizationInvitationUpdater,OrganizationInviter
@@ -48,7 +47,7 @@ type OrganizationInvitationUpdater interface {
 func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOptions) (interface{}, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitations(s.ctx, orgID, opts)
+		result, _, err := s.client.Organizations.Invitations(s.ctx, orgID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -59,7 +58,7 @@ func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOpti
 func (s *Store) OrganizationInvitation(orgID, invitationID string) (interface{}, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitation(s.ctx, orgID, invitationID)
+		result, _, err := s.client.Organizations.Invitation(s.ctx, orgID, invitationID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -70,7 +69,7 @@ func (s *Store) OrganizationInvitation(orgID, invitationID string) (interface{},
 func (s *Store) DeleteInvitation(orgID, invitationID string) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Organizations.DeleteInvitation(s.ctx, orgID, invitationID)
+		_, err := s.client.Organizations.DeleteInvitation(s.ctx, orgID, invitationID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -82,10 +81,10 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		if invitationID != "" {
-			result, _, err := s.client.(*opsmngr.Client).Organizations.UpdateInvitationByID(s.ctx, orgID, invitationID, invitation)
+			result, _, err := s.client.Organizations.UpdateInvitationByID(s.ctx, orgID, invitationID, invitation)
 			return result, err
 		}
-		result, _, err := s.client.(*opsmngr.Client).Organizations.UpdateInvitation(s.ctx, orgID, invitation)
+		result, _, err := s.client.Organizations.UpdateInvitation(s.ctx, orgID, invitation)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -96,7 +95,7 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 func (s *Store) InviteUser(orgID string, invitation *atlas.Invitation) (interface{}, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.InviteUser(s.ctx, orgID, invitation)
+		result, _, err := s.client.Organizations.InviteUser(s.ctx, orgID, invitation)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -42,7 +42,7 @@ type TeamDeleter interface {
 }
 
 type TeamAdder interface {
-	AddUsersToTeam(string, string, []string) (interface{}, error)
+	AddUsersToTeam(string, string, []string) ([]*opsmngr.User, error)
 }
 
 type TeamUserRemover interface {
@@ -57,7 +57,7 @@ type TeamRolesUpdater interface {
 func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Teams.Get(s.ctx, orgID, teamID)
+		result, _, err := s.client.Teams.Get(s.ctx, orgID, teamID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -68,7 +68,7 @@ func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
 func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Teams.GetOneTeamByName(s.ctx, orgID, teamName)
+		result, _, err := s.client.Teams.GetOneTeamByName(s.ctx, orgID, teamName)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -79,7 +79,7 @@ func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
 func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Teams.List(s.ctx, orgID, opts)
+		result, _, err := s.client.Teams.List(s.ctx, orgID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -90,7 +90,7 @@ func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, erro
 func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Teams.Create(s.ctx, orgID, team)
+		result, _, err := s.client.Teams.Create(s.ctx, orgID, team)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -101,7 +101,7 @@ func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) 
 func (s *Store) DeleteTeam(orgID, teamID string) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromOrganization(s.ctx, orgID, teamID)
+		_, err := s.client.Teams.RemoveTeamFromOrganization(s.ctx, orgID, teamID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -109,10 +109,10 @@ func (s *Store) DeleteTeam(orgID, teamID string) error {
 }
 
 // AddUsersToTeam encapsulates the logic to manage different cloud providers.
-func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) (interface{}, error) {
+func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) ([]*opsmngr.User, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Teams.AddUsersToTeam(s.ctx, orgID, teamID, users)
+		result, _, err := s.client.Teams.AddUsersToTeam(s.ctx, orgID, teamID, users)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -123,7 +123,7 @@ func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) (interface{
 func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Teams.RemoveUserToTeam(s.ctx, orgID, teamID, userID)
+		_, err := s.client.Teams.RemoveUserToTeam(s.ctx, orgID, teamID, userID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -134,7 +134,7 @@ func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
 func (s *Store) UpdateProjectTeamRoles(projectID, teamID string, team *atlas.TeamUpdateRoles) ([]atlas.TeamRoles, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Teams.UpdateTeamRoles(s.ctx, projectID, teamID, team)
+		result, _, err := s.client.Teams.UpdateTeamRoles(s.ctx, projectID, teamID, team)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

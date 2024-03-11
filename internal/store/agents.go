@@ -55,7 +55,7 @@ type AgentAPIKeyDeleter interface {
 func (s *Store) Agents(projectID, agentType string, opts *opsmngr.ListOptions) (*opsmngr.Agents, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Agents.ListAgentsByType(s.ctx, projectID, agentType, opts)
+		result, _, err := s.client.Agents.ListAgentsByType(s.ctx, projectID, agentType, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -66,7 +66,7 @@ func (s *Store) Agents(projectID, agentType string, opts *opsmngr.ListOptions) (
 func (s *Store) UpgradeAgent(projectID string) (*opsmngr.AutomationConfigAgent, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Automation.UpdateAgentVersion(s.ctx, projectID)
+		result, _, err := s.client.Automation.UpdateAgentVersion(s.ctx, projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -77,7 +77,7 @@ func (s *Store) UpgradeAgent(projectID string) (*opsmngr.AutomationConfigAgent, 
 func (s *Store) AgentAPIKeys(projectID string) ([]*opsmngr.AgentAPIKey, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Agents.ListAgentAPIKeys(s.ctx, projectID)
+		result, _, err := s.client.Agents.ListAgentAPIKeys(s.ctx, projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -88,7 +88,7 @@ func (s *Store) AgentAPIKeys(projectID string) ([]*opsmngr.AgentAPIKey, error) {
 func (s *Store) CreateAgentAPIKey(projectID string, r *opsmngr.AgentAPIKeysRequest) (*opsmngr.AgentAPIKey, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Agents.CreateAgentAPIKey(s.ctx, projectID, r)
+		result, _, err := s.client.Agents.CreateAgentAPIKey(s.ctx, projectID, r)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -99,7 +99,7 @@ func (s *Store) CreateAgentAPIKey(projectID string, r *opsmngr.AgentAPIKeysReque
 func (s *Store) DeleteAgentAPIKey(projectID, keyID string) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*opsmngr.Client).Agents.DeleteAgentAPIKey(s.ctx, projectID, keyID)
+		_, err := s.client.Agents.DeleteAgentAPIKey(s.ctx, projectID, keyID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -110,7 +110,7 @@ func (s *Store) DeleteAgentAPIKey(projectID, keyID string) error {
 func (s *Store) AgentGlobalVersions() (*opsmngr.SoftwareVersions, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Agents.GlobalVersions(s.ctx)
+		result, _, err := s.client.Agents.GlobalVersions(s.ctx)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -121,7 +121,7 @@ func (s *Store) AgentGlobalVersions() (*opsmngr.SoftwareVersions, error) {
 func (s *Store) AgentProjectVersions(projectID string) (*opsmngr.AgentVersions, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Agents.ProjectVersions(s.ctx, projectID)
+		result, _, err := s.client.Agents.ProjectVersions(s.ctx, projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

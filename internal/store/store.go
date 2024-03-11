@@ -62,7 +62,7 @@ type Store struct {
 	username      string
 	password      string
 	accessToken   *atlasauth.Token
-	client        interface{}
+	client        *opsmngr.Client
 	ctx           context.Context
 }
 

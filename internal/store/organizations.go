@@ -25,15 +25,15 @@ import (
 //go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store OrganizationLister,OrganizationCreator,OrganizationDeleter,OrganizationDescriber
 
 type OrganizationLister interface {
-	Organizations(*atlas.OrganizationsListOptions) (interface{}, error)
+	Organizations(*opsmngr.OrganizationsListOptions) (*opsmngr.Organizations, error)
 }
 
 type OrganizationDescriber interface {
-	Organization(string) (interface{}, error)
+	Organization(string) (*opsmngr.Organization, error)
 }
 
 type OrganizationCreator interface {
-	CreateOrganization(string) (*atlas.Organization, error)
+	CreateOrganization(string) (*opsmngr.Organization, error)
 }
 
 type OrganizationDeleter interface {
@@ -41,10 +41,10 @@ type OrganizationDeleter interface {
 }
 
 // Organizations encapsulate the logic to manage different cloud providers.
-func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (interface{}, error) {
+func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*opsmngr.Organizations, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.List(s.ctx, opts)
+		result, _, err := s.client.Organizations.List(s.ctx, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -52,10 +52,10 @@ func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (interface{}
 }
 
 // Organization encapsulate the logic to manage different cloud providers.
-func (s *Store) Organization(id string) (interface{}, error) {
+func (s *Store) Organization(id string) (*opsmngr.Organization, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.Get(s.ctx, id)
+		result, _, err := s.client.Organizations.Get(s.ctx, id)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -67,7 +67,7 @@ func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		org := &atlas.Organization{Name: name}
-		result, _, err := s.client.(*opsmngr.Client).Organizations.Create(s.ctx, org)
+		result, _, err := s.client.Organizations.Create(s.ctx, org)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -78,7 +78,7 @@ func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
 func (s *Store) DeleteOrganization(id string) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Organizations.Delete(s.ctx, id)
+		_, err := s.client.Organizations.Delete(s.ctx, id)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

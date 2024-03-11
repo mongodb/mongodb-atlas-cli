@@ -20,8 +20,6 @@ import (
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -32,44 +30,6 @@ type MetricsOpts struct {
 	Start           string
 	End             string
 	MeasurementType []string
-}
-
-func (opts *MetricsOpts) NewProcessMeasurementsAPIParams(groupID string, processID string) *atlasv2.GetHostMeasurementsApiParams {
-	return &atlasv2.GetHostMeasurementsApiParams{
-		GroupId:     groupID,
-		ProcessId:   processID,
-		Granularity: pointer.GetStringPointerIfNotEmpty(opts.Granularity),
-		M:           pointer.GetArrayPointerIfNotEmpty(opts.MeasurementType),
-		Period:      pointer.GetStringPointerIfNotEmpty(opts.Period),
-		Start:       pointer.StringToTimePointer(opts.Start),
-		End:         pointer.StringToTimePointer(opts.End),
-	}
-}
-
-func (opts *MetricsOpts) NewDiskMeasurementsAPIParams(groupID string, processID string, partitionName string) *atlasv2.GetDiskMeasurementsApiParams {
-	return &atlasv2.GetDiskMeasurementsApiParams{
-		GroupId:       groupID,
-		ProcessId:     processID,
-		PartitionName: partitionName,
-		Granularity:   pointer.GetStringPointerIfNotEmpty(opts.Granularity),
-		M:             pointer.GetArrayPointerIfNotEmpty(opts.MeasurementType),
-		Period:        pointer.GetStringPointerIfNotEmpty(opts.Period),
-		Start:         pointer.StringToTimePointer(opts.Start),
-		End:           pointer.StringToTimePointer(opts.End),
-	}
-}
-
-func (opts *MetricsOpts) NewDatabaseMeasurementsAPIParams(groupID string, processID string, dbName string) *atlasv2.GetDatabaseMeasurementsApiParams {
-	return &atlasv2.GetDatabaseMeasurementsApiParams{
-		GroupId:      groupID,
-		ProcessId:    processID,
-		DatabaseName: dbName,
-		Granularity:  pointer.GetStringPointerIfNotEmpty(opts.Granularity),
-		M:            pointer.GetArrayPointerIfNotEmpty(opts.MeasurementType),
-		Period:       pointer.GetStringPointerIfNotEmpty(opts.Period),
-		Start:        pointer.StringToTimePointer(opts.Start),
-		End:          pointer.StringToTimePointer(opts.End),
-	}
 }
 
 func (opts *MetricsOpts) NewProcessMetricsListOptions() *atlas.ProcessMeasurementListOptions {

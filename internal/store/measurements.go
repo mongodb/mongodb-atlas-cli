@@ -19,7 +19,6 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_measurements.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store HostMeasurementLister,HostDiskMeasurementsLister,HostDatabaseMeasurementsLister
@@ -40,7 +39,7 @@ type HostDatabaseMeasurementsLister interface {
 func (s *Store) HostMeasurements(groupID, host string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Measurements.Host(s.ctx, groupID, host, opts)
+		result, _, err := s.client.Measurements.Host(s.ctx, groupID, host, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -51,7 +50,7 @@ func (s *Store) HostMeasurements(groupID, host string, opts *atlas.ProcessMeasur
 func (s *Store) HostDiskMeasurements(groupID, hostID, partitionName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Measurements.Disk(s.ctx, groupID, hostID, partitionName, opts)
+		result, _, err := s.client.Measurements.Disk(s.ctx, groupID, hostID, partitionName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -62,7 +61,7 @@ func (s *Store) HostDiskMeasurements(groupID, hostID, partitionName string, opts
 func (s *Store) HostDatabaseMeasurements(groupID, hostID, databaseName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Measurements.Database(s.ctx, groupID, hostID, databaseName, opts)
+		result, _, err := s.client.Measurements.Database(s.ctx, groupID, hostID, databaseName, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

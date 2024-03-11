@@ -35,7 +35,7 @@ type FeatureControlPoliciesUpdater interface {
 func (s *Store) FeatureControlPolicies(projectID string, opts *opsmngr.ListOptions) (*opsmngr.FeaturePolicy, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).FeatureControlPolicies.List(s.ctx, projectID, opts)
+		result, _, err := s.client.FeatureControlPolicies.List(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -46,7 +46,7 @@ func (s *Store) FeatureControlPolicies(projectID string, opts *opsmngr.ListOptio
 func (s *Store) UpdateFeatureControlPolicy(projectID string, policy *opsmngr.FeaturePolicy) (*opsmngr.FeaturePolicy, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).FeatureControlPolicies.Update(s.ctx, projectID, policy)
+		result, _, err := s.client.FeatureControlPolicies.Update(s.ctx, projectID, policy)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

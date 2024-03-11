@@ -32,7 +32,7 @@ type ServiceVersionDescriber interface {
 func (s *Store) ServiceVersion() (*atlas.ServiceVersion, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ServiceVersion.Get(s.ctx)
+		result, _, err := s.client.ServiceVersion.Get(s.ctx)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
@@ -74,4 +75,13 @@ func TestList_Run(t *testing.T) {
 
 	t.Log(buf.String())
 	test.VerifyOutputTemplate(t, listTemplate, expected)
+}
+
+func TestListBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		ListBuilder(),
+		0,
+		[]string{flag.ProjectID, flag.Output, flag.Page, flag.Limit, flag.OmitCount, flag.Status},
+	)
 }

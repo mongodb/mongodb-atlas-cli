@@ -163,7 +163,7 @@ func (s *Store) UpgradeCluster(projectID string, cluster *atlas.Cluster) (*atlas
 func (s *Store) ProjectClusters(projectID string, opts *ListOptions) (*admin.PaginatedAdvancedClusterDescription, error) {
 	res := s.clientv2.ClustersApi.ListClusters(s.ctx, projectID)
 	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
 	result, _, err := res.Execute()
 	return result, err

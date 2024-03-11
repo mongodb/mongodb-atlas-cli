@@ -31,6 +31,6 @@ type ProcessDatabaseLister interface {
 func (s *Store) ProcessDatabases(groupID, host string, port int, opts *atlas.ListOptions) (*atlasv2.PaginatedDatabase, error) {
 	process := host + ":" + strconv.Itoa(port)
 	result, _, err := s.clientv2.MonitoringAndLogsApi.ListDatabases(s.ctx, groupID, process).
-		PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).Execute()
+		PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount).Execute()
 	return result, err
 }

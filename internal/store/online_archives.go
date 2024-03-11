@@ -50,7 +50,7 @@ func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.List
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 	result, _, err := s.clientv2.OnlineArchiveApi.ListOnlineArchives(s.ctx, projectID, clusterName).
-		PageNum(lstOpt.PageNum).ItemsPerPage(lstOpt.ItemsPerPage).Execute()
+		PageNum(lstOpt.PageNum).ItemsPerPage(lstOpt.ItemsPerPage).IncludeCount(lstOpt.IncludeCount).Execute()
 	return result, err
 }
 

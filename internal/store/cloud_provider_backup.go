@@ -94,7 +94,7 @@ type ScheduleDeleter interface {
 func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error) {
 	res := s.clientv2.CloudBackupsApi.ListBackupRestoreJobs(s.ctx, projectID, clusterName)
 	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
 	result, _, err := res.Execute()
 	return result, err
@@ -122,7 +122,7 @@ func (s *Store) CreateSnapshot(projectID, clusterName string, request *atlasv2.D
 func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupReplicaSet, error) {
 	res := s.clientv2.CloudBackupsApi.ListReplicaSetBackups(s.ctx, projectID, clusterName)
 	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
 	result, _, err := res.Execute()
 	return result, err
@@ -166,7 +166,7 @@ func (s *Store) CreateExportJob(projectID, clusterName string, job *atlasv2.Disk
 func (s *Store) ExportBuckets(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshotExportBucket, error) {
 	res := s.clientv2.CloudBackupsApi.ListExportBuckets(s.ctx, projectID)
 	if opts != nil {
-		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)
+		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
 	}
 	result, _, err := res.Execute()
 	return result, err

@@ -57,6 +57,7 @@ func TestListBuilder(t *testing.T) {
 			flag.Limit,
 			flag.ProjectID,
 			flag.Output,
+			flag.OmitCount,
 		},
 	)
 }

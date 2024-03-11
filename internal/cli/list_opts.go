@@ -34,6 +34,7 @@ func (opts *ListOpts) NewListOptions() *mongodbatlas.ListOptions {
 	return &mongodbatlas.ListOptions{
 		PageNum:      opts.PageNum,
 		ItemsPerPage: opts.ItemsPerPage,
+		IncludeCount: !opts.OmitCount,
 	}
 }
 
@@ -41,5 +42,6 @@ func (opts *ListOpts) NewAtlasListOptions() *store.ListOptions {
 	return &store.ListOptions{
 		PageNum:      opts.PageNum,
 		ItemsPerPage: opts.ItemsPerPage,
+		IncludeCount: !opts.OmitCount,
 	}
 }

@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestOrgs(t *testing.T) {
@@ -44,11 +44,11 @@ func TestOrgs(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var orgs atlasv2.PaginatedOrganization
+		var orgs opsmngr.Organizations
 		err = json.Unmarshal(resp, &orgs)
 		require.NoError(t, err, string(resp))
 		assert.NotEmpty(t, orgs.Results)
-		orgID = *orgs.GetResults()[0].Id
+		orgID = orgs.Results[0].ID
 		require.NotEmpty(t, orgID, "orgID not set, resp: %s", resp)
 	})
 	require.NotEmpty(t, orgID)

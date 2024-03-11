@@ -21,7 +21,6 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/validate"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -107,26 +106,6 @@ func NewProfileReplaceConfirm(entry string) survey.Prompt {
 		Message: fmt.Sprintf("There is already a profile called %s.\nDo you want to replace it?", entry),
 	}
 	return prompt
-}
-
-// NewOrgSelect create a prompt to choice the organization.
-func NewOrgSelect(options []atlasv2.AtlasOrganization) survey.Prompt {
-	opt := make([]string, len(options))
-	for i, o := range options {
-		opt[i] = *o.Id
-	}
-
-	return &survey.Select{
-		Message: "Choose a default organization:",
-		Options: opt,
-		Description: func(_ string, i int) string {
-			return options[i].Name
-		},
-		Filter: func(filter string, _ string, i int) bool {
-			filter = strings.ToLower(filter)
-			return strings.HasPrefix(strings.ToLower(options[i].Name), filter) || strings.HasPrefix(*options[i].Id, filter)
-		},
-	}
 }
 
 // NewOnPremOrgSelect create a prompt to choice the organization.

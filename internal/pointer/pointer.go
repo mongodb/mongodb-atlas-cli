@@ -14,21 +14,6 @@
 
 package pointer
 
-import (
-	"time"
-
-	customTime "github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/time"
-	"golang.org/x/exp/constraints"
-)
-
-func GetOrZero[T any](ptr *T) T {
-	if ptr == nil {
-		var zero T
-		return zero
-	}
-	return *ptr
-}
-
 func GetOrDefault[T any](ptr *T, defaultValue T) T {
 	if ptr != nil {
 		return *ptr
@@ -38,34 +23,4 @@ func GetOrDefault[T any](ptr *T, defaultValue T) T {
 
 func Get[T any](val T) *T {
 	return &val
-}
-
-func GetStringPointerIfNotEmpty(input string) *string {
-	if input != "" {
-		return &input
-	}
-	return nil
-}
-
-func GetArrayPointerIfNotEmpty[T any](input []T) *[]T {
-	if len(input) > 0 {
-		return &input
-	}
-	return nil
-}
-
-func StringToTimePointer(value string) *time.Time {
-	var result *time.Time
-	if completedAfter, err := customTime.ParseTimestamp(value); err == nil {
-		result = &completedAfter
-	}
-	return result
-}
-
-func GetNonZeroValue[T constraints.Integer](val T) *T {
-	if val > T(0) {
-		return Get(val)
-	}
-
-	return nil
 }

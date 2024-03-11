@@ -65,7 +65,7 @@ type CloudManagerClustersDeleter interface {
 func (s *Store) GetAutomationStatus(projectID string) (*opsmngr.AutomationStatus, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Automation.GetStatus(s.ctx, projectID)
+		result, _, err := s.client.Automation.GetStatus(s.ctx, projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -76,7 +76,7 @@ func (s *Store) GetAutomationStatus(projectID string) (*opsmngr.AutomationStatus
 func (s *Store) GetAutomationConfig(projectID string) (*opsmngr.AutomationConfig, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Automation.GetConfig(s.ctx, projectID)
+		result, _, err := s.client.Automation.GetConfig(s.ctx, projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -87,7 +87,7 @@ func (s *Store) GetAutomationConfig(projectID string) (*opsmngr.AutomationConfig
 func (s *Store) UpdateAutomationConfig(projectID string, automationConfig *opsmngr.AutomationConfig) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Automation.UpdateConfig(s.ctx, projectID, automationConfig)
+		_, err := s.client.Automation.UpdateConfig(s.ctx, projectID, automationConfig)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

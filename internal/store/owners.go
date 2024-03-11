@@ -36,7 +36,7 @@ func (s *Store) CreateOwner(u *opsmngr.User, ips []string) (*opsmngr.CreateUserR
 			opts = &opsmngr.WhitelistOpts{Whitelist: ips}
 		}
 
-		result, _, err := s.client.(*opsmngr.Client).UnauthUsers.CreateFirstUser(s.ctx, u, opts)
+		result, _, err := s.client.UnauthUsers.CreateFirstUser(s.ctx, u, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

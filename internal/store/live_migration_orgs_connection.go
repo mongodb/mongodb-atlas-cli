@@ -36,7 +36,7 @@ type OrganizationsDescriber interface {
 func (s *Store) ConnectOrganizations(orgID string, linkToken *atlas.LinkToken) (*opsmngr.ConnectionStatus, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).LiveMigration.ConnectOrganizations(s.ctx, orgID, linkToken)
+		result, _, err := s.client.LiveMigration.ConnectOrganizations(s.ctx, orgID, linkToken)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -47,7 +47,7 @@ func (s *Store) ConnectOrganizations(orgID string, linkToken *atlas.LinkToken) (
 func (s *Store) OrganizationConnectionStatus(orgID string) (*opsmngr.ConnectionStatus, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).LiveMigration.ConnectionStatus(s.ctx, orgID)
+		result, _, err := s.client.LiveMigration.ConnectionStatus(s.ctx, orgID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

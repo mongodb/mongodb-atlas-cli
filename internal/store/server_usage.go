@@ -60,7 +60,7 @@ type ServerUsageReportDownloader interface {
 func (s *Store) ProjectServerType(projectID string) (*opsmngr.ServerType, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ServerUsage.GetServerTypeProject(s.ctx, projectID)
+		result, _, err := s.client.ServerUsage.GetServerTypeProject(s.ctx, projectID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -71,7 +71,7 @@ func (s *Store) ProjectServerType(projectID string) (*opsmngr.ServerType, error)
 func (s *Store) UpdateProjectServerType(projectID string, serverType *opsmngr.ServerTypeRequest) error {
 	switch s.service {
 	case config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).ServerUsage.UpdateProjectServerType(s.ctx, projectID, serverType)
+		_, err := s.client.ServerUsage.UpdateProjectServerType(s.ctx, projectID, serverType)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -82,7 +82,7 @@ func (s *Store) UpdateProjectServerType(projectID string, serverType *opsmngr.Se
 func (s *Store) OrganizationServerType(orgID string) (*opsmngr.ServerType, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ServerUsage.GetServerTypeOrganization(s.ctx, orgID)
+		result, _, err := s.client.ServerUsage.GetServerTypeOrganization(s.ctx, orgID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -93,7 +93,7 @@ func (s *Store) OrganizationServerType(orgID string) (*opsmngr.ServerType, error
 func (s *Store) UpdateOrganizationServerType(orgID string, serverType *opsmngr.ServerTypeRequest) error {
 	switch s.service {
 	case config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).ServerUsage.UpdateOrganizationServerType(s.ctx, orgID, serverType)
+		_, err := s.client.ServerUsage.UpdateOrganizationServerType(s.ctx, orgID, serverType)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -104,7 +104,7 @@ func (s *Store) UpdateOrganizationServerType(orgID string, serverType *opsmngr.S
 func (s *Store) ProjectHostAssignments(projectID string, opts *opsmngr.ServerTypeOptions) (*opsmngr.HostAssignments, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ServerUsage.ProjectHostAssignments(s.ctx, projectID, opts)
+		result, _, err := s.client.ServerUsage.ProjectHostAssignments(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -115,7 +115,7 @@ func (s *Store) ProjectHostAssignments(projectID string, opts *opsmngr.ServerTyp
 func (s *Store) OrganizationHostAssignments(orgID string, opts *opsmngr.ServerTypeOptions) (*opsmngr.HostAssignments, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).ServerUsage.OrganizationHostAssignments(s.ctx, orgID, opts)
+		result, _, err := s.client.ServerUsage.OrganizationHostAssignments(s.ctx, orgID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -126,7 +126,7 @@ func (s *Store) OrganizationHostAssignments(orgID string, opts *opsmngr.ServerTy
 func (s *Store) GenerateSnapshot() error {
 	switch s.service {
 	case config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).ServerUsage.GenerateDailyUsageSnapshot(s.ctx)
+		_, err := s.client.ServerUsage.GenerateDailyUsageSnapshot(s.ctx)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -137,7 +137,7 @@ func (s *Store) GenerateSnapshot() error {
 func (s *Store) DownloadServerUsageReport(opts *opsmngr.ServerTypeOptions, out io.Writer) error {
 	switch s.service {
 	case config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).ServerUsageReport.Download(s.ctx, opts, out)
+		_, err := s.client.ServerUsageReport.Download(s.ctx, opts, out)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

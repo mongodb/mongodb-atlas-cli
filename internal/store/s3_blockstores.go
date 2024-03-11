@@ -47,7 +47,7 @@ type S3BlockstoresDescriber interface {
 func (s *Store) ListS3Blockstores(options *opsmngr.ListOptions) (*opsmngr.S3Blockstores, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).S3BlockstoreConfig.List(s.ctx, options)
+		result, _, err := s.client.S3BlockstoreConfig.List(s.ctx, options)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -58,7 +58,7 @@ func (s *Store) ListS3Blockstores(options *opsmngr.ListOptions) (*opsmngr.S3Bloc
 func (s *Store) DeleteS3Blockstore(blockstoreID string) error {
 	switch s.service {
 	case config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).S3BlockstoreConfig.Delete(s.ctx, blockstoreID)
+		_, err := s.client.S3BlockstoreConfig.Delete(s.ctx, blockstoreID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -69,7 +69,7 @@ func (s *Store) DeleteS3Blockstore(blockstoreID string) error {
 func (s *Store) CreateS3Blockstores(blockstore *opsmngr.S3Blockstore) (*opsmngr.S3Blockstore, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).S3BlockstoreConfig.Create(s.ctx, blockstore)
+		result, _, err := s.client.S3BlockstoreConfig.Create(s.ctx, blockstore)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -80,7 +80,7 @@ func (s *Store) CreateS3Blockstores(blockstore *opsmngr.S3Blockstore) (*opsmngr.
 func (s *Store) UpdateS3Blockstores(blockstoreID string, blockstore *opsmngr.S3Blockstore) (*opsmngr.S3Blockstore, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).S3BlockstoreConfig.Update(s.ctx, blockstoreID, blockstore)
+		result, _, err := s.client.S3BlockstoreConfig.Update(s.ctx, blockstoreID, blockstore)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -91,7 +91,7 @@ func (s *Store) UpdateS3Blockstores(blockstoreID string, blockstore *opsmngr.S3B
 func (s *Store) GetS3Blockstore(blockstoreID string) (*opsmngr.S3Blockstore, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).S3BlockstoreConfig.Get(s.ctx, blockstoreID)
+		result, _, err := s.client.S3BlockstoreConfig.Get(s.ctx, blockstoreID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

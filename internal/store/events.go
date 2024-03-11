@@ -19,7 +19,6 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_events.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store OrganizationEventLister,ProjectEventLister,EventLister
@@ -41,7 +40,7 @@ type EventLister interface {
 func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Events.ListProjectEvents(s.ctx, projectID, opts)
+		result, _, err := s.client.Events.ListProjectEvents(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -52,7 +51,7 @@ func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*
 func (s *Store) OrganizationEvents(orgID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Events.ListOrganizationEvents(s.ctx, orgID, opts)
+		result, _, err := s.client.Events.ListOrganizationEvents(s.ctx, orgID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -31,18 +31,16 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/auth"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestBuilder(t *testing.T) {
-	t.Run(config.MongoCLI, func(t *testing.T) {
-		test.CmdValidator(
-			t,
-			Builder(),
-			3,
-			[]string{},
-		)
-	})
+	test.CmdValidator(
+		t,
+		Builder(),
+		3,
+		[]string{},
+	)
 }
 
 func TestLoginBuilder(t *testing.T) {
@@ -104,15 +102,15 @@ func Test_loginOpts_Run(t *testing.T) {
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
 	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
 	mockConfig.EXPECT().Save().Return(nil).Times(2)
-	expectedOrgs := &atlas.Organizations{
+	expectedOrgs := &opsmngr.Organizations{
 		TotalCount: 1,
-		Results: []*atlas.Organization{
+		Results: []*opsmngr.Organization{
 			{ID: "o1", Name: "Org1"},
 		},
 	}
 	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
-	expectedProjects := &atlas.Projects{TotalCount: 1,
-		Results: []*atlas.Project{
+	expectedProjects := &opsmngr.Projects{TotalCount: 1,
+		Results: []*opsmngr.Project{
 			{ID: "p1", Name: "Project1"},
 		},
 	}

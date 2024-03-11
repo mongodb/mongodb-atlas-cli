@@ -19,8 +19,7 @@ import (
 	"fmt"
 	"time"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type InvalidStateError struct {
@@ -67,20 +66,6 @@ type Watcher struct {
 	describer          StateDescriber
 	hasStarted         bool
 	defaultWait        time.Duration
-}
-
-const defaultWait = 4 * time.Second
-
-func NewWatcher(stateTransition StateTransition, describer StateDescriber) *Watcher {
-	return NewWatcherWithDefaultWait(stateTransition, describer, defaultWait)
-}
-
-func NewWatcherWithDefaultWait(stateTransition StateTransition, describer StateDescriber, defaultWait time.Duration) *Watcher {
-	return &Watcher{
-		stateTransition: stateTransition,
-		describer:       describer,
-		defaultWait:     defaultWait,
-	}
 }
 
 func (watcher *Watcher) Watch() error {
@@ -184,8 +169,8 @@ func (st *StateTransition) IsEndError(err error) bool {
 		return false
 	}
 
-	var atlasErr *atlas.ErrorResponse
-	var atlasv2Err *atlasv2.GenericOpenAPIError
+	var atlasErr *opsmngr.ErrorResponse
+
 	var errCode string
 
 	if st.EndErrorCode == nil {
@@ -195,8 +180,6 @@ func (st *StateTransition) IsEndError(err error) bool {
 	switch {
 	case errors.As(err, &atlasErr):
 		errCode = atlasErr.ErrorCode
-	case errors.As(err, &atlasv2Err):
-		errCode = *atlasv2Err.Model().ErrorCode
 	default:
 		return false
 	}
@@ -209,15 +192,12 @@ func (st *StateTransition) HasEndError() bool {
 }
 
 func (st *StateTransition) IsRetryableError(err error) bool {
-	var atlasErr *atlas.ErrorResponse
-	var atlasv2Err *atlasv2.GenericOpenAPIError
+	var atlasErr *opsmngr.ErrorResponse
 	var errCode string
 
 	switch {
 	case errors.As(err, &atlasErr):
 		errCode = atlasErr.ErrorCode
-	case errors.As(err, &atlasv2Err):
-		errCode = *atlasv2Err.Model().ErrorCode
 	default:
 		return false
 	}

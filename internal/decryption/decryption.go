@@ -61,34 +61,6 @@ func WithKMIPOpts(opts *KeyProviderKMIPOpts) func(d *Decryption) {
 	}
 }
 
-func WithAWSOpts(accessKey, secretAccessKey, sessionToken string) func(d *Decryption) {
-	return func(d *Decryption) {
-		d.opts.AWS = &KeyProviderAWSOpts{
-			AccessKey:       accessKey,
-			SecretAccessKey: secretAccessKey,
-			SessionToken:    sessionToken,
-		}
-	}
-}
-
-func WithGCPOpts(serviceAccountKey string) func(d *Decryption) {
-	return func(d *Decryption) {
-		d.opts.GCP = &KeyProviderGCPOpts{
-			ServiceAccountKey: serviceAccountKey,
-		}
-	}
-}
-
-func WithAzureOpts(tenantID, clientID, secret string) func(d *Decryption) {
-	return func(d *Decryption) {
-		d.opts.Azure = &KeyProviderAzureOpts{
-			TenantID: tenantID,
-			ClientID: clientID,
-			Secret:   secret,
-		}
-	}
-}
-
 // Decrypt decrypts the content of an audit log file using the metadata found in the file,
 // the credentials provided by the user and the AES-GCM algorithm.
 // The decrypted audit log records are saved in the out stream.

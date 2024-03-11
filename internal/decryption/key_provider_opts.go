@@ -17,9 +17,6 @@ package decryption
 type KeyProviderOpts struct {
 	Local *KeyProviderLocalOpts
 	KMIP  *KeyProviderKMIPOpts
-	AWS   *KeyProviderAWSOpts
-	GCP   *KeyProviderGCPOpts
-	Azure *KeyProviderAzureOpts
 }
 
 type KeyProviderLocalOpts struct {
@@ -32,20 +29,4 @@ type KeyProviderKMIPOpts struct {
 	ClientCertificatePassword string
 	Username                  string
 	Password                  string
-}
-
-type KeyProviderAWSOpts struct {
-	AccessKey       string
-	SecretAccessKey string
-	SessionToken    string
-}
-
-type KeyProviderGCPOpts struct {
-	ServiceAccountKey string
-}
-
-type KeyProviderAzureOpts struct {
-	ClientID string
-	TenantID string
-	Secret   string
 }

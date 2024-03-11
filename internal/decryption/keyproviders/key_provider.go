@@ -25,9 +25,6 @@ type KeyStoreProvider string
 const (
 	LocalKey KeyStoreProvider = "local"
 	KMIP     KeyStoreProvider = "kmip"
-	AWS      KeyStoreProvider = "aws"
-	GCP      KeyStoreProvider = "gcp"
-	Azure    KeyStoreProvider = "azure"
 )
 
 type KeyProvider interface {
@@ -39,7 +36,7 @@ type KeyStoreIdentifier struct {
 	Provider KeyStoreProvider
 }
 
-func provideInput(m, d string) (string, error) {
+func provideInput(m string) (string, error) {
 	if _, ok := os.LookupEnv("CI"); ok {
 		return "", nil
 	}
@@ -47,7 +44,6 @@ func provideInput(m, d string) (string, error) {
 	var input string
 	err := survey.AskOne(&survey.Input{
 		Message: m,
-		Default: d,
 	}, &input)
 	if err != nil {
 		return "", err

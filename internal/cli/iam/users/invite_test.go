@@ -18,14 +18,12 @@ package users
 
 import (
 	"bytes"
-	"reflect"
 	"testing"
 
+	"github.com/go-test/deep"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -33,7 +31,7 @@ func TestInvite_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserCreator(ctrl)
 
-	expected := &mongodbatlas.AtlasUser{
+	expected := &opsmngr.User{
 		Username: "testUser",
 	}
 	opts := &InviteOpts{
@@ -56,98 +54,12 @@ func TestInvite_Run(t *testing.T) {
 	}
 }
 
-func TestCreateAtlasRole(t *testing.T) {
-	type test struct {
-		name  string
-		input InviteOpts
-		want  []mongodbatlas.AtlasRole
-	}
-
-	tests := []test{
-		{
-			name: "one role",
-			input: InviteOpts{
-				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER"},
-			},
-			want: []mongodbatlas.AtlasRole{{
-				OrgID:    "5e4e593f70dfbf1010295836",
-				RoleName: "ORG_OWNER",
-			}},
-		},
-		{
-			name: "multple roles",
-			input: InviteOpts{
-				orgRoles: []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
-			},
-			want: []mongodbatlas.AtlasRole{
-				{
-					OrgID:    "5e4e593f70dfbf1010295836",
-					RoleName: "ORG_OWNER",
-				},
-				{
-					OrgID:    "5e4e593f70dfbf1010295836",
-					RoleName: "ORG_GROUP_CREATOR",
-				},
-			},
-		},
-		{
-			name: "org and project roles",
-			input: InviteOpts{
-				orgRoles:     []string{"5e4e593f70dfbf1010295836:ORG_OWNER", "5e4e593f70dfbf1010295836:ORG_GROUP_CREATOR"},
-				projectRoles: []string{"5e4e593f70dfbf1010295836:GROUP_OWNER", "5e4e593f70dfbf1010295836:GROUP_CLUSTER_MANAGER"},
-			},
-			want: []mongodbatlas.AtlasRole{
-				{
-					OrgID:    "5e4e593f70dfbf1010295836",
-					RoleName: "ORG_OWNER",
-				},
-				{
-					OrgID:    "5e4e593f70dfbf1010295836",
-					RoleName: "ORG_GROUP_CREATOR",
-				},
-				{
-					GroupID:  "5e4e593f70dfbf1010295836",
-					RoleName: "GROUP_OWNER",
-				},
-				{
-					GroupID:  "5e4e593f70dfbf1010295836",
-					RoleName: "GROUP_CLUSTER_MANAGER",
-				},
-			},
-		},
-		{
-			name:  "empty",
-			input: InviteOpts{},
-			want:  []mongodbatlas.AtlasRole{},
-		},
-	}
-
-	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			got, err := tc.input.createAtlasRole()
-			if err != nil {
-				t.Fatalf("Run() unexpected error: %v", err)
-			}
-
-			if !reflect.DeepEqual(tc.want, got) {
-				t.Fatalf("expected: %v, got: %v", tc.want, got)
-			}
-		})
-	}
-}
-
 func TestCreateUserRole(t *testing.T) {
 	type test struct {
 		name  string
 		input InviteOpts
 		want  []*opsmngr.UserRole
 	}
-	prevServ := config.Service()
-	config.SetService(config.OpsManagerService)
-	defer func() {
-		config.SetService(prevServ)
-	}()
-
 	tests := []test{
 		{
 			name: "one role",
@@ -208,14 +120,12 @@ func TestCreateUserRole(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			got, err := tc.input.createUserRole()
-			if err != nil {
-				t.Fatalf("Run() unexpected error: %v", err)
-			}
-
-			if !reflect.DeepEqual(tc.want, got) {
-				t.Fatalf("expected: %v, got: %v", tc.want, got)
+		tt := tc
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := tt.input.createUserRole()
+			require.NoError(t, err)
+			if diff := deep.Equal(tt.want, got); diff != nil {
+				t.Fatalf("diff: %v", diff)
 			}
 		})
 	}

@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestCreate_Run(t *testing.T) {
@@ -31,7 +31,7 @@ func TestCreate_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectCreator(ctrl)
 
 	opts := CreateOpts{}
-	expected := &mongodbatlas.Project{}
+	expected := &opsmngr.Project{}
 
 	mockStore.
 		EXPECT().

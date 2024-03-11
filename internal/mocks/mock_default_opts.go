@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockProjectOrgsLister is a mock of ProjectOrgsLister interface.
@@ -35,10 +36,10 @@ func (m *MockProjectOrgsLister) EXPECT() *MockProjectOrgsListerMockRecorder {
 }
 
 // GetOrgProjects mocks base method.
-func (m *MockProjectOrgsLister) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ProjectsListOptions) (interface{}, error) {
+func (m *MockProjectOrgsLister) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ProjectsListOptions) (*opsmngr.Projects, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrgProjects", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*opsmngr.Projects)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -50,10 +51,10 @@ func (mr *MockProjectOrgsListerMockRecorder) GetOrgProjects(arg0, arg1 interface
 }
 
 // Organization mocks base method.
-func (m *MockProjectOrgsLister) Organization(arg0 string) (interface{}, error) {
+func (m *MockProjectOrgsLister) Organization(arg0 string) (*mongodbatlas.Organization, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organization", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlas.Organization)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -65,10 +66,10 @@ func (mr *MockProjectOrgsListerMockRecorder) Organization(arg0 interface{}) *gom
 }
 
 // Organizations mocks base method.
-func (m *MockProjectOrgsLister) Organizations(arg0 *mongodbatlas.OrganizationsListOptions) (interface{}, error) {
+func (m *MockProjectOrgsLister) Organizations(arg0 *mongodbatlas.OrganizationsListOptions) (*mongodbatlas.Organizations, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organizations", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlas.Organizations)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -80,10 +81,10 @@ func (mr *MockProjectOrgsListerMockRecorder) Organizations(arg0 interface{}) *go
 }
 
 // Project mocks base method.
-func (m *MockProjectOrgsLister) Project(arg0 string) (interface{}, error) {
+func (m *MockProjectOrgsLister) Project(arg0 string) (*opsmngr.Project, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Project", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*opsmngr.Project)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -95,10 +96,10 @@ func (mr *MockProjectOrgsListerMockRecorder) Project(arg0 interface{}) *gomock.C
 }
 
 // Projects mocks base method.
-func (m *MockProjectOrgsLister) Projects(arg0 *mongodbatlas.ListOptions) (interface{}, error) {
+func (m *MockProjectOrgsLister) Projects(arg0 *mongodbatlas.ListOptions) (*opsmngr.Projects, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Projects", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*opsmngr.Projects)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

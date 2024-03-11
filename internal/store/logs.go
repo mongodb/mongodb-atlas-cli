@@ -44,7 +44,7 @@ type LogJobDeleter interface {
 func (s *Store) LogCollectionJobs(groupID string, opts *opsmngr.LogListOptions) (*opsmngr.LogCollectionJobs, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		log, _, err := s.client.(*opsmngr.Client).LogCollections.List(s.ctx, groupID, opts)
+		log, _, err := s.client.LogCollections.List(s.ctx, groupID, opts)
 		return log, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -55,7 +55,7 @@ func (s *Store) LogCollectionJobs(groupID string, opts *opsmngr.LogListOptions) 
 func (s *Store) DeleteCollectionJob(groupID, logID string) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*opsmngr.Client).LogCollections.Delete(s.ctx, groupID, logID)
+		_, err := s.client.LogCollections.Delete(s.ctx, groupID, logID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -66,7 +66,7 @@ func (s *Store) DeleteCollectionJob(groupID, logID string) error {
 func (s *Store) Collect(groupID string, newLog *opsmngr.LogCollectionJob) (*opsmngr.LogCollectionJob, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		log, _, err := s.client.(*opsmngr.Client).LogCollections.Create(s.ctx, groupID, newLog)
+		log, _, err := s.client.LogCollections.Create(s.ctx, groupID, newLog)
 		return log, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -77,7 +77,7 @@ func (s *Store) Collect(groupID string, newLog *opsmngr.LogCollectionJob) (*opsm
 func (s *Store) DownloadLogJob(groupID, jobID string, out io.Writer) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*opsmngr.Client).Logs.Download(s.ctx, groupID, jobID, out)
+		_, err := s.client.Logs.Download(s.ctx, groupID, jobID, out)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

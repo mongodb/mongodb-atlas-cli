@@ -25,16 +25,16 @@ import (
 //go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter
 
 type ProjectLister interface {
-	Projects(*atlas.ListOptions) (interface{}, error)
-	GetOrgProjects(string, *atlas.ProjectsListOptions) (interface{}, error)
+	Projects(*opsmngr.ListOptions) (*opsmngr.Projects, error)
+	GetOrgProjects(string, *opsmngr.ProjectsListOptions) (*opsmngr.Projects, error)
 }
 
 type OrgProjectLister interface {
-	GetOrgProjects(string) (interface{}, error)
+	GetOrgProjects(string) (*opsmngr.Projects, error)
 }
 
 type ProjectCreator interface {
-	CreateProject(string, string, *bool, *atlas.CreateProjectOptions) (interface{}, error)
+	CreateProject(string, string, *bool, *atlas.CreateProjectOptions) (*opsmngr.Project, error)
 	ServiceVersionDescriber
 }
 
@@ -43,12 +43,12 @@ type ProjectDeleter interface {
 }
 
 type ProjectDescriber interface {
-	Project(string) (interface{}, error)
-	ProjectByName(string) (interface{}, error)
+	Project(string) (*opsmngr.Project, error)
+	ProjectByName(string) (*opsmngr.Project, error)
 }
 
 type ProjectUsersLister interface {
-	ProjectUsers(string, *atlas.ListOptions) (interface{}, error)
+	ProjectUsers(string, *opsmngr.ListOptions) ([]*opsmngr.User, error)
 }
 
 type ProjectUserDeleter interface {
@@ -56,7 +56,7 @@ type ProjectUserDeleter interface {
 }
 
 type ProjectTeamLister interface {
-	ProjectTeams(string) (interface{}, error)
+	ProjectTeams(string) (*atlas.TeamsAssigned, error)
 }
 
 type ProjectTeamAdder interface {
@@ -68,10 +68,10 @@ type ProjectTeamDeleter interface {
 }
 
 // Projects encapsulates the logic to manage different cloud providers.
-func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
+func (s *Store) Projects(opts *atlas.ListOptions) (*opsmngr.Projects, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.List(s.ctx, opts)
+		result, _, err := s.client.Projects.List(s.ctx, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -79,10 +79,10 @@ func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
 }
 
 // GetOrgProjects encapsulates the logic to manage different cloud providers.
-func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (interface{}, error) {
+func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (*opsmngr.Projects, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.Projects(s.ctx, orgID, opts)
+		result, _, err := s.client.Organizations.Projects(s.ctx, orgID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -90,20 +90,20 @@ func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (i
 }
 
 // Project encapsulates the logic to manage different cloud providers.
-func (s *Store) Project(id string) (interface{}, error) {
+func (s *Store) Project(id string) (*opsmngr.Project, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.Get(s.ctx, id)
+		result, _, err := s.client.Projects.Get(s.ctx, id)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-func (s *Store) ProjectByName(name string) (interface{}, error) {
+func (s *Store) ProjectByName(name string) (*opsmngr.Project, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.GetByName(s.ctx, name)
+		result, _, err := s.client.Projects.GetByName(s.ctx, name)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -111,11 +111,11 @@ func (s *Store) ProjectByName(name string) (interface{}, error) {
 }
 
 // CreateProject encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateProject(name, orgID string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (interface{}, error) {
+func (s *Store) CreateProject(name, orgID string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (*opsmngr.Project, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		project := &opsmngr.Project{Name: name, OrgID: orgID, WithDefaultAlertsSettings: defaultAlertSettings}
-		result, _, err := s.client.(*opsmngr.Client).Projects.Create(s.ctx, project, opts)
+		result, _, err := s.client.Projects.Create(s.ctx, project, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -126,7 +126,7 @@ func (s *Store) CreateProject(name, orgID string, defaultAlertSettings *bool, op
 func (s *Store) DeleteProject(projectID string) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Projects.Delete(s.ctx, projectID)
+		_, err := s.client.Projects.Delete(s.ctx, projectID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -134,21 +134,21 @@ func (s *Store) DeleteProject(projectID string) error {
 }
 
 // ProjectUsers lists all IAM users in a project.
-func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interface{}, error) {
+func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) ([]*opsmngr.User, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.ListUsers(s.ctx, projectID, opts)
+		result, _, err := s.client.Projects.ListUsers(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 }
 
-// DeleteProject encapsulates the logic to manage different cloud providers.
+// DeleteUserFromProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Projects.RemoveUser(s.ctx, projectID, userID)
+		_, err := s.client.Projects.RemoveUser(s.ctx, projectID, userID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -156,10 +156,10 @@ func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 }
 
 // ProjectTeams encapsulates the logic to manage different cloud providers.
-func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
+func (s *Store) ProjectTeams(projectID string) (*atlas.TeamsAssigned, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.GetTeams(s.ctx, projectID, nil)
+		result, _, err := s.client.Projects.GetTeams(s.ctx, projectID, nil)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -170,7 +170,7 @@ func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
 func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.AddTeamsToProject(s.ctx, projectID, teams)
+		result, _, err := s.client.Projects.AddTeamsToProject(s.ctx, projectID, teams)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -181,7 +181,7 @@ func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) 
 func (s *Store) DeleteTeamFromProject(projectID, teamID string) error {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromProject(s.ctx, projectID, teamID)
+		_, err := s.client.Teams.RemoveTeamFromProject(s.ctx, projectID, teamID)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

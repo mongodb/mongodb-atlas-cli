@@ -47,7 +47,7 @@ type HostDisksLister interface {
 func (s *Store) HostDatabases(groupID, hostID string, opts *atlas.ListOptions) (*atlas.ProcessDatabasesResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Deployments.ListDatabases(s.ctx, groupID, hostID, opts)
+		result, _, err := s.client.Deployments.ListDatabases(s.ctx, groupID, hostID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -58,7 +58,7 @@ func (s *Store) HostDatabases(groupID, hostID string, opts *atlas.ListOptions) (
 func (s *Store) HostDisks(groupID, hostID string, opts *atlas.ListOptions) (*atlas.ProcessDisksResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Deployments.ListPartitions(s.ctx, groupID, hostID, opts)
+		result, _, err := s.client.Deployments.ListPartitions(s.ctx, groupID, hostID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -69,7 +69,7 @@ func (s *Store) HostDisks(groupID, hostID string, opts *atlas.ListOptions) (*atl
 func (s *Store) Hosts(groupID string, opts *opsmngr.HostListOptions) (*opsmngr.Hosts, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Deployments.ListHosts(s.ctx, groupID, opts)
+		result, _, err := s.client.Deployments.ListHosts(s.ctx, groupID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -80,7 +80,7 @@ func (s *Store) Hosts(groupID string, opts *opsmngr.HostListOptions) (*opsmngr.H
 func (s *Store) Host(groupID, hostID string) (*opsmngr.Host, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Deployments.GetHost(s.ctx, groupID, hostID)
+		result, _, err := s.client.Deployments.GetHost(s.ctx, groupID, hostID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -91,7 +91,7 @@ func (s *Store) Host(groupID, hostID string) (*opsmngr.Host, error) {
 func (s *Store) HostByHostname(groupID, hostname string, port int) (*opsmngr.Host, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Deployments.GetHostByHostname(s.ctx, groupID, hostname, port)
+		result, _, err := s.client.Deployments.GetHostByHostname(s.ctx, groupID, hostname, port)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

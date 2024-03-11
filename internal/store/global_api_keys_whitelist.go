@@ -44,7 +44,7 @@ type GlobalAPIKeyWhitelistDeleter interface {
 func (s *Store) GlobalAPIKeyWhitelists(opts *atlas.ListOptions) (*opsmngr.GlobalWhitelistAPIKeys, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeysWhitelist.List(s.ctx, opts)
+		result, _, err := s.client.GlobalAPIKeysWhitelist.List(s.ctx, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -55,7 +55,7 @@ func (s *Store) GlobalAPIKeyWhitelists(opts *atlas.ListOptions) (*opsmngr.Global
 func (s *Store) GlobalAPIKeyWhitelist(id string) (*opsmngr.GlobalWhitelistAPIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeysWhitelist.Get(s.ctx, id)
+		result, _, err := s.client.GlobalAPIKeysWhitelist.Get(s.ctx, id)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -66,7 +66,7 @@ func (s *Store) GlobalAPIKeyWhitelist(id string) (*opsmngr.GlobalWhitelistAPIKey
 func (s *Store) CreateGlobalAPIKeyWhitelist(opts *opsmngr.WhitelistAPIKeysReq) (*opsmngr.GlobalWhitelistAPIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).GlobalAPIKeysWhitelist.Create(s.ctx, opts)
+		result, _, err := s.client.GlobalAPIKeysWhitelist.Create(s.ctx, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -77,7 +77,7 @@ func (s *Store) CreateGlobalAPIKeyWhitelist(opts *opsmngr.WhitelistAPIKeysReq) (
 func (s *Store) DeleteGlobalAPIKeyWhitelist(id string) error {
 	switch s.service {
 	case config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).GlobalAPIKeysWhitelist.Delete(s.ctx, id)
+		_, err := s.client.GlobalAPIKeysWhitelist.Delete(s.ctx, id)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

@@ -32,6 +32,5 @@
 	"golang.org/x/crypto": "mongocli",
 	"golang.org/x/tools": "mongocli",
 	"golang.org/x/mod": "mongocli",
-	"gopkg.in/yaml.v3": "mongocli",
-	"golang.org/x/exp": "atlas_kubernetes_team"
+	"gopkg.in/yaml.v3": "mongocli"
 }

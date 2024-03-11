@@ -35,7 +35,7 @@ type SnapshotScheduleUpdater interface {
 func (s *Store) GetSnapshotSchedule(projectID, clusterID string) (*opsmngr.SnapshotSchedule, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).SnapshotSchedule.Get(s.ctx, projectID, clusterID)
+		result, _, err := s.client.SnapshotSchedule.Get(s.ctx, projectID, clusterID)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -46,7 +46,7 @@ func (s *Store) GetSnapshotSchedule(projectID, clusterID string) (*opsmngr.Snaps
 func (s *Store) UpdateSnapshotSchedule(projectID, clusterID string, snapshotSchedule *opsmngr.SnapshotSchedule) (*opsmngr.SnapshotSchedule, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).SnapshotSchedule.Update(s.ctx, projectID, clusterID, snapshotSchedule)
+		result, _, err := s.client.SnapshotSchedule.Update(s.ctx, projectID, clusterID, snapshotSchedule)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

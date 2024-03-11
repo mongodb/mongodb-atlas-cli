@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockTeamLister is a mock of TeamLister interface.
@@ -201,10 +202,10 @@ func (m *MockTeamAdder) EXPECT() *MockTeamAdderMockRecorder {
 }
 
 // AddUsersToTeam mocks base method.
-func (m *MockTeamAdder) AddUsersToTeam(arg0, arg1 string, arg2 []string) (interface{}, error) {
+func (m *MockTeamAdder) AddUsersToTeam(arg0, arg1 string, arg2 []string) ([]*opsmngr.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddUsersToTeam", arg0, arg1, arg2)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].([]*opsmngr.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -22,7 +22,7 @@ import (
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store ClusterLister,OpsManagerClusterDescriber,AtlasSharedClusterDescriber
+//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store ClusterLister,OpsManagerClusterDescriber
 
 type ClusterLister interface {
 	ProjectClusters(string, *atlas.ListOptions) (*opsmngr.Clusters, error)
@@ -36,22 +36,11 @@ type AtlasSharedClusterDescriber interface {
 	AtlasSharedCluster(string, string) (*atlas.Cluster, error)
 }
 
-// AtlasSharedCluster encapsulates the logic to fetch details of one shared cluster.
-func (s *Store) AtlasSharedCluster(projectID, name string) (*atlas.Cluster, error) {
-	switch s.service {
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*atlas.Client).Clusters.Get(s.ctx, projectID, name)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
 // ProjectClusters encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (*opsmngr.Clusters, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Clusters.List(s.ctx, projectID, opts)
+		result, _, err := s.client.Clusters.List(s.ctx, projectID, opts)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -62,7 +51,7 @@ func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (*ops
 func (s *Store) OpsManagerCluster(projectID, name string) (*opsmngr.Cluster, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Clusters.Get(s.ctx, projectID, name)
+		result, _, err := s.client.Clusters.Get(s.ctx, projectID, name)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
@@ -73,7 +62,7 @@ func (s *Store) OpsManagerCluster(projectID, name string) (*opsmngr.Cluster, err
 func (s *Store) ListAllProjectClusters() (*opsmngr.AllClustersProjects, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Clusters.ListAll(s.ctx)
+		result, _, err := s.client.Clusters.ListAll(s.ctx)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

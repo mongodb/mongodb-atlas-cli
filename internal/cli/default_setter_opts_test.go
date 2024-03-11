@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestDefaultOpts_DefaultQuestions(t *testing.T) {
@@ -69,14 +69,14 @@ func TestDefaultOpts_Projects(t *testing.T) {
 		Store:   mockStore,
 	}
 	t.Run("empty", func(t *testing.T) {
-		expectedProjects := &atlas.Projects{}
+		expectedProjects := &opsmngr.Projects{}
 		mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(1)
 		_, _, err := opts.projects()
 		require.Error(t, err)
 	})
 	t.Run("with one project", func(t *testing.T) {
-		expectedProjects := &atlas.Projects{
-			Results: []*atlas.Project{
+		expectedProjects := &opsmngr.Projects{
+			Results: []*opsmngr.Project{
 				{
 					ID:   "1",
 					Name: "Project 1",
@@ -101,14 +101,14 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 		Store:   mockStore,
 	}
 	t.Run("empty", func(t *testing.T) {
-		expectedOrgs := &atlas.Organizations{}
+		expectedOrgs := &opsmngr.Organizations{}
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
 		_, err := opts.orgs("")
 		require.Error(t, err)
 	})
 	t.Run("with one org", func(t *testing.T) {
-		expectedOrgs := &atlas.Organizations{
-			Results: []*atlas.Organization{
+		expectedOrgs := &opsmngr.Organizations{
+			Results: []*opsmngr.Organization{
 				{
 					ID:   "1",
 					Name: "Org 1",
@@ -123,8 +123,8 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 	})
 
 	t.Run("with no org", func(t *testing.T) {
-		expectedOrgs := &atlas.Organizations{
-			Results: []*atlas.Organization{},
+		expectedOrgs := &opsmngr.Organizations{
+			Results: []*opsmngr.Organization{},
 		}
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
 		_, err := opts.orgs("")
@@ -133,7 +133,7 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 	})
 
 	t.Run("with nil org", func(t *testing.T) {
-		mockStore.EXPECT().Organizations(gomock.Any()).Return(nil, nil).Times(1)
+		mockStore.EXPECT().Organizations(gomock.Any()).Return(nil, errNoResults).Times(1)
 		_, err := opts.orgs("")
 		require.Error(t, err)
 		require.EqualError(t, err, errNoResults.Error())

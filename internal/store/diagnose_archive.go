@@ -32,7 +32,7 @@ type ArchivesDownloader interface {
 func (s *Store) DownloadArchive(groupID string, opts *opsmngr.DiagnosticsListOpts, out io.Writer) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		_, err := s.client.(*opsmngr.Client).Diagnostics.Get(s.ctx, groupID, opts, out)
+		_, err := s.client.Diagnostics.Get(s.ctx, groupID, opts, out)
 		return err
 	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)

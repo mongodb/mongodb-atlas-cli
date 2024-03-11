@@ -8,8 +8,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	store "github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockUserCreator is a mock of UserCreator interface.
@@ -36,7 +36,7 @@ func (m *MockUserCreator) EXPECT() *MockUserCreatorMockRecorder {
 }
 
 // CreateUser mocks base method.
-func (m *MockUserCreator) CreateUser(arg0 *store.UserRequest) (interface{}, error) {
+func (m *MockUserCreator) CreateUser(arg0 *opsmngr.User) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", arg0)
 	ret0, _ := ret[0].(interface{})

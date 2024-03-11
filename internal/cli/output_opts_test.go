@@ -18,11 +18,7 @@ package cli
 
 import (
 	"io"
-	"reflect"
 	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
 
 func TestOutputOpts_outputTypeAndValue(t *testing.T) {
@@ -67,34 +63,4 @@ func TestOutputOpts_outputTypeAndValue(t *testing.T) {
 			}
 		})
 	}
-}
-
-func TestOutputOpts_mapReduceResults(t *testing.T) {
-	t.Run("when results present", func(t *testing.T) {
-		input := *atlasv2.NewPaginatedTeam()
-		wantID := "123"
-		wantName := "Team A"
-		input.Results = &[]atlasv2.TeamResponse{
-			{
-				Id:   pointer.Get(wantID),
-				Name: pointer.Get(wantName),
-			},
-		}
-
-		compactResults, err := mapReduceResults(input)
-		if err != nil {
-			t.Fatalf("mapReduceResults() unexpected error: %v", err)
-		}
-
-		mapArrayResponse := reflect.ValueOf(compactResults).Interface().([]interface{})
-		mapResponse := mapArrayResponse[0].(map[string]interface{})
-		gotID := mapResponse["id"]
-		gotName := mapResponse["name"]
-		if gotID != wantID {
-			t.Errorf("mapReduceResults() got = %v, want %v", gotID, wantID)
-		}
-		if gotName != wantName {
-			t.Errorf("mapReduceResults() got = %v, want %v", gotName, wantName)
-		}
-	})
 }

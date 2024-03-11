@@ -19,6 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_teams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store TeamLister,TeamDescriber,TeamCreator,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
@@ -41,7 +42,7 @@ type TeamDeleter interface {
 }
 
 type TeamAdder interface {
-	AddUsersToTeam(string, string, []string) (interface{}, error)
+	AddUsersToTeam(string, string, []string) ([]*opsmngr.User, error)
 }
 
 type TeamUserRemover interface {
@@ -108,7 +109,7 @@ func (s *Store) DeleteTeam(orgID, teamID string) error {
 }
 
 // AddUsersToTeam encapsulates the logic to manage different cloud providers.
-func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) (interface{}, error) {
+func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) ([]*opsmngr.User, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Teams.AddUsersToTeam(s.ctx, orgID, teamID, users)

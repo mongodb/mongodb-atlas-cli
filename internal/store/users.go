@@ -25,7 +25,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store UserCreator,UserDescriber,UserDeleter,UserLister,TeamUserLister
 
 type UserCreator interface {
-	CreateUser(*UserRequest) (interface{}, error)
+	CreateUser(*opsmngr.User) (interface{}, error)
 }
 
 type UserDeleter interface {
@@ -45,16 +45,11 @@ type UserDescriber interface {
 	UserByName(string) (interface{}, error)
 }
 
-type UserRequest struct {
-	*opsmngr.User
-	AtlasRoles []atlas.AtlasRole
-}
-
 // CreateUser encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateUser(user *UserRequest) (interface{}, error) {
+func (s *Store) CreateUser(user *opsmngr.User) (interface{}, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.Users.Create(s.ctx, user.User)
+		result, _, err := s.client.Users.Create(s.ctx, user)
 		return result, err
 	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)

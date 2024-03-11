@@ -28,7 +28,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -57,29 +56,21 @@ func (opts *InviteOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *InviteOpts) newUserRequest() (*store.UserRequest, error) {
-	atlasRoles, err := opts.createAtlasRole()
-	if err != nil {
-		return nil, err
-	}
-
+func (opts *InviteOpts) newUserRequest() (*opsmngr.User, error) {
 	userRoles, err := opts.createUserRole()
 	if err != nil {
 		return nil, err
 	}
 
-	user := &store.UserRequest{
-		AtlasRoles: atlasRoles,
-		User: &opsmngr.User{
-			Username:     opts.username,
-			Password:     opts.password,
-			FirstName:    opts.firstName,
-			LastName:     opts.lastName,
-			EmailAddress: opts.email,
-			MobileNumber: opts.mobile,
-			Country:      opts.country,
-			Roles:        userRoles,
-		},
+	user := &opsmngr.User{
+		Username:     opts.username,
+		Password:     opts.password,
+		FirstName:    opts.firstName,
+		LastName:     opts.lastName,
+		EmailAddress: opts.email,
+		MobileNumber: opts.mobile,
+		Country:      opts.country,
+		Roles:        userRoles,
 	}
 
 	return user, nil
@@ -101,40 +92,7 @@ func (opts *InviteOpts) Run() error {
 
 const keyParts = 2
 
-func (opts *InviteOpts) createAtlasRole() ([]atlas.AtlasRole, error) {
-	if !config.IsCloud() {
-		return nil, nil
-	}
-
-	atlasRoles := make([]atlas.AtlasRole, len(opts.orgRoles)+len(opts.projectRoles))
-
-	i := 0
-	for _, role := range opts.orgRoles {
-		atlasRole, err := newAtlasOrgRole(role)
-		if err != nil {
-			return nil, err
-		}
-		atlasRoles[i] = atlasRole
-		i++
-	}
-
-	for _, role := range opts.projectRoles {
-		atlasRole, err := newAtlasProjectRole(role)
-		if err != nil {
-			return nil, err
-		}
-		atlasRoles[i] = atlasRole
-		i++
-	}
-
-	return atlasRoles, nil
-}
-
 func (opts *InviteOpts) createUserRole() ([]*opsmngr.UserRole, error) {
-	if config.IsCloud() {
-		return nil, nil
-	}
-
 	roles := make([]*opsmngr.UserRole, len(opts.orgRoles)+len(opts.projectRoles))
 
 	i := 0
@@ -207,31 +165,6 @@ func newUserProjectRole(role string) (*opsmngr.UserRole, error) {
 	}
 
 	return userRole, nil
-}
-
-func newAtlasProjectRole(role string) (atlas.AtlasRole, error) {
-	value, err := splitRole(role)
-	if err != nil {
-		return atlas.AtlasRole{}, err
-	}
-	atlasRole := atlas.AtlasRole{
-		GroupID:  value[0],
-		RoleName: strings.ToUpper(value[1]),
-	}
-
-	return atlasRole, nil
-}
-
-func newAtlasOrgRole(role string) (atlas.AtlasRole, error) {
-	value, err := splitRole(role)
-	if err != nil {
-		return atlas.AtlasRole{}, err
-	}
-	atlasRole := atlas.AtlasRole{
-		OrgID:    value[0],
-		RoleName: strings.ToUpper(value[1]),
-	}
-	return atlasRole, nil
 }
 
 // mongocli iam users(s) invite --username username --password password --country country --email email

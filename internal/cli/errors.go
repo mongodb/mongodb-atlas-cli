@@ -15,7 +15,6 @@
 package cli
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/flag"
@@ -25,6 +24,3 @@ const requiredF = `required flag(s) "%s" not set`
 
 var errMissingProjectID = fmt.Errorf(requiredF, flag.ProjectID)
 var ErrMissingOrgID = fmt.Errorf(requiredF, flag.OrgID)
-var ErrFreeClusterAlreadyExists = errors.New("this project already has another free cluster. To learn how to create non-free clusters, run \"atlas cluster create --help\"")
-var ErrNoRegionExistsTryCommand = errors.New(`the region does not exist. To find the available regions, run "atlas cluster availableRegions list"`)
-var ErrNameExists = errors.New(`the name already exists. Please run "atlas cluster list" to review existing cluster names`)

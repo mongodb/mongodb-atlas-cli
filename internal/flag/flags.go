@@ -119,7 +119,6 @@ const (
 	Key                             = "key"                             // Key flag
 	CollectionName                  = "collectionName"                  // CollectionName flag
 	Database                        = "db"                              // Database flag
-	Unique                          = "unique"                          // Unique flag
 	RSName                          = "rsName"                          // RSName flag
 	Sparse                          = "sparse"                          // Sparse flag
 	Locale                          = "locale"                          // Locale flag
@@ -171,7 +170,6 @@ const (
 	MonthlySnapshotRetentionMonths  = "monthlySnapshotRetentionMonths"  // MonthlySnapshotRetentionMonths flag
 	Policy                          = "policy"                          // Policy flag
 	SystemID                        = "systemId"                        // SystemID flag
-	Default                         = "default"                         // Default flag
 	Timestamp                       = "timestamp"                       // Timestamp flag
 	OwnerID                         = "ownerId"                         // OwnerID flag
 	LinkToken                       = "linkToken"                       // LinkToken flag

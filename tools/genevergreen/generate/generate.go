@@ -70,10 +70,10 @@ var (
 	}
 )
 
-func newDependency(toolName, os, serverVersion, repo string) shrub.TaskDependency {
+func newDependency(os, serverVersion, repo string) shrub.TaskDependency {
 	return shrub.TaskDependency{
-		Name:    fmt.Sprintf("push_%s_%s_%s_%s_%s_stable", toolName, newOs[os], repo, x86_64, strings.ReplaceAll(serverVersion, ".", "")),
-		Variant: fmt.Sprintf("generated_release_%s_publish_%s", toolName, strings.ReplaceAll(serverVersion, ".", "")),
+		Name:    fmt.Sprintf("push_mongocli_%s_%s_%s_%s_stable", newOs[os], repo, x86_64, strings.ReplaceAll(serverVersion, ".", "")),
+		Variant: fmt.Sprintf("generated_release_mongocli_publish_%s", strings.ReplaceAll(serverVersion, ".", "")),
 	}
 }
 
@@ -97,7 +97,7 @@ func RepoTasks(c *shrub.Configuration) {
 				}
 				t = t.Stepback(false).
 					GitTagOnly(true).
-					Dependency(newDependency("mongocli", os, serverVersion, repo)).
+					Dependency(newDependency(os, serverVersion, repo)).
 					Function("clone").
 					FunctionWithVars("docker build repo", map[string]string{
 						"server_version": serverVersion,

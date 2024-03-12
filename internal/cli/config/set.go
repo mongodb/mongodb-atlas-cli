@@ -21,7 +21,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/validate"
 	"github.com/spf13/cobra"
@@ -53,13 +52,6 @@ func (opts *SetOpts) Run() error {
 		opts.store.SetGlobal(opts.prop, value)
 	} else {
 		opts.store.Set(opts.prop, value)
-	}
-
-	if opts.prop == config.TelemetryEnabledProperty && mongosh.Detect() {
-		err := mongosh.SetTelemetry(value.(bool))
-		if err != nil {
-			return fmt.Errorf("error enabling telemetry on mongosh: %w", err)
-		}
 	}
 
 	if err := opts.store.Save(); err != nil {

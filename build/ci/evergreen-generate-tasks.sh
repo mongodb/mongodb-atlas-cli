@@ -16,4 +16,4 @@
 
 set -Eeou pipefail
 
-go run tools/genevergreen/main.go -tool_name "mongocli" -tasks "${task_type:?}" >tasks.json
+go run tools/genevergreen/main.go -tasks "${task_type:?}" >tasks.json

@@ -24,19 +24,15 @@ import (
 )
 
 func TestPublishSnapshotTasks(t *testing.T) {
-	t.Run("mongocli evergreen", func(t *testing.T) {
-		c := &shrub.Configuration{}
-		PublishSnapshotTasks(c)
-		assert.Len(t, c.Tasks, 34)
-		assert.Len(t, c.Variants, 2)
-	})
+	c := &shrub.Configuration{}
+	PublishSnapshotTasks(c)
+	assert.Len(t, c.Tasks, 34)
+	assert.Len(t, c.Variants, 2)
 }
 
 func TestPublishStableTasks(t *testing.T) {
-	t.Run("mongocli", func(t *testing.T) {
-		c := &shrub.Configuration{}
-		PublishStableTasks(c)
-		assert.Len(t, c.Variants, 4)
-		assert.Len(t, c.Tasks, 136)
-	})
+	c := &shrub.Configuration{}
+	PublishStableTasks(c)
+	assert.Len(t, c.Variants, 4)
+	assert.Len(t, c.Tasks, 136)
 }

@@ -21,7 +21,7 @@ jobs:
           echo "DATE=${DATE}" >> "$GITHUB_ENV"
       - name: 'Get latest tag'
         id: get-latest-tag
-        uses: oprypin/find-latest-tag@e1e0e606cc7e9ede25140a5a139b3a5a1b717ece
+        uses: oprypin/find-latest-tag@dd2729fe78b0bb55523ae2b2a310c6773a652bd1
         with:
           repository: mongodb/mongodb-atlas-cli
           releases-only: true
@@ -72,7 +72,7 @@ jobs:
           echo "DATE=${DATE}" >> "$GITHUB_ENV"
       - name: 'Get latest tag'
         id: get-latest-tag
-        uses: oprypin/find-latest-tag@e1e0e606cc7e9ede25140a5a139b3a5a1b717ece
+        uses: oprypin/find-latest-tag@dd2729fe78b0bb55523ae2b2a310c6773a652bd1
         with:
           repository: mongodb/mongodb-atlas-cli
           releases-only: true

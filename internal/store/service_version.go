@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -29,7 +28,7 @@ type ServiceVersionDescriber interface {
 }
 
 // ServiceVersion encapsulates the logic to manage different cloud providers.
-func (s *Store) ServiceVersion() (*atlas.ServiceVersion, error) {
+func (s *Store) ServiceVersion() (*opsmngr.ServiceVersion, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.ServiceVersion.Get(s.ctx)

@@ -18,14 +18,13 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
 
 type OrganizationAPIKeyAccessListLister interface {
-	OrganizationAPIKeyAccessLists(string, string, *opsmngr.ListOptions) (*atlas.AccessListAPIKeys, error)
+	OrganizationAPIKeyAccessLists(string, string, *opsmngr.ListOptions) (*opsmngr.AccessListAPIKeys, error)
 }
 
 type OrganizationAPIKeyAccessListDeleter interface {
@@ -33,11 +32,11 @@ type OrganizationAPIKeyAccessListDeleter interface {
 }
 
 type OrganizationAPIKeyAccessListCreator interface {
-	CreateOrganizationAPIKeyAccessList(string, string, []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error)
+	CreateOrganizationAPIKeyAccessList(string, string, []*opsmngr.AccessListAPIKeysReq) (*opsmngr.AccessListAPIKeys, error)
 }
 
 // CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error) {
+func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts []*opsmngr.AccessListAPIKeysReq) (*opsmngr.AccessListAPIKeys, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.AccessListAPIKeys.Create(s.ctx, orgID, apiKeyID, opts)
@@ -59,7 +58,7 @@ func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress st
 }
 
 // OrganizationAPIKeyAccessLists encapsulates the logic to manage different cloud providers.
-func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.AccessListAPIKeys, error) {
+func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *opsmngr.ListOptions) (*opsmngr.AccessListAPIKeys, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.AccessListAPIKeys.List(s.ctx, orgID, apiKeyID, opts)

@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestTeamUsers(t *testing.T) {
@@ -64,7 +64,7 @@ func TestTeamUsers(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
-		var users []mongodbatlas.AtlasUser
+		var users []opsmngr.User
 		require.NoError(t, json.Unmarshal(resp, &users))
 		found := false
 		for _, user := range users {
@@ -89,7 +89,7 @@ func TestTeamUsers(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
-		var teams []mongodbatlas.AtlasUser
+		var teams []opsmngr.User
 		require.NoError(t, json.Unmarshal(resp, &teams))
 		a.NotEmpty(teams)
 	})

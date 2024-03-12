@@ -20,14 +20,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestDescribe_Run_ByID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserDescriber(ctrl)
 
-	var expected mongodbatlas.AtlasUser
+	var expected *opsmngr.User
 
 	descOpts := &DescribeOpts{
 		store: mockStore,
@@ -49,7 +49,7 @@ func TestDescribe_Run_ByName(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserDescriber(ctrl)
 
-	var expected mongodbatlas.AtlasUser
+	var expected *opsmngr.User
 
 	descOpts := &DescribeOpts{
 		store:    mockStore,

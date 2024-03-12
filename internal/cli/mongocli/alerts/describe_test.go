@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestDescribeBuilder(t *testing.T) {
@@ -47,7 +47,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertDescriber(ctrl)
 
-	expected := &mongodbatlas.Alert{
+	expected := &opsmngr.Alert{
 		ID:            "test",
 		EventTypeName: "test",
 		Status:        "test",

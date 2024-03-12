@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type GlobalListOpts struct {
@@ -52,8 +52,8 @@ func (opts *GlobalListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *GlobalListOpts) newAlertsListOptions() *atlas.AlertsListOptions {
-	return &atlas.AlertsListOptions{
+func (opts *GlobalListOpts) newAlertsListOptions() *opsmngr.AlertsListOptions {
+	return &opsmngr.AlertsListOptions{
 		Status:      opts.status,
 		ListOptions: *opts.NewListOptions(),
 	}

@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -59,7 +58,7 @@ func (opts *ListOpts) Run() error {
 }
 
 func (opts *ListOpts) newOrganizationListOptions() *opsmngr.OrganizationsListOptions {
-	return &atlas.OrganizationsListOptions{
+	return &opsmngr.OrganizationsListOptions{
 		Name:               opts.name,
 		IncludeDeletedOrgs: &opts.includeDeletedOrgs,
 		ListOptions:        *opts.NewListOptions(),

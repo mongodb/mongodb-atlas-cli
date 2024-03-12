@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/oauth"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type logoutOpts struct {
@@ -44,7 +44,7 @@ type ConfigDeleter interface {
 }
 
 type Revoker interface {
-	RevokeToken(context.Context, string, string) (*atlas.Response, error)
+	RevokeToken(context.Context, string, string) (*opsmngr.Response, error)
 }
 
 func (opts *logoutOpts) initFlow() error {

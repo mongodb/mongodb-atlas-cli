@@ -19,18 +19,17 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/pointer"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_alert_configuration.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store AlertConfigurationLister,AlertConfigurationCreator,AlertConfigurationDeleter,AlertConfigurationUpdater,MatcherFieldsLister,AlertConfigurationEnabler,AlertConfigurationDisabler
 
 type AlertConfigurationLister interface {
-	AlertConfigurations(string, *opsmngr.ListOptions) ([]atlas.AlertConfiguration, error)
+	AlertConfigurations(string, *opsmngr.ListOptions) ([]opsmngr.AlertConfiguration, error)
 }
 
 type AlertConfigurationCreator interface {
-	CreateAlertConfiguration(*atlas.AlertConfiguration) (*atlas.AlertConfiguration, error)
+	CreateAlertConfiguration(*opsmngr.AlertConfiguration) (*opsmngr.AlertConfiguration, error)
 }
 
 type AlertConfigurationDeleter interface {
@@ -38,7 +37,7 @@ type AlertConfigurationDeleter interface {
 }
 
 type AlertConfigurationUpdater interface {
-	UpdateAlertConfiguration(*atlas.AlertConfiguration) (*atlas.AlertConfiguration, error)
+	UpdateAlertConfiguration(*opsmngr.AlertConfiguration) (*opsmngr.AlertConfiguration, error)
 }
 
 type MatcherFieldsLister interface {
@@ -46,15 +45,15 @@ type MatcherFieldsLister interface {
 }
 
 type AlertConfigurationEnabler interface {
-	EnableAlertConfiguration(string, string) (*atlas.AlertConfiguration, error)
+	EnableAlertConfiguration(string, string) (*opsmngr.AlertConfiguration, error)
 }
 
 type AlertConfigurationDisabler interface {
-	DisableAlertConfiguration(string, string) (*atlas.AlertConfiguration, error)
+	DisableAlertConfiguration(string, string) (*opsmngr.AlertConfiguration, error)
 }
 
 // AlertConfigurations encapsulate the logic to manage different cloud providers.
-func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) ([]atlas.AlertConfiguration, error) {
+func (s *Store) AlertConfigurations(projectID string, opts *opsmngr.ListOptions) ([]opsmngr.AlertConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.AlertConfigurations.List(s.ctx, projectID, opts)
@@ -65,7 +64,7 @@ func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) (
 }
 
 // CreateAlertConfiguration encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
+func (s *Store) CreateAlertConfiguration(alertConfig *opsmngr.AlertConfiguration) (*opsmngr.AlertConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.AlertConfigurations.Create(s.ctx, alertConfig.GroupID, alertConfig)
@@ -97,7 +96,7 @@ func (s *Store) MatcherFields() ([]string, error) {
 	}
 }
 
-func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
+func (s *Store) UpdateAlertConfiguration(alertConfig *opsmngr.AlertConfiguration) (*opsmngr.AlertConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.AlertConfigurations.Update(s.ctx, alertConfig.GroupID, alertConfig.ID, alertConfig)
@@ -108,7 +107,7 @@ func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) 
 }
 
 // EnableAlertConfiguration encapsulate the logic to manage different cloud providers.
-func (s *Store) EnableAlertConfiguration(projectID, id string) (*atlas.AlertConfiguration, error) {
+func (s *Store) EnableAlertConfiguration(projectID, id string) (*opsmngr.AlertConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(true))
@@ -119,7 +118,7 @@ func (s *Store) EnableAlertConfiguration(projectID, id string) (*atlas.AlertConf
 }
 
 // DisableAlertConfiguration encapsulate the logic to manage different cloud providers.
-func (s *Store) DisableAlertConfiguration(projectID, id string) (*atlas.AlertConfiguration, error) {
+func (s *Store) DisableAlertConfiguration(projectID, id string) (*opsmngr.AlertConfiguration, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(false))

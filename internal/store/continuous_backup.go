@@ -18,29 +18,29 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_continuous_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store CheckpointsLister,ContinuousJobLister,ContinuousJobCreator,ContinuousSnapshotsLister
 
 type CheckpointsLister interface {
-	Checkpoints(string, string, *atlas.ListOptions) (*atlas.Checkpoints, error)
+	Checkpoints(string, string, *opsmngr.ListOptions) (*opsmngr.Checkpoints, error)
 }
 
 type ContinuousJobLister interface {
-	ContinuousRestoreJobs(string, string, *atlas.ListOptions) (*atlas.ContinuousJobs, error)
+	ContinuousRestoreJobs(string, string, *opsmngr.ListOptions) (*opsmngr.ContinuousJobs, error)
 }
 
 type ContinuousJobCreator interface {
-	CreateContinuousRestoreJob(string, string, *atlas.ContinuousJobRequest) (*atlas.ContinuousJobs, error)
+	CreateContinuousRestoreJob(string, string, *opsmngr.ContinuousJobRequest) (*opsmngr.ContinuousJobs, error)
 }
 
 type ContinuousSnapshotsLister interface {
-	ContinuousSnapshots(string, string, *atlas.ListOptions) (*atlas.ContinuousSnapshots, error)
+	ContinuousSnapshots(string, string, *opsmngr.ListOptions) (*opsmngr.ContinuousSnapshots, error)
 }
 
 // Checkpoints encapsulate the logic to manage different cloud providers.
-func (s *Store) Checkpoints(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.Checkpoints, error) {
+func (s *Store) Checkpoints(projectID, clusterID string, opts *opsmngr.ListOptions) (*opsmngr.Checkpoints, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Checkpoints.List(s.ctx, projectID, clusterID, opts)
@@ -51,7 +51,7 @@ func (s *Store) Checkpoints(projectID, clusterID string, opts *atlas.ListOptions
 }
 
 // ContinuousRestoreJobs encapsulate the logic to manage different cloud providers.
-func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.ContinuousJobs, error) {
+func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *opsmngr.ListOptions) (*opsmngr.ContinuousJobs, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.ContinuousRestoreJobs.List(s.ctx, projectID, clusterID, opts)
@@ -62,7 +62,7 @@ func (s *Store) ContinuousRestoreJobs(projectID, clusterID string, opts *atlas.L
 }
 
 // CreateContinuousRestoreJob encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request *atlas.ContinuousJobRequest) (*atlas.ContinuousJobs, error) {
+func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request *opsmngr.ContinuousJobRequest) (*opsmngr.ContinuousJobs, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.ContinuousRestoreJobs.Create(s.ctx, projectID, clusterID, request)
@@ -73,7 +73,7 @@ func (s *Store) CreateContinuousRestoreJob(projectID, clusterID string, request 
 }
 
 // ContinuousSnapshots encapsulate the logic to manage different cloud providers.
-func (s *Store) ContinuousSnapshots(projectID, clusterID string, opts *atlas.ListOptions) (*atlas.ContinuousSnapshots, error) {
+func (s *Store) ContinuousSnapshots(projectID, clusterID string, opts *opsmngr.ListOptions) (*opsmngr.ContinuousSnapshots, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.ContinuousSnapshots.List(s.ctx, projectID, clusterID, opts)

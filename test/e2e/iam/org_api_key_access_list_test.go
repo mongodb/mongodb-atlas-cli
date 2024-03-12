@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestOrgAPIKeyAccessList(t *testing.T) {
@@ -58,7 +58,7 @@ func TestOrgAPIKeyAccessList(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var key mongodbatlas.AccessListAPIKeys
+		var key opsmngr.AccessListAPIKeys
 		require.NoError(t, json.Unmarshal(resp, &key))
 		assert.NotEmpty(t, key.Results)
 	})
@@ -74,34 +74,13 @@ func TestOrgAPIKeyAccessList(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var key mongodbatlas.AccessListAPIKeys
+		var key opsmngr.AccessListAPIKeys
 		require.NoError(t, json.Unmarshal(resp, &key))
 		assert.NotEmpty(t, key.Results)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
 		deleteAccessListEntry(t, cliPath, entry, apiKeyID)
-	})
-
-	t.Run("Create Current IP", func(t *testing.T) {
-		t.Skip("400 (request \"CANNOT_REMOVE_CALLER_FROM_ACCESS_LIST\") Cannot remove caller's IP address from access list")
-		cmd := exec.Command(cliPath, iamEntity,
-			orgEntity,
-			apiKeysEntity,
-			apiKeyAccessListEntity,
-			"create",
-			"--apiKey",
-			apiKeyID,
-			"--currentIp",
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
-		require.NoError(t, err, string(resp))
-		var key mongodbatlas.AccessListAPIKeys
-		require.NoError(t, json.Unmarshal(resp, &key))
-		a.NotEmpty(key.Results)
-		entry = key.Results[0].IPAddress
 	})
 
 	t.Run("Delete", func(t *testing.T) {

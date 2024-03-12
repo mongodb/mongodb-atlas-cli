@@ -25,6 +25,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/test/e2e"
 	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const (
@@ -66,7 +67,7 @@ func createOrgAPIKey() (string, error) {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 
-	var key mongodbatlas.APIKey
+	var key opsmngr.APIKey
 	if err := json.Unmarshal(resp, &key); err != nil {
 		return "", err
 	}

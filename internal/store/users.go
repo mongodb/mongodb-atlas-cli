@@ -18,14 +18,13 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store UserCreator,UserDescriber,UserDeleter,UserLister,TeamUserLister
 
 type UserCreator interface {
-	CreateUser(*opsmngr.User) (interface{}, error)
+	CreateUser(*opsmngr.User) (*opsmngr.User, error)
 }
 
 type UserDeleter interface {
@@ -33,7 +32,7 @@ type UserDeleter interface {
 }
 
 type UserLister interface {
-	OrganizationUsers(string, *atlas.ListOptions) (interface{}, error)
+	OrganizationUsers(string, *opsmngr.ListOptions) (*opsmngr.UsersResponse, error)
 }
 
 type TeamUserLister interface {
@@ -41,12 +40,12 @@ type TeamUserLister interface {
 }
 
 type UserDescriber interface {
-	UserByID(string) (interface{}, error)
-	UserByName(string) (interface{}, error)
+	UserByID(string) (*opsmngr.User, error)
+	UserByName(string) (*opsmngr.User, error)
 }
 
 // CreateUser encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateUser(user *opsmngr.User) (interface{}, error) {
+func (s *Store) CreateUser(user *opsmngr.User) (*opsmngr.User, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Users.Create(s.ctx, user)
@@ -57,7 +56,7 @@ func (s *Store) CreateUser(user *opsmngr.User) (interface{}, error) {
 }
 
 // UserByID encapsulates the logic to manage different cloud providers.
-func (s *Store) UserByID(userID string) (interface{}, error) {
+func (s *Store) UserByID(userID string) (*opsmngr.User, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Users.Get(s.ctx, userID)
@@ -68,7 +67,7 @@ func (s *Store) UserByID(userID string) (interface{}, error) {
 }
 
 // UserByName encapsulates the logic to manage different cloud providers.
-func (s *Store) UserByName(username string) (interface{}, error) {
+func (s *Store) UserByName(username string) (*opsmngr.User, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Users.GetByName(s.ctx, username)
@@ -90,7 +89,7 @@ func (s *Store) DeleteUser(userID string) error {
 }
 
 // OrganizationUsers encapsulates the logic to manage different cloud providers.
-func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions) (interface{}, error) {
+func (s *Store) OrganizationUsers(organizationID string, opts *opsmngr.ListOptions) (*opsmngr.UsersResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Organizations.ListUsers(s.ctx, organizationID, opts)

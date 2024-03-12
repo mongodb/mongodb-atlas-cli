@@ -19,16 +19,17 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_api_keys.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store ProjectAPIKeyLister,ProjectAPIKeyCreator,OrganizationAPIKeyLister,OrganizationAPIKeyDescriber,OrganizationAPIKeyUpdater,OrganizationAPIKeyCreator,OrganizationAPIKeyDeleter,ProjectAPIKeyDeleter,ProjectAPIKeyAssigner
 
 type ProjectAPIKeyLister interface {
-	ProjectAPIKeys(string, *atlas.ListOptions) ([]atlas.APIKey, error)
+	ProjectAPIKeys(string, *opsmngr.ListOptions) ([]opsmngr.APIKey, error)
 }
 
 type ProjectAPIKeyCreator interface {
-	CreateProjectAPIKey(string, *atlas.APIKeyInput) (*atlas.APIKey, error)
+	CreateProjectAPIKey(string, *opsmngr.APIKeyInput) (*opsmngr.APIKey, error)
 }
 
 type ProjectAPIKeyDeleter interface {
@@ -40,19 +41,19 @@ type ProjectAPIKeyAssigner interface {
 }
 
 type OrganizationAPIKeyLister interface {
-	OrganizationAPIKeys(string, *atlas.ListOptions) ([]atlas.APIKey, error)
+	OrganizationAPIKeys(string, *opsmngr.ListOptions) ([]opsmngr.APIKey, error)
 }
 
 type OrganizationAPIKeyDescriber interface {
-	OrganizationAPIKey(string, string) (*atlas.APIKey, error)
+	OrganizationAPIKey(string, string) (*opsmngr.APIKey, error)
 }
 
 type OrganizationAPIKeyUpdater interface {
-	UpdateOrganizationAPIKey(string, string, *atlas.APIKeyInput) (*atlas.APIKey, error)
+	UpdateOrganizationAPIKey(string, string, *opsmngr.APIKeyInput) (*opsmngr.APIKey, error)
 }
 
 type OrganizationAPIKeyCreator interface {
-	CreateOrganizationAPIKey(string, *atlas.APIKeyInput) (*atlas.APIKey, error)
+	CreateOrganizationAPIKey(string, *opsmngr.APIKeyInput) (*opsmngr.APIKey, error)
 }
 
 type OrganizationAPIKeyDeleter interface {
@@ -60,7 +61,7 @@ type OrganizationAPIKeyDeleter interface {
 }
 
 // OrganizationAPIKeys encapsulates the logic to manage different cloud providers.
-func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
+func (s *Store) OrganizationAPIKeys(orgID string, opts *opsmngr.ListOptions) ([]opsmngr.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.OrganizationAPIKeys.List(s.ctx, orgID, opts)
@@ -71,7 +72,7 @@ func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) ([]at
 }
 
 // OrganizationAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlas.APIKey, error) {
+func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*opsmngr.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.OrganizationAPIKeys.Get(s.ctx, orgID, apiKeyID)
@@ -82,7 +83,7 @@ func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlas.APIKey, error
 }
 
 // UpdateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
+func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *opsmngr.APIKeyInput) (*opsmngr.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.OrganizationAPIKeys.Update(s.ctx, orgID, apiKeyID, input)
@@ -93,7 +94,7 @@ func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlas.AP
 }
 
 // CreateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlas.APIKeyInput) (*atlas.APIKey, error) {
+func (s *Store) CreateOrganizationAPIKey(orgID string, input *opsmngr.APIKeyInput) (*opsmngr.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.OrganizationAPIKeys.Create(s.ctx, orgID, input)
@@ -115,7 +116,7 @@ func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
 }
 
 // ProjectAPIKeys returns the API Keys for a specific project.
-func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) ([]atlas.APIKey, error) {
+func (s *Store) ProjectAPIKeys(projectID string, opts *opsmngr.ListOptions) ([]opsmngr.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.ProjectAPIKeys.List(s.ctx, projectID, opts)
@@ -126,7 +127,7 @@ func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) ([]atl
 }
 
 // CreateProjectAPIKey creates an API Keys for a project.
-func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlas.APIKeyInput) (*atlas.APIKey, error) {
+func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *opsmngr.APIKeyInput) (*opsmngr.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.ProjectAPIKeys.Create(s.ctx, projectID, apiKeyInput)

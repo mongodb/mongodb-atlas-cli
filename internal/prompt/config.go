@@ -21,7 +21,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/validate"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func NewOMURLInput() survey.Prompt {
@@ -109,7 +109,7 @@ func NewProfileReplaceConfirm(entry string) survey.Prompt {
 }
 
 // NewOnPremOrgSelect create a prompt to choice the organization.
-func NewOnPremOrgSelect(options []*atlas.Organization) survey.Prompt {
+func NewOnPremOrgSelect(options []*opsmngr.Organization) survey.Prompt {
 	opt := make([]string, len(options))
 	for i, o := range options {
 		opt[i] = o.ID

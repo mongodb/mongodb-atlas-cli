@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -29,15 +28,15 @@ type AlertDescriber interface {
 }
 
 type AlertLister interface {
-	Alerts(string, *opsmngr.AlertsListOptions) (*atlas.AlertsResponse, error)
+	Alerts(string, *opsmngr.AlertsListOptions) (*opsmngr.AlertsResponse, error)
 }
 
 type AlertAcknowledger interface {
-	AcknowledgeAlert(string, string, *opsmngr.AcknowledgeRequest) (*atlas.Alert, error)
+	AcknowledgeAlert(string, string, *opsmngr.AcknowledgeRequest) (*opsmngr.Alert, error)
 }
 
 // Alert encapsulate the logic to manage different cloud providers.
-func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
+func (s *Store) Alert(projectID, alertID string) (*opsmngr.Alert, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Alerts.Get(s.ctx, projectID, alertID)
@@ -59,7 +58,7 @@ func (s *Store) Alerts(projectID string, opts *opsmngr.AlertsListOptions) (*opsm
 }
 
 // AcknowledgeAlert encapsulate the logic to manage different cloud providers.
-func (s *Store) AcknowledgeAlert(projectID, alertID string, body *opsmngr.AcknowledgeRequest) (*atlas.Alert, error) {
+func (s *Store) AcknowledgeAlert(projectID, alertID string, body *opsmngr.AcknowledgeRequest) (*opsmngr.Alert, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Alerts.Acknowledge(s.ctx, projectID, alertID, body)

@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/atmcfg"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
@@ -111,8 +110,8 @@ func (opts *IndexesCreateOpts) newIndexOptions() *opsmngr.IndexOptions {
 	}
 }
 
-func (opts *IndexesCreateOpts) newCollationOptions() *atlas.CollationOptions {
-	return &atlas.CollationOptions{
+func (opts *IndexesCreateOpts) newCollationOptions() *opsmngr.CollationOptions {
+	return &opsmngr.CollationOptions{
 		Locale:          opts.locale,
 		CaseLevel:       opts.caseLevel,
 		CaseFirst:       opts.caseFirst,

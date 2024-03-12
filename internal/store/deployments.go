@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -36,15 +35,15 @@ type HostByHostnameDescriber interface {
 }
 
 type HostDatabaseLister interface {
-	HostDatabases(string, string, *atlas.ListOptions) (*atlas.ProcessDatabasesResponse, error)
+	HostDatabases(string, string, *opsmngr.ListOptions) (*opsmngr.ProcessDatabasesResponse, error)
 }
 
 type HostDisksLister interface {
-	HostDisks(string, string, *atlas.ListOptions) (*atlas.ProcessDisksResponse, error)
+	HostDisks(string, string, *opsmngr.ListOptions) (*opsmngr.ProcessDisksResponse, error)
 }
 
 // HostDatabases encapsulate the logic to manage different cloud providers.
-func (s *Store) HostDatabases(groupID, hostID string, opts *atlas.ListOptions) (*atlas.ProcessDatabasesResponse, error) {
+func (s *Store) HostDatabases(groupID, hostID string, opts *opsmngr.ListOptions) (*opsmngr.ProcessDatabasesResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Deployments.ListDatabases(s.ctx, groupID, hostID, opts)
@@ -55,7 +54,7 @@ func (s *Store) HostDatabases(groupID, hostID string, opts *atlas.ListOptions) (
 }
 
 // HostDisks encapsulate the logic to manage different cloud providers.
-func (s *Store) HostDisks(groupID, hostID string, opts *atlas.ListOptions) (*atlas.ProcessDisksResponse, error) {
+func (s *Store) HostDisks(groupID, hostID string, opts *opsmngr.ListOptions) (*opsmngr.ProcessDisksResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Deployments.ListPartitions(s.ctx, groupID, hostID, opts)

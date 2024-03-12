@@ -18,18 +18,17 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen  -destination=../mocks/mock_global_alerts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store GlobalAlertLister
 
 type GlobalAlertLister interface {
-	GlobalAlerts(*atlas.AlertsListOptions) (*opsmngr.GlobalAlerts, error)
+	GlobalAlerts(*opsmngr.AlertsListOptions) (*opsmngr.GlobalAlerts, error)
 }
 
 // GlobalAlerts encapsulate the logic to manage different cloud providers.
-func (s *Store) GlobalAlerts(opts *atlas.AlertsListOptions) (*opsmngr.GlobalAlerts, error) {
+func (s *Store) GlobalAlerts(opts *opsmngr.AlertsListOptions) (*opsmngr.GlobalAlerts, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.GlobalAlerts.List(s.ctx, opts)

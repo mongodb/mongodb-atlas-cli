@@ -32,7 +32,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/log"
 	atlasauth "go.mongodb.org/atlas/auth"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -282,7 +281,7 @@ func (s *Store) setOpsManagerClient(client *http.Client) error {
 		return err
 	}
 
-	c.OnResponseProcessed(func(resp *atlas.Response) {
+	c.OnResponseProcessed(func(resp *opsmngr.Response) {
 		respHeaders := ""
 		for key, value := range resp.Header {
 			respHeaders += fmt.Sprintf("%v: %v\n", key, strings.Join(value, " "))

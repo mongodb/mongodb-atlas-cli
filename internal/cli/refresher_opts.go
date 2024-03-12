@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/oauth"
 	atlasauth "go.mongodb.org/atlas/auth"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 var TokenRefreshed bool
@@ -33,10 +33,10 @@ type RefresherOpts struct {
 
 //go:generate mockgen -destination=../mocks/mock_refresher.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli Refresher
 type Refresher interface {
-	RequestCode(context.Context) (*atlasauth.DeviceCode, *atlas.Response, error)
-	PollToken(context.Context, *atlasauth.DeviceCode) (*atlasauth.Token, *atlas.Response, error)
-	RefreshToken(context.Context, string) (*atlasauth.Token, *atlas.Response, error)
-	RegistrationConfig(ctx context.Context) (*atlasauth.RegistrationConfig, *atlas.Response, error)
+	RequestCode(context.Context) (*atlasauth.DeviceCode, *opsmngr.Response, error)
+	PollToken(context.Context, *atlasauth.DeviceCode) (*atlasauth.Token, *opsmngr.Response, error)
+	RefreshToken(context.Context, string) (*atlasauth.Token, *opsmngr.Response, error)
+	RegistrationConfig(ctx context.Context) (*atlasauth.RegistrationConfig, *opsmngr.Response, error)
 }
 
 func (opts *RefresherOpts) InitFlow(c oauth.ServiceGetter) func() error {
@@ -65,7 +65,7 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 	}
 	t, _, err := opts.flow.RefreshToken(ctx, config.RefreshToken())
 	if err != nil {
-		var target *atlas.ErrorResponse
+		var target *opsmngr.ErrorResponse
 		if errors.As(err, &target) && target.ErrorCode == "INVALID_REFRESH_TOKEN" {
 			return fmt.Errorf(
 				"%w\n\nTo login, run: %s auth login",
@@ -83,14 +83,14 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 	return nil
 }
 
-func (opts *RefresherOpts) PollToken(c context.Context, d *atlasauth.DeviceCode) (*atlasauth.Token, *atlas.Response, error) {
+func (opts *RefresherOpts) PollToken(c context.Context, d *atlasauth.DeviceCode) (*atlasauth.Token, *opsmngr.Response, error) {
 	return opts.flow.PollToken(c, d)
 }
 
-func (opts *RefresherOpts) RequestCode(c context.Context) (*atlasauth.DeviceCode, *atlas.Response, error) {
+func (opts *RefresherOpts) RequestCode(c context.Context) (*atlasauth.DeviceCode, *opsmngr.Response, error) {
 	return opts.flow.RequestCode(c)
 }
 
-func (opts *RefresherOpts) RegistrationConfig(c context.Context) (*atlasauth.RegistrationConfig, *atlas.Response, error) {
+func (opts *RefresherOpts) RegistrationConfig(c context.Context) (*atlasauth.RegistrationConfig, *opsmngr.Response, error) {
 	return opts.flow.RegistrationConfig(c)
 }

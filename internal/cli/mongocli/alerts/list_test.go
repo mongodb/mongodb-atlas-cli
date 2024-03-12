@@ -24,16 +24,16 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertLister(ctrl)
 
-	expected := &mongodbatlas.AlertsResponse{
+	expected := &opsmngr.AlertsResponse{
 		Links: nil,
-		Results: []mongodbatlas.Alert{
+		Results: []opsmngr.Alert{
 			{
 				ID:            "test",
 				EventTypeName: "test",

@@ -18,17 +18,17 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_events.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store OrganizationEventLister,ProjectEventLister,EventLister
 
 type OrganizationEventLister interface {
-	OrganizationEvents(string, *atlas.EventListOptions) (*atlas.EventResponse, error)
+	OrganizationEvents(string, *opsmngr.EventListOptions) (*opsmngr.EventResponse, error)
 }
 
 type ProjectEventLister interface {
-	ProjectEvents(string, *atlas.EventListOptions) (*atlas.EventResponse, error)
+	ProjectEvents(string, *opsmngr.EventListOptions) (*opsmngr.EventResponse, error)
 }
 
 type EventLister interface {
@@ -37,7 +37,7 @@ type EventLister interface {
 }
 
 // ProjectEvents encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
+func (s *Store) ProjectEvents(projectID string, opts *opsmngr.EventListOptions) (*opsmngr.EventResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Events.ListProjectEvents(s.ctx, projectID, opts)
@@ -48,7 +48,7 @@ func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*
 }
 
 // OrganizationEvents encapsulate the logic to manage different cloud providers.
-func (s *Store) OrganizationEvents(orgID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
+func (s *Store) OrganizationEvents(orgID string, opts *opsmngr.EventListOptions) (*opsmngr.EventResponse, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Events.ListOrganizationEvents(s.ctx, orgID, opts)

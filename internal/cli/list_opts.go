@@ -15,7 +15,7 @@
 package cli
 
 import (
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const (
@@ -28,8 +28,8 @@ type ListOpts struct {
 	ItemsPerPage int
 }
 
-func (opts *ListOpts) NewListOptions() *mongodbatlas.ListOptions {
-	return &mongodbatlas.ListOptions{
+func (opts *ListOpts) NewListOptions() *opsmngr.ListOptions {
+	return &opsmngr.ListOptions{
 		PageNum:      opts.PageNum,
 		ItemsPerPage: opts.ItemsPerPage,
 	}

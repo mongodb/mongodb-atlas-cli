@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestProjectAPIKeys(t *testing.T) {
@@ -50,7 +50,7 @@ func TestProjectAPIKeys(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
-		var key mongodbatlas.APIKey
+		var key opsmngr.APIKey
 		require.NoError(t, json.Unmarshal(resp, &key))
 		a.Equal(desc, key.Desc)
 		ID = key.ID
@@ -89,7 +89,7 @@ func TestProjectAPIKeys(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var keys []mongodbatlas.APIKey
+		var keys []opsmngr.APIKey
 		require.NoError(t, json.Unmarshal(resp, &keys))
 		assert.NotEmpty(t, keys)
 	})

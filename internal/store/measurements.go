@@ -18,25 +18,25 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_measurements.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store HostMeasurementLister,HostDiskMeasurementsLister,HostDatabaseMeasurementsLister
 
 type HostMeasurementLister interface {
-	HostMeasurements(string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error)
+	HostMeasurements(string, string, *opsmngr.ProcessMeasurementListOptions) (*opsmngr.ProcessMeasurements, error)
 }
 
 type HostDiskMeasurementsLister interface {
-	HostDiskMeasurements(string, string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error)
+	HostDiskMeasurements(string, string, string, *opsmngr.ProcessMeasurementListOptions) (*opsmngr.ProcessDiskMeasurements, error)
 }
 
 type HostDatabaseMeasurementsLister interface {
-	HostDatabaseMeasurements(string, string, string, *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error)
+	HostDatabaseMeasurements(string, string, string, *opsmngr.ProcessMeasurementListOptions) (*opsmngr.ProcessDatabaseMeasurements, error)
 }
 
 // HostMeasurements encapsulate the logic to manage different cloud providers.
-func (s *Store) HostMeasurements(groupID, host string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessMeasurements, error) {
+func (s *Store) HostMeasurements(groupID, host string, opts *opsmngr.ProcessMeasurementListOptions) (*opsmngr.ProcessMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Measurements.Host(s.ctx, groupID, host, opts)
@@ -47,7 +47,7 @@ func (s *Store) HostMeasurements(groupID, host string, opts *atlas.ProcessMeasur
 }
 
 // HostDiskMeasurements encapsulates the logic to manage different cloud providers.
-func (s *Store) HostDiskMeasurements(groupID, hostID, partitionName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDiskMeasurements, error) {
+func (s *Store) HostDiskMeasurements(groupID, hostID, partitionName string, opts *opsmngr.ProcessMeasurementListOptions) (*opsmngr.ProcessDiskMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Measurements.Disk(s.ctx, groupID, hostID, partitionName, opts)
@@ -58,7 +58,7 @@ func (s *Store) HostDiskMeasurements(groupID, hostID, partitionName string, opts
 }
 
 // HostDatabaseMeasurements encapsulate the logic to manage different cloud providers.
-func (s *Store) HostDatabaseMeasurements(groupID, hostID, databaseName string, opts *atlas.ProcessMeasurementListOptions) (*atlas.ProcessDatabaseMeasurements, error) {
+func (s *Store) HostDatabaseMeasurements(groupID, hostID, databaseName string, opts *opsmngr.ProcessMeasurementListOptions) (*opsmngr.ProcessDatabaseMeasurements, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Measurements.Database(s.ctx, groupID, hostID, databaseName, opts)

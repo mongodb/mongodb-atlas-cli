@@ -35,10 +35,10 @@ func (m *MockOrganizationInvitationLister) EXPECT() *MockOrganizationInvitationL
 }
 
 // OrganizationInvitations mocks base method.
-func (m *MockOrganizationInvitationLister) OrganizationInvitations(arg0 string, arg1 *mongodbatlas.InvitationOptions) (interface{}, error) {
+func (m *MockOrganizationInvitationLister) OrganizationInvitations(arg0 string, arg1 *mongodbatlas.InvitationOptions) ([]*mongodbatlas.Invitation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationInvitations", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].([]*mongodbatlas.Invitation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -110,10 +110,10 @@ func (m *MockOrganizationInvitationDescriber) EXPECT() *MockOrganizationInvitati
 }
 
 // OrganizationInvitation mocks base method.
-func (m *MockOrganizationInvitationDescriber) OrganizationInvitation(arg0, arg1 string) (interface{}, error) {
+func (m *MockOrganizationInvitationDescriber) OrganizationInvitation(arg0, arg1 string) (*mongodbatlas.Invitation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationInvitation", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlas.Invitation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -148,10 +148,10 @@ func (m *MockOrganizationInvitationUpdater) EXPECT() *MockOrganizationInvitation
 }
 
 // UpdateOrganizationInvitation mocks base method.
-func (m *MockOrganizationInvitationUpdater) UpdateOrganizationInvitation(arg0, arg1 string, arg2 *mongodbatlas.Invitation) (interface{}, error) {
+func (m *MockOrganizationInvitationUpdater) UpdateOrganizationInvitation(arg0, arg1 string, arg2 *mongodbatlas.Invitation) (*mongodbatlas.Invitation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateOrganizationInvitation", arg0, arg1, arg2)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlas.Invitation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -186,10 +186,10 @@ func (m *MockOrganizationInviter) EXPECT() *MockOrganizationInviterMockRecorder 
 }
 
 // InviteUser mocks base method.
-func (m *MockOrganizationInviter) InviteUser(arg0 string, arg1 *mongodbatlas.Invitation) (interface{}, error) {
+func (m *MockOrganizationInviter) InviteUser(arg0 string, arg1 *mongodbatlas.Invitation) (*mongodbatlas.Invitation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InviteUser", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*mongodbatlas.Invitation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

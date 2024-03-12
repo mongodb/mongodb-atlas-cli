@@ -18,7 +18,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
@@ -26,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const (
@@ -39,7 +38,6 @@ type CreateOpts struct {
 	name                        string
 	projectOwnerID              string
 	withoutDefaultAlertSettings bool
-	serviceVersion              *semver.Version
 	store                       store.ProjectCreator
 }
 
@@ -71,60 +69,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newCreateProjectOptions() *atlas.CreateProjectOptions {
-	return &atlas.CreateProjectOptions{ProjectOwnerID: opts.projectOwnerID}
-}
-
-func (opts *CreateOpts) validateOwnerID() error {
-	if opts.projectOwnerID == "" || opts.serviceVersion == nil {
-		return nil
-	}
-
-	constrain, err := semver.NewConstraint(">= 6.0")
-	if err != nil {
-		return err
-	}
-
-	if !constrain.Check(opts.serviceVersion) {
-		return fmt.Errorf("%s is available only for Atlas, Cloud Manager and Ops Manager >= 6.0", flag.OwnerID)
-	}
-
-	return nil
-}
-
-func (opts *CreateOpts) validateWithoutDefaultAlertSettings() error {
-	if !opts.withoutDefaultAlertSettings || opts.serviceVersion == nil {
-		return nil
-	}
-
-	constrain, err := semver.NewConstraint(">= 6.0")
-	if err != nil {
-		return err
-	}
-
-	if !constrain.Check(opts.serviceVersion) {
-		return fmt.Errorf("%s is available only for Atlas, Cloud Manager and Ops Manager >= 6.0", flag.WithoutDefaultAlertSettings)
-	}
-
-	return nil
-}
-
-func (opts *CreateOpts) initServiceVersion() error {
-	if config.Service() != config.OpsManagerService {
-		return nil
-	}
-	v, err := opts.store.ServiceVersion()
-	if err != nil {
-		return err
-	}
-
-	sv, err := cli.ParseServiceVersion(v)
-	if err != nil {
-		return err
-	}
-
-	opts.serviceVersion = sv
-	return nil
+func (opts *CreateOpts) newCreateProjectOptions() *opsmngr.CreateProjectOptions {
+	return &opsmngr.CreateProjectOptions{ProjectOwnerID: opts.projectOwnerID}
 }
 
 // mongocli iam project(s) create <name> [--orgId orgId] [--ownerID ownerID] [--withoutDefaultAlertSettings].
@@ -149,7 +95,7 @@ func CreateBuilder() *cobra.Command {
 			if !config.IsCloud() {
 				opts.Template += "Agent API Key: '{{.AgentAPIKey}}'\n"
 			}
-			return opts.PreRunE(opts.initStore(cmd.Context()), opts.initServiceVersion, opts.validateOwnerID, opts.validateWithoutDefaultAlertSettings)
+			return opts.PreRunE(opts.initStore(cmd.Context()))
 		},
 		RunE: func(_ *cobra.Command, args []string) error {
 			opts.name = args[0]

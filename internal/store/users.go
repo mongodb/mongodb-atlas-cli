@@ -36,7 +36,7 @@ type UserLister interface {
 }
 
 type TeamUserLister interface {
-	TeamUsers(string, string) (interface{}, error)
+	TeamUsers(string, string) ([]*opsmngr.User, error)
 }
 
 type UserDescriber interface {
@@ -100,7 +100,7 @@ func (s *Store) OrganizationUsers(organizationID string, opts *opsmngr.ListOptio
 }
 
 // TeamUsers encapsulates the logic to manage different cloud providers.
-func (s *Store) TeamUsers(orgID, teamID string) (interface{}, error) {
+func (s *Store) TeamUsers(orgID, teamID string) ([]*opsmngr.User, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Teams.GetTeamUsersAssigned(s.ctx, orgID, teamID)

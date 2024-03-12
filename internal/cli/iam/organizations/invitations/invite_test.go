@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationInviter(ctrl)
 
-	expected := &mongodbatlas.Invitation{}
+	expected := &opsmngr.Invitation{}
 	opts := &InviteOpts{
 		store:    mockStore,
 		username: "test",

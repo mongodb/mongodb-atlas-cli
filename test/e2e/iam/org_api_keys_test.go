@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -74,7 +73,7 @@ func TestOrgAPIKeys(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var keys []mongodbatlas.APIKey
+		var keys []opsmngr.APIKey
 		if err := json.Unmarshal(resp, &keys); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -96,7 +95,7 @@ func TestOrgAPIKeys(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
-		var key mongodbatlas.APIKey
+		var key opsmngr.APIKey
 		require.NoError(t, json.Unmarshal(resp, &key))
 		a.Equal(newDesc, key.Desc)
 	})
@@ -114,7 +113,7 @@ func TestOrgAPIKeys(t *testing.T) {
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
-		var key mongodbatlas.APIKey
+		var key opsmngr.APIKey
 		require.NoError(t, json.Unmarshal(resp, &key))
 		a.Equal(ID, key.ID)
 	})

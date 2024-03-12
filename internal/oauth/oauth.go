@@ -30,7 +30,6 @@ const (
 	maxIdleConnsPerHost   = 4
 	idleConnTimeout       = 30 * time.Second
 	expectContinueTimeout = 1 * time.Second
-	cloudGovServiceURL    = "https://cloud.mongodbgov.com/"
 )
 
 var defaultTransport = &http.Transport{
@@ -52,8 +51,7 @@ type ServiceGetter interface {
 }
 
 const (
-	ClientID    = "0oabtxactgS3gHIR0297" // ClientID for production
-	GovClientID = "0oabtyfelbTBdoucy297" // GovClientID for production
+	ClientID = "0oabtxactgS3gHIR0297" // ClientID for production
 )
 
 func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {

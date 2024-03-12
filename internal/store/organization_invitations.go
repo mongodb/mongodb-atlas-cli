@@ -18,21 +18,21 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_organization_invitations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store OrganizationInvitationLister,OrganizationInvitationDeleter,OrganizationInvitationDescriber,OrganizationInvitationUpdater,OrganizationInviter
 
 type OrganizationInvitationLister interface {
-	OrganizationInvitations(string, *atlas.InvitationOptions) (interface{}, error)
+	OrganizationInvitations(string, *opsmngr.InvitationOptions) ([]*opsmngr.Invitation, error)
 }
 
 type OrganizationInvitationDescriber interface {
-	OrganizationInvitation(string, string) (interface{}, error)
+	OrganizationInvitation(string, string) (*opsmngr.Invitation, error)
 }
 
 type OrganizationInviter interface {
-	InviteUser(string, *atlas.Invitation) (interface{}, error)
+	InviteUser(string, *opsmngr.Invitation) (*opsmngr.Invitation, error)
 }
 
 type OrganizationInvitationDeleter interface {
@@ -40,11 +40,11 @@ type OrganizationInvitationDeleter interface {
 }
 
 type OrganizationInvitationUpdater interface {
-	UpdateOrganizationInvitation(string, string, *atlas.Invitation) (interface{}, error)
+	UpdateOrganizationInvitation(string, string, *opsmngr.Invitation) (*opsmngr.Invitation, error)
 }
 
 // OrganizationInvitations encapsulate the logic to manage different cloud providers.
-func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOptions) (interface{}, error) {
+func (s *Store) OrganizationInvitations(orgID string, opts *opsmngr.InvitationOptions) ([]*opsmngr.Invitation, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Organizations.Invitations(s.ctx, orgID, opts)
@@ -55,7 +55,7 @@ func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOpti
 }
 
 // OrganizationInvitation encapsulate the logic to manage different cloud providers.
-func (s *Store) OrganizationInvitation(orgID, invitationID string) (interface{}, error) {
+func (s *Store) OrganizationInvitation(orgID, invitationID string) (*opsmngr.Invitation, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Organizations.Invitation(s.ctx, orgID, invitationID)
@@ -77,7 +77,7 @@ func (s *Store) DeleteInvitation(orgID, invitationID string) error {
 }
 
 // UpdateOrganizationInvitation encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitation *atlas.Invitation) (interface{}, error) {
+func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitation *opsmngr.Invitation) (*opsmngr.Invitation, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		if invitationID != "" {
@@ -92,7 +92,7 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 }
 
 // InviteUser encapsulates the logic to manage different cloud providers.
-func (s *Store) InviteUser(orgID string, invitation *atlas.Invitation) (interface{}, error) {
+func (s *Store) InviteUser(orgID string, invitation *opsmngr.Invitation) (*opsmngr.Invitation, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Organizations.InviteUser(s.ctx, orgID, invitation)

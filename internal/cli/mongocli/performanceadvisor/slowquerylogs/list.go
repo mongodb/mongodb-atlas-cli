@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const listTemplate = `NAMESPACE	LINE{{range valueOrEmptySlice .SlowQuery}}
@@ -60,11 +60,11 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newSlowQueryOptions() *atlas.SlowQueryOptions {
-	return &atlas.SlowQueryOptions{
+func (opts *ListOpts) newSlowQueryOptions() *opsmngr.SlowQueryOptions {
+	return &opsmngr.SlowQueryOptions{
 		Namespaces: opts.namespaces,
 		NLogs:      opts.nLog,
-		NamespaceOptions: atlas.NamespaceOptions{
+		NamespaceOptions: opsmngr.NamespaceOptions{
 			Since:    opts.since,
 			Duration: opts.duration,
 		},

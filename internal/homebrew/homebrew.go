@@ -53,7 +53,7 @@ func FormulaName(tool string) string {
 }
 
 // IsHomebrew checks if the cli was installed with homebrew.
-func (s Checker) IsHomebrew() bool {
+func (s *Checker) IsHomebrew() bool {
 	// Load from cache
 	h, err := s.load()
 	if h != nil && h.ExecutablePath != "" && h.FormulaPath != "" && err == nil {

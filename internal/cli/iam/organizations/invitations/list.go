@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range valueOrEmptySlice .}}
@@ -55,8 +55,8 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newInvitationOptions() *atlas.InvitationOptions {
-	return &atlas.InvitationOptions{
+func (opts *ListOpts) newInvitationOptions() *opsmngr.InvitationOptions {
+	return &opsmngr.InvitationOptions{
 		Username: opts.username,
 	}
 }

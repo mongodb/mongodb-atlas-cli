@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestProjectTeams(t *testing.T) {
@@ -68,7 +68,7 @@ func TestProjectTeams(t *testing.T) {
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
-		var teams mongodbatlas.TeamsAssigned
+		var teams opsmngr.TeamsAssigned
 		require.NoError(t, json.Unmarshal(resp, &teams))
 		found := false
 		for _, team := range teams.Results {
@@ -101,7 +101,7 @@ func TestProjectTeams(t *testing.T) {
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
-		var roles []mongodbatlas.TeamRoles
+		var roles []opsmngr.TeamRoles
 		require.NoError(t, json.Unmarshal(resp, &roles))
 		a.Len(roles, 1)
 
@@ -125,7 +125,7 @@ func TestProjectTeams(t *testing.T) {
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
-		var teams mongodbatlas.TeamsAssigned
+		var teams opsmngr.TeamsAssigned
 		require.NoError(t, json.Unmarshal(resp, &teams))
 		a.NotEmpty(teams.Results)
 	})

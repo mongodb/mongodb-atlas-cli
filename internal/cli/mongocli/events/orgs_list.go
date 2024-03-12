@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type orgListOpts struct {
@@ -46,7 +46,7 @@ func (opts *orgListOpts) initStore(ctx context.Context) func() error {
 func (opts *orgListOpts) Run() error {
 	listOpts := opts.newEventListOptions()
 
-	var r *atlas.EventResponse
+	var r *opsmngr.EventResponse
 	var err error
 	r, err = opts.store.OrganizationEvents(opts.ConfigOrgID(), listOpts)
 	if err != nil {

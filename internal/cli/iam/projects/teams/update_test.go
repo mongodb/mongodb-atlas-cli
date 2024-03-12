@@ -21,14 +21,14 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockTeamRolesUpdater(ctrl)
 
-	expected := []atlas.TeamRoles{}
+	var expected []opsmngr.TeamRoles
 
 	updateOpts := &UpdateOpts{
 		roles: []string{"test"},

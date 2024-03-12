@@ -22,7 +22,6 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -52,7 +51,7 @@ func TestList_Run(t *testing.T) {
 			store: mockStore,
 		}
 		listOpts.OrgID = "1"
-		filter := &mongodbatlas.ProjectsListOptions{ListOptions: *listOpts.NewListOptions()}
+		filter := &opsmngr.ProjectsListOptions{ListOptions: *listOpts.NewListOptions()}
 		mockStore.
 			EXPECT().
 			GetOrgProjects("1", filter).

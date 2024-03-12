@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -37,7 +36,7 @@ type ProjectAPIKeyDeleter interface {
 }
 
 type ProjectAPIKeyAssigner interface {
-	AssignProjectAPIKey(string, string, *atlas.AssignAPIKey) error
+	AssignProjectAPIKey(string, string, *opsmngr.AssignAPIKey) error
 }
 
 type OrganizationAPIKeyLister interface {
@@ -138,7 +137,7 @@ func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *opsmngr.APIKe
 }
 
 // AssignProjectAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlas.AssignAPIKey) error {
+func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *opsmngr.AssignAPIKey) error {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		_, err := s.client.ProjectAPIKeys.Assign(s.ctx, projectID, apiKeyID, input)

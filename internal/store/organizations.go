@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -41,7 +40,7 @@ type OrganizationDeleter interface {
 }
 
 // Organizations encapsulate the logic to manage different cloud providers.
-func (s *Store) Organizations(opts *atlas.OrganizationsListOptions) (*opsmngr.Organizations, error) {
+func (s *Store) Organizations(opts *opsmngr.OrganizationsListOptions) (*opsmngr.Organizations, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Organizations.List(s.ctx, opts)
@@ -63,10 +62,10 @@ func (s *Store) Organization(id string) (*opsmngr.Organization, error) {
 }
 
 // CreateOrganization encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateOrganization(name string) (*atlas.Organization, error) {
+func (s *Store) CreateOrganization(name string) (*opsmngr.Organization, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
-		org := &atlas.Organization{Name: name}
+		org := &opsmngr.Organization{Name: name}
 		result, _, err := s.client.Organizations.Create(s.ctx, org)
 		return result, err
 	default:

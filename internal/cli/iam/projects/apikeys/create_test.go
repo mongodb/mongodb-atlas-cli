@@ -21,7 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestCreate_Run(t *testing.T) {
@@ -36,11 +36,11 @@ func TestCreate_Run(t *testing.T) {
 
 	createOpts.ProjectID = "5a0a1e7e0f2912c554080adc"
 
-	apiKey := &mongodbatlas.APIKeyInput{
+	apiKey := &opsmngr.APIKeyInput{
 		Desc:  createOpts.description,
 		Roles: []string{},
 	}
-	expected := &mongodbatlas.APIKey{}
+	expected := &opsmngr.APIKey{}
 
 	mockStore.
 		EXPECT().

@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const (
@@ -47,7 +47,7 @@ func CreateProject(projectName string) (string, error) {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 
-	var project mongodbatlas.Project
+	var project opsmngr.Project
 	if err := json.Unmarshal(resp, &project); err != nil {
 		return "", fmt.Errorf("%w: %s", err, resp)
 	}

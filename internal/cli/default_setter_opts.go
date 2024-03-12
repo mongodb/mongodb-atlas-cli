@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/prompt"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/validate"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -87,14 +86,14 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 
 	var projects *opsmngr.Projects
 	if opts.OrgID == "" {
-		projects, err = opts.Store.Projects(&atlas.ListOptions{ItemsPerPage: resultsLimit})
+		projects, err = opts.Store.Projects(&opsmngr.ListOptions{ItemsPerPage: resultsLimit})
 	} else {
-		list := &atlas.ProjectsListOptions{}
+		list := &opsmngr.ProjectsListOptions{}
 		list.ItemsPerPage = resultsLimit
 		projects, err = opts.Store.GetOrgProjects(opts.OrgID, list)
 	}
 	if err != nil {
-		var atlasErr *atlas.ErrorResponse
+		var atlasErr *opsmngr.ErrorResponse
 		if errors.As(err, &atlasErr) && atlasErr.HTTPCode == 404 {
 			return nil, nil, errNoResults
 		}
@@ -116,11 +115,11 @@ func (opts *DefaultSetterOpts) orgs(filter string) (organizations []*opsmngr.Org
 	spin.Start()
 	defer spin.Stop()
 	includeDeleted := false
-	pagination := &atlas.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted, Name: filter}
+	pagination := &opsmngr.OrganizationsListOptions{IncludeDeletedOrgs: &includeDeleted, Name: filter}
 	pagination.ItemsPerPage = resultsLimit
 	orgs, err := opts.Store.Organizations(pagination)
 	if err != nil {
-		var atlasErr *atlas.ErrorResponse
+		var atlasErr *opsmngr.ErrorResponse
 		if errors.As(err, &atlasErr) && atlasErr.HTTPCode == 404 {
 			return nil, errNoResults
 		}
@@ -150,7 +149,7 @@ func (opts *DefaultSetterOpts) ProjectExists(id string) bool {
 func (opts *DefaultSetterOpts) AskProject() error {
 	ids, names, err := opts.projects()
 	if err != nil {
-		var target *atlas.ErrorResponse
+		var target *opsmngr.ErrorResponse
 		switch {
 		case errors.Is(err, errNoResults):
 			_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any project")
@@ -212,7 +211,7 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 	orgs, err := opts.orgs(filter)
 	if err != nil {
 		applyFilter := false
-		var target *atlas.ErrorResponse
+		var target *opsmngr.ErrorResponse
 		switch {
 		case errors.Is(err, errNoResults):
 			if filter == "" {
@@ -271,7 +270,7 @@ func (opts *DefaultSetterOpts) manualOrgID() error {
 	return nil
 }
 
-func (opts *DefaultSetterOpts) selectOnPremOrg(orgs []*atlas.Organization) error {
+func (opts *DefaultSetterOpts) selectOnPremOrg(orgs []*opsmngr.Organization) error {
 	if len(orgs) == 1 {
 		opts.OrgID = orgs[0].ID
 		return nil

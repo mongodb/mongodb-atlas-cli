@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/test"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestCreate_Run(t *testing.T) {
@@ -44,7 +44,7 @@ func TestCreate_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		CreateOrganizationAPIKeyAccessList(createOpts.OrgID, createOpts.apyKey, r).
-		Return(&atlas.AccessListAPIKeys{}, nil).
+		Return(&opsmngr.AccessListAPIKeys{}, nil).
 		Times(1)
 
 	if err = createOpts.Run(); err != nil {

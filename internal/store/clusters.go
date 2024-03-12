@@ -18,26 +18,21 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store ClusterLister,OpsManagerClusterDescriber
 
 type ClusterLister interface {
-	ProjectClusters(string, *atlas.ListOptions) (*opsmngr.Clusters, error)
+	ProjectClusters(string, *opsmngr.ListOptions) (*opsmngr.Clusters, error)
 }
 
 type OpsManagerClusterDescriber interface {
 	OpsManagerCluster(string, string) (*opsmngr.Cluster, error)
 }
 
-type AtlasSharedClusterDescriber interface {
-	AtlasSharedCluster(string, string) (*atlas.Cluster, error)
-}
-
 // ProjectClusters encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectClusters(projectID string, opts *atlas.ListOptions) (*opsmngr.Clusters, error) {
+func (s *Store) ProjectClusters(projectID string, opts *opsmngr.ListOptions) (*opsmngr.Clusters, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Clusters.List(s.ctx, projectID, opts)

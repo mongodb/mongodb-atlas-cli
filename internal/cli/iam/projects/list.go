@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const listTemplate = `ID	NAME{{range valueOrEmptySlice .Results}}
@@ -52,7 +52,7 @@ func (opts *ListOpts) Run() error {
 	var err error
 	listOptions := opts.NewListOptions()
 	if opts.ConfigOrgID() != "" && config.Service() == config.OpsManagerService {
-		l := &mongodbatlas.ProjectsListOptions{ListOptions: *listOptions}
+		l := &opsmngr.ProjectsListOptions{ListOptions: *listOptions}
 		r, err = opts.store.GetOrgProjects(opts.ConfigOrgID(), l)
 	} else {
 		r, err = opts.store.Projects(listOptions)

@@ -18,14 +18,13 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_global_api_keys_access_list.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store GlobalAPIKeyWhitelistLister,GlobalAPIKeyWhitelistDescriber,GlobalAPIKeyWhitelistCreator,GlobalAPIKeyWhitelistDeleter
 
 type GlobalAPIKeyWhitelistLister interface {
-	GlobalAPIKeyWhitelists(*atlas.ListOptions) (*opsmngr.GlobalWhitelistAPIKeys, error)
+	GlobalAPIKeyWhitelists(*opsmngr.ListOptions) (*opsmngr.GlobalWhitelistAPIKeys, error)
 }
 
 type GlobalAPIKeyWhitelistDescriber interface {
@@ -41,7 +40,7 @@ type GlobalAPIKeyWhitelistDeleter interface {
 }
 
 // GlobalAPIKeyWhitelists encapsulates the logic to manage different cloud providers.
-func (s *Store) GlobalAPIKeyWhitelists(opts *atlas.ListOptions) (*opsmngr.GlobalWhitelistAPIKeys, error) {
+func (s *Store) GlobalAPIKeyWhitelists(opts *opsmngr.ListOptions) (*opsmngr.GlobalWhitelistAPIKeys, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.GlobalAPIKeysWhitelist.List(s.ctx, opts)

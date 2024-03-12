@@ -18,22 +18,21 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_live_migration_orgs_connection.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store OrganizationsConnector,OrganizationsDescriber
 
 type OrganizationsConnector interface {
-	ConnectOrganizations(string, *atlas.LinkToken) (*opsmngr.ConnectionStatus, error)
+	ConnectOrganizations(string, *opsmngr.LinkToken) (*opsmngr.ConnectionStatus, error)
 }
 
 type OrganizationsDescriber interface {
 	OrganizationConnectionStatus(string) (*opsmngr.ConnectionStatus, error)
 }
 
-// CreateLinkConnection encapsulate the logic to manage different cloud providers.
-func (s *Store) ConnectOrganizations(orgID string, linkToken *atlas.LinkToken) (*opsmngr.ConnectionStatus, error) {
+// ConnectOrganizations encapsulate the logic to manage different cloud providers.
+func (s *Store) ConnectOrganizations(orgID string, linkToken *opsmngr.LinkToken) (*opsmngr.ConnectionStatus, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.LiveMigration.ConnectOrganizations(s.ctx, orgID, linkToken)

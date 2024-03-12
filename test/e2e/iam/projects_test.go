@@ -25,7 +25,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/test/e2e"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestProjects(t *testing.T) {
@@ -54,7 +54,7 @@ func TestProjects(t *testing.T) {
 
 		require.NoError(t, err, string(resp))
 
-		var project mongodbatlas.Project
+		var project opsmngr.Project
 		if err = json.Unmarshal(resp, &project); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}

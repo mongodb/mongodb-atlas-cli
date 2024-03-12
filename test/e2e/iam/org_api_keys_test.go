@@ -26,6 +26,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestOrgAPIKeys(t *testing.T) {
@@ -51,7 +52,7 @@ func TestOrgAPIKeys(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
-		var key mongodbatlas.APIKey
+		var key opsmngr.APIKey
 		require.NoError(t, json.Unmarshal(resp, &key))
 		a.Equal(desc, key.Desc)
 		ID = key.ID

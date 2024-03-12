@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/test"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -37,8 +37,8 @@ func TestListOpts_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		OrganizationAPIKeyAccessLists(opts.OrgID, opts.id, opts.NewListOptions()).
-		Return(&atlas.AccessListAPIKeys{
-			Results: []*atlas.AccessListAPIKey{},
+		Return(&opsmngr.AccessListAPIKeys{
+			Results: []*opsmngr.AccessListAPIKey{},
 		}, nil).
 		Times(1)
 

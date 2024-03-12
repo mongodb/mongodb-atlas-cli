@@ -25,7 +25,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_teams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store TeamLister,TeamDescriber,TeamCreator,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
 
 type TeamLister interface {
-	Teams(string, *atlas.ListOptions) ([]atlas.Team, error)
+	Teams(string, *opsmngr.ListOptions) ([]atlas.Team, error)
 }
 
 type TeamDescriber interface {

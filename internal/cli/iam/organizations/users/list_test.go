@@ -24,14 +24,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockUserLister(ctrl)
 
-	expected := &mongodbatlas.AtlasUsersResponse{}
+	expected := &opsmngr.UsersResponse{}
 
 	listOpts := &ListOpts{
 		GlobalOpts: cli.GlobalOpts{

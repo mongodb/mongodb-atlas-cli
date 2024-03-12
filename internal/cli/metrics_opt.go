@@ -20,7 +20,7 @@ import (
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/flag"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type MetricsOpts struct {
@@ -32,8 +32,8 @@ type MetricsOpts struct {
 	MeasurementType []string
 }
 
-func (opts *MetricsOpts) NewProcessMetricsListOptions() *atlas.ProcessMeasurementListOptions {
-	o := &atlas.ProcessMeasurementListOptions{
+func (opts *MetricsOpts) NewProcessMetricsListOptions() *opsmngr.ProcessMeasurementListOptions {
+	o := &opsmngr.ProcessMeasurementListOptions{
 		ListOptions: opts.NewListOptions(),
 	}
 	o.Granularity = opts.Granularity

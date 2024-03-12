@@ -36,10 +36,10 @@ func (m *MockUserCreator) EXPECT() *MockUserCreatorMockRecorder {
 }
 
 // CreateUser mocks base method.
-func (m *MockUserCreator) CreateUser(arg0 *opsmngr.User) (interface{}, error) {
+func (m *MockUserCreator) CreateUser(arg0 *opsmngr.User) (*opsmngr.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*opsmngr.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -74,10 +74,10 @@ func (m *MockUserDescriber) EXPECT() *MockUserDescriberMockRecorder {
 }
 
 // UserByID mocks base method.
-func (m *MockUserDescriber) UserByID(arg0 string) (interface{}, error) {
+func (m *MockUserDescriber) UserByID(arg0 string) (*opsmngr.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserByID", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*opsmngr.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -89,10 +89,10 @@ func (mr *MockUserDescriberMockRecorder) UserByID(arg0 interface{}) *gomock.Call
 }
 
 // UserByName mocks base method.
-func (m *MockUserDescriber) UserByName(arg0 string) (interface{}, error) {
+func (m *MockUserDescriber) UserByName(arg0 string) (*opsmngr.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserByName", arg0)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*opsmngr.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -164,10 +164,10 @@ func (m *MockUserLister) EXPECT() *MockUserListerMockRecorder {
 }
 
 // OrganizationUsers mocks base method.
-func (m *MockUserLister) OrganizationUsers(arg0 string, arg1 *mongodbatlas.ListOptions) (interface{}, error) {
+func (m *MockUserLister) OrganizationUsers(arg0 string, arg1 *mongodbatlas.ListOptions) (*opsmngr.UsersResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationUsers", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(*opsmngr.UsersResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

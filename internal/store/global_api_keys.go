@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -67,7 +66,7 @@ func (s *Store) GlobalAPIKey(apiKeyID string) (*opsmngr.APIKey, error) {
 }
 
 // UpdateGlobalAPIKey encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateGlobalAPIKey(apiKeyID string, input *atlas.APIKeyInput) (*opsmngr.APIKey, error) {
+func (s *Store) UpdateGlobalAPIKey(apiKeyID string, input *opsmngr.APIKeyInput) (*opsmngr.APIKey, error) {
 	switch s.service {
 	case config.OpsManagerService:
 		result, _, err := s.client.GlobalAPIKeys.Update(s.ctx, apiKeyID, input)

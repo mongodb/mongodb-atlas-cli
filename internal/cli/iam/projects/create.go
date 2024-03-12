@@ -31,7 +31,6 @@ import (
 
 const (
 	atlasCreateTemplate = "Project '{{.ID}}' created.\n"
-	govRegionOnly       = "GOV_REGIONS_ONLY"
 )
 
 type CreateOpts struct {

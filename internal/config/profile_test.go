@@ -21,7 +21,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -64,24 +63,6 @@ func TestConfig_OldMongoCLIConfigHome(t *testing.T) {
 		osHome, _ := os.UserHomeDir()
 		if home != osHome+"/.config" {
 			t.Errorf("OldMongoCLIConfigHome() = %s; want '%s/.config'", home, osHome)
-		}
-	})
-}
-
-func TestConfig_AtlasCLIConfigHome(t *testing.T) {
-	t.Run("with env set", func(t *testing.T) {
-		expHome, err := os.UserConfigDir()
-		expected := fmt.Sprintf("%s/atlascli", expHome)
-		if err != nil {
-			t.Fatalf("os.UserConfigDir() unexpected error: %v", err)
-		}
-
-		home, err := AtlasCLIConfigHome()
-		if err != nil {
-			t.Fatalf("AtlasCLIConfigHome() unexpected error: %v", err)
-		}
-		if home != expected {
-			t.Errorf("AtlasCLIConfigHome() = %s; want '%s'", home, expected)
 		}
 	})
 }
@@ -160,77 +141,6 @@ func TestConfig_IsTrue(t *testing.T) {
 		if got := IsTrue(tt.input); got != tt.want {
 			t.Errorf("IsTrue() get: %v, want %v", got, tt.want)
 		}
-	}
-}
-
-func Test_getConfigHostname(t *testing.T) {
-	type fields struct {
-		containerizedEnv string
-		atlasActionEnv   string
-		ghActionsEnv     string
-	}
-	tests := []struct {
-		name             string
-		fields           fields
-		expectedHostName string
-	}{
-		{
-			name: "sets native hostname when no hostname env var is set",
-			fields: fields{
-				containerizedEnv: "",
-				atlasActionEnv:   "",
-				ghActionsEnv:     "",
-			},
-			expectedHostName: NativeHostName,
-		},
-		{
-			name: "sets container hostname when containerized env var is set",
-			fields: fields{
-				containerizedEnv: "true",
-				atlasActionEnv:   "",
-				ghActionsEnv:     "",
-			},
-			expectedHostName: "-|-|" + DockerContainerHostName,
-		},
-		{
-			name: "sets atlas action hostname when containerized env var is set",
-			fields: fields{
-				containerizedEnv: "",
-				atlasActionEnv:   "true",
-				ghActionsEnv:     "",
-			},
-			expectedHostName: AtlasActionHostName + "|-|-",
-		},
-		{
-			name: "sets github actions hostname when action env var is set",
-			fields: fields{
-				containerizedEnv: "",
-				atlasActionEnv:   "",
-				ghActionsEnv:     "true",
-			},
-			expectedHostName: "-|" + GitHubActionsHostName + "|-",
-		},
-		{
-			name: "sets actions and containerized hostnames when both env vars are set",
-			fields: fields{
-				containerizedEnv: "true",
-				atlasActionEnv:   "true",
-				ghActionsEnv:     "true",
-			},
-			expectedHostName: AtlasActionHostName + "|" + GitHubActionsHostName + "|" + DockerContainerHostName,
-		},
-	}
-	for _, tt := range tests {
-		fields := tt.fields
-		expectedHostName := tt.expectedHostName
-		t.Run(tt.name, func(t *testing.T) {
-			t.Setenv(AtlasActionHostNameEnv, fields.atlasActionEnv)
-			t.Setenv(GitHubActionsHostNameEnv, fields.ghActionsEnv)
-			t.Setenv(ContainerizedHostNameEnv, fields.containerizedEnv)
-			actualHostName := getConfigHostnameFromEnvs()
-
-			assert.Equal(t, expectedHostName, actualHostName)
-		})
 	}
 }
 

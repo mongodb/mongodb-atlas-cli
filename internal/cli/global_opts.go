@@ -123,21 +123,3 @@ func DescriptionServiceName() string {
 	}
 	return "Atlas"
 }
-
-// ReturnValueForSetting returns a boolean value that is useful when working with boolean flags to inform
-// whether the given option should be active or inactive.
-func ReturnValueForSetting(enableFlag, disableFlag bool) *bool {
-	var valueToSet bool
-	if enableFlag && disableFlag {
-		return nil
-	}
-	if enableFlag {
-		valueToSet = true
-		return &valueToSet
-	}
-	if disableFlag {
-		valueToSet = false
-		return &valueToSet
-	}
-	return nil
-}

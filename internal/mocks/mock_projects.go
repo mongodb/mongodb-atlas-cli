@@ -277,18 +277,18 @@ func (m *MockProjectTeamLister) EXPECT() *MockProjectTeamListerMockRecorder {
 }
 
 // ProjectTeams mocks base method.
-func (m *MockProjectTeamLister) ProjectTeams(arg0 string) (*admin.PaginatedTeamRole, error) {
+func (m *MockProjectTeamLister) ProjectTeams(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedTeamRole, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProjectTeams", arg0)
+	ret := m.ctrl.Call(m, "ProjectTeams", arg0, arg1)
 	ret0, _ := ret[0].(*admin.PaginatedTeamRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ProjectTeams indicates an expected call of ProjectTeams.
-func (mr *MockProjectTeamListerMockRecorder) ProjectTeams(arg0 interface{}) *gomock.Call {
+func (mr *MockProjectTeamListerMockRecorder) ProjectTeams(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectTeams", reflect.TypeOf((*MockProjectTeamLister)(nil).ProjectTeams), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectTeams", reflect.TypeOf((*MockProjectTeamLister)(nil).ProjectTeams), arg0, arg1)
 }
 
 // MockProjectTeamAdder is a mock of ProjectTeamAdder interface.

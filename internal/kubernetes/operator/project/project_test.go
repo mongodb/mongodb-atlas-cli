@@ -294,7 +294,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		projectStore.EXPECT().Auditing(projectID).Return(auditing, nil)
 		projectStore.EXPECT().AlertConfigurations(listAlterOpt).Return(alertConfigResult, nil)
 		projectStore.EXPECT().DatabaseRoles(projectID).Return(customRoles, nil)
-		projectStore.EXPECT().ProjectTeams(projectID).Return(projectTeams, nil)
+		projectStore.EXPECT().ProjectTeams(projectID, nil).Return(projectTeams, nil)
 		projectStore.EXPECT().TeamByID(orgID, teamID).Return(teams, nil)
 		projectStore.EXPECT().TeamUsers(orgID, teamID).Return(teamUsers, nil)
 

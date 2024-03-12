@@ -70,7 +70,7 @@ func (s *Store) TeamByName(orgID, teamName string) (*atlasv2.TeamResponse, error
 func (s *Store) Teams(orgID string, opts *atlas.ListOptions) (*atlasv2.PaginatedTeam, error) {
 	res := s.clientv2.TeamsApi.ListOrganizationTeams(s.ctx, orgID)
 	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
 	result, _, err := res.Execute()
 	return result, err

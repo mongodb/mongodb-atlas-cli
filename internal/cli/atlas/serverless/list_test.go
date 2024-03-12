@@ -32,7 +32,7 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.Limit, flag.Page, flag.Output, flag.ProjectID},
+		[]string{flag.Limit, flag.Page, flag.Output, flag.ProjectID, flag.OmitCount},
 	)
 }
 

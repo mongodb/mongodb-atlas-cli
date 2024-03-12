@@ -49,8 +49,7 @@ type DownloadOpts struct {
 }
 
 var (
-	ErrAtlasNotSupported = errors.New("atlas deployments are not supported")
-	errEmptyLog          = errors.New("log is empty")
+	errEmptyLog = errors.New("log is empty")
 )
 
 func (opts *DownloadOpts) initStore(ctx context.Context) func() error {

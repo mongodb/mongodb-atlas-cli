@@ -47,20 +47,6 @@ func NewDecryption(options ...Option) *Decryption {
 	return d
 }
 
-func WithLocalOpts(fileName string) func(d *Decryption) {
-	return func(d *Decryption) {
-		d.opts.Local = &KeyProviderLocalOpts{
-			KeyFileName: fileName,
-		}
-	}
-}
-
-func WithKMIPOpts(opts *KeyProviderKMIPOpts) func(d *Decryption) {
-	return func(d *Decryption) {
-		d.opts.KMIP = opts
-	}
-}
-
 func WithAWSOpts(accessKey, secretAccessKey, sessionToken string) func(d *Decryption) {
 	return func(d *Decryption) {
 		d.opts.AWS = &KeyProviderAWSOpts{

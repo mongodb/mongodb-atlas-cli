@@ -325,10 +325,3 @@ func NewInstall(
 		version:          version,
 	}
 }
-
-func StringOrEmpty(s *string) string {
-	if s != nil {
-		return *s
-	}
-	return ""
-}

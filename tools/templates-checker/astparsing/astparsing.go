@@ -25,12 +25,7 @@ import (
 )
 
 const (
-	cobraCommandTypeName             = "*github.com/spf13/cobra.Command"
-	testingTypeName                  = "*testing.T"
-	testPrefix                       = "Test"
-	verifyOutputTemplateMod          = "test"
-	verifyOutputTemplateName         = "VerifyOutputTemplate"
-	verifyOutputTemplateNumberOfArgs = 3
+	cobraCommandTypeName = "*github.com/spf13/cobra.Command"
 )
 
 var stringDelimiters = []rune{'`', '\'', '"'}

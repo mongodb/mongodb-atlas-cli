@@ -19,15 +19,11 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
-	"os"
-	"regexp"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/search"
 )
-
-const minPasswordLength = 10
 
 // toString tries to cast an interface to string.
 func toString(val interface{}) (string, error) {
@@ -150,94 +146,10 @@ To log out, run: %s auth logout`,
 	)
 }
 
-func Token() error {
-	if t, err := config.Token(); t != nil {
-		return err
-	}
-
-	return ErrMissingCredentials
-}
-
 func FlagInSlice(value, flag string, validValues []string) error {
 	if search.StringInSlice(validValues, value) {
 		return nil
 	}
 
 	return fmt.Errorf(`invalid value for "%s", allowed values: "%s"`, flag, strings.Join(validValues, `", "`))
-}
-
-var ErrInvalidPath = errors.New("invalid path")
-
-func Path(val interface{}) error {
-	path, ok := val.(string)
-	if !ok {
-		return fmt.Errorf("%w: %v", ErrInvalidPath, val)
-	}
-
-	if _, err := os.Stat(path); err != nil {
-		return fmt.Errorf("%w: %s", ErrInvalidPath, path)
-	}
-
-	return nil
-}
-
-func OptionalPath(val interface{}) error {
-	if val == nil {
-		return nil
-	}
-	s, err := toString(val)
-	if err != nil || s == "" {
-		return err
-	}
-	return Path(val)
-}
-
-var ErrInvalidClusterName = errors.New("invalid cluster name")
-
-func ClusterName(val interface{}) error {
-	name, ok := val.(string)
-	if !ok {
-		return fmt.Errorf("%w: %v", ErrInvalidClusterName, val)
-	}
-	match, _ := regexp.MatchString("^[a-zA-Z0-9][a-zA-Z0-9-]*$", name)
-	if match {
-		return nil
-	}
-
-	return fmt.Errorf("%w. Cluster names can only contain ASCII letters, numbers, and hyphens: %s", ErrInvalidClusterName, name)
-}
-
-var ErrInvalidDBUsername = errors.New("invalid db username")
-
-func DBUsername(val interface{}) error {
-	name, ok := val.(string)
-	if !ok {
-		return fmt.Errorf("%w: %v", ErrInvalidDBUsername, val)
-	}
-	match, _ := regexp.MatchString("^[a-zA-Z0-9]+[a-zA-Z0-9-_]*$", name)
-	if match {
-		return nil
-	}
-
-	return fmt.Errorf("%w: %s", ErrInvalidDBUsername, name)
-}
-
-var ErrWeakPassword = errors.New("the password provided is too common")
-var ErrShortPassword = errors.New("the password provided is too short")
-
-func WeakPassword(val interface{}) error {
-	password, ok := val.(string)
-	if !ok {
-		return ErrWeakPassword
-	}
-
-	if len(password) < minPasswordLength {
-		return fmt.Errorf("%w min: %d", ErrShortPassword, minPasswordLength)
-	}
-
-	if commonPasswords[strings.ToLower(password)] {
-		return ErrWeakPassword
-	}
-
-	return nil
 }

@@ -171,7 +171,7 @@ func PublishStableTasks(c *shrub.Configuration) {
 func PublishSnapshotTasks(c *shrub.Configuration) {
 	dependency := []shrub.TaskDependency{
 		{
-			Name:    "compile_mongocli",
+			Name:    "compile",
 			Variant: "code_health",
 		},
 		{

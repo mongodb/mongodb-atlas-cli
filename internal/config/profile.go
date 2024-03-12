@@ -39,14 +39,12 @@ import (
 
 const (
 	MongoCLIEnvPrefix            = "MCLI"          // MongoCLIEnvPrefix prefix for MongoCLI ENV variables
-	AtlasCLIEnvPrefix            = "MONGODB_ATLAS" // AtlasCLIEnvPrefix prefix for AtlasCLI ENV variables
 	DefaultProfile               = "default"       // DefaultProfile default
 	CloudManagerService          = "cloud-manager" // CloudManagerService settings when using CLoud Manager API
 	OpsManagerService            = "ops-manager"   // OpsManagerService settings when using Ops Manager API
 	JSON                         = "json"          // JSON output format as json
 	projectID                    = "project_id"
 	orgID                        = "org_id"
-	mongoShellPath               = "mongosh_path"
 	configType                   = "toml"
 	service                      = "service"
 	publicAPIKey                 = "public_api_key"
@@ -64,20 +62,11 @@ const (
 	configPerm                   = 0600
 	defaultPermissions           = 0700
 	skipUpdateCheck              = "skip_update_check"
-	TelemetryEnabledProperty     = "telemetry_enabled"
 	MongoCLI                     = "mongocli"
-	ContainerizedHostNameEnv     = "MONGODB_ATLAS_IS_CONTAINERIZED"
-	GitHubActionsHostNameEnv     = "GITHUB_ACTIONS"
-	AtlasActionHostNameEnv       = "ATLAS_GITHUB_ACTION"
-	NativeHostName               = "native"
-	DockerContainerHostName      = "container"
-	GitHubActionsHostName        = "all_github_actions"
-	AtlasActionHostName          = "atlascli_github_action"
 )
 
 var (
-	HostName       = getConfigHostnameFromEnvs()
-	UserAgent      = fmt.Sprintf("%s/%s (%s;%s;%s)", MongoCLI, version.Version, runtime.GOOS, runtime.GOARCH, HostName)
+	UserAgent      = fmt.Sprintf("%s/%s (%s;%s)", MongoCLI, version.Version, runtime.GOOS, runtime.GOARCH)
 	defaultProfile = newProfile()
 )
 
@@ -122,9 +111,7 @@ func Properties() []string {
 		baseURL,
 		opsManagerCACertificate,
 		opsManagerSkipVerify,
-		mongoShellPath,
 		skipUpdateCheck,
-		TelemetryEnabledProperty,
 		AccessTokenField,
 		RefreshTokenField,
 	}
@@ -133,15 +120,12 @@ func Properties() []string {
 func BooleanProperties() []string {
 	return []string{
 		skipUpdateCheck,
-		TelemetryEnabledProperty,
 	}
 }
 
 func GlobalProperties() []string {
 	return []string{
 		skipUpdateCheck,
-		TelemetryEnabledProperty,
-		mongoShellPath,
 	}
 }
 
@@ -171,51 +155,6 @@ func List() []string {
 // Exists returns true if there are any set settings for the profile name.
 func Exists(name string) bool {
 	return search.StringInSlice(List(), name)
-}
-
-// getConfigHostnameFromEnvs patches the agent hostname based on set env vars.
-func getConfigHostnameFromEnvs() string {
-	var builder strings.Builder
-
-	envVars := []struct {
-		envName  string
-		hostName string
-	}{
-		{AtlasActionHostNameEnv, AtlasActionHostName},
-		{GitHubActionsHostNameEnv, GitHubActionsHostName},
-		{ContainerizedHostNameEnv, DockerContainerHostName},
-	}
-
-	for _, envVar := range envVars {
-		if envIsTrue(envVar.envName) {
-			appendToHostName(&builder, envVar.hostName)
-		} else {
-			appendToHostName(&builder, "-")
-		}
-	}
-	configHostName := builder.String()
-
-	if isDefaultHostName(configHostName) {
-		return NativeHostName
-	}
-	return configHostName
-}
-
-func envIsTrue(env string) bool {
-	return IsTrue(os.Getenv(env))
-}
-
-func appendToHostName(builder *strings.Builder, configVal string) {
-	if builder.Len() > 0 {
-		builder.WriteString("|")
-	}
-	builder.WriteString(configVal)
-}
-
-// isDefaultHostName checks if the hostname is the default placeholder.
-func isDefaultHostName(hostname string) bool {
-	// Using strings.Count for a more dynamic approach.
-	return strings.Count(hostname, "-") == strings.Count(hostname, "|")+1
 }
 
 func newProfile() *Profile {
@@ -634,21 +573,6 @@ func (p *Profile) Rename(newProfileName string) error {
 	return nil
 }
 
-func LoadAtlasCLIConfig() error { return Default().LoadAtlasCLIConfig(true) }
-func (p *Profile) LoadAtlasCLIConfig(readEnvironmentVars bool) error {
-	if p.err != nil {
-		return p.err
-	}
-
-	viper.SetConfigName("config")
-
-	if hasMongoCLIEnvVars() {
-		viper.SetEnvKeyReplacer(strings.NewReplacer(AtlasCLIEnvPrefix, MongoCLIEnvPrefix))
-	}
-
-	return p.load(readEnvironmentVars, AtlasCLIEnvPrefix)
-}
-
 func LoadMongoCLIConfig() error { return Default().LoadMongoCLIConfig(true) }
 func (p *Profile) LoadMongoCLIConfig(readEnvironmentVars bool) error {
 	if p.err != nil {
@@ -656,17 +580,6 @@ func (p *Profile) LoadMongoCLIConfig(readEnvironmentVars bool) error {
 	}
 	viper.SetConfigName("config")
 	return p.load(readEnvironmentVars, MongoCLIEnvPrefix)
-}
-
-func hasMongoCLIEnvVars() bool {
-	envVars := os.Environ()
-	for _, v := range envVars {
-		if strings.HasPrefix(v, MongoCLIEnvPrefix) {
-			return true
-		}
-	}
-
-	return false
 }
 
 func (p *Profile) load(readEnvironmentVars bool, envPrefix string) error {
@@ -735,16 +648,6 @@ func MongoCLIConfigHome() (string, error) {
 	}
 
 	return path.Join(home, "mongocli"), nil
-}
-
-// AtlasCLIConfigHome retrieves configHome path based used by AtlasCLI.
-func AtlasCLIConfigHome() (string, error) {
-	home, err := os.UserConfigDir()
-	if err != nil {
-		return "", err
-	}
-
-	return path.Join(home, "atlascli"), nil
 }
 
 // CLIConfigHome retrieves configHome path.

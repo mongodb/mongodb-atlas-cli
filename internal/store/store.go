@@ -47,7 +47,6 @@ const (
 	idleConnTimeout           = 30 * time.Second
 	expectContinueTimeout     = 1 * time.Second
 	versionManifestStaticPath = "https://opsmanager.mongodb.com/"
-	cloudGovServiceURL        = "https://cloud.mongodbgov.com/"
 )
 
 var errUnsupportedService = errors.New("unsupported service")
@@ -223,13 +222,6 @@ func WithCACertificate(caCertificate string) Option {
 func SkipVerify() Option {
 	return func(s *Store) error {
 		s.skipVerify = true
-		return nil
-	}
-}
-
-func Telemetry() Option {
-	return func(s *Store) error {
-		s.telemetry = true
 		return nil
 	}
 }

@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type UnacknowledgeOpts struct {
@@ -56,8 +56,8 @@ func (opts *UnacknowledgeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UnacknowledgeOpts) newAcknowledgeRequest() *atlas.AcknowledgeRequest {
-	return &atlas.AcknowledgeRequest{
+func (opts *UnacknowledgeOpts) newAcknowledgeRequest() *opsmngr.AcknowledgeRequest {
+	return &opsmngr.AcknowledgeRequest{
 		AcknowledgedUntil:      nil,
 		AcknowledgementComment: opts.comment,
 	}

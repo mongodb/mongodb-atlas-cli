@@ -22,9 +22,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
 )
@@ -35,9 +37,11 @@ type CreateOpts struct {
 	name        string
 	db          string
 	collection  string
+	filename    string
 	keys        []string
 	sparse      bool
 	store       store.IndexCreator
+	fs          afero.Fs
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -61,11 +65,43 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newIndex() (*atlasv2.DatabaseRollingIndexRequest, error) {
+	if opts.filename != "" {
+		return opts.newIndexViaFile()
+	}
+
+	return opts.newIndexViaFlags()
+}
+
+func (opts *CreateOpts) newIndexViaFile() (*atlasv2.DatabaseRollingIndexRequest, error) {
+	i := new(atlasv2.DatabaseRollingIndexRequest)
+	if err := file.Load(opts.fs, opts.filename, i); err != nil {
+		return nil, err
+	}
+
+	if opts.name == "" {
+		return i, nil
+	}
+
+	if i.Options == nil {
+		i.Options = &atlasv2.IndexOptions{
+			Name: &opts.name,
+		}
+
+		return i, nil
+	}
+
+	i.Options.Name = &opts.name
+
+	return i, nil
+}
+
+func (opts *CreateOpts) newIndexViaFlags() (*atlasv2.DatabaseRollingIndexRequest, error) {
+	i := new(atlasv2.DatabaseRollingIndexRequest)
 	keys, err := opts.indexKeys()
 	if err != nil {
 		return nil, err
 	}
-	i := new(atlasv2.DatabaseRollingIndexRequest)
+
 	i.Db = opts.db
 	i.Collection = opts.collection
 	i.Keys = &keys
@@ -100,7 +136,7 @@ func (opts *CreateOpts) indexKeys() ([]map[string]string, error) {
 }
 
 // CreateBuilder builds a cobra.Command that can run as:
-// mcli atlas clusters index create [indexName] --clusterName clusterName  --collection collection --dbName dbName [--key field:type].
+// mcli atlas clusters index create [indexName] --clusterName clusterName  --collection collection --dbName dbName [--key field:type] --file filename.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -116,7 +152,10 @@ func CreateBuilder() *cobra.Command {
   
   # Create a compound index named property_room_bedrooms on the
   listings collection of the realestate database:
-  atlas clusters indexes create property_room_bedrooms --clusterName Cluster0 --collection listings --db realestate --key property_type:1 --key room_type:1 --key bedrooms:1`,
+  atlas clusters indexes create property_room_bedrooms --clusterName Cluster0 --collection listings --db realestate --key property_type:1 --key room_type:1 --key bedrooms:1
+
+  # Create an index named my_index from a JSON configuration file named myfile.json:
+  atlas clusters indexes create my_index --file file.json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
@@ -133,13 +172,14 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringSliceVar(&opts.keys, flag.Key, []string{}, usage.Key)
 	cmd.Flags().BoolVar(&opts.sparse, flag.Sparse, false, usage.Sparse)
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.IndexFilename)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
-	_ = cmd.MarkFlagRequired(flag.ClusterName)
-	_ = cmd.MarkFlagRequired(flag.Database)
-	_ = cmd.MarkFlagRequired(flag.Collection)
-	_ = cmd.MarkFlagRequired(flag.Key)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.ClusterName)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Database)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Collection)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Key)
 
 	return cmd
 }

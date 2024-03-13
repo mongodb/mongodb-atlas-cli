@@ -227,6 +227,7 @@ func TestClustersFlags(t *testing.T) {
 			clustersEntity,
 			"indexes",
 			"create",
+			"RollingIndexTest",
 			"--clusterName", clusterName,
 			"--db=tes",
 			"--collection=tes",

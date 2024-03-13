@@ -135,10 +135,7 @@ func TestDescribe_RunAtlas(t *testing.T) {
 	ctx := context.Background()
 
 	const (
-		expectedIndexName       = "idx1"
 		expectedLocalDeployment = "localDeployment1"
-		expectedDB              = "db1"
-		expectedCollection      = "col1"
 	)
 
 	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, expectedLocalDeployment)

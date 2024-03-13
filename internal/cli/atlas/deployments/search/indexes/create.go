@@ -37,14 +37,11 @@ import (
 )
 
 const (
-	namePattern        = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	connectWaitSeconds = 10
 	createTemplate     = "Search index created with ID: {{.IndexID}}\n"
 	notFoundState      = "NOT_FOUND"
 )
 
-var ErrNoDeploymentName = errors.New("deployment name is required for Atlas resources")
-var ErrNotAuthenticated = errors.New("not authenticated, login first to create Atlas resources")
 var ErrSearchIndexDuplicated = errors.New("search index is duplicated")
 var ErrWatchNotAvailable = errors.New("watch is not available for Atlas resources")
 

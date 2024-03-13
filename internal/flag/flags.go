@@ -151,9 +151,7 @@ const (
 	Append                                    = "append"                                    // Append flag
 	Privilege                                 = "privilege"                                 // Privilege flag
 	InheritedRole                             = "inheritedRole"                             // InheritedRole flag
-	CollectionName                            = "collectionName"                            // CollectionName flag
 	Database                                  = "db"                                        // Database flag
-	Unique                                    = "unique"                                    // Unique flag
 	Sparse                                    = "sparse"                                    // Sparse flag
 	TestBucket                                = "testBucket"                                // TestBucket flag
 	Partition                                 = "partition"                                 // Partition flag
@@ -187,7 +185,6 @@ const (
 	ServiceKey                                = "serviceKey"                                // ServiceKey flag
 	WriteToken                                = "writeToken"                                // WriteToken flag
 	ReadToken                                 = "readToken"                                 // ReadToken flag
-	Label                                     = "label"                                     // Label flag
 	WriteConcern                              = "writeConcern"                              // WriteConcern flag
 	ReadConcern                               = "readConcern"                               // ReadConcern flag
 	DisableFailIndexKeyTooLong                = "disableFailIndexKeyTooLong"                // DisableFailIndexKeyTooLong flag

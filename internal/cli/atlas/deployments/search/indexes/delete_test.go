@@ -37,10 +37,7 @@ func TestDelete_RunLocal(t *testing.T) {
 	ctx := context.Background()
 
 	const (
-		expectedIndexName       = "idx1"
 		expectedLocalDeployment = "localDeployment1"
-		expectedDB              = "db1"
-		expectedCollection      = "col1"
 		indexID                 = "1"
 	)
 
@@ -117,10 +114,7 @@ func TestDelete_RunAtlas(t *testing.T) {
 	ctx := context.Background()
 
 	const (
-		expectedIndexName       = "idx1"
 		expectedLocalDeployment = "localDeployment1"
-		expectedDB              = "db1"
-		expectedCollection      = "col1"
 		indexID                 = "1"
 		projectID               = "1"
 	)

@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const updateTemplate = "Invitation {{.ID}} updated.\n"
@@ -56,8 +56,8 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newInvitation() *atlas.Invitation {
-	return &atlas.Invitation{
+func (opts *UpdateOpts) newInvitation() *opsmngr.Invitation {
+	return &opsmngr.Invitation{
 		Username: opts.username,
 		Roles:    opts.roles,
 	}

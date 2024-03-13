@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const listTemplate = `NAMESPACE	TYPE{{range valueOrEmptySlice .Namespaces}}
@@ -58,8 +58,8 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newNamespaceOptions() *atlas.NamespaceOptions {
-	return &atlas.NamespaceOptions{
+func (opts *ListOpts) newNamespaceOptions() *opsmngr.NamespaceOptions {
+	return &opsmngr.NamespaceOptions{
 		Since:    opts.since,
 		Duration: opts.duration,
 	}

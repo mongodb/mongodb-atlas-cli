@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -34,7 +33,7 @@ type OrgProjectLister interface {
 }
 
 type ProjectCreator interface {
-	CreateProject(string, string, *bool, *atlas.CreateProjectOptions) (*opsmngr.Project, error)
+	CreateProject(string, string, *bool, *opsmngr.CreateProjectOptions) (*opsmngr.Project, error)
 	ServiceVersionDescriber
 }
 
@@ -56,11 +55,11 @@ type ProjectUserDeleter interface {
 }
 
 type ProjectTeamLister interface {
-	ProjectTeams(string) (*atlas.TeamsAssigned, error)
+	ProjectTeams(string) (*opsmngr.TeamsAssigned, error)
 }
 
 type ProjectTeamAdder interface {
-	AddTeamsToProject(string, []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error)
+	AddTeamsToProject(string, []*opsmngr.ProjectTeam) (*opsmngr.TeamsAssigned, error)
 }
 
 type ProjectTeamDeleter interface {
@@ -68,7 +67,7 @@ type ProjectTeamDeleter interface {
 }
 
 // Projects encapsulates the logic to manage different cloud providers.
-func (s *Store) Projects(opts *atlas.ListOptions) (*opsmngr.Projects, error) {
+func (s *Store) Projects(opts *opsmngr.ListOptions) (*opsmngr.Projects, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Projects.List(s.ctx, opts)
@@ -79,7 +78,7 @@ func (s *Store) Projects(opts *atlas.ListOptions) (*opsmngr.Projects, error) {
 }
 
 // GetOrgProjects encapsulates the logic to manage different cloud providers.
-func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (*opsmngr.Projects, error) {
+func (s *Store) GetOrgProjects(orgID string, opts *opsmngr.ProjectsListOptions) (*opsmngr.Projects, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Organizations.Projects(s.ctx, orgID, opts)
@@ -111,7 +110,7 @@ func (s *Store) ProjectByName(name string) (*opsmngr.Project, error) {
 }
 
 // CreateProject encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateProject(name, orgID string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (*opsmngr.Project, error) {
+func (s *Store) CreateProject(name, orgID string, defaultAlertSettings *bool, opts *opsmngr.CreateProjectOptions) (*opsmngr.Project, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		project := &opsmngr.Project{Name: name, OrgID: orgID, WithDefaultAlertsSettings: defaultAlertSettings}
@@ -134,7 +133,7 @@ func (s *Store) DeleteProject(projectID string) error {
 }
 
 // ProjectUsers lists all IAM users in a project.
-func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) ([]*opsmngr.User, error) {
+func (s *Store) ProjectUsers(projectID string, opts *opsmngr.ListOptions) ([]*opsmngr.User, error) {
 	switch s.service {
 	case config.OpsManagerService, config.CloudManagerService:
 		result, _, err := s.client.Projects.ListUsers(s.ctx, projectID, opts)
@@ -156,7 +155,7 @@ func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 }
 
 // ProjectTeams encapsulates the logic to manage different cloud providers.
-func (s *Store) ProjectTeams(projectID string) (*atlas.TeamsAssigned, error) {
+func (s *Store) ProjectTeams(projectID string) (*opsmngr.TeamsAssigned, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Projects.GetTeams(s.ctx, projectID, nil)
@@ -167,7 +166,7 @@ func (s *Store) ProjectTeams(projectID string) (*atlas.TeamsAssigned, error) {
 }
 
 // AddTeamsToProject encapsulates the logic to manage different cloud providers.
-func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error) {
+func (s *Store) AddTeamsToProject(projectID string, teams []*opsmngr.ProjectTeam) (*opsmngr.TeamsAssigned, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Projects.AddTeamsToProject(s.ctx, projectID, teams)

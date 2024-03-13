@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockEventLister(ctrl)
 
-	expected := &mongodbatlas.EventResponse{}
+	expected := &opsmngr.EventResponse{}
 
 	t.Run("for a project", func(t *testing.T) {
 		listOpts := &ListOpts{

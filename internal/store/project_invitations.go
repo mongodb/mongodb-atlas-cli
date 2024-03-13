@@ -18,21 +18,21 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_project_invitations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store ProjectInvitationLister,ProjectInvitationDescriber,ProjectInvitationDeleter,ProjectInviter,ProjectInvitationUpdater
 
 type ProjectInvitationLister interface {
-	ProjectInvitations(string, *atlas.InvitationOptions) ([]*atlas.Invitation, error)
+	ProjectInvitations(string, *opsmngr.InvitationOptions) ([]*opsmngr.Invitation, error)
 }
 
 type ProjectInvitationDescriber interface {
-	ProjectInvitation(string, string) (*atlas.Invitation, error)
+	ProjectInvitation(string, string) (*opsmngr.Invitation, error)
 }
 
 type ProjectInviter interface {
-	InviteUserToProject(string, *atlas.Invitation) (*atlas.Invitation, error)
+	InviteUserToProject(string, *opsmngr.Invitation) (*opsmngr.Invitation, error)
 }
 
 type ProjectInvitationDeleter interface {
@@ -40,11 +40,11 @@ type ProjectInvitationDeleter interface {
 }
 
 type ProjectInvitationUpdater interface {
-	UpdateProjectInvitation(string, string, *atlas.Invitation) (*atlas.Invitation, error)
+	UpdateProjectInvitation(string, string, *opsmngr.Invitation) (*opsmngr.Invitation, error)
 }
 
 // ProjectInvitations encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectInvitations(groupID string, opts *atlas.InvitationOptions) ([]*atlas.Invitation, error) {
+func (s *Store) ProjectInvitations(groupID string, opts *opsmngr.InvitationOptions) ([]*opsmngr.Invitation, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Projects.Invitations(s.ctx, groupID, opts)
@@ -55,7 +55,7 @@ func (s *Store) ProjectInvitations(groupID string, opts *atlas.InvitationOptions
 }
 
 // ProjectInvitation encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectInvitation(groupID, invitationID string) (*atlas.Invitation, error) {
+func (s *Store) ProjectInvitation(groupID, invitationID string) (*opsmngr.Invitation, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Projects.Invitation(s.ctx, groupID, invitationID)
@@ -77,7 +77,7 @@ func (s *Store) DeleteProjectInvitation(groupID, invitationID string) error {
 }
 
 // InviteUserToProject encapsulate the logic to manage different cloud providers.
-func (s *Store) InviteUserToProject(groupID string, invitation *atlas.Invitation) (*atlas.Invitation, error) {
+func (s *Store) InviteUserToProject(groupID string, invitation *opsmngr.Invitation) (*opsmngr.Invitation, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Projects.InviteUser(s.ctx, groupID, invitation)
@@ -88,7 +88,7 @@ func (s *Store) InviteUserToProject(groupID string, invitation *atlas.Invitation
 }
 
 // UpdateProjectInvitation encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateProjectInvitation(groupID, invitationID string, invitation *atlas.Invitation) (*atlas.Invitation, error) {
+func (s *Store) UpdateProjectInvitation(groupID, invitationID string, invitation *opsmngr.Invitation) (*opsmngr.Invitation, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		if invitationID != "" {

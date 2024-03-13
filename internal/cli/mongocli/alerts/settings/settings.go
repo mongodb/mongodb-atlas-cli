@@ -19,6 +19,7 @@ import (
 
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const (
@@ -63,8 +64,8 @@ type ConfigOpts struct {
 	metricThresholdThreshold        float64
 }
 
-func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *atlas.AlertConfiguration {
-	out := new(atlas.AlertConfiguration)
+func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *opsmngr.AlertConfiguration {
+	out := new(opsmngr.AlertConfiguration)
 
 	out.GroupID = projectID
 	out.EventTypeName = strings.ToUpper(opts.event)

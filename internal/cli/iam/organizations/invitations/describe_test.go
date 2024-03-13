@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/test"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestDescribe_Run(t *testing.T) {
@@ -38,7 +38,7 @@ func TestDescribe_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		OrganizationInvitation(opts.ConfigOrgID(), opts.id).
-		Return(&mongodbatlas.Invitation{}, nil).
+		Return(&opsmngr.Invitation{}, nil).
 		Times(1)
 
 	if err := opts.Run(); err != nil {

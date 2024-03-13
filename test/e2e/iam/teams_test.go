@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestTeams(t *testing.T) {
@@ -57,7 +57,7 @@ func TestTeams(t *testing.T) {
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
-		var team mongodbatlas.Team
+		var team opsmngr.Team
 		require.NoError(t, json.Unmarshal(resp, &team))
 		a.Equal(teamName, team.Name)
 		teamID = team.ID
@@ -78,7 +78,7 @@ func TestTeams(t *testing.T) {
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
-		var team mongodbatlas.Team
+		var team opsmngr.Team
 		require.NoError(t, json.Unmarshal(resp, &team))
 		a.Equal(teamID, team.ID)
 	})
@@ -97,7 +97,7 @@ func TestTeams(t *testing.T) {
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
-		var team mongodbatlas.Team
+		var team opsmngr.Team
 		require.NoError(t, json.Unmarshal(resp, &team))
 		a.Equal(teamName, team.Name)
 	})
@@ -114,7 +114,7 @@ func TestTeams(t *testing.T) {
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
-		var teams []mongodbatlas.Team
+		var teams []opsmngr.Team
 		require.NoError(t, json.Unmarshal(resp, &teams))
 		a.NotEmpty(t, teams)
 	})

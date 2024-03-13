@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 type EventListOpts struct {
@@ -35,9 +35,9 @@ type EventListOpts struct {
 	MaxDate   string
 }
 
-func (opts *EventListOpts) newEventListOptions() *atlas.EventListOptions {
-	return &atlas.EventListOptions{
-		ListOptions: atlas.ListOptions{
+func (opts *EventListOpts) newEventListOptions() *opsmngr.EventListOptions {
+	return &opsmngr.EventListOptions{
+		ListOptions: opsmngr.ListOptions{
 			PageNum:      opts.PageNum,
 			ItemsPerPage: opts.ItemsPerPage,
 		},
@@ -70,7 +70,7 @@ var listTemplate = `ID	TYPE	CREATED{{range valueOrEmptySlice .Results}}
 func (opts *ListOpts) Run() error {
 	listOpts := opts.newEventListOptions()
 
-	var r *atlas.EventResponse
+	var r *opsmngr.EventResponse
 	var err error
 
 	if opts.orgID != "" {

@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const listTemplate = `ID	NAMESPACE	SUGGESTED INDEX{{range valueOrEmptySlice .SuggestedIndexes}}  
@@ -61,12 +61,12 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newSuggestedIndexOptions() *atlas.SuggestedIndexOptions {
-	return &atlas.SuggestedIndexOptions{
+func (opts *ListOpts) newSuggestedIndexOptions() *opsmngr.SuggestedIndexOptions {
+	return &opsmngr.SuggestedIndexOptions{
 		Namespaces: opts.namespaces,
 		NIndexes:   opts.nIndexes,
 		NExamples:  opts.nExamples,
-		NamespaceOptions: atlas.NamespaceOptions{
+		NamespaceOptions: opsmngr.NamespaceOptions{
 			Since:    opts.since,
 			Duration: opts.duration,
 		},

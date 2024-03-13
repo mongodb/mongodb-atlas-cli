@@ -18,23 +18,22 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_teams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store TeamLister,TeamDescriber,TeamCreator,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
 
 type TeamLister interface {
-	Teams(string, *opsmngr.ListOptions) ([]atlas.Team, error)
+	Teams(string, *opsmngr.ListOptions) ([]opsmngr.Team, error)
 }
 
 type TeamDescriber interface {
-	TeamByID(string, string) (*atlas.Team, error)
-	TeamByName(string, string) (*atlas.Team, error)
+	TeamByID(string, string) (*opsmngr.Team, error)
+	TeamByName(string, string) (*opsmngr.Team, error)
 }
 
 type TeamCreator interface {
-	CreateTeam(string, *atlas.Team) (*atlas.Team, error)
+	CreateTeam(string, *opsmngr.Team) (*opsmngr.Team, error)
 }
 
 type TeamDeleter interface {
@@ -50,11 +49,11 @@ type TeamUserRemover interface {
 }
 
 type TeamRolesUpdater interface {
-	UpdateProjectTeamRoles(string, string, *atlas.TeamUpdateRoles) ([]atlas.TeamRoles, error)
+	UpdateProjectTeamRoles(string, string, *opsmngr.TeamUpdateRoles) ([]opsmngr.TeamRoles, error)
 }
 
 // TeamByID encapsulates the logic to manage different cloud providers.
-func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
+func (s *Store) TeamByID(orgID, teamID string) (*opsmngr.Team, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Teams.Get(s.ctx, orgID, teamID)
@@ -65,7 +64,7 @@ func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
 }
 
 // TeamByName encapsulates the logic to manage different cloud providers.
-func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
+func (s *Store) TeamByName(orgID, teamName string) (*opsmngr.Team, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Teams.GetOneTeamByName(s.ctx, orgID, teamName)
@@ -76,7 +75,7 @@ func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
 }
 
 // Teams encapsulates the logic to manage different cloud providers.
-func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, error) {
+func (s *Store) Teams(orgID string, opts *opsmngr.ListOptions) ([]opsmngr.Team, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Teams.List(s.ctx, orgID, opts)
@@ -87,7 +86,7 @@ func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, erro
 }
 
 // CreateTeam encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) {
+func (s *Store) CreateTeam(orgID string, team *opsmngr.Team) (*opsmngr.Team, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Teams.Create(s.ctx, orgID, team)
@@ -131,7 +130,7 @@ func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
 }
 
 // UpdateProjectTeamRoles encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateProjectTeamRoles(projectID, teamID string, team *atlas.TeamUpdateRoles) ([]atlas.TeamRoles, error) {
+func (s *Store) UpdateProjectTeamRoles(projectID, teamID string, team *opsmngr.TeamUpdateRoles) ([]opsmngr.TeamRoles, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.Teams.UpdateTeamRoles(s.ctx, projectID, teamID, team)

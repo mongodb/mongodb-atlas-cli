@@ -29,7 +29,7 @@ require (
 	github.com/tangzero/inflector v1.0.0
 	go.mongodb.org/atlas v0.36.0
 	go.mongodb.org/mongo-driver v1.14.0
-	go.mongodb.org/ops-manager v0.55.3
+	go.mongodb.org/ops-manager v0.55.5
 	golang.org/x/crypto v0.21.0
 	golang.org/x/mod v0.16.0
 	golang.org/x/tools v0.19.0

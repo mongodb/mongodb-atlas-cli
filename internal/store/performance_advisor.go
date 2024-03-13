@@ -18,24 +18,24 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 //go:generate mockgen -destination=../mocks/mock_performance_advisor.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/store PerformanceAdvisorNamespacesLister,PerformanceAdvisorSlowQueriesLister,PerformanceAdvisorIndexesLister
 type PerformanceAdvisorNamespacesLister interface {
-	PerformanceAdvisorNamespaces(string, string, *atlas.NamespaceOptions) (*atlas.Namespaces, error)
+	PerformanceAdvisorNamespaces(string, string, *opsmngr.NamespaceOptions) (*opsmngr.Namespaces, error)
 }
 
 type PerformanceAdvisorSlowQueriesLister interface {
-	PerformanceAdvisorSlowQueries(string, string, *atlas.SlowQueryOptions) (*atlas.SlowQueries, error)
+	PerformanceAdvisorSlowQueries(string, string, *opsmngr.SlowQueryOptions) (*opsmngr.SlowQueries, error)
 }
 
 type PerformanceAdvisorIndexesLister interface {
-	PerformanceAdvisorIndexes(string, string, *atlas.SuggestedIndexOptions) (*atlas.SuggestedIndexes, error)
+	PerformanceAdvisorIndexes(string, string, *opsmngr.SuggestedIndexOptions) (*opsmngr.SuggestedIndexes, error)
 }
 
 // PerformanceAdvisorNamespaces encapsulates the logic to manage different cloud providers.
-func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts *atlas.NamespaceOptions) (*atlas.Namespaces, error) {
+func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts *opsmngr.NamespaceOptions) (*opsmngr.Namespaces, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.PerformanceAdvisor.GetNamespaces(s.ctx, projectID, processName, opts)
@@ -46,7 +46,7 @@ func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts
 }
 
 // PerformanceAdvisorSlowQueries encapsulates the logic to manage different cloud providers.
-func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opts *atlas.SlowQueryOptions) (*atlas.SlowQueries, error) {
+func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opts *opsmngr.SlowQueryOptions) (*opsmngr.SlowQueries, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.PerformanceAdvisor.GetSlowQueries(s.ctx, projectID, processName, opts)
@@ -57,7 +57,7 @@ func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opt
 }
 
 // PerformanceAdvisorIndexes encapsulates the logic to manage different cloud providers.
-func (s *Store) PerformanceAdvisorIndexes(projectID, processName string, opts *atlas.SuggestedIndexOptions) (*atlas.SuggestedIndexes, error) {
+func (s *Store) PerformanceAdvisorIndexes(projectID, processName string, opts *opsmngr.SuggestedIndexOptions) (*opsmngr.SuggestedIndexes, error) {
 	switch s.service {
 	case config.CloudManagerService, config.OpsManagerService:
 		result, _, err := s.client.PerformanceAdvisor.GetSuggestedIndexes(s.ctx, projectID, processName, opts)

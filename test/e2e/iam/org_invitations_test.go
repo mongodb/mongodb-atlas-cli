@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestOrgInvitations(t *testing.T) {
@@ -55,7 +55,7 @@ func TestOrgInvitations(t *testing.T) {
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
-		var invitation mongodbatlas.Invitation
+		var invitation opsmngr.Invitation
 		require.NoError(t, json.Unmarshal(resp, &invitation))
 		a.Equal(emailOrg, invitation.Username)
 		require.NotEmpty(t, invitation.ID)
@@ -75,7 +75,7 @@ func TestOrgInvitations(t *testing.T) {
 
 		a := assert.New(t)
 
-		var invitations []mongodbatlas.Invitation
+		var invitations []opsmngr.Invitation
 		require.NoError(t, json.Unmarshal(resp, &invitations))
 		a.NotEmpty(invitations)
 	})
@@ -94,7 +94,7 @@ func TestOrgInvitations(t *testing.T) {
 
 		a := assert.New(t)
 
-		var invitation mongodbatlas.Invitation
+		var invitation opsmngr.Invitation
 		require.NoError(t, json.Unmarshal(resp, &invitation))
 		a.Equal(orgInvitationID, invitation.ID)
 	})
@@ -116,7 +116,7 @@ func TestOrgInvitations(t *testing.T) {
 
 		a := assert.New(t)
 
-		var invitation mongodbatlas.Invitation
+		var invitation opsmngr.Invitation
 		require.NoError(t, json.Unmarshal(resp, &invitation))
 		a.Equal(emailOrg, invitation.Username)
 		a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)
@@ -137,7 +137,7 @@ func TestOrgInvitations(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
-		var invitation mongodbatlas.Invitation
+		var invitation opsmngr.Invitation
 		require.NoError(t, json.Unmarshal(resp, &invitation))
 		a.Equal(emailOrg, invitation.Username)
 		a.ElementsMatch([]string{roleNameOrg}, invitation.Roles)

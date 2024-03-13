@@ -202,10 +202,10 @@ func (m *MockTeamUserLister) EXPECT() *MockTeamUserListerMockRecorder {
 }
 
 // TeamUsers mocks base method.
-func (m *MockTeamUserLister) TeamUsers(arg0, arg1 string) (interface{}, error) {
+func (m *MockTeamUserLister) TeamUsers(arg0, arg1 string) ([]*opsmngr.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "TeamUsers", arg0, arg1)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].([]*opsmngr.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

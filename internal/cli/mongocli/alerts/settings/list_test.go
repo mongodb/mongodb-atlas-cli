@@ -26,13 +26,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestConfigList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAlertConfigurationLister(ctrl)
 
-	expected := []mongodbatlas.AlertConfiguration{
+	expected := []opsmngr.AlertConfiguration{
 		{
 			ID:                     "test",
 			GroupID:                "test",

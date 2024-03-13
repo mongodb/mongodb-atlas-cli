@@ -24,7 +24,6 @@ import (
 	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/test/e2e"
-	"go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -119,7 +118,7 @@ func createTeam(teamName string) (string, error) {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 
-	var team mongodbatlas.Team
+	var team opsmngr.Team
 	if err := json.Unmarshal(resp, &team); err != nil {
 		return "", err
 	}
@@ -166,7 +165,7 @@ func OrgNUser(n int) (username, userID string, err error) {
 		return "", "", fmt.Errorf("error loading org users: %w (%s)", err, string(resp))
 	}
 
-	var users mongodbatlas.AtlasUsersResponse
+	var users opsmngr.UsersResponse
 	if err := json.Unmarshal(resp, &users); err != nil {
 		return "", "", err
 	}

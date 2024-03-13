@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/test"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 func TestEnableBuilder(t *testing.T) {
@@ -51,7 +51,7 @@ func TestEnableOpts_Run(t *testing.T) {
 		},
 		store: mockStore,
 	}
-	expected := &mongodbatlas.AlertConfiguration{}
+	expected := &opsmngr.AlertConfiguration{}
 	mockStore.
 		EXPECT().
 		EnableAlertConfiguration(opts.ProjectID, opts.alertID).

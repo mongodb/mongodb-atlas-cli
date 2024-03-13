@@ -77,53 +77,64 @@ func TestBuildAtlasInheritedRoles(t *testing.T) {
 }
 
 func TestBuildAtlasActions(t *testing.T) {
-	type test struct {
+	tests := []struct {
+		name  string
 		input []string
 		want  []atlasv2.DatabasePrivilegeAction
-	}
-
-	cluster := true
-
-	testdb := "testdb"
-	collection := "collection"
-	datalake := "DATA_LAKE"
-
-	tests := []test{
+	}{
 		{
+			name:  "role",
 			input: []string{"clusterName"},
 			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "clusterName",
 					Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
 						{
-							Cluster: cluster,
+							Cluster: true,
 						},
 					},
 				},
 			},
 		},
 		{
+			name:  "role and fqn",
 			input: []string{"clusterName@testdb.collection"},
 			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "clusterName",
 					Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
 						{
-							Db:         testdb,
-							Collection: collection,
+							Db:         "testdb",
+							Collection: "collection",
 						},
 					},
 				},
 			},
 		},
 		{
+			name:  "role and fqn",
+			input: []string{"clusterName@testdb.collection.with.dots"},
+			want: []atlasv2.DatabasePrivilegeAction{
+				{
+					Action: "clusterName",
+					Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
+						{
+							Db:         "testdb",
+							Collection: "collection.with.dots",
+						},
+					},
+				},
+			},
+		},
+		{
+			name:  "role and fqn",
 			input: []string{"clusterName", "name@DATA_LAKE"},
 			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "clusterName",
 					Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
 						{
-							Cluster: cluster,
+							Cluster: true,
 						},
 					},
 				},
@@ -131,7 +142,7 @@ func TestBuildAtlasActions(t *testing.T) {
 					Action: "name",
 					Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
 						{
-							Db: datalake,
+							Db: "DATA_LAKE",
 						},
 					},
 				},
@@ -139,14 +150,13 @@ func TestBuildAtlasActions(t *testing.T) {
 		},
 	}
 
-	for _, tc := range tests {
-		input := tc.input
-		want := tc.want
+	for _, tt := range tests {
+		tc := tt
 		t.Run("", func(t *testing.T) {
 			t.Parallel()
-			got := BuildAtlasActions(input)
-			if err := deep.Equal(want, got); err != nil {
-				t.Fatalf("expected: %v, got: %v", want, got)
+			got := BuildAtlasActions(tc.input)
+			if diff := deep.Equal(tc.want, got); diff != nil {
+				t.Error(diff)
 			}
 		})
 	}

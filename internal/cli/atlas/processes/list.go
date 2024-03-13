@@ -73,6 +73,10 @@ func (opts *ListOpts) newProcessesListParams() *atlasv2.ListAtlasProcessesApiPar
 	if listOpts.ItemsPerPage > 0 {
 		processesList.ItemsPerPage = &listOpts.ItemsPerPage
 	}
+
+	if listOpts.IncludeCount {
+		processesList.IncludeCount = &listOpts.IncludeCount
+	}
 	return processesList
 }
 
@@ -101,6 +105,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
+	cmd.Flags().BoolVar(&opts.OmitCount, flag.OmitCount, false, usage.OmitCount)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

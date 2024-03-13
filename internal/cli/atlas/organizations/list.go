@@ -64,6 +64,7 @@ func (opts *ListOpts) newOrganizationListOptions() *atlasv2.ListOrganizationsApi
 	if listOpt := opts.NewListOptions(); listOpt != nil {
 		params.PageNum = &listOpt.PageNum
 		params.ItemsPerPage = &listOpt.ItemsPerPage
+		params.IncludeCount = &listOpt.IncludeCount
 	}
 	return params
 }
@@ -96,11 +97,12 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.name, flag.Name, "", usage.OrgNameFilter)
-	cmd.Flags().BoolVar(&opts.includeDeletedOrgs, flag.IncludeDeleted, false, usage.OrgIncludeDeleted)
-
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
+	cmd.Flags().BoolVar(&opts.OmitCount, flag.OmitCount, false, usage.OmitCount)
+
+	cmd.Flags().StringVar(&opts.name, flag.Name, "", usage.OrgNameFilter)
+	cmd.Flags().BoolVar(&opts.includeDeletedOrgs, flag.IncludeDeleted, false, usage.OrgIncludeDeleted)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())

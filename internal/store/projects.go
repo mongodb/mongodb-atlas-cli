@@ -51,7 +51,7 @@ type ProjectUserDeleter interface {
 }
 
 type ProjectTeamLister interface {
-	ProjectTeams(string) (*atlasv2.PaginatedTeamRole, error)
+	ProjectTeams(string, *ListOptions) (*atlasv2.PaginatedTeamRole, error)
 }
 
 type ProjectTeamAdder interface {
@@ -109,7 +109,7 @@ func (s *Store) DeleteProject(projectID string) error {
 func (s *Store) ProjectUsers(projectID string, opts *ListOptions) (*atlasv2.PaginatedAppUser, error) {
 	res := s.clientv2.ProjectsApi.ListProjectUsers(s.ctx, projectID)
 	if opts != nil {
-		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)
+		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
 	}
 	result, _, err := res.Execute()
 	return result, err
@@ -122,8 +122,18 @@ func (s *Store) DeleteUserFromProject(projectID, userID string) error {
 }
 
 // ProjectTeams encapsulates the logic to manage different cloud providers.
-func (s *Store) ProjectTeams(projectID string) (*atlasv2.PaginatedTeamRole, error) {
-	result, _, err := s.clientv2.TeamsApi.ListProjectTeams(s.ctx, projectID).Execute()
+func (s *Store) ProjectTeams(projectID string, opts *ListOptions) (*atlasv2.PaginatedTeamRole, error) {
+	res := s.clientv2.TeamsApi.
+		ListProjectTeams(s.ctx, projectID)
+
+	if opts != nil {
+		res.
+			IncludeCount(opts.IncludeCount).
+			PageNum(opts.PageNum).
+			ItemsPerPage(opts.ItemsPerPage)
+	}
+
+	result, _, err := res.Execute()
 	return result, err
 }
 

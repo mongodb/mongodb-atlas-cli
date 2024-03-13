@@ -21,7 +21,7 @@ jobs:
           echo "DATE=${DATE}" >> "$GITHUB_ENV"
       - name: 'Get latest tag'
         id: get-latest-tag
-        uses: oprypin/find-latest-tag@e1e0e606cc7e9ede25140a5a139b3a5a1b717ece
+        uses: oprypin/find-latest-tag@dd2729fe78b0bb55523ae2b2a310c6773a652bd1
         with:
           repository: mongodb/mongodb-atlas-cli
           releases-only: true
@@ -38,7 +38,7 @@ jobs:
           username: "${{ secrets.DOCKERHUB_USER }}"
           password: "${{ secrets.DOCKERHUB_SECRET }}"
       - name: Build and push image to dockerhub staging registry
-        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56
+        uses: docker/build-push-action@af5a7ed5ba88268d5278f7203fb52cd833f66d6e
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
@@ -72,7 +72,7 @@ jobs:
           echo "DATE=${DATE}" >> "$GITHUB_ENV"
       - name: 'Get latest tag'
         id: get-latest-tag
-        uses: oprypin/find-latest-tag@e1e0e606cc7e9ede25140a5a139b3a5a1b717ece
+        uses: oprypin/find-latest-tag@dd2729fe78b0bb55523ae2b2a310c6773a652bd1
         with:
           repository: mongodb/mongodb-atlas-cli
           releases-only: true

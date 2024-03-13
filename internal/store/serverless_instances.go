@@ -51,6 +51,7 @@ func (s *Store) ServerlessInstances(projectID string, listOps *ListOptions) (*at
 	result, _, err := s.clientv2.ServerlessInstancesApi.ListServerlessInstances(s.ctx, projectID).
 		ItemsPerPage(listOps.ItemsPerPage).
 		PageNum(listOps.PageNum).
+		IncludeCount(listOps.IncludeCount).
 		Execute()
 
 	return result, err

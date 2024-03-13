@@ -56,6 +56,7 @@ func (opts *ListOpts) Run() error {
 		ApiUserId:    opts.id,
 		PageNum:      pointer.Get(listOpts.PageNum),
 		ItemsPerPage: pointer.Get(listOpts.ItemsPerPage),
+		IncludeCount: pointer.Get(listOpts.IncludeCount),
 	}
 	result, err := opts.store.OrganizationAPIKeyAccessLists(params)
 	if err != nil {
@@ -95,6 +96,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
+	cmd.Flags().BoolVar(&opts.OmitCount, flag.OmitCount, false, usage.OmitCount)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

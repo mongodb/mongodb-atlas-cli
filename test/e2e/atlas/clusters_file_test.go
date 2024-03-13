@@ -83,6 +83,48 @@ func TestClustersFile(t *testing.T) {
 		assert.Contains(t, string(resp), "Cluster available")
 	})
 
+	t.Run("Create Partial Index", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"indexes",
+			"create",
+			"--clusterName", clusterFileName,
+			"--file=data/create_partial_index.json",
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+	})
+
+	t.Run("Create Sparse Index", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"indexes",
+			"create",
+			"--clusterName", clusterFileName,
+			"--file=data/create_sparse_index.json",
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+	})
+
+	t.Run("Create 2dspere Index", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"indexes",
+			"create",
+			"--clusterName", clusterFileName,
+			"--file=data/create_2dspere_index.json",
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+	})
+
 	t.Run("Update via file", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,

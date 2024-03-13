@@ -16,7 +16,6 @@ package indexes
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -159,14 +158,11 @@ func CreateBuilder() *cobra.Command {
 
   # Create an index named my_index from a JSON configuration file named myfile.json:
   atlas clusters indexes create my_index --clusterName Cluster0 --file file.json`,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			if opts.filename == "" {
 				_ = cmd.MarkFlagRequired(flag.Database)
 				_ = cmd.MarkFlagRequired(flag.Collection)
 				_ = cmd.MarkFlagRequired(flag.Key)
-				if len(args) == 0 {
-					return errors.New("index name missing")
-				}
 			}
 
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))

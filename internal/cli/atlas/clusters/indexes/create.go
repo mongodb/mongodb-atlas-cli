@@ -16,6 +16,7 @@ package indexes
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -138,7 +139,9 @@ func (opts *CreateOpts) indexKeys() ([]map[string]string, error) {
 // CreateBuilder builds a cobra.Command that can run as:
 // mcli atlas clusters index create [indexName] --clusterName clusterName  --collection collection --dbName dbName [--key field:type] --file filename.
 func CreateBuilder() *cobra.Command {
-	opts := &CreateOpts{}
+	opts := &CreateOpts{
+		fs: afero.NewOsFs(),
+	}
 	cmd := &cobra.Command{
 		Use:   "create [indexName]",
 		Short: "Create a rolling index for the specified cluster for your project.",
@@ -155,8 +158,17 @@ func CreateBuilder() *cobra.Command {
   atlas clusters indexes create property_room_bedrooms --clusterName Cluster0 --collection listings --db realestate --key property_type:1 --key room_type:1 --key bedrooms:1
 
   # Create an index named my_index from a JSON configuration file named myfile.json:
-  atlas clusters indexes create my_index --file file.json`,
-		PreRunE: func(cmd *cobra.Command, _ []string) error {
+  atlas clusters indexes create my_index --clusterName Cluster0 --file file.json`,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if opts.filename == "" {
+				_ = cmd.MarkFlagRequired(flag.Database)
+				_ = cmd.MarkFlagRequired(flag.Collection)
+				_ = cmd.MarkFlagRequired(flag.Key)
+				if len(args) == 0 {
+					return errors.New("index name missing")
+				}
+			}
+
 			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
 		RunE: func(_ *cobra.Command, args []string) error {
@@ -176,10 +188,10 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
-	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.ClusterName)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Database)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Collection)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Key)
 
+	_ = cmd.MarkFlagRequired(flag.ClusterName)
 	return cmd
 }

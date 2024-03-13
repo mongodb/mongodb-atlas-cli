@@ -55,10 +55,8 @@ Options
      - Description
    * - --clusterName
      - string
-     - false
+     - true
      - Name of the cluster.
-
-       Mutually exclusive with --file.
    * - --collection
      - string
      - false
@@ -76,7 +74,7 @@ Options
      - false
      - Path to an optional JSON configuration file that defines index settings.
 
-       Mutually exclusive with --clusterName, --db, --collection, --key.
+       Mutually exclusive with --db, --collection, --key.
    * - -h, --help
      - 
      - false
@@ -131,4 +129,4 @@ Examples
 .. code-block::
 
    # Create an index named my_index from a JSON configuration file named myfile.json:
-   atlas clusters indexes create my_index --file file.json
+   atlas clusters indexes create my_index --clusterName Cluster0 --file file.json

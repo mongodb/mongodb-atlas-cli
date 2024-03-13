@@ -196,6 +196,22 @@ func TestClustersFlags(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
+	t.Run("Create Partial Index via File", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"indexes",
+			"create",
+			"--clusterName", clusterName,
+			"--db=tes",
+			"--collection=tes",
+			"--key=name:1",
+			"--projectId", g.projectID,
+		)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+	})
+
 	t.Run("Fail Delete for Termination Protection enabled", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,

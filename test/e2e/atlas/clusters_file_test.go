@@ -88,7 +88,7 @@ func TestClustersFile(t *testing.T) {
 			clustersEntity,
 			"update",
 			clusterFileName,
-			"--file=update_cluster_test.json",
+			"--file=data/update_cluster_test.json",
 			"--projectId", g.projectID,
 			"-o=json")
 
@@ -141,9 +141,9 @@ func generateClusterFile(mdbVersion string) (string, error) {
 		MongoDBMajorVersion: mdbVersion,
 	}
 
-	templateFile := "create_cluster_test.json"
+	templateFile := "data/create_cluster_test.json"
 	if service := os.Getenv("MCLI_SERVICE"); service == config.CloudGovService {
-		templateFile = "create_cluster_gov_test.json"
+		templateFile = "data/create_cluster_gov_test.json"
 	}
 
 	tmpl, err := template.ParseFiles(templateFile)
@@ -156,7 +156,7 @@ func generateClusterFile(mdbVersion string) (string, error) {
 		return "", err
 	}
 
-	const clusterFile = "create_cluster.json"
+	const clusterFile = "data/create_cluster.json"
 	file, err := os.Create(clusterFile)
 	if err != nil {
 		return "", err

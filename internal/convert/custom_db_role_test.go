@@ -24,12 +24,10 @@ import (
 )
 
 func TestBuildAtlasInheritedRoles(t *testing.T) {
-	type test struct {
+	tests := []struct {
 		input []string
 		want  []atlasv2.DatabaseInheritedRole
-	}
-
-	tests := []test{
+	}{
 		{
 			input: []string{"admin"},
 			want: []atlasv2.DatabaseInheritedRole{
@@ -69,8 +67,8 @@ func TestBuildAtlasInheritedRoles(t *testing.T) {
 		t.Run("", func(t *testing.T) {
 			t.Parallel()
 			got := BuildAtlasInheritedRoles(input)
-			if err := deep.Equal(want, got); err != nil {
-				t.Fatalf("expected: %v, got: %v", want, got)
+			if diff := deep.Equal(want, got); diff != nil {
+				t.Error(diff)
 			}
 		})
 	}
@@ -152,7 +150,7 @@ func TestBuildAtlasActions(t *testing.T) {
 
 	for _, tt := range tests {
 		tc := tt
-		t.Run("", func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			got := BuildAtlasActions(tc.input)
 			if diff := deep.Equal(tc.want, got); diff != nil {

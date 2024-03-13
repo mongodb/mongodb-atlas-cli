@@ -150,14 +150,6 @@ To log out, run: %s auth logout`,
 	)
 }
 
-func Token() error {
-	if t, err := config.Token(); t != nil {
-		return err
-	}
-
-	return ErrMissingCredentials
-}
-
 func FlagInSlice(value, flag string, validValues []string) error {
 	if slices.Contains(validValues, value) {
 		return nil

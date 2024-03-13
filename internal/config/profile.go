@@ -43,7 +43,6 @@ const (
 	DefaultProfile           = "default"       // DefaultProfile default
 	CloudService             = "cloud"         // CloudService setting when using Atlas API
 	CloudGovService          = "cloudgov"      // CloudGovService setting when using Atlas API for Government
-	JSON                     = "json"          // JSON output format as json
 	projectID                = "project_id"
 	orgID                    = "org_id"
 	mongoShellPath           = "mongosh_path"
@@ -658,15 +657,6 @@ func (p *Profile) LoadAtlasCLIConfig(readEnvironmentVars bool) error {
 	}
 
 	return p.load(readEnvironmentVars, AtlasCLIEnvPrefix)
-}
-
-func LoadMongoCLIConfig() error { return Default().LoadMongoCLIConfig(true) }
-func (p *Profile) LoadMongoCLIConfig(readEnvironmentVars bool) error {
-	if p.err != nil {
-		return p.err
-	}
-	viper.SetConfigName("config")
-	return p.load(readEnvironmentVars, MongoCLIEnvPrefix)
 }
 
 func hasMongoCLIEnvVars() bool {

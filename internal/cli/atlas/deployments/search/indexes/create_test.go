@@ -19,6 +19,7 @@ package indexes
 import (
 	"bytes"
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -43,7 +44,6 @@ const (
 	expectedLocalDeployment = "localDeployment1"
 	expectedDB              = "db1"
 	expectedCollection      = "col1"
-	local                   = "local"
 )
 
 func TestCreate_RunLocal(t *testing.T) {
@@ -270,8 +270,7 @@ func TestCreate_Duplicated(t *testing.T) {
 		SearchIndexByName(ctx, index.Name, index.CollectionName).
 		Return(indexWithID, nil).
 		Times(1)
-
-	if err := opts.Run(ctx); err == nil || err != ErrSearchIndexDuplicated {
+	if err := opts.Run(ctx); err == nil || !errors.Is(err, ErrSearchIndexDuplicated) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

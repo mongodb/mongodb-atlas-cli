@@ -80,17 +80,6 @@ func TestWithBaseURL(t *testing.T) {
 	}
 }
 
-func TestSkipVerify(t *testing.T) {
-	c, err := New(Service(config.CloudService), SkipVerify())
-	if err != nil {
-		t.Fatalf("New() unexpected error: %v", err)
-	}
-
-	if !c.skipVerify {
-		t.Error("New() skipVerify not set")
-	}
-}
-
 type testConfig struct {
 	url string
 	auth

@@ -17,6 +17,7 @@ package instance
 import (
 	"context"
 	"fmt"
+	"io"
 	"slices"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -27,6 +28,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
 var downloadMessage = "Download of %s completed.\n"
@@ -38,7 +41,6 @@ type DownloadOpts struct {
 	fileName   string
 	start      int64
 	end        int64
-	decompress bool
 	store      store.StreamsDownloader
 }
 
@@ -58,13 +60,28 @@ func (opts *DownloadOpts) initDefaultOut() error {
 }
 
 func (opts *DownloadOpts) Run() error {
-	w, err := opts.NewWriteCloser()
+	params := atlasv2.DownloadStreamTenantAuditLogsApiParams{
+		GroupId:    opts.ProjectID,
+		TenantName: opts.tenantName,
+		StartDate:  &opts.start,
+		EndDate:    &opts.end,
+	}
+
+	f, err := opts.store.DownloadAuditLog(&params)
 	if err != nil {
 		return err
 	}
-	defer w.Close()
 
-	return nil
+	defer f.Close()
+
+	out, err := opts.NewWriteCloser()
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, f)
+	return err
 }
 
 // DownloadBuilder
@@ -109,7 +126,6 @@ func DownloadBuilder() *cobra.Command {
 	cmd.Flags().Int64Var(&opts.start, flag.Start, 0, usage.LogStart)
 	cmd.Flags().Int64Var(&opts.end, flag.End, 0, usage.LogEnd)
 	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.ForceFile)
-	cmd.Flags().BoolVarP(&opts.decompress, flag.Decompress, flag.DecompressShort, false, usage.Decompress)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

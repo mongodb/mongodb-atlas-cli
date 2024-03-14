@@ -23,10 +23,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
 func TestDownloadOpts_Run(t *testing.T) {
@@ -34,7 +34,8 @@ func TestDownloadOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockStreamsDownloader(ctrl)
 
 	const contents = "expected"
-	const fileName = "auditLogs.gz"
+	const projectID = "download-project-id"
+	const tenantName = "streams-tenant"
 
 	file, err := os.CreateTemp("", "")
 	if err != nil {
@@ -52,22 +53,22 @@ func TestDownloadOpts_Run(t *testing.T) {
 	downloadOpts := &DownloadOpts{
 		store: mockStore,
 		DownloaderOpts: cli.DownloaderOpts{
-			Out: fileName,
+			Out: "auditLogs.gz",
 			Fs:  fs,
 		},
 	}
 
-	downloadOpts.ProjectID = "download-project-id"
-	downloadOpts.decompress = true
-	downloadOpts.fileName = fileName
+	downloadOpts.ProjectID = projectID
+	downloadOpts.tenantName = tenantName
 
 	endDate := int64(0)
 	startDate := int64(0)
 
-	downloadParams := new(store.DownloadStreamTenantAuditLogsApiParams)
+	downloadParams := new(atlasv2.DownloadStreamTenantAuditLogsApiParams)
 	downloadParams.EndDate = &endDate
 	downloadParams.StartDate = &startDate
-	downloadParams.TenantName = "streams-tenant"
+	downloadParams.GroupId = projectID
+	downloadParams.TenantName = tenantName
 
 	mockStore.
 		EXPECT().
@@ -79,7 +80,7 @@ func TestDownloadOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
-	of, _ := fs.Open(fileName)
+	of, _ := fs.Open("auditLogs.gz")
 	defer of.Close()
 	b, _ := io.ReadAll(of)
 	require.Equal(t, contents, string(b))
@@ -90,6 +91,6 @@ func TestDownloadBuilder(t *testing.T) {
 		t,
 		DownloadBuilder(),
 		0,
-		[]string{flag.Out, flag.Start, flag.End, flag.Force, flag.Decompress, flag.ProjectID},
+		[]string{flag.Out, flag.Start, flag.End, flag.Force, flag.ProjectID},
 	)
 }

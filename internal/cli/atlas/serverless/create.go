@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
 const providerName = "SERVERLESS"
@@ -76,7 +76,7 @@ func (opts *CreateOpts) newServerlessCreateRequestParams() *atlasv2.ServerlessIn
 		tags := []atlasv2.ResourceTag{}
 		for k, v := range opts.tag {
 			if k != "" && v != "" {
-				tags = append(tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+				tags = append(tags, atlasv2.ResourceTag{Key: k, Value: v})
 			}
 		}
 		req.Tags = &tags

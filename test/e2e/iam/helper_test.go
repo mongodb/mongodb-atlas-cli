@@ -24,7 +24,7 @@ import (
 	"strconv"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
 const (

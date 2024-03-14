@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/clusters/sampledata"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/search"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -70,8 +70,8 @@ func addTags(out *atlasv2.AdvancedClusterDescription, tags map[string]string) {
 			}
 			key, value := k, v
 			tag := atlasv2.ResourceTag{
-				Key:   &key,
-				Value: &value,
+				Key:   key,
+				Value: value,
 			}
 			t = append(t, tag)
 		}

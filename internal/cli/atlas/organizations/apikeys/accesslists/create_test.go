@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	"go.mongodb.org/atlas-sdk/v20231115007/admin"
+	"go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
 func TestCreate_Run(t *testing.T) {
@@ -39,9 +39,9 @@ func TestCreate_Run(t *testing.T) {
 	r, err := createOpts.newAccessListAPIKeysReq()
 
 	params := &admin.CreateApiKeyAccessListApiParams{
-		OrgId:          createOpts.OrgID,
-		ApiUserId:      createOpts.apyKey,
-		UserAccessList: r,
+		OrgId:                 createOpts.OrgID,
+		ApiUserId:             createOpts.apyKey,
+		UserAccessListRequest: r,
 	}
 	if err != nil {
 		t.Fatalf("newAccessListAPIKeysReq() unexpected error: %v", err)
@@ -50,7 +50,7 @@ func TestCreate_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		CreateOrganizationAPIKeyAccessList(params).
-		Return(&admin.PaginatedApiUserAccessList{}, nil).
+		Return(&admin.PaginatedApiUserAccessListResponse{}, nil).
 		Times(1)
 
 	if err = createOpts.Run(); err != nil {

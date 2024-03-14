@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
 const testJSON = `{"Specs":[{"instanceSize": "S20_HIGHCPU_NVME", "nodeCount": 2}, {"instanceSize": "S110_LOWCPU_NVME", "nodeCount": 42}]}`
@@ -34,7 +34,7 @@ const testInvalidJSON = `(╯°□°)╯︵ ┻━┻`
 const fileName = "spec.json"
 
 var testJSONParsed = atlasv2.ApiSearchDeploymentRequest{
-	Specs: &[]atlasv2.ApiSearchDeploymentSpec{
+	Specs: []atlasv2.ApiSearchDeploymentSpec{
 		{InstanceSize: "S20_HIGHCPU_NVME", NodeCount: 2},
 		{InstanceSize: "S110_LOWCPU_NVME", NodeCount: 42},
 	},

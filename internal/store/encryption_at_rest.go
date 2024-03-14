@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_encryption_at_rest.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store EncryptionAtRestDescriber

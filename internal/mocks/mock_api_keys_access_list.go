@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	admin "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
 // MockOrganizationAPIKeyAccessListCreator is a mock of OrganizationAPIKeyAccessListCreator interface.
@@ -35,10 +35,10 @@ func (m *MockOrganizationAPIKeyAccessListCreator) EXPECT() *MockOrganizationAPIK
 }
 
 // CreateOrganizationAPIKeyAccessList mocks base method.
-func (m *MockOrganizationAPIKeyAccessListCreator) CreateOrganizationAPIKeyAccessList(arg0 *admin.CreateApiKeyAccessListApiParams) (*admin.PaginatedApiUserAccessList, error) {
+func (m *MockOrganizationAPIKeyAccessListCreator) CreateOrganizationAPIKeyAccessList(arg0 *admin.CreateApiKeyAccessListApiParams) (*admin.PaginatedApiUserAccessListResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOrganizationAPIKeyAccessList", arg0)
-	ret0, _ := ret[0].(*admin.PaginatedApiUserAccessList)
+	ret0, _ := ret[0].(*admin.PaginatedApiUserAccessListResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -110,10 +110,10 @@ func (m *MockOrganizationAPIKeyAccessListLister) EXPECT() *MockOrganizationAPIKe
 }
 
 // OrganizationAPIKeyAccessLists mocks base method.
-func (m *MockOrganizationAPIKeyAccessListLister) OrganizationAPIKeyAccessLists(arg0 *admin.ListApiKeyAccessListsEntriesApiParams) (*admin.PaginatedApiUserAccessList, error) {
+func (m *MockOrganizationAPIKeyAccessListLister) OrganizationAPIKeyAccessLists(arg0 *admin.ListApiKeyAccessListsEntriesApiParams) (*admin.PaginatedApiUserAccessListResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationAPIKeyAccessLists", arg0)
-	ret0, _ := ret[0].(*admin.PaginatedApiUserAccessList)
+	ret0, _ := ret[0].(*admin.PaginatedApiUserAccessListResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

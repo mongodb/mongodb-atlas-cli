@@ -34,7 +34,7 @@ import (
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -76,8 +76,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			},
 			Tags: &[]atlasv2.ResourceTag{
 				{
-					Key:   pointer.Get("TestTagKey"),
-					Value: pointer.Get("TestTagValue"),
+					Key:   "TestTagKey",
+					Value: "TestTagValue",
 				},
 			},
 			MongoDBMajorVersion: pointer.Get("5.0"),

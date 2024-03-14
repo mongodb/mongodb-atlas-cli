@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -110,7 +110,7 @@ func (opts *Opts) newCluster() *atlasv2.AdvancedClusterDescription {
 		tags := []atlasv2.ResourceTag{}
 		for k, v := range opts.Tag {
 			if k != "" && v != "" {
-				tags = append(tags, atlasv2.ResourceTag{Key: pointer.Get(k), Value: pointer.Get(v)})
+				tags = append(tags, atlasv2.ResourceTag{Key: k, Value: v})
 			}
 		}
 		cluster.Tags = &tags

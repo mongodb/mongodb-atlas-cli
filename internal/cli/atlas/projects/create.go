@@ -23,11 +23,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
 const atlasCreateTemplate = "Project '{{.Id}}' created.\n"
@@ -79,9 +78,7 @@ func (opts *CreateOpts) newCreateProjectGroupTags() *[]atlasv2.ResourceTag {
 			continue
 		}
 
-		resourceTag := *atlasv2.NewResourceTag()
-		resourceTag.Key = pointer.Get(key)
-		resourceTag.Value = pointer.Get(value)
+		resourceTag := *atlasv2.NewResourceTag(key, value)
 
 		tags = append(tags, resourceTag)
 	}

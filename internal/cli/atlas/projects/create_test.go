@@ -22,9 +22,8 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
 func TestCreate_Run(t *testing.T) {
@@ -34,8 +33,8 @@ func TestCreate_Run(t *testing.T) {
 	opts := CreateOpts{}
 	expected := &atlasv2.Group{
 		Tags: &[]atlasv2.ResourceTag{
-			{Key: pointer.Get("environment"), Value: pointer.Get("unit-testing")},
-			{Key: pointer.Get("production"), Value: pointer.Get("false")},
+			{Key: "environment", Value: "unit-testing"},
+			{Key: "production", Value: "false"},
 		},
 	}
 

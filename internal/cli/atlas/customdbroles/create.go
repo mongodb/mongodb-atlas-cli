@@ -24,7 +24,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
@@ -62,10 +61,12 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newCustomDBRole() *atlasv2.UserCustomDBRole {
+	actions := convert.BuildAtlasActions(opts.action)
+	inheritedRoles := convert.BuildAtlasInheritedRoles(opts.inheritedRoles)
 	return &atlasv2.UserCustomDBRole{
 		RoleName:       opts.roleName,
-		Actions:        pointer.Get((convert.BuildAtlasActions(opts.action))),
-		InheritedRoles: pointer.Get(convert.BuildAtlasInheritedRoles(opts.inheritedRoles)),
+		Actions:        &actions,
+		InheritedRoles: &inheritedRoles,
 	}
 }
 

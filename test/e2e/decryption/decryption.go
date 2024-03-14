@@ -33,10 +33,6 @@ func GenerateFileName(dir, suffix string) string {
 	return path.Join(dir, fmt.Sprintf("test-%s", suffix))
 }
 
-func GenerateFileNameCase(dir string, i int, suffix string) string {
-	return path.Join(dir, fmt.Sprintf("test%d-%s", i, suffix))
-}
-
 func DumpToTemp(files embed.FS, srcFile, destFile string) error {
 	content, err := files.ReadFile(srcFile)
 	if err != nil {

@@ -38,17 +38,6 @@ var ClusterCreated = &StateTransition{
 	EndState:   pointer.Get(clusterIdle),
 }
 
-var ClusterUpdated = &StateTransition{
-	StartState: pointer.Get(clusterUpdating),
-	EndState:   pointer.Get(clusterIdle),
-}
-
-var ClusterUpgraded = &StateTransition{
-	StartState:          pointer.Get(clusterUpdating),
-	EndState:            pointer.Get(clusterIdle),
-	RetryableErrorCodes: []string{clusterNotFound},
-}
-
 type AtlasClusterStateDescriber struct {
 	store       store.ClusterDescriber
 	projectID   string

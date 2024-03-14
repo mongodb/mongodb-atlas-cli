@@ -44,7 +44,6 @@ import (
 )
 
 const (
-	labelKey            = "Infrastructure Tool"
 	DefaultAtlasTier    = "M0"
 	defaultAtlasGovTier = "M30"
 	atlasAdmin          = "atlasAdmin"

@@ -19,7 +19,6 @@ DEBUG_FLAGS=all=-N -l
 
 TEST_CMD?=go test
 UNIT_TAGS?=unit
-INTEGRATION_TAGS?=integration
 E2E_TAGS?=e2e
 E2E_TIMEOUT?=60m
 E2E_PARALLEL?=1
@@ -72,7 +71,7 @@ fmt-all: ### Format all go files with goimports and gofmt
 	find . -name "*.go" -not -path "./vendor/*" -not -path "./internal/mocks" -exec goimports -l -w "{}" \;
 
 .PHONY: test
-test: unit-test integration-test fuzz-normalizer-test
+test: unit-test fuzz-normalizer-test
 
 .PHONY: lint
 lint: ## Run linter
@@ -127,11 +126,6 @@ e2e-test: build ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI_* environment variables are exported
 	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
-
-.PHONY: integration-test
-integration-test: ## Run integration tests
-	@echo "==> Running integration tests..."
-	$(TEST_CMD) --tags="$(INTEGRATION_TAGS)" -count=1 ./internal...
 
 .PHONY: fuzz-normalizer-test
 fuzz-normalizer-test: ## Run fuzz test

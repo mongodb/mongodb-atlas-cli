@@ -56,7 +56,7 @@ func BuildAtlasActions(a []string) []atlasv2.DatabasePrivilegeAction {
 			resource := strings.Split(action[1], resourceSep)
 			resourceStruct.Db = resource[0]
 			if len(resource) > 1 {
-				resourceStruct.Collection = resource[1]
+				resourceStruct.Collection = strings.Join(resource[1:], resourceSep)
 			}
 		} else {
 			resourceStruct.Cluster = true

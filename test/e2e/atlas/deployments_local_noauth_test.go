@@ -154,7 +154,7 @@ func TestDeploymentsLocal(t *testing.T) {
 		require.NoError(t, err)
 		t.Log(ids)
 
-		b, err := os.ReadFile("sample_embedded_movies.json")
+		b, err := os.ReadFile("data/sample_embedded_movies.json")
 		require.NoError(t, err)
 
 		var movies []interface{}
@@ -292,7 +292,7 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--type",
 			"local",
 			"--file",
-			"sample_vector_search.json",
+			"data/sample_vector_search.json",
 			"-w",
 		)
 

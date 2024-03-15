@@ -522,49 +522,103 @@ func TestBuildServerlessDeployments(t *testing.T) {
 }
 
 func TestCleanTenantFields(t *testing.T) {
-	spec := akov2.AtlasDeploymentSpec{
-		DeploymentSpec: &akov2.AdvancedDeploymentSpec{
-			BackupEnabled: pointer.Get(true),
-			BiConnector: &akov2.BiConnectorSpec{
-				Enabled:        pointer.Get(true),
-				ReadPreference: "SECONDARY",
+	for _, tt := range []struct {
+		name   string
+		spec   akov2.AtlasDeploymentSpec
+		expect bool
+	}{
+		{
+			name: "nil deploymentspec",
+			spec: akov2.AtlasDeploymentSpec{
+				DeploymentSpec: nil,
 			},
-			EncryptionAtRestProvider: "AWS",
-			PitEnabled:               pointer.Get(true),
-			MongoDBMajorVersion:      "5.1",
-			ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
-				{
-					RegionConfigs: []*akov2.AdvancedRegionConfig{
+			expect: false,
+		},
+		{
+			name: "nil replicationspec",
+			spec: akov2.AtlasDeploymentSpec{
+				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
+					ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
+						nil,
+					},
+				},
+			},
+			expect: false,
+		},
+		{
+			name: "nil regionconfig",
+			spec: akov2.AtlasDeploymentSpec{
+				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
+					ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
 						{
-							ProviderName: "TENANT",
+							RegionConfigs: []*akov2.AdvancedRegionConfig{
+								nil,
+							},
 						},
 					},
 				},
 			},
+			expect: false,
 		},
-	}
-
-	cleanTenantFields(&spec)
-
-	expected := akov2.AtlasDeploymentSpec{
-		DeploymentSpec: &akov2.AdvancedDeploymentSpec{
-			BackupEnabled:            nil,
-			BiConnector:              nil,
-			EncryptionAtRestProvider: "",
-			PitEnabled:               nil,
-			MongoDBMajorVersion:      "",
-			ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
-				{
-					RegionConfigs: []*akov2.AdvancedRegionConfig{
+		{
+			name: "multiple non-tenant regionconfigs",
+			spec: akov2.AtlasDeploymentSpec{
+				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
+					ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
 						{
-							ProviderName: "TENANT",
+							RegionConfigs: []*akov2.AdvancedRegionConfig{
+								{
+									ProviderName: "AWS",
+								},
+								{
+									ProviderName: "GCP",
+								},
+								{
+									ProviderName: "AZURE",
+								},
+								{
+									ProviderName: "AWS",
+								},
+							},
 						},
 					},
 				},
 			},
+			expect: false,
 		},
-	}
-	if !reflect.DeepEqual(spec, expected) {
-		t.Fatalf("Cleaning tenant readonly fields mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expected, spec)
+		{
+			name: "multiple non-tenant regionconfigs and one tenant",
+			spec: akov2.AtlasDeploymentSpec{
+				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
+					ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
+						{
+							RegionConfigs: []*akov2.AdvancedRegionConfig{
+								{
+									ProviderName: "AWS",
+								},
+								{
+									ProviderName: "GCP",
+								},
+								{
+									ProviderName: "AZURE",
+								},
+								{
+									ProviderName: "TENANT",
+								},
+							},
+						},
+					},
+				},
+			},
+			expect: true,
+		},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := hasTenantRegionConfig(&akov2.AtlasDeployment{
+				Spec: tt.spec,
+			}); got != tt.expect {
+				t.Errorf("")
+			}
+		})
 	}
 }

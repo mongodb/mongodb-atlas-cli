@@ -61,12 +61,9 @@ func TestDownloadOpts_Run(t *testing.T) {
 	downloadOpts.ProjectID = projectID
 	downloadOpts.tenantName = tenantName
 
-	endDate := int64(0)
-	startDate := int64(0)
-
 	downloadParams := new(atlasv2.DownloadStreamTenantAuditLogsApiParams)
-	downloadParams.EndDate = &endDate
-	downloadParams.StartDate = &startDate
+	downloadParams.EndDate = nil
+	downloadParams.StartDate = nil
 	downloadParams.GroupId = projectID
 	downloadParams.TenantName = tenantName
 

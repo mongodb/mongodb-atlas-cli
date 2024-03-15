@@ -520,3 +520,51 @@ func TestBuildServerlessDeployments(t *testing.T) {
 		}
 	})
 }
+
+func TestCleanTenantFields(t *testing.T) {
+	spec := akov2.AtlasDeploymentSpec{
+		DeploymentSpec: &akov2.AdvancedDeploymentSpec{
+			BackupEnabled: pointer.Get(true),
+			BiConnector: &akov2.BiConnectorSpec{
+				Enabled:        pointer.Get(true),
+				ReadPreference: "SECONDARY",
+			},
+			EncryptionAtRestProvider: "AWS",
+			PitEnabled:               pointer.Get(true),
+			MongoDBMajorVersion:      "5.1",
+			ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
+				{
+					RegionConfigs: []*akov2.AdvancedRegionConfig{
+						{
+							ProviderName: "TENANT",
+						},
+					},
+				},
+			},
+		},
+	}
+
+	cleanTenantFields(&spec)
+
+	expected := akov2.AtlasDeploymentSpec{
+		DeploymentSpec: &akov2.AdvancedDeploymentSpec{
+			BackupEnabled:            nil,
+			BiConnector:              nil,
+			EncryptionAtRestProvider: "",
+			PitEnabled:               nil,
+			MongoDBMajorVersion:      "",
+			ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
+				{
+					RegionConfigs: []*akov2.AdvancedRegionConfig{
+						{
+							ProviderName: "TENANT",
+						},
+					},
+				},
+			},
+		},
+	}
+	if !reflect.DeepEqual(spec, expected) {
+		t.Fatalf("Cleaning tenant readonly fields mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expected, spec)
+	}
+}

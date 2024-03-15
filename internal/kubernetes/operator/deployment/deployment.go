@@ -171,7 +171,34 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, va
 		advancedSpec.ManagedNamespaces = managedNamespaces
 	}
 
+	cleanTenantFields(&atlasDeployment.Spec)
+
 	return deploymentResult, nil
+}
+
+func cleanTenantFields(out *akov2.AtlasDeploymentSpec) {
+
+	isTenant := false
+	if out.DeploymentSpec == nil {
+		return
+	}
+	for _, spec := range out.DeploymentSpec.ReplicationSpecs {
+		for _, c := range spec.RegionConfigs {
+			if c.ProviderName == "TENANT" {
+				isTenant = true
+				break
+			}
+		}
+	}
+
+	if isTenant {
+		out.DeploymentSpec.BiConnector = nil
+		out.DeploymentSpec.EncryptionAtRestProvider = ""
+		out.DeploymentSpec.DiskSizeGB = nil
+		out.DeploymentSpec.MongoDBMajorVersion = ""
+		out.DeploymentSpec.PitEnabled = nil
+		out.DeploymentSpec.BackupEnabled = nil
+	}
 }
 
 func buildGlobalDeployment(atlasRepSpec []atlasv2.ReplicationSpec, globalDeploymentProvider store.GlobalClusterDescriber, projectID, clusterID string) ([]akov2.CustomZoneMapping, []akov2.ManagedNamespace, error) {

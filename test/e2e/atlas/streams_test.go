@@ -98,7 +98,7 @@ func TestStreams(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			"streams",
 			"instance",
-			"logs",
+			"download",
 			instanceName,
 			"auditLogs.gz",
 			"--out",

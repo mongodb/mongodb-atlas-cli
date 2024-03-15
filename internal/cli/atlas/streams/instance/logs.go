@@ -90,7 +90,7 @@ func (opts *DownloadOpts) Run() error {
 }
 
 // DownloadBuilder
-// atlas streams logs [tenantName] audit.gz --projectId [projectID].
+// atlas streams download [tenantName] audit.gz --projectId [projectID].
 func DownloadBuilder() *cobra.Command {
 	const argsN = 2
 	opts := &DownloadOpts{}

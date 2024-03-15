@@ -63,8 +63,14 @@ func (opts *DownloadOpts) Run() error {
 	params := atlasv2.DownloadStreamTenantAuditLogsApiParams{
 		GroupId:    opts.ProjectID,
 		TenantName: opts.tenantName,
-		StartDate:  &opts.start,
-		EndDate:    &opts.end,
+	}
+
+	if opts.start != 0 {
+		params.StartDate = &opts.start
+	}
+
+	if opts.end != 0 {
+		params.EndDate = &opts.end
 	}
 
 	f, err := opts.store.DownloadAuditLog(&params)

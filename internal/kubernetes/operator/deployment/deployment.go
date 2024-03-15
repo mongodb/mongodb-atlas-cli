@@ -177,8 +177,8 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, va
 }
 
 func cleanTenantFields(out *akov2.AtlasDeploymentSpec) {
-
 	isTenant := false
+
 	if out.DeploymentSpec == nil {
 		return
 	}

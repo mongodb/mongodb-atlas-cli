@@ -617,7 +617,7 @@ func TestCleanTenantFields(t *testing.T) {
 			if got := hasTenantRegionConfig(&akov2.AtlasDeployment{
 				Spec: tt.spec,
 			}); got != tt.expect {
-				t.Errorf("")
+				t.Errorf("expect hasTenantRegionConfig to be %t, got %t", tt.expect, got)
 			}
 		})
 	}

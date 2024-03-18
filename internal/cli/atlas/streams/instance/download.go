@@ -18,7 +18,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"slices"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -37,7 +36,6 @@ type DownloadOpts struct {
 	cli.GlobalOpts
 	cli.DownloaderOpts
 	tenantName string
-	fileName   string
 	start      int64
 	end        int64
 	store      store.StreamsDownloader
@@ -49,13 +47,6 @@ func (opts *DownloadOpts) initStore(ctx context.Context) func() error {
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 		return err
 	}
-}
-
-func (opts *DownloadOpts) initDefaultOut() error {
-	if opts.Out == "" {
-		opts.Out = opts.fileName
-	}
-	return nil
 }
 
 func (opts *DownloadOpts) Run() error {
@@ -90,41 +81,31 @@ func (opts *DownloadOpts) Run() error {
 }
 
 // DownloadBuilder
-// atlas streams download [tenantName] audit.gz --projectId [projectID].
+// atlas streams download [tenantName] --projectId [projectID].
 func DownloadBuilder() *cobra.Command {
-	const argsN = 2
+	const argsN = 1
 	opts := &DownloadOpts{}
 	opts.Fs = afero.NewOsFs()
 	cmd := &cobra.Command{
-		Use:   "download <tenantName> <auditLogs.gz>",
+		Use:   "download <tenantName>",
 		Short: "Download a compressed file that contains the logs for the specified Atlas Stream Processing instance.",
 		Long:  `This command downloads a file with a .gz extension.` + fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
 		Args: cobra.MatchAll(
 			require.ExactArgs(argsN),
-			func(cmd *cobra.Command, args []string) error {
-				if !slices.Contains(cmd.ValidArgs, args[1]) {
-					return fmt.Errorf("<logname> must be one of %s", cmd.ValidArgs)
-				}
-				return nil
-			},
 		),
 		Example: `  # Download the audit log file from the instance myProcessor for the project with the ID 5e2211c17a3e5a48f5497de3:
-  atlas streams instance logs myProcessor auditLogs.gz --projectId 5e2211c17a3e5a48f5497de3`,
+  atlas streams instance download myProcessor --projectId 5e2211c17a3e5a48f5497de3`,
 		Annotations: map[string]string{
-			"tenantNameDesc":   "Label that identifies the tenant that stores the log files that you want to download.",
-			"auditLogs.gzDesc": "Log file that you want to return.",
-			"output":           downloadMessage,
+			"tenantNameDesc": "Label that identifies the tenant that stores the log files that you want to download.",
+			"output":         downloadMessage,
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.tenantName = args[0]
-			opts.fileName = args[1]
-			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()), opts.initDefaultOut)
+			return opts.PreRunE(opts.ValidateProjectID, opts.initStore(cmd.Context()))
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
-
-		ValidArgs: []string{"auditLogs.gz"},
 	}
 
 	cmd.Flags().StringVar(&opts.Out, flag.Out, "", usage.LogOut)
@@ -134,6 +115,7 @@ func DownloadBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 
+	_ = cmd.MarkFlagRequired(flag.Out)
 	_ = cmd.MarkFlagFilename(flag.Out)
 
 	return cmd

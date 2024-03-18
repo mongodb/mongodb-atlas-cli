@@ -100,7 +100,6 @@ func TestStreams(t *testing.T) {
 			"instance",
 			"download",
 			instanceName,
-			"auditLogs.gz",
 			"--out",
 			"-",
 			"--start",

@@ -89,7 +89,7 @@ func DownloadBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "download <tenantName>",
 		Short: "Download a compressed file that contains the logs for the specified Atlas Stream Processing instance.",
-		Long:  `This command downloads a file with a .gz extension.` + fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
+		Long:  `This command downloads a file with a .gz extension. ` + fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
 		Args: cobra.MatchAll(
 			require.ExactArgs(argsN),
 		),

@@ -520,3 +520,105 @@ func TestBuildServerlessDeployments(t *testing.T) {
 		}
 	})
 }
+
+func TestCleanTenantFields(t *testing.T) {
+	for _, tt := range []struct {
+		name   string
+		spec   akov2.AtlasDeploymentSpec
+		expect bool
+	}{
+		{
+			name: "nil deploymentspec",
+			spec: akov2.AtlasDeploymentSpec{
+				DeploymentSpec: nil,
+			},
+			expect: false,
+		},
+		{
+			name: "nil replicationspec",
+			spec: akov2.AtlasDeploymentSpec{
+				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
+					ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
+						nil,
+					},
+				},
+			},
+			expect: false,
+		},
+		{
+			name: "nil regionconfig",
+			spec: akov2.AtlasDeploymentSpec{
+				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
+					ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
+						{
+							RegionConfigs: []*akov2.AdvancedRegionConfig{
+								nil,
+							},
+						},
+					},
+				},
+			},
+			expect: false,
+		},
+		{
+			name: "multiple non-tenant regionconfigs",
+			spec: akov2.AtlasDeploymentSpec{
+				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
+					ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
+						{
+							RegionConfigs: []*akov2.AdvancedRegionConfig{
+								{
+									ProviderName: "AWS",
+								},
+								{
+									ProviderName: "GCP",
+								},
+								{
+									ProviderName: "AZURE",
+								},
+								{
+									ProviderName: "AWS",
+								},
+							},
+						},
+					},
+				},
+			},
+			expect: false,
+		},
+		{
+			name: "multiple non-tenant regionconfigs and one tenant",
+			spec: akov2.AtlasDeploymentSpec{
+				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
+					ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
+						{
+							RegionConfigs: []*akov2.AdvancedRegionConfig{
+								{
+									ProviderName: "AWS",
+								},
+								{
+									ProviderName: "GCP",
+								},
+								{
+									ProviderName: "AZURE",
+								},
+								{
+									ProviderName: "TENANT",
+								},
+							},
+						},
+					},
+				},
+			},
+			expect: true,
+		},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := hasTenantRegionConfig(&akov2.AtlasDeployment{
+				Spec: tt.spec,
+			}); got != tt.expect {
+				t.Errorf("expect hasTenantRegionConfig to be %t, got %t", tt.expect, got)
+			}
+		})
+	}
+}

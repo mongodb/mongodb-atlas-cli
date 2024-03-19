@@ -21,7 +21,7 @@ import (
 )
 
 func ListKeyProviders(logReader io.ReadSeeker) ([]*AuditLogLineKeyStoreIdentifier, error) {
-	_, logLineScanner, err := readAuditLogFile(logReader)
+	logLineScanner, err := readAuditLogFile(logReader)
 	if err != nil {
 		return nil, err
 	}

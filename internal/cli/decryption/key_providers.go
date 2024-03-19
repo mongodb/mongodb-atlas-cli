@@ -24,6 +24,7 @@ func KeyProvidersBuilder() *cobra.Command {
 		Use:     "keyProviders",
 		Aliases: cli.GenerateAliases("keyProviders", "keys"),
 		Short:   "Manage your key collections.",
+		Hidden:  true,
 	}
 
 	cmd.AddCommand(KeyProvidersListBuilder())

@@ -146,6 +146,8 @@ func UpdateBuilder() *cobra.Command {
 		
 You can't change the name of the cluster or downgrade the MongoDB version of your cluster.
 
+You must not update a replica set to a multi-sharded cluster, only single-sharded cluster is supported. See https://www.mongodb.com/docs/atlas/scale-cluster/#convert-a-replica-set-to-a-sharded-cluster and https://www.mongodb.com/docs/v4.4/tutorial/convert-replica-set-to-replicated-shard-cluster/#add-initial-replica-set-as-a-shard for more information.
+
 ` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Cluster Manager"), "Atlas supports this command only for M10+ clusters"),
 		Example: `  # Update the tier for a cluster named myCluster for the project with ID 5e2211c17a3e5a48f5497de3:
   atlas cluster update myCluster --projectId 5e2211c17a3e5a48f5497de3 --tier M50

@@ -1,6 +1,6 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
-GOLANGCI_VERSION=v1.56.1
+GOLANGCI_VERSION=v1.56.2
 COVERAGE=coverage.out
 
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
@@ -28,6 +28,7 @@ export PATH := $(shell go env GOPATH)/bin:$(PATH)
 export PATH := ./bin:$(PATH)
 export TERM := linux-m
 export GO111MODULE := on
+export GOTOOLCHAIN := local
 export ATLAS_E2E_BINARY
 
 .PHONY: pre-commit

@@ -19,6 +19,14 @@ set -Eeou pipefail
 EXE_FILE="dist/windows_windows_amd64_v1/bin/atlas.exe"
 MSI_FILE="bin/mongodb-atlas-cli_${VERSION}_windows_x86_64.msi"
 
+echo "*** DEBUG ***"
+echo "$@"
+ls -la
+ls -la bin
+ls -la dist
+echo "*** DEBUG ***"
+
+
 if [[ -f "$EXE_FILE" && -f "$MSI_FILE" ]]; then
 	echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
 

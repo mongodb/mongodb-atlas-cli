@@ -33,8 +33,8 @@ BINARY_URL=https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${crea
 
 pushd bin
 
-echo "downloading $PACKAGE_URL into $PWD"
+echo "downloading $PACKAGE_URL into $PWD/$PACKAGE_NAME"
 curl "$PACKAGE_URL" --output "${PACKAGE_NAME}"
 
-echo "downloading $BINARY_URL into $PWD"
+echo "downloading $BINARY_URL into $PWD/$BINARY_NAME"
 curl "$BINARY_URL" --output "${BINARY_NAME}"

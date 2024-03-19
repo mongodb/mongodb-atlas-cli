@@ -268,6 +268,7 @@ tasks:
           bucket: mongodb-mongocli-build
           permissions: public-read
           content_type: ${content_type|application/octet-stream}
+          display_name: unsigned_
   - name: package_goreleaser
     tags: ["packaging"]
     depends_on:

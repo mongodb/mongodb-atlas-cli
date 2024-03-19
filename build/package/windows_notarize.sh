@@ -16,7 +16,7 @@
 
 set -Eeou pipefail
 
-EXE_FILE="dist/windows_windows_amd64_v1/bin/mongocli.exe"
+EXE_FILE="bin/mongocli.exe"
 MSI_FILE="bin/mongocli_${VERSION}_windows_x86_64.msi"
 
 if [[ -f "$EXE_FILE" && -f "$MSI_FILE" ]]; then

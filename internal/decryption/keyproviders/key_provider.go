@@ -24,11 +24,9 @@ import (
 type KeyStoreProvider string
 
 const (
-	LocalKey KeyStoreProvider = "local"
-	KMIP     KeyStoreProvider = "kmip"
-	AWS      KeyStoreProvider = "aws"
-	GCP      KeyStoreProvider = "gcp"
-	Azure    KeyStoreProvider = "azure"
+	AWS   KeyStoreProvider = "aws"
+	GCP   KeyStoreProvider = "gcp"
+	Azure KeyStoreProvider = "azure"
 )
 
 type KeyProvider interface {

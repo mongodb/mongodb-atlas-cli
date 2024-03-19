@@ -264,10 +264,11 @@ tasks:
           local_files_include_filter:
             - src/github.com/mongodb/mongodb-atlas-cli/bin/*.exe
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
-          remote_file: ${project}/dist/${revision}_${created_at}/
+          remote_file: ${project}/dist/${revision}_${created_at}/unsigned_
           bucket: mongodb-mongocli-build
           permissions: public-read
           content_type: ${content_type|application/octet-stream}
+          display_name: unsigned
   - name: package_goreleaser
     tags: ["packaging"]
     depends_on:

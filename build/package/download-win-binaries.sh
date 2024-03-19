@@ -28,10 +28,13 @@ fi
 PACKAGE_NAME="mongodb-atlas-cli_${VERSION_NAME}_windows_x86_64.msi"
 BINARY_NAME="atlas.exe"
 
+PACKAGE_URL=https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/unsigned_${PACKAGE_NAME}
+BINARY_URL=https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/unsigned_${BINARY_NAME}
+
 pushd bin
 
-echo "downloading https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${PACKAGE_NAME} into $PWD"
-curl "https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${PACKAGE_NAME}" --output "${PACKAGE_NAME}"
+echo "downloading $PACKAGE_URL into $PWD/$PACKAGE_NAME"
+curl "$PACKAGE_URL" --output "${PACKAGE_NAME}"
 
-echo "downloading https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${BINARY_NAME} into $PWD"
-curl "https://${BUCKET}.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/${BINARY_NAME}" --output "${BINARY_NAME}"
+echo "downloading $BINARY_URL into $PWD/$BINARY_NAME"
+curl "$BINARY_URL" --output "${BINARY_NAME}"

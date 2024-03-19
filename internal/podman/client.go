@@ -181,7 +181,9 @@ func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	info, err := o.machineInspect(ctx)
 	if err != nil {
 		d.MachineFound = false
-		d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman machine: %w", err).Error())
+		if d.MachineRequired {
+			d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman machine: %w", err).Error())
+		}
 	} else {
 		d.MachineInfo = info
 		d.MachineState = info.State

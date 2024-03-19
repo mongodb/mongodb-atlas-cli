@@ -79,7 +79,7 @@ func WithAzureOpts(tenantID, clientID, secret string) func(d *Decryption) {
 // the credentials provided by the user and the AES-GCM algorithm.
 // The decrypted audit log records are saved in the out stream.
 func (d *Decryption) Decrypt(logReader io.ReadSeeker, out io.Writer) error {
-	_, logLineScanner, err := readAuditLogFile(logReader)
+	logLineScanner, err := readAuditLogFile(logReader)
 	if err != nil {
 		return err
 	}

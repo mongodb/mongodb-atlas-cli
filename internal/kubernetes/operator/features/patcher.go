@@ -45,32 +45,30 @@ func NopPatcher() Patcher {
 // UnknownBackupPolicyFrequencyTypesPruner removes backup policy items from a backup policy
 // with unknown frequency types.
 // It inspects the CRD definition to determine supported frequency types.
-func UnknownBackupPolicyFrequencyTypesPruner() Patcher {
-	return PatcherFunc(func(crdSpec *v1.JSONSchemaProps, obj runtime.Object) error {
-		// we are not defensive here as this function assumes the invariant
-		// of a stable CRD definition for a given version of Kubernetes Atlas Operator.
-		frequencyTypePropsEnum := crdSpec.Properties["items"].Items.Schema.Properties["frequencyType"].Enum
+func UnknownBackupPolicyFrequencyTypesPruner(crdSpec *v1.JSONSchemaProps, obj runtime.Object) error {
+	// we are not defensive here as this function assumes the invariant
+	// of a stable CRD definition for a given version of Kubernetes Atlas Operator.
+	frequencyTypePropsEnum := crdSpec.Properties["items"].Items.Schema.Properties["frequencyType"].Enum
 
-		knownFrequencyTypes := make(map[string]struct{})
-		for i := range frequencyTypePropsEnum {
-			knownFrequencyType := strings.Trim(string(frequencyTypePropsEnum[i].Raw), `"`)
-			knownFrequencyTypes[knownFrequencyType] = struct{}{}
+	knownFrequencyTypes := make(map[string]struct{})
+	for i := range frequencyTypePropsEnum {
+		knownFrequencyType := strings.Trim(string(frequencyTypePropsEnum[i].Raw), `"`)
+		knownFrequencyTypes[knownFrequencyType] = struct{}{}
+	}
+
+	policy, ok := obj.(*akov2.AtlasBackupPolicy)
+	if !ok || policy == nil {
+		return fmt.Errorf("invalid object: %T: %v", obj, obj)
+	}
+
+	prunedItems := make([]akov2.AtlasBackupPolicyItem, 0, len(policy.Spec.Items))
+	for i := range policy.Spec.Items {
+		frequencyType := policy.Spec.Items[i].FrequencyType
+		if _, ok := knownFrequencyTypes[frequencyType]; ok {
+			prunedItems = append(prunedItems, policy.Spec.Items[i])
 		}
+	}
+	policy.Spec.Items = prunedItems
 
-		policy, ok := obj.(*akov2.AtlasBackupPolicy)
-		if !ok || policy == nil {
-			return fmt.Errorf("invalid object: %T: %v", obj, obj)
-		}
-
-		prunedItems := make([]akov2.AtlasBackupPolicyItem, 0, len(policy.Spec.Items))
-		for i := range policy.Spec.Items {
-			frequencyType := policy.Spec.Items[i].FrequencyType
-			if _, ok := knownFrequencyTypes[frequencyType]; ok {
-				prunedItems = append(prunedItems, policy.Spec.Items[i])
-			}
-		}
-		policy.Spec.Items = prunedItems
-
-		return nil
-	})
+	return nil
 }

@@ -1093,7 +1093,10 @@ func referenceSharedCluster(name, region, namespace, projectName string, labels 
 	cluster.Spec.DeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].BackingProviderName = string(akov2provider.ProviderAWS)
 	cluster.Spec.DeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ProviderName = string(akov2provider.ProviderTenant)
 
-	cluster.Spec.DeploymentSpec.PitEnabled = pointer.Get(false)
+	cluster.Spec.DeploymentSpec.BackupEnabled = nil
+	cluster.Spec.DeploymentSpec.BiConnector = nil
+	cluster.Spec.DeploymentSpec.EncryptionAtRestProvider = ""
+	cluster.Spec.DeploymentSpec.PitEnabled = nil
 	cluster.Spec.BackupScheduleRef = akov2common.ResourceRefNamespaced{}
 	return cluster
 }
@@ -1214,6 +1217,12 @@ func referenceBackupPolicy(namespace, projectName, clusterName string, labels ma
 					FrequencyInterval: 40,
 					RetentionUnit:     "months",
 					RetentionValue:    12,
+				},
+				{
+					FrequencyType:     "yearly",
+					FrequencyInterval: 12,
+					RetentionUnit:     "years",
+					RetentionValue:    1,
 				},
 			},
 		},

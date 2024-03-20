@@ -36,7 +36,7 @@ const (
 type AtlasSecretBuilder func() (*corev1.Secret, map[string]string)
 
 func NewAtlasSecretBuilder(name, namespace string, dictionary map[string]string) AtlasSecretBuilder {
-	return AtlasSecretBuilder(func() (*corev1.Secret, map[string]string) {
+	return func() (*corev1.Secret, map[string]string) {
 		secret := &corev1.Secret{
 			TypeMeta: v1.TypeMeta{
 				Kind:       "Secret",
@@ -51,28 +51,28 @@ func NewAtlasSecretBuilder(name, namespace string, dictionary map[string]string)
 			},
 		}
 		return secret, dictionary
-	})
+	}
 }
 
 func (a AtlasSecretBuilder) WithData(data map[string][]byte) AtlasSecretBuilder {
-	return AtlasSecretBuilder(func() (*corev1.Secret, map[string]string) {
+	return func() (*corev1.Secret, map[string]string) {
 		s, d := a()
 		s.Data = data
 		return s, d
-	})
+	}
 }
 
 func (a AtlasSecretBuilder) WithProjectLabels(id, name string) AtlasSecretBuilder {
-	return AtlasSecretBuilder(func() (*corev1.Secret, map[string]string) {
+	return func() (*corev1.Secret, map[string]string) {
 		s, d := a()
 		s.Labels[ProjectIDLabelKey] = resources.NormalizeAtlasName(id, d)
 		s.Labels[ProjectNameLabelKey] = resources.NormalizeAtlasName(name, d)
 		return s, d
-	})
+	}
 }
 
 func (a AtlasSecretBuilder) WithNotifierLabels(id *string, typeName string) AtlasSecretBuilder {
-	return AtlasSecretBuilder(func() (*corev1.Secret, map[string]string) {
+	return func() (*corev1.Secret, map[string]string) {
 		s, d := a()
 		if id == nil {
 			return s, d
@@ -80,7 +80,7 @@ func (a AtlasSecretBuilder) WithNotifierLabels(id *string, typeName string) Atla
 		s.Labels[NotifierIDLabelKey] = resources.NormalizeAtlasName(*id, d)
 		s.Labels[NotifierNameLabelKey] = typeName // don't normalize type name, as it is already a short form
 		return s, d
-	})
+	}
 }
 
 func (a AtlasSecretBuilder) Build() *corev1.Secret {

@@ -340,9 +340,9 @@ func pipelineToIdentifiers(pipeline *parse.PipeNode) ([]string, error) {
 	}
 
 	switch arg := arg.(type) {
-	case (*parse.DotNode):
+	case *parse.DotNode:
 		return make([]string, 0), nil
-	case (*parse.FieldNode):
+	case *parse.FieldNode:
 		return arg.Ident, nil
 	default:
 		return nil, errors.New("unsupported node type")

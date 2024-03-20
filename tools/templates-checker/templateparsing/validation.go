@@ -65,15 +65,15 @@ func (c *TemplateCallTree) Validate(pkg *packages.Package, typeInfo types.Type) 
 
 func (c *TemplateCallTree) validateInner(pkg *packages.Package, result *ValidationResult, breadCrumb string, typeInfo types.Type) error {
 	switch typeInfo := typeInfo.(type) {
-	case (*types.Basic):
+	case *types.Basic:
 		return c.validateBasic(result, breadCrumb)
-	case (*types.Map):
+	case *types.Map:
 		return c.validateMap(pkg, result, breadCrumb, typeInfo)
-	case (*types.Named):
+	case *types.Named:
 		return c.validateStruct(pkg, result, breadCrumb, typeInfo)
-	case (*types.Pointer):
+	case *types.Pointer:
 		return c.validateInner(pkg, result, breadCrumb, typeInfo.Elem())
-	case (*types.Slice):
+	case *types.Slice:
 		return c.validateSlice(pkg, result, breadCrumb, typeInfo)
 
 	default:

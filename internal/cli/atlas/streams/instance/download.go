@@ -51,7 +51,7 @@ func (opts *DownloadOpts) initStore(ctx context.Context) func() error {
 
 func (opts *DownloadOpts) Run() error {
 	params := atlasv2.DownloadStreamTenantAuditLogsApiParams{
-		GroupId:    opts.ProjectID,
+		GroupId:    opts.ConfigProjectID(),
 		TenantName: opts.tenantName,
 	}
 

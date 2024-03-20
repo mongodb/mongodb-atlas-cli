@@ -16,7 +16,7 @@ package instance
 
 import (
 	"io"
-	"os"
+	"strings"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -37,19 +37,8 @@ func TestDownloadOpts_Run(t *testing.T) {
 	const projectID = "download-project-id"
 	const tenantName = "streams-tenant"
 
-	file, err := os.CreateTemp("", "")
-	if err != nil {
-		require.NoError(t, err)
-	}
-	filename := file.Name()
-	defer os.Remove(filename)
-	_, _ = file.WriteString(contents)
-	_ = file.Close()
-
-	expected, _ := os.Open(filename)
-	defer expected.Close()
-
 	fs := afero.NewMemMapFs()
+
 	downloadOpts := &DownloadOpts{
 		store: mockStore,
 		DownloaderOpts: cli.DownloaderOpts{
@@ -66,6 +55,8 @@ func TestDownloadOpts_Run(t *testing.T) {
 	downloadParams.StartDate = nil
 	downloadParams.GroupId = projectID
 	downloadParams.TenantName = tenantName
+
+	expected := io.NopCloser(strings.NewReader(contents))
 
 	mockStore.
 		EXPECT().

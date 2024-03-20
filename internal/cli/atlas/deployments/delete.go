@@ -86,6 +86,7 @@ func (opts *DeleteOpts) runLocal(ctx context.Context) error {
 }
 
 func (opts *DeleteOpts) PostRun() error {
+	opts.UpdateDeploymentTelemetry()
 	if !opts.EnableWatch || !opts.IsAtlasDeploymentType() {
 		return nil
 	}

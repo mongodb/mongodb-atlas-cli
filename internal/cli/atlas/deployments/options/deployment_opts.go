@@ -96,6 +96,7 @@ type DeploymentOpts struct {
 	DefaultSetter         cli.DefaultSetterOpts
 	AtlasClusterListStore store.ClusterLister
 	Config                setup.ProfileReader
+	DeploymentTelemetry   DeploymentTelemetry
 }
 
 type Deployment struct {
@@ -115,6 +116,8 @@ func (opts *DeploymentOpts) InitStore(ctx context.Context, writer io.Writer) fun
 			return err
 		}
 		opts.DefaultSetter.OutWriter = writer
+		opts.DeploymentTelemetry = NewDeploymentTypeTelemetry(opts)
+		opts.UpdateDeploymentTelemetry()
 		return opts.DefaultSetter.InitStore(ctx)
 	}
 }
@@ -242,19 +245,11 @@ func (opts *DeploymentOpts) ValidateAndPromptDeploymentType() error {
 }
 
 func (opts *DeploymentOpts) IsAtlasDeploymentType() bool {
-	if strings.EqualFold(opts.DeploymentType, AtlasCluster) {
-		telemetry.AppendOption(telemetry.WithDeploymentType(AtlasCluster))
-		return true
-	}
-	return false
+	return strings.EqualFold(opts.DeploymentType, AtlasCluster)
 }
 
 func (opts *DeploymentOpts) IsLocalDeploymentType() bool {
-	if strings.EqualFold(opts.DeploymentType, LocalCluster) {
-		telemetry.AppendOption(telemetry.WithDeploymentType(LocalCluster))
-		return true
-	}
-	return false
+	return strings.EqualFold(opts.DeploymentType, LocalCluster)
 }
 
 func (opts *DeploymentOpts) NoDeploymentTypeSet() bool {
@@ -263,4 +258,8 @@ func (opts *DeploymentOpts) NoDeploymentTypeSet() bool {
 
 func (opts *DeploymentOpts) IsAuthEnabled() bool {
 	return opts.DBUsername != ""
+}
+
+func (opts *DeploymentOpts) UpdateDeploymentTelemetry() {
+	opts.DeploymentTelemetry.AppendDeploymentType()
 }

@@ -53,7 +53,6 @@ func (opts *ConnectOpts) Connect(ctx context.Context) error {
 	}
 
 	if opts.IsAtlasDeploymentType() {
-		telemetry.AppendOption(telemetry.WithDeploymentType(AtlasCluster))
 		if err := opts.validateAndPromptAtlasOpts(); err != nil {
 			return err
 		}
@@ -61,7 +60,6 @@ func (opts *ConnectOpts) Connect(ctx context.Context) error {
 		return opts.connectToAtlas()
 	}
 
-	telemetry.AppendOption(telemetry.WithDeploymentType(LocalCluster))
 	return opts.connectToLocal(ctx)
 }
 

@@ -24,6 +24,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/deployments/options"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
@@ -146,4 +147,44 @@ func TestListBuilder(t *testing.T) {
 		0,
 		[]string{flag.ProjectID},
 	)
+}
+
+func TestList_PostRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	buf := new(bytes.Buffer)
+
+	mockStore := mocks.NewMockClusterLister(ctrl)
+	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
+	mockProfileReader := mocks.NewMockProfileReader(ctrl)
+
+	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
+	deploymentsTest.Opts.Config = mockProfileReader
+	deploymentsTest.Opts.CredStore = mockCredentialsGetter
+	deploymentsTest.Opts.AtlasClusterListStore = mockStore
+
+	listOpts := &ListOpts{
+		DeploymentOpts: *deploymentsTest.Opts,
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: "64f670f0bf789926667dad1a",
+		},
+		OutputOpts: cli.OutputOpts{
+			Template:  listTemplate,
+			OutWriter: buf,
+		},
+	}
+
+	mockCredentialsGetter.
+		EXPECT().
+		AuthType().
+		Return(config.OAuth).
+		Times(1)
+
+	deploymentsTest.MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
+
+	if err := listOpts.PostRun(); err != nil {
+		t.Fatalf("PostRun() unexpected error: %v", err)
+	}
 }

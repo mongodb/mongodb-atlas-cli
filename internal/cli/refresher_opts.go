@@ -68,7 +68,7 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 		var target *atlas.ErrorResponse
 		if errors.As(err, &target) && target.ErrorCode == "INVALID_REFRESH_TOKEN" {
 			return fmt.Errorf(
-				"%w\n\nTo login, run: %s auth login",
+				"%w\n\nPlease note that your session expires periodically. If you use Atlas CLI for automation, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-automate/ for best practices.\nTo login, run: %s auth login",
 				ErrInvalidRefreshToken,
 				config.BinName())
 		}

@@ -395,6 +395,12 @@ func referenceExportedBackupPolicy() *akov2.AtlasBackupPolicy {
 					RetentionUnit:     "months",
 					RetentionValue:    12,
 				},
+				{
+					FrequencyType:     "yearly",
+					FrequencyInterval: 12,
+					RetentionUnit:     "years",
+					RetentionValue:    1,
+				},
 			},
 		},
 	}

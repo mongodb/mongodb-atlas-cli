@@ -61,7 +61,7 @@ func (opts *CreateOpts) Run() error {
 }
 
 func (opts *CreateOpts) newCustomDBRole() *atlasv2.UserCustomDBRole {
-	actions := convert.BuildAtlasActions(opts.action)
+	actions := joinActions(convert.BuildAtlasActions(opts.action))
 	inheritedRoles := convert.BuildAtlasInheritedRoles(opts.inheritedRoles)
 	return &atlasv2.UserCustomDBRole{
 		RoleName:       opts.roleName,

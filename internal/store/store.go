@@ -321,14 +321,7 @@ func New(opts ...Option) (*Store, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	switch store.service {
-	case config.CloudService, config.CloudGovService:
-		err = store.setAtlasClient(client)
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, store.service)
-	}
-	if err != nil {
+	if err = store.setAtlasClient(client); err != nil {
 		return nil, err
 	}
 

@@ -2,6 +2,8 @@ module github.com/mongodb/mongodb-atlas-cli/atlascli
 
 go 1.22
 
+toolchain go1.22.1
+
 require (
 	cloud.google.com/go/kms v1.15.8
 	github.com/AlecAivazis/survey/v2 v2.3.7
@@ -18,7 +20,7 @@ require (
 	github.com/briandowns/spinner v1.23.0
 	github.com/creack/pty v1.1.21
 	github.com/denisbrodbeck/machineid v1.0.1
-	github.com/evergreen-ci/shrub v0.0.0-20231121224157-600e066f9de6
+	github.com/evergreen-ci/shrub v0.0.0-20240215220116-3f233ddeff2a
 	github.com/gemalto/kmip-go v0.0.10
 	github.com/go-test/deep v1.1.0
 	github.com/golang-jwt/jwt/v4 v4.5.0
@@ -44,7 +46,7 @@ require (
 	go.mongodb.org/atlas-sdk/v20231115008 v20231115008.0.0
 	go.mongodb.org/mongo-driver v1.14.0
 	golang.org/x/crypto v0.21.0
-	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc
+	golang.org/x/exp v0.0.0-20240318143956-a85f2c67cd81
 	golang.org/x/mod v0.16.0
 	golang.org/x/tools v0.19.0
 	google.golang.org/api v0.170.0

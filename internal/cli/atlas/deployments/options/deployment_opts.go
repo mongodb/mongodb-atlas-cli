@@ -242,11 +242,19 @@ func (opts *DeploymentOpts) ValidateAndPromptDeploymentType() error {
 }
 
 func (opts *DeploymentOpts) IsAtlasDeploymentType() bool {
-	return strings.EqualFold(opts.DeploymentType, AtlasCluster)
+	if strings.EqualFold(opts.DeploymentType, AtlasCluster) {
+		telemetry.AppendOption(telemetry.WithDeploymentType(AtlasCluster))
+		return true
+	}
+	return false
 }
 
 func (opts *DeploymentOpts) IsLocalDeploymentType() bool {
-	return strings.EqualFold(opts.DeploymentType, LocalCluster)
+	if strings.EqualFold(opts.DeploymentType, LocalCluster) {
+		telemetry.AppendOption(telemetry.WithDeploymentType(LocalCluster))
+		return true
+	}
+	return false
 }
 
 func (opts *DeploymentOpts) NoDeploymentTypeSet() bool {

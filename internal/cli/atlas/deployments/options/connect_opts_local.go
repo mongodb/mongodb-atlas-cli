@@ -15,13 +15,9 @@ package options
 
 import (
 	"context"
-
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 )
 
 func (opts *ConnectOpts) connectToLocal(ctx context.Context) error {
-	telemetry.AppendOption(telemetry.WithDeploymentType(LocalCluster))
-
 	connectionString, err := opts.ConnectionString(ctx)
 	if err != nil {
 		return err

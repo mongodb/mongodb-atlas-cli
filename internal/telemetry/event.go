@@ -164,7 +164,7 @@ func withAnonymousID() EventOpt {
 
 func WithDeploymentType(t string) EventOpt {
 	return func(event Event) {
-		event.Properties["deployment_type"] = t
+		event.Properties["deployment_type"] = strings.ToLower(t)
 	}
 }
 

@@ -30,6 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -66,10 +67,12 @@ func (opts *DownloadOpts) Run(ctx context.Context) error {
 	}
 
 	if opts.IsLocalDeploymentType() {
+		telemetry.AppendOption(telemetry.WithDeploymentType(options.LocalCluster))
 		return opts.RunLocal(ctx)
 	}
 
 	if opts.IsAtlasDeploymentType() {
+		telemetry.AppendOption(telemetry.WithDeploymentType(options.LocalCluster))
 		if err := opts.validateAtlasFlags(); err != nil {
 			return err
 		}

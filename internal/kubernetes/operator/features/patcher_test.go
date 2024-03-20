@@ -118,10 +118,8 @@ func TestUnkownBackupPolicyFrequencyTypesPruner(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			patcher := UnknownBackupPolicyFrequencyTypesPruner()
-
 			gotErr := ""
-			if err := patcher.Patch(tt.crdSpec, tt.atlasBackupPolicy); err != nil {
+			if err := UnknownBackupPolicyFrequencyTypesPruner(tt.crdSpec, tt.atlasBackupPolicy); err != nil {
 				gotErr = err.Error()
 			}
 

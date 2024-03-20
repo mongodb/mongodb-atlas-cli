@@ -27,7 +27,7 @@ import (
 )
 
 const (
-	LatestOperatorMajorVersion  = "2.0.0"
+	LatestOperatorMajorVersion  = "2.2.0"
 	maxDepth                    = 100
 	ResourceVersion             = "mongodb.com/atlas-resource-version"
 	ResourceAtlasProject        = "atlasprojects"
@@ -65,6 +65,16 @@ var (
 			resource{ResourceAtlasDeployment, NopPatcher()},
 			resource{ResourceAtlasBackupSchedule, NopPatcher()},
 			resource{ResourceAtlasBackupPolicy, PatcherFunc(UnknownBackupPolicyFrequencyTypesPruner)},
+			resource{ResourceAtlasTeam, NopPatcher()},
+			resource{ResourceAtlasDataFederation, NopPatcher()},
+			resource{ResourceAtlasFederatedAuth, NopPatcher()},
+		},
+		"2.2.0": {
+			resource{ResourceAtlasDatabaseUser, NopPatcher()},
+			resource{ResourceAtlasProject, NopPatcher()},
+			resource{ResourceAtlasDeployment, NopPatcher()},
+			resource{ResourceAtlasBackupSchedule, NopPatcher()},
+			resource{ResourceAtlasBackupPolicy, NopPatcher()},
 			resource{ResourceAtlasTeam, NopPatcher()},
 			resource{ResourceAtlasDataFederation, NopPatcher()},
 			resource{ResourceAtlasFederatedAuth, NopPatcher()},

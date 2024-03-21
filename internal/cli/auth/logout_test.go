@@ -68,7 +68,6 @@ func Test_logoutOpts_Run(t *testing.T) {
 }
 
 func Test_logoutOpts_Run_Keep(t *testing.T) {
-	t.Skip("")
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRevoker(ctrl)
 	mockConfig := mocks.NewMockConfigDeleter(ctrl)

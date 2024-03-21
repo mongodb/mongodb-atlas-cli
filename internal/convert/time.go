@@ -14,7 +14,12 @@
 
 package convert
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
+
+var ErrInvalidTimestamp = fmt.Errorf("supported timestamp formats examples: %s, 2006-01-02T15:04:05-0700", time.RFC3339)
 
 func ParseTimestamp(timestamp string) (time.Time, error) {
 	layouts := []string{
@@ -31,5 +36,5 @@ func ParseTimestamp(timestamp string) (time.Time, error) {
 			return parsedTime, err
 		}
 	}
-	return parsedTime, err
+	return parsedTime, fmt.Errorf("%w, %w", err, ErrInvalidTimestamp)
 }

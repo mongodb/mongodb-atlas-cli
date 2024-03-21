@@ -130,6 +130,22 @@ func (opts *ListOpts) NewProjectListOptions() admin.ListProjectEventsApiParams {
 	return p
 }
 
+func (opts *EventListOpts) ValidateMaxAndMinDates() func() error {
+	return func() error {
+		if opts.MaxDate != "" {
+			if _, err := convert.ParseTimestamp(opts.MaxDate); err != nil {
+				return fmt.Errorf("invalid maxDate format. %v", err)
+			}
+		}
+		if opts.MinDate != "" {
+			if _, err := convert.ParseTimestamp(opts.MinDate); err != nil {
+				return fmt.Errorf("invalid minDate format. %v", err)
+			}
+		}
+		return nil
+	}
+}
+
 // ListBuilder
 //
 //	atlas event(s) list
@@ -164,6 +180,11 @@ func ListBuilder() *cobra.Command {
 				return fmt.Errorf("--%s or --%s must be set", flag.ProjectID, flag.OrgID)
 			}
 			opts.OutWriter = cmd.OutOrStdout()
+
+			if err := opts.ValidateMaxAndMinDates()(); err != nil {
+				return err
+			}
+
 			return opts.initStore(cmd.Context())()
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {

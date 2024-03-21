@@ -110,6 +110,7 @@ func ProjectListBuilder() *cobra.Command {
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.ValidateMaxAndMinDates(),
 			)
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {

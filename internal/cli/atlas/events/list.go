@@ -134,12 +134,12 @@ func (opts *EventListOpts) ValidateMaxAndMinDates() func() error {
 	return func() error {
 		if opts.MaxDate != "" {
 			if _, err := convert.ParseTimestamp(opts.MaxDate); err != nil {
-				return fmt.Errorf("invalid maxDate format. %v", err)
+				return fmt.Errorf("invalid maxDate format, %w", err)
 			}
 		}
 		if opts.MinDate != "" {
 			if _, err := convert.ParseTimestamp(opts.MinDate); err != nil {
-				return fmt.Errorf("invalid minDate format. %v", err)
+				return fmt.Errorf("invalid minDate format, %w", err)
 			}
 		}
 		return nil

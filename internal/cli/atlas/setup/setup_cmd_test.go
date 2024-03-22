@@ -59,7 +59,6 @@ func TestBuilder(t *testing.T) {
 }
 
 func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
 	ctx := context.TODO()
@@ -99,7 +98,6 @@ func Test_setupOpts_RunSkipRegister(t *testing.T) {
 }
 
 func TestCluster_Run(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
 	mockFlow := mocks.NewMockRefresher(ctrl)
@@ -158,7 +156,6 @@ func TestCluster_Run(t *testing.T) {
 }
 
 func TestCluster_Run_CheckFlagsSet(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
 	mockFlow := mocks.NewMockRefresher(ctrl)

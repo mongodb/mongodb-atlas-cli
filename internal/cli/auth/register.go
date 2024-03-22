@@ -99,9 +99,9 @@ func RegisterBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "register",
 		Short: "Register with MongoDB Atlas.",
-		Example: fmt.Sprintf(`  # To start the interactive setup:
-  %s auth register
-`, config.BinName()),
+		Example: `  # To start the interactive setup:
+  atlas auth register
+`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			defaultProfile := config.Default()

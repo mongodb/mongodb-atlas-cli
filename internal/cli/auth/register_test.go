@@ -43,7 +43,6 @@ func TestRegisterBuilder(t *testing.T) {
 }
 
 func Test_registerOpts_Run(t *testing.T) {
-	t.Cleanup(test.CleanupConfig)
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
 	mockConfig := mocks.NewMockLoginConfig(ctrl)
@@ -96,6 +95,8 @@ func Test_registerOpts_Run(t *testing.T) {
 	mockConfig.EXPECT().Set("access_token", "asdf").Times(1)
 	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
+	mockConfig.EXPECT().OrgID().Return("").AnyTimes()
+	mockConfig.EXPECT().ProjectID().Return("").AnyTimes()
 	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
 	mockConfig.EXPECT().Save().Return(nil).Times(2)
 	expectedOrgs := &admin.PaginatedOrganization{
@@ -104,13 +105,21 @@ func Test_registerOpts_Run(t *testing.T) {
 			{Id: pointer.Get("o1"), Name: "Org1"},
 		},
 	}
-	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
+	mockStore.
+		EXPECT().
+		Organizations(gomock.Any()).
+		Return(expectedOrgs, nil).
+		Times(1)
 	expectedProjects := &admin.PaginatedAtlasGroup{TotalCount: pointer.Get(1),
 		Results: &[]admin.Group{
 			{Id: pointer.Get("p1"), Name: "Project1"},
 		},
 	}
-	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
+	mockStore.
+		EXPECT().
+		GetOrgProjects("o1", gomock.Any()).
+		Return(expectedProjects, nil).
+		Times(1)
 
 	require.NoError(t, opts.RegisterRun(ctx))
 	assert.Equal(t, `

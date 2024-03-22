@@ -15,12 +15,14 @@
 package events
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
@@ -42,6 +44,50 @@ func Test_projectListOpts_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func Test_projectListOpts_Run_WithDate(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectEventLister(ctrl)
+
+	expected := &admin.GroupPaginatedEvent{}
+	listOpts := &projectListOpts{
+		store: mockStore,
+		EventListOpts: EventListOpts{
+			MaxDate: "2024-03-18T15:00:03-0000",
+			MinDate: "2024-03-18T14:40:03-0000",
+		},
+	}
+	listOpts.ProjectID = "1"
+	anyMock := gomock.Any()
+	mockStore.
+		EXPECT().ProjectEvents(anyMock).
+		Return(expected, nil).
+		Times(1)
+
+	if err := listOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func Test_projectListOpts_Run_WithInvalidDate(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectEventLister(ctrl)
+
+	listOpts := &projectListOpts{
+		store: mockStore,
+		EventListOpts: EventListOpts{
+			MaxDate: "2024-03-18T15:00:03+00:00Z",
+			MinDate: "2024-03-18T15:00:03+00:00Z",
+		},
+	}
+	listOpts.ProjectID = "1"
+
+	err := listOpts.Run()
+	if err == nil {
+		t.Fatal("Run() expected error")
+	}
+	assert.True(t, strings.Contains(err.Error(), "parsing time"))
 }
 
 func TestProjectListBuilder(t *testing.T) {

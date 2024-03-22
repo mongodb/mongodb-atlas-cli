@@ -97,7 +97,7 @@ func (opts *SaveOpts) validate() error {
 }
 
 func (opts *SaveOpts) newLDAPConfiguration() *atlasv2.UserSecurity {
-	userToDNMapping := []atlasv2.UserToDNMapping{}
+	var userToDNMapping []atlasv2.UserToDNMapping
 	if opts.mappingMatch != "" {
 		mapping := atlasv2.UserToDNMapping{Match: opts.mappingMatch}
 		if opts.mappingLdapQuery != "" {

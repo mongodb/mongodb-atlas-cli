@@ -28,9 +28,13 @@ func NewDeploymentTypeTelemetry(opts *DeploymentOpts) DeploymentTelemetry {
 }
 
 func (opts *DeploymentOpts) AppendDeploymentType() {
+	var deploymentType string
 	if opts.IsLocalDeploymentType() {
-		telemetry.AppendOption(telemetry.WithDeploymentType(LocalCluster))
+		deploymentType = LocalCluster
 	} else if opts.IsAtlasDeploymentType() {
-		telemetry.AppendOption(telemetry.WithDeploymentType(AtlasCluster))
+		deploymentType = AtlasCluster
+	}
+	if deploymentType != "" {
+		telemetry.AppendOption(telemetry.WithDeploymentType(deploymentType))
 	}
 }

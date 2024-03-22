@@ -107,7 +107,7 @@ func (opts *Opts) newCluster() *atlasv2.AdvancedClusterDescription {
 	}
 
 	if len(opts.Tag) > 0 {
-		tags := []atlasv2.ResourceTag{}
+		var tags []atlasv2.ResourceTag
 		for k, v := range opts.Tag {
 			if k != "" && v != "" {
 				tags = append(tags, atlasv2.ResourceTag{Key: k, Value: v})

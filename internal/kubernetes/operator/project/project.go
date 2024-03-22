@@ -817,7 +817,7 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 		return akoNotifications, akoSecrets
 	}
 
-	secretResults := []*corev1.Secret{}
+	var secretResults []*corev1.Secret
 	results := make([]akov2.AlertConfiguration, 0, len(data.GetResults()))
 	for _, alertConfig := range data.GetResults() {
 		notifications, notificationSecrets := convertNotifications(alertConfig.GetNotifications())

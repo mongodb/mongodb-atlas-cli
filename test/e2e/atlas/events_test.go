@@ -54,7 +54,7 @@ func TestEvents(t *testing.T) {
 			orgEntity,
 			"list",
 			"--omitCount",
-			"--minDate="+time.Now().Add(-time.Hour*time.Duration(24)).Format("2006-01-02"),
+			"--minDate="+time.Now().Add(-time.Hour*time.Duration(24)).Format("2006-01-02T15:04:05-0700"),
 			"-o=json",
 		)
 

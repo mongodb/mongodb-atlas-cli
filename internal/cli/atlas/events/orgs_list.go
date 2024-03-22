@@ -20,7 +20,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
@@ -45,10 +44,11 @@ func (opts *orgListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *orgListOpts) Run() error {
-	var r interface{}
-	var err error
-	listEventsAPIParams := opts.NewOrgListOptions()
-	r, err = opts.store.OrganizationEvents(&listEventsAPIParams)
+	listEventsAPIParams, err := opts.NewOrgListOptions()
+	if err != nil {
+		return err
+	}
+	r, err := opts.store.OrganizationEvents(listEventsAPIParams)
 	if err != nil {
 		return err
 	}
@@ -56,12 +56,14 @@ func (opts *orgListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *orgListOpts) NewOrgListOptions() admin.ListOrganizationEventsApiParams {
+func (opts *orgListOpts) NewOrgListOptions() (*admin.ListOrganizationEventsApiParams, error) {
 	var eventType []string
+	var err error
+
 	if len(opts.EventType) > 0 {
 		eventType = opts.EventType
 	}
-	p := admin.ListOrganizationEventsApiParams{
+	p := &admin.ListOrganizationEventsApiParams{
 		OrgId:     opts.ConfigOrgID(),
 		EventType: &eventType,
 	}
@@ -74,13 +76,16 @@ func (opts *orgListOpts) NewOrgListOptions() admin.ListOrganizationEventsApiPara
 	if opts.OmitCount {
 		p.IncludeCount = pointer.Get(false)
 	}
-	if maxDate, err := convert.ParseTimestamp(opts.MaxDate); err == nil {
-		p.MaxDate = pointer.Get(maxDate)
+
+	if p.MaxDate, err = parseDate(opts.MaxDate); err != nil {
+		return p, err
 	}
-	if minDate, err := convert.ParseTimestamp(opts.MinDate); err == nil {
-		p.MinDate = pointer.Get(minDate)
+
+	if p.MinDate, err = parseDate(opts.MinDate); err != nil {
+		return p, err
 	}
-	return p
+
+	return p, nil
 }
 
 // OrgListBuilder

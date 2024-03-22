@@ -85,6 +85,7 @@ func Test_orgListOpts_Run_WithInvalidDate(t *testing.T) {
 		t.Fatalf("Expected inavlid date error from Run() got none")
 	}
 }
+
 func TestOrgListBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,

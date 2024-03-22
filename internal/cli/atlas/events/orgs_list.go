@@ -44,13 +44,11 @@ func (opts *orgListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *orgListOpts) Run() error {
-	var r interface{}
-
 	listEventsAPIParams, err := opts.NewOrgListOptions()
 	if err != nil {
 		return err
 	}
-	r, err = opts.store.OrganizationEvents(&listEventsAPIParams)
+	r, err := opts.store.OrganizationEvents(listEventsAPIParams)
 	if err != nil {
 		return err
 	}
@@ -58,14 +56,14 @@ func (opts *orgListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *orgListOpts) NewOrgListOptions() (admin.ListOrganizationEventsApiParams, error) {
+func (opts *orgListOpts) NewOrgListOptions() (*admin.ListOrganizationEventsApiParams, error) {
 	var eventType []string
 	var err error
 
 	if len(opts.EventType) > 0 {
 		eventType = opts.EventType
 	}
-	p := admin.ListOrganizationEventsApiParams{
+	p := &admin.ListOrganizationEventsApiParams{
 		OrgId:     opts.ConfigOrgID(),
 		EventType: &eventType,
 	}

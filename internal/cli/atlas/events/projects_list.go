@@ -44,14 +44,12 @@ func (opts *projectListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *projectListOpts) Run() error {
-	var r interface{}
-	var err error
 	listEventsAPIParams, err := opts.NewProjectListOptions()
 	if err != nil {
 		return err
 	}
 
-	r, err = opts.store.ProjectEvents(&listEventsAPIParams)
+	r, err := opts.store.ProjectEvents(listEventsAPIParams)
 	if err != nil {
 		return err
 	}
@@ -59,13 +57,13 @@ func (opts *projectListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *projectListOpts) NewProjectListOptions() (admin.ListProjectEventsApiParams, error) {
+func (opts *projectListOpts) NewProjectListOptions() (*admin.ListProjectEventsApiParams, error) {
 	var eventType *[]string
 	var err error
 	if len(opts.EventType) > 0 {
 		eventType = &opts.EventType
 	}
-	p := admin.ListProjectEventsApiParams{
+	p := &admin.ListProjectEventsApiParams{
 		GroupId:   opts.ConfigProjectID(),
 		EventType: eventType,
 	}

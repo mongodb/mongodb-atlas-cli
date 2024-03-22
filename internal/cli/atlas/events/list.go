@@ -68,7 +68,7 @@ func (opts *ListOpts) Run() error {
 			return lErr
 		}
 
-		if r, err = opts.store.OrganizationEvents(&listEventsAPIParams); err != nil {
+		if r, err = opts.store.OrganizationEvents(listEventsAPIParams); err != nil {
 			return err
 		}
 	} else if opts.projectID != "" {
@@ -76,7 +76,7 @@ func (opts *ListOpts) Run() error {
 		if lErr != nil {
 			return lErr
 		}
-		if r, err = opts.store.ProjectEvents(&listEventsAPIParams); err != nil {
+		if r, err = opts.store.ProjectEvents(listEventsAPIParams); err != nil {
 			return err
 		}
 	}
@@ -84,14 +84,14 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) NewOrgListOptions() (admin.ListOrganizationEventsApiParams, error) {
+func (opts *ListOpts) NewOrgListOptions() (*admin.ListOrganizationEventsApiParams, error) {
 	var eventType *[]string
 	var err error
 
 	if len(opts.EventType) > 0 {
 		eventType = &opts.EventType
 	}
-	p := admin.ListOrganizationEventsApiParams{
+	p := &admin.ListOrganizationEventsApiParams{
 		OrgId:     opts.orgID,
 		EventType: eventType,
 	}
@@ -113,13 +113,13 @@ func (opts *ListOpts) NewOrgListOptions() (admin.ListOrganizationEventsApiParams
 	return p, nil
 }
 
-func (opts *ListOpts) NewProjectListOptions() (admin.ListProjectEventsApiParams, error) {
+func (opts *ListOpts) NewProjectListOptions() (*admin.ListProjectEventsApiParams, error) {
 	var eventType *[]string
 	var err error
 	if len(opts.EventType) > 0 {
 		eventType = &opts.EventType
 	}
-	p := admin.ListProjectEventsApiParams{
+	p := &admin.ListProjectEventsApiParams{
 		GroupId:   opts.projectID,
 		EventType: eventType,
 	}

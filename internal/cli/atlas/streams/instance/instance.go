@@ -27,7 +27,7 @@ func Builder() *cobra.Command {
 		Short:   "Manage Atlas Stream Processing instances.",
 		Long:    `Create, list, update and delete your Atlas Stream Processing instances.`,
 	}
-	cmd.AddCommand(CreateBuilder(), UpdateBuilder(), ListBuilder(), DeleteBuilder(), DescribeBuilder())
+	cmd.AddCommand(CreateBuilder(), UpdateBuilder(), ListBuilder(), DeleteBuilder(), DescribeBuilder(), DownloadBuilder())
 
 	return cmd
 }

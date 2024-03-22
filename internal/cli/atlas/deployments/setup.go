@@ -815,7 +815,7 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithDeploymentType(opts.DeploymentType))
+	opts.AppendDeploymentType()
 	if strings.EqualFold(options.LocalCluster, opts.DeploymentType) {
 		return opts.runLocal(ctx)
 	}

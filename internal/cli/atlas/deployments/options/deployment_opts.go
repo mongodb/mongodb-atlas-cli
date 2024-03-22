@@ -96,6 +96,7 @@ type DeploymentOpts struct {
 	DefaultSetter         cli.DefaultSetterOpts
 	AtlasClusterListStore store.ClusterLister
 	Config                setup.ProfileReader
+	DeploymentTelemetry   DeploymentTelemetry
 }
 
 type Deployment struct {
@@ -115,6 +116,8 @@ func (opts *DeploymentOpts) InitStore(ctx context.Context, writer io.Writer) fun
 			return err
 		}
 		opts.DefaultSetter.OutWriter = writer
+		opts.DeploymentTelemetry = NewDeploymentTypeTelemetry(opts)
+		opts.UpdateDeploymentTelemetry()
 		return opts.DefaultSetter.InitStore(ctx)
 	}
 }
@@ -255,4 +258,8 @@ func (opts *DeploymentOpts) NoDeploymentTypeSet() bool {
 
 func (opts *DeploymentOpts) IsAuthEnabled() bool {
 	return opts.DBUsername != ""
+}
+
+func (opts *DeploymentOpts) UpdateDeploymentTelemetry() {
+	opts.DeploymentTelemetry.AppendDeploymentType()
 }

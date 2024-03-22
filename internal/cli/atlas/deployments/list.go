@@ -71,6 +71,7 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 }
 
 func (opts *ListOpts) PostRun() error {
+	opts.UpdateDeploymentTelemetry()
 	return opts.PostRunMessages()
 }
 
@@ -89,7 +90,8 @@ func ListBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
-				opts.InitOutput(cmd.OutOrStdout(), listTemplate))
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+			)
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd.Context())

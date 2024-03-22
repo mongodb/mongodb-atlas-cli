@@ -24,5 +24,6 @@ type MockDeploymentOpts struct {
 	MockCredentialsGetter     *mocks.MockCredentialsGetter
 	MockAtlasClusterListStore *mocks.MockClusterLister
 	MockPodman                *mocks.MockClient
+	MockDeploymentTelemetry   *mocks.MockDeploymentTelemetry
 	Opts                      *options.DeploymentOpts
 }

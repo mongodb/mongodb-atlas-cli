@@ -159,3 +159,26 @@ func TestDeleteBuilder(t *testing.T) {
 		[]string{flag.TypeFlag, flag.Force, flag.EnableWatch, flag.WatchTimeout, flag.ProjectID},
 	)
 }
+
+func TestDelete_PostRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
+	buf := new(bytes.Buffer)
+
+	opts := &DeleteOpts{
+		DeploymentOpts: *deploymentsTest.Opts,
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: "64f670f0bf789926667dad1a",
+		},
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
+		},
+		DeleteOpts: cli.NewDeleteOpts(deleteSuccessMessage, deleteFailMessage),
+	}
+
+	deploymentsTest.MockDeploymentTelemetry.EXPECT().AppendDeploymentType().Times(1)
+
+	if err := opts.PostRun(); err != nil {
+		t.Fatalf("PostRun() unexpected error: %v", err)
+	}
+}

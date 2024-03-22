@@ -482,8 +482,7 @@ func (o *client) Version(ctx context.Context) (version *Version, err error) {
 
 func (o *client) Logs(ctx context.Context) (map[string]interface{}, []error) {
 	l := map[string]interface{}{}
-	errs := []error{}
-
+	var errs []error
 	output, err := o.runPodman(ctx, "ps", "--all", "--format", "json", "--filter", "name=mongo")
 	if err != nil {
 		errs = append(errs, err)

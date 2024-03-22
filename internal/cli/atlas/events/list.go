@@ -17,6 +17,7 @@ package events
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -62,33 +63,43 @@ func (opts *ListOpts) Run() error {
 	var err error
 
 	if opts.orgID != "" {
-		listEventsAPIParams := opts.NewOrgListOptions()
-		r, err = opts.store.OrganizationEvents(&listEventsAPIParams)
+		listEventsAPIParams, lErr := opts.NewOrgListOptions()
+		if lErr != nil {
+			return lErr
+		}
+
+		if r, err = opts.store.OrganizationEvents(listEventsAPIParams); err != nil {
+			return err
+		}
 	} else if opts.projectID != "" {
-		listEventsAPIParams := opts.NewProjectListOptions()
-		r, err = opts.store.ProjectEvents(&listEventsAPIParams)
-	}
-	if err != nil {
-		return err
+		listEventsAPIParams, lErr := opts.NewProjectListOptions()
+		if lErr != nil {
+			return lErr
+		}
+		if r, err = opts.store.ProjectEvents(listEventsAPIParams); err != nil {
+			return err
+		}
 	}
 
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) NewOrgListOptions() admin.ListOrganizationEventsApiParams {
+func (opts *ListOpts) NewOrgListOptions() (*admin.ListOrganizationEventsApiParams, error) {
 	var eventType *[]string
+	var err error
+
 	if len(opts.EventType) > 0 {
 		eventType = &opts.EventType
 	}
-	p := admin.ListOrganizationEventsApiParams{
+	p := &admin.ListOrganizationEventsApiParams{
 		OrgId:     opts.orgID,
 		EventType: eventType,
 	}
-	if maxDate, err := convert.ParseTimestamp(opts.MaxDate); err == nil {
-		p.MaxDate = pointer.Get(maxDate)
+	if p.MaxDate, err = parseDate(opts.MaxDate); err != nil {
+		return p, err
 	}
-	if minDate, err := convert.ParseTimestamp(opts.MinDate); err == nil {
-		p.MinDate = pointer.Get(minDate)
+	if p.MinDate, err = parseDate(opts.MinDate); err != nil {
+		return p, err
 	}
 	if opts.ItemsPerPage > 0 {
 		p.ItemsPerPage = &opts.ItemsPerPage
@@ -99,24 +110,28 @@ func (opts *ListOpts) NewOrgListOptions() admin.ListOrganizationEventsApiParams 
 	if opts.OmitCount {
 		p.IncludeCount = pointer.Get(false)
 	}
-	return p
+	return p, nil
 }
 
-func (opts *ListOpts) NewProjectListOptions() admin.ListProjectEventsApiParams {
+func (opts *ListOpts) NewProjectListOptions() (*admin.ListProjectEventsApiParams, error) {
 	var eventType *[]string
+	var err error
 	if len(opts.EventType) > 0 {
 		eventType = &opts.EventType
 	}
-	p := admin.ListProjectEventsApiParams{
+	p := &admin.ListProjectEventsApiParams{
 		GroupId:   opts.projectID,
 		EventType: eventType,
 	}
-	if maxDate, err := convert.ParseTimestamp(opts.MaxDate); err == nil {
-		p.MaxDate = pointer.Get(maxDate)
+
+	if p.MaxDate, err = parseDate(opts.MaxDate); err != nil {
+		return p, err
 	}
-	if minDate, err := convert.ParseTimestamp(opts.MinDate); err == nil {
-		p.MinDate = pointer.Get(minDate)
+
+	if p.MinDate, err = parseDate(opts.MinDate); err != nil {
+		return p, err
 	}
+
 	if opts.ItemsPerPage > 0 {
 		p.ItemsPerPage = &opts.ItemsPerPage
 	}
@@ -127,7 +142,19 @@ func (opts *ListOpts) NewProjectListOptions() admin.ListProjectEventsApiParams {
 		p.IncludeCount = pointer.Get(false)
 	}
 
-	return p
+	return p, nil
+}
+
+func parseDate(date string) (*time.Time, error) {
+	if date == "" {
+		return nil, nil
+	}
+
+	parsedDate, err := convert.ParseTimestamp(date)
+	if err != nil {
+		return nil, err
+	}
+	return &parsedDate, nil
 }
 
 // ListBuilder
@@ -164,6 +191,7 @@ func ListBuilder() *cobra.Command {
 				return fmt.Errorf("--%s or --%s must be set", flag.ProjectID, flag.OrgID)
 			}
 			opts.OutWriter = cmd.OutOrStdout()
+
 			return opts.initStore(cmd.Context())()
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {

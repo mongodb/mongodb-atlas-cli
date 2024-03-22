@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
+
 package events
 
 import (
@@ -41,6 +43,48 @@ func Test_orgListOpts_Run(t *testing.T) {
 
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func Test_orgListOpts_Run_WithDate(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockOrganizationEventLister(ctrl)
+
+	expected := &admin.OrgPaginatedEvent{}
+	listOpts := &orgListOpts{
+		store: mockStore,
+		EventListOpts: EventListOpts{
+			MaxDate: "2024-03-18T15:00:03-0000",
+			MinDate: "2024-03-18T14:40:03-0000",
+		},
+	}
+	listOpts.OrgID = "1"
+	anyMock := gomock.Any()
+	mockStore.
+		EXPECT().OrganizationEvents(anyMock).
+		Return(expected, nil).
+		Times(1)
+
+	if err := listOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func Test_orgListOpts_Run_WithInvalidDate(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockOrganizationEventLister(ctrl)
+
+	listOpts := &orgListOpts{
+		store: mockStore,
+		EventListOpts: EventListOpts{
+			MaxDate: "2024-03-18T15:00:03+00:00Z",
+			MinDate: "2024-03-18T13:00:03+00:00Z",
+		},
+	}
+	listOpts.OrgID = "1"
+
+	if err := listOpts.Run(); err == nil {
+		t.Fatalf("Expected inavlid date error from Run() got none")
 	}
 }
 

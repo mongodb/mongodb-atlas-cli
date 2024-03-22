@@ -73,7 +73,7 @@ func (opts *CreateOpts) newServerlessCreateRequestParams() *atlasv2.ServerlessIn
 	}
 
 	if len(opts.tag) > 0 {
-		tags := []atlasv2.ResourceTag{}
+		var tags []atlasv2.ResourceTag
 		for k, v := range opts.tag {
 			if k != "" && v != "" {
 				tags = append(tags, atlasv2.ResourceTag{Key: k, Value: v})

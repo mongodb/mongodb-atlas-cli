@@ -86,3 +86,65 @@ func (mr *MockConfigDeleterMockRecorder) Delete() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockConfigDeleter)(nil).Delete))
 }
+
+// Save mocks base method.
+func (m *MockConfigDeleter) Save() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Save")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Save indicates an expected call of Save.
+func (mr *MockConfigDeleterMockRecorder) Save() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockConfigDeleter)(nil).Save))
+}
+
+// SetAccessToken mocks base method.
+func (m *MockConfigDeleter) SetAccessToken(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetAccessToken", arg0)
+}
+
+// SetAccessToken indicates an expected call of SetAccessToken.
+func (mr *MockConfigDeleterMockRecorder) SetAccessToken(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAccessToken", reflect.TypeOf((*MockConfigDeleter)(nil).SetAccessToken), arg0)
+}
+
+// SetOrgID mocks base method.
+func (m *MockConfigDeleter) SetOrgID(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetOrgID", arg0)
+}
+
+// SetOrgID indicates an expected call of SetOrgID.
+func (mr *MockConfigDeleterMockRecorder) SetOrgID(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOrgID", reflect.TypeOf((*MockConfigDeleter)(nil).SetOrgID), arg0)
+}
+
+// SetProjectID mocks base method.
+func (m *MockConfigDeleter) SetProjectID(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetProjectID", arg0)
+}
+
+// SetProjectID indicates an expected call of SetProjectID.
+func (mr *MockConfigDeleterMockRecorder) SetProjectID(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetProjectID", reflect.TypeOf((*MockConfigDeleter)(nil).SetProjectID), arg0)
+}
+
+// SetRefreshToken mocks base method.
+func (m *MockConfigDeleter) SetRefreshToken(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetRefreshToken", arg0)
+}
+
+// SetRefreshToken indicates an expected call of SetRefreshToken.
+func (mr *MockConfigDeleterMockRecorder) SetRefreshToken(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetRefreshToken", reflect.TypeOf((*MockConfigDeleter)(nil).SetRefreshToken), arg0)
+}

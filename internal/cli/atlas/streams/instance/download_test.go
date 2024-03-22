@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
 package instance
 
 import (
-	"bytes"
+	"io"
+	"strings"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -25,50 +24,61 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	"github.com/stretchr/testify/assert"
+	"github.com/spf13/afero"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
-func TestDescribeOpts_Run(t *testing.T) {
+func TestDownloadOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockStreamsDescriber(ctrl)
+	mockStore := mocks.NewMockStreamsDownloader(ctrl)
 
-	buf := new(bytes.Buffer)
-	describeOpts := &DescribeOpts{
+	const contents = "expected"
+	const projectID = "download-project-id"
+	const tenantName = "streams-tenant"
+
+	fs := afero.NewMemMapFs()
+
+	downloadOpts := &DownloadOpts{
 		store: mockStore,
-		name:  "Example Name",
-		OutputOpts: cli.OutputOpts{
-			Template:  describeTemplate,
-			OutWriter: buf,
+		DownloaderOpts: cli.DownloaderOpts{
+			Out: "auditLogs.gz",
+			Fs:  fs,
 		},
 	}
 
-	id := "1"
-	name := "ExampleInstance"
-	expected := &atlasv2.StreamsTenant{Id: &id, Name: &name}
-	expected.DataProcessRegion = atlasv2.NewStreamsDataProcessRegion("AWS", "US_EAST_1")
+	downloadOpts.ProjectID = projectID
+	downloadOpts.tenantName = tenantName
+
+	downloadParams := new(atlasv2.DownloadStreamTenantAuditLogsApiParams)
+	downloadParams.EndDate = nil
+	downloadParams.StartDate = nil
+	downloadParams.GroupId = projectID
+	downloadParams.TenantName = tenantName
+
+	expected := io.NopCloser(strings.NewReader(contents))
 
 	mockStore.
 		EXPECT().
-		AtlasStream(describeOpts.ConfigProjectID(), describeOpts.name).
+		DownloadAuditLog(downloadParams).
 		Return(expected, nil).
 		Times(1)
 
-	if err := describeOpts.Run(); err != nil {
+	if err := downloadOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	t.Log(buf.String())
-	test.VerifyOutputTemplate(t, describeTemplate, expected)
-	assert.Equal(t, `ID    NAME              CLOUD   REGION
-1     ExampleInstance   AWS     US_EAST_1
-`, buf.String())
+
+	of, _ := fs.Open("auditLogs.gz")
+	defer of.Close()
+	b, _ := io.ReadAll(of)
+	require.Equal(t, contents, string(b))
 }
 
-func TestDescribeBuilder(t *testing.T) {
+func TestDownloadBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		DescribeBuilder(),
+		DownloadBuilder(),
 		0,
-		[]string{flag.ProjectID, flag.Output},
+		[]string{flag.Out, flag.Start, flag.End, flag.Force, flag.ProjectID},
 	)
 }

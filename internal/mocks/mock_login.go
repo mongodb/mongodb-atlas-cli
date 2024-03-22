@@ -48,6 +48,34 @@ func (mr *MockLoginConfigMockRecorder) AccessTokenSubject() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessTokenSubject", reflect.TypeOf((*MockLoginConfig)(nil).AccessTokenSubject))
 }
 
+// OrgID mocks base method.
+func (m *MockLoginConfig) OrgID() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "OrgID")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// OrgID indicates an expected call of OrgID.
+func (mr *MockLoginConfigMockRecorder) OrgID() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OrgID", reflect.TypeOf((*MockLoginConfig)(nil).OrgID))
+}
+
+// ProjectID mocks base method.
+func (m *MockLoginConfig) ProjectID() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ProjectID")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// ProjectID indicates an expected call of ProjectID.
+func (mr *MockLoginConfigMockRecorder) ProjectID() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectID", reflect.TypeOf((*MockLoginConfig)(nil).ProjectID))
+}
+
 // Save mocks base method.
 func (m *MockLoginConfig) Save() error {
 	m.ctrl.T.Helper()

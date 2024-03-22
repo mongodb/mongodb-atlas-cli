@@ -79,11 +79,11 @@ func (opts *orgListOpts) NewOrgListOptions() (admin.ListOrganizationEventsApiPar
 		p.IncludeCount = pointer.Get(false)
 	}
 
-	if p.MaxDate, err = opts.ParseDate(opts.MaxDate); err != nil {
+	if p.MaxDate, err = ParseDate(opts.MaxDate); err != nil {
 		return p, err
 	}
 
-	if p.MinDate, err = opts.ParseDate(opts.MinDate); err != nil {
+	if p.MinDate, err = ParseDate(opts.MinDate); err != nil {
 		return p, err
 	}
 

@@ -70,11 +70,11 @@ func (opts *projectListOpts) NewProjectListOptions() (admin.ListProjectEventsApi
 		EventType: eventType,
 	}
 
-	if p.MaxDate, err = opts.ParseDate(opts.MaxDate); err != nil {
+	if p.MaxDate, err = ParseDate(opts.MaxDate); err != nil {
 		return p, err
 	}
 
-	if p.MinDate, err = opts.ParseDate(opts.MinDate); err != nil {
+	if p.MinDate, err = ParseDate(opts.MinDate); err != nil {
 		return p, err
 	}
 

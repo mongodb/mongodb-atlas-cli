@@ -147,14 +147,14 @@ func TestList_Run(t *testing.T) {
 func TestParseDate(t *testing.T) {
 	t.Run("valid date", func(t *testing.T) {
 		date := "2024-03-18T15:00:03-0000"
-		_, err := ParseDate(date)
+		_, err := parseDate(date)
 		if err != nil {
 			t.Fatalf("parseDate() unexpected error: %v", err)
 		}
 	})
 	t.Run("invalid date", func(t *testing.T) {
 		date := "2024-03-18T15:00:03+00:00Z"
-		_, err := ParseDate(date)
+		_, err := parseDate(date)
 		if err == nil {
 			t.Fatalf("expected error from parseDate() but got none")
 		}

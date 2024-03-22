@@ -95,10 +95,10 @@ func (opts *ListOpts) NewOrgListOptions() (*admin.ListOrganizationEventsApiParam
 		OrgId:     opts.orgID,
 		EventType: eventType,
 	}
-	if p.MaxDate, err = ParseDate(opts.MaxDate); err != nil {
+	if p.MaxDate, err = parseDate(opts.MaxDate); err != nil {
 		return p, err
 	}
-	if p.MinDate, err = ParseDate(opts.MinDate); err != nil {
+	if p.MinDate, err = parseDate(opts.MinDate); err != nil {
 		return p, err
 	}
 	if opts.ItemsPerPage > 0 {
@@ -124,11 +124,11 @@ func (opts *ListOpts) NewProjectListOptions() (*admin.ListProjectEventsApiParams
 		EventType: eventType,
 	}
 
-	if p.MaxDate, err = ParseDate(opts.MaxDate); err != nil {
+	if p.MaxDate, err = parseDate(opts.MaxDate); err != nil {
 		return p, err
 	}
 
-	if p.MinDate, err = ParseDate(opts.MinDate); err != nil {
+	if p.MinDate, err = parseDate(opts.MinDate); err != nil {
 		return p, err
 	}
 
@@ -145,7 +145,7 @@ func (opts *ListOpts) NewProjectListOptions() (*admin.ListProjectEventsApiParams
 	return p, nil
 }
 
-func ParseDate(date string) (*time.Time, error) {
+func parseDate(date string) (*time.Time, error) {
 	if date == "" {
 		return nil, nil
 	}
@@ -154,7 +154,7 @@ func ParseDate(date string) (*time.Time, error) {
 	if err != nil {
 		return nil, err
 	}
-	return pointer.Get(parsedDate), nil
+	return &parsedDate, nil
 }
 
 // ListBuilder

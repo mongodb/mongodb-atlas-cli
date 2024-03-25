@@ -186,6 +186,27 @@ func TestStart_RunAtlas(t *testing.T) {
 	t.Log(buf.String())
 }
 
+func TestStartOpts_PostRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
+	buf := new(bytes.Buffer)
+
+	opts := &StartOpts{
+		DeploymentOpts: *deploymentsTest.Opts,
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
+		},
+	}
+
+	deploymentsTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
+
+	require.NoError(t, opts.PostRun())
+}
+
 func TestStartBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,

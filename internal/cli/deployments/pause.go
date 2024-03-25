@@ -122,6 +122,11 @@ func (opts *PauseOpts) StopMongoD(ctx context.Context, names string) error {
 	return opts.PodmanClient.Exec(ctx, "-d", names, "mongod", "--shutdown")
 }
 
+func (opts *PauseOpts) PostRun() error {
+	opts.DeploymentTelemetry.AppendDeploymentType()
+	return opts.PostRunMessages()
+}
+
 func PauseBuilder() *cobra.Command {
 	opts := &PauseOpts{}
 	cmd := &cobra.Command{
@@ -149,9 +154,8 @@ func PauseBuilder() *cobra.Command {
 			}
 			return opts.Run(cmd.Context())
 		},
-
 		PostRunE: func(_ *cobra.Command, _ []string) error {
-			return opts.PostRunMessages()
+			return opts.PostRun()
 		},
 	}
 

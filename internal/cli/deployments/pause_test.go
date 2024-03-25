@@ -121,6 +121,28 @@ func TestPause_RunAtlas(t *testing.T) {
 	t.Log(buf.String())
 }
 
+func Test_PostRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
+	buf := new(bytes.Buffer)
+
+	opts := &PauseOpts{
+		DeploymentOpts: *deploymentTest.Opts,
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
+		},
+	}
+
+	deploymentTest.MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
+
+	if err := opts.PostRun(); err != nil {
+		t.Fatalf("PostRun() unexpected error: %v", err)
+	}
+}
+
 func TestPauseBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,

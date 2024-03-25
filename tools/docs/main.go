@@ -19,7 +19,7 @@ import (
 	"os"
 
 	"github.com/mongodb-labs/cobra2snooty"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/root/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/root"
 	"github.com/spf13/cobra"
 )
 
@@ -40,7 +40,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	atlasBuilder := atlas.Builder()
+	atlasBuilder := root.Builder()
 	atlasBuilder.InitDefaultCompletionCmd()
 
 	setDisableAutoGenTag(atlasBuilder)

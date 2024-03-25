@@ -348,14 +348,12 @@ func (n *Notifier) notifyIfApplicable(isHb bool) error {
 	} else {
 		upgradeInstructions = "To upgrade, see: https://dochub.mongodb.org/core/install-atlas-cli"
 	}
-
-	newVersionTemplate := `
-A new version of atlascli is available '%s'!
+	_, err = fmt.Fprintf(n.writer, `
+A new version of atlascli is available %q!
 %s
 
-To disable this alert, run "%s config set skip_update_check true"
-`
-	_, err = fmt.Fprintf(n.writer, newVersionTemplate, release.Version, upgradeInstructions, config.BinName())
+To disable this alert, run "atlas config set skip_update_check true"
+`, release.Version, upgradeInstructions)
 	return err
 }
 

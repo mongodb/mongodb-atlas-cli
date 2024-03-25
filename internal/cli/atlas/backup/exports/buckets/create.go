@@ -75,8 +75,8 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create <bucketName>",
 		Short: "Create an export destination for Atlas backups using an existing AWS S3 bucket.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Example: fmt.Sprintf(`  # The following command creates an export destination for Atlas backups using the existing AWS S3 bucket named test-bucket:
-  %s backup export buckets create test-bucket --cloudProvider AWS --iamRoleId 12345678f901a234dbdb00ca`, config.BinName()),
+		Example: `  # The following command creates an export destination for Atlas backups using the existing AWS S3 bucket named test-bucket:
+  atlas backup export buckets create test-bucket --cloudProvider AWS --iamRoleId 12345678f901a234dbdb00ca`,
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"bucketNameDesc": "Name of the existing S3 bucket that the provided role ID is authorized to access.",

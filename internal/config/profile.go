@@ -77,10 +77,6 @@ var (
 	defaultProfile = newProfile()
 )
 
-func BinName() string {
-	return "atlas"
-}
-
 type Setter interface {
 	Set(string, interface{})
 }

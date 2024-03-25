@@ -83,9 +83,9 @@ func SetBuilder() *cobra.Command {
 			}
 			return nil
 		},
-		Example: fmt.Sprintf(`
+		Example: `
   Set the organization ID in the default profile to 5dd5aaef7a3e5a6c5bd12de4:
-  %s config set org_id 5dd5aaef7a3e5a6c5bd12de4`, config.BinName()),
+  atlas config set org_id 5dd5aaef7a3e5a6c5bd12de4`,
 		Annotations: map[string]string{
 			"propertyNameDesc": "Property to set in the profile. Valid values for Atlas CLI and MongoDB CLI are project_id, org_id, service, public_api_key, private_api_key, output, mongosh_path, skip_update_check, telemetry_enabled, access_token, and refresh_token. Additionally, values that are only valid for MongoDB CLI include ops_manager_url base_url, ops_manager_ca_certificate, and ops_manager_skip_verify.",
 			"valueDesc":        "Value for the property to set in the profile.",

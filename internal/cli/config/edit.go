@@ -15,7 +15,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 
@@ -48,9 +47,9 @@ func EditBuilder() *cobra.Command {
 		Use:   "edit",
 		Short: "Opens the config file with the default text editor.",
 		Long:  `Uses the default editor to open the config file. You can use EDITOR or VISUAL envs to change the default.`,
-		Example: fmt.Sprintf(`  # To open the config
-  %s config edit
-`, config.BinName()),
+		Example: `  # To open the config
+  atlas config edit
+`,
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opt.Run()
 		},

@@ -185,10 +185,10 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 			return ErrOrgIDNotFound
 		}
 
-		_, _ = fmt.Fprintf(opts.OutWriter, `
+		_, _ = fmt.Fprint(opts.OutWriter, `
 You have successfully configured your profile.
-You can use [%s config set] to change your profile settings later.
-`, config.BinName())
+You can use [atlas config set] to change your profile settings later.
+`)
 	}
 
 	return opts.config.Save()
@@ -289,9 +289,9 @@ func LoginBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
-		Example: fmt.Sprintf(`  # Log in to your MongoDB Atlas account in interactive mode:
-  %s auth login
-`, config.BinName()),
+		Example: `  # Log in to your MongoDB Atlas account in interactive mode:
+  atlas auth login
+`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			defaultProfile := config.Default()

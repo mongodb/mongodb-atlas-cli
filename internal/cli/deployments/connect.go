@@ -29,7 +29,7 @@ func Run(ctx context.Context, opts *options.ConnectOpts) error {
 }
 
 func PostRun(opts *options.ConnectOpts) error {
-	opts.AppendDeploymentType()
+	opts.DeploymentTelemetry.AppendDeploymentType()
 	return nil
 }
 

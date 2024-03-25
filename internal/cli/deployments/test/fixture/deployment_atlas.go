@@ -68,4 +68,9 @@ func (m *MockDeploymentOpts) CommonAtlasMocks(projectID string) {
 		ProjectClusters(projectID, gomock.Any()).
 		Return(m.MockPaginatedAdvancedClusterDescription(), nil).
 		Times(1)
+
+	m.MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
 }

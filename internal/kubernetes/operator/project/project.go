@@ -30,7 +30,7 @@ import (
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8snames "k8s.io/apiserver/pkg/storage/names"
 )
 
@@ -192,11 +192,11 @@ func BuildAtlasProject(projectStore store.OperatorProjectStore, validator featur
 
 func newAtlasProject(project *atlasv2.Group, dictionary map[string]string, targetNamespace string, version string) *akov2.AtlasProject {
 	return &akov2.AtlasProject{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: apisv1.TypeMeta{
 			Kind:       "AtlasProject",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: apisv1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(project.Name, dictionary),
 			Namespace: targetNamespace,
 			Labels: map[string]string{
@@ -908,11 +908,11 @@ func buildTeams(teamsProvider store.OperatorTeamsStore, orgID, projectID, projec
 		}
 
 		atlasTeamCRs = append(atlasTeamCRs, &akov2.AtlasTeam{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: apisv1.TypeMeta{
 				Kind:       "AtlasTeam",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: apisv1.ObjectMeta{
 				Name:      crName,
 				Namespace: targetNamespace,
 				Labels: map[string]string{

@@ -24,7 +24,7 @@ import (
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"go.mongodb.org/atlas-sdk/v20231115008/admin"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -41,11 +41,11 @@ func BuildAtlasDataFederation(dataFederationStore store.DataFederationStore, dat
 		return nil, nil
 	}
 	atlasDataFederation := &akov2.AtlasDataFederation{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: apisv1.TypeMeta{
 			APIVersion: "atlas.mongodb.com/v1",
 			Kind:       "AtlasDataFederation",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: apisv1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, dataFederation.GetName()), dictionary),
 			Namespace: targetNamespace,
 			Labels: map[string]string{

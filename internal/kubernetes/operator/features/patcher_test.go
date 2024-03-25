@@ -18,19 +18,19 @@ import (
 	"testing"
 
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
-	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/api/equality"
 )
 
 func TestUnkownBackupPolicyFrequencyTypesPruner(t *testing.T) {
-	crdSpec := &apiextensions.JSONSchemaProps{
-		Properties: map[string]apiextensions.JSONSchemaProps{
+	crdSpec := &apiextensionsv1.JSONSchemaProps{
+		Properties: map[string]apiextensionsv1.JSONSchemaProps{
 			"items": {
-				Items: &apiextensions.JSONSchemaPropsOrArray{
-					Schema: &apiextensions.JSONSchemaProps{
-						Properties: map[string]apiextensions.JSONSchemaProps{
+				Items: &apiextensionsv1.JSONSchemaPropsOrArray{
+					Schema: &apiextensionsv1.JSONSchemaProps{
+						Properties: map[string]apiextensionsv1.JSONSchemaProps{
 							"frequencyType": {
-								Enum: []apiextensions.JSON{
+								Enum: []apiextensionsv1.JSON{
 									{Raw: []byte(`"daily"`)},
 									{Raw: []byte(`"monthly"`)},
 								},
@@ -44,7 +44,7 @@ func TestUnkownBackupPolicyFrequencyTypesPruner(t *testing.T) {
 
 	tests := []struct {
 		name                  string
-		crdSpec               *apiextensions.JSONSchemaProps
+		crdSpec               *apiextensionsv1.JSONSchemaProps
 		atlasBackupPolicy     *akov2.AtlasBackupPolicy
 		wantAtlasBackupPolicy *akov2.AtlasBackupPolicy
 		wantErr               string

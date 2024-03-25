@@ -17,7 +17,7 @@ package secrets
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -38,11 +38,11 @@ type AtlasSecretBuilder func() (*corev1.Secret, map[string]string)
 func NewAtlasSecretBuilder(name, namespace string, dictionary map[string]string) AtlasSecretBuilder {
 	return func() (*corev1.Secret, map[string]string) {
 		secret := &corev1.Secret{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: apisv1.TypeMeta{
 				Kind:       "Secret",
 				APIVersion: "v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: apisv1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(name, dictionary),
 				Namespace: namespace,
 				Labels: map[string]string{

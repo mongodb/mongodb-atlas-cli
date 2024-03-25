@@ -26,7 +26,7 @@ import (
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -109,11 +109,11 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, va
 	}
 
 	atlasDeployment := &akov2.AtlasDeployment{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: apisv1.TypeMeta{
 			Kind:       "AtlasDeployment",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: apisv1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, clusterID), dictionary),
 			Namespace: targetNamespace,
 			Labels: map[string]string{
@@ -295,11 +295,11 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectName, projectI
 			})
 		}
 		policies = append(policies, &akov2.AtlasBackupPolicy{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: apisv1.TypeMeta{
 				Kind:       "AtlasBackupPolicy",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: apisv1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName), dictionary),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
@@ -322,11 +322,11 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectName, projectI
 	}
 
 	schedule := &akov2.AtlasBackupSchedule{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: apisv1.TypeMeta{
 			Kind:       "AtlasBackupSchedule",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: apisv1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName), dictionary),
 			Namespace: targetNamespace,
 			Labels: map[string]string{
@@ -475,11 +475,11 @@ func BuildServerlessDeployments(deploymentStore store.OperatorClusterStore, vali
 
 	atlasName := fmt.Sprintf("%s-%s", projectName, store.StringOrEmpty(deployment.Name))
 	atlasDeployment := &akov2.AtlasDeployment{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: apisv1.TypeMeta{
 			Kind:       "AtlasDeployment",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: apisv1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(atlasName, dictionary),
 			Namespace: targetNamespace,
 			Labels: map[string]string{

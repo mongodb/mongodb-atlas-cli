@@ -47,17 +47,15 @@ func TestRun_ConnectLocal(t *testing.T) {
 	mockPodman := mocks.NewMockClient(ctrl)
 	buf := new(bytes.Buffer)
 
-	connectOpts := &ConnectCommandOpts{
-		options.ConnectOpts{
-			ConnectWith: "connectionString",
-			DeploymentOpts: options.DeploymentOpts{
-				PodmanClient:   mockPodman,
-				DeploymentName: expectedLocalDeployment,
-				DeploymentType: "local",
-			},
-			OutputOpts: cli.OutputOpts{
-				OutWriter: buf,
-			},
+	connectOpts := &options.ConnectOpts{
+		ConnectWith: "connectionString",
+		DeploymentOpts: options.DeploymentOpts{
+			PodmanClient:   mockPodman,
+			DeploymentName: expectedLocalDeployment,
+			DeploymentType: "local",
+		},
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
 		},
 	}
 
@@ -112,7 +110,7 @@ func TestRun_ConnectLocal(t *testing.T) {
 		}, nil).
 		Times(1)
 
-	if err := connectOpts.Run(ctx); err != nil {
+	if err := Run(ctx, connectOpts); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
@@ -125,29 +123,21 @@ func TestRun_ConnectAtlas(t *testing.T) {
 	ctx := context.Background()
 	buf := new(bytes.Buffer)
 
-	mockAtlasClusterListStore := mocks.NewMockClusterLister(ctrl)
-	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockAtlasClusterDescriber := mocks.NewMockClusterDescriber(ctrl)
+	deploymenTest := fixture.NewMockAtlasDeploymentOpts(ctrl, expectedAtlasDeployment)
 
-	connectOpts := &ConnectCommandOpts{
-		options.ConnectOpts{
-			ConnectWith: "connectionString",
-			DeploymentOpts: options.DeploymentOpts{
-				AtlasClusterListStore: mockAtlasClusterListStore,
-				DeploymentName:        expectedAtlasDeployment,
-				DeploymentType:        "atlas",
-				CredStore:             mockCredentialsGetter,
+	connectOpts := &options.ConnectOpts{
+		ConnectWith:    "connectionString",
+		DeploymentOpts: *deploymenTest.Opts,
+		ConnectToAtlasOpts: options.ConnectToAtlasOpts{
+			Store: mockAtlasClusterDescriber,
+			GlobalOpts: cli.GlobalOpts{
+				ProjectID: "projectID",
 			},
-			ConnectToAtlasOpts: options.ConnectToAtlasOpts{
-				Store: mockAtlasClusterDescriber,
-				GlobalOpts: cli.GlobalOpts{
-					ProjectID: "projectID",
-				},
-				ConnectionStringType: "standard",
-			},
-			OutputOpts: cli.OutputOpts{
-				OutWriter: buf,
-			},
+			ConnectionStringType: "standard",
+		},
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
 		},
 	}
 
@@ -166,7 +156,7 @@ func TestRun_ConnectAtlas(t *testing.T) {
 		},
 	}
 
-	mockAtlasClusterListStore.
+	deploymenTest.MockAtlasClusterListStore.
 		EXPECT().
 		ProjectClusters(connectOpts.ProjectID,
 			&store.ListOptions{
@@ -183,13 +173,13 @@ func TestRun_ConnectAtlas(t *testing.T) {
 		Return(&expectedAtlasClusters.GetResults()[0], nil).
 		Times(1)
 
-	mockCredentialsGetter.
+	deploymenTest.MockCredentialsGetter.
 		EXPECT().
 		AuthType().
 		Return(config.OAuth).
 		Times(1)
 
-	if err := connectOpts.Run(ctx); err != nil {
+	if err := Run(ctx, connectOpts); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
@@ -202,12 +192,10 @@ func TestRun_PostRun(t *testing.T) {
 	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
 	buf := new(bytes.Buffer)
 
-	opts := &ConnectCommandOpts{
-		options.ConnectOpts{
-			DeploymentOpts: *deploymentsTest.Opts,
-			OutputOpts: cli.OutputOpts{
-				OutWriter: buf,
-			},
+	opts := &options.ConnectOpts{
+		DeploymentOpts: *deploymentsTest.Opts,
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
 		},
 	}
 
@@ -217,7 +205,7 @@ func TestRun_PostRun(t *testing.T) {
 		AppendDeploymentType().
 		Times(1)
 
-	if err := opts.PostRun(); err != nil {
+	if err := PostRun(opts); err != nil {
 		t.Fatalf("PostRun() unexpected error: %v", err)
 	}
 }

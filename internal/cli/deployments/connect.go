@@ -24,22 +24,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ConnectCommandOpts struct {
-	options.ConnectOpts
-}
-
-func (opts *ConnectCommandOpts) Run(ctx context.Context) error {
+func Run(ctx context.Context, opts *options.ConnectOpts) error {
 	return opts.Connect(ctx)
 }
 
-func (opts *ConnectCommandOpts) PostRun() error {
-	opts.DeploymentTelemetry.AppendDeploymentType()
+func PostRun(opts *options.ConnectOpts) error {
+	opts.AppendDeploymentType()
 	return nil
 }
 
 // atlas deployments connect [clusterName].
 func ConnectBuilder() *cobra.Command {
-	opts := &ConnectCommandOpts{}
+	opts := &options.ConnectOpts{}
 	cmd := &cobra.Command{
 		Use:     "connect [deploymentName]",
 		Short:   "Connect to a deployment that is running locally or in Atlas. If the deployment is paused, make sure to run atlas deployments start first.",
@@ -60,10 +56,10 @@ func ConnectBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return opts.Run(cmd.Context())
+			return Run(cmd.Context(), opts)
 		},
 		PostRunE: func(_ *cobra.Command, _ []string) error {
-			return opts.PostRun()
+			return PostRun(opts)
 		},
 	}
 

@@ -211,7 +211,11 @@ func TestRun_PostRun(t *testing.T) {
 		},
 	}
 
-	deploymentsTest.MockDeploymentTelemetry.EXPECT().AppendDeploymentType().Times(1)
+	deploymentsTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
 
 	if err := opts.PostRun(); err != nil {
 		t.Fatalf("PostRun() unexpected error: %v", err)

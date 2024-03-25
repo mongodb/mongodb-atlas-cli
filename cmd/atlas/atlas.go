@@ -24,7 +24,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/AlecAivazis/survey/v2/core"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/root/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/root"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/terminal"
@@ -35,7 +35,7 @@ import (
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	ctx := telemetry.NewContext()
-	rootCmd := atlas.Builder()
+	rootCmd := root.Builder()
 	// append here to avoid a recursive link on generated docs
 	rootCmd.Long += `
 
@@ -158,7 +158,7 @@ func trackInitError(e error) {
 	if e == nil {
 		return
 	}
-	if cmd, args, err := atlas.Builder().Find(os.Args[1:]); err == nil {
+	if cmd, args, err := root.Builder().Find(os.Args[1:]); err == nil {
 		if !telemetry.StartedTrackingCommand() {
 			telemetry.StartTrackingCommand(cmd, args)
 		}
@@ -170,7 +170,7 @@ func trackInitError(e error) {
 }
 
 func initTrack() {
-	cmd, args, _ := atlas.Builder().Find(os.Args[1:])
+	cmd, args, _ := root.Builder().Find(os.Args[1:])
 	telemetry.StartTrackingCommand(cmd, args)
 }
 

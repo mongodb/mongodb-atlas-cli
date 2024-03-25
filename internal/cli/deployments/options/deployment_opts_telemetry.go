@@ -37,7 +37,6 @@ func (opts *DeploymentOpts) AppendDeploymentType() {
 	}
 	log.Warning(deploymentType)
 	if deploymentType != "" {
-		log.Debugf("Appending deployment type: %s", deploymentType)
 		telemetry.AppendOption(telemetry.WithDeploymentType(deploymentType))
 	}
 }

@@ -163,7 +163,6 @@ func TestDelete_PostRun(t *testing.T) {
 	if err := opts.PostRun(); err != nil {
 		t.Fatalf("PostRun() unexpected error: %v", err)
 	}
-
 }
 
 func TestDeleteBuilder(t *testing.T) {

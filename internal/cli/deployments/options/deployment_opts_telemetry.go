@@ -15,7 +15,6 @@
 package options
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 )
 
@@ -35,7 +34,6 @@ func (opts *DeploymentOpts) AppendDeploymentType() {
 	} else if opts.IsAtlasDeploymentType() {
 		deploymentType = AtlasCluster
 	}
-	log.Warning(deploymentType)
 	if deploymentType != "" {
 		telemetry.AppendOption(telemetry.WithDeploymentType(deploymentType))
 	}

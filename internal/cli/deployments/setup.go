@@ -861,7 +861,7 @@ func SetupBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd.Context())
 		},
-		PostRunE: func(cmd *cobra.Command, _ []string) error {
+		PostRunE: func(_ *cobra.Command, _ []string) error {
 			return opts.PostRun()
 		},
 	}

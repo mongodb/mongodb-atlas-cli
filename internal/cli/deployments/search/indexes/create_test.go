@@ -72,6 +72,12 @@ func TestCreate_RunLocal(t *testing.T) {
 
 	testDeployments.LocalMockFlow(ctx)
 
+	testDeployments.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
+
 	mockPodman.
 		EXPECT().
 		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
@@ -159,7 +165,6 @@ func TestCreate_RunLocal(t *testing.T) {
 	if err := opts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-
 	if err := opts.PostRun(ctx); err != nil {
 		t.Fatalf("PostRun() unexpected error: %v", err)
 	}
@@ -333,6 +338,12 @@ func TestCreate_RunAtlas(t *testing.T) {
 		CreateSearchIndexes(opts.ProjectID, opts.DeploymentName, index).
 		Times(1).
 		Return(indexWithID, nil)
+
+	deploymentTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
 
 	if err := opts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

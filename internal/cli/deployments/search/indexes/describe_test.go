@@ -31,6 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
@@ -179,6 +180,27 @@ func TestDescribe_RunAtlas(t *testing.T) {
 	if err := opts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestDescribe_PostRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
+	buf := new(bytes.Buffer)
+
+	opts := &DescribeOpts{
+		DeploymentOpts: *deploymentTest.Opts,
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
+		},
+	}
+
+	deploymentTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
+
+	require.NoError(t, opts.PostRun())
 }
 
 func TestDescribeBuilder(t *testing.T) {

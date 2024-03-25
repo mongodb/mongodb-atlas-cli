@@ -172,6 +172,7 @@ func (opts *CreateOpts) watch(ctx context.Context) (any, bool, error) {
 }
 
 func (opts *CreateOpts) PostRun(ctx context.Context) error {
+	opts.AppendDeploymentType()
 	if !opts.EnableWatch {
 		return opts.Print(opts.index)
 	}

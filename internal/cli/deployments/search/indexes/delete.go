@@ -99,6 +99,11 @@ func (opts *DeleteOpts) initMongoDBClient(ctx context.Context) func() error {
 	}
 }
 
+func (opts *DeleteOpts) PostRun() error {
+	opts.DeploymentTelemetry.AppendDeploymentType()
+	return nil
+}
+
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts(deletedMessage, deleteMessageFailed),
@@ -126,6 +131,9 @@ func DeleteBuilder() *cobra.Command {
 			}
 
 			return opts.Run(cmd.Context())
+		},
+		PostRunE: func(_ *cobra.Command, _ []string) error {
+			return opts.PostRun()
 		},
 	}
 

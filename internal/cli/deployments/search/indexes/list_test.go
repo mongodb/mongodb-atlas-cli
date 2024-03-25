@@ -209,6 +209,28 @@ func TestList_RunAtlas(t *testing.T) {
 	}
 }
 
+func TestList_PostRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
+	buf := new(bytes.Buffer)
+
+	opts := &ListOpts{
+		DeploymentOpts: *deploymentTest.Opts,
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
+		},
+	}
+
+	deploymentTest.MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
+
+	if err := opts.PostRun(); err != nil {
+		t.Fatalf("PostRun() unexpected error: %v", err)
+	}
+}
+
 func TestListBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,

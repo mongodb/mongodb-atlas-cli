@@ -147,6 +147,25 @@ func TestDelete_RunAtlas(t *testing.T) {
 	}
 }
 
+func TestDelete_PostRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
+	opts := &DeleteOpts{
+		DeploymentOpts: *deploymentTest.Opts,
+	}
+
+	deploymentTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
+
+	if err := opts.PostRun(); err != nil {
+		t.Fatalf("PostRun() unexpected error: %v", err)
+	}
+
+}
+
 func TestDeleteBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,

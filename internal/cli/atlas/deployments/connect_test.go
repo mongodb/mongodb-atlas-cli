@@ -24,6 +24,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/deployments/options"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
@@ -46,15 +47,17 @@ func TestRun_ConnectLocal(t *testing.T) {
 	mockPodman := mocks.NewMockClient(ctrl)
 	buf := new(bytes.Buffer)
 
-	connectOpts := &options.ConnectOpts{
-		ConnectWith: "connectionString",
-		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:   mockPodman,
-			DeploymentName: expectedLocalDeployment,
-			DeploymentType: "local",
-		},
-		OutputOpts: cli.OutputOpts{
-			OutWriter: buf,
+	connectOpts := &ConnectCommandOpts{
+		options.ConnectOpts{
+			ConnectWith: "connectionString",
+			DeploymentOpts: options.DeploymentOpts{
+				PodmanClient:   mockPodman,
+				DeploymentName: expectedLocalDeployment,
+				DeploymentType: "local",
+			},
+			OutputOpts: cli.OutputOpts{
+				OutWriter: buf,
+			},
 		},
 	}
 
@@ -109,7 +112,7 @@ func TestRun_ConnectLocal(t *testing.T) {
 		}, nil).
 		Times(1)
 
-	if err := Run(ctx, connectOpts); err != nil {
+	if err := connectOpts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
@@ -126,23 +129,25 @@ func TestRun_ConnectAtlas(t *testing.T) {
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockAtlasClusterDescriber := mocks.NewMockClusterDescriber(ctrl)
 
-	connectOpts := &options.ConnectOpts{
-		ConnectWith: "connectionString",
-		DeploymentOpts: options.DeploymentOpts{
-			AtlasClusterListStore: mockAtlasClusterListStore,
-			DeploymentName:        expectedAtlasDeployment,
-			DeploymentType:        "atlas",
-			CredStore:             mockCredentialsGetter,
-		},
-		ConnectToAtlasOpts: options.ConnectToAtlasOpts{
-			Store: mockAtlasClusterDescriber,
-			GlobalOpts: cli.GlobalOpts{
-				ProjectID: "projectID",
+	connectOpts := &ConnectCommandOpts{
+		options.ConnectOpts{
+			ConnectWith: "connectionString",
+			DeploymentOpts: options.DeploymentOpts{
+				AtlasClusterListStore: mockAtlasClusterListStore,
+				DeploymentName:        expectedAtlasDeployment,
+				DeploymentType:        "atlas",
+				CredStore:             mockCredentialsGetter,
 			},
-			ConnectionStringType: "standard",
-		},
-		OutputOpts: cli.OutputOpts{
-			OutWriter: buf,
+			ConnectToAtlasOpts: options.ConnectToAtlasOpts{
+				Store: mockAtlasClusterDescriber,
+				GlobalOpts: cli.GlobalOpts{
+					ProjectID: "projectID",
+				},
+				ConnectionStringType: "standard",
+			},
+			OutputOpts: cli.OutputOpts{
+				OutWriter: buf,
+			},
 		},
 	}
 
@@ -184,12 +189,33 @@ func TestRun_ConnectAtlas(t *testing.T) {
 		Return(config.OAuth).
 		Times(1)
 
-	if err := Run(ctx, connectOpts); err != nil {
+	if err := connectOpts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 
 	assert.Equal(t, `mongodb://localhost:27017/?directConnection=true
 `, buf.String())
+}
+
+func TestRun_PostRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
+	buf := new(bytes.Buffer)
+
+	opts := &ConnectCommandOpts{
+		options.ConnectOpts{
+			DeploymentOpts: *deploymentsTest.Opts,
+			OutputOpts: cli.OutputOpts{
+				OutWriter: buf,
+			},
+		},
+	}
+
+	deploymentsTest.MockDeploymentTelemetry.EXPECT().AppendDeploymentType().Times(1)
+
+	if err := opts.PostRun(); err != nil {
+		t.Fatalf("PostRun() unexpected error: %v", err)
+	}
 }
 
 func TestConnectBuilder(t *testing.T) {

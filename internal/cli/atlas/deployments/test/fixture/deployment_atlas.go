@@ -25,16 +25,19 @@ import (
 func NewMockAtlasDeploymentOpts(ctrl *gomock.Controller, deploymentName string) MockDeploymentOpts {
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockAtlasClusterListStore := mocks.NewMockClusterLister(ctrl)
+	mockDeploymentTelemetry := mocks.NewMockDeploymentTelemetry(ctrl)
 
 	return MockDeploymentOpts{
 		ctrl:                      ctrl,
 		MockCredentialsGetter:     mockCredentialsGetter,
 		MockAtlasClusterListStore: mockAtlasClusterListStore,
+		MockDeploymentTelemetry:   mockDeploymentTelemetry,
 		Opts: &options.DeploymentOpts{
 			CredStore:             mockCredentialsGetter,
 			AtlasClusterListStore: mockAtlasClusterListStore,
 			DeploymentName:        deploymentName,
 			DeploymentType:        "atlas",
+			DeploymentTelemetry:   mockDeploymentTelemetry,
 		},
 	}
 }

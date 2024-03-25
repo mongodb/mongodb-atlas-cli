@@ -20,17 +20,28 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/atlas/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-func Run(ctx context.Context, opts *options.ConnectOpts) error {
+type ConnectCommandOpts struct {
+	options.ConnectOpts
+}
+
+func (opts *ConnectCommandOpts) Run(ctx context.Context) error {
 	return opts.Connect(ctx)
+}
+
+func (opts *ConnectCommandOpts) PostRun() error {
+	log.Warning("posturn")
+	opts.AppendDeploymentType()
+	return nil
 }
 
 // atlas deployments connect [clusterName].
 func ConnectBuilder() *cobra.Command {
-	opts := &options.ConnectOpts{}
+	opts := &ConnectCommandOpts{}
 	cmd := &cobra.Command{
 		Use:     "connect [deploymentName]",
 		Short:   "Connect to a deployment that is running locally or in Atlas. If the deployment is paused, make sure to run atlas deployments start first.",
@@ -51,7 +62,10 @@ func ConnectBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return Run(cmd.Context(), opts)
+			return opts.Run(cmd.Context())
+		},
+		PostRunE: func(cmd *cobra.Command, _ []string) error {
+			return opts.PostRun()
 		},
 	}
 

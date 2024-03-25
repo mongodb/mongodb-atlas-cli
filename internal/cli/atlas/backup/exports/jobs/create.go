@@ -86,8 +86,8 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create",
 		Short: "Export one backup snapshot for an M10 or higher Atlas cluster to an existing AWS S3 bucket.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Example: fmt.Sprintf(`  # The following command exports one backup snapshot of the ExampleCluster cluster to an existing AWS S3 bucket:
-  %s backup export jobs create --clusterName ExampleCluster --bucketId 62c569f85b7a381c093cc539 --snapshotId 62c808ceeb4e021d850dfe1b --customData name=test,info=test`, config.BinName()),
+		Example: `  # The following command exports one backup snapshot of the ExampleCluster cluster to an existing AWS S3 bucket:
+  atlas backup export jobs create --clusterName ExampleCluster --bucketId 62c569f85b7a381c093cc539 --snapshotId 62c808ceeb4e021d850dfe1b --customData name=test,info=test`,
 		Annotations: map[string]string{
 			"output": createTemplate,
 		},

@@ -15,8 +15,6 @@
 package config
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -44,7 +42,7 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   "Return a list of available profiles by name.",
 		Long:    `If you did not specify a name for your profile, it displays as the default profile.`,
-		Example: fmt.Sprintf("  %s config ls", config.BinName()),
+		Example: "  atlas config ls",
 		PreRun: func(cmd *cobra.Command, _ []string) {
 			o.OutWriter = cmd.OutOrStdout()
 		},

@@ -53,7 +53,7 @@ func TestCheck(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			if got := Check(tc.err); got != tc.want {
+			if got := Check(tc.err); !errors.Is(got, tc.want) {
 				t.Errorf("Check(%v) = %v, want %v", tc.err, got, tc.want)
 			}
 		})

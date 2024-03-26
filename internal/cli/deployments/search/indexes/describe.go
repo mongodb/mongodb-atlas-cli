@@ -103,9 +103,8 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DescribeOpts) PostRun() error {
+func (opts *DescribeOpts) PostRun() {
 	opts.DeploymentTelemetry.AppendDeploymentType()
-	return nil
 }
 
 func DescribeBuilder() *cobra.Command {
@@ -134,8 +133,8 @@ func DescribeBuilder() *cobra.Command {
 			}
 			return opts.Run(cmd.Context())
 		},
-		PostRunE: func(_ *cobra.Command, _ []string) error {
-			return opts.PostRun()
+		PostRun: func(_ *cobra.Command, _ []string) {
+			opts.PostRun()
 		},
 	}
 

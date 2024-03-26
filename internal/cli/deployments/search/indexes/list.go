@@ -112,9 +112,8 @@ func (opts *ListOpts) validateAndPrompt() error {
 	return nil
 }
 
-func (opts *ListOpts) PostRun() error {
+func (opts *ListOpts) PostRun() {
 	opts.DeploymentTelemetry.AppendDeploymentType()
-	return nil
 }
 
 func ListBuilder() *cobra.Command {
@@ -140,8 +139,8 @@ func ListBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd.Context())
 		},
-		PostRunE: func(_ *cobra.Command, _ []string) error {
-			return opts.PostRun()
+		PostRun: func(_ *cobra.Command, _ []string) {
+			opts.PostRun()
 		},
 	}
 

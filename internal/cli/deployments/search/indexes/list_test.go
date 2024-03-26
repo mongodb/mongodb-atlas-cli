@@ -226,9 +226,7 @@ func TestList_PostRun(t *testing.T) {
 		AppendDeploymentType().
 		Times(1)
 
-	if err := opts.PostRun(); err != nil {
-		t.Fatalf("PostRun() unexpected error: %v", err)
-	}
+	opts.PostRun()
 }
 
 func TestListBuilder(t *testing.T) {

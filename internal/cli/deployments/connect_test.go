@@ -165,9 +165,7 @@ func TestPostRun(t *testing.T) {
 		AppendDeploymentType().
 		Times(1)
 
-	if err := PostRun(opts); err != nil {
-		t.Fatalf("PostRun() unexpected error: %v", err)
-	}
+	PostRun(opts)
 }
 
 func TestConnectBuilder(t *testing.T) {

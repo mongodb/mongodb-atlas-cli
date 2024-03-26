@@ -28,9 +28,8 @@ func Run(ctx context.Context, opts *options.ConnectOpts) error {
 	return opts.Connect(ctx)
 }
 
-func PostRun(opts *options.ConnectOpts) error {
+func PostRun(opts *options.ConnectOpts) {
 	opts.DeploymentTelemetry.AppendDeploymentType()
-	return nil
 }
 
 // atlas deployments connect [clusterName].
@@ -58,8 +57,8 @@ func ConnectBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd.Context(), opts)
 		},
-		PostRunE: func(_ *cobra.Command, _ []string) error {
-			return PostRun(opts)
+		PostRun: func(_ *cobra.Command, _ []string) {
+			PostRun(opts)
 		},
 	}
 

@@ -149,7 +149,7 @@ func TestListBuilder(t *testing.T) {
 	)
 }
 
-func TestList_PostRun(t *testing.T) {
+func TestListOpts_PostRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	buf := new(bytes.Buffer)
 

@@ -147,7 +147,7 @@ func TestRun_ConnectAtlas(t *testing.T) {
 `, buf.String())
 }
 
-func TestRun_PostRun(t *testing.T) {
+func TestPostRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
 	buf := new(bytes.Buffer)

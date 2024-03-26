@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 )
 
-func TestPostRun(t *testing.T) {
+func TestSetupOpts_PostRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
 	buf := new(bytes.Buffer)
@@ -42,7 +42,5 @@ func TestPostRun(t *testing.T) {
 		AppendDeploymentType().
 		Times(1)
 
-	if err := opts.PostRun(); err != nil {
-		t.Fatalf("PostRun() unexpected error: %v", err)
-	}
+	opts.PostRun()
 }

@@ -121,7 +121,7 @@ func TestPause_RunAtlas(t *testing.T) {
 	t.Log(buf.String())
 }
 
-func Test_PostRun(t *testing.T) {
+func TestPauseOpts_PostRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
 	buf := new(bytes.Buffer)

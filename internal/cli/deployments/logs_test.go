@@ -113,7 +113,7 @@ func TestLogs_RunAtlas(t *testing.T) {
 	}
 }
 
-func TestLogs_PostRun(t *testing.T) {
+func TestDownloadOpts_PostRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
 	buf := new(bytes.Buffer)
@@ -131,7 +131,5 @@ func TestLogs_PostRun(t *testing.T) {
 		AppendDeploymentType().
 		Times(1)
 
-	if err := opts.PostRun(); err != nil {
-		t.Fatalf("PostRun() unexpected error: %v", err)
-	}
+	opts.PostRun()
 }

@@ -121,6 +121,11 @@ func (opts *StartOpts) RunAtlas() error {
 	return opts.Print(r)
 }
 
+func (opts *StartOpts) PostRun() error {
+	opts.DeploymentTelemetry.AppendDeploymentType()
+	return opts.PostRunMessages()
+}
+
 func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{
@@ -146,7 +151,7 @@ func StartBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 		PostRunE: func(_ *cobra.Command, _ []string) error {
-			return opts.PostRunMessages()
+			return opts.PostRun()
 		},
 	}
 

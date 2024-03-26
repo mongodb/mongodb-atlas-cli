@@ -159,7 +159,6 @@ func TestCreate_RunLocal(t *testing.T) {
 	if err := opts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-
 	if err := opts.PostRun(ctx); err != nil {
 		t.Fatalf("PostRun() unexpected error: %v", err)
 	}

@@ -181,6 +181,10 @@ func (opts *DownloadOpts) validateAtlasFlags() error {
 	return nil
 }
 
+func (opts *DownloadOpts) PostRun() {
+	opts.DeploymentTelemetry.AppendDeploymentType()
+}
+
 // atlas deployments logs.
 func LogsBuilder() *cobra.Command {
 	opts := &DownloadOpts{
@@ -203,6 +207,9 @@ func LogsBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd.Context())
+		},
+		PostRun: func(_ *cobra.Command, _ []string) {
+			opts.PostRun()
 		},
 	}
 

@@ -823,6 +823,10 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 	return opts.runAtlas(ctx)
 }
 
+func (opts *SetupOpts) PostRun() {
+	opts.DeploymentTelemetry.AppendDeploymentType()
+}
+
 // atlas deployments setup.
 func SetupBuilder() *cobra.Command {
 	opts := &SetupOpts{
@@ -855,6 +859,9 @@ func SetupBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd.Context())
+		},
+		PostRun: func(_ *cobra.Command, _ []string) {
+			opts.PostRun()
 		},
 	}
 

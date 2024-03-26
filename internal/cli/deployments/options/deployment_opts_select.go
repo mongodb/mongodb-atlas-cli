@@ -104,7 +104,7 @@ func (opts *DeploymentOpts) Select(deployments []Deployment) (Deployment, error)
 		opts.DeploymentName = deployments[0].Name
 		opts.DeploymentType = strings.ToLower(deployments[0].Type)
 
-		opts.AppendDeploymentType()
+		opts.UpdateDeploymentTelemetry()
 		return deployments[0], nil
 	}
 
@@ -131,6 +131,6 @@ func (opts *DeploymentOpts) Select(deployments []Deployment) (Deployment, error)
 	deployment := deploymentsByDisplayName[displayName]
 	opts.DeploymentName = deployment.Name
 	opts.DeploymentType = strings.ToLower(deployment.Type)
-	opts.AppendDeploymentType()
+	opts.UpdateDeploymentTelemetry()
 	return deployment, nil
 }

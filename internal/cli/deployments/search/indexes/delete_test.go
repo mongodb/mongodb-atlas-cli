@@ -147,6 +147,22 @@ func TestDelete_RunAtlas(t *testing.T) {
 	}
 }
 
+func TestDeleteOpts_PostRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
+	opts := &DeleteOpts{
+		DeploymentOpts: *deploymentTest.Opts,
+	}
+
+	deploymentTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
+
+	opts.PostRun()
+}
+
 func TestDeleteBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,

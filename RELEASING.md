@@ -67,6 +67,11 @@ We use `go version` to generate the SBOM for Atlas CLI binaries. You can generat
 go version -m <path_to_atlasCLI_binary>
 ```
 
+## MongoCLI Binary
+We use `go version` to generate the SBOM for MongoCLI binaries. You can generate the SBOM via the following command:
+```bash
+go version -m <path_to_MongoCLI_binary>
+
 ## Atlas CLI Docker image
 We use `docker sbom` to generate the SBOM for the AtlasCLI docker image. You can generate the SBOM via the following command:
 ```bash

@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
@@ -35,6 +36,7 @@ var errDeploymentRequiredOnPipe = fmt.Errorf("deployment name is required  when 
 func (opts *DeploymentOpts) findMongoDContainer(ctx context.Context) (*podman.InspectContainerData, error) {
 	containers, err := opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname())
 	if err != nil {
+		_, _ = log.Debugf("Error: failed to retrieve Local deployments because %q\n", err.Error())
 		return nil, fmt.Errorf("%w: %s", ErrDeploymentNotFound, opts.DeploymentName)
 	}
 

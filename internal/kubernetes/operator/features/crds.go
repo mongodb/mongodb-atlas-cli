@@ -21,7 +21,7 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/crds"
-	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/runtime"
 )
@@ -136,7 +136,7 @@ func CRDCompatibleVersion(operatorVersion string) (string, error) {
 }
 
 type AtlasCRDs struct {
-	resources map[string]*apiextensions.JSONSchemaProps
+	resources map[string]*apiextensionsv1.JSONSchemaProps
 	patchers  map[string]Patcher
 }
 
@@ -162,7 +162,7 @@ func NewAtlasCRDs(crdProvider crds.AtlasOperatorCRDProvider, version string) (*A
 	}
 
 	result := &AtlasCRDs{
-		resources: map[string]*apiextensions.JSONSchemaProps{},
+		resources: map[string]*apiextensionsv1.JSONSchemaProps{},
 		patchers:  map[string]Patcher{},
 	}
 
@@ -195,14 +195,14 @@ func (a *AtlasCRDs) FeatureExist(resourceName, featurePath string) bool {
 	return false
 }
 
-func pathExists(path string, data *apiextensions.JSONSchemaProps) bool {
+func pathExists(path string, data *apiextensionsv1.JSONSchemaProps) bool {
 	parts := strings.Split(path, ".")
 	if len(parts) == 0 || data == nil {
 		return false
 	}
 
-	var lookup func(path []string, data *apiextensions.JSONSchemaProps, depth int) bool
-	lookup = func(path []string, data *apiextensions.JSONSchemaProps, depth int) bool {
+	var lookup func(path []string, data *apiextensionsv1.JSONSchemaProps, depth int) bool
+	lookup = func(path []string, data *apiextensionsv1.JSONSchemaProps, depth int) bool {
 		if len(path) == 0 {
 			return true
 		}
@@ -230,7 +230,7 @@ func pathExists(path string, data *apiextensions.JSONSchemaProps) bool {
 	return lookup(parts, data, maxDepth)
 }
 
-func getCRDRoot(document *apiextensions.CustomResourceDefinition) (*apiextensions.JSONSchemaProps, error) {
+func getCRDRoot(document *apiextensionsv1.CustomResourceDefinition) (*apiextensionsv1.JSONSchemaProps, error) {
 	if document == nil {
 		return nil, ErrDocumentIsEmpty
 	}

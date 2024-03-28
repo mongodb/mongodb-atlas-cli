@@ -30,7 +30,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
-	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -70,7 +70,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		})
 
 		e2eNamespace := &corev1.Namespace{
-			ObjectMeta: apisv1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name: "e2e-autodetect-parameters",
 			},
 		}
@@ -104,7 +104,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		})
 
 		e2eNamespace := &corev1.Namespace{
-			ObjectMeta: apisv1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name: "e2e-autodetect-operator-version",
 			},
 		}
@@ -138,7 +138,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		})
 
 		e2eNamespace := &corev1.Namespace{
-			ObjectMeta: apisv1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name: "e2e-export-atlas-resource",
 			},
 		}

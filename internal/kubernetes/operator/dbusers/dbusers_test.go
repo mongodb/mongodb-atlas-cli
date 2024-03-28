@@ -38,7 +38,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 	corev1 "k8s.io/api/core/v1"
-	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const resourceVersion = "x.y.z"
@@ -103,11 +103,11 @@ func Test_buildUserSecret(t *testing.T) {
 		}
 
 		expectedSecret := &corev1.Secret{
-			TypeMeta: apisv1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "Secret",
 				APIVersion: "v1",
 			},
-			ObjectMeta: apisv1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-%s", projectName, atlasUser.Username)),
 				Namespace: "TestNamespace",
 				Labels: map[string]string{
@@ -181,11 +181,11 @@ func TestBuildDBUsers(t *testing.T) {
 		}
 
 		expectedUser := &akov2.AtlasDatabaseUser{
-			TypeMeta: apisv1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasDatabaseUser",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: apisv1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, user.Username), dictionary),
 				Namespace: targetNamespace,
 				Labels: map[string]string{

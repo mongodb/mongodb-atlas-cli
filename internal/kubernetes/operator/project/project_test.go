@@ -39,7 +39,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 	corev1 "k8s.io/api/core/v1"
-	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -380,11 +380,11 @@ func TestBuildAtlasProject(t *testing.T) {
 		teamsName := store.StringOrEmpty(teams.Name)
 		expectedTeams := []*akov2.AtlasTeam{
 			{
-				TypeMeta: apisv1.TypeMeta{
+				TypeMeta: metav1.TypeMeta{
 					Kind:       "AtlasTeam",
 					APIVersion: "atlas.mongodb.com/v1",
 				},
-				ObjectMeta: apisv1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(p.Name), strings.ToLower(teamsName)),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
@@ -403,11 +403,11 @@ func TestBuildAtlasProject(t *testing.T) {
 			},
 		}
 		expectedProject := &akov2.AtlasProject{
-			TypeMeta: apisv1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasProject",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: apisv1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(p.Name, dictionary),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
@@ -585,11 +585,11 @@ func TestBuildProjectConnectionSecret(t *testing.T) {
 			orgID, true, dictionary)
 
 		expected := &corev1.Secret{
-			TypeMeta: apisv1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "Secret",
 				APIVersion: "v1",
 			},
-			ObjectMeta: apisv1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-credentials", name)),
 				Namespace: namespace,
 				Labels: map[string]string{
@@ -615,11 +615,11 @@ func TestBuildProjectConnectionSecret(t *testing.T) {
 			orgID, false, dictionary)
 
 		expected := &corev1.Secret{
-			TypeMeta: apisv1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "Secret",
 				APIVersion: "v1",
 			},
-			ObjectMeta: apisv1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-credentials", name)),
 				Namespace: namespace,
 				Labels: map[string]string{
@@ -953,11 +953,11 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expectedSecrets := []*corev1.Secret{
 			{
-				TypeMeta: apisv1.TypeMeta{
+				TypeMeta: metav1.TypeMeta{
 					Kind:       "Secret",
 					APIVersion: "v1",
 				},
-				ObjectMeta: apisv1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
 						strings.ToLower(ints.GetResults()[0].GetType())),
@@ -1018,11 +1018,11 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expectedSecrets := []*corev1.Secret{
 			{
-				TypeMeta: apisv1.TypeMeta{
+				TypeMeta: metav1.TypeMeta{
 					Kind:       "Secret",
 					APIVersion: "v1",
 				},
-				ObjectMeta: apisv1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
 						strings.ToLower(ints.GetResults()[0].GetType())),

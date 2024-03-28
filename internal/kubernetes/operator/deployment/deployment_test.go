@@ -35,7 +35,7 @@ import (
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
-	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const resourceVersion = "x.y.z"
@@ -206,11 +206,11 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		clusterStore.EXPECT().DescribeSchedule(projectName, clusterName).Return(backupSchedule, nil)
 
 		expectCluster := &akov2.AtlasDeployment{
-			TypeMeta: apisv1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasDeployment",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: apisv1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-%s", projectName, clusterName)),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
@@ -331,11 +331,11 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 
 		expectPolicies := []*akov2.AtlasBackupPolicy{
 			{
-				TypeMeta: apisv1.TypeMeta{
+				TypeMeta: metav1.TypeMeta{
 					Kind:       "AtlasBackupPolicy",
 					APIVersion: "atlas.mongodb.com/v1",
 				},
-				ObjectMeta: apisv1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      strings.ToLower(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName)),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
@@ -357,11 +357,11 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		}
 
 		expectSchedule := &akov2.AtlasBackupSchedule{
-			TypeMeta: apisv1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasBackupSchedule",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: apisv1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName)),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
@@ -467,11 +467,11 @@ func TestBuildServerlessDeployments(t *testing.T) {
 		clusterStore.EXPECT().ServerlessPrivateEndpoints(projectName, clusterName).Return(spe, nil)
 
 		expected := &akov2.AtlasDeployment{
-			TypeMeta: apisv1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasDeployment",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: apisv1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-%s", projectName, clusterName)),
 				Namespace: targetNamespace,
 				Labels: map[string]string{

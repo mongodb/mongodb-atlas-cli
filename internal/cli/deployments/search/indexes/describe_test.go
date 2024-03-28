@@ -181,6 +181,27 @@ func TestDescribe_RunAtlas(t *testing.T) {
 	}
 }
 
+func TestDescribeOpts_PostRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
+	buf := new(bytes.Buffer)
+
+	opts := &DescribeOpts{
+		DeploymentOpts: *deploymentTest.Opts,
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
+		},
+	}
+
+	deploymentTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
+
+	opts.PostRun()
+}
+
 func TestDescribeBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,

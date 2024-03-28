@@ -17,6 +17,7 @@ package deployment
 import (
 	"fmt"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
@@ -389,7 +390,7 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*akov2.Advan
 			var analyticsSpecs *akov2.Specs
 			if rc.AnalyticsSpecs != nil {
 				analyticsSpecs = &akov2.Specs{
-					DiskIOPS:      pointer.Get(int64(rc.AnalyticsSpecs.GetDiskIOPS())),
+					DiskIOPS:      convert.IntToInt64(rc.AnalyticsSpecs.DiskIOPS),
 					EbsVolumeType: rc.AnalyticsSpecs.GetEbsVolumeType(),
 					InstanceSize:  rc.AnalyticsSpecs.GetInstanceSize(),
 					NodeCount:     rc.AnalyticsSpecs.NodeCount,
@@ -398,7 +399,7 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*akov2.Advan
 			var electableSpecs *akov2.Specs
 			if rc.ElectableSpecs != nil {
 				electableSpecs = &akov2.Specs{
-					DiskIOPS:      pointer.Get(int64(rc.ElectableSpecs.GetDiskIOPS())),
+					DiskIOPS:      convert.IntToInt64(rc.ElectableSpecs.DiskIOPS),
 					EbsVolumeType: rc.ElectableSpecs.GetEbsVolumeType(),
 					InstanceSize:  rc.ElectableSpecs.GetInstanceSize(),
 					NodeCount:     rc.ElectableSpecs.NodeCount,
@@ -408,7 +409,7 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*akov2.Advan
 			var readOnlySpecs *akov2.Specs
 			if rc.ReadOnlySpecs != nil {
 				readOnlySpecs = &akov2.Specs{
-					DiskIOPS:      pointer.Get(int64(rc.ReadOnlySpecs.GetDiskIOPS())),
+					DiskIOPS:      convert.IntToInt64(rc.ReadOnlySpecs.DiskIOPS),
 					EbsVolumeType: rc.ReadOnlySpecs.GetEbsVolumeType(),
 					InstanceSize:  rc.ReadOnlySpecs.GetInstanceSize(),
 					NodeCount:     rc.ReadOnlySpecs.NodeCount,

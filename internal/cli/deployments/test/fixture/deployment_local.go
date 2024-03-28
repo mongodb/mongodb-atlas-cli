@@ -51,6 +51,11 @@ func (m *MockDeploymentOpts) LocalMockFlowWithMockContainer(ctx context.Context,
 		ListContainers(ctx, options.MongodHostnamePrefix).
 		Return(mockContainer, nil).
 		Times(1)
+
+	m.MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
 }
 
 func (m *MockDeploymentOpts) LocalMockFlow(ctx context.Context) {

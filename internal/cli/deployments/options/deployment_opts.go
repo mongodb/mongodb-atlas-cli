@@ -261,5 +261,8 @@ func (opts *DeploymentOpts) IsAuthEnabled() bool {
 }
 
 func (opts *DeploymentOpts) UpdateDeploymentTelemetry() {
+	if opts.DeploymentTelemetry == nil {
+		opts.DeploymentTelemetry = NewDeploymentTypeTelemetry(opts)
+	}
 	opts.DeploymentTelemetry.AppendDeploymentType()
 }

@@ -112,3 +112,24 @@ func TestLogs_RunAtlas(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
+
+func TestDownloadOpts_PostRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
+	buf := new(bytes.Buffer)
+
+	opts := &DownloadOpts{
+		DeploymentOpts: *deploymentTest.Opts,
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
+		},
+	}
+
+	deploymentTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
+
+	opts.PostRun()
+}

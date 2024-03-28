@@ -24,12 +24,11 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas-sdk/v20231115008/admin"
@@ -43,43 +42,20 @@ const (
 func TestRun_ConnectLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
-	mockPodman := mocks.NewMockClient(ctrl)
 	buf := new(bytes.Buffer)
 
+	deploymenTest := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
 	connectOpts := &options.ConnectOpts{
-		ConnectWith: "connectionString",
-		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:   mockPodman,
-			DeploymentName: expectedLocalDeployment,
-			DeploymentType: "local",
-		},
+		ConnectWith:    "connectionString",
+		DeploymentOpts: *deploymenTest.Opts,
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
 		},
 	}
 
-	expectedContainers := []*podman.Container{
-		{
-			Names:  []string{expectedLocalDeployment},
-			State:  "running",
-			Labels: map[string]string{"version": "6.0.9"},
-			ID:     expectedLocalDeployment,
-		},
-	}
+	deploymenTest.LocalMockFlow(ctx)
 
-	mockPodman.
-		EXPECT().
-		Ready(ctx).
-		Return(nil).
-		Times(1)
-
-	mockPodman.
-		EXPECT().
-		ListContainers(ctx, options.MongodHostnamePrefix).
-		Return(expectedContainers, nil).
-		Times(1)
-
-	mockPodman.
+	deploymenTest.MockPodman.
 		EXPECT().
 		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
 		Return([]*podman.InspectContainerData{
@@ -122,18 +98,12 @@ func TestRun_ConnectAtlas(t *testing.T) {
 	ctx := context.Background()
 	buf := new(bytes.Buffer)
 
-	mockAtlasClusterListStore := mocks.NewMockClusterLister(ctrl)
-	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockAtlasClusterDescriber := mocks.NewMockClusterDescriber(ctrl)
+	deploymenTest := fixture.NewMockAtlasDeploymentOpts(ctrl, expectedAtlasDeployment)
 
 	connectOpts := &options.ConnectOpts{
-		ConnectWith: "connectionString",
-		DeploymentOpts: options.DeploymentOpts{
-			AtlasClusterListStore: mockAtlasClusterListStore,
-			DeploymentName:        expectedAtlasDeployment,
-			DeploymentType:        "atlas",
-			CredStore:             mockCredentialsGetter,
-		},
+		ConnectWith:    "connectionString",
+		DeploymentOpts: *deploymenTest.Opts,
 		ConnectToAtlasOpts: options.ConnectToAtlasOpts{
 			Store: mockAtlasClusterDescriber,
 			GlobalOpts: cli.GlobalOpts{
@@ -161,27 +131,12 @@ func TestRun_ConnectAtlas(t *testing.T) {
 		},
 	}
 
-	mockAtlasClusterListStore.
-		EXPECT().
-		ProjectClusters(connectOpts.ProjectID,
-			&store.ListOptions{
-				PageNum:      cli.DefaultPage,
-				ItemsPerPage: options.MaxItemsPerPage,
-			},
-		).
-		Return(expectedAtlasClusters, nil).
-		Times(1)
+	deploymenTest.CommonAtlasMocks(connectOpts.ProjectID)
 
 	mockAtlasClusterDescriber.
 		EXPECT().
 		AtlasCluster(connectOpts.ProjectID, expectedAtlasDeployment).
 		Return(&expectedAtlasClusters.GetResults()[0], nil).
-		Times(1)
-
-	mockCredentialsGetter.
-		EXPECT().
-		AuthType().
-		Return(config.OAuth).
 		Times(1)
 
 	if err := Run(ctx, connectOpts); err != nil {
@@ -190,6 +145,27 @@ func TestRun_ConnectAtlas(t *testing.T) {
 
 	assert.Equal(t, `mongodb://localhost:27017/?directConnection=true
 `, buf.String())
+}
+
+func TestPostRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
+	buf := new(bytes.Buffer)
+
+	opts := &options.ConnectOpts{
+		DeploymentOpts: *deploymentsTest.Opts,
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
+		},
+	}
+
+	deploymentsTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
+
+	PostRun(opts)
 }
 
 func TestConnectBuilder(t *testing.T) {

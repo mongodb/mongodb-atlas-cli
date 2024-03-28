@@ -160,7 +160,7 @@ func TestDeleteBuilder(t *testing.T) {
 	)
 }
 
-func TestDelete_PostRun(t *testing.T) {
+func TestDeleteOpts_PostRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
 	buf := new(bytes.Buffer)

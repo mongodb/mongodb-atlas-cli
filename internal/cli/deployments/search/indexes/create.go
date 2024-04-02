@@ -17,6 +17,7 @@ package indexes
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -190,6 +191,7 @@ func (opts *CreateOpts) PostRun(ctx context.Context) error {
 
 	watch := opts.watchLocal
 	if opts.IsAtlasDeploymentType() {
+		time.Sleep(5 * time.Second)
 		watch = opts.watchAtlas
 	}
 

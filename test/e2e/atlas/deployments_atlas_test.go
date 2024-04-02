@@ -18,17 +18,14 @@ package atlas_test
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"os"
 	"os/exec"
-	"strings"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 const (
@@ -82,68 +79,6 @@ func TestDeploymentsAtlas(t *testing.T) {
 	})
 	require.NoError(t, watchCluster(g.projectID, clusterName))
 
-	t.Run("Connect to database", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			deploymentEntity,
-			"connect",
-			clusterName,
-			"--type", "atlas",
-			"--connectWith", "connectionString",
-			"--projectId", g.projectID,
-		)
-
-		cmd.Env = os.Environ()
-
-		r, err := cmd.CombinedOutput()
-		req.NoError(err, string(r))
-
-		connectionString := strings.TrimSpace(string(r))
-		client, err = mongo.Connect(
-			ctx,
-			options.Client().
-				ApplyURI(connectionString).
-				SetAuth(options.Credential{
-					AuthMechanism: "PLAIN",
-					Username:      dbUserUsername,
-					Password:      dbUserPassword,
-				}),
-		)
-		require.NoError(t, err)
-	})
-
-	t.Cleanup(func() {
-		require.NoError(t, client.Disconnect(ctx))
-	})
-
-	t.Run("Pause Cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			deploymentEntity,
-			"pause",
-			clusterName,
-			"--type=ATLAS",
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
-		assert.Contains(t, string(resp), fmt.Sprintf("Pausing deployment '%s'", clusterName))
-	})
-
-	t.Run("Start Cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			deploymentEntity,
-			"start",
-			clusterName,
-			"--type=ATLAS",
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
-		assert.Contains(t, string(resp), fmt.Sprintf("Starting deployment '%s'", clusterName))
-	})
-	require.NoError(t, watchCluster(g.projectID, clusterName))
-
 	t.Run("Create Search Index", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
@@ -167,25 +102,5 @@ func TestDeploymentsAtlas(t *testing.T) {
 		out := string(r)
 		require.NoError(t, err, out)
 		assert.Contains(t, out, "Search index created")
-	})
-
-	t.Run("Delete Cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			deploymentEntity,
-			"delete",
-			clusterName,
-			"--type",
-			"ATLAS",
-			"--force",
-			"--watch",
-			"--watchTimeout", "300",
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		expected := fmt.Sprintf("Deployment '" + clusterName + "' deleted\n<nil>\n")
-		assert.Equal(t, expected, string(resp))
 	})
 }

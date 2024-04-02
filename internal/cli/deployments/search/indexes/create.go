@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
@@ -160,13 +161,25 @@ func (opts *CreateOpts) status(ctx context.Context) (string, error) {
 	return status, nil
 }
 
-func (opts *CreateOpts) watch(ctx context.Context) (any, bool, error) {
+func (opts *CreateOpts) watchLocal(ctx context.Context) (any, bool, error) {
 	state, err := opts.status(ctx)
 	if err != nil {
 		return nil, false, err
 	}
 	if state == "READY" {
-		return nil, true, nil
+		opts.index.Status = &state
+		return opts.index, true, nil
+	}
+	return nil, false, nil
+}
+
+func (opts *CreateOpts) watchAtlas(_ context.Context) (any, bool, error) {
+	index, err := opts.store.SearchIndex(opts.ConfigProjectID(), opts.DeploymentName, *opts.index.IndexID)
+	if err != nil {
+		return nil, false, err
+	}
+	if pointer.GetOrZero(index.Status) == "STEADY" {
+		return index, true, nil
 	}
 	return nil, false, nil
 }
@@ -177,11 +190,19 @@ func (opts *CreateOpts) PostRun(ctx context.Context) error {
 		return opts.Print(opts.index)
 	}
 
-	if _, err := opts.Watch(func() (any, bool, error) {
-		return opts.watch(ctx)
-	}); err != nil {
+	watch := opts.watchLocal
+	if opts.IsAtlasDeploymentType() {
+		watch = opts.watchAtlas
+	}
+
+	watchResult, err := opts.Watch(func() (any, bool, error) {
+		return watch(ctx)
+	})
+
+	if err != nil {
 		return err
 	}
+	opts.index = watchResult.(*admin.ClusterSearchIndex)
 
 	if err := opts.Print(opts.index); err != nil {
 		return err

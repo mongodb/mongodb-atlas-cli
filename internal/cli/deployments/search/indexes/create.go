@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
@@ -178,7 +177,7 @@ func (opts *CreateOpts) watchAtlas(_ context.Context) (any, bool, error) {
 	if err != nil {
 		return nil, false, err
 	}
-	if pointer.GetOrZero(index.Status) == "STEADY" {
+	if index.GetStatus() == "STEADY" {
 		return index, true, nil
 	}
 	return nil, false, nil

@@ -32,8 +32,8 @@ import (
 )
 
 const (
-	collectionNameAtlas = "myCol"
-	databaseNameAtlas   = "myDB"
+	collectionNameAtlas = "movies"
+	databaseNameAtlas   = "sample_mflix"
 )
 
 func TestDeploymentsAtlas(t *testing.T) {
@@ -65,7 +65,6 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"M10",
 			"--force",
 			"--skipMongosh",
-			"--skipSampleData",
 			"--debug",
 			"--projectId", g.projectID,
 			"--username", dbUserUsername,

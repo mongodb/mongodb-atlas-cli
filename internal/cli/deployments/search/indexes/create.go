@@ -43,7 +43,6 @@ const (
 )
 
 var ErrSearchIndexDuplicated = errors.New("search index is duplicated")
-var ErrWatchNotAvailable = errors.New("watch is not available for Atlas resources")
 
 type CreateOpts struct {
 	cli.WatchOpts
@@ -263,10 +262,6 @@ func CreateBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			w := cmd.OutOrStdout()
 			opts.WatchOpts.OutWriter = w
-
-			if opts.DeploymentType == "atlas" && opts.EnableWatch {
-				return ErrWatchNotAvailable
-			}
 
 			if opts.Filename != "" && (opts.DBName != "" || opts.Collection != "") {
 				return errors.New("the '-file' flag cannot be used in conjunction with the 'db' and 'collection' flags, please choose either 'file' or 'db' and '-collection', but not both")

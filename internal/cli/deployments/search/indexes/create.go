@@ -41,6 +41,7 @@ const (
 	connectWaitSeconds = 10
 	createTemplate     = "Search index created with ID: {{.IndexID}}\n"
 	notFoundState      = "NOT_FOUND"
+	watchInitialWait   = 5 * time.Second
 )
 
 var ErrSearchIndexDuplicated = errors.New("search index is duplicated")
@@ -191,7 +192,7 @@ func (opts *CreateOpts) PostRun(ctx context.Context) error {
 
 	watch := opts.watchLocal
 	if opts.IsAtlasDeploymentType() {
-		time.Sleep(5 * time.Second)
+		time.Sleep(watchInitialWait)
 		watch = opts.watchAtlas
 	}
 

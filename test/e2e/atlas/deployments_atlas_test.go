@@ -17,7 +17,6 @@ package atlas_test
 
 import (
 	"bytes"
-	"context"
 	"os"
 	"os/exec"
 	"testing"
@@ -25,7 +24,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const (
@@ -47,9 +45,6 @@ func TestDeploymentsAtlas(t *testing.T) {
 	req.NoError(err)
 
 	dbUserPassword := dbUserUsername + "~PwD"
-
-	var client *mongo.Client
-	ctx := context.Background()
 
 	t.Run("Setup", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

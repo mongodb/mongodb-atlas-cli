@@ -22,5 +22,5 @@ LATEST_SDK_RELEASE=$(echo "${LATEST_SDK_TAG}" | cut -d '.' -f 1)
 echo  "==> Updating SDK to latest major version ${LATEST_SDK_TAG}"
 gomajor get "go.mongodb.org/atlas-sdk/${LATEST_SDK_RELEASE}@${LATEST_SDK_TAG}"
 go mod tidy
-sed -r -i "s|go.mongodb.org/atlas-sdk/v[0-9]*|go.mongodb.org/atlas-sdk/${LATEST_SDK_RELEASE}|" build/ci/library_owners.json
+sed -i -r "s|go.mongodb.org/atlas-sdk/v[0-9]*|go.mongodb.org/atlas-sdk/${LATEST_SDK_RELEASE}|" build/ci/library_owners.json
 echo "Done"

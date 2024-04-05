@@ -76,6 +76,7 @@ jobs:
           title: "${{ steps.create.outputs.jira-ticket-id }}: Bump Atlas GO SDK to ${{ steps.version.outputs.VERSION }}"
           commit-message: "${{ steps.create.outputs.jira-ticket-id }}: Bump Atlas GO SDK to ${{ steps.version.outputs.VERSION }}"
           delete-branch: true
+          base: master
           branch: ${{ steps.create.outputs.jira-ticket-id }}
           labels: |
             dependencies

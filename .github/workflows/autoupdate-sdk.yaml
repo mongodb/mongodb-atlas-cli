@@ -77,6 +77,10 @@ jobs:
           commit-message: "${{ steps.create.outputs.jira-ticket-id }}: Bump Atlas GO SDK to ${{ steps.version.outputs.VERSION }}"
           delete-branch: true
           branch: ${{ steps.create.outputs.jira-ticket-id }}
+          labels: |
+            dependencies
+            go
+            atlas-sdk
           body: |
             ## Proposed changes
             Update MongoDB Atlas Go Client SDK to ${{ steps.version.outputs.VERSION }}

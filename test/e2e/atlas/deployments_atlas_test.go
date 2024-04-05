@@ -32,8 +32,8 @@ import (
 )
 
 const (
-	collectionNameAtlas = "myCol"
-	databaseNameAtlas   = "myDB"
+	collectionNameAtlas = "movies"
+	databaseNameAtlas   = "sample_mflix"
 )
 
 func TestDeploymentsAtlas(t *testing.T) {
@@ -65,7 +65,6 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"M10",
 			"--force",
 			"--skipMongosh",
-			"--skipSampleData",
 			"--debug",
 			"--projectId", g.projectID,
 			"--username", dbUserUsername,
@@ -144,7 +143,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 	})
 	require.NoError(t, watchCluster(g.projectID, clusterName))
 
-	t.Run("Create Index", func(t *testing.T) {
+	t.Run("Create Search Index", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			searchEntity,
@@ -159,6 +158,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 			databaseNameAtlas,
 			"--collection",
 			collectionNameAtlas,
+			"--watch",
 		)
 		cmd.Env = os.Environ()
 

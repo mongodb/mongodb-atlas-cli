@@ -26,6 +26,7 @@ type SearchIndexLister interface {
 
 type SearchIndexCreator interface {
 	CreateSearchIndexes(string, string, *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error)
+	SearchIndex(string, string, string) (*atlasv2.ClusterSearchIndex, error)
 }
 
 type SearchIndexDescriber interface {

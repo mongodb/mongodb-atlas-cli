@@ -88,6 +88,9 @@ func CreateBuilder() *cobra.Command {
 		Example: `# Create a custom database role
   atlas customDbRoles create customRole --privilege FIND@databaseName,UPDATE@databaseName.collectionName
 
+  # Create a custom database role on multiple collections
+  atlas customDbRoles create customRole --privilege FIND@databaseName,UPDATE@databaseName.firstCollectionName,UPDATE@databaseName.secondCollectionName
+
   # Create a customer database role with granted action on the cluster resource
   atlas customDbRoles create customRole --privilege GET_CMD_LINE_OPTS
 

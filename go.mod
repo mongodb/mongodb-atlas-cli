@@ -7,16 +7,16 @@ toolchain go1.22.1
 require (
 	cloud.google.com/go/kms v1.15.8
 	github.com/AlecAivazis/survey/v2 v2.3.7
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.10.0
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.11.0
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.5.1
 	github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azkeys v1.1.0
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2
 	github.com/PaesslerAG/jsonpath v0.1.1
-	github.com/aws/aws-sdk-go-v2 v1.26.0
-	github.com/aws/aws-sdk-go-v2/config v1.27.9
-	github.com/aws/aws-sdk-go-v2/credentials v1.17.9
-	github.com/aws/aws-sdk-go-v2/service/kms v1.30.0
+	github.com/aws/aws-sdk-go-v2 v1.26.1
+	github.com/aws/aws-sdk-go-v2/config v1.27.10
+	github.com/aws/aws-sdk-go-v2/credentials v1.17.10
+	github.com/aws/aws-sdk-go-v2/service/kms v1.30.1
 	github.com/briandowns/spinner v1.23.0
 	github.com/creack/pty v1.1.21
 	github.com/denisbrodbeck/machineid v1.0.1
@@ -29,12 +29,12 @@ require (
 	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02
 	github.com/klauspost/compress v1.17.7
 	github.com/mattn/go-isatty v0.0.20
-	github.com/mongodb-forks/digest v1.0.5
+	github.com/mongodb-forks/digest v1.1.0
 	github.com/mongodb-labs/cobra2snooty v0.18.1
 	github.com/mongodb/mongodb-atlas-kubernetes/v2 v2.2.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
-	github.com/shirou/gopsutil/v3 v3.24.2
+	github.com/shirou/gopsutil/v3 v3.24.3
 	github.com/spf13/afero v1.11.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/pflag v1.0.5
@@ -47,7 +47,7 @@ require (
 	golang.org/x/exp v0.0.0-20240318143956-a85f2c67cd81
 	golang.org/x/mod v0.16.0
 	golang.org/x/tools v0.19.0
-	google.golang.org/api v0.171.0
+	google.golang.org/api v0.172.0
 	google.golang.org/protobuf v1.33.0
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.29.3
@@ -71,16 +71,16 @@ require (
 	github.com/PaesslerAG/gval v1.0.0 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230217124315-7d5c6f04bbb8 // indirect
 	github.com/alessio/shellescape v1.4.1 // indirect
-	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.16.0 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.4 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.4 // indirect
+	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.16.1 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.5 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.5 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.8.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.11.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.11.6 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sso v1.20.3 // indirect
-	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.23.3 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sts v1.28.5 // indirect
-	github.com/aws/smithy-go v1.20.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.11.2 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.11.7 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sso v1.20.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.23.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sts v1.28.6 // indirect
+	github.com/aws/smithy-go v1.20.2 // indirect
 	github.com/cloudflare/circl v1.3.7 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
@@ -161,7 +161,7 @@ require (
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto v0.0.0-20240213162025-012b6fc9bca9 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240311132316-a219d84964c2 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240314234333-6e1732d8331c // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240318140521-94a12d6c2237 // indirect
 	google.golang.org/grpc v1.62.1 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect

@@ -2,7 +2,7 @@ module github.com/mongodb/mongodb-atlas-cli/atlascli
 
 go 1.22.1
 
-toolchain go1.22.2
+toolchain go1.22.1
 
 require (
 	cloud.google.com/go/kms v1.15.8

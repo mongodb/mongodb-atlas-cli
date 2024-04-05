@@ -1,0 +1,33 @@
+---
+name: Snapshot
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+permissions:
+  contents: write
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GORELEASER_KEY: ${{ secrets.GORELEASER_KEY }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+      - run: |
+          echo 'deb [trusted=yes] https://repo.goreleaser.com/apt/ /' | sudo tee /etc/apt/sources.list.d/goreleaser.list
+          sudo apt update
+          sudo apt install goreleaser-pro
+      - run: ./build/package/generate-notices.sh
+      - run: |
+          VERSION_GIT="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+          export VERSION_GIT
+          goreleaser --config "build/package/.goreleaser.yml" --rm-dist --release-notes "CHANGELOG.md" -p 1 --snapshot --debug

@@ -16,32 +16,32 @@
 
 set -Eeou pipefail
 
-EXE_FILE="bin/atlas.exe"
-MSI_FILE="bin/mongodb-atlas-cli_${VERSION}_windows_x86_64.msi"
+# EXE_FILE="bin/atlas.exe"
+# MSI_FILE="bin/mongodb-atlas-cli_${VERSION}_windows_x86_64.msi"
 
-if [[ -f "$EXE_FILE" && -f "$MSI_FILE" ]]; then
-	echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
+# if [[ -f "$EXE_FILE" && -f "$MSI_FILE" ]]; then
+# 	echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
 
-	echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" > .env
-	echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> .env
+# 	echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" > .env
+# 	echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> .env
 
-	echo "signing $EXE_FILE"
-	podman run \
-		--env-file=.env \
-		--rm \
-		-v "$(pwd):$(pwd)" \
-		-w "$(pwd)" \
-		artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-jsign \
-		/bin/bash -c "jsign --tsaurl http://timestamp.digicert.com -a mongo-authenticode-2021 \"$EXE_FILE\""
+# 	echo "signing $EXE_FILE"
+# 	podman run \
+# 		--env-file=.env \
+# 		--rm \
+# 		-v "$(pwd):$(pwd)" \
+# 		-w "$(pwd)" \
+# 		artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-jsign \
+# 		/bin/bash -c "jsign --tsaurl http://timestamp.digicert.com -a mongo-authenticode-2021 \"$EXE_FILE\""
 	
-	echo "signing $MSI_FILE"
-	podman run \
-		--env-file=.env \
-		--rm \
-		-v "$(pwd):$(pwd)" \
-		-w "$(pwd)" \
-		artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-jsign \
-		/bin/bash -c "jsign --tsaurl http://timestamp.digicert.com -a mongo-authenticode-2021 \"$MSI_FILE\""
+# 	echo "signing $MSI_FILE"
+# 	podman run \
+# 		--env-file=.env \
+# 		--rm \
+# 		-v "$(pwd):$(pwd)" \
+# 		-w "$(pwd)" \
+# 		artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-jsign \
+# 		/bin/bash -c "jsign --tsaurl http://timestamp.digicert.com -a mongo-authenticode-2021 \"$MSI_FILE\""
 	
-	rm .env
-fi
+# 	rm .env
+# fi

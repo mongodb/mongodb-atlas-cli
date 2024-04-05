@@ -21,7 +21,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/spf13/cobra"
 )
 
@@ -111,7 +111,7 @@ func generateFile(name, version string) error {
 		ReleaseDate:          time.Now().UTC(),
 		Version:              version,
 		ManualLink:           manualLink,
-		PreviousReleasesLink: "https://github.com/mongodb/mongodb-atlas-cli/atlascli/releases",
+		PreviousReleasesLink: "https://github.com/fmenezes/mongodb-atlas-cli/atlascli/releases",
 		ReleaseNotesLink:     releaseNotesLink,
 		TutorialLink:         tutorialLink,
 		Platform: []Platform{

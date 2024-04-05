@@ -15,8 +15,8 @@
 package deployments
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/search"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/deployments/search"
 	"github.com/spf13/cobra"
 )
 

@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_indexes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store IndexCreator
+//go:generate mockgen -destination=../mocks/mock_indexes.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store IndexCreator
 
 type IndexCreator interface {
 	CreateIndex(string, string, *atlasv2.DatabaseRollingIndexRequest) error

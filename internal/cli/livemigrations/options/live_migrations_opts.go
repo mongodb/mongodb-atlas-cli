@@ -19,11 +19,11 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/prompt"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/telemetry"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )

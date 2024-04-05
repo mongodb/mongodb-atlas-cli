@@ -17,9 +17,9 @@ package livemigrations
 import (
 	"context"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/livemigrations/options"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/livemigrations/options"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/spf13/cobra"
 )
 

@@ -17,10 +17,10 @@ package store
 import (
 	"net/http"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/config"
 )
 
-//go:generate mockgen -destination=../mocks/mock_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store EventsSender,UnauthEventsSender
+//go:generate mockgen -destination=../mocks/mock_telemetry.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store EventsSender,UnauthEventsSender
 
 type EventsSender interface {
 	SendEvents(body interface{}) error

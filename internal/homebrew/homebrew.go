@@ -22,8 +22,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/spf13/afero"
 )
 

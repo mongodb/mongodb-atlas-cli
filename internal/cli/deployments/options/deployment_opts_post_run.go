@@ -17,8 +17,8 @@ package options
 import (
 	"errors"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/podman"
 )
 
 func (opts *DeploymentOpts) PostRunMessages() error {

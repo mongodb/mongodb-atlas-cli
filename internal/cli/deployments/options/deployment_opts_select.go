@@ -22,10 +22,10 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/podman"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/telemetry"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/usage"
 )
 
 var errEmptyLocalDeployments = errors.New("currently there are no deployment in your local system")

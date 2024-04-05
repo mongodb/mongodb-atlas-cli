@@ -15,8 +15,8 @@
 package telemetry
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/spf13/cobra"
 )
 

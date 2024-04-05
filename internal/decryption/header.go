@@ -19,8 +19,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/decryption/aes"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/decryption/keyproviders"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/decryption/aes"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/decryption/keyproviders"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

@@ -30,7 +30,7 @@ please head over to our [feedback page](https://feedback.mongodb.com/forums/9308
 
 ## Reporting Issues
 
-Please create a [GitHub issue](https://github.com/mongodb/mongodb-atlas-cli/issues/new?assignees=&labels=&template=bug_report.md) describing the kind of problem you're facing
+Please create a [GitHub issue](https://github.com/fmenezes/mongodb-atlas-cli/issues/new?assignees=&labels=&template=bug_report.md) describing the kind of problem you're facing
 with as much detail as possible, including things like operating system or anything else may be relevant to the issue.
 
 ## Auto-close Stale Issues and Pull Requests
@@ -56,7 +56,7 @@ To make the contribution process as seamless as possible, we ask for the followi
   - Have test cases for the new code. If you have questions about how to do this, please ask in your pull request or check the [Building and Testing](#building-and-testing) section.
   - Run `make fmt`.
   - Add documentation if you are adding new features or changing functionality.
-  - Confirm that `make check` succeeds. [GitHub Actions](https://github.com/mongodb/mongodb-atlas-cli/actions).
+  - Confirm that `make check` succeeds. [GitHub Actions](https://github.com/fmenezes/mongodb-atlas-cli/actions).
 
 ### Development Setup
 
@@ -144,12 +144,12 @@ Depending on the feature you are building you might choose to:
 For a command group, we need to create new cobra root command. 
 This command aggregates a number of subcommands that can perform network requests and return results
 
-For example [teams](https://github.com/mongodb/mongodb-atlas-cli/tree/220c6c73f346f5c711a1c772b17f93a6811efc69/internal/cli/atlas/teams) 
+For example [teams](https://github.com/fmenezes/mongodb-atlas-cli/tree/220c6c73f346f5c711a1c772b17f93a6811efc69/internal/cli/atlas/teams) 
 command root provides the main execution point for `atlas teams` with subcommands like `atlas teams list`
 
 Root command links to a number of child commands. Atlas CLI provides a number of patterns for child commands depending on the type of operation performed.
 Each new feature might cover typical commands like `list` and `describe` along with dedicated actions.
-For example [list command](https://github.com/mongodb/mongodb-atlas-cli/blob/220c6c73f346f5c711a1c772b17f93a6811efc69/internal/cli/atlas/teams/list.go).
+For example [list command](https://github.com/fmenezes/mongodb-atlas-cli/blob/220c6c73f346f5c711a1c772b17f93a6811efc69/internal/cli/atlas/teams/list.go).
 It is normal to duplicate existing commands and edit descriptions and methods for your own needs.
 
 Additionally, after adding new command we need to add it to the main CLI root command. 
@@ -197,7 +197,7 @@ Flags are a way to modify the command, also may be called "options". Flags alway
 - `--booleanFlag`: this flag represents a boolean and it sets the related variable to true when the flag is used, false otherwise. Example: `--force`
 - `--flagName value1,value2,..,valueN`: you will also find flags that accept a list of values. This type of flag can be very useful to represent data structures as `--role roleName1@db,roleName2@db`, `--privilege action@dbName.collection,action2@dbName.collection`, or `--key field:type`.
   As shown in the examples, the standard format used to represent data structures consists of splitting the first value with the second one by at sign `@` or colon `:`, and the second value with the third one by a full stop `.`.
-  We recommend using configuration files for complex data structures that require more than three values. For an example of configuration files, see [mongocli atlas cluster create](https://github.com/mongodb/mongodb-atlas-cli/blob/f2e6d661a3eb2cfcf9baab5f9e0b1c0f872b8c14/internal/cli/atlas/clusters/create.go#L235).
+  We recommend using configuration files for complex data structures that require more than three values. For an example of configuration files, see [mongocli atlas cluster create](https://github.com/fmenezes/mongodb-atlas-cli/blob/f2e6d661a3eb2cfcf9baab5f9e0b1c0f872b8c14/internal/cli/atlas/clusters/create.go#L235).
 
 #### Documentation Requirements
 

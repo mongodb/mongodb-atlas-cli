@@ -19,9 +19,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/convert"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/pointer"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 

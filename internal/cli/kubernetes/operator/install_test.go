@@ -19,8 +19,8 @@ package operator
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/test"
 )
 
 func TestInstallBuilder(t *testing.T) {

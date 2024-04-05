@@ -15,10 +15,10 @@
 package options
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/telemetry"
 )
 
-//go:generate mockgen -destination=../../../mocks/mock_deployment_opts_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options DeploymentTelemetry
+//go:generate mockgen -destination=../../../mocks/mock_deployment_opts_telemetry.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/deployments/options DeploymentTelemetry
 type DeploymentTelemetry interface {
 	AppendDeploymentType()
 }

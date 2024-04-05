@@ -21,20 +21,20 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/prerun"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/telemetry"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/auth LoginConfig
+//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/auth LoginConfig
 
 type LoginConfig interface {
 	config.SetSaver

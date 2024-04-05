@@ -15,7 +15,7 @@
 package config
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/spf13/cobra"
 )
 

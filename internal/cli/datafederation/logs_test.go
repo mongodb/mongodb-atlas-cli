@@ -23,11 +23,11 @@ import (
 	"os"
 	"testing"
 
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
 )

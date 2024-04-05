@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_performance_advisor.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store PerformanceAdvisorNamespacesLister,PerformanceAdvisorSlowQueriesLister,PerformanceAdvisorIndexesLister,PerformanceAdvisorSlowOperationThresholdEnabler,PerformanceAdvisorSlowOperationThresholdDisabler
+//go:generate mockgen -destination=../mocks/mock_performance_advisor.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store PerformanceAdvisorNamespacesLister,PerformanceAdvisorSlowQueriesLister,PerformanceAdvisorIndexesLister,PerformanceAdvisorSlowOperationThresholdEnabler,PerformanceAdvisorSlowOperationThresholdDisabler
 type PerformanceAdvisorNamespacesLister interface {
 	PerformanceAdvisorNamespaces(opts *atlasv2.ListSlowQueryNamespacesApiParams) (*atlasv2.Namespaces, error)
 }

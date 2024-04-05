@@ -15,7 +15,7 @@
 package gcp
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/privateendpoints/gcp/interfaces"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/privateendpoints/gcp/interfaces"
 	"github.com/spf13/cobra"
 )
 

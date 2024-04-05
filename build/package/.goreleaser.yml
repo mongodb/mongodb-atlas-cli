@@ -15,7 +15,7 @@ builds:
       binary: bin/atlas
       main: ./cmd/atlas
       ldflags:
-        - -s -w -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.Version={{.Version}} -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.GitCommit={{.FullCommit}}
+        - -s -w -X github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/version.Version={{.Version}} -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.GitCommit={{.FullCommit}}
     id: linux
     goos: [linux]
     goarch: [amd64,arm64]

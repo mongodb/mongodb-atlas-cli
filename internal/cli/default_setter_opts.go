@@ -22,18 +22,18 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/briandowns/spinner"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/prompt"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/telemetry"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/validate"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_default_opts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli ProjectOrgsLister
+//go:generate mockgen -destination=../mocks/mock_default_opts.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli ProjectOrgsLister
 
 type ProjectOrgsLister interface {
 	Project(id string) (*atlasv2.Group, error)

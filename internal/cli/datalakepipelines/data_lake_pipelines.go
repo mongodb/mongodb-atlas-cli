@@ -17,11 +17,11 @@
 package datalakepipelines
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/datalakepipelines/availableschedules"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/datalakepipelines/availablesnapshots"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/datalakepipelines/datasets"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/datalakepipelines/runs"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/datalakepipelines/availableschedules"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/datalakepipelines/availablesnapshots"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/datalakepipelines/datasets"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/datalakepipelines/runs"
 	"github.com/spf13/cobra"
 )
 

@@ -15,10 +15,10 @@
 package metrics
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/metrics/databases"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/metrics/disks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/metrics/processes"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/metrics/databases"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/metrics/disks"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/metrics/processes"
 	"github.com/spf13/cobra"
 )
 

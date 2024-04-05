@@ -17,7 +17,7 @@ package decryption
 import (
 	"io"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/log"
 )
 
 func ListKeyProviders(logReader io.ReadSeeker) ([]*AuditLogLineKeyStoreIdentifier, error) {

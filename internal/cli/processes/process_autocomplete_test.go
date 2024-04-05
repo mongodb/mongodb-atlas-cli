@@ -19,9 +19,9 @@ package processes
 import (
 	"testing"
 
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )

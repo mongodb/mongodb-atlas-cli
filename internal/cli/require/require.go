@@ -17,7 +17,7 @@ package require
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	"github.com/tangzero/inflector"
 )

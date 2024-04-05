@@ -19,8 +19,8 @@ import (
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/search"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/telemetry"
 )
 
 const (

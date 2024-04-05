@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_organization_invitations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OrganizationInvitationLister,OrganizationInvitationDeleter,OrganizationInvitationDescriber,OrganizationInvitationUpdater,OrganizationInviter
+//go:generate mockgen -destination=../mocks/mock_organization_invitations.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store OrganizationInvitationLister,OrganizationInvitationDeleter,OrganizationInvitationDescriber,OrganizationInvitationUpdater,OrganizationInviter
 
 type OrganizationInvitationLister interface {
 	OrganizationInvitations(*atlasv2.ListOrganizationInvitationsApiParams) ([]atlasv2.OrganizationInvitation, error)

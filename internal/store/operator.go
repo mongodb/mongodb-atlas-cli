@@ -15,14 +15,14 @@
 package store
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/pointer"
 )
 
-//go:generate mockgen -destination=../mocks/mock_atlas_operator_cluster_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OperatorClusterStore
-//go:generate mockgen -destination=../mocks/mock_atlas_operator_project_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OperatorProjectStore
-//go:generate mockgen -destination=../mocks/mock_atlas_operator_db_users_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OperatorDBUsersStore
-//go:generate mockgen -destination=../mocks/mock_atlas_operator_org_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OperatorOrgStore
-//go:generate mockgen -destination=../mocks/mock_atlas_generic_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OperatorGenericStore
+//go:generate mockgen -destination=../mocks/mock_atlas_operator_cluster_store.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store OperatorClusterStore
+//go:generate mockgen -destination=../mocks/mock_atlas_operator_project_store.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store OperatorProjectStore
+//go:generate mockgen -destination=../mocks/mock_atlas_operator_db_users_store.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store OperatorDBUsersStore
+//go:generate mockgen -destination=../mocks/mock_atlas_operator_org_store.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store OperatorOrgStore
+//go:generate mockgen -destination=../mocks/mock_atlas_generic_store.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store OperatorGenericStore
 
 type ListOptions struct {
 	PageNum      int

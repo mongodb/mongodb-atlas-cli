@@ -18,17 +18,17 @@ import (
 	"context"
 	"io"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/oauth"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/oauth"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_logout.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/auth Revoker,ConfigDeleter
+//go:generate mockgen -destination=../../mocks/mock_logout.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/auth Revoker,ConfigDeleter
 
 type ConfigDeleter interface {
 	Delete() error

@@ -20,7 +20,7 @@ import (
 	"go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_data_federation_private_endpoint.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DataFederationPrivateEndpointLister,DataFederationPrivateEndpointDescriber,DataFederationPrivateEndpointCreator,DataFederationPrivateEndpointDeleter
+//go:generate mockgen -destination=../mocks/mock_data_federation_private_endpoint.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store DataFederationPrivateEndpointLister,DataFederationPrivateEndpointDescriber,DataFederationPrivateEndpointCreator,DataFederationPrivateEndpointDeleter
 
 type DataFederationPrivateEndpointLister interface {
 	DataFederationPrivateEndpoints(string) (*admin.PaginatedPrivateNetworkEndpointIdEntry, error)

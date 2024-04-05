@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_processes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProcessLister,ProcessDescriber
+//go:generate mockgen -destination=../mocks/mock_processes.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store ProcessLister,ProcessDescriber
 
 type ProcessLister interface {
 	Processes(*atlasv2.ListAtlasProcessesApiParams) (*atlasv2.PaginatedHostViewAtlas, error)

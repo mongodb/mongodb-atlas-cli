@@ -25,11 +25,11 @@ import (
 	"time"
 
 	"github.com/denisbrodbeck/machineid"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/terminal"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/terminal"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )

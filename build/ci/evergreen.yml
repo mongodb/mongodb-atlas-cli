@@ -27,18 +27,18 @@ variables:
       GO111MODULE: "on"
       GOROOT: ${go_root}
       GOPATH: ${go_base_path}${workdir}
-      ADD_PATH: "${go_bin}:${go_base_path}${workdir}/bin:${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
+      ADD_PATH: "${go_bin}:${go_base_path}${workdir}/bin:${go_base_path}${workdir}/src/github.com/fmenezes/mongodb-atlas-cli/bin"
       GOPROXY: ${go_proxy}
   - &go_options
     add_to_path:
       - ${go_bin}
       - ${go_base_path}${workdir}/bin
-      - ${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
+      - ${go_base_path}${workdir}/src/github.com/fmenezes/mongodb-atlas-cli/bin
     include_expansions_in_env:
       - go_base_path
       - go_proxy
       - workdir
-    working_dir: src/github.com/mongodb/mongodb-atlas-cli
+    working_dir: src/github.com/fmenezes/mongodb-atlas-cli
     env:
       <<: *go_env
 functions:
@@ -46,7 +46,7 @@ functions:
     - command: git.get_project
       type: setup
       params:
-        directory: src/github.com/mongodb/mongodb-atlas-cli
+        directory: src/github.com/fmenezes/mongodb-atlas-cli
   "build":
     - command: subprocess.exec
       type: test
@@ -95,7 +95,7 @@ functions:
       type: setup
       params:
         <<: *go_options
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        working_dir: src/github.com/fmenezes/mongodb-atlas-cli/bin
         shell: bash
         script: |
           set -Eeou pipefail
@@ -105,13 +105,13 @@ functions:
     - command: subprocess.exec
       type: setup
       params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        working_dir: src/github.com/fmenezes/mongodb-atlas-cli/bin
         binary: ../build/ci/install_podman.sh
   "setup operator":
     command: subprocess.exec
     type: setup
     params:
-      working_dir: src/github.com/mongodb/mongodb-atlas-cli
+      working_dir: src/github.com/fmenezes/mongodb-atlas-cli
       env:
         MCLI_ORG_ID: ${atlas_org_id}
         MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
@@ -135,7 +135,7 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
-          - src/github.com/mongodb/mongodb-atlas-cli/tasks.json
+          - src/github.com/fmenezes/mongodb-atlas-cli/tasks.json
         remote_file: ${project}/dist/${revision}_${created_at}/atlascli/${task_type}/
         bucket: mongodb-mongocli-build
         permissions: public-read
@@ -150,7 +150,7 @@ pre:
 post:
   - command: attach.xunit_results
     params:
-      files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
+      files: ["src/github.com/fmenezes/mongodb-atlas-cli/*.xml"]
 tasks:
   - name: compile
     tags: ["code_health"]

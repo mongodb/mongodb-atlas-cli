@@ -21,12 +21,12 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/latestrelease"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/test"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/golang/mock/gomock"
 	"github.com/google/go-github/v50/github"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/latestrelease"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/afero"
 )
 

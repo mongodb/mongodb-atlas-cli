@@ -8,6 +8,8 @@ updates:
     open-pull-requests-limit: 20
     reviewers:
       - "mongodb/mongocli"
+    ignore:
+      - dependency-name: "go.mongodb.org/atlas-sdk/*"
     groups:
       golang:
         patterns:

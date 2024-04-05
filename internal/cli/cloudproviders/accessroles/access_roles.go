@@ -15,8 +15,8 @@
 package accessroles
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/cloudproviders/accessroles/aws"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/cloudproviders/accessroles/aws"
 	"github.com/spf13/cobra"
 )
 

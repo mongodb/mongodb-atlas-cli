@@ -15,10 +15,10 @@
 package organizations
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/organizations/apikeys"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/organizations/invitations"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/organizations/users"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/organizations/apikeys"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/organizations/invitations"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/organizations/users"
 	"github.com/spf13/cobra"
 )
 

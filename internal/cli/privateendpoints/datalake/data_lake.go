@@ -15,8 +15,8 @@
 package datalake
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/privateendpoints/datalake/aws"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/privateendpoints/datalake/aws"
 	"github.com/spf13/cobra"
 )
 

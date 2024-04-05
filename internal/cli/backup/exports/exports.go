@@ -15,9 +15,9 @@
 package exports
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/backup/exports/buckets"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/backup/exports/jobs"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/backup/exports/buckets"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/backup/exports/jobs"
 	"github.com/spf13/cobra"
 )
 

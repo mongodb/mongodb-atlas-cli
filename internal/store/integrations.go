@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store IntegrationCreator,IntegrationLister,IntegrationDeleter,IntegrationDescriber
+//go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store IntegrationCreator,IntegrationLister,IntegrationDeleter,IntegrationDescriber
 
 type IntegrationCreator interface {
 	CreateIntegration(string, string, *atlasv2.ThirdPartyIntegration) (*atlasv2.PaginatedIntegration, error)

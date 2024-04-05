@@ -17,9 +17,9 @@ package cli
 import (
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/prerun"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	"github.com/tangzero/inflector"
 )

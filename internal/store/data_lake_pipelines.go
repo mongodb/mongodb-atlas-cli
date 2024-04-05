@@ -23,7 +23,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_data_lake_pipelines.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store PipelinesLister,PipelinesDescriber,PipelinesCreator,PipelinesUpdater,PipelinesDeleter,PipelineAvailableSnapshotsLister,PipelineAvailableSchedulesLister,PipelinesTriggerer,PipelinesPauser,PipelinesResumer
+//go:generate mockgen -destination=../mocks/mock_data_lake_pipelines.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store PipelinesLister,PipelinesDescriber,PipelinesCreator,PipelinesUpdater,PipelinesDeleter,PipelineAvailableSnapshotsLister,PipelineAvailableSchedulesLister,PipelinesTriggerer,PipelinesPauser,PipelinesResumer
 
 type PipelinesLister interface {
 	Pipelines(string) ([]atlasv2.DataLakeIngestionPipeline, error)

@@ -19,7 +19,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store UserCreator,UserDescriber,UserLister,TeamUserLister
+//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store UserCreator,UserDescriber,UserLister,TeamUserLister
 
 type UserCreator interface {
 	CreateUser(user *atlasv2.CloudAppUser) (*atlasv2.CloudAppUser, error)

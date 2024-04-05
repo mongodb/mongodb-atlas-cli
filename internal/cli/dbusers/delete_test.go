@@ -19,9 +19,9 @@ package dbusers
 import (
 	"testing"
 
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 )
 
 func TestDBUsersDelete_Run(t *testing.T) {

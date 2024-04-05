@@ -20,7 +20,7 @@ import (
 	"go.mongodb.org/atlas-sdk/v20230201007/admin"
 )
 
-//go:generate mockgen -destination=../../mocks/atlas/mock_{{ .BaseFileName }}.go -package=atlas github.com/mongodb/mongodb-atlas-cli/internal/store/atlas {{ .InterfaceNames }}
+//go:generate mockgen -destination=../../mocks/atlas/mock_{{ .BaseFileName }}.go -package=atlas github.com/fmenezes/mongodb-atlas-cli/internal/store/atlas {{ .InterfaceNames }}
 
 {{ if .Lister }}
 type {{ .Lister.Name }} interface {

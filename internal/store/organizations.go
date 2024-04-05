@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OrganizationLister,OrganizationDeleter,OrganizationDescriber,OrganizationCreator
+//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store OrganizationLister,OrganizationDeleter,OrganizationDescriber,OrganizationCreator
 
 type OrganizationLister interface {
 	Organizations(*atlasv2.ListOrganizationsApiParams) (*atlasv2.PaginatedOrganization, error)

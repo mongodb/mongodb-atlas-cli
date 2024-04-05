@@ -15,7 +15,7 @@
 package sampledata
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/spf13/cobra"
 )
 

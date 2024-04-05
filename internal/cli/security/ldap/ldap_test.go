@@ -18,7 +18,7 @@ package ldap
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/test"
 )
 
 func TestBuilder(t *testing.T) {

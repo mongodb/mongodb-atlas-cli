@@ -18,11 +18,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migrations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store LiveMigrationCreator,LiveMigrationDescriber
+//go:generate mockgen -destination=../mocks/mock_live_migrations.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store LiveMigrationCreator,LiveMigrationDescriber
 
 type LiveMigrationCreator interface {
 	LiveMigrationCreate(string, *atlasv2.LiveMigrationRequest) (*atlasv2.LiveMigrationResponse, error)

@@ -24,7 +24,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/config"
 )
 
 const minPasswordLength = 10

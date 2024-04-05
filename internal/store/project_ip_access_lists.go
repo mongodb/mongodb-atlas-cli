@@ -20,7 +20,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_project_ip_access_lists.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectIPAccessListDescriber,ProjectIPAccessListLister,ProjectIPAccessListCreator,ProjectIPAccessListDeleter
+//go:generate mockgen -destination=../mocks/mock_project_ip_access_lists.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store ProjectIPAccessListDescriber,ProjectIPAccessListLister,ProjectIPAccessListCreator,ProjectIPAccessListDeleter
 
 type ProjectIPAccessListDescriber interface {
 	IPAccessList(string, string) (*atlasv2.NetworkPermissionEntry, error)

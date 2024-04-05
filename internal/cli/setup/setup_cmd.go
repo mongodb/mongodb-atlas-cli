@@ -25,19 +25,19 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/auth"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongosh"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/sighandle"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/auth"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/mongosh"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/prerun"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/sighandle"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/telemetry"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"go.mongodb.org/atlas-sdk/v20231115008/admin"
@@ -95,7 +95,7 @@ We could not find your public IP address. To add your IP address run:
 
 `
 
-//go:generate mockgen -destination=../../mocks/mock_setup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/setup ProfileReader
+//go:generate mockgen -destination=../../mocks/mock_setup.go -package=mocks github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/setup ProfileReader
 
 type ProfileReader interface {
 	ProjectID() string

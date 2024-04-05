@@ -15,12 +15,12 @@
 package backup
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/backup/compliancepolicy"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/backup/exports"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/backup/restores"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/backup/schedule"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/backup/snapshots"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/backup/compliancepolicy"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/backup/exports"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/backup/restores"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/backup/schedule"
+	"github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/cli/backup/snapshots"
 	"github.com/spf13/cobra"
 )
 

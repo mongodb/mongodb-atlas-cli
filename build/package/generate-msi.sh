@@ -33,7 +33,7 @@ COMMIT=$(git log -n1 --format=format:"%H")
 SOURCE_FILES=./cmd/atlas
 PACKAGE_NAME=mongodb-atlas-cli_${VERSION_NAME}_windows_x86_64.msi
 OUTPUT=./bin/atlas.exe
-LINKER_FLAGS="-s -w -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.Version=${VERSION_GIT} -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.GitCommit=${COMMIT}"
+LINKER_FLAGS="-s -w -X github.com/fmenezes/mongodb-atlas-cli/atlascli/internal/version.Version=${VERSION_GIT} -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.GitCommit=${COMMIT}"
 WIX_MANIFEST_FILE="./build/package/wix/atlascli.json"
 
 env GOOS=windows GOARCH=amd64 go build \

@@ -18,7 +18,7 @@ Use the instructions bellow as a fallback.
 
 Package Managers are published after a stable release happens, in which binaries are stored in github releases and also uploaded to our download center (https://www.mongodb.com/try/download/atlascli and https://www.mongodb.com/try/download/mongocli).
 
-* [Chocolatey](http://chocolatey.org) release is triggered in https://github.com/mongodb-forks/chocolatey-packages/, the Github Action will trigger every weekday at 4pm (UTC) to check if there are any new releases in https://github.com/mongodb/mongodb-atlas-cli/releases/.
+* [Chocolatey](http://chocolatey.org) release is triggered in https://github.com/mongodb-forks/chocolatey-packages/, the Github Action will trigger every weekday at 4pm (UTC) to check if there are any new releases in https://github.com/fmenezes/mongodb-atlas-cli/releases/.
 
 * [Homebrew](http://brew.sh/) release is triggered in https://github.com/Homebrew/homebrew-core/, which is not maintained by MongoDB rather by homebrew community.
 
@@ -26,7 +26,7 @@ Package Managers are published after a stable release happens, in which binaries
 
 ## Docker Image
 Our Docker image release for AtlasCLI is managed through the [docker-release.yml](.github/workflows/docker-release.yml)  workflow. This process is automated to run daily, ensuring the latest versions of the image dependencies are updated.
-![github_action](https://github.com/mongodb/mongodb-atlas-cli/assets/5663078/fd54ccda-7794-4139-af92-dbde0c278e78)
+![github_action](https://github.com/fmenezes/mongodb-atlas-cli/assets/5663078/fd54ccda-7794-4139-af92-dbde0c278e78)
 ### Release Steps
 #### Step 1: Build and Stage
 The AtlasCLI Docker image is built from the ([Dockerfile](Dockerfile)) and tagged in three ways: `latest`, `vX.Y.Z` (reflecting the latest release version, e.g., `v1.22.0`), and `vX.Y.Z-date` (adding the current date, e.g., `v1.22.0-2024-01-01`). This image is initially published to a staging registry to prepare for signature in the next step.
@@ -55,7 +55,7 @@ This will do the following things:
 1. Tag a new version, ie: `git tag -a -s atlascli/v1.0.0 -m "atlascli/v1.0.0"`
 2. Publish the new tag, ie `git push origin atlascli/v1.0.0`
 3. The [evergreen](build/ci/release.yml) release task will run after a tag event from master.
-4. If everything goes smoothly the release will be published in the [releases page](https://github.com/mongodb/mongodb-atlas-cli/releases), and [download center](https://www.mongodb.com/try/download/mongocli).
+4. If everything goes smoothly the release will be published in the [releases page](https://github.com/fmenezes/mongodb-atlas-cli/releases), and [download center](https://www.mongodb.com/try/download/mongocli).
 
 
 # Generate the SBOM

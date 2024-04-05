@@ -38,11 +38,10 @@ jobs:
             --header 'Accept: application/json' \
             --header 'Content-Type: application/json' \
             --data '{
-              "jql": "project = CLOUDP and summary ~ \"Bump Atlas GO SDK to '"${VERSION}"'\" and status not in (Closed, Resolved)"
+              "jql": "project = CLOUDP and summary ~ \"Bump Atlas GO SDK to '"${VERSION}"'\""
             }')
           echo "Response: ${json_response}"
           echo "FOUND=$(echo "${json_response}" | jq -c '[.issues] | flatten | any')" >> "$GITHUB_OUTPUT"
-          echo "${json_response}" | jq -r '[.issues] | flatten | first | .key')
       - name: Create JIRA ticket
         id: create
         if: steps.verify-changed-files.outputs.files_changed == 'true' && steps.find.outputs.FOUND == 'false'

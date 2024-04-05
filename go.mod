@@ -1,6 +1,6 @@
 module github.com/mongodb/mongodb-atlas-cli/atlascli
 
-go 1.22.1
+go 1.22
 
 toolchain go1.22.1
 

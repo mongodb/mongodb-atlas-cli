@@ -15,7 +15,7 @@ jobs:
           go-version-file: 'go.mod'
       - run:  go install github.com/icholy/gomajor@latest 
       - id:   version
-        run:  echo "VERSION=$(curl -sSfL -X GET  https://api.github.com/repos/mongodb/atlas-sdk-go/releases/latest | jq -r '.tag_name')" >> $GITHUB_OUTPUT
+        run:  echo "VERSION=$(curl -sSfL -X GET  https://api.github.com/repos/mongodb/atlas-sdk-go/releases/latest | jq -r '.tag_name')" >> "$GITHUB_OUTPUT"
       - run:  make update-atlas-sdk
       - name: Verify Changed files
         uses: tj-actions/verify-changed-files@1e517a7f5663673148ceb7c09c1900e5af48e7a1
@@ -44,14 +44,14 @@ jobs:
                   "project": {
                       "id": "10984"
                   },
-                  "summary": "Bump Atlas GO SDK to '${VERSION}'",
+                  "summary": "Bump Atlas GO SDK to '"${VERSION}"'",
                   "issuetype": {
                       "id": "12"
                   },
                   "customfield_12751": [{
                           "id": "22223"
                   }],
-                  "description": "Update Atlas GO SDK to '${VERSION}'.",
+                  "description": "Update Atlas GO SDK to '"${VERSION}"'.",
                   "components": [
                       {
                           "id": "30450"

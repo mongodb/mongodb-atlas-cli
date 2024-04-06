@@ -1,5 +1,5 @@
 {
-  "name": "{{ .setProjectName }}",
+  "name": "{{ .SetProjectName }}",
   "tags": [
     {
       "key": "env",

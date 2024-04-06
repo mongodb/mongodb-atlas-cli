@@ -111,7 +111,7 @@ func TestAtlasProjects(t *testing.T) {
 	updateTests := []struct {
 		name                string
 		filename            string
-		setProjectName      *string
+		SetProjectName      *string
 		expectedProjectName string
 		expectedProjectTags []admin.ResourceTag
 	}{

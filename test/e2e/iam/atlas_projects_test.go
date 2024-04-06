@@ -22,8 +22,10 @@ import (
 	"os"
 	"os/exec"
 	"testing"
+	"text/template"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
@@ -38,7 +40,7 @@ func TestAtlasProjects(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	projectName := fmt.Sprintf("e2e-proj-%v", n)
+	projectName := fmt.Sprintf("e2e-proj-%d", n)
 
 	var projectID string
 	t.Run("Create", func(t *testing.T) {
@@ -100,18 +102,69 @@ func TestAtlasProjects(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		require.Len(t, project.GetTags(), 2)
+		a := assert.New(t)
+		expectedTags := []admin.ResourceTag{{Key: "env", Value: "e2e"}, {Key: "prod", Value: "false"}}
+		a.ElementsMatch(expectedTags, project.GetTags())
+	})
 
-		expectedTags := map[string]string{"env": "e2e", "prod": "false"}
-		for _, tag := range project.GetTags() {
-			expectedValue, ok := expectedTags[tag.GetKey()]
-			if !ok {
-				t.Errorf("unexpected tag key %s in tags: %v, expected tags: %v\n", tag.GetKey(), project.Tags, expectedTags)
+	updatedProjectName := fmt.Sprintf("%s-updated", projectName)
+	updateTests := []struct {
+		name                string
+		filename            string
+		setProjectName      *string
+		expectedProjectName string
+		expectedProjectTags []admin.ResourceTag
+	}{
+		{
+			"setNameAndTags",
+			"data/update_project_name_and_tags.json",
+			&updatedProjectName,
+			updatedProjectName,
+			[]admin.ResourceTag{{Key: "env", Value: "e2e"}, {Key: "app", Value: "cli"}},
+		},
+		{
+			"resetTags",
+			"data/update_project_reset_tags.json",
+			nil,
+			updatedProjectName,
+			[]admin.ResourceTag{},
+		},
+	}
+	for _, tt := range updateTests {
+		t.Run("Update"+tt.name, func(t *testing.T) {
+			filename := fmt.Sprintf("update_project_%s.json", tt.name)
+			testTmpl, err := os.ReadFile(tt.filename)
+			tpl := template.Must(template.New("").Parse(string(testTmpl)))
+
+			require.NoError(t, err)
+			file, err := os.Create(filename)
+			require.NoError(t, err)
+			t.Cleanup(func() {
+				require.NoError(t, os.Remove(filename))
+			})
+
+			require.NoError(t, tpl.Execute(file, tt))
+
+			cmd := exec.Command(cliPath,
+				projectsEntity,
+				"update",
+				projectID,
+				"--file",
+				filename,
+				"-o=json")
+			cmd.Env = os.Environ()
+			resp, err := cmd.CombinedOutput()
+			require.NoError(t, err, string(resp))
+			var project admin.Group
+			if err := json.Unmarshal(resp, &project); err != nil {
+				t.Fatalf("unexpected error: %v", err)
 			}
 
-			require.Equal(t, expectedValue, tag.GetValue())
-		}
-	})
+			a := assert.New(t)
+			a.Equal(tt.expectedProjectName, project.Name)
+			a.ElementsMatch(tt.expectedProjectTags, project.GetTags())
+		})
+	}
 
 	t.Run("Users", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

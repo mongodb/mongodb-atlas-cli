@@ -382,6 +382,7 @@ dbName and collection are required only for built-in roles.`
 		"In a monthly policy item, 1 indicates that the monthly snapshot occurs on the first day of the month and 40 indicates the last day of the month. " +
 		"In a weekly policy item, 1 indicates that the weekly snapshot occurs on Monday and 7 indicates Sunday. " +
 		"In an hourly policy item, you can set the frequency interval to 1, 2, 4, 6, 8, or 12. For hourly policy items for NVMe clusters, Atlas accepts only 12 as the frequency interval value."
-	RetentionUnit  = "Unit of time in which Atlas measures snapshot retention: 'days' 'weeks' 'months'. "
-	RetentionValue = "Duration in days, weeks, or months that Atlas retains the snapshot. For less frequent policy items, Atlas requires that you specify a value greater than or equal to the value specified for more frequent policy items."
+	RetentionUnit         = "Unit of time in which Atlas measures snapshot retention: 'days' 'weeks' 'months'. "
+	RetentionValue        = "Duration in days, weeks, or months that Atlas retains the snapshot. For less frequent policy items, Atlas requires that you specify a value greater than or equal to the value specified for more frequent policy items."
+	ProjectConfigFilename = "Path to the JSON configuration file that defines project configuration settings. To learn more about project configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/tbd!!!!!!!!!."
 )

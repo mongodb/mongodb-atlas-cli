@@ -131,7 +131,7 @@ func TestAtlasProjects(t *testing.T) {
 		},
 	}
 	for _, tt := range updateTests {
-		t.Run("Update"+tt.name, func(t *testing.T) {
+		t.Run("Update_"+tt.name, func(t *testing.T) {
 			filename := fmt.Sprintf("update_project_%s.json", tt.name)
 			testTmpl, err := os.ReadFile(tt.filename)
 			tpl := template.Must(template.New("").Parse(string(testTmpl)))
@@ -154,6 +154,15 @@ func TestAtlasProjects(t *testing.T) {
 				"-o=json")
 			cmd.Env = os.Environ()
 			resp, err := cmd.CombinedOutput()
+			require.NoError(t, err, string(resp))
+
+			cmd = exec.Command(cliPath,
+				projectsEntity,
+				"describe",
+				projectID,
+				"-o=json")
+			cmd.Env = os.Environ()
+			resp, err = cmd.CombinedOutput()
 			require.NoError(t, err, string(resp))
 			var project admin.Group
 			if err := json.Unmarshal(resp, &project); err != nil {

@@ -77,13 +77,13 @@ func UpdateBuilder() *cobra.Command {
 	opts := UpdateOpts{fs: afero.NewOsFs()}
 	opts.Template = updateTemplate
 	cmd := &cobra.Command{
-		Use:   "update <projectId>",
+		Use:   "update <ID>",
 		Short: "Update a project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"projectIdDesc": "ID of the project you want to update.",
-			"output":        updateTemplate,
+			"IDDesc": "ID of the project you want to update.",
+			"output": updateTemplate,
 		},
 		Example: `  # Update a project with the ID 5e2211c17a3e5a48f5497de3 using the JSON file named myProject.json:
   atlas projects update 5f4007f327a3bd7b6f4103c5 --file myProject.json --output json`,

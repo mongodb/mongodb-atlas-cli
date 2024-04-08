@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas projects update <projectId> [options]
+   atlas projects update <ID> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -37,7 +37,7 @@ Arguments
      - Type
      - Required
      - Description
-   * - projectId
+   * - ID
      - string
      - true
      - ID of the project you want to update.

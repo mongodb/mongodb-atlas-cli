@@ -63,7 +63,7 @@ func (opts *UpdateOpts) Run() error {
 }
 
 func (opts *UpdateOpts) newUpdateProjectParams() (*atlasv2.UpdateProjectApiParams, error) {
-	groupUpdate := &atlasv2.GroupUpdate{}
+	var groupUpdate *atlasv2.GroupUpdate
 	if err := file.Load(opts.fs, opts.filename, groupUpdate); err != nil {
 		return nil, err
 	}

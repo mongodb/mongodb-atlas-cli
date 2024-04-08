@@ -23,8 +23,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
@@ -33,11 +35,11 @@ import (
 const updateTemplate = "Project '{{.Id}}' updated.\n"
 
 type UpdateOpts struct {
-	cli.GlobalOpts
 	cli.OutputOpts
-	filename string
-	fs       afero.Fs
-	store    store.ProjectUpdater
+	ProjectID string
+	filename  string
+	fs        afero.Fs
+	store     store.ProjectUpdater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -89,8 +91,10 @@ func UpdateBuilder() *cobra.Command {
   atlas projects update 5f4007f327a3bd7b6f4103c5 --file myProject.json --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			return opts.PreRunE(
-				opts.ValidateProjectID,
+			return prerun.ExecuteE(
+				func() error {
+					return validate.ObjectID(opts.ProjectID)
+				},
 				opts.initStore(cmd.Context()),
 			)
 		},

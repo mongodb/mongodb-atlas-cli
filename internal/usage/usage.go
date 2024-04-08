@@ -384,5 +384,5 @@ dbName and collection are required only for built-in roles.`
 		"In an hourly policy item, you can set the frequency interval to 1, 2, 4, 6, 8, or 12. For hourly policy items for NVMe clusters, Atlas accepts only 12 as the frequency interval value."
 	RetentionUnit         = "Unit of time in which Atlas measures snapshot retention: 'days' 'weeks' 'months'. "
 	RetentionValue        = "Duration in days, weeks, or months that Atlas retains the snapshot. For less frequent policy items, Atlas requires that you specify a value greater than or equal to the value specified for more frequent policy items."
-	ProjectConfigFilename = "Path to the JSON configuration file that defines project configuration settings. To learn more about project configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/tbd!!!!!!!!!."
+	ProjectConfigFilename = "Path to the JSON configuration file that defines project configuration settings. To learn more about project configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/project-config-file."
 )

@@ -36,7 +36,7 @@ const updateTemplate = "Project '{{.Id}}' updated.\n"
 
 type UpdateOpts struct {
 	cli.OutputOpts
-	ProjectID string
+	projectID string
 	filename  string
 	fs        afero.Fs
 	store     store.ProjectUpdater
@@ -71,7 +71,7 @@ func (opts *UpdateOpts) newUpdateProjectParams() (*atlasv2.UpdateProjectApiParam
 	}
 
 	return &atlasv2.UpdateProjectApiParams{
-		GroupId: opts.ProjectID, GroupUpdate: groupUpdate}, nil
+		GroupId: opts.projectID, GroupUpdate: groupUpdate}, nil
 }
 
 // atlas project(s) update <projectId> [--file filePath].
@@ -81,7 +81,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update <ID>",
 		Short: "Update a project.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Data Access Read/Write"),
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
 			"IDDesc": "ID of the project you want to update.",
@@ -93,13 +93,13 @@ func UpdateBuilder() *cobra.Command {
 			opts.OutWriter = cmd.OutOrStdout()
 			return prerun.ExecuteE(
 				func() error {
-					return validate.ObjectID(opts.ProjectID)
+					return validate.ObjectID(opts.projectID)
 				},
 				opts.initStore(cmd.Context()),
 			)
 		},
 		RunE: func(_ *cobra.Command, args []string) error {
-			opts.ProjectID = args[0]
+			opts.projectID = args[0]
 			return opts.Run()
 		},
 	}

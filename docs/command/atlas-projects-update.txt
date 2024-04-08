@@ -14,7 +14,7 @@ atlas projects update
 
 Update a project.
 
-To use this command, you must authenticate with a user account or an API key with the Project Data Access Read/Write role.
+To use this command, you must authenticate with a user account or an API key with the Project Owner role.
 
 Syntax
 ------
@@ -56,7 +56,7 @@ Options
    * - -f, --file
      - string
      - true
-     - Path to the JSON configuration file that defines project configuration settings. To learn more about project configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/tbd!!!!!!!!!.
+     - Path to the JSON configuration file that defines project configuration settings. To learn more about project configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/project-config-file.
    * - -h, --help
      - 
      - false

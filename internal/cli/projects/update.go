@@ -65,7 +65,7 @@ func (opts *UpdateOpts) Run() error {
 }
 
 func (opts *UpdateOpts) newUpdateProjectParams() (*atlasv2.UpdateProjectApiParams, error) {
-	var groupUpdate *atlasv2.GroupUpdate
+	groupUpdate := new(atlasv2.GroupUpdate)
 	if err := file.Load(opts.fs, opts.filename, groupUpdate); err != nil {
 		return nil, err
 	}
@@ -74,9 +74,13 @@ func (opts *UpdateOpts) newUpdateProjectParams() (*atlasv2.UpdateProjectApiParam
 		GroupId: opts.projectID, GroupUpdate: groupUpdate}, nil
 }
 
+func (opts *UpdateOpts) validateProjectID() error {
+	return validate.ObjectID(opts.projectID)
+}
+
 // atlas project(s) update <projectId> [--file filePath].
 func UpdateBuilder() *cobra.Command {
-	opts := UpdateOpts{fs: afero.NewOsFs()}
+	opts := &UpdateOpts{fs: afero.NewOsFs()}
 	opts.Template = updateTemplate
 	cmd := &cobra.Command{
 		Use:   "update <ID>",
@@ -89,17 +93,15 @@ func UpdateBuilder() *cobra.Command {
 		},
 		Example: `  # Update a project with the ID 5e2211c17a3e5a48f5497de3 using the JSON file named myProject.json:
   atlas projects update 5f4007f327a3bd7b6f4103c5 --file myProject.json --output json`,
-		PreRunE: func(cmd *cobra.Command, _ []string) error {
+		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
+			opts.projectID = args[0]
 			return prerun.ExecuteE(
-				func() error {
-					return validate.ObjectID(opts.projectID)
-				},
+				opts.validateProjectID,
 				opts.initStore(cmd.Context()),
 			)
 		},
-		RunE: func(_ *cobra.Command, args []string) error {
-			opts.projectID = args[0]
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

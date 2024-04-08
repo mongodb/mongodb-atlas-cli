@@ -46,11 +46,11 @@ func TestUpdate_Run(t *testing.T) {
 	}
 
 	updateOpts := &UpdateOpts{
-		fs:       appFS,
-		store:    mockStore,
-		filename: filename,
+		fs:        appFS,
+		store:     mockStore,
+		filename:  filename,
+		projectID: "5a0a1e7e0f2912c554080add",
 	}
-	updateOpts.projectID = "5a0a1e7e0f2912c554080add"
 	params, err := updateOpts.newUpdateProjectParams()
 	if err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

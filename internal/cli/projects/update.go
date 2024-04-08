@@ -69,7 +69,7 @@ func (opts *UpdateOpts) newUpdateProjectParams() (*atlasv2.UpdateProjectApiParam
 	}
 
 	return &atlasv2.UpdateProjectApiParams{
-		GroupId: opts.ConfigProjectID(), GroupUpdate: groupUpdate}, nil
+		GroupId: opts.ProjectID, GroupUpdate: groupUpdate}, nil
 }
 
 // atlas project(s) update <projectId> [--file filePath].

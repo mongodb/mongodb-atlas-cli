@@ -686,10 +686,16 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 	convertMatchers := func(atlasMatcher []map[string]interface{}) []akov2.Matcher {
 		var res []akov2.Matcher
 		for _, m := range atlasMatcher {
+			fieldName, fieldOk := (m["FieldName"]).(string)
+			operator, opOk := (m["Operator"]).(string)
+			value, ok := (m["Value"]).(string)
+			if !fieldOk || !opOk || !ok {
+				continue
+			}
 			res = append(res, akov2.Matcher{
-				FieldName: (m["FieldName"]).(string),
-				Operator:  (m["Operator"]).(string),
-				Value:     (m["Value"]).(string),
+				FieldName: fieldName,
+				Operator:  operator,
+				Value:     value,
 			})
 		}
 		return res

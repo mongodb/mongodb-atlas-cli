@@ -1,6 +1,8 @@
 module github.com/mongodb/mongodb-atlas-cli/mongocli/v2
 
-go 1.21
+go 1.22
+
+toolchain go1.22.1
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
@@ -18,7 +20,7 @@ require (
 	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02
 	github.com/klauspost/compress v1.17.7
 	github.com/mattn/go-isatty v0.0.20
-	github.com/mongodb-forks/digest v1.0.5
+	github.com/mongodb-forks/digest v1.1.0
 	github.com/mongodb-labs/cobra2snooty v0.18.1
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
@@ -30,9 +32,9 @@ require (
 	go.mongodb.org/atlas v0.36.0
 	go.mongodb.org/mongo-driver v1.14.0
 	go.mongodb.org/ops-manager v0.55.5
-	golang.org/x/crypto v0.21.0
-	golang.org/x/mod v0.16.0
-	golang.org/x/tools v0.19.0
+	golang.org/x/crypto v0.22.0
+	golang.org/x/mod v0.17.0
+	golang.org/x/tools v0.20.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -72,8 +74,9 @@ require (
 	go.uber.org/zap v1.26.0 // indirect
 	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc // indirect
 	golang.org/x/oauth2 v0.17.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
-	golang.org/x/term v0.18.0 // indirect
+	golang.org/x/sync v0.7.0 // indirect
+	golang.org/x/sys v0.19.0 // indirect
+	golang.org/x/term v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/protobuf v1.32.0 // indirect

@@ -28,6 +28,7 @@ export PATH := $(shell go env GOPATH)/bin:$(PATH)
 export PATH := ./bin:$(PATH)
 export TERM := linux-m
 export GO111MODULE := on
+export GOTOOLCHAIN := local
 export MCLI_E2E_BINARY
 
 .PHONY: pre-commit

@@ -27,32 +27,71 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
+const (
+	testProjectID = "create-project-id"
+)
+
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockStreamsCreator(ctrl)
 
-	buf := new(bytes.Buffer)
-	opts := &CreateOpts{
-		store:    mockStore,
-		name:     "ExampleStream",
-		provider: "AWS",
-		region:   "VIRGINIA_USA",
-	}
-	opts.ProjectID = "create-project-id"
+	t.Run("stream instances create", func(t *testing.T) {
+		buf := new(bytes.Buffer)
+		opts := &CreateOpts{
+			store:    mockStore,
+			name:     "ExampleStream",
+			provider: "AWS",
+			region:   "VIRGINIA_USA",
+		}
+		opts.ProjectID = testProjectID
 
-	expected := &atlasv2.StreamsTenant{Name: &opts.name, GroupId: &opts.ProjectID, DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "VIRGINIA_USA"}}
+		expected := &atlasv2.StreamsTenant{Name: &opts.name, GroupId: &opts.ProjectID, DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "VIRGINIA_USA"}}
 
-	mockStore.
-		EXPECT().
-		CreateStream(opts.ProjectID, expected).
-		Return(expected, nil).
-		Times(1)
+		mockStore.
+			EXPECT().
+			CreateStream(opts.ProjectID, expected).
+			Return(expected, nil).
+			Times(1)
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-	t.Log(buf.String())
-	test.VerifyOutputTemplate(t, createTemplate, expected)
+		if err := opts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+		t.Log(buf.String())
+		test.VerifyOutputTemplate(t, createTemplate, expected)
+	})
+
+	t.Run("stream instances create --tier", func(t *testing.T) {
+		buf := new(bytes.Buffer)
+		opts := &CreateOpts{
+			store:    mockStore,
+			name:     "ExampleStream",
+			provider: "AWS",
+			region:   "VIRGINIA_USA",
+			tier:     "SP30",
+		}
+		opts.ProjectID = testProjectID
+
+		expected := &atlasv2.StreamsTenant{
+			Name:              &opts.name,
+			GroupId:           &opts.ProjectID,
+			DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "VIRGINIA_USA"},
+			StreamConfig: &atlasv2.StreamConfig{
+				Tier: &opts.tier,
+			},
+		}
+
+		mockStore.
+			EXPECT().
+			CreateStream(opts.ProjectID, expected).
+			Return(expected, nil).
+			Times(1)
+
+		if err := opts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+		t.Log(buf.String())
+		test.VerifyOutputTemplate(t, createTemplate, expected)
+	})
 }
 
 func TestCreateBuilder(t *testing.T) {
@@ -61,5 +100,14 @@ func TestCreateBuilder(t *testing.T) {
 		CreateBuilder(),
 		0,
 		[]string{flag.Provider, flag.Region},
+	)
+}
+
+func TestCreateBuilderWithTier(t *testing.T) {
+	test.CmdValidator(
+		t,
+		CreateBuilder(),
+		0,
+		[]string{flag.Provider, flag.Region, flag.Tier},
 	)
 }

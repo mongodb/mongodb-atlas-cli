@@ -35,6 +35,7 @@ type CreateOpts struct {
 	name     string
 	provider string
 	region   string
+	tier     string
 	store    store.StreamsCreator
 }
 
@@ -47,6 +48,11 @@ func (opts *CreateOpts) Run() error {
 	streamProcessor.Name = &opts.name
 	streamProcessor.GroupId = &opts.ProjectID
 	streamProcessor.DataProcessRegion = atlasv2.NewStreamsDataProcessRegion(opts.provider, opts.region)
+	if opts.tier != "" {
+		streamConfig := streamProcessor.GetStreamConfig()
+		streamConfig.Tier = &opts.tier
+		streamProcessor.StreamConfig = &streamConfig
+	}
 
 	r, err := opts.store.CreateStream(opts.ProjectID, streamProcessor)
 
@@ -76,7 +82,7 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create an Atlas Stream Processing instance for your project",
 		Long:  `To get started quickly, specify a name, a cloud provider, and a region to configure an Atlas Stream Processing instance.` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: `  # Deploy an Atlas Stream Processing instance called myProcessor for the project with the ID 5e2211c17a3e5a48f5497de3:
-  atlas streams instance create myProcessor --projectId 5e2211c17a3e5a48f5497de3 --provider AWS --region VIRGINIA_USA`,
+  atlas streams instance create myProcessor --projectId 5e2211c17a3e5a48f5497de3 --provider AWS --region VIRGINIA_USA --tier SP30`,
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
 			"nameDesc": "Name of the Atlas Stream Processing instance. After creation, you can't change the name of the instance. The name can contain ASCII letters, numbers, and hyphens.",
@@ -100,6 +106,8 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
+	cmd.Flags().StringVar(&opts.tier, flag.Tier, "SP30", usage.StreamsInstanceTier)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 	_ = cmd.MarkFlagRequired(flag.Provider)

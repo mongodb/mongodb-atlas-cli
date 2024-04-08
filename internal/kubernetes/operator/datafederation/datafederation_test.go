@@ -29,8 +29,8 @@ import (
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	"go.mongodb.org/atlas-sdk/v20231115008/admin"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -47,26 +47,26 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 	dictionary := resources.AtlasNameToKubernetesName()
 
 	t.Run("Can import Data Federations", func(t *testing.T) {
-		dataFederation := &admin.DataLakeTenant{
-			CloudProviderConfig: &admin.DataLakeCloudProviderConfig{
-				Aws: admin.DataLakeAWSCloudProviderConfig{
+		dataFederation := &atlasv2.DataLakeTenant{
+			CloudProviderConfig: &atlasv2.DataLakeCloudProviderConfig{
+				Aws: atlasv2.DataLakeAWSCloudProviderConfig{
 					RoleId:       "TestRoleID",
 					TestS3Bucket: "TestBucket",
 				},
 			},
-			DataProcessRegion: &admin.DataLakeDataProcessRegion{
+			DataProcessRegion: &atlasv2.DataLakeDataProcessRegion{
 				CloudProvider: "TestProvider",
 				Region:        "TestRegion",
 			},
 			Hostnames: &[]string{"TestHostname"},
 			Name:      pointer.Get(dataFederationName),
 			State:     pointer.Get("TestState"),
-			Storage: &admin.DataLakeStorage{
-				Databases: &[]admin.DataLakeDatabaseInstance{
+			Storage: &atlasv2.DataLakeStorage{
+				Databases: &[]atlasv2.DataLakeDatabaseInstance{
 					{
-						Collections: &[]admin.DataLakeDatabaseCollection{
+						Collections: &[]atlasv2.DataLakeDatabaseCollection{
 							{
-								DataSources: &[]admin.DataLakeDatabaseDataSourceSettings{
+								DataSources: &[]atlasv2.DataLakeDatabaseDataSourceSettings{
 									{
 										AllowInsecure:       pointer.Get(true),
 										Collection:          pointer.Get("TestCollection"),
@@ -85,7 +85,7 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 						},
 						MaxWildcardCollections: pointer.Get(10),
 						Name:                   pointer.Get("TestName"),
-						Views: &[]admin.DataLakeApiBase{
+						Views: &[]atlasv2.DataLakeApiBase{
 							{
 								Name:     pointer.Get("TestName"),
 								Pipeline: pointer.Get("TestPipeline"),
@@ -94,7 +94,7 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 						},
 					},
 				},
-				Stores: &[]admin.DataLakeStoreSettings{
+				Stores: &[]atlasv2.DataLakeStoreSettings{
 					{
 						Name:                     pointer.Get("TestName"),
 						Provider:                 "TestProvider",
@@ -113,11 +113,11 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 		dataFederationStore.EXPECT().DataFederation(projectID, dataFederationName).Return(dataFederation, nil)
 
 		expected := &akov2.AtlasDataFederation{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasDataFederation",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, dataFederation.GetName()), dictionary),
 				Namespace: targetNamespace,
 				Labels: map[string]string{

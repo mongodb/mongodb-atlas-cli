@@ -78,6 +78,8 @@ func TestStreams(t *testing.T) {
 			"AWS",
 			"-r",
 			"VIRGINIA_USA",
+			"--tier",
+			"SP30",
 			instanceName,
 			"-o=json",
 			"--projectId",

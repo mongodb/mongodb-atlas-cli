@@ -41,6 +41,7 @@ type CreateOpts struct {
 
 const (
 	createTemplate = "Atlas Streams Processor Instance '{{.Name}}' successfully created.\n"
+	defaultTier    = "SP30"
 )
 
 func (opts *CreateOpts) Run() error {
@@ -48,11 +49,14 @@ func (opts *CreateOpts) Run() error {
 	streamProcessor.Name = &opts.name
 	streamProcessor.GroupId = &opts.ProjectID
 	streamProcessor.DataProcessRegion = atlasv2.NewStreamsDataProcessRegion(opts.provider, opts.region)
+
+	tierOrDefault := defaultTier
 	if opts.tier != "" {
-		streamConfig := streamProcessor.GetStreamConfig()
-		streamConfig.Tier = &opts.tier
-		streamProcessor.StreamConfig = &streamConfig
+		tierOrDefault = opts.tier
 	}
+	streamConfig := streamProcessor.GetStreamConfig()
+	streamConfig.Tier = &tierOrDefault
+	streamProcessor.StreamConfig = &streamConfig
 
 	r, err := opts.store.CreateStream(opts.ProjectID, streamProcessor)
 

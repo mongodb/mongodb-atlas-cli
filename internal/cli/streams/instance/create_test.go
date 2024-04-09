@@ -44,8 +44,16 @@ func TestCreateOpts_Run(t *testing.T) {
 			region:   "VIRGINIA_USA",
 		}
 		opts.ProjectID = testProjectID
+		defaultTier := "SP30"
 
-		expected := &atlasv2.StreamsTenant{Name: &opts.name, GroupId: &opts.ProjectID, DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "VIRGINIA_USA"}}
+		expected := &atlasv2.StreamsTenant{
+			Name:              &opts.name,
+			GroupId:           &opts.ProjectID,
+			DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "VIRGINIA_USA"},
+			StreamConfig: &atlasv2.StreamConfig{
+				Tier: &defaultTier,
+			},
+		}
 
 		mockStore.
 			EXPECT().
@@ -67,7 +75,7 @@ func TestCreateOpts_Run(t *testing.T) {
 			name:     "ExampleStream",
 			provider: "AWS",
 			region:   "VIRGINIA_USA",
-			tier:     "SP30",
+			tier:     "SP10", // Test non default case
 		}
 		opts.ProjectID = testProjectID
 

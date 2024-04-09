@@ -17,7 +17,7 @@ jobs:
         run:  echo "VERSION=$(curl -sSfL -X GET  https://api.github.com/repos/mongodb/atlas-sdk-go/releases/latest | jq -r '.tag_name')" >> "$GITHUB_OUTPUT"
       - run:  make update-atlas-sdk
       - name: Verify Changed files
-        uses: tj-actions/verify-changed-files@4e5543c6baf40a680fb74056d168a4772116c28d
+        uses: tj-actions/verify-changed-files@3da26b2ca2b2791d4783124ead45684e860c7ee9
         id: verify-changed-files
         with:
           files: |

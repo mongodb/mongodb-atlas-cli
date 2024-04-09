@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/secrets"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
@@ -803,19 +804,52 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 func convertMatchers(atlasMatcher []map[string]interface{}) []akov2.Matcher {
 	res := make([]akov2.Matcher, 0, len(atlasMatcher))
 	for _, m := range atlasMatcher {
-		fieldName, fieldOk := (m["FieldName"]).(string)
-		operator, opOk := (m["Operator"]).(string)
-		value, ok := (m["Value"]).(string)
-		if !fieldOk || !opOk || !ok {
+		matcher, err := toMatcher(m)
+		if err != nil {
+			_, _ = log.Warningf("Skipping matcher %v, conversion failed: %v\n", m, err.Error())
 			continue
 		}
-		res = append(res, akov2.Matcher{
-			FieldName: fieldName,
-			Operator:  operator,
-			Value:     value,
-		})
+		res = append(res, matcher)
 	}
 	return res
+}
+
+func toMatcher(m map[string]interface{}) (akov2.Matcher, error) {
+	var matcher akov2.Matcher
+	if len(m) == 0 {
+		return matcher, fmt.Errorf("empty map cannot be converted to Matcher")
+	}
+	fieldName, err := keyAsString(m, "FieldName")
+	if err != nil {
+		return matcher, err
+	}
+	operator, err := keyAsString(m, "Operator")
+	if err != nil {
+		return matcher, err
+	}
+	value, err := keyAsString(m, "Value")
+	if err != nil {
+		return matcher, err
+	}
+	matcher.FieldName = fieldName
+	matcher.Operator = operator
+	matcher.Value = value
+	return matcher, nil
+}
+
+func keyAsString(m map[string]interface{}, key string) (string, error) {
+	v, ok := m[key]
+	if !ok {
+		return "", fmt.Errorf("no key %q at map %v", key, m)
+	}
+	if v == nil {
+		return "", fmt.Errorf("no key %q is unset at map %v", key, m)
+	}
+	s, ok := (v).(string)
+	if !ok {
+		return "", fmt.Errorf("%q is not a string at map %v", key, m)
+	}
+	return s, nil
 }
 
 func convertMetricThreshold(atlasMT *atlasv2.ServerlessMetricThreshold) *akov2.MetricThreshold {

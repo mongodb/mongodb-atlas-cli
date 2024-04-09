@@ -18,6 +18,7 @@ package project
 
 import (
 	"fmt"
+	"log"
 	"reflect"
 	"strings"
 	"testing"
@@ -1325,4 +1326,93 @@ func Test_firstElementOrEmpty(t *testing.T) {
 	t.Run("should return first item when slice has multiple items", func(t *testing.T) {
 		assert.Equal(t, "1", firstElementOrZeroValue([]string{"1", "2", "3"}))
 	})
+}
+
+func TestToMatcherErrors(t *testing.T) {
+	testCases := []struct {
+		title            string
+		m                map[string]interface{}
+		expectedErrorMsg string
+	}{
+		{
+			title:            "Nil map renders nil map error",
+			m:                nil,
+			expectedErrorMsg: "empty map cannot be converted to Matcher",
+		},
+		{
+			title:            "Empty map renders nil map error",
+			m:                map[string]interface{}{},
+			expectedErrorMsg: "empty map cannot be converted to Matcher",
+		},
+		{
+			title:            "Missing FieldName renders key not found error",
+			m:                map[string]interface{}{"blah": 1},
+			expectedErrorMsg: "no key \"FieldName\"",
+		},
+		{
+			title:            "Misnamed FieldName renders key not found error",
+			m:                map[string]interface{}{"fieldName": 1},
+			expectedErrorMsg: "no key \"FieldName\"",
+		},
+		{
+			title:            "Nil FieldName value renders conversion error",
+			m:                map[string]interface{}{"FieldName": nil},
+			expectedErrorMsg: "\"FieldName\" is unset",
+		},
+		{
+			title:            "No string FieldName renders conversion error",
+			m:                map[string]interface{}{"FieldName": 1},
+			expectedErrorMsg: "\"FieldName\" is not a string",
+		},
+		{
+			title:            "Missing Operator renders key not found error",
+			m:                map[string]interface{}{"FieldName": "blah"},
+			expectedErrorMsg: "no key \"Operator\"",
+		},
+		{
+			title:            "Non string Operator renders conversion error",
+			m:                map[string]interface{}{"FieldName": "blah", "Operator": 1},
+			expectedErrorMsg: "\"Operator\" is not a string",
+		},
+		{
+			title:            "Missing Value renders key not found error",
+			m:                map[string]interface{}{"FieldName": "blah", "Operator": "op"},
+			expectedErrorMsg: "no key \"Value\"",
+		},
+		{
+			title:            "Non string Value renders conversion error",
+			m:                map[string]interface{}{"FieldName": "blah", "Operator": "op", "Value": 0},
+			expectedErrorMsg: "\"Value\" is not a string",
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.title, func(t *testing.T) {
+			_, err := toMatcher(tc.m)
+			log.Printf("err=%v", err)
+			assert.ErrorContains(t, err, tc.expectedErrorMsg)
+		})
+	}
+}
+
+func TestConvertMatchers(t *testing.T) {
+	maps := []map[string]interface{}{
+		nil,
+		{},
+		{"field": 1},
+		{"fieldName": 1},
+		{"FieldName": 1},
+		{"FieldName": nil},
+		{"FieldName": "field"},
+		{"FieldName": "field", "Operator": 1},
+		{"FieldName": "field", "Operator": "op"},
+		{"FieldName": "field", "Operator": "op", "Value": 0},
+		{"FieldName": "field", "Operator": "op", "Value": "value"},
+		{"FieldName": "field2", "Operator": "op2", "Value": "other-value"},
+	}
+	expected := []akov2.Matcher{
+		{FieldName: "field", Operator: "op", Value: "value"},
+		{FieldName: "field2", Operator: "op2", Value: "other-value"},
+	}
+	matchers := convertMatchers(maps)
+	assert.Equal(t, expected, matchers)
 }

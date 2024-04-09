@@ -42,16 +42,16 @@ func TestCreateOpts_Run(t *testing.T) {
 			name:     "ExampleStream",
 			provider: "AWS",
 			region:   "VIRGINIA_USA",
+			tier:     "SP30", // Test non default case
 		}
 		opts.ProjectID = testProjectID
-		defaultTier := "SP30"
 
 		expected := &atlasv2.StreamsTenant{
 			Name:              &opts.name,
 			GroupId:           &opts.ProjectID,
 			DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "VIRGINIA_USA"},
 			StreamConfig: &atlasv2.StreamConfig{
-				Tier: &defaultTier,
+				Tier: &opts.tier,
 			},
 		}
 

@@ -683,47 +683,6 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 		return nil, nil, err
 	}
 
-	convertMatchers := func(atlasMatcher []map[string]interface{}) []akov2.Matcher {
-		var res []akov2.Matcher
-		for _, m := range atlasMatcher {
-			fieldName, fieldOk := (m["FieldName"]).(string)
-			operator, opOk := (m["Operator"]).(string)
-			value, ok := (m["Value"]).(string)
-			if !fieldOk || !opOk || !ok {
-				continue
-			}
-			res = append(res, akov2.Matcher{
-				FieldName: fieldName,
-				Operator:  operator,
-				Value:     value,
-			})
-		}
-		return res
-	}
-
-	convertMetricThreshold := func(atlasMT *atlasv2.ServerlessMetricThreshold) *akov2.MetricThreshold {
-		if atlasMT == nil {
-			return &akov2.MetricThreshold{}
-		}
-		return &akov2.MetricThreshold{
-			MetricName: atlasMT.MetricName,
-			Operator:   store.StringOrEmpty(atlasMT.Operator),
-			Threshold:  fmt.Sprintf("%f", pointer.GetOrDefault(atlasMT.Threshold, 0.0)),
-			Units:      store.StringOrEmpty(atlasMT.Units),
-			Mode:       store.StringOrEmpty(atlasMT.Mode),
-		}
-	}
-
-	convertThreshold := func(atlasT *atlasv2.GreaterThanRawThreshold) *akov2.Threshold {
-		if atlasT == nil {
-			return &akov2.Threshold{}
-		}
-		return &akov2.Threshold{
-			Operator:  store.StringOrEmpty(atlasT.Operator),
-			Units:     store.StringOrEmpty(atlasT.Units),
-			Threshold: fmt.Sprintf("%d", pointer.GetOrDefault(atlasT.Threshold, 0)),
-		}
-	}
 	convertNotifications := func(atlasNotifications []atlasv2.AlertsNotificationRootForGroup) ([]akov2.Notification, []*corev1.Secret) {
 		var (
 			akoNotifications []akov2.Notification
@@ -839,6 +798,48 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 		})
 	}
 	return results, secretResults, nil
+}
+
+func convertMatchers(atlasMatcher []map[string]interface{}) []akov2.Matcher {
+	var res []akov2.Matcher
+	for _, m := range atlasMatcher {
+		fieldName, fieldOk := (m["FieldName"]).(string)
+		operator, opOk := (m["Operator"]).(string)
+		value, ok := (m["Value"]).(string)
+		if !fieldOk || !opOk || !ok {
+			continue
+		}
+		res = append(res, akov2.Matcher{
+			FieldName: fieldName,
+			Operator:  operator,
+			Value:     value,
+		})
+	}
+	return res
+}
+
+func convertMetricThreshold(atlasMT *atlasv2.ServerlessMetricThreshold) *akov2.MetricThreshold {
+	if atlasMT == nil {
+		return &akov2.MetricThreshold{}
+	}
+	return &akov2.MetricThreshold{
+		MetricName: atlasMT.MetricName,
+		Operator:   store.StringOrEmpty(atlasMT.Operator),
+		Threshold:  fmt.Sprintf("%f", pointer.GetOrDefault(atlasMT.Threshold, 0.0)),
+		Units:      store.StringOrEmpty(atlasMT.Units),
+		Mode:       store.StringOrEmpty(atlasMT.Mode),
+	}
+}
+
+func convertThreshold(atlasT *atlasv2.GreaterThanRawThreshold) *akov2.Threshold {
+	if atlasT == nil {
+		return &akov2.Threshold{}
+	}
+	return &akov2.Threshold{
+		Operator:  store.StringOrEmpty(atlasT.Operator),
+		Units:     store.StringOrEmpty(atlasT.Units),
+		Threshold: fmt.Sprintf("%d", pointer.GetOrDefault(atlasT.Threshold, 0)),
+	}
 }
 
 func generateName(base string) string {

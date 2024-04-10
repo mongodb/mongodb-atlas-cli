@@ -15,6 +15,7 @@
 package project
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -817,7 +818,7 @@ func convertMatchers(atlasMatcher []map[string]interface{}) []akov2.Matcher {
 func toMatcher(m map[string]interface{}) (akov2.Matcher, error) {
 	var matcher akov2.Matcher
 	if len(m) == 0 {
-		return matcher, fmt.Errorf("empty map cannot be converted to Matcher")
+		return matcher, errors.New("empty map cannot be converted to Matcher")
 	}
 	fieldName, err := keyAsString(m, "FieldName")
 	if err != nil {
@@ -859,9 +860,9 @@ func convertMetricThreshold(atlasMT *atlasv2.ServerlessMetricThreshold) *akov2.M
 	return &akov2.MetricThreshold{
 		MetricName: atlasMT.MetricName,
 		Operator:   store.StringOrEmpty(atlasMT.Operator),
-		Threshold:  fmt.Sprintf("%f", pointer.GetOrDefault(atlasMT.Threshold, 0.0)),
-		Units:      store.StringOrEmpty(atlasMT.Units),
-		Mode:       store.StringOrEmpty(atlasMT.Mode),
+		Threshold:  fmt.Sprintf("%f", atlasMT.GetThreshold()),
+		Units:      atlasMT.GetUnits(),
+		Mode:       atlasMT.GetMode(),
 	}
 }
 
@@ -872,7 +873,7 @@ func convertThreshold(atlasT *atlasv2.GreaterThanRawThreshold) *akov2.Threshold 
 	return &akov2.Threshold{
 		Operator:  store.StringOrEmpty(atlasT.Operator),
 		Units:     store.StringOrEmpty(atlasT.Units),
-		Threshold: fmt.Sprintf("%d", pointer.GetOrDefault(atlasT.Threshold, 0)),
+		Threshold: fmt.Sprintf("%d", atlasT.GetThreshold()),
 	}
 }
 

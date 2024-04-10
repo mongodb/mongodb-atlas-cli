@@ -843,11 +843,11 @@ func keyAsString(m map[string]interface{}, key string) (string, error) {
 		return "", fmt.Errorf("no key %q at map %v", key, m)
 	}
 	if v == nil {
-		return "", fmt.Errorf("no key %q is unset at map %v", key, m)
+		return "", fmt.Errorf("%q is unset in %v", key, m)
 	}
 	s, ok := (v).(string)
 	if !ok {
-		return "", fmt.Errorf("%q is not a string at map %v", key, m)
+		return "", fmt.Errorf("%q is not a string in %v", key, m)
 	}
 	return s, nil
 }

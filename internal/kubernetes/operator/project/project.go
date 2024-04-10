@@ -840,7 +840,7 @@ func toMatcher(m map[string]interface{}) (akov2.Matcher, error) {
 func keyAsString(m map[string]interface{}, key string) (string, error) {
 	v, ok := m[key]
 	if !ok {
-		return "", fmt.Errorf("no key %q at map %v", key, m)
+		return "", fmt.Errorf("no key %q in %v", key, m)
 	}
 	if v == nil {
 		return "", fmt.Errorf("%q is unset in %v", key, m)

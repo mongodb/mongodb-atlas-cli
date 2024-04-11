@@ -298,11 +298,11 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 			strconv.Itoa(newAlertConfig.Notifications[0].IntervalMin),
 			"--notificationDelayMin",
 			strconv.Itoa(*newAlertConfig.Notifications[0].DelayMin),
-			fmt.Sprintf("--notificationSmsEnabled=%s", strconv.FormatBool(*newAlertConfig.Notifications[0].SMSEnabled)),
-			fmt.Sprintf("--notificationEmailEnabled=%s", strconv.FormatBool(*newAlertConfig.Notifications[0].EmailEnabled)),
-			fmt.Sprintf("--matcherFieldName=%s", *&newAlertConfig.Matchers[0].FieldName),
-			fmt.Sprintf("--matcherOperator=%s", *&newAlertConfig.Matchers[0].Operator),
-			fmt.Sprintf("--matcherValue=%s", *&newAlertConfig.Matchers[0].Value),
+			fmt.Sprintf("--notificationSmsEnabled=%s", strconv.FormatBool(pointer.GetOrZero(newAlertConfig.Notifications[0].SMSEnabled))),
+			fmt.Sprintf("--notificationEmailEnabled=%s", strconv.FormatBool(pointer.GetOrZero(newAlertConfig.Notifications[0].EmailEnabled))),
+			fmt.Sprintf("--matcherFieldName=%s", newAlertConfig.Matchers[0].FieldName),
+			fmt.Sprintf("--matcherOperator=%s", newAlertConfig.Matchers[0].Operator),
+			fmt.Sprintf("--matcherValue=%s", newAlertConfig.Matchers[0].Value),
 			"-o=json")
 		cmd.Env = os.Environ()
 		_, err := cmd.CombinedOutput()

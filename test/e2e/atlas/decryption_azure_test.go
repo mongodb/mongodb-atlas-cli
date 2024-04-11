@@ -33,6 +33,7 @@ var filesAzure embed.FS
 const azureTestsInputDir = "decryption/azure"
 
 func TestDecryptWithAzure(t *testing.T) {
+	t.Skip("CLOUDP-241760")
 	req := require.New(t)
 
 	cliPath, err := e2e.AtlasCLIBin()

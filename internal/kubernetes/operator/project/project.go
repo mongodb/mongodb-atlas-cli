@@ -820,15 +820,15 @@ func toMatcher(m map[string]interface{}) (akov2.Matcher, error) {
 	if len(m) == 0 {
 		return matcher, errors.New("empty map cannot be converted to Matcher")
 	}
-	fieldName, err := keyAsString(m, "FieldName")
+	fieldName, err := keyAsString(m, "fieldName")
 	if err != nil {
 		return matcher, err
 	}
-	operator, err := keyAsString(m, "Operator")
+	operator, err := keyAsString(m, "operator")
 	if err != nil {
 		return matcher, err
 	}
-	value, err := keyAsString(m, "Value")
+	value, err := keyAsString(m, "value")
 	if err != nil {
 		return matcher, err
 	}

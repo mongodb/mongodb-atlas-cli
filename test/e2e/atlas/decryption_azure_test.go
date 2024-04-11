@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && decryptdisabled)
-
-// re-enable test after Azure key is regenerated and wiki updated
+//go:build e2e || (atlas && decrypt)
 
 package atlas_test
 
@@ -35,6 +33,7 @@ var filesAzure embed.FS
 const azureTestsInputDir = "decryption/azure"
 
 func TestDecryptWithAzure(t *testing.T) {
+	t.Skip("CLOUDP-241760")
 	req := require.New(t)
 
 	cliPath, err := e2e.AtlasCLIBin()

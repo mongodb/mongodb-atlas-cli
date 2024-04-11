@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && decrypt)
+//go:build e2e || (atlas && decrypt-disabled)
+
+// re-enable test after Azure key is regenerated and wiki updated
 
 package atlas_test
 

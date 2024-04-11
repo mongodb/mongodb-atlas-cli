@@ -18,6 +18,7 @@ package project
 
 import (
 	"fmt"
+	"log"
 	"reflect"
 	"strings"
 	"testing"
@@ -166,9 +167,9 @@ func TestBuildAtlasProject(t *testing.T) {
 					EventTypeName: pointer.Get("TestEventTypeName"),
 					Matchers: &[]map[string]interface{}{
 						{
-							"FieldName": "TestFieldName",
-							"Operator":  "TestOperator",
-							"Value":     "TestValue",
+							"fieldName": "TestFieldName",
+							"operator":  "TestOperator",
+							"value":     "TestValue",
 						},
 					},
 					MetricThreshold: &atlasv2.ServerlessMetricThreshold{
@@ -327,9 +328,9 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 		expectedMatchers := []akov2.Matcher{
 			{
-				FieldName: (alertConfigs[0].GetMatchers()[0]["FieldName"]).(string),
-				Operator:  (alertConfigs[0].GetMatchers()[0]["Operator"]).(string),
-				Value:     (alertConfigs[0].GetMatchers()[0]["Value"]).(string),
+				FieldName: (alertConfigs[0].GetMatchers()[0]["fieldName"]).(string),
+				Operator:  (alertConfigs[0].GetMatchers()[0]["operator"]).(string),
+				Value:     (alertConfigs[0].GetMatchers()[0]["value"]).(string),
 			},
 		}
 		expectedNotifications := []akov2.Notification{
@@ -1325,4 +1326,93 @@ func Test_firstElementOrEmpty(t *testing.T) {
 	t.Run("should return first item when slice has multiple items", func(t *testing.T) {
 		assert.Equal(t, "1", firstElementOrZeroValue([]string{"1", "2", "3"}))
 	})
+}
+
+func TestToMatcherErrors(t *testing.T) {
+	testCases := []struct {
+		title            string
+		m                map[string]interface{}
+		expectedErrorMsg string
+	}{
+		{
+			title:            "Nil map renders nil map error",
+			m:                nil,
+			expectedErrorMsg: "empty map cannot be converted to Matcher",
+		},
+		{
+			title:            "Empty map renders nil map error",
+			m:                map[string]interface{}{},
+			expectedErrorMsg: "empty map cannot be converted to Matcher",
+		},
+		{
+			title:            "Missing fieldName renders key not found error",
+			m:                map[string]interface{}{"blah": 1},
+			expectedErrorMsg: "no key \"fieldName\"",
+		},
+		{
+			title:            "Misnamed fieldName renders key not found error",
+			m:                map[string]interface{}{"FieldName": 1},
+			expectedErrorMsg: "no key \"fieldName\"",
+		},
+		{
+			title:            "Nil fieldName value renders conversion error",
+			m:                map[string]interface{}{"fieldName": nil},
+			expectedErrorMsg: "\"fieldName\" is unset",
+		},
+		{
+			title:            "No string fieldName renders conversion error",
+			m:                map[string]interface{}{"fieldName": 1},
+			expectedErrorMsg: "\"fieldName\" is not a string",
+		},
+		{
+			title:            "Missing operator renders key not found error",
+			m:                map[string]interface{}{"fieldName": "blah"},
+			expectedErrorMsg: "no key \"operator\"",
+		},
+		{
+			title:            "Non string operator renders conversion error",
+			m:                map[string]interface{}{"fieldName": "blah", "operator": 1},
+			expectedErrorMsg: "\"operator\" is not a string",
+		},
+		{
+			title:            "Missing value renders key not found error",
+			m:                map[string]interface{}{"fieldName": "blah", "operator": "op"},
+			expectedErrorMsg: "no key \"value\"",
+		},
+		{
+			title:            "Non string value renders conversion error",
+			m:                map[string]interface{}{"fieldName": "blah", "operator": "op", "value": 0},
+			expectedErrorMsg: "\"value\" is not a string",
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.title, func(t *testing.T) {
+			_, err := toMatcher(tc.m)
+			log.Printf("err=%v", err)
+			assert.ErrorContains(t, err, tc.expectedErrorMsg)
+		})
+	}
+}
+
+func TestConvertMatchers(t *testing.T) {
+	maps := []map[string]interface{}{
+		nil,
+		{},
+		{"field": 1},
+		{"FieldName": 1},
+		{"fieldName": 1},
+		{"fieldName": nil},
+		{"fieldName": "field"},
+		{"fieldName": "field", "operator": 1},
+		{"fieldName": "field", "operator": "op"},
+		{"fieldName": "field", "operator": "op", "value": 0},
+		{"fieldName": "field", "operator": "op", "value": "value"},
+		{"fieldName": "field2", "operator": "op2", "value": "other-value"},
+	}
+	expected := []akov2.Matcher{
+		{FieldName: "field", Operator: "op", Value: "value"},
+		{FieldName: "field2", Operator: "op2", Value: "other-value"},
+	}
+	matchers := convertMatchers(maps)
+	assert.Equal(t, expected, matchers)
 }

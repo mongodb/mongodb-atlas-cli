@@ -15,12 +15,14 @@
 package project
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/secrets"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
@@ -683,41 +685,6 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 		return nil, nil, err
 	}
 
-	convertMatchers := func(atlasMatcher []map[string]interface{}) []akov2.Matcher {
-		var res []akov2.Matcher
-		for _, m := range atlasMatcher {
-			res = append(res, akov2.Matcher{
-				FieldName: (m["FieldName"]).(string),
-				Operator:  (m["Operator"]).(string),
-				Value:     (m["Value"]).(string),
-			})
-		}
-		return res
-	}
-
-	convertMetricThreshold := func(atlasMT *atlasv2.ServerlessMetricThreshold) *akov2.MetricThreshold {
-		if atlasMT == nil {
-			return &akov2.MetricThreshold{}
-		}
-		return &akov2.MetricThreshold{
-			MetricName: atlasMT.MetricName,
-			Operator:   store.StringOrEmpty(atlasMT.Operator),
-			Threshold:  fmt.Sprintf("%f", pointer.GetOrDefault(atlasMT.Threshold, 0.0)),
-			Units:      store.StringOrEmpty(atlasMT.Units),
-			Mode:       store.StringOrEmpty(atlasMT.Mode),
-		}
-	}
-
-	convertThreshold := func(atlasT *atlasv2.GreaterThanRawThreshold) *akov2.Threshold {
-		if atlasT == nil {
-			return &akov2.Threshold{}
-		}
-		return &akov2.Threshold{
-			Operator:  store.StringOrEmpty(atlasT.Operator),
-			Units:     store.StringOrEmpty(atlasT.Units),
-			Threshold: fmt.Sprintf("%d", pointer.GetOrDefault(atlasT.Threshold, 0)),
-		}
-	}
 	convertNotifications := func(atlasNotifications []atlasv2.AlertsNotificationRootForGroup) ([]akov2.Notification, []*corev1.Secret) {
 		var (
 			akoNotifications []akov2.Notification
@@ -833,6 +800,81 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 		})
 	}
 	return results, secretResults, nil
+}
+
+func convertMatchers(atlasMatcher []map[string]interface{}) []akov2.Matcher {
+	res := make([]akov2.Matcher, 0, len(atlasMatcher))
+	for _, m := range atlasMatcher {
+		matcher, err := toMatcher(m)
+		if err != nil {
+			_, _ = log.Warningf("Skipping matcher %v, conversion failed: %v\n", m, err.Error())
+			continue
+		}
+		res = append(res, matcher)
+	}
+	return res
+}
+
+func toMatcher(m map[string]interface{}) (akov2.Matcher, error) {
+	var matcher akov2.Matcher
+	if len(m) == 0 {
+		return matcher, errors.New("empty map cannot be converted to Matcher")
+	}
+	fieldName, err := keyAsString(m, "fieldName")
+	if err != nil {
+		return matcher, err
+	}
+	operator, err := keyAsString(m, "operator")
+	if err != nil {
+		return matcher, err
+	}
+	value, err := keyAsString(m, "value")
+	if err != nil {
+		return matcher, err
+	}
+	matcher.FieldName = fieldName
+	matcher.Operator = operator
+	matcher.Value = value
+	return matcher, nil
+}
+
+func keyAsString(m map[string]interface{}, key string) (string, error) {
+	v, ok := m[key]
+	if !ok {
+		return "", fmt.Errorf("no key %q in %v", key, m)
+	}
+	if v == nil {
+		return "", fmt.Errorf("%q is unset in %v", key, m)
+	}
+	s, ok := (v).(string)
+	if !ok {
+		return "", fmt.Errorf("%q is not a string in %v", key, m)
+	}
+	return s, nil
+}
+
+func convertMetricThreshold(atlasMT *atlasv2.ServerlessMetricThreshold) *akov2.MetricThreshold {
+	if atlasMT == nil {
+		return &akov2.MetricThreshold{}
+	}
+	return &akov2.MetricThreshold{
+		MetricName: atlasMT.MetricName,
+		Operator:   store.StringOrEmpty(atlasMT.Operator),
+		Threshold:  fmt.Sprintf("%f", atlasMT.GetThreshold()),
+		Units:      atlasMT.GetUnits(),
+		Mode:       atlasMT.GetMode(),
+	}
+}
+
+func convertThreshold(atlasT *atlasv2.GreaterThanRawThreshold) *akov2.Threshold {
+	if atlasT == nil {
+		return &akov2.Threshold{}
+	}
+	return &akov2.Threshold{
+		Operator:  store.StringOrEmpty(atlasT.Operator),
+		Units:     store.StringOrEmpty(atlasT.Units),
+		Threshold: fmt.Sprintf("%d", atlasT.GetThreshold()),
+	}
 }
 
 func generateName(base string) string {

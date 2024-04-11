@@ -239,7 +239,7 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 	newAlertConfig := akov2.AlertConfiguration{
 		Threshold:       &akov2.Threshold{},
 		MetricThreshold: &akov2.MetricThreshold{},
-		EventTypeName:   eventTypeName,
+		EventTypeName:   "HOST_DOWN",
 		Enabled:         true,
 		Notifications: []akov2.Notification{
 			{
@@ -270,6 +270,13 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 				},
 			},
 		},
+		Matchers: []akov2.Matcher{
+			{
+				FieldName: "HOSTNAME",
+				Operator:  "CONTAINS",
+				Value:     "some-name",
+			},
+		},
 	}
 	expectedProject.Spec.AlertConfigurations = []akov2.AlertConfiguration{
 		newAlertConfig,
@@ -293,6 +300,9 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 			strconv.Itoa(*newAlertConfig.Notifications[0].DelayMin),
 			fmt.Sprintf("--notificationSmsEnabled=%s", strconv.FormatBool(*newAlertConfig.Notifications[0].SMSEnabled)),
 			fmt.Sprintf("--notificationEmailEnabled=%s", strconv.FormatBool(*newAlertConfig.Notifications[0].EmailEnabled)),
+			fmt.Sprintf("--matcherFieldName=%s", *&newAlertConfig.Matchers[0].FieldName),
+			fmt.Sprintf("--matcherOperator=%s", *&newAlertConfig.Matchers[0].Operator),
+			fmt.Sprintf("--matcherValue=%s", *&newAlertConfig.Matchers[0].Value),
 			"-o=json")
 		cmd.Env = os.Environ()
 		_, err := cmd.CombinedOutput()
@@ -889,6 +899,11 @@ func checkProject(t *testing.T, output []runtime.Object, expected *akov2.AtlasPr
 				expected.Spec.AlertConfigurations[i].Notifications[j].OpsGenieAPIKeyRef = p.Spec.AlertConfigurations[i].Notifications[j].OpsGenieAPIKeyRef
 				expected.Spec.AlertConfigurations[i].Notifications[j].ServiceKeyRef = p.Spec.AlertConfigurations[i].Notifications[j].ServiceKeyRef
 				expected.Spec.AlertConfigurations[i].Notifications[j].VictorOpsSecretRef = p.Spec.AlertConfigurations[i].Notifications[j].VictorOpsSecretRef
+			}
+			for k := range alertConfig.Matchers {
+				expected.Spec.AlertConfigurations[i].Matchers[k].FieldName = p.Spec.AlertConfigurations[i].Matchers[k].FieldName
+				expected.Spec.AlertConfigurations[i].Matchers[k].Operator = p.Spec.AlertConfigurations[i].Matchers[k].Operator
+				expected.Spec.AlertConfigurations[i].Matchers[k].Value = p.Spec.AlertConfigurations[i].Matchers[k].Value
 			}
 		}
 

@@ -168,9 +168,9 @@ func (opts *ConfigOpts) newMetricThreshold() *atlasv2.ServerlessMetricThreshold 
 
 func (opts *ConfigOpts) newMatcher() map[string]interface{} {
 	result := make(map[string]interface{})
-	result["FieldName"] = strings.ToUpper(opts.matcherFieldName)
-	result["Operator"] = strings.ToUpper(opts.matcherOperator)
-	result["Value"] = strings.ToUpper(opts.matcherValue)
+	result["fieldName"] = strings.ToUpper(opts.matcherFieldName)
+	result["operator"] = strings.ToUpper(opts.matcherOperator)
+	result["value"] = strings.ToUpper(opts.matcherValue)
 	return result
 }
 

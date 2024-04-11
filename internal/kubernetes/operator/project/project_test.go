@@ -167,9 +167,9 @@ func TestBuildAtlasProject(t *testing.T) {
 					EventTypeName: pointer.Get("TestEventTypeName"),
 					Matchers: &[]map[string]interface{}{
 						{
-							"FieldName": "TestFieldName",
-							"Operator":  "TestOperator",
-							"Value":     "TestValue",
+							"fieldName": "TestFieldName",
+							"operator":  "TestOperator",
+							"value":     "TestValue",
 						},
 					},
 					MetricThreshold: &atlasv2.ServerlessMetricThreshold{
@@ -328,9 +328,9 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 		expectedMatchers := []akov2.Matcher{
 			{
-				FieldName: (alertConfigs[0].GetMatchers()[0]["FieldName"]).(string),
-				Operator:  (alertConfigs[0].GetMatchers()[0]["Operator"]).(string),
-				Value:     (alertConfigs[0].GetMatchers()[0]["Value"]).(string),
+				FieldName: (alertConfigs[0].GetMatchers()[0]["fieldName"]).(string),
+				Operator:  (alertConfigs[0].GetMatchers()[0]["operator"]).(string),
+				Value:     (alertConfigs[0].GetMatchers()[0]["value"]).(string),
 			},
 		}
 		expectedNotifications := []akov2.Notification{

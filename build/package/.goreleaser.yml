@@ -90,6 +90,8 @@ nfpms:
   formats: [deb,rpm]
 checksum:
   name_template: checksums.txt
+  extra_files:
+    - glob: ./bin/*.msi
 snapshot:
   name_template: "{{ .Env.VERSION_GIT }}-next"
 changelog:

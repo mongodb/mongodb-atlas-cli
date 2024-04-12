@@ -2,6 +2,7 @@ version: 2
 updates:
   - package-ecosystem: gomod
     directory: "/"
+    target-branch: master
     schedule:
       interval: weekly
       day: tuesday
@@ -31,6 +32,7 @@ updates:
           - "github.com/containers*"
   - package-ecosystem: github-actions
     directory: "/"
+    target-branch: master
     schedule:
       interval: weekly
       day: tuesday

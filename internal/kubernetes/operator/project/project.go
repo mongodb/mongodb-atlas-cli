@@ -15,6 +15,7 @@
 package project
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -820,37 +821,23 @@ func toMatcher(m map[string]interface{}) (akov2.Matcher, error) {
 	if len(m) == 0 {
 		return matcher, errors.New("empty map cannot be converted to Matcher")
 	}
-	fieldName, err := keyAsString(m, "fieldName")
+	jsonBytes, err := json.Marshal(m)
 	if err != nil {
+		return matcher, fmt.Errorf("could not marshal mather map %v back to json: %w", m, err)
+	}
+	if err := json.Unmarshal(jsonBytes, &matcher); err != nil {
 		return matcher, err
 	}
-	operator, err := keyAsString(m, "operator")
-	if err != nil {
-		return matcher, err
+	if matcher.FieldName == "" {
+		return matcher, fmt.Errorf("matcher's fieldName is not set")
 	}
-	value, err := keyAsString(m, "value")
-	if err != nil {
-		return matcher, err
+	if matcher.Operator == "" {
+		return matcher, fmt.Errorf("matcher's operator is not set")
 	}
-	matcher.FieldName = fieldName
-	matcher.Operator = operator
-	matcher.Value = value
+	if matcher.Value == "" {
+		return matcher, fmt.Errorf("matcher's value is not set")
+	}
 	return matcher, nil
-}
-
-func keyAsString(m map[string]interface{}, key string) (string, error) {
-	v, ok := m[key]
-	if !ok {
-		return "", fmt.Errorf("no key %q in %v", key, m)
-	}
-	if v == nil {
-		return "", fmt.Errorf("%q is unset in %v", key, m)
-	}
-	s, ok := (v).(string)
-	if !ok {
-		return "", fmt.Errorf("%q is not a string in %v", key, m)
-	}
-	return s, nil
 }
 
 func convertMetricThreshold(atlasMT *atlasv2.ServerlessMetricThreshold) *akov2.MetricThreshold {

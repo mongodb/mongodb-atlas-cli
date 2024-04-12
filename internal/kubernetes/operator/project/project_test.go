@@ -1345,44 +1345,44 @@ func TestToMatcherErrors(t *testing.T) {
 			expectedErrorMsg: "empty map cannot be converted to Matcher",
 		},
 		{
-			title:            "Missing fieldName renders key not found error",
+			title:            "Missing fieldName renders key not set error",
 			m:                map[string]interface{}{"blah": 1},
-			expectedErrorMsg: "no key \"fieldName\"",
+			expectedErrorMsg: "fieldName is not set",
 		},
 		{
 			title:            "Misnamed fieldName renders key not found error",
-			m:                map[string]interface{}{"FieldName": 1},
-			expectedErrorMsg: "no key \"fieldName\"",
+			m:                map[string]interface{}{"FieldNames": "blah"},
+			expectedErrorMsg: "fieldName is not set",
 		},
 		{
-			title:            "Nil fieldName value renders conversion error",
+			title:            "Nil fieldName value renders key not found error",
 			m:                map[string]interface{}{"fieldName": nil},
-			expectedErrorMsg: "\"fieldName\" is unset",
+			expectedErrorMsg: "fieldName is not set",
 		},
 		{
-			title:            "No string fieldName renders conversion error",
+			title:            "Non string fieldName renders conversion error",
 			m:                map[string]interface{}{"fieldName": 1},
-			expectedErrorMsg: "\"fieldName\" is not a string",
+			expectedErrorMsg: "cannot unmarshal number into Go struct field Matcher.fieldName",
 		},
 		{
 			title:            "Missing operator renders key not found error",
 			m:                map[string]interface{}{"fieldName": "blah"},
-			expectedErrorMsg: "no key \"operator\"",
+			expectedErrorMsg: "operator is not set",
 		},
 		{
 			title:            "Non string operator renders conversion error",
 			m:                map[string]interface{}{"fieldName": "blah", "operator": 1},
-			expectedErrorMsg: "\"operator\" is not a string",
+			expectedErrorMsg: "cannot unmarshal number into Go struct field Matcher.operator",
 		},
 		{
 			title:            "Missing value renders key not found error",
 			m:                map[string]interface{}{"fieldName": "blah", "operator": "op"},
-			expectedErrorMsg: "no key \"value\"",
+			expectedErrorMsg: "value is not set",
 		},
 		{
 			title:            "Non string value renders conversion error",
 			m:                map[string]interface{}{"fieldName": "blah", "operator": "op", "value": 0},
-			expectedErrorMsg: "\"value\" is not a string",
+			expectedErrorMsg: "cannot unmarshal number into Go struct field Matcher.value",
 		},
 	}
 	for _, tc := range testCases {
@@ -1407,7 +1407,8 @@ func TestConvertMatchers(t *testing.T) {
 		{"fieldName": "field", "operator": "op"},
 		{"fieldName": "field", "operator": "op", "value": 0},
 		{"fieldName": "field", "operator": "op", "value": "value"},
-		{"fieldName": "field2", "operator": "op2", "value": "other-value"},
+		// JSON unmarshaling is case insensitive
+		{"FIeldName": "field2", "Operator": "op2", "VaLUe": "other-value"},
 	}
 	expected := []akov2.Matcher{
 		{FieldName: "field", Operator: "op", Value: "value"},

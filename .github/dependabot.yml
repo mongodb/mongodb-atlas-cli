@@ -51,8 +51,6 @@ updates:
     open-pull-requests-limit: 20
     reviewers:
       - "mongodb/mongocli"
-    ignore:
-      - dependency-name: "go.mongodb.org/atlas-sdk/*"
     groups:
       golang:
         patterns:
@@ -69,9 +67,6 @@ updates:
       azure:
         patterns:
           - "github.com/Azure*"
-      containers:
-        patterns:
-          - "github.com/containers*"
   - package-ecosystem: github-actions
     directory: "/"
     target-branch: mongocli-master

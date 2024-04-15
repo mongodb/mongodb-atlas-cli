@@ -315,7 +315,7 @@ func TestStreams(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &cluster))
 		ensureCluster(t, cluster, clusterName, e2eSharedMDBVer, 10, false)
 
-		cmd1 := exec.Command(cliPath,
+		streamsCmd := exec.Command(cliPath,
 			"streams",
 			"connection",
 			"create",
@@ -329,16 +329,16 @@ func TestStreams(t *testing.T) {
 			g.projectID,
 		)
 
-		cmd1.Env = os.Environ()
-		resp1, err1 := cmd1.CombinedOutput()
-		req.NoError(err1, string(resp1))
+		streamsCmd.Env = os.Environ()
+		streamsResp, streamsErr := streamsCmd.CombinedOutput()
+		req.NoError(streamsErr, string(streamsResp))
 
-		var connection1 atlasv2.StreamsConnection
-		req.NoError(json.Unmarshal(resp1, &connection1))
+		var connection atlasv2.StreamsConnection
+		req.NoError(json.Unmarshal(streamsResp, &connection))
 
 		// Assert on config from create_streams_connection_atlas_test.json
-		a.Equal("ClusterConn", *connection1.Name)
-		a.Equal("atlasAdmin", *connection1.DbRoleToExecute.Role)
+		a.Equal("ClusterConn", *connection.Name)
+		a.Equal("atlasAdmin", *connection.DbRoleToExecute.Role)
 
 		t.Cleanup(func() {
 			require.NoError(t, deleteClusterForProject(g.projectID, clusterName))

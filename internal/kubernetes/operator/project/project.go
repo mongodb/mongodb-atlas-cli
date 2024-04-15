@@ -823,19 +823,19 @@ func toMatcher(m map[string]interface{}) (akov2.Matcher, error) {
 	}
 	jsonBytes, err := json.Marshal(m)
 	if err != nil {
-		return matcher, fmt.Errorf("could not marshal mather map %v back to json: %w", m, err)
+		return matcher, fmt.Errorf("could not marshal matcher map %#v back to json: %w", m, err)
 	}
 	if err := json.Unmarshal(jsonBytes, &matcher); err != nil {
 		return matcher, err
 	}
 	if matcher.FieldName == "" {
-		return matcher, fmt.Errorf("matcher's fieldName is not set")
+		return matcher, errors.New("matcher's fieldName is not set")
 	}
 	if matcher.Operator == "" {
-		return matcher, fmt.Errorf("matcher's operator is not set")
+		return matcher, errors.New("matcher's operator is not set")
 	}
 	if matcher.Value == "" {
-		return matcher, fmt.Errorf("matcher's value is not set")
+		return matcher, errors.New("matcher's value is not set")
 	}
 	return matcher, nil
 }

@@ -30,7 +30,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	github.com/tangzero/inflector v1.0.0
 	go.mongodb.org/atlas v0.36.0
-	go.mongodb.org/mongo-driver v1.14.0
+	go.mongodb.org/mongo-driver v1.15.0
 	go.mongodb.org/ops-manager v0.55.5
 	golang.org/x/crypto v0.22.0
 	golang.org/x/mod v0.17.0

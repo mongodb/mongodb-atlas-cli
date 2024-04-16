@@ -486,7 +486,7 @@ func TestBuildServerlessDeployments(t *testing.T) {
 				BackupScheduleRef: akov2common.ResourceRefNamespaced{},
 				ServerlessSpec: &akov2.ServerlessSpec{
 					Name: store.StringOrEmpty(cluster.Name),
-					ProviderSettings: &akov2.ProviderSettingsSpec{
+					ProviderSettings: &akov2.ServerlessProviderSettingsSpec{
 						BackingProviderName: cluster.ProviderSettings.BackingProviderName,
 						ProviderName:        akov2provider.ProviderName(store.StringOrEmpty(cluster.ProviderSettings.ProviderName)),
 						RegionName:          cluster.ProviderSettings.RegionName,

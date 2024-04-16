@@ -838,8 +838,10 @@ tasks:
           E2E_TAGS: atlas,livemigrations
   # Streams commands tests, does this need to depend on cluster running?
   - name: atlas_streams
-    tags: ["e2e","generic","atlas", "assigned_to_jira_team_cloudp_atlas_streams"]
+    tags:
+      ["e2e", "generic", "atlas", "assigned_to_jira_team_cloudp_atlas_streams"]
     must_have_test_results: true
+    depends_on:
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true

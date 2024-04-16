@@ -98,6 +98,9 @@ func TestAtlasUsers(t *testing.T) {
 		n, err := e2e.RandInt(10000)
 		require.NoError(t, err)
 		emailUser := fmt.Sprintf("cli-test-%v@moongodb.com", n)
+		if revision, ok := os.LookupEnv("revision"); ok {
+			emailUser = fmt.Sprintf("cli-test-%v-%s@moongodb.com", n, revision)
+		}
 		t.Log("emailUser", emailUser, "orgID", orgID)
 		cmd := exec.Command(cliPath,
 			usersEntity,

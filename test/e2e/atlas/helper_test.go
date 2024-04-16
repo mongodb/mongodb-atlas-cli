@@ -699,7 +699,7 @@ func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 					_ = watchCluster(projectID, clusterName)
 					return
 				}
-				assert.NoError(t, deleteClusterForProject(projectID, clusterName))
+				require.NoError(t, deleteClusterForProject(projectID, clusterName))
 			})
 		}(cluster.GetName(), cluster.GetStateName())
 	}
@@ -719,7 +719,7 @@ func deleteDatapipelinesForProject(t *testing.T, cliPath, projectID string) {
 	var pipelines []atlasv2.DataLakeIngestionPipeline
 	require.NoError(t, json.Unmarshal(resp, &pipelines))
 	for _, p := range pipelines {
-		assert.NoError(t, deleteDatalakeForProject(cliPath, projectID, p.GetName()))
+		require.NoError(t, deleteDatalakeForProject(cliPath, projectID, p.GetName()))
 	}
 }
 
@@ -755,7 +755,7 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 		)
 		cmd.Env = os.Environ()
 		resp, err = cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		require.NoError(t, err, string(resp))
 	}
 }
 

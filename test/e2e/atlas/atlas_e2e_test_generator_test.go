@@ -25,7 +25,6 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
@@ -283,7 +282,7 @@ func deleteOrgTeams(t *testing.T, cliPath string) {
 	var teams atlasv2.PaginatedTeam
 	require.NoError(t, json.Unmarshal(resp, &teams), string(resp))
 	for _, team := range teams.GetResults() {
-		assert.NoError(t, deleteTeam(team.GetId()))
+		require.NoError(t, deleteTeam(team.GetId()))
 	}
 }
 

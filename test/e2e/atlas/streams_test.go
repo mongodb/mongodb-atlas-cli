@@ -324,7 +324,8 @@ func TestStreams(t *testing.T) {
 
 		var cluster *atlasv2.AdvancedClusterDescription
 		req.NoError(json.Unmarshal(resp, &cluster))
-		ensureCluster(t, cluster, clusterName, mdbVersion, 10, false)
+
+		req.NoError(watchCluster(g.projectID, clusterName))
 
 		streamsCmd := exec.Command(cliPath,
 			"streams",

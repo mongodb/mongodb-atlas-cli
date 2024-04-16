@@ -16,7 +16,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.26.1
 	github.com/aws/aws-sdk-go-v2/config v1.27.11
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.11
-	github.com/aws/aws-sdk-go-v2/service/kms v1.30.1
+	github.com/aws/aws-sdk-go-v2/service/kms v1.31.0
 	github.com/briandowns/spinner v1.23.0
 	github.com/creack/pty v1.1.21
 	github.com/denisbrodbeck/machineid v1.0.1
@@ -43,7 +43,7 @@ require (
 	github.com/tangzero/inflector v1.0.0
 	go.mongodb.org/atlas v0.36.0
 	go.mongodb.org/atlas-sdk/v20231115008 v20231115008.5.0
-	go.mongodb.org/mongo-driver v1.14.0
+	go.mongodb.org/mongo-driver v1.15.0
 	golang.org/x/exp v0.0.0-20240318143956-a85f2c67cd81
 	golang.org/x/mod v0.17.0
 	golang.org/x/tools v0.20.0
@@ -55,7 +55,7 @@ require (
 	k8s.io/apimachinery v0.29.3
 	k8s.io/apiserver v0.29.3
 	k8s.io/client-go v0.29.3
-	sigs.k8s.io/controller-runtime v0.17.2
+	sigs.k8s.io/controller-runtime v0.17.3
 	sigs.k8s.io/kind v0.22.0
 	sigs.k8s.io/yaml v1.4.0
 )

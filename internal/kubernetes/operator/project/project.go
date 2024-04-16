@@ -70,12 +70,7 @@ type AtlasProjectResult struct {
 	Teams   []*akov2.AtlasTeam
 }
 
-func BuildAtlasProject(projectStore store.OperatorProjectStore, validator features.FeatureValidator, orgID, projectID, targetNamespace string, includeSecret bool, dictionary map[string]string, version string) (*AtlasProjectResult, error) { //nolint:gocyclo
-	project, err := projectStore.Project(projectID)
-	if err != nil {
-		return nil, err
-	}
-
+func BuildAtlasProject(projectStore store.OperatorProjectStore, project *atlasv2.Group, validator features.FeatureValidator, orgID, projectID, targetNamespace string, includeSecret bool, dictionary map[string]string, version string) (*AtlasProjectResult, error) { //nolint:gocyclo
 	projectResult := newAtlasProject(project, dictionary, targetNamespace, version)
 
 	result := &AtlasProjectResult{
@@ -190,7 +185,7 @@ func BuildAtlasProject(projectStore store.OperatorProjectStore, validator featur
 		result.Teams = teams
 	}
 
-	return result, err
+	return result, nil
 }
 
 func newAtlasProject(project *atlasv2.Group, dictionary map[string]string, targetNamespace string, version string) *akov2.AtlasProject {

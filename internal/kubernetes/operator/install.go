@@ -146,10 +146,6 @@ func (i *Install) ensureProject(orgID, projectName string) (*admin.Group, error)
 		return project, nil
 	}
 
-	if err != nil {
-		return nil, fmt.Errorf("failed to retrieve project: %w", err)
-	}
-
 	project, err = i.atlasStore.CreateProject(&admin.CreateProjectApiParams{
 		Group: &admin.Group{
 			Name:                      projectName,

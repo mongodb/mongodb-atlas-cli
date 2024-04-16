@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/project"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
@@ -160,9 +161,19 @@ func (e *ConfigExporter) Run() (string, error) {
 }
 
 func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
+	atlasProject, err := e.dataProvider.Project(e.projectID)
+	if err != nil {
+		return nil, "", err
+	}
+	if atlasProject.OrgId != e.orgID {
+		_, _ = log.Warningf("Re-setting org ID to %q, owner of exported project\n", atlasProject.OrgId)
+		e.orgID = atlasProject.OrgId
+	}
+
 	// Project
 	projectData, err := project.BuildAtlasProject(
 		e.dataProvider,
+		atlasProject,
 		e.featureValidator,
 		e.orgID, e.projectID,
 		e.targetNamespace,
@@ -172,6 +183,7 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 	if err != nil {
 		return nil, "", err
 	}
+
 	var r []runtime.Object //nolint:prealloc
 	r = append(r, projectData.Project)
 	for _, secret := range projectData.Secrets {

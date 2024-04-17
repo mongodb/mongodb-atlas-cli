@@ -4,6 +4,9 @@ go 1.22
 
 toolchain go1.22.1
 
+replace go.mongodb.org/atlas-sdk/v20231115008 v20231115008.5.0 => ./../atlas-sdk-go
+
+
 require (
 	cloud.google.com/go/kms v1.15.8
 	github.com/AlecAivazis/survey/v2 v2.3.7

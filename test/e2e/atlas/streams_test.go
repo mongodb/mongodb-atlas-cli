@@ -48,9 +48,6 @@ func TestStreams(t *testing.T) {
 	connectionName, err := RandEntityWithRevision("connection")
 	req.NoError(err)
 
-	mdbVersion, err := MongoDBMajorVersion()
-	req.NoError(err)
-
 	t.Run("List all streams in the e2e project", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			"streams",
@@ -301,61 +298,6 @@ func TestStreams(t *testing.T) {
 		a := assert.New(t)
 		a.Equal(*connection.Name, connectionName)
 		a.Equal("SSL", connection.Security.GetProtocol())
-	})
-
-	t.Run("Creating a streams connection with atlas cluster", func(t *testing.T) {
-		clusterName := "Cluster1"
-
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"create",
-			clusterName,
-			"--backup",
-			"--tier", tierM10,
-			"--region=US_EAST_1",
-			"--provider", e2eClusterProvider,
-			"--mdbVersion", mdbVersion,
-			"--projectId",
-			g.projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		var cluster *atlasv2.AdvancedClusterDescription
-		req.NoError(json.Unmarshal(resp, &cluster))
-
-		req.NoError(watchCluster(g.projectID, clusterName))
-
-		streamsCmd := exec.Command(cliPath,
-			"streams",
-			"connection",
-			"create",
-			g.clusterName,
-			"-f",
-			"create_streams_connection_atlas_test.json",
-			"-i",
-			instanceName,
-			"-o=json",
-			"--projectId",
-			g.projectID,
-		)
-
-		streamsCmd.Env = os.Environ()
-		streamsResp, streamsErr := streamsCmd.CombinedOutput()
-		req.NoError(streamsErr, string(streamsResp))
-
-		var connection atlasv2.StreamsConnection
-		req.NoError(json.Unmarshal(streamsResp, &connection))
-
-		// Assert on config from create_streams_connection_atlas_test.json
-		a := assert.New(t)
-		a.Equal("ClusterConn", *connection.Name)
-		a.Equal("atlasAdmin", *connection.DbRoleToExecute.Role)
-
-		t.Cleanup(func() {
-			require.NoError(t, deleteClusterForProject(g.projectID, clusterName))
-		})
 	})
 
 	t.Run("Deleting a streams connection", func(t *testing.T) {

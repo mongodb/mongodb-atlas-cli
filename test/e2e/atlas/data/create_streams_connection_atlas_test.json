@@ -1,7 +1,7 @@
 {
   "name": "ClusterConn",
   "type": "Cluster",
-  "clusterName": "Cluster1",
+  "clusterName": "{{.ClusterName}}",
   "dbRoleToExecute": {
     "links": [],
     "role": "atlasAdmin",

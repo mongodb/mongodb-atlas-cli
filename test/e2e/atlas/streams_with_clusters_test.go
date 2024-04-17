@@ -73,7 +73,7 @@ func TestStreamsWithClusters(t *testing.T) {
 		assert.Equal(t, instance.GetName(), instanceName)
 	})
 
-	t.Run("Create a streams instance with an atlas cluster", func(t *testing.T) {
+	t.Run("Create a streams connection with an atlas cluster", func(t *testing.T) {
 		configFile, err := generateAtlasConnectionConfigFile(g.clusterName)
 		req.NoError(err)
 

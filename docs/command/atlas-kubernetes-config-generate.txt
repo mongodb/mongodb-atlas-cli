@@ -57,10 +57,6 @@ Options
      - string
      - false
      - Version of Atlas Kubernetes Operator to generate resources for. This value defaults to "2.2.0".
-   * - --orgId
-     - string
-     - false
-     - Organization ID to use. This option overrides the settings in the configuration file or environment variable.
    * - --projectId
      - string
      - false

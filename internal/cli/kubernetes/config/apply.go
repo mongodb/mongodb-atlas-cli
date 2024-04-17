@@ -98,7 +98,7 @@ func (opts *ApplyOpts) Run() error {
 		return err
 	}
 
-	exporter := operator.NewConfigExporter(opts.store, opts.credsStore, opts.ProjectID, opts.OrgID).
+	exporter := operator.NewConfigExporter(opts.store, opts.credsStore, opts.ProjectID).
 		WithClustersNames(opts.clusterName).
 		WithTargetNamespace(opts.targetNamespace).
 		WithTargetOperatorVersion(opts.operatorVersion).
@@ -149,7 +149,6 @@ func ApplyBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.ValidateOrgID,
 				opts.ValidateTargetNamespace,
 				opts.ValidateOperatorVersion,
 				opts.initStores(cmd.Context()),
@@ -163,6 +162,7 @@ func ApplyBuilder() *cobra.Command {
 	flags := cmd.Flags()
 
 	flags.StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	_ = flags.MarkDeprecated(flag.OrgID, "It will be ignored, the Organization ID will be inferred from the project.")
 	flags.StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	flags.StringSliceVar(&opts.clusterName, flag.ClusterName, []string{}, usage.ExporterClusterName)
 	flags.StringVar(&opts.targetNamespace, flag.OperatorTargetNamespace, "", usage.OperatorTargetNamespace)

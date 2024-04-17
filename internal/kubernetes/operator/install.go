@@ -234,7 +234,7 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 			return fmt.Errorf("failed to assign api key to project %s: %w", projectID, err)
 		}
 
-		exporter := NewConfigExporter(i.atlasStore, i.credStore, projectID, orgID).
+		exporter := NewConfigExporter(i.atlasStore, i.credStore, projectID).
 			WithTargetNamespace(i.namespace).
 			WithTargetOperatorVersion(crdVersion).
 			WithFeatureValidator(i.featureValidator).

@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/project"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
@@ -63,7 +62,7 @@ var (
 	ErrNoCloudManagerClusters = errors.New("can not get 'advanced clusters' object")
 )
 
-func NewConfigExporter(dataProvider store.OperatorGenericStore, credsProvider store.CredentialsGetter, projectID, orgID string) *ConfigExporter {
+func NewConfigExporter(dataProvider store.OperatorGenericStore, credsProvider store.CredentialsGetter, projectID string) *ConfigExporter {
 	return &ConfigExporter{
 		dataProvider:            dataProvider,
 		credsProvider:           credsProvider,
@@ -72,7 +71,6 @@ func NewConfigExporter(dataProvider store.OperatorGenericStore, credsProvider st
 		dataFederationNames:     []string{},
 		targetNamespace:         "",
 		includeSecretsData:      false,
-		orgID:                   orgID,
 		dictionaryForAtlasNames: resources.AtlasNameToKubernetesName(),
 	}
 }
@@ -165,10 +163,7 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 	if err != nil {
 		return nil, "", err
 	}
-	if atlasProject.OrgId != e.orgID {
-		_, _ = log.Warningf("Re-setting org ID to %q, owner of exported project\n", atlasProject.OrgId)
-		e.orgID = atlasProject.OrgId
-	}
+	e.orgID = atlasProject.OrgId
 
 	// Project
 	projectData, err := project.BuildAtlasProject(

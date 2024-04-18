@@ -50,6 +50,7 @@ func TestIntegrations(t *testing.T) {
 			integrationsEntity,
 			"create",
 			datadogEntity,
+			"--debug",
 			"--apiKey",
 			datadogKey,
 			"--projectId",
@@ -60,7 +61,6 @@ func TestIntegrations(t *testing.T) {
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
-
 		var thirdPartyIntegrations atlasv2.PaginatedIntegration
 		require.NoError(t, json.Unmarshal(resp, &thirdPartyIntegrations))
 		a.True(integrationExists(datadogEntity, thirdPartyIntegrations))
@@ -76,6 +76,7 @@ func TestIntegrations(t *testing.T) {
 			opsGenieEntity,
 			"--apiKey",
 			opsGenieKey,
+			"--debug",
 			"--projectId",
 			g.projectID,
 			"-o=json")

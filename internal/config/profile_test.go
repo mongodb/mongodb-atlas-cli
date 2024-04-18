@@ -151,7 +151,6 @@ func TestConfig_IsTrue(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
-			tt := tt
 			t.Parallel()
 			if got := IsTrue(tt.input); got != tt.want {
 				t.Errorf("IsTrue() get: %v, want %v", got, tt.want)

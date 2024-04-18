@@ -38,7 +38,6 @@ import (
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -1390,7 +1389,7 @@ func TestToMatcherErrors(t *testing.T) {
 		t.Run(tc.title, func(t *testing.T) {
 			_, err := toMatcher(tc.m)
 			log.Printf("err=%v", err)
-			require.ErrorContains(t, err, tc.expectedErrorMsg)
+			assert.ErrorContains(t, err, tc.expectedErrorMsg)
 		})
 	}
 }

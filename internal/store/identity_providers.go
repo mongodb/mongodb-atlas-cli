@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_project_invitations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store IdentityProviderLister
+//go:generate mockgen -destination=../mocks/mock_project_invitations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store IdentityProviderLister, IdentityProviderDescriber, IdentityProviderCreator, IdentityProviderDeleter, IdentityProviderUpdater
 
 type IdentityProviderLister interface {
 	IdentityProviders(opts *atlasv2.ListIdentityProvidersApiParams) ([]atlasv2.PaginatedFederationIdentityProvider, error)
@@ -29,7 +29,7 @@ type IdentityProviderDescriber interface {
 }
 
 type IdentityProviderCreator interface {
-	CreateIdentityProvider(*atlasv2.CreateIdentityProviderApiParams) (*atlasv2.FederationIdentityProvider, error)
+	CreateIdentityProvider(*atlasv2.CreateIdentityProviderApiParams) (*atlasv2.FederationOidcIdentityProvider, error)
 }
 
 type IdentityProviderDeleter interface {

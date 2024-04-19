@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115009/admin"
 )
 
 func TestIntegrations(t *testing.T) {
@@ -60,7 +60,6 @@ func TestIntegrations(t *testing.T) {
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
-
 		var thirdPartyIntegrations atlasv2.PaginatedIntegration
 		require.NoError(t, json.Unmarshal(resp, &thirdPartyIntegrations))
 		a.True(integrationExists(datadogEntity, thirdPartyIntegrations))

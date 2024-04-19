@@ -50,7 +50,6 @@ func TestIntegrations(t *testing.T) {
 			integrationsEntity,
 			"create",
 			datadogEntity,
-			"--debug",
 			"--apiKey",
 			datadogKey,
 			"--projectId",
@@ -76,7 +75,6 @@ func TestIntegrations(t *testing.T) {
 			opsGenieEntity,
 			"--apiKey",
 			opsGenieKey,
-			"--debug",
 			"--projectId",
 			g.projectID,
 			"-o=json")

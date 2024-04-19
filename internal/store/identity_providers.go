@@ -52,7 +52,7 @@ func (s *Store) IdentityProvider(opts *atlasv2.GetIdentityProviderApiParams) (*a
 	return result, err
 }
 
-// // CreateIdentityProvider encapsulate the logic to manage different cloud providers.
+// CreateIdentityProvider encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateIdentityProvider(opts *atlasv2.CreateIdentityProviderApiParams) (*atlasv2.FederationOidcIdentityProvider, error) {
 	result, _, err := s.clientv2.FederatedAuthenticationApi.CreateIdentityProviderWithParams(s.ctx, opts).Execute()
 	return result, err

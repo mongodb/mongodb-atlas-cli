@@ -107,46 +107,6 @@ func TestCreateOpts_validate(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "set both x509 and LDAP",
-			fields: fields{
-				roles:      []string{"test"},
-				awsIamType: user,
-				ldapType:   user,
-				x509Type:   X509TypeManaged,
-			},
-			wantErr: true,
-		},
-		{
-			name: "set both x509 and AWS IAM",
-			fields: fields{
-				roles:      []string{"test"},
-				awsIamType: user,
-				ldapType:   none,
-				x509Type:   X509TypeManaged,
-			},
-			wantErr: true,
-		},
-		{
-			name: "set both LDAP and AWS IAM",
-			fields: fields{
-				roles:      []string{"test"},
-				awsIamType: user,
-				ldapType:   user,
-				x509Type:   none,
-			},
-			wantErr: true,
-		},
-		{
-			name: "set both LDAP and AWS IAM and x509",
-			fields: fields{
-				roles:      []string{"test"},
-				awsIamType: user,
-				ldapType:   user,
-				x509Type:   X509TypeManaged,
-			},
-			wantErr: true,
-		},
-		{
 			name: "no external auth",
 			fields: fields{
 				roles:      []string{"test"},

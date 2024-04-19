@@ -36,15 +36,16 @@ type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.InputOpts
-	username    string
-	password    string
-	x509Type    string
-	awsIamType  string
-	ldapType    string
-	deleteAfter string
-	roles       []string
-	scopes      []string
-	store       store.DatabaseUserCreator
+	username     string
+	password     string
+	x509Type     string
+	awsIamType   string
+	ldapType     string
+	oidcAuthType string
+	deleteAfter  string
+	roles        []string
+	scopes       []string
+	store        store.DatabaseUserCreator
 }
 
 const (
@@ -61,6 +62,7 @@ var (
 	validX509Flags   = []string{none, X509TypeManaged, X509TypeCustomer}
 	validAWSIAMFlags = []string{none, role, user}
 	validLDAPFlags   = []string{none, group, user}
+	validOIDCFlags   = []string{none, group, user}
 )
 
 func (opts *CreateOpts) isX509Set() bool {
@@ -127,6 +129,11 @@ func (opts *CreateOpts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 	if opts.ldapType != "" {
 		u.LdapAuthType = &opts.ldapType
 	}
+
+	if opts.oidcAuthType != "" {
+		u.OidcAuthType = &opts.oidcAuthType
+	}
+
 	return u
 }
 
@@ -155,15 +162,14 @@ func (opts *CreateOpts) validate() error {
 		return errors.New("can't supply both $external authentication and password")
 	}
 
-	// a && (b || c) || (b && c): check if at least two are true
-	if opts.isAWSIAMSet() && (opts.isX509Set() || opts.isLDAPSet()) || (opts.isX509Set() && opts.isLDAPSet()) {
-		return errors.New("can't supply more than one $external type")
-	}
-
 	if err := validate.FlagInSlice(opts.x509Type, flag.X509Type, validX509Flags); err != nil {
 		return err
 	}
 	if err := validate.FlagInSlice(opts.awsIamType, flag.AWSIAMType, validAWSIAMFlags); err != nil {
+		return err
+	}
+
+	if err := validate.FlagInSlice(opts.oidcAuthType, flag.OIDCType, validOIDCFlags); err != nil {
 		return err
 	}
 	return validate.FlagInSlice(opts.ldapType, flag.LDAPType, validLDAPFlags)
@@ -231,6 +237,14 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, none, usage.X509Type)
 	cmd.Flags().StringVar(&opts.awsIamType, flag.AWSIAMType, none, usage.AWSIAMType)
 	cmd.Flags().StringVar(&opts.ldapType, flag.LDAPType, none, usage.LDAPType)
+	cmd.Flags().StringVar(&opts.oidcAuthType, flag.OIDCType, none, usage.OIDCType)
+
+	cmd.MarkFlagsMutuallyExclusive(flag.AWSIAMType, flag.LDAPType)
+	cmd.MarkFlagsMutuallyExclusive(flag.AWSIAMType, flag.X509Type)
+	cmd.MarkFlagsMutuallyExclusive(flag.AWSIAMType, flag.OIDCType)
+	cmd.MarkFlagsMutuallyExclusive(flag.LDAPType, flag.X509Type)
+	cmd.MarkFlagsMutuallyExclusive(flag.LDAPType, flag.OIDCType)
+	cmd.MarkFlagsMutuallyExclusive(flag.X509Type, flag.OIDCType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

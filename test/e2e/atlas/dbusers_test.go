@@ -65,6 +65,24 @@ func TestDBUserWithFlags(t *testing.T) {
 		testCreateUserCmd(t, cmd, username)
 	})
 
+	t.Run("Create OIDC Dbuser", func(t *testing.T) {
+		pwd, err := generateRandomBase64String(14)
+		require.NoError(t, err)
+		cmd := exec.Command(cliPath,
+			dbusersEntity,
+			"create",
+			"atlasAdmin",
+			"--deleteAfter", time.Now().AddDate(0, 0, 1).Format(time.RFC3339),
+			"--username", username,
+			"--password", pwd,
+			"--oidcType",
+			"--scope", scopeClusterDataLake,
+			"-o=json",
+		)
+
+		testCreateUserCmd(t, cmd, username)
+	})
+
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			dbusersEntity,

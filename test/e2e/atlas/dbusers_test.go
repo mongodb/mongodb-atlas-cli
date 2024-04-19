@@ -301,7 +301,7 @@ func generateRandomASCIIString(length int) (string, error) {
 
 // generateRandomBase64String generate a random ASCII string encoded using base64.
 func generateRandomBase64String() (string, error) {
-	length = 14
+	length := 14
 	result, err := generateRandomASCIIString(length)
 	return base64.StdEncoding.EncodeToString([]byte(result))[:length], err
 }

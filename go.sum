@@ -342,10 +342,10 @@ github.com/yusufpapurcu/wmi v1.2.4 h1:zFUKzehAFReQwLys1b/iSMl+JQGSCSjtVqQn9bBrPo
 github.com/yusufpapurcu/wmi v1.2.4/go.mod h1:SBZ9tNy3G9/m5Oi98Zks0QjeHVDvuK0qfxQmPyzfmi0=
 go.mongodb.org/atlas v0.36.0 h1:m05S3AO7zkl+bcG1qaNsEKBnAqnKx2FDwLooHpIG3j4=
 go.mongodb.org/atlas v0.36.0/go.mod h1:nfPldE9dSama6G2IbIzmEza02Ly7yFZjMMVscaM0uEc=
-go.mongodb.org/atlas-sdk v0.3.1-0.20230529214006-03805e98d970 h1:1uwKoTf4/SZKhNpzdPbxCmM21RLFn2iIA8Mki9IGOf8=
-go.mongodb.org/atlas-sdk v0.3.1-0.20230529214006-03805e98d970/go.mod h1:GzQWxevVUwtUOk9I4DlYLZVvl17TEjTQsGNsH07JQpI=
 go.mongodb.org/atlas-sdk/v20231115004 v20231115004.1.0 h1:vOvfk8bPedcphaTHIm6p8UB/ZPeVOqJZ7+MmTuI1eGs=
 go.mongodb.org/atlas-sdk/v20231115004 v20231115004.1.0/go.mod h1:FzD5DLz+WPB+z3OGgNBjXMPQJjJ7Y+hKn4iupXZuoOc=
+go.mongodb.org/atlas-sdk/v20231115008 v20231115008.5.0 h1:OuV1HfIpZUZa4+BKvtrvDlNqnilkCkdHspuZok6KAbM=
+go.mongodb.org/atlas-sdk/v20231115008 v20231115008.5.0/go.mod h1:0707RpWIrNFZ6Msy/dwRDCzC5JVDon61JoOqcbfCujg=
 go.mongodb.org/atlas-sdk/v20231115009 v20231115009.0.0 h1:1udFltYcREgqknzgA5OQpMUC6SY3pcSSZh17/UuZSPI=
 go.mongodb.org/atlas-sdk/v20231115009 v20231115009.0.0/go.mod h1:T7c8gdzNufnadj9PMLrTmdzQwp+MOdVGSoDDVg+sZ00=
 go.mongodb.org/mongo-driver v1.15.0 h1:rJCKC8eEliewXjZGf0ddURtl7tTVy1TK3bfl0gkUSLc=

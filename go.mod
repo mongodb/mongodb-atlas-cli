@@ -4,9 +4,6 @@ go 1.22
 
 toolchain go1.22.1
 
-replace go.mongodb.org/atlas-sdk/v20231115008 v20231115008.5.0 => ./../atlas-sdk-go
-
-
 require (
 	cloud.google.com/go/kms v1.15.8
 	github.com/AlecAivazis/survey/v2 v2.3.7
@@ -45,6 +42,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	github.com/tangzero/inflector v1.0.0
 	go.mongodb.org/atlas v0.36.0
+	go.mongodb.org/atlas-sdk/v20231115008 v20231115008.5.0
 	go.mongodb.org/atlas-sdk/v20231115009 v20231115009.0.0
 	go.mongodb.org/mongo-driver v1.15.0
 	golang.org/x/exp v0.0.0-20240318143956-a85f2c67cd81

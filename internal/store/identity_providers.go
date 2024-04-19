@@ -21,7 +21,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_identity_providers_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store IdentityProviderLister,IdentityProviderDescriber,IdentityProviderCreator,IdentityProviderDeleter,IdentityProviderUpdater
 
 type IdentityProviderLister interface {
-	IdentityProviders(opts *atlasv2.ListIdentityProvidersApiParams) ([]atlasv2.PaginatedFederationIdentityProvider, error)
+	IdentityProviders(opts *atlasv2.ListIdentityProvidersApiParams) (*atlasv2.PaginatedFederationIdentityProvider, error)
 }
 
 type IdentityProviderDescriber interface {

@@ -35,10 +35,10 @@ func (m *MockIdentityProviderLister) EXPECT() *MockIdentityProviderListerMockRec
 }
 
 // IdentityProviders mocks base method.
-func (m *MockIdentityProviderLister) IdentityProviders(arg0 *admin.ListIdentityProvidersApiParams) ([]admin.PaginatedFederationIdentityProvider, error) {
+func (m *MockIdentityProviderLister) IdentityProviders(arg0 *admin.ListIdentityProvidersApiParams) (*admin.PaginatedFederationIdentityProvider, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "IdentityProviders", arg0)
-	ret0, _ := ret[0].([]admin.PaginatedFederationIdentityProvider)
+	ret0, _ := ret[0].(*admin.PaginatedFederationIdentityProvider)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

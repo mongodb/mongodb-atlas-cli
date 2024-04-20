@@ -36,22 +36,23 @@ type CreateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.InputOpts
-	username     string
-	password     string
-	x509Type     string
-	awsIamType   string
-	ldapType     string
-	oidcAuthType string
-	deleteAfter  string
-	roles        []string
-	scopes       []string
-	store        store.DatabaseUserCreator
+	username    string
+	password    string
+	x509Type    string
+	awsIamType  string
+	ldapType    string
+	oidcType    string
+	deleteAfter string
+	roles       []string
+	scopes      []string
+	store       store.DatabaseUserCreator
 }
 
 const (
 	user             = "USER"
 	role             = "ROLE"
 	group            = "GROUP"
+	groupID          = "GROUP_ID"
 	X509TypeManaged  = "MANAGED"
 	X509TypeCustomer = "CUSTOMER"
 	none             = "NONE"
@@ -62,7 +63,7 @@ var (
 	validX509Flags   = []string{none, X509TypeManaged, X509TypeCustomer}
 	validAWSIAMFlags = []string{none, role, user}
 	validLDAPFlags   = []string{none, group, user}
-	validOIDCFlags   = []string{none, group, user}
+	validOIDCFlags   = []string{none, groupID, user}
 )
 
 func (opts *CreateOpts) isX509Set() bool {
@@ -130,8 +131,8 @@ func (opts *CreateOpts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 		u.LdapAuthType = &opts.ldapType
 	}
 
-	if opts.oidcAuthType != "" {
-		u.OidcAuthType = &opts.oidcAuthType
+	if opts.oidcType != "" {
+		u.OidcAuthType = &opts.oidcType
 	}
 
 	return u
@@ -169,7 +170,7 @@ func (opts *CreateOpts) validate() error {
 		return err
 	}
 
-	if err := validate.FlagInSlice(opts.oidcAuthType, flag.OIDCType, validOIDCFlags); err != nil {
+	if err := validate.FlagInSlice(opts.oidcType, flag.OIDCType, validOIDCFlags); err != nil {
 		return err
 	}
 	return validate.FlagInSlice(opts.ldapType, flag.LDAPType, validLDAPFlags)
@@ -237,7 +238,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, none, usage.X509Type)
 	cmd.Flags().StringVar(&opts.awsIamType, flag.AWSIAMType, none, usage.AWSIAMType)
 	cmd.Flags().StringVar(&opts.ldapType, flag.LDAPType, none, usage.LDAPType)
-	cmd.Flags().StringVar(&opts.oidcAuthType, flag.OIDCType, none, usage.OIDCType)
+	cmd.Flags().StringVar(&opts.oidcType, flag.OIDCType, none, usage.OIDCType)
 
 	cmd.MarkFlagsMutuallyExclusive(flag.AWSIAMType, flag.LDAPType)
 	cmd.MarkFlagsMutuallyExclusive(flag.AWSIAMType, flag.X509Type)

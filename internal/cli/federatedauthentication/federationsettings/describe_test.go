@@ -56,7 +56,6 @@ func TestDescribe_Run(t *testing.T) {
 	}
 	t.Log(buf.String())
 	test.VerifyOutputTemplate(t, describeTemplate, *expected)
-
 }
 
 func TestDescribeBuilder(t *testing.T) {

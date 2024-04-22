@@ -48,7 +48,7 @@ type CreateOpts struct {
 
 const (
 	user           = "USER"
-	role           = "ROLE"
+	group          = "GROUP"
 	none           = "NONE"
 	oidc           = "OIDC"
 	createTemplate = "Identity provider '{{.Id}}' created.\n"
@@ -106,6 +106,7 @@ func CreateBuilder() *cobra.Command {
 			"displayNameDesc": "The Identity Provider display name.",
 			"output":          createTemplate,
 		},
+		Hidden: true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Protocol = oidc
 			return opts.PreRunE(
@@ -122,7 +123,7 @@ func CreateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.FederationSettingsId, flag.FederationSettingsId, "", usage.FederationSettingsId)
-	cmd.Flags().StringVar(&opts.IdpType, flag.IdpType, "", usage.IdpType)
+	cmd.Flags().StringVar(&opts.IdpType, flag.IdpType, group, usage.IdpType)
 	cmd.Flags().StringVar(&opts.Audience, flag.Audience, "", usage.Audience)
 	cmd.Flags().StringVar(&opts.AuthorizationType, flag.AuthorizationType, "", usage.AuthorizationType)
 	cmd.Flags().StringVar(&opts.ClientId, flag.ClientId, "", usage.ClientId)
@@ -149,5 +150,3 @@ func CreateBuilder() *cobra.Command {
 
 	return cmd
 }
-
-// ./bin/atlas federatedAuthentication identityProvider oidc create -P fedauth cliProvider --audience "audience13" --authorizationType "GROUP" --clientId clientId --desc "CLI TEST Provider" --federationSettingsId "6531abc7cbe54754fd77f068" --groupsClaim "groups" --idpType "WORKFORCE" --issuerUri "https://accounts.google.com" --userClaim "user" --output json --associatedDomains "iam-test-domain-dev.com" --debug

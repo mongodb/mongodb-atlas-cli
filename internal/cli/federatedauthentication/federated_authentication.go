@@ -30,8 +30,9 @@ func Builder() *cobra.Command {
 		Hidden:  true,
 	}
 	cmd.AddCommand(
-		identityprovider.Builder())
-	cmd.AddCommand(federationsettings.Builder())
+		identityprovider.Builder(),
+		federationsettings.Builder(),
+	)
 
 	return cmd
 }

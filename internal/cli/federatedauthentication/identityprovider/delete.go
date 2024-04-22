@@ -50,7 +50,7 @@ func (opts *DeleteOpts) Run() error {
 // atlas federatedAuthentication identityProvider delete <identityProviderId> --federationSettingsId federationSettingsId [--output output].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts("'%s' deleted\n", "Not deleted"),
+		DeleteOpts: cli.NewDeleteOpts("Identity provider '%s' deleted\n", "Identity provider not deleted"),
 	}
 	cmd := &cobra.Command{
 		Use:   "delete <identityProviderId>",

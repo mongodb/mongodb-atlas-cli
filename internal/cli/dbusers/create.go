@@ -52,7 +52,7 @@ const (
 	user             = "USER"
 	role             = "ROLE"
 	group            = "GROUP"
-	groupID          = "GROUP_ID"
+	groupID          = "IDP_GROUP"
 	X509TypeManaged  = "MANAGED"
 	X509TypeCustomer = "CUSTOMER"
 	none             = "NONE"
@@ -78,8 +78,12 @@ func (opts *CreateOpts) isLDAPSet() bool {
 	return opts.ldapType != "" && opts.ldapType != none
 }
 
+func (opts *CreateOpts) isOIDCSet() bool {
+	return opts.oidcType != "" && opts.oidcType != none
+}
+
 func (opts *CreateOpts) isExternal() bool {
-	return opts.isX509Set() || opts.isAWSIAMSet() || opts.isLDAPSet()
+	return opts.isX509Set() || opts.isAWSIAMSet() || opts.isLDAPSet() || opts.isOIDCSet()
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -118,6 +122,7 @@ func (opts *CreateOpts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 		DeleteAfterDate: convert.ParseDeleteAfter(opts.deleteAfter),
 		DatabaseName:    authDB,
 	}
+
 	if opts.password != "" {
 		u.Password = &opts.password
 	}
@@ -246,6 +251,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.MarkFlagsMutuallyExclusive(flag.LDAPType, flag.X509Type)
 	cmd.MarkFlagsMutuallyExclusive(flag.LDAPType, flag.OIDCType)
 	cmd.MarkFlagsMutuallyExclusive(flag.X509Type, flag.OIDCType)
+	cmd.MarkFlagsMutuallyExclusive(flag.Password, flag.OIDCType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

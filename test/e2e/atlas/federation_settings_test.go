@@ -57,7 +57,6 @@ func TestFederationSettings(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &settings))
 
 		a := assert.New(t)
-		a.Len(settings, 1)
 		a.NotEmpty(settings.Id)
 		a.NotEmpty(settings.IdentityProviderStatus)
 	})

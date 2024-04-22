@@ -45,6 +45,7 @@ func TestFederationSettings(t *testing.T) {
 			federatedAuthenticationEntity,
 			federationSettingsEntity,
 			"describe",
+			"--orgId",
 			orgID,
 			"-o=json",
 		)

@@ -35,7 +35,6 @@ const describeTemplate = `ID	IDENTITY PROVIDER ID	IDENTITY PROVIDER STATUS
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	id    string
 	store store.FederationSettingsDescriber
 }
 
@@ -49,7 +48,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 
 func (opts *DescribeOpts) Run() error {
 	params := &atlasv2.GetFederationSettingsApiParams{
-		OrgId: opts.id,
+		OrgId: opts.ConfigOrgID(),
 	}
 	r, err := opts.store.FederationSetting(params)
 	if err != nil {
@@ -59,34 +58,35 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas federatedAuthentication federationSettings describe <orgID>.
+// atlas federatedAuthentication federationSettings describe --orgId orgId.
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:     "describe <orgID>",
+		Use:     "describe",
 		Aliases: []string{"get"},
-		Args:    require.ExactArgs(1),
+		Args:    require.NoArgs,
 		Short:   "Return the Federation Settings details for the specified organization.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Owner"),
 		Annotations: map[string]string{
-			"orgIDDesc": "Unique 24-digit string that identifies the organization.",
-			"output":    describeTemplate,
+			"output": describeTemplate,
 		},
 		Example: `  # Return the JSON-formatted Federation Settings details for the organization with the ID 5e2211c17a3e5a48f5497de3:
-  atlas federatedAuthentication federationSettings describe 5e2211c17a3e5a48f5497de3 --output json`,
+  atlas federatedAuthentication federationSettings describe --orgId 5e2211c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+				opts.ValidateOrgID,
 			)
 		},
 		RunE: func(_ *cobra.Command, args []string) error {
-			opts.id = args[0]
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd

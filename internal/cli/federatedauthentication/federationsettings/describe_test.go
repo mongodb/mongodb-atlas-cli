@@ -35,7 +35,6 @@ func TestDescribe_Run(t *testing.T) {
 	buf := new(bytes.Buffer)
 	describeOpts := &DescribeOpts{
 		store: mockStore,
-		id:    "id",
 		OutputOpts: cli.OutputOpts{
 			Template:  describeTemplate,
 			OutWriter: buf,
@@ -63,6 +62,9 @@ func TestDescribeBuilder(t *testing.T) {
 		t,
 		DescribeBuilder(),
 		0,
-		[]string{flag.Output},
+		[]string{
+			flag.OrgID,
+			flag.Output,
+		},
 	)
 }

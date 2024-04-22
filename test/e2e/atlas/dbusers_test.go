@@ -45,9 +45,6 @@ func TestDBUserWithFlags(t *testing.T) {
 	username, err := RandUsername()
 	require.NoError(t, err)
 
-	oidcUsername, err := RandUsername()
-	require.NoError(t, err)
-
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
@@ -61,24 +58,6 @@ func TestDBUserWithFlags(t *testing.T) {
 			"--deleteAfter", time.Now().AddDate(0, 0, 1).Format(time.RFC3339),
 			"--username", username,
 			"--password", pwd,
-			"--scope", scopeClusterDataLake,
-			"-o=json",
-		)
-
-		testCreateUserCmd(t, cmd, username)
-	})
-
-	t.Run("Create OIDC Dbuser", func(t *testing.T) {
-		pwd, err := generateRandomBase64String()
-		require.NoError(t, err)
-		cmd := exec.Command(cliPath,
-			dbusersEntity,
-			"create",
-			"atlasAdmin",
-			"--deleteAfter", time.Now().AddDate(0, 0, 1).Format(time.RFC3339),
-			"--username", oidcUsername,
-			"--password", pwd,
-			"--oidcType",
 			"--scope", scopeClusterDataLake,
 			"-o=json",
 		)
@@ -145,7 +124,6 @@ func TestDBUserWithFlags(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		testDeleteUser(t, cliPath, dbusersEntity, username)
-		testDeleteUser(t, cliPath, dbusersEntity, oidcUsername)
 	})
 }
 

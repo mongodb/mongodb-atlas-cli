@@ -15,12 +15,15 @@
 package project
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/secrets"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
@@ -28,9 +31,9 @@ import (
 	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8snames "k8s.io/apiserver/pkg/storage/names"
 )
 
@@ -192,11 +195,11 @@ func BuildAtlasProject(projectStore store.OperatorProjectStore, validator featur
 
 func newAtlasProject(project *atlasv2.Group, dictionary map[string]string, targetNamespace string, version string) *akov2.AtlasProject {
 	return &akov2.AtlasProject{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: metav1.TypeMeta{
 			Kind:       "AtlasProject",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: metav1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(project.Name, dictionary),
 			Namespace: targetNamespace,
 			Labels: map[string]string{
@@ -683,41 +686,6 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 		return nil, nil, err
 	}
 
-	convertMatchers := func(atlasMatcher []map[string]interface{}) []akov2.Matcher {
-		var res []akov2.Matcher
-		for _, m := range atlasMatcher {
-			res = append(res, akov2.Matcher{
-				FieldName: (m["FieldName"]).(string),
-				Operator:  (m["Operator"]).(string),
-				Value:     (m["Value"]).(string),
-			})
-		}
-		return res
-	}
-
-	convertMetricThreshold := func(atlasMT *atlasv2.ServerlessMetricThreshold) *akov2.MetricThreshold {
-		if atlasMT == nil {
-			return &akov2.MetricThreshold{}
-		}
-		return &akov2.MetricThreshold{
-			MetricName: atlasMT.MetricName,
-			Operator:   store.StringOrEmpty(atlasMT.Operator),
-			Threshold:  fmt.Sprintf("%f", pointer.GetOrDefault(atlasMT.Threshold, 0.0)),
-			Units:      store.StringOrEmpty(atlasMT.Units),
-			Mode:       store.StringOrEmpty(atlasMT.Mode),
-		}
-	}
-
-	convertThreshold := func(atlasT *atlasv2.GreaterThanRawThreshold) *akov2.Threshold {
-		if atlasT == nil {
-			return &akov2.Threshold{}
-		}
-		return &akov2.Threshold{
-			Operator:  store.StringOrEmpty(atlasT.Operator),
-			Units:     store.StringOrEmpty(atlasT.Units),
-			Threshold: fmt.Sprintf("%d", pointer.GetOrDefault(atlasT.Threshold, 0)),
-		}
-	}
 	convertNotifications := func(atlasNotifications []atlasv2.AlertsNotificationRootForGroup) ([]akov2.Notification, []*corev1.Secret) {
 		var (
 			akoNotifications []akov2.Notification
@@ -817,7 +785,7 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 		return akoNotifications, akoSecrets
 	}
 
-	secretResults := []*corev1.Secret{}
+	var secretResults []*corev1.Secret
 	results := make([]akov2.AlertConfiguration, 0, len(data.GetResults()))
 	for _, alertConfig := range data.GetResults() {
 		notifications, notificationSecrets := convertNotifications(alertConfig.GetNotifications())
@@ -833,6 +801,67 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 		})
 	}
 	return results, secretResults, nil
+}
+
+func convertMatchers(atlasMatcher []map[string]interface{}) []akov2.Matcher {
+	res := make([]akov2.Matcher, 0, len(atlasMatcher))
+	for _, m := range atlasMatcher {
+		matcher, err := toMatcher(m)
+		if err != nil {
+			_, _ = log.Warningf("Skipping matcher %v, conversion failed: %v\n", m, err.Error())
+			continue
+		}
+		res = append(res, matcher)
+	}
+	return res
+}
+
+func toMatcher(m map[string]interface{}) (akov2.Matcher, error) {
+	var matcher akov2.Matcher
+	if len(m) == 0 {
+		return matcher, errors.New("empty map cannot be converted to Matcher")
+	}
+	jsonBytes, err := json.Marshal(m)
+	if err != nil {
+		return matcher, fmt.Errorf("could not marshal matcher map %#v back to json: %w", m, err)
+	}
+	if err := json.Unmarshal(jsonBytes, &matcher); err != nil {
+		return matcher, err
+	}
+	if matcher.FieldName == "" {
+		return matcher, errors.New("matcher's fieldName is not set")
+	}
+	if matcher.Operator == "" {
+		return matcher, errors.New("matcher's operator is not set")
+	}
+	if matcher.Value == "" {
+		return matcher, errors.New("matcher's value is not set")
+	}
+	return matcher, nil
+}
+
+func convertMetricThreshold(atlasMT *atlasv2.ServerlessMetricThreshold) *akov2.MetricThreshold {
+	if atlasMT == nil {
+		return &akov2.MetricThreshold{}
+	}
+	return &akov2.MetricThreshold{
+		MetricName: atlasMT.MetricName,
+		Operator:   store.StringOrEmpty(atlasMT.Operator),
+		Threshold:  fmt.Sprintf("%f", atlasMT.GetThreshold()),
+		Units:      atlasMT.GetUnits(),
+		Mode:       atlasMT.GetMode(),
+	}
+}
+
+func convertThreshold(atlasT *atlasv2.GreaterThanRawThreshold) *akov2.Threshold {
+	if atlasT == nil {
+		return &akov2.Threshold{}
+	}
+	return &akov2.Threshold{
+		Operator:  store.StringOrEmpty(atlasT.Operator),
+		Units:     store.StringOrEmpty(atlasT.Units),
+		Threshold: fmt.Sprintf("%d", atlasT.GetThreshold()),
+	}
 }
 
 func generateName(base string) string {
@@ -908,11 +937,11 @@ func buildTeams(teamsProvider store.OperatorTeamsStore, orgID, projectID, projec
 		}
 
 		atlasTeamCRs = append(atlasTeamCRs, &akov2.AtlasTeam{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasTeam",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      crName,
 				Namespace: targetNamespace,
 				Labels: map[string]string{

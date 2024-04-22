@@ -54,6 +54,7 @@ Related Commands
 * :ref:`atlas-streams-instances-create` - Create an Atlas Stream Processing instance for your project
 * :ref:`atlas-streams-instances-delete` - Delete an Atlas Stream Processing instance.
 * :ref:`atlas-streams-instances-describe` - Describe an Atlas Stream Processing instance for your project.
+* :ref:`atlas-streams-instances-download` - Download a compressed file that contains the logs for the specified Atlas Stream Processing instance.
 * :ref:`atlas-streams-instances-list` - List all the Atlas Stream Processing instances for your project.
 * :ref:`atlas-streams-instances-update` - Updates an Atlas Stream Processing instance for your project.
 
@@ -64,6 +65,7 @@ Related Commands
    create </command/atlas-streams-instances-create>
    delete </command/atlas-streams-instances-delete>
    describe </command/atlas-streams-instances-describe>
+   download </command/atlas-streams-instances-download>
    list </command/atlas-streams-instances-list>
    update </command/atlas-streams-instances-update>
 

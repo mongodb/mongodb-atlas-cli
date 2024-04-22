@@ -29,10 +29,10 @@ import (
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
-	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -323,7 +323,7 @@ func setupCluster(t *testing.T, name string, namespaces ...string) *operatorHelp
 
 	for _, namespace := range namespaces {
 		operatorNamespace := &corev1.Namespace{
-			ObjectMeta: apisv1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name: namespace,
 			},
 		}

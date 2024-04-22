@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20231115007/admin"
+	"go.mongodb.org/atlas-sdk/v20231115010/admin"
 	"go.mongodb.org/atlas/auth"
 )
 
@@ -133,6 +133,8 @@ func Test_loginOpts_Run(t *testing.T) {
 	mockConfig.EXPECT().Set("access_token", "asdf").Times(1)
 	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
+	mockConfig.EXPECT().OrgID().Return("").AnyTimes()
+	mockConfig.EXPECT().ProjectID().Return("").AnyTimes()
 	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
 	mockConfig.EXPECT().Save().Return(nil).Times(2)
 	expectedOrgs := &admin.PaginatedOrganization{

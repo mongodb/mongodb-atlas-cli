@@ -59,6 +59,7 @@ Related Commands
 * :ref:`atlas-projects-list` - Return all projects.
 * :ref:`atlas-projects-settings` - Settings operations.
 * :ref:`atlas-projects-teams` - Manage your Atlas teams.
+* :ref:`atlas-projects-update` - Update a project.
 * :ref:`atlas-projects-users` - Manage users for a project.
 
 
@@ -73,5 +74,6 @@ Related Commands
    list </command/atlas-projects-list>
    settings </command/atlas-projects-settings>
    teams </command/atlas-projects-teams>
+   update </command/atlas-projects-update>
    users </command/atlas-projects-users>
 

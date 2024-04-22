@@ -34,8 +34,8 @@ import (
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const resourceVersion = "x.y.z"
@@ -76,8 +76,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			},
 			Tags: &[]atlasv2.ResourceTag{
 				{
-					Key:   pointer.Get("TestTagKey"),
-					Value: pointer.Get("TestTagValue"),
+					Key:   "TestTagKey",
+					Value: "TestTagValue",
 				},
 			},
 			MongoDBMajorVersion: pointer.Get("5.0"),
@@ -142,7 +142,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			SampleRefreshIntervalBIConnector: pointer.Get(10),
 		}
 		processArgs.OplogSizeMB = pointer.Get(10)
-		processArgs.OplogMinRetentionHours = pointer.Get(float64(10.1))
+		processArgs.OplogMinRetentionHours = pointer.Get[float64](10.1)
 		backupSchedule := &atlasv2.DiskBackupSnapshotSchedule{
 			ClusterId:             pointer.Get("testClusterID"),
 			ClusterName:           pointer.Get(clusterName),
@@ -206,11 +206,11 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		clusterStore.EXPECT().DescribeSchedule(projectName, clusterName).Return(backupSchedule, nil)
 
 		expectCluster := &akov2.AtlasDeployment{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasDeployment",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-%s", projectName, clusterName)),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
@@ -331,11 +331,11 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 
 		expectPolicies := []*akov2.AtlasBackupPolicy{
 			{
-				TypeMeta: v1.TypeMeta{
+				TypeMeta: metav1.TypeMeta{
 					Kind:       "AtlasBackupPolicy",
 					APIVersion: "atlas.mongodb.com/v1",
 				},
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      strings.ToLower(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName)),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
@@ -357,11 +357,11 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		}
 
 		expectSchedule := &akov2.AtlasBackupSchedule{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasBackupSchedule",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName)),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
@@ -467,11 +467,11 @@ func TestBuildServerlessDeployments(t *testing.T) {
 		clusterStore.EXPECT().ServerlessPrivateEndpoints(projectName, clusterName).Return(spe, nil)
 
 		expected := &akov2.AtlasDeployment{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasDeployment",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-%s", projectName, clusterName)),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
@@ -519,4 +519,106 @@ func TestBuildServerlessDeployments(t *testing.T) {
 			t.Fatalf("Serverless deployment mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expected, got)
 		}
 	})
+}
+
+func TestCleanTenantFields(t *testing.T) {
+	for _, tt := range []struct {
+		name   string
+		spec   akov2.AtlasDeploymentSpec
+		expect bool
+	}{
+		{
+			name: "nil deploymentspec",
+			spec: akov2.AtlasDeploymentSpec{
+				DeploymentSpec: nil,
+			},
+			expect: false,
+		},
+		{
+			name: "nil replicationspec",
+			spec: akov2.AtlasDeploymentSpec{
+				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
+					ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
+						nil,
+					},
+				},
+			},
+			expect: false,
+		},
+		{
+			name: "nil regionconfig",
+			spec: akov2.AtlasDeploymentSpec{
+				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
+					ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
+						{
+							RegionConfigs: []*akov2.AdvancedRegionConfig{
+								nil,
+							},
+						},
+					},
+				},
+			},
+			expect: false,
+		},
+		{
+			name: "multiple non-tenant regionconfigs",
+			spec: akov2.AtlasDeploymentSpec{
+				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
+					ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
+						{
+							RegionConfigs: []*akov2.AdvancedRegionConfig{
+								{
+									ProviderName: "AWS",
+								},
+								{
+									ProviderName: "GCP",
+								},
+								{
+									ProviderName: "AZURE",
+								},
+								{
+									ProviderName: "AWS",
+								},
+							},
+						},
+					},
+				},
+			},
+			expect: false,
+		},
+		{
+			name: "multiple non-tenant regionconfigs and one tenant",
+			spec: akov2.AtlasDeploymentSpec{
+				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
+					ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
+						{
+							RegionConfigs: []*akov2.AdvancedRegionConfig{
+								{
+									ProviderName: "AWS",
+								},
+								{
+									ProviderName: "GCP",
+								},
+								{
+									ProviderName: "AZURE",
+								},
+								{
+									ProviderName: "TENANT",
+								},
+							},
+						},
+					},
+				},
+			},
+			expect: true,
+		},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := hasTenantRegionConfig(&akov2.AtlasDeployment{
+				Spec: tt.spec,
+			}); got != tt.expect {
+				t.Errorf("expect hasTenantRegionConfig to be %t, got %t", tt.expect, got)
+			}
+		})
+	}
 }

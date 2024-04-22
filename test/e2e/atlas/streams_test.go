@@ -20,12 +20,14 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 )
 
 func TestStreams(t *testing.T) {
@@ -76,6 +78,8 @@ func TestStreams(t *testing.T) {
 			"AWS",
 			"-r",
 			"VIRGINIA_USA",
+			"--tier",
+			"SP30",
 			instanceName,
 			"-o=json",
 			"--projectId",
@@ -90,6 +94,28 @@ func TestStreams(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &instance))
 
 		assert.Equal(t, instance.GetName(), instanceName)
+	})
+
+	t.Run("Downloading streams instance logs instance", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			"streams",
+			"instance",
+			"download",
+			instanceName,
+			"--out",
+			"-",
+			"--start",
+			strconv.FormatInt(time.Now().Add(-10*time.Second).Unix(), 10),
+			"--end",
+			strconv.FormatInt(time.Now().Unix(), 10),
+			"--force",
+			"--projectId",
+			g.projectID,
+		)
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("List all streams in the e2e project after creating", func(t *testing.T) {

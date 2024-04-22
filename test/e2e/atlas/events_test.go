@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20231115007/admin"
+	"go.mongodb.org/atlas-sdk/v20231115010/admin"
 )
 
 func TestEvents(t *testing.T) {
@@ -54,7 +54,7 @@ func TestEvents(t *testing.T) {
 			orgEntity,
 			"list",
 			"--omitCount",
-			"--minDate="+time.Now().Add(-time.Hour*time.Duration(24)).Format("2006-01-02"),
+			"--minDate="+time.Now().Add(-time.Hour*time.Duration(24)).Format("2006-01-02T15:04:05-0700"),
 			"-o=json",
 		)
 

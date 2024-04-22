@@ -193,6 +193,7 @@
 | `streams instance describe`                             | Y         | Y
 | `streams instance list`                                 | Y         | Y
 | `streams instance update`                               | Y         | Y
+| `streams instance log`                                  | Y         | Y
 | `config`                                                |           |
 | `completion`                                            | Y         | Y
 | `config delete`                                         | Y         | Y

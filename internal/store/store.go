@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -321,14 +321,7 @@ func New(opts ...Option) (*Store, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	switch store.service {
-	case config.CloudService, config.CloudGovService:
-		err = store.setAtlasClient(client)
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, store.service)
-	}
-	if err != nil {
+	if err = store.setAtlasClient(client); err != nil {
 		return nil, err
 	}
 

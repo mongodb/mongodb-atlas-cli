@@ -855,6 +855,24 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,streams
+  - name: atlas_streams_with_cluster
+    tags: [ "e2e","streams","atlas","assigned_to_jira_team_cloudp_atlas_streams"]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,streams_with_cluster
   - name: atlas_decrypt_e2e
     tags: [ "e2e","decrypt" ]
     must_have_test_results: true
@@ -1075,6 +1093,8 @@ tasks:
           E2E_PARALLEL: 16
   - name: atlas_deployments_local_noauth_e2e
     tags: ["e2e","deployments","local","noauth"]
+    # This test will be enabled in CLOUDP-237038
+    patch_only: true
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
@@ -1107,6 +1127,8 @@ tasks:
           E2E_TIMEOUT: 3h
   - name: atlas_deployments_local_auth_e2e
     tags: ["e2e","deployments","local","auth"]
+    # This test will be enabled in CLOUDP-237038
+    patch_only: true
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
@@ -1178,7 +1200,7 @@ buildvariants:
   - name: e2e_required
     display_name: "E2E Tests Required"
     run_on:
-      - rhel8.9-small
+      - rhel80-small
     expansions:
       <<: *go_linux_version
     tasks:
@@ -1280,14 +1302,21 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .atlas"
-# This variant will be enabled in CLOUDP-237038
-#  - name: e2e_local_deployments
-#    display_name: "E2E Local Deployments Tests"
-#    run_on:
-#      - rhel80-small
-#    expansions:
-#      <<: *go_linux_version
-#    tasks:
-#      - name: ".e2e .deployments .local"
+  - name: e2e_local_deployments
+    display_name: "E2E Local Deployments Tests"
+    run_on:
+      - rhel80-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+  - name: e2e_atlas_streams_with_clusters
+    display_name: "E2E Atlas Streams with Clusters Tests"
+    run_on:
+      - ubuntu2204-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .atlas .streams"
 include:
   - filename: build/ci/release.yml

@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_search.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store SearchIndexLister,SearchIndexCreator,SearchIndexDescriber,SearchIndexUpdater,SearchIndexDeleter
@@ -26,6 +26,7 @@ type SearchIndexLister interface {
 
 type SearchIndexCreator interface {
 	CreateSearchIndexes(string, string, *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error)
+	SearchIndex(string, string, string) (*atlasv2.ClusterSearchIndex, error)
 }
 
 type SearchIndexDescriber interface {

@@ -18,6 +18,7 @@ package project
 
 import (
 	"fmt"
+	"log"
 	"reflect"
 	"strings"
 	"testing"
@@ -37,9 +38,9 @@ import (
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -166,9 +167,9 @@ func TestBuildAtlasProject(t *testing.T) {
 					EventTypeName: pointer.Get("TestEventTypeName"),
 					Matchers: &[]map[string]interface{}{
 						{
-							"FieldName": "TestFieldName",
-							"Operator":  "TestOperator",
-							"Value":     "TestValue",
+							"fieldName": "TestFieldName",
+							"operator":  "TestOperator",
+							"value":     "TestValue",
 						},
 					},
 					MetricThreshold: &atlasv2.ServerlessMetricThreshold{
@@ -327,9 +328,9 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 		expectedMatchers := []akov2.Matcher{
 			{
-				FieldName: (alertConfigs[0].GetMatchers()[0]["FieldName"]).(string),
-				Operator:  (alertConfigs[0].GetMatchers()[0]["Operator"]).(string),
-				Value:     (alertConfigs[0].GetMatchers()[0]["Value"]).(string),
+				FieldName: (alertConfigs[0].GetMatchers()[0]["fieldName"]).(string),
+				Operator:  (alertConfigs[0].GetMatchers()[0]["operator"]).(string),
+				Value:     (alertConfigs[0].GetMatchers()[0]["value"]).(string),
 			},
 		}
 		expectedNotifications := []akov2.Notification{
@@ -380,11 +381,11 @@ func TestBuildAtlasProject(t *testing.T) {
 		teamsName := store.StringOrEmpty(teams.Name)
 		expectedTeams := []*akov2.AtlasTeam{
 			{
-				TypeMeta: v1.TypeMeta{
+				TypeMeta: metav1.TypeMeta{
 					Kind:       "AtlasTeam",
 					APIVersion: "atlas.mongodb.com/v1",
 				},
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(p.Name), strings.ToLower(teamsName)),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
@@ -403,11 +404,11 @@ func TestBuildAtlasProject(t *testing.T) {
 			},
 		}
 		expectedProject := &akov2.AtlasProject{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasProject",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(p.Name, dictionary),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
@@ -585,11 +586,11 @@ func TestBuildProjectConnectionSecret(t *testing.T) {
 			orgID, true, dictionary)
 
 		expected := &corev1.Secret{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "Secret",
 				APIVersion: "v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-credentials", name)),
 				Namespace: namespace,
 				Labels: map[string]string{
@@ -615,11 +616,11 @@ func TestBuildProjectConnectionSecret(t *testing.T) {
 			orgID, false, dictionary)
 
 		expected := &corev1.Secret{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "Secret",
 				APIVersion: "v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-credentials", name)),
 				Namespace: namespace,
 				Labels: map[string]string{
@@ -953,11 +954,11 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expectedSecrets := []*corev1.Secret{
 			{
-				TypeMeta: v1.TypeMeta{
+				TypeMeta: metav1.TypeMeta{
 					Kind:       "Secret",
 					APIVersion: "v1",
 				},
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
 						strings.ToLower(ints.GetResults()[0].GetType())),
@@ -1018,11 +1019,11 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expectedSecrets := []*corev1.Secret{
 			{
-				TypeMeta: v1.TypeMeta{
+				TypeMeta: metav1.TypeMeta{
 					Kind:       "Secret",
 					APIVersion: "v1",
 				},
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
 						strings.ToLower(ints.GetResults()[0].GetType())),
@@ -1325,4 +1326,94 @@ func Test_firstElementOrEmpty(t *testing.T) {
 	t.Run("should return first item when slice has multiple items", func(t *testing.T) {
 		assert.Equal(t, "1", firstElementOrZeroValue([]string{"1", "2", "3"}))
 	})
+}
+
+func TestToMatcherErrors(t *testing.T) {
+	testCases := []struct {
+		title            string
+		m                map[string]interface{}
+		expectedErrorMsg string
+	}{
+		{
+			title:            "Nil map renders nil map error",
+			m:                nil,
+			expectedErrorMsg: "empty map cannot be converted to Matcher",
+		},
+		{
+			title:            "Empty map renders nil map error",
+			m:                map[string]interface{}{},
+			expectedErrorMsg: "empty map cannot be converted to Matcher",
+		},
+		{
+			title:            "Missing fieldName renders key not set error",
+			m:                map[string]interface{}{"blah": 1},
+			expectedErrorMsg: "fieldName is not set",
+		},
+		{
+			title:            "Misnamed fieldName renders key not found error",
+			m:                map[string]interface{}{"FieldNames": "blah"},
+			expectedErrorMsg: "fieldName is not set",
+		},
+		{
+			title:            "Nil fieldName value renders key not found error",
+			m:                map[string]interface{}{"fieldName": nil},
+			expectedErrorMsg: "fieldName is not set",
+		},
+		{
+			title:            "Non string fieldName renders conversion error",
+			m:                map[string]interface{}{"fieldName": 1},
+			expectedErrorMsg: "cannot unmarshal number into Go struct field Matcher.fieldName",
+		},
+		{
+			title:            "Missing operator renders key not found error",
+			m:                map[string]interface{}{"fieldName": "blah"},
+			expectedErrorMsg: "operator is not set",
+		},
+		{
+			title:            "Non string operator renders conversion error",
+			m:                map[string]interface{}{"fieldName": "blah", "operator": 1},
+			expectedErrorMsg: "cannot unmarshal number into Go struct field Matcher.operator",
+		},
+		{
+			title:            "Missing value renders key not found error",
+			m:                map[string]interface{}{"fieldName": "blah", "operator": "op"},
+			expectedErrorMsg: "value is not set",
+		},
+		{
+			title:            "Non string value renders conversion error",
+			m:                map[string]interface{}{"fieldName": "blah", "operator": "op", "value": 0},
+			expectedErrorMsg: "cannot unmarshal number into Go struct field Matcher.value",
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.title, func(t *testing.T) {
+			_, err := toMatcher(tc.m)
+			log.Printf("err=%v", err)
+			assert.ErrorContains(t, err, tc.expectedErrorMsg)
+		})
+	}
+}
+
+func TestConvertMatchers(t *testing.T) {
+	maps := []map[string]interface{}{
+		nil,
+		{},
+		{"field": 1},
+		{"FieldName": 1},
+		{"fieldName": 1},
+		{"fieldName": nil},
+		{"fieldName": "field"},
+		{"fieldName": "field", "operator": 1},
+		{"fieldName": "field", "operator": "op"},
+		{"fieldName": "field", "operator": "op", "value": 0},
+		{"fieldName": "field", "operator": "op", "value": "value"},
+		// JSON unmarshaling is case insensitive
+		{"FIeldName": "field2", "Operator": "op2", "VaLUe": "other-value"},
+	}
+	expected := []akov2.Matcher{
+		{FieldName: "field", Operator: "op", Value: "value"},
+		{FieldName: "field2", Operator: "op2", Value: "other-value"},
+	}
+	matchers := convertMatchers(maps)
+	assert.Equal(t, expected, matchers)
 }

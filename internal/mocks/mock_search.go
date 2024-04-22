@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	admin "go.mongodb.org/atlas-sdk/v20231115010/admin"
 )
 
 // MockSearchIndexLister is a mock of SearchIndexLister interface.
@@ -85,6 +85,21 @@ func (m *MockSearchIndexCreator) CreateSearchIndexes(arg0, arg1 string, arg2 *ad
 func (mr *MockSearchIndexCreatorMockRecorder) CreateSearchIndexes(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSearchIndexes", reflect.TypeOf((*MockSearchIndexCreator)(nil).CreateSearchIndexes), arg0, arg1, arg2)
+}
+
+// SearchIndex mocks base method.
+func (m *MockSearchIndexCreator) SearchIndex(arg0, arg1, arg2 string) (*admin.ClusterSearchIndex, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchIndex", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchIndex indicates an expected call of SearchIndex.
+func (mr *MockSearchIndexCreatorMockRecorder) SearchIndex(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndex", reflect.TypeOf((*MockSearchIndexCreator)(nil).SearchIndex), arg0, arg1, arg2)
 }
 
 // MockSearchIndexDescriber is a mock of SearchIndexDescriber interface.

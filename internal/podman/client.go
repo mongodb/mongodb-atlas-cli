@@ -181,7 +181,9 @@ func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	info, err := o.machineInspect(ctx)
 	if err != nil {
 		d.MachineFound = false
-		d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman machine: %w", err).Error())
+		if d.MachineRequired {
+			d.Errors = append(d.Errors, fmt.Sprintf("failed to detect podman machine: %s", err))
+		}
 	} else {
 		d.MachineInfo = info
 		d.MachineState = info.State
@@ -480,8 +482,7 @@ func (o *client) Version(ctx context.Context) (version *Version, err error) {
 
 func (o *client) Logs(ctx context.Context) (map[string]interface{}, []error) {
 	l := map[string]interface{}{}
-	errs := []error{}
-
+	var errs []error
 	output, err := o.runPodman(ctx, "ps", "--all", "--format", "json", "--filter", "name=mongo")
 	if err != nil {
 		errs = append(errs, err)

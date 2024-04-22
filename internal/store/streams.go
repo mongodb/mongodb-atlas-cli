@@ -15,10 +15,13 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	"fmt"
+	"io"
+
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_streams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store StreamsLister,StreamsDescriber,StreamsCreator,StreamsDeleter,StreamsUpdater,ConnectionCreator,ConnectionDeleter,ConnectionUpdater,StreamsConnectionDescriber,StreamsConnectionLister
+//go:generate mockgen -destination=../mocks/mock_streams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store StreamsLister,StreamsDescriber,StreamsCreator,StreamsDeleter,StreamsUpdater,StreamsDownloader,ConnectionCreator,ConnectionDeleter,ConnectionUpdater,StreamsConnectionDescriber,StreamsConnectionLister
 
 type StreamsLister interface {
 	ProjectStreams(*atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error)
@@ -38,6 +41,10 @@ type StreamsDeleter interface {
 
 type StreamsUpdater interface {
 	UpdateStream(string, string, *atlasv2.StreamsDataProcessRegion) (*atlasv2.StreamsTenant, error)
+}
+
+type StreamsDownloader interface {
+	DownloadAuditLog(*atlasv2.DownloadStreamTenantAuditLogsApiParams) (io.ReadCloser, error)
 }
 
 type StreamsConnectionLister interface {
@@ -83,6 +90,17 @@ func (s *Store) DeleteStream(projectID, name string) error {
 func (s *Store) UpdateStream(projectID, name string, streamsDataProcessRegion *atlasv2.StreamsDataProcessRegion) (*atlasv2.StreamsTenant, error) {
 	result, _, err := s.clientv2.StreamsApi.UpdateStreamInstance(s.ctx, projectID, name, streamsDataProcessRegion).Execute()
 	return result, err
+}
+
+func (s *Store) DownloadAuditLog(request *atlasv2.DownloadStreamTenantAuditLogsApiParams) (io.ReadCloser, error) {
+	result, _, err := s.clientv2.StreamsApi.DownloadStreamTenantAuditLogsWithParams(s.ctx, request).Execute()
+	if err != nil {
+		return nil, err
+	}
+	if result == nil {
+		return nil, fmt.Errorf("returned file is empty")
+	}
+	return result, nil
 }
 
 // StreamsConnections encapsulates the logic to manage different cloud providers.

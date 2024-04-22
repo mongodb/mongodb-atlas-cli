@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 )
 
 const (

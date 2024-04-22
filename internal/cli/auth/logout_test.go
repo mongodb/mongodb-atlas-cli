@@ -90,5 +90,27 @@ func Test_logoutOpts_Run_Keep(t *testing.T) {
 		Return(nil, nil).
 		Times(1)
 
+	mockConfig.
+		EXPECT().
+		SetAccessToken("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetRefreshToken("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetProjectID("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetOrgID("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		Save().
+		Return(nil).
+		Times(1)
+
 	require.NoError(t, opts.Run(ctx))
 }

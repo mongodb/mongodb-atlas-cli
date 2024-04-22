@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 )
 
 func TestSetup(t *testing.T) {
@@ -118,7 +118,7 @@ func TestSetup(t *testing.T) {
 		assert.Equal(t, clusterName, *cluster.Name)
 
 		assert.Len(t, cluster.GetTags(), 1)
-		assert.Equal(t, tagKey, *cluster.GetTags()[0].Key)
-		assert.Equal(t, tagValue, *cluster.GetTags()[0].Value)
+		assert.Equal(t, tagKey, cluster.GetTags()[0].Key)
+		assert.Equal(t, tagValue, cluster.GetTags()[0].Value)
 	})
 }

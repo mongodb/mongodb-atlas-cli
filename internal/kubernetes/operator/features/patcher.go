@@ -19,25 +19,25 @@ import (
 	"strings"
 
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
-	v1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
 // Patcher is the type that is able to patch Kubernetes objects using a CRD specification.
 type Patcher interface {
-	Patch(crdSpec *v1.JSONSchemaProps, obj runtime.Object) error
+	Patch(crdSpec *apiextensionsv1.JSONSchemaProps, obj runtime.Object) error
 }
 
 // PatcherFunc is a convenience function wrapper around Patcher.
-type PatcherFunc func(crdSpec *v1.JSONSchemaProps, obj runtime.Object) error
+type PatcherFunc func(crdSpec *apiextensionsv1.JSONSchemaProps, obj runtime.Object) error
 
-func (pf PatcherFunc) Patch(crdSpec *v1.JSONSchemaProps, obj runtime.Object) error {
+func (pf PatcherFunc) Patch(crdSpec *apiextensionsv1.JSONSchemaProps, obj runtime.Object) error {
 	return pf(crdSpec, obj)
 }
 
 // NopPatcher does not patch anything.
 func NopPatcher() Patcher {
-	return PatcherFunc(func(*v1.JSONSchemaProps, runtime.Object) error {
+	return PatcherFunc(func(*apiextensionsv1.JSONSchemaProps, runtime.Object) error {
 		return nil
 	})
 }
@@ -45,32 +45,30 @@ func NopPatcher() Patcher {
 // UnknownBackupPolicyFrequencyTypesPruner removes backup policy items from a backup policy
 // with unknown frequency types.
 // It inspects the CRD definition to determine supported frequency types.
-func UnknownBackupPolicyFrequencyTypesPruner() Patcher {
-	return PatcherFunc(func(crdSpec *v1.JSONSchemaProps, obj runtime.Object) error {
-		// we are not defensive here as this function assumes the invariant
-		// of a stable CRD definition for a given version of Kubernetes Atlas Operator.
-		frequencyTypePropsEnum := crdSpec.Properties["items"].Items.Schema.Properties["frequencyType"].Enum
+func UnknownBackupPolicyFrequencyTypesPruner(crdSpec *apiextensionsv1.JSONSchemaProps, obj runtime.Object) error {
+	// we are not defensive here as this function assumes the invariant
+	// of a stable CRD definition for a given version of Kubernetes Atlas Operator.
+	frequencyTypePropsEnum := crdSpec.Properties["items"].Items.Schema.Properties["frequencyType"].Enum
 
-		knownFrequencyTypes := make(map[string]struct{})
-		for i := range frequencyTypePropsEnum {
-			knownFrequencyType := strings.Trim(string(frequencyTypePropsEnum[i].Raw), `"`)
-			knownFrequencyTypes[knownFrequencyType] = struct{}{}
+	knownFrequencyTypes := make(map[string]struct{})
+	for i := range frequencyTypePropsEnum {
+		knownFrequencyType := strings.Trim(string(frequencyTypePropsEnum[i].Raw), `"`)
+		knownFrequencyTypes[knownFrequencyType] = struct{}{}
+	}
+
+	policy, ok := obj.(*akov2.AtlasBackupPolicy)
+	if !ok || policy == nil {
+		return fmt.Errorf("invalid object: %T: %v", obj, obj)
+	}
+
+	prunedItems := make([]akov2.AtlasBackupPolicyItem, 0, len(policy.Spec.Items))
+	for i := range policy.Spec.Items {
+		frequencyType := policy.Spec.Items[i].FrequencyType
+		if _, ok := knownFrequencyTypes[frequencyType]; ok {
+			prunedItems = append(prunedItems, policy.Spec.Items[i])
 		}
+	}
+	policy.Spec.Items = prunedItems
 
-		policy, ok := obj.(*akov2.AtlasBackupPolicy)
-		if !ok || policy == nil {
-			return fmt.Errorf("invalid object: %T: %v", obj, obj)
-		}
-
-		prunedItems := make([]akov2.AtlasBackupPolicyItem, 0, len(policy.Spec.Items))
-		for i := range policy.Spec.Items {
-			frequencyType := policy.Spec.Items[i].FrequencyType
-			if _, ok := knownFrequencyTypes[frequencyType]; ok {
-				prunedItems = append(prunedItems, policy.Spec.Items[i])
-			}
-		}
-		policy.Spec.Items = prunedItems
-
-		return nil
-	})
+	return nil
 }

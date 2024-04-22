@@ -31,14 +31,14 @@ jobs:
           release_tag=${{ steps.get-latest-tag.outputs.tag }}
           echo "LATEST_VERSION=${release_tag#*/}" >> "$GITHUB_ENV"
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@0d103c3126aa41d772a8362f6aa67afac040f80c
+        uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb
       - name: Login to Docker Hub
         uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d
         with:
           username: "${{ secrets.DOCKERHUB_USER }}"
           password: "${{ secrets.DOCKERHUB_SECRET }}"
       - name: Build and push image to dockerhub staging registry
-        uses: docker/build-push-action@af5a7ed5ba88268d5278f7203fb52cd833f66d6e
+        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0
         with:
           context: .
           platforms: ${{ env.PLATFORMS }}
@@ -173,7 +173,7 @@ jobs:
           username: "${{ secrets.DOCKERHUB_USER }}"
           password: "${{ secrets.DOCKERHUB_SECRET }}"
       - name: Install Cosign
-        uses: sigstore/cosign-installer@e1523de7571e31dbe865fd2e80c5c7c23ae71eb4
+        uses: sigstore/cosign-installer@59acb6260d9c0ba8f4a2f9d9b48431a222b68e20
         with:
           cosign-release: 'v2.2.3'
       - name: Verify Signature Docker Image
@@ -212,7 +212,7 @@ jobs:
           username: "${{ secrets.QUAY_USER }}"
           password: "${{ secrets.QUAY_TOKEN }}"
       - name: Install Cosign
-        uses: sigstore/cosign-installer@e1523de7571e31dbe865fd2e80c5c7c23ae71eb4
+        uses: sigstore/cosign-installer@59acb6260d9c0ba8f4a2f9d9b48431a222b68e20
         with:
           cosign-release: 'v2.2.3'
       - name: Verify Signature Quay Image

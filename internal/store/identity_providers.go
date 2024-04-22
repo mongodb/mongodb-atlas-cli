@@ -59,8 +59,8 @@ func (s *Store) CreateIdentityProvider(opts *atlasv2.CreateIdentityProviderApiPa
 }
 
 // DeleteIdentityProvider encapsulate the logic to manage different cloud providers.
-func (s *Store) DeleteIdentityProvider(federationSettingsId string, identityProviderId string) error {
-	_, err := s.clientv2.FederatedAuthenticationApi.DeleteIdentityProvider(s.ctx, federationSettingsId, identityProviderId).Execute()
+func (s *Store) DeleteIdentityProvider(federationSettingsID string, identityProviderID string) error {
+	_, err := s.clientv2.FederatedAuthenticationApi.DeleteIdentityProvider(s.ctx, federationSettingsID, identityProviderID).Execute()
 	return err
 }
 

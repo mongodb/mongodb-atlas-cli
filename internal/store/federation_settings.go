@@ -18,9 +18,9 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_federation_settings_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store FederationSettignsDescriber
+//go:generate mockgen -destination=../mocks/mock_federation_settings_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store FederationSettingsDescriber
 
-type FederationSettignsDescriber interface {
+type FederationSettingsDescriber interface {
 	FederationSetting(opts *atlasv2.GetFederationSettingsApiParams) (*atlasv2.OrgFederationSettings, error)
 }
 

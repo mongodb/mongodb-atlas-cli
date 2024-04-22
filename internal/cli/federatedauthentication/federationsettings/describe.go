@@ -36,7 +36,7 @@ type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	id    string
-	store store.FederationSettignsDescriber
+	store store.FederationSettingsDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

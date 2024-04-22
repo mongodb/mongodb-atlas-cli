@@ -12,23 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package federatedauthentication
+package oidc
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/federatedauthentication/identityprovider"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "federatedAuthentication"
+	const use = "oidc"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage Atlas Federated Authentication.",
+		Short:   "Manage Federated Authentication OIDC Identity Providers.",
 	}
-	cmd.AddCommand(
-		identityprovider.Builder())
+	cmd.AddCommand(CreateBuilder())
 
 	return cmd
 }

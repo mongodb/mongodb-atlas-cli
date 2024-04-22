@@ -39,7 +39,6 @@ type CreateOpts struct {
 	username    string
 	password    string
 	x509Type    string
-	oidcType    string
 	awsIamType  string
 	ldapType    string
 	deleteAfter string

@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20231115009/admin"
+	admin "go.mongodb.org/atlas-sdk/v20231115010/admin"
 )
 
 // MockLiveMigrationValidationsCreator is a mock of LiveMigrationValidationsCreator interface.

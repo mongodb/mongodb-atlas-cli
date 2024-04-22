@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 )
@@ -48,9 +49,16 @@ type OidcOpts struct {
 
 const (
 	user           = "USER"
-	group          = "GROUP_IDP"
+	group          = "GROUP"
 	oidc           = "OIDC"
+	workflorce     = "WORKFORCE"
+	workload       = "WORKLOAD"
 	createTemplate = "Identity provider '{{.Id}}' created.\n"
+)
+
+var (
+	validAuthTypeFlagValues = []string{group, user}
+	validIdpTypeValues      = []string{workflorce, workload}
 )
 
 func (opts *OidcOpts) InitStore(ctx context.Context) func() error {
@@ -64,8 +72,10 @@ func (opts *OidcOpts) InitStore(ctx context.Context) func() error {
 		return err
 	}
 }
+
 func (opts *OidcOpts) newIdentityProvider() *atlasv2.CreateIdentityProviderApiParams {
 	return &atlasv2.CreateIdentityProviderApiParams{
+		FederationSettingsId: opts.FederationSettingsID,
 		FederationOidcIdentityProviderUpdate: &atlasv2.FederationOidcIdentityProviderUpdate{
 			AssociatedDomains: &opts.AssociatedDomains,
 			Audience:          &opts.Audience,
@@ -81,6 +91,14 @@ func (opts *OidcOpts) newIdentityProvider() *atlasv2.CreateIdentityProviderApiPa
 			UserClaim:         &opts.UserClaim,
 		},
 	}
+}
+
+func (opts *OidcOpts) Validate() error {
+	if err := validate.FlagInSlice(opts.AuthorizationType, flag.AuthorizationType, validAuthTypeFlagValues); err != nil {
+		return err
+	}
+
+	return validate.FlagInSlice(opts.IdpType, flag.IdpType, validIdpTypeValues)
 }
 
 func (opts *OidcOpts) Run() error {
@@ -111,6 +129,7 @@ func OIDCBuilder() *cobra.Command {
 				opts.InitStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 				opts.InitInput(cmd.InOrStdin()),
+				opts.Validate,
 			)
 		},
 		RunE: func(_ *cobra.Command, args []string) error {

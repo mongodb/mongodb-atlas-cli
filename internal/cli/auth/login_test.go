@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20231115009/admin"
+	"go.mongodb.org/atlas-sdk/v20231115010/admin"
 	"go.mongodb.org/atlas/auth"
 )
 

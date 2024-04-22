@@ -17,9 +17,11 @@
 package create
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
@@ -40,6 +42,7 @@ func TestOidcCreate(t *testing.T) {
 
 	expected := &atlasv2.FederationOidcIdentityProvider{}
 
+	buf := new(bytes.Buffer)
 	createOpts := &OidcOpts{
 		AssociatedDomains:    []string{"test"},
 		FederationSettingsID: "id",
@@ -55,7 +58,10 @@ func TestOidcCreate(t *testing.T) {
 		UserClaim:            "user",
 		RequestedScopes:      []string{"scope"},
 		store:                mockStore,
-	}
+		OutputOpts: cli.OutputOpts{
+			Template:  createTemplate,
+			OutWriter: buf,
+		}}
 
 	mockStore.
 		EXPECT().
@@ -65,4 +71,6 @@ func TestOidcCreate(t *testing.T) {
 	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	t.Log(buf.String())
+	test.VerifyOutputTemplate(t, createTemplate, *expected)
 }

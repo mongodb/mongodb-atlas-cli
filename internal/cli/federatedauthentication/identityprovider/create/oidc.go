@@ -26,7 +26,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 )
 
-type CreateOpts struct {
+type OidcOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.InputOpts
@@ -53,7 +53,7 @@ const (
 	createTemplate = "Identity provider '{{.Id}}' created.\n"
 )
 
-func (opts *CreateOpts) InitStore(ctx context.Context) func() error {
+func (opts *OidcOpts) InitStore(ctx context.Context) func() error {
 	return func() error {
 		if opts.store != nil {
 			return nil
@@ -64,7 +64,7 @@ func (opts *CreateOpts) InitStore(ctx context.Context) func() error {
 		return err
 	}
 }
-func (opts *CreateOpts) newIdentityProvider() *atlasv2.CreateIdentityProviderApiParams {
+func (opts *OidcOpts) newIdentityProvider() *atlasv2.CreateIdentityProviderApiParams {
 	return &atlasv2.CreateIdentityProviderApiParams{
 		FederationOidcIdentityProviderUpdate: &atlasv2.FederationOidcIdentityProviderUpdate{
 			AssociatedDomains: &opts.AssociatedDomains,
@@ -83,7 +83,7 @@ func (opts *CreateOpts) newIdentityProvider() *atlasv2.CreateIdentityProviderApi
 	}
 }
 
-func (opts *CreateOpts) Run() error {
+func (opts *OidcOpts) Run() error {
 	user := opts.newIdentityProvider()
 
 	r, err := opts.store.CreateIdentityProvider(user)
@@ -96,7 +96,7 @@ func (opts *CreateOpts) Run() error {
 
 // atlas federatedAuthentication identityProvider oidc create <displayName> --federationSettingsId federationSettingsId --idpType idpType --audience audience --authorizationType authorizationType --clientId clientId --description description --groupsClaim groupsClaim --userClaim userClaim --issuerUri issuerUri [--associatedDomains associatedDomains] [--requestedScopes	 requestedScopes][-o/--output output]
 func OIDCBuilder() *cobra.Command {
-	opts := &CreateOpts{}
+	opts := &OidcOpts{}
 	cmd := &cobra.Command{
 		Use:   "oidc [displayName]",
 		Short: "Create an OIDC identity provider.",
@@ -127,7 +127,7 @@ func OIDCBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.Description, flag.Description, "", usage.Description)
 	cmd.Flags().StringVar(&opts.GroupsClaim, flag.GroupsClaim, "", usage.GroupsClaim)
 	cmd.Flags().StringVar(&opts.UserClaim, flag.UserClaim, "", usage.UserClaim)
-	cmd.Flags().StringVar(&opts.IssuerURI, flag.IssuerUri, "", usage.IssuerUri)
+	cmd.Flags().StringVar(&opts.IssuerURI, flag.IssuerURI, "", usage.IssuerURI)
 	cmd.Flags().StringSliceVar(&opts.AssociatedDomains, flag.AssociatedDomains, []string{}, usage.AssociatedDomains)
 	cmd.Flags().StringSliceVar(&opts.RequestedScopes, flag.RequestedScopes, []string{}, usage.RequestedScopes)
 
@@ -143,7 +143,7 @@ func OIDCBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.DisplayName)
 	_ = cmd.MarkFlagRequired(flag.GroupsClaim)
 	_ = cmd.MarkFlagRequired(flag.UserClaim)
-	_ = cmd.MarkFlagRequired(flag.IssuerUri)
+	_ = cmd.MarkFlagRequired(flag.IssuerURI)
 
 	return cmd
 }

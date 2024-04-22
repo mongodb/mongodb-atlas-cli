@@ -19,7 +19,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func CreateBuilder() *cobra.Command {
+func Builder() *cobra.Command {
 	const use = "create"
 	cmd := &cobra.Command{
 		Use:     use,

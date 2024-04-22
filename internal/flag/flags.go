@@ -317,7 +317,7 @@ const (
 	DisplayName                               = "displayName"                               // DisplayName flag
 	GroupsClaim                               = "groupsClaim"                               // GroupsClaim flag
 	UserClaim                                 = "userClaim"                                 // UserClaim flag
-	IssuerUri                                 = "issuerUri"                                 // IssuerUri flag
+	IssuerURI                                 = "issuerUri"                                 // IssuerURI flag
 	AssociatedDomains                         = "associatedDomains"                         // AssociatedDomains flag
 	RequestedScopes                           = "requestedScopes"                           // RequestedScopes flag
 

@@ -395,7 +395,7 @@ dbName and collection are required only for built-in roles.`
 	DisplayName           = "Display name of the Identity Provider."
 	GroupsClaim           = "Identifier of the claim which contains IdP Group IDs in the token."
 	UserClaim             = "Identifier of the claim which contains the user ID in the token."
-	IssuerUri             = "Unique string that identifies the issuer of the OIDC metadata/discovery document URL."
+	IssuerURI             = "Unique string that identifies the issuer of the OIDC metadata/discovery document URL."
 	AssociatedDomains     = "List of domains associated with the Identity Provider."
 	RequestedScopes       = "Scopes that MongoDB applications will request from the authorization endpoint.	"
 )

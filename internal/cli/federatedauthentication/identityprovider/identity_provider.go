@@ -27,7 +27,7 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage Federated Authentication Identity Providers.",
 	}
-	cmd.AddCommand(create.CreateBuilder())
+	cmd.AddCommand(create.Builder())
 
 	return cmd
 }

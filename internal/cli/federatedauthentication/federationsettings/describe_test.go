@@ -30,7 +30,7 @@ import (
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockFederationSettignsDescriber(ctrl)
+	mockStore := mocks.NewMockFederationSettingsDescriber(ctrl)
 
 	buf := new(bytes.Buffer)
 	describeOpts := &DescribeOpts{

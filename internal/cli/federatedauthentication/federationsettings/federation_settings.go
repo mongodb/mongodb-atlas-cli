@@ -12,26 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package federatedauthentication
+package federationsettings
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/federatedauthentication/federationsettings"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/federatedauthentication/identityprovider"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "federatedAuthentication"
+	const use = "federationSettings"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage Atlas Federated Authentication.",
-		Hidden:  true,
+		Short:   "Manage Atlas Federated Authentication Federation Settings",
 	}
-	cmd.AddCommand(
-		identityprovider.Builder())
-	cmd.AddCommand(federationsettings.Builder())
+	cmd.AddCommand(DescribeBuilder())
 
 	return cmd
 }

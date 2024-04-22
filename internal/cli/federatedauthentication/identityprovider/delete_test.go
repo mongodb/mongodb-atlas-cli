@@ -17,7 +17,6 @@
 package identityprovider
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -30,16 +29,12 @@ import (
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIdentityProviderDeleter(ctrl)
-	buf := new(bytes.Buffer)
 
 	deleteOpts := &DeleteOpts{
 		store: mockStore,
 		DeleteOpts: &cli.DeleteOpts{
 			Entry:   "id",
 			Confirm: true,
-		},
-		OutputOpts: cli.OutputOpts{
-			OutWriter: buf,
 		},
 		FederationSettingsID: "federationSettingsID",
 	}
@@ -53,8 +48,6 @@ func TestDelete_Run(t *testing.T) {
 	if err := deleteOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	t.Log(buf.String())
-
 }
 
 func TestDeleteBuilder(t *testing.T) {

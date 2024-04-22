@@ -79,7 +79,7 @@ func DescribeBuilder() *cobra.Command {
 				opts.ValidateOrgID,
 			)
 		},
-		RunE: func(_ *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

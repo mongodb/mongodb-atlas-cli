@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package oidc
+package create
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
-func Builder() *cobra.Command {
-	const use = "oidc"
+func CreateBuilder() *cobra.Command {
+	const use = "create"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage Federated Authentication OIDC Identity Providers.",
+		Short:   "Manage Federated Authentication Identity Providers.",
 	}
-	cmd.AddCommand(CreateBuilder())
+	cmd.AddCommand(OIDCBuilder())
 
 	return cmd
 }

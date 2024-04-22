@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package oidc
+package create
 
 import (
 	"context"
@@ -31,14 +31,14 @@ type CreateOpts struct {
 	cli.OutputOpts
 	cli.InputOpts
 	AssociatedDomains    []string
-	FederationSettingsId string
+	FederationSettingsID string
 	Audience             string
-	ClientId             string
+	ClientID             string
 	AuthorizationType    string
 	Description          string
 	DisplayName          string
 	IdpType              string
-	IssuerUri            string
+	IssuerURI            string
 	Protocol             string
 	GroupsClaim          string
 	UserClaim            string
@@ -48,8 +48,7 @@ type CreateOpts struct {
 
 const (
 	user           = "USER"
-	group          = "GROUP"
-	none           = "NONE"
+	group          = "GROUP_IDP"
 	oidc           = "OIDC"
 	createTemplate = "Identity provider '{{.Id}}' created.\n"
 )
@@ -70,12 +69,12 @@ func (opts *CreateOpts) newIdentityProvider() *atlasv2.CreateIdentityProviderApi
 		FederationOidcIdentityProviderUpdate: &atlasv2.FederationOidcIdentityProviderUpdate{
 			AssociatedDomains: &opts.AssociatedDomains,
 			Audience:          &opts.Audience,
-			ClientId:          &opts.ClientId,
+			ClientId:          &opts.ClientID,
 			AuthorizationType: &opts.AuthorizationType,
 			Description:       &opts.Description,
 			DisplayName:       &opts.DisplayName,
 			IdpType:           &opts.IdpType,
-			IssuerUri:         &opts.IssuerUri,
+			IssuerUri:         &opts.IssuerURI,
 			Protocol:          &opts.Protocol,
 			GroupsClaim:       &opts.GroupsClaim,
 			RequestedScopes:   &opts.RequestedScopes,
@@ -96,21 +95,19 @@ func (opts *CreateOpts) Run() error {
 }
 
 // atlas federatedAuthentication identityProvider oidc create <displayName> --federationSettingsId federationSettingsId --idpType idpType --audience audience --authorizationType authorizationType --clientId clientId --description description --groupsClaim groupsClaim --userClaim userClaim --issuerUri issuerUri [--associatedDomains associatedDomains] [--requestedScopes	 requestedScopes][-o/--output output]
-func CreateBuilder() *cobra.Command {
+func OIDCBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
-		Use:   "create [displayName]",
-		Short: "Create an oidc identity provider.",
+		Use:   "oidc [displayName]",
+		Short: "Create an OIDC identity provider.",
 		Args:  cobra.ExactArgs(1),
 		Annotations: map[string]string{
 			"displayNameDesc": "The Identity Provider display name.",
 			"output":          createTemplate,
 		},
-		Hidden: true,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Protocol = oidc
 			return opts.PreRunE(
-				opts.ValidateProjectID,
 				opts.InitStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 				opts.InitInput(cmd.InOrStdin()),
@@ -122,26 +119,26 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.FederationSettingsId, flag.FederationSettingsId, "", usage.FederationSettingsId)
+	cmd.Flags().StringVar(&opts.FederationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
 	cmd.Flags().StringVar(&opts.IdpType, flag.IdpType, group, usage.IdpType)
 	cmd.Flags().StringVar(&opts.Audience, flag.Audience, "", usage.Audience)
 	cmd.Flags().StringVar(&opts.AuthorizationType, flag.AuthorizationType, "", usage.AuthorizationType)
-	cmd.Flags().StringVar(&opts.ClientId, flag.ClientId, "", usage.ClientId)
+	cmd.Flags().StringVar(&opts.ClientID, flag.ClientID, "", usage.ClientID)
 	cmd.Flags().StringVar(&opts.Description, flag.Description, "", usage.Description)
 	cmd.Flags().StringVar(&opts.GroupsClaim, flag.GroupsClaim, "", usage.GroupsClaim)
 	cmd.Flags().StringVar(&opts.UserClaim, flag.UserClaim, "", usage.UserClaim)
-	cmd.Flags().StringVar(&opts.IssuerUri, flag.IssuerUri, "", usage.IssuerUri)
+	cmd.Flags().StringVar(&opts.IssuerURI, flag.IssuerUri, "", usage.IssuerUri)
 	cmd.Flags().StringSliceVar(&opts.AssociatedDomains, flag.AssociatedDomains, []string{}, usage.AssociatedDomains)
 	cmd.Flags().StringSliceVar(&opts.RequestedScopes, flag.RequestedScopes, []string{}, usage.RequestedScopes)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 	_ = cmd.MarkFlagRequired(flag.Username)
-	_ = cmd.MarkFlagRequired(flag.FederationSettingsId)
+	_ = cmd.MarkFlagRequired(flag.FederationSettingsID)
 	_ = cmd.MarkFlagRequired(flag.IdpType)
 	_ = cmd.MarkFlagRequired(flag.Audience)
 	_ = cmd.MarkFlagRequired(flag.AuthorizationType)
-	_ = cmd.MarkFlagRequired(flag.ClientId)
+	_ = cmd.MarkFlagRequired(flag.ClientID)
 	_ = cmd.MarkFlagRequired(flag.Description)
 	_ = cmd.MarkFlagRequired(flag.DisplayName)
 	_ = cmd.MarkFlagRequired(flag.GroupsClaim)

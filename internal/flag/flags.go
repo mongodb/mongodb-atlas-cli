@@ -309,11 +309,11 @@ const (
 	FrequencyInterval                         = "frequencyInterval"                         // FrequencyInterval flag
 	RetentionUnit                             = "retentionUnit"                             // RetentionUnit flag
 	RetentionValue                            = "retentionValue"                            // RetentionValue flag
-	FederationSettingsId                      = "federationSettingsId"                      // FederationSettingsId flag
+	FederationSettingsID                      = "federationSettingsId"                      // FederationSettingsId flag
 	IdpType                                   = "idpType"                                   // IdpType flag
 	Audience                                  = "audience"                                  // Audience flag
 	AuthorizationType                         = "authorizationType"                         // AuthorizationType flag
-	ClientId                                  = "clientId"                                  // ClientId flag
+	ClientID                                  = "clientId"                                  // ClientId flag
 	DisplayName                               = "displayName"                               // DisplayName flag
 	GroupsClaim                               = "groupsClaim"                               // GroupsClaim flag
 	UserClaim                                 = "userClaim"                                 // UserClaim flag

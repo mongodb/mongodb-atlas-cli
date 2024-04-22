@@ -16,7 +16,7 @@ package identityprovider
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/federatedauthentication/identityprovider/oidc"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/federatedauthentication/identityprovider/create"
 	"github.com/spf13/cobra"
 )
 
@@ -27,8 +27,7 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage Federated Authentication Identity Providers.",
 	}
-	cmd.AddCommand(
-		oidc.Builder())
+	cmd.AddCommand(create.CreateBuilder())
 
 	return cmd
 }

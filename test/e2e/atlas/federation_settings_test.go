@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ func TestFederationSettings(t *testing.T) {
 
 	t.Run("Describing an org federation settings", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			"federatedAuthentication",
-			"federationSettings",
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
 			"describe",
 			orgID,
 			"-o=json",

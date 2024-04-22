@@ -64,9 +64,9 @@ func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
 		Use:     "describe <orgID>",
-		Aliases: []string{"show"},
+		Aliases: []string{"get"},
 		Args:    require.ExactArgs(1),
-		Short:   "Return the federation Settings details for the specified organizations.",
+		Short:   "Return the Federation Settings details for the specified organization.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization Owner"),
 		Annotations: map[string]string{
 			"orgIDDesc": "Unique 24-digit string that identifies the organization.",

@@ -17,7 +17,7 @@ package search
 import (
 	"strings"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115009/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 )
 
 func StringInSliceFold(a []string, x string) bool {

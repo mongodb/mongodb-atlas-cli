@@ -246,12 +246,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ldapType, flag.LDAPType, none, usage.LDAPType)
 	cmd.Flags().StringVar(&opts.oidcType, flag.OIDCType, none, usage.OIDCType)
 
-	cmd.MarkFlagsMutuallyExclusive(flag.AWSIAMType, flag.LDAPType)
-	cmd.MarkFlagsMutuallyExclusive(flag.AWSIAMType, flag.X509Type)
-	cmd.MarkFlagsMutuallyExclusive(flag.AWSIAMType, flag.OIDCType)
-	cmd.MarkFlagsMutuallyExclusive(flag.LDAPType, flag.X509Type)
-	cmd.MarkFlagsMutuallyExclusive(flag.LDAPType, flag.OIDCType)
-	cmd.MarkFlagsMutuallyExclusive(flag.X509Type, flag.OIDCType)
+	cmd.MarkFlagsMutuallyExclusive(flag.AWSIAMType, flag.LDAPType, flag.X509Type, flag.OIDCType)
 	cmd.MarkFlagsMutuallyExclusive(flag.Password, flag.OIDCType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)

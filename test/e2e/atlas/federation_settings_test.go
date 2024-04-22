@@ -61,5 +61,4 @@ func TestFederationSettings(t *testing.T) {
 		a.NotEmpty(settings.Id)
 		a.NotEmpty(settings.IdentityProviderStatus)
 	})
-
 }

@@ -80,7 +80,7 @@ Options
      - false
      - OIDC method by which the provided database user is authenticated. Valid values are NONE, USER, or IDP_GROUP. If you set this to USER or GROUP_ID, the user authenticates with OIDC. If you set this to USER or IDP_GROUP, you can't set --x509Type, --awsIAMType or --ldapType to any value other than NONE.
 
-       Mutually exclusive with --awsIAMType, --ldapType, --x509Type. This value defaults to "NONE".
+       Mutually exclusive with --awsIAMType, --ldapType, --x509Type, --password. This value defaults to "NONE".
    * - -o, --output
      - string
      - false
@@ -89,6 +89,8 @@ Options
      - string
      - false
      - Password for the database user.
+
+       Mutually exclusive with --oidcType.
    * - --projectId
      - string
      - false

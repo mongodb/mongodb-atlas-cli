@@ -52,7 +52,7 @@ const (
 	user             = "USER"
 	role             = "ROLE"
 	group            = "GROUP"
-	groupID          = "IDP_GROUP"
+	groupIDP         = "IDP_GROUP"
 	X509TypeManaged  = "MANAGED"
 	X509TypeCustomer = "CUSTOMER"
 	none             = "NONE"
@@ -63,7 +63,7 @@ var (
 	validX509Flags   = []string{none, X509TypeManaged, X509TypeCustomer}
 	validAWSIAMFlags = []string{none, role, user}
 	validLDAPFlags   = []string{none, group, user}
-	validOIDCFlags   = []string{none, groupID, user}
+	validOIDCFlags   = []string{none, groupIDP, user}
 )
 
 func (opts *CreateOpts) isX509Set() bool {
@@ -178,6 +178,7 @@ func (opts *CreateOpts) validate() error {
 	if err := validate.FlagInSlice(opts.oidcType, flag.OIDCType, validOIDCFlags); err != nil {
 		return err
 	}
+
 	return validate.FlagInSlice(opts.ldapType, flag.LDAPType, validLDAPFlags)
 }
 

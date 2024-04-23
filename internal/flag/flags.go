@@ -309,5 +309,6 @@ const (
 	FrequencyInterval                         = "frequencyInterval"                         // FrequencyInterval flag
 	RetentionUnit                             = "retentionUnit"                             // RetentionUnit flag
 	RetentionValue                            = "retentionValue"                            // RetentionValue flag
+	OIDCType                                  = "oidcType"                                  // OidcType flag
 	FederationSettingsID                      = "federationSettingsId"                      // FederationSettingsId flag
 )

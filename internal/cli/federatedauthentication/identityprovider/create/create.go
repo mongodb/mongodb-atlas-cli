@@ -22,7 +22,7 @@ func Builder() *cobra.Command {
 	const use = "create"
 	cmd := &cobra.Command{
 		Use:   use,
-		Short: "Manage Federated Authentication Identity Providers.",
+		Short: "Create Federated Authentication Identity Providers.",
 	}
 	cmd.AddCommand(OIDCBuilder())
 

@@ -51,5 +51,7 @@
 	"sigs.k8s.io/kind": "atlas_kubernetes_team",
 	"golang.org/x/exp": "atlas_kubernetes_team",
 	"github.com/shirou/gopsutil/v3": "mongocli",
-	"github.com/denisbrodbeck/machineid": "mongocli"
+	"github.com/denisbrodbeck/machineid": "mongocli",
+	"k8s.io/klog/v2": "atlas_kubernetes_team",
+	"k8s.io/kube-openapi": "atlas_kubernetes_team"
 }

@@ -34,8 +34,6 @@ type ListOpts struct {
 	*cli.ListOpts
 	store                store.IdentityProviderLister
 	federationSettingsID string
-	itemsPerPage         int
-	pageNum              int
 	idpType              string
 	protocol             string
 }
@@ -59,8 +57,8 @@ func (opts *ListOpts) Run() error {
 	idpType := []string{opts.idpType}
 	params := &atlasv2.ListIdentityProvidersApiParams{
 		FederationSettingsId: opts.federationSettingsID,
-		ItemsPerPage:         &opts.itemsPerPage,
-		PageNum:              &opts.pageNum,
+		ItemsPerPage:         &opts.ItemsPerPage,
+		PageNum:              &opts.PageNum,
 		Protocol:             &protocol,
 		IdpType:              &idpType,
 	}
@@ -100,8 +98,8 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.pageNum, flag.Page, cli.DefaultPage, usage.Page)
-	cmd.Flags().IntVar(&opts.itemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
 	cmd.Flags().StringVar(&opts.federationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
 	cmd.Flags().StringVar(&opts.idpType, flag.IdpType, "", usage.IdpType)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

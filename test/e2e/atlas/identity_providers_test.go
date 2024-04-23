@@ -17,6 +17,7 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -68,7 +69,7 @@ func TestIdentityProviders(t *testing.T) {
 	t.Run("List OIDC identity providers of type WORKFORCE", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
-			identityProvidersEntity,
+			identityProviderEntity,
 			"list",
 			"--federationSettingsId",
 			*federationSettingsID,
@@ -78,6 +79,9 @@ func TestIdentityProviders(t *testing.T) {
 			"WORKFORCE",
 			"-o=json",
 		)
+
+		fmt.Println("Printing federationSettingsID")
+		fmt.Println(*federationSettingsID)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -90,7 +94,7 @@ func TestIdentityProviders(t *testing.T) {
 	t.Run("List OIDC identity providers of type WORKLOAD", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
-			identityProvidersEntity,
+			identityProviderEntity,
 			"list",
 			"--federationSettingsId",
 			*federationSettingsID,
@@ -112,7 +116,7 @@ func TestIdentityProviders(t *testing.T) {
 	t.Run("List SAML identity providers", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
-			identityProvidersEntity,
+			identityProviderEntity,
 			"list",
 			"--federationSettingsId",
 			*federationSettingsID,
@@ -132,7 +136,7 @@ func TestIdentityProviders(t *testing.T) {
 	t.Run("Create an OIDC identity provider of type WORKFORCE", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
-			identityProvidersEntity,
+			identityProviderEntity,
 			"create",
 			"oidc",
 			"cliTestProvider",
@@ -174,7 +178,7 @@ func TestIdentityProviders(t *testing.T) {
 	t.Run("Describe an OIDC identity provider of type WORKFORCE", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
-			identityProvidersEntity,
+			identityProviderEntity,
 			"describe",
 			*oidcIdentityProviderID,
 			"--federationSettingsId",

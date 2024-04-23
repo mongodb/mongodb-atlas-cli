@@ -100,7 +100,7 @@ const (
 	deploymentEntity              = "deployments"
 	federatedAuthenticationEntity = "federatedAuthentication"
 	federationSettingsEntity      = "federationSettings"
-	identityProvidersEntity       = "identityProviders"
+	identityProviderEntity        = "identityProvider"
 	deletingState                 = "DELETING"
 	authEntity                    = "auth"
 )

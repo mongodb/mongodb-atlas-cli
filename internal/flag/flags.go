@@ -321,4 +321,5 @@ const (
 	IssuerURI                                 = "issuerUri"                                 // IssuerURI flag
 	AssociatedDomain                          = "associatedDomain"                          // AssociatedDomain flag
 	RequestedScope                            = "requestedScope"                            // RequestedScope flag
+	Protocol                                  = "protocol"                                  // Protocol flag
 )

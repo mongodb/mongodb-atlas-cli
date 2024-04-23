@@ -33,5 +33,6 @@ func Builder() *cobra.Command {
 		identityprovider.Builder(),
 		federationsettings.Builder(),
 	)
+
 	return cmd
 }

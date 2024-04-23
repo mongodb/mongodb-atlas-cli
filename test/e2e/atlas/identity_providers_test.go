@@ -66,7 +66,7 @@ func TestIdentityProviders(t *testing.T) {
 		federationSettingsID = settings.Id
 	})
 
-	t.Run("List OIDC identity providers of type WORKFORCE", func(t *testing.T) {
+	t.Run("List OIDC IdPs WORKFORCE", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			identityProviderEntity,
@@ -91,7 +91,7 @@ func TestIdentityProviders(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &settings))
 	})
 
-	t.Run("List OIDC identity providers of type WORKLOAD", func(t *testing.T) {
+	t.Run("List OIDC IdPs WORKLOAD", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			identityProviderEntity,
@@ -113,7 +113,7 @@ func TestIdentityProviders(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &settings))
 	})
 
-	t.Run("List SAML identity providers", func(t *testing.T) {
+	t.Run("List SAML IdPs", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			identityProviderEntity,
@@ -133,7 +133,7 @@ func TestIdentityProviders(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &settings))
 	})
 
-	t.Run("Create an OIDC identity provider of type WORKFORCE", func(t *testing.T) {
+	t.Run("Create OIDC IdP WORKFORCE", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			identityProviderEntity,

@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 )
@@ -44,20 +45,20 @@ func TestList_Run(t *testing.T) {
 		},
 	}
 
-	params := &atlasv2.ListIdentityProvidersApiParams{
-		FederationSettingsId: ListOpts.federationSettingsID,
-		// Protocol:             &ListOpts.protocol,
-		// IdpType:              &ListOpts.idpType,
-	}
-
 	displayName := "displayName"
 	displayName2 := "displayName2"
 	issuerURI := "issuerUri"
 	clientID := "clientId"
 	idpType := "WORKFORCE"
 
-	expected := &atlasv2.PaginatedFederationIdentityProviders{
-		Results: []*atlasv2.FederationIdentityProvider{
+	expected := &atlasv2.PaginatedFederationIdentityProvider{
+		Links: &[]atlasv2.Link{
+			{
+				Rel:  pointer.Get("test"),
+				Href: pointer.Get("test"),
+			},
+		},
+		Results: &[]atlasv2.FederationIdentityProvider{
 			{
 				DisplayName: &displayName,
 				IssuerUri:   &issuerURI,
@@ -71,12 +72,12 @@ func TestList_Run(t *testing.T) {
 				IdpType:     &idpType,
 			},
 		},
-		TotalCount: 2,
+		TotalCount: pointer.Get(2),
 	}
 
 	mockStore.
 		EXPECT().
-		IdentityProviders(params).
+		IdentityProviders(gomock.Any()).
 		Return(expected, nil).
 		Times(1)
 

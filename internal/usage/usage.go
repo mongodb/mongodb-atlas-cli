@@ -387,4 +387,5 @@ dbName and collection are required only for built-in roles.`
 	RetentionValue        = "Duration in days, weeks, or months that Atlas retains the snapshot. For less frequent policy items, Atlas requires that you specify a value greater than or equal to the value specified for more frequent policy items."
 	ProjectConfigFilename = "Path to the JSON configuration file that defines project configuration settings. To learn more about project configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/project-config-file."
 	OIDCType              = "OIDC method by which the provided database user is authenticated. Valid values are NONE, USER, or IDP_GROUP. If you set this to USER or GROUP_ID, the user authenticates with OIDC."
+	FederationSettingsID  = "Unique identifier of the federation settings."
 )

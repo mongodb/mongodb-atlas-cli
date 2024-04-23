@@ -72,7 +72,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas federatedAuthentication identityProvider list --federationSettingsId federationSettingsId --idpType idpType [--output output].
+// atlas federatedAuthentication identityProvider list --federationSettingsId federationSettingsId --idpType idpType [--page page] [--itemsPerPage itemsPerPage] [--output output].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{
 		protocol: oidc,

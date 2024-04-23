@@ -12,26 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package identityprovider
+package create
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/federatedauthentication/identityprovider/create"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
-	const use = "identityProvider"
+	const use = "create"
 	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage Federated Authentication Identity Providers.",
+		Use:   use,
+		Short: "Manage Federated Authentication Identity Providers.",
 	}
-	cmd.AddCommand(
-		DeleteBuilder(),
-		DescribeBuilder(),
-		create.Builder(),
-	)
+	cmd.AddCommand(OIDCBuilder())
 
 	return cmd
 }

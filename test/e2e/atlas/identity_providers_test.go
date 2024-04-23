@@ -35,13 +35,14 @@ func TestIdentityProviders(t *testing.T) {
 	req.NoError(err)
 
 	var federationSettingsID *string
+	var oidcIdentityProviderID *string
 	var orgID string
 	var set bool
 	if orgID, set = os.LookupEnv("MCLI_ORG_ID"); !set {
 		t.Skip("MCLI_ORG_ID must be set")
 	}
 
-	t.Run("Describing an org federation settings", func(t *testing.T) {
+	t.Run("Describe an org federation settings", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			federationSettingsEntity,
@@ -64,13 +65,118 @@ func TestIdentityProviders(t *testing.T) {
 		federationSettingsID = settings.Id
 	})
 
-	t.Run("Creating an OIDC identity provider of type WORKLOAD", func(t *testing.T) {
+	t.Run("List OIDC identity providers of type WORKFORCE", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			identityProvidersEntity,
-			"oidc",
+			"list",
+			"--federationSettingsId",
+			*federationSettingsID,
+			"--protocol",
+			"OIDC",
+			"--idpType",
+			"WORKFORCE",
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var settings atlasv2.FederationIdentityProvider
+		req.NoError(json.Unmarshal(resp, &settings))
+	})
+
+	t.Run("List OIDC identity providers of type WORKLOAD", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			identityProvidersEntity,
+			"list",
+			"--federationSettingsId",
+			*federationSettingsID,
+			"--protocol",
+			"OIDC",
+			"--idpType",
+			"WORKLOAD",
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var settings atlasv2.FederationIdentityProvider
+		req.NoError(json.Unmarshal(resp, &settings))
+	})
+
+	t.Run("List SAML identity providers", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			identityProvidersEntity,
+			"list",
+			"--federationSettingsId",
+			*federationSettingsID,
+			"--protocol",
+			"SAML",
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var settings atlasv2.FederationIdentityProvider
+		req.NoError(json.Unmarshal(resp, &settings))
+	})
+
+	t.Run("Create an OIDC identity provider of type WORKFORCE", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			identityProvidersEntity,
 			"create",
+			"oidc",
 			"cliTestProvider",
+			"--federationSettingsId",
+			*federationSettingsID,
+			"--audience",
+			"AtlasCLIAudience",
+			"--authorizationType",
+			"GROUP",
+			"--clientId",
+			"cliClients",
+			"--desc",
+			"CLI TEST Provider",
+			"--groupsClaim",
+			"groups",
+			"--idpType",
+			"WORKFORCE",
+			"--issuerUri",
+			"https://accounts.google.com",
+			"--userClaim",
+			"user",
+			"--associatedDomains",
+			"iam-test-domain-dev.com",
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var provider atlasv2.FederationIdentityProvider
+		req.NoError(json.Unmarshal(resp, &provider))
+
+		a := assert.New(t)
+		a.NotEmpty(provider.Id)
+		oidcIdentityProviderID = &provider.Id
+	})
+
+	t.Run("Describe an OIDC identity provider of type WORKFORCE", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			identityProvidersEntity,
+			"describe",
+			*oidcIdentityProviderID,
 			"--federationSettingsId",
 			*federationSettingsID,
 			"-o=json",

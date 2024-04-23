@@ -76,8 +76,8 @@ func Test_fetchDataFederationNames(t *testing.T) {
 		expected := []string{"DataFederationInstance0", "DataFederationInstance1", "DataFederationInstance2"}
 		ce := NewConfigExporter(
 			atlasOperatorGenericStore,
-			nil, // credsProvider (not used)
-			projectID,
+			nil,           // credsProvider (not used)
+			projectID, "", // orgID (not used)
 		)
 		got, err := ce.fetchDataFederationNames()
 		if err != nil {

@@ -131,6 +131,28 @@ func InitialSetup(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	return s
 }
 
+func TestProjectWithWrongOrgID(t *testing.T) {
+	s := InitialSetup(t)
+	cliPath := s.cliPath
+
+	t.Run("should fail to generate when the org id does not match the owner of the project", func(t *testing.T) {
+		g := newAtlasE2ETestGenerator(t)
+		g.generateProject("k8sConfigApplyWrongNs")
+
+		cmd := exec.Command(cliPath,
+			"kubernetes",
+			"config",
+			"generate",
+			"--targetNamespace", "default",
+			"--orgId", "wrong-ID",
+			"--projectId", g.projectID)
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.Error(t, err, string(resp))
+		assert.Contains(t, string(resp), "\"wrong-ID\" is not the owner of project")
+	})
+}
+
 func TestEmptyProject(t *testing.T) {
 	s := InitialSetup(t)
 	cliPath := s.cliPath
@@ -145,6 +167,7 @@ func TestEmptyProject(t *testing.T) {
 			"generate",
 			"--projectId",
 			generator.projectID,
+			"--orgId", "", // Empty org id does not make it fail
 			"--targetNamespace",
 			targetNamespace,
 			"--includeSecrets")

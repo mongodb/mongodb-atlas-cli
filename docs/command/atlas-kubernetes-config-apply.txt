@@ -57,6 +57,10 @@ Options
      - string
      - false
      - Version of Atlas Kubernetes Operator to generate resources for.
+   * - --orgId
+     - string
+     - false
+     - Organization ID to use. This option overrides the settings in the configuration file or environment variable.
    * - --projectId
      - string
      - false

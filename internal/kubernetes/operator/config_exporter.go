@@ -62,7 +62,7 @@ var (
 	ErrNoCloudManagerClusters = errors.New("can not get 'advanced clusters' object")
 )
 
-func NewConfigExporter(dataProvider store.OperatorGenericStore, credsProvider store.CredentialsGetter, projectID string) *ConfigExporter {
+func NewConfigExporter(dataProvider store.OperatorGenericStore, credsProvider store.CredentialsGetter, projectID, orgID string) *ConfigExporter {
 	return &ConfigExporter{
 		dataProvider:            dataProvider,
 		credsProvider:           credsProvider,
@@ -71,6 +71,7 @@ func NewConfigExporter(dataProvider store.OperatorGenericStore, credsProvider st
 		dataFederationNames:     []string{},
 		targetNamespace:         "",
 		includeSecretsData:      false,
+		orgID:                   orgID,
 		dictionaryForAtlasNames: resources.AtlasNameToKubernetesName(),
 	}
 }
@@ -162,6 +163,10 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 	atlasProject, err := e.dataProvider.Project(e.projectID)
 	if err != nil {
 		return nil, "", err
+	}
+	if e.orgID != "" && e.orgID != atlasProject.OrgId {
+		return nil, "", fmt.Errorf("%q is not the owner of project %s, org id %s is",
+			e.orgID, atlasProject.GetId(), atlasProject.OrgId)
 	}
 	e.orgID = atlasProject.OrgId
 

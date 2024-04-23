@@ -15,16 +15,14 @@
 package create
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/spf13/cobra"
 )
 
 func Builder() *cobra.Command {
 	const use = "create"
 	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage Federated Authentication Identity Providers.",
+		Use:   use,
+		Short: "Manage Federated Authentication Identity Providers.",
 	}
 	cmd.AddCommand(OIDCBuilder())
 

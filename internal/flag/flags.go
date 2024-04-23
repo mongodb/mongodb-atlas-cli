@@ -319,6 +319,6 @@ const (
 	GroupsClaim                               = "groupsClaim"                               // GroupsClaim flag
 	UserClaim                                 = "userClaim"                                 // UserClaim flag
 	IssuerURI                                 = "issuerUri"                                 // IssuerURI flag
-	AssociatedDomains                         = "associatedDomains"                         // AssociatedDomains flag
-	RequestedScopes                           = "requestedScopes"                           // RequestedScopes flag
+	AssociatedDomain                          = "associatedDomain"                          // AssociatedDomain flag
+	RequestedScope                            = "requestedScope"                            // RequestedScope flag
 )

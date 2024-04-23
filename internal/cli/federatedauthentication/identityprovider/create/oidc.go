@@ -31,19 +31,19 @@ type OidcOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.InputOpts
-	AssociatedDomains    []string
-	FederationSettingsID string
-	Audience             string
-	ClientID             string
-	AuthorizationType    string
-	Description          string
-	DisplayName          string
-	IdpType              string
-	IssuerURI            string
-	Protocol             string
-	GroupsClaim          string
-	UserClaim            string
-	RequestedScopes      []string
+	associatedDomains    []string
+	federationSettingsID string
+	audience             string
+	clientID             string
+	authorizationType    string
+	description          string
+	displayName          string
+	idpType              string
+	issuerURI            string
+	protocol             string
+	groupsClaim          string
+	userClaim            string
+	requestedScopes      []string
 	store                store.IdentityProviderCreator
 }
 
@@ -75,30 +75,30 @@ func (opts *OidcOpts) InitStore(ctx context.Context) func() error {
 
 func (opts *OidcOpts) newIdentityProvider() *atlasv2.CreateIdentityProviderApiParams {
 	return &atlasv2.CreateIdentityProviderApiParams{
-		FederationSettingsId: opts.FederationSettingsID,
+		FederationSettingsId: opts.federationSettingsID,
 		FederationOidcIdentityProviderUpdate: &atlasv2.FederationOidcIdentityProviderUpdate{
-			AssociatedDomains: &opts.AssociatedDomains,
-			Audience:          &opts.Audience,
-			ClientId:          &opts.ClientID,
-			AuthorizationType: &opts.AuthorizationType,
-			Description:       &opts.Description,
-			DisplayName:       &opts.DisplayName,
-			IdpType:           &opts.IdpType,
-			IssuerUri:         &opts.IssuerURI,
-			Protocol:          &opts.Protocol,
-			GroupsClaim:       &opts.GroupsClaim,
-			RequestedScopes:   &opts.RequestedScopes,
-			UserClaim:         &opts.UserClaim,
+			AssociatedDomains: &opts.associatedDomains,
+			Audience:          &opts.audience,
+			ClientId:          &opts.clientID,
+			AuthorizationType: &opts.authorizationType,
+			Description:       &opts.description,
+			DisplayName:       &opts.displayName,
+			IdpType:           &opts.idpType,
+			IssuerUri:         &opts.issuerURI,
+			Protocol:          &opts.protocol,
+			GroupsClaim:       &opts.groupsClaim,
+			RequestedScopes:   &opts.requestedScopes,
+			UserClaim:         &opts.userClaim,
 		},
 	}
 }
 
 func (opts *OidcOpts) Validate() error {
-	if err := validate.FlagInSlice(opts.AuthorizationType, flag.AuthorizationType, validAuthTypeFlagValues); err != nil {
+	if err := validate.FlagInSlice(opts.authorizationType, flag.AuthorizationType, validAuthTypeFlagValues); err != nil {
 		return err
 	}
 
-	return validate.FlagInSlice(opts.IdpType, flag.IdpType, validIdpTypeValues)
+	return validate.FlagInSlice(opts.idpType, flag.IdpType, validIdpTypeValues)
 }
 
 func (opts *OidcOpts) Run() error {
@@ -124,7 +124,7 @@ func OIDCBuilder() *cobra.Command {
 			"output":          createTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
-			opts.Protocol = oidc
+			opts.protocol = oidc
 			return opts.PreRunE(
 				opts.InitStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
@@ -133,22 +133,22 @@ func OIDCBuilder() *cobra.Command {
 			)
 		},
 		RunE: func(_ *cobra.Command, args []string) error {
-			opts.DisplayName = args[0]
+			opts.displayName = args[0]
 			return opts.Run()
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.FederationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
-	cmd.Flags().StringVar(&opts.IdpType, flag.IdpType, group, usage.IdpType)
-	cmd.Flags().StringVar(&opts.Audience, flag.Audience, "", usage.Audience)
-	cmd.Flags().StringVar(&opts.AuthorizationType, flag.AuthorizationType, "", usage.AuthorizationType)
-	cmd.Flags().StringVar(&opts.ClientID, flag.ClientID, "", usage.ClientID)
-	cmd.Flags().StringVar(&opts.Description, flag.Description, "", usage.Description)
-	cmd.Flags().StringVar(&opts.GroupsClaim, flag.GroupsClaim, "", usage.GroupsClaim)
-	cmd.Flags().StringVar(&opts.UserClaim, flag.UserClaim, "", usage.UserClaim)
-	cmd.Flags().StringVar(&opts.IssuerURI, flag.IssuerURI, "", usage.IssuerURI)
-	cmd.Flags().StringSliceVar(&opts.AssociatedDomains, flag.AssociatedDomains, []string{}, usage.AssociatedDomains)
-	cmd.Flags().StringSliceVar(&opts.RequestedScopes, flag.RequestedScopes, []string{}, usage.RequestedScopes)
+	cmd.Flags().StringVar(&opts.federationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
+	cmd.Flags().StringVar(&opts.idpType, flag.IdpType, group, usage.IdpType)
+	cmd.Flags().StringVar(&opts.audience, flag.Audience, "", usage.Audience)
+	cmd.Flags().StringVar(&opts.authorizationType, flag.AuthorizationType, "", usage.AuthorizationType)
+	cmd.Flags().StringVar(&opts.clientID, flag.ClientID, "", usage.ClientID)
+	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.Description)
+	cmd.Flags().StringVar(&opts.groupsClaim, flag.GroupsClaim, "", usage.GroupsClaim)
+	cmd.Flags().StringVar(&opts.userClaim, flag.UserClaim, "", usage.UserClaim)
+	cmd.Flags().StringVar(&opts.issuerURI, flag.IssuerURI, "", usage.IssuerURI)
+	cmd.Flags().StringSliceVar(&opts.associatedDomains, flag.AssociatedDomain, []string{}, usage.AssociatedDomains)
+	cmd.Flags().StringSliceVar(&opts.requestedScopes, flag.RequestedScope, []string{}, usage.RequestedScopes)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())

@@ -33,7 +33,7 @@ func TestOidcBuilder(t *testing.T) {
 		t,
 		OIDCBuilder(),
 		0,
-		[]string{flag.FederationSettingsID, flag.IdpType, flag.Audience, flag.AuthorizationType, flag.ClientID, flag.Description, flag.GroupsClaim, flag.UserClaim, flag.IssuerURI, flag.AssociatedDomains, flag.RequestedScopes, flag.Output},
+		[]string{flag.FederationSettingsID, flag.IdpType, flag.Audience, flag.AuthorizationType, flag.ClientID, flag.Description, flag.GroupsClaim, flag.UserClaim, flag.IssuerURI, flag.AssociatedDomain, flag.RequestedScope, flag.Output},
 	)
 }
 func TestOidcCreate(t *testing.T) {
@@ -44,19 +44,19 @@ func TestOidcCreate(t *testing.T) {
 
 	buf := new(bytes.Buffer)
 	createOpts := &OidcOpts{
-		AssociatedDomains:    []string{"test"},
-		FederationSettingsID: "id",
-		Audience:             "audience",
-		ClientID:             "cliendId",
-		AuthorizationType:    "auth",
-		Description:          "desc",
-		DisplayName:          "name",
-		IdpType:              "type",
-		IssuerURI:            "uri",
-		Protocol:             "oidc",
-		GroupsClaim:          "groups",
-		UserClaim:            "user",
-		RequestedScopes:      []string{"scope"},
+		associatedDomains:    []string{"test"},
+		federationSettingsID: "id",
+		audience:             "audience",
+		clientID:             "cliendId",
+		authorizationType:    "auth",
+		description:          "desc",
+		displayName:          "name",
+		idpType:              "type",
+		issuerURI:            "uri",
+		protocol:             "oidc",
+		groupsClaim:          "groups",
+		userClaim:            "user",
+		requestedScopes:      []string{"scope"},
 		store:                mockStore,
 		OutputOpts: cli.OutputOpts{
 			Template:  createTemplate,

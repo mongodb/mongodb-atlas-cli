@@ -45,11 +45,11 @@ func TestList_Run(t *testing.T) {
 		},
 	}
 
-	displayName := "displayName"
-	displayName2 := "displayName2"
-	issuerURI := "issuerUri"
-	clientID := "clientId"
-	idpType := "WORKFORCE"
+	displayName := "listName"
+	displayName2 := "listName2"
+	issuerURI := "uri"
+	clientID := "id"
+	idpType := "WORKLOAD"
 
 	expected := &atlasv2.PaginatedFederationIdentityProvider{
 		Links: &[]atlasv2.Link{

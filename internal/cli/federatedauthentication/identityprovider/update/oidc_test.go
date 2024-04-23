@@ -36,9 +36,9 @@ func TestOidcBuilder(t *testing.T) {
 		[]string{flag.FederationSettingsID, flag.IdpType, flag.Audience, flag.AuthorizationType, flag.ClientID, flag.Description, flag.GroupsClaim, flag.UserClaim, flag.IssuerURI, flag.AssociatedDomain, flag.RequestedScope, flag.Output},
 	)
 }
-func TestOidcCreate(t *testing.T) {
+func TestOidcUpdate(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockIdentityProviderCreator(ctrl)
+	mockStore := mocks.NewMockIdentityProviderUpdater(ctrl)
 
 	expected := &atlasv2.FederationOidcIdentityProvider{}
 
@@ -59,18 +59,18 @@ func TestOidcCreate(t *testing.T) {
 		requestedScopes:      []string{"scope"},
 		store:                mockStore,
 		OutputOpts: cli.OutputOpts{
-			Template:  createTemplate,
+			Template:  updateTemplate,
 			OutWriter: buf,
 		}}
 
 	mockStore.
 		EXPECT().
-		CreateIdentityProvider(createOpts.newIdentityProvider()).Return(expected, nil).
+		UpdateIdentityProvider(createOpts.newIdentityProvider()).Return(expected, nil).
 		Times(1)
 
 	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	t.Log(buf.String())
-	test.VerifyOutputTemplate(t, createTemplate, *expected)
+	test.VerifyOutputTemplate(t, updateTemplate, *expected)
 }

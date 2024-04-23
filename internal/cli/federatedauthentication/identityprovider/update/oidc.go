@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 )
 
@@ -60,6 +61,7 @@ const (
 var (
 	validAuthTypeFlagValues = []string{group, user}
 	validIdpTypeValues      = []string{workflorce, workload}
+	workloadValidFlags      = []string{flag.Audience, flag.AuthorizationType, flag.Description, flag.DisplayName, flag.GroupsClaim, flag.IdpType, flag.IssuerURI, flag.UserClaim}
 )
 
 func (opts *OidcOpts) InitStore(ctx context.Context) func() error {
@@ -84,19 +86,6 @@ func (opts *OidcOpts) newIdentityProvider() *atlasv2.UpdateIdentityProviderApiPa
 		},
 	}
 
-	// AssociatedDomains: &opts.associatedDomains,
-	// Audience:          &opts.audience,
-	// ClientId:          &opts.clientID,
-	// AuthorizationType: &opts.authorizationType,
-	// Description:       &opts.description,
-	// DisplayName:       &opts.displayName,
-	// IdpType:           &opts.idpType,
-	// IssuerUri:         &opts.issuerURI,
-	// Protocol:          &opts.protocol,
-	// GroupsClaim:       &opts.groupsClaim,
-	// RequestedScopes:   &opts.requestedScopes,
-	// UserClaim:         &opts.userClaim,
-
 	if len(opts.associatedDomains) > 0 {
 		params.FederationIdentityProviderUpdate.AssociatedDomains = &opts.associatedDomains
 	}
@@ -105,18 +94,75 @@ func (opts *OidcOpts) newIdentityProvider() *atlasv2.UpdateIdentityProviderApiPa
 		params.FederationIdentityProviderUpdate.Audience = &opts.audience
 	}
 
+	if opts.clientID != "" {
+		params.FederationIdentityProviderUpdate.ClientId = &opts.clientID
+	}
+
+	if opts.authorizationType != "" {
+		params.FederationIdentityProviderUpdate.AuthorizationType = &opts.authorizationType
+	}
+
+	if opts.description != "" {
+		params.FederationIdentityProviderUpdate.Description = &opts.description
+	}
+
+	if opts.displayName != "" {
+		params.FederationIdentityProviderUpdate.DisplayName = &opts.displayName
+	}
+
+	if opts.issuerURI != "" {
+		params.FederationIdentityProviderUpdate.IssuerUri = &opts.issuerURI
+	}
+
+	if opts.groupsClaim != "" {
+		params.FederationIdentityProviderUpdate.GroupsClaim = &opts.groupsClaim
+	}
+
+	if len(opts.requestedScopes) > 0 {
+		params.FederationIdentityProviderUpdate.RequestedScopes = &opts.requestedScopes
+	}
+
+	if opts.userClaim != "" {
+		params.FederationIdentityProviderUpdate.UserClaim = &opts.userClaim
+	}
+
+	if len(opts.associatedDomains) > 0 {
+		params.FederationIdentityProviderUpdate.AssociatedDomains = &opts.associatedDomains
+	}
+
 	return params
 }
 
-func (opts *OidcOpts) Validate() error {
+func (opts *OidcOpts) Validate(flagSet *pflag.FlagSet) func() error {
+	var flags []string
+	flagSet.Visit(func(f *pflag.Flag) {
+		flags = append(flags, f.Name)
+	})
+
+	if opts.idpType == workload {
+		for _, f := range flags {
+			if err := validate.ConditionalFlagInSlice(flag.IdpType, opts.idpType, f, workloadValidFlags); err != nil {
+				return func() error {
+					return err
+				}
+			}
+		}
+	}
+
 	if opts.authorizationType != "" {
 		if err := validate.FlagInSlice(opts.authorizationType, flag.AuthorizationType, validAuthTypeFlagValues); err != nil {
-			return err
+			return func() error {
+				return err
+			}
 		}
 	}
 
 	if opts.idpType != "" {
-		return validate.FlagInSlice(opts.idpType, flag.IdpType, validIdpTypeValues)
+		if err := validate.FlagInSlice(opts.idpType, flag.IdpType, validIdpTypeValues); err != nil {
+			return func() error {
+				return err
+			}
+		}
 	}
 	return nil
 }
@@ -132,7 +178,7 @@ func (opts *OidcOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas federatedAuthentication identityProvider update oidc <identityProviderId> --federationSettingsId federationSettingsId [--audience audience] [--authorizationType authorizationType] [--clientId clientId] [--description description] [--displayName displayName] [--groupsClaim groupsClaim] [--userClaim userClaim] [--issuerUri issuerUri] [--associatedDomain associatedDomains] [--requestedScope requestedScopes][-o/--output output]
+// atlas federatedAuthentication identityProvider update oidc <identityProviderId> --federationSettingsId federationSettingsId --idpType idpType [--audience audience] [--authorizationType authorizationType] [--clientId clientId] [--description description] [--displayName displayName] [--groupsClaim groupsClaim] [--userClaim userClaim] [--issuerUri issuerUri] [--associatedDomain associatedDomains] [--requestedScope requestedScopes][-o/--output output]
 func OIDCBuilder() *cobra.Command {
 	opts := &OidcOpts{
 		protocol: oidc,
@@ -145,13 +191,17 @@ func OIDCBuilder() *cobra.Command {
 			"identityProviderIdDesc": "The Identity Provider ID.",
 			"output":                 updateTemplate,
 		},
+		Example: `  # Update the audience for the specified identity provider from your federation settings with ID 5d1113b25a115342acc2d1aa, federationSettingsId 5d1113b25a115342acc2d1aa and IdpType WORKFORCE
+			atlas federatedAuthentication identityProvider update 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa --idpType WORKFORCE --audience newAudience
+		`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.protocol = oidc
+			flags := cmd.Flags()
 			return opts.PreRunE(
 				opts.InitStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 				opts.InitInput(cmd.InOrStdin()),
-				opts.Validate,
+				opts.Validate(flags),
 			)
 		},
 		RunE: func(_ *cobra.Command, args []string) error {

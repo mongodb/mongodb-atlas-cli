@@ -38,11 +38,13 @@ type ListOpts struct {
 	protocol             string
 }
 
-const oidc = "OIDC"
-
-const listTemplate = `ID	DISPLAY NAME	ISSUER URI	CLIENT ID	IDP TYPE{{range valueOrEmptySlice .Results}}
+const (
+	oidc         = "OIDC"
+	workforce    = "WORKFORCE"
+	listTemplate = `ID	DISPLAY NAME	ISSUER URI	CLIENT ID	IDP TYPE{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.DisplayName}}	{{.IssuerUri}}	{{.ClientId}}	{{.IdpType}}{{end}}
 `
+)
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -101,11 +103,10 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
 	cmd.Flags().StringVar(&opts.federationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
-	cmd.Flags().StringVar(&opts.idpType, flag.IdpType, "", usage.IdpType)
+	cmd.Flags().StringVar(&opts.idpType, flag.IdpType, workforce, usage.IdpType)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 
 	_ = cmd.MarkFlagRequired(flag.FederationSettingsID)
-	_ = cmd.MarkFlagRequired(flag.IdpType)
 
 	return cmd
 }

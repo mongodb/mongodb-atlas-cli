@@ -94,6 +94,6 @@ func TestListBuilder(t *testing.T) {
 		t,
 		ListBuilder(),
 		0,
-		[]string{flag.Output, flag.FederationSettingsID, flag.IdpType, flag.Page, flag.Limit},
+		[]string{flag.Output, flag.FederationSettingsID, flag.IdpType, flag.Page, flag.Limit, flag.Protocol},
 	)
 }

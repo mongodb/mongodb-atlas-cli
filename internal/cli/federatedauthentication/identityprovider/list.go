@@ -42,7 +42,7 @@ type ListOpts struct {
 
 const oidc = "OIDC"
 
-const listTemplate = `TYPE{{range valueOrEmptySlice .Results}}
+const listTemplate = `ID	DISPLAY NAME	ISSUER URI	CLIENT ID	IDP TYPE{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.DisplayName}}	{{.IssuerUri}}	{{.ClientId}}	{{.IdpType}}{{end}}
 `
 

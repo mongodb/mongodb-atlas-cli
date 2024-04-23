@@ -42,6 +42,7 @@ type UpdateOpts struct {
 	roles           []string
 	scopes          []string
 	x509Type        string
+	oidcType        string
 	store           store.DatabaseUserUpdater
 }
 
@@ -93,6 +94,11 @@ func (opts *UpdateOpts) update(out *admin.CloudDatabaseUser) {
 	if opts.x509Type != "" {
 		out.X509Type = &opts.x509Type
 	}
+
+	if opts.oidcType != "" {
+		out.OidcAuthType = &opts.oidcType
+	}
+
 }
 
 func (opts *UpdateOpts) validateAuthDB() error {
@@ -140,6 +146,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles+usage.UpdateWarning)
 	cmd.Flags().StringSliceVar(&opts.scopes, flag.Scope, []string{}, usage.Scopes+usage.UpdateWarning)
 	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, none, usage.X509Type)
+	cmd.Flags().StringVar(&opts.oidcType, flag.OIDCType, "", usage.OIDCType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

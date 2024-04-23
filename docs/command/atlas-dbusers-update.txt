@@ -61,6 +61,10 @@ Options
      - 
      - false
      - help for update
+   * - --oidcType
+     - string
+     - false
+     - OIDC method by which the provided database user is authenticated. Valid values are NONE, USER, or IDP_GROUP. If you set this to USER or GROUP_ID, the user authenticates with OIDC.
    * - -o, --output
      - string
      - false

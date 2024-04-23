@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
 )
@@ -33,16 +34,20 @@ type ListOpts struct {
 	cli.OutputOpts
 	*cli.ListOpts
 	store                store.IdentityProviderLister
-	FederationSettingsID string
-	ItemsPerPage         int
-	PageNum              int
-	IdpType              string
-	Protocol             string
+	federationSettingsID string
+	idpType              string
+	protocol             string
 }
 
-const listTemplate = `TYPE{{range valueOrEmptySlice .Results}}
+const (
+	oidc         = "OIDC"
+	workforce    = "WORKFORCE"
+	workload     = "WORKLOAD"
+	saml         = "SAML"
+	listTemplate = `ID	DISPLAY NAME	ISSUER URI	CLIENT ID	IDP TYPE{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.DisplayName}}	{{.IssuerUri}}	{{.ClientId}}	{{.IdpType}}{{end}}
 `
+)
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -53,19 +58,36 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
+	protocol := []string{opts.protocol}
+	idpType := []string{opts.idpType}
 	params := &atlasv2.ListIdentityProvidersApiParams{
-		FederationSettingsId: opts.FederationSettingsID,
-		ItemsPerPage:         opts.ItemsPerPage,
-		PageNum:              opts.PageNum,
-		Protocol:             "saml",
-		IdpType:              "enterprise",
+		FederationSettingsId: opts.federationSettingsID,
+		ItemsPerPage:         &opts.ItemsPerPage,
+		PageNum:              &opts.PageNum,
+		Protocol:             &protocol,
+		IdpType:              &idpType,
 	}
-	return nil
+	r, err := opts.store.IdentityProviders(params)
+	if err != nil {
+		return err
+	}
+
+	return opts.Print(r)
 }
 
-// atlas federatedAuthentication identityProvider delete <identityProviderId> --federationSettingsId federationSettingsId [--output output].
+func (opts *ListOpts) Validate() error {
+	if err := validate.FlagInSlice(opts.idpType, flag.IdpType, []string{workforce, workload}); err != nil {
+		return err
+	}
+
+	return validate.FlagInSlice(opts.protocol, flag.Protocol, []string{oidc, saml})
+}
+
+// atlas federatedAuthentication identityProvider list --federationSettingsId federationSettingsId -[-idpType idpType] [--page page] [--itemsPerPage itemsPerPage] [--output output].
 func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
+	opts := &ListOpts{
+		ListOpts: &cli.ListOpts{},
+	}
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "List the identity providers from your federation settings.",
@@ -75,12 +97,14 @@ func ListBuilder() *cobra.Command {
 			"identityProviderIdDesc": "ID of the identityProvider to be deleted.",
 			"output":                 listTemplate,
 		},
-		Example: `  # List the identity providers from your federation settings with federationSettingsId 5d1113b25a115342acc2d1aa.
-	atlas federatedAuthentication identityProvider list --federationSettingsId 5d1113b25a115342acc2d1aa
+		Example: `  # List the identity providers from your federation settings with federationSettingsId 5d1113b25a115342acc2d1aa and idpType WORKLOAD
+	atlas federatedAuthentication identityProvider list --federationSettingsId 5d1113b25a115342acc2d1aa --idpType WORKLOAD
 `,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.initStore(cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				opts.Validate,
 			)
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
@@ -90,8 +114,10 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
 	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
-	cmd.Flags().StringVar(&opts.FederationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
+	cmd.Flags().StringVar(&opts.federationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
+	cmd.Flags().StringVar(&opts.idpType, flag.IdpType, workforce, usage.IdpType)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.Flags().StringVar(&opts.protocol, flag.Protocol, oidc, usage.Protocol)
 
 	_ = cmd.MarkFlagRequired(flag.FederationSettingsID)
 

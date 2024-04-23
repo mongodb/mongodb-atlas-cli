@@ -28,9 +28,10 @@ func Builder() *cobra.Command {
 		Short:   "Manage Federated Authentication Identity Providers.",
 	}
 	cmd.AddCommand(
-		DeleteBuilder(),
-		DescribeBuilder(),
 		create.Builder(),
+		DescribeBuilder(),
+		ListBuilder(),
+		DeleteBuilder(),
 	)
 
 	return cmd

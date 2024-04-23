@@ -399,4 +399,5 @@ dbName and collection are required only for built-in roles.`
 	IssuerURI             = "Unique string that identifies the issuer of the OIDC metadata/discovery document URL."
 	AssociatedDomains     = "List of domains associated with the Identity Provider."
 	RequestedScopes       = "Scopes that MongoDB applications will request from the authorization endpoint.	"
+	Protocol              = "Protocol used to authenticate the user. Valid value is OIDC or SAML."
 )

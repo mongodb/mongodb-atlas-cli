@@ -1,7 +1,7 @@
-.. _atlas-federatedAuthentication-identityProvider-create:
+.. _atlas-federatedAuthentication-identityProvider-update:
 
 =====================================================
-atlas federatedAuthentication identityProvider create
+atlas federatedAuthentication identityProvider update
 =====================================================
 
 .. default-domain:: mongodb
@@ -12,7 +12,7 @@ atlas federatedAuthentication identityProvider create
    :depth: 1
    :class: singlecol
 
-Create Federated Authentication Identity Providers.
+Update Federated Authentication Identity Providers.
 
 Options
 -------
@@ -28,7 +28,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for create
+     - help for update
 
 Inherited Options
 -----------------
@@ -49,11 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-federatedAuthentication-identityProvider-create-oidc` - Create an OIDC identity provider.
+* :ref:`atlas-federatedAuthentication-identityProvider-update-oidc` - Update an OIDC identity provider.
 
 
 .. toctree::
    :titlesonly:
 
-   oidc </command/atlas-federatedAuthentication-identityProvider-create-oidc>
+   oidc </command/atlas-federatedAuthentication-identityProvider-update-oidc>
 

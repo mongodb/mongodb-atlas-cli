@@ -49,10 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-federatedAuthentication-identityProvider-create` - Manage Federated Authentication Identity Providers.
+* :ref:`atlas-federatedAuthentication-identityProvider-create` - Create Federated Authentication Identity Providers.
 * :ref:`atlas-federatedAuthentication-identityProvider-delete` - Remove the specified identity provider from your federation settings.
 * :ref:`atlas-federatedAuthentication-identityProvider-describe` - Describe the specified identity provider from your federation settings.
 * :ref:`atlas-federatedAuthentication-identityProvider-list` - List the identity providers from your federation settings.
+* :ref:`atlas-federatedAuthentication-identityProvider-update` - Update Federated Authentication Identity Providers.
 
 
 .. toctree::
@@ -62,4 +63,5 @@ Related Commands
    delete </command/atlas-federatedAuthentication-identityProvider-delete>
    describe </command/atlas-federatedAuthentication-identityProvider-describe>
    list </command/atlas-federatedAuthentication-identityProvider-list>
+   update </command/atlas-federatedAuthentication-identityProvider-update>
 

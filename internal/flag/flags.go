@@ -311,4 +311,5 @@ const (
 	RetentionValue                            = "retentionValue"                            // RetentionValue flag
 	OIDCType                                  = "oidcType"                                  // OidcType flag
 	FederationSettingsID                      = "federationSettingsId"                      // FederationSettingsId flag
+	IdpType                                   = "idpType"                                   // IdpType flag
 )

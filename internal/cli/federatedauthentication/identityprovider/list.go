@@ -76,6 +76,7 @@ func (opts *ListOpts) Run() error {
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{
 		protocol: oidc,
+		ListOpts: &cli.ListOpts{},
 	}
 	cmd := &cobra.Command{
 		Use:   "list",

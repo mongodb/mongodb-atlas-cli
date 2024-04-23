@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package create
+package update
 
 import (
 	"context"
@@ -31,6 +31,7 @@ type OidcOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.InputOpts
+	identityProviderID   string
 	associatedDomains    []string
 	federationSettingsID string
 	audience             string
@@ -44,7 +45,7 @@ type OidcOpts struct {
 	groupsClaim          string
 	userClaim            string
 	requestedScopes      []string
-	store                store.IdentityProviderCreator
+	store                store.IdentityProviderUpdater
 }
 
 const (
@@ -53,7 +54,7 @@ const (
 	oidc           = "OIDC"
 	workflorce     = "WORKFORCE"
 	workload       = "WORKLOAD"
-	createTemplate = "Identity provider '{{.Id}}' created.\n"
+	updateTemplate = "Identity provider '{{.Id}}' updated.\n"
 )
 
 var (
@@ -73,38 +74,57 @@ func (opts *OidcOpts) InitStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *OidcOpts) newIdentityProvider() *atlasv2.CreateIdentityProviderApiParams {
-	return &atlasv2.CreateIdentityProviderApiParams{
+func (opts *OidcOpts) newIdentityProvider() *atlasv2.UpdateIdentityProviderApiParams {
+	params := &atlasv2.UpdateIdentityProviderApiParams{
 		FederationSettingsId: opts.federationSettingsID,
-		FederationOidcIdentityProviderUpdate: &atlasv2.FederationOidcIdentityProviderUpdate{
-			AssociatedDomains: &opts.associatedDomains,
-			Audience:          &opts.audience,
-			ClientId:          &opts.clientID,
-			AuthorizationType: &opts.authorizationType,
-			Description:       &opts.description,
-			DisplayName:       &opts.displayName,
-			IdpType:           &opts.idpType,
-			IssuerUri:         &opts.issuerURI,
-			Protocol:          &opts.protocol,
-			GroupsClaim:       &opts.groupsClaim,
-			RequestedScopes:   &opts.requestedScopes,
-			UserClaim:         &opts.userClaim,
+		IdentityProviderId:   opts.identityProviderID,
+		FederationIdentityProviderUpdate: &atlasv2.FederationIdentityProviderUpdate{
+			Protocol: &opts.protocol,
+			IdpType:  &opts.idpType,
 		},
 	}
+
+	// AssociatedDomains: &opts.associatedDomains,
+	// Audience:          &opts.audience,
+	// ClientId:          &opts.clientID,
+	// AuthorizationType: &opts.authorizationType,
+	// Description:       &opts.description,
+	// DisplayName:       &opts.displayName,
+	// IdpType:           &opts.idpType,
+	// IssuerUri:         &opts.issuerURI,
+	// Protocol:          &opts.protocol,
+	// GroupsClaim:       &opts.groupsClaim,
+	// RequestedScopes:   &opts.requestedScopes,
+	// UserClaim:         &opts.userClaim,
+
+	if len(opts.associatedDomains) > 0 {
+		params.FederationIdentityProviderUpdate.AssociatedDomains = &opts.associatedDomains
+	}
+
+	if opts.audience != "" {
+		params.FederationIdentityProviderUpdate.Audience = &opts.audience
+	}
+
+	return params
 }
 
 func (opts *OidcOpts) Validate() error {
-	if err := validate.FlagInSlice(opts.authorizationType, flag.AuthorizationType, validAuthTypeFlagValues); err != nil {
-		return err
+	if opts.authorizationType != "" {
+		if err := validate.FlagInSlice(opts.authorizationType, flag.AuthorizationType, validAuthTypeFlagValues); err != nil {
+			return err
+		}
 	}
 
-	return validate.FlagInSlice(opts.idpType, flag.IdpType, validIdpTypeValues)
+	if opts.idpType != "" {
+		return validate.FlagInSlice(opts.idpType, flag.IdpType, validIdpTypeValues)
+	}
+	return nil
 }
 
 func (opts *OidcOpts) Run() error {
-	user := opts.newIdentityProvider()
+	provider := opts.newIdentityProvider()
 
-	r, err := opts.store.CreateIdentityProvider(user)
+	r, err := opts.store.UpdateIdentityProvider(provider)
 	if err != nil {
 		return err
 	}
@@ -112,34 +132,36 @@ func (opts *OidcOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas federatedAuthentication identityProvider oidc create <displayName> --federationSettingsId federationSettingsId --idpType idpType --audience audience --authorizationType authorizationType --clientId clientId --description description --groupsClaim groupsClaim --userClaim userClaim --issuerUri issuerUri [--associatedDomain associatedDomains] [--requestedScope requestedScopes][-o/--output output].
+// atlas federatedAuthentication identityProvider update oidc <identityProviderId> --federationSettingsId federationSettingsId [--audience audience] [--authorizationType authorizationType] [--clientId clientId] [--description description] [--displayName displayName] [--groupsClaim groupsClaim] [--userClaim userClaim] [--issuerUri issuerUri] [--associatedDomain associatedDomains] [--requestedScope requestedScopes][-o/--output output]
 func OIDCBuilder() *cobra.Command {
-	opts := &OidcOpts{}
+	opts := &OidcOpts{
+		protocol: oidc,
+	}
 	cmd := &cobra.Command{
-		Use:   "oidc [displayName]",
-		Short: "Create an OIDC identity provider.",
+		Use:   "oidc [identityProviderId]",
+		Short: "Update an OIDC identity provider.",
 		Args:  cobra.ExactArgs(1),
 		Annotations: map[string]string{
-			"displayNameDesc": "The Identity Provider display name.",
-			"output":          createTemplate,
+			"identityProviderIdDesc": "The Identity Provider ID.",
+			"output":                 updateTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.protocol = oidc
 			return opts.PreRunE(
 				opts.InitStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 				opts.InitInput(cmd.InOrStdin()),
 				opts.Validate,
 			)
 		},
 		RunE: func(_ *cobra.Command, args []string) error {
-			opts.displayName = args[0]
+			opts.identityProviderID = args[0]
 			return opts.Run()
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.federationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
-	cmd.Flags().StringVar(&opts.idpType, flag.IdpType, group, usage.IdpType)
+	cmd.Flags().StringVar(&opts.idpType, flag.IdpType, "", usage.IdpType)
 	cmd.Flags().StringVar(&opts.audience, flag.Audience, "", usage.Audience)
 	cmd.Flags().StringVar(&opts.authorizationType, flag.AuthorizationType, "", usage.AuthorizationType)
 	cmd.Flags().StringVar(&opts.clientID, flag.ClientID, "", usage.ClientID)
@@ -152,17 +174,8 @@ func OIDCBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
-	_ = cmd.MarkFlagRequired(flag.Username)
 	_ = cmd.MarkFlagRequired(flag.FederationSettingsID)
 	_ = cmd.MarkFlagRequired(flag.IdpType)
-	_ = cmd.MarkFlagRequired(flag.Audience)
-	_ = cmd.MarkFlagRequired(flag.AuthorizationType)
-	_ = cmd.MarkFlagRequired(flag.ClientID)
-	_ = cmd.MarkFlagRequired(flag.Description)
-	_ = cmd.MarkFlagRequired(flag.DisplayName)
-	_ = cmd.MarkFlagRequired(flag.GroupsClaim)
-	_ = cmd.MarkFlagRequired(flag.UserClaim)
-	_ = cmd.MarkFlagRequired(flag.IssuerURI)
 
 	return cmd
 }

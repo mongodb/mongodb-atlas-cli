@@ -158,7 +158,7 @@ func TestIdentityProviders(t *testing.T) {
 			"https://accounts.google.com",
 			"--userClaim",
 			"user",
-			"--associatedDomains",
+			"--associatedDomain",
 			"iam-test-domain-dev.com",
 			"-o=json",
 		)
@@ -180,6 +180,28 @@ func TestIdentityProviders(t *testing.T) {
 			federatedAuthenticationEntity,
 			identityProviderEntity,
 			"describe",
+			*oidcIdentityProviderID,
+			"--federationSettingsId",
+			*federationSettingsID,
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var settings atlasv2.FederationIdentityProvider
+		req.NoError(json.Unmarshal(resp, &settings))
+
+		a := assert.New(t)
+		a.NotEmpty(settings.Id)
+	})
+
+	t.Run("Delete an OIDC identity provider of type WORKFORCE", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			identityProviderEntity,
+			"delete",
 			*oidcIdentityProviderID,
 			"--federationSettingsId",
 			*federationSettingsID,

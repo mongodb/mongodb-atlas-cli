@@ -310,6 +310,7 @@ const (
 	RetentionUnit                             = "retentionUnit"                             // RetentionUnit flag
 	RetentionValue                            = "retentionValue"                            // RetentionValue flag
 	FederationSettingsID                      = "federationSettingsId"                      // FederationSettingsId flag
+	OIDCType                                  = "oidcType"                                  // OidcType flag
 	IdpType                                   = "idpType"                                   // IdpType flag
 	Audience                                  = "audience"                                  // Audience flag
 	AuthorizationType                         = "authorizationType"                         // AuthorizationType flag
@@ -320,5 +321,4 @@ const (
 	IssuerURI                                 = "issuerUri"                                 // IssuerURI flag
 	AssociatedDomains                         = "associatedDomains"                         // AssociatedDomains flag
 	RequestedScopes                           = "requestedScopes"                           // RequestedScopes flag
-
 )

@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,11 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage Federated Authentication Identity Providers.",
 	}
-	cmd.AddCommand(create.Builder())
+	cmd.AddCommand(
+		DeleteBuilder(),
+		DescribeBuilder(),
+		create.Builder(),
+	)
 
 	return cmd
 }

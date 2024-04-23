@@ -33,7 +33,7 @@ type IdentityProviderCreator interface {
 }
 
 type IdentityProviderDeleter interface {
-	DeleteIdentityProvider(*atlasv2.DeleteIdentityProviderApiParams) (*atlasv2.FederationOidcIdentityProvider, error)
+	DeleteIdentityProvider(string, string) error
 }
 
 type IdentityProviderUpdater interface {
@@ -59,8 +59,8 @@ func (s *Store) CreateIdentityProvider(opts *atlasv2.CreateIdentityProviderApiPa
 }
 
 // DeleteIdentityProvider encapsulate the logic to manage different cloud providers.
-func (s *Store) DeleteIdentityProvider(opts *atlasv2.DeleteIdentityProviderApiParams) error {
-	_, err := s.clientv2.FederatedAuthenticationApi.DeleteIdentityProviderWithParams(s.ctx, opts).Execute()
+func (s *Store) DeleteIdentityProvider(federationSettingsID string, identityProviderID string) error {
+	_, err := s.clientv2.FederatedAuthenticationApi.DeleteIdentityProvider(s.ctx, federationSettingsID, identityProviderID).Execute()
 	return err
 }
 

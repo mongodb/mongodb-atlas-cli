@@ -112,7 +112,7 @@ func (opts *OidcOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas federatedAuthentication identityProvider oidc create <displayName> --federationSettingsId federationSettingsId --idpType idpType --audience audience --authorizationType authorizationType --clientId clientId --description description --groupsClaim groupsClaim --userClaim userClaim --issuerUri issuerUri [--associatedDomains associatedDomains] [--requestedScopes requestedScopes][-o/--output output].
+// atlas federatedAuthentication identityProvider oidc create <displayName> --federationSettingsId federationSettingsId --idpType idpType --audience audience --authorizationType authorizationType --clientId clientId --description description --groupsClaim groupsClaim --userClaim userClaim --issuerUri issuerUri [--associatedDomain associatedDomains] [--requestedScope requestedScopes][-o/--output output].
 func OIDCBuilder() *cobra.Command {
 	opts := &OidcOpts{}
 	cmd := &cobra.Command{

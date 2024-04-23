@@ -197,7 +197,7 @@ func TestIdentityProviders(t *testing.T) {
 		a.NotEmpty(settings.Id)
 	})
 
-	t.Run("Delete OIDC IdP WORKFORCE", func(t *testing.T) {
+	t.Run("Delete OIDC IdP WORKFORCE", func(_ *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			identityProviderEntity,
@@ -282,7 +282,7 @@ func TestIdentityProviders(t *testing.T) {
 		a.NotEmpty(settings.Id)
 	})
 
-	t.Run("Delete OIDC IdP WORKFORCE", func(t *testing.T) {
+	t.Run("Delete OIDC IdP WORKFORCE", func(_ *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			identityProviderEntity,

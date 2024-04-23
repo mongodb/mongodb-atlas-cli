@@ -59,9 +59,9 @@ const (
 )
 
 var (
-	validAuthTypeFlagValues = []string{group, user}
-	validIdpTypeValues      = []string{workflorce, workload}
-	workloadValidFlags      = []string{flag.Audience, flag.AuthorizationType, flag.Description, flag.DisplayName, flag.GroupsClaim, flag.IdpType, flag.IssuerURI, flag.UserClaim}
+	validAuthTypeFlagValues   = []string{group, user}
+	validIdpTypeValues        = []string{workflorce, workload}
+	workloadInvalidValidFlags = []string{flag.AssociatedDomain, flag.ClientID, flag.RequestedScope}
 )
 
 func (opts *OidcOpts) InitStore(ctx context.Context) func() error {
@@ -133,7 +133,7 @@ func (opts *OidcOpts) newIdentityProvider() *atlasv2.UpdateIdentityProviderApiPa
 	return params
 }
 
-func (opts *OidcOpts) Validate(flagSet *pflag.FlagSet) func() error {
+func (opts *OidcOpts) Validate(flagSet *pflag.FlagSet) error {
 	var flags []string
 	flagSet.Visit(func(f *pflag.Flag) {
 		flags = append(flags, f.Name)
@@ -141,27 +141,23 @@ func (opts *OidcOpts) Validate(flagSet *pflag.FlagSet) func() error {
 
 	if opts.idpType == workload {
 		for _, f := range flags {
-			if err := validate.ConditionalFlagInSlice(flag.IdpType, opts.idpType, f, workloadValidFlags); err != nil {
-				return func() error {
-					return err
-				}
+			if err := validate.ConditionalFlagNotInSlice(flag.IdpType, opts.idpType, f, workloadInvalidValidFlags); err != nil {
+				return err
+
 			}
 		}
 	}
 
 	if opts.authorizationType != "" {
 		if err := validate.FlagInSlice(opts.authorizationType, flag.AuthorizationType, validAuthTypeFlagValues); err != nil {
-			return func() error {
-				return err
-			}
+			return err
+
 		}
 	}
 
 	if opts.idpType != "" {
 		if err := validate.FlagInSlice(opts.idpType, flag.IdpType, validIdpTypeValues); err != nil {
-			return func() error {
-				return err
-			}
+			return err
 		}
 	}
 	return nil
@@ -197,11 +193,13 @@ func OIDCBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.protocol = oidc
 			flags := cmd.Flags()
+			if err := opts.Validate(flags); err != nil {
+				return err
+			}
 			return opts.PreRunE(
 				opts.InitStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 				opts.InitInput(cmd.InOrStdin()),
-				opts.Validate(flags),
 			)
 		},
 		RunE: func(_ *cobra.Command, args []string) error {

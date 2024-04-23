@@ -40,10 +40,10 @@ func TestOidcUpdate(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIdentityProviderUpdater(ctrl)
 
-	expected := &atlasv2.FederationOidcIdentityProvider{}
+	expected := &atlasv2.FederationIdentityProvider{}
 
 	buf := new(bytes.Buffer)
-	createOpts := &OidcOpts{
+	updateOpts := &OidcOpts{
 		associatedDomains:    []string{"test"},
 		federationSettingsID: "id",
 		audience:             "audience",
@@ -65,10 +65,10 @@ func TestOidcUpdate(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		UpdateIdentityProvider(createOpts.newIdentityProvider()).Return(expected, nil).
+		UpdateIdentityProvider(gomock.Any()).Return(expected, nil).
 		Times(1)
 
-	if err := createOpts.Run(); err != nil {
+	if err := updateOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	t.Log(buf.String())

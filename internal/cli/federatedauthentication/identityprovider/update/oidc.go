@@ -143,7 +143,6 @@ func (opts *OidcOpts) Validate(flagSet *pflag.FlagSet) error {
 		for _, f := range flags {
 			if err := validate.ConditionalFlagNotInSlice(flag.IdpType, opts.idpType, f, workloadInvalidValidFlags); err != nil {
 				return err
-
 			}
 		}
 	}
@@ -151,7 +150,6 @@ func (opts *OidcOpts) Validate(flagSet *pflag.FlagSet) error {
 	if opts.authorizationType != "" {
 		if err := validate.FlagInSlice(opts.authorizationType, flag.AuthorizationType, validAuthTypeFlagValues); err != nil {
 			return err
-
 		}
 	}
 
@@ -174,7 +172,7 @@ func (opts *OidcOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas federatedAuthentication identityProvider update oidc <identityProviderId> --federationSettingsId federationSettingsId --idpType idpType [--audience audience] [--authorizationType authorizationType] [--clientId clientId] [--description description] [--displayName displayName] [--groupsClaim groupsClaim] [--userClaim userClaim] [--issuerUri issuerUri] [--associatedDomain associatedDomains] [--requestedScope requestedScopes][-o/--output output]
+// atlas federatedAuthentication identityProvider update oidc <identityProviderId> --federationSettingsId federationSettingsId --idpType idpType [--audience audience] [--authorizationType authorizationType] [--clientId clientId] [--description description] [--displayName displayName] [--groupsClaim groupsClaim] [--userClaim userClaim] [--issuerUri issuerUri] [--associatedDomain associatedDomains] [--requestedScope requestedScopes][-o/--output output].
 func OIDCBuilder() *cobra.Command {
 	opts := &OidcOpts{
 		protocol: oidc,

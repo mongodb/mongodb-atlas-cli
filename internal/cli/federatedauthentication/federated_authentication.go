@@ -16,7 +16,6 @@ package federatedauthentication
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/federatedauthentication/connectedorgsconfigs"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/federatedauthentication/federationsettings"
 	"github.com/spf13/cobra"
 )
@@ -31,7 +30,6 @@ func Builder() *cobra.Command {
 	}
 	cmd.AddCommand(
 		federationsettings.Builder(),
-		connectedorgsconfigs.Builder(),
 	)
 
 	return cmd

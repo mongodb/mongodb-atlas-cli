@@ -52,12 +52,15 @@ func (opts *ConnectOpts) InitStore(ctx context.Context) func() error {
 }
 
 func (opts *ConnectOpts) Run() error {
+	idpId := []string{opts.identityProviderID}
+	var id string
 	params := &atlasv2.UpdateConnectedOrgConfigApiParams{
 		FederationSettingsId: opts.federationSettingsID,
 		OrgId:                opts.ConfigOrgID(),
 		ConnectedOrgConfig: &atlasv2.ConnectedOrgConfig{
-			IdentityProviderId: opts.identityProviderID,
-			OrgId:              opts.ConfigOrgID(),
+			DataAccessIdentityProviderIds: &idpId,
+			IdentityProviderId:            id,
+			OrgId:                         opts.ConfigOrgID(),
 		},
 	}
 

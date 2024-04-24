@@ -29,27 +29,19 @@ import (
 )
 
 func TestIdentityProviders(t *testing.T) {
-	_ = newAtlasE2ETestGenerator(t)
 	req := require.New(t)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	req.NoError(err)
 
-	var federationSettingsID *string
-	var oidcIdentityProviderID *string
-	var orgID string
-	var set bool
-	if orgID, set = os.LookupEnv("MCLI_ORG_ID"); !set {
-		t.Skip("MCLI_ORG_ID must be set")
-	}
+	var federationSettingsID string
+	var oidcIdentityProviderID string
 
 	t.Run("Describe an org federation settings", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			federationSettingsEntity,
 			"describe",
-			"--orgId",
-			orgID,
 			"-o=json",
 		)
 
@@ -61,9 +53,9 @@ func TestIdentityProviders(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &settings))
 
 		a := assert.New(t)
-		a.NotEmpty(settings.Id)
-		a.NotEmpty(settings.IdentityProviderStatus)
-		federationSettingsID = settings.Id
+		a.NotEmpty(settings.GetId())
+		a.NotEmpty(settings.GetIdentityProviderId())
+		federationSettingsID = settings.GetId()
 	})
 
 	t.Run("List OIDC IdPs WORKFORCE", func(_ *testing.T) {
@@ -72,7 +64,7 @@ func TestIdentityProviders(t *testing.T) {
 			identityProviderEntity,
 			"list",
 			"--federationSettingsId",
-			*federationSettingsID,
+			federationSettingsID,
 			"--protocol",
 			"OIDC",
 			"--idpType",
@@ -80,15 +72,12 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		fmt.Println("Printing federationSettingsID")
-		fmt.Println(*federationSettingsID)
-
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var settings atlasv2.FederationIdentityProvider
-		req.NoError(json.Unmarshal(resp, &settings))
+		var provider atlasv2.FederationIdentityProvider
+		req.NoError(json.Unmarshal(resp, &provider))
 	})
 
 	t.Run("List OIDC IdPs WORKLOAD", func(_ *testing.T) {
@@ -97,7 +86,7 @@ func TestIdentityProviders(t *testing.T) {
 			identityProviderEntity,
 			"list",
 			"--federationSettingsId",
-			*federationSettingsID,
+			federationSettingsID,
 			"--protocol",
 			"OIDC",
 			"--idpType",
@@ -109,8 +98,8 @@ func TestIdentityProviders(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var settings atlasv2.FederationIdentityProvider
-		req.NoError(json.Unmarshal(resp, &settings))
+		var provider atlasv2.FederationIdentityProvider
+		req.NoError(json.Unmarshal(resp, &provider))
 	})
 
 	t.Run("List SAML IdPs", func(_ *testing.T) {
@@ -119,7 +108,7 @@ func TestIdentityProviders(t *testing.T) {
 			identityProviderEntity,
 			"list",
 			"--federationSettingsId",
-			*federationSettingsID,
+			federationSettingsID,
 			"--protocol",
 			"SAML",
 			"-o=json",
@@ -129,13 +118,12 @@ func TestIdentityProviders(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var settings atlasv2.FederationIdentityProvider
-		req.NoError(json.Unmarshal(resp, &settings))
+		var provider atlasv2.FederationIdentityProvider
+		req.NoError(json.Unmarshal(resp, &provider))
 	})
 
 	t.Run("Create OIDC IdP WORKLOAD", func(t *testing.T) {
 		idpName, err := RandIdentityProviderName()
-		fmt.Println(idpName)
 		req.NoError(err)
 
 		cmd := exec.Command(cliPath,
@@ -145,7 +133,7 @@ func TestIdentityProviders(t *testing.T) {
 			"oidc",
 			idpName,
 			"--federationSettingsId",
-			*federationSettingsID,
+			federationSettingsID,
 			"--audience",
 			"AtlasCLIAudience",
 			"--authorizationType",
@@ -170,9 +158,8 @@ func TestIdentityProviders(t *testing.T) {
 		var provider atlasv2.FederationIdentityProvider
 		req.NoError(json.Unmarshal(resp, &provider))
 
-		a := assert.New(t)
-		a.NotEmpty(provider.Id)
-		oidcIdentityProviderID = &provider.Id
+		assert.NotEmpty(t, provider.GetId())
+		oidcIdentityProviderID = provider.GetId()
 	})
 
 	t.Run("Describe an OIDC identity provider of type WORKFORCE", func(t *testing.T) {
@@ -180,9 +167,9 @@ func TestIdentityProviders(t *testing.T) {
 			federatedAuthenticationEntity,
 			identityProviderEntity,
 			"describe",
-			*oidcIdentityProviderID,
+			oidcIdentityProviderID,
 			"--federationSettingsId",
-			*federationSettingsID,
+			federationSettingsID,
 			"-o=json",
 		)
 
@@ -190,11 +177,10 @@ func TestIdentityProviders(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var settings atlasv2.FederationIdentityProvider
-		req.NoError(json.Unmarshal(resp, &settings))
+		var provider atlasv2.FederationIdentityProvider
+		req.NoError(json.Unmarshal(resp, &provider))
 
-		a := assert.New(t)
-		a.NotEmpty(settings.Id)
+		assert.NotEmpty(t, provider.GetId())
 	})
 
 	t.Run("Delete OIDC IdP WORKFORCE", func(_ *testing.T) {
@@ -202,9 +188,9 @@ func TestIdentityProviders(t *testing.T) {
 			federatedAuthenticationEntity,
 			identityProviderEntity,
 			"delete",
-			*oidcIdentityProviderID,
+			oidcIdentityProviderID,
 			"--federationSettingsId",
-			*federationSettingsID,
+			federationSettingsID,
 			"--force",
 			"-o=json",
 		)
@@ -226,7 +212,7 @@ func TestIdentityProviders(t *testing.T) {
 			"oidc",
 			idpName,
 			"--federationSettingsId",
-			*federationSettingsID,
+			federationSettingsID,
 			"--audience",
 			"AtlasCLIAudience",
 			"--authorizationType",
@@ -255,9 +241,8 @@ func TestIdentityProviders(t *testing.T) {
 		var provider atlasv2.FederationIdentityProvider
 		req.NoError(json.Unmarshal(resp, &provider))
 
-		a := assert.New(t)
-		a.NotEmpty(provider.Id)
-		oidcIdentityProviderID = &provider.Id
+		assert.NotEmpty(t, provider.GetId())
+		oidcIdentityProviderID = provider.Id
 	})
 
 	t.Run("Describe OIDC IdP WORKFORCE", func(t *testing.T) {
@@ -265,9 +250,9 @@ func TestIdentityProviders(t *testing.T) {
 			federatedAuthenticationEntity,
 			identityProviderEntity,
 			"describe",
-			*oidcIdentityProviderID,
+			oidcIdentityProviderID,
 			"--federationSettingsId",
-			*federationSettingsID,
+			federationSettingsID,
 			"-o=json",
 		)
 
@@ -275,11 +260,9 @@ func TestIdentityProviders(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var settings atlasv2.FederationIdentityProvider
-		req.NoError(json.Unmarshal(resp, &settings))
-
-		a := assert.New(t)
-		a.NotEmpty(settings.Id)
+		var provider atlasv2.FederationIdentityProvider
+		req.NoError(json.Unmarshal(resp, &provider))
+		assert.NotEmpty(t, provider.GetId())
 	})
 
 	t.Run("Delete OIDC IdP WORKFORCE", func(_ *testing.T) {
@@ -287,9 +270,9 @@ func TestIdentityProviders(t *testing.T) {
 			federatedAuthenticationEntity,
 			identityProviderEntity,
 			"delete",
-			*oidcIdentityProviderID,
+			oidcIdentityProviderID,
 			"--federationSettingsId",
-			*federationSettingsID,
+			federationSettingsID,
 			"--force",
 			"-o=json",
 		)

@@ -86,7 +86,7 @@ Options
    * - --idpType
      - string
      - true
-     - Type of Identity Provider. Valid values are WORKFORCE or WORKLOAD. This value defaults to "GROUP".
+     - Type of Identity Provider. Valid values are WORKFORCE or WORKLOAD.
    * - --issuerUri
      - string
      - true

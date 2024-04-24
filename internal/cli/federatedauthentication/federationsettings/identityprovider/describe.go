@@ -71,7 +71,7 @@ func DescribeBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Org Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{
-			"identityProviderIdDesc": "ID of the identityProvider to be deleted.",
+			"identityProviderIdDesc": "ID of the identityProvider.",
 			"output":                 describeTemplate,
 		},
 		Example: `  # Describe the specified identity provider from your federation settings with ID 5d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa.

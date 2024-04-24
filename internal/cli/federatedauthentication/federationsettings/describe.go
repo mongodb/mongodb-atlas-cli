@@ -70,7 +70,7 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": describeTemplate,
 		},
-		Example: `  # Return the JSON-formatted Federation Settings details for the organization with the ID 5e2211c17a3e5a48f5497de3:
+		Example: `  # Return the JSON-formatted Federation Settings details:
   atlas federatedAuthentication federationSettings describe --orgId 5e2211c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

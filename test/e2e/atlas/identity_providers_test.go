@@ -54,7 +54,7 @@ func TestIdentityProviders(t *testing.T) {
 
 		a := assert.New(t)
 		a.NotEmpty(settings.GetId())
-		a.NotEmpty(settings.GetIdentityProviderId())
+		a.NotEmpty(settings.GetIdentityProviderStatus())
 		federationSettingsID = settings.GetId()
 	})
 
@@ -162,7 +162,7 @@ func TestIdentityProviders(t *testing.T) {
 		oidcIdentityProviderID = provider.GetId()
 	})
 
-	t.Run("Describe an OIDC identity provider of type WORKFORCE", func(t *testing.T) {
+	t.Run("Describe OIDC IdP WORKFORCE", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			identityProviderEntity,

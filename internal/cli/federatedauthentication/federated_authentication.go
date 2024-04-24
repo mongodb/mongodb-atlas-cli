@@ -17,7 +17,6 @@ package federatedauthentication
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/federatedauthentication/federationsettings"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/federatedauthentication/identityprovider"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +28,6 @@ func Builder() *cobra.Command {
 		Short:   "Manage Atlas Federated Authentication.",
 	}
 	cmd.AddCommand(
-		identityprovider.Builder(),
 		federationsettings.Builder(),
 	)
 

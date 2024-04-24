@@ -16,6 +16,7 @@ package federationsettings
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/federatedauthentication/federationsettings/identityprovider"
 	"github.com/spf13/cobra"
 )
 
@@ -26,7 +27,10 @@ func Builder() *cobra.Command {
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage Atlas Federated Authentication Federation Settings",
 	}
-	cmd.AddCommand(DescribeBuilder())
+	cmd.AddCommand(
+		DescribeBuilder(),
+		identityprovider.Builder(),
+	)
 
 	return cmd
 }

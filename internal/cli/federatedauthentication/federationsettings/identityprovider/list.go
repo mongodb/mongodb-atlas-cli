@@ -94,7 +94,7 @@ func ListBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Org Owner"),
 		Args:  require.NoArgs,
 		Annotations: map[string]string{
-			"identityProviderIdDesc": "ID of the identityProvider to be deleted.",
+			"identityProviderIdDesc": "ID of the identityProvider.",
 			"output":                 listTemplate,
 		},
 		Example: `  # List the identity providers from your federation settings with federationSettingsId 5d1113b25a115342acc2d1aa and idpType WORKLOAD

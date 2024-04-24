@@ -40,7 +40,7 @@ Arguments
    * - identityProviderId
      - string
      - true
-     - ID of the identityProvider to be deleted.
+     - ID of the identityProvider.
 
 Options
 -------

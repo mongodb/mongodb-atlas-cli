@@ -1,8 +1,8 @@
-.. _atlas-federatedAuthentication-identityProvider-create:
+.. _atlas-federatedAuthentication-federationSettings-identityProvider-create:
 
-=====================================================
-atlas federatedAuthentication identityProvider create
-=====================================================
+========================================================================
+atlas federatedAuthentication federationSettings identityProvider create
+========================================================================
 
 .. default-domain:: mongodb
 
@@ -49,11 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-federatedAuthentication-identityProvider-create-oidc` - Create an OIDC identity provider.
+* :ref:`atlas-federatedAuthentication-federationSettings-identityProvider-create-oidc` - Create an OIDC identity provider.
 
 
 .. toctree::
    :titlesonly:
 
-   oidc </command/atlas-federatedAuthentication-identityProvider-create-oidc>
+   oidc </command/atlas-federatedAuthentication-federationSettings-identityProvider-create-oidc>
 

@@ -1,8 +1,8 @@
-.. _atlas-federatedAuthentication-identityProvider-delete:
+.. _atlas-federatedAuthentication-federationSettings-identityProvider-delete:
 
-=====================================================
-atlas federatedAuthentication identityProvider delete
-=====================================================
+========================================================================
+atlas federatedAuthentication federationSettings identityProvider delete
+========================================================================
 
 .. default-domain:: mongodb
 
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas federatedAuthentication identityProvider delete <identityProviderId> [options]
+   atlas federatedAuthentication federationSettings identityProvider delete <identityProviderId> [options]
 
 .. Code end marker, please don't delete this comment
 

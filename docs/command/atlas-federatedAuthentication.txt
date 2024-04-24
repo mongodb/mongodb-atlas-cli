@@ -50,12 +50,10 @@ Related Commands
 ----------------
 
 * :ref:`atlas-federatedAuthentication-federationSettings` - Manage Atlas Federated Authentication Federation Settings
-* :ref:`atlas-federatedAuthentication-identityProvider` - Manage Federated Authentication Identity Providers.
 
 
 .. toctree::
    :titlesonly:
 
    federationSettings </command/atlas-federatedAuthentication-federationSettings>
-   identityProvider </command/atlas-federatedAuthentication-identityProvider>
 

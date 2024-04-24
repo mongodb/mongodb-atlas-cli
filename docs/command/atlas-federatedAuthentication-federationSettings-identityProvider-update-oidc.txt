@@ -1,8 +1,8 @@
-.. _atlas-federatedAuthentication-identityProvider-update-oidc:
+.. _atlas-federatedAuthentication-federationSettings-identityProvider-update-oidc:
 
-==========================================================
-atlas federatedAuthentication identityProvider update oidc
-==========================================================
+=============================================================================
+atlas federatedAuthentication federationSettings identityProvider update oidc
+=============================================================================
 
 .. default-domain:: mongodb
 
@@ -20,7 +20,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas federatedAuthentication identityProvider update oidc [identityProviderId] [options]
+   atlas federatedAuthentication federationSettings identityProvider update oidc [identityProviderId] [options]
 
 .. Code end marker, please don't delete this comment
 

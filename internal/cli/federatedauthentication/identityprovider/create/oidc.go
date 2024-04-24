@@ -157,7 +157,6 @@ func OIDCBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.IdpType)
 	_ = cmd.MarkFlagRequired(flag.Audience)
 	_ = cmd.MarkFlagRequired(flag.AuthorizationType)
-	_ = cmd.MarkFlagRequired(flag.ClientID)
 	_ = cmd.MarkFlagRequired(flag.Description)
 	_ = cmd.MarkFlagRequired(flag.DisplayName)
 	_ = cmd.MarkFlagRequired(flag.GroupsClaim)

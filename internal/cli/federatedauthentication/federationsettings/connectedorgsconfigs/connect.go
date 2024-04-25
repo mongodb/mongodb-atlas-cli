@@ -42,7 +42,7 @@ const (
 	saml = "SAML"
 )
 
-const updateTemplate = `Connected Org Config connected with Connected Org Config connected with {{range $index, $element := .DataAccessIdentityProviderIds}}{{if $index}}, {{end}}{{$element}}{{end}}.`
+const updateTemplate = `Connected Org Config with {{range $index, $element := .DataAccessIdentityProviderIds}}{{if $index}}, {{end}}{{$element}}{{end}}.`
 
 func (opts *ConnectOpts) InitStore(ctx context.Context) func() error {
 	return func() error {

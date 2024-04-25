@@ -35,7 +35,8 @@ func TestIdentityProviders(t *testing.T) {
 	req.NoError(err)
 
 	var federationSettingsID string
-	var oidcIdentityProviderID string
+	var oidcWorkloadIdpID string
+	var oidcIWorkforceIdpID string
 
 	t.Run("Describe an org federation settings", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -96,7 +97,7 @@ func TestIdentityProviders(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &provider))
 
 		assert.NotEmpty(t, provider.GetId())
-		oidcIdentityProviderID = provider.GetId()
+		oidcWorkloadIdpID = provider.GetId()
 	})
 
 	t.Run("Create OIDC IdP WORKFORCE", func(t *testing.T) {
@@ -142,7 +143,7 @@ func TestIdentityProviders(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &provider))
 
 		assert.NotEmpty(t, provider.GetId())
-		oidcIdentityProviderID = provider.Id
+		oidcIWorkforceIdpID = provider.Id
 	})
 
 	t.Run("Describe OIDC IdP WORKFORCE", func(t *testing.T) {
@@ -151,7 +152,7 @@ func TestIdentityProviders(t *testing.T) {
 			federationSettingsEntity,
 			identityProviderEntity,
 			"describe",
-			oidcIdentityProviderID,
+			oidcIWorkforceIdpID,
 			"--federationSettingsId",
 			federationSettingsID,
 			"-o=json",
@@ -174,7 +175,7 @@ func TestIdentityProviders(t *testing.T) {
 			connectedOrgsConfigsEntity,
 			"connect",
 			"--identityProviderId",
-			oidcIdentityProviderID,
+			oidcIWorkforceIdpID,
 			"--federationSettingsId",
 			federationSettingsID,
 			"-o=json",
@@ -188,7 +189,7 @@ func TestIdentityProviders(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &config))
 
 		assert.NotEmpty(t, config.DataAccessIdentityProviderIds)
-		assert.Contains(t, config.GetDataAccessIdentityProviderIds(), oidcIdentityProviderID)
+		assert.Contains(t, config.GetDataAccessIdentityProviderIds(), oidcIWorkforceIdpID)
 	})
 
 	t.Run("Disconnect OIDC IdP WORKFORCE", func(t *testing.T) {
@@ -198,7 +199,7 @@ func TestIdentityProviders(t *testing.T) {
 			connectedOrgsConfigsEntity,
 			"disconnect",
 			"--identityProviderId",
-			oidcIdentityProviderID,
+			oidcIWorkforceIdpID,
 			"--federationSettingsId",
 			federationSettingsID,
 			"-o=json",
@@ -211,7 +212,7 @@ func TestIdentityProviders(t *testing.T) {
 		var config atlasv2.ConnectedOrgConfig
 		req.NoError(json.Unmarshal(resp, &config))
 
-		assert.NotContains(t, config.GetDataAccessIdentityProviderIds(), oidcIdentityProviderID)
+		assert.NotContains(t, config.GetDataAccessIdentityProviderIds(), oidcIWorkforceIdpID)
 	})
 
 	t.Run("List OIDC IdPs WORKFORCE", func(_ *testing.T) {
@@ -287,7 +288,7 @@ func TestIdentityProviders(t *testing.T) {
 			federationSettingsEntity,
 			identityProviderEntity,
 			"describe",
-			oidcIdentityProviderID,
+			oidcIWorkforceIdpID,
 			"--federationSettingsId",
 			federationSettingsID,
 			"-o=json",
@@ -308,7 +309,7 @@ func TestIdentityProviders(t *testing.T) {
 			federationSettingsEntity,
 			identityProviderEntity,
 			"delete",
-			oidcIdentityProviderID,
+			oidcIWorkforceIdpID,
 			"--federationSettingsId",
 			federationSettingsID,
 			"--force",
@@ -320,13 +321,13 @@ func TestIdentityProviders(t *testing.T) {
 		req.NoError(err, string(resp))
 	})
 
-	t.Run("Delete OIDC IdP WORKFORCE", func(_ *testing.T) {
+	t.Run("Delete OIDC IdP WORKLOAD", func(_ *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			federationSettingsEntity,
 			identityProviderEntity,
 			"delete",
-			oidcIdentityProviderID,
+			oidcWorkloadIdpID,
 			"--federationSettingsId",
 			federationSettingsID,
 			"--force",

@@ -390,8 +390,8 @@ tasks:
   - name: pkg_test_windows
     tags: [ "smoke-test", "windows" ]
     depends_on:
-      - name: package_msi
-        variant: go_atlascli_msi_snapshot
+      - name: package_goreleaser
+        variant: goreleaser_atlascli_snapshot
     commands:
       - func: "powershell build"
         vars:

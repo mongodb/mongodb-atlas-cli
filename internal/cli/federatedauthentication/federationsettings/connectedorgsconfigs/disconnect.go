@@ -69,8 +69,8 @@ func (opts *DisconnectOpts) removeIdpFromOrgConfig(orgConfig *atlasv2.ConnectedO
 		}
 		orgConfig.DataAccessIdentityProviderIds = &newIdps
 	} else if opts.protocol == saml {
-		emptyId := ""
-		orgConfig.IdentityProviderId = &emptyId
+		emptyID := ""
+		orgConfig.IdentityProviderId = &emptyID
 	}
 }
 
@@ -103,15 +103,17 @@ func (opts *DisconnectOpts) Run() error {
 
 // atlas federatedAuthentication connectedOrgs disconnect --identityProviderId identityProviderId --protocol protocol --federationSettingsId federationSettingsId [-o/--output output].
 func DisconnectBuilder() *cobra.Command {
-	opts := &DisconnectOpts{}
+	opts := &DisconnectOpts{
+		DescribeOrgConfigsOpts: &DescribeOrgConfigsOpts{},
+	}
 	cmd := &cobra.Command{
-		Use:   "connect",
+		Use:   "disconnect",
 		Short: "Connect an Identity Provider to an Organization.",
 		Args:  cobra.NoArgs,
 		Annotations: map[string]string{
 			"output": updateTemplate,
 		},
-		Example: `  # Connect the current profile Org with Identity Provider with ID 5d1113b25a115342acc2d1aa and  federationSettingsId 5d1113b25a115342acc2d1aa 
+		Example: `  # Disconnect the current profile Org with Identity Provider with ID 5d1113b25a115342acc2d1aa and  federationSettingsId 5d1113b25a115342acc2d1aa 
 			atlas federatedAuthentication connectedOrgs connect --identityProviderId 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
 			# Connect the Org with ID 7d1113b25a115342acc2d1aa with Identity Provider with ID 5d1113b25a115342acc2d1aa and  federationSettingsId 5d1113b25a115342acc2d1aa 
 			atlas federatedAuthentication connectedOrgs connect --orgId 7d1113b25a115342acc2d1aa --identityProviderId 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
@@ -120,10 +122,10 @@ func DisconnectBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
 				opts.InitStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), disconnectTemplate),
 			)
 		},
-		RunE: func(_ *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

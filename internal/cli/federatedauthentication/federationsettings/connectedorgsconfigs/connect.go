@@ -71,7 +71,6 @@ func (opts *ConnectOpts) Run() error {
 		orgConfig.RoleMappings = nil
 	}
 
-	idpId := []string{opts.identityProviderID}
 	params := &atlasv2.UpdateConnectedOrgConfigApiParams{
 		FederationSettingsId: opts.federationSettingsID,
 		OrgId:                opts.ConfigOrgID(),
@@ -79,7 +78,8 @@ func (opts *ConnectOpts) Run() error {
 	}
 
 	if opts.protocol == oidc {
-		params.ConnectedOrgConfig.DataAccessIdentityProviderIds = &idpId
+		newList := append(*orgConfig.DataAccessIdentityProviderIds, opts.identityProviderID)
+		params.ConnectedOrgConfig.DataAccessIdentityProviderIds = &newList
 	} else if opts.protocol == saml {
 		params.ConnectedOrgConfig.IdentityProviderId = &opts.identityProviderID
 	}
@@ -94,7 +94,9 @@ func (opts *ConnectOpts) Run() error {
 
 // atlas federatedAuthentication connectedOrgs connect --identityProviderId identityProviderId --federationSettingsId federationSettingsId [-o/--output output].
 func ConnectBuilder() *cobra.Command {
-	opts := &ConnectOpts{}
+	opts := &ConnectOpts{
+		DescribeOrgConfigsOpts: &DescribeOrgConfigsOpts{},
+	}
 	cmd := &cobra.Command{
 		Use:   "connect",
 		Short: "Connect an Identity Provider to an Organization.",
@@ -114,7 +116,7 @@ func ConnectBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
 			)
 		},
-		RunE: func(_ *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

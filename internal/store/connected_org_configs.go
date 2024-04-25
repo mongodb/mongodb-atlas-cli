@@ -15,10 +15,10 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_federation_settings_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ConnectedOrgConfigsUpdater
+//go:generate mockgen -destination=../mocks/mock_connected_orgs_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ConnectedOrgConfigsUpdater,ConnectedOrgConfigsDescriber
 
 type ConnectedOrgConfigsUpdater interface {
 	UpdateConnectedOrgConfig(opts *atlasv2.UpdateConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error)

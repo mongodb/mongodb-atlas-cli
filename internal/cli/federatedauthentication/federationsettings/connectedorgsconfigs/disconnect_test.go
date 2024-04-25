@@ -17,21 +17,72 @@
 package connectedorgsconfigs
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
-func TestConnect_Run(t *testing.T) {
+func TestDisconnect_Run(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockConnectedOrgConfigsUpdater(ctrl)
+	describeStore := mocks.NewMockConnectedOrgConfigsDescriber(ctrl)
+	buf := new(bytes.Buffer)
+
+	DisconnectOpts := &DisconnectOpts{
+		store:                mockStore,
+		federationSettingsID: "federationSettingsID",
+		identityProviderID:   "id",
+		protocol:             oidc,
+		DescribeOrgConfigsOpts: &DescribeOrgConfigsOpts{
+			describeStore: describeStore,
+		},
+		OutputOpts: cli.OutputOpts{
+			Template:  disconnectTemplate,
+			OutWriter: buf,
+		},
+	}
+
+	ids := []string{"id"}
+	current := &atlasv2.ConnectedOrgConfig{
+		OrgId:                         "id",
+		DataAccessIdentityProviderIds: &ids,
+	}
+
+	expected := &atlasv2.ConnectedOrgConfig{
+		OrgId:                         "id",
+		DataAccessIdentityProviderIds: &ids,
+	}
+	describeStore.
+		EXPECT().
+		GetConnectedOrgConfig(gomock.Any()).
+		Return(current, nil).
+		Times(1)
+
+	mockStore.
+		EXPECT().
+		UpdateConnectedOrgConfig(gomock.Any()).
+		Return(expected, nil).
+		Times(1)
+
+	if err := DisconnectOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+
+	test.VerifyOutputTemplate(t, disconnectTemplate, expected)
+}
+
+func TestDisconnectEmpty_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockConnectedOrgConfigsUpdater(ctrl)
 	describeStore := mocks.NewMockConnectedOrgConfigsDescriber(ctrl)
 
-	ConnectOpts := &ConnectOpts{
+	DisconnectOpts := &DisconnectOpts{
 		store:                mockStore,
 		federationSettingsID: "federationSettingsID",
 		identityProviderID:   "id",
@@ -40,6 +91,11 @@ func TestConnect_Run(t *testing.T) {
 			describeStore: describeStore,
 		},
 	}
+	describeStore.
+		EXPECT().
+		GetConnectedOrgConfig(gomock.Any()).
+		Return(&atlasv2.ConnectedOrgConfig{}, nil).
+		Times(1)
 
 	mockStore.
 		EXPECT().
@@ -47,21 +103,15 @@ func TestConnect_Run(t *testing.T) {
 		Return(&atlasv2.ConnectedOrgConfig{}, nil).
 		Times(1)
 
-	describeStore.
-		EXPECT().
-		GetConnectedOrgConfig(gomock.Any()).
-		Return(&atlasv2.ConnectedOrgConfig{}, nil).
-		Times(1)
-
-	if err := ConnectOpts.Run(); err != nil {
+	if err := DisconnectOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
 
-func TestConnectBuilder(t *testing.T) {
+func TestDisconnectBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		ConnectBuilder(),
+		DisconnectBuilder(),
 		0,
 		[]string{flag.Output, flag.FederationSettingsID, flag.IdentityProviderID, flag.Protocol, flag.OrgID},
 	)

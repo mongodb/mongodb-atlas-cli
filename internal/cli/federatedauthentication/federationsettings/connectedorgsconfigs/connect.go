@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 type ConnectOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.InputOpts
-	DescribeOrgConfigsOpts
+	*DescribeOrgConfigsOpts
 	identityProviderID   string
 	protocol             string
 	federationSettingsID string
@@ -81,7 +81,7 @@ func (opts *ConnectOpts) Run() error {
 	if opts.protocol == oidc {
 		params.ConnectedOrgConfig.DataAccessIdentityProviderIds = &idpId
 	} else if opts.protocol == saml {
-		params.ConnectedOrgConfig.IdentityProviderId = opts.identityProviderID
+		params.ConnectedOrgConfig.IdentityProviderId = &opts.identityProviderID
 	}
 
 	r, err := opts.store.UpdateConnectedOrgConfig(params)

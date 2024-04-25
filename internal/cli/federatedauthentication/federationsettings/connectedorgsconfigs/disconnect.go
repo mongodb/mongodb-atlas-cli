@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 type DisconnectOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.InputOpts
-	DescribeOrgConfigsOpts
+	*DescribeOrgConfigsOpts
 	identityProviderID   string
 	protocol             string
 	federationSettingsID string
@@ -57,6 +57,9 @@ func (opts *DisconnectOpts) InitStore(ctx context.Context) func() error {
 
 func (opts *DisconnectOpts) removeIdpFromOrgConfig(orgConfig *atlasv2.ConnectedOrgConfig) {
 	if opts.protocol == oidc {
+		if orgConfig.DataAccessIdentityProviderIds == nil {
+			return
+		}
 		// search and remove id from orgConfig.DataAccessIdentityProviderIds
 		newIdps := []string{}
 		for _, idp := range *orgConfig.DataAccessIdentityProviderIds {
@@ -66,7 +69,8 @@ func (opts *DisconnectOpts) removeIdpFromOrgConfig(orgConfig *atlasv2.ConnectedO
 		}
 		orgConfig.DataAccessIdentityProviderIds = &newIdps
 	} else if opts.protocol == saml {
-		orgConfig.IdentityProviderId = ""
+		emptyId := ""
+		orgConfig.IdentityProviderId = &emptyId
 	}
 }
 

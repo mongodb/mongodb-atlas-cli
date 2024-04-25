@@ -38,10 +38,10 @@ func (opts *DescribeOrgConfigsOpts) InitDescribeStore(ctx context.Context) func(
 	}
 }
 
-func (opts *DescribeOrgConfigsOpts) GetConnectedOrgConfig(federationSettings string, orgId string) (*atlasv2.ConnectedOrgConfig, error) {
+func (opts *DescribeOrgConfigsOpts) GetConnectedOrgConfig(federationSettings string, orgID string) (*atlasv2.ConnectedOrgConfig, error) {
 	params := &atlasv2.GetConnectedOrgConfigApiParams{
 		FederationSettingsId: federationSettings,
-		OrgId:                orgId,
+		OrgId:                orgID,
 	}
 
 	return opts.describeStore.GetConnectedOrgConfig(params)

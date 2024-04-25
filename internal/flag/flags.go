@@ -322,4 +322,5 @@ const (
 	AssociatedDomain                          = "associatedDomain"                          // AssociatedDomain flag
 	RequestedScope                            = "requestedScope"                            // RequestedScope flag
 	Protocol                                  = "protocol"                                  // Protocol flag
+	IdentityProviderID                        = "identityProviderId"                        // IdentityProviderId flag
 )

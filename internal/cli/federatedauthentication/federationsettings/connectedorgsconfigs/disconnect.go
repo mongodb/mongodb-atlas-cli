@@ -37,7 +37,7 @@ type DisconnectOpts struct {
 	store                store.ConnectedOrgConfigsUpdater
 }
 
-const disconnectTemplate = `Connected Org Configs disconnected.`
+const disconnectTemplate = `Org Configs disconnected.`
 
 func (opts *DisconnectOpts) InitStore(ctx context.Context) func() error {
 	return func() error {

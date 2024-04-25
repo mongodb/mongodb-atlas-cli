@@ -188,6 +188,7 @@ func TestIdentityProviders(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &config))
 
 		assert.NotEmpty(t, config.DataAccessIdentityProviderIds)
+		assert.Contains(t, config.GetDataAccessIdentityProviderIds(), oidcIdentityProviderID)
 	})
 
 	t.Run("Disconnect OIDC IdP WORKFORCE", func(t *testing.T) {
@@ -210,7 +211,7 @@ func TestIdentityProviders(t *testing.T) {
 		var config atlasv2.ConnectedOrgConfig
 		req.NoError(json.Unmarshal(resp, &config))
 
-		assert.NotEmpty(t, config.DataAccessIdentityProviderIds)
+		assert.NotContains(t, config.GetDataAccessIdentityProviderIds(), oidcIdentityProviderID)
 	})
 
 	t.Run("List OIDC IdPs WORKFORCE", func(_ *testing.T) {

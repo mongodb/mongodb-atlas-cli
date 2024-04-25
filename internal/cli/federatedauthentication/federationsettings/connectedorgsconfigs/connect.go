@@ -78,6 +78,10 @@ func (opts *ConnectOpts) Run() error {
 	}
 
 	if opts.protocol == oidc {
+		if orgConfig.DataAccessIdentityProviderIds == nil {
+			orgConfig.DataAccessIdentityProviderIds = &[]string{}
+		}
+
 		newList := append(*orgConfig.DataAccessIdentityProviderIds, opts.identityProviderID)
 		params.ConnectedOrgConfig.DataAccessIdentityProviderIds = &newList
 	} else if opts.protocol == saml {

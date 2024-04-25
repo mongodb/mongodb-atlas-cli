@@ -101,6 +101,7 @@ const (
 	federatedAuthenticationEntity = "federatedAuthentication"
 	federationSettingsEntity      = "federationSettings"
 	identityProviderEntity        = "identityProvider"
+	connectedOrgsConfigsEntity    = "connectedOrgConfigs"
 	deletingState                 = "DELETING"
 	authEntity                    = "auth"
 )

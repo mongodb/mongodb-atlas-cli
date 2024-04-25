@@ -105,9 +105,6 @@ func ConnectBuilder() *cobra.Command {
 		Use:   "connect",
 		Short: "Connect an Identity Provider to an Organization.",
 		Args:  cobra.NoArgs,
-		Annotations: map[string]string{
-			"output": updateTemplate,
-		},
 		Example: `  # Connect the current profile Org with Identity Provider with ID 5d1113b25a115342acc2d1aa and  federationSettingsId 5d1113b25a115342acc2d1aa 
 			atlas federatedAuthentication connectedOrgs connect --identityProviderId 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
 			# Connect the Org with ID 7d1113b25a115342acc2d1aa with Identity Provider with ID 5d1113b25a115342acc2d1aa and  federationSettingsId 5d1113b25a115342acc2d1aa 

@@ -83,7 +83,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   Connected Org Config connected with {{- range valueOrEmptySlice .DataAccessIdentityProviderIds><>{{- end>.
+   Connected Org Config connected with Connected Org Config connected with {{if $index>, {{$element>.
 
 Examples
 --------

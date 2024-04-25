@@ -30,38 +30,58 @@ type ConnectOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.InputOpts
+	DescribeOrgConfigsOpts
 	identityProviderID   string
+	protocol             string
 	federationSettingsID string
 	store                store.ConnectedOrgConfigsUpdater
 }
 
 const (
-	updateTemplate = "Connected Org Config '{{.Id}}' connected.\n"
+	oidc = "OIDC"
+	saml = "SAML"
 )
+
+const updateTemplate = `Connected Org Config connected with {{- range valueOrEmptySlice .DataAccessIdentityProviderIds}}{{.}}{{- end}}.`
 
 func (opts *ConnectOpts) InitStore(ctx context.Context) func() error {
 	return func() error {
-		if opts.store != nil {
+		if opts.store != nil && opts.describeStore != nil {
 			return nil
 		}
 
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
-		return err
+		if err != nil {
+			return err
+		}
+
+		return opts.InitDescribeStore(ctx)()
 	}
 }
 
 func (opts *ConnectOpts) Run() error {
+	var orgConfig *atlasv2.ConnectedOrgConfig
+	var err error
+	if orgConfig, err = opts.GetConnectedOrgConfig(opts.federationSettingsID, opts.ConfigOrgID()); err != nil {
+		return err
+	}
+
+	if len(orgConfig.GetRoleMappings()) == 0 {
+		orgConfig.RoleMappings = nil
+	}
+
 	idpId := []string{opts.identityProviderID}
-	var id string
 	params := &atlasv2.UpdateConnectedOrgConfigApiParams{
 		FederationSettingsId: opts.federationSettingsID,
 		OrgId:                opts.ConfigOrgID(),
-		ConnectedOrgConfig: &atlasv2.ConnectedOrgConfig{
-			DataAccessIdentityProviderIds: &idpId,
-			IdentityProviderId:            id,
-			OrgId:                         opts.ConfigOrgID(),
-		},
+		ConnectedOrgConfig:   orgConfig,
+	}
+
+	if opts.protocol == oidc {
+		params.ConnectedOrgConfig.DataAccessIdentityProviderIds = &idpId
+	} else if opts.protocol == saml {
+		params.ConnectedOrgConfig.IdentityProviderId = opts.identityProviderID
 	}
 
 	r, err := opts.store.UpdateConnectedOrgConfig(params)
@@ -101,6 +121,7 @@ func ConnectBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.federationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
 	cmd.Flags().StringVar(&opts.identityProviderID, flag.IdentityProviderID, "", usage.IdentityProviderID)
+	cmd.Flags().StringVar(&opts.protocol, flag.Protocol, oidc, usage.Protocol)
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

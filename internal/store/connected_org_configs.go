@@ -24,8 +24,18 @@ type ConnectedOrgConfigsUpdater interface {
 	UpdateConnectedOrgConfig(opts *atlasv2.UpdateConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error)
 }
 
+type ConnectedOrgConfigsDescriber interface {
+	GetConnectedOrgConfig(opts *atlasv2.GetConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error)
+}
+
 // UpdateConnectedOrgConfig encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateConnectedOrgConfig(opts *atlasv2.UpdateConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error) {
 	result, _, err := s.clientv2.FederatedAuthenticationApi.UpdateConnectedOrgConfigWithParams(s.ctx, opts).Execute()
+	return result, err
+}
+
+// GetConnectedOrgConfig encapsulate the logic to manage different cloud providers.
+func (s *Store) GetConnectedOrgConfig(opts *atlasv2.GetConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error) {
+	result, _, err := s.clientv2.FederatedAuthenticationApi.GetConnectedOrgConfigWithParams(s.ctx, opts).Execute()
 	return result, err
 }

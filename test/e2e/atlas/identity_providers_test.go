@@ -72,7 +72,7 @@ func TestIdentityProviders(t *testing.T) {
 			"--federationSettingsId",
 			federationSettingsID,
 			"--audience",
-			idpName, //using random as audience also should be unique
+			idpName, // using random as audience also should be unique
 			"--authorizationType",
 			"GROUP",
 			"--desc",
@@ -114,7 +114,7 @@ func TestIdentityProviders(t *testing.T) {
 			"--federationSettingsId",
 			federationSettingsID,
 			"--audience",
-			idpName, //using random as audience also should be unique
+			idpName, // using random as audience also should be unique
 			"--authorizationType",
 			"GROUP",
 			"--clientId",

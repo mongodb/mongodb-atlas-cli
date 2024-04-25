@@ -165,11 +165,11 @@ func TestBuildAtlasProject(t *testing.T) {
 				{
 					Enabled:       pointer.Get(true),
 					EventTypeName: pointer.Get("TestEventTypeName"),
-					Matchers: &[]map[string]interface{}{
+					Matchers: &[]atlasv2.StreamsMatcher{
 						{
-							"fieldName": "TestFieldName",
-							"operator":  "TestOperator",
-							"value":     "TestValue",
+							FieldName: "TestFieldName",
+							Operator:  "TestOperator",
+							Value:     "TestValue",
 						},
 					},
 					MetricThreshold: &atlasv2.ServerlessMetricThreshold{
@@ -328,9 +328,9 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 		expectedMatchers := []akov2.Matcher{
 			{
-				FieldName: (alertConfigs[0].GetMatchers()[0]["fieldName"]).(string),
-				Operator:  (alertConfigs[0].GetMatchers()[0]["operator"]).(string),
-				Value:     (alertConfigs[0].GetMatchers()[0]["value"]).(string),
+				FieldName: (alertConfigs[0].GetMatchers()[0].GetFieldName()),
+				Operator:  (alertConfigs[0].GetMatchers()[0].GetOperator()),
+				Value:     (alertConfigs[0].GetMatchers()[0].GetValue()),
 			},
 		}
 		expectedNotifications := []akov2.Notification{
@@ -1331,58 +1331,33 @@ func Test_firstElementOrEmpty(t *testing.T) {
 func TestToMatcherErrors(t *testing.T) {
 	testCases := []struct {
 		title            string
-		m                map[string]interface{}
+		m                atlasv2.StreamsMatcher
 		expectedErrorMsg string
 	}{
 		{
-			title:            "Nil map renders nil map error",
-			m:                nil,
-			expectedErrorMsg: "empty map cannot be converted to Matcher",
-		},
-		{
 			title:            "Empty map renders nil map error",
-			m:                map[string]interface{}{},
-			expectedErrorMsg: "empty map cannot be converted to Matcher",
+			m:                atlasv2.StreamsMatcher{},
+			expectedErrorMsg: "matcher is empty",
 		},
 		{
 			title:            "Missing fieldName renders key not set error",
-			m:                map[string]interface{}{"blah": 1},
+			m:                atlasv2.StreamsMatcher{Operator: "op", Value: "value"},
 			expectedErrorMsg: "fieldName is not set",
 		},
 		{
 			title:            "Misnamed fieldName renders key not found error",
-			m:                map[string]interface{}{"FieldNames": "blah"},
+			m:                atlasv2.StreamsMatcher{Operator: "op"},
 			expectedErrorMsg: "fieldName is not set",
-		},
-		{
-			title:            "Nil fieldName value renders key not found error",
-			m:                map[string]interface{}{"fieldName": nil},
-			expectedErrorMsg: "fieldName is not set",
-		},
-		{
-			title:            "Non string fieldName renders conversion error",
-			m:                map[string]interface{}{"fieldName": 1},
-			expectedErrorMsg: "cannot unmarshal number into Go struct field Matcher.fieldName",
 		},
 		{
 			title:            "Missing operator renders key not found error",
-			m:                map[string]interface{}{"fieldName": "blah"},
+			m:                atlasv2.StreamsMatcher{FieldName: "name"},
 			expectedErrorMsg: "operator is not set",
 		},
 		{
-			title:            "Non string operator renders conversion error",
-			m:                map[string]interface{}{"fieldName": "blah", "operator": 1},
-			expectedErrorMsg: "cannot unmarshal number into Go struct field Matcher.operator",
-		},
-		{
 			title:            "Missing value renders key not found error",
-			m:                map[string]interface{}{"fieldName": "blah", "operator": "op"},
+			m:                atlasv2.StreamsMatcher{Operator: "op", FieldName: "fieldName"},
 			expectedErrorMsg: "value is not set",
-		},
-		{
-			title:            "Non string value renders conversion error",
-			m:                map[string]interface{}{"fieldName": "blah", "operator": "op", "value": 0},
-			expectedErrorMsg: "cannot unmarshal number into Go struct field Matcher.value",
 		},
 	}
 	for _, tc := range testCases {
@@ -1395,25 +1370,15 @@ func TestToMatcherErrors(t *testing.T) {
 }
 
 func TestConvertMatchers(t *testing.T) {
-	maps := []map[string]interface{}{
-		nil,
+	configs := []atlasv2.StreamsMatcher{
 		{},
-		{"field": 1},
-		{"FieldName": 1},
-		{"fieldName": 1},
-		{"fieldName": nil},
-		{"fieldName": "field"},
-		{"fieldName": "field", "operator": 1},
-		{"fieldName": "field", "operator": "op"},
-		{"fieldName": "field", "operator": "op", "value": 0},
-		{"fieldName": "field", "operator": "op", "value": "value"},
-		// JSON unmarshaling is case insensitive
-		{"FIeldName": "field2", "Operator": "op2", "VaLUe": "other-value"},
+		{FieldName: "field"},
+		{FieldName: "field", Operator: "op"},
+		{FieldName: "field", Operator: "op", Value: "value"},
 	}
 	expected := []akov2.Matcher{
 		{FieldName: "field", Operator: "op", Value: "value"},
-		{FieldName: "field2", Operator: "op2", Value: "other-value"},
 	}
-	matchers := convertMatchers(maps)
+	matchers := convertMatchers(configs)
 	assert.Equal(t, expected, matchers)
 }

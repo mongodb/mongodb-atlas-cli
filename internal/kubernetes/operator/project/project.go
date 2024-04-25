@@ -15,7 +15,6 @@
 package project
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -803,7 +802,7 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 	return results, secretResults, nil
 }
 
-func convertMatchers(atlasMatcher []map[string]interface{}) []akov2.Matcher {
+func convertMatchers(atlasMatcher []atlasv2.StreamsMatcher) []akov2.Matcher {
 	res := make([]akov2.Matcher, 0, len(atlasMatcher))
 	for _, m := range atlasMatcher {
 		matcher, err := toMatcher(m)
@@ -816,17 +815,15 @@ func convertMatchers(atlasMatcher []map[string]interface{}) []akov2.Matcher {
 	return res
 }
 
-func toMatcher(m map[string]interface{}) (akov2.Matcher, error) {
+func toMatcher(m atlasv2.StreamsMatcher) (akov2.Matcher, error) {
 	var matcher akov2.Matcher
-	if len(m) == 0 {
-		return matcher, errors.New("empty map cannot be converted to Matcher")
-	}
-	jsonBytes, err := json.Marshal(m)
-	if err != nil {
-		return matcher, fmt.Errorf("could not marshal matcher map %#v back to json: %w", m, err)
-	}
-	if err := json.Unmarshal(jsonBytes, &matcher); err != nil {
-		return matcher, err
+
+	matcher.FieldName = m.GetFieldName()
+	matcher.Operator = m.GetOperator()
+	matcher.Value = m.GetValue()
+
+	if matcher.FieldName == "" && matcher.Operator == "" && matcher.Value == "" {
+		return matcher, errors.New("matcher is empty")
 	}
 	if matcher.FieldName == "" {
 		return matcher, errors.New("matcher's fieldName is not set")

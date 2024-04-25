@@ -111,7 +111,7 @@ func DisconnectBuilder() *cobra.Command {
 		Short: "Connect an Identity Provider to an Organization.",
 		Args:  cobra.NoArgs,
 		Annotations: map[string]string{
-			"output": updateTemplate,
+			"output": disconnectTemplate,
 		},
 		Example: `  # Disconnect the current profile Org with Identity Provider from ID 5d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa 
 			atlas federatedAuthentication connectedOrgs disconnect --identityProviderId 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 

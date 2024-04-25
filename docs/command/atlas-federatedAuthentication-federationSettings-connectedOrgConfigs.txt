@@ -50,12 +50,12 @@ Related Commands
 ----------------
 
 * :ref:`atlas-federatedAuthentication-federationSettings-connectedOrgConfigs-connect` - Connect an Identity Provider to an Organization.
-* :ref:`atlas-federatedAuthentication-federationSettings-connectedOrgConfigs-connect` - Connect an Identity Provider to an Organization.
+* :ref:`atlas-federatedAuthentication-federationSettings-connectedOrgConfigs-disconnect` - Connect an Identity Provider to an Organization.
 
 
 .. toctree::
    :titlesonly:
 
    connect </command/atlas-federatedAuthentication-federationSettings-connectedOrgConfigs-connect>
-   connect </command/atlas-federatedAuthentication-federationSettings-connectedOrgConfigs-connect>
+   disconnect </command/atlas-federatedAuthentication-federationSettings-connectedOrgConfigs-disconnect>
 

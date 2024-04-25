@@ -49,6 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`atlas-federatedAuthentication-federationSettings-connectedOrgConfigs` - Manage Atlas Federated Authentication Connected Orgs Config
 * :ref:`atlas-federatedAuthentication-federationSettings-describe` - Return the Federation Settings details for the specified organization.
 * :ref:`atlas-federatedAuthentication-federationSettings-identityProvider` - Manage Federated Authentication Identity Providers.
 
@@ -56,6 +57,7 @@ Related Commands
 .. toctree::
    :titlesonly:
 
+   connectedOrgConfigs </command/atlas-federatedAuthentication-federationSettings-connectedOrgConfigs>
    describe </command/atlas-federatedAuthentication-federationSettings-describe>
    identityProvider </command/atlas-federatedAuthentication-federationSettings-identityProvider>
 

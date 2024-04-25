@@ -26,7 +26,6 @@ func Builder() *cobra.Command {
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Manage Atlas Federated Authentication.",
-		Hidden:  true,
 	}
 	cmd.AddCommand(
 		federationsettings.Builder(),

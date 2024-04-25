@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 type OidcOpts struct {
@@ -51,14 +51,14 @@ const (
 	user           = "USER"
 	group          = "GROUP"
 	oidc           = "OIDC"
-	workflorce     = "WORKFORCE"
+	workforce      = "WORKFORCE"
 	workload       = "WORKLOAD"
 	createTemplate = "Identity provider '{{.Id}}' created.\n"
 )
 
 var (
 	validAuthTypeFlagValues = []string{group, user}
-	validIdpTypeValues      = []string{workflorce, workload}
+	validIdpTypeValues      = []string{workforce, workload}
 )
 
 func (opts *OidcOpts) InitStore(ctx context.Context) func() error {
@@ -139,7 +139,7 @@ func OIDCBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.federationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
-	cmd.Flags().StringVar(&opts.idpType, flag.IdpType, group, usage.IdpType)
+	cmd.Flags().StringVar(&opts.idpType, flag.IdpType, "", usage.IdpType)
 	cmd.Flags().StringVar(&opts.audience, flag.Audience, "", usage.Audience)
 	cmd.Flags().StringVar(&opts.authorizationType, flag.AuthorizationType, "", usage.AuthorizationType)
 	cmd.Flags().StringVar(&opts.clientID, flag.ClientID, "", usage.ClientID)

@@ -100,6 +100,30 @@ func TestIdentityProviders(t *testing.T) {
 		oidcWorkloadIdpID = provider.GetId()
 	})
 
+	t.Run("Connect OIDC IdP WORKLOAD", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			connectedOrgsConfigsEntity,
+			"connect",
+			"--identityProviderId",
+			oidcWorkloadIdpID,
+			"--federationSettingsId",
+			federationSettingsID,
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var config atlasv2.ConnectedOrgConfig
+		req.NoError(json.Unmarshal(resp, &config))
+
+		assert.NotEmpty(t, config.DataAccessIdentityProviderIds)
+		assert.Contains(t, config.GetDataAccessIdentityProviderIds(), oidcIWorkforceIdpID)
+	})
+
 	t.Run("Create OIDC IdP WORKFORCE", func(t *testing.T) {
 		idpName, err := RandIdentityProviderName()
 		fmt.Println(idpName)
@@ -190,6 +214,53 @@ func TestIdentityProviders(t *testing.T) {
 
 		assert.NotEmpty(t, config.DataAccessIdentityProviderIds)
 		assert.Contains(t, config.GetDataAccessIdentityProviderIds(), oidcIWorkforceIdpID)
+	})
+
+	t.Run("Describe connectedOrgsConfig", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			connectedOrgsConfigsEntity,
+			"disconnect",
+			"--identityProviderId",
+			oidcWorkloadIdpID,
+			"--federationSettingsId",
+			federationSettingsID,
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var config atlasv2.ConnectedOrgConfig
+		req.NoError(json.Unmarshal(resp, &config))
+
+		assert.Contains(t, config.GetDataAccessIdentityProviderIds(), oidcIWorkforceIdpID)
+		assert.Contains(t, config.GetDataAccessIdentityProviderIds(), oidcWorkloadIdpID)
+	})
+
+	t.Run("Disconnect OIDC IdP WORKLOAD", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			connectedOrgsConfigsEntity,
+			"disconnect",
+			"--identityProviderId",
+			oidcWorkloadIdpID,
+			"--federationSettingsId",
+			federationSettingsID,
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var config atlasv2.ConnectedOrgConfig
+		req.NoError(json.Unmarshal(resp, &config))
+
+		assert.Contains(t, config.GetDataAccessIdentityProviderIds(), oidcWorkloadIdpID)
 	})
 
 	t.Run("Disconnect OIDC IdP WORKFORCE", func(t *testing.T) {

@@ -26,7 +26,7 @@ export GORELEASER_KEY=${goreleaser_key:?}
 export VERSION_GIT
 
 echo "$GITHUB_APP_PEM" > app.pem
-GITHUB_TOKEN="$(github-token -pem app.pem -app_id "$GITHUB_APP_ID" -owner "mongodb" -repo "mongodb-atlas-cli" -perm "contents=write,actions=read")"
+GITHUB_TOKEN="$(go run ./tools/github-token -pem app.pem -app_id "$GITHUB_APP_ID" -owner "mongodb" -repo "mongodb-atlas-cli" -perm "contents=write,actions=read")"
 
 export GITHUB_TOKEN
 

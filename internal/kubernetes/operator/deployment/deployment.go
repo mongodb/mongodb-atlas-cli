@@ -463,7 +463,7 @@ func BuildServerlessDeployments(deploymentStore store.OperatorClusterStore, vali
 		return nil, nil
 	}
 
-	providerSettings := &akov2.ProviderSettingsSpec{
+	providerSettings := &akov2.ServerlessProviderSettingsSpec{
 		BackingProviderName: deployment.ProviderSettings.BackingProviderName,
 		ProviderName:        akov2provider.ProviderName(store.StringOrEmpty(deployment.ProviderSettings.ProviderName)),
 		RegionName:          deployment.ProviderSettings.RegionName,

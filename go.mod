@@ -1,8 +1,6 @@
 module github.com/mongodb/mongodb-atlas-cli/atlascli
 
-go 1.22
-
-toolchain go1.22.1
+go 1.22.1
 
 require (
 	cloud.google.com/go/kms v1.15.8
@@ -31,7 +29,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mongodb-forks/digest v1.1.0
 	github.com/mongodb-labs/cobra2snooty v0.18.1
-	github.com/mongodb/mongodb-atlas-kubernetes/v2 v2.2.0
+	github.com/mongodb/mongodb-atlas-kubernetes/v2 v2.2.1
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/shirou/gopsutil/v3 v3.24.3
@@ -143,7 +141,7 @@ require (
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
-	go.mongodb.org/atlas-sdk/v20231115004 v20231115004.1.0 // indirect
+	go.mongodb.org/atlas-sdk/v20231115008 v20231115008.4.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.49.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.49.0 // indirect

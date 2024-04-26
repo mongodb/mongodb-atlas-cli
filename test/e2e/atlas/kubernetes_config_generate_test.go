@@ -1081,7 +1081,7 @@ func referenceServerless(name, region, namespace, projectName string, labels map
 			},
 			ServerlessSpec: &akov2.ServerlessSpec{
 				Name: name,
-				ProviderSettings: &akov2.ProviderSettingsSpec{
+				ProviderSettings: &akov2.ServerlessProviderSettingsSpec{
 					BackingProviderName: string(akov2provider.ProviderAWS),
 					ProviderName:        akov2provider.ProviderServerless,
 					RegionName:          region,

@@ -112,7 +112,7 @@ type installation struct {
 }
 
 func getInstallationID(ctx context.Context, repo, token string) (int, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("https://api.github.com/repos/%s/installation", repo), nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("https://api.github.com/repos/%s/installation", repo), nil)
 	if err != nil {
 		return -1, err
 	}
@@ -267,7 +267,7 @@ type accessTokensResponse struct {
 }
 
 func getAccessToken(ctx context.Context, installationID int, token string, r *accessTokensRequest) (string, error) {
-	req, err := http.NewRequestWithContext(ctx, "POST", fmt.Sprintf("https://api.github.com/app/installations/%d/access_tokens", installationID), nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, fmt.Sprintf("https://api.github.com/app/installations/%d/access_tokens", installationID), nil)
 	if err != nil {
 		return "", err
 	}
@@ -298,7 +298,19 @@ func getAccessToken(ctx context.Context, installationID int, token string, r *ac
 	return i.Token, nil
 }
 
-func run(ctx context.Context, pem, appID, owner, repo string, perm map[string]string) error {
+func convertPermissions(s string) map[string]string {
+	result := map[string]string{}
+	for _, permission := range strings.Split(s, ",") {
+		data := strings.Split(permission, "=")
+		result[data[0]] = data[1]
+	}
+	return result
+}
+
+func run(pem, appID, owner, repo string, perm map[string]string) error {
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
+	defer cancel()
+
 	token, err := generateToken(pem, appID)
 	if err != nil {
 		return err
@@ -350,16 +362,7 @@ func main() {
 		log.Fatalf("perm flag is required")
 	}
 
-	permissions := map[string]string{}
-	for _, permission := range strings.Split(*perm, ",") {
-		data := strings.Split(permission, "=")
-		permissions[data[0]] = data[1]
-	}
-
-	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
-	defer cancel()
-
-	err := run(ctx, *pem, *appID, *owner, *repo, permissions)
+	err := run(*pem, *appID, *owner, *repo, convertPermissions(*perm))
 	if err != nil {
 		log.Fatal(err)
 	}

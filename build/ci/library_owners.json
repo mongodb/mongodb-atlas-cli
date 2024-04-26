@@ -14,6 +14,7 @@
 	"github.com/evergreen-ci/shrub": "mongocli",
 	"github.com/go-test/deep": "mongocli",
 	"github.com/golang-jwt/jwt/v4": "mongocli",
+	"github.com/golang-jwt/jwt/v5": "mongocli",
 	"github.com/golang/mock": "mongocli",
 	"github.com/google/go-github/v50": "mongocli",
 	"github.com/google/uuid": "atlas_kubernetes_team",

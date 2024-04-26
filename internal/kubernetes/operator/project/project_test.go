@@ -312,7 +312,17 @@ func TestBuildAtlasProject(t *testing.T) {
 		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureTeams).Return(true)
 
 		dictionary := resources.AtlasNameToKubernetesName()
-		projectResult, err := BuildAtlasProject(projectStore, p, featureValidator, orgID, projectID, targetNamespace, true, dictionary, resourceVersion)
+		projectResult, err := BuildAtlasProject(&AtlasProjectBuildRequest{
+			ProjectStore:    projectStore,
+			Project:         p,
+			Validator:       featureValidator,
+			OrgID:           orgID,
+			ProjectID:       projectID,
+			TargetNamespace: targetNamespace,
+			IncludeSecret:   true,
+			Dictionary:      dictionary,
+			Version:         resourceVersion,
+		})
 		if err != nil {
 			t.Fatalf("%v", err)
 		}

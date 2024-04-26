@@ -17,6 +17,7 @@
 package operator
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/go-test/deep"
@@ -84,6 +85,33 @@ func Test_fetchDataFederationNames(t *testing.T) {
 			t.Fatalf("%v", err)
 		}
 
+		if diff := deep.Equal(got, expected); diff != nil {
+			t.Error(diff)
+		}
+	})
+}
+
+func TestProjectWithWrongOrgID(t *testing.T) {
+	ctl := gomock.NewController(t)
+	atlasOperatorGenericStore := mocks.NewMockOperatorGenericStore(ctl)
+
+	t.Run("should fail flagging when the org id does not match the owner of the project", func(t *testing.T) {
+		project := &admin.Group{
+			Id:    pointer.Get("project-id"),
+			Name:  "test-project",
+			OrgId: "right-org-id",
+		}
+
+		atlasOperatorGenericStore.EXPECT().Project(projectID).Return(project, nil)
+		ce := NewConfigExporter(
+			atlasOperatorGenericStore,
+			nil, // credsProvider (not used)
+			projectID, "wrong-org-id",
+		)
+		_, got := ce.Run()
+		expected := fmt.Errorf("the project test-project (project-id) is not part of the " +
+			"organization \"wrong-org-id\", please confirm the arguments provided " +
+			"to the command or you are using the correct profile")
 		if diff := deep.Equal(got, expected); diff != nil {
 			t.Error(diff)
 		}

@@ -165,22 +165,24 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 		return nil, "", err
 	}
 	if e.orgID != "" && e.orgID != atlasProject.OrgId {
-		return nil, "", fmt.Errorf("the project %s (%s) is not part of the organization %q,"+
+		return nil, "", fmt.Errorf("the project %s (%s) is not part of the organization %q, "+
 			"please confirm the arguments provided to the command or you are using the correct profile",
 			atlasProject.GetName(), atlasProject.GetId(), e.orgID)
 	}
 	e.orgID = atlasProject.OrgId
 
 	// Project
-	projectData, err := project.BuildAtlasProject(
-		e.dataProvider,
-		atlasProject,
-		e.featureValidator,
-		e.orgID, e.projectID,
-		e.targetNamespace,
-		e.includeSecretsData,
-		e.dictionaryForAtlasNames,
-		e.operatorVersion)
+	projectData, err := project.BuildAtlasProject(&project.AtlasProjectBuildRequest{
+		ProjectStore:    e.dataProvider,
+		Project:         atlasProject,
+		Validator:       e.featureValidator,
+		OrgID:           e.orgID,
+		ProjectID:       e.projectID,
+		TargetNamespace: e.targetNamespace,
+		IncludeSecret:   e.includeSecretsData,
+		Dictionary:      e.dictionaryForAtlasNames,
+		Version:         e.operatorVersion,
+	})
 	if err != nil {
 		return nil, "", err
 	}

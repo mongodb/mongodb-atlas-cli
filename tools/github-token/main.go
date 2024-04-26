@@ -1,7 +1,22 @@
+// Copyright 2024 MongoDB Inc
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -9,13 +24,14 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
 	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func generateToken(pemPath string, appId string) (string, error) {
+func generateToken(pemPath string, appID string) (string, error) {
 	pemBytes, err := os.ReadFile(pemPath)
 	if err != nil {
 		return "", err
@@ -26,10 +42,12 @@ func generateToken(pemPath string, appId string) (string, error) {
 		return "", err
 	}
 
+	const timeout = 10 * time.Minute
+
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
 		"iat": time.Now().Unix(),
-		"exp": time.Now().Add(10 * time.Minute).Unix(),
-		"iss": appId,
+		"exp": time.Now().Add(timeout).Unix(),
+		"iss": appID,
 	})
 
 	// Sign the JWT token with the private key
@@ -93,8 +111,8 @@ type installation struct {
 	SuspendedAt            any       `json:"suspended_at"`
 }
 
-func getInstallationId(repo, token string) (int, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("https://api.github.com/repos/%s/installation", repo), nil)
+func getInstallationID(ctx context.Context, repo, token string) (int, error) {
+	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("https://api.github.com/repos/%s/installation", repo), nil)
 	if err != nil {
 		return -1, err
 	}
@@ -248,8 +266,8 @@ type accessTokensResponse struct {
 	} `json:"repositories"`
 }
 
-func getAccessToken(installationId int, token string, r *accessTokensRequest) (string, error) {
-	req, err := http.NewRequest("POST", fmt.Sprintf("https://api.github.com/app/installations/%d/access_tokens", installationId), nil)
+func getAccessToken(ctx context.Context, installationID int, token string, r *accessTokensRequest) (string, error) {
+	req, err := http.NewRequestWithContext(ctx, "POST", fmt.Sprintf("https://api.github.com/app/installations/%d/access_tokens", installationID), nil)
 	if err != nil {
 		return "", err
 	}
@@ -280,18 +298,18 @@ func getAccessToken(installationId int, token string, r *accessTokensRequest) (s
 	return i.Token, nil
 }
 
-func run(pem, appId, owner, repo string, perm map[string]string) error {
-	token, err := generateToken(pem, appId)
+func run(ctx context.Context, pem, appID, owner, repo string, perm map[string]string) error {
+	token, err := generateToken(pem, appID)
 	if err != nil {
 		return err
 	}
 
-	id, err := getInstallationId(fmt.Sprintf("%s/%s", owner, repo), token)
+	id, err := getInstallationID(ctx, fmt.Sprintf("%s/%s", owner, repo), token)
 	if err != nil {
 		return err
 	}
 
-	accessToken, err := getAccessToken(id, token, &accessTokensRequest{
+	accessToken, err := getAccessToken(ctx, id, token, &accessTokensRequest{
 		Repositories: []string{repo},
 		Permissions:  perm,
 	})
@@ -305,7 +323,7 @@ func run(pem, appId, owner, repo string, perm map[string]string) error {
 
 func main() {
 	pem := flag.String("pem", "", "path to pem file")
-	appId := flag.String("app_id", "", "id of github app")
+	appID := flag.String("app_id", "", "id of github app")
 	owner := flag.String("owner", "", "github owner")
 	repo := flag.String("repo", "", "github repo")
 	perm := flag.String("perm", "", "access token permissions")
@@ -316,7 +334,7 @@ func main() {
 		log.Fatalf("pem flag is required")
 	}
 
-	if appId == nil || *appId == "" {
+	if appID == nil || *appID == "" {
 		log.Fatalf("app_id flag is required")
 	}
 
@@ -338,7 +356,10 @@ func main() {
 		permissions[data[0]] = data[1]
 	}
 
-	err := run(*pem, *appId, *owner, *repo, permissions)
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
+	defer cancel()
+
+	err := run(ctx, *pem, *appID, *owner, *repo, permissions)
 	if err != nil {
 		log.Fatal(err)
 	}

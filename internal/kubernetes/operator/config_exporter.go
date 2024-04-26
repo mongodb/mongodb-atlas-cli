@@ -165,8 +165,9 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 		return nil, "", err
 	}
 	if e.orgID != "" && e.orgID != atlasProject.OrgId {
-		return nil, "", fmt.Errorf("%q is not the owner of project %s, org id %s is",
-			e.orgID, atlasProject.GetId(), atlasProject.OrgId)
+		return nil, "", fmt.Errorf("the project %s (%s) is not part of the organization %q,"+
+			"please confirm the arguments provided to the command or you are using the correct profile",
+			atlasProject.GetName(), atlasProject.GetId(), e.orgID)
 	}
 	e.orgID = atlasProject.OrgId
 

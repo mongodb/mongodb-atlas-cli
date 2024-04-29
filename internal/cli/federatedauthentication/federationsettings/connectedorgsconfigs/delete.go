@@ -59,9 +59,9 @@ func DeleteBuilder() *cobra.Command {
 		Use:   "delete",
 		Short: "Delete a connected org config Organization.",
 		Args:  cobra.NoArgs,
-		Example: `  # Delete connected org config from the current profile org and federationSettingsId 5d1113b25a115342acc2d1aa 
+		Example: `  # Delete a connected org config from the current profile org and federationSettingsId 5d1113b25a115342acc2d1aa 
 			atlas federatedAuthentication connectedOrgs delete --federationSettingsId 5d1113b25a115342acc2d1aa 
-			# Delete connected org config from the org with ID 7d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa 
+			# Delete a connected org config from the org with ID 7d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa 
 			atlas federatedAuthentication connectedOrgs connect --orgId 7d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
 		`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {

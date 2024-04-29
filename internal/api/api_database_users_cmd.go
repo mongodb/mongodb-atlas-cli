@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -597,9 +598,11 @@ func updateDatabaseUserBuilder() *cobra.Command {
 }
 
 func databaseUsersBuilder() *cobra.Command {
+	const use = "databaseUsers"
 	cmd := &cobra.Command{
-		Use:   "databaseUsers",
-		Short: `Returns, adds, edits, and removes database users.`,
+		Use:     use,
+		Short:   `Returns, adds, edits, and removes database users.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createDatabaseUserBuilder(),

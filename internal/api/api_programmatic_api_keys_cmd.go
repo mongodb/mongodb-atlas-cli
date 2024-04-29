@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -1528,9 +1529,11 @@ func updateApiKeyRolesBuilder() *cobra.Command {
 }
 
 func programmaticAPIKeysBuilder() *cobra.Command {
+	const use = "programmaticAPIKeys"
 	cmd := &cobra.Command{
-		Use:   "programmaticAPIKeys",
-		Short: `Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API. MongoDB Cloud applies these keys to organizations. These resources can return, assign, or revoke use of these keys within a specified project.`,
+		Use:     use,
+		Short:   `Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API. MongoDB Cloud applies these keys to organizations. These resources can return, assign, or revoke use of these keys within a specified project.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		addProjectApiKeyBuilder(),

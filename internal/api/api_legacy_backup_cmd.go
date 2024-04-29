@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -1170,9 +1171,11 @@ func updateLegacySnapshotScheduleBuilder() *cobra.Command {
 }
 
 func legacyBackupBuilder() *cobra.Command {
+	const use = "legacyBackup"
 	cmd := &cobra.Command{
-		Use:   "legacyBackup",
-		Short: `Manages Legacy Backup snapshots, restore jobs, schedules and checkpoints.`,
+		Use:     use,
+		Short:   `Manages Legacy Backup snapshots, restore jobs, schedules and checkpoints.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createLegacyBackupRestoreJobBuilder(),

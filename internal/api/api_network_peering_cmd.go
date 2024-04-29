@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -1371,10 +1372,12 @@ func verifyConnectViaPeeringOnlyModeForOneProjectBuilder() *cobra.Command {
 }
 
 func networkPeeringBuilder() *cobra.Command {
+	const use = "networkPeering"
 	cmd := &cobra.Command{
-		Use: "networkPeering",
+		Use: use,
 		Short: `Returns, adds, edits, and removes network peering containers and peering connections.
 When you deploy an M10+ dedicated cluster, Atlas creates a VPC for the selected provider and region or regions if no existing VPC or VPC peering connection exists for that provider and region. Atlas assigns the VPC a Classless Inter-Domain Routing (CIDR) block.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createPeeringConnectionBuilder(),

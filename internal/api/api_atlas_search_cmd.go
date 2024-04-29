@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -969,9 +970,11 @@ func updateAtlasSearchIndexBuilder() *cobra.Command {
 }
 
 func atlasSearchBuilder() *cobra.Command {
+	const use = "atlasSearch"
 	cmd := &cobra.Command{
-		Use:   "atlasSearch",
-		Short: `Returns, adds, edits, and removes Atlas Search indexes for the specified cluster. Also returns and updates user-defined analyzers for the specified cluster.`,
+		Use:     use,
+		Short:   `Returns, adds, edits, and removes Atlas Search indexes for the specified cluster. Also returns and updates user-defined analyzers for the specified cluster.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createAtlasSearchDeploymentBuilder(),

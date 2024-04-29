@@ -28,6 +28,7 @@ import (
 	"time"
 
 	"github.com/briandowns/spinner"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -1539,9 +1540,11 @@ func upgradeSharedClusterToServerlessBuilder() *cobra.Command {
 }
 
 func clustersBuilder() *cobra.Command {
+	const use = "clusters"
 	cmd := &cobra.Command{
-		Use:   "clusters",
-		Short: `Returns, adds, edits, and removes database deployments. Changes to cluster configurations can affect costs. This resource requires your Project ID.`,
+		Use:     use,
+		Short:   `Returns, adds, edits, and removes database deployments. Changes to cluster configurations can affect costs. This resource requires your Project ID.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createClusterBuilder(),

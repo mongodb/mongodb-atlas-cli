@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -560,9 +561,11 @@ func updateServerlessPrivateEndpointBuilder() *cobra.Command {
 }
 
 func serverlessPrivateEndpointsBuilder() *cobra.Command {
+	const use = "serverlessPrivateEndpoints"
 	cmd := &cobra.Command{
-		Use:   "serverlessPrivateEndpoints",
-		Short: `Returns, adds, edits, and removes private endpoints for serverless instances. To learn more, see the Atlas Administration API tab on the following tutorial.`,
+		Use:     use,
+		Short:   `Returns, adds, edits, and removes private endpoints for serverless instances. To learn more, see the Atlas Administration API tab on the following tutorial.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createServerlessPrivateEndpointBuilder(),

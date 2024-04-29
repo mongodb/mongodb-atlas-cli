@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20231115012/admin"
@@ -661,9 +662,11 @@ func setServerlessAutoIndexingBuilder() *cobra.Command {
 }
 
 func performanceAdvisorBuilder() *cobra.Command {
+	const use = "performanceAdvisor"
 	cmd := &cobra.Command{
-		Use:   "performanceAdvisor",
-		Short: `Returns suggested indexes and slow query data for a database deployment. Also enables or disables MongoDB Cloud-managed slow operation thresholds. To view field values in a sample query, you must have the Project Data Access Read Only role or higher. Otherwise, MongoDB Cloud returns redacted data rather than the field values.`,
+		Use:     use,
+		Short:   `Returns suggested indexes and slow query data for a database deployment. Also enables or disables MongoDB Cloud-managed slow operation thresholds. To view field values in a sample query, you must have the Project Data Access Read Only role or higher. Otherwise, MongoDB Cloud returns redacted data rather than the field values.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		disableSlowOperationThresholdingBuilder(),

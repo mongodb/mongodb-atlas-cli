@@ -27,6 +27,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20231115012/admin"
@@ -1555,9 +1556,11 @@ func listMetricTypesBuilder() *cobra.Command {
 }
 
 func monitoringAndLogsBuilder() *cobra.Command {
+	const use = "monitoringAndLogs"
 	cmd := &cobra.Command{
-		Use:   "monitoringAndLogs",
-		Short: `Returns database deployment monitoring and logging data.`,
+		Use:     use,
+		Short:   `Returns database deployment monitoring and logging data.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		getAtlasProcessBuilder(),

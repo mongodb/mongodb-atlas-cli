@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -418,9 +419,11 @@ func updateMaintenanceWindowBuilder() *cobra.Command {
 }
 
 func maintenanceWindowsBuilder() *cobra.Command {
+	const use = "maintenanceWindows"
 	cmd := &cobra.Command{
-		Use:   "maintenanceWindows",
-		Short: `Returns, edits, and removes maintenance windows. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. You can defer a scheduled maintenance event for a project up to two times. Deferred maintenance events occur during your preferred maintenance window exactly one week after the previously scheduled date and time.`,
+		Use:     use,
+		Short:   `Returns, edits, and removes maintenance windows. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. You can defer a scheduled maintenance event for a project up to two times. Deferred maintenance events occur during your preferred maintenance window exactly one week after the previously scheduled date and time.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		deferMaintenanceWindowBuilder(),

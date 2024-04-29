@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -1327,9 +1328,11 @@ func updateTeamRolesBuilder() *cobra.Command {
 }
 
 func teamsBuilder() *cobra.Command {
+	const use = "teams"
 	cmd := &cobra.Command{
-		Use:   "teams",
-		Short: `Returns, adds, edits, or removes teams.`,
+		Use:     use,
+		Short:   `Returns, adds, edits, or removes teams.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		addAllTeamsToProjectBuilder(),

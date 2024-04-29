@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -368,9 +369,11 @@ func updatePushBasedLogConfigurationBuilder() *cobra.Command {
 }
 
 func pushBasedLogExportBuilder() *cobra.Command {
+	const use = "pushBasedLogExport"
 	cmd := &cobra.Command{
-		Use:   "pushBasedLogExport",
-		Short: `You can continually push logs from mongod, mongos, and audit logs to an AWS S3 bucket. Atlas exports logs every 5 minutes.`,
+		Use:     use,
+		Short:   `You can continually push logs from mongod, mongos, and audit logs to an AWS S3 bucket. Atlas exports logs every 5 minutes.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createPushBasedLogConfigurationBuilder(),

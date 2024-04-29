@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -519,9 +520,11 @@ func listCloudProviderAccessRolesBuilder() *cobra.Command {
 }
 
 func cloudProviderAccessBuilder() *cobra.Command {
+	const use = "cloudProviderAccess"
 	cmd := &cobra.Command{
-		Use:   "cloudProviderAccess",
-		Short: `Returns, adds, authorizes, and removes AWS IAM roles in Atlas.`,
+		Use:     use,
+		Short:   `Returns, adds, authorizes, and removes AWS IAM roles in Atlas.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		authorizeCloudProviderAccessRoleBuilder(),

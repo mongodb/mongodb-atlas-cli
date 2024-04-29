@@ -18,6 +18,7 @@ import (
 	"github.com/spf13/cobra"
 	"{{sdkImport}}/admin"
 	"{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/atlascli/internal/config"
+	"{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/atlascli/internal/cli"
 )
 
 {{#operations}}
@@ -259,9 +260,11 @@ func {{#lambda.camelcase}}{{baseName}}{{/lambda.camelcase}}Builder() *cobra.Comm
 {{#operations}}
 {{#operation}}
 {{#-first}}
+	const use = "{{#lambda.camelcase}}{{baseName}}{{/lambda.camelcase}}"
 	cmd := &cobra.Command{
-		Use:     "{{#lambda.camelcase}}{{baseName}}{{/lambda.camelcase}}",
+		Use:     use,
 		Short:   `{{#tags}}{{#-first}}{{description}}{{/-first}}{{/tags}}`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 {{/-first}}

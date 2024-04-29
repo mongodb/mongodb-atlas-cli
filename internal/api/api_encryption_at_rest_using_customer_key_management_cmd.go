@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -238,9 +239,11 @@ func updateEncryptionAtRestBuilder() *cobra.Command {
 }
 
 func encryptionAtRestUsingCustomerKeyManagementBuilder() *cobra.Command {
+	const use = "encryptionAtRestUsingCustomerKeyManagement"
 	cmd := &cobra.Command{
-		Use:   "encryptionAtRestUsingCustomerKeyManagement",
-		Short: `Returns and edits the Encryption at Rest using Customer Key Management configuration. MongoDB Cloud encrypts all storage whether or not you use your own key management.`,
+		Use:     use,
+		Short:   `Returns and edits the Encryption at Rest using Customer Key Management configuration. MongoDB Cloud encrypts all storage whether or not you use your own key management.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		getEncryptionAtRestBuilder(),

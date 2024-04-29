@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -1751,9 +1752,11 @@ func updateOrganizationSettingsBuilder() *cobra.Command {
 }
 
 func organizationsBuilder() *cobra.Command {
+	const use = "organizations"
 	cmd := &cobra.Command{
-		Use:   "organizations",
-		Short: `Returns, adds, and edits organizational units in MongoDB Cloud.`,
+		Use:     use,
+		Short:   `Returns, adds, and edits organizational units in MongoDB Cloud.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createOrganizationBuilder(),

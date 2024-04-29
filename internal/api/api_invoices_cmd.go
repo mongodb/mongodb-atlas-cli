@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -599,9 +600,11 @@ func listPendingInvoicesBuilder() *cobra.Command {
 }
 
 func invoicesBuilder() *cobra.Command {
+	const use = "invoices"
 	cmd := &cobra.Command{
-		Use:   "invoices",
-		Short: `Returns invoices.`,
+		Use:     use,
+		Short:   `Returns invoices.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createCostExplorerQueryProcessBuilder(),

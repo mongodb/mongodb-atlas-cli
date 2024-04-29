@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -130,9 +131,11 @@ func createRollingIndexBuilder() *cobra.Command {
 }
 
 func rollingIndexBuilder() *cobra.Command {
+	const use = "rollingIndex"
 	cmd := &cobra.Command{
-		Use:   "rollingIndex",
-		Short: `Creates one index to a database deployment in a rolling manner. You can&#39;t create a rolling index on an &#x60;M0&#x60; free cluster or &#x60;M2/M5&#x60; shared cluster.`,
+		Use:     use,
+		Short:   `Creates one index to a database deployment in a rolling manner. You can&#39;t create a rolling index on an &#x60;M0&#x60; free cluster or &#x60;M2/M5&#x60; shared cluster.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createRollingIndexBuilder(),

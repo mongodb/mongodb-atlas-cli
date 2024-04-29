@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -339,9 +340,11 @@ func listSharedClusterBackupRestoreJobsBuilder() *cobra.Command {
 }
 
 func sharedTierRestoreJobsBuilder() *cobra.Command {
+	const use = "sharedTierRestoreJobs"
 	cmd := &cobra.Command{
-		Use:   "sharedTierRestoreJobs",
-		Short: `Returns and adds restore jobs for shared-tier database deployments.`,
+		Use:     use,
+		Short:   `Returns and adds restore jobs for shared-tier database deployments.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createSharedClusterBackupRestoreJobBuilder(),

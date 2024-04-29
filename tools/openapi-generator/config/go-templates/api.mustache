@@ -7,9 +7,10 @@ import (
 
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "api",
-		Short: "Access to api resources.",
-		Long:  `This command provides access to API resources specified in https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/.`,
+		Use:     "api",
+		Short:   "Access to api resources.",
+		Long:    `This command provides access to API resources specified in https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/.`,
+		Aliases: []string{"API"},
 	}
 
 	cmd.AddCommand(

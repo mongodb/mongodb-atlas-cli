@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -238,9 +239,11 @@ func updateAuditingConfigurationBuilder() *cobra.Command {
 }
 
 func auditingBuilder() *cobra.Command {
+	const use = "auditing"
 	cmd := &cobra.Command{
-		Use:   "auditing",
-		Short: `Returns and edits database auditing settings for MongoDB Cloud projects.`,
+		Use:     use,
+		Short:   `Returns and edits database auditing settings for MongoDB Cloud projects.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		getAuditingConfigurationBuilder(),

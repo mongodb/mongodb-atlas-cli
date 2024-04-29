@@ -24,6 +24,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20231115012/admin"
@@ -170,9 +171,11 @@ func returnAllControlPlaneIPAddressesBuilder() *cobra.Command {
 }
 
 func rootBuilder() *cobra.Command {
+	const use = "root"
 	cmd := &cobra.Command{
-		Use:   "root",
-		Short: `Returns details that describe the MongoDB Cloud build and the access token that requests this resource. This starts the MongoDB Cloud API.`,
+		Use:     use,
+		Short:   `Returns details that describe the MongoDB Cloud build and the access token that requests this resource. This starts the MongoDB Cloud API.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		getSystemStatusBuilder(),

@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -2351,9 +2352,11 @@ func updateProjectSettingsBuilder() *cobra.Command {
 }
 
 func projectsBuilder() *cobra.Command {
+	const use = "projects"
 	cmd := &cobra.Command{
-		Use:   "projects",
-		Short: `Returns, adds, and edits collections of clusters and users in MongoDB Cloud.`,
+		Use:     use,
+		Short:   `Returns, adds, and edits collections of clusters and users in MongoDB Cloud.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		addUserToProjectBuilder(),

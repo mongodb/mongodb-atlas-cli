@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -955,9 +956,11 @@ func toggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 }
 
 func privateEndpointServicesBuilder() *cobra.Command {
+	const use = "privateEndpointServices"
 	cmd := &cobra.Command{
-		Use:   "privateEndpointServices",
-		Short: `Returns, adds, edits, and removes private endpoint services.`,
+		Use:     use,
+		Short:   `Returns, adds, edits, and removes private endpoint services.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createPrivateEndpointBuilder(),

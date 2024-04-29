@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -573,11 +574,13 @@ func updateThirdPartyIntegrationBuilder() *cobra.Command {
 }
 
 func thirdPartyIntegrationsBuilder() *cobra.Command {
+	const use = "thirdPartyIntegrations"
 	cmd := &cobra.Command{
-		Use: "thirdPartyIntegrations",
+		Use: use,
 		Short: `Returns, adds, edits, and removes third-party service integration configurations. MongoDB Cloud sends alerts to each third-party service that you configure.
 
 **IMPORTANT**: Each project can only have one configuration per integrationType.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createThirdPartyIntegrationBuilder(),

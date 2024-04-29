@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -1594,9 +1595,11 @@ func updateRoleMappingBuilder() *cobra.Command {
 }
 
 func federatedAuthenticationBuilder() *cobra.Command {
+	const use = "federatedAuthentication"
 	cmd := &cobra.Command{
-		Use:   "federatedAuthentication",
-		Short: `Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.`,
+		Use:     use,
+		Short:   `Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createIdentityProviderBuilder(),

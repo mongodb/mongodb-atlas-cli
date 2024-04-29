@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -549,9 +550,11 @@ func updateServerlessInstanceBuilder() *cobra.Command {
 }
 
 func serverlessInstancesBuilder() *cobra.Command {
+	const use = "serverlessInstances"
 	cmd := &cobra.Command{
-		Use:   "serverlessInstances",
-		Short: `Returns, adds, edits, and removes serverless instances.`,
+		Use:     use,
+		Short:   `Returns, adds, edits, and removes serverless instances.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createServerlessInstanceBuilder(),

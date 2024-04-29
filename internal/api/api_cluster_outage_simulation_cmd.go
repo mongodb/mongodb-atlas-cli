@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -335,9 +336,11 @@ func startOutageSimulationBuilder() *cobra.Command {
 }
 
 func clusterOutageSimulationBuilder() *cobra.Command {
+	const use = "clusterOutageSimulation"
 	cmd := &cobra.Command{
-		Use:   "clusterOutageSimulation",
-		Short: `Returns, starts, or ends a cluster outage simulation.`,
+		Use:     use,
+		Short:   `Returns, starts, or ends a cluster outage simulation.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		endOutageSimulationBuilder(),

@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -816,9 +817,11 @@ func updateAlertConfigurationBuilder() *cobra.Command {
 }
 
 func alertConfigurationsBuilder() *cobra.Command {
+	const use = "alertConfigurations"
 	cmd := &cobra.Command{
-		Use:   "alertConfigurations",
-		Short: `Returns and edits the conditions that trigger alerts and how MongoDB Cloud notifies users. This collection remains under revision and may change.`,
+		Use:     use,
+		Short:   `Returns and edits the conditions that trigger alerts and how MongoDB Cloud notifies users. This collection remains under revision and may change.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createAlertConfigurationBuilder(),

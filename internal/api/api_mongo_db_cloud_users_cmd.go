@@ -24,6 +24,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -287,9 +288,11 @@ func getUserByUsernameBuilder() *cobra.Command {
 }
 
 func mongoDBCloudUsersBuilder() *cobra.Command {
+	const use = "mongoDBCloudUsers"
 	cmd := &cobra.Command{
-		Use:   "mongoDBCloudUsers",
-		Short: `Returns, adds, and edits MongoDB Cloud users.`,
+		Use:     use,
+		Short:   `Returns, adds, and edits MongoDB Cloud users.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createUserBuilder(),

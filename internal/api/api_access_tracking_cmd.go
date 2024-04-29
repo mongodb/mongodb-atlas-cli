@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20231115012/admin"
@@ -240,9 +241,11 @@ func listAccessLogsByHostnameBuilder() *cobra.Command {
 }
 
 func accessTrackingBuilder() *cobra.Command {
+	const use = "accessTracking"
 	cmd := &cobra.Command{
-		Use:   "accessTracking",
-		Short: `Returns access logs for authentication attempts made to Atlas database deployments. To view database access history, you must have either the Project Owner or Organization Owner role.`,
+		Use:     use,
+		Short:   `Returns access logs for authentication attempts made to Atlas database deployments. To view database access history, you must have either the Project Owner or Organization Owner role.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		listAccessLogsByClusterNameBuilder(),

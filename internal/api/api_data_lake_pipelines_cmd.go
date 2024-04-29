@@ -27,6 +27,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -1338,9 +1339,11 @@ func updatePipelineBuilder() *cobra.Command {
 }
 
 func dataLakePipelinesBuilder() *cobra.Command {
+	const use = "dataLakePipelines"
 	cmd := &cobra.Command{
-		Use:   "dataLakePipelines",
-		Short: `Returns, adds, edits, and removes Atlas Data Lake Pipelines and associated runs.`,
+		Use:     use,
+		Short:   `Returns, adds, edits, and removes Atlas Data Lake Pipelines and associated runs.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createPipelineBuilder(),

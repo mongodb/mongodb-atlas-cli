@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -1177,9 +1178,11 @@ func updateStreamInstanceBuilder() *cobra.Command {
 }
 
 func streamsBuilder() *cobra.Command {
+	const use = "streams"
 	cmd := &cobra.Command{
-		Use:   "streams",
-		Short: `Returns, adds, edits, and removes Streams Instances. This resource requires your project ID.`,
+		Use:     use,
+		Short:   `Returns, adds, edits, and removes Streams Instances. This resource requires your project ID.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createStreamConnectionBuilder(),

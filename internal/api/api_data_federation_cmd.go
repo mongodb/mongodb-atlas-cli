@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -1465,9 +1466,11 @@ func updateFederatedDatabaseBuilder() *cobra.Command {
 }
 
 func dataFederationBuilder() *cobra.Command {
+	const use = "dataFederation"
 	cmd := &cobra.Command{
-		Use:   "dataFederation",
-		Short: `Returns, adds, edits, and removes Federated Database Instances. This resource requires your project ID. Changes to federated database instance configurations can affect costs.`,
+		Use:     use,
+		Short:   `Returns, adds, edits, and removes Federated Database Instances. This resource requires your project ID. Changes to federated database instance configurations can affect costs.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createDataFederationPrivateEndpointBuilder(),

@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -667,9 +668,11 @@ func updateOnlineArchiveBuilder() *cobra.Command {
 }
 
 func onlineArchiveBuilder() *cobra.Command {
+	const use = "onlineArchive"
 	cmd := &cobra.Command{
-		Use:   "onlineArchive",
-		Short: `Returns, adds, edits, or removes an online archive.`,
+		Use:     use,
+		Short:   `Returns, adds, edits, or removes an online archive.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		createOnlineArchiveBuilder(),

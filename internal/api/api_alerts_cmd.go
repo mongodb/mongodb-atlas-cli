@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -441,9 +442,11 @@ func listAlertsByAlertConfigurationIdBuilder() *cobra.Command {
 }
 
 func alertsBuilder() *cobra.Command {
+	const use = "alerts"
 	cmd := &cobra.Command{
-		Use:   "alerts",
-		Short: `Returns and acknowledges alerts that MongoDB Cloud triggers based on the alert conditions that you define. This collection remains under revision and may change.`,
+		Use:     use,
+		Short:   `Returns and acknowledges alerts that MongoDB Cloud triggers based on the alert conditions that you define. This collection remains under revision and may change.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		acknowledgeAlertBuilder(),

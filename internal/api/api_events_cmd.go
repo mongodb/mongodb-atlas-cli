@@ -27,6 +27,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20231115012/admin"
@@ -477,9 +478,11 @@ func listProjectEventsBuilder() *cobra.Command {
 }
 
 func eventsBuilder() *cobra.Command {
+	const use = "events"
 	cmd := &cobra.Command{
-		Use:   "events",
-		Short: `Returns events. This collection remains under revision and may change.`,
+		Use:     use,
+		Short:   `Returns events. This collection remains under revision and may change.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		getOrganizationEventBuilder(),

@@ -26,6 +26,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -2976,9 +2977,11 @@ func updateSnapshotRetentionBuilder() *cobra.Command {
 }
 
 func cloudBackupsBuilder() *cobra.Command {
+	const use = "cloudBackups"
 	cmd := &cobra.Command{
-		Use:   "cloudBackups",
-		Short: `Manages Cloud Backup snapshots, snapshot export buckets, restore jobs, and schedules. This resource applies only to clusters that use Cloud Backups.`,
+		Use:     use,
+		Short:   `Manages Cloud Backup snapshots, snapshot export buckets, restore jobs, and schedules. This resource applies only to clusters that use Cloud Backups.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		cancelBackupRestoreJobBuilder(),

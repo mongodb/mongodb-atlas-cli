@@ -27,6 +27,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -1074,9 +1075,11 @@ func unpinNamespacesBuilder() *cobra.Command {
 }
 
 func collectionLevelMetricsBuilder() *cobra.Command {
+	const use = "collectionLevelMetrics"
 	cmd := &cobra.Command{
-		Use:   "collectionLevelMetrics",
-		Short: `Returns, adds, and edits pinned namespaces for the specified cluster or process. Also returns collection level latency metric data.`,
+		Use:     use,
+		Short:   `Returns, adds, and edits pinned namespaces for the specified cluster or process. Also returns collection level latency metric data.`,
+		Aliases: cli.GenerateAliases(use),
 	}
 	cmd.AddCommand(
 		getCollStatsLatencyNamespaceClusterMeasurementsBuilder(),

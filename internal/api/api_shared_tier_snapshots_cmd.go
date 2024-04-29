@@ -134,9 +134,11 @@ func downloadSharedClusterBackupBuilder() *cobra.Command {
 	opts := downloadSharedClusterBackupOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "downloadSharedClusterBackup"
 	cmd := &cobra.Command{
-		Use:   "downloadSharedClusterBackup",
-		Short: "Download One M2 or M5 Cluster Snapshot",
+		Use:     use,
+		Short:   "Download One M2 or M5 Cluster Snapshot",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -227,9 +229,11 @@ func (opts *getSharedClusterBackupOpts) postRun(_ context.Context, w io.Writer) 
 
 func getSharedClusterBackupBuilder() *cobra.Command {
 	opts := getSharedClusterBackupOpts{}
+	const use = "getSharedClusterBackup"
 	cmd := &cobra.Command{
-		Use:   "getSharedClusterBackup",
-		Short: "Return One Snapshot for One M2 or M5 Cluster",
+		Use:     use,
+		Short:   "Return One Snapshot for One M2 or M5 Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -318,9 +322,11 @@ func (opts *listSharedClusterBackupsOpts) postRun(_ context.Context, w io.Writer
 
 func listSharedClusterBackupsBuilder() *cobra.Command {
 	opts := listSharedClusterBackupsOpts{}
+	const use = "listSharedClusterBackups"
 	cmd := &cobra.Command{
-		Use:   "listSharedClusterBackups",
-		Short: "Return All Snapshots for One M2 or M5 Cluster",
+		Use:     use,
+		Short:   "Return All Snapshots for One M2 or M5 Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

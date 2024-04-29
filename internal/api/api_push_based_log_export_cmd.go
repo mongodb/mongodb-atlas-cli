@@ -108,9 +108,11 @@ func createPushBasedLogConfigurationBuilder() *cobra.Command {
 	opts := createPushBasedLogConfigurationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createPushBasedLogConfiguration"
 	cmd := &cobra.Command{
-		Use:   "createPushBasedLogConfiguration",
-		Short: "Enable the push-based log export feature for a project",
+		Use:     use,
+		Short:   "Enable the push-based log export feature for a project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -170,9 +172,11 @@ func (opts *deletePushBasedLogConfigurationOpts) postRun(_ context.Context, _ io
 
 func deletePushBasedLogConfigurationBuilder() *cobra.Command {
 	opts := deletePushBasedLogConfigurationOpts{}
+	const use = "deletePushBasedLogConfiguration"
 	cmd := &cobra.Command{
-		Use:   "deletePushBasedLogConfiguration",
-		Short: "Disable the push-based log export feature for a project",
+		Use:     use,
+		Short:   "Disable the push-based log export feature for a project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -254,9 +258,11 @@ func (opts *getPushBasedLogConfigurationOpts) postRun(_ context.Context, w io.Wr
 
 func getPushBasedLogConfigurationBuilder() *cobra.Command {
 	opts := getPushBasedLogConfigurationOpts{}
+	const use = "getPushBasedLogConfiguration"
 	cmd := &cobra.Command{
-		Use:   "getPushBasedLogConfiguration",
-		Short: "Get the push-based log export configuration for a project",
+		Use:     use,
+		Short:   "Get the push-based log export configuration for a project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -348,9 +354,11 @@ func updatePushBasedLogConfigurationBuilder() *cobra.Command {
 	opts := updatePushBasedLogConfigurationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updatePushBasedLogConfiguration"
 	cmd := &cobra.Command{
-		Use:   "updatePushBasedLogConfiguration",
-		Short: "Update the push-based log export feature for a project",
+		Use:     use,
+		Short:   "Update the push-based log export feature for a project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

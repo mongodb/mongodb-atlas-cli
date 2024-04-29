@@ -101,9 +101,11 @@ func (opts *endOutageSimulationOpts) postRun(_ context.Context, w io.Writer) err
 
 func endOutageSimulationBuilder() *cobra.Command {
 	opts := endOutageSimulationOpts{}
+	const use = "endOutageSimulation"
 	cmd := &cobra.Command{
-		Use:   "endOutageSimulation",
-		Short: "End an Outage Simulation",
+		Use:     use,
+		Short:   "End an Outage Simulation",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -190,9 +192,11 @@ func (opts *getOutageSimulationOpts) postRun(_ context.Context, w io.Writer) err
 
 func getOutageSimulationBuilder() *cobra.Command {
 	opts := getOutageSimulationOpts{}
+	const use = "getOutageSimulation"
 	cmd := &cobra.Command{
-		Use:   "getOutageSimulation",
-		Short: "Return One Outage Simulation",
+		Use:     use,
+		Short:   "Return One Outage Simulation",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -312,9 +316,11 @@ func startOutageSimulationBuilder() *cobra.Command {
 	opts := startOutageSimulationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "startOutageSimulation"
 	cmd := &cobra.Command{
-		Use:   "startOutageSimulation",
-		Short: "Start an Outage Simulation",
+		Use:     use,
+		Short:   "Start an Outage Simulation",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

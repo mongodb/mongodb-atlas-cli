@@ -134,9 +134,11 @@ func createAtlasSearchDeploymentBuilder() *cobra.Command {
 	opts := createAtlasSearchDeploymentOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createAtlasSearchDeployment"
 	cmd := &cobra.Command{
-		Use:   "createAtlasSearchDeployment",
-		Short: "Create Search Nodes",
+		Use:     use,
+		Short:   "Create Search Nodes",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -258,9 +260,11 @@ func createAtlasSearchIndexBuilder() *cobra.Command {
 	opts := createAtlasSearchIndexOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createAtlasSearchIndex"
 	cmd := &cobra.Command{
-		Use:   "createAtlasSearchIndex",
-		Short: "Create One Atlas Search Index",
+		Use:     use,
+		Short:   "Create One Atlas Search Index",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -325,9 +329,11 @@ func (opts *deleteAtlasSearchDeploymentOpts) postRun(_ context.Context, _ io.Wri
 
 func deleteAtlasSearchDeploymentBuilder() *cobra.Command {
 	opts := deleteAtlasSearchDeploymentOpts{}
+	const use = "deleteAtlasSearchDeployment"
 	cmd := &cobra.Command{
-		Use:   "deleteAtlasSearchDeployment",
-		Short: "Delete Search Nodes",
+		Use:     use,
+		Short:   "Delete Search Nodes",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -415,9 +421,11 @@ func (opts *deleteAtlasSearchIndexOpts) postRun(_ context.Context, w io.Writer) 
 
 func deleteAtlasSearchIndexBuilder() *cobra.Command {
 	opts := deleteAtlasSearchIndexOpts{}
+	const use = "deleteAtlasSearchIndex"
 	cmd := &cobra.Command{
-		Use:   "deleteAtlasSearchIndex",
-		Short: "Remove One Atlas Search Index",
+		Use:     use,
+		Short:   "Remove One Atlas Search Index",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -506,9 +514,11 @@ func (opts *getAtlasSearchDeploymentOpts) postRun(_ context.Context, w io.Writer
 
 func getAtlasSearchDeploymentBuilder() *cobra.Command {
 	opts := getAtlasSearchDeploymentOpts{}
+	const use = "getAtlasSearchDeployment"
 	cmd := &cobra.Command{
-		Use:   "getAtlasSearchDeployment",
-		Short: "Return Search Nodes",
+		Use:     use,
+		Short:   "Return Search Nodes",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -597,9 +607,11 @@ func (opts *getAtlasSearchIndexOpts) postRun(_ context.Context, w io.Writer) err
 
 func getAtlasSearchIndexBuilder() *cobra.Command {
 	opts := getAtlasSearchIndexOpts{}
+	const use = "getAtlasSearchIndex"
 	cmd := &cobra.Command{
-		Use:   "getAtlasSearchIndex",
-		Short: "Return One Atlas Search Index",
+		Use:     use,
+		Short:   "Return One Atlas Search Index",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -692,9 +704,11 @@ func (opts *listAtlasSearchIndexesOpts) postRun(_ context.Context, w io.Writer) 
 
 func listAtlasSearchIndexesBuilder() *cobra.Command {
 	opts := listAtlasSearchIndexesOpts{}
+	const use = "listAtlasSearchIndexes"
 	cmd := &cobra.Command{
-		Use:   "listAtlasSearchIndexes",
-		Short: "Return All Atlas Search Indexes for One Collection",
+		Use:     use,
+		Short:   "Return All Atlas Search Indexes for One Collection",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -818,9 +832,11 @@ func updateAtlasSearchDeploymentBuilder() *cobra.Command {
 	opts := updateAtlasSearchDeploymentOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateAtlasSearchDeployment"
 	cmd := &cobra.Command{
-		Use:   "updateAtlasSearchDeployment",
-		Short: "Update Search Nodes",
+		Use:     use,
+		Short:   "Update Search Nodes",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -944,9 +960,11 @@ func updateAtlasSearchIndexBuilder() *cobra.Command {
 	opts := updateAtlasSearchIndexOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateAtlasSearchIndex"
 	cmd := &cobra.Command{
-		Use:   "updateAtlasSearchIndex",
-		Short: "Update One Atlas Search Index",
+		Use:     use,
+		Short:   "Update One Atlas Search Index",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

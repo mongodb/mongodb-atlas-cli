@@ -99,9 +99,11 @@ func (opts *getAuditingConfigurationOpts) postRun(_ context.Context, w io.Writer
 
 func getAuditingConfigurationBuilder() *cobra.Command {
 	opts := getAuditingConfigurationOpts{}
+	const use = "getAuditingConfiguration"
 	cmd := &cobra.Command{
-		Use:   "getAuditingConfiguration",
-		Short: "Return the Auditing Configuration for One Project",
+		Use:     use,
+		Short:   "Return the Auditing Configuration for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -217,9 +219,11 @@ func updateAuditingConfigurationBuilder() *cobra.Command {
 	opts := updateAuditingConfigurationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateAuditingConfiguration"
 	cmd := &cobra.Command{
-		Use:   "updateAuditingConfiguration",
-		Short: "Update Auditing Configuration for One Project",
+		Use:     use,
+		Short:   "Update Auditing Configuration for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

@@ -117,9 +117,11 @@ func createUserBuilder() *cobra.Command {
 	opts := createUserOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createUser"
 	cmd := &cobra.Command{
-		Use:   "createUser",
-		Short: "Create One MongoDB Cloud User",
+		Use:     use,
+		Short:   "Create One MongoDB Cloud User",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -192,9 +194,11 @@ func (opts *getUserOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getUserBuilder() *cobra.Command {
 	opts := getUserOpts{}
+	const use = "getUser"
 	cmd := &cobra.Command{
-		Use:   "getUser",
-		Short: "Return One MongoDB Cloud User using Its ID",
+		Use:     use,
+		Short:   "Return One MongoDB Cloud User using Its ID",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -267,9 +271,11 @@ func (opts *getUserByUsernameOpts) postRun(_ context.Context, w io.Writer) error
 
 func getUserByUsernameBuilder() *cobra.Command {
 	opts := getUserByUsernameOpts{}
+	const use = "getUserByUsername"
 	cmd := &cobra.Command{
-		Use:   "getUserByUsername",
-		Short: "Return One MongoDB Cloud User using Their Username",
+		Use:     use,
+		Short:   "Return One MongoDB Cloud User using Their Username",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

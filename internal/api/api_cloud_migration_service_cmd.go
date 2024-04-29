@@ -132,9 +132,11 @@ func createLinkTokenBuilder() *cobra.Command {
 	opts := createLinkTokenOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createLinkToken"
 	cmd := &cobra.Command{
-		Use:   "createLinkToken",
-		Short: "Create One Link-Token",
+		Use:     use,
+		Short:   "Create One Link-Token",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -252,9 +254,11 @@ func createPushMigrationBuilder() *cobra.Command {
 	opts := createPushMigrationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createPushMigration"
 	cmd := &cobra.Command{
-		Use:   "createPushMigration",
-		Short: "Migrate One Local Managed Cluster to MongoDB Atlas",
+		Use:     use,
+		Short:   "Migrate One Local Managed Cluster to MongoDB Atlas",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -317,9 +321,11 @@ func (opts *cutoverMigrationOpts) postRun(_ context.Context, _ io.Writer) error 
 
 func cutoverMigrationBuilder() *cobra.Command {
 	opts := cutoverMigrationOpts{}
+	const use = "cutoverMigration"
 	cmd := &cobra.Command{
-		Use:   "cutoverMigration",
-		Short: "Cut Over the Migrated Cluster",
+		Use:     use,
+		Short:   "Cut Over the Migrated Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -403,9 +409,11 @@ func (opts *deleteLinkTokenOpts) postRun(_ context.Context, w io.Writer) error {
 
 func deleteLinkTokenBuilder() *cobra.Command {
 	opts := deleteLinkTokenOpts{}
+	const use = "deleteLinkToken"
 	cmd := &cobra.Command{
-		Use:   "deleteLinkToken",
-		Short: "Remove One Link-Token",
+		Use:     use,
+		Short:   "Remove One Link-Token",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -490,9 +498,11 @@ func (opts *getPushMigrationOpts) postRun(_ context.Context, w io.Writer) error 
 
 func getPushMigrationBuilder() *cobra.Command {
 	opts := getPushMigrationOpts{}
+	const use = "getPushMigration"
 	cmd := &cobra.Command{
-		Use:   "getPushMigration",
-		Short: "Return One Migration Job",
+		Use:     use,
+		Short:   "Return One Migration Job",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -579,9 +589,11 @@ func (opts *getValidationStatusOpts) postRun(_ context.Context, w io.Writer) err
 
 func getValidationStatusBuilder() *cobra.Command {
 	opts := getValidationStatusOpts{}
+	const use = "getValidationStatus"
 	cmd := &cobra.Command{
-		Use:   "getValidationStatus",
-		Short: "Return One Migration Validation Job",
+		Use:     use,
+		Short:   "Return One Migration Validation Job",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -666,9 +678,11 @@ func (opts *listSourceProjectsOpts) postRun(_ context.Context, w io.Writer) erro
 
 func listSourceProjectsBuilder() *cobra.Command {
 	opts := listSourceProjectsOpts{}
+	const use = "listSourceProjects"
 	cmd := &cobra.Command{
-		Use:   "listSourceProjects",
-		Short: "Return All Projects Available for Migration",
+		Use:     use,
+		Short:   "Return All Projects Available for Migration",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -784,9 +798,11 @@ func validateMigrationBuilder() *cobra.Command {
 	opts := validateMigrationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "validateMigration"
 	cmd := &cobra.Command{
-		Use:   "validateMigration",
-		Short: "Validate One Migration Request",
+		Use:     use,
+		Short:   "Validate One Migration Request",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

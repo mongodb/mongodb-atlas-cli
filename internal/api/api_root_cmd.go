@@ -82,9 +82,11 @@ func (opts *getSystemStatusOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getSystemStatusBuilder() *cobra.Command {
 	opts := getSystemStatusOpts{}
+	const use = "getSystemStatus"
 	cmd := &cobra.Command{
-		Use:   "getSystemStatus",
-		Short: "Return the status of this MongoDB application",
+		Use:     use,
+		Short:   "Return the status of this MongoDB application",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -152,9 +154,11 @@ func (opts *returnAllControlPlaneIPAddressesOpts) postRun(_ context.Context, w i
 
 func returnAllControlPlaneIPAddressesBuilder() *cobra.Command {
 	opts := returnAllControlPlaneIPAddressesOpts{}
+	const use = "returnAllControlPlaneIPAddresses"
 	cmd := &cobra.Command{
-		Use:   "returnAllControlPlaneIPAddresses",
-		Short: "Return All Control Plane IP Addresses",
+		Use:     use,
+		Short:   "Return All Control Plane IP Addresses",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

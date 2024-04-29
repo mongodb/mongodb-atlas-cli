@@ -175,9 +175,11 @@ func createClusterBuilder() *cobra.Command {
 	opts := createClusterOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createCluster"
 	cmd := &cobra.Command{
-		Use:   "createCluster",
-		Short: "TEST DESCRIPTION",
+		Use:     use,
+		Short:   "TEST DESCRIPTION",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -244,9 +246,11 @@ func (opts *deleteClusterOpts) postRun(_ context.Context, _ io.Writer) error {
 
 func deleteClusterBuilder() *cobra.Command {
 	opts := deleteClusterOpts{}
+	const use = "deleteCluster"
 	cmd := &cobra.Command{
-		Use:   "deleteCluster",
-		Short: "Remove One Cluster from One Project",
+		Use:     use,
+		Short:   "Remove One Cluster from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -333,9 +337,11 @@ func (opts *getClusterOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getClusterBuilder() *cobra.Command {
 	opts := getClusterOpts{}
+	const use = "getCluster"
 	cmd := &cobra.Command{
-		Use:   "getCluster",
-		Short: "Return One Cluster from One Project",
+		Use:     use,
+		Short:   "Return One Cluster from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -422,9 +428,11 @@ func (opts *getClusterAdvancedConfigurationOpts) postRun(_ context.Context, w io
 
 func getClusterAdvancedConfigurationBuilder() *cobra.Command {
 	opts := getClusterAdvancedConfigurationOpts{}
+	const use = "getClusterAdvancedConfiguration"
 	cmd := &cobra.Command{
-		Use:   "getClusterAdvancedConfiguration",
-		Short: "Return One Advanced Configuration Options for One Cluster",
+		Use:     use,
+		Short:   "Return One Advanced Configuration Options for One Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -511,9 +519,11 @@ func (opts *getClusterStatusOpts) postRun(_ context.Context, w io.Writer) error 
 
 func getClusterStatusBuilder() *cobra.Command {
 	opts := getClusterStatusOpts{}
+	const use = "getClusterStatus"
 	cmd := &cobra.Command{
-		Use:   "getClusterStatus",
-		Short: "Return Status of All Cluster Operations",
+		Use:     use,
+		Short:   "Return Status of All Cluster Operations",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -600,9 +610,11 @@ func (opts *getSampleDatasetLoadStatusOpts) postRun(_ context.Context, w io.Writ
 
 func getSampleDatasetLoadStatusBuilder() *cobra.Command {
 	opts := getSampleDatasetLoadStatusOpts{}
+	const use = "getSampleDatasetLoadStatus"
 	cmd := &cobra.Command{
-		Use:   "getSampleDatasetLoadStatus",
-		Short: "Check Status of Cluster Sample Dataset Request",
+		Use:     use,
+		Short:   "Check Status of Cluster Sample Dataset Request",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -697,9 +709,11 @@ func (opts *listCloudProviderRegionsOpts) postRun(_ context.Context, w io.Writer
 
 func listCloudProviderRegionsBuilder() *cobra.Command {
 	opts := listCloudProviderRegionsOpts{}
+	const use = "listCloudProviderRegions"
 	cmd := &cobra.Command{
-		Use:   "listCloudProviderRegions",
-		Short: "Return All Cloud Provider Regions",
+		Use:     use,
+		Short:   "Return All Cloud Provider Regions",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -795,9 +809,11 @@ func (opts *listClustersOpts) postRun(_ context.Context, w io.Writer) error {
 
 func listClustersBuilder() *cobra.Command {
 	opts := listClustersOpts{}
+	const use = "listClusters"
 	cmd := &cobra.Command{
-		Use:   "listClusters",
-		Short: "Return All Clusters in One Project",
+		Use:     use,
+		Short:   "Return All Clusters in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -877,9 +893,11 @@ func (opts *listClustersForAllProjectsOpts) postRun(_ context.Context, w io.Writ
 
 func listClustersForAllProjectsBuilder() *cobra.Command {
 	opts := listClustersForAllProjectsOpts{}
+	const use = "listClustersForAllProjects"
 	cmd := &cobra.Command{
-		Use:   "listClustersForAllProjects",
-		Short: "Return All Authorized Clusters in All Projects",
+		Use:     use,
+		Short:   "Return All Authorized Clusters in All Projects",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -966,9 +984,11 @@ func (opts *loadSampleDatasetOpts) postRun(_ context.Context, w io.Writer) error
 
 func loadSampleDatasetBuilder() *cobra.Command {
 	opts := loadSampleDatasetOpts{}
+	const use = "loadSampleDataset"
 	cmd := &cobra.Command{
-		Use:   "loadSampleDataset",
-		Short: "Load Sample Dataset Request into Cluster",
+		Use:     use,
+		Short:   "Load Sample Dataset Request into Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1031,9 +1051,11 @@ func (opts *testFailoverOpts) postRun(_ context.Context, _ io.Writer) error {
 
 func testFailoverBuilder() *cobra.Command {
 	opts := testFailoverOpts{}
+	const use = "testFailover"
 	cmd := &cobra.Command{
-		Use:   "testFailover",
-		Short: "Test Failover for One Cluster",
+		Use:     use,
+		Short:   "Test Failover for One Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1152,9 +1174,11 @@ func updateClusterBuilder() *cobra.Command {
 	opts := updateClusterOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateCluster"
 	cmd := &cobra.Command{
-		Use:   "updateCluster",
-		Short: "Modify One Cluster from One Project",
+		Use:     use,
+		Short:   "Modify One Cluster from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1276,9 +1300,11 @@ func updateClusterAdvancedConfigurationBuilder() *cobra.Command {
 	opts := updateClusterAdvancedConfigurationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateClusterAdvancedConfiguration"
 	cmd := &cobra.Command{
-		Use:   "updateClusterAdvancedConfiguration",
-		Short: "Update Advanced Configuration Options for One Cluster",
+		Use:     use,
+		Short:   "Update Advanced Configuration Options for One Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1398,9 +1424,11 @@ func upgradeSharedClusterBuilder() *cobra.Command {
 	opts := upgradeSharedClusterOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "upgradeSharedCluster"
 	cmd := &cobra.Command{
-		Use:   "upgradeSharedCluster",
-		Short: "Upgrade One Shared-tier Cluster",
+		Use:     use,
+		Short:   "Upgrade One Shared-tier Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1518,9 +1546,11 @@ func upgradeSharedClusterToServerlessBuilder() *cobra.Command {
 	opts := upgradeSharedClusterToServerlessOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "upgradeSharedClusterToServerless"
 	cmd := &cobra.Command{
-		Use:   "upgradeSharedClusterToServerless",
-		Short: "Upgrades One Shared-Tier Cluster to the Serverless Instance",
+		Use:     use,
+		Short:   "Upgrades One Shared-Tier Cluster to the Serverless Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

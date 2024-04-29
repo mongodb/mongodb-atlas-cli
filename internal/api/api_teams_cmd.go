@@ -132,9 +132,11 @@ func addAllTeamsToProjectBuilder() *cobra.Command {
 	opts := addAllTeamsToProjectOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "addAllTeamsToProject"
 	cmd := &cobra.Command{
-		Use:   "addAllTeamsToProject",
-		Short: "Add One or More Teams to One Project",
+		Use:     use,
+		Short:   "Add One or More Teams to One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -254,9 +256,11 @@ func addTeamUserBuilder() *cobra.Command {
 	opts := addTeamUserOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "addTeamUser"
 	cmd := &cobra.Command{
-		Use:   "addTeamUser",
-		Short: "Assign MongoDB Cloud Users from One Organization to One Team",
+		Use:     use,
+		Short:   "Assign MongoDB Cloud Users from One Organization to One Team",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -376,9 +380,11 @@ func createTeamBuilder() *cobra.Command {
 	opts := createTeamOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createTeam"
 	cmd := &cobra.Command{
-		Use:   "createTeam",
-		Short: "Create One Team in One Organization",
+		Use:     use,
+		Short:   "Create One Team in One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -465,9 +471,11 @@ func (opts *deleteTeamOpts) postRun(_ context.Context, w io.Writer) error {
 
 func deleteTeamBuilder() *cobra.Command {
 	opts := deleteTeamOpts{}
+	const use = "deleteTeam"
 	cmd := &cobra.Command{
-		Use:   "deleteTeam",
-		Short: "Remove One Team from One Organization",
+		Use:     use,
+		Short:   "Remove One Team from One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -554,9 +562,11 @@ func (opts *getTeamByIdOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getTeamByIdBuilder() *cobra.Command {
 	opts := getTeamByIdOpts{}
+	const use = "getTeamById"
 	cmd := &cobra.Command{
-		Use:   "getTeamById",
-		Short: "Return One Team using its ID",
+		Use:     use,
+		Short:   "Return One Team using its ID",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -643,9 +653,11 @@ func (opts *getTeamByNameOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getTeamByNameBuilder() *cobra.Command {
 	opts := getTeamByNameOpts{}
+	const use = "getTeamByName"
 	cmd := &cobra.Command{
-		Use:   "getTeamByName",
-		Short: "Return One Team using its Name",
+		Use:     use,
+		Short:   "Return One Team using its Name",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -736,9 +748,11 @@ func (opts *listOrganizationTeamsOpts) postRun(_ context.Context, w io.Writer) e
 
 func listOrganizationTeamsBuilder() *cobra.Command {
 	opts := listOrganizationTeamsOpts{}
+	const use = "listOrganizationTeams"
 	cmd := &cobra.Command{
-		Use:   "listOrganizationTeams",
-		Short: "Return All Teams in One Organization",
+		Use:     use,
+		Short:   "Return All Teams in One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -830,9 +844,11 @@ func (opts *listProjectTeamsOpts) postRun(_ context.Context, w io.Writer) error 
 
 func listProjectTeamsBuilder() *cobra.Command {
 	opts := listProjectTeamsOpts{}
+	const use = "listProjectTeams"
 	cmd := &cobra.Command{
-		Use:   "listProjectTeams",
-		Short: "Return All Teams in One Project",
+		Use:     use,
+		Short:   "Return All Teams in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -924,9 +940,11 @@ func (opts *listTeamUsersOpts) postRun(_ context.Context, w io.Writer) error {
 
 func listTeamUsersBuilder() *cobra.Command {
 	opts := listTeamUsersOpts{}
+	const use = "listTeamUsers"
 	cmd := &cobra.Command{
-		Use:   "listTeamUsers",
-		Short: "Return All MongoDB Cloud Users Assigned to One Team",
+		Use:     use,
+		Short:   "Return All MongoDB Cloud Users Assigned to One Team",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -991,9 +1009,11 @@ func (opts *removeProjectTeamOpts) postRun(_ context.Context, _ io.Writer) error
 
 func removeProjectTeamBuilder() *cobra.Command {
 	opts := removeProjectTeamOpts{}
+	const use = "removeProjectTeam"
 	cmd := &cobra.Command{
-		Use:   "removeProjectTeam",
-		Short: "Remove One Team from One Project",
+		Use:     use,
+		Short:   "Remove One Team from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1057,9 +1077,11 @@ func (opts *removeTeamUserOpts) postRun(_ context.Context, _ io.Writer) error {
 
 func removeTeamUserBuilder() *cobra.Command {
 	opts := removeTeamUserOpts{}
+	const use = "removeTeamUser"
 	cmd := &cobra.Command{
-		Use:   "removeTeamUser",
-		Short: "Remove One MongoDB Cloud User from One Team",
+		Use:     use,
+		Short:   "Remove One MongoDB Cloud User from One Team",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1180,9 +1202,11 @@ func renameTeamBuilder() *cobra.Command {
 	opts := renameTeamOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "renameTeam"
 	cmd := &cobra.Command{
-		Use:   "renameTeam",
-		Short: "Rename One Team",
+		Use:     use,
+		Short:   "Rename One Team",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1304,9 +1328,11 @@ func updateTeamRolesBuilder() *cobra.Command {
 	opts := updateTeamRolesOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateTeamRoles"
 	cmd := &cobra.Command{
-		Use:   "updateTeamRoles",
-		Short: "Update Team Roles in One Project",
+		Use:     use,
+		Short:   "Update Team Roles in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

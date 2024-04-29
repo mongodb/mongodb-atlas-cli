@@ -101,9 +101,11 @@ func (opts *getAtlasProcessOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getAtlasProcessBuilder() *cobra.Command {
 	opts := getAtlasProcessOpts{}
+	const use = "getAtlasProcess"
 	cmd := &cobra.Command{
-		Use:   "getAtlasProcess",
-		Short: "Return One MongoDB Process by ID",
+		Use:     use,
+		Short:   "Return One MongoDB Process by ID",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -192,9 +194,11 @@ func (opts *getDatabaseOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getDatabaseBuilder() *cobra.Command {
 	opts := getDatabaseOpts{}
+	const use = "getDatabase"
 	cmd := &cobra.Command{
-		Use:   "getDatabase",
-		Short: "Return One Database for a MongoDB Process",
+		Use:     use,
+		Short:   "Return One Database for a MongoDB Process",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -313,9 +317,11 @@ func (opts *getDatabaseMeasurementsOpts) postRun(_ context.Context, w io.Writer)
 
 func getDatabaseMeasurementsBuilder() *cobra.Command {
 	opts := getDatabaseMeasurementsOpts{}
+	const use = "getDatabaseMeasurements"
 	cmd := &cobra.Command{
-		Use:   "getDatabaseMeasurements",
-		Short: "Return Measurements of One Database for One MongoDB Process",
+		Use:     use,
+		Short:   "Return Measurements of One Database for One MongoDB Process",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -440,9 +446,11 @@ func (opts *getDiskMeasurementsOpts) postRun(_ context.Context, w io.Writer) err
 
 func getDiskMeasurementsBuilder() *cobra.Command {
 	opts := getDiskMeasurementsOpts{}
+	const use = "getDiskMeasurements"
 	cmd := &cobra.Command{
-		Use:   "getDiskMeasurements",
-		Short: "Return Measurements of One Disk for One MongoDB Process",
+		Use:     use,
+		Short:   "Return Measurements of One Disk for One MongoDB Process",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -543,9 +551,11 @@ func (opts *getHostLogsOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getHostLogsBuilder() *cobra.Command {
 	opts := getHostLogsOpts{}
+	const use = "getHostLogs"
 	cmd := &cobra.Command{
-		Use:   "getHostLogs",
-		Short: "Download Logs for One Cluster Host in One Project",
+		Use:     use,
+		Short:   "Download Logs for One Cluster Host in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -664,9 +674,11 @@ func (opts *getHostMeasurementsOpts) postRun(_ context.Context, w io.Writer) err
 
 func getHostMeasurementsBuilder() *cobra.Command {
 	opts := getHostMeasurementsOpts{}
+	const use = "getHostMeasurements"
 	cmd := &cobra.Command{
-		Use:   "getHostMeasurements",
-		Short: "Return Measurements for One MongoDB Process",
+		Use:     use,
+		Short:   "Return Measurements for One MongoDB Process",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -793,9 +805,11 @@ func (opts *getIndexMetricsOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getIndexMetricsBuilder() *cobra.Command {
 	opts := getIndexMetricsOpts{}
+	const use = "getIndexMetrics"
 	cmd := &cobra.Command{
-		Use:   "getIndexMetrics",
-		Short: "Return Atlas Search Metrics for One Index in One Specified Namespace",
+		Use:     use,
+		Short:   "Return Atlas Search Metrics for One Index in One Specified Namespace",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -923,9 +937,11 @@ func (opts *getMeasurementsOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getMeasurementsBuilder() *cobra.Command {
 	opts := getMeasurementsOpts{}
+	const use = "getMeasurements"
 	cmd := &cobra.Command{
-		Use:   "getMeasurements",
-		Short: "Return Atlas Search Hardware and Status Metrics",
+		Use:     use,
+		Short:   "Return Atlas Search Hardware and Status Metrics",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1023,9 +1039,11 @@ func (opts *listAtlasProcessesOpts) postRun(_ context.Context, w io.Writer) erro
 
 func listAtlasProcessesBuilder() *cobra.Command {
 	opts := listAtlasProcessesOpts{}
+	const use = "listAtlasProcesses"
 	cmd := &cobra.Command{
-		Use:   "listAtlasProcesses",
-		Short: "Return All MongoDB Processes in One Project",
+		Use:     use,
+		Short:   "Return All MongoDB Processes in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1119,9 +1137,11 @@ func (opts *listDatabasesOpts) postRun(_ context.Context, w io.Writer) error {
 
 func listDatabasesBuilder() *cobra.Command {
 	opts := listDatabasesOpts{}
+	const use = "listDatabases"
 	cmd := &cobra.Command{
-		Use:   "listDatabases",
-		Short: "Return Available Databases for One MongoDB Process",
+		Use:     use,
+		Short:   "Return Available Databases for One MongoDB Process",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1213,9 +1233,11 @@ func (opts *listDiskMeasurementsOpts) postRun(_ context.Context, w io.Writer) er
 
 func listDiskMeasurementsBuilder() *cobra.Command {
 	opts := listDiskMeasurementsOpts{}
+	const use = "listDiskMeasurements"
 	cmd := &cobra.Command{
-		Use:   "listDiskMeasurements",
-		Short: "Return Measurements of One Disk",
+		Use:     use,
+		Short:   "Return Measurements of One Disk",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1310,9 +1332,11 @@ func (opts *listDiskPartitionsOpts) postRun(_ context.Context, w io.Writer) erro
 
 func listDiskPartitionsBuilder() *cobra.Command {
 	opts := listDiskPartitionsOpts{}
+	const use = "listDiskPartitions"
 	cmd := &cobra.Command{
-		Use:   "listDiskPartitions",
-		Short: "Return Available Disks for One MongoDB Process",
+		Use:     use,
+		Short:   "Return Available Disks for One MongoDB Process",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1434,9 +1458,11 @@ func (opts *listIndexMetricsOpts) postRun(_ context.Context, w io.Writer) error 
 
 func listIndexMetricsBuilder() *cobra.Command {
 	opts := listIndexMetricsOpts{}
+	const use = "listIndexMetrics"
 	cmd := &cobra.Command{
-		Use:   "listIndexMetrics",
-		Short: "Return All Atlas Search Index Metrics for One Namespace",
+		Use:     use,
+		Short:   "Return All Atlas Search Index Metrics for One Namespace",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1534,9 +1560,11 @@ func (opts *listMetricTypesOpts) postRun(_ context.Context, w io.Writer) error {
 
 func listMetricTypesBuilder() *cobra.Command {
 	opts := listMetricTypesOpts{}
+	const use = "listMetricTypes"
 	cmd := &cobra.Command{
-		Use:   "listMetricTypes",
-		Short: "Return All Atlas Search Metric Types for One Process",
+		Use:     use,
+		Short:   "Return All Atlas Search Metric Types for One Process",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

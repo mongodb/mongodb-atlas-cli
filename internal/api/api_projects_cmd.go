@@ -132,9 +132,11 @@ func addUserToProjectBuilder() *cobra.Command {
 	opts := addUserToProjectOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "addUserToProject"
 	cmd := &cobra.Command{
-		Use:   "addUserToProject",
-		Short: "Add One MongoDB Cloud User to One Project",
+		Use:     use,
+		Short:   "Add One MongoDB Cloud User to One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -242,9 +244,11 @@ func createProjectBuilder() *cobra.Command {
 	opts := createProjectOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createProject"
 	cmd := &cobra.Command{
-		Use:   "createProject",
-		Short: "Create One Project",
+		Use:     use,
+		Short:   "Create One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -362,9 +366,11 @@ func createProjectInvitationBuilder() *cobra.Command {
 	opts := createProjectInvitationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createProjectInvitation"
 	cmd := &cobra.Command{
-		Use:   "createProjectInvitation",
-		Short: "Invite One MongoDB Cloud User to Join One Project",
+		Use:     use,
+		Short:   "Invite One MongoDB Cloud User to Join One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -449,9 +455,11 @@ func (opts *deleteProjectOpts) postRun(_ context.Context, w io.Writer) error {
 
 func deleteProjectBuilder() *cobra.Command {
 	opts := deleteProjectOpts{}
+	const use = "deleteProject"
 	cmd := &cobra.Command{
-		Use:   "deleteProject",
-		Short: "Remove One Project",
+		Use:     use,
+		Short:   "Remove One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -536,9 +544,11 @@ func (opts *deleteProjectInvitationOpts) postRun(_ context.Context, w io.Writer)
 
 func deleteProjectInvitationBuilder() *cobra.Command {
 	opts := deleteProjectInvitationOpts{}
+	const use = "deleteProjectInvitation"
 	cmd := &cobra.Command{
-		Use:   "deleteProjectInvitation",
-		Short: "Cancel One Project Invitation",
+		Use:     use,
+		Short:   "Cancel One Project Invitation",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -625,9 +635,11 @@ func (opts *deleteProjectLimitOpts) postRun(_ context.Context, w io.Writer) erro
 
 func deleteProjectLimitBuilder() *cobra.Command {
 	opts := deleteProjectLimitOpts{}
+	const use = "deleteProjectLimit"
 	cmd := &cobra.Command{
-		Use:   "deleteProjectLimit",
-		Short: "Remove One Project Limit",
+		Use:     use,
+		Short:   "Remove One Project Limit",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -728,9 +740,11 @@ func (opts *getProjectOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getProjectBuilder() *cobra.Command {
 	opts := getProjectOpts{}
+	const use = "getProject"
 	cmd := &cobra.Command{
-		Use:   "getProject",
-		Short: "Return One Project",
+		Use:     use,
+		Short:   "Return One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -802,9 +816,11 @@ func (opts *getProjectByNameOpts) postRun(_ context.Context, w io.Writer) error 
 
 func getProjectByNameBuilder() *cobra.Command {
 	opts := getProjectByNameOpts{}
+	const use = "getProjectByName"
 	cmd := &cobra.Command{
-		Use:   "getProjectByName",
-		Short: "Return One Project using Its Name",
+		Use:     use,
+		Short:   "Return One Project using Its Name",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -890,9 +906,11 @@ func (opts *getProjectInvitationOpts) postRun(_ context.Context, w io.Writer) er
 
 func getProjectInvitationBuilder() *cobra.Command {
 	opts := getProjectInvitationOpts{}
+	const use = "getProjectInvitation"
 	cmd := &cobra.Command{
-		Use:   "getProjectInvitation",
-		Short: "Return One Project Invitation",
+		Use:     use,
+		Short:   "Return One Project Invitation",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -979,9 +997,11 @@ func (opts *getProjectLimitOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getProjectLimitBuilder() *cobra.Command {
 	opts := getProjectLimitOpts{}
+	const use = "getProjectLimit"
 	cmd := &cobra.Command{
-		Use:   "getProjectLimit",
-		Short: "Return One Limit for One Project",
+		Use:     use,
+		Short:   "Return One Limit for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1082,9 +1102,11 @@ func (opts *getProjectSettingsOpts) postRun(_ context.Context, w io.Writer) erro
 
 func getProjectSettingsBuilder() *cobra.Command {
 	opts := getProjectSettingsOpts{}
+	const use = "getProjectSettings"
 	cmd := &cobra.Command{
-		Use:   "getProjectSettings",
-		Short: "Return One Project Settings",
+		Use:     use,
+		Short:   "Return One Project Settings",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1169,9 +1191,11 @@ func (opts *listProjectInvitationsOpts) postRun(_ context.Context, w io.Writer) 
 
 func listProjectInvitationsBuilder() *cobra.Command {
 	opts := listProjectInvitationsOpts{}
+	const use = "listProjectInvitations"
 	cmd := &cobra.Command{
-		Use:   "listProjectInvitations",
-		Short: "Return All Project Invitations",
+		Use:     use,
+		Short:   "Return All Project Invitations",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1255,9 +1279,11 @@ func (opts *listProjectLimitsOpts) postRun(_ context.Context, w io.Writer) error
 
 func listProjectLimitsBuilder() *cobra.Command {
 	opts := listProjectLimitsOpts{}
+	const use = "listProjectLimits"
 	cmd := &cobra.Command{
-		Use:   "listProjectLimits",
-		Short: "Return All Limits for One Project",
+		Use:     use,
+		Short:   "Return All Limits for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1350,9 +1376,11 @@ func (opts *listProjectUsersOpts) postRun(_ context.Context, w io.Writer) error 
 
 func listProjectUsersBuilder() *cobra.Command {
 	opts := listProjectUsersOpts{}
+	const use = "listProjectUsers"
 	cmd := &cobra.Command{
-		Use:   "listProjectUsers",
-		Short: "Return All Users in One Project",
+		Use:     use,
+		Short:   "Return All Users in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1433,9 +1461,11 @@ func (opts *listProjectsOpts) postRun(_ context.Context, w io.Writer) error {
 
 func listProjectsBuilder() *cobra.Command {
 	opts := listProjectsOpts{}
+	const use = "listProjects"
 	cmd := &cobra.Command{
-		Use:   "listProjects",
-		Short: "Return All Projects",
+		Use:     use,
+		Short:   "Return All Projects",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1498,9 +1528,11 @@ func (opts *removeProjectUserOpts) postRun(_ context.Context, _ io.Writer) error
 
 func removeProjectUserBuilder() *cobra.Command {
 	opts := removeProjectUserOpts{}
+	const use = "removeProjectUser"
 	cmd := &cobra.Command{
-		Use:   "removeProjectUser",
-		Short: "Remove One User from One Project",
+		Use:     use,
+		Short:   "Remove One User from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1584,9 +1616,11 @@ func (opts *returnAllIPAddressesOpts) postRun(_ context.Context, w io.Writer) er
 
 func returnAllIPAddressesBuilder() *cobra.Command {
 	opts := returnAllIPAddressesOpts{}
+	const use = "returnAllIPAddresses"
 	cmd := &cobra.Command{
-		Use:   "returnAllIPAddresses",
-		Short: "Return All IP Addresses for One Project",
+		Use:     use,
+		Short:   "Return All IP Addresses for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1704,9 +1738,11 @@ func setProjectLimitBuilder() *cobra.Command {
 	opts := setProjectLimitOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "setProjectLimit"
 	cmd := &cobra.Command{
-		Use:   "setProjectLimit",
-		Short: "Set One Project Limit",
+		Use:     use,
+		Short:   "Set One Project Limit",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1842,9 +1878,11 @@ func updateProjectBuilder() *cobra.Command {
 	opts := updateProjectOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateProject"
 	cmd := &cobra.Command{
-		Use:   "updateProject",
-		Short: "Update One Project",
+		Use:     use,
+		Short:   "Update One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1962,9 +2000,11 @@ func updateProjectInvitationBuilder() *cobra.Command {
 	opts := updateProjectInvitationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateProjectInvitation"
 	cmd := &cobra.Command{
-		Use:   "updateProjectInvitation",
-		Short: "Update One Project Invitation",
+		Use:     use,
+		Short:   "Update One Project Invitation",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -2084,9 +2124,11 @@ func updateProjectInvitationByIdBuilder() *cobra.Command {
 	opts := updateProjectInvitationByIdOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateProjectInvitationById"
 	cmd := &cobra.Command{
-		Use:   "updateProjectInvitationById",
-		Short: "Update One Project Invitation by Invitation ID",
+		Use:     use,
+		Short:   "Update One Project Invitation by Invitation ID",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -2208,9 +2250,11 @@ func updateProjectRolesBuilder() *cobra.Command {
 	opts := updateProjectRolesOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateProjectRoles"
 	cmd := &cobra.Command{
-		Use:   "updateProjectRoles",
-		Short: "Update Project Roles for One MongoDB Cloud User",
+		Use:     use,
+		Short:   "Update Project Roles for One MongoDB Cloud User",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -2330,9 +2374,11 @@ func updateProjectSettingsBuilder() *cobra.Command {
 	opts := updateProjectSettingsOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateProjectSettings"
 	cmd := &cobra.Command{
-		Use:   "updateProjectSettings",
-		Short: "Update One Project Settings",
+		Use:     use,
+		Short:   "Update One Project Settings",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

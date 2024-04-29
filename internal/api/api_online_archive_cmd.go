@@ -134,9 +134,11 @@ func createOnlineArchiveBuilder() *cobra.Command {
 	opts := createOnlineArchiveOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createOnlineArchive"
 	cmd := &cobra.Command{
-		Use:   "createOnlineArchive",
-		Short: "Create One Online Archive",
+		Use:     use,
+		Short:   "Create One Online Archive",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -227,9 +229,11 @@ func (opts *deleteOnlineArchiveOpts) postRun(_ context.Context, w io.Writer) err
 
 func deleteOnlineArchiveBuilder() *cobra.Command {
 	opts := deleteOnlineArchiveOpts{}
+	const use = "deleteOnlineArchive"
 	cmd := &cobra.Command{
-		Use:   "deleteOnlineArchive",
-		Short: "Remove One Online Archive",
+		Use:     use,
+		Short:   "Remove One Online Archive",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -324,9 +328,11 @@ func (opts *downloadOnlineArchiveQueryLogsOpts) postRun(_ context.Context, w io.
 
 func downloadOnlineArchiveQueryLogsBuilder() *cobra.Command {
 	opts := downloadOnlineArchiveQueryLogsOpts{}
+	const use = "downloadOnlineArchiveQueryLogs"
 	cmd := &cobra.Command{
-		Use:   "downloadOnlineArchiveQueryLogs",
-		Short: "Download Online Archive Query Logs",
+		Use:     use,
+		Short:   "Download Online Archive Query Logs",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -418,9 +424,11 @@ func (opts *getOnlineArchiveOpts) postRun(_ context.Context, w io.Writer) error 
 
 func getOnlineArchiveBuilder() *cobra.Command {
 	opts := getOnlineArchiveOpts{}
+	const use = "getOnlineArchive"
 	cmd := &cobra.Command{
-		Use:   "getOnlineArchive",
-		Short: "Return One Online Archive",
+		Use:     use,
+		Short:   "Return One Online Archive",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -515,9 +523,11 @@ func (opts *listOnlineArchivesOpts) postRun(_ context.Context, w io.Writer) erro
 
 func listOnlineArchivesBuilder() *cobra.Command {
 	opts := listOnlineArchivesOpts{}
+	const use = "listOnlineArchives"
 	cmd := &cobra.Command{
-		Use:   "listOnlineArchives",
-		Short: "Return All Online Archives for One Cluster",
+		Use:     use,
+		Short:   "Return All Online Archives for One Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -642,9 +652,11 @@ func updateOnlineArchiveBuilder() *cobra.Command {
 	opts := updateOnlineArchiveOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateOnlineArchive"
 	cmd := &cobra.Command{
-		Use:   "updateOnlineArchive",
-		Short: "Update One Online Archive",
+		Use:     use,
+		Short:   "Update One Online Archive",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

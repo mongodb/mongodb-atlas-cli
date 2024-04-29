@@ -132,9 +132,11 @@ func createDataFederationPrivateEndpointBuilder() *cobra.Command {
 	opts := createDataFederationPrivateEndpointOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createDataFederationPrivateEndpoint"
 	cmd := &cobra.Command{
-		Use:   "createDataFederationPrivateEndpoint",
-		Short: "Create One Federated Database Instance and Online Archive Private Endpoint for One Project",
+		Use:     use,
+		Short:   "Create One Federated Database Instance and Online Archive Private Endpoint for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -255,9 +257,11 @@ func createFederatedDatabaseBuilder() *cobra.Command {
 	opts := createFederatedDatabaseOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createFederatedDatabase"
 	cmd := &cobra.Command{
-		Use:   "createFederatedDatabase",
-		Short: "Create One Federated Database Instance in One Project",
+		Use:     use,
+		Short:   "Create One Federated Database Instance in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -380,9 +384,11 @@ func createOneDataFederationQueryLimitBuilder() *cobra.Command {
 	opts := createOneDataFederationQueryLimitOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createOneDataFederationQueryLimit"
 	cmd := &cobra.Command{
-		Use:   "createOneDataFederationQueryLimit",
-		Short: "Configure One Query Limit for One Federated Database Instance",
+		Use:     use,
+		Short:   "Configure One Query Limit for One Federated Database Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -481,9 +487,11 @@ func (opts *deleteDataFederationPrivateEndpointOpts) postRun(_ context.Context, 
 
 func deleteDataFederationPrivateEndpointBuilder() *cobra.Command {
 	opts := deleteDataFederationPrivateEndpointOpts{}
+	const use = "deleteDataFederationPrivateEndpoint"
 	cmd := &cobra.Command{
-		Use:   "deleteDataFederationPrivateEndpoint",
-		Short: "Remove One Federated Database Instance and Online Archive Private Endpoint from One Project",
+		Use:     use,
+		Short:   "Remove One Federated Database Instance and Online Archive Private Endpoint from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -570,9 +578,11 @@ func (opts *deleteFederatedDatabaseOpts) postRun(_ context.Context, w io.Writer)
 
 func deleteFederatedDatabaseBuilder() *cobra.Command {
 	opts := deleteFederatedDatabaseOpts{}
+	const use = "deleteFederatedDatabase"
 	cmd := &cobra.Command{
-		Use:   "deleteFederatedDatabase",
-		Short: "Remove One Federated Database Instance from One Project",
+		Use:     use,
+		Short:   "Remove One Federated Database Instance from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -661,9 +671,11 @@ func (opts *deleteOneDataFederationInstanceQueryLimitOpts) postRun(_ context.Con
 
 func deleteOneDataFederationInstanceQueryLimitBuilder() *cobra.Command {
 	opts := deleteOneDataFederationInstanceQueryLimitOpts{}
+	const use = "deleteOneDataFederationInstanceQueryLimit"
 	cmd := &cobra.Command{
-		Use:   "deleteOneDataFederationInstanceQueryLimit",
-		Short: "Delete One Query Limit For One Federated Database Instance",
+		Use:     use,
+		Short:   "Delete One Query Limit For One Federated Database Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -764,9 +776,11 @@ func (opts *downloadFederatedDatabaseQueryLogsOpts) postRun(_ context.Context, w
 
 func downloadFederatedDatabaseQueryLogsBuilder() *cobra.Command {
 	opts := downloadFederatedDatabaseQueryLogsOpts{}
+	const use = "downloadFederatedDatabaseQueryLogs"
 	cmd := &cobra.Command{
-		Use:   "downloadFederatedDatabaseQueryLogs",
-		Short: "Download Query Logs for One Federated Database Instance",
+		Use:     use,
+		Short:   "Download Query Logs for One Federated Database Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -855,9 +869,11 @@ func (opts *getDataFederationPrivateEndpointOpts) postRun(_ context.Context, w i
 
 func getDataFederationPrivateEndpointBuilder() *cobra.Command {
 	opts := getDataFederationPrivateEndpointOpts{}
+	const use = "getDataFederationPrivateEndpoint"
 	cmd := &cobra.Command{
-		Use:   "getDataFederationPrivateEndpoint",
-		Short: "Return One Federated Database Instance and Online Archive Private Endpoint in One Project",
+		Use:     use,
+		Short:   "Return One Federated Database Instance and Online Archive Private Endpoint in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -944,9 +960,11 @@ func (opts *getFederatedDatabaseOpts) postRun(_ context.Context, w io.Writer) er
 
 func getFederatedDatabaseBuilder() *cobra.Command {
 	opts := getFederatedDatabaseOpts{}
+	const use = "getFederatedDatabase"
 	cmd := &cobra.Command{
-		Use:   "getFederatedDatabase",
-		Short: "Return One Federated Database Instance in One Project",
+		Use:     use,
+		Short:   "Return One Federated Database Instance in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1037,9 +1055,11 @@ func (opts *listDataFederationPrivateEndpointsOpts) postRun(_ context.Context, w
 
 func listDataFederationPrivateEndpointsBuilder() *cobra.Command {
 	opts := listDataFederationPrivateEndpointsOpts{}
+	const use = "listDataFederationPrivateEndpoints"
 	cmd := &cobra.Command{
-		Use:   "listDataFederationPrivateEndpoints",
-		Short: "Return All Federated Database Instance and Online Archive Private Endpoints in One Project",
+		Use:     use,
+		Short:   "Return All Federated Database Instance and Online Archive Private Endpoints in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1127,9 +1147,11 @@ func (opts *listFederatedDatabasesOpts) postRun(_ context.Context, w io.Writer) 
 
 func listFederatedDatabasesBuilder() *cobra.Command {
 	opts := listFederatedDatabasesOpts{}
+	const use = "listFederatedDatabases"
 	cmd := &cobra.Command{
-		Use:   "listFederatedDatabases",
-		Short: "Return All Federated Database Instances in One Project",
+		Use:     use,
+		Short:   "Return All Federated Database Instances in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1217,9 +1239,11 @@ func (opts *returnFederatedDatabaseQueryLimitOpts) postRun(_ context.Context, w 
 
 func returnFederatedDatabaseQueryLimitBuilder() *cobra.Command {
 	opts := returnFederatedDatabaseQueryLimitOpts{}
+	const use = "returnFederatedDatabaseQueryLimit"
 	cmd := &cobra.Command{
-		Use:   "returnFederatedDatabaseQueryLimit",
-		Short: "Return One Federated Database Instance Query Limit for One Project",
+		Use:     use,
+		Short:   "Return One Federated Database Instance Query Limit for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1316,9 +1340,11 @@ func (opts *returnFederatedDatabaseQueryLimitsOpts) postRun(_ context.Context, w
 
 func returnFederatedDatabaseQueryLimitsBuilder() *cobra.Command {
 	opts := returnFederatedDatabaseQueryLimitsOpts{}
+	const use = "returnFederatedDatabaseQueryLimits"
 	cmd := &cobra.Command{
-		Use:   "returnFederatedDatabaseQueryLimits",
-		Short: "Return All Query Limits for One Federated Database Instance",
+		Use:     use,
+		Short:   "Return All Query Limits for One Federated Database Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1440,9 +1466,11 @@ func updateFederatedDatabaseBuilder() *cobra.Command {
 	opts := updateFederatedDatabaseOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateFederatedDatabase"
 	cmd := &cobra.Command{
-		Use:   "updateFederatedDatabase",
-		Short: "Update One Federated Database Instance in One Project",
+		Use:     use,
+		Short:   "Update One Federated Database Instance in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

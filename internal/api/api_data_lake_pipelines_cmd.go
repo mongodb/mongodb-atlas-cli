@@ -133,9 +133,11 @@ func createPipelineBuilder() *cobra.Command {
 	opts := createPipelineOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createPipeline"
 	cmd := &cobra.Command{
-		Use:   "createPipeline",
-		Short: "Create One Data Lake Pipeline",
+		Use:     use,
+		Short:   "Create One Data Lake Pipeline",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -222,9 +224,11 @@ func (opts *deletePipelineOpts) postRun(_ context.Context, w io.Writer) error {
 
 func deletePipelineBuilder() *cobra.Command {
 	opts := deletePipelineOpts{}
+	const use = "deletePipeline"
 	cmd := &cobra.Command{
-		Use:   "deletePipeline",
-		Short: "Remove One Data Lake Pipeline",
+		Use:     use,
+		Short:   "Remove One Data Lake Pipeline",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -313,9 +317,11 @@ func (opts *deletePipelineRunDatasetOpts) postRun(_ context.Context, w io.Writer
 
 func deletePipelineRunDatasetBuilder() *cobra.Command {
 	opts := deletePipelineRunDatasetOpts{}
+	const use = "deletePipelineRunDataset"
 	cmd := &cobra.Command{
-		Use:   "deletePipelineRunDataset",
-		Short: "Delete Pipeline Run Dataset",
+		Use:     use,
+		Short:   "Delete Pipeline Run Dataset",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -404,9 +410,11 @@ func (opts *getPipelineOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getPipelineBuilder() *cobra.Command {
 	opts := getPipelineOpts{}
+	const use = "getPipeline"
 	cmd := &cobra.Command{
-		Use:   "getPipeline",
-		Short: "Return One Data Lake Pipeline",
+		Use:     use,
+		Short:   "Return One Data Lake Pipeline",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -495,9 +503,11 @@ func (opts *getPipelineRunOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getPipelineRunBuilder() *cobra.Command {
 	opts := getPipelineRunOpts{}
+	const use = "getPipelineRun"
 	cmd := &cobra.Command{
-		Use:   "getPipelineRun",
-		Short: "Return One Data Lake Pipeline Run",
+		Use:     use,
+		Short:   "Return One Data Lake Pipeline Run",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -603,9 +613,11 @@ func (opts *listPipelineRunsOpts) postRun(_ context.Context, w io.Writer) error 
 
 func listPipelineRunsBuilder() *cobra.Command {
 	opts := listPipelineRunsOpts{}
+	const use = "listPipelineRuns"
 	cmd := &cobra.Command{
-		Use:   "listPipelineRuns",
-		Short: "Return All Data Lake Pipeline Runs from One Project",
+		Use:     use,
+		Short:   "Return All Data Lake Pipeline Runs from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -696,9 +708,11 @@ func (opts *listPipelineSchedulesOpts) postRun(_ context.Context, w io.Writer) e
 
 func listPipelineSchedulesBuilder() *cobra.Command {
 	opts := listPipelineSchedulesOpts{}
+	const use = "listPipelineSchedules"
 	cmd := &cobra.Command{
-		Use:   "listPipelineSchedules",
-		Short: "Return Available Ingestion Schedules for One Data Lake Pipeline",
+		Use:     use,
+		Short:   "Return Available Ingestion Schedules for One Data Lake Pipeline",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -802,9 +816,11 @@ func (opts *listPipelineSnapshotsOpts) postRun(_ context.Context, w io.Writer) e
 
 func listPipelineSnapshotsBuilder() *cobra.Command {
 	opts := listPipelineSnapshotsOpts{}
+	const use = "listPipelineSnapshots"
 	cmd := &cobra.Command{
-		Use:   "listPipelineSnapshots",
-		Short: "Return Available Backup Snapshots for One Data Lake Pipeline",
+		Use:     use,
+		Short:   "Return Available Backup Snapshots for One Data Lake Pipeline",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -893,9 +909,11 @@ func (opts *listPipelinesOpts) postRun(_ context.Context, w io.Writer) error {
 
 func listPipelinesBuilder() *cobra.Command {
 	opts := listPipelinesOpts{}
+	const use = "listPipelines"
 	cmd := &cobra.Command{
-		Use:   "listPipelines",
-		Short: "Return All Data Lake Pipelines from One Project",
+		Use:     use,
+		Short:   "Return All Data Lake Pipelines from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -980,9 +998,11 @@ func (opts *pausePipelineOpts) postRun(_ context.Context, w io.Writer) error {
 
 func pausePipelineBuilder() *cobra.Command {
 	opts := pausePipelineOpts{}
+	const use = "pausePipeline"
 	cmd := &cobra.Command{
-		Use:   "pausePipeline",
-		Short: "Pause One Data Lake Pipeline",
+		Use:     use,
+		Short:   "Pause One Data Lake Pipeline",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1069,9 +1089,11 @@ func (opts *resumePipelineOpts) postRun(_ context.Context, w io.Writer) error {
 
 func resumePipelineBuilder() *cobra.Command {
 	opts := resumePipelineOpts{}
+	const use = "resumePipeline"
 	cmd := &cobra.Command{
-		Use:   "resumePipeline",
-		Short: "Resume One Data Lake Pipeline",
+		Use:     use,
+		Short:   "Resume One Data Lake Pipeline",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1191,9 +1213,11 @@ func triggerSnapshotIngestionBuilder() *cobra.Command {
 	opts := triggerSnapshotIngestionOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "triggerSnapshotIngestion"
 	cmd := &cobra.Command{
-		Use:   "triggerSnapshotIngestion",
-		Short: "Trigger on demand snapshot ingestion",
+		Use:     use,
+		Short:   "Trigger on demand snapshot ingestion",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1315,9 +1339,11 @@ func updatePipelineBuilder() *cobra.Command {
 	opts := updatePipelineOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updatePipeline"
 	cmd := &cobra.Command{
-		Use:   "updatePipeline",
-		Short: "Update One Data Lake Pipeline",
+		Use:     use,
+		Short:   "Update One Data Lake Pipeline",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

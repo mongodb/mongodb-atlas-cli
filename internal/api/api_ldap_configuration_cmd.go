@@ -99,9 +99,11 @@ func (opts *deleteLDAPConfigurationOpts) postRun(_ context.Context, w io.Writer)
 
 func deleteLDAPConfigurationBuilder() *cobra.Command {
 	opts := deleteLDAPConfigurationOpts{}
+	const use = "deleteLDAPConfiguration"
 	cmd := &cobra.Command{
-		Use:   "deleteLDAPConfiguration",
-		Short: "Remove the Current LDAP User to DN Mapping",
+		Use:     use,
+		Short:   "Remove the Current LDAP User to DN Mapping",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -184,9 +186,11 @@ func (opts *getLDAPConfigurationOpts) postRun(_ context.Context, w io.Writer) er
 
 func getLDAPConfigurationBuilder() *cobra.Command {
 	opts := getLDAPConfigurationOpts{}
+	const use = "getLDAPConfiguration"
 	cmd := &cobra.Command{
-		Use:   "getLDAPConfiguration",
-		Short: "Return the Current LDAP or X.509 Configuration",
+		Use:     use,
+		Short:   "Return the Current LDAP or X.509 Configuration",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -271,9 +275,11 @@ func (opts *getLDAPConfigurationStatusOpts) postRun(_ context.Context, w io.Writ
 
 func getLDAPConfigurationStatusBuilder() *cobra.Command {
 	opts := getLDAPConfigurationStatusOpts{}
+	const use = "getLDAPConfigurationStatus"
 	cmd := &cobra.Command{
-		Use:   "getLDAPConfigurationStatus",
-		Short: "Return the Status of One Verify LDAP Configuration Request",
+		Use:     use,
+		Short:   "Return the Status of One Verify LDAP Configuration Request",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -391,9 +397,11 @@ func saveLDAPConfigurationBuilder() *cobra.Command {
 	opts := saveLDAPConfigurationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "saveLDAPConfiguration"
 	cmd := &cobra.Command{
-		Use:   "saveLDAPConfiguration",
-		Short: "Edit the LDAP or X.509 Configuration",
+		Use:     use,
+		Short:   "Edit the LDAP or X.509 Configuration",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -511,9 +519,11 @@ func verifyLDAPConfigurationBuilder() *cobra.Command {
 	opts := verifyLDAPConfigurationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "verifyLDAPConfiguration"
 	cmd := &cobra.Command{
-		Use:   "verifyLDAPConfiguration",
-		Short: "Verify the LDAP Configuration in One Project",
+		Use:     use,
+		Short:   "Verify the LDAP Configuration in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

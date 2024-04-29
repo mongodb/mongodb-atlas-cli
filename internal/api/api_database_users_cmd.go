@@ -132,9 +132,11 @@ func createDatabaseUserBuilder() *cobra.Command {
 	opts := createDatabaseUserOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createDatabaseUser"
 	cmd := &cobra.Command{
-		Use:   "createDatabaseUser",
-		Short: "Create One Database User in One Project",
+		Use:     use,
+		Short:   "Create One Database User in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -223,9 +225,11 @@ func (opts *deleteDatabaseUserOpts) postRun(_ context.Context, w io.Writer) erro
 
 func deleteDatabaseUserBuilder() *cobra.Command {
 	opts := deleteDatabaseUserOpts{}
+	const use = "deleteDatabaseUser"
 	cmd := &cobra.Command{
-		Use:   "deleteDatabaseUser",
-		Short: "Remove One Database User from One Project",
+		Use:     use,
+		Short:   "Remove One Database User from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -328,9 +332,11 @@ func (opts *getDatabaseUserOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getDatabaseUserBuilder() *cobra.Command {
 	opts := getDatabaseUserOpts{}
+	const use = "getDatabaseUser"
 	cmd := &cobra.Command{
-		Use:   "getDatabaseUser",
-		Short: "Return One Database User from One Project",
+		Use:     use,
+		Short:   "Return One Database User from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -435,9 +441,11 @@ func (opts *listDatabaseUsersOpts) postRun(_ context.Context, w io.Writer) error
 
 func listDatabaseUsersBuilder() *cobra.Command {
 	opts := listDatabaseUsersOpts{}
+	const use = "listDatabaseUsers"
 	cmd := &cobra.Command{
-		Use:   "listDatabaseUsers",
-		Short: "Return All Database Users from One Project",
+		Use:     use,
+		Short:   "Return All Database Users from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -560,9 +568,11 @@ func updateDatabaseUserBuilder() *cobra.Command {
 	opts := updateDatabaseUserOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateDatabaseUser"
 	cmd := &cobra.Command{
-		Use:   "updateDatabaseUser",
-		Short: "Update One Database User in One Project",
+		Use:     use,
+		Short:   "Update One Database User in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

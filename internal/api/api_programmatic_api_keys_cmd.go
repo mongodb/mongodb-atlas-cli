@@ -134,9 +134,11 @@ func addProjectApiKeyBuilder() *cobra.Command {
 	opts := addProjectApiKeyOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "addProjectApiKey"
 	cmd := &cobra.Command{
-		Use:   "addProjectApiKey",
-		Short: "Assign One Organization API Key to One Project",
+		Use:     use,
+		Short:   "Assign One Organization API Key to One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -256,9 +258,11 @@ func createApiKeyBuilder() *cobra.Command {
 	opts := createApiKeyOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createApiKey"
 	cmd := &cobra.Command{
-		Use:   "createApiKey",
-		Short: "Create One Organization API Key",
+		Use:     use,
+		Short:   "Create One Organization API Key",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -385,9 +389,11 @@ func createApiKeyAccessListBuilder() *cobra.Command {
 	opts := createApiKeyAccessListOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createApiKeyAccessList"
 	cmd := &cobra.Command{
-		Use:   "createApiKeyAccessList",
-		Short: "Create Access List Entries for One Organization API Key",
+		Use:     use,
+		Short:   "Create Access List Entries for One Organization API Key",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -510,9 +516,11 @@ func createProjectApiKeyBuilder() *cobra.Command {
 	opts := createProjectApiKeyOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createProjectApiKey"
 	cmd := &cobra.Command{
-		Use:   "createProjectApiKey",
-		Short: "Create and Assign One Organization API Key to One Project",
+		Use:     use,
+		Short:   "Create and Assign One Organization API Key to One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -599,9 +607,11 @@ func (opts *deleteApiKeyOpts) postRun(_ context.Context, w io.Writer) error {
 
 func deleteApiKeyBuilder() *cobra.Command {
 	opts := deleteApiKeyOpts{}
+	const use = "deleteApiKey"
 	cmd := &cobra.Command{
-		Use:   "deleteApiKey",
-		Short: "Remove One Organization API Key",
+		Use:     use,
+		Short:   "Remove One Organization API Key",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -690,9 +700,11 @@ func (opts *deleteApiKeyAccessListEntryOpts) postRun(_ context.Context, w io.Wri
 
 func deleteApiKeyAccessListEntryBuilder() *cobra.Command {
 	opts := deleteApiKeyAccessListEntryOpts{}
+	const use = "deleteApiKeyAccessListEntry"
 	cmd := &cobra.Command{
-		Use:   "deleteApiKeyAccessListEntry",
-		Short: "Remove One Access List Entry for One Organization API Key",
+		Use:     use,
+		Short:   "Remove One Access List Entry for One Organization API Key",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -781,9 +793,11 @@ func (opts *getApiKeyOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getApiKeyBuilder() *cobra.Command {
 	opts := getApiKeyOpts{}
+	const use = "getApiKey"
 	cmd := &cobra.Command{
-		Use:   "getApiKey",
-		Short: "Return One Organization API Key",
+		Use:     use,
+		Short:   "Return One Organization API Key",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -872,9 +886,11 @@ func (opts *getApiKeyAccessListOpts) postRun(_ context.Context, w io.Writer) err
 
 func getApiKeyAccessListBuilder() *cobra.Command {
 	opts := getApiKeyAccessListOpts{}
+	const use = "getApiKeyAccessList"
 	cmd := &cobra.Command{
-		Use:   "getApiKeyAccessList",
-		Short: "Return One Access List Entry for One Organization API Key",
+		Use:     use,
+		Short:   "Return One Access List Entry for One Organization API Key",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -969,9 +985,11 @@ func (opts *listApiKeyAccessListsEntriesOpts) postRun(_ context.Context, w io.Wr
 
 func listApiKeyAccessListsEntriesBuilder() *cobra.Command {
 	opts := listApiKeyAccessListsEntriesOpts{}
+	const use = "listApiKeyAccessListsEntries"
 	cmd := &cobra.Command{
-		Use:   "listApiKeyAccessListsEntries",
-		Short: "Return All Access List Entries for One Organization API Key",
+		Use:     use,
+		Short:   "Return All Access List Entries for One Organization API Key",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1065,9 +1083,11 @@ func (opts *listApiKeysOpts) postRun(_ context.Context, w io.Writer) error {
 
 func listApiKeysBuilder() *cobra.Command {
 	opts := listApiKeysOpts{}
+	const use = "listApiKeys"
 	cmd := &cobra.Command{
-		Use:   "listApiKeys",
-		Short: "Return All Organization API Keys",
+		Use:     use,
+		Short:   "Return All Organization API Keys",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1159,9 +1179,11 @@ func (opts *listProjectApiKeysOpts) postRun(_ context.Context, w io.Writer) erro
 
 func listProjectApiKeysBuilder() *cobra.Command {
 	opts := listProjectApiKeysOpts{}
+	const use = "listProjectApiKeys"
 	cmd := &cobra.Command{
-		Use:   "listProjectApiKeys",
-		Short: "Return All Organization API Keys Assigned to One Project",
+		Use:     use,
+		Short:   "Return All Organization API Keys Assigned to One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1249,9 +1271,11 @@ func (opts *removeProjectApiKeyOpts) postRun(_ context.Context, w io.Writer) err
 
 func removeProjectApiKeyBuilder() *cobra.Command {
 	opts := removeProjectApiKeyOpts{}
+	const use = "removeProjectApiKey"
 	cmd := &cobra.Command{
-		Use:   "removeProjectApiKey",
-		Short: "Unassign One Organization API Key from One Project",
+		Use:     use,
+		Short:   "Unassign One Organization API Key from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1371,9 +1395,11 @@ func updateApiKeyBuilder() *cobra.Command {
 	opts := updateApiKeyOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateApiKey"
 	cmd := &cobra.Command{
-		Use:   "updateApiKey",
-		Short: "Update One Organization API Key",
+		Use:     use,
+		Short:   "Update One Organization API Key",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1502,9 +1528,11 @@ func updateApiKeyRolesBuilder() *cobra.Command {
 	opts := updateApiKeyRolesOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateApiKeyRoles"
 	cmd := &cobra.Command{
-		Use:   "updateApiKeyRoles",
-		Short: "Update Roles of One Organization API Key to One Project",
+		Use:     use,
+		Short:   "Update Roles of One Organization API Key to One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

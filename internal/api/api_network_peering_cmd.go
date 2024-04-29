@@ -132,9 +132,11 @@ func createPeeringConnectionBuilder() *cobra.Command {
 	opts := createPeeringConnectionOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createPeeringConnection"
 	cmd := &cobra.Command{
-		Use:   "createPeeringConnection",
-		Short: "Create One New Network Peering Connection",
+		Use:     use,
+		Short:   "Create One New Network Peering Connection",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -252,9 +254,11 @@ func createPeeringContainerBuilder() *cobra.Command {
 	opts := createPeeringContainerOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createPeeringContainer"
 	cmd := &cobra.Command{
-		Use:   "createPeeringContainer",
-		Short: "Create One New Network Peering Container",
+		Use:     use,
+		Short:   "Create One New Network Peering Container",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -341,9 +345,11 @@ func (opts *deletePeeringConnectionOpts) postRun(_ context.Context, w io.Writer)
 
 func deletePeeringConnectionBuilder() *cobra.Command {
 	opts := deletePeeringConnectionOpts{}
+	const use = "deletePeeringConnection"
 	cmd := &cobra.Command{
-		Use:   "deletePeeringConnection",
-		Short: "Remove One Existing Network Peering Connection",
+		Use:     use,
+		Short:   "Remove One Existing Network Peering Connection",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -430,9 +436,11 @@ func (opts *deletePeeringContainerOpts) postRun(_ context.Context, w io.Writer) 
 
 func deletePeeringContainerBuilder() *cobra.Command {
 	opts := deletePeeringContainerOpts{}
+	const use = "deletePeeringContainer"
 	cmd := &cobra.Command{
-		Use:   "deletePeeringContainer",
-		Short: "Remove One Network Peering Container",
+		Use:     use,
+		Short:   "Remove One Network Peering Container",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -550,9 +558,11 @@ func disablePeeringBuilder() *cobra.Command {
 	opts := disablePeeringOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "disablePeering"
 	cmd := &cobra.Command{
-		Use:   "disablePeering",
-		Short: "Disable Connect via Peering Only Mode for One Project",
+		Use:     use,
+		Short:   "Disable Connect via Peering Only Mode for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -639,9 +649,11 @@ func (opts *getPeeringConnectionOpts) postRun(_ context.Context, w io.Writer) er
 
 func getPeeringConnectionBuilder() *cobra.Command {
 	opts := getPeeringConnectionOpts{}
+	const use = "getPeeringConnection"
 	cmd := &cobra.Command{
-		Use:   "getPeeringConnection",
-		Short: "Return One Network Peering Connection in One Project",
+		Use:     use,
+		Short:   "Return One Network Peering Connection in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -728,9 +740,11 @@ func (opts *getPeeringContainerOpts) postRun(_ context.Context, w io.Writer) err
 
 func getPeeringContainerBuilder() *cobra.Command {
 	opts := getPeeringContainerOpts{}
+	const use = "getPeeringContainer"
 	cmd := &cobra.Command{
-		Use:   "getPeeringContainer",
-		Short: "Return One Network Peering Container",
+		Use:     use,
+		Short:   "Return One Network Peering Container",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -823,9 +837,11 @@ func (opts *listPeeringConnectionsOpts) postRun(_ context.Context, w io.Writer) 
 
 func listPeeringConnectionsBuilder() *cobra.Command {
 	opts := listPeeringConnectionsOpts{}
+	const use = "listPeeringConnections"
 	cmd := &cobra.Command{
-		Use:   "listPeeringConnections",
-		Short: "Return All Network Peering Connections in One Project",
+		Use:     use,
+		Short:   "Return All Network Peering Connections in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -920,9 +936,11 @@ func (opts *listPeeringContainerByCloudProviderOpts) postRun(_ context.Context, 
 
 func listPeeringContainerByCloudProviderBuilder() *cobra.Command {
 	opts := listPeeringContainerByCloudProviderOpts{}
+	const use = "listPeeringContainerByCloudProvider"
 	cmd := &cobra.Command{
-		Use:   "listPeeringContainerByCloudProvider",
-		Short: "Return All Network Peering Containers in One Project for One Cloud Provider",
+		Use:     use,
+		Short:   "Return All Network Peering Containers in One Project for One Cloud Provider",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1016,9 +1034,11 @@ func (opts *listPeeringContainersOpts) postRun(_ context.Context, w io.Writer) e
 
 func listPeeringContainersBuilder() *cobra.Command {
 	opts := listPeeringContainersOpts{}
+	const use = "listPeeringContainers"
 	cmd := &cobra.Command{
-		Use:   "listPeeringContainers",
-		Short: "Return All Network Peering Containers in One Project",
+		Use:     use,
+		Short:   "Return All Network Peering Containers in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1139,9 +1159,11 @@ func updatePeeringConnectionBuilder() *cobra.Command {
 	opts := updatePeeringConnectionOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updatePeeringConnection"
 	cmd := &cobra.Command{
-		Use:   "updatePeeringConnection",
-		Short: "Update One New Network Peering Connection",
+		Use:     use,
+		Short:   "Update One New Network Peering Connection",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1263,9 +1285,11 @@ func updatePeeringContainerBuilder() *cobra.Command {
 	opts := updatePeeringContainerOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updatePeeringContainer"
 	cmd := &cobra.Command{
-		Use:   "updatePeeringContainer",
-		Short: "Update One Network Peering Container",
+		Use:     use,
+		Short:   "Update One Network Peering Container",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1352,9 +1376,11 @@ func (opts *verifyConnectViaPeeringOnlyModeForOneProjectOpts) postRun(_ context.
 
 func verifyConnectViaPeeringOnlyModeForOneProjectBuilder() *cobra.Command {
 	opts := verifyConnectViaPeeringOnlyModeForOneProjectOpts{}
+	const use = "verifyConnectViaPeeringOnlyModeForOneProject"
 	cmd := &cobra.Command{
-		Use:   "verifyConnectViaPeeringOnlyModeForOneProject",
-		Short: "Verify Connect via Peering Only Mode for One Project",
+		Use:     use,
+		Short:   "Verify Connect via Peering Only Mode for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

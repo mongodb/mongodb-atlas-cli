@@ -141,9 +141,11 @@ func createThirdPartyIntegrationBuilder() *cobra.Command {
 	opts := createThirdPartyIntegrationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createThirdPartyIntegration"
 	cmd := &cobra.Command{
-		Use:   "createThirdPartyIntegration",
-		Short: "Configure One Third-Party Service Integration",
+		Use:     use,
+		Short:   "Configure One Third-Party Service Integration",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -235,9 +237,11 @@ func (opts *deleteThirdPartyIntegrationOpts) postRun(_ context.Context, w io.Wri
 
 func deleteThirdPartyIntegrationBuilder() *cobra.Command {
 	opts := deleteThirdPartyIntegrationOpts{}
+	const use = "deleteThirdPartyIntegration"
 	cmd := &cobra.Command{
-		Use:   "deleteThirdPartyIntegration",
-		Short: "Remove One Third-Party Service Integration",
+		Use:     use,
+		Short:   "Remove One Third-Party Service Integration",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -324,9 +328,11 @@ func (opts *getThirdPartyIntegrationOpts) postRun(_ context.Context, w io.Writer
 
 func getThirdPartyIntegrationBuilder() *cobra.Command {
 	opts := getThirdPartyIntegrationOpts{}
+	const use = "getThirdPartyIntegration"
 	cmd := &cobra.Command{
-		Use:   "getThirdPartyIntegration",
-		Short: "Return One Third-Party Service Integration",
+		Use:     use,
+		Short:   "Return One Third-Party Service Integration",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -417,9 +423,11 @@ func (opts *listThirdPartyIntegrationsOpts) postRun(_ context.Context, w io.Writ
 
 func listThirdPartyIntegrationsBuilder() *cobra.Command {
 	opts := listThirdPartyIntegrationsOpts{}
+	const use = "listThirdPartyIntegrations"
 	cmd := &cobra.Command{
-		Use:   "listThirdPartyIntegrations",
-		Short: "Return All Active Third-Party Service Integrations",
+		Use:     use,
+		Short:   "Return All Active Third-Party Service Integrations",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -547,9 +555,11 @@ func updateThirdPartyIntegrationBuilder() *cobra.Command {
 	opts := updateThirdPartyIntegrationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateThirdPartyIntegration"
 	cmd := &cobra.Command{
-		Use:   "updateThirdPartyIntegration",
-		Short: "Update One Third-Party Service Integration",
+		Use:     use,
+		Short:   "Update One Third-Party Service Integration",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

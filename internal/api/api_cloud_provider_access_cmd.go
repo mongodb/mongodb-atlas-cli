@@ -134,9 +134,11 @@ func authorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 	opts := authorizeCloudProviderAccessRoleOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "authorizeCloudProviderAccessRole"
 	cmd := &cobra.Command{
-		Use:   "authorizeCloudProviderAccessRole",
-		Short: "Authorize One Cloud Provider Access Role",
+		Use:     use,
+		Short:   "Authorize One Cloud Provider Access Role",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -256,9 +258,11 @@ func createCloudProviderAccessRoleBuilder() *cobra.Command {
 	opts := createCloudProviderAccessRoleOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createCloudProviderAccessRole"
 	cmd := &cobra.Command{
-		Use:   "createCloudProviderAccessRole",
-		Short: "Create One Cloud Provider Access Role",
+		Use:     use,
+		Short:   "Create One Cloud Provider Access Role",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -323,9 +327,11 @@ func (opts *deauthorizeCloudProviderAccessRoleOpts) postRun(_ context.Context, _
 
 func deauthorizeCloudProviderAccessRoleBuilder() *cobra.Command {
 	opts := deauthorizeCloudProviderAccessRoleOpts{}
+	const use = "deauthorizeCloudProviderAccessRole"
 	cmd := &cobra.Command{
-		Use:   "deauthorizeCloudProviderAccessRole",
-		Short: "Deauthorize One Cloud Provider Access Role",
+		Use:     use,
+		Short:   "Deauthorize One Cloud Provider Access Role",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -413,9 +419,11 @@ func (opts *getCloudProviderAccessRoleOpts) postRun(_ context.Context, w io.Writ
 
 func getCloudProviderAccessRoleBuilder() *cobra.Command {
 	opts := getCloudProviderAccessRoleOpts{}
+	const use = "getCloudProviderAccessRole"
 	cmd := &cobra.Command{
-		Use:   "getCloudProviderAccessRole",
-		Short: "Return specified Cloud Provider Access Role",
+		Use:     use,
+		Short:   "Return specified Cloud Provider Access Role",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -500,9 +508,11 @@ func (opts *listCloudProviderAccessRolesOpts) postRun(_ context.Context, w io.Wr
 
 func listCloudProviderAccessRolesBuilder() *cobra.Command {
 	opts := listCloudProviderAccessRolesOpts{}
+	const use = "listCloudProviderAccessRoles"
 	cmd := &cobra.Command{
-		Use:   "listCloudProviderAccessRoles",
-		Short: "Return All Cloud Provider Access Roles",
+		Use:     use,
+		Short:   "Return All Cloud Provider Access Roles",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

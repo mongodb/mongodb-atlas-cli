@@ -121,9 +121,11 @@ func createIdentityProviderBuilder() *cobra.Command {
 	opts := createIdentityProviderOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createIdentityProvider"
 	cmd := &cobra.Command{
-		Use:   "createIdentityProvider",
-		Short: "Create one identity provider",
+		Use:     use,
+		Short:   "Create one identity provider",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -244,9 +246,11 @@ func createRoleMappingBuilder() *cobra.Command {
 	opts := createRoleMappingOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createRoleMapping"
 	cmd := &cobra.Command{
-		Use:   "createRoleMapping",
-		Short: "Add One Role Mapping to One Organization",
+		Use:     use,
+		Short:   "Add One Role Mapping to One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -298,9 +302,11 @@ func (opts *deleteFederationAppOpts) postRun(_ context.Context, _ io.Writer) err
 
 func deleteFederationAppBuilder() *cobra.Command {
 	opts := deleteFederationAppOpts{}
+	const use = "deleteFederationApp"
 	cmd := &cobra.Command{
-		Use:   "deleteFederationApp",
-		Short: "Delete the federation settings instance.",
+		Use:     use,
+		Short:   "Delete the federation settings instance.",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -350,9 +356,11 @@ func (opts *deleteIdentityProviderOpts) postRun(_ context.Context, _ io.Writer) 
 
 func deleteIdentityProviderBuilder() *cobra.Command {
 	opts := deleteIdentityProviderOpts{}
+	const use = "deleteIdentityProvider"
 	cmd := &cobra.Command{
-		Use:   "deleteIdentityProvider",
-		Short: "Delete the identity provider.",
+		Use:     use,
+		Short:   "Delete the identity provider.",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -417,9 +425,11 @@ func (opts *deleteRoleMappingOpts) postRun(_ context.Context, _ io.Writer) error
 
 func deleteRoleMappingBuilder() *cobra.Command {
 	opts := deleteRoleMappingOpts{}
+	const use = "deleteRoleMapping"
 	cmd := &cobra.Command{
-		Use:   "deleteRoleMapping",
-		Short: "Remove One Role Mapping from One Organization",
+		Use:     use,
+		Short:   "Remove One Role Mapping from One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -496,9 +506,11 @@ func (opts *getConnectedOrgConfigOpts) postRun(_ context.Context, w io.Writer) e
 
 func getConnectedOrgConfigBuilder() *cobra.Command {
 	opts := getConnectedOrgConfigOpts{}
+	const use = "getConnectedOrgConfig"
 	cmd := &cobra.Command{
-		Use:   "getConnectedOrgConfig",
-		Short: "Return One Org Config Connected to One Federation",
+		Use:     use,
+		Short:   "Return One Org Config Connected to One Federation",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -584,9 +596,11 @@ func (opts *getFederationSettingsOpts) postRun(_ context.Context, w io.Writer) e
 
 func getFederationSettingsBuilder() *cobra.Command {
 	opts := getFederationSettingsOpts{}
+	const use = "getFederationSettings"
 	cmd := &cobra.Command{
-		Use:   "getFederationSettings",
-		Short: "Return Federation Settings for One Organization",
+		Use:     use,
+		Short:   "Return Federation Settings for One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -660,9 +674,11 @@ func (opts *getIdentityProviderOpts) postRun(_ context.Context, w io.Writer) err
 
 func getIdentityProviderBuilder() *cobra.Command {
 	opts := getIdentityProviderOpts{}
+	const use = "getIdentityProvider"
 	cmd := &cobra.Command{
-		Use:   "getIdentityProvider",
-		Short: "Return one identity provider from the specified federation by id.",
+		Use:     use,
+		Short:   "Return one identity provider from the specified federation by id.",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -739,9 +755,11 @@ func (opts *getIdentityProviderMetadataOpts) postRun(_ context.Context, w io.Wri
 
 func getIdentityProviderMetadataBuilder() *cobra.Command {
 	opts := getIdentityProviderMetadataOpts{}
+	const use = "getIdentityProviderMetadata"
 	cmd := &cobra.Command{
-		Use:   "getIdentityProviderMetadata",
-		Short: "Return the metadata of one identity provider in the specified federation.",
+		Use:     use,
+		Short:   "Return the metadata of one identity provider in the specified federation.",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -831,9 +849,11 @@ func (opts *getRoleMappingOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getRoleMappingBuilder() *cobra.Command {
 	opts := getRoleMappingOpts{}
+	const use = "getRoleMapping"
 	cmd := &cobra.Command{
-		Use:   "getRoleMapping",
-		Short: "Return One Role Mapping from One Organization",
+		Use:     use,
+		Short:   "Return One Role Mapping from One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -909,9 +929,11 @@ func (opts *listConnectedOrgConfigsOpts) postRun(_ context.Context, w io.Writer)
 
 func listConnectedOrgConfigsBuilder() *cobra.Command {
 	opts := listConnectedOrgConfigsOpts{}
+	const use = "listConnectedOrgConfigs"
 	cmd := &cobra.Command{
-		Use:   "listConnectedOrgConfigs",
-		Short: "Return All Connected Org Configs from the Federation",
+		Use:     use,
+		Short:   "Return All Connected Org Configs from the Federation",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -992,9 +1014,11 @@ func (opts *listIdentityProvidersOpts) postRun(_ context.Context, w io.Writer) e
 
 func listIdentityProvidersBuilder() *cobra.Command {
 	opts := listIdentityProvidersOpts{}
+	const use = "listIdentityProviders"
 	cmd := &cobra.Command{
-		Use:   "listIdentityProviders",
-		Short: "Return all identity providers from the specified federation.",
+		Use:     use,
+		Short:   "Return all identity providers from the specified federation.",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1084,9 +1108,11 @@ func (opts *listRoleMappingsOpts) postRun(_ context.Context, w io.Writer) error 
 
 func listRoleMappingsBuilder() *cobra.Command {
 	opts := listRoleMappingsOpts{}
+	const use = "listRoleMappings"
 	cmd := &cobra.Command{
-		Use:   "listRoleMappings",
-		Short: "Return All Role Mappings from One Organization",
+		Use:     use,
+		Short:   "Return All Role Mappings from One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1162,9 +1188,11 @@ func (opts *removeConnectedOrgConfigOpts) postRun(_ context.Context, w io.Writer
 
 func removeConnectedOrgConfigBuilder() *cobra.Command {
 	opts := removeConnectedOrgConfigOpts{}
+	const use = "removeConnectedOrgConfig"
 	cmd := &cobra.Command{
-		Use:   "removeConnectedOrgConfig",
-		Short: "Remove One Org Config Connected to One Federation",
+		Use:     use,
+		Short:   "Remove One Org Config Connected to One Federation",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1217,9 +1245,11 @@ func (opts *revokeJwksFromIdentityProviderOpts) postRun(_ context.Context, _ io.
 
 func revokeJwksFromIdentityProviderBuilder() *cobra.Command {
 	opts := revokeJwksFromIdentityProviderOpts{}
+	const use = "revokeJwksFromIdentityProvider"
 	cmd := &cobra.Command{
-		Use:   "revokeJwksFromIdentityProvider",
-		Short: "Revoke the JWKS tokens from an OIDC identity provider.",
+		Use:     use,
+		Short:   "Revoke the JWKS tokens from an OIDC identity provider.",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1328,9 +1358,11 @@ func updateConnectedOrgConfigBuilder() *cobra.Command {
 	opts := updateConnectedOrgConfigOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateConnectedOrgConfig"
 	cmd := &cobra.Command{
-		Use:   "updateConnectedOrgConfig",
-		Short: "Update One Org Config Connected to One Federation",
+		Use:     use,
+		Short:   "Update One Org Config Connected to One Federation",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1442,9 +1474,11 @@ func updateIdentityProviderBuilder() *cobra.Command {
 	opts := updateIdentityProviderOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateIdentityProvider"
 	cmd := &cobra.Command{
-		Use:   "updateIdentityProvider",
-		Short: "Update the identity provider.",
+		Use:     use,
+		Short:   "Update the identity provider.",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1569,9 +1603,11 @@ func updateRoleMappingBuilder() *cobra.Command {
 	opts := updateRoleMappingOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateRoleMapping"
 	cmd := &cobra.Command{
-		Use:   "updateRoleMapping",
-		Short: "Update One Role Mapping in One Organization",
+		Use:     use,
+		Short:   "Update One Role Mapping in One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

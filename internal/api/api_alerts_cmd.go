@@ -134,9 +134,11 @@ func acknowledgeAlertBuilder() *cobra.Command {
 	opts := acknowledgeAlertOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "acknowledgeAlert"
 	cmd := &cobra.Command{
-		Use:   "acknowledgeAlert",
-		Short: "Acknowledge One Alert from One Project",
+		Use:     use,
+		Short:   "Acknowledge One Alert from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -225,9 +227,11 @@ func (opts *getAlertOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getAlertBuilder() *cobra.Command {
 	opts := getAlertOpts{}
+	const use = "getAlert"
 	cmd := &cobra.Command{
-		Use:   "getAlert",
-		Short: "Return One Alert from One Project",
+		Use:     use,
+		Short:   "Return One Alert from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -320,9 +324,11 @@ func (opts *listAlertsOpts) postRun(_ context.Context, w io.Writer) error {
 
 func listAlertsBuilder() *cobra.Command {
 	opts := listAlertsOpts{}
+	const use = "listAlerts"
 	cmd := &cobra.Command{
-		Use:   "listAlerts",
-		Short: "Return All Alerts from One Project",
+		Use:     use,
+		Short:   "Return All Alerts from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -417,9 +423,11 @@ func (opts *listAlertsByAlertConfigurationIdOpts) postRun(_ context.Context, w i
 
 func listAlertsByAlertConfigurationIdBuilder() *cobra.Command {
 	opts := listAlertsByAlertConfigurationIdOpts{}
+	const use = "listAlertsByAlertConfigurationId"
 	cmd := &cobra.Command{
-		Use:   "listAlertsByAlertConfigurationId",
-		Short: "Return All Open Alerts for Alert Configuration",
+		Use:     use,
+		Short:   "Return All Open Alerts for Alert Configuration",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

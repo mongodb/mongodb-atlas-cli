@@ -132,9 +132,11 @@ func createCustomDatabaseRoleBuilder() *cobra.Command {
 	opts := createCustomDatabaseRoleOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createCustomDatabaseRole"
 	cmd := &cobra.Command{
-		Use:   "createCustomDatabaseRole",
-		Short: "Create One Custom Role",
+		Use:     use,
+		Short:   "Create One Custom Role",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -197,9 +199,11 @@ func (opts *deleteCustomDatabaseRoleOpts) postRun(_ context.Context, _ io.Writer
 
 func deleteCustomDatabaseRoleBuilder() *cobra.Command {
 	opts := deleteCustomDatabaseRoleOpts{}
+	const use = "deleteCustomDatabaseRole"
 	cmd := &cobra.Command{
-		Use:   "deleteCustomDatabaseRole",
-		Short: "Remove One Custom Role from One Project",
+		Use:     use,
+		Short:   "Remove One Custom Role from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -285,9 +289,11 @@ func (opts *getCustomDatabaseRoleOpts) postRun(_ context.Context, w io.Writer) e
 
 func getCustomDatabaseRoleBuilder() *cobra.Command {
 	opts := getCustomDatabaseRoleOpts{}
+	const use = "getCustomDatabaseRole"
 	cmd := &cobra.Command{
-		Use:   "getCustomDatabaseRole",
-		Short: "Return One Custom Role in One Project",
+		Use:     use,
+		Short:   "Return One Custom Role in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -372,9 +378,11 @@ func (opts *listCustomDatabaseRolesOpts) postRun(_ context.Context, w io.Writer)
 
 func listCustomDatabaseRolesBuilder() *cobra.Command {
 	opts := listCustomDatabaseRolesOpts{}
+	const use = "listCustomDatabaseRoles"
 	cmd := &cobra.Command{
-		Use:   "listCustomDatabaseRoles",
-		Short: "Return All Custom Roles in One Project",
+		Use:     use,
+		Short:   "Return All Custom Roles in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -492,9 +500,11 @@ func updateCustomDatabaseRoleBuilder() *cobra.Command {
 	opts := updateCustomDatabaseRoleOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateCustomDatabaseRole"
 	cmd := &cobra.Command{
-		Use:   "updateCustomDatabaseRole",
-		Short: "Update One Custom Role in One Project",
+		Use:     use,
+		Short:   "Update One Custom Role in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

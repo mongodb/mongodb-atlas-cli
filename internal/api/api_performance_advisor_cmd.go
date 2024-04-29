@@ -74,9 +74,11 @@ func (opts *disableSlowOperationThresholdingOpts) postRun(_ context.Context, _ i
 
 func disableSlowOperationThresholdingBuilder() *cobra.Command {
 	opts := disableSlowOperationThresholdingOpts{}
+	const use = "disableSlowOperationThresholding"
 	cmd := &cobra.Command{
-		Use:   "disableSlowOperationThresholding",
-		Short: "Disable Managed Slow Operation Threshold",
+		Use:     use,
+		Short:   "Disable Managed Slow Operation Threshold",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -134,9 +136,11 @@ func (opts *enableSlowOperationThresholdingOpts) postRun(_ context.Context, _ io
 
 func enableSlowOperationThresholdingBuilder() *cobra.Command {
 	opts := enableSlowOperationThresholdingOpts{}
+	const use = "enableSlowOperationThresholding"
 	cmd := &cobra.Command{
-		Use:   "enableSlowOperationThresholding",
-		Short: "Enable Managed Slow Operation Threshold",
+		Use:     use,
+		Short:   "Enable Managed Slow Operation Threshold",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -220,9 +224,11 @@ func (opts *getServerlessAutoIndexingOpts) postRun(_ context.Context, w io.Write
 
 func getServerlessAutoIndexingBuilder() *cobra.Command {
 	opts := getServerlessAutoIndexingOpts{}
+	const use = "getServerlessAutoIndexing"
 	cmd := &cobra.Command{
-		Use:   "getServerlessAutoIndexing",
-		Short: "Return Serverless Auto Indexing Enabled",
+		Use:     use,
+		Short:   "Return Serverless Auto Indexing Enabled",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -317,9 +323,11 @@ func (opts *listSlowQueriesOpts) postRun(_ context.Context, w io.Writer) error {
 
 func listSlowQueriesBuilder() *cobra.Command {
 	opts := listSlowQueriesOpts{}
+	const use = "listSlowQueries"
 	cmd := &cobra.Command{
-		Use:   "listSlowQueries",
-		Short: "Return Slow Queries",
+		Use:     use,
+		Short:   "Return Slow Queries",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -420,9 +428,11 @@ func (opts *listSlowQueryNamespacesOpts) postRun(_ context.Context, w io.Writer)
 
 func listSlowQueryNamespacesBuilder() *cobra.Command {
 	opts := listSlowQueryNamespacesOpts{}
+	const use = "listSlowQueryNamespaces"
 	cmd := &cobra.Command{
-		Use:   "listSlowQueryNamespaces",
-		Short: "Return All Namespaces for One Host",
+		Use:     use,
+		Short:   "Return All Namespaces for One Host",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -533,9 +543,11 @@ func (opts *listSuggestedIndexesOpts) postRun(_ context.Context, w io.Writer) er
 
 func listSuggestedIndexesBuilder() *cobra.Command {
 	opts := listSuggestedIndexesOpts{}
+	const use = "listSuggestedIndexes"
 	cmd := &cobra.Command{
-		Use:   "listSuggestedIndexes",
-		Short: "Return Suggested Indexes",
+		Use:     use,
+		Short:   "Return Suggested Indexes",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -638,9 +650,11 @@ func (opts *setServerlessAutoIndexingOpts) postRun(_ context.Context, w io.Write
 
 func setServerlessAutoIndexingBuilder() *cobra.Command {
 	opts := setServerlessAutoIndexingOpts{}
+	const use = "setServerlessAutoIndexing"
 	cmd := &cobra.Command{
-		Use:   "setServerlessAutoIndexing",
-		Short: "Set Serverless Auto Indexing",
+		Use:     use,
+		Short:   "Set Serverless Auto Indexing",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

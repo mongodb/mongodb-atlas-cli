@@ -134,9 +134,11 @@ func createLegacyBackupRestoreJobBuilder() *cobra.Command {
 	opts := createLegacyBackupRestoreJobOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createLegacyBackupRestoreJob"
 	cmd := &cobra.Command{
-		Use:   "createLegacyBackupRestoreJob",
-		Short: "Create One Legacy Backup Restore Job",
+		Use:     use,
+		Short:   "Create One Legacy Backup Restore Job",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -227,9 +229,11 @@ func (opts *deleteLegacySnapshotOpts) postRun(_ context.Context, w io.Writer) er
 
 func deleteLegacySnapshotBuilder() *cobra.Command {
 	opts := deleteLegacySnapshotOpts{}
+	const use = "deleteLegacySnapshot"
 	cmd := &cobra.Command{
-		Use:   "deleteLegacySnapshot",
-		Short: "Remove One Legacy Backup Snapshot",
+		Use:     use,
+		Short:   "Remove One Legacy Backup Snapshot",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -320,9 +324,11 @@ func (opts *getLegacyBackupCheckpointOpts) postRun(_ context.Context, w io.Write
 
 func getLegacyBackupCheckpointBuilder() *cobra.Command {
 	opts := getLegacyBackupCheckpointOpts{}
+	const use = "getLegacyBackupCheckpoint"
 	cmd := &cobra.Command{
-		Use:   "getLegacyBackupCheckpoint",
-		Short: "Return One Legacy Backup Checkpoint",
+		Use:     use,
+		Short:   "Return One Legacy Backup Checkpoint",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -413,9 +419,11 @@ func (opts *getLegacyBackupRestoreJobOpts) postRun(_ context.Context, w io.Write
 
 func getLegacyBackupRestoreJobBuilder() *cobra.Command {
 	opts := getLegacyBackupRestoreJobOpts{}
+	const use = "getLegacyBackupRestoreJob"
 	cmd := &cobra.Command{
-		Use:   "getLegacyBackupRestoreJob",
-		Short: "Return One Legacy Backup Restore Job",
+		Use:     use,
+		Short:   "Return One Legacy Backup Restore Job",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -506,9 +514,11 @@ func (opts *getLegacySnapshotOpts) postRun(_ context.Context, w io.Writer) error
 
 func getLegacySnapshotBuilder() *cobra.Command {
 	opts := getLegacySnapshotOpts{}
+	const use = "getLegacySnapshot"
 	cmd := &cobra.Command{
-		Use:   "getLegacySnapshot",
-		Short: "Return One Legacy Backup Snapshot",
+		Use:     use,
+		Short:   "Return One Legacy Backup Snapshot",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -597,9 +607,11 @@ func (opts *getLegacySnapshotScheduleOpts) postRun(_ context.Context, w io.Write
 
 func getLegacySnapshotScheduleBuilder() *cobra.Command {
 	opts := getLegacySnapshotScheduleOpts{}
+	const use = "getLegacySnapshotSchedule"
 	cmd := &cobra.Command{
-		Use:   "getLegacySnapshotSchedule",
-		Short: "Return One Snapshot Schedule",
+		Use:     use,
+		Short:   "Return One Snapshot Schedule",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -692,9 +704,11 @@ func (opts *listLegacyBackupCheckpointsOpts) postRun(_ context.Context, w io.Wri
 
 func listLegacyBackupCheckpointsBuilder() *cobra.Command {
 	opts := listLegacyBackupCheckpointsOpts{}
+	const use = "listLegacyBackupCheckpoints"
 	cmd := &cobra.Command{
-		Use:   "listLegacyBackupCheckpoints",
-		Short: "Return All Legacy Backup Checkpoints",
+		Use:     use,
+		Short:   "Return All Legacy Backup Checkpoints",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -792,9 +806,11 @@ func (opts *listLegacyBackupRestoreJobsOpts) postRun(_ context.Context, w io.Wri
 
 func listLegacyBackupRestoreJobsBuilder() *cobra.Command {
 	opts := listLegacyBackupRestoreJobsOpts{}
+	const use = "listLegacyBackupRestoreJobs"
 	cmd := &cobra.Command{
-		Use:   "listLegacyBackupRestoreJobs",
-		Short: "Return All Legacy Backup Restore Jobs",
+		Use:     use,
+		Short:   "Return All Legacy Backup Restore Jobs",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -893,9 +909,11 @@ func (opts *listLegacySnapshotsOpts) postRun(_ context.Context, w io.Writer) err
 
 func listLegacySnapshotsBuilder() *cobra.Command {
 	opts := listLegacySnapshotsOpts{}
+	const use = "listLegacySnapshots"
 	cmd := &cobra.Command{
-		Use:   "listLegacySnapshots",
-		Short: "Return All Legacy Backup Snapshots",
+		Use:     use,
+		Short:   "Return All Legacy Backup Snapshots",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1021,9 +1039,11 @@ func updateLegacySnapshotRetentionBuilder() *cobra.Command {
 	opts := updateLegacySnapshotRetentionOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateLegacySnapshotRetention"
 	cmd := &cobra.Command{
-		Use:   "updateLegacySnapshotRetention",
-		Short: "Change One Legacy Backup Snapshot Expiration",
+		Use:     use,
+		Short:   "Change One Legacy Backup Snapshot Expiration",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1147,9 +1167,11 @@ func updateLegacySnapshotScheduleBuilder() *cobra.Command {
 	opts := updateLegacySnapshotScheduleOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateLegacySnapshotSchedule"
 	cmd := &cobra.Command{
-		Use:   "updateLegacySnapshotSchedule",
-		Short: "Update Snapshot Schedule for One Cluster",
+		Use:     use,
+		Short:   "Update Snapshot Schedule for One Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

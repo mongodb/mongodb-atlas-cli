@@ -119,9 +119,11 @@ func createOrganizationBuilder() *cobra.Command {
 	opts := createOrganizationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createOrganization"
 	cmd := &cobra.Command{
-		Use:   "createOrganization",
-		Short: "Create One Organization",
+		Use:     use,
+		Short:   "Create One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -238,9 +240,11 @@ func createOrganizationInvitationBuilder() *cobra.Command {
 	opts := createOrganizationInvitationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createOrganizationInvitation"
 	cmd := &cobra.Command{
-		Use:   "createOrganizationInvitation",
-		Short: "Invite One MongoDB Cloud User to Join One Atlas Organization",
+		Use:     use,
+		Short:   "Invite One MongoDB Cloud User to Join One Atlas Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -325,9 +329,11 @@ func (opts *deleteOrganizationOpts) postRun(_ context.Context, w io.Writer) erro
 
 func deleteOrganizationBuilder() *cobra.Command {
 	opts := deleteOrganizationOpts{}
+	const use = "deleteOrganization"
 	cmd := &cobra.Command{
-		Use:   "deleteOrganization",
-		Short: "Remove One Organization",
+		Use:     use,
+		Short:   "Remove One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -412,9 +418,11 @@ func (opts *deleteOrganizationInvitationOpts) postRun(_ context.Context, w io.Wr
 
 func deleteOrganizationInvitationBuilder() *cobra.Command {
 	opts := deleteOrganizationInvitationOpts{}
+	const use = "deleteOrganizationInvitation"
 	cmd := &cobra.Command{
-		Use:   "deleteOrganizationInvitation",
-		Short: "Cancel One Organization Invitation",
+		Use:     use,
+		Short:   "Cancel One Organization Invitation",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -499,9 +507,11 @@ func (opts *getOrganizationOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getOrganizationBuilder() *cobra.Command {
 	opts := getOrganizationOpts{}
+	const use = "getOrganization"
 	cmd := &cobra.Command{
-		Use:   "getOrganization",
-		Short: "Return One Organization",
+		Use:     use,
+		Short:   "Return One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -586,9 +596,11 @@ func (opts *getOrganizationInvitationOpts) postRun(_ context.Context, w io.Write
 
 func getOrganizationInvitationBuilder() *cobra.Command {
 	opts := getOrganizationInvitationOpts{}
+	const use = "getOrganizationInvitation"
 	cmd := &cobra.Command{
-		Use:   "getOrganizationInvitation",
-		Short: "Return One Organization Invitation",
+		Use:     use,
+		Short:   "Return One Organization Invitation",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -673,9 +685,11 @@ func (opts *getOrganizationSettingsOpts) postRun(_ context.Context, w io.Writer)
 
 func getOrganizationSettingsBuilder() *cobra.Command {
 	opts := getOrganizationSettingsOpts{}
+	const use = "getOrganizationSettings"
 	cmd := &cobra.Command{
-		Use:   "getOrganizationSettings",
-		Short: "Return Settings for One Organization",
+		Use:     use,
+		Short:   "Return Settings for One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -760,9 +774,11 @@ func (opts *listOrganizationInvitationsOpts) postRun(_ context.Context, w io.Wri
 
 func listOrganizationInvitationsBuilder() *cobra.Command {
 	opts := listOrganizationInvitationsOpts{}
+	const use = "listOrganizationInvitations"
 	cmd := &cobra.Command{
-		Use:   "listOrganizationInvitations",
-		Short: "Return All Organization Invitations",
+		Use:     use,
+		Short:   "Return All Organization Invitations",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -854,9 +870,11 @@ func (opts *listOrganizationProjectsOpts) postRun(_ context.Context, w io.Writer
 
 func listOrganizationProjectsBuilder() *cobra.Command {
 	opts := listOrganizationProjectsOpts{}
+	const use = "listOrganizationProjects"
 	cmd := &cobra.Command{
-		Use:   "listOrganizationProjects",
-		Short: "Return One or More Projects in One Organization",
+		Use:     use,
+		Short:   "Return One or More Projects in One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -949,9 +967,11 @@ func (opts *listOrganizationUsersOpts) postRun(_ context.Context, w io.Writer) e
 
 func listOrganizationUsersBuilder() *cobra.Command {
 	opts := listOrganizationUsersOpts{}
+	const use = "listOrganizationUsers"
 	cmd := &cobra.Command{
-		Use:   "listOrganizationUsers",
-		Short: "Return All MongoDB Cloud Users in One Organization",
+		Use:     use,
+		Short:   "Return All MongoDB Cloud Users in One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1032,9 +1052,11 @@ func (opts *listOrganizationsOpts) postRun(_ context.Context, w io.Writer) error
 
 func listOrganizationsBuilder() *cobra.Command {
 	opts := listOrganizationsOpts{}
+	const use = "listOrganizations"
 	cmd := &cobra.Command{
-		Use:   "listOrganizations",
-		Short: "Return All Organizations",
+		Use:     use,
+		Short:   "Return All Organizations",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1122,9 +1144,11 @@ func (opts *removeOrganizationUserOpts) postRun(_ context.Context, w io.Writer) 
 
 func removeOrganizationUserBuilder() *cobra.Command {
 	opts := removeOrganizationUserOpts{}
+	const use = "removeOrganizationUser"
 	cmd := &cobra.Command{
-		Use:   "removeOrganizationUser",
-		Short: "Remove One MongoDB Cloud User from One Organization",
+		Use:     use,
+		Short:   "Remove One MongoDB Cloud User from One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1242,9 +1266,11 @@ func renameOrganizationBuilder() *cobra.Command {
 	opts := renameOrganizationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "renameOrganization"
 	cmd := &cobra.Command{
-		Use:   "renameOrganization",
-		Short: "Rename One Organization",
+		Use:     use,
+		Short:   "Rename One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1362,9 +1388,11 @@ func updateOrganizationInvitationBuilder() *cobra.Command {
 	opts := updateOrganizationInvitationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateOrganizationInvitation"
 	cmd := &cobra.Command{
-		Use:   "updateOrganizationInvitation",
-		Short: "Update One Organization Invitation",
+		Use:     use,
+		Short:   "Update One Organization Invitation",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1484,9 +1512,11 @@ func updateOrganizationInvitationByIdBuilder() *cobra.Command {
 	opts := updateOrganizationInvitationByIdOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateOrganizationInvitationById"
 	cmd := &cobra.Command{
-		Use:   "updateOrganizationInvitationById",
-		Short: "Update One Organization Invitation by Invitation ID",
+		Use:     use,
+		Short:   "Update One Organization Invitation by Invitation ID",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1608,9 +1638,11 @@ func updateOrganizationRolesBuilder() *cobra.Command {
 	opts := updateOrganizationRolesOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateOrganizationRoles"
 	cmd := &cobra.Command{
-		Use:   "updateOrganizationRoles",
-		Short: "Update Organization Roles for One MongoDB Cloud User",
+		Use:     use,
+		Short:   "Update Organization Roles for One MongoDB Cloud User",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1730,9 +1762,11 @@ func updateOrganizationSettingsBuilder() *cobra.Command {
 	opts := updateOrganizationSettingsOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateOrganizationSettings"
 	cmd := &cobra.Command{
-		Use:   "updateOrganizationSettings",
-		Short: "Update Settings for One Organization",
+		Use:     use,
+		Short:   "Update Settings for One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

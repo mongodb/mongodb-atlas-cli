@@ -134,9 +134,11 @@ func createCustomZoneMappingBuilder() *cobra.Command {
 	opts := createCustomZoneMappingOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createCustomZoneMapping"
 	cmd := &cobra.Command{
-		Use:   "createCustomZoneMapping",
-		Short: "Add One Entry to One Custom Zone Mapping",
+		Use:     use,
+		Short:   "Add One Entry to One Custom Zone Mapping",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -258,9 +260,11 @@ func createManagedNamespaceBuilder() *cobra.Command {
 	opts := createManagedNamespaceOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createManagedNamespace"
 	cmd := &cobra.Command{
-		Use:   "createManagedNamespace",
-		Short: "Create One Managed Namespace in One Global Cluster",
+		Use:     use,
+		Short:   "Create One Managed Namespace in One Global Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -349,9 +353,11 @@ func (opts *deleteAllCustomZoneMappingsOpts) postRun(_ context.Context, w io.Wri
 
 func deleteAllCustomZoneMappingsBuilder() *cobra.Command {
 	opts := deleteAllCustomZoneMappingsOpts{}
+	const use = "deleteAllCustomZoneMappings"
 	cmd := &cobra.Command{
-		Use:   "deleteAllCustomZoneMappings",
-		Short: "Remove All Custom Zone Mappings from One Global Cluster",
+		Use:     use,
+		Short:   "Remove All Custom Zone Mappings from One Global Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -442,9 +448,11 @@ func (opts *deleteManagedNamespaceOpts) postRun(_ context.Context, w io.Writer) 
 
 func deleteManagedNamespaceBuilder() *cobra.Command {
 	opts := deleteManagedNamespaceOpts{}
+	const use = "deleteManagedNamespace"
 	cmd := &cobra.Command{
-		Use:   "deleteManagedNamespace",
-		Short: "Remove One Managed Namespace from One Global Cluster",
+		Use:     use,
+		Short:   "Remove One Managed Namespace from One Global Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -533,9 +541,11 @@ func (opts *getManagedNamespaceOpts) postRun(_ context.Context, w io.Writer) err
 
 func getManagedNamespaceBuilder() *cobra.Command {
 	opts := getManagedNamespaceOpts{}
+	const use = "getManagedNamespace"
 	cmd := &cobra.Command{
-		Use:   "getManagedNamespace",
-		Short: "Return One Managed Namespace in One Global Cluster",
+		Use:     use,
+		Short:   "Return One Managed Namespace in One Global Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

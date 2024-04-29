@@ -132,9 +132,11 @@ func createServerlessInstanceBuilder() *cobra.Command {
 	opts := createServerlessInstanceOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createServerlessInstance"
 	cmd := &cobra.Command{
-		Use:   "createServerlessInstance",
-		Short: "Create One Serverless Instance in One Project",
+		Use:     use,
+		Short:   "Create One Serverless Instance in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -221,9 +223,11 @@ func (opts *deleteServerlessInstanceOpts) postRun(_ context.Context, w io.Writer
 
 func deleteServerlessInstanceBuilder() *cobra.Command {
 	opts := deleteServerlessInstanceOpts{}
+	const use = "deleteServerlessInstance"
 	cmd := &cobra.Command{
-		Use:   "deleteServerlessInstance",
-		Short: "Remove One Serverless Instance from One Project",
+		Use:     use,
+		Short:   "Remove One Serverless Instance from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -310,9 +314,11 @@ func (opts *getServerlessInstanceOpts) postRun(_ context.Context, w io.Writer) e
 
 func getServerlessInstanceBuilder() *cobra.Command {
 	opts := getServerlessInstanceOpts{}
+	const use = "getServerlessInstance"
 	cmd := &cobra.Command{
-		Use:   "getServerlessInstance",
-		Short: "Return One Serverless Instance from One Project",
+		Use:     use,
+		Short:   "Return One Serverless Instance from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -403,9 +409,11 @@ func (opts *listServerlessInstancesOpts) postRun(_ context.Context, w io.Writer)
 
 func listServerlessInstancesBuilder() *cobra.Command {
 	opts := listServerlessInstancesOpts{}
+	const use = "listServerlessInstances"
 	cmd := &cobra.Command{
-		Use:   "listServerlessInstances",
-		Short: "Return All Serverless Instances from One Project",
+		Use:     use,
+		Short:   "Return All Serverless Instances from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -526,9 +534,11 @@ func updateServerlessInstanceBuilder() *cobra.Command {
 	opts := updateServerlessInstanceOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateServerlessInstance"
 	cmd := &cobra.Command{
-		Use:   "updateServerlessInstance",
-		Short: "Update One Serverless Instance in One Project",
+		Use:     use,
+		Short:   "Update One Serverless Instance in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

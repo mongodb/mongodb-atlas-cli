@@ -132,9 +132,11 @@ func createAlertConfigurationBuilder() *cobra.Command {
 	opts := createAlertConfigurationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createAlertConfiguration"
 	cmd := &cobra.Command{
-		Use:   "createAlertConfiguration",
-		Short: "Create One Alert Configuration in One Project",
+		Use:     use,
+		Short:   "Create One Alert Configuration in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -197,9 +199,11 @@ func (opts *deleteAlertConfigurationOpts) postRun(_ context.Context, _ io.Writer
 
 func deleteAlertConfigurationBuilder() *cobra.Command {
 	opts := deleteAlertConfigurationOpts{}
+	const use = "deleteAlertConfiguration"
 	cmd := &cobra.Command{
-		Use:   "deleteAlertConfiguration",
-		Short: "Remove One Alert Configuration from One Project",
+		Use:     use,
+		Short:   "Remove One Alert Configuration from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -285,9 +289,11 @@ func (opts *getAlertConfigurationOpts) postRun(_ context.Context, w io.Writer) e
 
 func getAlertConfigurationBuilder() *cobra.Command {
 	opts := getAlertConfigurationOpts{}
+	const use = "getAlertConfiguration"
 	cmd := &cobra.Command{
-		Use:   "getAlertConfiguration",
-		Short: "Return One Alert Configuration from One Project",
+		Use:     use,
+		Short:   "Return One Alert Configuration from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -358,9 +364,11 @@ func (opts *listAlertConfigurationMatchersFieldNamesOpts) postRun(_ context.Cont
 
 func listAlertConfigurationMatchersFieldNamesBuilder() *cobra.Command {
 	opts := listAlertConfigurationMatchersFieldNamesOpts{}
+	const use = "listAlertConfigurationMatchersFieldNames"
 	cmd := &cobra.Command{
-		Use:   "listAlertConfigurationMatchersFieldNames",
-		Short: "Get All Alert Configuration Matchers Field Names",
+		Use:     use,
+		Short:   "Get All Alert Configuration Matchers Field Names",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -448,9 +456,11 @@ func (opts *listAlertConfigurationsOpts) postRun(_ context.Context, w io.Writer)
 
 func listAlertConfigurationsBuilder() *cobra.Command {
 	opts := listAlertConfigurationsOpts{}
+	const use = "listAlertConfigurations"
 	cmd := &cobra.Command{
-		Use:   "listAlertConfigurations",
-		Short: "Return All Alert Configurations for One Project",
+		Use:     use,
+		Short:   "Return All Alert Configurations for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -544,9 +554,11 @@ func (opts *listAlertConfigurationsByAlertIdOpts) postRun(_ context.Context, w i
 
 func listAlertConfigurationsByAlertIdBuilder() *cobra.Command {
 	opts := listAlertConfigurationsByAlertIdOpts{}
+	const use = "listAlertConfigurationsByAlertId"
 	cmd := &cobra.Command{
-		Use:   "listAlertConfigurationsByAlertId",
-		Short: "Return All Alert Configurations Set for One Alert",
+		Use:     use,
+		Short:   "Return All Alert Configurations Set for One Alert",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -669,9 +681,11 @@ func toggleAlertConfigurationBuilder() *cobra.Command {
 	opts := toggleAlertConfigurationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "toggleAlertConfiguration"
 	cmd := &cobra.Command{
-		Use:   "toggleAlertConfiguration",
-		Short: "Toggle One State of One Alert Configuration in One Project",
+		Use:     use,
+		Short:   "Toggle One State of One Alert Configuration in One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -793,9 +807,11 @@ func updateAlertConfigurationBuilder() *cobra.Command {
 	opts := updateAlertConfigurationOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateAlertConfiguration"
 	cmd := &cobra.Command{
-		Use:   "updateAlertConfiguration",
-		Short: "Update One Alert Configuration for One Project",
+		Use:     use,
+		Short:   "Update One Alert Configuration for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

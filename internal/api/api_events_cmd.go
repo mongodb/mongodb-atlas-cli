@@ -103,9 +103,11 @@ func (opts *getOrganizationEventOpts) postRun(_ context.Context, w io.Writer) er
 
 func getOrganizationEventBuilder() *cobra.Command {
 	opts := getOrganizationEventOpts{}
+	const use = "getOrganizationEvent"
 	cmd := &cobra.Command{
-		Use:   "getOrganizationEvent",
-		Short: "Return One Event from One Organization",
+		Use:     use,
+		Short:   "Return One Event from One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -195,9 +197,11 @@ func (opts *getProjectEventOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getProjectEventBuilder() *cobra.Command {
 	opts := getProjectEventOpts{}
+	const use = "getProjectEvent"
 	cmd := &cobra.Command{
-		Use:   "getProjectEvent",
-		Short: "Return One Event from One Project",
+		Use:     use,
+		Short:   "Return One Event from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -315,9 +319,11 @@ func (opts *listOrganizationEventsOpts) postRun(_ context.Context, w io.Writer) 
 
 func listOrganizationEventsBuilder() *cobra.Command {
 	opts := listOrganizationEventsOpts{}
+	const use = "listOrganizationEvents"
 	cmd := &cobra.Command{
-		Use:   "listOrganizationEvents",
-		Short: "Return All Events from One Organization",
+		Use:     use,
+		Short:   "Return All Events from One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -445,9 +451,11 @@ func (opts *listProjectEventsOpts) postRun(_ context.Context, w io.Writer) error
 
 func listProjectEventsBuilder() *cobra.Command {
 	opts := listProjectEventsOpts{}
+	const use = "listProjectEvents"
 	cmd := &cobra.Command{
-		Use:   "listProjectEvents",
-		Short: "Return All Events from One Project",
+		Use:     use,
+		Short:   "Return All Events from One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

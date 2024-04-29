@@ -99,9 +99,11 @@ func (opts *getAWSCustomDNSOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getAWSCustomDNSBuilder() *cobra.Command {
 	opts := getAWSCustomDNSOpts{}
+	const use = "getAWSCustomDNS"
 	cmd := &cobra.Command{
-		Use:   "getAWSCustomDNS",
-		Short: "Return One Custom DNS Configuration for Atlas Clusters on AWS",
+		Use:     use,
+		Short:   "Return One Custom DNS Configuration for Atlas Clusters on AWS",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -217,9 +219,11 @@ func toggleAWSCustomDNSBuilder() *cobra.Command {
 	opts := toggleAWSCustomDNSOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "toggleAWSCustomDNS"
 	cmd := &cobra.Command{
-		Use:   "toggleAWSCustomDNS",
-		Short: "Toggle State of One Custom DNS Configuration for Atlas Clusters on AWS",
+		Use:     use,
+		Short:   "Toggle State of One Custom DNS Configuration for Atlas Clusters on AWS",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

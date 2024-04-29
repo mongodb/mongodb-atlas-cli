@@ -108,9 +108,11 @@ func createRollingIndexBuilder() *cobra.Command {
 	opts := createRollingIndexOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createRollingIndex"
 	cmd := &cobra.Command{
-		Use:   "createRollingIndex",
-		Short: "Create One Rolling Index",
+		Use:     use,
+		Short:   "Create One Rolling Index",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

@@ -134,9 +134,11 @@ func createSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 	opts := createSharedClusterBackupRestoreJobOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createSharedClusterBackupRestoreJob"
 	cmd := &cobra.Command{
-		Use:   "createSharedClusterBackupRestoreJob",
-		Short: "Create One Restore Job from One M2 or M5 Cluster",
+		Use:     use,
+		Short:   "Create One Restore Job from One M2 or M5 Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -227,9 +229,11 @@ func (opts *getSharedClusterBackupRestoreJobOpts) postRun(_ context.Context, w i
 
 func getSharedClusterBackupRestoreJobBuilder() *cobra.Command {
 	opts := getSharedClusterBackupRestoreJobOpts{}
+	const use = "getSharedClusterBackupRestoreJob"
 	cmd := &cobra.Command{
-		Use:   "getSharedClusterBackupRestoreJob",
-		Short: "Return One Restore Job for One M2 or M5 Cluster",
+		Use:     use,
+		Short:   "Return One Restore Job for One M2 or M5 Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -318,9 +322,11 @@ func (opts *listSharedClusterBackupRestoreJobsOpts) postRun(_ context.Context, w
 
 func listSharedClusterBackupRestoreJobsBuilder() *cobra.Command {
 	opts := listSharedClusterBackupRestoreJobsOpts{}
+	const use = "listSharedClusterBackupRestoreJobs"
 	cmd := &cobra.Command{
-		Use:   "listSharedClusterBackupRestoreJobs",
-		Short: "Return All Restore Jobs for One M2 or M5 Cluster",
+		Use:     use,
+		Short:   "Return All Restore Jobs for One M2 or M5 Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

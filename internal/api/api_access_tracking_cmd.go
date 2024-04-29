@@ -110,9 +110,11 @@ func (opts *listAccessLogsByClusterNameOpts) postRun(_ context.Context, w io.Wri
 
 func listAccessLogsByClusterNameBuilder() *cobra.Command {
 	opts := listAccessLogsByClusterNameOpts{}
+	const use = "listAccessLogsByClusterName"
 	cmd := &cobra.Command{
-		Use:   "listAccessLogsByClusterName",
-		Short: "Return Database Access History for One Cluster using Its Cluster Name",
+		Use:     use,
+		Short:   "Return Database Access History for One Cluster using Its Cluster Name",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -214,9 +216,11 @@ func (opts *listAccessLogsByHostnameOpts) postRun(_ context.Context, w io.Writer
 
 func listAccessLogsByHostnameBuilder() *cobra.Command {
 	opts := listAccessLogsByHostnameOpts{}
+	const use = "listAccessLogsByHostname"
 	cmd := &cobra.Command{
-		Use:   "listAccessLogsByHostname",
-		Short: "Return Database Access History for One Cluster using Its Hostname",
+		Use:     use,
+		Short:   "Return Database Access History for One Cluster using Its Hostname",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

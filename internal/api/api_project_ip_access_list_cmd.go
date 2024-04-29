@@ -139,9 +139,11 @@ func createProjectIpAccessListBuilder() *cobra.Command {
 	opts := createProjectIpAccessListOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createProjectIpAccessList"
 	cmd := &cobra.Command{
-		Use:   "createProjectIpAccessList",
-		Short: "Add Entries to Project IP Access List",
+		Use:     use,
+		Short:   "Add Entries to Project IP Access List",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -231,9 +233,11 @@ func (opts *deleteProjectIpAccessListOpts) postRun(_ context.Context, w io.Write
 
 func deleteProjectIpAccessListBuilder() *cobra.Command {
 	opts := deleteProjectIpAccessListOpts{}
+	const use = "deleteProjectIpAccessList"
 	cmd := &cobra.Command{
-		Use:   "deleteProjectIpAccessList",
-		Short: "Remove One Entry from One Project IP Access List",
+		Use:     use,
+		Short:   "Remove One Entry from One Project IP Access List",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -324,9 +328,11 @@ func (opts *getProjectIpAccessListStatusOpts) postRun(_ context.Context, w io.Wr
 
 func getProjectIpAccessListStatusBuilder() *cobra.Command {
 	opts := getProjectIpAccessListStatusOpts{}
+	const use = "getProjectIpAccessListStatus"
 	cmd := &cobra.Command{
-		Use:   "getProjectIpAccessListStatus",
-		Short: "Return Status of One Project IP Access List Entry",
+		Use:     use,
+		Short:   "Return Status of One Project IP Access List Entry",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -413,9 +419,11 @@ func (opts *getProjectIpListOpts) postRun(_ context.Context, w io.Writer) error 
 
 func getProjectIpListBuilder() *cobra.Command {
 	opts := getProjectIpListOpts{}
+	const use = "getProjectIpList"
 	cmd := &cobra.Command{
-		Use:   "getProjectIpList",
-		Short: "Return One Project IP Access List Entry",
+		Use:     use,
+		Short:   "Return One Project IP Access List Entry",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -506,9 +514,11 @@ func (opts *listProjectIpAccessListsOpts) postRun(_ context.Context, w io.Writer
 
 func listProjectIpAccessListsBuilder() *cobra.Command {
 	opts := listProjectIpAccessListsOpts{}
+	const use = "listProjectIpAccessLists"
 	cmd := &cobra.Command{
-		Use:   "listProjectIpAccessLists",
-		Short: "Return Project IP Access List",
+		Use:     use,
+		Short:   "Return Project IP Access List",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

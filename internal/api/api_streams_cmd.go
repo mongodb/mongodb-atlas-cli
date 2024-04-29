@@ -134,9 +134,11 @@ func createStreamConnectionBuilder() *cobra.Command {
 	opts := createStreamConnectionOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createStreamConnection"
 	cmd := &cobra.Command{
-		Use:   "createStreamConnection",
-		Short: "Create One Connection",
+		Use:     use,
+		Short:   "Create One Connection",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -256,9 +258,11 @@ func createStreamInstanceBuilder() *cobra.Command {
 	opts := createStreamInstanceOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createStreamInstance"
 	cmd := &cobra.Command{
-		Use:   "createStreamInstance",
-		Short: "Create One Stream Instance",
+		Use:     use,
+		Short:   "Create One Stream Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -347,9 +351,11 @@ func (opts *deleteStreamConnectionOpts) postRun(_ context.Context, w io.Writer) 
 
 func deleteStreamConnectionBuilder() *cobra.Command {
 	opts := deleteStreamConnectionOpts{}
+	const use = "deleteStreamConnection"
 	cmd := &cobra.Command{
-		Use:   "deleteStreamConnection",
-		Short: "Delete One Stream Connection",
+		Use:     use,
+		Short:   "Delete One Stream Connection",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -438,9 +444,11 @@ func (opts *deleteStreamInstanceOpts) postRun(_ context.Context, w io.Writer) er
 
 func deleteStreamInstanceBuilder() *cobra.Command {
 	opts := deleteStreamInstanceOpts{}
+	const use = "deleteStreamInstance"
 	cmd := &cobra.Command{
-		Use:   "deleteStreamInstance",
-		Short: "Delete One Stream Instance",
+		Use:     use,
+		Short:   "Delete One Stream Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -531,9 +539,11 @@ func (opts *downloadStreamTenantAuditLogsOpts) postRun(_ context.Context, w io.W
 
 func downloadStreamTenantAuditLogsBuilder() *cobra.Command {
 	opts := downloadStreamTenantAuditLogsOpts{}
+	const use = "downloadStreamTenantAuditLogs"
 	cmd := &cobra.Command{
-		Use:   "downloadStreamTenantAuditLogs",
-		Short: "Download Audit Logs for One Atlas Stream Processing Instance",
+		Use:     use,
+		Short:   "Download Audit Logs for One Atlas Stream Processing Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -624,9 +634,11 @@ func (opts *getStreamConnectionOpts) postRun(_ context.Context, w io.Writer) err
 
 func getStreamConnectionBuilder() *cobra.Command {
 	opts := getStreamConnectionOpts{}
+	const use = "getStreamConnection"
 	cmd := &cobra.Command{
-		Use:   "getStreamConnection",
-		Short: "Return One Stream Connection",
+		Use:     use,
+		Short:   "Return One Stream Connection",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -717,9 +729,11 @@ func (opts *getStreamInstanceOpts) postRun(_ context.Context, w io.Writer) error
 
 func getStreamInstanceBuilder() *cobra.Command {
 	opts := getStreamInstanceOpts{}
+	const use = "getStreamInstance"
 	cmd := &cobra.Command{
-		Use:   "getStreamInstance",
-		Short: "Return One Stream Instance",
+		Use:     use,
+		Short:   "Return One Stream Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -811,9 +825,11 @@ func (opts *listStreamConnectionsOpts) postRun(_ context.Context, w io.Writer) e
 
 func listStreamConnectionsBuilder() *cobra.Command {
 	opts := listStreamConnectionsOpts{}
+	const use = "listStreamConnections"
 	cmd := &cobra.Command{
-		Use:   "listStreamConnections",
-		Short: "Return All Connections Of The Stream Instances",
+		Use:     use,
+		Short:   "Return All Connections Of The Stream Instances",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -904,9 +920,11 @@ func (opts *listStreamInstancesOpts) postRun(_ context.Context, w io.Writer) err
 
 func listStreamInstancesBuilder() *cobra.Command {
 	opts := listStreamInstancesOpts{}
+	const use = "listStreamInstances"
 	cmd := &cobra.Command{
-		Use:   "listStreamInstances",
-		Short: "Return All Project Stream Instances",
+		Use:     use,
+		Short:   "Return All Project Stream Instances",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1028,9 +1046,11 @@ func updateStreamConnectionBuilder() *cobra.Command {
 	opts := updateStreamConnectionOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateStreamConnection"
 	cmd := &cobra.Command{
-		Use:   "updateStreamConnection",
-		Short: "Update One Stream Connection",
+		Use:     use,
+		Short:   "Update One Stream Connection",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1154,9 +1174,11 @@ func updateStreamInstanceBuilder() *cobra.Command {
 	opts := updateStreamInstanceOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateStreamInstance"
 	cmd := &cobra.Command{
-		Use:   "updateStreamInstance",
-		Short: "Update One Stream Instance",
+		Use:     use,
+		Short:   "Update One Stream Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

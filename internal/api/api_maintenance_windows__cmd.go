@@ -75,9 +75,11 @@ func (opts *deferMaintenanceWindowOpts) postRun(_ context.Context, _ io.Writer) 
 
 func deferMaintenanceWindowBuilder() *cobra.Command {
 	opts := deferMaintenanceWindowOpts{}
+	const use = "deferMaintenanceWindow"
 	cmd := &cobra.Command{
-		Use:   "deferMaintenanceWindow",
-		Short: "Defer One Maintenance Window for One Project",
+		Use:     use,
+		Short:   "Defer One Maintenance Window for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -159,9 +161,11 @@ func (opts *getMaintenanceWindowOpts) postRun(_ context.Context, w io.Writer) er
 
 func getMaintenanceWindowBuilder() *cobra.Command {
 	opts := getMaintenanceWindowOpts{}
+	const use = "getMaintenanceWindow"
 	cmd := &cobra.Command{
-		Use:   "getMaintenanceWindow",
-		Short: "Return One Maintenance Window for One Project",
+		Use:     use,
+		Short:   "Return One Maintenance Window for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -220,9 +224,11 @@ func (opts *resetMaintenanceWindowOpts) postRun(_ context.Context, _ io.Writer) 
 
 func resetMaintenanceWindowBuilder() *cobra.Command {
 	opts := resetMaintenanceWindowOpts{}
+	const use = "resetMaintenanceWindow"
 	cmd := &cobra.Command{
-		Use:   "resetMaintenanceWindow",
-		Short: "Reset One Maintenance Window for One Project",
+		Use:     use,
+		Short:   "Reset One Maintenance Window for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -280,9 +286,11 @@ func (opts *toggleMaintenanceAutoDeferOpts) postRun(_ context.Context, _ io.Writ
 
 func toggleMaintenanceAutoDeferBuilder() *cobra.Command {
 	opts := toggleMaintenanceAutoDeferOpts{}
+	const use = "toggleMaintenanceAutoDefer"
 	cmd := &cobra.Command{
-		Use:   "toggleMaintenanceAutoDefer",
-		Short: "Toggle Automatic Deferral of Maintenance for One Project",
+		Use:     use,
+		Short:   "Toggle Automatic Deferral of Maintenance for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -397,9 +405,11 @@ func updateMaintenanceWindowBuilder() *cobra.Command {
 	opts := updateMaintenanceWindowOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateMaintenanceWindow"
 	cmd := &cobra.Command{
-		Use:   "updateMaintenanceWindow",
-		Short: "Update Maintenance Window for One Project",
+		Use:     use,
+		Short:   "Update Maintenance Window for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

@@ -99,9 +99,11 @@ func (opts *getEncryptionAtRestOpts) postRun(_ context.Context, w io.Writer) err
 
 func getEncryptionAtRestBuilder() *cobra.Command {
 	opts := getEncryptionAtRestOpts{}
+	const use = "getEncryptionAtRest"
 	cmd := &cobra.Command{
-		Use:   "getEncryptionAtRest",
-		Short: "Return One Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
+		Use:     use,
+		Short:   "Return One Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -217,9 +219,11 @@ func updateEncryptionAtRestBuilder() *cobra.Command {
 	opts := updateEncryptionAtRestOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateEncryptionAtRest"
 	cmd := &cobra.Command{
-		Use:   "updateEncryptionAtRest",
-		Short: "Update Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
+		Use:     use,
+		Short:   "Update Configuration for Encryption at Rest using Customer-Managed Keys for One Project",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

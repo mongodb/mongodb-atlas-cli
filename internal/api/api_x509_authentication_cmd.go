@@ -134,9 +134,11 @@ func createDatabaseUserCertificateBuilder() *cobra.Command {
 	opts := createDatabaseUserCertificateOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createDatabaseUserCertificate"
 	cmd := &cobra.Command{
-		Use:   "createDatabaseUserCertificate",
-		Short: "Create One X.509 Certificate for One MongoDB User",
+		Use:     use,
+		Short:   "Create One X.509 Certificate for One MongoDB User",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -223,9 +225,11 @@ func (opts *disableCustomerManagedX509Opts) postRun(_ context.Context, w io.Writ
 
 func disableCustomerManagedX509Builder() *cobra.Command {
 	opts := disableCustomerManagedX509Opts{}
+	const use = "disableCustomerManagedX509"
 	cmd := &cobra.Command{
-		Use:   "disableCustomerManagedX509",
-		Short: "Disable Customer-Managed X.509",
+		Use:     use,
+		Short:   "Disable Customer-Managed X.509",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -316,9 +320,11 @@ func (opts *listDatabaseUserCertificatesOpts) postRun(_ context.Context, w io.Wr
 
 func listDatabaseUserCertificatesBuilder() *cobra.Command {
 	opts := listDatabaseUserCertificatesOpts{}
+	const use = "listDatabaseUserCertificates"
 	cmd := &cobra.Command{
-		Use:   "listDatabaseUserCertificates",
-		Short: "Return All X.509 Certificates Assigned to One MongoDB User",
+		Use:     use,
+		Short:   "Return All X.509 Certificates Assigned to One MongoDB User",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

@@ -134,9 +134,11 @@ func (opts *getCollStatsLatencyNamespaceClusterMeasurementsOpts) postRun(_ conte
 
 func getCollStatsLatencyNamespaceClusterMeasurementsBuilder() *cobra.Command {
 	opts := getCollStatsLatencyNamespaceClusterMeasurementsOpts{}
+	const use = "getCollStatsLatencyNamespaceClusterMeasurements"
 	cmd := &cobra.Command{
-		Use:   "getCollStatsLatencyNamespaceClusterMeasurements",
-		Short: "Return Cluster-Level Query Latency",
+		Use:     use,
+		Short:   "Return Cluster-Level Query Latency",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -263,9 +265,11 @@ func (opts *getCollStatsLatencyNamespaceHostMeasurementsOpts) postRun(_ context.
 
 func getCollStatsLatencyNamespaceHostMeasurementsBuilder() *cobra.Command {
 	opts := getCollStatsLatencyNamespaceHostMeasurementsOpts{}
+	const use = "getCollStatsLatencyNamespaceHostMeasurements"
 	cmd := &cobra.Command{
-		Use:   "getCollStatsLatencyNamespaceHostMeasurements",
-		Short: "Return Host-Level Query Latency",
+		Use:     use,
+		Short:   "Return Host-Level Query Latency",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -358,9 +362,11 @@ func (opts *getCollStatsLatencyNamespaceMetricsOpts) postRun(_ context.Context, 
 
 func getCollStatsLatencyNamespaceMetricsBuilder() *cobra.Command {
 	opts := getCollStatsLatencyNamespaceMetricsOpts{}
+	const use = "getCollStatsLatencyNamespaceMetrics"
 	cmd := &cobra.Command{
-		Use:   "getCollStatsLatencyNamespaceMetrics",
-		Short: "Return all metric names",
+		Use:     use,
+		Short:   "Return all metric names",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -471,9 +477,11 @@ func (opts *getCollStatsLatencyNamespacesForClusterOpts) postRun(_ context.Conte
 
 func getCollStatsLatencyNamespacesForClusterBuilder() *cobra.Command {
 	opts := getCollStatsLatencyNamespacesForClusterOpts{}
+	const use = "getCollStatsLatencyNamespacesForCluster"
 	cmd := &cobra.Command{
-		Use:   "getCollStatsLatencyNamespacesForCluster",
-		Short: "Return Ranked Namespaces from a Cluster",
+		Use:     use,
+		Short:   "Return Ranked Namespaces from a Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -589,9 +597,11 @@ func (opts *getCollStatsLatencyNamespacesForHostOpts) postRun(_ context.Context,
 
 func getCollStatsLatencyNamespacesForHostBuilder() *cobra.Command {
 	opts := getCollStatsLatencyNamespacesForHostOpts{}
+	const use = "getCollStatsLatencyNamespacesForHost"
 	cmd := &cobra.Command{
-		Use:   "getCollStatsLatencyNamespacesForHost",
-		Short: "Return Ranked Namespaces from a Host",
+		Use:     use,
+		Short:   "Return Ranked Namespaces from a Host",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -681,9 +691,11 @@ func (opts *getPinnedNamespacesOpts) postRun(_ context.Context, w io.Writer) err
 
 func getPinnedNamespacesBuilder() *cobra.Command {
 	opts := getPinnedNamespacesOpts{}
+	const use = "getPinnedNamespaces"
 	cmd := &cobra.Command{
-		Use:   "getPinnedNamespaces",
-		Short: "Return Pinned Namespaces",
+		Use:     use,
+		Short:   "Return Pinned Namespaces",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -803,9 +815,11 @@ func pinNamespacesPatchBuilder() *cobra.Command {
 	opts := pinNamespacesPatchOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "pinNamespacesPatch"
 	cmd := &cobra.Command{
-		Use:   "pinNamespacesPatch",
-		Short: "Add Pinned Namespaces",
+		Use:     use,
+		Short:   "Add Pinned Namespaces",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -927,9 +941,11 @@ func pinNamespacesPutBuilder() *cobra.Command {
 	opts := pinNamespacesPutOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "pinNamespacesPut"
 	cmd := &cobra.Command{
-		Use:   "pinNamespacesPut",
-		Short: "Pin Namespaces",
+		Use:     use,
+		Short:   "Pin Namespaces",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1051,9 +1067,11 @@ func unpinNamespacesBuilder() *cobra.Command {
 	opts := unpinNamespacesOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "unpinNamespaces"
 	cmd := &cobra.Command{
-		Use:   "unpinNamespaces",
-		Short: "Unpin namespaces",
+		Use:     use,
+		Short:   "Unpin namespaces",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

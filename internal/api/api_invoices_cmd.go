@@ -132,9 +132,11 @@ func createCostExplorerQueryProcessBuilder() *cobra.Command {
 	opts := createCostExplorerQueryProcessOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createCostExplorerQueryProcess"
 	cmd := &cobra.Command{
-		Use:   "createCostExplorerQueryProcess",
-		Short: "Create Cost Explorer query process",
+		Use:     use,
+		Short:   "Create Cost Explorer query process",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -221,9 +223,11 @@ func (opts *createCostExplorerQueryProcess1Opts) postRun(_ context.Context, w io
 
 func createCostExplorerQueryProcess1Builder() *cobra.Command {
 	opts := createCostExplorerQueryProcess1Opts{}
+	const use = "createCostExplorerQueryProcess1"
 	cmd := &cobra.Command{
-		Use:   "createCostExplorerQueryProcess1",
-		Short: "Return results from a given Cost Explorer query, or notify that the results are not ready yet.",
+		Use:     use,
+		Short:   "Return results from a given Cost Explorer query, or notify that the results are not ready yet.",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -310,9 +314,11 @@ func (opts *downloadInvoiceCSVOpts) postRun(_ context.Context, w io.Writer) erro
 
 func downloadInvoiceCSVBuilder() *cobra.Command {
 	opts := downloadInvoiceCSVOpts{}
+	const use = "downloadInvoiceCSV"
 	cmd := &cobra.Command{
-		Use:   "downloadInvoiceCSV",
-		Short: "Return One Organization Invoice as CSV",
+		Use:     use,
+		Short:   "Return One Organization Invoice as CSV",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -399,9 +405,11 @@ func (opts *getInvoiceOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getInvoiceBuilder() *cobra.Command {
 	opts := getInvoiceOpts{}
+	const use = "getInvoice"
 	cmd := &cobra.Command{
-		Use:   "getInvoice",
-		Short: "Return One Organization Invoice",
+		Use:     use,
+		Short:   "Return One Organization Invoice",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -492,9 +500,11 @@ func (opts *listInvoicesOpts) postRun(_ context.Context, w io.Writer) error {
 
 func listInvoicesBuilder() *cobra.Command {
 	opts := listInvoicesOpts{}
+	const use = "listInvoices"
 	cmd := &cobra.Command{
-		Use:   "listInvoices",
-		Short: "Return All Invoices for One Organization",
+		Use:     use,
+		Short:   "Return All Invoices for One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -580,9 +590,11 @@ func (opts *listPendingInvoicesOpts) postRun(_ context.Context, w io.Writer) err
 
 func listPendingInvoicesBuilder() *cobra.Command {
 	opts := listPendingInvoicesOpts{}
+	const use = "listPendingInvoices"
 	cmd := &cobra.Command{
-		Use:   "listPendingInvoices",
-		Short: "Return All Pending Invoices for One Organization",
+		Use:     use,
+		Short:   "Return All Pending Invoices for One Organization",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

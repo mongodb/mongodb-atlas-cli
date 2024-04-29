@@ -134,9 +134,11 @@ func createServerlessPrivateEndpointBuilder() *cobra.Command {
 	opts := createServerlessPrivateEndpointOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createServerlessPrivateEndpoint"
 	cmd := &cobra.Command{
-		Use:   "createServerlessPrivateEndpoint",
-		Short: "Create One Private Endpoint for One Serverless Instance",
+		Use:     use,
+		Short:   "Create One Private Endpoint for One Serverless Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -227,9 +229,11 @@ func (opts *deleteServerlessPrivateEndpointOpts) postRun(_ context.Context, w io
 
 func deleteServerlessPrivateEndpointBuilder() *cobra.Command {
 	opts := deleteServerlessPrivateEndpointOpts{}
+	const use = "deleteServerlessPrivateEndpoint"
 	cmd := &cobra.Command{
-		Use:   "deleteServerlessPrivateEndpoint",
-		Short: "Remove One Private Endpoint for One Serverless Instance",
+		Use:     use,
+		Short:   "Remove One Private Endpoint for One Serverless Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -320,9 +324,11 @@ func (opts *getServerlessPrivateEndpointOpts) postRun(_ context.Context, w io.Wr
 
 func getServerlessPrivateEndpointBuilder() *cobra.Command {
 	opts := getServerlessPrivateEndpointOpts{}
+	const use = "getServerlessPrivateEndpoint"
 	cmd := &cobra.Command{
-		Use:   "getServerlessPrivateEndpoint",
-		Short: "Return One Private Endpoint for One Serverless Instance",
+		Use:     use,
+		Short:   "Return One Private Endpoint for One Serverless Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -411,9 +417,11 @@ func (opts *listServerlessPrivateEndpointsOpts) postRun(_ context.Context, w io.
 
 func listServerlessPrivateEndpointsBuilder() *cobra.Command {
 	opts := listServerlessPrivateEndpointsOpts{}
+	const use = "listServerlessPrivateEndpoints"
 	cmd := &cobra.Command{
-		Use:   "listServerlessPrivateEndpoints",
-		Short: "Return All Private Endpoints for One Serverless Instance",
+		Use:     use,
+		Short:   "Return All Private Endpoints for One Serverless Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -535,9 +543,11 @@ func updateServerlessPrivateEndpointBuilder() *cobra.Command {
 	opts := updateServerlessPrivateEndpointOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateServerlessPrivateEndpoint"
 	cmd := &cobra.Command{
-		Use:   "updateServerlessPrivateEndpoint",
-		Short: "Update One Private Endpoint for One Serverless Instance",
+		Use:     use,
+		Short:   "Update One Private Endpoint for One Serverless Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

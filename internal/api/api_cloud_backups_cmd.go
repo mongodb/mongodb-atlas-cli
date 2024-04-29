@@ -103,9 +103,11 @@ func (opts *cancelBackupRestoreJobOpts) postRun(_ context.Context, w io.Writer) 
 
 func cancelBackupRestoreJobBuilder() *cobra.Command {
 	opts := cancelBackupRestoreJobOpts{}
+	const use = "cancelBackupRestoreJob"
 	cmd := &cobra.Command{
-		Use:   "cancelBackupRestoreJob",
-		Short: "Cancel One Restore Job of One Cluster",
+		Use:     use,
+		Short:   "Cancel One Restore Job of One Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -227,9 +229,11 @@ func createBackupExportJobBuilder() *cobra.Command {
 	opts := createBackupExportJobOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createBackupExportJob"
 	cmd := &cobra.Command{
-		Use:   "createBackupExportJob",
-		Short: "Create One Cloud Backup Snapshot Export Job",
+		Use:     use,
+		Short:   "Create One Cloud Backup Snapshot Export Job",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -351,9 +355,11 @@ func createBackupRestoreJobBuilder() *cobra.Command {
 	opts := createBackupRestoreJobOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createBackupRestoreJob"
 	cmd := &cobra.Command{
-		Use:   "createBackupRestoreJob",
-		Short: "Restore One Snapshot of One Cluster",
+		Use:     use,
+		Short:   "Restore One Snapshot of One Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -473,9 +479,11 @@ func createExportBucketBuilder() *cobra.Command {
 	opts := createExportBucketOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createExportBucket"
 	cmd := &cobra.Command{
-		Use:   "createExportBucket",
-		Short: "Grant Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
+		Use:     use,
+		Short:   "Grant Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -595,9 +603,11 @@ func createServerlessBackupRestoreJobBuilder() *cobra.Command {
 	opts := createServerlessBackupRestoreJobOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createServerlessBackupRestoreJob"
 	cmd := &cobra.Command{
-		Use:   "createServerlessBackupRestoreJob",
-		Short: "Restore One Snapshot of One Serverless Instance",
+		Use:     use,
+		Short:   "Restore One Snapshot of One Serverless Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -686,9 +696,11 @@ func (opts *deleteAllBackupSchedulesOpts) postRun(_ context.Context, w io.Writer
 
 func deleteAllBackupSchedulesBuilder() *cobra.Command {
 	opts := deleteAllBackupSchedulesOpts{}
+	const use = "deleteAllBackupSchedules"
 	cmd := &cobra.Command{
-		Use:   "deleteAllBackupSchedules",
-		Short: "Remove All Cloud Backup Schedules",
+		Use:     use,
+		Short:   "Remove All Cloud Backup Schedules",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -775,9 +787,11 @@ func (opts *deleteExportBucketOpts) postRun(_ context.Context, w io.Writer) erro
 
 func deleteExportBucketBuilder() *cobra.Command {
 	opts := deleteExportBucketOpts{}
+	const use = "deleteExportBucket"
 	cmd := &cobra.Command{
-		Use:   "deleteExportBucket",
-		Short: "Revoke Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
+		Use:     use,
+		Short:   "Revoke Access to AWS S3 Bucket for Cloud Backup Snapshot Exports",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -866,9 +880,11 @@ func (opts *deleteReplicaSetBackupOpts) postRun(_ context.Context, w io.Writer) 
 
 func deleteReplicaSetBackupBuilder() *cobra.Command {
 	opts := deleteReplicaSetBackupOpts{}
+	const use = "deleteReplicaSetBackup"
 	cmd := &cobra.Command{
-		Use:   "deleteReplicaSetBackup",
-		Short: "Remove One Replica Set Cloud Backup",
+		Use:     use,
+		Short:   "Remove One Replica Set Cloud Backup",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -959,9 +975,11 @@ func (opts *deleteShardedClusterBackupOpts) postRun(_ context.Context, w io.Writ
 
 func deleteShardedClusterBackupBuilder() *cobra.Command {
 	opts := deleteShardedClusterBackupOpts{}
+	const use = "deleteShardedClusterBackup"
 	cmd := &cobra.Command{
-		Use:   "deleteShardedClusterBackup",
-		Short: "Remove One Sharded Cluster Cloud Backup",
+		Use:     use,
+		Short:   "Remove One Sharded Cluster Cloud Backup",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1052,9 +1070,11 @@ func (opts *getBackupExportJobOpts) postRun(_ context.Context, w io.Writer) erro
 
 func getBackupExportJobBuilder() *cobra.Command {
 	opts := getBackupExportJobOpts{}
+	const use = "getBackupExportJob"
 	cmd := &cobra.Command{
-		Use:   "getBackupExportJob",
-		Short: "Return One Cloud Backup Snapshot Export Job",
+		Use:     use,
+		Short:   "Return One Cloud Backup Snapshot Export Job",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1145,9 +1165,11 @@ func (opts *getBackupRestoreJobOpts) postRun(_ context.Context, w io.Writer) err
 
 func getBackupRestoreJobBuilder() *cobra.Command {
 	opts := getBackupRestoreJobOpts{}
+	const use = "getBackupRestoreJob"
 	cmd := &cobra.Command{
-		Use:   "getBackupRestoreJob",
-		Short: "Return One Restore Job of One Cluster",
+		Use:     use,
+		Short:   "Return One Restore Job of One Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1236,9 +1258,11 @@ func (opts *getBackupScheduleOpts) postRun(_ context.Context, w io.Writer) error
 
 func getBackupScheduleBuilder() *cobra.Command {
 	opts := getBackupScheduleOpts{}
+	const use = "getBackupSchedule"
 	cmd := &cobra.Command{
-		Use:   "getBackupSchedule",
-		Short: "Return One Cloud Backup Schedule",
+		Use:     use,
+		Short:   "Return One Cloud Backup Schedule",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1323,9 +1347,11 @@ func (opts *getDataProtectionSettingsOpts) postRun(_ context.Context, w io.Write
 
 func getDataProtectionSettingsBuilder() *cobra.Command {
 	opts := getDataProtectionSettingsOpts{}
+	const use = "getDataProtectionSettings"
 	cmd := &cobra.Command{
-		Use:   "getDataProtectionSettings",
-		Short: "Return the Backup Compliance Policy settings",
+		Use:     use,
+		Short:   "Return the Backup Compliance Policy settings",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1410,9 +1436,11 @@ func (opts *getExportBucketOpts) postRun(_ context.Context, w io.Writer) error {
 
 func getExportBucketBuilder() *cobra.Command {
 	opts := getExportBucketOpts{}
+	const use = "getExportBucket"
 	cmd := &cobra.Command{
-		Use:   "getExportBucket",
-		Short: "Return One AWS S3 Bucket Used for Cloud Backup Snapshot Exports",
+		Use:     use,
+		Short:   "Return One AWS S3 Bucket Used for Cloud Backup Snapshot Exports",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1501,9 +1529,11 @@ func (opts *getReplicaSetBackupOpts) postRun(_ context.Context, w io.Writer) err
 
 func getReplicaSetBackupBuilder() *cobra.Command {
 	opts := getReplicaSetBackupOpts{}
+	const use = "getReplicaSetBackup"
 	cmd := &cobra.Command{
-		Use:   "getReplicaSetBackup",
-		Short: "Return One Replica Set Cloud Backup",
+		Use:     use,
+		Short:   "Return One Replica Set Cloud Backup",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1594,9 +1624,11 @@ func (opts *getServerlessBackupOpts) postRun(_ context.Context, w io.Writer) err
 
 func getServerlessBackupBuilder() *cobra.Command {
 	opts := getServerlessBackupOpts{}
+	const use = "getServerlessBackup"
 	cmd := &cobra.Command{
-		Use:   "getServerlessBackup",
-		Short: "Return One Snapshot of One Serverless Instance",
+		Use:     use,
+		Short:   "Return One Snapshot of One Serverless Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1687,9 +1719,11 @@ func (opts *getServerlessBackupRestoreJobOpts) postRun(_ context.Context, w io.W
 
 func getServerlessBackupRestoreJobBuilder() *cobra.Command {
 	opts := getServerlessBackupRestoreJobOpts{}
+	const use = "getServerlessBackupRestoreJob"
 	cmd := &cobra.Command{
-		Use:   "getServerlessBackupRestoreJob",
-		Short: "Return One Restore Job for One Serverless Instance",
+		Use:     use,
+		Short:   "Return One Restore Job for One Serverless Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1780,9 +1814,11 @@ func (opts *getShardedClusterBackupOpts) postRun(_ context.Context, w io.Writer)
 
 func getShardedClusterBackupBuilder() *cobra.Command {
 	opts := getShardedClusterBackupOpts{}
+	const use = "getShardedClusterBackup"
 	cmd := &cobra.Command{
-		Use:   "getShardedClusterBackup",
-		Short: "Return One Sharded Cluster Cloud Backup",
+		Use:     use,
+		Short:   "Return One Sharded Cluster Cloud Backup",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1877,9 +1913,11 @@ func (opts *listBackupExportJobsOpts) postRun(_ context.Context, w io.Writer) er
 
 func listBackupExportJobsBuilder() *cobra.Command {
 	opts := listBackupExportJobsOpts{}
+	const use = "listBackupExportJobs"
 	cmd := &cobra.Command{
-		Use:   "listBackupExportJobs",
-		Short: "Return All Cloud Backup Snapshot Export Jobs",
+		Use:     use,
+		Short:   "Return All Cloud Backup Snapshot Export Jobs",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1975,9 +2013,11 @@ func (opts *listBackupRestoreJobsOpts) postRun(_ context.Context, w io.Writer) e
 
 func listBackupRestoreJobsBuilder() *cobra.Command {
 	opts := listBackupRestoreJobsOpts{}
+	const use = "listBackupRestoreJobs"
 	cmd := &cobra.Command{
-		Use:   "listBackupRestoreJobs",
-		Short: "Return All Restore Jobs for One Cluster",
+		Use:     use,
+		Short:   "Return All Restore Jobs for One Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -2071,9 +2111,11 @@ func (opts *listExportBucketsOpts) postRun(_ context.Context, w io.Writer) error
 
 func listExportBucketsBuilder() *cobra.Command {
 	opts := listExportBucketsOpts{}
+	const use = "listExportBuckets"
 	cmd := &cobra.Command{
-		Use:   "listExportBuckets",
-		Short: "Return All AWS S3 Buckets Used for Cloud Backup Snapshot Exports",
+		Use:     use,
+		Short:   "Return All AWS S3 Buckets Used for Cloud Backup Snapshot Exports",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -2167,9 +2209,11 @@ func (opts *listReplicaSetBackupsOpts) postRun(_ context.Context, w io.Writer) e
 
 func listReplicaSetBackupsBuilder() *cobra.Command {
 	opts := listReplicaSetBackupsOpts{}
+	const use = "listReplicaSetBackups"
 	cmd := &cobra.Command{
-		Use:   "listReplicaSetBackups",
-		Short: "Return All Replica Set Cloud Backups",
+		Use:     use,
+		Short:   "Return All Replica Set Cloud Backups",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -2265,9 +2309,11 @@ func (opts *listServerlessBackupRestoreJobsOpts) postRun(_ context.Context, w io
 
 func listServerlessBackupRestoreJobsBuilder() *cobra.Command {
 	opts := listServerlessBackupRestoreJobsOpts{}
+	const use = "listServerlessBackupRestoreJobs"
 	cmd := &cobra.Command{
-		Use:   "listServerlessBackupRestoreJobs",
-		Short: "Return All Restore Jobs for One Serverless Instance",
+		Use:     use,
+		Short:   "Return All Restore Jobs for One Serverless Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -2363,9 +2409,11 @@ func (opts *listServerlessBackupsOpts) postRun(_ context.Context, w io.Writer) e
 
 func listServerlessBackupsBuilder() *cobra.Command {
 	opts := listServerlessBackupsOpts{}
+	const use = "listServerlessBackups"
 	cmd := &cobra.Command{
-		Use:   "listServerlessBackups",
-		Short: "Return All Snapshots of One Serverless Instance",
+		Use:     use,
+		Short:   "Return All Snapshots of One Serverless Instance",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -2455,9 +2503,11 @@ func (opts *listShardedClusterBackupsOpts) postRun(_ context.Context, w io.Write
 
 func listShardedClusterBackupsBuilder() *cobra.Command {
 	opts := listShardedClusterBackupsOpts{}
+	const use = "listShardedClusterBackups"
 	cmd := &cobra.Command{
-		Use:   "listShardedClusterBackups",
-		Short: "Return All Sharded Cluster Cloud Backups",
+		Use:     use,
+		Short:   "Return All Sharded Cluster Cloud Backups",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -2577,9 +2627,11 @@ func takeSnapshotBuilder() *cobra.Command {
 	opts := takeSnapshotOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "takeSnapshot"
 	cmd := &cobra.Command{
-		Use:   "takeSnapshot",
-		Short: "Take One On-Demand Snapshot",
+		Use:     use,
+		Short:   "Take One On-Demand Snapshot",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -2701,9 +2753,11 @@ func updateBackupScheduleBuilder() *cobra.Command {
 	opts := updateBackupScheduleOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateBackupSchedule"
 	cmd := &cobra.Command{
-		Use:   "updateBackupSchedule",
-		Short: "Update Cloud Backup Schedule for One Cluster",
+		Use:     use,
+		Short:   "Update Cloud Backup Schedule for One Cluster",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -2826,9 +2880,11 @@ func updateDataProtectionSettingsBuilder() *cobra.Command {
 	opts := updateDataProtectionSettingsOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateDataProtectionSettings"
 	cmd := &cobra.Command{
-		Use:   "updateDataProtectionSettings",
-		Short: "Update or enable the Backup Compliance Policy settings",
+		Use:     use,
+		Short:   "Update or enable the Backup Compliance Policy settings",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -2951,9 +3007,11 @@ func updateSnapshotRetentionBuilder() *cobra.Command {
 	opts := updateSnapshotRetentionOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "updateSnapshotRetention"
 	cmd := &cobra.Command{
-		Use:   "updateSnapshotRetention",
-		Short: "Change Expiration Date for One Cloud Backup",
+		Use:     use,
+		Short:   "Change Expiration Date for One Cloud Backup",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

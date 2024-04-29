@@ -136,9 +136,11 @@ func createPrivateEndpointBuilder() *cobra.Command {
 	opts := createPrivateEndpointOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createPrivateEndpoint"
 	cmd := &cobra.Command{
-		Use:   "createPrivateEndpoint",
-		Short: "Create One Private Endpoint for One Provider",
+		Use:     use,
+		Short:   "Create One Private Endpoint for One Provider",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -260,9 +262,11 @@ func createPrivateEndpointServiceBuilder() *cobra.Command {
 	opts := createPrivateEndpointServiceOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "createPrivateEndpointService"
 	cmd := &cobra.Command{
-		Use:   "createPrivateEndpointService",
-		Short: "Create One Private Endpoint Service for One Provider",
+		Use:     use,
+		Short:   "Create One Private Endpoint Service for One Provider",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -353,9 +357,11 @@ func (opts *deletePrivateEndpointOpts) postRun(_ context.Context, w io.Writer) e
 
 func deletePrivateEndpointBuilder() *cobra.Command {
 	opts := deletePrivateEndpointOpts{}
+	const use = "deletePrivateEndpoint"
 	cmd := &cobra.Command{
-		Use:   "deletePrivateEndpoint",
-		Short: "Remove One Private Endpoint for One Provider",
+		Use:     use,
+		Short:   "Remove One Private Endpoint for One Provider",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -448,9 +454,11 @@ func (opts *deletePrivateEndpointServiceOpts) postRun(_ context.Context, w io.Wr
 
 func deletePrivateEndpointServiceBuilder() *cobra.Command {
 	opts := deletePrivateEndpointServiceOpts{}
+	const use = "deletePrivateEndpointService"
 	cmd := &cobra.Command{
-		Use:   "deletePrivateEndpointService",
-		Short: "Remove One Private Endpoint Service for One Provider",
+		Use:     use,
+		Short:   "Remove One Private Endpoint Service for One Provider",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -543,9 +551,11 @@ func (opts *getPrivateEndpointOpts) postRun(_ context.Context, w io.Writer) erro
 
 func getPrivateEndpointBuilder() *cobra.Command {
 	opts := getPrivateEndpointOpts{}
+	const use = "getPrivateEndpoint"
 	cmd := &cobra.Command{
-		Use:   "getPrivateEndpoint",
-		Short: "Return One Private Endpoint for One Provider",
+		Use:     use,
+		Short:   "Return One Private Endpoint for One Provider",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -638,9 +648,11 @@ func (opts *getPrivateEndpointServiceOpts) postRun(_ context.Context, w io.Write
 
 func getPrivateEndpointServiceBuilder() *cobra.Command {
 	opts := getPrivateEndpointServiceOpts{}
+	const use = "getPrivateEndpointService"
 	cmd := &cobra.Command{
-		Use:   "getPrivateEndpointService",
-		Short: "Return One Private Endpoint Service for One Provider",
+		Use:     use,
+		Short:   "Return One Private Endpoint Service for One Provider",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -727,9 +739,11 @@ func (opts *getRegionalizedPrivateEndpointSettingOpts) postRun(_ context.Context
 
 func getRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 	opts := getRegionalizedPrivateEndpointSettingOpts{}
+	const use = "getRegionalizedPrivateEndpointSetting"
 	cmd := &cobra.Command{
-		Use:   "getRegionalizedPrivateEndpointSetting",
-		Short: "Return Regionalized Private Endpoint Status",
+		Use:     use,
+		Short:   "Return Regionalized Private Endpoint Status",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -814,9 +828,11 @@ func (opts *listPrivateEndpointServicesOpts) postRun(_ context.Context, w io.Wri
 
 func listPrivateEndpointServicesBuilder() *cobra.Command {
 	opts := listPrivateEndpointServicesOpts{}
+	const use = "listPrivateEndpointServices"
 	cmd := &cobra.Command{
-		Use:   "listPrivateEndpointServices",
-		Short: "Return All Private Endpoint Services for One Provider",
+		Use:     use,
+		Short:   "Return All Private Endpoint Services for One Provider",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -934,9 +950,11 @@ func toggleRegionalizedPrivateEndpointSettingBuilder() *cobra.Command {
 	opts := toggleRegionalizedPrivateEndpointSettingOpts{
 		fs: afero.NewOsFs(),
 	}
+	const use = "toggleRegionalizedPrivateEndpointSetting"
 	cmd := &cobra.Command{
-		Use:   "toggleRegionalizedPrivateEndpointSetting",
-		Short: "Toggle Regionalized Private Endpoint Status",
+		Use:     use,
+		Short:   "Toggle Regionalized Private Endpoint Status",
+		Aliases: cli.GenerateAliases(use),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},

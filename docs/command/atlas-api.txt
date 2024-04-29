@@ -1,0 +1,153 @@
+.. _atlas-api:
+
+=========
+atlas api
+=========
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Access to api resources.
+
+This command provides access to API resources specified in https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for api
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Related Commands
+----------------
+
+* :ref:`atlas-api-aWSClustersDNS` - Returns and edits custom DNS configurations for MongoDB Cloud database deployments on AWS. The resource requires your Project ID. If you use the VPC peering on AWS and you use your own DNS servers instead of Amazon Route 53, enable custom DNS. Before 31 March 2020, applications deployed within AWS using custom DNS services and VPC-peered with MongoDB Cloud couldn&#39;t connect over private IP addresses. Custom DNS resolved to public IP addresses. AWS internal DNS resolved to private IP addresses. Applications deployed with custom DNS services in AWS should use Private IP for Peering connection strings.
+* :ref:`atlas-api-accessTracking` - Returns access logs for authentication attempts made to Atlas database deployments. To view database access history, you must have either the Project Owner or Organization Owner role.
+* :ref:`atlas-api-alertConfigurations` - Returns and edits the conditions that trigger alerts and how MongoDB Cloud notifies users. This collection remains under revision and may change.
+* :ref:`atlas-api-alerts` - Returns and acknowledges alerts that MongoDB Cloud triggers based on the alert conditions that you define. This collection remains under revision and may change.
+* :ref:`atlas-api-atlasSearch` - Returns, adds, edits, and removes Atlas Search indexes for the specified cluster. Also returns and updates user-defined analyzers for the specified cluster.
+* :ref:`atlas-api-auditing` - Returns and edits database auditing settings for MongoDB Cloud projects.
+* :ref:`atlas-api-cloudBackups` - Manages Cloud Backup snapshots, snapshot export buckets, restore jobs, and schedules. This resource applies only to clusters that use Cloud Backups.
+* :ref:`atlas-api-cloudMigrationService` - Manages the Cloud Migration Service. Source organizations, projects, and MongoDB clusters reside on Cloud Manager or Ops Manager. Destination organizations, projects, and MongoDB clusters reside on MongoDB Cloud. Source databases can&#39;t use any authentication except SCRAM-SHA.
+* :ref:`atlas-api-cloudProviderAccess` - Returns, adds, authorizes, and removes AWS IAM roles in Atlas.
+* :ref:`atlas-api-clusterOutageSimulation` - Returns, starts, or ends a cluster outage simulation.
+* :ref:`atlas-api-clusters` - Returns, adds, edits, and removes database deployments. Changes to cluster configurations can affect costs. This resource requires your Project ID.
+* :ref:`atlas-api-collectionLevelMetrics` - Returns, adds, and edits pinned namespaces for the specified cluster or process. Also returns collection level latency metric data.
+* :ref:`atlas-api-customDatabaseRoles` - Returns, adds, edits, and removes custom database user privilege roles. Use custom roles to specify custom sets of actions that the MongoDB Cloud built-in roles can&#39;t describe. You define custom roles at the project level, for all clusters in the project. This resource supports a subset of MongoDB privilege actions. You can create a subset of custom role actions. To create a wider list of custom role actions, use the MongoDB Cloud user interface. Custom roles must include actions that all project&#39;s clusters support, and that are compatible with each MongoDB version that your project&#39;s clusters use. For example, if your project has MongoDB 4.2 clusters, you can&#39;t create custom roles that use actions introduced in MongoDB 4.4.
+* :ref:`atlas-api-dataFederation` - Returns, adds, edits, and removes Federated Database Instances. This resource requires your project ID. Changes to federated database instance configurations can affect costs.
+* :ref:`atlas-api-dataLakePipelines` - Returns, adds, edits, and removes Atlas Data Lake Pipelines and associated runs.
+* :ref:`atlas-api-databaseUsers` - Returns, adds, edits, and removes database users.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement` - Returns and edits the Encryption at Rest using Customer Key Management configuration. MongoDB Cloud encrypts all storage whether or not you use your own key management.
+* :ref:`atlas-api-events` - Returns events. This collection remains under revision and may change.
+* :ref:`atlas-api-federatedAuthentication` - Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.
+* :ref:`atlas-api-globalClusters` - Returns, adds, and removes Global Cluster managed namespaces and custom zone mappings. Each collection in a Global Cluster is associated with a managed namespace. When you create a managed namespace for a Global Cluster, MongoDB Cloud creates an empty collection for that namespace. Creating a managed namespace doesn&#39;t populate a collection with data. Similarly, deleting a managed namespace doesn&#39;t delete the associated collection.
+MongoDB Cloud shards the empty collection using the required location field and a custom shard key. For example, if your custom shard key is &#x60;city&#x60;, the compound shard key is &#x60;location, city&#x60;. Each Global Cluster is also associated with one or more Global Writes Zones. When a user creates a Global Cluster, MongoDB Cloud automatically maps each location code to the closest geographical zone. Custom zone mappings allow administrators to override these automatic mappings. For example, a use case might require mapping a location code to a geographically distant zone. Administrators can manage custom zone mappings with the APIs below and the **Global Cluster Configuration** pane when you create or modify your Global Cluster.
+* :ref:`atlas-api-invoices` - Returns invoices.
+* :ref:`atlas-api-lDAPConfiguration` - Returns, edits, verifies, and removes LDAP configurations. An LDAP configuration defines settings for MongoDB Cloud to connect to your LDAP server over TLS for user authentication and authorization. Your LDAP server must be visible to the internet or connected to your MongoDB Cloud cluster with VPC Peering. Also, your LDAP server must use TLS. You must have the MongoDB Cloud admin user privilege to use these endpoints. Also, to configure user authentication and authorization with LDAPS, your cluster must run MongoDB 3.6 or higher. Groups for which you have configured LDAPS can&#39;t create a cluster using a version of MongoDB 3.6 or lower.
+* :ref:`atlas-api-legacyBackup` - Manages Legacy Backup snapshots, restore jobs, schedules and checkpoints.
+* :ref:`atlas-api-maintenanceWindows` - Returns, edits, and removes maintenance windows. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. You can defer a scheduled maintenance event for a project up to two times. Deferred maintenance events occur during your preferred maintenance window exactly one week after the previously scheduled date and time.
+* :ref:`atlas-api-mongoDBCloudUsers` - Returns, adds, and edits MongoDB Cloud users.
+* :ref:`atlas-api-monitoringAndLogs` - Returns database deployment monitoring and logging data.
+* :ref:`atlas-api-networkPeering` - Returns, adds, edits, and removes network peering containers and peering connections.
+When you deploy an M10+ dedicated cluster, Atlas creates a VPC for the selected provider and region or regions if no existing VPC or VPC peering connection exists for that provider and region. Atlas assigns the VPC a Classless Inter-Domain Routing (CIDR) block.
+* :ref:`atlas-api-onlineArchive` - Returns, adds, edits, or removes an online archive.
+* :ref:`atlas-api-organizations` - Returns, adds, and edits organizational units in MongoDB Cloud.
+* :ref:`atlas-api-performanceAdvisor` - Returns suggested indexes and slow query data for a database deployment. Also enables or disables MongoDB Cloud-managed slow operation thresholds. To view field values in a sample query, you must have the Project Data Access Read Only role or higher. Otherwise, MongoDB Cloud returns redacted data rather than the field values.
+* :ref:`atlas-api-privateEndpointServices` - Returns, adds, edits, and removes private endpoint services.
+* :ref:`atlas-api-programmaticAPIKeys` - Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API. MongoDB Cloud applies these keys to organizations. These resources can return, assign, or revoke use of these keys within a specified project.
+* :ref:`atlas-api-projectIPAccessList` - Returns, adds, edits, and removes network access limits to database deployments in Atlas. This resource replaces the whitelist resource. Atlas removed whitelists in July 2021. Update your applications to use this new resource. This resource manages a project&#39;s IP Access List and supports creating temporary Access List entries that automatically expire within a user-configurable 7-day period.
+* :ref:`atlas-api-projects` - Returns, adds, and edits collections of clusters and users in MongoDB Cloud.
+* :ref:`atlas-api-pushBasedLogExport` - You can continually push logs from mongod, mongos, and audit logs to an AWS S3 bucket. Atlas exports logs every 5 minutes.
+* :ref:`atlas-api-rollingIndex` - Creates one index to a database deployment in a rolling manner. You can&#39;t create a rolling index on an &#x60;M0&#x60; free cluster or &#x60;M2/M5&#x60; shared cluster.
+* :ref:`atlas-api-root` - Returns details that describe the MongoDB Cloud build and the access token that requests this resource. This starts the MongoDB Cloud API.
+* :ref:`atlas-api-serverlessInstances` - Returns, adds, edits, and removes serverless instances.
+* :ref:`atlas-api-serverlessPrivateEndpoints` - Returns, adds, edits, and removes private endpoints for serverless instances. To learn more, see the Atlas Administration API tab on the following tutorial.
+* :ref:`atlas-api-sharedTierRestoreJobs` - Returns and adds restore jobs for shared-tier database deployments.
+* :ref:`atlas-api-sharedTierSnapshots` - Returns and requests to download shared-tier database deployment snapshots.
+* :ref:`atlas-api-streams` - Returns, adds, edits, and removes Streams Instances. This resource requires your project ID.
+* :ref:`atlas-api-teams` - Returns, adds, edits, or removes teams.
+* :ref:`atlas-api-thirdPartyIntegrations` - Returns, adds, edits, and removes third-party service integration configurations. MongoDB Cloud sends alerts to each third-party service that you configure.
+
+**IMPORTANT**: Each project can only have one configuration per integrationType.
+* :ref:`atlas-api-x509Authentication` - Returns, edits, and removes user-managed X.509 configurations. Also returns and generates MongoDB Cloud-managed X.509 certificates for database users. The following resources help manage database users who authenticate using X.509 certificates. You can manage these X.509 certificates or let MongoDB Cloud do it for you. If MongoDB Cloud manages your certificates, it also manages your Certificate Authority and can generate certificates for your database users. No additional X.509 configuration is required. If you manage your certificates, you must provide a Certificate Authority and generate certificates for your database users.
+
+
+.. toctree::
+   :titlesonly:
+
+   aWSClustersDNS </command/atlas-api-aWSClustersDNS>
+   accessTracking </command/atlas-api-accessTracking>
+   alertConfigurations </command/atlas-api-alertConfigurations>
+   alerts </command/atlas-api-alerts>
+   atlasSearch </command/atlas-api-atlasSearch>
+   auditing </command/atlas-api-auditing>
+   cloudBackups </command/atlas-api-cloudBackups>
+   cloudMigrationService </command/atlas-api-cloudMigrationService>
+   cloudProviderAccess </command/atlas-api-cloudProviderAccess>
+   clusterOutageSimulation </command/atlas-api-clusterOutageSimulation>
+   clusters </command/atlas-api-clusters>
+   collectionLevelMetrics </command/atlas-api-collectionLevelMetrics>
+   customDatabaseRoles </command/atlas-api-customDatabaseRoles>
+   dataFederation </command/atlas-api-dataFederation>
+   dataLakePipelines </command/atlas-api-dataLakePipelines>
+   databaseUsers </command/atlas-api-databaseUsers>
+   encryptionAtRestUsingCustomerKeyManagement </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement>
+   events </command/atlas-api-events>
+   federatedAuthentication </command/atlas-api-federatedAuthentication>
+   globalClusters </command/atlas-api-globalClusters>
+   invoices </command/atlas-api-invoices>
+   lDAPConfiguration </command/atlas-api-lDAPConfiguration>
+   legacyBackup </command/atlas-api-legacyBackup>
+   maintenanceWindows </command/atlas-api-maintenanceWindows>
+   mongoDBCloudUsers </command/atlas-api-mongoDBCloudUsers>
+   monitoringAndLogs </command/atlas-api-monitoringAndLogs>
+   networkPeering </command/atlas-api-networkPeering>
+   onlineArchive </command/atlas-api-onlineArchive>
+   organizations </command/atlas-api-organizations>
+   performanceAdvisor </command/atlas-api-performanceAdvisor>
+   privateEndpointServices </command/atlas-api-privateEndpointServices>
+   programmaticAPIKeys </command/atlas-api-programmaticAPIKeys>
+   projectIPAccessList </command/atlas-api-projectIPAccessList>
+   projects </command/atlas-api-projects>
+   pushBasedLogExport </command/atlas-api-pushBasedLogExport>
+   rollingIndex </command/atlas-api-rollingIndex>
+   root </command/atlas-api-root>
+   serverlessInstances </command/atlas-api-serverlessInstances>
+   serverlessPrivateEndpoints </command/atlas-api-serverlessPrivateEndpoints>
+   sharedTierRestoreJobs </command/atlas-api-sharedTierRestoreJobs>
+   sharedTierSnapshots </command/atlas-api-sharedTierSnapshots>
+   streams </command/atlas-api-streams>
+   teams </command/atlas-api-teams>
+   thirdPartyIntegrations </command/atlas-api-thirdPartyIntegrations>
+   x509Authentication </command/atlas-api-x509Authentication>
+

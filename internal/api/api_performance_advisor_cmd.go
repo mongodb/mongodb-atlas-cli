@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 type disableSlowOperationThresholdingOpts struct {
@@ -151,6 +151,95 @@ func enableSlowOperationThresholdingBuilder() *cobra.Command {
 	return cmd
 }
 
+type getServerlessAutoIndexingOpts struct {
+	client      *admin.APIClient
+	groupId     string
+	clusterName string
+	format      string
+	tmpl        *template.Template
+	resp        bool
+}
+
+func (opts *getServerlessAutoIndexingOpts) preRun() (err error) {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	if opts.format != "" {
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (opts *getServerlessAutoIndexingOpts) run(ctx context.Context, _ io.Reader) error {
+
+	params := &admin.GetServerlessAutoIndexingApiParams{
+		GroupId:     opts.groupId,
+		ClusterName: opts.clusterName,
+	}
+
+	var err error
+	opts.resp, _, err = opts.client.PerformanceAdvisorApi.GetServerlessAutoIndexingWithParams(ctx, params).Execute()
+	return err
+}
+
+func (opts *getServerlessAutoIndexingOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	if opts.format == "" {
+		_, err := fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	return opts.tmpl.Execute(w, parsedJSON)
+}
+
+func getServerlessAutoIndexingBuilder() *cobra.Command {
+	opts := getServerlessAutoIndexingOpts{}
+	cmd := &cobra.Command{
+		Use:   "getServerlessAutoIndexing",
+		Short: "Return Serverless Auto Indexing Enabled",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.preRun()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+
+	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
+	return cmd
+}
+
 type listSlowQueriesOpts struct {
 	client     *admin.APIClient
 	groupId    string
@@ -248,7 +337,7 @@ func listSlowQueriesBuilder() *cobra.Command {
 - If you specify neither the **duration** nor **since** parameters, the endpoint returns data from the previous 24 hours.`)
 	cmd.Flags().StringSliceVar(&opts.namespaces, "namespaces", nil, `Namespaces from which to retrieve slow queries. A namespace consists of one database and one collection resource written as &#x60;.&#x60;: &#x60;&lt;database&gt;.&lt;collection&gt;&#x60;. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (&#x60;&amp;&#x60;) between each namespace. Omit this parameter to return results for all namespaces.`)
 	cmd.Flags().Int64Var(&opts.nLogs, "nLogs", 20000, `Maximum number of lines from the log to return.`)
-	cmd.Flags().Int64Var(&opts.since, "since", 0, `Date and time from which the query retrieves the slow queries. This parameter expresses its value in the number of seconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
+	cmd.Flags().Int64Var(&opts.since, "since", 0, `Date and time from which the query retrieves the slow queries. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
 
 - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time.
 - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.`)
@@ -349,7 +438,7 @@ func listSlowQueryNamespacesBuilder() *cobra.Command {
 
 - If you don&#39;t specify the **since** parameter, the endpoint returns data covering the duration before the current time.
 - If you specify neither the **duration** nor **since** parameters, the endpoint returns data from the previous 24 hours.`)
-	cmd.Flags().Int64Var(&opts.since, "since", 0, `Date and time from which the query retrieves the suggested indexes. This parameter expresses its value in the number of seconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
+	cmd.Flags().Int64Var(&opts.since, "since", 0, `Date and time from which the query retrieves the suggested indexes. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
 
 - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time.
 - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.`)
@@ -468,12 +557,105 @@ func listSuggestedIndexesBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.namespaces, "namespaces", nil, `Namespaces from which to retrieve suggested indexes. A namespace consists of one database and one collection resource written as &#x60;.&#x60;: &#x60;&lt;database&gt;.&lt;collection&gt;&#x60;. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (&#x60;&amp;&#x60;) between each namespace. Omit this parameter to return results for all namespaces.`)
 	cmd.Flags().Int64Var(&opts.nExamples, "nExamples", 5, `Maximum number of example queries that benefit from the suggested index.`)
 	cmd.Flags().Int64Var(&opts.nIndexes, "nIndexes", 0, `Number that indicates the maximum indexes to suggest.`)
-	cmd.Flags().Int64Var(&opts.since, "since", 0, `Date and time from which the query retrieves the suggested indexes. This parameter expresses its value in the number of seconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
+	cmd.Flags().Int64Var(&opts.since, "since", 0, `Date and time from which the query retrieves the suggested indexes. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
 
 - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time.
 - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.`)
 
 	_ = cmd.MarkFlagRequired("processId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
+	return cmd
+}
+
+type setServerlessAutoIndexingOpts struct {
+	client      *admin.APIClient
+	groupId     string
+	clusterName string
+	enable      bool
+	format      string
+	tmpl        *template.Template
+	resp        map[string]interface{}
+}
+
+func (opts *setServerlessAutoIndexingOpts) preRun() (err error) {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	if opts.format != "" {
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (opts *setServerlessAutoIndexingOpts) run(ctx context.Context, _ io.Reader) error {
+
+	params := &admin.SetServerlessAutoIndexingApiParams{
+		GroupId:     opts.groupId,
+		ClusterName: opts.clusterName,
+		Enable:      &opts.enable,
+	}
+
+	var err error
+	opts.resp, _, err = opts.client.PerformanceAdvisorApi.SetServerlessAutoIndexingWithParams(ctx, params).Execute()
+	return err
+}
+
+func (opts *setServerlessAutoIndexingOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	if opts.format == "" {
+		_, err := fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	return opts.tmpl.Execute(w, parsedJSON)
+}
+
+func setServerlessAutoIndexingBuilder() *cobra.Command {
+	opts := setServerlessAutoIndexingOpts{}
+	cmd := &cobra.Command{
+		Use:   "setServerlessAutoIndexing",
+		Short: "Set Serverless Auto Indexing",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.preRun()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster.`)
+	cmd.Flags().BoolVar(&opts.enable, "enable", false, `Value that we want to set for the Serverless Auto Indexing toggle.`)
+
+	_ = cmd.MarkFlagRequired("clusterName")
+	_ = cmd.MarkFlagRequired("enable")
 	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
@@ -486,9 +668,11 @@ func performanceAdvisorBuilder() *cobra.Command {
 	cmd.AddCommand(
 		disableSlowOperationThresholdingBuilder(),
 		enableSlowOperationThresholdingBuilder(),
+		getServerlessAutoIndexingBuilder(),
 		listSlowQueriesBuilder(),
 		listSlowQueryNamespacesBuilder(),
 		listSuggestedIndexesBuilder(),
+		setServerlessAutoIndexingBuilder(),
 	)
 	return cmd
 }

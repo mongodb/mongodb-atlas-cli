@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 type createCustomZoneMappingOpts struct {
@@ -69,8 +69,8 @@ func (opts *createCustomZoneMappingOpts) preRun() (err error) {
 	return nil
 }
 
-func (opts *createCustomZoneMappingOpts) readData(r io.Reader) (*admin.GeoSharding, error) {
-	var out *admin.GeoSharding
+func (opts *createCustomZoneMappingOpts) readData(r io.Reader) (*admin.CustomZoneMappings, error) {
+	var out *admin.CustomZoneMappings
 
 	var buf []byte
 	var err error
@@ -101,7 +101,7 @@ func (opts *createCustomZoneMappingOpts) run(ctx context.Context, r io.Reader) e
 		GroupId:     opts.groupId,
 		ClusterName: opts.clusterName,
 
-		GeoSharding: data,
+		CustomZoneMappings: data,
 	}
 
 	var err error
@@ -147,7 +147,7 @@ func createCustomZoneMappingBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this cluster.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -259,7 +259,7 @@ func createManagedNamespaceBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "createManagedNamespace",
-		Short: "Create One Managed Namespace in One Global Multi-Cloud Cluster",
+		Short: "Create One Managed Namespace in One Global Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -271,7 +271,7 @@ func createManagedNamespaceBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this cluster.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -350,7 +350,7 @@ func deleteAllCustomZoneMappingsBuilder() *cobra.Command {
 	opts := deleteAllCustomZoneMappingsOpts{}
 	cmd := &cobra.Command{
 		Use:   "deleteAllCustomZoneMappings",
-		Short: "Remove All Custom Zone Mappings from One Global Multi-Cloud Cluster",
+		Short: "Remove All Custom Zone Mappings from One Global Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -362,7 +362,7 @@ func deleteAllCustomZoneMappingsBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this cluster.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
@@ -443,7 +443,7 @@ func deleteManagedNamespaceBuilder() *cobra.Command {
 	opts := deleteManagedNamespaceOpts{}
 	cmd := &cobra.Command{
 		Use:   "deleteManagedNamespace",
-		Short: "Remove One Managed Namespace from One Global Multi-Cloud Cluster",
+		Short: "Remove One Managed Namespace from One Global Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -454,7 +454,7 @@ func deleteManagedNamespaceBuilder() *cobra.Command {
 			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this cluster.`)
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.db, "db", "", `Human-readable label that identifies the database that contains the collection.`)
 	cmd.Flags().StringVar(&opts.collection, "collection", "", `Human-readable label that identifies the collection associated with the managed namespace.`)
@@ -534,7 +534,7 @@ func getManagedNamespaceBuilder() *cobra.Command {
 	opts := getManagedNamespaceOpts{}
 	cmd := &cobra.Command{
 		Use:   "getManagedNamespace",
-		Short: "Return One Managed Namespace in One Global Multi-Cloud Cluster",
+		Short: "Return One Managed Namespace in One Global Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -546,7 +546,7 @@ func getManagedNamespaceBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this cluster.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")

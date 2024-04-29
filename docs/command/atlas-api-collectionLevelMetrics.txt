@@ -1,0 +1,75 @@
+.. _atlas-api-collectionLevelMetrics:
+
+================================
+atlas api collectionLevelMetrics
+================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Returns, adds, and edits pinned namespaces for the specified cluster or process. Also returns collection level latency metric data.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for collectionLevelMetrics
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Related Commands
+----------------
+
+* :ref:`atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespaceClusterMeasurements` - Return Cluster-Level Query Latency
+* :ref:`atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespaceHostMeasurements` - Return Host-Level Query Latency
+* :ref:`atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespaceMetrics` - Return all metric names
+* :ref:`atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespacesForCluster` - Return Ranked Namespaces from a Cluster
+* :ref:`atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespacesForHost` - Return Ranked Namespaces from a Host
+* :ref:`atlas-api-collectionLevelMetrics-getPinnedNamespaces` - Return Pinned Namespaces
+* :ref:`atlas-api-collectionLevelMetrics-pinNamespacesPatch` - Add Pinned Namespaces
+* :ref:`atlas-api-collectionLevelMetrics-pinNamespacesPut` - Pin Namespaces
+* :ref:`atlas-api-collectionLevelMetrics-unpinNamespaces` - Unpin namespaces
+
+
+.. toctree::
+   :titlesonly:
+
+   getCollStatsLatencyNamespaceClusterMeasurements </command/atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespaceClusterMeasurements>
+   getCollStatsLatencyNamespaceHostMeasurements </command/atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespaceHostMeasurements>
+   getCollStatsLatencyNamespaceMetrics </command/atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespaceMetrics>
+   getCollStatsLatencyNamespacesForCluster </command/atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespacesForCluster>
+   getCollStatsLatencyNamespacesForHost </command/atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespacesForHost>
+   getPinnedNamespaces </command/atlas-api-collectionLevelMetrics-getPinnedNamespaces>
+   pinNamespacesPatch </command/atlas-api-collectionLevelMetrics-pinNamespacesPatch>
+   pinNamespacesPut </command/atlas-api-collectionLevelMetrics-pinNamespacesPut>
+   unpinNamespaces </command/atlas-api-collectionLevelMetrics-unpinNamespaces>
+

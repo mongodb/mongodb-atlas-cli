@@ -1,0 +1,85 @@
+.. _atlas-api-programmaticAPIKeys:
+
+=============================
+atlas api programmaticAPIKeys
+=============================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API. MongoDB Cloud applies these keys to organizations. These resources can return, assign, or revoke use of these keys within a specified project.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for programmaticAPIKeys
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Related Commands
+----------------
+
+* :ref:`atlas-api-programmaticAPIKeys-addProjectApiKey` - Assign One Organization API Key to One Project
+* :ref:`atlas-api-programmaticAPIKeys-createApiKey` - Create One Organization API Key
+* :ref:`atlas-api-programmaticAPIKeys-createApiKeyAccessList` - Create Access List Entries for One Organization API Key
+* :ref:`atlas-api-programmaticAPIKeys-createProjectApiKey` - Create and Assign One Organization API Key to One Project
+* :ref:`atlas-api-programmaticAPIKeys-deleteApiKey` - Remove One Organization API Key
+* :ref:`atlas-api-programmaticAPIKeys-deleteApiKeyAccessListEntry` - Remove One Access List Entry for One Organization API Key
+* :ref:`atlas-api-programmaticAPIKeys-getApiKey` - Return One Organization API Key
+* :ref:`atlas-api-programmaticAPIKeys-getApiKeyAccessList` - Return One Access List Entry for One Organization API Key
+* :ref:`atlas-api-programmaticAPIKeys-listApiKeyAccessListsEntries` - Return All Access List Entries for One Organization API Key
+* :ref:`atlas-api-programmaticAPIKeys-listApiKeys` - Return All Organization API Keys
+* :ref:`atlas-api-programmaticAPIKeys-listProjectApiKeys` - Return All Organization API Keys Assigned to One Project
+* :ref:`atlas-api-programmaticAPIKeys-removeProjectApiKey` - Unassign One Organization API Key from One Project
+* :ref:`atlas-api-programmaticAPIKeys-updateApiKey` - Update One Organization API Key
+* :ref:`atlas-api-programmaticAPIKeys-updateApiKeyRoles` - Update Roles of One Organization API Key to One Project
+
+
+.. toctree::
+   :titlesonly:
+
+   addProjectApiKey </command/atlas-api-programmaticAPIKeys-addProjectApiKey>
+   createApiKey </command/atlas-api-programmaticAPIKeys-createApiKey>
+   createApiKeyAccessList </command/atlas-api-programmaticAPIKeys-createApiKeyAccessList>
+   createProjectApiKey </command/atlas-api-programmaticAPIKeys-createProjectApiKey>
+   deleteApiKey </command/atlas-api-programmaticAPIKeys-deleteApiKey>
+   deleteApiKeyAccessListEntry </command/atlas-api-programmaticAPIKeys-deleteApiKeyAccessListEntry>
+   getApiKey </command/atlas-api-programmaticAPIKeys-getApiKey>
+   getApiKeyAccessList </command/atlas-api-programmaticAPIKeys-getApiKeyAccessList>
+   listApiKeyAccessListsEntries </command/atlas-api-programmaticAPIKeys-listApiKeyAccessListsEntries>
+   listApiKeys </command/atlas-api-programmaticAPIKeys-listApiKeys>
+   listProjectApiKeys </command/atlas-api-programmaticAPIKeys-listProjectApiKeys>
+   removeProjectApiKey </command/atlas-api-programmaticAPIKeys-removeProjectApiKey>
+   updateApiKey </command/atlas-api-programmaticAPIKeys-updateApiKey>
+   updateApiKeyRoles </command/atlas-api-programmaticAPIKeys-updateApiKeyRoles>
+

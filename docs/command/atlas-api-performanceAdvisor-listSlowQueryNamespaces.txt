@@ -1,0 +1,84 @@
+.. _atlas-api-performanceAdvisor-listSlowQueryNamespaces:
+
+====================================================
+atlas api performanceAdvisor listSlowQueryNamespaces
+====================================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Return All Namespaces for One Host
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api performanceAdvisor listSlowQueryNamespaces [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --duration
+     - int
+     - false
+     - Length of time expressed during which the query finds suggested indexes among the managed namespaces in the cluster. This parameter expresses its value in milliseconds.
+       
+       - If you don&#39;t specify the **since** parameter, the endpoint returns data covering the duration before the current time.
+       - If you specify neither the **duration** nor **since** parameters, the endpoint returns data from the previous 24 hours.
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for listSlowQueryNamespaces
+   * - --processId
+     - string
+     - true
+     - Combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (&#x60;mongod&#x60; or &#x60;mongos&#x60;). The port must be the IANA port on which the MongoDB process listens for requests.
+   * - --projectId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies your project.
+   * - --since
+     - int
+     - false
+     - Date and time from which the query retrieves the suggested indexes. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
+       
+       - If you don&#39;t specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time.
+       - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

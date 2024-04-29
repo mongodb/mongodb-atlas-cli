@@ -1,0 +1,70 @@
+.. _atlas-api-federatedAuthentication-getIdentityProvider:
+
+=====================================================
+atlas api federatedAuthentication getIdentityProvider
+=====================================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Return one identity provider from the specified federation by id.
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api federatedAuthentication getIdentityProvider [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --federationSettingsId
+     - string
+     - true
+     - Unique 24-hexadecimal digit string that identifies your federation.
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for getIdentityProvider
+   * - --identityProviderId
+     - string
+     - true
+     - Unique string that identifies the identity provider to connect. If using an API version before 11-15-2023, use the legacy 20-hexadecimal digit id. This id can be found within the Federation Management Console &gt; Identity Providers tab by clicking the info icon in the IdP ID row of a configured identity provider. For all other versions, use the 24-hexadecimal digit id.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

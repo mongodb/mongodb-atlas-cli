@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ func Builder() *cobra.Command {
 		cloudProviderAccessBuilder(),
 		clusterOutageSimulationBuilder(),
 		clustersBuilder(),
+		collectionLevelMetricsBuilder(),
 		customDatabaseRolesBuilder(),
 		dataFederationBuilder(),
 		dataLakePipelinesBuilder(),
@@ -51,7 +52,6 @@ func Builder() *cobra.Command {
 		invoicesBuilder(),
 		lDAPConfigurationBuilder(),
 		legacyBackupBuilder(),
-		legacyBackupRestoreJobsBuilder(),
 		maintenanceWindowsBuilder(),
 		mongoDBCloudUsersBuilder(),
 		monitoringAndLogsBuilder(),

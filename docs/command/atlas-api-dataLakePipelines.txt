@@ -1,0 +1,83 @@
+.. _atlas-api-dataLakePipelines:
+
+===========================
+atlas api dataLakePipelines
+===========================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Returns, adds, edits, and removes Atlas Data Lake Pipelines and associated runs.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for dataLakePipelines
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Related Commands
+----------------
+
+* :ref:`atlas-api-dataLakePipelines-createPipeline` - Create One Data Lake Pipeline
+* :ref:`atlas-api-dataLakePipelines-deletePipeline` - Remove One Data Lake Pipeline
+* :ref:`atlas-api-dataLakePipelines-deletePipelineRunDataset` - Delete Pipeline Run Dataset
+* :ref:`atlas-api-dataLakePipelines-getPipeline` - Return One Data Lake Pipeline
+* :ref:`atlas-api-dataLakePipelines-getPipelineRun` - Return One Data Lake Pipeline Run
+* :ref:`atlas-api-dataLakePipelines-listPipelineRuns` - Return All Data Lake Pipeline Runs from One Project
+* :ref:`atlas-api-dataLakePipelines-listPipelineSchedules` - Return Available Ingestion Schedules for One Data Lake Pipeline
+* :ref:`atlas-api-dataLakePipelines-listPipelineSnapshots` - Return Available Backup Snapshots for One Data Lake Pipeline
+* :ref:`atlas-api-dataLakePipelines-listPipelines` - Return All Data Lake Pipelines from One Project
+* :ref:`atlas-api-dataLakePipelines-pausePipeline` - Pause One Data Lake Pipeline
+* :ref:`atlas-api-dataLakePipelines-resumePipeline` - Resume One Data Lake Pipeline
+* :ref:`atlas-api-dataLakePipelines-triggerSnapshotIngestion` - Trigger on demand snapshot ingestion
+* :ref:`atlas-api-dataLakePipelines-updatePipeline` - Update One Data Lake Pipeline
+
+
+.. toctree::
+   :titlesonly:
+
+   createPipeline </command/atlas-api-dataLakePipelines-createPipeline>
+   deletePipeline </command/atlas-api-dataLakePipelines-deletePipeline>
+   deletePipelineRunDataset </command/atlas-api-dataLakePipelines-deletePipelineRunDataset>
+   getPipeline </command/atlas-api-dataLakePipelines-getPipeline>
+   getPipelineRun </command/atlas-api-dataLakePipelines-getPipelineRun>
+   listPipelineRuns </command/atlas-api-dataLakePipelines-listPipelineRuns>
+   listPipelineSchedules </command/atlas-api-dataLakePipelines-listPipelineSchedules>
+   listPipelineSnapshots </command/atlas-api-dataLakePipelines-listPipelineSnapshots>
+   listPipelines </command/atlas-api-dataLakePipelines-listPipelines>
+   pausePipeline </command/atlas-api-dataLakePipelines-pausePipeline>
+   resumePipeline </command/atlas-api-dataLakePipelines-resumePipeline>
+   triggerSnapshotIngestion </command/atlas-api-dataLakePipelines-triggerSnapshotIngestion>
+   updatePipeline </command/atlas-api-dataLakePipelines-updatePipeline>
+

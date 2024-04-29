@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,10 +28,10 @@ import (
 	"time"
 
 	"github.com/briandowns/spinner"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 type createClusterOpts struct {
@@ -245,7 +245,7 @@ func deleteClusterBuilder() *cobra.Command {
 	opts := deleteClusterOpts{}
 	cmd := &cobra.Command{
 		Use:   "deleteCluster",
-		Short: "Remove One Multi-Cloud Cluster from One Project",
+		Short: "Remove One Cluster from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -334,7 +334,7 @@ func getClusterBuilder() *cobra.Command {
 	opts := getClusterOpts{}
 	cmd := &cobra.Command{
 		Use:   "getCluster",
-		Short: "Return One Multi-Cloud Cluster from One Project",
+		Short: "Return One Cluster from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -346,7 +346,7 @@ func getClusterBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
-	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this advanced cluster.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies this cluster.`)
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
@@ -1032,7 +1032,7 @@ func testFailoverBuilder() *cobra.Command {
 	opts := testFailoverOpts{}
 	cmd := &cobra.Command{
 		Use:   "testFailover",
-		Short: "Test Failover for One Multi-Cloud Cluster",
+		Short: "Test Failover for One Cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1153,7 +1153,7 @@ func updateClusterBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "updateCluster",
-		Short: "Modify One Multi-Cloud Cluster from One Project",
+		Short: "Modify One Cluster from One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -1334,8 +1334,8 @@ func (opts *upgradeSharedClusterOpts) preRun() (err error) {
 	return nil
 }
 
-func (opts *upgradeSharedClusterOpts) readData(r io.Reader) (*admin.LegacyAtlasCluster, error) {
-	var out *admin.LegacyAtlasCluster
+func (opts *upgradeSharedClusterOpts) readData(r io.Reader) (*admin.LegacyAtlasTenantClusterUpgradeRequest, error) {
+	var out *admin.LegacyAtlasTenantClusterUpgradeRequest
 
 	var buf []byte
 	var err error
@@ -1365,7 +1365,7 @@ func (opts *upgradeSharedClusterOpts) run(ctx context.Context, r io.Reader) erro
 	params := &admin.UpgradeSharedClusterApiParams{
 		GroupId: opts.groupId,
 
-		LegacyAtlasCluster: data,
+		LegacyAtlasTenantClusterUpgradeRequest: data,
 	}
 
 	var err error

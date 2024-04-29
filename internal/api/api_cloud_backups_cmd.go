@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 type cancelBackupRestoreJobOpts struct {
@@ -1261,7 +1261,7 @@ type getDataProtectionSettingsOpts struct {
 	groupId string
 	format  string
 	tmpl    *template.Template
-	resp    *admin.DataProtectionSettings
+	resp    *admin.DataProtectionSettings20231001
 }
 
 func (opts *getDataProtectionSettingsOpts) preRun() (err error) {
@@ -2727,11 +2727,12 @@ type updateDataProtectionSettingsOpts struct {
 	client  *admin.APIClient
 	groupId string
 
-	filename string
-	fs       afero.Fs
-	format   string
-	tmpl     *template.Template
-	resp     *admin.DataProtectionSettings
+	overwriteBackupPolicies bool
+	filename                string
+	fs                      afero.Fs
+	format                  string
+	tmpl                    *template.Template
+	resp                    *admin.DataProtectionSettings20231001
 }
 
 func (opts *updateDataProtectionSettingsOpts) preRun() (err error) {
@@ -2759,8 +2760,8 @@ func (opts *updateDataProtectionSettingsOpts) preRun() (err error) {
 	return nil
 }
 
-func (opts *updateDataProtectionSettingsOpts) readData(r io.Reader) (*admin.DataProtectionSettings, error) {
-	var out *admin.DataProtectionSettings
+func (opts *updateDataProtectionSettingsOpts) readData(r io.Reader) (*admin.DataProtectionSettings20231001, error) {
+	var out *admin.DataProtectionSettings20231001
 
 	var buf []byte
 	var err error
@@ -2790,7 +2791,9 @@ func (opts *updateDataProtectionSettingsOpts) run(ctx context.Context, r io.Read
 	params := &admin.UpdateDataProtectionSettingsApiParams{
 		GroupId: opts.groupId,
 
-		DataProtectionSettings: data,
+		OverwriteBackupPolicies: &opts.overwriteBackupPolicies,
+
+		DataProtectionSettings20231001: data,
 	}
 
 	var err error
@@ -2837,6 +2840,7 @@ func updateDataProtectionSettingsBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 
+	cmd.Flags().BoolVar(&opts.overwriteBackupPolicies, "overwriteBackupPolicies", true, `Flag that indicates whether to overwrite non complying backup policies with the new data protection settings or not.`)
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
 	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")

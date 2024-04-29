@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 type createStreamConnectionOpts struct {
@@ -452,6 +452,101 @@ func deleteStreamInstanceBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
 	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the stream instance to delete.`)
+
+	_ = cmd.MarkFlagRequired("tenantName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
+	return cmd
+}
+
+type downloadStreamTenantAuditLogsOpts struct {
+	client     *admin.APIClient
+	groupId    string
+	tenantName string
+	endDate    int64
+	startDate  int64
+	format     string
+	tmpl       *template.Template
+	resp       io.ReadCloser
+}
+
+func (opts *downloadStreamTenantAuditLogsOpts) preRun() (err error) {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	if opts.format != "" {
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (opts *downloadStreamTenantAuditLogsOpts) run(ctx context.Context, _ io.Reader) error {
+
+	params := &admin.DownloadStreamTenantAuditLogsApiParams{
+		GroupId:    opts.groupId,
+		TenantName: opts.tenantName,
+		EndDate:    &opts.endDate,
+		StartDate:  &opts.startDate,
+	}
+
+	var err error
+	opts.resp, _, err = opts.client.StreamsApi.DownloadStreamTenantAuditLogsWithParams(ctx, params).Execute()
+	return err
+}
+
+func (opts *downloadStreamTenantAuditLogsOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	if opts.format == "" {
+		_, err := fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	return opts.tmpl.Execute(w, parsedJSON)
+}
+
+func downloadStreamTenantAuditLogsBuilder() *cobra.Command {
+	opts := downloadStreamTenantAuditLogsOpts{}
+	cmd := &cobra.Command{
+		Use:   "downloadStreamTenantAuditLogs",
+		Short: "Download Audit Logs for One Atlas Stream Processing Instance",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.preRun()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
+	cmd.Flags().StringVar(&opts.tenantName, "tenantName", "", `Human-readable label that identifies the stream instance.`)
+	cmd.Flags().Int64Var(&opts.endDate, "endDate", 0, `Timestamp that specifies the end point for the range of log messages to download.  MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`)
+	cmd.Flags().Int64Var(&opts.startDate, "startDate", 0, `Timestamp that specifies the starting point for the range of log messages to download. MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`)
 
 	_ = cmd.MarkFlagRequired("tenantName")
 	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
@@ -1091,6 +1186,7 @@ func streamsBuilder() *cobra.Command {
 		createStreamInstanceBuilder(),
 		deleteStreamConnectionBuilder(),
 		deleteStreamInstanceBuilder(),
+		downloadStreamTenantAuditLogsBuilder(),
 		getStreamConnectionBuilder(),
 		getStreamInstanceBuilder(),
 		listStreamConnectionsBuilder(),

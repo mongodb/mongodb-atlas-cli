@@ -1,0 +1,74 @@
+.. _atlas-api-teams-addTeamUser:
+
+===========================
+atlas api teams addTeamUser
+===========================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Assign MongoDB Cloud Users from One Organization to One Team
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api teams addTeamUser [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -f, --file
+     - string
+     - false
+     - Path to an optional JSON configuration file if not passed stdin is expected
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for addTeamUser
+   * - --orgId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies the organization
+   * - --teamId
+     - string
+     - true
+     - Unique 24-hexadecimal character string that identifies the team to which you want to add MongoDB Cloud users.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

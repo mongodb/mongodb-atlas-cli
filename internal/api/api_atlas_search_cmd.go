@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,11 +26,135 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
+
+type createAtlasSearchDeploymentOpts struct {
+	client      *admin.APIClient
+	groupId     string
+	clusterName string
+
+	filename string
+	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
+	resp     *admin.ApiSearchDeploymentResponse
+}
+
+func (opts *createAtlasSearchDeploymentOpts) preRun() (err error) {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	if opts.format != "" {
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (opts *createAtlasSearchDeploymentOpts) readData(r io.Reader) (*admin.ApiSearchDeploymentRequest, error) {
+	var out *admin.ApiSearchDeploymentRequest
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(r)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createAtlasSearchDeploymentOpts) run(ctx context.Context, r io.Reader) error {
+	data, errData := opts.readData(r)
+	if errData != nil {
+		return errData
+	}
+
+	params := &admin.CreateAtlasSearchDeploymentApiParams{
+		GroupId:     opts.groupId,
+		ClusterName: opts.clusterName,
+
+		ApiSearchDeploymentRequest: data,
+	}
+
+	var err error
+	opts.resp, _, err = opts.client.AtlasSearchApi.CreateAtlasSearchDeploymentWithParams(ctx, params).Execute()
+	return err
+}
+
+func (opts *createAtlasSearchDeploymentOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	if opts.format == "" {
+		_, err := fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	return opts.tmpl.Execute(w, parsedJSON)
+}
+
+func createAtlasSearchDeploymentBuilder() *cobra.Command {
+	opts := createAtlasSearchDeploymentOpts{
+		fs: afero.NewOsFs(),
+	}
+	cmd := &cobra.Command{
+		Use:   "createAtlasSearchDeployment",
+		Short: "Create Search Nodes",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.preRun()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Label that identifies the cluster to create Search Nodes for.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
+	return cmd
+}
 
 type createAtlasSearchIndexOpts struct {
 	client      *admin.APIClient
@@ -156,6 +280,70 @@ func createAtlasSearchIndexBuilder() *cobra.Command {
 	return cmd
 }
 
+type deleteAtlasSearchDeploymentOpts struct {
+	client      *admin.APIClient
+	groupId     string
+	clusterName string
+}
+
+func (opts *deleteAtlasSearchDeploymentOpts) preRun() (err error) {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	return nil
+}
+
+func (opts *deleteAtlasSearchDeploymentOpts) run(ctx context.Context, _ io.Reader) error {
+
+	params := &admin.DeleteAtlasSearchDeploymentApiParams{
+		GroupId:     opts.groupId,
+		ClusterName: opts.clusterName,
+	}
+
+	var err error
+	_, err = opts.client.AtlasSearchApi.DeleteAtlasSearchDeploymentWithParams(ctx, params).Execute()
+	return err
+}
+
+func (opts *deleteAtlasSearchDeploymentOpts) postRun(_ context.Context, _ io.Writer) error {
+
+	return nil
+}
+
+func deleteAtlasSearchDeploymentBuilder() *cobra.Command {
+	opts := deleteAtlasSearchDeploymentOpts{}
+	cmd := &cobra.Command{
+		Use:   "deleteAtlasSearchDeployment",
+		Short: "Delete Search Nodes",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.preRun()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Label that identifies the cluster to delete.`)
+
+	_ = cmd.MarkFlagRequired("clusterName")
+	return cmd
+}
+
 type deleteAtlasSearchIndexOpts struct {
 	client      *admin.APIClient
 	groupId     string
@@ -245,6 +433,95 @@ func deleteAtlasSearchIndexBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired("clusterName")
 	_ = cmd.MarkFlagRequired("indexId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
+	return cmd
+}
+
+type getAtlasSearchDeploymentOpts struct {
+	client      *admin.APIClient
+	groupId     string
+	clusterName string
+	format      string
+	tmpl        *template.Template
+	resp        *admin.ApiSearchDeploymentResponse
+}
+
+func (opts *getAtlasSearchDeploymentOpts) preRun() (err error) {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	if opts.format != "" {
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (opts *getAtlasSearchDeploymentOpts) run(ctx context.Context, _ io.Reader) error {
+
+	params := &admin.GetAtlasSearchDeploymentApiParams{
+		GroupId:     opts.groupId,
+		ClusterName: opts.clusterName,
+	}
+
+	var err error
+	opts.resp, _, err = opts.client.AtlasSearchApi.GetAtlasSearchDeploymentWithParams(ctx, params).Execute()
+	return err
+}
+
+func (opts *getAtlasSearchDeploymentOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	if opts.format == "" {
+		_, err := fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	return opts.tmpl.Execute(w, parsedJSON)
+}
+
+func getAtlasSearchDeploymentBuilder() *cobra.Command {
+	opts := getAtlasSearchDeploymentOpts{}
+	cmd := &cobra.Command{
+		Use:   "getAtlasSearchDeployment",
+		Short: "Return Search Nodes",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.preRun()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Label that identifies the cluster to return the Search Nodes for.`)
+
+	_ = cmd.MarkFlagRequired("clusterName")
 	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
 	return cmd
 }
@@ -439,6 +716,130 @@ func listAtlasSearchIndexesBuilder() *cobra.Command {
 	return cmd
 }
 
+type updateAtlasSearchDeploymentOpts struct {
+	client      *admin.APIClient
+	groupId     string
+	clusterName string
+
+	filename string
+	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
+	resp     *admin.ApiSearchDeploymentResponse
+}
+
+func (opts *updateAtlasSearchDeploymentOpts) preRun() (err error) {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	if opts.format != "" {
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (opts *updateAtlasSearchDeploymentOpts) readData(r io.Reader) (*admin.ApiSearchDeploymentRequest, error) {
+	var out *admin.ApiSearchDeploymentRequest
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(r)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *updateAtlasSearchDeploymentOpts) run(ctx context.Context, r io.Reader) error {
+	data, errData := opts.readData(r)
+	if errData != nil {
+		return errData
+	}
+
+	params := &admin.UpdateAtlasSearchDeploymentApiParams{
+		GroupId:     opts.groupId,
+		ClusterName: opts.clusterName,
+
+		ApiSearchDeploymentRequest: data,
+	}
+
+	var err error
+	opts.resp, _, err = opts.client.AtlasSearchApi.UpdateAtlasSearchDeploymentWithParams(ctx, params).Execute()
+	return err
+}
+
+func (opts *updateAtlasSearchDeploymentOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	if opts.format == "" {
+		_, err := fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	return opts.tmpl.Execute(w, parsedJSON)
+}
+
+func updateAtlasSearchDeploymentBuilder() *cobra.Command {
+	opts := updateAtlasSearchDeploymentOpts{
+		fs: afero.NewOsFs(),
+	}
+	cmd := &cobra.Command{
+		Use:   "updateAtlasSearchDeployment",
+		Short: "Update Search Nodes",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.preRun()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Label that identifies the cluster to update the Search Nodes for.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
+	return cmd
+}
+
 type updateAtlasSearchIndexOpts struct {
 	client      *admin.APIClient
 	groupId     string
@@ -573,10 +974,14 @@ func atlasSearchBuilder() *cobra.Command {
 		Short: `Returns, adds, edits, and removes Atlas Search indexes for the specified cluster. Also returns and updates user-defined analyzers for the specified cluster.`,
 	}
 	cmd.AddCommand(
+		createAtlasSearchDeploymentBuilder(),
 		createAtlasSearchIndexBuilder(),
+		deleteAtlasSearchDeploymentBuilder(),
 		deleteAtlasSearchIndexBuilder(),
+		getAtlasSearchDeploymentBuilder(),
 		getAtlasSearchIndexBuilder(),
 		listAtlasSearchIndexesBuilder(),
+		updateAtlasSearchDeploymentBuilder(),
 		updateAtlasSearchIndexBuilder(),
 	)
 	return cmd

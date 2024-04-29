@@ -1,0 +1,82 @@
+.. _atlas-api-networkPeering-listPeeringContainerByCloudProvider:
+
+============================================================
+atlas api networkPeering listPeeringContainerByCloudProvider
+============================================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Return All Network Peering Containers in One Project for One Cloud Provider
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api networkPeering listPeeringContainerByCloudProvider [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for listPeeringContainerByCloudProvider
+   * - --includeCount
+     - 
+     - false
+     - Flag that indicates whether the response returns the total number of items (**totalCount**) in the response. This value defaults to true.
+   * - --itemsPerPage
+     - int
+     - false
+     - Number of items that the response returns per page. This value defaults to 100.
+   * - --pageNum
+     - int
+     - false
+     - Number of the page that displays the current set of the total objects that the response returns. This value defaults to 1.
+   * - --projectId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies your project.
+   * - --providerName
+     - string
+     - true
+     - Cloud service provider that serves the desired network peering containers. This value defaults to "&quot;AWS&quot;".
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

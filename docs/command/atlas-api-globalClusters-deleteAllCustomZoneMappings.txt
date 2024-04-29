@@ -1,0 +1,70 @@
+.. _atlas-api-globalClusters-deleteAllCustomZoneMappings:
+
+====================================================
+atlas api globalClusters deleteAllCustomZoneMappings
+====================================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Remove All Custom Zone Mappings from One Global Cluster
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api globalClusters deleteAllCustomZoneMappings [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --clusterName
+     - string
+     - true
+     - Human-readable label that identifies this cluster.
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for deleteAllCustomZoneMappings
+   * - --projectId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies your project.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

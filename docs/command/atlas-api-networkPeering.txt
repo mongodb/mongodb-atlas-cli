@@ -1,0 +1,84 @@
+.. _atlas-api-networkPeering:
+
+========================
+atlas api networkPeering
+========================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Returns, adds, edits, and removes network peering containers and peering connections.
+When you deploy an M10+ dedicated cluster, Atlas creates a VPC for the selected provider and region or regions if no existing VPC or VPC peering connection exists for that provider and region. Atlas assigns the VPC a Classless Inter-Domain Routing (CIDR) block.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for networkPeering
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Related Commands
+----------------
+
+* :ref:`atlas-api-networkPeering-createPeeringConnection` - Create One New Network Peering Connection
+* :ref:`atlas-api-networkPeering-createPeeringContainer` - Create One New Network Peering Container
+* :ref:`atlas-api-networkPeering-deletePeeringConnection` - Remove One Existing Network Peering Connection
+* :ref:`atlas-api-networkPeering-deletePeeringContainer` - Remove One Network Peering Container
+* :ref:`atlas-api-networkPeering-disablePeering` - Disable Connect via Peering Only Mode for One Project
+* :ref:`atlas-api-networkPeering-getPeeringConnection` - Return One Network Peering Connection in One Project
+* :ref:`atlas-api-networkPeering-getPeeringContainer` - Return One Network Peering Container
+* :ref:`atlas-api-networkPeering-listPeeringConnections` - Return All Network Peering Connections in One Project
+* :ref:`atlas-api-networkPeering-listPeeringContainerByCloudProvider` - Return All Network Peering Containers in One Project for One Cloud Provider
+* :ref:`atlas-api-networkPeering-listPeeringContainers` - Return All Network Peering Containers in One Project
+* :ref:`atlas-api-networkPeering-updatePeeringConnection` - Update One New Network Peering Connection
+* :ref:`atlas-api-networkPeering-updatePeeringContainer` - Update One Network Peering Container
+* :ref:`atlas-api-networkPeering-verifyConnectViaPeeringOnlyModeForOneProject` - Verify Connect via Peering Only Mode for One Project
+
+
+.. toctree::
+   :titlesonly:
+
+   createPeeringConnection </command/atlas-api-networkPeering-createPeeringConnection>
+   createPeeringContainer </command/atlas-api-networkPeering-createPeeringContainer>
+   deletePeeringConnection </command/atlas-api-networkPeering-deletePeeringConnection>
+   deletePeeringContainer </command/atlas-api-networkPeering-deletePeeringContainer>
+   disablePeering </command/atlas-api-networkPeering-disablePeering>
+   getPeeringConnection </command/atlas-api-networkPeering-getPeeringConnection>
+   getPeeringContainer </command/atlas-api-networkPeering-getPeeringContainer>
+   listPeeringConnections </command/atlas-api-networkPeering-listPeeringConnections>
+   listPeeringContainerByCloudProvider </command/atlas-api-networkPeering-listPeeringContainerByCloudProvider>
+   listPeeringContainers </command/atlas-api-networkPeering-listPeeringContainers>
+   updatePeeringConnection </command/atlas-api-networkPeering-updatePeeringConnection>
+   updatePeeringContainer </command/atlas-api-networkPeering-updatePeeringContainer>
+   verifyConnectViaPeeringOnlyModeForOneProject </command/atlas-api-networkPeering-verifyConnectViaPeeringOnlyModeForOneProject>
+

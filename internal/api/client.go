@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@
 package api
 
 import (
-	"time"
 	"net"
 	"net/http"
+	"time"
 
 	"github.com/mongodb-forks/digest"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 	"go.mongodb.org/atlas/auth"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
 )
 
 const (

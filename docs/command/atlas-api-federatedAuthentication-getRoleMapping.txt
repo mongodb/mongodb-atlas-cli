@@ -1,0 +1,74 @@
+.. _atlas-api-federatedAuthentication-getRoleMapping:
+
+================================================
+atlas api federatedAuthentication getRoleMapping
+================================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Return One Role Mapping from One Organization
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api federatedAuthentication getRoleMapping [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --federationSettingsId
+     - string
+     - true
+     - Unique 24-hexadecimal digit string that identifies your federation.
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for getRoleMapping
+   * - --id
+     - string
+     - true
+     - Unique 24-hexadecimal digit string that identifies the role mapping that you want to return.
+   * - --orgId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies the organization
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

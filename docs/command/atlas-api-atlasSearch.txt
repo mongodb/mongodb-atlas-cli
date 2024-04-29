@@ -1,0 +1,75 @@
+.. _atlas-api-atlasSearch:
+
+=====================
+atlas api atlasSearch
+=====================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Returns, adds, edits, and removes Atlas Search indexes for the specified cluster. Also returns and updates user-defined analyzers for the specified cluster.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for atlasSearch
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Related Commands
+----------------
+
+* :ref:`atlas-api-atlasSearch-createAtlasSearchDeployment` - Create Search Nodes
+* :ref:`atlas-api-atlasSearch-createAtlasSearchIndex` - Create One Atlas Search Index
+* :ref:`atlas-api-atlasSearch-deleteAtlasSearchDeployment` - Delete Search Nodes
+* :ref:`atlas-api-atlasSearch-deleteAtlasSearchIndex` - Remove One Atlas Search Index
+* :ref:`atlas-api-atlasSearch-getAtlasSearchDeployment` - Return Search Nodes
+* :ref:`atlas-api-atlasSearch-getAtlasSearchIndex` - Return One Atlas Search Index
+* :ref:`atlas-api-atlasSearch-listAtlasSearchIndexes` - Return All Atlas Search Indexes for One Collection
+* :ref:`atlas-api-atlasSearch-updateAtlasSearchDeployment` - Update Search Nodes
+* :ref:`atlas-api-atlasSearch-updateAtlasSearchIndex` - Update One Atlas Search Index
+
+
+.. toctree::
+   :titlesonly:
+
+   createAtlasSearchDeployment </command/atlas-api-atlasSearch-createAtlasSearchDeployment>
+   createAtlasSearchIndex </command/atlas-api-atlasSearch-createAtlasSearchIndex>
+   deleteAtlasSearchDeployment </command/atlas-api-atlasSearch-deleteAtlasSearchDeployment>
+   deleteAtlasSearchIndex </command/atlas-api-atlasSearch-deleteAtlasSearchIndex>
+   getAtlasSearchDeployment </command/atlas-api-atlasSearch-getAtlasSearchDeployment>
+   getAtlasSearchIndex </command/atlas-api-atlasSearch-getAtlasSearchIndex>
+   listAtlasSearchIndexes </command/atlas-api-atlasSearch-listAtlasSearchIndexes>
+   updateAtlasSearchDeployment </command/atlas-api-atlasSearch-updateAtlasSearchDeployment>
+   updateAtlasSearchIndex </command/atlas-api-atlasSearch-updateAtlasSearchIndex>
+

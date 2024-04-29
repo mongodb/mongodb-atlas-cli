@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,11 +26,131 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
+
+type addUserToProjectOpts struct {
+	client  *admin.APIClient
+	groupId string
+
+	filename string
+	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
+	resp     *admin.OrganizationInvitation
+}
+
+func (opts *addUserToProjectOpts) preRun() (err error) {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	if opts.format != "" {
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (opts *addUserToProjectOpts) readData(r io.Reader) (*admin.GroupInvitationRequest, error) {
+	var out *admin.GroupInvitationRequest
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(r)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *addUserToProjectOpts) run(ctx context.Context, r io.Reader) error {
+	data, errData := opts.readData(r)
+	if errData != nil {
+		return errData
+	}
+
+	params := &admin.AddUserToProjectApiParams{
+		GroupId: opts.groupId,
+
+		GroupInvitationRequest: data,
+	}
+
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.AddUserToProjectWithParams(ctx, params).Execute()
+	return err
+}
+
+func (opts *addUserToProjectOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	if opts.format == "" {
+		_, err := fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	return opts.tmpl.Execute(w, parsedJSON)
+}
+
+func addUserToProjectBuilder() *cobra.Command {
+	opts := addUserToProjectOpts{
+		fs: afero.NewOsFs(),
+	}
+	cmd := &cobra.Command{
+		Use:   "addUserToProject",
+		Short: "Add One MongoDB Cloud User to One Project",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.preRun()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
+	return cmd
+}
 
 type createProjectOpts struct {
 	client *admin.APIClient
@@ -1397,6 +1517,91 @@ func removeProjectUserBuilder() *cobra.Command {
 	return cmd
 }
 
+type returnAllIPAddressesOpts struct {
+	client  *admin.APIClient
+	groupId string
+	format  string
+	tmpl    *template.Template
+	resp    *admin.GroupIPAddresses
+}
+
+func (opts *returnAllIPAddressesOpts) preRun() (err error) {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	if opts.format != "" {
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (opts *returnAllIPAddressesOpts) run(ctx context.Context, _ io.Reader) error {
+
+	params := &admin.ReturnAllIPAddressesApiParams{
+		GroupId: opts.groupId,
+	}
+
+	var err error
+	opts.resp, _, err = opts.client.ProjectsApi.ReturnAllIPAddressesWithParams(ctx, params).Execute()
+	return err
+}
+
+func (opts *returnAllIPAddressesOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	if opts.format == "" {
+		_, err := fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	return opts.tmpl.Execute(w, parsedJSON)
+}
+
+func returnAllIPAddressesBuilder() *cobra.Command {
+	opts := returnAllIPAddressesOpts{}
+	cmd := &cobra.Command{
+		Use:   "returnAllIPAddresses",
+		Short: "Return All IP Addresses for One Project",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.preRun()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
+
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
+	return cmd
+}
+
 type setProjectLimitOpts struct {
 	client    *admin.APIClient
 	limitName string
@@ -1573,8 +1778,8 @@ func (opts *updateProjectOpts) preRun() (err error) {
 	return nil
 }
 
-func (opts *updateProjectOpts) readData(r io.Reader) (*admin.GroupName, error) {
-	var out *admin.GroupName
+func (opts *updateProjectOpts) readData(r io.Reader) (*admin.GroupUpdate, error) {
+	var out *admin.GroupUpdate
 
 	var buf []byte
 	var err error
@@ -1604,7 +1809,7 @@ func (opts *updateProjectOpts) run(ctx context.Context, r io.Reader) error {
 	params := &admin.UpdateProjectApiParams{
 		GroupId: opts.groupId,
 
-		GroupName: data,
+		GroupUpdate: data,
 	}
 
 	var err error
@@ -1638,7 +1843,7 @@ func updateProjectBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "updateProject",
-		Short: "Update One Project Name",
+		Short: "Update One Project",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -2151,6 +2356,7 @@ func projectsBuilder() *cobra.Command {
 		Short: `Returns, adds, and edits collections of clusters and users in MongoDB Cloud.`,
 	}
 	cmd.AddCommand(
+		addUserToProjectBuilder(),
 		createProjectBuilder(),
 		createProjectInvitationBuilder(),
 		deleteProjectBuilder(),
@@ -2166,6 +2372,7 @@ func projectsBuilder() *cobra.Command {
 		listProjectUsersBuilder(),
 		listProjectsBuilder(),
 		removeProjectUserBuilder(),
+		returnAllIPAddressesBuilder(),
 		setProjectLimitBuilder(),
 		updateProjectBuilder(),
 		updateProjectInvitationBuilder(),

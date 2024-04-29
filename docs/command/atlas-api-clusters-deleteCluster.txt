@@ -1,0 +1,70 @@
+.. _atlas-api-clusters-deleteCluster:
+
+================================
+atlas api clusters deleteCluster
+================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Remove One Cluster from One Project
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api clusters deleteCluster [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --clusterName
+     - string
+     - true
+     - Human-readable label that identifies the cluster.
+   * - -h, --help
+     - 
+     - false
+     - help for deleteCluster
+   * - --projectId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies your project.
+   * - --retainBackups
+     - 
+     - false
+     - Flag that indicates whether to retain backup snapshots for the deleted dedicated cluster.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

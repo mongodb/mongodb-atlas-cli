@@ -1,0 +1,85 @@
+.. _atlas-api-monitoringAndLogs:
+
+===========================
+atlas api monitoringAndLogs
+===========================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Returns database deployment monitoring and logging data.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for monitoringAndLogs
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Related Commands
+----------------
+
+* :ref:`atlas-api-monitoringAndLogs-getAtlasProcess` - Return One MongoDB Process by ID
+* :ref:`atlas-api-monitoringAndLogs-getDatabase` - Return One Database for a MongoDB Process
+* :ref:`atlas-api-monitoringAndLogs-getDatabaseMeasurements` - Return Measurements of One Database for One MongoDB Process
+* :ref:`atlas-api-monitoringAndLogs-getDiskMeasurements` - Return Measurements of One Disk for One MongoDB Process
+* :ref:`atlas-api-monitoringAndLogs-getHostLogs` - Download Logs for One Cluster Host in One Project
+* :ref:`atlas-api-monitoringAndLogs-getHostMeasurements` - Return Measurements for One MongoDB Process
+* :ref:`atlas-api-monitoringAndLogs-getIndexMetrics` - Return Atlas Search Metrics for One Index in One Specified Namespace
+* :ref:`atlas-api-monitoringAndLogs-getMeasurements` - Return Atlas Search Hardware and Status Metrics
+* :ref:`atlas-api-monitoringAndLogs-listAtlasProcesses` - Return All MongoDB Processes in One Project
+* :ref:`atlas-api-monitoringAndLogs-listDatabases` - Return Available Databases for One MongoDB Process
+* :ref:`atlas-api-monitoringAndLogs-listDiskMeasurements` - Return Measurements of One Disk
+* :ref:`atlas-api-monitoringAndLogs-listDiskPartitions` - Return Available Disks for One MongoDB Process
+* :ref:`atlas-api-monitoringAndLogs-listIndexMetrics` - Return All Atlas Search Index Metrics for One Namespace
+* :ref:`atlas-api-monitoringAndLogs-listMetricTypes` - Return All Atlas Search Metric Types for One Process
+
+
+.. toctree::
+   :titlesonly:
+
+   getAtlasProcess </command/atlas-api-monitoringAndLogs-getAtlasProcess>
+   getDatabase </command/atlas-api-monitoringAndLogs-getDatabase>
+   getDatabaseMeasurements </command/atlas-api-monitoringAndLogs-getDatabaseMeasurements>
+   getDiskMeasurements </command/atlas-api-monitoringAndLogs-getDiskMeasurements>
+   getHostLogs </command/atlas-api-monitoringAndLogs-getHostLogs>
+   getHostMeasurements </command/atlas-api-monitoringAndLogs-getHostMeasurements>
+   getIndexMetrics </command/atlas-api-monitoringAndLogs-getIndexMetrics>
+   getMeasurements </command/atlas-api-monitoringAndLogs-getMeasurements>
+   listAtlasProcesses </command/atlas-api-monitoringAndLogs-listAtlasProcesses>
+   listDatabases </command/atlas-api-monitoringAndLogs-listDatabases>
+   listDiskMeasurements </command/atlas-api-monitoringAndLogs-listDiskMeasurements>
+   listDiskPartitions </command/atlas-api-monitoringAndLogs-listDiskPartitions>
+   listIndexMetrics </command/atlas-api-monitoringAndLogs-listIndexMetrics>
+   listMetricTypes </command/atlas-api-monitoringAndLogs-listMetricTypes>
+

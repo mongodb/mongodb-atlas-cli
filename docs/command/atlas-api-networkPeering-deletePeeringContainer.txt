@@ -1,0 +1,70 @@
+.. _atlas-api-networkPeering-deletePeeringContainer:
+
+===============================================
+atlas api networkPeering deletePeeringContainer
+===============================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Remove One Network Peering Container
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api networkPeering deletePeeringContainer [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --containerId
+     - string
+     - true
+     - Unique 24-hexadecimal digit string that identifies the MongoDB Cloud network container that you want to remove.
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for deletePeeringContainer
+   * - --projectId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies your project.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

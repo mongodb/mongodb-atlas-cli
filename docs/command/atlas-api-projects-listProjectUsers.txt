@@ -1,0 +1,86 @@
+.. _atlas-api-projects-listProjectUsers:
+
+===================================
+atlas api projects listProjectUsers
+===================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Return All Users in One Project
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api projects listProjectUsers [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --flattenTeams
+     - 
+     - false
+     - Flag that indicates whether the returned list should include users who belong to a team with a role in this project. You might not have assigned the individual users a role in this project. If &#x60;&quot;flattenTeams&quot; : false&#x60;, this resource returns only users with a role in the project.  If &#x60;&quot;flattenTeams&quot; : true&#x60;, this resource returns both users with roles in the project and users who belong to teams with roles in the project.
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for listProjectUsers
+   * - --includeCount
+     - 
+     - false
+     - Flag that indicates whether the response returns the total number of items (**totalCount**) in the response. This value defaults to true.
+   * - --includeOrgUsers
+     - 
+     - false
+     - Flag that indicates whether the returned list should include users with implicit access to the project, the Organization Owner or Organization Read Only role. You might not have assigned the individual users a role in this project. If &#x60;&quot;includeOrgUsers&quot;: false&#x60;, this resource returns only users with a role in the project. If &#x60;&quot;includeOrgUsers&quot;: true&#x60;, this resource returns both users with roles in the project and users who have implicit access to the project through their organization role.
+   * - --itemsPerPage
+     - int
+     - false
+     - Number of items that the response returns per page. This value defaults to 100.
+   * - --pageNum
+     - int
+     - false
+     - Number of the page that displays the current set of the total objects that the response returns. This value defaults to 1.
+   * - --projectId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies your project.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

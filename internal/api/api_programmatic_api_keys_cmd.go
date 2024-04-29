@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 type addProjectApiKeyOpts struct {
@@ -288,7 +288,7 @@ type createApiKeyAccessListOpts struct {
 	fs           afero.Fs
 	format       string
 	tmpl         *template.Template
-	resp         *admin.PaginatedApiUserAccessList
+	resp         *admin.PaginatedApiUserAccessListResponse
 }
 
 func (opts *createApiKeyAccessListOpts) preRun() (err error) {
@@ -316,8 +316,8 @@ func (opts *createApiKeyAccessListOpts) preRun() (err error) {
 	return nil
 }
 
-func (opts *createApiKeyAccessListOpts) readData(r io.Reader) (*[]admin.UserAccessList, error) {
-	var out *[]admin.UserAccessList
+func (opts *createApiKeyAccessListOpts) readData(r io.Reader) (*[]admin.UserAccessListRequest, error) {
+	var out *[]admin.UserAccessListRequest
 
 	var buf []byte
 	var err error
@@ -352,7 +352,7 @@ func (opts *createApiKeyAccessListOpts) run(ctx context.Context, r io.Reader) er
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 
-		UserAccessList: data,
+		UserAccessListRequest: data,
 	}
 
 	var err error
@@ -808,7 +808,7 @@ type getApiKeyAccessListOpts struct {
 	apiUserId string
 	format    string
 	tmpl      *template.Template
-	resp      *admin.UserAccessList
+	resp      *admin.UserAccessListResponse
 }
 
 func (opts *getApiKeyAccessListOpts) preRun() (err error) {
@@ -903,7 +903,7 @@ type listApiKeyAccessListsEntriesOpts struct {
 	pageNum      int
 	format       string
 	tmpl         *template.Template
-	resp         *admin.PaginatedApiUserAccessList
+	resp         *admin.PaginatedApiUserAccessListResponse
 }
 
 func (opts *listApiKeyAccessListsEntriesOpts) preRun() (err error) {

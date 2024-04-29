@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,14 +23,13 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
 	"strings"
 	"text/template"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 type createDataFederationPrivateEndpointOpts struct {
@@ -700,7 +699,7 @@ type downloadFederatedDatabaseQueryLogsOpts struct {
 	startDate  int64
 	format     string
 	tmpl       *template.Template
-	resp       *os.File
+	resp       io.ReadCloser
 }
 
 func (opts *downloadFederatedDatabaseQueryLogsOpts) preRun() (err error) {

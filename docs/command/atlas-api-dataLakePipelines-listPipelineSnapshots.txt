@@ -1,0 +1,86 @@
+.. _atlas-api-dataLakePipelines-listPipelineSnapshots:
+
+=================================================
+atlas api dataLakePipelines listPipelineSnapshots
+=================================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Return Available Backup Snapshots for One Data Lake Pipeline
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api dataLakePipelines listPipelineSnapshots [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --completedAfter
+     - string
+     - false
+     - Date and time after which MongoDB Cloud created the snapshot. If specified, MongoDB Cloud returns available backup snapshots created after this time and date only. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for listPipelineSnapshots
+   * - --includeCount
+     - 
+     - false
+     - Flag that indicates whether the response returns the total number of items (**totalCount**) in the response. This value defaults to true.
+   * - --itemsPerPage
+     - int
+     - false
+     - Number of items that the response returns per page. This value defaults to 100.
+   * - --pageNum
+     - int
+     - false
+     - Number of the page that displays the current set of the total objects that the response returns. This value defaults to 1.
+   * - --pipelineName
+     - string
+     - true
+     - Human-readable label that identifies the Data Lake Pipeline.
+   * - --projectId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies your project.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

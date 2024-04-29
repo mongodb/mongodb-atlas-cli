@@ -1,0 +1,82 @@
+.. _atlas-api-monitoringAndLogs-getHostLogs:
+
+=======================================
+atlas api monitoringAndLogs getHostLogs
+=======================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Download Logs for One Cluster Host in One Project
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api monitoringAndLogs getHostLogs [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --endDate
+     - int
+     - false
+     - Date and time when the period specifies the inclusive ending point for the range of log messages to retrieve. This parameter expresses its value in the number of seconds that have elapsed since the UNIX epoch.
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for getHostLogs
+   * - --hostName
+     - string
+     - true
+     - Human-readable label that identifies the host that stores the log files that you want to download.
+   * - --logName
+     - string
+     - true
+     - Human-readable label that identifies the log file that you want to return. To return audit logs, enable *Database Auditing* for the specified project.
+   * - --projectId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies your project.
+   * - --startDate
+     - int
+     - false
+     - Date and time when the period specifies the inclusive starting point for the range of log messages to retrieve. This parameter expresses its value in the number of seconds that have elapsed since the UNIX epoch.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

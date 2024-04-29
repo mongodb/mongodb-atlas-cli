@@ -1,0 +1,93 @@
+.. _atlas-api-federatedAuthentication:
+
+=================================
+atlas api federatedAuthentication
+=================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for federatedAuthentication
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Related Commands
+----------------
+
+* :ref:`atlas-api-federatedAuthentication-createIdentityProvider` - Create one identity provider
+* :ref:`atlas-api-federatedAuthentication-createRoleMapping` - Add One Role Mapping to One Organization
+* :ref:`atlas-api-federatedAuthentication-deleteFederationApp` - Delete the federation settings instance.
+* :ref:`atlas-api-federatedAuthentication-deleteIdentityProvider` - Delete the identity provider.
+* :ref:`atlas-api-federatedAuthentication-deleteRoleMapping` - Remove One Role Mapping from One Organization
+* :ref:`atlas-api-federatedAuthentication-getConnectedOrgConfig` - Return One Org Config Connected to One Federation
+* :ref:`atlas-api-federatedAuthentication-getFederationSettings` - Return Federation Settings for One Organization
+* :ref:`atlas-api-federatedAuthentication-getIdentityProvider` - Return one identity provider from the specified federation by id.
+* :ref:`atlas-api-federatedAuthentication-getIdentityProviderMetadata` - Return the metadata of one identity provider in the specified federation.
+* :ref:`atlas-api-federatedAuthentication-getRoleMapping` - Return One Role Mapping from One Organization
+* :ref:`atlas-api-federatedAuthentication-listConnectedOrgConfigs` - Return All Connected Org Configs from the Federation
+* :ref:`atlas-api-federatedAuthentication-listIdentityProviders` - Return all identity providers from the specified federation.
+* :ref:`atlas-api-federatedAuthentication-listRoleMappings` - Return All Role Mappings from One Organization
+* :ref:`atlas-api-federatedAuthentication-removeConnectedOrgConfig` - Remove One Org Config Connected to One Federation
+* :ref:`atlas-api-federatedAuthentication-revokeJwksFromIdentityProvider` - Revoke the JWKS tokens from an OIDC identity provider.
+* :ref:`atlas-api-federatedAuthentication-updateConnectedOrgConfig` - Update One Org Config Connected to One Federation
+* :ref:`atlas-api-federatedAuthentication-updateIdentityProvider` - Update the identity provider.
+* :ref:`atlas-api-federatedAuthentication-updateRoleMapping` - Update One Role Mapping in One Organization
+
+
+.. toctree::
+   :titlesonly:
+
+   createIdentityProvider </command/atlas-api-federatedAuthentication-createIdentityProvider>
+   createRoleMapping </command/atlas-api-federatedAuthentication-createRoleMapping>
+   deleteFederationApp </command/atlas-api-federatedAuthentication-deleteFederationApp>
+   deleteIdentityProvider </command/atlas-api-federatedAuthentication-deleteIdentityProvider>
+   deleteRoleMapping </command/atlas-api-federatedAuthentication-deleteRoleMapping>
+   getConnectedOrgConfig </command/atlas-api-federatedAuthentication-getConnectedOrgConfig>
+   getFederationSettings </command/atlas-api-federatedAuthentication-getFederationSettings>
+   getIdentityProvider </command/atlas-api-federatedAuthentication-getIdentityProvider>
+   getIdentityProviderMetadata </command/atlas-api-federatedAuthentication-getIdentityProviderMetadata>
+   getRoleMapping </command/atlas-api-federatedAuthentication-getRoleMapping>
+   listConnectedOrgConfigs </command/atlas-api-federatedAuthentication-listConnectedOrgConfigs>
+   listIdentityProviders </command/atlas-api-federatedAuthentication-listIdentityProviders>
+   listRoleMappings </command/atlas-api-federatedAuthentication-listRoleMappings>
+   removeConnectedOrgConfig </command/atlas-api-federatedAuthentication-removeConnectedOrgConfig>
+   revokeJwksFromIdentityProvider </command/atlas-api-federatedAuthentication-revokeJwksFromIdentityProvider>
+   updateConnectedOrgConfig </command/atlas-api-federatedAuthentication-updateConnectedOrgConfig>
+   updateIdentityProvider </command/atlas-api-federatedAuthentication-updateIdentityProvider>
+   updateRoleMapping </command/atlas-api-federatedAuthentication-updateRoleMapping>
+

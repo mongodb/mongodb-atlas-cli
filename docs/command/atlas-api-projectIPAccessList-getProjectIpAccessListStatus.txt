@@ -1,0 +1,70 @@
+.. _atlas-api-projectIPAccessList-getProjectIpAccessListStatus:
+
+==========================================================
+atlas api projectIPAccessList getProjectIpAccessListStatus
+==========================================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Return Status of One Project IP Access List Entry
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api projectIPAccessList getProjectIpAccessListStatus [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --entryValue
+     - string
+     - true
+     - Network address or cloud provider security construct that identifies which project access list entry to be verified.
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for getProjectIpAccessListStatus
+   * - --projectId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies your project.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

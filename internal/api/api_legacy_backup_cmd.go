@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,11 +26,135 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
+
+type createLegacyBackupRestoreJobOpts struct {
+	client      *admin.APIClient
+	groupId     string
+	clusterName string
+
+	filename string
+	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
+	resp     *admin.PaginatedRestoreJob
+}
+
+func (opts *createLegacyBackupRestoreJobOpts) preRun() (err error) {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
+		return err
+	}
+
+	if opts.groupId == "" {
+		opts.groupId = config.ProjectID()
+	}
+	if opts.groupId == "" {
+		return errors.New(`required flag(s) "projectId" not set`)
+	}
+	b, errDecode := hex.DecodeString(opts.groupId)
+	if errDecode != nil || len(b) != 12 {
+		return fmt.Errorf("the provided value '%s' is not a valid ID", opts.groupId)
+	}
+
+	if opts.format != "" {
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (opts *createLegacyBackupRestoreJobOpts) readData(r io.Reader) (*admin.BackupRestoreJob, error) {
+	var out *admin.BackupRestoreJob
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(r)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createLegacyBackupRestoreJobOpts) run(ctx context.Context, r io.Reader) error {
+	data, errData := opts.readData(r)
+	if errData != nil {
+		return errData
+	}
+
+	params := &admin.CreateLegacyBackupRestoreJobApiParams{
+		GroupId:     opts.groupId,
+		ClusterName: opts.clusterName,
+
+		BackupRestoreJob: data,
+	}
+
+	var err error
+	opts.resp, _, err = opts.client.LegacyBackupApi.CreateLegacyBackupRestoreJobWithParams(ctx, params).Execute()
+	return err
+}
+
+func (opts *createLegacyBackupRestoreJobOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	if opts.format == "" {
+		_, err := fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	return opts.tmpl.Execute(w, parsedJSON)
+}
+
+func createLegacyBackupRestoreJobBuilder() *cobra.Command {
+	opts := createLegacyBackupRestoreJobOpts{
+		fs: afero.NewOsFs(),
+	}
+	cmd := &cobra.Command{
+		Use:   "createLegacyBackupRestoreJob",
+		Short: "Create One Legacy Backup Restore Job",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.preRun()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.groupId, "projectId", "", `Unique 24-hexadecimal digit string that identifies your project.`)
+	cmd.Flags().StringVar(&opts.clusterName, "clusterName", "", `Human-readable label that identifies the cluster with the snapshot you want to return.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	_ = cmd.MarkFlagRequired("clusterName")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
+	return cmd
+}
 
 type deleteLegacySnapshotOpts struct {
 	client      *admin.APIClient
@@ -1051,6 +1175,7 @@ func legacyBackupBuilder() *cobra.Command {
 		Short: `Manages Legacy Backup snapshots, restore jobs, schedules and checkpoints.`,
 	}
 	cmd.AddCommand(
+		createLegacyBackupRestoreJobBuilder(),
 		deleteLegacySnapshotBuilder(),
 		getLegacyBackupCheckpointBuilder(),
 		getLegacyBackupRestoreJobBuilder(),

@@ -1,0 +1,83 @@
+.. _atlas-api-teams:
+
+===============
+atlas api teams
+===============
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Returns, adds, edits, or removes teams.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for teams
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Related Commands
+----------------
+
+* :ref:`atlas-api-teams-addAllTeamsToProject` - Add One or More Teams to One Project
+* :ref:`atlas-api-teams-addTeamUser` - Assign MongoDB Cloud Users from One Organization to One Team
+* :ref:`atlas-api-teams-createTeam` - Create One Team in One Organization
+* :ref:`atlas-api-teams-deleteTeam` - Remove One Team from One Organization
+* :ref:`atlas-api-teams-getTeamById` - Return One Team using its ID
+* :ref:`atlas-api-teams-getTeamByName` - Return One Team using its Name
+* :ref:`atlas-api-teams-listOrganizationTeams` - Return All Teams in One Organization
+* :ref:`atlas-api-teams-listProjectTeams` - Return All Teams in One Project
+* :ref:`atlas-api-teams-listTeamUsers` - Return All MongoDB Cloud Users Assigned to One Team
+* :ref:`atlas-api-teams-removeProjectTeam` - Remove One Team from One Project
+* :ref:`atlas-api-teams-removeTeamUser` - Remove One MongoDB Cloud User from One Team
+* :ref:`atlas-api-teams-renameTeam` - Rename One Team
+* :ref:`atlas-api-teams-updateTeamRoles` - Update Team Roles in One Project
+
+
+.. toctree::
+   :titlesonly:
+
+   addAllTeamsToProject </command/atlas-api-teams-addAllTeamsToProject>
+   addTeamUser </command/atlas-api-teams-addTeamUser>
+   createTeam </command/atlas-api-teams-createTeam>
+   deleteTeam </command/atlas-api-teams-deleteTeam>
+   getTeamById </command/atlas-api-teams-getTeamById>
+   getTeamByName </command/atlas-api-teams-getTeamByName>
+   listOrganizationTeams </command/atlas-api-teams-listOrganizationTeams>
+   listProjectTeams </command/atlas-api-teams-listProjectTeams>
+   listTeamUsers </command/atlas-api-teams-listTeamUsers>
+   removeProjectTeam </command/atlas-api-teams-removeProjectTeam>
+   removeTeamUser </command/atlas-api-teams-removeTeamUser>
+   renameTeam </command/atlas-api-teams-renameTeam>
+   updateTeamRoles </command/atlas-api-teams-updateTeamRoles>
+

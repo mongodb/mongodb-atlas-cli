@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 type createPushBasedLogConfigurationOpts struct {
@@ -59,8 +59,8 @@ func (opts *createPushBasedLogConfigurationOpts) preRun() (err error) {
 	return nil
 }
 
-func (opts *createPushBasedLogConfigurationOpts) readData(r io.Reader) (*admin.PushBasedLogExportProject, error) {
-	var out *admin.PushBasedLogExportProject
+func (opts *createPushBasedLogConfigurationOpts) readData(r io.Reader) (*admin.CreatePushBasedLogExportProjectRequest, error) {
+	var out *admin.CreatePushBasedLogExportProjectRequest
 
 	var buf []byte
 	var err error
@@ -90,7 +90,7 @@ func (opts *createPushBasedLogConfigurationOpts) run(ctx context.Context, r io.R
 	params := &admin.CreatePushBasedLogConfigurationApiParams{
 		GroupId: opts.groupId,
 
-		PushBasedLogExportProject: data,
+		CreatePushBasedLogExportProjectRequest: data,
 	}
 
 	var err error
@@ -370,7 +370,7 @@ func updatePushBasedLogConfigurationBuilder() *cobra.Command {
 func pushBasedLogExportBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "pushBasedLogExport",
-		Short: ``,
+		Short: `You can continually push logs from mongod, mongos, and audit logs to an AWS S3 bucket. Atlas exports logs every 5 minutes.`,
 	}
 	cmd.AddCommand(
 		createPushBasedLogConfigurationBuilder(),

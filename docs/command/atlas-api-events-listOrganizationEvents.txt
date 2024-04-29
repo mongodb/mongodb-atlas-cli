@@ -1,0 +1,96 @@
+.. _atlas-api-events-listOrganizationEvents:
+
+=======================================
+atlas api events listOrganizationEvents
+=======================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Return All Events from One Organization
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api events listOrganizationEvents [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --eventType
+     - strings
+     - false
+     - Category of incident recorded at this moment in time.
+       
+       **IMPORTANT**: The complete list of event type values changes frequently.
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for listOrganizationEvents
+   * - --includeCount
+     - 
+     - false
+     - Flag that indicates whether the response returns the total number of items (**totalCount**) in the response. This value defaults to true.
+   * - --includeRaw
+     - 
+     - false
+     - Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.
+   * - --itemsPerPage
+     - int
+     - false
+     - Number of items that the response returns per page. This value defaults to 100.
+   * - --maxDate
+     - string
+     - false
+     - Date and time from when MongoDB Cloud stops returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.
+   * - --minDate
+     - string
+     - false
+     - Date and time from when MongoDB Cloud starts returning events. This parameter uses the &lt;a href&#x3D;&quot;https://en.wikipedia.org/wiki/ISO_8601&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener noreferrer&quot;&gt;ISO 8601&lt;/a&gt; timestamp format in UTC.
+   * - --orgId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies the organization
+   * - --pageNum
+     - int
+     - false
+     - Number of the page that displays the current set of the total objects that the response returns. This value defaults to 1.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

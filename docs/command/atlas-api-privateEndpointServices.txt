@@ -1,0 +1,75 @@
+.. _atlas-api-privateEndpointServices:
+
+=================================
+atlas api privateEndpointServices
+=================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Returns, adds, edits, and removes private endpoint services.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for privateEndpointServices
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Related Commands
+----------------
+
+* :ref:`atlas-api-privateEndpointServices-createPrivateEndpoint` - Create One Private Endpoint for One Provider
+* :ref:`atlas-api-privateEndpointServices-createPrivateEndpointService` - Create One Private Endpoint Service for One Provider
+* :ref:`atlas-api-privateEndpointServices-deletePrivateEndpoint` - Remove One Private Endpoint for One Provider
+* :ref:`atlas-api-privateEndpointServices-deletePrivateEndpointService` - Remove One Private Endpoint Service for One Provider
+* :ref:`atlas-api-privateEndpointServices-getPrivateEndpoint` - Return One Private Endpoint for One Provider
+* :ref:`atlas-api-privateEndpointServices-getPrivateEndpointService` - Return One Private Endpoint Service for One Provider
+* :ref:`atlas-api-privateEndpointServices-getRegionalizedPrivateEndpointSetting` - Return Regionalized Private Endpoint Status
+* :ref:`atlas-api-privateEndpointServices-listPrivateEndpointServices` - Return All Private Endpoint Services for One Provider
+* :ref:`atlas-api-privateEndpointServices-toggleRegionalizedPrivateEndpointSetting` - Toggle Regionalized Private Endpoint Status
+
+
+.. toctree::
+   :titlesonly:
+
+   createPrivateEndpoint </command/atlas-api-privateEndpointServices-createPrivateEndpoint>
+   createPrivateEndpointService </command/atlas-api-privateEndpointServices-createPrivateEndpointService>
+   deletePrivateEndpoint </command/atlas-api-privateEndpointServices-deletePrivateEndpoint>
+   deletePrivateEndpointService </command/atlas-api-privateEndpointServices-deletePrivateEndpointService>
+   getPrivateEndpoint </command/atlas-api-privateEndpointServices-getPrivateEndpoint>
+   getPrivateEndpointService </command/atlas-api-privateEndpointServices-getPrivateEndpointService>
+   getRegionalizedPrivateEndpointSetting </command/atlas-api-privateEndpointServices-getRegionalizedPrivateEndpointSetting>
+   listPrivateEndpointServices </command/atlas-api-privateEndpointServices-listPrivateEndpointServices>
+   toggleRegionalizedPrivateEndpointSetting </command/atlas-api-privateEndpointServices-toggleRegionalizedPrivateEndpointSetting>
+

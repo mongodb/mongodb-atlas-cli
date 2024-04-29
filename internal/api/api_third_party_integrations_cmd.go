@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 type createThirdPartyIntegrationOpts struct {
@@ -72,8 +72,8 @@ func (opts *createThirdPartyIntegrationOpts) preRun() (err error) {
 	return nil
 }
 
-func (opts *createThirdPartyIntegrationOpts) readData(r io.Reader) (*admin.ThridPartyIntegration, error) {
-	var out *admin.ThridPartyIntegration
+func (opts *createThirdPartyIntegrationOpts) readData(r io.Reader) (*admin.ThirdPartyIntegration, error) {
+	var out *admin.ThirdPartyIntegration
 
 	var buf []byte
 	var err error
@@ -108,7 +108,7 @@ func (opts *createThirdPartyIntegrationOpts) run(ctx context.Context, r io.Reade
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 
-		ThridPartyIntegration: data,
+		ThirdPartyIntegration: data,
 	}
 
 	var err error
@@ -261,7 +261,7 @@ type getThirdPartyIntegrationOpts struct {
 	integrationType string
 	format          string
 	tmpl            *template.Template
-	resp            *admin.ThridPartyIntegration
+	resp            *admin.ThirdPartyIntegration
 }
 
 func (opts *getThirdPartyIntegrationOpts) preRun() (err error) {
@@ -478,8 +478,8 @@ func (opts *updateThirdPartyIntegrationOpts) preRun() (err error) {
 	return nil
 }
 
-func (opts *updateThirdPartyIntegrationOpts) readData(r io.Reader) (*admin.ThridPartyIntegration, error) {
-	var out *admin.ThridPartyIntegration
+func (opts *updateThirdPartyIntegrationOpts) readData(r io.Reader) (*admin.ThirdPartyIntegration, error) {
+	var out *admin.ThirdPartyIntegration
 
 	var buf []byte
 	var err error
@@ -514,7 +514,7 @@ func (opts *updateThirdPartyIntegrationOpts) run(ctx context.Context, r io.Reade
 		ItemsPerPage: &opts.itemsPerPage,
 		PageNum:      &opts.pageNum,
 
-		ThridPartyIntegration: data,
+		ThirdPartyIntegration: data,
 	}
 
 	var err error

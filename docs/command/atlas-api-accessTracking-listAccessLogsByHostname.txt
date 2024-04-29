@@ -1,0 +1,90 @@
+.. _atlas-api-accessTracking-listAccessLogsByHostname:
+
+=================================================
+atlas api accessTracking listAccessLogsByHostname
+=================================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Return Database Access History for One Cluster using Its Hostname
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api accessTracking listAccessLogsByHostname [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --authResult
+     - 
+     - false
+     - Flag that indicates whether the response returns the successful authentication attempts only.
+   * - --end
+     - int
+     - false
+     - Date and time when to stop retrieving database history. If you specify **end**, you must also specify **start**. This parameter uses UNIX epoch time in milliseconds.
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for listAccessLogsByHostname
+   * - --hostname
+     - string
+     - true
+     - Fully qualified domain name or IP address of the MongoDB host that stores the log files that you want to download.
+   * - --ipAddress
+     - string
+     - false
+     - One Internet Protocol address that attempted to authenticate with the database.
+   * - --nLogs
+     - int
+     - false
+     - Maximum number of lines from the log to return. This value defaults to 20000.
+   * - --projectId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies your project.
+   * - --start
+     - int
+     - false
+     - Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

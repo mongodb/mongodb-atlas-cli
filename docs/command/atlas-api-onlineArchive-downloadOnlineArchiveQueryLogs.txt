@@ -1,0 +1,82 @@
+.. _atlas-api-onlineArchive-downloadOnlineArchiveQueryLogs:
+
+======================================================
+atlas api onlineArchive downloadOnlineArchiveQueryLogs
+======================================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Download Online Archive Query Logs
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api onlineArchive downloadOnlineArchiveQueryLogs [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --archiveOnly
+     - 
+     - false
+     - Flag that indicates whether to download logs for queries against your online archive only or both your online archive and cluster.
+   * - --clusterName
+     - string
+     - true
+     - Human-readable label that identifies the cluster that contains the collection for which you want to return the query logs from one online archive.
+   * - --endDate
+     - int
+     - false
+     - Date and time that specifies the end point for the range of log messages to return. This resource expresses this value in the number of seconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for downloadOnlineArchiveQueryLogs
+   * - --projectId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies your project.
+   * - --startDate
+     - int
+     - false
+     - Date and time that specifies the starting point for the range of log messages to return. This resource expresses this value in the number of seconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

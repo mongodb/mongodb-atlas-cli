@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,11 +26,121 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
+
+type createIdentityProviderOpts struct {
+	client               *admin.APIClient
+	federationSettingsId string
+
+	filename string
+	fs       afero.Fs
+	format   string
+	tmpl     *template.Template
+	resp     *admin.FederationOidcIdentityProvider
+}
+
+func (opts *createIdentityProviderOpts) preRun() (err error) {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
+		return err
+	}
+
+	if opts.format != "" {
+		if opts.tmpl, err = template.New("").Parse(strings.ReplaceAll(opts.format, "\\n", "\n") + "\n"); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (opts *createIdentityProviderOpts) readData(r io.Reader) (*admin.FederationOidcIdentityProviderUpdate, error) {
+	var out *admin.FederationOidcIdentityProviderUpdate
+
+	var buf []byte
+	var err error
+	if opts.filename == "" {
+		buf, err = io.ReadAll(r)
+	} else {
+		if exists, errExists := afero.Exists(opts.fs, opts.filename); !exists || errExists != nil {
+			return nil, fmt.Errorf("file not found: %s", opts.filename)
+		}
+		buf, err = afero.ReadFile(opts.fs, opts.filename)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(buf, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (opts *createIdentityProviderOpts) run(ctx context.Context, r io.Reader) error {
+	data, errData := opts.readData(r)
+	if errData != nil {
+		return errData
+	}
+
+	params := &admin.CreateIdentityProviderApiParams{
+		FederationSettingsId: opts.federationSettingsId,
+
+		FederationOidcIdentityProviderUpdate: data,
+	}
+
+	var err error
+	opts.resp, _, err = opts.client.FederatedAuthenticationApi.CreateIdentityProviderWithParams(ctx, params).Execute()
+	return err
+}
+
+func (opts *createIdentityProviderOpts) postRun(_ context.Context, w io.Writer) error {
+
+	prettyJSON, errJson := json.MarshalIndent(opts.resp, "", " ")
+	if errJson != nil {
+		return errJson
+	}
+
+	if opts.format == "" {
+		_, err := fmt.Fprintln(w, string(prettyJSON))
+		return err
+	}
+
+	var parsedJSON interface{}
+	if err := json.Unmarshal([]byte(prettyJSON), &parsedJSON); err != nil {
+		return err
+	}
+
+	return opts.tmpl.Execute(w, parsedJSON)
+}
+
+func createIdentityProviderBuilder() *cobra.Command {
+	opts := createIdentityProviderOpts{
+		fs: afero.NewOsFs(),
+	}
+	cmd := &cobra.Command{
+		Use:   "createIdentityProvider",
+		Short: "Create one identity provider",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.preRun()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
+
+	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
+
+	_ = cmd.MarkFlagRequired("federationSettingsId")
+	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
+	return cmd
+}
 
 type createRoleMappingOpts struct {
 	client               *admin.APIClient
@@ -203,6 +313,60 @@ func deleteFederationAppBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
+	return cmd
+}
+
+type deleteIdentityProviderOpts struct {
+	client               *admin.APIClient
+	federationSettingsId string
+	identityProviderId   string
+}
+
+func (opts *deleteIdentityProviderOpts) preRun() (err error) {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (opts *deleteIdentityProviderOpts) run(ctx context.Context, _ io.Reader) error {
+
+	params := &admin.DeleteIdentityProviderApiParams{
+		FederationSettingsId: opts.federationSettingsId,
+		IdentityProviderId:   opts.identityProviderId,
+	}
+
+	var err error
+	_, err = opts.client.FederatedAuthenticationApi.DeleteIdentityProviderWithParams(ctx, params).Execute()
+	return err
+}
+
+func (opts *deleteIdentityProviderOpts) postRun(_ context.Context, _ io.Writer) error {
+
+	return nil
+}
+
+func deleteIdentityProviderBuilder() *cobra.Command {
+	opts := deleteIdentityProviderOpts{}
+	cmd := &cobra.Command{
+		Use:   "deleteIdentityProvider",
+		Short: "Delete the identity provider.",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.preRun()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
+	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", `Unique 24-hexadecimal digit string that identifies the identity provider to connect.`)
+
+	_ = cmd.MarkFlagRequired("federationSettingsId")
+	_ = cmd.MarkFlagRequired("identityProviderId")
 	return cmd
 }
 
@@ -497,7 +661,7 @@ func getIdentityProviderBuilder() *cobra.Command {
 	opts := getIdentityProviderOpts{}
 	cmd := &cobra.Command{
 		Use:   "getIdentityProvider",
-		Short: "Return one identity provider from the specified federation.",
+		Short: "Return one identity provider from the specified federation by id.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			return opts.preRun()
 		},
@@ -509,7 +673,7 @@ func getIdentityProviderBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
-	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", `Unique 20-hexadecimal digit string that identifies the identity provider.`)
+	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", `Unique string that identifies the identity provider to connect. If using an API version before 11-15-2023, use the legacy 20-hexadecimal digit id. This id can be found within the Federation Management Console &gt; Identity Providers tab by clicking the info icon in the IdP ID row of a configured identity provider. For all other versions, use the 24-hexadecimal digit id.`)
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("identityProviderId")
@@ -588,7 +752,7 @@ func getIdentityProviderMetadataBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
-	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", `Unique 20-hexadecimal digit string that identifies the identity provider.`)
+	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", `Legacy 20-hexadecimal digit string that identifies the identity provider. This id can be found within the Federation Management Console &gt; Identity Providers tab by clicking the info icon in the IdP ID row of a configured identity provider.`)
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	_ = cmd.MarkFlagRequired("identityProviderId")
@@ -767,9 +931,13 @@ func listConnectedOrgConfigsBuilder() *cobra.Command {
 type listIdentityProvidersOpts struct {
 	client               *admin.APIClient
 	federationSettingsId string
+	itemsPerPage         int
+	pageNum              int
+	protocol             []string
+	idpType              []string
 	format               string
 	tmpl                 *template.Template
-	resp                 []admin.FederationIdentityProvider
+	resp                 *admin.PaginatedFederationIdentityProvider
 }
 
 func (opts *listIdentityProvidersOpts) preRun() (err error) {
@@ -790,6 +958,10 @@ func (opts *listIdentityProvidersOpts) run(ctx context.Context, _ io.Reader) err
 
 	params := &admin.ListIdentityProvidersApiParams{
 		FederationSettingsId: opts.federationSettingsId,
+		ItemsPerPage:         &opts.itemsPerPage,
+		PageNum:              &opts.pageNum,
+		Protocol:             &opts.protocol,
+		IdpType:              &opts.idpType,
 	}
 
 	var err error
@@ -833,6 +1005,10 @@ func listIdentityProvidersBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
+	cmd.Flags().IntVar(&opts.itemsPerPage, "itemsPerPage", 100, `Number of items that the response returns per page.`)
+	cmd.Flags().IntVar(&opts.pageNum, "pageNum", 1, `Number of the page that displays the current set of the total objects that the response returns.`)
+	cmd.Flags().StringSliceVar(&opts.protocol, "protocol", nil, `The protocols of the target identity providers.`)
+	cmd.Flags().StringSliceVar(&opts.idpType, "idpType", nil, `The types of the target identity providers.`)
 
 	_ = cmd.MarkFlagRequired("federationSettingsId")
 	cmd.Flags().StringVar(&opts.format, "format", "", "Format of the output")
@@ -845,7 +1021,7 @@ type listRoleMappingsOpts struct {
 	orgId                string
 	format               string
 	tmpl                 *template.Template
-	resp                 []admin.AuthFederationRoleMapping
+	resp                 *admin.PaginatedRoleMapping
 }
 
 func (opts *listRoleMappingsOpts) preRun() (err error) {
@@ -1007,6 +1183,60 @@ func removeConnectedOrgConfigBuilder() *cobra.Command {
 	return cmd
 }
 
+type revokeJwksFromIdentityProviderOpts struct {
+	client               *admin.APIClient
+	federationSettingsId string
+	identityProviderId   string
+}
+
+func (opts *revokeJwksFromIdentityProviderOpts) preRun() (err error) {
+	if opts.client, err = newClientWithAuth(config.UserAgent, config.Default()); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (opts *revokeJwksFromIdentityProviderOpts) run(ctx context.Context, _ io.Reader) error {
+
+	params := &admin.RevokeJwksFromIdentityProviderApiParams{
+		FederationSettingsId: opts.federationSettingsId,
+		IdentityProviderId:   opts.identityProviderId,
+	}
+
+	var err error
+	_, err = opts.client.FederatedAuthenticationApi.RevokeJwksFromIdentityProviderWithParams(ctx, params).Execute()
+	return err
+}
+
+func (opts *revokeJwksFromIdentityProviderOpts) postRun(_ context.Context, _ io.Writer) error {
+
+	return nil
+}
+
+func revokeJwksFromIdentityProviderBuilder() *cobra.Command {
+	opts := revokeJwksFromIdentityProviderOpts{}
+	cmd := &cobra.Command{
+		Use:   "revokeJwksFromIdentityProvider",
+		Short: "Revoke the JWKS tokens from an OIDC identity provider.",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.preRun()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return opts.run(cmd.Context(), cmd.InOrStdin())
+		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			return opts.postRun(cmd.Context(), cmd.OutOrStdout())
+		},
+	}
+	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
+	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", `Unique 24-hexadecimal digit string that identifies the identity provider to connect.`)
+
+	_ = cmd.MarkFlagRequired("federationSettingsId")
+	_ = cmd.MarkFlagRequired("identityProviderId")
+	return cmd
+}
+
 type updateConnectedOrgConfigOpts struct {
 	client               *admin.APIClient
 	federationSettingsId string
@@ -1147,8 +1377,8 @@ func (opts *updateIdentityProviderOpts) preRun() (err error) {
 	return nil
 }
 
-func (opts *updateIdentityProviderOpts) readData(r io.Reader) (*admin.SamlIdentityProviderUpdate, error) {
-	var out *admin.SamlIdentityProviderUpdate
+func (opts *updateIdentityProviderOpts) readData(r io.Reader) (*admin.FederationIdentityProviderUpdate, error) {
+	var out *admin.FederationIdentityProviderUpdate
 
 	var buf []byte
 	var err error
@@ -1179,7 +1409,7 @@ func (opts *updateIdentityProviderOpts) run(ctx context.Context, r io.Reader) er
 		FederationSettingsId: opts.federationSettingsId,
 		IdentityProviderId:   opts.identityProviderId,
 
-		SamlIdentityProviderUpdate: data,
+		FederationIdentityProviderUpdate: data,
 	}
 
 	var err error
@@ -1225,7 +1455,7 @@ func updateIdentityProviderBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.federationSettingsId, "federationSettingsId", "", `Unique 24-hexadecimal digit string that identifies your federation.`)
-	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", `Unique 20-hexadecimal digit string that identifies the identity provider.`)
+	cmd.Flags().StringVar(&opts.identityProviderId, "identityProviderId", "", `Unique string that identifies the identity provider to connect. If using an API version before 11-15-2023, use the legacy 20-hexadecimal digit id. This id can be found within the Federation Management Console &gt; Identity Providers tab by clicking the info icon in the IdP ID row of a configured identity provider. For all other versions, use the 24-hexadecimal digit id.`)
 
 	cmd.Flags().StringVarP(&opts.filename, "file", "f", "", "Path to an optional JSON configuration file if not passed stdin is expected")
 
@@ -1369,8 +1599,10 @@ func federatedAuthenticationBuilder() *cobra.Command {
 		Short: `Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.`,
 	}
 	cmd.AddCommand(
+		createIdentityProviderBuilder(),
 		createRoleMappingBuilder(),
 		deleteFederationAppBuilder(),
+		deleteIdentityProviderBuilder(),
 		deleteRoleMappingBuilder(),
 		getConnectedOrgConfigBuilder(),
 		getFederationSettingsBuilder(),
@@ -1381,6 +1613,7 @@ func federatedAuthenticationBuilder() *cobra.Command {
 		listIdentityProvidersBuilder(),
 		listRoleMappingsBuilder(),
 		removeConnectedOrgConfigBuilder(),
+		revokeJwksFromIdentityProviderBuilder(),
 		updateConnectedOrgConfigBuilder(),
 		updateIdentityProviderBuilder(),
 		updateRoleMappingBuilder(),

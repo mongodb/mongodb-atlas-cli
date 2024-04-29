@@ -1,0 +1,74 @@
+.. _atlas-api-programmaticAPIKeys-getApiKeyAccessList:
+
+=================================================
+atlas api programmaticAPIKeys getApiKeyAccessList
+=================================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Return One Access List Entry for One Organization API Key
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api programmaticAPIKeys getApiKeyAccessList [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --apiUserId
+     - string
+     - true
+     - Unique 24-hexadecimal digit string that identifies this organization API key for  which you want to return access list entries.
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for getApiKeyAccessList
+   * - --ipAddress
+     - string
+     - true
+     - One IP address or multiple IP addresses represented as one CIDR block to limit  requests to API resources in the specified organization. When adding a CIDR block with a subnet mask, such as  192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.
+   * - --orgId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies the organization
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

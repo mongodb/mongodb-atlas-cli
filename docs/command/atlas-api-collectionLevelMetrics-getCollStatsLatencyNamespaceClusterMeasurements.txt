@@ -1,0 +1,98 @@
+.. _atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespaceClusterMeasurements:
+
+================================================================================
+atlas api collectionLevelMetrics getCollStatsLatencyNamespaceClusterMeasurements
+================================================================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Return Cluster-Level Query Latency
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api collectionLevelMetrics getCollStatsLatencyNamespaceClusterMeasurements [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --clusterName
+     - string
+     - true
+     - Human-readable label that identifies the cluster to retrieve metrics for.
+   * - --clusterView
+     - string
+     - true
+     - Human-readable label that identifies the cluster topology to retrieve metrics for.
+   * - --collectionName
+     - string
+     - true
+     - Human-readable label that identifies the collection.
+   * - --databaseName
+     - string
+     - true
+     - Human-readable label that identifies the database.
+   * - --end
+     - string
+     - false
+     - Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for getCollStatsLatencyNamespaceClusterMeasurements
+   * - --metrics
+     - strings
+     - false
+     - List that contains the metrics that you want to retrieve for the associated data series. If you don&#39;t set this parameter, this resource returns data series for all Coll Stats Latency metrics.
+   * - --period
+     - string
+     - false
+     - Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.
+   * - --projectId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies your project.
+   * - --start
+     - string
+     - false
+     - Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

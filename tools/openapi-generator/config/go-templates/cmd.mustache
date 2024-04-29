@@ -17,7 +17,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"{{sdkImport}}/admin"
-	"{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/internal/config"
+	"{{gitHost}}/{{gitUserId}}/{{gitRepoId}}/atlascli/internal/config"
 )
 
 {{#operations}}
@@ -35,7 +35,7 @@ type {{#lambda.camelcase}}{{operationId}}{{/lambda.camelcase}}Opts struct {
 	format string
 	tmpl *template.Template
 	{{#returnProperty}}
-	resp {{#isFile}}{{dataType}}{{/isFile}}{{#isPrimitiveType}}{{dataType}}{{/isPrimitiveType}}{{^isFile}}{{^isPrimitiveType}}{{#isArray}}[]{{/isArray}}{{^isArray}}*{{/isArray}}admin.{{complexType}}{{/isPrimitiveType}}{{/isFile}}
+	resp {{#isFile}}io.ReadCloser{{/isFile}}{{#isPrimitiveType}}{{dataType}}{{/isPrimitiveType}}{{^isFile}}{{^isPrimitiveType}}{{#isArray}}[]{{/isArray}}{{^isArray}}*{{/isArray}}admin.{{complexType}}{{/isPrimitiveType}}{{/isFile}}
 	{{/returnProperty}}
 	{{/returnType}}
 	{{#vendorExtensions.x-watcher-operation}}

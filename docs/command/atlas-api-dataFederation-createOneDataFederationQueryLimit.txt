@@ -1,0 +1,86 @@
+.. _atlas-api-dataFederation-createOneDataFederationQueryLimit:
+
+==========================================================
+atlas api dataFederation createOneDataFederationQueryLimit
+==========================================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Configure One Query Limit for One Federated Database Instance
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas api dataFederation createOneDataFederationQueryLimit [options]
+
+.. Code end marker, please don't delete this comment
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -f, --file
+     - string
+     - false
+     - Path to an optional JSON configuration file if not passed stdin is expected
+   * - --format
+     - string
+     - false
+     - Format of the output
+   * - -h, --help
+     - 
+     - false
+     - help for createOneDataFederationQueryLimit
+   * - --limitName
+     - string
+     - true
+     - Human-readable label that identifies this data federation instance limit.
+       
+       | Limit Name | Description | Default |
+       | --- | --- | --- |
+       | bytesProcessed.query | Limit on the number of bytes processed during a single data federation query | N/A |
+       | bytesProcessed.daily | Limit on the number of bytes processed for the data federation instance for the current day | N/A |
+       | bytesProcessed.weekly | Limit on the number of bytes processed for the data federation instance for the current week | N/A |
+       | bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A |
+       
+   * - --projectId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string that identifies your project.
+   * - --tenantName
+     - string
+     - true
+     - Human-readable label that identifies the federated database instance to which the query limit applies.
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+

@@ -1,0 +1,69 @@
+.. _atlas-api-invoices:
+
+==================
+atlas api invoices
+==================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Returns invoices.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for invoices
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Related Commands
+----------------
+
+* :ref:`atlas-api-invoices-createCostExplorerQueryProcess` - Create Cost Explorer query process
+* :ref:`atlas-api-invoices-createCostExplorerQueryProcess1` - Return results from a given Cost Explorer query, or notify that the results are not ready yet.
+* :ref:`atlas-api-invoices-downloadInvoiceCSV` - Return One Organization Invoice as CSV
+* :ref:`atlas-api-invoices-getInvoice` - Return One Organization Invoice
+* :ref:`atlas-api-invoices-listInvoices` - Return All Invoices for One Organization
+* :ref:`atlas-api-invoices-listPendingInvoices` - Return All Pending Invoices for One Organization
+
+
+.. toctree::
+   :titlesonly:
+
+   createCostExplorerQueryProcess </command/atlas-api-invoices-createCostExplorerQueryProcess>
+   createCostExplorerQueryProcess1 </command/atlas-api-invoices-createCostExplorerQueryProcess1>
+   downloadInvoiceCSV </command/atlas-api-invoices-downloadInvoiceCSV>
+   getInvoice </command/atlas-api-invoices-getInvoice>
+   listInvoices </command/atlas-api-invoices-listInvoices>
+   listPendingInvoices </command/atlas-api-invoices-listPendingInvoices>
+

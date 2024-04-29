@@ -1,0 +1,103 @@
+.. _atlas-api-projects:
+
+==================
+atlas api projects
+==================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Returns, adds, and edits collections of clusters and users in MongoDB Cloud.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for projects
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Related Commands
+----------------
+
+* :ref:`atlas-api-projects-addUserToProject` - Add One MongoDB Cloud User to One Project
+* :ref:`atlas-api-projects-createProject` - Create One Project
+* :ref:`atlas-api-projects-createProjectInvitation` - Invite One MongoDB Cloud User to Join One Project
+* :ref:`atlas-api-projects-deleteProject` - Remove One Project
+* :ref:`atlas-api-projects-deleteProjectInvitation` - Cancel One Project Invitation
+* :ref:`atlas-api-projects-deleteProjectLimit` - Remove One Project Limit
+* :ref:`atlas-api-projects-getProject` - Return One Project
+* :ref:`atlas-api-projects-getProjectByName` - Return One Project using Its Name
+* :ref:`atlas-api-projects-getProjectInvitation` - Return One Project Invitation
+* :ref:`atlas-api-projects-getProjectLimit` - Return One Limit for One Project
+* :ref:`atlas-api-projects-getProjectSettings` - Return One Project Settings
+* :ref:`atlas-api-projects-listProjectInvitations` - Return All Project Invitations
+* :ref:`atlas-api-projects-listProjectLimits` - Return All Limits for One Project
+* :ref:`atlas-api-projects-listProjectUsers` - Return All Users in One Project
+* :ref:`atlas-api-projects-listProjects` - Return All Projects
+* :ref:`atlas-api-projects-removeProjectUser` - Remove One User from One Project
+* :ref:`atlas-api-projects-returnAllIPAddresses` - Return All IP Addresses for One Project
+* :ref:`atlas-api-projects-setProjectLimit` - Set One Project Limit
+* :ref:`atlas-api-projects-updateProject` - Update One Project
+* :ref:`atlas-api-projects-updateProjectInvitation` - Update One Project Invitation
+* :ref:`atlas-api-projects-updateProjectInvitationById` - Update One Project Invitation by Invitation ID
+* :ref:`atlas-api-projects-updateProjectRoles` - Update Project Roles for One MongoDB Cloud User
+* :ref:`atlas-api-projects-updateProjectSettings` - Update One Project Settings
+
+
+.. toctree::
+   :titlesonly:
+
+   addUserToProject </command/atlas-api-projects-addUserToProject>
+   createProject </command/atlas-api-projects-createProject>
+   createProjectInvitation </command/atlas-api-projects-createProjectInvitation>
+   deleteProject </command/atlas-api-projects-deleteProject>
+   deleteProjectInvitation </command/atlas-api-projects-deleteProjectInvitation>
+   deleteProjectLimit </command/atlas-api-projects-deleteProjectLimit>
+   getProject </command/atlas-api-projects-getProject>
+   getProjectByName </command/atlas-api-projects-getProjectByName>
+   getProjectInvitation </command/atlas-api-projects-getProjectInvitation>
+   getProjectLimit </command/atlas-api-projects-getProjectLimit>
+   getProjectSettings </command/atlas-api-projects-getProjectSettings>
+   listProjectInvitations </command/atlas-api-projects-listProjectInvitations>
+   listProjectLimits </command/atlas-api-projects-listProjectLimits>
+   listProjectUsers </command/atlas-api-projects-listProjectUsers>
+   listProjects </command/atlas-api-projects-listProjects>
+   removeProjectUser </command/atlas-api-projects-removeProjectUser>
+   returnAllIPAddresses </command/atlas-api-projects-returnAllIPAddresses>
+   setProjectLimit </command/atlas-api-projects-setProjectLimit>
+   updateProject </command/atlas-api-projects-updateProject>
+   updateProjectInvitation </command/atlas-api-projects-updateProjectInvitation>
+   updateProjectInvitationById </command/atlas-api-projects-updateProjectInvitationById>
+   updateProjectRoles </command/atlas-api-projects-updateProjectRoles>
+   updateProjectSettings </command/atlas-api-projects-updateProjectSettings>
+

@@ -34,8 +34,6 @@ type DeleteOpts struct {
 	store                store.ConnectedOrgConfigsDeleter
 }
 
-const deleteTemplate = `Connected Org Config deleted.`
-
 func (opts *DeleteOpts) InitStore(ctx context.Context) func() error {
 	return func() error {
 		if opts.store != nil {

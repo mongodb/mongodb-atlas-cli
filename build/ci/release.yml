@@ -83,7 +83,8 @@ functions:
           - goreleaser_key
           - goreleaser_config
           - changelog_file
-          - github_token
+          - github_app_id
+          - github_app_pem
           - unstable
         binary: build/package/package.sh
   "install go-msi":

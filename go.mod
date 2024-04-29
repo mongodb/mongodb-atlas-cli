@@ -9,6 +9,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2
 	github.com/PaesslerAG/jsonpath v0.1.1
+	github.com/bradleyfalzon/ghinstallation/v2 v2.10.0
 	github.com/briandowns/spinner v1.23.0
 	github.com/creack/pty v1.1.21
 	github.com/evergreen-ci/shrub v0.0.0-20240215220116-3f233ddeff2a
@@ -16,7 +17,7 @@ require (
 	github.com/go-test/deep v1.1.0
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/golang/mock v1.6.0
-	github.com/google/go-github/v50 v50.2.0
+	github.com/google/go-github/v61 v61.0.0
 	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02
 	github.com/klauspost/compress v1.17.8
 	github.com/mattn/go-isatty v0.0.20
@@ -40,16 +41,13 @@ require (
 
 require (
 	github.com/PaesslerAG/gval v1.0.0 // indirect
-	github.com/ProtonMail/go-crypto v0.0.0-20230217124315-7d5c6f04bbb8 // indirect
 	github.com/ansel1/merry v1.6.2 // indirect
 	github.com/ansel1/merry/v2 v2.0.1 // indirect
-	github.com/cloudflare/circl v1.3.7 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gemalto/flume v0.13.0 // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/google/go-cmp v0.6.0 // indirect
+	github.com/google/go-github/v60 v60.0.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -73,13 +71,10 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.26.0 // indirect
 	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc // indirect
-	golang.org/x/oauth2 v0.17.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.19.0 // indirect
 	golang.org/x/term v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
-	google.golang.org/appengine v1.6.8 // indirect
-	google.golang.org/protobuf v1.32.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 )

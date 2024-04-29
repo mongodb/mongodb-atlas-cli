@@ -22,7 +22,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/google/go-github/v50/github"
+	"github.com/google/go-github/v61/github"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/latestrelease"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"

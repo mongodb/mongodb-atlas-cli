@@ -80,13 +80,13 @@ func DescribeBuilder() *cobra.Command {
 		Use:         "describe",
 		Aliases:     []string{"get"},
 		Annotations: map[string]string{"output": describeTemplate},
-		Example: `  # Return the JSON-formatted details for the MongoDB user with the ID 5dd56c847a3e5a1f363d424d:
+		Example: `  # Return the JSON-formatted details for the Atlas user with the ID 5dd56c847a3e5a1f363d424d:
   atlas users describe --id 5dd56c847a3e5a1f363d424d --output json
   
-  # Return the JSON-formatted details for the MongoDB user with the username myUser:
+  # Return the JSON-formatted details for the Atlas user with the username myUser:
   atlas users describe --username myUser --output json`,
-		Short: "Return the details for the specified MongoDB user.",
-		Long: `You can specify either the unique 24-digit ID that identifies the MongoDB user or the username for the MongoDB user.
+		Short: "Return the details for the specified Atlas user.",
+		Long: `You can specify either the unique 24-digit ID that identifies the Atlas user or the username for the Atlas user.
 		
 User accounts and API keys with any role can run this command.`,
 		Args: require.NoArgs,

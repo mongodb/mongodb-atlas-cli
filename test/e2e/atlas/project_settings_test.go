@@ -22,10 +22,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestProjectSettings(t *testing.T) {
@@ -76,15 +76,13 @@ func TestProjectSettings(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var settings atlas.ProjectSettings
-		if err := json.Unmarshal(resp, &settings); err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		var settings atlasv2.GroupSettings
+		require.NoError(t, json.Unmarshal(resp, &settings))
 		a := assert.New(t)
-		a.False(*settings.IsCollectDatabaseSpecificsStatisticsEnabled)
-		a.True(*settings.IsSchemaAdvisorEnabled)
-		a.True(*settings.IsPerformanceAdvisorEnabled)
-		a.True(*settings.IsRealtimePerformancePanelEnabled)
-		a.True(*settings.IsDataExplorerEnabled)
+		a.False(settings.GetIsCollectDatabaseSpecificsStatisticsEnabled())
+		a.True(settings.GetIsSchemaAdvisorEnabled())
+		a.True(settings.GetIsPerformanceAdvisorEnabled())
+		a.True(settings.GetIsRealtimePerformancePanelEnabled())
+		a.True(settings.GetIsDataExplorerEnabled())
 	})
 }

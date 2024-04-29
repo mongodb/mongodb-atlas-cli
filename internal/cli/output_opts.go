@@ -23,11 +23,11 @@ import (
 	"strings"
 
 	"github.com/PaesslerAG/jsonpath"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonpathwriter"
-	"github.com/mongodb/mongodb-atlas-cli/internal/jsonwriter"
-	"github.com/mongodb/mongodb-atlas-cli/internal/templatewriter"
-	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/jsonpathwriter"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/jsonwriter"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/templatewriter"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/terminal"
 	"github.com/spf13/cobra"
 )
 
@@ -57,7 +57,7 @@ func (opts *OutputOpts) InitOutput(w io.Writer, t string) func() error {
 }
 
 func (*OutputOpts) AutoCompleteOutputFlag() func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-	return func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	return func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return []string{"json", "json-path", "go-template", "go-template-file"}, cobra.ShellCompDirectiveDefault
 	}
 }

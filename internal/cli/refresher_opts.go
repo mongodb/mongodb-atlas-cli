@@ -19,17 +19,19 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/oauth"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/oauth"
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
+
+var TokenRefreshed bool
 
 type RefresherOpts struct {
 	flow Refresher
 }
 
-//go:generate mockgen -destination=../mocks/mock_refresher.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli Refresher
+//go:generate mockgen -destination=../mocks/mock_refresher.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli Refresher
 type Refresher interface {
 	RequestCode(context.Context) (*atlasauth.DeviceCode, *atlas.Response, error)
 	PollToken(context.Context, *atlasauth.DeviceCode) (*atlasauth.Token, *atlas.Response, error)
@@ -58,6 +60,7 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 		return err
 	}
 	if current.Valid() {
+		TokenRefreshed = true
 		return nil
 	}
 	t, _, err := opts.flow.RefreshToken(ctx, config.RefreshToken())
@@ -65,15 +68,22 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 		var target *atlas.ErrorResponse
 		if errors.As(err, &target) && target.ErrorCode == "INVALID_REFRESH_TOKEN" {
 			return fmt.Errorf(
-				"%w\n\nTo login, run: %s auth login",
-				ErrInvalidRefreshToken,
-				config.BinName())
+				`%w
+
+Please note that your session expires periodically. 
+If you use Atlas CLI for automation, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-automate/ for best practices.
+To login, run: atlas auth login`,
+				ErrInvalidRefreshToken)
 		}
 		return err
 	}
 	config.SetAccessToken(t.AccessToken)
 	config.SetRefreshToken(t.RefreshToken)
-	return config.Save()
+	if err := config.Save(); err != nil {
+		return err
+	}
+	TokenRefreshed = true
+	return nil
 }
 
 func (opts *RefresherOpts) PollToken(c context.Context, d *atlasauth.DeviceCode) (*atlasauth.Token, *atlas.Response, error) {

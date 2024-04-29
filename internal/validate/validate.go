@@ -21,10 +21,10 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"slices"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/search"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 )
 
 const minPasswordLength = 10
@@ -104,16 +104,12 @@ func Credentials() error {
 		return nil
 	}
 
-	configCMD := "config"
-	if config.BinName() == "atlas" {
-		configCMD += " init"
-	}
 	return fmt.Errorf(
-		"%w\n\nTo log in using your Atlas username and password, run: %s auth login\nTo set credentials using API keys, run: %s %s",
+		`%w
+
+To log in using your Atlas username and password, run: atlas auth login
+To set credentials using API keys, run: atlas config init`,
 		ErrMissingCredentials,
-		config.BinName(),
-		config.BinName(),
-		configCMD,
 	)
 }
 
@@ -126,10 +122,9 @@ func NoAPIKeys() error {
 	}
 	return fmt.Errorf(`%w (%s)
 
-To authenticate using your Atlas username and password on a new profile, run: %s auth login --profile <profile_name>`,
+To authenticate using your Atlas username and password on a new profile, run: atlas auth login --profile <profile_name>`,
 		ErrAlreadyAuthenticatedAPIKeys,
 		config.PublicAPIKey(),
-		config.BinName(),
 	)
 }
 
@@ -143,27 +138,26 @@ func NoAccessToken() error {
 	subject, _ := config.AccessTokenSubject()
 	return fmt.Errorf(`%w (%s)
 
-To log out, run: %s auth logout`,
+To log out, run: atlas auth logout`,
 		ErrAlreadyAuthenticatedToken,
 		subject,
-		config.BinName(),
 	)
 }
 
-func Token() error {
-	if t, err := config.Token(); t != nil {
-		return err
-	}
-
-	return ErrMissingCredentials
-}
-
 func FlagInSlice(value, flag string, validValues []string) error {
-	if search.StringInSlice(validValues, value) {
+	if slices.Contains(validValues, value) {
 		return nil
 	}
 
 	return fmt.Errorf(`invalid value for "%s", allowed values: "%s"`, flag, strings.Join(validValues, `", "`))
+}
+
+func ConditionalFlagNotInSlice(conditionalFlag string, conditionalFlagValue string, flag string, invalidFlags []string) error {
+	if !slices.Contains(invalidFlags, flag) {
+		return nil
+	}
+
+	return fmt.Errorf(`invalid flag "%s" in combination with "%s=%s", not allowed values: "%s"`, flag, conditionalFlag, conditionalFlagValue, strings.Join(invalidFlags, `", "`))
 }
 
 var ErrInvalidPath = errors.New("invalid path")

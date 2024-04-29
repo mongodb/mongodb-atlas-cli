@@ -22,36 +22,36 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 )
 
 func Test_getCRDRoot(t *testing.T) {
-	properties := map[string]apiextensions.JSONSchemaProps{
+	properties := map[string]apiextensionsv1.JSONSchemaProps{
 		"spec": {
-			Items: &apiextensions.JSONSchemaPropsOrArray{},
+			Items: &apiextensionsv1.JSONSchemaPropsOrArray{},
 		},
 	}
 	specPtr := properties["spec"]
 
 	type args struct {
-		document *apiextensions.CustomResourceDefinition
+		document *apiextensionsv1.CustomResourceDefinition
 	}
 
 	tests := []struct {
 		name    string
 		args    args
-		want    *apiextensions.JSONSchemaProps
+		want    *apiextensionsv1.JSONSchemaProps
 		wantErr bool
 	}{
 		{
 			name: "Can get document Root for a valid CRD",
 			args: args{
-				document: &apiextensions.CustomResourceDefinition{
-					Spec: apiextensions.CustomResourceDefinitionSpec{
-						Versions: []apiextensions.CustomResourceDefinitionVersion{
+				document: &apiextensionsv1.CustomResourceDefinition{
+					Spec: apiextensionsv1.CustomResourceDefinitionSpec{
+						Versions: []apiextensionsv1.CustomResourceDefinitionVersion{
 							{
-								Schema: &apiextensions.CustomResourceValidation{
-									OpenAPIV3Schema: &apiextensions.JSONSchemaProps{
+								Schema: &apiextensionsv1.CustomResourceValidation{
+									OpenAPIV3Schema: &apiextensionsv1.JSONSchemaProps{
 										Properties: properties,
 									},
 								},
@@ -74,9 +74,9 @@ func Test_getCRDRoot(t *testing.T) {
 		{
 			name: "Return an error if there are no versions",
 			args: args{
-				document: &apiextensions.CustomResourceDefinition{
-					Spec: apiextensions.CustomResourceDefinitionSpec{
-						Versions: []apiextensions.CustomResourceDefinitionVersion{},
+				document: &apiextensionsv1.CustomResourceDefinition{
+					Spec: apiextensionsv1.CustomResourceDefinitionSpec{
+						Versions: []apiextensionsv1.CustomResourceDefinitionVersion{},
 					},
 				},
 			},
@@ -86,11 +86,11 @@ func Test_getCRDRoot(t *testing.T) {
 		{
 			name: "Return an error if there is no Schema",
 			args: args{
-				document: &apiextensions.CustomResourceDefinition{
-					Spec: apiextensions.CustomResourceDefinitionSpec{
-						Versions: []apiextensions.CustomResourceDefinitionVersion{
+				document: &apiextensionsv1.CustomResourceDefinition{
+					Spec: apiextensionsv1.CustomResourceDefinitionSpec{
+						Versions: []apiextensionsv1.CustomResourceDefinitionVersion{
 							{
-								Schema: &apiextensions.CustomResourceValidation{
+								Schema: &apiextensionsv1.CustomResourceValidation{
 									OpenAPIV3Schema: nil,
 								},
 							},
@@ -104,13 +104,13 @@ func Test_getCRDRoot(t *testing.T) {
 		{
 			name: "Return an error if there is no Spec",
 			args: args{
-				document: &apiextensions.CustomResourceDefinition{
-					Spec: apiextensions.CustomResourceDefinitionSpec{
-						Versions: []apiextensions.CustomResourceDefinitionVersion{
+				document: &apiextensionsv1.CustomResourceDefinition{
+					Spec: apiextensionsv1.CustomResourceDefinitionSpec{
+						Versions: []apiextensionsv1.CustomResourceDefinitionVersion{
 							{
-								Schema: &apiextensions.CustomResourceValidation{
-									OpenAPIV3Schema: &apiextensions.JSONSchemaProps{
-										Properties: map[string]apiextensions.JSONSchemaProps{},
+								Schema: &apiextensionsv1.CustomResourceValidation{
+									OpenAPIV3Schema: &apiextensionsv1.JSONSchemaProps{
+										Properties: map[string]apiextensionsv1.JSONSchemaProps{},
 									},
 								},
 							},
@@ -139,7 +139,7 @@ func Test_getCRDRoot(t *testing.T) {
 func Test_pathExists(t *testing.T) {
 	type args struct {
 		path string
-		data *apiextensions.JSONSchemaProps
+		data *apiextensionsv1.JSONSchemaProps
 	}
 	tests := []struct {
 		name string
@@ -150,10 +150,10 @@ func Test_pathExists(t *testing.T) {
 			name: "Path is valid with Properties",
 			args: args{
 				path: "level1.level2",
-				data: &apiextensions.JSONSchemaProps{
-					Properties: map[string]apiextensions.JSONSchemaProps{
+				data: &apiextensionsv1.JSONSchemaProps{
+					Properties: map[string]apiextensionsv1.JSONSchemaProps{
 						"level1": {
-							Properties: map[string]apiextensions.JSONSchemaProps{
+							Properties: map[string]apiextensionsv1.JSONSchemaProps{
 								"level2": {},
 							},
 						},
@@ -166,10 +166,10 @@ func Test_pathExists(t *testing.T) {
 			name: "Path is NOT valid with Properties",
 			args: args{
 				path: "level1.level2",
-				data: &apiextensions.JSONSchemaProps{
-					Properties: map[string]apiextensions.JSONSchemaProps{
+				data: &apiextensionsv1.JSONSchemaProps{
+					Properties: map[string]apiextensionsv1.JSONSchemaProps{
 						"level1": {
-							Properties: map[string]apiextensions.JSONSchemaProps{
+							Properties: map[string]apiextensionsv1.JSONSchemaProps{
 								"level3": {},
 							},
 						},
@@ -182,14 +182,14 @@ func Test_pathExists(t *testing.T) {
 			name: "Path is valid with Items",
 			args: args{
 				path: "level1.level2",
-				data: &apiextensions.JSONSchemaProps{
-					Properties: map[string]apiextensions.JSONSchemaProps{
+				data: &apiextensionsv1.JSONSchemaProps{
+					Properties: map[string]apiextensionsv1.JSONSchemaProps{
 						"level1": {
-							Items: &apiextensions.JSONSchemaPropsOrArray{
+							Items: &apiextensionsv1.JSONSchemaPropsOrArray{
 								Schema: nil,
-								JSONSchemas: []apiextensions.JSONSchemaProps{
+								JSONSchemas: []apiextensionsv1.JSONSchemaProps{
 									{
-										Properties: map[string]apiextensions.JSONSchemaProps{
+										Properties: map[string]apiextensionsv1.JSONSchemaProps{
 											"level2": {},
 										},
 									},
@@ -205,14 +205,14 @@ func Test_pathExists(t *testing.T) {
 			name: "Path is NOT valid with Items",
 			args: args{
 				path: "level1.level2",
-				data: &apiextensions.JSONSchemaProps{
-					Properties: map[string]apiextensions.JSONSchemaProps{
+				data: &apiextensionsv1.JSONSchemaProps{
+					Properties: map[string]apiextensionsv1.JSONSchemaProps{
 						"level1": {
-							Items: &apiextensions.JSONSchemaPropsOrArray{
+							Items: &apiextensionsv1.JSONSchemaPropsOrArray{
 								Schema: nil,
-								JSONSchemas: []apiextensions.JSONSchemaProps{
+								JSONSchemas: []apiextensionsv1.JSONSchemaProps{
 									{
-										Properties: map[string]apiextensions.JSONSchemaProps{
+										Properties: map[string]apiextensionsv1.JSONSchemaProps{
 											"level32": {},
 										},
 									},
@@ -228,19 +228,19 @@ func Test_pathExists(t *testing.T) {
 			name: "Path is valid with Items and Props",
 			args: args{
 				path: "level1.level2.level3",
-				data: &apiextensions.JSONSchemaProps{
-					Properties: map[string]apiextensions.JSONSchemaProps{
+				data: &apiextensionsv1.JSONSchemaProps{
+					Properties: map[string]apiextensionsv1.JSONSchemaProps{
 						"level1": {
-							Items: &apiextensions.JSONSchemaPropsOrArray{
+							Items: &apiextensionsv1.JSONSchemaPropsOrArray{
 								Schema: nil,
-								JSONSchemas: []apiextensions.JSONSchemaProps{
+								JSONSchemas: []apiextensionsv1.JSONSchemaProps{
 									{
-										Properties: map[string]apiextensions.JSONSchemaProps{
+										Properties: map[string]apiextensionsv1.JSONSchemaProps{
 											"level2": {
-												Items: &apiextensions.JSONSchemaPropsOrArray{
+												Items: &apiextensionsv1.JSONSchemaPropsOrArray{
 													JSONSchemas: nil,
-													Schema: &apiextensions.JSONSchemaProps{
-														Properties: map[string]apiextensions.JSONSchemaProps{
+													Schema: &apiextensionsv1.JSONSchemaProps{
+														Properties: map[string]apiextensionsv1.JSONSchemaProps{
 															"level3": {},
 														},
 													},
@@ -273,9 +273,9 @@ func Test_CRDCompatibleVersion(t *testing.T) {
 	})
 
 	t.Run("should return operator major version when it is less than supported CRD version", func(t *testing.T) {
-		crdVersion, err := semver.NewVersion(LatestOperatorMajorVersion)
+		latestOperatorSemver, err := semver.NewVersion(LatestOperatorMajorVersion)
 		require.NoError(t, err)
-		operatorVersion := semver.New(crdVersion.Major(), crdVersion.Minor()-1, 2, "", "")
+		operatorVersion := semver.New(latestOperatorSemver.Major()-1, latestOperatorSemver.Minor(), 2, "", "")
 
 		expected := fmt.Sprintf("%d.%d.0", operatorVersion.Major(), operatorVersion.Minor())
 		compatibleVersion, err := CRDCompatibleVersion(operatorVersion.String())
@@ -284,9 +284,9 @@ func Test_CRDCompatibleVersion(t *testing.T) {
 	})
 
 	t.Run("should return operator major version when it is equal than supported CRD version", func(t *testing.T) {
-		crdVersion, err := semver.NewVersion(LatestOperatorMajorVersion)
+		latestOperatorSemver, err := semver.NewVersion(LatestOperatorMajorVersion)
 		require.NoError(t, err)
-		operatorVersion := semver.New(crdVersion.Major(), crdVersion.Minor(), crdVersion.Patch(), "", "")
+		operatorVersion := semver.New(latestOperatorSemver.Major(), latestOperatorSemver.Minor(), latestOperatorSemver.Patch(), "", "")
 
 		expected := fmt.Sprintf("%d.%d.0", operatorVersion.Major(), operatorVersion.Minor())
 		compatibleVersion, err := CRDCompatibleVersion(operatorVersion.String())
@@ -295,9 +295,9 @@ func Test_CRDCompatibleVersion(t *testing.T) {
 	})
 
 	t.Run("should return CRD major version when it is less than operator version", func(t *testing.T) {
-		crdVersion, err := semver.NewVersion(LatestOperatorMajorVersion)
+		latestOperatorSemver, err := semver.NewVersion(LatestOperatorMajorVersion)
 		require.NoError(t, err)
-		operatorVersion := semver.New(crdVersion.Major(), crdVersion.Minor()+1, 0, "", "")
+		operatorVersion := semver.New(latestOperatorSemver.Major(), latestOperatorSemver.Minor()+1, 0, "", "")
 
 		compatibleVersion, err := CRDCompatibleVersion(operatorVersion.String())
 		require.NoError(t, err)

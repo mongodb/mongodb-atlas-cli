@@ -24,7 +24,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -32,8 +32,8 @@ import (
 )
 
 const (
-	collectionNameAtlas = "myCol"
-	databaseNameAtlas   = "myDB"
+	collectionNameAtlas = "movies"
+	databaseNameAtlas   = "sample_mflix"
 )
 
 func TestDeploymentsAtlas(t *testing.T) {
@@ -51,7 +51,6 @@ func TestDeploymentsAtlas(t *testing.T) {
 
 	dbUserPassword := dbUserUsername + "~PwD"
 
-	var connectionString string
 	var client *mongo.Client
 	ctx := context.Background()
 
@@ -66,7 +65,6 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"M10",
 			"--force",
 			"--skipMongosh",
-			"--skipSampleData",
 			"--debug",
 			"--projectId", g.projectID,
 			"--username", dbUserUsername,
@@ -79,24 +77,9 @@ func TestDeploymentsAtlas(t *testing.T) {
 		cmd.Stdout = &o
 		cmd.Stderr = &e
 		err = cmd.Run()
-		req.NoError(err, e.String())
-
-		connectionString = strings.TrimSpace(o.String())
-		connectionString = strings.Replace(connectionString, "Your connection string: ", "", 1)
+		require.NoError(t, err, e.String())
 	})
-
-	t.Run("Watch Cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-		assert.Contains(t, string(resp), "Cluster available")
-	})
+	require.NoError(t, watchCluster(g.projectID, clusterName))
 
 	t.Run("Connect to database", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -124,11 +107,11 @@ func TestDeploymentsAtlas(t *testing.T) {
 					Password:      dbUserPassword,
 				}),
 		)
-		req.NoError(err)
+		require.NoError(t, err)
 	})
 
 	t.Cleanup(func() {
-		_ = client.Disconnect(ctx)
+		require.NoError(t, client.Disconnect(ctx))
 	})
 
 	t.Run("Pause Cluster", func(t *testing.T) {
@@ -141,9 +124,8 @@ func TestDeploymentsAtlas(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-		a := assert.New(t)
-		a.Contains(string(resp), fmt.Sprintf("Pausing deployment '%s'", clusterName))
+		require.NoError(t, err, string(resp))
+		assert.Contains(t, string(resp), fmt.Sprintf("Pausing deployment '%s'", clusterName))
 	})
 
 	t.Run("Start Cluster", func(t *testing.T) {
@@ -156,25 +138,12 @@ func TestDeploymentsAtlas(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-		a := assert.New(t)
-		a.Contains(string(resp), fmt.Sprintf("Starting deployment '%s'", clusterName))
+		require.NoError(t, err, string(resp))
+		assert.Contains(t, string(resp), fmt.Sprintf("Starting deployment '%s'", clusterName))
 	})
+	require.NoError(t, watchCluster(g.projectID, clusterName))
 
-	t.Run("Watch Cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-		assert.Contains(t, string(resp), "Cluster available")
-	})
-
-	t.Run("Create Index", func(t *testing.T) {
+	t.Run("Create Search Index", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			searchEntity,
@@ -189,14 +158,14 @@ func TestDeploymentsAtlas(t *testing.T) {
 			databaseNameAtlas,
 			"--collection",
 			collectionNameAtlas,
+			"--watch",
 		)
 		cmd.Env = os.Environ()
 
 		r, err := cmd.CombinedOutput()
 		out := string(r)
-		req.NoError(err, out)
-		a := assert.New(t)
-		a.Contains(out, "Search index created")
+		require.NoError(t, err, out)
+		assert.Contains(t, out, "Search index created")
 	})
 
 	t.Run("Delete Cluster", func(t *testing.T) {
@@ -217,19 +186,5 @@ func TestDeploymentsAtlas(t *testing.T) {
 
 		expected := fmt.Sprintf("Deployment '" + clusterName + "' deleted\n<nil>\n")
 		assert.Equal(t, expected, string(resp))
-	})
-
-	t.Run("Watch cluster deletion", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		// this command will fail with 404 once the cluster is deleted
-		// we just need to wait for this to close the project
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
 	})
 }

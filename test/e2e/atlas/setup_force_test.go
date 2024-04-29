@@ -18,16 +18,14 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestSetup(t *testing.T) {
@@ -60,10 +58,12 @@ func TestSetup(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 		assert.Contains(t, string(resp), "Cluster created.", string(resp))
 	})
-
+	t.Cleanup(func() {
+		require.NoError(t, deleteClusterForProject(g.projectID, clusterName))
+	})
 	t.Run("Check accessListIp was correctly added", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			accessListEntity,
@@ -73,27 +73,16 @@ func TestSetup(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		require.NoError(t, err, string(resp))
 
 		var entries *atlasv2.PaginatedNetworkAccess
-		err = json.Unmarshal(resp, &entries)
-		req.NoError(err)
-		req.Len(entries.Results, 1, "Expected 1 IP in list of IP's")
-		req.Contains(entries.Results[0].GetIpAddress(), arbitraryAccessListIP, "IP from list does not match added IP")
+		require.NoError(t, json.Unmarshal(resp, &entries))
+
+		assert.Len(t, entries.GetResults(), 1, "Expected 1 IP in list of IP's")
+		assert.Contains(t, entries.GetResults()[0].GetIpAddress(), arbitraryAccessListIP, "IP from list does not match added IP")
 	})
 
-	t.Run("Watch Cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-		assert.Contains(t, string(resp), "Cluster available")
-	})
+	require.NoError(t, watchCluster(g.projectID, clusterName))
 
 	t.Run("Describe DB User", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -107,9 +96,9 @@ func TestSetup(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 
-		var user mongodbatlas.DatabaseUser
+		var user atlasv2.CloudDatabaseUser
 		require.NoError(t, json.Unmarshal(resp, &user), string(resp))
-		assert.Equal(t, dbUserUsername, user.Username)
+		assert.Equal(t, dbUserUsername, user.GetUsername())
 	})
 
 	t.Run("Describe Cluster", func(t *testing.T) {
@@ -128,38 +117,8 @@ func TestSetup(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &cluster), string(resp))
 		assert.Equal(t, clusterName, *cluster.Name)
 
-		assert.Len(t, cluster.Tags, 1)
-		assert.Equal(t, tagKey, *cluster.Tags[0].Key)
-		assert.Equal(t, tagValue, *cluster.Tags[0].Value)
-	})
-
-	t.Run("Delete Cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"delete",
-			clusterName,
-			"--force",
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
-		assert.Equal(t, expected, string(resp))
-	})
-
-	t.Run("Watch cluster deletion", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		// this command will fail with 404 once the cluster is deleted
-		// we just need to wait for this to close the project
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
+		assert.Len(t, cluster.GetTags(), 1)
+		assert.Equal(t, tagKey, cluster.GetTags()[0].Key)
+		assert.Equal(t, tagValue, cluster.GetTags()[0].Value)
 	})
 }

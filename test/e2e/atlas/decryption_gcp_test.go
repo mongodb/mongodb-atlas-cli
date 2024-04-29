@@ -24,8 +24,8 @@ import (
 	"path"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e/decryption"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e/decryption"
 	"github.com/stretchr/testify/require"
 )
 

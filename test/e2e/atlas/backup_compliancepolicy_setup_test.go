@@ -22,10 +22,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestBackupCompliancePolicySetup(t *testing.T) {
@@ -36,16 +36,18 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("setup-compliance-policy")
 
-	scheduledPolicyItem := atlasv2.DiskBackupApiPolicyItem{
+	scheduledPolicyItem := atlasv2.BackupComplianceScheduledPolicyItem{
 		FrequencyInterval: 1,
 		FrequencyType:     "daily",
 		RetentionUnit:     "days",
 		RetentionValue:    1,
 	}
-	policy := &atlasv2.DataProtectionSettings{
-		ScheduledPolicyItems: []atlasv2.DiskBackupApiPolicyItem{scheduledPolicyItem},
-		ProjectId:            &g.projectID,
-		AuthorizedEmail:      authorizedEmail,
+	policy := &atlasv2.DataProtectionSettings20231001{
+		ScheduledPolicyItems:    &[]atlasv2.BackupComplianceScheduledPolicyItem{scheduledPolicyItem},
+		ProjectId:               &g.projectID,
+		AuthorizedUserLastName:  authorizedUserLastName,
+		AuthorizedUserFirstName: authorizedUserFirstName,
+		AuthorizedEmail:         authorizedEmail,
 	}
 	path := "./compliancepolicy.json"
 
@@ -53,7 +55,7 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 
 	cmd := exec.Command(cliPath,
 		backupsEntity,
-		compliancepolicyEntity,
+		compliancePolicyEntity,
 		"setup",
 		"--projectId",
 		g.projectID,
@@ -68,10 +70,12 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 
 	r.NoError(outputErr, string(resp))
 
-	var result atlasv2.DataProtectionSettings
+	var result atlasv2.DataProtectionSettings20231001
 	r.NoError(json.Unmarshal(resp, &result), resp)
 
 	a := assert.New(t)
 	a.Len(result.GetScheduledPolicyItems(), 1)
+	a.Equal(authorizedUserFirstName, result.GetAuthorizedUserFirstName())
+	a.Equal(authorizedUserLastName, result.GetAuthorizedUserLastName())
 	a.Equal(authorizedEmail, result.GetAuthorizedEmail())
 }

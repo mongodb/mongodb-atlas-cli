@@ -25,11 +25,11 @@ import (
 	"time"
 
 	"github.com/denisbrodbeck/machineid"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/internal/terminal"
-	"github.com/mongodb/mongodb-atlas-cli/internal/version"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/terminal"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -152,12 +152,13 @@ func withCI() EventOpt {
 
 func withAnonymousID() EventOpt {
 	return func(event Event) {
-		id, err := machineid.ProtectedID(config.ToolName)
+		id, err := machineid.ProtectedID(config.AtlasCLI)
 		if err != nil {
+			event.Properties["device_id_err"] = err.Error()
 			_, _ = log.Debugf("error generating machine id: %v\n", err)
-		} else {
-			event.Properties["device_id"] = id
+			return
 		}
+		event.Properties["device_id"] = id
 	}
 }
 
@@ -201,6 +202,7 @@ func withOS() EventOpt {
 type Authenticator interface {
 	PublicAPIKey() string
 	PrivateAPIKey() string
+	AccessToken() string
 }
 
 func withAuthMethod(c Authenticator) EventOpt {
@@ -208,9 +210,9 @@ func withAuthMethod(c Authenticator) EventOpt {
 		if c.PublicAPIKey() != "" && c.PrivateAPIKey() != "" {
 			event.Properties["auth_method"] = "api_key"
 			return
+		} else if c.AccessToken() != "" {
+			event.Properties["auth_method"] = "oauth"
 		}
-
-		event.Properties["auth_method"] = "oauth"
 	}
 }
 
@@ -225,6 +227,16 @@ func withService(c ServiceGetter) EventOpt {
 		if c.OpsManagerURL() != "" {
 			event.Properties["ops_manager_url"] = c.OpsManagerURL()
 		}
+	}
+}
+
+type SkipUpdateGetter interface {
+	SkipUpdateCheck() bool
+}
+
+func withSkipUpdateCheck(c SkipUpdateGetter) EventOpt {
+	return func(event Event) {
+		event.Properties["skip_update_check"] = c.SkipUpdateCheck()
 	}
 }
 
@@ -317,7 +329,7 @@ func withUserAgent() EventOpt {
 func newEvent(opts ...EventOpt) Event {
 	var event = Event{
 		Timestamp: time.Now(),
-		Source:    config.ToolName,
+		Source:    config.AtlasCLI,
 		Properties: map[string]interface{}{
 			"result": "SUCCESS",
 		},

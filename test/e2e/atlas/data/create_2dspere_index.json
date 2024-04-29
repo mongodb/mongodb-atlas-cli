@@ -1,0 +1,24 @@
+{
+  "collation": {
+    "alternate": "non-ignorable",
+    "backwards": false,
+    "caseFirst": "lower",
+    "caseLevel": false,
+    "locale": "af",
+    "maxVariable": "punct",
+    "normalization": false,
+    "numericOrdering": false,
+    "strength": 3
+  },
+  "collection": "accounts",
+  "db": "sample_airbnb",
+  "keys": [
+    {
+      "test_field": "2dsphere"
+    }
+  ],
+  "options": {
+    "name": "2dspereIndexTest",
+    "2dsphereIndexVersion": 2
+  }
+}

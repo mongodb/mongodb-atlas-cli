@@ -16,18 +16,32 @@ package auth
 
 import (
 	"context"
-	"fmt"
 	"io"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/oauth"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/oauth"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
+
+//go:generate mockgen -destination=../../mocks/mock_logout.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/auth Revoker,ConfigDeleter
+
+type ConfigDeleter interface {
+	Delete() error
+	SetAccessToken(string)
+	SetRefreshToken(string)
+	SetProjectID(string)
+	SetOrgID(string)
+	Save() error
+}
+
+type Revoker interface {
+	RevokeToken(context.Context, string, string) (*atlas.Response, error)
+}
 
 type logoutOpts struct {
 	*cli.DeleteOpts
@@ -35,16 +49,6 @@ type logoutOpts struct {
 	config     ConfigDeleter
 	flow       Revoker
 	keepConfig bool
-}
-
-//go:generate mockgen -destination=../../mocks/mock_logout.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/cli/auth Revoker,ConfigDeleter
-
-type ConfigDeleter interface {
-	Delete() error
-}
-
-type Revoker interface {
-	RevokeToken(context.Context, string, string) (*atlas.Response, error)
 }
 
 func (opts *logoutOpts) initFlow() error {
@@ -62,11 +66,11 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 	if !opts.keepConfig {
 		return opts.Delete(opts.config.Delete)
 	}
-	config.SetAccessToken("")
-	config.SetRefreshToken("")
-	config.SetProjectID("")
-	config.SetOrgID("")
-	return config.Save()
+	opts.config.SetAccessToken("")
+	opts.config.SetRefreshToken("")
+	opts.config.SetProjectID("")
+	opts.config.SetOrgID("")
+	return opts.config.Save()
 }
 
 func LogoutBuilder() *cobra.Command {
@@ -77,15 +81,15 @@ func LogoutBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "logout",
 		Short: "Log out of the CLI.",
-		Example: fmt.Sprintf(`  # To log out from the CLI:
-  %s auth logout
-`, config.BinName()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		Example: `  # To log out from the CLI:
+  atlas auth logout
+`,
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			opts.config = config.Default()
 			return opts.initFlow()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			if config.RefreshToken() == "" {
 				return ErrUnauthenticated
 			}

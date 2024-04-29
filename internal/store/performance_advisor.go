@@ -15,24 +15,20 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_performance_advisor.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store PerformanceAdvisorNamespacesLister,PerformanceAdvisorSlowQueriesLister,PerformanceAdvisorIndexesLister,PerformanceAdvisorSlowOperationThresholdEnabler,PerformanceAdvisorSlowOperationThresholdDisabler
+//go:generate mockgen -destination=../mocks/mock_performance_advisor.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store PerformanceAdvisorNamespacesLister,PerformanceAdvisorSlowQueriesLister,PerformanceAdvisorIndexesLister,PerformanceAdvisorSlowOperationThresholdEnabler,PerformanceAdvisorSlowOperationThresholdDisabler
 type PerformanceAdvisorNamespacesLister interface {
-	PerformanceAdvisorNamespaces(string, string, *atlas.NamespaceOptions) (*atlas.Namespaces, error)
+	PerformanceAdvisorNamespaces(opts *atlasv2.ListSlowQueryNamespacesApiParams) (*atlasv2.Namespaces, error)
 }
 
 type PerformanceAdvisorSlowQueriesLister interface {
-	PerformanceAdvisorSlowQueries(string, string, *atlas.SlowQueryOptions) (*atlas.SlowQueries, error)
+	PerformanceAdvisorSlowQueries(*atlasv2.ListSlowQueriesApiParams) (*atlasv2.PerformanceAdvisorSlowQueryList, error)
 }
 
 type PerformanceAdvisorIndexesLister interface {
-	PerformanceAdvisorIndexes(string, string, *atlas.SuggestedIndexOptions) (*atlas.SuggestedIndexes, error)
+	PerformanceAdvisorIndexes(*atlasv2.ListSuggestedIndexesApiParams) (*atlasv2.PerformanceAdvisorResponse, error)
 }
 
 type PerformanceAdvisorSlowOperationThresholdEnabler interface {
@@ -44,65 +40,69 @@ type PerformanceAdvisorSlowOperationThresholdDisabler interface {
 }
 
 // PerformanceAdvisorNamespaces encapsulates the logic to manage different cloud providers.
-func (s *Store) PerformanceAdvisorNamespaces(projectID, processName string, opts *atlas.NamespaceOptions) (*atlas.Namespaces, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetNamespaces(s.ctx, projectID, processName, opts)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetNamespaces(s.ctx, projectID, processName, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+func (s *Store) PerformanceAdvisorNamespaces(opts *atlasv2.ListSlowQueryNamespacesApiParams) (*atlasv2.Namespaces, error) {
+	request := s.clientv2.PerformanceAdvisorApi.
+		ListSlowQueryNamespaces(s.ctx, opts.GroupId, opts.ProcessId)
+	if opts.Duration != nil {
+		request = request.Duration(*opts.Duration)
 	}
+	if opts.Since != nil {
+		request = request.Since(*opts.Since)
+	}
+	result, _, err := request.Execute()
+	return result, err
 }
 
 // PerformanceAdvisorSlowQueries encapsulates the logic to manage different cloud providers.
-func (s *Store) PerformanceAdvisorSlowQueries(projectID, processName string, opts *atlas.SlowQueryOptions) (*atlas.SlowQueries, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetSlowQueries(s.ctx, projectID, processName, opts)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSlowQueries(s.ctx, projectID, processName, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+func (s *Store) PerformanceAdvisorSlowQueries(opts *atlasv2.ListSlowQueriesApiParams) (*atlasv2.PerformanceAdvisorSlowQueryList, error) {
+	request := s.clientv2.PerformanceAdvisorApi.ListSlowQueries(s.ctx, opts.GroupId, opts.ProcessId)
+	if opts.Duration != nil {
+		request = request.Duration(*opts.Duration)
 	}
+	if opts.Since != nil {
+		request = request.Since(*opts.Since)
+	}
+	if opts.Namespaces != nil {
+		request = request.Namespaces(*opts.Namespaces)
+	}
+	if opts.NLogs != nil {
+		request = request.NLogs(*opts.NLogs)
+	}
+	result, _, err := request.Execute()
+	return result, err
 }
 
 // PerformanceAdvisorIndexes encapsulates the logic to manage different cloud providers.
-func (s *Store) PerformanceAdvisorIndexes(projectID, processName string, opts *atlas.SuggestedIndexOptions) (*atlas.SuggestedIndexes, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).PerformanceAdvisor.GetSuggestedIndexes(s.ctx, projectID, processName, opts)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).PerformanceAdvisor.GetSuggestedIndexes(s.ctx, projectID, processName, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+func (s *Store) PerformanceAdvisorIndexes(opts *atlasv2.ListSuggestedIndexesApiParams) (*atlasv2.PerformanceAdvisorResponse, error) {
+	request := s.clientv2.PerformanceAdvisorApi.
+		ListSuggestedIndexes(s.ctx, opts.GroupId, opts.ProcessId)
+	if opts.Namespaces != nil {
+		request = request.Namespaces(*opts.Namespaces)
 	}
+	if opts.Duration != nil {
+		request = request.Duration(*opts.Duration)
+	}
+	if opts.Since != nil {
+		request = request.Since(*opts.Since)
+	}
+	if opts.NExamples != nil {
+		request = request.NExamples(*opts.NExamples)
+	}
+	if opts.NIndexes != nil {
+		request = request.NIndexes(*opts.NIndexes)
+	}
+	result, _, err := request.Execute()
+	return result, err
 }
 
 // EnablePerformanceAdvisorSlowOperationThreshold encapsulates the logic to manage different cloud providers.
 func (s *Store) EnablePerformanceAdvisorSlowOperationThreshold(projectID string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).PerformanceAdvisor.EnableManagedSlowOperationThreshold(s.ctx, projectID)
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	_, err := s.clientv2.PerformanceAdvisorApi.EnableSlowOperationThresholding(s.ctx, projectID).Execute()
+	return err
 }
 
 // DisablePerformanceAdvisorSlowOperationThreshold encapsulates the logic to manage different cloud providers.
 func (s *Store) DisablePerformanceAdvisorSlowOperationThreshold(projectID string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).PerformanceAdvisor.DisableManagedSlowOperationThreshold(s.ctx, projectID)
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	_, err := s.clientv2.PerformanceAdvisorApi.DisableSlowOperationThresholding(s.ctx, projectID).Execute()
+	return err
 }

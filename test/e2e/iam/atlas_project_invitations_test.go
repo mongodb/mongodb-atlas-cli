@@ -22,14 +22,14 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestAtlasProjectInvitations(t *testing.T) {
-	cliPath, err := e2e.Bin()
+	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
 	var invitationID string
@@ -48,7 +48,6 @@ func TestAtlasProjectInvitations(t *testing.T) {
 
 	t.Run("Invite", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			invitationsEntity,
 			"invite",
@@ -72,7 +71,6 @@ func TestAtlasProjectInvitations(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			invitationsEntity,
 			"ls",
@@ -91,7 +89,6 @@ func TestAtlasProjectInvitations(t *testing.T) {
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			invitationsEntity,
 			"get",
@@ -112,7 +109,6 @@ func TestAtlasProjectInvitations(t *testing.T) {
 
 	t.Run("Update by email", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			invitationsEntity,
 			"update",
@@ -138,7 +134,6 @@ func TestAtlasProjectInvitations(t *testing.T) {
 
 	t.Run("Update by ID", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			invitationsEntity,
 			"update",
@@ -163,7 +158,6 @@ func TestAtlasProjectInvitations(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			iamEntity,
 			projectsEntity,
 			invitationsEntity,
 			"delete",

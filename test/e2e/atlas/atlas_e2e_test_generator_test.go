@@ -24,10 +24,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 const (
@@ -46,6 +46,7 @@ type atlasE2ETestGenerator struct {
 	teamUser       string
 	dbUser         string
 	tier           string
+	mDBVer         string
 	dataFedName    string
 	enableBackup   bool
 	firstProcess   *atlasv2.ApiHostViewAtlas
@@ -215,7 +216,7 @@ func deleteTeamWithRetry(t *testing.T, teamID string) {
 	backoff := 1
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
 		e := deleteTeam(teamID)
-		if e == nil {
+		if e == nil || strings.Contains(e.Error(), "GROUP_NOT_FOUND") {
 			t.Logf("team %q successfully deleted", teamID)
 			deleted = true
 			break
@@ -236,17 +237,12 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	backoff := 1
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
 		e := deleteProject(projectID)
-		if e == nil {
+		if e == nil || strings.Contains(e.Error(), "GROUP_NOT_FOUND") {
 			t.Logf("project %q successfully deleted", projectID)
 			deleted = true
 			break
 		}
 		t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, backoff, projectID, e)
-		if strings.Contains(e.Error(), "CANNOT_CLOSE_GROUP_ACTIVE_ATLAS_CLUSTERS") {
-			cliPath, err := e2e.AtlasCLIBin()
-			require.NoError(t, err)
-			deleteClustersForProject(t, cliPath, projectID)
-		}
 		time.Sleep(time.Duration(backoff) * time.Second)
 		backoff *= 2
 	}
@@ -286,8 +282,8 @@ func deleteOrgTeams(t *testing.T, cliPath string) {
 	require.NoError(t, err, string(resp))
 	var teams atlasv2.PaginatedTeam
 	require.NoError(t, json.Unmarshal(resp, &teams), string(resp))
-	for _, team := range teams.Results {
-		assert.NoError(t, deleteTeam(team.GetId())) //nolint: testifylint // try to delete all
+	for _, team := range teams.GetResults() {
+		assert.NoError(t, deleteTeam(team.GetId()))
 	}
 }
 
@@ -319,9 +315,9 @@ func (g *atlasE2ETestGenerator) generateServerlessCluster() {
 	g.t.Logf("serverlessName=%s", g.serverlessName)
 
 	g.t.Cleanup(func() {
-		if e := deleteServerlessInstanceForProject(g.projectID, g.serverlessName); e != nil {
-			g.t.Errorf("unexpected error deleting serverless instance: %v", e)
-		}
+		cliPath, err := e2e.AtlasCLIBin()
+		require.NoError(g.t, err)
+		deleteServerlessInstanceForProject(g.t, cliPath, g.projectID, g.serverlessName)
 	})
 }
 
@@ -338,7 +334,14 @@ func (g *atlasE2ETestGenerator) generateCluster() {
 		g.tier = e2eTier()
 	}
 
-	g.clusterName, g.clusterRegion, err = deployClusterForProject(g.projectID, g.tier, g.enableBackup)
+	if g.mDBVer == "" {
+		mdbVersion, e := MongoDBMajorVersion()
+		require.NoError(g.t, e)
+
+		g.mDBVer = mdbVersion
+	}
+
+	g.clusterName, g.clusterRegion, err = deployClusterForProject(g.projectID, g.tier, g.mDBVer, g.enableBackup)
 	if err != nil {
 		g.Logf("projectID=%q, clusterName=%q", g.projectID, g.clusterName)
 		g.t.Errorf("unexpected error deploying cluster: %v", err)
@@ -380,11 +383,12 @@ func (g *atlasE2ETestGenerator) generateDataFederation() {
 
 	g.t.Cleanup(func() {
 		g.Logf("Data Federation cleanup %q\n", storeName)
-		if e := deleteDataFederationForProject(g.projectID, storeName); e != nil {
-			g.t.Errorf("unexpected error deleting data federation: %v", e)
-		} else {
-			g.Logf("data federation %q successfully deleted", storeName)
-		}
+
+		cliPath, err := e2e.AtlasCLIBin()
+		require.NoError(g.t, err)
+
+		deleteDataFederationForProject(g.t, cliPath, g.projectID, storeName)
+		g.Logf("data federation %q successfully deleted", storeName)
 	})
 }
 
@@ -466,11 +470,11 @@ func (g *atlasE2ETestGenerator) getProcesses() ([]atlasv2.ApiHostViewAtlas, erro
 		g.t.Fatalf("unexpected error: project must be generated %s - %s", err, resp)
 	}
 
-	if len(processes.Results) == 0 {
+	if len(processes.GetResults()) == 0 {
 		g.t.Fatalf("got=%#v\nwant=%#v", 0, "len(processes) > 0")
 	}
 
-	return processes.Results, nil
+	return processes.GetResults(), nil
 }
 
 // runCommand runs a command on mongocli tool.

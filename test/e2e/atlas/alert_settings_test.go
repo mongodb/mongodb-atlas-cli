@@ -24,10 +24,10 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestAlertConfig(t *testing.T) {
@@ -60,16 +60,31 @@ func TestAlertConfig(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &alert))
 		a := assert.New(t)
 		a.Equal(eventTypeName, alert.GetEventTypeName())
-		a.NotEmpty(alert.Notifications)
-		a.Equal(delayMin, alert.Notifications[0].GetDelayMin())
-		a.Equal(group, alert.Notifications[0].GetTypeName())
-		a.Equal(intervalMin, alert.Notifications[0].GetIntervalMin())
-		a.False(alert.Notifications[0].GetSmsEnabled())
+		a.NotEmpty(alert.GetNotifications())
+		a.Equal(delayMin, alert.GetNotifications()[0].GetDelayMin())
+		a.Equal(group, alert.GetNotifications()[0].GetTypeName())
+		a.Equal(intervalMin, alert.GetNotifications()[0].GetIntervalMin())
+		a.False(alert.GetNotifications()[0].GetSmsEnabled())
 		alertID = alert.GetId()
 	})
 	if alertID == "" {
 		assert.FailNow(t, "Failed to create alert setting")
 	}
+
+	t.Run("Describe", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			alertsEntity,
+			configEntity,
+			"get",
+			alertID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+		var config admin.GroupAlertsConfig
+		require.NoError(t, json.Unmarshal(resp, &config))
+		assert.Equal(t, alertID, config.GetId())
+	})
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -125,9 +140,9 @@ func TestAlertConfig(t *testing.T) {
 		var alert admin.GroupAlertsConfig
 		require.NoError(t, json.Unmarshal(resp, &alert))
 		a.False(alert.GetEnabled())
-		a.NotEmpty(alert.Notifications)
-		a.True(alert.Notifications[0].GetSmsEnabled())
-		a.True(alert.Notifications[0].GetEmailEnabled())
+		a.NotEmpty(alert.GetNotifications())
+		a.True(alert.GetNotifications()[0].GetSmsEnabled())
+		a.True(alert.GetNotifications()[0].GetEmailEnabled())
 	})
 
 	t.Run("Update Setting using file input", func(t *testing.T) {
@@ -167,9 +182,9 @@ func TestAlertConfig(t *testing.T) {
 		var alert admin.GroupAlertsConfig
 		require.NoError(t, json.Unmarshal(resp, &alert))
 		a.False(alert.GetEnabled())
-		a.NotEmpty(alert.Notifications)
-		a.True(alert.Notifications[0].GetSmsEnabled())
-		a.True(alert.Notifications[0].GetEmailEnabled())
+		a.NotEmpty(alert.GetNotifications())
+		a.True(alert.GetNotifications()[0].GetSmsEnabled())
+		a.True(alert.GetNotifications()[0].GetEmailEnabled())
 	})
 
 	t.Run("Delete", func(t *testing.T) {

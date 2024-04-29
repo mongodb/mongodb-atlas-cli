@@ -18,17 +18,15 @@ import (
 	"os"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 )
 
 type KeyStoreProvider string
 
 const (
-	LocalKey KeyStoreProvider = "local"
-	KMIP     KeyStoreProvider = "kmip"
-	AWS      KeyStoreProvider = "aws"
-	GCP      KeyStoreProvider = "gcp"
-	Azure    KeyStoreProvider = "azure"
+	AWS   KeyStoreProvider = "aws"
+	GCP   KeyStoreProvider = "gcp"
+	Azure KeyStoreProvider = "azure"
 )
 
 type KeyProvider interface {

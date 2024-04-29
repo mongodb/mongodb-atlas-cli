@@ -15,25 +15,21 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_project_invitations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectInvitationLister,ProjectInvitationDescriber,ProjectInvitationDeleter,ProjectInviter,ProjectInvitationUpdater
+//go:generate mockgen -destination=../mocks/mock_project_invitations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectInvitationLister,ProjectInvitationDescriber,ProjectInvitationDeleter,ProjectInviter,ProjectInvitationUpdater
 
 type ProjectInvitationLister interface {
-	ProjectInvitations(string, *atlas.InvitationOptions) ([]*atlas.Invitation, error)
+	ProjectInvitations(*atlasv2.ListProjectInvitationsApiParams) ([]atlasv2.GroupInvitation, error)
 }
 
 type ProjectInvitationDescriber interface {
-	ProjectInvitation(string, string) (*atlas.Invitation, error)
+	ProjectInvitation(string, string) (*atlasv2.GroupInvitation, error)
 }
 
 type ProjectInviter interface {
-	InviteUserToProject(string, *atlas.Invitation) (*atlas.Invitation, error)
+	InviteUserToProject(string, *atlasv2.GroupInvitationRequest) (*atlasv2.GroupInvitation, error)
 }
 
 type ProjectInvitationDeleter interface {
@@ -41,84 +37,43 @@ type ProjectInvitationDeleter interface {
 }
 
 type ProjectInvitationUpdater interface {
-	UpdateProjectInvitation(string, string, *atlas.Invitation) (*atlas.Invitation, error)
+	UpdateProjectInvitation(string, string, *atlasv2.GroupInvitationRequest) (*atlasv2.GroupInvitation, error)
 }
 
 // ProjectInvitations encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectInvitations(groupID string, opts *atlas.InvitationOptions) ([]*atlas.Invitation, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.Invitations(s.ctx, groupID, opts)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.Invitations(s.ctx, groupID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+func (s *Store) ProjectInvitations(params *atlasv2.ListProjectInvitationsApiParams) ([]atlasv2.GroupInvitation, error) {
+	result, _, err := s.clientv2.ProjectsApi.ListProjectInvitationsWithParams(s.ctx, params).Execute()
+	return result, err
 }
 
 // ProjectInvitation encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectInvitation(groupID, invitationID string) (*atlas.Invitation, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.Invitation(s.ctx, groupID, invitationID)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.Invitation(s.ctx, groupID, invitationID)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+func (s *Store) ProjectInvitation(groupID, invitationID string) (*atlasv2.GroupInvitation, error) {
+	result, _, err := s.clientv2.ProjectsApi.GetProjectInvitation(s.ctx, groupID, invitationID).Execute()
+	return result, err
 }
 
 // DeleteProjectInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteProjectInvitation(groupID, invitationID string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Projects.DeleteInvitation(s.ctx, groupID, invitationID)
-		return err
-	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Projects.DeleteInvitation(s.ctx, groupID, invitationID)
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	_, _, err := s.clientv2.ProjectsApi.DeleteProjectInvitation(s.ctx, groupID, invitationID).Execute()
+	return err
 }
 
 // InviteUserToProject encapsulate the logic to manage different cloud providers.
-func (s *Store) InviteUserToProject(groupID string, invitation *atlas.Invitation) (*atlas.Invitation, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.InviteUser(s.ctx, groupID, invitation)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.InviteUser(s.ctx, groupID, invitation)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+func (s *Store) InviteUserToProject(groupID string, invitation *atlasv2.GroupInvitationRequest) (*atlasv2.GroupInvitation, error) {
+	result, _, err := s.clientv2.ProjectsApi.CreateProjectInvitation(s.ctx, groupID, invitation).Execute()
+	return result, err
 }
 
 // UpdateProjectInvitation encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateProjectInvitation(groupID, invitationID string, invitation *atlas.Invitation) (*atlas.Invitation, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		if invitationID != "" {
-			result, _, err := s.client.(*atlas.Client).Projects.UpdateInvitationByID(s.ctx, groupID, invitationID, invitation)
-			return result, err
+func (s *Store) UpdateProjectInvitation(groupID, invitationID string, invitation *atlasv2.GroupInvitationRequest) (*atlasv2.GroupInvitation, error) {
+	if invitationID != "" {
+		groupInvitationRequest := atlasv2.GroupInvitationUpdateRequest{
+			Roles: invitation.Roles,
 		}
-		result, _, err := s.client.(*atlas.Client).Projects.UpdateInvitation(s.ctx, groupID, invitation)
+		result, _, err := s.clientv2.ProjectsApi.UpdateProjectInvitationById(s.ctx, groupID, invitationID, &groupInvitationRequest).Execute()
 		return result, err
-
-	case config.CloudManagerService, config.OpsManagerService:
-		if invitationID != "" {
-			result, _, err := s.client.(*opsmngr.Client).Projects.UpdateInvitationByID(s.ctx, groupID, invitationID, invitation)
-			return result, err
-		}
-		result, _, err := s.client.(*opsmngr.Client).Projects.UpdateInvitation(s.ctx, groupID, invitation)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+
+	result, _, err := s.clientv2.ProjectsApi.UpdateProjectInvitation(s.ctx, groupID, invitation).Execute()
+	return result, err
 }

@@ -24,20 +24,21 @@ import (
 	"testing"
 	"time"
 
+	"github.com/go-test/deep"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/features"
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/resources"
-	"github.com/mongodb/mongodb-atlas-cli/internal/kubernetes/operator/secrets"
-	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/internal/store/atlas"
-	atlasV1 "github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/common"
-	"github.com/mongodb/mongodb-atlas-kubernetes/pkg/api/v1/status"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/secrets"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
+	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
+	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const resourceVersion = "x.y.z"
@@ -45,7 +46,7 @@ const resourceVersion = "x.y.z"
 func Test_convertUserLabels(t *testing.T) {
 	t.Run("Can convert user labels from Atlas to the Operator format", func(t *testing.T) {
 		atlasUser := &atlasv2.CloudDatabaseUser{
-			Labels: []atlasv2.ComponentLabel{
+			Labels: &[]atlasv2.ComponentLabel{
 				{
 					Key:   pointer.Get("TestKey"),
 					Value: pointer.Get("TestValue"),
@@ -53,7 +54,7 @@ func Test_convertUserLabels(t *testing.T) {
 			},
 		}
 
-		expectedLabels := []common.LabelSpec{
+		expectedLabels := []akov2common.LabelSpec{
 			{
 				Key:   "TestKey",
 				Value: "TestValue",
@@ -69,7 +70,7 @@ func Test_convertUserLabels(t *testing.T) {
 func Test_convertUserRoles(t *testing.T) {
 	t.Run("Can convert user labels from Atlas to the Operator format", func(t *testing.T) {
 		atlasUser := &atlasv2.CloudDatabaseUser{
-			Roles: []atlasv2.DatabaseUserRole{
+			Roles: &[]atlasv2.DatabaseUserRole{
 				{
 					RoleName:       "TestRole",
 					DatabaseName:   "TestDB",
@@ -78,7 +79,7 @@ func Test_convertUserRoles(t *testing.T) {
 			},
 		}
 
-		expectedRoles := []atlasV1.RoleSpec{
+		expectedRoles := []akov2.RoleSpec{
 			{
 				RoleName:       "TestRole",
 				DatabaseName:   "TestDB",
@@ -95,21 +96,24 @@ func Test_buildUserSecret(t *testing.T) {
 	dictionary := resources.AtlasNameToKubernetesName()
 	t.Run("Can build user secret WITHOUT credentials", func(t *testing.T) {
 		projectName := "TestProject-1"
+		projectID := "123"
 		atlasUser := &atlasv2.CloudDatabaseUser{
 			Password: pointer.Get("TestPassword"),
 			Username: "TestName",
 		}
 
 		expectedSecret := &corev1.Secret{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "Secret",
 				APIVersion: "v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-%s", projectName, atlasUser.Username)),
 				Namespace: "TestNamespace",
 				Labels: map[string]string{
-					secrets.TypeLabelKey: secrets.CredLabelVal,
+					secrets.TypeLabelKey:        secrets.CredLabelVal,
+					secrets.ProjectIDLabelKey:   resources.NormalizeAtlasName(projectID, dictionary),
+					secrets.ProjectNameLabelKey: resources.NormalizeAtlasName(projectName, dictionary),
 				},
 			},
 			Data: map[string][]byte{
@@ -117,9 +121,9 @@ func Test_buildUserSecret(t *testing.T) {
 			},
 		}
 
-		got := buildUserSecret(resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, atlasUser.Username), dictionary), "TestNamespace", dictionary)
-		if !reflect.DeepEqual(got, expectedSecret) {
-			t.Errorf("buildUserSecret(); \r\n got:%v;s\r\n want:%v", got, expectedSecret)
+		got := buildUserSecret(resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, atlasUser.Username), dictionary), "TestNamespace", projectID, projectName, dictionary)
+		if diff := deep.Equal(expectedSecret, got); diff != nil {
+			t.Fatalf("buildUserSecret() mismatch: %v", diff)
 		}
 	})
 }
@@ -137,7 +141,7 @@ func TestBuildDBUsers(t *testing.T) {
 		user := atlasv2.CloudDatabaseUser{
 			DatabaseName:    "TestDB",
 			DeleteAfterDate: pointer.Get(time.Now()),
-			Labels: []atlasv2.ComponentLabel{
+			Labels: &[]atlasv2.ComponentLabel{
 				{
 					Key:   pointer.Get("TestLabelKey"),
 					Value: pointer.Get("TestLabelValue"),
@@ -147,14 +151,14 @@ func TestBuildDBUsers(t *testing.T) {
 			X509Type:     pointer.Get("TestX509"),
 			AwsIAMType:   pointer.Get("TestAWSIAMType"),
 			GroupId:      "0",
-			Roles: []atlasv2.DatabaseUserRole{
+			Roles: &[]atlasv2.DatabaseUserRole{
 				{
 					RoleName:       "TestRoleName",
 					DatabaseName:   "TestRoleDatabaseName",
 					CollectionName: pointer.Get("TestCollectionName"),
 				},
 			},
-			Scopes: []atlasv2.UserScope{
+			Scopes: &[]atlasv2.UserScope{
 				{
 					Name: "TestScopeName",
 					Type: "CLUSTER",
@@ -164,9 +168,9 @@ func TestBuildDBUsers(t *testing.T) {
 			Username: "TestUsername",
 		}
 
-		listOptions := &atlas.ListOptions{}
+		listOptions := &store.ListOptions{}
 		mockUserStore.EXPECT().DatabaseUsers(projectID, listOptions).Return(&atlasv2.PaginatedApiAtlasDatabaseUser{
-			Results: []atlasv2.CloudDatabaseUser{
+			Results: &[]atlasv2.CloudDatabaseUser{
 				user,
 			},
 		}, nil)
@@ -176,53 +180,53 @@ func TestBuildDBUsers(t *testing.T) {
 			t.Fatalf("%v", err)
 		}
 
-		expectedUser := &atlasV1.AtlasDatabaseUser{
-			TypeMeta: v1.TypeMeta{
+		expectedUser := &akov2.AtlasDatabaseUser{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasDatabaseUser",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, user.Username), dictionary),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
 					features.ResourceVersion: resourceVersion,
 				},
 			},
-			Spec: atlasV1.AtlasDatabaseUserSpec{
-				Project: common.ResourceRefNamespaced{
+			Spec: akov2.AtlasDatabaseUserSpec{
+				Project: akov2common.ResourceRefNamespaced{
 					Name:      resources.NormalizeAtlasName(projectName, dictionary),
 					Namespace: targetNamespace,
 				},
 				DatabaseName:    user.DatabaseName,
-				DeleteAfterDate: user.DeleteAfterDate.String(),
-				Labels: []common.LabelSpec{
+				DeleteAfterDate: user.DeleteAfterDate.Format(timeFormatISO8601),
+				Labels: []akov2common.LabelSpec{
 					{
-						Key:   *user.Labels[0].Key,
-						Value: *user.Labels[0].Value,
+						Key:   *user.GetLabels()[0].Key,
+						Value: *user.GetLabels()[0].Value,
 					},
 				},
-				Roles: []atlasV1.RoleSpec{
+				Roles: []akov2.RoleSpec{
 					{
-						RoleName:       user.Roles[0].RoleName,
-						DatabaseName:   user.Roles[0].DatabaseName,
-						CollectionName: *user.Roles[0].CollectionName,
+						RoleName:       user.GetRoles()[0].RoleName,
+						DatabaseName:   user.GetRoles()[0].DatabaseName,
+						CollectionName: *user.GetRoles()[0].CollectionName,
 					},
 				},
-				Scopes: []atlasV1.ScopeSpec{
+				Scopes: []akov2.ScopeSpec{
 					{
-						Name: user.Scopes[0].Name,
-						Type: atlasV1.ScopeType(user.Scopes[0].Type),
+						Name: user.GetScopes()[0].Name,
+						Type: akov2.ScopeType(user.GetScopes()[0].Type),
 					},
 				},
-				PasswordSecret: &common.ResourceRef{
+				PasswordSecret: &akov2common.ResourceRef{
 					Name: relatedSecrets[0].Name,
 				},
 				Username: user.Username,
 				X509Type: *user.X509Type,
 			},
-			Status: status.AtlasDatabaseUserStatus{
-				Common: status.Common{
-					Conditions: []status.Condition{},
+			Status: akov2status.AtlasDatabaseUserStatus{
+				Common: akov2status.Common{
+					Conditions: []akov2status.Condition{},
 				},
 			},
 		}
@@ -239,24 +243,26 @@ func TestBuildDBUsers(t *testing.T) {
 			t.Fatalf("User result doesn't match.\r\nexpected: %v,\r\ngot: %v\r\n", string(ed), string(gd))
 		}
 
-		expectedSecret := secrets.NewAtlasSecret(
+		expectedSecret := secrets.NewAtlasSecretBuilder(
 			fmt.Sprintf("%v-%v", projectName, user.Username),
 			targetNamespace,
-			map[string][]byte{
-				secrets.PasswordField: []byte(""),
-			}, dictionary)
-		if !reflect.DeepEqual(relatedSecrets[0], expectedSecret) {
-			t.Fatalf("Secret result doesn't match.\r\nexpected: %v\r\ngot %v\r\n", expectedSecret, relatedSecrets[0])
+			dictionary,
+		).WithData(map[string][]byte{
+			secrets.PasswordField: []byte(""),
+		}).WithProjectLabels(projectID, projectName).Build()
+
+		if diff := deep.Equal(relatedSecrets[0], expectedSecret); diff != nil {
+			t.Fatalf("Secret mismatch: %v", diff)
 		}
 	})
 
 	t.Run("Can build AtlasDatabaseUser when k8s resource name conflicts", func(t *testing.T) {
 		atlasUsers := atlasv2.PaginatedApiAtlasDatabaseUser{
-			Results: []atlasv2.CloudDatabaseUser{
+			Results: &[]atlasv2.CloudDatabaseUser{
 				{
 					DatabaseName:    "TestDB",
 					DeleteAfterDate: pointer.Get(time.Now()),
-					Labels: []atlasv2.ComponentLabel{
+					Labels: &[]atlasv2.ComponentLabel{
 						{
 							Key:   pointer.Get("TestLabelKey"),
 							Value: pointer.Get("TestLabelValue"),
@@ -266,14 +272,14 @@ func TestBuildDBUsers(t *testing.T) {
 					X509Type:     pointer.Get("TestX509"),
 					AwsIAMType:   pointer.Get("TestAWSIAMType"),
 					GroupId:      "0",
-					Roles: []atlasv2.DatabaseUserRole{
+					Roles: &[]atlasv2.DatabaseUserRole{
 						{
 							RoleName:       "TestRoleName",
 							DatabaseName:   "TestRoleDatabaseName",
 							CollectionName: pointer.Get("TestCollectionName"),
 						},
 					},
-					Scopes: []atlasv2.UserScope{
+					Scopes: &[]atlasv2.UserScope{
 						{
 							Name: "TestScopeName",
 							Type: "CLUSTER",
@@ -285,7 +291,7 @@ func TestBuildDBUsers(t *testing.T) {
 				{
 					DatabaseName:    "TestDB",
 					DeleteAfterDate: pointer.Get(time.Now()),
-					Labels: []atlasv2.ComponentLabel{
+					Labels: &[]atlasv2.ComponentLabel{
 						{
 							Key:   pointer.Get("TestLabelKey"),
 							Value: pointer.Get("TestLabelValue"),
@@ -295,14 +301,14 @@ func TestBuildDBUsers(t *testing.T) {
 					X509Type:     pointer.Get("TestX509"),
 					AwsIAMType:   pointer.Get("TestAWSIAMType"),
 					GroupId:      "0",
-					Roles: []atlasv2.DatabaseUserRole{
+					Roles: &[]atlasv2.DatabaseUserRole{
 						{
 							RoleName:       "TestRoleName",
 							DatabaseName:   "TestRoleDatabaseName",
 							CollectionName: pointer.Get("TestCollectionName"),
 						},
 					},
-					Scopes: []atlasv2.UserScope{
+					Scopes: &[]atlasv2.UserScope{
 						{
 							Name: "TestScopeName",
 							Type: "CLUSTER",
@@ -314,8 +320,7 @@ func TestBuildDBUsers(t *testing.T) {
 			},
 		}
 
-		listOptions := &atlas.ListOptions{}
-
+		listOptions := &store.ListOptions{}
 		mockUserStore.EXPECT().DatabaseUsers(projectID, listOptions).Return(&atlasUsers, nil)
 
 		users, relatedSecrets, err := BuildDBUsers(mockUserStore, projectID, projectName, targetNamespace, dictionary, resourceVersion)

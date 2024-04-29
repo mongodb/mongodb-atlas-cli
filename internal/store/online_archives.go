@@ -17,12 +17,12 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_online_archives.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OnlineArchiveLister,OnlineArchiveDescriber,OnlineArchiveCreator,OnlineArchiveUpdater,OnlineArchiveDeleter
+//go:generate mockgen -destination=../mocks/mock_online_archives.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OnlineArchiveLister,OnlineArchiveDescriber,OnlineArchiveCreator,OnlineArchiveUpdater,OnlineArchiveDeleter
 
 type OnlineArchiveLister interface {
 	OnlineArchives(string, string, *atlas.ListOptions) (*atlasv2.PaginatedOnlineArchive, error)
@@ -46,56 +46,46 @@ type OnlineArchiveDeleter interface {
 
 // OnlineArchives encapsulate the logic to manage different cloud providers.
 func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.ListOptions) (*atlasv2.PaginatedOnlineArchive, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.clientv2.OnlineArchiveApi.ListOnlineArchives(s.ctx, projectID, clusterName).
-			PageNum(lstOpt.PageNum).ItemsPerPage(lstOpt.ItemsPerPage).Execute()
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.clientv2.OnlineArchiveApi.ListOnlineArchives(s.ctx, projectID, clusterName).
+		PageNum(lstOpt.PageNum).ItemsPerPage(lstOpt.ItemsPerPage).IncludeCount(lstOpt.IncludeCount).Execute()
+	return result, err
 }
 
 // OnlineArchive encapsulate the logic to manage different cloud providers.
 func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlasv2.BackupOnlineArchive, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.clientv2.OnlineArchiveApi.GetOnlineArchive(s.ctx, projectID, archiveID, clusterName).Execute()
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.clientv2.OnlineArchiveApi.GetOnlineArchive(s.ctx, projectID, archiveID, clusterName).Execute()
+	return result, err
 }
 
 // CreateOnlineArchive encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atlasv2.BackupOnlineArchiveCreate) (*atlasv2.BackupOnlineArchive, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.clientv2.OnlineArchiveApi.CreateOnlineArchive(s.ctx, projectID, clusterName, archive).Execute()
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.clientv2.OnlineArchiveApi.CreateOnlineArchive(s.ctx, projectID, clusterName, archive).Execute()
+	return result, err
 }
 
 // UpdateOnlineArchive encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atlasv2.BackupOnlineArchive) (*atlasv2.BackupOnlineArchive, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.clientv2.OnlineArchiveApi.UpdateOnlineArchive(s.ctx, projectID, archive.GetId(), clusterName, archive).Execute()
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.clientv2.OnlineArchiveApi.UpdateOnlineArchive(s.ctx, projectID, archive.GetId(), clusterName, archive).Execute()
+	return result, err
 }
 
 // DeleteOnlineArchive encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteOnlineArchive(projectID, clusterName, archiveID string) error {
-	switch s.service {
-	case config.CloudService:
-		_, _, err := s.clientv2.OnlineArchiveApi.DeleteOnlineArchive(s.ctx, projectID, archiveID, clusterName).Execute()
-		return err
-	default:
+	if s.service == config.CloudGovService {
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	_, _, err := s.clientv2.OnlineArchiveApi.DeleteOnlineArchive(s.ctx, projectID, archiveID, clusterName).Execute()
+	return err
 }

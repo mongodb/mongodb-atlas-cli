@@ -15,26 +15,21 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_organization_invitations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OrganizationInvitationLister,OrganizationInvitationDeleter,OrganizationInvitationDescriber,OrganizationInvitationUpdater,OrganizationInviter
+//go:generate mockgen -destination=../mocks/mock_organization_invitations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OrganizationInvitationLister,OrganizationInvitationDeleter,OrganizationInvitationDescriber,OrganizationInvitationUpdater,OrganizationInviter
 
 type OrganizationInvitationLister interface {
-	OrganizationInvitations(string, *atlas.InvitationOptions) (interface{}, error)
+	OrganizationInvitations(*atlasv2.ListOrganizationInvitationsApiParams) ([]atlasv2.OrganizationInvitation, error)
 }
 
 type OrganizationInvitationDescriber interface {
-	OrganizationInvitation(string, string) (interface{}, error)
+	OrganizationInvitation(string, string) (*atlasv2.OrganizationInvitation, error)
 }
 
 type OrganizationInviter interface {
-	InviteUser(string, *atlas.Invitation) (interface{}, error)
+	InviteUser(string, *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error)
 }
 
 type OrganizationInvitationDeleter interface {
@@ -42,105 +37,47 @@ type OrganizationInvitationDeleter interface {
 }
 
 type OrganizationInvitationUpdater interface {
-	UpdateOrganizationInvitation(string, string, *atlas.Invitation) (interface{}, error)
+	UpdateOrganizationInvitation(string, string, *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error)
 }
 
 // OrganizationInvitations encapsulate the logic to manage different cloud providers.
-func (s *Store) OrganizationInvitations(orgID string, opts *atlas.InvitationOptions) (interface{}, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		res := s.clientv2.OrganizationsApi.ListOrganizationInvitations(s.ctx, orgID)
-		if opts != nil {
-			res = res.Username(opts.Username)
-		}
-		result, _, err := res.Execute()
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitations(s.ctx, orgID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+func (s *Store) OrganizationInvitations(params *atlasv2.ListOrganizationInvitationsApiParams) ([]atlasv2.OrganizationInvitation, error) {
+	result, _, err := s.clientv2.OrganizationsApi.ListOrganizationInvitationsWithParams(s.ctx, params).Execute()
+	return result, err
 }
 
 // OrganizationInvitation encapsulate the logic to manage different cloud providers.
-func (s *Store) OrganizationInvitation(orgID, invitationID string) (interface{}, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.OrganizationsApi.GetOrganizationInvitation(s.ctx, orgID, invitationID).Execute()
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.Invitation(s.ctx, orgID, invitationID)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+func (s *Store) OrganizationInvitation(orgID, invitationID string) (*atlasv2.OrganizationInvitation, error) {
+	result, _, err := s.clientv2.OrganizationsApi.GetOrganizationInvitation(s.ctx, orgID, invitationID).Execute()
+	return result, err
 }
 
 // DeleteInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteInvitation(orgID, invitationID string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Organizations.DeleteInvitation(s.ctx, orgID, invitationID)
-		return err
-	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Organizations.DeleteInvitation(s.ctx, orgID, invitationID)
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	_, _, err := s.clientv2.OrganizationsApi.DeleteOrganizationInvitation(s.ctx, orgID, invitationID).Execute()
+	return err
 }
 
 // UpdateOrganizationInvitation encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitation *atlas.Invitation) (interface{}, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		if invitationID != "" {
-			invitationRequest := atlasv2.OrganizationInvitationUpdateRequest{
-				Roles:   invitation.Roles,
-				TeamIds: invitation.TeamIDs,
-			}
-
-			result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitationById(s.ctx, orgID, invitationID, &invitationRequest).Execute()
-			return result, err
+func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitation *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error) {
+	if invitationID != "" {
+		invitationRequest := atlasv2.OrganizationInvitationUpdateRequest{
+			Roles:   invitation.Roles,
+			TeamIds: invitation.TeamIds,
 		}
-		invitationRequest := mapInvitation(invitation)
-		result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitation(s.ctx, orgID, &invitationRequest).Execute()
 
+		result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitationById(s.ctx, orgID,
+			invitationID, &invitationRequest).Execute()
 		return result, err
-
-	case config.CloudManagerService, config.OpsManagerService:
-		if invitationID != "" {
-			result, _, err := s.client.(*opsmngr.Client).Organizations.UpdateInvitationByID(s.ctx, orgID, invitationID, invitation)
-			return result, err
-		}
-		result, _, err := s.client.(*opsmngr.Client).Organizations.UpdateInvitation(s.ctx, orgID, invitation)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitation(s.ctx, orgID, invitation).Execute()
+
+	return result, err
 }
 
 // InviteUser encapsulates the logic to manage different cloud providers.
-func (s *Store) InviteUser(orgID string, invitation *atlas.Invitation) (interface{}, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		invitationRequest := mapInvitation(invitation)
-		result, _, err := s.clientv2.OrganizationsApi.CreateOrganizationInvitation(s.ctx, orgID, &invitationRequest).Execute()
+func (s *Store) InviteUser(orgID string, invitation *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error) {
+	result, _, err := s.clientv2.OrganizationsApi.CreateOrganizationInvitation(s.ctx, orgID, invitation).Execute()
 
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.InviteUser(s.ctx, orgID, invitation)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
-}
-
-func mapInvitation(invitation *atlas.Invitation) atlasv2.OrganizationInvitationRequest {
-	return atlasv2.OrganizationInvitationRequest{
-		Roles:    invitation.Roles,
-		TeamIds:  invitation.TeamIDs,
-		Username: &invitation.Username,
-	}
+	return result, err
 }

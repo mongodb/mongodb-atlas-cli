@@ -22,10 +22,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
@@ -35,14 +35,14 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("compliance-policy-pointintimerestore")
-	initialItem := atlasv2.DiskBackupApiPolicyItem{
+	initialItem := atlasv2.BackupComplianceScheduledPolicyItem{
 		FrequencyInterval: 1,
 		FrequencyType:     "hourly",
 		RetentionUnit:     "days",
 		RetentionValue:    1,
 	}
-	compliancePolicy := atlasv2.DataProtectionSettings{
-		ScheduledPolicyItems: []atlasv2.DiskBackupApiPolicyItem{initialItem},
+	compliancePolicy := atlasv2.DataProtectionSettings20231001{
+		ScheduledPolicyItems: &[]atlasv2.BackupComplianceScheduledPolicyItem{initialItem},
 	}
 	res, err := setupCompliancePolicy(t, g.projectID, &compliancePolicy)
 	r.NoError(err)
@@ -53,7 +53,7 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 		cmd := exec.Command(
 			cliPath,
 			backupsEntity,
-			compliancepolicyEntity,
+			compliancePolicyEntity,
 			"pointintimerestore",
 			"enable",
 			"-o=json",
@@ -66,7 +66,7 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 		resp, outputErr := cmd.CombinedOutput()
 		r.NoError(outputErr, string(resp))
 
-		var compliancepolicy atlasv2.DataProtectionSettings
+		var compliancepolicy atlasv2.DataProtectionSettings20231001
 		r.NoError(json.Unmarshal(resp, &compliancepolicy), string(resp))
 
 		assert.True(t, compliancepolicy.GetPitEnabled())

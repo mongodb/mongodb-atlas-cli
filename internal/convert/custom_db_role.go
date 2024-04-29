@@ -17,7 +17,7 @@ package convert
 import (
 	"strings"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 const (
@@ -56,7 +56,7 @@ func BuildAtlasActions(a []string) []atlasv2.DatabasePrivilegeAction {
 			resource := strings.Split(action[1], resourceSep)
 			resourceStruct.Db = resource[0]
 			if len(resource) > 1 {
-				resourceStruct.Collection = resource[1]
+				resourceStruct.Collection = strings.Join(resource[1:], resourceSep)
 			}
 		} else {
 			resourceStruct.Cluster = true
@@ -64,7 +64,7 @@ func BuildAtlasActions(a []string) []atlasv2.DatabasePrivilegeAction {
 
 		actions[i] = atlasv2.DatabasePrivilegeAction{
 			Action:    actionName,
-			Resources: []atlasv2.DatabasePermittedNamespaceResource{resourceStruct},
+			Resources: &[]atlasv2.DatabasePermittedNamespaceResource{resourceStruct},
 		}
 	}
 	return actions

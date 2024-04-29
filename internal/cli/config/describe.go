@@ -17,11 +17,11 @@ package config
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -38,7 +38,11 @@ func (opts *describeOpts) Run() error {
 	if !config.Exists(opts.name) {
 		return fmt.Errorf("you don't have a profile named '%s'", opts.name)
 	}
-	config.SetName(opts.name)
+
+	if err := config.SetName(opts.name); err != nil {
+		return err
+	}
+
 	return opts.Print(config.Map())
 }
 
@@ -53,10 +57,10 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"nameDesc": "Label that identifies the profile.",
 		},
-		PreRun: func(cmd *cobra.Command, args []string) {
+		PreRun: func(cmd *cobra.Command, _ []string) {
 			opts.OutWriter = cmd.OutOrStdout()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts.name = args[0]
 			return opts.Run()
 		},

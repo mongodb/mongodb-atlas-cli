@@ -15,11 +15,10 @@
 package test
 
 import (
+	"bytes"
 	"testing"
-	"text/template"
 
-	"github.com/jba/templatecheck"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/templatewriter"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -43,18 +42,9 @@ func CmdValidator(t *testing.T, subject *cobra.Command, nSubCommands int, flags 
 	}
 }
 
-func CleanupConfig() {
-	config.SetAccessToken("")
-	config.SetPublicAPIKey("")
-	config.SetPrivateAPIKey("")
-	config.SetOrgID("")
-	config.SetProjectID("")
-}
-
 // VerifyOutputTemplate validates that the given template string is valid.
 func VerifyOutputTemplate(t *testing.T, tmpl string, typeValue interface{}) {
 	t.Helper()
-	parsedTemplate, err := template.New("output").Parse(tmpl)
-	require.NoError(t, err)
-	require.NoError(t, templatecheck.CheckText(parsedTemplate, typeValue))
+	var buf bytes.Buffer
+	require.NoError(t, templatewriter.Print(&buf, tmpl, typeValue))
 }

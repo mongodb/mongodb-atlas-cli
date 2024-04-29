@@ -24,10 +24,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestDataFederation(t *testing.T) {
@@ -61,10 +61,9 @@ func TestDataFederation(t *testing.T) {
 
 		r.NoError(err, string(resp))
 
-		a := assert.New(t)
-		var dataLake atlas.DataLake
+		var dataLake atlasv2.DataLakeTenant
 		require.NoError(t, json.Unmarshal(resp, &dataLake))
-		a.Equal(dataFederationName, dataLake.Name)
+		assert.Equal(t, dataFederationName, dataLake.GetName())
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -77,11 +76,9 @@ func TestDataFederation(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		r.NoError(err, string(resp))
-
-		a := assert.New(t)
-		var dataLake atlas.DataLake
+		var dataLake atlasv2.DataLakeTenant
 		require.NoError(t, json.Unmarshal(resp, &dataLake))
-		a.Equal(dataFederationName, dataLake.Name)
+		assert.Equal(t, dataFederationName, dataLake.GetName())
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -93,10 +90,9 @@ func TestDataFederation(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		r.NoError(err, string(resp))
 
-		var r []atlas.DataLake
-		a := assert.New(t)
+		var r []atlasv2.DataLakeTenant
 		require.NoError(t, json.Unmarshal(resp, &r))
-		a.NotEmpty(r)
+		assert.NotEmpty(t, r)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -112,10 +108,9 @@ func TestDataFederation(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		r.NoError(err, string(resp))
 
-		var dataLake atlas.DataLake
-		a := assert.New(t)
+		var dataLake atlasv2.DataLakeTenant
 		require.NoError(t, json.Unmarshal(resp, &dataLake))
-		a.Equal(updateRegion, dataLake.DataProcessRegion.Region)
+		assert.Equal(t, updateRegion, dataLake.GetDataProcessRegion().Region)
 	})
 
 	t.Run("Log", func(t *testing.T) {
@@ -133,7 +128,7 @@ func TestDataFederation(t *testing.T) {
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Delete", func(t *testing.T) {

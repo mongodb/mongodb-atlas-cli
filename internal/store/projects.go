@@ -15,27 +15,26 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store ProjectLister,OrgProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter
+//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectLister,ProjectCreator,ProjectUpdater,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter,OrgProjectLister
 
 type ProjectLister interface {
-	Projects(*atlas.ListOptions) (interface{}, error)
-	GetOrgProjects(string, *atlas.ProjectsListOptions) (interface{}, error)
+	Projects(*ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
 }
 
 type OrgProjectLister interface {
-	GetOrgProjects(string) (interface{}, error)
+	ProjectLister
+	GetOrgProjects(string, *ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
 }
 
 type ProjectCreator interface {
-	CreateProject(string, string, string, *bool, *atlas.CreateProjectOptions) (interface{}, error)
-	ServiceVersionDescriber
+	CreateProject(*atlasv2.CreateProjectApiParams) (*atlasv2.Group, error)
+}
+
+type ProjectUpdater interface {
+	UpdateProject(*atlasv2.UpdateProjectApiParams) (*atlasv2.Group, error)
 }
 
 type ProjectDeleter interface {
@@ -43,12 +42,12 @@ type ProjectDeleter interface {
 }
 
 type ProjectDescriber interface {
-	Project(string) (interface{}, error)
-	ProjectByName(string) (interface{}, error)
+	Project(string) (*atlasv2.Group, error)
+	ProjectByName(string) (*atlasv2.Group, error)
 }
 
 type ProjectUsersLister interface {
-	ProjectUsers(string, *atlas.ListOptions) (interface{}, error)
+	ProjectUsers(string, *ListOptions) (*atlasv2.PaginatedAppUser, error)
 }
 
 type ProjectUserDeleter interface {
@@ -56,11 +55,11 @@ type ProjectUserDeleter interface {
 }
 
 type ProjectTeamLister interface {
-	ProjectTeams(string) (interface{}, error)
+	ProjectTeams(string, *ListOptions) (*atlasv2.PaginatedTeamRole, error)
 }
 
 type ProjectTeamAdder interface {
-	AddTeamsToProject(string, []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error)
+	AddTeamsToProject(string, []atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error)
 }
 
 type ProjectTeamDeleter interface {
@@ -68,156 +67,94 @@ type ProjectTeamDeleter interface {
 }
 
 // Projects encapsulates the logic to manage different cloud providers.
-func (s *Store) Projects(opts *atlas.ListOptions) (interface{}, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetAllProjects(s.ctx, opts)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.List(s.ctx, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+func (s *Store) Projects(opts *ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
+	res := s.clientv2.ProjectsApi.ListProjects(s.ctx)
+	if opts != nil {
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 	}
+	result, _, err := res.Execute()
+	return result, err
 }
 
 // GetOrgProjects encapsulates the logic to manage different cloud providers.
-func (s *Store) GetOrgProjects(orgID string, opts *atlas.ProjectsListOptions) (interface{}, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Organizations.Projects(s.ctx, orgID, opts)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Organizations.Projects(s.ctx, orgID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+func (s *Store) GetOrgProjects(orgID string, opts *ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
+	res := s.clientv2.OrganizationsApi.ListOrganizationProjects(s.ctx, orgID)
+	if opts != nil {
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 	}
+	result, _, err := res.Execute()
+	return result, err
 }
 
 // Project encapsulates the logic to manage different cloud providers.
-func (s *Store) Project(id string) (interface{}, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetOneProject(s.ctx, id)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.Get(s.ctx, id)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+func (s *Store) Project(id string) (*atlasv2.Group, error) {
+	result, _, err := s.clientv2.ProjectsApi.GetProject(s.ctx, id).Execute()
+	return result, err
 }
 
-func (s *Store) ProjectByName(name string) (interface{}, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetOneProjectByName(s.ctx, name)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.GetByName(s.ctx, name)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+func (s *Store) ProjectByName(name string) (*atlasv2.Group, error) {
+	result, _, err := s.clientv2.ProjectsApi.GetProjectByName(s.ctx, name).Execute()
+	return result, err
 }
 
 // CreateProject encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateProject(name, orgID, regionUsageRestrictions string, defaultAlertSettings *bool, opts *atlas.CreateProjectOptions) (interface{}, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		project := &atlas.Project{Name: name, OrgID: orgID, RegionUsageRestrictions: regionUsageRestrictions, WithDefaultAlertsSettings: defaultAlertSettings}
-		result, _, err := s.client.(*atlas.Client).Projects.Create(s.ctx, project, opts)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		project := &opsmngr.Project{Name: name, OrgID: orgID, WithDefaultAlertsSettings: defaultAlertSettings}
-		result, _, err := s.client.(*opsmngr.Client).Projects.Create(s.ctx, project, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+func (s *Store) CreateProject(params *atlasv2.CreateProjectApiParams) (*atlasv2.Group, error) {
+	result, _, err := s.clientv2.ProjectsApi.CreateProjectWithParams(s.ctx, params).Execute()
+	return result, err
+}
+
+// UpdateProject encapsulates the logic to manage different cloud providers.
+func (s *Store) UpdateProject(params *atlasv2.UpdateProjectApiParams) (*atlasv2.Group, error) {
+	result, _, err := s.clientv2.ProjectsApi.UpdateProjectWithParams(s.ctx, params).Execute()
+	return result, err
 }
 
 // DeleteProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteProject(projectID string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Projects.Delete(s.ctx, projectID)
-		return err
-	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Projects.Delete(s.ctx, projectID)
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	_, _, err := s.clientv2.ProjectsApi.DeleteProject(s.ctx, projectID).Execute()
+	return err
 }
 
 // ProjectUsers lists all IAM users in a project.
-func (s *Store) ProjectUsers(projectID string, opts *atlas.ListOptions) (interface{}, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).AtlasUsers.List(s.ctx, projectID, opts)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.ListUsers(s.ctx, projectID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+func (s *Store) ProjectUsers(projectID string, opts *ListOptions) (*atlasv2.PaginatedAppUser, error) {
+	res := s.clientv2.ProjectsApi.ListProjectUsers(s.ctx, projectID)
+	if opts != nil {
+		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
 	}
+	result, _, err := res.Execute()
+	return result, err
 }
 
-// DeleteProject encapsulates the logic to manage different cloud providers.
+// DeleteUserFromProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteUserFromProject(projectID, userID string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Projects.RemoveUserFromProject(s.ctx, projectID, userID)
-		return err
-	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Projects.RemoveUser(s.ctx, projectID, userID)
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	_, err := s.clientv2.ProjectsApi.RemoveProjectUser(s.ctx, projectID, userID).Execute()
+	return err
 }
 
 // ProjectTeams encapsulates the logic to manage different cloud providers.
-func (s *Store) ProjectTeams(projectID string) (interface{}, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.GetProjectTeamsAssigned(s.ctx, projectID)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.GetTeams(s.ctx, projectID, nil)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+func (s *Store) ProjectTeams(projectID string, opts *ListOptions) (*atlasv2.PaginatedTeamRole, error) {
+	res := s.clientv2.TeamsApi.
+		ListProjectTeams(s.ctx, projectID)
+
+	if opts != nil {
+		res.
+			IncludeCount(opts.IncludeCount).
+			PageNum(opts.PageNum).
+			ItemsPerPage(opts.ItemsPerPage)
 	}
+
+	result, _, err := res.Execute()
+	return result, err
 }
 
 // AddTeamsToProject encapsulates the logic to manage different cloud providers.
-func (s *Store) AddTeamsToProject(projectID string, teams []*atlas.ProjectTeam) (*atlas.TeamsAssigned, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Projects.AddTeamsToProject(s.ctx, projectID, teams)
-		return result, err
-	case config.CloudManagerService, config.OpsManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Projects.AddTeamsToProject(s.ctx, projectID, teams)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+func (s *Store) AddTeamsToProject(projectID string, teams []atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error) {
+	result, _, err := s.clientv2.TeamsApi.AddAllTeamsToProject(s.ctx, projectID, &teams).Execute()
+	return result, err
 }
 
 // DeleteTeamFromProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteTeamFromProject(projectID, teamID string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, err := s.client.(*atlas.Client).Teams.RemoveTeamFromProject(s.ctx, projectID, teamID)
-		return err
-	case config.CloudManagerService, config.OpsManagerService:
-		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromProject(s.ctx, projectID, teamID)
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	_, err := s.clientv2.TeamsApi.RemoveProjectTeam(s.ctx, projectID, teamID).Execute()
+	return err
 }

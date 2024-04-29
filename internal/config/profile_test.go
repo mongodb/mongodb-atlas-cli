@@ -20,24 +20,20 @@ import (
 	"fmt"
 	"os"
 	"testing"
+
+	"github.com/spf13/afero"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestConfig_MongoCLIConfigHome(t *testing.T) {
-	t.Run("with env set", func(t *testing.T) {
-		expHome, err := os.UserConfigDir()
-		expected := fmt.Sprintf("%s/mongocli", expHome)
-		if err != nil {
-			t.Fatalf("os.UserConfigDir() unexpected error: %v", err)
-		}
+	expHome, err := os.UserConfigDir()
+	require.NoError(t, err)
 
-		home, err := MongoCLIConfigHome()
-		if err != nil {
-			t.Fatalf("MongoCLIConfigHome() unexpected error: %v", err)
-		}
-		if home != expected {
-			t.Errorf("MongoCLIConfigHome() = %s; want '%s'", home, expected)
-		}
-	})
+	home, err := MongoCLIConfigHome()
+	require.NoError(t, err)
+	expected := fmt.Sprintf("%s/mongocli", expHome)
+	assert.Equal(t, expected, home)
 }
 
 func TestConfig_OldMongoCLIConfigHome(t *testing.T) {
@@ -154,8 +150,160 @@ func TestConfig_IsTrue(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		if got := IsTrue(tt.input); got != tt.want {
-			t.Errorf("IsTrue() get: %v, want %v", got, tt.want)
-		}
+		t.Run("", func(t *testing.T) {
+			t.Parallel()
+			if got := IsTrue(tt.input); got != tt.want {
+				t.Errorf("IsTrue() get: %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_getConfigHostname(t *testing.T) {
+	type fields struct {
+		containerizedEnv string
+		atlasActionEnv   string
+		ghActionsEnv     string
+	}
+	tests := []struct {
+		name             string
+		fields           fields
+		expectedHostName string
+	}{
+		{
+			name: "sets native hostname when no hostname env var is set",
+			fields: fields{
+				containerizedEnv: "",
+				atlasActionEnv:   "",
+				ghActionsEnv:     "",
+			},
+			expectedHostName: NativeHostName,
+		},
+		{
+			name: "sets container hostname when containerized env var is set",
+			fields: fields{
+				containerizedEnv: "true",
+				atlasActionEnv:   "",
+				ghActionsEnv:     "",
+			},
+			expectedHostName: "-|-|" + DockerContainerHostName,
+		},
+		{
+			name: "sets atlas action hostname when containerized env var is set",
+			fields: fields{
+				containerizedEnv: "",
+				atlasActionEnv:   "true",
+				ghActionsEnv:     "",
+			},
+			expectedHostName: AtlasActionHostName + "|-|-",
+		},
+		{
+			name: "sets github actions hostname when action env var is set",
+			fields: fields{
+				containerizedEnv: "",
+				atlasActionEnv:   "",
+				ghActionsEnv:     "true",
+			},
+			expectedHostName: "-|" + GitHubActionsHostName + "|-",
+		},
+		{
+			name: "sets actions and containerized hostnames when both env vars are set",
+			fields: fields{
+				containerizedEnv: "true",
+				atlasActionEnv:   "true",
+				ghActionsEnv:     "true",
+			},
+			expectedHostName: AtlasActionHostName + "|" + GitHubActionsHostName + "|" + DockerContainerHostName,
+		},
+	}
+	for _, tt := range tests {
+		f := tt.fields
+		expectedHostName := tt.expectedHostName
+		t.Run(tt.name, func(t *testing.T) {
+			t.Setenv(AtlasActionHostNameEnv, f.atlasActionEnv)
+			t.Setenv(GitHubActionsHostNameEnv, f.ghActionsEnv)
+			t.Setenv(ContainerizedHostNameEnv, f.containerizedEnv)
+			actualHostName := getConfigHostnameFromEnvs()
+
+			assert.Equal(t, expectedHostName, actualHostName)
+		})
+	}
+}
+
+func TestProfile_Rename(t *testing.T) {
+	tests := []struct {
+		name    string
+		wantErr require.ErrorAssertionFunc
+	}{
+		{
+			name:    "default",
+			wantErr: require.NoError,
+		},
+		{
+			name:    "default-123",
+			wantErr: require.NoError,
+		},
+		{
+			name:    "default-test",
+			wantErr: require.NoError,
+		},
+		{
+			name:    "default.123",
+			wantErr: require.Error,
+		},
+		{
+			name:    "default.test",
+			wantErr: require.Error,
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			p := &Profile{
+				name: tt.name,
+				fs:   afero.NewMemMapFs(),
+			}
+			tt.wantErr(t, p.Rename(tt.name), fmt.Sprintf("Rename(%v)", tt.name))
+		})
+	}
+}
+
+func TestProfile_SetName(t *testing.T) {
+	tests := []struct {
+		name    string
+		wantErr require.ErrorAssertionFunc
+	}{
+		{
+			name:    "default",
+			wantErr: require.NoError,
+		},
+		{
+			name:    "default-123",
+			wantErr: require.NoError,
+		},
+		{
+			name:    "default-test",
+			wantErr: require.NoError,
+		},
+		{
+			name:    "default.123",
+			wantErr: require.Error,
+		},
+		{
+			name:    "default.test",
+			wantErr: require.Error,
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			p := &Profile{
+				name: tt.name,
+				fs:   afero.NewMemMapFs(),
+			}
+			tt.wantErr(t, p.SetName(tt.name), fmt.Sprintf("SetName(%v)", tt.name))
+		})
 	}
 }

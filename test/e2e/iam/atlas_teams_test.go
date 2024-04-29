@@ -23,10 +23,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestAtlasTeams(t *testing.T) {
@@ -65,10 +65,11 @@ func TestAtlasTeams(t *testing.T) {
 		var team atlasv2.Team
 		require.NoError(t, json.Unmarshal(resp, &team))
 		a.Equal(teamName, team.Name)
-		teamID = *team.Id
+		teamID = team.GetId()
 	})
+	require.NotEmpty(t, teamID)
 
-	t.Run("Describe By Id", func(t *testing.T) {
+	t.Run("Describe By ID", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			"describe",
@@ -77,13 +78,11 @@ func TestAtlasTeams(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
 		var team atlasv2.TeamResponse
 		require.NoError(t, json.Unmarshal(resp, &team))
-		a.Equal(teamID, *team.Id)
+		assert.Equal(t, teamID, team.GetId())
 	})
 
 	t.Run("Describe By Name", func(t *testing.T) {
@@ -95,12 +94,29 @@ func TestAtlasTeams(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		var team atlasv2.TeamResponse
 		require.NoError(t, json.Unmarshal(resp, &team))
-		a.Equal(teamName, *team.Name)
+		assert.Equal(t, teamName, team.GetName())
+	})
+
+	t.Run("Rename", func(t *testing.T) {
+		teamName += "_renamed"
+		cmd := exec.Command(cliPath,
+			teamsEntity,
+			"rename",
+			teamName,
+			"--teamId",
+			teamID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+
+		var team atlasv2.TeamResponse
+		require.NoError(t, json.Unmarshal(resp, &team))
+		assert.Equal(t, teamID, team.GetId())
+		assert.Equal(t, teamName, team.GetName())
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -110,13 +126,11 @@ func TestAtlasTeams(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
 		var teams atlasv2.PaginatedTeam
 		require.NoError(t, json.Unmarshal(resp, &teams))
-		a.NotEmpty(t, teams.Results)
+		assert.NotEmpty(t, teams.Results)
 	})
 
 	t.Run("List Compact", func(t *testing.T) {
@@ -127,13 +141,11 @@ func TestAtlasTeams(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
 		var teams []atlasv2.TeamResponse
 		require.NoError(t, json.Unmarshal(resp, &teams))
-		a.NotEmpty(t, teams)
+		assert.NotEmpty(t, teams)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -144,9 +156,8 @@ func TestAtlasTeams(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Team '%s' deleted\n", teamID)
-		a.Equal(expected, string(resp))
+		assert.Equal(t, expected, string(resp))
 	})
 }

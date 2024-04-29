@@ -18,10 +18,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/prerun"
-	"github.com/mongodb/mongodb-atlas-cli/internal/validate"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	atlasauth "go.mongodb.org/atlas/auth"
 )
@@ -99,10 +99,10 @@ func RegisterBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "register",
 		Short: "Register with MongoDB Atlas.",
-		Example: fmt.Sprintf(`  # To start the interactive setup:
-  %s auth register
-`, config.BinName()),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		Example: `  # To start the interactive setup:
+  atlas auth register
+`,
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			defaultProfile := config.Default()
 			return prerun.ExecuteE(
@@ -112,7 +112,7 @@ func RegisterBuilder() *cobra.Command {
 				validate.NoAPIKeys,
 				validate.NoAccessToken)
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
 
 			return opts.RegisterRun(cmd.Context())

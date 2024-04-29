@@ -12,14 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
           cache: false # see https://github.com/golangci/golangci-lint-action/issues/807
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3.7.0
+        uses: golangci/golangci-lint-action@v4.0.0
         with:
-          version: v1.55.0
+          version: v1.56.2
   unit-tests:
     env:
       COVERAGE: coverage.out
@@ -35,33 +35,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
       - run: go install gotest.tools/gotestsum@latest
       - run: make unit-test
       - name: Test Summary
         id: test_summary
-        uses: test-summary/action@v2.1
+        uses: test-summary/action@v2.3
         with:
           paths: unit-tests.xml
         if: always() && matrix.os == 'ubuntu-latest'
-  integration-tests:
-    env:
-      COVERAGE: coverage.out
-      TEST_CMD: gotestsum --format standard-verbose --
-      UNIT_TAGS: unit
-      INTEGRATION_TAGS: integration
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Install Go
-        uses: actions/setup-go@v4
-        with:
-          go-version-file: 'go.mod'
-      - run: go install gotest.tools/gotestsum@latest
-      - run: make integration-test
   fuzz-tests:
     env:
       COVERAGE: coverage.out
@@ -73,7 +57,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
       - run: go install gotest.tools/gotestsum@latest
@@ -84,7 +68,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
       - name: Run check-library-owners
@@ -95,42 +79,59 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
       - name: Generate docs
         run: make gen-docs > /dev/null
-      - name: Check for uncommited files
+      - name: Check for uncommitted files
         run: |
-          export FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)
-          export LINES=$(echo "$FILES" | awk 'NF' | wc -l)
-          if [ $LINES -ne 0 ]; then
+          export FILES=
+          FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)
+          export LINES=
+          LINES=$(echo "$FILES" | awk 'NF' | wc -l)
+          if [ "$LINES" -ne 0 ]; then
             echo "Detected files that need to be committed:"
-            echo "$FILES" | sed -e "s/^/  /"
+            echo "${FILES//^/ }"
             echo ""
             echo "Try running: make gen-docs"
             exit 1
           fi
+  actionlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download actionlint
+        id: get_actionlint
+        run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+        shell: bash
+      - name: Check workflow files
+        run: |
+          echo "::add-matcher::.github/actionlint-matcher.json"
+          ${{ steps.get_actionlint.outputs.executable }} -color
+        shell: bash
   mocks:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
       - name: Install go-mock
         run: go install github.com/golang/mock/mockgen@latest
       - name: Generate mocks
         run: make gen-mocks
-      - name: Check for uncommited files
+      - name: Check for uncommitted files
         run: |
-          export FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)
-          export LINES=$(echo "$FILES" | awk 'NF' | wc -l)
-          if [ $LINES -ne 0 ]; then
+          export FILES=
+          FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)
+          export LINES=
+          LINES=$(echo "$FILES" | awk 'NF' | wc -l)
+          if [ "$LINES" -ne 0 ]; then
             echo "Detected files that need to be committed:"
-            echo "$FILES" | sed -e "s/^/  /"
+            echo "${FILES//^/ }"
             echo ""
             echo "Try running: make gen-mocks"
             exit 1
@@ -148,18 +149,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
       - name: Run 'go mod tidy'
         run: go mod tidy
-      - name: Check for uncommited files
+      - name: Check for uncommitted files
         run: |
-          export FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)
-          export LINES=$(echo "$FILES" | awk 'NF' | wc -l)
-          if [ $LINES -ne 0 ]; then
+          export FILES=
+          FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)
+          export LINES=
+          LINES=$(echo "$FILES" | awk 'NF' | wc -l)
+          if [ "$LINES" -ne 0 ]; then
             echo "Detected files that need to be committed:"
-            echo "$FILES" | sed -e "s/^/  /"
+            echo "${FILES//^/ }"
             echo ""
             echo "Try running: go mod tidy"
             exit 1
@@ -170,8 +173,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
       - run: make devtools
       - run: ./build/ci/check-licenses.sh
+  checktemplates:
+    name: checktemplates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+      - run: make check-templates

@@ -17,153 +17,85 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestSharedClusterUpgrade(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("clustersUpgrade")
-
+	g.tier = tierM0
+	g.generateCluster()
 	cliPath, err := e2e.AtlasCLIBin()
-	req := require.New(t)
-	req.NoError(err)
+	require.NoError(t, err)
 
-	clusterName, err := RandClusterName()
-	req.NoError(err)
-
-	region, err := g.newAvailableRegion(tierM2, e2eClusterProvider)
-	req.NoError(err)
-
-	t.Run("Create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"create",
-			clusterName,
-			"--region", region,
-			"--tier", tierM2,
-			"--provider", e2eClusterProvider,
-			"--mdbVersion", e2eSharedMDBVer,
-			"--enableTerminationProtection",
-			"--projectId", g.projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		var cluster *mongodbatlas.Cluster
-		err = json.Unmarshal(resp, &cluster)
-		req.NoError(err)
-
-		ensureSharedCluster(t, cluster, clusterName, tierM2, 2, true)
-	})
-
-	t.Run("Watch create", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
-	})
-
-	t.Run("Fail Delete for Termination Protection", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"delete",
-			clusterName,
-			"--force",
-			"--projectId", g.projectID)
-
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.Error(err, string(resp))
-	})
-
-	t.Run("Upgrade", func(t *testing.T) {
+	t.Run("Upgrade to shared cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"upgrade",
-			clusterName,
-			"--tier", tierM10,
-			"--diskSizeGB", diskSizeGB40,
-			"--mdbVersion=6.0",
-			"--disableTerminationProtection",
+			g.clusterName,
+			"--tier", tierM2,
+			"--diskSizeGB=2",
 			"--projectId", g.projectID,
 			"--tag", "env=e2e",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
+		require.NoError(t, watchCluster(g.projectID, g.clusterName))
+		cluster := fetchCluster(t, cliPath, g.projectID, g.clusterName)
+		ensureClusterTier(t, cluster, tierM2)
+		assert.Contains(t, cluster.GetTags(), atlasv2.ResourceTag{Key: "env", Value: "e2e"})
 	})
 
-	t.Run("Watch upgrade", func(t *testing.T) {
+	t.Run("Upgrade to dedicated tier", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
-			"watch",
-			clusterName,
+			"upgrade",
+			g.clusterName,
+			"--tier", tierM10,
+			"--diskSizeGB", diskSizeGB40,
 			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
-	})
-
-	t.Run("Ensure upgrade", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"get",
-			clusterName,
-			"--projectId", g.projectID,
+			"--tag", "env=e2e",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
-
-		var clusterResponse *atlasv2.AdvancedClusterDescription
-		err = json.Unmarshal(resp, &clusterResponse)
-		req.NoError(err)
-
-		ensureCluster(t, clusterResponse, clusterName, "6.0", 40, false)
+		require.NoError(t, err, string(resp))
+		require.NoError(t, watchCluster(g.projectID, g.clusterName))
+		cluster := fetchCluster(t, cliPath, g.projectID, g.clusterName)
+		ensureClusterTier(t, cluster, tierM10)
+		assert.InDelta(t, 40, cluster.GetDiskSizeGB(), 0.01)
+		assert.Contains(t, cluster.GetTags(), atlasv2.ResourceTag{Key: "env", Value: "e2e"})
 	})
+}
 
-	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"delete",
-			clusterName,
-			"--projectId", g.projectID,
-			"--force",
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
+func fetchCluster(t *testing.T, cliPath, projectID, clusterName string) *atlasv2.AdvancedClusterDescription {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		clustersEntity,
+		"get",
+		clusterName,
+		"--projectId", projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	req := require.New(t)
+	req.NoError(err, string(resp))
+	var c *atlasv2.AdvancedClusterDescription
+	req.NoError(json.Unmarshal(resp, &c), string(resp))
+	return c
+}
 
-		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
-		a := assert.New(t)
-		a.Equal(expected, string(resp))
-	})
-
-	t.Run("Watch deletion", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
-	})
+func ensureClusterTier(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, expected string) {
+	t.Helper()
+	req := require.New(t)
+	req.NotEmpty(cluster.GetReplicationSpecs())
+	req.NotEmpty(cluster.GetReplicationSpecs()[0].GetRegionConfigs())
+	assert.Equal(t, expected, cluster.GetReplicationSpecs()[0].GetRegionConfigs()[0].ElectableSpecs.GetInstanceSize())
 }

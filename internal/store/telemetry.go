@@ -17,11 +17,10 @@ package store
 import (
 	"net/http"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 )
 
-//go:generate mockgen -destination=../mocks/mock_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store EventsSender,UnauthEventsSender
+//go:generate mockgen -destination=../mocks/mock_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store EventsSender,UnauthEventsSender
 
 type EventsSender interface {
 	SendEvents(body interface{}) error
@@ -34,7 +33,7 @@ type UnauthEventsSender interface {
 func (s *Store) SendEvents(body interface{}) error {
 	switch s.service {
 	case config.CloudService:
-		client := s.client.(*atlas.Client)
+		client := s.client
 		request, err := client.NewRequest(s.ctx, http.MethodPost, "api/private/v1.0/telemetry/events", body)
 		if err != nil {
 			return err
@@ -49,7 +48,7 @@ func (s *Store) SendEvents(body interface{}) error {
 func (s *Store) SendUnauthEvents(body interface{}) error {
 	switch s.service {
 	case config.CloudService:
-		client := s.client.(*atlas.Client)
+		client := s.client
 		request, err := client.NewRequest(s.ctx, http.MethodPost, "api/private/unauth/telemetry/events", body)
 		if err != nil {
 			return err

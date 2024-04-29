@@ -17,11 +17,11 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_data_lake.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store DataLakeLister,DataLakeDescriber,DataLakeCreator,DataLakeDeleter,DataLakeUpdater,DataLakeStore
+//go:generate mockgen -destination=../mocks/mock_data_lake.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DataLakeLister,DataLakeDescriber,DataLakeCreator,DataLakeDeleter,DataLakeUpdater
 
 type DataLakeLister interface {
 	DataLakes(string) ([]atlas.DataLake, error)
@@ -43,65 +43,47 @@ type DataLakeUpdater interface {
 	UpdateDataLake(string, string, *atlas.DataLakeUpdateRequest) (*atlas.DataLake, error)
 }
 
-type DataLakeStore interface {
-	DataLakeLister
-	DataLakeDescriber
-	DataLakeCreator
-	DataLakeDeleter
-	DataLakeUpdater
-}
-
 // CreateDataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateDataLake(projectID string, dataLake *atlas.DataLakeCreateRequest) (*atlas.DataLake, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DataLakes.Create(s.ctx, projectID, dataLake)
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.client.DataLakes.Create(s.ctx, projectID, dataLake)
+	return result, err
 }
 
 // UpdateDataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateDataLake(projectID, name string, dataLake *atlas.DataLakeUpdateRequest) (*atlas.DataLake, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DataLakes.Update(s.ctx, projectID, name, dataLake)
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.client.DataLakes.Update(s.ctx, projectID, name, dataLake)
+	return result, err
 }
 
 // DeleteDataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteDataLake(projectID, name string) error {
-	switch s.service {
-	case config.CloudService:
-		_, err := s.client.(*atlas.Client).DataLakes.Delete(s.ctx, projectID, name)
-		return err
-	default:
+	if s.service == config.CloudGovService {
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	_, err := s.client.DataLakes.Delete(s.ctx, projectID, name)
+	return err
 }
 
 // DataLakes encapsulate the logic to manage different cloud providers.
 func (s *Store) DataLakes(projectID string) ([]atlas.DataLake, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DataLakes.List(s.ctx, projectID)
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.client.DataLakes.List(s.ctx, projectID)
+	return result, err
 }
 
 // DataLake encapsulate the logic to manage different cloud providers.
 func (s *Store) DataLake(projectID, name string) (*atlas.DataLake, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.client.(*atlas.Client).DataLakes.Get(s.ctx, projectID, name)
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.client.DataLakes.Get(s.ctx, projectID, name)
+	return result, err
 }

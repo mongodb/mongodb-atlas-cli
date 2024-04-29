@@ -22,10 +22,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestBackupCompliancePolicyEnable(t *testing.T) {
@@ -38,10 +38,14 @@ func TestBackupCompliancePolicyEnable(t *testing.T) {
 
 	cmd := exec.Command(cliPath,
 		backupsEntity,
-		compliancepolicyEntity,
+		compliancePolicyEntity,
 		"enable",
 		"--projectId",
 		g.projectID,
+		"--authorizedUserFirstName",
+		authorizedUserFirstName,
+		"--authorizedUserLastName",
+		authorizedUserLastName,
 		"--authorizedEmail",
 		authorizedEmail,
 		"-o=json",
@@ -50,7 +54,7 @@ func TestBackupCompliancePolicyEnable(t *testing.T) {
 	cmd.Env = os.Environ()
 	resp, outputErr := cmd.CombinedOutput()
 	r.NoError(outputErr, string(resp))
-	var result atlasv2.DataProtectionSettings
+	var result atlasv2.DataProtectionSettings20231001
 	r.NoError(json.Unmarshal(resp, &result), string(resp))
 
 	assert.Equal(t, authorizedEmail, result.GetAuthorizedEmail())

@@ -15,24 +15,16 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_encryption_at_rest.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store EncryptionAtRestDescriber
+//go:generate mockgen -destination=../mocks/mock_encryption_at_rest.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store EncryptionAtRestDescriber
 
 type EncryptionAtRestDescriber interface {
 	EncryptionAtRest(string) (*atlasv2.EncryptionAtRest, error)
 }
 
 func (s *Store) EncryptionAtRest(projectID string) (*atlasv2.EncryptionAtRest, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.EncryptionAtRestUsingCustomerKeyManagementApi.GetEncryptionAtRest(s.ctx, projectID).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.EncryptionAtRestUsingCustomerKeyManagementApi.GetEncryptionAtRest(s.ctx, projectID).Execute()
+	return result, err
 }

@@ -22,10 +22,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestBackupCompliancePolicyPoliciesDescribe(t *testing.T) {
@@ -39,7 +39,7 @@ func TestBackupCompliancePolicyPoliciesDescribe(t *testing.T) {
 
 	cmd := exec.Command(cliPath,
 		backupsEntity,
-		compliancepolicyEntity,
+		compliancePolicyEntity,
 		policiesEntity,
 		"describe",
 		"--projectId",
@@ -50,7 +50,7 @@ func TestBackupCompliancePolicyPoliciesDescribe(t *testing.T) {
 
 	r.NoError(outputErr, string(resp))
 
-	var result atlasv2.DataProtectionSettings
+	var result atlasv2.DataProtectionSettings20231001
 	r.NoError(json.Unmarshal(resp, &result), string(resp))
 
 	assert.NotEmpty(t, result)

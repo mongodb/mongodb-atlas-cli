@@ -21,9 +21,9 @@ import (
 
 	"github.com/go-test/deep"
 	"github.com/golang/mock/gomock"
-	mocks "github.com/mongodb/mongodb-atlas-cli/internal/mocks/atlas"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
-	"go.mongodb.org/atlas-sdk/v20230201008/admin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 const projectID = "TestProjectID"

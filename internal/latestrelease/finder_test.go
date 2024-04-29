@@ -22,15 +22,14 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/google/go-github/v50/github"
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/internal/version"
+	"github.com/google/go-github/v61/github"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/afero"
 )
 
 type testCase struct {
-	tool             string
 	currentVersion   string
 	expectNewVersion bool
 	release          *github.RepositoryRelease
@@ -39,75 +38,32 @@ type testCase struct {
 func testCases() []testCase {
 	f := false
 	atlasV := "atlascli/v2.0.0"
-	mcliV := "mongocli/v2.0.0"
-	mcliOldV := "v2.0.0"
 
 	tests := []testCase{
 		{
-			tool:             "atlascli",
 			currentVersion:   "v1.0.0",
 			expectNewVersion: true,
 			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
 		},
 		{
-			tool:             "atlascli",
 			currentVersion:   "atlascli/v1.0.0",
 			expectNewVersion: true,
 			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
 		},
 		{
-			tool:             "atlascli",
 			currentVersion:   "v2.0.0",
 			expectNewVersion: false,
 			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
 		},
 		{
-			tool:             "atlascli",
 			currentVersion:   "v3.0.0",
 			expectNewVersion: false,
 			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
 		},
 		{
-			tool:             "atlascli",
 			currentVersion:   "v3.0.0-123",
 			expectNewVersion: false,
 			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
-		},
-		{
-			tool:             "mongocli",
-			currentVersion:   "v1.0.0",
-			expectNewVersion: true,
-			release:          &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
-		},
-		{
-			tool:             "mongocli",
-			currentVersion:   "v2.0.0",
-			expectNewVersion: false,
-			release:          &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
-		},
-		{
-			tool:             "mongocli",
-			currentVersion:   "mongocli/v1.0.0",
-			expectNewVersion: true,
-			release:          &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
-		},
-		{
-			tool:             "mongocli",
-			currentVersion:   "v1.0.0",
-			expectNewVersion: true,
-			release:          &github.RepositoryRelease{TagName: &mcliV, Prerelease: &f, Draft: &f},
-		},
-		{
-			tool:             "mongocli",
-			currentVersion:   "v3.0.0",
-			expectNewVersion: false,
-			release:          &github.RepositoryRelease{TagName: &mcliOldV, Prerelease: &f, Draft: &f},
-		},
-		{
-			tool:             "mongocli",
-			currentVersion:   "v3.0.0-123",
-			expectNewVersion: false,
-			release:          &github.RepositoryRelease{TagName: &mcliV, Prerelease: &f, Draft: &f},
 		},
 	}
 	return tests
@@ -116,7 +72,6 @@ func testCases() []testCase {
 func TestOutputOpts_Find_NoCache(t *testing.T) {
 	tests := testCases()
 	for _, tt := range tests {
-		config.ToolName = tt.tool
 		prevVersion := version.Version
 		version.Version = tt.currentVersion
 		t.Cleanup(func() {
@@ -128,7 +83,7 @@ func TestOutputOpts_Find_NoCache(t *testing.T) {
 
 			mockDescriber.
 				EXPECT().
-				LatestWithCriteria(gomock.Any(), gomock.Any(), gomock.Any()).
+				LatestWithCriteria(gomock.Any(), gomock.Any()).
 				Return(tt.release, nil).
 				Times(1)
 
@@ -142,7 +97,7 @@ func TestOutputOpts_Find_NoCache(t *testing.T) {
 				t.Errorf("Find() unexpected error: %v", err)
 			}
 
-			expectedV := strings.ReplaceAll(tt.release.GetTagName(), tt.tool+"/", "")
+			expectedV := strings.ReplaceAll(tt.release.GetTagName(), config.AtlasCLI+"/", "")
 
 			if newV != nil && (!tt.expectNewVersion || newV.Version != expectedV) {
 				t.Errorf("want: versionAvailable=%v and newV=%v got: versionAvailable=%v and newV=%v.",
@@ -154,21 +109,17 @@ func TestOutputOpts_Find_NoCache(t *testing.T) {
 
 func TestOutputOpts_testIsValidTag(t *testing.T) {
 	tests := []struct {
-		tool    string
 		tag     string
 		isValid bool
 	}{
-		{"atlascli", "atlascli/v1.0.0", true},
-		{"atlascli", "mongocli/v1.0.0", false},
-		{"atlascli", "v1.0.0", false},
-		{"mongocli", "atlascli/v1.0.0", false},
-		{"mongocli", "mongocli/v1.0.0", true},
-		{"mongocli", "v1.0.0", true},
+		{"atlascli/v1.0.0", true},
+		{"mongocli/v1.0.0", false},
+		{"v1.0.0", false},
 	}
 
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("%v_%v", tt.tag, tt.isValid), func(t *testing.T) {
-			if result := isValidTagForTool(tt.tag, tt.tool); result != tt.isValid {
+			if result := isValidTagForTool(tt.tag); result != tt.isValid {
 				t.Errorf("got = %v, want %v", result, tt.isValid)
 			}
 		})

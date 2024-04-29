@@ -15,21 +15,17 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/mongodb/mongodb-atlas-cli/internal/config"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
-	"go.mongodb.org/ops-manager/opsmngr"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_events.go -package=mocks github.com/mongodb/mongodb-atlas-cli/internal/store OrganizationEventLister,ProjectEventLister,EventLister
+//go:generate mockgen -destination=../mocks/mock_events.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OrganizationEventLister,ProjectEventLister,EventLister
 
 type OrganizationEventLister interface {
-	OrganizationEvents(string, *atlas.EventListOptions) (*atlas.EventResponse, error)
+	OrganizationEvents(opts *admin.ListOrganizationEventsApiParams) (*admin.OrgPaginatedEvent, error)
 }
 
 type ProjectEventLister interface {
-	ProjectEvents(string, *atlas.EventListOptions) (*atlas.EventResponse, error)
+	ProjectEvents(opts *admin.ListProjectEventsApiParams) (*admin.GroupPaginatedEvent, error)
 }
 
 type EventLister interface {
@@ -38,29 +34,13 @@ type EventLister interface {
 }
 
 // ProjectEvents encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectEvents(projectID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Events.ListProjectEvents(s.ctx, projectID, opts)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Events.ListProjectEvents(s.ctx, projectID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+func (s *Store) ProjectEvents(opts *admin.ListProjectEventsApiParams) (*admin.GroupPaginatedEvent, error) {
+	result, _, err := s.clientv2.EventsApi.ListProjectEventsWithParams(s.ctx, opts).Execute()
+	return result, err
 }
 
 // OrganizationEvents encapsulate the logic to manage different cloud providers.
-func (s *Store) OrganizationEvents(orgID string, opts *atlas.EventListOptions) (*atlas.EventResponse, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.client.(*atlas.Client).Events.ListOrganizationEvents(s.ctx, orgID, opts)
-		return result, err
-	case config.OpsManagerService, config.CloudManagerService:
-		result, _, err := s.client.(*opsmngr.Client).Events.ListOrganizationEvents(s.ctx, orgID, opts)
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+func (s *Store) OrganizationEvents(opts *admin.ListOrganizationEventsApiParams) (*admin.OrgPaginatedEvent, error) {
+	result, _, err := s.clientv2.EventsApi.ListOrganizationEventsWithParams(s.ctx, opts).Execute()
+	return result, err
 }

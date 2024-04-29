@@ -22,11 +22,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20230201008/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestDataLakePipelines(t *testing.T) {
@@ -50,18 +49,18 @@ func TestDataLakePipelines(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var sampleDatasetJob *mongodbatlas.SampleDatasetJob
+		var sampleDatasetJob *atlasv2.SampleDatasetStatus
 		err = json.Unmarshal(resp, &sampleDatasetJob)
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.Equal(g.clusterName, sampleDatasetJob.ClusterName)
+		a.Equal(g.clusterName, sampleDatasetJob.GetClusterName())
 
 		cmd = exec.Command(cliPath,
 			clustersEntity,
 			"sampleData",
 			"watch",
-			sampleDatasetJob.ID,
+			sampleDatasetJob.GetId(),
 			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
 		resp, err = cmd.CombinedOutput()
@@ -82,11 +81,11 @@ func TestDataLakePipelines(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
-		var snapshot *mongodbatlas.CloudProviderSnapshot
+		var snapshot *atlasv2.BackupSnapshot
 		err = json.Unmarshal(resp, &snapshot)
 		req.NoError(err)
 
-		snapshotID = snapshot.ID
+		snapshotID = snapshot.GetId()
 
 		cmd = exec.Command(cliPath,
 			backupsEntity,

@@ -18,11 +18,12 @@ package decryption
 
 import (
 	"encoding/base64"
+	"fmt"
 	"testing"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/internal/decryption/keyproviders"
-	"github.com/mongodb/mongodb-atlas-cli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/decryption/keyproviders"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 )
 
 func Test_validateMAC(t *testing.T) {
@@ -96,7 +97,7 @@ func Test_validateMAC(t *testing.T) {
 func Test_validateHeaderFields(t *testing.T) {
 	ts := time.Now()
 	invalidCompressionMode := "foo"
-	provider := keyproviders.LocalKey
+	provider := keyproviders.Azure
 	encryptedKey := []byte{0, 1, 2, 3}
 
 	testCases := []struct {
@@ -225,12 +226,16 @@ func Test_validateHeaderFields(t *testing.T) {
 			expectErr: true,
 		},
 	}
-	for _, testCase := range testCases {
-		err := validateHeaderFields(pointer.Get(testCase.input))
-		if testCase.expectErr && err == nil {
-			t.Errorf("expected: not nil got: %v", err)
-		} else if !testCase.expectErr && err != nil {
-			t.Errorf("expected: nil got: %v", err)
-		}
+	for i, tc := range testCases {
+		tt := tc
+		t.Run(fmt.Sprintf("test_%d", i), func(t *testing.T) {
+			t.Parallel()
+			err := validateHeaderFields(&tt.input)
+			if tt.expectErr && err == nil {
+				t.Errorf("expected: not nil got: %v", err)
+			} else if !tt.expectErr && err != nil {
+				t.Errorf("expected: nil got: %v", err)
+			}
+		})
 	}
 }

@@ -21,7 +21,6 @@ import (
 )
 
 func Builder() *cobra.Command {
-	const use = "api"
 	cmd := &cobra.Command{
 		Use:   "api",
 		Short: "Access to api resources.",

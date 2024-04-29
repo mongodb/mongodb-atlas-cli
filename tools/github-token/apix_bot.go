@@ -47,12 +47,7 @@ func (bot apixBot) githubClient() (*github.Client, error) {
 	return github.NewClient(&http.Client{Transport: itr}), nil
 }
 
-func (bot apixBot) installationID(ctx context.Context) (int64, error) {
-	client, err := bot.githubClient()
-	if err != nil {
-		return -1, err
-	}
-
+func (bot apixBot) installationID(ctx context.Context, client *github.Client) (int64, error) {
 	installation, _, err := client.Apps.FindRepositoryInstallation(ctx, bot.repo.owner, bot.repo.name)
 	if err != nil {
 		return -1, err
@@ -61,12 +56,7 @@ func (bot apixBot) installationID(ctx context.Context) (int64, error) {
 	return *installation.ID, nil
 }
 
-func (bot apixBot) accessToken(ctx context.Context, installationID int64) (string, error) {
-	client, err := bot.githubClient()
-	if err != nil {
-		return "", err
-	}
-
+func (apixBot) accessToken(ctx context.Context, client *github.Client, installationID int64) (string, error) {
 	token, _, err := client.Apps.CreateInstallationToken(ctx, installationID, &github.InstallationTokenOptions{
 		Permissions: &github.InstallationPermissions{
 			Actions:  &read,
@@ -81,9 +71,14 @@ func (bot apixBot) accessToken(ctx context.Context, installationID int64) (strin
 }
 
 func (bot apixBot) InstallationAccessToken(ctx context.Context) (string, error) {
-	id, err := bot.installationID(ctx)
+	client, err := bot.githubClient()
 	if err != nil {
 		return "", err
 	}
-	return bot.accessToken(ctx, id)
+
+	id, err := bot.installationID(ctx, client)
+	if err != nil {
+		return "", err
+	}
+	return bot.accessToken(ctx, client, id)
 }

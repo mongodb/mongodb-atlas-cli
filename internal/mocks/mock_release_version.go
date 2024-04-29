@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	github "github.com/google/go-github/v50/github"
+	github "github.com/google/go-github/v61/github"
 	version "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 )
 

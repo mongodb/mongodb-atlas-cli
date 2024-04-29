@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/templatewriter"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
@@ -52,10 +53,7 @@ func (opts *RevokeOpts) Run() error {
 		return err
 	}
 
-	idp := atlasv2.FederationIdentityProvider{
-		Id: opts.IdentityProviderID,
-	}
-	return opts.Print(idp)
+	return templatewriter.Print(opts.ConfigWriter(), revokeTemplate, atlasv2.FederationIdentityProvider{Id: opts.IdentityProviderID})
 }
 
 // atlas federatedAuthentication identityProvider revokeJwk <identityProviderId> --federationSettingsId federationSettingsId [--output output].

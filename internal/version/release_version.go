@@ -18,7 +18,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/google/go-github/v50/github"
+	"github.com/google/go-github/v61/github"
 )
 
 //go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/version ReleaseVersionDescriber

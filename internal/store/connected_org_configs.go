@@ -18,7 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_connected_orgs_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ConnectedOrgConfigsUpdater,ConnectedOrgConfigsDescriber
+//go:generate mockgen -destination=../mocks/mock_connected_orgs_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ConnectedOrgConfigsUpdater,ConnectedOrgConfigsDescriber,ConnectedOrgConfigsDeleter
 
 type ConnectedOrgConfigsUpdater interface {
 	UpdateConnectedOrgConfig(opts *atlasv2.UpdateConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error)
@@ -26,6 +26,10 @@ type ConnectedOrgConfigsUpdater interface {
 
 type ConnectedOrgConfigsDescriber interface {
 	GetConnectedOrgConfig(opts *atlasv2.GetConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error)
+}
+
+type ConnectedOrgConfigsDeleter interface {
+	DeleteConnectedOrgConfig(federationSettingsID string, orgID string) error
 }
 
 // UpdateConnectedOrgConfig encapsulate the logic to manage different cloud providers.
@@ -38,4 +42,10 @@ func (s *Store) UpdateConnectedOrgConfig(opts *atlasv2.UpdateConnectedOrgConfigA
 func (s *Store) GetConnectedOrgConfig(opts *atlasv2.GetConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error) {
 	result, _, err := s.clientv2.FederatedAuthenticationApi.GetConnectedOrgConfigWithParams(s.ctx, opts).Execute()
 	return result, err
+}
+
+// DeleteConnectedOrgConfig encapsulate the logic to manage different cloud providers.
+func (s *Store) DeleteConnectedOrgConfig(federationSettingsID string, orgID string) error {
+	_, _, err := s.clientv2.FederatedAuthenticationApi.RemoveConnectedOrgConfig(s.ctx, federationSettingsID, orgID).Execute()
+	return err
 }

@@ -4,7 +4,8 @@
   on:
     pull_request:
       types: [opened]
-
+    workflow_dispatch: # Run the action manually
+    
   permissions: 
     pull-requests: write
     contents: read

@@ -17,18 +17,24 @@
 set -Eeou pipefail
 
 export GOROOT="${GOROOT:?}"
-export GITHUB_TOKEN=${github_token:?}
+export GITHUB_APP_ID=${github_app_id:?}
+export GITHUB_APP_PEM=${github_app_pem:?}
 export NOTARY_SERVICE_URL=${notary_service_url:?}
 export MACOS_NOTARY_KEY=${notary_service_key_id:?}
 export MACOS_NOTARY_SECRET=${notary_service_secret:?}
 export GORELEASER_KEY=${goreleaser_key:?}
 export VERSION_GIT
 
+echo "$GITHUB_APP_PEM" > app.pem
+GITHUB_TOKEN="$(go run ./tools/github-token -pem app.pem -app_id "$GITHUB_APP_ID" -owner 'mongodb' -repo 'mongodb-atlas-cli')"
+
+export GITHUB_TOKEN
+
 VERSION_GIT="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
 if [[ "${unstable-}" == "-unstable" ]]; then
 	# avoid race conditions on the notarization step by using `-p 1`
-	./bin/goreleaser --config "build/package/.goreleaser.yml" --rm-dist --release-notes "CHANGELOG.md" --snapshot -p 1
+	./bin/goreleaser --config "build/package/.goreleaser.yml" --rm-dist --release-notes "CHANGELOG.md" -p 1 --snapshot
 else
 	# avoid race conditions on the notarization step by using `-p 1`
 	./bin/goreleaser --config "build/package/.goreleaser.yml" --rm-dist --release-notes "CHANGELOG.md" -p 1

@@ -31,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -100,6 +100,8 @@ const (
 	deploymentEntity              = "deployments"
 	federatedAuthenticationEntity = "federatedAuthentication"
 	federationSettingsEntity      = "federationSettings"
+	identityProviderEntity        = "identityProvider"
+	connectedOrgsConfigsEntity    = "connectedOrgConfigs"
 	deletingState                 = "DELETING"
 	authEntity                    = "auth"
 )
@@ -456,6 +458,17 @@ func RandClusterName() (string, error) {
 		return fmt.Sprintf("cluster-%v-%s", n, revision), nil
 	}
 	return fmt.Sprintf("cluster-%v", n), nil
+}
+
+func RandIdentityProviderName() (string, error) {
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	if revision, ok := os.LookupEnv("revision"); ok {
+		return fmt.Sprintf("idp-%v-%s", n, revision), nil
+	}
+	return fmt.Sprintf("idp-%v", n), nil
 }
 
 func RandTeamName() (string, error) {

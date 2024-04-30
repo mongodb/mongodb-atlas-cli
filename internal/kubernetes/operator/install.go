@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
-	"go.mongodb.org/atlas-sdk/v20231115010/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -144,10 +144,6 @@ func (i *Install) ensureProject(orgID, projectName string) (*admin.Group, error)
 
 	if err == nil {
 		return project, nil
-	}
-
-	if err != nil {
-		return nil, fmt.Errorf("failed to retrieve project: %w", err)
 	}
 
 	project, err = i.atlasStore.CreateProject(&admin.CreateProjectApiParams{

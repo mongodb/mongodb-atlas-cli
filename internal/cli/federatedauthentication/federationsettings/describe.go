@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 const describeTemplate = `ID	IDENTITY PROVIDER ID	IDENTITY PROVIDER STATUS
@@ -70,7 +70,7 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": describeTemplate,
 		},
-		Example: `  # Return the JSON-formatted Federation Settings details for the organization with the ID 5e2211c17a3e5a48f5497de3:
+		Example: `  # Return the JSON-formatted Federation Settings details:
   atlas federatedAuthentication federationSettings describe --orgId 5e2211c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

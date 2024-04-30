@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

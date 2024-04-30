@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 type CreateOpts struct {
@@ -41,6 +41,7 @@ type CreateOpts struct {
 	x509Type    string
 	awsIamType  string
 	ldapType    string
+	oidcType    string
 	deleteAfter string
 	roles       []string
 	scopes      []string
@@ -51,6 +52,7 @@ const (
 	user             = "USER"
 	role             = "ROLE"
 	group            = "GROUP"
+	groupIDP         = "IDP_GROUP"
 	X509TypeManaged  = "MANAGED"
 	X509TypeCustomer = "CUSTOMER"
 	none             = "NONE"
@@ -61,6 +63,7 @@ var (
 	validX509Flags   = []string{none, X509TypeManaged, X509TypeCustomer}
 	validAWSIAMFlags = []string{none, role, user}
 	validLDAPFlags   = []string{none, group, user}
+	validOIDCFlags   = []string{none, groupIDP, user}
 )
 
 func (opts *CreateOpts) isX509Set() bool {
@@ -75,8 +78,12 @@ func (opts *CreateOpts) isLDAPSet() bool {
 	return opts.ldapType != "" && opts.ldapType != none
 }
 
+func (opts *CreateOpts) isOIDCSet() bool {
+	return opts.oidcType != "" && opts.oidcType != none
+}
+
 func (opts *CreateOpts) isExternal() bool {
-	return opts.isX509Set() || opts.isAWSIAMSet() || opts.isLDAPSet()
+	return opts.isX509Set() || opts.isAWSIAMSet() || opts.isLDAPSet() || opts.isOIDCSet()
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -115,6 +122,7 @@ func (opts *CreateOpts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 		DeleteAfterDate: convert.ParseDeleteAfter(opts.deleteAfter),
 		DatabaseName:    authDB,
 	}
+
 	if opts.password != "" {
 		u.Password = &opts.password
 	}
@@ -127,6 +135,11 @@ func (opts *CreateOpts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 	if opts.ldapType != "" {
 		u.LdapAuthType = &opts.ldapType
 	}
+
+	if opts.oidcType != "" {
+		u.OidcAuthType = &opts.oidcType
+	}
+
 	return u
 }
 
@@ -155,17 +168,17 @@ func (opts *CreateOpts) validate() error {
 		return errors.New("can't supply both $external authentication and password")
 	}
 
-	// a && (b || c) || (b && c): check if at least two are true
-	if opts.isAWSIAMSet() && (opts.isX509Set() || opts.isLDAPSet()) || (opts.isX509Set() && opts.isLDAPSet()) {
-		return errors.New("can't supply more than one $external type")
-	}
-
 	if err := validate.FlagInSlice(opts.x509Type, flag.X509Type, validX509Flags); err != nil {
 		return err
 	}
 	if err := validate.FlagInSlice(opts.awsIamType, flag.AWSIAMType, validAWSIAMFlags); err != nil {
 		return err
 	}
+
+	if err := validate.FlagInSlice(opts.oidcType, flag.OIDCType, validOIDCFlags); err != nil {
+		return err
+	}
+
 	return validate.FlagInSlice(opts.ldapType, flag.LDAPType, validLDAPFlags)
 }
 
@@ -231,6 +244,10 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, none, usage.X509Type)
 	cmd.Flags().StringVar(&opts.awsIamType, flag.AWSIAMType, none, usage.AWSIAMType)
 	cmd.Flags().StringVar(&opts.ldapType, flag.LDAPType, none, usage.LDAPType)
+	cmd.Flags().StringVar(&opts.oidcType, flag.OIDCType, none, usage.OIDCType)
+
+	cmd.MarkFlagsMutuallyExclusive(flag.AWSIAMType, flag.LDAPType, flag.X509Type, flag.OIDCType)
+	cmd.MarkFlagsMutuallyExclusive(flag.Password, flag.OIDCType)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)

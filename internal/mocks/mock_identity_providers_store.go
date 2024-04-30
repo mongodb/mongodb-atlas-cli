@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20231115010/admin"
+	admin "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 // MockIdentityProviderLister is a mock of IdentityProviderLister interface.
@@ -149,18 +149,17 @@ func (m *MockIdentityProviderDeleter) EXPECT() *MockIdentityProviderDeleterMockR
 }
 
 // DeleteIdentityProvider mocks base method.
-func (m *MockIdentityProviderDeleter) DeleteIdentityProvider(arg0 *admin.DeleteIdentityProviderApiParams) (*admin.FederationOidcIdentityProvider, error) {
+func (m *MockIdentityProviderDeleter) DeleteIdentityProvider(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteIdentityProvider", arg0)
-	ret0, _ := ret[0].(*admin.FederationOidcIdentityProvider)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret := m.ctrl.Call(m, "DeleteIdentityProvider", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // DeleteIdentityProvider indicates an expected call of DeleteIdentityProvider.
-func (mr *MockIdentityProviderDeleterMockRecorder) DeleteIdentityProvider(arg0 interface{}) *gomock.Call {
+func (mr *MockIdentityProviderDeleterMockRecorder) DeleteIdentityProvider(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteIdentityProvider", reflect.TypeOf((*MockIdentityProviderDeleter)(nil).DeleteIdentityProvider), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteIdentityProvider", reflect.TypeOf((*MockIdentityProviderDeleter)(nil).DeleteIdentityProvider), arg0, arg1)
 }
 
 // MockIdentityProviderUpdater is a mock of IdentityProviderUpdater interface.

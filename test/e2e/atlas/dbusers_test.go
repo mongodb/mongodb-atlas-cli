@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 const (
@@ -49,7 +49,7 @@ func TestDBUserWithFlags(t *testing.T) {
 	require.NoError(t, err)
 
 	t.Run("Create", func(t *testing.T) {
-		pwd, err := generateRandomBase64String(14)
+		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
@@ -105,7 +105,7 @@ func TestDBUserWithFlags(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		pwd, err := generateRandomBase64String(14)
+		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
@@ -139,7 +139,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 	}
 
 	t.Run("Create", func(t *testing.T) {
-		pwd, err := generateRandomBase64String(14)
+		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
@@ -282,7 +282,8 @@ func generateRandomASCIIString(length int) (string, error) {
 }
 
 // generateRandomBase64String generate a random ASCII string encoded using base64.
-func generateRandomBase64String(length int) (string, error) {
+func generateRandomBase64String() (string, error) {
+	length := 14
 	result, err := generateRandomASCIIString(length)
 	return base64.StdEncoding.EncodeToString([]byte(result))[:length], err
 }

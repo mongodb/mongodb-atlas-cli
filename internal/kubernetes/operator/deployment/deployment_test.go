@@ -34,7 +34,7 @@ import (
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -486,7 +486,7 @@ func TestBuildServerlessDeployments(t *testing.T) {
 				BackupScheduleRef: akov2common.ResourceRefNamespaced{},
 				ServerlessSpec: &akov2.ServerlessSpec{
 					Name: store.StringOrEmpty(cluster.Name),
-					ProviderSettings: &akov2.ProviderSettingsSpec{
+					ProviderSettings: &akov2.ServerlessProviderSettingsSpec{
 						BackingProviderName: cluster.ProviderSettings.BackingProviderName,
 						ProviderName:        akov2provider.ProviderName(store.StringOrEmpty(cluster.ProviderSettings.ProviderName)),
 						RegionName:          cluster.ProviderSettings.RegionName,

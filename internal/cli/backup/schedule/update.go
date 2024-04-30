@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115010/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 var updateTemplate = "Snapshot backup policy for cluster '{{.ClusterName}}' updated.\n"

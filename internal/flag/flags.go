@@ -309,4 +309,18 @@ const (
 	FrequencyInterval                         = "frequencyInterval"                         // FrequencyInterval flag
 	RetentionUnit                             = "retentionUnit"                             // RetentionUnit flag
 	RetentionValue                            = "retentionValue"                            // RetentionValue flag
+	FederationSettingsID                      = "federationSettingsId"                      // FederationSettingsId flag
+	OIDCType                                  = "oidcType"                                  // OidcType flag
+	IdpType                                   = "idpType"                                   // IdpType flag
+	Audience                                  = "audience"                                  // Audience flag
+	AuthorizationType                         = "authorizationType"                         // AuthorizationType flag
+	ClientID                                  = "clientId"                                  // ClientId flag
+	DisplayName                               = "displayName"                               // DisplayName flag
+	GroupsClaim                               = "groupsClaim"                               // GroupsClaim flag
+	UserClaim                                 = "userClaim"                                 // UserClaim flag
+	IssuerURI                                 = "issuerUri"                                 // IssuerURI flag
+	AssociatedDomain                          = "associatedDomain"                          // AssociatedDomain flag
+	RequestedScope                            = "requestedScope"                            // RequestedScope flag
+	Protocol                                  = "protocol"                                  // Protocol flag
+	IdentityProviderID                        = "identityProviderId"                        // IdentityProviderId flag
 )

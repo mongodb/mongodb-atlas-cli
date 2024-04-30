@@ -8,4 +8,4 @@ labels:
     type: "pull_request"
     draft: False
     files:
-      - "docs\\/*.txt"
+      - "docs\/*.txt"

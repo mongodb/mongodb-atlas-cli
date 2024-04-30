@@ -372,6 +372,23 @@ func TestIdentityProviders(t *testing.T) {
 		assert.NotEmpty(t, provider.GetId())
 	})
 
+	t.Run("Revoke JWK from OIDC IdP WORKFORCE", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			identityProviderEntity,
+			"revokeJwk",
+			oidcIWorkforceIdpID,
+			"--federationSettingsId",
+			federationSettingsID,
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+	})
+
 	t.Run("Delete OIDC IdP WORKFORCE", func(_ *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
@@ -382,6 +399,23 @@ func TestIdentityProviders(t *testing.T) {
 			"--federationSettingsId",
 			federationSettingsID,
 			"--force",
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+	})
+
+	t.Run("Revoke JWK from OIDC IdP WORKLOAD", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			identityProviderEntity,
+			"revokeJwk",
+			oidcWorkloadIdpID,
+			"--federationSettingsId",
+			federationSettingsID,
 			"-o=json",
 		)
 

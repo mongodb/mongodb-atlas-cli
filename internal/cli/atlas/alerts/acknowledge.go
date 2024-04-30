@@ -107,7 +107,7 @@ func AcknowledgeBuilder() *cobra.Command {
 			)
 		},
 		Annotations: map[string]string{
-			"alertIdDesc": "ID of the alert you want to acknowledge or unacknowledge.",
+			"alertIdDesc": "ID of the alert test you want to acknowledge or unacknowledge.",
 			"output":      ackTemplate,
 		},
 		Example: fmt.Sprintf(`  # Acknowledge an alert with the ID 5d1113b25a115342acc2d1aa in the project with the ID 5e2211c17a3e5a48f5497de3 until January 1 2028:

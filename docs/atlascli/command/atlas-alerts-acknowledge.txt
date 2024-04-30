@@ -40,7 +40,7 @@ Arguments
    * - alertId
      - string
      - true
-     - ID of the alert you want to acknowledge or unacknowledge.
+     - ID of the alert test you want to acknowledge or unacknowledge.
 
 Options
 -------

@@ -64,7 +64,7 @@ func ListBuilder() *cobra.Command {
 		Short: "Returns all alert configurations for your project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all alert configurations for the project with the ID 5df90590f10fab5e33de2305:
-  %s alerts settings list --projectId 5df90590f10fab5e33de2305 --output json`, cli.ExampleAtlasEntryPoint()),
+  %s alerts settings list --projectId 5df90590f10fab5e33de2305 --output json`, cli.ExampleEntryPoint()),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {

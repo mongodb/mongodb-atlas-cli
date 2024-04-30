@@ -77,11 +77,11 @@ func ListBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": listTemplate,
 		},
-		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all organizations:
-  %[1]s organizations list --output json
+		Example: `  # Return a JSON-formatted list of all organizations:
+  mongocli iam organizations list --output json
   
   # Return a JSON-formatted list that includes the organizations named org1 and Org1, but doesn't return org123:
-  %[1]s organizations list --name org1 --output json`, cli.ExampleAtlasEntryPoint()),
+  mongocli iam organizations list --name org1 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.initStore(cmd.Context()),

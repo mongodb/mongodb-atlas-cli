@@ -99,17 +99,9 @@ func Credentials() error {
 	if config.PrivateAPIKey() != "" && config.PublicAPIKey() != "" {
 		return nil
 	}
-
-	configCMD := "config"
-	if config.BinName() == "atlas" {
-		configCMD += " init"
-	}
 	return fmt.Errorf(
-		"%w\n\nTo log in using your Atlas username and password, run: %s auth login\nTo set credentials using API keys, run: %s %s",
+		"%w\n\nTo log in using your Atlas username and password, run: mongocli auth login\nTo set credentials using API keys, run: mongocli config",
 		ErrMissingCredentials,
-		config.BinName(),
-		config.BinName(),
-		configCMD,
 	)
 }
 
@@ -122,10 +114,9 @@ func NoAPIKeys() error {
 	}
 	return fmt.Errorf(`%w (%s)
 
-To authenticate using your Atlas username and password on a new profile, run: %s auth login --profile <profile_name>`,
+To authenticate using your Atlas username and password on a new profile, run: mongocli auth login --profile <profile_name>`,
 		ErrAlreadyAuthenticatedAPIKeys,
 		config.PublicAPIKey(),
-		config.BinName(),
 	)
 }
 
@@ -139,10 +130,9 @@ func NoAccessToken() error {
 	subject, _ := config.AccessTokenSubject()
 	return fmt.Errorf(`%w (%s)
 
-To log out, run: %s auth logout`,
+To log out, run: mongocli auth logout`,
 		ErrAlreadyAuthenticatedToken,
 		subject,
-		config.BinName(),
 	)
 }
 

@@ -177,10 +177,10 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 			return ErrOrgIDNotFound
 		}
 
-		_, _ = fmt.Fprintf(opts.OutWriter, `
+		_, _ = fmt.Fprint(opts.OutWriter, `
 You have successfully configured your profile.
-You can use [%s config set] to change your profile settings later.
-`, config.BinName())
+You can use [mongocli config set] to change your profile settings later.
+`)
 	}
 
 	return opts.config.Save()
@@ -275,19 +275,15 @@ func (opts *LoginOpts) LoginPreRun(ctx context.Context) func() error {
 	}
 }
 
-func tool() string {
-	return "Cloud Manager"
-}
-
 func LoginBuilder() *cobra.Command {
 	opts := &LoginOpts{}
 
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
-		Example: fmt.Sprintf(`  # Log in to your MongoDB %s account in interactive mode:
-  %s auth login
-`, tool(), config.BinName()),
+		Example: `  # Log in to your MongoDB Cloud Manager account in interactive mode:
+  mongocli auth login
+`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			defaultProfile := config.Default()

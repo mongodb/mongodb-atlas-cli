@@ -15,8 +15,6 @@
 package projects
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/iam/projects/apikeys"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/iam/projects/invitations"
@@ -29,7 +27,7 @@ func Builder() *cobra.Command {
 	const use = "projects"
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   fmt.Sprintf("Manage your %s projects.", cli.DescriptionServiceName()),
+		Short:   "Manage your Ops Manager or Cloud Manager projects.",
 		Long:    "Create, list and manage your MongoDB projects.",
 		Aliases: cli.GenerateAliases(use),
 	}

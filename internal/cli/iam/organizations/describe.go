@@ -70,8 +70,8 @@ func DescribeBuilder() *cobra.Command {
 			"IDDesc": "Unique 24-digit string that identifies the organization.",
 			"output": describeTemplate,
 		},
-		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the organization with the ID 5e2211c17a3e5a48f5497de3:
-  %s organizations describe 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return the JSON-formatted details for the organization with the ID 5e2211c17a3e5a48f5497de3:
+  mongocli iam organizations describe 5e2211c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.initStore(cmd.Context()),

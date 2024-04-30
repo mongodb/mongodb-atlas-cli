@@ -174,7 +174,7 @@ func (n *Notifier) notifyIfApplicable(isHb bool) error {
 
 	var upgradeInstructions string
 	if isHb {
-		upgradeInstructions = fmt.Sprintf(`To upgrade, run "brew update && brew upgrade %s".`, homebrew.FormulaName(config.MongoCLI))
+		upgradeInstructions = `To upgrade, run "brew update && brew upgrade mongocli".`
 	} else {
 		upgradeInstructions = "To upgrade, see: https://dochub.mongodb.org/core/install-mongocli."
 	}
@@ -183,9 +183,9 @@ func (n *Notifier) notifyIfApplicable(isHb bool) error {
 A new version of %s is available '%s'!
 %s
 
-To disable this alert, run "%s config set skip_update_check true".
+To disable this alert, run "mongocli config set skip_update_check true".
 `
-	_, err = fmt.Fprintf(n.writer, newVersionTemplate, config.MongoCLI, release.Version, upgradeInstructions, config.BinName())
+	_, err = fmt.Fprintf(n.writer, newVersionTemplate, config.MongoCLI, release.Version, upgradeInstructions)
 	return err
 }
 

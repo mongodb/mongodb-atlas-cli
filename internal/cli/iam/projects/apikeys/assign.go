@@ -16,7 +16,6 @@ package apikeys
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/require"
@@ -68,14 +67,14 @@ func AssignBuilder() *cobra.Command {
 		Aliases: []string{"update"},
 		Args:    require.ExactArgs(1),
 		Short:   "Assign the specified organization API key to your project and modify the API key's roles for the project.",
-		Long: fmt.Sprintf(`When you modify the roles for an organization API key with this command, the values you specify overwrite the existing roles assigned to the API key.
+		Long: `When you modify the roles for an organization API key with this command, the values you specify overwrite the existing roles assigned to the API key.
 		
-To view possible values for the ID argument, run %s organizations apiKeys list.`, cli.ExampleAtlasEntryPoint()),
+To view possible values for the ID argument, run mongocli iam organizations apiKeys list.`,
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies your API key.",
 		},
-		Example: fmt.Sprintf(`  # Assign an organization API key with the ID 5f46ae53d58b421fe3edc115 and grant the GROUP_DATA_ACCESS_READ_WRITE role for the project with ID 5e2211c17a3e5a48f5497de3:
-  %s projects apiKeys assign 5f46ae53d58b421fe3edc115 --projectId 5e1234c17a3e5a48f5497de3 --role GROUP_DATA_ACCESS_READ_WRITE --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Assign an organization API key with the ID 5f46ae53d58b421fe3edc115 and grant the GROUP_DATA_ACCESS_READ_WRITE role for the project with ID 5e2211c17a3e5a48f5497de3:
+  mongocli iam projects apiKeys assign 5f46ae53d58b421fe3edc115 --projectId 5e1234c17a3e5a48f5497de3 --role GROUP_DATA_ACCESS_READ_WRITE --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.PreRunE(

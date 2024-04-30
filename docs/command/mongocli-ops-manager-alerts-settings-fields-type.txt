@@ -68,4 +68,4 @@ Examples
 .. code-block::
 
    # Return a JSON-formatted list of accepted field types for the matchersFieldName option:
-   mongocli atlas alerts settings fields type --output json
+   mongocli [ops-manager|cloud-manager] alerts settings fields type --output json

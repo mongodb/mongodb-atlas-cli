@@ -67,8 +67,8 @@ func ListBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": listTemplate,
 		},
-		Example: fmt.Sprintf(`  # Return a JSON-formatted list of all teams for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s projects teams list --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Return a JSON-formatted list of all teams for the project with the ID 5e2211c17a3e5a48f5497de3:
+  mongocli iam projects teams list --projectId 5e2211c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -73,7 +73,7 @@ func OrgListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of events for the organization with the ID 5dd5a6b6f10fab1d71a58495:
-  %s events organizations list --orgId 5dd5a6b6f10fab1d71a58495 --output json`, cli.ExampleAtlasEntryPoint()),
+  %s events organizations list --orgId 5dd5a6b6f10fab1d71a58495 --output json`, cli.ExampleEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

@@ -88,8 +88,8 @@ func CreateBuilder() *cobra.Command {
 			"projectNameDesc": "Label that identifies the project.",
 			"output":          atlasCreateTemplate,
 		},
-		Example: fmt.Sprintf(`  # Create a project in the organization with the ID 5e2211c17a3e5a48f5497de3 using default alert settings:
-  %s projects create --orgId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Create a project in the organization with the ID 5e2211c17a3e5a48f5497de3 using default alert settings:
+  mongocli iam projects create --orgId 5e2211c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			if !config.IsCloud() {

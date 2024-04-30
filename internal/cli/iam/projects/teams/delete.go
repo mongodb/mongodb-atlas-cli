@@ -62,8 +62,8 @@ func DeleteBuilder() *cobra.Command {
 			"teamIdDesc": "Unique 24-digit string that identifies the team.",
 			"output":     opts.SuccessMessage(),
 		},
-		Example: fmt.Sprintf(`  # Remove the team with the ID 5dd58c647a3e5a6c5bce46c7 from the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s projects teams delete 5dd58c647a3e5a6c5bce46c7 --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Remove the team with the ID 5dd58c647a3e5a6c5bce46c7 from the project with the ID 5e2211c17a3e5a48f5497de3:
+  mongocli iam projects teams delete 5dd58c647a3e5a6c5bce46c7 --projectId 5e2211c17a3e5a48f5497de3`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]
 			return opts.PreRunE(

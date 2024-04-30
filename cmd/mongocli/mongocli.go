@@ -48,7 +48,7 @@ To learn more, see our documentation: https://www.mongodb.com/docs/mongocli/stab
 }
 
 func updateMongoCLIConfigPath() {
-	mongoCLIConfigHome, err := config.MongoCLIConfigHome()
+	mongoCLIConfigHome, err := config.CLIConfigHome()
 	if err != nil {
 		return
 	}

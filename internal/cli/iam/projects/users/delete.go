@@ -58,8 +58,8 @@ func DeleteBuilder() *cobra.Command {
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project User Admin"),
 		Args: require.ExactArgs(1),
-		Example: fmt.Sprintf(`  # Remove the user with the ID 5dd58c647a3e5a6c5bce46c7 from the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s projects users delete 5dd58c647a3e5a6c5bce46c7 --projectId 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Remove the user with the ID 5dd58c647a3e5a6c5bce46c7 from the project with the ID 5e2211c17a3e5a48f5497de3:
+  mongocli iam projects users delete 5dd58c647a3e5a6c5bce46c7 --projectId 5e2211c17a3e5a48f5497de3`,
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies the user.",
 			"output": opts.SuccessMessage(),

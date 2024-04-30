@@ -73,8 +73,8 @@ func CreateBuilder() *cobra.Command {
 			"nameDesc": "Label that identifies the team.",
 			"output":   createTemplate,
 		},
-		Example: fmt.Sprintf(`  # Create a team named myTeam in the organization with ID 5e2211c17a3e5a48f5497de3:
-  %s teams create myTeam --username user1@example.com,user2@example.com --orgId 5e1234c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Create a team named myTeam in the organization with ID 5e2211c17a3e5a48f5497de3:
+  mongocli iam teams create myTeam --username user1@example.com,user2@example.com --orgId 5e1234c17a3e5a48f5497de3 --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateOrgID,

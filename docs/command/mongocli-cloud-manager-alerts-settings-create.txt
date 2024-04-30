@@ -182,7 +182,7 @@ Examples
 .. code-block::
 
    # Create an alert configuration that notifies a user when they join a group for the project with the ID 5df90590f10fab5e33de2305:
-   mongocli atlas alerts settings create --event JOINED_GROUP --enabled \
+   mongocli [ops-manager|cloud-manager] alerts settings create --event JOINED_GROUP --enabled \
    --notificationType USER --notificationEmailEnabled \
    --notificationUsername john@example.com \
    --output json --projectId 5df90590f10fab5e33de2305

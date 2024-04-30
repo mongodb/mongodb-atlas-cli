@@ -96,7 +96,7 @@ func AcknowledgeBuilder() *cobra.Command {
 			"alertIdDesc": "ID of the alert you want to acknowledge or unacknowledge.",
 		},
 		Example: fmt.Sprintf(`  # Acknowledge an alert with the ID 5d1113b25a115342acc2d1aa in the project with the ID 5e2211c17a3e5a48f5497de3 until January 1 2028:
-  %s alerts acknowledge 5d1113b25a115342acc2d1aa --until 2028-01-01T20:24:26Z --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+  %s alerts acknowledge 5d1113b25a115342acc2d1aa --until 2028-01-01T20:24:26Z --projectId 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleEntryPoint()),
 		RunE: func(_ *cobra.Command, args []string) error {
 			opts.alertID = args[0]
 			return opts.Run()

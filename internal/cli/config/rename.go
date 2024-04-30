@@ -66,8 +66,8 @@ func RenameBuilder() *cobra.Command {
 		Use:     "rename <oldProfileName> <newProfileName>",
 		Aliases: []string{"mv"},
 		Short:   "Rename a profile.",
-		Example: fmt.Sprintf(`  # Rename a profile called myProfile to testProfile:
-  %s config rename myProfile testProfile`, config.BinName()),
+		Example: `  # Rename a profile called myProfile to testProfile:
+  mongocli config rename myProfile testProfile`,
 		Annotations: map[string]string{
 			"oldProfileNameDesc": "Name of the profile to rename.",
 			"newProfileNameDesc": "New name of the profile.",

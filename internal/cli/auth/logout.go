@@ -16,7 +16,6 @@ package auth
 
 import (
 	"context"
-	"fmt"
 	"io"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli"
@@ -77,9 +76,9 @@ func LogoutBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "logout",
 		Short: "Log out of the CLI.",
-		Example: fmt.Sprintf(`  # To log out from the CLI:
-  %s auth logout
-`, config.BinName()),
+		Example: `  # To log out from the CLI:
+  mongocli auth logout
+`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			opts.config = config.Default()

@@ -70,10 +70,6 @@ var (
 	defaultProfile = newProfile()
 )
 
-func BinName() string {
-	return MongoCLI
-}
-
 type Setter interface {
 	Set(string, interface{})
 }
@@ -640,19 +636,14 @@ func OldMongoCLIConfigHome() (string, error) {
 	return path.Join(home, ".config"), nil
 }
 
-// MongoCLIConfigHome retrieves configHome path based used by MongoCLI.
-func MongoCLIConfigHome() (string, error) {
+// CLIConfigHome retrieves configHome path.
+func CLIConfigHome() (string, error) {
 	home, err := os.UserConfigDir()
 	if err != nil {
 		return "", err
 	}
 
 	return path.Join(home, "mongocli"), nil
-}
-
-// CLIConfigHome retrieves configHome path.
-func CLIConfigHome() (string, error) {
-	return MongoCLIConfigHome()
 }
 
 func Path(f string) (string, error) {

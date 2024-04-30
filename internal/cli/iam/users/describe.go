@@ -17,7 +17,6 @@ package users
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/require"
@@ -86,11 +85,11 @@ func DescribeBuilder() *cobra.Command {
 		Use:         "describe",
 		Aliases:     []string{"get"},
 		Annotations: map[string]string{"output": describeTemplate},
-		Example: fmt.Sprintf(`  # Return the JSON-formatted details for the MongoDB user with the ID 5dd56c847a3e5a1f363d424d:
-  %[1]s users describe --id 5dd56c847a3e5a1f363d424d --output json
+		Example: `  # Return the JSON-formatted details for the MongoDB user with the ID 5dd56c847a3e5a1f363d424d:
+  mongocli iam users describe --id 5dd56c847a3e5a1f363d424d --output json
   
   # Return the JSON-formatted details for the MongoDB user with the username myUser:
-  %[1]s users describe --username myUser --output json`, cli.ExampleAtlasEntryPoint()),
+  mongocli iam users describe --username myUser --output json`,
 		Short: "Return the details for the specified MongoDB user.",
 		Long: `You can specify either the unique 24-digit ID that identifies the MongoDB user or the username for the MongoDB user.
 		

@@ -62,7 +62,7 @@ func FieldsTypeBuilder() *cobra.Command {
 		Aliases: []string{"types"},
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of accepted field types for the matchersFieldName option:
-  %s alerts settings fields type --output json`, cli.ExampleAtlasEntryPoint()),
+  %s alerts settings fields type --output json`, cli.ExampleEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()

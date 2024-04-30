@@ -15,8 +15,6 @@
 package organizations
 
 import (
-	"fmt"
-
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/iam/organizations/apikeys"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/iam/organizations/invitations"
@@ -29,7 +27,7 @@ const use = "organizations"
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     use,
-		Short:   fmt.Sprintf("Manage your %s organizations.", cli.DescriptionServiceName()),
+		Short:   "Manage your Ops Manager or Cloud Manager organizations.",
 		Long:    "Create, list and manage your MongoDB organizations.",
 		Aliases: cli.GenerateAliases(use, "orgs", "org"),
 	}

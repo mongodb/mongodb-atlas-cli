@@ -91,4 +91,4 @@ Examples
 .. code-block::
 
    # Return a JSON-formatted list of all projects:
-   mongocli projects list --output json
+   mongocli iam projects list --output json

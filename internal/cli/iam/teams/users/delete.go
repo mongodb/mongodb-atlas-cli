@@ -57,8 +57,8 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Remove the specified user from a team for your organization.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
 		Args:    require.ExactArgs(1),
-		Example: fmt.Sprintf(`  # Remove the user with the ID 5dd58c647a3e5a6c5bce46c7 from the team with the ID 5f6a5c6c713184005d72fe6e for the organization with ID 5e2211c17a3e5a48f5497de3:
-  %s teams users delete 5dd58c647a3e5a6c5bce46c7 --teamId 5f6a5c6c713184005d72fe6e --orgId 5e1234c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Remove the user with the ID 5dd58c647a3e5a6c5bce46c7 from the team with the ID 5f6a5c6c713184005d72fe6e for the organization with ID 5e2211c17a3e5a48f5497de3:
+  mongocli iam teams users delete 5dd58c647a3e5a6c5bce46c7 --teamId 5f6a5c6c713184005d72fe6e --orgId 5e1234c17a3e5a48f5497de3`,
 		Annotations: map[string]string{
 			"userIdDesc": "Unique 24-digit string that identifies the user.",
 			"output":     opts.SuccessMessage(),

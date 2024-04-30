@@ -100,26 +100,8 @@ func GenerateAliases(use string, extra ...string) []string {
 	return aliases
 }
 
-var exampleBin string
-
-// ExampleAtlasEntryPoint returns the entry point for an atlas command while taking into account
+// ExampleEntryPoint returns the entry point for an atlas command while taking into account
 // if the bin is atlas or mongocli.
-func ExampleAtlasEntryPoint() string {
-	if exampleBin != "" {
-		return exampleBin
-	}
-	exampleBin = config.BinName()
-	if exampleBin == config.MongoCLI {
-		exampleBin += " atlas"
-	}
-	return exampleBin
-}
-
-// DescriptionServiceName returns the name of the service that uses a given IAM command.
-func DescriptionServiceName() string {
-	exampleBin = config.BinName()
-	if exampleBin == config.MongoCLI {
-		return "Ops Manager or Cloud Manager"
-	}
-	return "Atlas"
+func ExampleEntryPoint() string {
+	return fmt.Sprintf("%s [ops-manager|cloud-manager]", config.MongoCLI)
 }

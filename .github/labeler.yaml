@@ -1,2 +1,12 @@
-kubernetes:
-  - '(kubernetes)'
+version: 1
+issues: True
+labels:
+  - label: "kubernetes"
+    type: "issue"
+    body: "^kubernetes*"
+  - label: "need-doc-review"
+    type: "pull_request"
+    draft: False
+    mergeable: True
+    files:
+      - "docs\\/*.txt"

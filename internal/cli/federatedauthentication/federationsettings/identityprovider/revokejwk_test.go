@@ -17,42 +17,37 @@
 package identityprovider
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestRevoke_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIdentityProviderJwkRevoker(ctrl)
-	buf := new(bytes.Buffer)
 
 	revokeOpts := &RevokeOpts{
 		store:                mockStore,
 		FederationSettingsID: "federationSettingsID",
-		IdentityProviderID:   "id",
-	}
-
-	expected := atlasv2.FederationIdentityProvider{
-		Id: revokeOpts.IdentityProviderID,
+		DeleteOpts: &cli.DeleteOpts{
+			Entry:   "id",
+			Confirm: true,
+		},
 	}
 
 	mockStore.
 		EXPECT().
-		RevokeJwksFromIdentityProvider(revokeOpts.FederationSettingsID, revokeOpts.IdentityProviderID).
+		RevokeJwksFromIdentityProvider(revokeOpts.FederationSettingsID, revokeOpts.Entry).
 		Return(nil).
 		Times(1)
 
 	if err := revokeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	t.Log(buf.String())
-	test.VerifyOutputTemplate(t, revokeTemplate, expected)
 }
 
 func TestRevokeBuilder(t *testing.T) {

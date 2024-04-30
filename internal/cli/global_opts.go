@@ -15,11 +15,12 @@
 package cli
 
 import (
+	"fmt"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/prerun"
+	"github.com/andreaangiolillo/mongocli-test/internal/validate"
 	"github.com/spf13/cobra"
 	"github.com/tangzero/inflector"
 )
@@ -71,6 +72,10 @@ func (opts *GlobalOpts) ValidateOrgID() error {
 	return validate.ObjectID(opts.ConfigOrgID())
 }
 
+func DeploymentStatus(baseURL, projectID string) string {
+	return fmt.Sprintf("Changes are being applied, please check %sv2/%s#deployment/topology for status\n", baseURL, projectID)
+}
+
 // GenerateAliases return aliases for use such that they are:
 // a version all lower case, a version with dashes, a singular versions with the same rules.
 func GenerateAliases(use string, extra ...string) []string {
@@ -93,6 +98,30 @@ func GenerateAliases(use string, extra ...string) []string {
 	}
 	aliases = append(aliases, extra...)
 	return aliases
+}
+
+var exampleBin string
+
+// ExampleAtlasEntryPoint returns the entry point for an atlas command while taking into account
+// if the bin is atlas or mongocli.
+func ExampleAtlasEntryPoint() string {
+	if exampleBin != "" {
+		return exampleBin
+	}
+	exampleBin = config.BinName()
+	if exampleBin == config.MongoCLI {
+		exampleBin += " atlas"
+	}
+	return exampleBin
+}
+
+// DescriptionServiceName returns the name of the service that uses a given IAM command.
+func DescriptionServiceName() string {
+	exampleBin = config.BinName()
+	if exampleBin == config.MongoCLI {
+		return "Ops Manager or Cloud Manager"
+	}
+	return "Atlas"
 }
 
 // ReturnValueForSetting returns a boolean value that is useful when working with boolean flags to inform

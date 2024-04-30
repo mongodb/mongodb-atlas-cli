@@ -17,8 +17,20 @@ package search
 import (
 	"strings"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
+	"go.mongodb.org/ops-manager/search"
 )
+
+func StringInSlice(a []string, x string) bool {
+	for _, b := range a {
+		if b == x {
+			return true
+		}
+	}
+	return false
+}
 
 func StringInSliceFold(a []string, x string) bool {
 	for _, b := range a {
@@ -26,6 +38,30 @@ func StringInSliceFold(a []string, x string) bool {
 			return true
 		}
 	}
+	return false
+}
+
+// ClusterExists returns true if a cluster exists in the automation config for the given name.
+func ClusterExists(c *opsmngr.AutomationConfig, name string) bool {
+	_, rsFound := search.ReplicaSets(c.ReplicaSets, func(r *opsmngr.ReplicaSet) bool {
+		return r.ID == name
+	})
+
+	_, shardedFound := search.ShardingConfig(c.Sharding, func(r *opsmngr.ShardingConfig) bool {
+		return r.Name == name
+	})
+
+	return rsFound || shardedFound
+}
+
+// AtlasClusterExists returns true if a cluster exists for the given name.
+func AtlasClusterExists(clusters []atlas.Cluster, name string) bool {
+	for i := range clusters {
+		if clusters[i].Name == name {
+			return true
+		}
+	}
+
 	return false
 }
 

@@ -1,9 +1,15 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
-GOLANGCI_VERSION=v1.56.2
+GOLANGCI_VERSION=v1.55.2
 COVERAGE=coverage.out
 
+MCLI_SOURCE_FILES?=./cmd/mongocli
+MCLI_BINARY_NAME=mongocli
+MCLI_VERSION?=$(shell git describe --match "mongocli/v*" | cut -d "v" -f 2)
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
+MCLI_DESTINATION=./bin/$(MCLI_BINARY_NAME)
+MCLI_INSTALL_PATH="${GOPATH}/bin/$(MCLI_BINARY_NAME)"
+MCLI_E2E_BINARY?=../../../bin/${MCLI_BINARY_NAME}
 
 ATLAS_SOURCE_FILES?=./cmd/atlas
 ATLAS_BINARY_NAME=atlas
@@ -11,14 +17,16 @@ ATLAS_VERSION?=$(shell git describe --match "atlascli/v*" | cut -d "v" -f 2)
 ATLAS_DESTINATION=./bin/$(ATLAS_BINARY_NAME)
 ATLAS_INSTALL_PATH="${GOPATH}/bin/$(ATLAS_BINARY_NAME)"
 
-LINKER_FLAGS=-s -w -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.GitCommit=${MCLI_GIT_SHA}
-ATLAS_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.Version=${ATLAS_VERSION}
+LINKER_FLAGS=-s -w -X github.com/mongodb/mongodb-atlas-cli/internal/version.GitCommit=${MCLI_GIT_SHA}
+MCLI_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=$(MCLI_BINARY_NAME) -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${MCLI_VERSION}
+ATLAS_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=atlascli -X github.com/mongodb/mongodb-atlas-cli/internal/version.Version=${ATLAS_VERSION}
 ATLAS_E2E_BINARY?=../../../bin/${ATLAS_BINARY_NAME}
 
 DEBUG_FLAGS=all=-N -l
 
 TEST_CMD?=go test
 UNIT_TAGS?=unit
+INTEGRATION_TAGS?=integration
 E2E_TAGS?=e2e
 E2E_TIMEOUT?=60m
 E2E_PARALLEL?=1
@@ -28,7 +36,7 @@ export PATH := $(shell go env GOPATH)/bin:$(PATH)
 export PATH := ./bin:$(PATH)
 export TERM := linux-m
 export GO111MODULE := on
-export GOTOOLCHAIN := local
+export MCLI_E2E_BINARY
 export ATLAS_E2E_BINARY
 
 .PHONY: pre-commit
@@ -72,7 +80,7 @@ fmt-all: ### Format all go files with goimports and gofmt
 	find . -name "*.go" -not -path "./vendor/*" -not -path "./internal/mocks" -exec goimports -l -w "{}" \;
 
 .PHONY: test
-test: unit-test fuzz-normalizer-test
+test: unit-test integration-test fuzz-normalizer-test
 
 .PHONY: lint
 lint: ## Run linter
@@ -84,10 +92,6 @@ fix-lint: ## Fix linting errors
 
 .PHONY: check
 check: test fix-lint ## Run tests and linters
-
-.PHONY: check-templates
-check-templates:
-	go run ./tools/templates-checker
 
 .PHONY: addcopy
 addcopy:
@@ -104,29 +108,60 @@ gen-code: ## Generate code
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
 	@echo "==> Generating mocks"
-	rm -rf ./internal/mocks
 	go generate ./internal...
 
 .PHONY: gen-docs
-gen-docs: ## Generate docs for atlascli commands
-	@echo "==> Generating docs"
-	go run -ldflags "$(ATLAS_LINKER_FLAGS)" ./tools/docs/main.go
+gen-docs: gen-docs-mongocli gen-docs-atlascli ## Generate docs for commands
+
+.PHONY: gen-docs-mongocli
+gen-docs-mongocli: ## Generate docs for mongocli commands
+	@echo "==> Generating docs for mongocli"
+	go run -ldflags "$(MCLI_LINKER_FLAGS)" ./tools/mongoclidocs/main.go
+
+.PHONY: gen-docs-atlascli
+gen-docs-atlascli: ## Generate docs for atlascli commands
+	@echo "==> Generating docs for atlascli"
+	go run -ldflags "$(ATLAS_LINKER_FLAGS)" ./tools/atlasclidocs/main.go
 
 .PHONY: build
-build: ## Generate an atlas binary in ./bin
+build: build-mongocli ## Generate a binary for mongocli
+
+.PHONY: build-all
+build-all: build-mongocli build-atlascli ## Generate a binary for both CLIs
+
+.PHONY: build-mongocli
+build-mongocli: ## Generate a mongocli binary in ./bin
+	@echo "==> Building $(MCLI_BINARY_NAME) binary"
+	go build -ldflags "$(MCLI_LINKER_FLAGS)" -o $(MCLI_DESTINATION) $(MCLI_SOURCE_FILES)
+
+.PHONY: build-atlascli
+build-atlascli: ## Generate a atlascli binary in ./bin
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary"
 	go build -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: build-debug
-build-debug: ## Generate a binary in ./bin for debugging atlascli
+build-debug: build-mongocli-debug build-atlascli-debug ## Generate binaries in ./bin for debugging both CLIs
+
+.PHONY: build-mongocli-debug
+build-mongocli-debug: ## Generate a binary in ./bin for debugging mongocli
+	@echo "==> Building $(MCLI_BINARY_NAME) binary for debugging"
+	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(MCLI_LINKER_FLAGS)" -o $(MCLI_DESTINATION) $(MCLI_SOURCE_FILES)
+
+.PHONY: build-atlascli-debug
+build-atlascli-debug: ## Generate a binary in ./bin for debugging atlascli
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary for debugging"
 	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: e2e-test
-e2e-test: build ## Run E2E tests
+e2e-test: build-all ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	# the target assumes the MCLI_* environment variables are exported
 	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
+
+.PHONY: integration-test
+integration-test: ## Run integration tests
+	@echo "==> Running integration tests..."
+	$(TEST_CMD) --tags="$(INTEGRATION_TAGS)" -count=1 ./internal...
 
 .PHONY: fuzz-normalizer-test
 fuzz-normalizer-test: ## Run fuzz test
@@ -139,6 +174,16 @@ unit-test: ## Run unit-tests
 	$(TEST_CMD) --tags="$(UNIT_TAGS)" -race -cover -count=1 -coverprofile $(COVERAGE) ./...
 
 .PHONY: install
+install: install-mongocli install-atlascli ## Install binaries in $GOPATH/bin for both CLIs
+
+.PHONY: install-mongocli
+install-mongocli: ## Install mongocli binary in $GOPATH/bin
+	@echo "==> Installing $(MCLI_BINARY_NAME) to $(MCLI_INSTALL_PATH)"
+	go install -ldflags "$(MCLI_LINKER_FLAGS)" $(MCLI_SOURCE_FILES)
+	@echo "==> Done..."
+
+.PHONY: install-atlascli
+install-atlascli: ## Install atlascli binary in $GOPATH/bin
 	@echo "==> Installing $(ATLAS_BINARY_NAME) to $(ATLAS_INSTALL_PATH)"
 	go install -ldflags "$(ATLAS_LINKER_FLAGS)" $(ATLAS_SOURCE_FILES)
 	@echo "==> Done..."

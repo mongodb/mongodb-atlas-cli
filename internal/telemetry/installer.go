@@ -15,7 +15,7 @@
 package telemetry
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/homebrew"
+	"github.com/andreaangiolillo/mongocli-test/internal/homebrew"
 	"github.com/spf13/afero"
 )
 

@@ -1,0 +1,4 @@
+{"atype":"decryptionLogError","line":1,"error":"error processing header line 1: key provider not supported: aws","ts":1644232049921}
+{"atype":"decryptionLogWarning","line":2,"error":"line 2 skipped, the header record for current section is missing or corrupted","ts":1644232049922}
+{"atype":"decryptionLogWarning","line":3,"error":"line 3 skipped, the header record for current section is missing or corrupted","ts":1644232050645}
+{"atype":"decryptionLogWarning","line":4,"error":"line 4 skipped, the header record for current section is missing or corrupted","ts":1644232050645}

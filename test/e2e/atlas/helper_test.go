@@ -16,7 +16,6 @@
 package atlas_test
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -28,82 +27,78 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
-	eventsEntity                  = "events"
-	clustersEntity                = "clusters"
-	processesEntity               = "processes"
-	metricsEntity                 = "metrics"
-	searchEntity                  = "search"
-	indexEntity                   = "index"
-	nodesEntity                   = "nodes"
-	datafederationEntity          = "datafederation"
-	datalakePipelineEntity        = "datalakepipeline"
-	alertsEntity                  = "alerts"
-	configEntity                  = "settings"
-	dbusersEntity                 = "dbusers"
-	certsEntity                   = "certs"
-	privateEndpointsEntity        = "privateendpoints"
-	queryLimitsEntity             = "querylimits"
-	onlineArchiveEntity           = "onlineArchives"
-	projectEntity                 = "project"
-	orgEntity                     = "org"
-	invitationsEntity             = "invitations"
-	maintenanceEntity             = "maintenanceWindows"
-	integrationsEntity            = "integrations"
-	securityEntity                = "security"
-	ldapEntity                    = "ldap"
-	awsEntity                     = "aws"
-	azureEntity                   = "azure"
-	gcpEntity                     = "gcp"
-	customDNSEntity               = "customDns"
-	logsEntity                    = "logs"
-	cloudProvidersEntity          = "cloudProviders"
-	accessRolesEntity             = "accessRoles"
-	customDBRoleEntity            = "customDbRoles"
-	regionalModeEntity            = "regionalModes"
-	serverlessEntity              = "serverless"
-	liveMigrationsEntity          = "liveMigrations"
-	auditingEntity                = "auditing"
-	accessLogsEntity              = "accessLogs"
-	accessListEntity              = "accessList"
-	performanceAdvisorEntity      = "performanceAdvisor"
-	slowQueryLogsEntity           = "slowQueryLogs"
-	namespacesEntity              = "namespaces"
-	networkingEntity              = "networking"
-	networkPeeringEntity          = "peering"
-	suggestedIndexesEntity        = "suggestedIndexes"
-	slowOperationThresholdEntity  = "slowOperationThreshold"
-	tierM10                       = "M10"
-	tierM0                        = "M0"
-	tierM2                        = "M2"
-	diskSizeGB40                  = "40"
-	diskSizeGB30                  = "30"
-	projectsEntity                = "projects"
-	settingsEntity                = "settings"
-	backupsEntity                 = "backups"
-	exportsEntity                 = "exports"
-	bucketsEntity                 = "buckets"
-	jobsEntity                    = "jobs"
-	snapshotsEntity               = "snapshots"
-	restoresEntity                = "restores"
-	compliancePolicyEntity        = "compliancepolicy"
-	policiesEntity                = "policies"
-	teamsEntity                   = "teams"
-	setupEntity                   = "setup"
-	deploymentEntity              = "deployments"
-	federatedAuthenticationEntity = "federatedAuthentication"
-	federationSettingsEntity      = "federationSettings"
-	identityProviderEntity        = "identityProvider"
-	connectedOrgsConfigsEntity    = "connectedOrgConfigs"
-	deletingState                 = "DELETING"
-	authEntity                    = "auth"
+	eventsEntity                 = "events"
+	clustersEntity               = "clusters"
+	processesEntity              = "processes"
+	metricsEntity                = "metrics"
+	searchEntity                 = "search"
+	indexEntity                  = "index"
+	datalakeEntity               = "datalake"
+	datafederationEntity         = "datafederation"
+	datalakePipelineEntity       = "datalakepipeline"
+	alertsEntity                 = "alerts"
+	configEntity                 = "settings"
+	dbusersEntity                = "dbusers"
+	certsEntity                  = "certs"
+	privateEndpointsEntity       = "privateendpoints"
+	queryLimitsEntity            = "querylimits"
+	onlineArchiveEntity          = "onlineArchives"
+	projectEntity                = "project"
+	orgEntity                    = "org"
+	invitationsEntity            = "invitations"
+	maintenanceEntity            = "maintenanceWindows"
+	integrationsEntity           = "integrations"
+	securityEntity               = "security"
+	ldapEntity                   = "ldap"
+	awsEntity                    = "aws"
+	azureEntity                  = "azure"
+	gcpEntity                    = "gcp"
+	customDNSEntity              = "customDns"
+	logsEntity                   = "logs"
+	cloudProvidersEntity         = "cloudProviders"
+	accessRolesEntity            = "accessRoles"
+	customDBRoleEntity           = "customDbRoles"
+	regionalModeEntity           = "regionalModes"
+	serverlessEntity             = "serverless"
+	liveMigrationsEntity         = "liveMigrations"
+	auditingEntity               = "auditing"
+	accessLogsEntity             = "accessLogs"
+	accessListEntity             = "accessList"
+	performanceAdvisorEntity     = "performanceAdvisor"
+	slowQueryLogsEntity          = "slowQueryLogs"
+	namespacesEntity             = "namespaces"
+	networkingEntity             = "networking"
+	networkPeeringEntity         = "peering"
+	suggestedIndexesEntity       = "suggestedIndexes"
+	slowOperationThresholdEntity = "slowOperationThreshold"
+	tierM10                      = "M10"
+	tierM0                       = "M0"
+	tierM2                       = "M2"
+	diskSizeGB40                 = "40"
+	diskSizeGB30                 = "30"
+	projectsEntity               = "projects"
+	settingsEntity               = "settings"
+	backupsEntity                = "backups"
+	exportsEntity                = "exports"
+	bucketsEntity                = "buckets"
+	jobsEntity                   = "jobs"
+	snapshotsEntity              = "snapshots"
+	restoresEntity               = "restores"
+	compliancePolicyEntity       = "compliancepolicy"
+	policiesEntity               = "policies"
+	teamsEntity                  = "teams"
+	setupEntity                  = "setup"
+	deploymentEntity             = "deployments"
+	deletingState                = "DELETING"
+	authEntity                   = "auth"
 )
 
 // AlertConfig constants.
@@ -134,6 +129,8 @@ const (
 	e2eGovClusterTier    = "M20"
 	e2eSharedClusterTier = "M2"
 	e2eClusterProvider   = "AWS" // e2eClusterProvider preferred provider for e2e testing.
+	e2eMDBVer            = "4.4"
+	e2eSharedMDBVer      = "6.0"
 )
 
 // Backup compliance policy constants.
@@ -142,23 +139,6 @@ const (
 	authorizedUserLastName  = "lastname"
 	authorizedEmail         = "firstname.lastname@example.com"
 )
-
-// Local Development constants.
-const (
-	collectionName  = "myCol"
-	databaseName    = "myDB"
-	searchIndexName = "indexTest"
-	vectorSearchDB  = "sample_mflix"
-	vectorSearchCol = "embedded_movies"
-)
-
-func splitOutput(cmd *exec.Cmd) (string, string, error) {
-	var o, e bytes.Buffer
-	cmd.Stdout = &o
-	cmd.Stderr = &e
-	err := cmd.Run()
-	return o.String(), e.String(), err
-}
 
 func deployServerlessInstanceForProject(projectID string) (string, error) {
 	cliPath, err := e2e.AtlasCLIBin()
@@ -249,7 +229,7 @@ func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, cluste
 	_ = watchServerlessInstanceForProject(projectID, clusterName)
 }
 
-func deployClusterForProject(projectID, tier, mDBVersion string, enableBackup bool) (string, string, error) {
+func deployClusterForProject(projectID, tier string, enableBackup bool) (string, string, error) {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		return "", "", err
@@ -266,7 +246,7 @@ func deployClusterForProject(projectID, tier, mDBVersion string, enableBackup bo
 		clustersEntity,
 		"create",
 		clusterName,
-		"--mdbVersion", mDBVersion,
+		"--mdbVersion", e2eMDBVer,
 		"--region", region,
 		"--tier", tier,
 		"--provider", e2eClusterProvider,
@@ -442,11 +422,11 @@ func newAvailableRegion(projectID, tier, provider string) (string, error) {
 		return "", fmt.Errorf("error unmarshaling response %w: %s", err, string(resp))
 	}
 
-	if cloudProviders.GetTotalCount() == 0 || len(cloudProviders.GetResults()[0].GetInstanceSizes()) == 0 {
+	if cloudProviders.GetTotalCount() == 0 || len(cloudProviders.GetResults()[0].InstanceSizes) == 0 {
 		return "", errNoRegions
 	}
 
-	return cloudProviders.GetResults()[0].GetInstanceSizes()[0].GetAvailableRegions()[0].GetName(), nil
+	return cloudProviders.Results[0].GetInstanceSizes()[0].GetAvailableRegions()[0].GetName(), nil
 }
 
 func RandClusterName() (string, error) {
@@ -458,17 +438,6 @@ func RandClusterName() (string, error) {
 		return fmt.Sprintf("cluster-%v-%s", n, revision), nil
 	}
 	return fmt.Sprintf("cluster-%v", n), nil
-}
-
-func RandIdentityProviderName() (string, error) {
-	n, err := e2e.RandInt(1000)
-	if err != nil {
-		return "", err
-	}
-	if revision, ok := os.LookupEnv("revision"); ok {
-		return fmt.Sprintf("idp-%v-%s", n, revision), nil
-	}
-	return fmt.Sprintf("idp-%v", n), nil
 }
 
 func RandTeamName() (string, error) {
@@ -553,7 +522,7 @@ func MongoDBMajorVersion() (string, error) {
 }
 
 func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedIntegration) bool {
-	services := thirdPartyIntegrations.GetResults()
+	services := thirdPartyIntegrations.Results
 	for i := range services {
 		iType := getIntegrationType(services[i])
 		if iType == name {
@@ -563,7 +532,7 @@ func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedInte
 	return false
 }
 
-func getIntegrationType(val atlasv2.ThirdPartyIntegration) string {
+func getIntegrationType(val atlasv2.ThridPartyIntegration) string {
 	return val.GetType()
 }
 
@@ -597,7 +566,7 @@ func getFirstOrgUser() (string, error) {
 		return "", fmt.Errorf("no users found")
 	}
 
-	return users.GetResults()[0].Username, nil
+	return users.Results[0].Username, nil
 }
 
 func createTeam(teamName, userName string) (string, error) {
@@ -679,12 +648,12 @@ func createProjectWithoutAlertSettings(projectName string) (string, error) {
 		return "", fmt.Errorf("%s (%w)", string(resp), err)
 	}
 
-	var project atlasv2.Group
+	var project mongodbatlas.Project
 	if err := json.Unmarshal(resp, &project); err != nil {
 		return "", fmt.Errorf("invalid response: %s (%w)", string(resp), err)
 	}
 
-	return project.GetId(), nil
+	return project.ID, nil
 }
 
 func listClustersForProject(t *testing.T, cliPath, projectID string) atlasv2.PaginatedAdvancedClusterDescription {
@@ -706,15 +675,15 @@ func listClustersForProject(t *testing.T, cliPath, projectID string) atlasv2.Pag
 func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 	clusters := listClustersForProject(t, cliPath, projectID)
-	for _, cluster := range clusters.GetResults() {
+	for _, cluster := range clusters.Results {
 		func(clusterName, state string) {
-			t.Run("delete cluster "+clusterName, func(t *testing.T) {
+			t.Run(fmt.Sprintf("delete cluster %s\n", clusterName), func(t *testing.T) {
 				t.Parallel()
 				if state == deletingState {
 					_ = watchCluster(projectID, clusterName)
 					return
 				}
-				assert.NoError(t, deleteClusterForProject(projectID, clusterName))
+				assert.NoError(t, deleteClusterForProject(projectID, clusterName)) //nolint: testifylint // we want to check all instead of failing early
 			})
 		}(cluster.GetName(), cluster.GetStateName())
 	}
@@ -734,7 +703,7 @@ func deleteDatapipelinesForProject(t *testing.T, cliPath, projectID string) {
 	var pipelines []atlasv2.DataLakeIngestionPipeline
 	require.NoError(t, json.Unmarshal(resp, &pipelines))
 	for _, p := range pipelines {
-		assert.NoError(t, deleteDatalakeForProject(cliPath, projectID, p.GetName()))
+		assert.NoError(t, deleteDatalakeForProject(cliPath, projectID, p.GetName())) //nolint: testifylint // we want to check all instead of failing early
 	}
 }
 
@@ -770,7 +739,7 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 		)
 		cmd.Env = os.Environ()
 		resp, err = cmd.CombinedOutput()
-		assert.NoError(t, err, string(resp))
+		assert.NoError(t, err, string(resp)) //nolint: testifylint // we want to check all instead of failing early
 	}
 }
 
@@ -813,7 +782,8 @@ func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider st
 	t.Log(string(resp))
 	require.NoError(t, err, string(resp))
 	var privateEndpoints []atlasv2.EndpointService
-	require.NoError(t, json.Unmarshal(resp, &privateEndpoints))
+	err = json.Unmarshal(resp, &privateEndpoints)
+	require.NoError(t, err)
 
 	return privateEndpoints
 }
@@ -973,7 +943,7 @@ func deleteAllServerlessInstances(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
 	serverlessInstances := listServerlessByProject(t, cliPath, projectID)
-	for _, serverless := range serverlessInstances.GetResults() {
+	for _, serverless := range serverlessInstances.Results {
 		func(serverlessInstance, state string) {
 			t.Run(fmt.Sprintf("delete serverless instance %s\n", serverlessInstance), func(t *testing.T) {
 				t.Parallel()

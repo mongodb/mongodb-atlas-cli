@@ -1,0 +1,2 @@
+{"atype":"decryptionLogError","line":2,"error":"logRecordIdx missmatch: expected 1 got 2","ts":1644232050645}
+{"ts":{"$date":"2022-02-07T11:07:30.645Z"},"atype":"createDatabase","uuid":{"$binary":{"base64":"+mOPbB12RDGgTsXXjR8R/A==","subType":"04"}},"local":{"isSystemUser":true},"remote":{"isSystemUser":true},"users":[],"param":{"ns":"admin"},"roles":[],"result":0}

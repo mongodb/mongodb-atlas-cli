@@ -19,8 +19,8 @@ package config
 import (
 	"testing"
 
+	"github.com/andreaangiolillo/mongocli-test/internal/mocks"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 )
 
 func TestSet_Run(t *testing.T) {

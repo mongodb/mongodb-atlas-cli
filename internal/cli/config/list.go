@@ -15,14 +15,16 @@
 package config
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"fmt"
+
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	"github.com/andreaangiolillo/mongocli-test/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-var listTemplate = `PROFILE NAME{{range valueOrEmptySlice .}}
+var listTemplate = `PROFILE NAME{{range .}}
 {{.}}{{end}}
 `
 
@@ -42,11 +44,11 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   "Return a list of available profiles by name.",
 		Long:    `If you did not specify a name for your profile, it displays as the default profile.`,
-		Example: "  atlas config ls",
-		PreRun: func(cmd *cobra.Command, _ []string) {
+		Example: fmt.Sprintf("  %s config ls", config.BinName()),
+		PreRun: func(cmd *cobra.Command, args []string) {
 			o.OutWriter = cmd.OutOrStdout()
 		},
-		RunE: func(_ *cobra.Command, _ []string) error {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			return o.Run()
 		},
 	}

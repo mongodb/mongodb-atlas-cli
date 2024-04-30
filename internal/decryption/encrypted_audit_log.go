@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/decryption/keyproviders"
+	"github.com/andreaangiolillo/mongocli-test/internal/decryption/keyproviders"
 )
 
 var (
@@ -32,6 +32,13 @@ type AuditRecordType string
 
 type AuditLogLineKeyStoreIdentifier struct {
 	Provider *keyproviders.KeyStoreProvider `json:"provider,omitempty"`
+	// localKey
+	Filename string `json:"filename,omitempty"`
+	// kmip
+	UID            string                         `json:"uniqueKeyID,omitempty"`
+	KMIPServerName []string                       `json:"kmipServerName,omitempty"`
+	KMIPPort       int                            `json:"kmipPort,omitempty"`
+	KeyWrapMethod  keyproviders.KMIPKeyWrapMethod `json:"keyWrapMethod,omitempty"`
 	// aws
 	Key      string `json:"key,omitempty"`
 	Region   string `json:"region,omitempty"`
@@ -69,6 +76,29 @@ func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.Key
 	}
 
 	switch *logLine.KeyStoreIdentifier.Provider {
+	case keyproviders.LocalKey:
+		if opts.Local == nil {
+			return nil, fmt.Errorf("%w: %s", ErrKeyProviderNotSupported, *logLine.KeyStoreIdentifier.Provider)
+		}
+		return &keyproviders.LocalKeyIdentifier{
+			HeaderFilename: logLine.KeyStoreIdentifier.Filename,
+			Filename:       opts.Local.KeyFileName,
+		}, nil
+	case keyproviders.KMIP:
+		if opts.KMIP == nil {
+			return nil, fmt.Errorf("%w: %s", ErrKeyProviderNotSupported, *logLine.KeyStoreIdentifier.Provider)
+		}
+		return &keyproviders.KMIPKeyIdentifier{
+			UniqueKeyID:               logLine.KeyStoreIdentifier.UID,
+			ServerNames:               logLine.KeyStoreIdentifier.KMIPServerName,
+			ServerPort:                logLine.KeyStoreIdentifier.KMIPPort,
+			KeyWrapMethod:             logLine.KeyStoreIdentifier.KeyWrapMethod,
+			ServerCAFileName:          opts.KMIP.ServerCAFileName,
+			ClientCertificateFileName: opts.KMIP.ClientCertificateFileName,
+			ClientCertificatePassword: opts.KMIP.ClientCertificatePassword,
+			Username:                  opts.KMIP.Username,
+			Password:                  opts.KMIP.Password,
+		}, nil
 	case keyproviders.AWS:
 		if opts.AWS == nil {
 			return nil, fmt.Errorf("%w: %s", ErrKeyProviderNotSupported, *logLine.KeyStoreIdentifier.Provider)

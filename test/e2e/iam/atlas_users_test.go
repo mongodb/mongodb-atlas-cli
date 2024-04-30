@@ -23,10 +23,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestAtlasUsers(t *testing.T) {
@@ -51,8 +51,8 @@ func TestAtlasUsers(t *testing.T) {
 		var users atlasv2.PaginatedApiAppUser
 		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
 		require.NotEmpty(t, users.Results)
-		username = users.GetResults()[0].GetUsername()
-		userID = users.GetResults()[0].GetId()
+		username = users.Results[0].GetUsername()
+		userID = users.Results[0].GetId()
 	})
 
 	t.Run("Describe by username", func(t *testing.T) {
@@ -71,7 +71,7 @@ func TestAtlasUsers(t *testing.T) {
 		assert.Equal(t, username, user.GetUsername())
 		for i, item := range user.GetRoles() {
 			if item.HasOrgId() {
-				orgID = user.GetRoles()[i].GetOrgId()
+				orgID = user.Roles[i].GetOrgId()
 				break
 			}
 		}
@@ -98,9 +98,6 @@ func TestAtlasUsers(t *testing.T) {
 		n, err := e2e.RandInt(10000)
 		require.NoError(t, err)
 		emailUser := fmt.Sprintf("cli-test-%v@moongodb.com", n)
-		if revision, ok := os.LookupEnv("revision"); ok {
-			emailUser = fmt.Sprintf("cli-test-%v-%s@moongodb.com", n, revision)
-		}
 		t.Log("emailUser", emailUser, "orgID", orgID)
 		cmd := exec.Command(cliPath,
 			usersEntity,

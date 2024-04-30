@@ -20,15 +20,16 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"slices"
 	"sort"
 	"strings"
+
+	"github.com/andreaangiolillo/mongocli-test/internal/search"
 )
 
-// StableIDs is a struct that holds a list of OpenAPI operation IDs.
+// StableIds is a struct that holds a list of OpenAPI operation IDs.
 // We rely on SDK convention to name methods based on operations IDs.
-type StableIDs struct {
-	StableIDs []string `json:"stableIds"`
+type StableIds struct {
+	StableIds []string `json:"stableIds"`
 }
 
 // Generating list of used GO SDK operation IDs.
@@ -36,7 +37,7 @@ func main() {
 	argsNumber := 3
 	// Check if the folder path is provided as a command-line argument
 	if len(os.Args) != argsNumber {
-		_, _ = fmt.Fprintln(os.Stderr, "Usage: go run main.go <folder_path> <output_file>")
+		fmt.Fprintln(os.Stderr, "Usage: go run main.go <folder_path> <output_file>")
 		os.Exit(1)
 	}
 
@@ -44,11 +45,11 @@ func main() {
 	outputFile := os.Args[2]
 
 	if folderPath == "" {
-		_, _ = fmt.Fprintln(os.Stderr, "Please provide a folder path")
+		fmt.Fprintln(os.Stderr, "Please provide a folder path")
 		os.Exit(1)
 	}
 	if outputFile == "" {
-		_, _ = fmt.Fprintln(os.Stderr, "Please provide an output file")
+		fmt.Fprintln(os.Stderr, "Please provide an output file")
 		os.Exit(1)
 	}
 
@@ -58,27 +59,27 @@ func main() {
 	// Compile the regular expression
 	regex, err := regexp.Compile(pattern)
 	if err != nil {
-		_, _ = fmt.Fprintln(os.Stderr, "Error compiling regular expression:", err)
+		fmt.Fprintln(os.Stderr, "Error compiling regular expression:", err)
 		os.Exit(1)
 	}
 	// Perform regexp search on all Go files
-	stableIDs, err := walkFiles(folderPath, regex)
+	stableIds, err := walkFiles(folderPath, regex)
 	if err != nil {
-		_, _ = fmt.Fprintln(os.Stderr, "Error walking through directory:", err)
+		fmt.Fprintln(os.Stderr, "Error walking through directory:", err)
 		os.Exit(1)
 	}
-	sort.Strings(stableIDs.StableIDs)
+	sort.Strings(stableIds.StableIds)
 
-	err = writeStringsToJSONFile(*stableIDs, outputFile)
+	err = writeStringsToJSONFile(*stableIds, outputFile)
 	if err != nil {
-		_, _ = fmt.Fprintln(os.Stderr, "Error saving operations file:", err)
+		fmt.Fprintln(os.Stderr, "Error saving operations file:", err)
 		os.Exit(1)
 	}
 }
 
-func walkFiles(folderPath string, regex *regexp.Regexp) (*StableIDs, error) {
-	stableIDs := StableIDs{
-		StableIDs: []string{},
+func walkFiles(folderPath string, regex *regexp.Regexp) (*StableIds, error) {
+	stableIds := StableIds{
+		StableIds: []string{},
 	}
 	err := filepath.Walk(folderPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -100,18 +101,18 @@ func walkFiles(folderPath string, regex *regexp.Regexp) (*StableIDs, error) {
 					value = strings.TrimSuffix(value, "WithParams")
 					value = strings.TrimSpace(value)
 					value = strings.ToLower(value[:1]) + value[1:]
-					if !slices.Contains(stableIDs.StableIDs, value) {
-						stableIDs.StableIDs = append(stableIDs.StableIDs, value)
+					if !search.StringInSlice(stableIds.StableIds, value) {
+						stableIds.StableIds = append(stableIds.StableIds, value)
 					}
 				}
 			}
 		}
 		return nil
 	})
-	return &stableIDs, err
+	return &stableIds, err
 }
 
-func writeStringsToJSONFile(values StableIDs, filename string) error {
+func writeStringsToJSONFile(values StableIds, filename string) error {
 	file, err := os.Create(filename)
 	if err != nil {
 		return err

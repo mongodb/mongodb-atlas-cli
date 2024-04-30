@@ -20,7 +20,7 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	"github.com/stretchr/testify/require"
 )
 
@@ -52,7 +52,7 @@ func TestLinkToken(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		require.NoError(t, err, string(resp))
+		r.NoError(err, string(resp))
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -64,6 +64,6 @@ func TestLinkToken(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		require.NoError(t, err, string(resp))
+		r.NoError(err, string(resp))
 	})
 }

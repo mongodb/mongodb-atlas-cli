@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2020 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,37 +15,56 @@
 package store
 
 import (
-	"go.mongodb.org/atlas-sdk/v20231115012/admin"
+	"fmt"
+
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_alerts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store AlertDescriber,AlertLister,AlertAcknowledger
+//go:generate mockgen -destination=../mocks/mock_alerts.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store AlertDescriber,AlertLister,AlertAcknowledger
 
 type AlertDescriber interface {
-	Alert(*admin.GetAlertApiParams) (*admin.AlertViewForNdsGroup, error)
+	Alert(string, string) (*opsmngr.Alert, error)
 }
 
 type AlertLister interface {
-	Alerts(*admin.ListAlertsApiParams) (*admin.PaginatedAlert, error)
+	Alerts(string, *opsmngr.AlertsListOptions) (*atlas.AlertsResponse, error)
 }
 
 type AlertAcknowledger interface {
-	AcknowledgeAlert(*admin.AcknowledgeAlertApiParams) (*admin.AlertViewForNdsGroup, error)
+	AcknowledgeAlert(string, string, *opsmngr.AcknowledgeRequest) (*atlas.Alert, error)
 }
 
 // Alert encapsulate the logic to manage different cloud providers.
-func (s *Store) Alert(params *admin.GetAlertApiParams) (*admin.AlertViewForNdsGroup, error) {
-	result, _, err := s.clientv2.AlertsApi.GetAlertWithParams(s.ctx, params).Execute()
-	return result, err
+func (s *Store) Alert(projectID, alertID string) (*atlas.Alert, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Alerts.Get(s.ctx, projectID, alertID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // Alerts encapsulate the logic to manage different cloud providers.
-func (s *Store) Alerts(params *admin.ListAlertsApiParams) (*admin.PaginatedAlert, error) {
-	result, _, err := s.clientv2.AlertsApi.ListAlertsWithParams(s.ctx, params).Execute()
-	return result, err
+func (s *Store) Alerts(projectID string, opts *opsmngr.AlertsListOptions) (*opsmngr.AlertsResponse, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Alerts.List(s.ctx, projectID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
-// AcknowledgeAlert encapsulate the logic to manage different cloud providers.
-func (s *Store) AcknowledgeAlert(params *admin.AcknowledgeAlertApiParams) (*admin.AlertViewForNdsGroup, error) {
-	result, _, err := s.clientv2.AlertsApi.AcknowledgeAlertWithParams(s.ctx, params).Execute()
-	return result, err
+// Acknowledge encapsulate the logic to manage different cloud providers.
+func (s *Store) AcknowledgeAlert(projectID, alertID string, body *opsmngr.AcknowledgeRequest) (*atlas.Alert, error) {
+	switch s.service {
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Alerts.Acknowledge(s.ctx, projectID, alertID, body)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }

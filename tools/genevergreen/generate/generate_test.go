@@ -24,15 +24,69 @@ import (
 )
 
 func TestPublishSnapshotTasks(t *testing.T) {
-	c := &shrub.Configuration{}
-	PublishSnapshotTasks(c)
-	assert.Len(t, c.Tasks, 34)
-	assert.Len(t, c.Variants, 2)
+	type args struct {
+		c        *shrub.Configuration
+		toolName string
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: atlascli,
+			args: args{
+				c:        &shrub.Configuration{},
+				toolName: atlascli,
+			},
+		},
+		{
+			name: mongocli,
+			args: args{
+				c:        &shrub.Configuration{},
+				toolName: mongocli,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := tt.args.c
+			PublishSnapshotTasks(c, tt.args.toolName)
+			assert.Len(t, c.Tasks, 34)
+			assert.Len(t, c.Variants, 2)
+		})
+	}
 }
 
 func TestPublishStableTasks(t *testing.T) {
-	c := &shrub.Configuration{}
-	PublishStableTasks(c)
-	assert.Len(t, c.Variants, 4)
-	assert.Len(t, c.Tasks, 136)
+	type args struct {
+		c        *shrub.Configuration
+		toolName string
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: atlascli,
+			args: args{
+				c:        &shrub.Configuration{},
+				toolName: atlascli,
+			},
+		},
+		{
+			name: mongocli,
+			args: args{
+				c:        &shrub.Configuration{},
+				toolName: mongocli,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := tt.args.c
+			PublishStableTasks(c, tt.args.toolName)
+			assert.Len(t, c.Variants, 4)
+			assert.Len(t, c.Tasks, 136)
+		})
+	}
 }

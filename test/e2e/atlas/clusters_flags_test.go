@@ -17,16 +17,14 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
 
-	"github.com/Masterminds/semver/v3"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 const writeConcern = "majority"
@@ -46,12 +44,6 @@ func TestClustersFlags(t *testing.T) {
 	region, err := g.newAvailableRegion(tier, e2eClusterProvider)
 	req.NoError(err)
 
-	mdbVersion, err := MongoDBMajorVersion()
-	req.NoError(err)
-
-	previousMdbVersion, err := getPreviousMajorVersion(mdbVersion)
-	req.NoError(err)
-
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -61,7 +53,7 @@ func TestClustersFlags(t *testing.T) {
 			"--members=3",
 			"--tier", tier,
 			"--provider", e2eClusterProvider,
-			"--mdbVersion", previousMdbVersion,
+			"--mdbVersion", e2eMDBVer,
 			"--diskSizeGB", diskSizeGB30,
 			"--enableTerminationProtection",
 			"--projectId", g.projectID,
@@ -69,12 +61,13 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err, string(resp))
 
 		var cluster *atlasv2.AdvancedClusterDescription
-		require.NoError(t, json.Unmarshal(resp, &cluster))
+		err = json.Unmarshal(resp, &cluster)
+		req.NoError(err)
 
-		ensureCluster(t, cluster, clusterName, previousMdbVersion, 30, true)
+		ensureCluster(t, cluster, clusterName, e2eMDBVer, 30, true)
 	})
 
 	t.Run("Load Sample Data", func(t *testing.T) {
@@ -87,11 +80,14 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err, string(resp))
 
 		var job *atlasv2.SampleDatasetStatus
-		require.NoError(t, json.Unmarshal(resp, &job))
-		assert.Equal(t, clusterName, job.GetClusterName())
+		err = json.Unmarshal(resp, &job)
+		req.NoError(err)
+
+		a := assert.New(t)
+		a.Equal(clusterName, job.GetClusterName())
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -102,11 +98,14 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err, string(resp))
 
 		var clusters atlasv2.PaginatedAdvancedClusterDescription
-		require.NoError(t, json.Unmarshal(resp, &clusters))
-		assert.NotEmpty(t, clusters.Results)
+		err = json.Unmarshal(resp, &clusters)
+		req.NoError(err)
+
+		a := assert.New(t)
+		a.NotEmpty(clusters.Results)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -118,11 +117,14 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err, string(resp))
 
 		var cluster atlasv2.AdvancedClusterDescription
-		require.NoError(t, json.Unmarshal(resp, &cluster))
-		assert.Equal(t, clusterName, cluster.GetName())
+		err = json.Unmarshal(resp, &cluster)
+		req.NoError(err)
+
+		a := assert.New(t)
+		a.Equal(clusterName, cluster.GetName())
 	})
 
 	t.Run("Describe Connection String", func(t *testing.T) {
@@ -135,10 +137,11 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err, string(resp))
 
 		var connectionString atlasv2.ClusterConnectionStrings
-		require.NoError(t, json.Unmarshal(resp, &connectionString))
+		err = json.Unmarshal(resp, &connectionString)
+		req.NoError(err)
 
 		a := assert.New(t)
 		a.NotEmpty(connectionString.GetStandard())
@@ -157,7 +160,7 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err, string(resp))
 	})
 
 	t.Run("Describe Advanced Configuration Settings", func(t *testing.T) {
@@ -170,10 +173,11 @@ func TestClustersFlags(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err, string(resp))
 
 		var config atlasv2.ClusterDescriptionProcessArgs
-		require.NoError(t, json.Unmarshal(resp, &config))
+		err = json.Unmarshal(resp, &config)
+		req.NoError(err)
 
 		a := assert.New(t)
 		a.NotEmpty(config.GetMinimumEnabledTlsProtocol())
@@ -193,7 +197,7 @@ func TestClustersFlags(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err, string(resp))
 	})
 
 	t.Run("Fail Delete for Termination Protection enabled", func(t *testing.T) {
@@ -206,7 +210,7 @@ func TestClustersFlags(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.Error(t, err, string(resp))
+		req.Error(err, string(resp))
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -215,36 +219,29 @@ func TestClustersFlags(t *testing.T) {
 			"update",
 			clusterName,
 			"--diskSizeGB", diskSizeGB40,
-			"--mdbVersion", mdbVersion,
+			"--mdbVersion=5.0",
 			"--disableTerminationProtection",
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err, string(resp))
 
 		var cluster atlasv2.AdvancedClusterDescription
-		require.NoError(t, json.Unmarshal(resp, &cluster))
+		err = json.Unmarshal(resp, &cluster)
+		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterName, mdbVersion, 40, false)
+		ensureCluster(t, &cluster, clusterName, "5.0", 40, false)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force", "-w")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err)
 
 		expected := "Cluster deleted"
-		assert.Contains(t, string(resp), expected)
+		a := assert.New(t)
+		a.Contains(string(resp), expected)
 	})
-}
-
-func getPreviousMajorVersion(version string) (string, error) {
-	v, err := semver.NewVersion(version)
-	if err != nil {
-		return "", err
-	}
-
-	return fmt.Sprintf("%d.%d", v.Major()-1, v.Minor()), nil
 }

@@ -15,11 +15,12 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/require"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -47,10 +48,10 @@ func EditBuilder() *cobra.Command {
 		Use:   "edit",
 		Short: "Opens the config file with the default text editor.",
 		Long:  `Uses the default editor to open the config file. You can use EDITOR or VISUAL envs to change the default.`,
-		Example: `  # To open the config
-  atlas config edit
-`,
-		RunE: func(_ *cobra.Command, _ []string) error {
+		Example: fmt.Sprintf(`  # To open the config
+  %s config edit
+`, config.BinName()),
+		RunE: func(cmd *cobra.Command, args []string) error {
 			return opt.Run()
 		},
 		Annotations: map[string]string{

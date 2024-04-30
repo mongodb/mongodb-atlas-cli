@@ -19,16 +19,14 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/andreaangiolillo/mongocli-test/internal/watchers"
 	"github.com/briandowns/spinner"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/watchers"
 )
 
 type WatchOpts struct {
 	OutputOpts
 	s              *spinner.Spinner
 	EnableWatch    bool
-	DefaultWait    *time.Duration
 	Timeout        uint
 	IsRetryableErr func(err error) bool
 }
@@ -38,41 +36,41 @@ const (
 	speed       = 100 * time.Millisecond
 )
 
-type Watcher func() (interface{}, bool, error)
+type Watcher func() (bool, error)
 
 // Watch allow to init the OutputOpts in a functional way.
-func (opts *WatchOpts) Watch(f Watcher) (interface{}, error) {
+func (opts *WatchOpts) Watch(f Watcher) error {
 	if f == nil {
-		return nil, errors.New("no watcher provided")
+		return errors.New("no watcher provided")
 	}
 	opts.start()
 	for {
-		value, done, err := opts.exponentialBackoff(f)
+		done, err := opts.exponentialBackoff(f)
 		if err != nil || done {
 			opts.stop()
-			return value, err
+			return err
 		}
 		if !opts.IsTerminal() {
 			if _, err = fmt.Fprint(opts.ConfigWriter(), "."); err != nil {
-				return nil, err
+				return err
 			}
 		}
-		time.Sleep(opts.GetDefaultWait())
+		time.Sleep(defaultWait)
 	}
 }
 
-var backoffCoefficients = []float32{0.5, 1, 2}
+var backoffTimes = []time.Duration{2 * time.Second, 4 * time.Second, 8 * time.Second}
 
-func (opts *WatchOpts) exponentialBackoff(f Watcher) (interface{}, bool, error) {
+func (opts *WatchOpts) exponentialBackoff(f Watcher) (bool, error) {
 	if opts.IsRetryableErr == nil {
 		return f()
 	}
 
-	for _, coefficient := range backoffCoefficients {
-		if value, done, err := f(); err == nil || !opts.IsRetryableErr(err) {
-			return value, done, err
+	for _, backoffTime := range backoffTimes {
+		if done, err := f(); err == nil || !opts.IsRetryableErr(err) {
+			return done, err
 		}
-		time.Sleep(time.Duration(coefficient) * opts.GetDefaultWait())
+		time.Sleep(backoffTime)
 	}
 	// Should only happen after trying three times (>14 seconds)
 	return f()
@@ -100,8 +98,4 @@ func (opts *WatchOpts) stop() {
 	if opts.IsTerminal() {
 		opts.s.Stop()
 	}
-}
-
-func (opts *WatchOpts) GetDefaultWait() time.Duration {
-	return pointer.GetOrDefault(opts.DefaultWait, defaultWait)
 }

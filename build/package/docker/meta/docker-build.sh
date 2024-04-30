@@ -16,7 +16,12 @@
 
 set -Eeou pipefail
 
-VERSION="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+if [[ "${tool_name:?}" != atlascli ]]; then
+	echo "invalid tool '${tool_name:?}' expected 'atlascli'"
+	exit 1
+fi
+
+VERSION="$(git tag --list "${tool_name:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
 FILE_EXT=deb
 if [[ "${image-}" =~ "rpm" ]]; then
@@ -30,5 +35,5 @@ docker build \
 	--build-arg url="${URL-}" \
 	--build-arg entrypoint="${ENTRYPOINT-}" \
 	--build-arg server_version="5.0" \
-	-t "atlascli-${image-}" \
+	-t "${tool_name-}-${image-}" \
 	-f "${image-}.Dockerfile" .

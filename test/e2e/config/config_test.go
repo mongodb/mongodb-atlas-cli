@@ -24,9 +24,9 @@ import (
 	"testing"
 
 	"github.com/Netflix/go-expect"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	pseudotty "github.com/creack/pty"
 	"github.com/hinshun/vt10x"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 )
 
 const (
@@ -35,7 +35,7 @@ const (
 )
 
 func TestConfig(t *testing.T) {
-	cliPath, err := e2e.AtlasCLIBin()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -59,7 +59,7 @@ func TestConfig(t *testing.T) {
 		}
 		defer c.Close()
 
-		cmd := exec.Command(cliPath, configEntity, "init", "-P", "e2e-expect")
+		cmd := exec.Command(cliPath, configEntity, "-P", "e2e-expect")
 		cmd.Stdin = c.Tty()
 		cmd.Stdout = c.Tty()
 		cmd.Stderr = c.Tty()

@@ -23,11 +23,12 @@ import (
 	"os/exec"
 	"strconv"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
+	iamEntity              = "iam"
 	orgEntity              = "orgs"
 	apiKeysEntity          = "apikeys"
 	apiKeyAccessListEntity = "accessLists"
@@ -46,12 +47,12 @@ const (
 var errNoAPIKey = errors.New("the apiKey ID is empty")
 
 func createOrgAPIKey() (string, error) {
-	cliPath, err := e2e.AtlasCLIBin()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", err
 	}
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, iamEntity,
 		orgEntity,
 		apiKeysEntity,
 		"create",
@@ -65,24 +66,25 @@ func createOrgAPIKey() (string, error) {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 
-	var key atlasv2.ApiKeyUserDetails
+	var key mongodbatlas.APIKey
 	if err := json.Unmarshal(resp, &key); err != nil {
 		return "", err
 	}
 
-	if key.GetId() != "" {
-		return key.GetId(), nil
+	if key.ID != "" {
+		return key.ID, nil
 	}
 
 	return "", errNoAPIKey
 }
 
 func deleteOrgAPIKey(id string) error {
-	cliPath, err := e2e.AtlasCLIBin()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		return err
 	}
 	cmd := exec.Command(cliPath,
+		iamEntity,
 		orgEntity,
 		apiKeysEntity,
 		"rm",
@@ -93,7 +95,7 @@ func deleteOrgAPIKey(id string) error {
 }
 
 func createTeam(teamName string) (string, error) {
-	cliPath, err := e2e.AtlasCLIBin()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", err
 	}
@@ -103,6 +105,7 @@ func createTeam(teamName string) (string, error) {
 		return "", err
 	}
 	cmd := exec.Command(cliPath,
+		iamEntity,
 		teamsEntity,
 		"create",
 		teamName,
@@ -115,20 +118,21 @@ func createTeam(teamName string) (string, error) {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 
-	var team atlasv2.Team
+	var team mongodbatlas.Team
 	if err := json.Unmarshal(resp, &team); err != nil {
 		return "", err
 	}
 
-	return team.GetId(), nil
+	return team.ID, nil
 }
 
 func deleteTeam(teamID string) error {
-	cliPath, err := e2e.AtlasCLIBin()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		return err
 	}
 	cmd := exec.Command(cliPath,
+		iamEntity,
 		teamsEntity,
 		"delete",
 		teamID,
@@ -143,11 +147,12 @@ var errInvalidIndex = errors.New("invalid index")
 // We need to pass the userIndex because the command iam teams users add would not work
 // if the user is already in the team.
 func OrgNUser(n int) (username, userID string, err error) {
-	cliPath, err := e2e.AtlasCLIBin()
+	cliPath, err := e2e.Bin()
 	if err != nil {
 		return "", "", err
 	}
 	cmd := exec.Command(cliPath,
+		iamEntity,
 		orgEntity,
 		usersEntity,
 		"list",
@@ -160,14 +165,14 @@ func OrgNUser(n int) (username, userID string, err error) {
 		return "", "", fmt.Errorf("error loading org users: %w (%s)", err, string(resp))
 	}
 
-	var users atlasv2.PaginatedAppUser
+	var users mongodbatlas.AtlasUsersResponse
 	if err := json.Unmarshal(resp, &users); err != nil {
 		return "", "", err
 	}
 
-	if len(users.GetResults()) <= n {
-		return "", "", fmt.Errorf("%w: %d for %d users", errInvalidIndex, n, len(users.GetResults()))
+	if len(users.Results) <= n {
+		return "", "", fmt.Errorf("%w: %d for %d users", errInvalidIndex, n, len(users.Results))
 	}
 
-	return users.GetResults()[n].Username, users.GetResults()[n].GetId(), nil
+	return users.Results[n].Username, users.Results[n].ID, nil
 }

@@ -15,15 +15,18 @@
 package store
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	"fmt"
+
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_database_users.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DatabaseUserLister,DatabaseUserCreator,DatabaseUserDeleter,DatabaseUserUpdater,DatabaseUserDescriber,DBUserCertificateLister,DBUserCertificateCreator
+//go:generate mockgen -destination=../mocks/mock_database_users.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store DatabaseUserLister,DatabaseUserCreator,DatabaseUserDeleter,DatabaseUserUpdater,DatabaseUserDescriber,DBUserCertificateLister,DBUserCertificateCreator
 
 type DatabaseUserLister interface {
-	DatabaseUsers(groupID string, opts *ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error)
+	DatabaseUsers(groupID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error)
 }
 
 type DatabaseUserCreator interface {
@@ -52,49 +55,84 @@ type DBUserCertificateCreator interface {
 
 // CreateDatabaseUser encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateDatabaseUser(user *atlasv2.CloudDatabaseUser) (*atlasv2.CloudDatabaseUser, error) {
-	result, _, err := s.clientv2.DatabaseUsersApi.CreateDatabaseUser(s.ctx, user.GroupId, user).Execute()
-	return result, err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.DatabaseUsersApi.CreateDatabaseUser(s.ctx, user.GroupId, user).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 func (s *Store) DeleteDatabaseUser(authDB, groupID, username string) error {
-	_, _, err := s.clientv2.DatabaseUsersApi.DeleteDatabaseUser(s.ctx, groupID, authDB, username).Execute()
-	return err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		_, _, err := s.clientv2.DatabaseUsersApi.DeleteDatabaseUser(s.ctx, groupID, authDB, username).Execute()
+		return err
+	default:
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
-func (s *Store) DatabaseUsers(projectID string, opts *ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error) {
-	res := s.clientv2.DatabaseUsersApi.ListDatabaseUsers(s.ctx, projectID)
-	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
+func (s *Store) DatabaseUsers(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		res := s.clientv2.DatabaseUsersApi.ListDatabaseUsers(s.ctx, projectID)
+		if opts != nil {
+			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		}
+		result, _, err := res.Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := res.Execute()
-	return result, err
 }
 
 func (s *Store) UpdateDatabaseUser(params *atlasv2.UpdateDatabaseUserApiParams) (*atlasv2.CloudDatabaseUser, error) {
-	result, _, err := s.clientv2.DatabaseUsersApi.UpdateDatabaseUserWithParams(s.ctx, params).Execute()
-	return result, err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.DatabaseUsersApi.UpdateDatabaseUserWithParams(s.ctx, params).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlasv2.CloudDatabaseUser, error) {
-	result, _, err := s.clientv2.DatabaseUsersApi.GetDatabaseUser(s.ctx, groupID, authDB, username).Execute()
-	return result, err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.DatabaseUsersApi.GetDatabaseUser(s.ctx, groupID, authDB, username).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // DBUserCertificates retrieves the current Atlas managed certificates for a database user.
 func (s *Store) DBUserCertificates(projectID, username string, opts *atlas.ListOptions) (*atlasv2.PaginatedUserCert, error) {
-	res := s.clientv2.X509AuthenticationApi.ListDatabaseUserCertificates(s.ctx, projectID, username)
-	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		res := s.clientv2.X509AuthenticationApi.ListDatabaseUserCertificates(s.ctx, projectID, username)
+		if opts != nil {
+			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		}
+		result, _, err := res.Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := res.Execute()
-	return result, err
 }
 
 // CreateDBUserCertificate creates a new Atlas managed certificates for a database user.
 func (s *Store) CreateDBUserCertificate(projectID, username string, monthsUntilExpiration int) (string, error) {
-	userCert := &atlasv2.UserCert{
-		MonthsUntilExpiration: pointer.Get(monthsUntilExpiration),
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		userCert := &atlasv2.UserCert{
+			MonthsUntilExpiration: pointer.Get(monthsUntilExpiration),
+		}
+		cert, _, err := s.clientv2.X509AuthenticationApi.CreateDatabaseUserCertificate(s.ctx, projectID, username, userCert).Execute()
+		return cert, err
+	default:
+		return "", fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	cert, _, err := s.clientv2.X509AuthenticationApi.CreateDatabaseUserCertificate(s.ctx, projectID, username, userCert).Execute()
-	return cert, err
 }

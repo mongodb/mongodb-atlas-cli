@@ -20,14 +20,16 @@ import (
 	"testing"
 
 	"github.com/go-test/deep"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestBuildAtlasInheritedRoles(t *testing.T) {
-	tests := []struct {
+	type test struct {
 		input []string
 		want  []atlasv2.DatabaseInheritedRole
-	}{
+	}
+
+	tests := []test{
 		{
 			input: []string{"admin"},
 			want: []atlasv2.DatabaseInheritedRole{
@@ -67,80 +69,69 @@ func TestBuildAtlasInheritedRoles(t *testing.T) {
 		t.Run("", func(t *testing.T) {
 			t.Parallel()
 			got := BuildAtlasInheritedRoles(input)
-			if diff := deep.Equal(want, got); diff != nil {
-				t.Error(diff)
+			if err := deep.Equal(want, got); err != nil {
+				t.Fatalf("expected: %v, got: %v", want, got)
 			}
 		})
 	}
 }
 
 func TestBuildAtlasActions(t *testing.T) {
-	tests := []struct {
-		name  string
+	type test struct {
 		input []string
 		want  []atlasv2.DatabasePrivilegeAction
-	}{
+	}
+
+	cluster := true
+
+	testdb := "testdb"
+	collection := "collection"
+	datalake := "DATA_LAKE"
+
+	tests := []test{
 		{
-			name:  "role",
 			input: []string{"clusterName"},
 			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "clusterName",
-					Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
-							Cluster: true,
+							Cluster: cluster,
 						},
 					},
 				},
 			},
 		},
 		{
-			name:  "role and fqn",
 			input: []string{"clusterName@testdb.collection"},
 			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "clusterName",
-					Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
-							Db:         "testdb",
-							Collection: "collection",
+							Db:         testdb,
+							Collection: collection,
 						},
 					},
 				},
 			},
 		},
 		{
-			name:  "role and fqn",
-			input: []string{"clusterName@testdb.collection.with.dots"},
-			want: []atlasv2.DatabasePrivilegeAction{
-				{
-					Action: "clusterName",
-					Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
-						{
-							Db:         "testdb",
-							Collection: "collection.with.dots",
-						},
-					},
-				},
-			},
-		},
-		{
-			name:  "role and fqn",
 			input: []string{"clusterName", "name@DATA_LAKE"},
 			want: []atlasv2.DatabasePrivilegeAction{
 				{
 					Action: "clusterName",
-					Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
-							Cluster: true,
+							Cluster: cluster,
 						},
 					},
 				},
 				{
 					Action: "name",
-					Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
+					Resources: []atlasv2.DatabasePermittedNamespaceResource{
 						{
-							Db: "DATA_LAKE",
+							Db: datalake,
 						},
 					},
 				},
@@ -148,13 +139,14 @@ func TestBuildAtlasActions(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		tc := tt
-		t.Run(tc.name, func(t *testing.T) {
+	for _, tc := range tests {
+		input := tc.input
+		want := tc.want
+		t.Run("", func(t *testing.T) {
 			t.Parallel()
-			got := BuildAtlasActions(tc.input)
-			if diff := deep.Equal(tc.want, got); diff != nil {
-				t.Error(diff)
+			got := BuildAtlasActions(input)
+			if err := deep.Equal(want, got); err != nil {
+				t.Fatalf("expected: %v, got: %v", want, got)
 			}
 		})
 	}

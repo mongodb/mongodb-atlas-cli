@@ -24,12 +24,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	"github.com/andreaangiolillo/mongocli-test/internal/log"
+	"github.com/andreaangiolillo/mongocli-test/internal/terminal"
+	"github.com/andreaangiolillo/mongocli-test/internal/version"
 	"github.com/denisbrodbeck/machineid"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/terminal"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -152,7 +152,7 @@ func withCI() EventOpt {
 
 func withAnonymousID() EventOpt {
 	return func(event Event) {
-		id, err := machineid.ProtectedID(config.AtlasCLI)
+		id, err := machineid.ProtectedID(config.ToolName)
 		if err != nil {
 			event.Properties["device_id_err"] = err.Error()
 			_, _ = log.Debugf("error generating machine id: %v\n", err)
@@ -329,7 +329,7 @@ func withUserAgent() EventOpt {
 func newEvent(opts ...EventOpt) Event {
 	var event = Event{
 		Timestamp: time.Now(),
-		Source:    config.AtlasCLI,
+		Source:    config.ToolName,
 		Properties: map[string]interface{}{
 			"result": "SUCCESS",
 		},

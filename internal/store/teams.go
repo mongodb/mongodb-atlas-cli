@@ -15,27 +15,26 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	"fmt"
+
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_teams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store TeamLister,TeamDescriber,TeamCreator,TeamRenamer,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
+//go:generate mockgen -destination=../mocks/mock_teams.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store TeamLister,TeamDescriber,TeamCreator,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
 
 type TeamLister interface {
-	Teams(string, *atlas.ListOptions) (*atlasv2.PaginatedTeam, error)
+	Teams(string, *atlas.ListOptions) ([]atlas.Team, error)
 }
 
 type TeamDescriber interface {
-	TeamByID(string, string) (*atlasv2.TeamResponse, error)
-	TeamByName(string, string) (*atlasv2.TeamResponse, error)
+	TeamByID(string, string) (*atlas.Team, error)
+	TeamByName(string, string) (*atlas.Team, error)
 }
 
 type TeamCreator interface {
-	CreateTeam(string, *atlasv2.Team) (*atlasv2.Team, error)
-}
-
-type TeamRenamer interface {
-	RenameTeam(string, string, *atlasv2.TeamUpdate) (*atlasv2.TeamResponse, error)
+	CreateTeam(string, *atlas.Team) (*atlas.Team, error)
 }
 
 type TeamDeleter interface {
@@ -43,7 +42,7 @@ type TeamDeleter interface {
 }
 
 type TeamAdder interface {
-	AddUsersToTeam(string, string, []atlasv2.AddUserToTeam) (*atlasv2.PaginatedApiAppUser, error)
+	AddUsersToTeam(string, string, []string) (interface{}, error)
 }
 
 type TeamUserRemover interface {
@@ -51,61 +50,117 @@ type TeamUserRemover interface {
 }
 
 type TeamRolesUpdater interface {
-	UpdateProjectTeamRoles(string, string, *atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error)
+	UpdateProjectTeamRoles(string, string, *atlas.TeamUpdateRoles) ([]atlas.TeamRoles, error)
 }
 
 // TeamByID encapsulates the logic to manage different cloud providers.
-func (s *Store) TeamByID(orgID, teamID string) (*atlasv2.TeamResponse, error) {
-	result, _, err := s.clientv2.TeamsApi.GetTeamById(s.ctx, orgID, teamID).Execute()
-	return result, err
+func (s *Store) TeamByID(orgID, teamID string) (*atlas.Team, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).Teams.Get(s.ctx, orgID, teamID)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Teams.Get(s.ctx, orgID, teamID)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // TeamByName encapsulates the logic to manage different cloud providers.
-func (s *Store) TeamByName(orgID, teamName string) (*atlasv2.TeamResponse, error) {
-	result, _, err := s.clientv2.TeamsApi.GetTeamByName(s.ctx, orgID, teamName).Execute()
-	return result, err
+func (s *Store) TeamByName(orgID, teamName string) (*atlas.Team, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).Teams.GetOneTeamByName(s.ctx, orgID, teamName)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Teams.GetOneTeamByName(s.ctx, orgID, teamName)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // Teams encapsulates the logic to manage different cloud providers.
-func (s *Store) Teams(orgID string, opts *atlas.ListOptions) (*atlasv2.PaginatedTeam, error) {
-	res := s.clientv2.TeamsApi.ListOrganizationTeams(s.ctx, orgID)
-	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
+func (s *Store) Teams(orgID string, opts *atlas.ListOptions) ([]atlas.Team, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).Teams.List(s.ctx, orgID, opts)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Teams.List(s.ctx, orgID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := res.Execute()
-	return result, err
 }
 
-func (s *Store) CreateTeam(orgID string, team *atlasv2.Team) (*atlasv2.Team, error) {
-	result, _, err := s.clientv2.TeamsApi.CreateTeam(s.ctx, orgID, team).Execute()
-	return result, err
-}
-
-func (s *Store) RenameTeam(orgID, teamID string, team *atlasv2.TeamUpdate) (*atlasv2.TeamResponse, error) {
-	result, _, err := s.clientv2.TeamsApi.RenameTeam(s.ctx, orgID, teamID, team).Execute()
-	return result, err
+// CreateTeam encapsulates the logic to manage different cloud providers.
+func (s *Store) CreateTeam(orgID string, team *atlas.Team) (*atlas.Team, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).Teams.Create(s.ctx, orgID, team)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Teams.Create(s.ctx, orgID, team)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // DeleteTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteTeam(orgID, teamID string) error {
-	_, _, err := s.clientv2.TeamsApi.DeleteTeam(s.ctx, orgID, teamID).Execute()
-	return err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		_, err := s.client.(*atlas.Client).Teams.RemoveTeamFromOrganization(s.ctx, orgID, teamID)
+		return err
+	case config.CloudManagerService, config.OpsManagerService:
+		_, err := s.client.(*opsmngr.Client).Teams.RemoveTeamFromOrganization(s.ctx, orgID, teamID)
+		return err
+	default:
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // AddUsersToTeam encapsulates the logic to manage different cloud providers.
-func (s *Store) AddUsersToTeam(orgID, teamID string, users []atlasv2.AddUserToTeam) (*atlasv2.PaginatedApiAppUser, error) {
-	result, _, err := s.clientv2.TeamsApi.AddTeamUser(s.ctx, orgID, teamID, &users).Execute()
-	return result, err
+func (s *Store) AddUsersToTeam(orgID, teamID string, users []string) (interface{}, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).Teams.AddUsersToTeam(s.ctx, orgID, teamID, users)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Teams.AddUsersToTeam(s.ctx, orgID, teamID, users)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // RemoveUserFromTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
-	_, err := s.clientv2.TeamsApi.RemoveTeamUser(s.ctx, orgID, teamID, userID).Execute()
-	return err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		_, err := s.client.(*atlas.Client).Teams.RemoveUserToTeam(s.ctx, orgID, teamID, userID)
+		return err
+	case config.CloudManagerService, config.OpsManagerService:
+		_, err := s.client.(*opsmngr.Client).Teams.RemoveUserToTeam(s.ctx, orgID, teamID, userID)
+		return err
+	default:
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // UpdateProjectTeamRoles encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateProjectTeamRoles(projectID, teamID string, team *atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error) {
-	result, _, err := s.clientv2.TeamsApi.UpdateTeamRoles(s.ctx, projectID, teamID, team).Execute()
-	return result, err
+func (s *Store) UpdateProjectTeamRoles(projectID, teamID string, team *atlas.TeamUpdateRoles) ([]atlas.TeamRoles, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).Teams.UpdateTeamRoles(s.ctx, projectID, teamID, team)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).Teams.UpdateTeamRoles(s.ctx, projectID, teamID, team)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }

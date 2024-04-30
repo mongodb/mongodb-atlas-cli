@@ -17,14 +17,14 @@ package datafederation
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/features"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/resources"
+	"github.com/andreaangiolillo/mongocli-test/internal/store/atlas"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -32,7 +32,7 @@ const (
 	DeletedState  = "DELETED"
 )
 
-func BuildAtlasDataFederation(dataFederationStore store.DataFederationStore, dataFederationName, projectID, projectName, operatorVersion, targetNamespace string, dictionary map[string]string) (*akov2.AtlasDataFederation, error) {
+func BuildAtlasDataFederation(dataFederationStore atlas.DataFederationStore, dataFederationName, projectID, projectName, operatorVersion, targetNamespace string, dictionary map[string]string) (*akov2.AtlasDataFederation, error) {
 	dataFederation, err := dataFederationStore.DataFederation(projectID, dataFederationName)
 	if err != nil {
 		return nil, err
@@ -41,11 +41,11 @@ func BuildAtlasDataFederation(dataFederationStore store.DataFederationStore, dat
 		return nil, nil
 	}
 	atlasDataFederation := &akov2.AtlasDataFederation{
-		TypeMeta: metav1.TypeMeta{
+		TypeMeta: v1.TypeMeta{
 			APIVersion: "atlas.mongodb.com/v1",
 			Kind:       "AtlasDataFederation",
 		},
-		ObjectMeta: metav1.ObjectMeta{
+		ObjectMeta: v1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, dataFederation.GetName()), dictionary),
 			Namespace: targetNamespace,
 			Labels: map[string]string{
@@ -62,12 +62,12 @@ func BuildAtlasDataFederation(dataFederationStore store.DataFederationStore, dat
 	return atlasDataFederation, nil
 }
 
-func isDataFederationExportable(dataFederation *atlasv2.DataLakeTenant) bool {
+func isDataFederationExportable(dataFederation *admin.DataLakeTenant) bool {
 	state := dataFederation.GetState()
 	return state != DeletingState && state != DeletedState
 }
 
-func getDataFederationSpec(dataFederationSpec *atlasv2.DataLakeTenant, targetNamespace, projectName string) akov2.DataFederationSpec {
+func getDataFederationSpec(dataFederationSpec *admin.DataLakeTenant, targetNamespace, projectName string) akov2.DataFederationSpec {
 	return akov2.DataFederationSpec{
 		Project:             akov2common.ResourceRefNamespaced{Name: projectName, Namespace: targetNamespace},
 		Name:                dataFederationSpec.GetName(),
@@ -77,7 +77,7 @@ func getDataFederationSpec(dataFederationSpec *atlasv2.DataLakeTenant, targetNam
 	}
 }
 
-func getCloudProviderConfig(cloudProviderConfig *atlasv2.DataLakeCloudProviderConfig) *akov2.CloudProviderConfig {
+func getCloudProviderConfig(cloudProviderConfig *admin.DataLakeCloudProviderConfig) *akov2.CloudProviderConfig {
 	if cloudProviderConfig == nil {
 		return &akov2.CloudProviderConfig{}
 	}
@@ -89,7 +89,7 @@ func getCloudProviderConfig(cloudProviderConfig *atlasv2.DataLakeCloudProviderCo
 	}
 }
 
-func getDataProcessRegion(dataProcessRegion *atlasv2.DataLakeDataProcessRegion) *akov2.DataProcessRegion {
+func getDataProcessRegion(dataProcessRegion *admin.DataLakeDataProcessRegion) *akov2.DataProcessRegion {
 	if dataProcessRegion == nil {
 		return &akov2.DataProcessRegion{}
 	}
@@ -99,17 +99,17 @@ func getDataProcessRegion(dataProcessRegion *atlasv2.DataLakeDataProcessRegion) 
 	}
 }
 
-func getStorage(storage *atlasv2.DataLakeStorage) *akov2.Storage {
+func getStorage(storage *admin.DataLakeStorage) *akov2.Storage {
 	if storage == nil {
 		return &akov2.Storage{}
 	}
 	return &akov2.Storage{
-		Databases: getDatabases(storage.GetDatabases()),
-		Stores:    getStores(storage.GetStores()),
+		Databases: getDatabases(storage.Databases),
+		Stores:    getStores(storage.Stores),
 	}
 }
 
-func getDatabases(database []atlasv2.DataLakeDatabaseInstance) []akov2.Database {
+func getDatabases(database []admin.DataLakeDatabaseInstance) []akov2.Database {
 	if database == nil {
 		return []akov2.Database{}
 	}
@@ -126,7 +126,7 @@ func getDatabases(database []atlasv2.DataLakeDatabaseInstance) []akov2.Database 
 	return result
 }
 
-func getCollection(collections []atlasv2.DataLakeDatabaseCollection) []akov2.Collection {
+func getCollection(collections []admin.DataLakeDatabaseCollection) []akov2.Collection {
 	if collections == nil {
 		return []akov2.Collection{}
 	}
@@ -141,7 +141,7 @@ func getCollection(collections []atlasv2.DataLakeDatabaseCollection) []akov2.Col
 	return result
 }
 
-func getDataSources(dataSources []atlasv2.DataLakeDatabaseDataSourceSettings) []akov2.DataSource {
+func getDataSources(dataSources []admin.DataLakeDatabaseDataSourceSettings) []akov2.DataSource {
 	if dataSources == nil {
 		return []akov2.DataSource{}
 	}
@@ -164,7 +164,7 @@ func getDataSources(dataSources []atlasv2.DataLakeDatabaseDataSourceSettings) []
 	return result
 }
 
-func getViews(views []atlasv2.DataLakeApiBase) []akov2.View {
+func getViews(views []admin.DataLakeApiBase) []akov2.View {
 	if views == nil {
 		return []akov2.View{}
 	}
@@ -180,7 +180,7 @@ func getViews(views []atlasv2.DataLakeApiBase) []akov2.View {
 	return result
 }
 
-func getStores(stores []atlasv2.DataLakeStoreSettings) []akov2.Store {
+func getStores(stores []admin.DataLakeStoreSettings) []akov2.Store {
 	if stores == nil {
 		return []akov2.Store{}
 	}

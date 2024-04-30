@@ -22,15 +22,15 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/resources"
+	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -70,7 +70,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		})
 
 		e2eNamespace := &corev1.Namespace{
-			ObjectMeta: metav1.ObjectMeta{
+			ObjectMeta: apisv1.ObjectMeta{
 				Name: "e2e-autodetect-parameters",
 			},
 		}
@@ -104,7 +104,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		})
 
 		e2eNamespace := &corev1.Namespace{
-			ObjectMeta: metav1.ObjectMeta{
+			ObjectMeta: apisv1.ObjectMeta{
 				Name: "e2e-autodetect-operator-version",
 			},
 		}
@@ -138,7 +138,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		})
 
 		e2eNamespace := &corev1.Namespace{
-			ObjectMeta: metav1.ObjectMeta{
+			ObjectMeta: apisv1.ObjectMeta{
 				Name: "e2e-export-atlas-resource",
 			},
 		}
@@ -333,8 +333,6 @@ func referenceExportedDBUser(projectName, dbUser, namespace string) *akov2.Atlas
 				},
 			},
 			Username:     dbUser,
-			OIDCAuthType: "NONE",
-			AWSIAMType:   "NONE",
 			X509Type:     "MANAGED",
 			DatabaseName: "$external",
 		},
@@ -394,12 +392,6 @@ func referenceExportedBackupPolicy() *akov2.AtlasBackupPolicy {
 					FrequencyInterval: 40,
 					RetentionUnit:     "months",
 					RetentionValue:    12,
-				},
-				{
-					FrequencyType:     "yearly",
-					FrequencyInterval: 12,
-					RetentionUnit:     "years",
-					RetentionValue:    1,
 				},
 			},
 		},

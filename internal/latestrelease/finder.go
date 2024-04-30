@@ -19,9 +19,9 @@ import (
 	"time"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/file"
+	"github.com/andreaangiolillo/mongocli-test/internal/version"
 	"github.com/spf13/afero"
 )
 
@@ -50,7 +50,8 @@ func NewVersionFinder(fs afero.Fs, d version.ReleaseVersionDescriber) (VersionFi
 	return &finder{
 		describer:      d,
 		filesystem:     fs,
-		currentVersion: VersionFromTag(version.Version),
+		tool:           config.ToolName,
+		currentVersion: VersionFromTag(version.Version, config.ToolName),
 		path:           filePath,
 	}, nil
 }
@@ -58,19 +59,23 @@ func NewVersionFinder(fs afero.Fs, d version.ReleaseVersionDescriber) (VersionFi
 type finder struct {
 	describer      version.ReleaseVersionDescriber
 	filesystem     afero.Fs
+	tool           string
 	currentVersion string
 	path           string
 }
 
-func VersionFromTag(ver string) string {
-	if prefix := config.AtlasCLI + "/"; strings.HasPrefix(ver, prefix) {
+func VersionFromTag(ver, toolName string) string {
+	if prefix := toolName + "/"; strings.HasPrefix(ver, prefix) {
 		return strings.ReplaceAll(ver, prefix, "")
 	}
 	return ver
 }
 
-func isValidTagForTool(tag string) bool {
-	return strings.Contains(tag, config.AtlasCLI)
+func isValidTagForTool(tag, tool string) bool {
+	if tool == config.MongoCLI {
+		return !strings.Contains(tag, config.AtlasCLI)
+	}
+	return strings.Contains(tag, tool)
 }
 
 func (f *finder) loadOrGet() (*ReleaseInformation, *semver.Version, error) {
@@ -90,13 +95,13 @@ func (f *finder) loadOrGet() (*ReleaseInformation, *semver.Version, error) {
 }
 
 func (f *finder) latest() (*ReleaseInformation, error) {
-	release, err := f.describer.LatestWithCriteria(minPageSize, isValidTagForTool)
+	release, err := f.describer.LatestWithCriteria(minPageSize, isValidTagForTool, f.tool)
 	if err != nil || release == nil {
 		return nil, err
 	}
 
 	latestFoundRelease := &ReleaseInformation{
-		Version:     VersionFromTag(release.GetTagName()),
+		Version:     VersionFromTag(release.GetTagName(), f.tool),
 		PublishedAt: release.GetPublishedAt().Time,
 		CheckedAt:   time.Now(),
 	}

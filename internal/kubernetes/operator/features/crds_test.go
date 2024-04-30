@@ -22,36 +22,36 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 )
 
 func Test_getCRDRoot(t *testing.T) {
-	properties := map[string]apiextensionsv1.JSONSchemaProps{
+	properties := map[string]apiextensions.JSONSchemaProps{
 		"spec": {
-			Items: &apiextensionsv1.JSONSchemaPropsOrArray{},
+			Items: &apiextensions.JSONSchemaPropsOrArray{},
 		},
 	}
 	specPtr := properties["spec"]
 
 	type args struct {
-		document *apiextensionsv1.CustomResourceDefinition
+		document *apiextensions.CustomResourceDefinition
 	}
 
 	tests := []struct {
 		name    string
 		args    args
-		want    *apiextensionsv1.JSONSchemaProps
+		want    *apiextensions.JSONSchemaProps
 		wantErr bool
 	}{
 		{
 			name: "Can get document Root for a valid CRD",
 			args: args{
-				document: &apiextensionsv1.CustomResourceDefinition{
-					Spec: apiextensionsv1.CustomResourceDefinitionSpec{
-						Versions: []apiextensionsv1.CustomResourceDefinitionVersion{
+				document: &apiextensions.CustomResourceDefinition{
+					Spec: apiextensions.CustomResourceDefinitionSpec{
+						Versions: []apiextensions.CustomResourceDefinitionVersion{
 							{
-								Schema: &apiextensionsv1.CustomResourceValidation{
-									OpenAPIV3Schema: &apiextensionsv1.JSONSchemaProps{
+								Schema: &apiextensions.CustomResourceValidation{
+									OpenAPIV3Schema: &apiextensions.JSONSchemaProps{
 										Properties: properties,
 									},
 								},
@@ -74,9 +74,9 @@ func Test_getCRDRoot(t *testing.T) {
 		{
 			name: "Return an error if there are no versions",
 			args: args{
-				document: &apiextensionsv1.CustomResourceDefinition{
-					Spec: apiextensionsv1.CustomResourceDefinitionSpec{
-						Versions: []apiextensionsv1.CustomResourceDefinitionVersion{},
+				document: &apiextensions.CustomResourceDefinition{
+					Spec: apiextensions.CustomResourceDefinitionSpec{
+						Versions: []apiextensions.CustomResourceDefinitionVersion{},
 					},
 				},
 			},
@@ -86,11 +86,11 @@ func Test_getCRDRoot(t *testing.T) {
 		{
 			name: "Return an error if there is no Schema",
 			args: args{
-				document: &apiextensionsv1.CustomResourceDefinition{
-					Spec: apiextensionsv1.CustomResourceDefinitionSpec{
-						Versions: []apiextensionsv1.CustomResourceDefinitionVersion{
+				document: &apiextensions.CustomResourceDefinition{
+					Spec: apiextensions.CustomResourceDefinitionSpec{
+						Versions: []apiextensions.CustomResourceDefinitionVersion{
 							{
-								Schema: &apiextensionsv1.CustomResourceValidation{
+								Schema: &apiextensions.CustomResourceValidation{
 									OpenAPIV3Schema: nil,
 								},
 							},
@@ -104,13 +104,13 @@ func Test_getCRDRoot(t *testing.T) {
 		{
 			name: "Return an error if there is no Spec",
 			args: args{
-				document: &apiextensionsv1.CustomResourceDefinition{
-					Spec: apiextensionsv1.CustomResourceDefinitionSpec{
-						Versions: []apiextensionsv1.CustomResourceDefinitionVersion{
+				document: &apiextensions.CustomResourceDefinition{
+					Spec: apiextensions.CustomResourceDefinitionSpec{
+						Versions: []apiextensions.CustomResourceDefinitionVersion{
 							{
-								Schema: &apiextensionsv1.CustomResourceValidation{
-									OpenAPIV3Schema: &apiextensionsv1.JSONSchemaProps{
-										Properties: map[string]apiextensionsv1.JSONSchemaProps{},
+								Schema: &apiextensions.CustomResourceValidation{
+									OpenAPIV3Schema: &apiextensions.JSONSchemaProps{
+										Properties: map[string]apiextensions.JSONSchemaProps{},
 									},
 								},
 							},
@@ -139,7 +139,7 @@ func Test_getCRDRoot(t *testing.T) {
 func Test_pathExists(t *testing.T) {
 	type args struct {
 		path string
-		data *apiextensionsv1.JSONSchemaProps
+		data *apiextensions.JSONSchemaProps
 	}
 	tests := []struct {
 		name string
@@ -150,10 +150,10 @@ func Test_pathExists(t *testing.T) {
 			name: "Path is valid with Properties",
 			args: args{
 				path: "level1.level2",
-				data: &apiextensionsv1.JSONSchemaProps{
-					Properties: map[string]apiextensionsv1.JSONSchemaProps{
+				data: &apiextensions.JSONSchemaProps{
+					Properties: map[string]apiextensions.JSONSchemaProps{
 						"level1": {
-							Properties: map[string]apiextensionsv1.JSONSchemaProps{
+							Properties: map[string]apiextensions.JSONSchemaProps{
 								"level2": {},
 							},
 						},
@@ -166,10 +166,10 @@ func Test_pathExists(t *testing.T) {
 			name: "Path is NOT valid with Properties",
 			args: args{
 				path: "level1.level2",
-				data: &apiextensionsv1.JSONSchemaProps{
-					Properties: map[string]apiextensionsv1.JSONSchemaProps{
+				data: &apiextensions.JSONSchemaProps{
+					Properties: map[string]apiextensions.JSONSchemaProps{
 						"level1": {
-							Properties: map[string]apiextensionsv1.JSONSchemaProps{
+							Properties: map[string]apiextensions.JSONSchemaProps{
 								"level3": {},
 							},
 						},
@@ -182,14 +182,14 @@ func Test_pathExists(t *testing.T) {
 			name: "Path is valid with Items",
 			args: args{
 				path: "level1.level2",
-				data: &apiextensionsv1.JSONSchemaProps{
-					Properties: map[string]apiextensionsv1.JSONSchemaProps{
+				data: &apiextensions.JSONSchemaProps{
+					Properties: map[string]apiextensions.JSONSchemaProps{
 						"level1": {
-							Items: &apiextensionsv1.JSONSchemaPropsOrArray{
+							Items: &apiextensions.JSONSchemaPropsOrArray{
 								Schema: nil,
-								JSONSchemas: []apiextensionsv1.JSONSchemaProps{
+								JSONSchemas: []apiextensions.JSONSchemaProps{
 									{
-										Properties: map[string]apiextensionsv1.JSONSchemaProps{
+										Properties: map[string]apiextensions.JSONSchemaProps{
 											"level2": {},
 										},
 									},
@@ -205,14 +205,14 @@ func Test_pathExists(t *testing.T) {
 			name: "Path is NOT valid with Items",
 			args: args{
 				path: "level1.level2",
-				data: &apiextensionsv1.JSONSchemaProps{
-					Properties: map[string]apiextensionsv1.JSONSchemaProps{
+				data: &apiextensions.JSONSchemaProps{
+					Properties: map[string]apiextensions.JSONSchemaProps{
 						"level1": {
-							Items: &apiextensionsv1.JSONSchemaPropsOrArray{
+							Items: &apiextensions.JSONSchemaPropsOrArray{
 								Schema: nil,
-								JSONSchemas: []apiextensionsv1.JSONSchemaProps{
+								JSONSchemas: []apiextensions.JSONSchemaProps{
 									{
-										Properties: map[string]apiextensionsv1.JSONSchemaProps{
+										Properties: map[string]apiextensions.JSONSchemaProps{
 											"level32": {},
 										},
 									},
@@ -228,19 +228,19 @@ func Test_pathExists(t *testing.T) {
 			name: "Path is valid with Items and Props",
 			args: args{
 				path: "level1.level2.level3",
-				data: &apiextensionsv1.JSONSchemaProps{
-					Properties: map[string]apiextensionsv1.JSONSchemaProps{
+				data: &apiextensions.JSONSchemaProps{
+					Properties: map[string]apiextensions.JSONSchemaProps{
 						"level1": {
-							Items: &apiextensionsv1.JSONSchemaPropsOrArray{
+							Items: &apiextensions.JSONSchemaPropsOrArray{
 								Schema: nil,
-								JSONSchemas: []apiextensionsv1.JSONSchemaProps{
+								JSONSchemas: []apiextensions.JSONSchemaProps{
 									{
-										Properties: map[string]apiextensionsv1.JSONSchemaProps{
+										Properties: map[string]apiextensions.JSONSchemaProps{
 											"level2": {
-												Items: &apiextensionsv1.JSONSchemaPropsOrArray{
+												Items: &apiextensions.JSONSchemaPropsOrArray{
 													JSONSchemas: nil,
-													Schema: &apiextensionsv1.JSONSchemaProps{
-														Properties: map[string]apiextensionsv1.JSONSchemaProps{
+													Schema: &apiextensions.JSONSchemaProps{
+														Properties: map[string]apiextensions.JSONSchemaProps{
 															"level3": {},
 														},
 													},

@@ -17,17 +17,19 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_serverless_instances.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ServerlessInstanceLister,ServerlessInstanceDescriber,ServerlessInstanceDeleter,ServerlessInstanceCreator,ServerlessInstanceUpdater
+//go:generate mockgen -destination=../mocks/mock_serverless_instances.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store ServerlessInstanceLister,ServerlessInstanceDescriber,ServerlessInstanceDeleter,ServerlessInstanceCreator,ServerlessInstanceUpdater
 
 type ServerlessInstanceLister interface {
-	ServerlessInstances(string, *ListOptions) (*atlasv2.PaginatedServerlessInstanceDescription, error)
+	ServerlessInstances(string, *atlas.ListOptions) (*atlasv2.PaginatedServerlessInstanceDescription, error)
 }
 
 type ServerlessInstanceDescriber interface {
+	ServerlessInstance(string, string) (*atlas.Cluster, error)
 	GetServerlessInstance(string, string) (*atlasv2.ServerlessInstanceDescription, error)
 }
 
@@ -44,54 +46,74 @@ type ServerlessInstanceUpdater interface {
 }
 
 // ServerlessInstances encapsulates the logic to manage different cloud providers.
-func (s *Store) ServerlessInstances(projectID string, listOps *ListOptions) (*atlasv2.PaginatedServerlessInstanceDescription, error) {
-	if s.service == config.CloudGovService {
+func (s *Store) ServerlessInstances(projectID string, listOps *atlas.ListOptions) (*atlasv2.PaginatedServerlessInstanceDescription, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.clientv2.ServerlessInstancesApi.ListServerlessInstances(s.ctx, projectID).
+			ItemsPerPage(listOps.ItemsPerPage).
+			PageNum(listOps.PageNum).
+			Execute()
+
+		return result, err
+	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.ServerlessInstancesApi.ListServerlessInstances(s.ctx, projectID).
-		ItemsPerPage(listOps.ItemsPerPage).
-		PageNum(listOps.PageNum).
-		IncludeCount(listOps.IncludeCount).
-		Execute()
-
-	return result, err
 }
 
-// GetServerlessInstance encapsulates the logic to manage different cloud providers.
+// ServerlessInstance encapsulates the logic to manage different cloud providers.
 func (s *Store) GetServerlessInstance(projectID, clusterName string) (*atlasv2.ServerlessInstanceDescription, error) {
-	if s.service == config.CloudGovService {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.clientv2.ServerlessInstancesApi.GetServerlessInstance(s.ctx, projectID, clusterName).Execute()
+		return result, err
+	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.ServerlessInstancesApi.GetServerlessInstance(s.ctx, projectID, clusterName).Execute()
-	return result, err
+}
+
+// Used by Kubernetes v1 ServerlessInstance encapsulates the logic to manage different cloud providers.
+func (s *Store) ServerlessInstance(projectID, clusterName string) (*atlas.Cluster, error) {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.client.(*atlas.Client).ServerlessInstances.Get(s.ctx, projectID, clusterName)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // DeleteServerlessInstance encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteServerlessInstance(projectID, name string) error {
-	if s.service == config.CloudGovService {
+	switch s.service {
+	case config.CloudService:
+		_, _, err := s.clientv2.ServerlessInstancesApi.DeleteServerlessInstance(s.ctx, projectID, name).Execute()
+		return err
+	default:
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	_, _, err := s.clientv2.ServerlessInstancesApi.DeleteServerlessInstance(s.ctx, projectID, name).Execute()
-	return err
 }
 
 // CreateServerlessInstance encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateServerlessInstance(projectID string, cluster *atlasv2.ServerlessInstanceDescriptionCreate) (*atlasv2.ServerlessInstanceDescription, error) {
-	if s.service == config.CloudGovService {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.clientv2.ServerlessInstancesApi.CreateServerlessInstance(s.ctx, projectID, cluster).
+			Execute()
+		return result, err
+	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.ServerlessInstancesApi.CreateServerlessInstance(s.ctx, projectID, cluster).
-		Execute()
-	return result, err
 }
 
 // UpdateServerlessInstance encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateServerlessInstance(projectID string, instanceName string, req *atlasv2.ServerlessInstanceDescriptionUpdate) (*atlasv2.ServerlessInstanceDescription, error) {
-	if s.service == config.CloudGovService {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.clientv2.ServerlessInstancesApi.UpdateServerlessInstance(s.ctx, projectID, instanceName, req).
+			Execute()
+
+		return result, err
+	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.ServerlessInstancesApi.UpdateServerlessInstance(s.ctx, projectID, instanceName, req).
-		Execute()
-
-	return result, err
 }

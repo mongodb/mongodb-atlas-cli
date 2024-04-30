@@ -47,6 +47,20 @@ func NewDecryption(options ...Option) *Decryption {
 	return d
 }
 
+func WithLocalOpts(fileName string) func(d *Decryption) {
+	return func(d *Decryption) {
+		d.opts.Local = &KeyProviderLocalOpts{
+			KeyFileName: fileName,
+		}
+	}
+}
+
+func WithKMIPOpts(opts *KeyProviderKMIPOpts) func(d *Decryption) {
+	return func(d *Decryption) {
+		d.opts.KMIP = opts
+	}
+}
+
 func WithAWSOpts(accessKey, secretAccessKey, sessionToken string) func(d *Decryption) {
 	return func(d *Decryption) {
 		d.opts.AWS = &KeyProviderAWSOpts{
@@ -79,7 +93,7 @@ func WithAzureOpts(tenantID, clientID, secret string) func(d *Decryption) {
 // the credentials provided by the user and the AES-GCM algorithm.
 // The decrypted audit log records are saved in the out stream.
 func (d *Decryption) Decrypt(logReader io.ReadSeeker, out io.Writer) error {
-	logLineScanner, err := readAuditLogFile(logReader)
+	_, logLineScanner, err := readAuditLogFile(logReader)
 	if err != nil {
 		return err
 	}

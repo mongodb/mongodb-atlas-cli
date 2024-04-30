@@ -15,13 +15,16 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	"fmt"
+
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store IntegrationCreator,IntegrationLister,IntegrationDeleter,IntegrationDescriber
+//go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store IntegrationCreator,IntegrationLister,IntegrationDeleter,IntegrationDescriber
 
 type IntegrationCreator interface {
-	CreateIntegration(string, string, *atlasv2.ThirdPartyIntegration) (*atlasv2.PaginatedIntegration, error)
+	CreateIntegration(string, string, *atlasv2.ThridPartyIntegration) (*atlasv2.PaginatedIntegration, error)
 }
 
 type IntegrationLister interface {
@@ -33,30 +36,50 @@ type IntegrationDeleter interface {
 }
 
 type IntegrationDescriber interface {
-	Integration(string, string) (*atlasv2.ThirdPartyIntegration, error)
+	Integration(string, string) (*atlasv2.ThridPartyIntegration, error)
 }
 
 // CreateIntegration encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateIntegration(projectID, integrationType string, integration *atlasv2.ThirdPartyIntegration) (*atlasv2.PaginatedIntegration, error) {
-	resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.CreateThirdPartyIntegration(s.ctx,
-		integrationType, projectID, integration).Execute()
-	return resp, err
+func (s *Store) CreateIntegration(projectID, integrationType string, integration *atlasv2.ThridPartyIntegration) (*atlasv2.PaginatedIntegration, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.CreateThirdPartyIntegration(s.ctx,
+			integrationType, projectID, integration).Execute()
+		return resp, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // Integrations encapsulates the logic to manage different cloud providers.
 func (s *Store) Integrations(projectID string) (*atlasv2.PaginatedIntegration, error) {
-	resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.ListThirdPartyIntegrations(s.ctx, projectID).Execute()
-	return resp, err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.ListThirdPartyIntegrations(s.ctx, projectID).Execute()
+		return resp, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // DeleteIntegration encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteIntegration(projectID, integrationType string) error {
-	_, _, err := s.clientv2.ThirdPartyIntegrationsApi.DeleteThirdPartyIntegration(s.ctx, integrationType, projectID).Execute()
-	return err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		_, _, err := s.clientv2.ThirdPartyIntegrationsApi.DeleteThirdPartyIntegration(s.ctx, integrationType, projectID).Execute()
+		return err
+	default:
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // Integration encapsulates the logic to manage different cloud providers.
-func (s *Store) Integration(projectID, integrationType string) (*atlasv2.ThirdPartyIntegration, error) {
-	resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.GetThirdPartyIntegration(s.ctx, projectID, integrationType).Execute()
-	return resp, err
+func (s *Store) Integration(projectID, integrationType string) (*atlasv2.ThridPartyIntegration, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.GetThirdPartyIntegration(s.ctx, projectID, integrationType).Execute()
+		return resp, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }

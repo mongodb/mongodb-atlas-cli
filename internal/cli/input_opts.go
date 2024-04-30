@@ -18,7 +18,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/terminal"
+	"github.com/andreaangiolillo/mongocli-test/internal/terminal"
 )
 
 type InputOpts struct {

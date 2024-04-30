@@ -15,10 +15,13 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	"fmt"
+
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_processes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProcessLister,ProcessDescriber
+//go:generate mockgen -destination=../mocks/mock_processes.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store ProcessLister,ProcessDescriber
 
 type ProcessLister interface {
 	Processes(*atlasv2.ListAtlasProcessesApiParams) (*atlasv2.PaginatedHostViewAtlas, error)
@@ -30,12 +33,22 @@ type ProcessDescriber interface {
 
 // Process encapsulate the logic to manage different cloud providers.
 func (s *Store) Process(params *atlasv2.GetAtlasProcessApiParams) (*atlasv2.ApiHostViewAtlas, error) {
-	result, _, err := s.clientv2.MonitoringAndLogsApi.GetAtlasProcessWithParams(s.ctx, params).Execute()
-	return result, err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.MonitoringAndLogsApi.GetAtlasProcessWithParams(s.ctx, params).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // Processes encapsulate the logic to manage different cloud providers.
 func (s *Store) Processes(params *atlasv2.ListAtlasProcessesApiParams) (*atlasv2.PaginatedHostViewAtlas, error) {
-	result, _, err := s.clientv2.MonitoringAndLogsApi.ListAtlasProcessesWithParams(s.ctx, params).Execute()
-	return result, err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.MonitoringAndLogsApi.ListAtlasProcessesWithParams(s.ctx, params).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }

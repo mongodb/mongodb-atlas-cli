@@ -15,18 +15,22 @@
 package store
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"go.mongodb.org/atlas-sdk/v20231115012/admin"
+	"fmt"
+
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_alert_configuration.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store AlertConfigurationLister,AlertConfigurationCreator,AlertConfigurationDeleter,AlertConfigurationUpdater,MatcherFieldsLister,AlertConfigurationEnabler,AlertConfigurationDisabler,AlertConfigurationDescriber
+//go:generate mockgen -destination=../mocks/mock_alert_configuration.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store AlertConfigurationLister,AlertConfigurationCreator,AlertConfigurationDeleter,AlertConfigurationUpdater,MatcherFieldsLister,AlertConfigurationEnabler,AlertConfigurationDisabler
 
 type AlertConfigurationLister interface {
-	AlertConfigurations(*admin.ListAlertConfigurationsApiParams) (*admin.PaginatedAlertConfig, error)
+	AlertConfigurations(string, *opsmngr.ListOptions) ([]atlas.AlertConfiguration, error)
 }
 
 type AlertConfigurationCreator interface {
-	CreateAlertConfiguration(*admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error)
+	CreateAlertConfiguration(*atlas.AlertConfiguration) (*atlas.AlertConfiguration, error)
 }
 
 type AlertConfigurationDeleter interface {
@@ -34,7 +38,7 @@ type AlertConfigurationDeleter interface {
 }
 
 type AlertConfigurationUpdater interface {
-	UpdateAlertConfiguration(*admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error)
+	UpdateAlertConfiguration(*atlas.AlertConfiguration) (*atlas.AlertConfiguration, error)
 }
 
 type MatcherFieldsLister interface {
@@ -42,65 +46,106 @@ type MatcherFieldsLister interface {
 }
 
 type AlertConfigurationEnabler interface {
-	EnableAlertConfiguration(string, string) (*admin.GroupAlertsConfig, error)
+	EnableAlertConfiguration(string, string) (*atlas.AlertConfiguration, error)
 }
 
 type AlertConfigurationDisabler interface {
-	DisableAlertConfiguration(string, string) (*admin.GroupAlertsConfig, error)
-}
-
-type AlertConfigurationDescriber interface {
-	AlertConfiguration(string, string) (*admin.GroupAlertsConfig, error)
+	DisableAlertConfiguration(string, string) (*atlas.AlertConfiguration, error)
 }
 
 // AlertConfigurations encapsulate the logic to manage different cloud providers.
-func (s *Store) AlertConfigurations(params *admin.ListAlertConfigurationsApiParams) (*admin.PaginatedAlertConfig, error) {
-	result, _, err := s.clientv2.AlertConfigurationsApi.ListAlertConfigurationsWithParams(s.ctx, params).Execute()
-	return result, err
+func (s *Store) AlertConfigurations(projectID string, opts *atlas.ListOptions) ([]atlas.AlertConfiguration, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.List(s.ctx, projectID, opts)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.List(s.ctx, projectID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // CreateAlertConfiguration encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateAlertConfiguration(alertConfig *admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error) {
-	result, _, err := s.clientv2.AlertConfigurationsApi.CreateAlertConfiguration(s.ctx, alertConfig.GetGroupId(), alertConfig).Execute()
-	return result, err
+func (s *Store) CreateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.Create(s.ctx, alertConfig.GroupID, alertConfig)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.Create(s.ctx, alertConfig.GroupID, alertConfig)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // DeleteAlertConfiguration encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteAlertConfiguration(projectID, id string) error {
-	_, err := s.clientv2.AlertConfigurationsApi.DeleteAlertConfiguration(s.ctx, projectID, id).Execute()
-	return err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		_, err := s.client.(*atlas.Client).AlertConfigurations.Delete(s.ctx, projectID, id)
+		return err
+	case config.OpsManagerService, config.CloudManagerService:
+		_, err := s.client.(*opsmngr.Client).AlertConfigurations.Delete(s.ctx, projectID, id)
+		return err
+	default:
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // MatcherFields encapsulate the logic to manage different cloud providers.
 func (s *Store) MatcherFields() ([]string, error) {
-	result, _, err := s.clientv2.AlertConfigurationsApi.ListAlertConfigurationMatchersFieldNames(s.ctx).Execute()
-	return result, err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.ListMatcherFields(s.ctx)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.ListMatcherFields(s.ctx)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
-func (s *Store) UpdateAlertConfiguration(alertConfig *admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error) {
-	result, _, err := s.clientv2.AlertConfigurationsApi.UpdateAlertConfiguration(s.ctx, alertConfig.GetGroupId(), alertConfig.GetId(), alertConfig).Execute()
-	return result, err
+func (s *Store) UpdateAlertConfiguration(alertConfig *atlas.AlertConfiguration) (*atlas.AlertConfiguration, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.Update(s.ctx, alertConfig.GroupID, alertConfig.ID, alertConfig)
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.Update(s.ctx, alertConfig.GroupID, alertConfig.ID, alertConfig)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // EnableAlertConfiguration encapsulate the logic to manage different cloud providers.
-func (s *Store) EnableAlertConfiguration(projectID, id string) (*admin.GroupAlertsConfig, error) {
-	toggle := admin.AlertsToggle{
-		Enabled: pointer.Get(true),
+func (s *Store) EnableAlertConfiguration(projectID, id string) (*atlas.AlertConfiguration, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(true))
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(true))
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.AlertConfigurationsApi.ToggleAlertConfiguration(s.ctx, projectID, id, &toggle).Execute()
-	return result, err
 }
 
 // DisableAlertConfiguration encapsulate the logic to manage different cloud providers.
-func (s *Store) DisableAlertConfiguration(projectID, id string) (*admin.GroupAlertsConfig, error) {
-	toggle := admin.AlertsToggle{
-		Enabled: pointer.Get(false),
+func (s *Store) DisableAlertConfiguration(projectID, id string) (*atlas.AlertConfiguration, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(false))
+		return result, err
+	case config.OpsManagerService, config.CloudManagerService:
+		result, _, err := s.client.(*opsmngr.Client).AlertConfigurations.EnableAnAlertConfig(s.ctx, projectID, id, pointer.Get(false))
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.AlertConfigurationsApi.ToggleAlertConfiguration(s.ctx, projectID, id, &toggle).Execute()
-	return result, err
-}
-
-func (s *Store) AlertConfiguration(projectID, id string) (*admin.GroupAlertsConfig, error) {
-	result, _, err := s.clientv2.AlertConfigurationsApi.GetAlertConfiguration(s.ctx, projectID, id).Execute()
-	return result, err
 }

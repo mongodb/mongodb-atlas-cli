@@ -15,7 +15,7 @@
 package decryption
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -24,7 +24,6 @@ func KeyProvidersBuilder() *cobra.Command {
 		Use:     "keyProviders",
 		Aliases: cli.GenerateAliases("keyProviders", "keys"),
 		Short:   "Manage your key collections.",
-		Hidden:  true,
 	}
 
 	cmd.AddCommand(KeyProvidersListBuilder())

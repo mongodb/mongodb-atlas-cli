@@ -15,10 +15,13 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	"fmt"
+
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_process_measurements.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProcessMeasurementLister
+//go:generate mockgen -destination=../mocks/mock_process_measurements.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store ProcessMeasurementLister
 
 type ProcessMeasurementLister interface {
 	ProcessMeasurements(*atlasv2.GetHostMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error)
@@ -26,6 +29,11 @@ type ProcessMeasurementLister interface {
 
 // ProcessMeasurements encapsulate the logic to manage different cloud providers.
 func (s *Store) ProcessMeasurements(params *atlasv2.GetHostMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error) {
-	result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostMeasurementsWithParams(s.ctx, params).Execute()
-	return result, err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostMeasurementsWithParams(s.ctx, params).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }

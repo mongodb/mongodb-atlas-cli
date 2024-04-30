@@ -24,7 +24,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -32,8 +32,8 @@ import (
 )
 
 const (
-	collectionNameAtlas = "movies"
-	databaseNameAtlas   = "sample_mflix"
+	collectionNameAtlas = "myCol"
+	databaseNameAtlas   = "myDB"
 )
 
 func TestDeploymentsAtlas(t *testing.T) {
@@ -51,6 +51,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 
 	dbUserPassword := dbUserUsername + "~PwD"
 
+	var connectionString string
 	var client *mongo.Client
 	ctx := context.Background()
 
@@ -65,6 +66,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"M10",
 			"--force",
 			"--skipMongosh",
+			"--skipSampleData",
 			"--debug",
 			"--projectId", g.projectID,
 			"--username", dbUserUsername,
@@ -77,7 +79,10 @@ func TestDeploymentsAtlas(t *testing.T) {
 		cmd.Stdout = &o
 		cmd.Stderr = &e
 		err = cmd.Run()
-		require.NoError(t, err, e.String())
+		req.NoError(err, e.String())
+
+		connectionString = strings.TrimSpace(o.String())
+		connectionString = strings.Replace(connectionString, "Your connection string: ", "", 1)
 	})
 	require.NoError(t, watchCluster(g.projectID, clusterName))
 
@@ -107,7 +112,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 					Password:      dbUserPassword,
 				}),
 		)
-		require.NoError(t, err)
+		req.NoError(err)
 	})
 
 	t.Cleanup(func() {
@@ -124,7 +129,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err, string(resp))
 		assert.Contains(t, string(resp), fmt.Sprintf("Pausing deployment '%s'", clusterName))
 	})
 
@@ -138,12 +143,13 @@ func TestDeploymentsAtlas(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
-		assert.Contains(t, string(resp), fmt.Sprintf("Starting deployment '%s'", clusterName))
+		req.NoError(err, string(resp))
+		a := assert.New(t)
+		a.Contains(string(resp), fmt.Sprintf("Starting deployment '%s'", clusterName))
 	})
 	require.NoError(t, watchCluster(g.projectID, clusterName))
 
-	t.Run("Create Search Index", func(t *testing.T) {
+	t.Run("Create Index", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			searchEntity,
@@ -158,13 +164,12 @@ func TestDeploymentsAtlas(t *testing.T) {
 			databaseNameAtlas,
 			"--collection",
 			collectionNameAtlas,
-			"--watch",
 		)
 		cmd.Env = os.Environ()
 
 		r, err := cmd.CombinedOutput()
 		out := string(r)
-		require.NoError(t, err, out)
+		req.NoError(err, out)
 		assert.Contains(t, out, "Search index created")
 	})
 

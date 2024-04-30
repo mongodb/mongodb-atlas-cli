@@ -22,7 +22,9 @@ import (
 )
 
 const (
-	runOn = "ubuntu2004-small"
+	runOn    = "ubuntu2004-small"
+	atlascli = "atlascli"
+	mongocli = "mongocli"
 )
 
 var (
@@ -68,23 +70,27 @@ var (
 	}
 )
 
-func newDependency(os, serverVersion, repo string) shrub.TaskDependency {
+func newDependency(toolName, os, serverVersion, repo string) shrub.TaskDependency {
 	return shrub.TaskDependency{
-		Name:    fmt.Sprintf("push_atlascli_%s_%s_%s_%s_stable", newOs[os], repo, x86_64, strings.ReplaceAll(serverVersion, ".", "")),
-		Variant: fmt.Sprintf("generated_release_atlascli_publish_%s", strings.ReplaceAll(serverVersion, ".", "")),
+		Name:    fmt.Sprintf("push_%s_%s_%s_%s_%s_stable", toolName, newOs[os], repo, x86_64, strings.ReplaceAll(serverVersion, ".", "")),
+		Variant: fmt.Sprintf("generated_release_%s_publish_%s", toolName, strings.ReplaceAll(serverVersion, ".", "")),
 	}
 }
 
-func RepoTasks(c *shrub.Configuration) {
+func RepoTasks(c *shrub.Configuration, toolName string) {
 	for _, serverVersion := range serverVersions {
 		v := &shrub.Variant{
-			BuildName:        fmt.Sprintf("test_repo_atlascli_%v", serverVersion),
-			BuildDisplayName: fmt.Sprintf("Test atlascli on repo %v", serverVersion),
+			BuildName:        fmt.Sprintf("test_repo_%v_%v", toolName, serverVersion),
+			BuildDisplayName: fmt.Sprintf("Test %v on repo %v", toolName, serverVersion),
 			DistroRunOn:      []string{runOn},
 		}
 
 		pkg := "mongodb-atlas-cli"
 		entrypoint := "atlas"
+		if toolName == mongocli {
+			pkg = mongocli
+			entrypoint = mongocli
+		}
 
 		for _, os := range oses {
 			for _, repo := range repos {
@@ -94,11 +100,11 @@ func RepoTasks(c *shrub.Configuration) {
 				}
 
 				t := &shrub.Task{
-					Name: fmt.Sprintf("test_repo_atlascli_%v_%v_%v", os, repo, serverVersion),
+					Name: fmt.Sprintf("test_repo_%v_%v_%v_%v", toolName, os, repo, serverVersion),
 				}
 				t = t.Stepback(false).
 					GitTagOnly(true).
-					Dependency(newDependency(os, serverVersion, repo)).
+					Dependency(newDependency(toolName, os, serverVersion, repo)).
 					Function("clone").
 					FunctionWithVars("docker build repo", map[string]string{
 						"server_version": serverVersion,
@@ -117,22 +123,23 @@ func RepoTasks(c *shrub.Configuration) {
 	}
 }
 
-func PostPkgTasks(c *shrub.Configuration) {
+func PostPkgTasks(c *shrub.Configuration, toolName string) {
 	v := &shrub.Variant{
-		BuildName:        "pkg_smoke_tests_docker_atlascli_generated",
-		BuildDisplayName: "Generated post packaging smoke tests (Docker / atlascli)",
+		BuildName:        fmt.Sprintf("pkg_smoke_tests_docker_%v_generated", toolName),
+		BuildDisplayName: fmt.Sprintf("Generated post packaging smoke tests (Docker / %v)", toolName),
 		DistroRunOn:      []string{runOn},
 	}
 
 	for _, os := range oses {
 		t := &shrub.Task{
-			Name: fmt.Sprintf("pkg_test_atlascli_docker_%v", os),
+			Name: fmt.Sprintf("pkg_test_%v_docker_%v", toolName, os),
 		}
 		t = t.Dependency(shrub.TaskDependency{
 			Name:    "package_goreleaser",
-			Variant: "goreleaser_atlascli_snapshot",
+			Variant: fmt.Sprintf("goreleaser_%v_snapshot", toolName),
 		}).Function("clone").FunctionWithVars("docker build", map[string]string{
-			"image": postPkgImg[os],
+			"tool_name": toolName,
+			"image":     postPkgImg[os],
 		})
 		c.Tasks = append(c.Tasks, t)
 		v.AddTasks(t.Name)
@@ -141,23 +148,28 @@ func PostPkgTasks(c *shrub.Configuration) {
 	c.Variants = append(c.Variants, v)
 }
 
-func PostPkgMetaTasks(c *shrub.Configuration) {
+func PostPkgMetaTasks(c *shrub.Configuration, toolName string) {
+	if toolName != atlascli {
+		return
+	}
+
 	v := &shrub.Variant{
-		BuildName:        "pkg_smoke_tests_docker_meta_atlascli_generated",
-		BuildDisplayName: "Generated post packaging smoke tests (Meta / atlascli)",
+		BuildName:        fmt.Sprintf("pkg_smoke_tests_docker_meta_%s_generated", toolName),
+		BuildDisplayName: fmt.Sprintf("Generated post packaging smoke tests (Meta / %s)", toolName),
 		DistroRunOn:      []string{runOn},
 	}
 
 	for _, os := range oses {
 		t := &shrub.Task{
-			Name: fmt.Sprintf("pkg_test_atlascli_meta_docker_%s", os),
+			Name: fmt.Sprintf("pkg_test_%s_meta_docker_%s", toolName, os),
 		}
 		t = t.Dependency(shrub.TaskDependency{
 			Name:    "package_goreleaser",
-			Variant: "goreleaser_atlascli_snapshot",
+			Variant: fmt.Sprintf("goreleaser_%v_snapshot", toolName),
 		}).Function("clone").
 			FunctionWithVars("docker build meta", map[string]string{
-				"image": postPkgImg[os],
+				"tool_name": toolName,
+				"image":     postPkgImg[os],
 			})
 		c.Tasks = append(c.Tasks, t)
 		v.AddTasks(t.Name)
@@ -166,26 +178,27 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 	c.Variants = append(c.Variants, v)
 }
 
-func PublishStableTasks(c *shrub.Configuration) {
+func PublishStableTasks(c *shrub.Configuration, toolName string) {
 	dependency := []shrub.TaskDependency{
 		{
-			Name:    "compile",
+			Name:    fmt.Sprintf("compile_%s", toolName),
 			Variant: "code_health",
 		},
 		{
-			Name:    "package_goreleaser",
-			Variant: "release_atlascli_github",
+			Name:    fmt.Sprintf("release_%s", toolName),
+			Variant: fmt.Sprintf("release_%s_github", toolName),
 		},
 	}
 	for _, sv := range serverVersions {
 		v := &shrub.Variant{
-			BuildName:        fmt.Sprintf("generated_release_atlascli_publish_%s", strings.ReplaceAll(sv, ".", "")),
-			BuildDisplayName: fmt.Sprintf("Publish atlascli yum/apt %s", sv),
+			BuildName:        fmt.Sprintf("generated_release_%s_publish_%s", toolName, strings.ReplaceAll(sv, ".", "")),
+			BuildDisplayName: fmt.Sprintf("Publish %s yum/apt %s", toolName, sv),
 			DistroRunOn:      []string{"rhel80-small"},
 		}
 		publishVariant(
 			c,
 			v,
+			toolName,
 			sv,
 			"_stable",
 			dependency,
@@ -194,24 +207,57 @@ func PublishStableTasks(c *shrub.Configuration) {
 	}
 }
 
-func PublishSnapshotTasks(c *shrub.Configuration) {
+func PublishSnapshotTasks(c *shrub.Configuration, toolName string) {
 	dependency := []shrub.TaskDependency{
 		{
-			Name:    "compile",
+			Name:    fmt.Sprintf("compile_%s", toolName),
 			Variant: "code_health",
 		},
 		{
 			Name:    "package_goreleaser",
-			Variant: "goreleaser_atlascli_snapshot",
+			Variant: fmt.Sprintf("goreleaser_%s_snapshot", toolName),
 		},
 	}
-	v := c.Variant("publish_atlascli_snapshot")
+	v := c.Variant(fmt.Sprintf("publish_%s_snapshot", toolName))
 	publishVariant(
 		c,
 		v,
+		toolName,
 		"5.0",
 		"",
 		dependency,
 		false,
 	)
+}
+
+func LocalDeploymentTasks(c *shrub.Configuration, toolName string) {
+	if toolName != atlascli {
+		return
+	}
+
+	for _, runOn := range []string{
+		"rhel8.7-small",
+		"rhel8.8-small",
+		"rhel90-small",
+		"rhel91-small",
+	} {
+		v := &shrub.Variant{
+			BuildName:        fmt.Sprintf("e2e_generated_local_deployments_%v", strings.ReplaceAll(runOn, ".", "_")),
+			BuildDisplayName: fmt.Sprintf("Generated local deployments tests (%s)", runOn),
+			DistroRunOn:      []string{runOn},
+			Expansions:       expansions(),
+		}
+
+		v.AddTasks(".e2e .deployments .local .run")
+
+		c.Variants = append(c.Variants, v)
+	}
+}
+
+func expansions() map[string]interface{} {
+	return map[string]interface{}{
+		"go_root":      "/opt/golang/go1.21",
+		"go_bin":       "/opt/golang/go1.21/bin",
+		"go_base_path": "",
+	}
 }

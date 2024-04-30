@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"time"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -66,20 +66,14 @@ type Watcher struct {
 	stateTransition    StateTransition
 	describer          StateDescriber
 	hasStarted         bool
-	defaultWait        time.Duration
 }
 
 const defaultWait = 4 * time.Second
 
 func NewWatcher(stateTransition StateTransition, describer StateDescriber) *Watcher {
-	return NewWatcherWithDefaultWait(stateTransition, describer, defaultWait)
-}
-
-func NewWatcherWithDefaultWait(stateTransition StateTransition, describer StateDescriber, defaultWait time.Duration) *Watcher {
 	return &Watcher{
 		stateTransition: stateTransition,
 		describer:       describer,
-		defaultWait:     defaultWait,
 	}
 }
 
@@ -94,7 +88,7 @@ func (watcher *Watcher) Watch() error {
 
 func (watcher *Watcher) fibonacciBackoff() error {
 	previousBackoff := 0 * time.Second
-	currentBackoff := watcher.defaultWait
+	currentBackoff := defaultWait
 
 	for {
 		done, err := watcher.IsDone()
@@ -113,7 +107,7 @@ func (watcher *Watcher) constantBackoff() error {
 		if err != nil || done {
 			return err
 		}
-		time.Sleep(watcher.defaultWait)
+		time.Sleep(defaultWait)
 	}
 }
 

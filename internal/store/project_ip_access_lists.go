@@ -16,17 +16,20 @@ package store
 
 import (
 	"errors"
+	"fmt"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_project_ip_access_lists.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectIPAccessListDescriber,ProjectIPAccessListLister,ProjectIPAccessListCreator,ProjectIPAccessListDeleter
+//go:generate mockgen -destination=../mocks/mock_project_ip_access_lists.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store ProjectIPAccessListDescriber,ProjectIPAccessListLister,ProjectIPAccessListCreator,ProjectIPAccessListDeleter
 
 type ProjectIPAccessListDescriber interface {
 	IPAccessList(string, string) (*atlasv2.NetworkPermissionEntry, error)
 }
 type ProjectIPAccessListLister interface {
-	ProjectIPAccessLists(string, *ListOptions) (*atlasv2.PaginatedNetworkAccess, error)
+	ProjectIPAccessLists(string, *atlas.ListOptions) (*atlasv2.PaginatedNetworkAccess, error)
 }
 
 type ProjectIPAccessListCreator interface {
@@ -42,34 +45,53 @@ func (s *Store) CreateProjectIPAccessList(entries []*atlasv2.NetworkPermissionEn
 	if len(entries) == 0 {
 		return nil, errors.New("no entries")
 	}
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		entry := make([]atlasv2.NetworkPermissionEntry, len(entries))
+		for i, ptr := range entries {
+			entry[i] = *ptr
+		}
 
-	entry := make([]atlasv2.NetworkPermissionEntry, len(entries))
-	for i, ptr := range entries {
-		entry[i] = *ptr
+		result, _, err := s.clientv2.ProjectIPAccessListApi.CreateProjectIpAccessList(s.ctx, entries[0].GetGroupId(), &entry).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-
-	result, _, err := s.clientv2.ProjectIPAccessListApi.CreateProjectIpAccessList(s.ctx, entries[0].GetGroupId(), &entry).Execute()
-	return result, err
 }
 
 // DeleteProjectIPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
-	_, _, err := s.clientv2.ProjectIPAccessListApi.DeleteProjectIpAccessList(s.ctx, projectID, entry).Execute()
-	return err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		_, _, err := s.clientv2.ProjectIPAccessListApi.DeleteProjectIpAccessList(s.ctx, projectID, entry).Execute()
+		return err
+	default:
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // ProjectIPAccessLists encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectIPAccessLists(projectID string, opts *ListOptions) (*atlasv2.PaginatedNetworkAccess, error) {
-	res := s.clientv2.ProjectIPAccessListApi.ListProjectIpAccessLists(s.ctx, projectID)
-	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
+func (s *Store) ProjectIPAccessLists(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedNetworkAccess, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		res := s.clientv2.ProjectIPAccessListApi.ListProjectIpAccessLists(s.ctx, projectID)
+		if opts != nil {
+			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		}
+		result, _, err := res.Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := res.Execute()
-	return result, err
 }
 
 // IPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) IPAccessList(projectID, name string) (*atlasv2.NetworkPermissionEntry, error) {
-	result, _, err := s.clientv2.ProjectIPAccessListApi.GetProjectIpList(s.ctx, projectID, name).Execute()
-	return result, err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.ProjectIPAccessListApi.GetProjectIpList(s.ctx, projectID, name).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }

@@ -23,10 +23,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
@@ -59,7 +59,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var key atlasv2.PaginatedApiUserAccessListResponse
+		var key atlasv2.PaginatedApiUserAccessList
 		require.NoError(t, json.Unmarshal(resp, &key))
 		assert.NotEmpty(t, key.Results)
 	})
@@ -75,7 +75,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var key atlasv2.PaginatedApiUserAccessListResponse
+		var key atlasv2.PaginatedApiUserAccessList
 		require.NoError(t, json.Unmarshal(resp, &key))
 		assert.NotEmpty(t, key.Results)
 	})
@@ -97,10 +97,10 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
-		var key atlasv2.PaginatedApiUserAccessListResponse
+		var key atlasv2.PaginatedApiUserAccessList
 		require.NoError(t, json.Unmarshal(resp, &key))
 		assert.NotEmpty(t, key.Results)
-		entry = *key.GetResults()[0].IpAddress
+		entry = *key.Results[0].IpAddress
 	})
 
 	t.Run("Delete", func(t *testing.T) {

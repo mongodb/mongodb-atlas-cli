@@ -21,15 +21,15 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/version"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/resources"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/version"
 	"gopkg.in/yaml.v3"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes/scheme"
 )
@@ -43,27 +43,16 @@ const (
 	credentialsProjectScopedName  = "mongodb-atlas-%s-api-key"       //nolint:gosec
 )
 
-type InstallConfig struct {
-	Version                              string
-	Namespace                            string
-	Watch                                []string
-	ResourceDeletionProtectionEnabled    bool
-	SubResourceDeletionProtectionEnabled bool
-	AtlasGov                             bool
-}
-
 type Installer interface {
 	InstallCRDs(ctx context.Context, version string, namespaced bool) error
-	InstallConfiguration(ctx context.Context, installConfig *InstallConfig) error
+	InstallConfiguration(ctx context.Context, version, namespace string, watch []string, atlasGov bool) error
 	InstallCredentials(ctx context.Context, namespace, orgID, publicKey, privateKey string, projectName string) error
 }
 
 type InstallResources struct {
-	versionProvider       version.AtlasOperatorVersionProvider
-	kubeCtl               *kubernetes.KubeCtl
-	objConverter          runtime.UnstructuredConverter
-	deletionProtection    bool
-	subDeletionProtection bool
+	versionProvider version.AtlasOperatorVersionProvider
+	kubeCtl         *kubernetes.KubeCtl
+	objConverter    runtime.UnstructuredConverter
 }
 
 func (ir *InstallResources) InstallCRDs(ctx context.Context, version string, namespaced bool) error {
@@ -104,14 +93,14 @@ func (ir *InstallResources) InstallCRDs(ctx context.Context, version string, nam
 	return nil
 }
 
-func (ir *InstallResources) InstallConfiguration(ctx context.Context, installConfig *InstallConfig) error {
+func (ir *InstallResources) InstallConfiguration(ctx context.Context, version, namespace string, watch []string, atlasGov bool) error {
 	target := installationTargetClusterWide
 
-	if len(installConfig.Watch) > 0 {
+	if len(watch) > 0 {
 		target = installationTargetNamespaced
 	}
 
-	data, err := ir.versionProvider.DownloadResource(ctx, installConfig.Version, fmt.Sprintf("deploy/%s/%s-config.yaml", target, target))
+	data, err := ir.versionProvider.DownloadResource(ctx, version, fmt.Sprintf("deploy/%s/%s-config.yaml", target, target))
 	if err != nil {
 		return fmt.Errorf("unable to retrieve configuration from repository: %w", err)
 	}
@@ -122,29 +111,42 @@ func (ir *InstallResources) InstallConfiguration(ctx context.Context, installCon
 	}
 
 	for _, config := range configData {
-		if err2 := ir.handleKind(ctx, installConfig, config); err2 != nil {
-			return err2
+		switch config["kind"] {
+		case "ServiceAccount":
+			err = ir.addServiceAccount(ctx, config, namespace)
+			if err != nil {
+				return err
+			}
+		case "Role":
+			err = ir.addRoles(ctx, config, namespace, watch)
+			if err != nil {
+				return err
+			}
+		case "ClusterRole":
+			err = ir.addClusterRole(ctx, config, namespace)
+			if err != nil {
+				return err
+			}
+		case "RoleBinding":
+			err = ir.addRoleBindings(ctx, config, namespace, watch)
+			if err != nil {
+				return err
+			}
+		case "ClusterRoleBinding":
+			err = ir.addClusterRoleBinding(ctx, config, namespace)
+			if err != nil {
+				return err
+			}
+		case "Deployment":
+			err = ir.addDeployment(ctx, config, namespace, watch, atlasGov)
+			if err != nil {
+				return err
+			}
+		default:
+			continue
 		}
 	}
 
-	return nil
-}
-
-func (ir *InstallResources) handleKind(ctx context.Context, installConfig *InstallConfig, config map[string]interface{}) error {
-	switch config["kind"] {
-	case "ServiceAccount":
-		return ir.addServiceAccount(ctx, config, installConfig.Namespace)
-	case "Role":
-		return ir.addRoles(ctx, config, installConfig.Namespace, installConfig.Watch)
-	case "ClusterRole":
-		return ir.addClusterRole(ctx, config, installConfig.Namespace)
-	case "RoleBinding":
-		return ir.addRoleBindings(ctx, config, installConfig.Namespace, installConfig.Watch)
-	case "ClusterRoleBinding":
-		return ir.addClusterRoleBinding(ctx, config, installConfig.Namespace)
-	case "Deployment":
-		return ir.addDeployment(ctx, config, installConfig)
-	}
 	return nil
 }
 
@@ -156,7 +158,7 @@ func (ir *InstallResources) InstallCredentials(ctx context.Context, namespace, o
 	}
 
 	obj := &corev1.Secret{
-		ObjectMeta: metav1.ObjectMeta{
+		ObjectMeta: apisv1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,
 			Labels: map[string]string{
@@ -285,20 +287,20 @@ func (ir *InstallResources) addClusterRoleBinding(ctx context.Context, config ma
 	return nil
 }
 
-func (ir *InstallResources) addDeployment(ctx context.Context, config map[string]interface{}, installConfig *InstallConfig) error {
+func (ir *InstallResources) addDeployment(ctx context.Context, config map[string]interface{}, namespace string, watch []string, atlasGov bool) error {
 	obj := &appsv1.Deployment{}
 	err := ir.objConverter.FromUnstructured(config, obj)
 	if err != nil {
 		return fmt.Errorf("failed to convert Deployment object: %w", err)
 	}
 
-	obj.SetNamespace(installConfig.Namespace)
+	obj.SetNamespace(namespace)
 
 	if len(obj.Spec.Template.Spec.Containers) > 0 {
 		atlasDomain := os.Getenv("MCLI_OPS_MANAGER_URL")
 		if atlasDomain == "" {
 			atlasDomain = "https://cloud.mongodb.com/"
-			if installConfig.AtlasGov {
+			if atlasGov {
 				atlasDomain = "https://cloud.mongodbgov.com/"
 			}
 		}
@@ -309,24 +311,17 @@ func (ir *InstallResources) addDeployment(ctx context.Context, config map[string
 			}
 		}
 
-		if len(installConfig.Watch) > 0 {
+		if len(watch) > 0 {
 			for i := range obj.Spec.Template.Spec.Containers[0].Env {
 				env := obj.Spec.Template.Spec.Containers[0].Env[i]
 
 				if env.Name == "WATCH_NAMESPACE" {
 					env.ValueFrom = nil
-					env.Value = joinNamespaces(installConfig.Namespace, installConfig.Watch)
+					env.Value = joinNamespaces(namespace, watch)
 				}
 
 				obj.Spec.Template.Spec.Containers[0].Env[i] = env
 			}
-		}
-
-		if !installConfig.ResourceDeletionProtectionEnabled {
-			obj.Spec.Template.Spec.Containers[0].Args = append(obj.Spec.Template.Spec.Containers[0].Args, "--object-deletion-protection=false")
-		}
-		if !installConfig.SubResourceDeletionProtectionEnabled {
-			obj.Spec.Template.Spec.Containers[0].Args = append(obj.Spec.Template.Spec.Containers[0].Args, "--subobject-deletion-protection=false")
 		}
 	}
 
@@ -360,13 +355,11 @@ func parseYaml(data io.ReadCloser) ([]map[string]interface{}, error) {
 	return k8sResources, nil
 }
 
-func NewInstaller(versionProvider version.AtlasOperatorVersionProvider, kubectl *kubernetes.KubeCtl, deletionProtection, subDeletionProtection bool) *InstallResources {
+func NewInstaller(versionProvider version.AtlasOperatorVersionProvider, kubectl *kubernetes.KubeCtl) *InstallResources {
 	return &InstallResources{
-		versionProvider:       versionProvider,
-		kubeCtl:               kubectl,
-		objConverter:          runtime.DefaultUnstructuredConverter,
-		deletionProtection:    deletionProtection,
-		subDeletionProtection: subDeletionProtection,
+		versionProvider: versionProvider,
+		kubeCtl:         kubectl,
+		objConverter:    runtime.DefaultUnstructuredConverter,
 	}
 }
 

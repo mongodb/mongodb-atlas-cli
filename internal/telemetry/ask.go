@@ -16,8 +16,8 @@ package telemetry
 
 import (
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/log"
 )
 
 func TrackAsk(qs []*survey.Question, response interface{}, opts ...survey.AskOpt) error {

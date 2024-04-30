@@ -15,10 +15,13 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	"fmt"
+
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_database_roles.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DatabaseRoleLister,DatabaseRoleCreator,DatabaseRoleDeleter,DatabaseRoleUpdater,DatabaseRoleDescriber
+//go:generate mockgen -destination=../mocks/mock_database_roles.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store DatabaseRoleLister,DatabaseRoleCreator,DatabaseRoleDeleter,DatabaseRoleUpdater,DatabaseRoleDescriber
 
 type DatabaseRoleLister interface {
 	DatabaseRoles(string) ([]atlasv2.UserCustomDBRole, error)
@@ -43,34 +46,59 @@ type DatabaseRoleDescriber interface {
 
 // CreateDatabaseRole encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateDatabaseRole(groupID string, role *atlasv2.UserCustomDBRole) (*atlasv2.UserCustomDBRole, error) {
-	result, _, err := s.clientv2.CustomDatabaseRolesApi.CreateCustomDatabaseRole(s.ctx, groupID, role).Execute()
-	return result, err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.CustomDatabaseRolesApi.CreateCustomDatabaseRole(s.ctx, groupID, role).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // DeleteDatabaseRole encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteDatabaseRole(groupID, roleName string) error {
-	_, err := s.clientv2.CustomDatabaseRolesApi.DeleteCustomDatabaseRole(s.ctx, groupID, roleName).Execute()
-	return err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		_, err := s.clientv2.CustomDatabaseRolesApi.DeleteCustomDatabaseRole(s.ctx, groupID, roleName).Execute()
+		return err
+	default:
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // DatabaseRoles encapsulate the logic to manage different cloud providers.
 func (s *Store) DatabaseRoles(projectID string) ([]atlasv2.UserCustomDBRole, error) {
-	result, _, err := s.clientv2.CustomDatabaseRolesApi.ListCustomDatabaseRoles(s.ctx, projectID).Execute()
-	return result, err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.CustomDatabaseRolesApi.ListCustomDatabaseRoles(s.ctx, projectID).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // UpdateDatabaseRole encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateDatabaseRole(groupID, roleName string, role *atlasv2.UserCustomDBRole) (*atlasv2.UserCustomDBRole, error) {
-	dbRole := atlasv2.UpdateCustomDBRole{
-		Actions:        role.Actions,
-		InheritedRoles: role.InheritedRoles,
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		dbRole := atlasv2.UpdateCustomDBRole{
+			Actions:        role.Actions,
+			InheritedRoles: role.InheritedRoles,
+		}
+		result, _, err := s.clientv2.CustomDatabaseRolesApi.UpdateCustomDatabaseRole(s.ctx, groupID, roleName, &dbRole).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.CustomDatabaseRolesApi.UpdateCustomDatabaseRole(s.ctx, groupID, roleName, &dbRole).Execute()
-	return result, err
 }
 
 // DatabaseRole encapsulate the logic to manage different cloud providers.
 func (s *Store) DatabaseRole(groupID, roleName string) (*atlasv2.UserCustomDBRole, error) {
-	result, _, err := s.clientv2.CustomDatabaseRolesApi.GetCustomDatabaseRole(s.ctx, groupID, roleName).Execute()
-	return result, err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.CustomDatabaseRolesApi.GetCustomDatabaseRole(s.ctx, groupID, roleName).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }

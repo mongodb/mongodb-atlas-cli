@@ -16,19 +16,17 @@
 package atlas_test
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
 	"testing"
-	"text/template"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestClustersFile(t *testing.T) {
@@ -42,15 +40,10 @@ func TestClustersFile(t *testing.T) {
 	clusterFileName, err := RandClusterName()
 	req.NoError(err)
 
-	mdbVersion, err := MongoDBMajorVersion()
-	req.NoError(err)
-
-	clusterFile, err := generateClusterFile(mdbVersion)
-	req.NoError(err)
-
-	t.Cleanup(func() {
-		os.Remove(clusterFile)
-	})
+	clusterFile := "create_cluster_test.json"
+	if service := os.Getenv("MCLI_SERVICE"); service == config.CloudGovService {
+		clusterFile = "create_cluster_gov_test.json"
+	}
 
 	t.Run("Create via file", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -65,9 +58,10 @@ func TestClustersFile(t *testing.T) {
 		req.NoError(err, string(resp))
 
 		var cluster atlasv2.AdvancedClusterDescription
-		req.NoError(json.Unmarshal(resp, &cluster))
+		err = json.Unmarshal(resp, &cluster)
+		req.NoError(err)
 
-		ensureCluster(t, &cluster, clusterFileName, mdbVersion, 30, false)
+		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 30, false)
 	})
 
 	t.Run("Watch", func(t *testing.T) {
@@ -80,49 +74,9 @@ func TestClustersFile(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
-		assert.Contains(t, string(resp), "Cluster available")
-	})
 
-	t.Run("Create Partial Index", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"indexes",
-			"create",
-			"--clusterName", clusterFileName,
-			"--file=data/create_partial_index.json",
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
-	})
-
-	t.Run("Create Sparse Index", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"indexes",
-			"create",
-			"--clusterName", clusterFileName,
-			"--file=data/create_sparse_index.json",
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
-	})
-
-	t.Run("Create 2dspere Index", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"indexes",
-			"create",
-			"--clusterName", clusterFileName,
-			"--file=data/create_2dspere_index.json",
-			"--projectId", g.projectID,
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		a := assert.New(t)
+		a.Contains(string(resp), "Cluster available")
 	})
 
 	t.Run("Update via file", func(t *testing.T) {
@@ -130,35 +84,29 @@ func TestClustersFile(t *testing.T) {
 			clustersEntity,
 			"update",
 			clusterFileName,
-			"--file=data/update_cluster_test.json",
+			"--file=update_cluster_test.json",
 			"--projectId", g.projectID,
 			"-o=json")
-
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
 		var cluster atlasv2.AdvancedClusterDescription
-		req.NoError(json.Unmarshal(resp, &cluster))
-		t.Logf("%v\n", cluster)
-		ensureCluster(t, &cluster, clusterFileName, mdbVersion, 40, false)
-		assert.Empty(t, cluster.GetTags())
+		err = json.Unmarshal(resp, &cluster)
+		req.NoError(err)
+
+		ensureCluster(t, &cluster, clusterFileName, e2eMDBVer, 40, false)
 	})
 
 	t.Run("Delete file creation", func(t *testing.T) {
-		cmd := exec.Command(
-			cliPath,
-			clustersEntity,
-			"delete",
-			clusterFileName,
-			"--projectId", g.projectID,
-			"--force")
+		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterFileName, "--projectId", g.projectID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("Deleting cluster '%s'", clusterFileName)
-		assert.Equal(t, expected, string(resp))
+		a := assert.New(t)
+		a.Equal(expected, string(resp))
 	})
 
 	t.Run("Watch deletion", func(t *testing.T) {
@@ -174,37 +122,4 @@ func TestClustersFile(t *testing.T) {
 		resp, _ := cmd.CombinedOutput()
 		t.Log(string(resp))
 	})
-}
-
-func generateClusterFile(mdbVersion string) (string, error) {
-	data := struct {
-		MongoDBMajorVersion string
-	}{
-		MongoDBMajorVersion: mdbVersion,
-	}
-
-	templateFile := "data/create_cluster_test.json"
-	if service := os.Getenv("MCLI_SERVICE"); service == config.CloudGovService {
-		templateFile = "data/create_cluster_gov_test.json"
-	}
-
-	tmpl, err := template.ParseFiles(templateFile)
-	if err != nil {
-		return "", err
-	}
-
-	var tempBuffer bytes.Buffer
-	if err = tmpl.Execute(&tempBuffer, data); err != nil {
-		return "", err
-	}
-
-	const clusterFile = "data/create_cluster.json"
-	file, err := os.Create(clusterFile)
-	if err != nil {
-		return "", err
-	}
-	defer file.Close()
-
-	_, err = tempBuffer.WriteTo(file)
-	return clusterFile, err
 }

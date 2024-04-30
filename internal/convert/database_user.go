@@ -18,7 +18,10 @@ import (
 	"strings"
 	"time"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
+	customTime "github.com/andreaangiolillo/mongocli-test/internal/time"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
 const (
@@ -50,15 +53,16 @@ func BuildAtlasRoles(r []string) []atlasv2.DatabaseUserRole {
 }
 
 func buildCollectionName(dbCollection []string) *string {
+	var collectionName string
 	if len(dbCollection) > 1 {
-		c := strings.Join(dbCollection[1:], ".")
-		return &c
+		collectionName = strings.Join(dbCollection[1:], ".")
 	}
-	return nil
+	return pointer.GetStringPointerIfNotEmpty(collectionName)
 }
 
 func ParseDeleteAfter(deleteAfter string) *time.Time {
-	deleteAfterDate, err := ParseTimestamp(deleteAfter)
+	deleteAfterDate, err := customTime.ParseTimestamp(deleteAfter)
+
 	if err == nil {
 		return &deleteAfterDate
 	}
@@ -73,6 +77,21 @@ func splitRoleAndDBName(roleAndDBNAme string) (role, dbName string) {
 		dbName = rd[1]
 	}
 	return
+}
+
+// BuildOMRoles converts the roles inside the array of string in an array of opsmngr.DatabaseUserRole structs.
+// r contains roles in the format roleName@dbName.
+func BuildOMRoles(r []string) []*opsmngr.Role {
+	roles := make([]*opsmngr.Role, len(r))
+	for i, roleP := range r {
+		roleName, databaseName := splitRoleAndDBName(roleP)
+
+		roles[i] = &opsmngr.Role{
+			Role:     roleName,
+			Database: databaseName,
+		}
+	}
+	return roles
 }
 
 // BuildAtlasScopes converts the scopes inside the array of string in an array of mongodbatlas.Scope structs.
@@ -99,8 +118,8 @@ func BuildAtlasScopes(r []string) []atlasv2.UserScope {
 // SCRAM-SHA should use admin.
 func GetAuthDB(user *atlasv2.CloudDatabaseUser) string {
 	// base documentation https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/resources/database_user
-	_, isX509 := adminX509Type[user.GetX509Type()]
-	_, isIAM := awsIAMType[user.GetAwsIAMType()]
+	_, isX509 := adminX509Type[pointer.GetOrDefault(user.X509Type, "")]
+	_, isIAM := awsIAMType[pointer.GetOrDefault(user.AwsIAMType, "")]
 
 	// just USER is external
 	isLDAP := user.LdapAuthType != nil && *user.LdapAuthType == userLdapAuthType

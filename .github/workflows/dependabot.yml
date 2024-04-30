@@ -4,8 +4,7 @@
   on:
     pull_request:
       types: [opened]
-    workflow_dispatch: # Run the action manually
-    
+
   permissions: 
     pull-requests: write
     contents: read
@@ -22,12 +21,7 @@
       - name: Find JIRA team
         id: find
         run: |
-          assigned_team=$(git diff HEAD~1..HEAD -- go.mod | grep -v "// indirect" | grep -i "^\-" | grep -v "^\-\-\-" | awk '{print $2}' | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners.json" | sh | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners_jira.json" | sh | head -1)"
-          if [ -z "$assigned_team" ]; then
-              echo "Variable assigned_team is empty or not defined. Defaulting to the mongocli team"
-              assigned_team="mongocli"
-          fi
-          echo "assigned_team=${assigned_team}" >> "${GITHUB_OUTPUT}"
+          echo "assigned_team="$(git diff HEAD~1..HEAD -- go.mod | grep -v "// indirect" | grep -i "^\-" | grep -v "^\-\-\-" | awk '{print $2}' | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners.json" | sh | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners_jira.json" | sh | head -1)  >> "${GITHUB_OUTPUT}"
       - name: Create JIRA ticket
         id: create
         shell: bash
@@ -73,7 +67,7 @@
           echo "The following JIRA ticket has been created: ${JIRA_TICKET_ID}"
           echo "jira-ticket-id=${JIRA_TICKET_ID}" >> "${GITHUB_OUTPUT}"
       - name: Add comment
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/create-or-update-comment@v3
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |

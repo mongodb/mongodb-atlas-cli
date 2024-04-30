@@ -23,10 +23,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestExportJobs(t *testing.T) {
@@ -36,9 +36,6 @@ func TestExportJobs(t *testing.T) {
 
 	clusterName, err := RandClusterName()
 	fmt.Println(clusterName)
-	r.NoError(err)
-
-	mdbVersion, err := MongoDBMajorVersion()
 	r.NoError(err)
 
 	const cloudProvider = "AWS"
@@ -59,7 +56,7 @@ func TestExportJobs(t *testing.T) {
 			"--tier", tierM10,
 			"--region=US_EAST_1",
 			"--provider", e2eClusterProvider,
-			"--mdbVersion", mdbVersion,
+			"--mdbVersion", e2eSharedMDBVer,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -67,7 +64,7 @@ func TestExportJobs(t *testing.T) {
 
 		var cluster *atlasv2.AdvancedClusterDescription
 		r.NoError(json.Unmarshal(resp, &cluster))
-		ensureCluster(t, cluster, clusterName, mdbVersion, 10, false)
+		ensureCluster(t, cluster, clusterName, e2eSharedMDBVer, 10, false)
 	})
 	t.Cleanup(func() {
 		require.NoError(t, deleteClusterForProject("", clusterName))
@@ -146,9 +143,10 @@ func TestExportJobs(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 
 		r.NoError(err, string(resp))
+		a := assert.New(t)
 		var job atlasv2.DiskBackupExportJob
 		r.NoError(json.Unmarshal(resp, &job))
-		assert.Equal(t, job.GetExportBucketId(), bucketID)
+		a.Equal(job.GetExportBucketId(), bucketID)
 		exportJobID = job.GetId()
 	})
 
@@ -182,9 +180,10 @@ func TestExportJobs(t *testing.T) {
 
 		r.NoError(err, string(resp))
 
+		a := assert.New(t)
 		var job atlasv2.DiskBackupExportJob
 		r.NoError(json.Unmarshal(resp, &job))
-		assert.Equal(t, job.GetExportBucketId(), bucketID)
+		a.Equal(job.GetExportBucketId(), bucketID)
 	})
 
 	t.Run("List jobs", func(t *testing.T) {
@@ -200,8 +199,9 @@ func TestExportJobs(t *testing.T) {
 		r.NoError(err, string(resp))
 
 		var jobs atlasv2.PaginatedApiAtlasDiskBackupExportJob
+		a := assert.New(t)
 		r.NoError(json.Unmarshal(resp, &jobs))
-		assert.NotEmpty(t, jobs)
+		a.NotEmpty(jobs)
 	})
 
 	t.Run("Delete snapshot", func(t *testing.T) {
@@ -215,7 +215,7 @@ func TestExportJobs(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		r.NoError(err, string(resp))
 	})
 
 	t.Run("Watch snapshot deletion", func(t *testing.T) {

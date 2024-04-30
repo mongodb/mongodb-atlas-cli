@@ -17,12 +17,12 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup_serverless.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ServerlessSnapshotsLister,ServerlessSnapshotsDescriber,ServerlessRestoreJobsLister,ServerlessRestoreJobsDescriber,ServerlessRestoreJobsCreator
+//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup_serverless.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store ServerlessSnapshotsLister,ServerlessSnapshotsDescriber,ServerlessRestoreJobsLister,ServerlessRestoreJobsDescriber,ServerlessRestoreJobsCreator
 
 type ServerlessSnapshotsLister interface {
 	ServerlessSnapshots(string, string, *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasServerlessBackupSnapshot, error)
@@ -46,50 +46,63 @@ type ServerlessRestoreJobsCreator interface {
 
 // ServerlessSnapshots encapsulates the logic to manage different cloud providers.
 func (s *Store) ServerlessSnapshots(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasServerlessBackupSnapshot, error) {
-	if s.service == config.CloudGovService {
+	switch s.service {
+	case config.CloudService:
+		res := s.clientv2.CloudBackupsApi.ListServerlessBackups(s.ctx, projectID, clusterName)
+		if opts != nil {
+			res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
+		}
+		result, _, err := res.Execute()
+		return result, err
+	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	res := s.clientv2.CloudBackupsApi.ListServerlessBackups(s.ctx, projectID, clusterName)
-	if opts != nil {
-		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
-	}
-	result, _, err := res.Execute()
-	return result, err
 }
 
 // ServerlessSnapshot encapsulates the logic to manage different cloud providers.
 func (s *Store) ServerlessSnapshot(projectID, instanceName, snapshotID string) (*atlasv2.ServerlessBackupSnapshot, error) {
-	if s.service == config.CloudGovService {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.clientv2.CloudBackupsApi.GetServerlessBackup(s.ctx, projectID, instanceName, snapshotID).Execute()
+		return result, err
+	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.CloudBackupsApi.GetServerlessBackup(s.ctx, projectID, instanceName, snapshotID).Execute()
-	return result, err
 }
 
 // ServerlessRestoreJobs encapsulates the logic to manage different cloud providers.
 func (s *Store) ServerlessRestoreJobs(projectID, instanceName string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob, error) {
-	if s.service == config.CloudGovService {
+	switch s.service {
+	case config.CloudService:
+		res := s.clientv2.CloudBackupsApi.ListServerlessBackupRestoreJobs(s.ctx, projectID, instanceName)
+		if opts != nil {
+			res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum)
+		}
+		result, _, err := res.Execute()
+		return result, err
+	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	res := s.clientv2.CloudBackupsApi.ListServerlessBackupRestoreJobs(s.ctx, projectID, instanceName)
-	if opts != nil {
-		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
-	}
-	result, _, err := res.Execute()
-	return result, err
 }
 
 // ServerlessRestoreJob encapsulates the logic to manage different cloud providers.
 func (s *Store) ServerlessRestoreJob(projectID, instanceName string, jobID string) (*atlasv2.ServerlessBackupRestoreJob, error) {
-	if s.service == config.CloudGovService {
+	switch s.service {
+	case config.CloudService:
+		result, _, err := s.clientv2.CloudBackupsApi.GetServerlessBackupRestoreJob(s.ctx, projectID, instanceName, jobID).Execute()
+		return result, err
+	default:
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.CloudBackupsApi.GetServerlessBackupRestoreJob(s.ctx, projectID, instanceName, jobID).Execute()
-	return result, err
 }
 
 // CreateRestoreJobs encapsulates the logic to manage different cloud providers.
 func (s *Store) ServerlessCreateRestoreJobs(projectID, clusterName string, request *atlasv2.ServerlessBackupRestoreJob) (*atlasv2.ServerlessBackupRestoreJob, error) {
-	result, _, err := s.clientv2.CloudBackupsApi.CreateServerlessBackupRestoreJob(s.ctx, projectID, clusterName, request).Execute()
-	return result, err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.clientv2.CloudBackupsApi.CreateServerlessBackupRestoreJob(s.ctx, projectID, clusterName, request).Execute()
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }

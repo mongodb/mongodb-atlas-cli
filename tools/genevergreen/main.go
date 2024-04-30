@@ -21,8 +21,13 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/andreaangiolillo/mongocli-test/tools/genevergreen/generate"
 	"github.com/evergreen-ci/shrub"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/genevergreen/generate"
+)
+
+const (
+	atlascli = "atlascli"
+	mongocli = "mongocli"
 )
 
 var (
@@ -30,11 +35,20 @@ var (
 )
 
 func run() error {
-	var taskType string
+	var toolName, taskType string
 
 	flag.StringVar(&taskType, "tasks", "", "type of task to be generated")
+	flag.StringVar(&toolName, "tool_name", "", fmt.Sprintf("Tool to generate tasks for (%s or %s)", atlascli, mongocli))
 
 	flag.Parse()
+
+	if toolName == "" {
+		return fmt.Errorf("%w: %s", ErrMissingOption, "tool_name")
+	}
+
+	if toolName != atlascli && toolName != mongocli {
+		return fmt.Errorf("-tool_name must be either %q or %q", atlascli, mongocli)
+	}
 
 	if taskType == "" {
 		return fmt.Errorf("%w: %s", ErrMissingOption, "tasks")
@@ -44,14 +58,16 @@ func run() error {
 
 	switch taskType {
 	case "repo":
-		generate.RepoTasks(c)
+		generate.RepoTasks(c, toolName)
 	case "postpkg":
-		generate.PostPkgTasks(c)
-		generate.PostPkgMetaTasks(c)
+		generate.PostPkgTasks(c, toolName)
+		generate.PostPkgMetaTasks(c, toolName)
 	case "snapshot":
-		generate.PublishSnapshotTasks(c)
+		generate.PublishSnapshotTasks(c, toolName)
 	case "publish":
-		generate.PublishStableTasks(c)
+		generate.PublishStableTasks(c, toolName)
+	case "local":
+		generate.LocalDeploymentTasks(c, toolName)
 	default:
 		return errors.New("-tasks is invalid")
 	}

@@ -23,9 +23,9 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/mocks"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
@@ -36,9 +36,10 @@ func TestTrackCommand(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockEventsSender(ctrl)
 
+	config.ToolName = config.AtlasCLI
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(_ *cobra.Command, _ []string) {
+		Run: func(cmd *cobra.Command, args []string) {
 		},
 	}
 	_ = cmd.ExecuteContext(NewContext())
@@ -63,12 +64,14 @@ func TestTrackCommandWithError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockEventsSender(ctrl)
 
-	cacheDir, err := os.MkdirTemp(os.TempDir(), config.AtlasCLI+"*")
+	config.ToolName = config.AtlasCLI
+
+	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
 	require.NoError(t, err)
 
 	cmd := &cobra.Command{
 		Use: "test-command",
-		RunE: func(_ *cobra.Command, _ []string) error {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			return errors.New("test command error")
 		},
 	}
@@ -100,12 +103,14 @@ func TestTrackCommandWithSendError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockEventsSender(ctrl)
 
-	cacheDir, err := os.MkdirTemp(os.TempDir(), config.AtlasCLI+"*")
+	config.ToolName = config.AtlasCLI
+
+	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
 	require.NoError(t, err)
 
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(_ *cobra.Command, _ []string) {
+		Run: func(cmd *cobra.Command, args []string) {
 		},
 	}
 	errCmd := cmd.ExecuteContext(NewContext())
@@ -144,7 +149,9 @@ func TestTrackCommandWithSendError(t *testing.T) {
 }
 
 func TestSave(t *testing.T) {
-	cacheDir, err := os.MkdirTemp(os.TempDir(), config.AtlasCLI+"*")
+	config.ToolName = config.AtlasCLI
+
+	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
 	require.NoError(t, err)
 
 	tr := &tracker{
@@ -158,7 +165,7 @@ func TestSave(t *testing.T) {
 	}
 	var event = Event{
 		Timestamp:  time.Now(),
-		Source:     config.AtlasCLI,
+		Source:     config.ToolName,
 		Properties: properties,
 	}
 	require.NoError(t, tr.save(event))
@@ -175,7 +182,8 @@ func TestSave(t *testing.T) {
 }
 
 func TestSaveOverMaxCacheFileSize(t *testing.T) {
-	cacheDir, err := os.MkdirTemp(os.TempDir(), config.AtlasCLI+"*")
+	config.ToolName = config.AtlasCLI
+	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
 	require.NoError(t, err)
 
 	tr := &tracker{
@@ -189,7 +197,7 @@ func TestSaveOverMaxCacheFileSize(t *testing.T) {
 	}
 	var event = Event{
 		Timestamp:  time.Now(),
-		Source:     config.AtlasCLI,
+		Source:     config.ToolName,
 		Properties: properties,
 	}
 
@@ -200,7 +208,9 @@ func TestSaveOverMaxCacheFileSize(t *testing.T) {
 }
 
 func TestOpenCacheFile(t *testing.T) {
-	cacheDir, err := os.MkdirTemp(os.TempDir(), config.AtlasCLI+"*")
+	config.ToolName = config.AtlasCLI
+
+	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
 	require.NoError(t, err)
 
 	tr := &tracker{
@@ -224,12 +234,13 @@ func TestOpenCacheFile(t *testing.T) {
 }
 
 func TestTrackSurvey(t *testing.T) {
-	cacheDir, err := os.MkdirTemp(os.TempDir(), config.AtlasCLI+"*")
+	config.ToolName = config.AtlasCLI
+	cacheDir, err := os.MkdirTemp(os.TempDir(), config.ToolName+"*")
 	require.NoError(t, err)
 
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(_ *cobra.Command, _ []string) {
+		Run: func(cmd *cobra.Command, args []string) {
 		},
 	}
 	errCmd := cmd.ExecuteContext(NewContext())

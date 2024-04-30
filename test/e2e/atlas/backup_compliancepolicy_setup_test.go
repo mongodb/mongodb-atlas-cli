@@ -22,10 +22,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestBackupCompliancePolicySetup(t *testing.T) {
@@ -43,7 +43,7 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 		RetentionValue:    1,
 	}
 	policy := &atlasv2.DataProtectionSettings20231001{
-		ScheduledPolicyItems:    &[]atlasv2.BackupComplianceScheduledPolicyItem{scheduledPolicyItem},
+		ScheduledPolicyItems:    []atlasv2.BackupComplianceScheduledPolicyItem{scheduledPolicyItem},
 		ProjectId:               &g.projectID,
 		AuthorizedUserLastName:  authorizedUserLastName,
 		AuthorizedUserFirstName: authorizedUserFirstName,

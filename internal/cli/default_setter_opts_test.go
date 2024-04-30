@@ -19,12 +19,11 @@ package cli
 import (
 	"testing"
 
+	"github.com/andreaangiolillo/mongocli-test/internal/mocks"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestDefaultOpts_DefaultQuestions(t *testing.T) {
@@ -50,6 +49,20 @@ func TestDefaultOpts_DefaultQuestions(t *testing.T) {
 			},
 			want: 1,
 		},
+		{
+			name: "cloud manager",
+			fields: fields{
+				Service: "cloud-manager",
+			},
+			want: 1,
+		},
+		{
+			name: "ops manager",
+			fields: fields{
+				Service: "ops-manager",
+			},
+			want: 1,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -70,20 +83,20 @@ func TestDefaultOpts_Projects(t *testing.T) {
 		Store:   mockStore,
 	}
 	t.Run("empty", func(t *testing.T) {
-		expectedProjects := &atlasv2.PaginatedAtlasGroup{}
+		expectedProjects := &atlas.Projects{}
 		mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(1)
 		_, _, err := opts.projects()
 		require.Error(t, err)
 	})
 	t.Run("with one project", func(t *testing.T) {
-		expectedProjects := &atlasv2.PaginatedAtlasGroup{
-			Results: &[]atlasv2.Group{
+		expectedProjects := &atlas.Projects{
+			Results: []*atlas.Project{
 				{
-					Id:   pointer.Get("1"),
+					ID:   "1",
 					Name: "Project 1",
 				},
 			},
-			TotalCount: pointer.Get(1),
+			TotalCount: 1,
 		}
 		mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(1)
 		gotIDs, gotNames, err := opts.projects()
@@ -102,30 +115,30 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 		Store:   mockStore,
 	}
 	t.Run("empty", func(t *testing.T) {
-		expectedOrgs := &atlasv2.PaginatedOrganization{}
+		expectedOrgs := &atlas.Organizations{}
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
 		_, err := opts.orgs("")
 		require.Error(t, err)
 	})
 	t.Run("with one org", func(t *testing.T) {
-		expectedOrgs := &atlasv2.PaginatedOrganization{
-			Results: &[]atlasv2.AtlasOrganization{
+		expectedOrgs := &atlas.Organizations{
+			Results: []*atlas.Organization{
 				{
-					Id:   pointer.Get("1"),
+					ID:   "1",
 					Name: "Org 1",
 				},
 			},
-			TotalCount: pointer.Get(1),
+			TotalCount: 1,
 		}
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
 		gotOrgs, err := opts.orgs("")
 		require.NoError(t, err)
-		assert.Equal(t, expectedOrgs.GetResults(), gotOrgs)
+		assert.Equal(t, expectedOrgs.Results, gotOrgs)
 	})
 
 	t.Run("with no org", func(t *testing.T) {
-		expectedOrgs := &atlasv2.PaginatedOrganization{
-			Results: &[]atlasv2.AtlasOrganization{},
+		expectedOrgs := &atlas.Organizations{
+			Results: []*atlas.Organization{},
 		}
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
 		_, err := opts.orgs("")

@@ -23,10 +23,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestAtlasTeamUsers(t *testing.T) {
@@ -66,7 +66,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 		var users atlasv2.PaginatedApiAppUser
 		require.NoError(t, json.Unmarshal(resp, &users))
 		found := false
-		for _, user := range users.GetResults() {
+		for _, user := range users.Results {
 			if user.Username == username {
 				found = true
 				break

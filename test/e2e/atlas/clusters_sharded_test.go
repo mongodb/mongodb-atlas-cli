@@ -22,10 +22,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestShardedCluster(t *testing.T) {
@@ -33,6 +33,7 @@ func TestShardedCluster(t *testing.T) {
 	g.generateProject("shardedClusters")
 
 	cliPath, err := e2e.AtlasCLIBin()
+	a := assert.New(t)
 	req := require.New(t)
 	req.NoError(err)
 
@@ -41,9 +42,6 @@ func TestShardedCluster(t *testing.T) {
 
 	tier := e2eTier()
 	region, err := g.newAvailableRegion(tier, e2eClusterProvider)
-	req.NoError(err)
-
-	mdbVersion, err := MongoDBMajorVersion()
 	req.NoError(err)
 
 	t.Run("Create sharded cluster", func(t *testing.T) {
@@ -57,7 +55,7 @@ func TestShardedCluster(t *testing.T) {
 			"--members=3",
 			"--tier", tier,
 			"--provider", e2eClusterProvider,
-			"--mdbVersion", mdbVersion,
+			"--mdbVersion", e2eMDBVer,
 			"--diskSizeGB", diskSizeGB30,
 			"--projectId", g.projectID,
 			"-o=json")
@@ -67,9 +65,10 @@ func TestShardedCluster(t *testing.T) {
 		req.NoError(err, string(resp))
 
 		var cluster atlasv2.AdvancedClusterDescription
-		req.NoError(json.Unmarshal(resp, &cluster))
+		err = json.Unmarshal(resp, &cluster)
+		req.NoError(err)
 
-		ensureCluster(t, &cluster, shardedClusterName, mdbVersion, 30, false)
+		ensureCluster(t, &cluster, shardedClusterName, e2eMDBVer, 30, false)
 	})
 
 	t.Run("Delete sharded cluster", func(t *testing.T) {
@@ -79,7 +78,7 @@ func TestShardedCluster(t *testing.T) {
 		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("Deleting cluster '%s'", shardedClusterName)
-		assert.Equal(t, expected, string(resp))
+		a.Equal(expected, string(resp))
 	})
 
 	t.Run("Watch deletion", func(t *testing.T) {

@@ -63,7 +63,7 @@ To make the contribution process as seamless as possible, we ask for the followi
 #### Prerequisite Tools
 
 - [Git](https://git-scm.com/)
-- [Go (at least Go 1.22)](https://golang.org/dl/)
+- [Go (at least Go 1.21.3)](https://golang.org/dl/)
 
 #### Environment
 
@@ -123,6 +123,7 @@ Review and replace command name and arguments depending on the command you are u
             "mode": "auto",
             "program": "${workspaceFolder}/cmd/atlas",
             "env": {},
+            "buildFlags": "-ldflags '-X github.com/mongodb/mongodb-atlas-cli/internal/config.ToolName=atlascli'",
             "args": [
               "login"
             ]
@@ -157,8 +158,8 @@ For example please edit `./root/atlas/builder.go` to add your command builder me
 
 ### Adding a New Command
 
-`atlascli` have defined a basic structure for individual commands that should be followed.
-For a `atlas scope newCommand` command, a file `internal/cli/scope/new_command.go` should implement:
+`atlascli` and `mongocli` have defined a basic structure for individual commands that should be followed.
+For a `mongocli scope newCommand` command, a file `internal/cli/scope/new_command.go` should implement:
 
 - A `ScopeNewCommandOpts` struct which handles the different options for the command.
 - At least a `func (opts *ScopeNewCommandOpts) Run() error` function with the main command logic.

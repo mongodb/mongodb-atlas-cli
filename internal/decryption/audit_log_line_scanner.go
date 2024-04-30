@@ -56,12 +56,12 @@ func peekFirstByte(reader io.ReadSeeker) (byte, error) {
 	return b[0], nil
 }
 
-func readAuditLogFile(reader io.ReadSeeker) (auditLogScanner, error) {
+func readAuditLogFile(reader io.ReadSeeker) (AuditLogFormat, auditLogScanner, error) {
 	auditLogFormat := BSON
 
 	b, err := peekFirstByte(reader)
 	if err != nil {
-		return nil, err
+		return auditLogFormat, nil, err
 	}
 
 	if b == '{' {
@@ -75,7 +75,7 @@ func readAuditLogFile(reader io.ReadSeeker) (auditLogScanner, error) {
 	case JSON:
 		scanner = newJSONScanner(reader)
 	}
-	return scanner, err
+	return auditLogFormat, scanner, err
 }
 
 type auditLogScanner interface {

@@ -20,14 +20,12 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/crds"
-	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
-	"k8s.io/apimachinery/pkg/api/meta"
-	"k8s.io/apimachinery/pkg/runtime"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/crds"
+	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 )
 
 const (
-	LatestOperatorMajorVersion  = "2.2.0"
+	LatestOperatorMajorVersion  = "2.0.0"
 	maxDepth                    = 100
 	ResourceVersion             = "mongodb.com/atlas-resource-version"
 	ResourceAtlasProject        = "atlasprojects"
@@ -48,60 +46,25 @@ var (
 	ErrDocumentHasNoSchema       = errors.New("document contains no Schema")
 	ErrDocumentHasNoSpec         = errors.New("document contains no Spec")
 
-	versionsToResourcesMap = map[string][]resource{
+	versionsToResourcesMap = map[string][]string{
 		"2.0.0": {
-			resource{ResourceAtlasDatabaseUser, NopPatcher()},
-			resource{ResourceAtlasProject, NopPatcher()},
-			resource{ResourceAtlasDeployment, NopPatcher()},
-			resource{ResourceAtlasBackupSchedule, NopPatcher()},
-			resource{ResourceAtlasBackupPolicy, PatcherFunc(UnknownBackupPolicyFrequencyTypesPruner)},
-			resource{ResourceAtlasTeam, NopPatcher()},
-			resource{ResourceAtlasDataFederation, NopPatcher()},
-			resource{ResourceAtlasFederatedAuth, NopPatcher()},
-		},
-		"2.1.0": {
-			resource{ResourceAtlasDatabaseUser, NopPatcher()},
-			resource{ResourceAtlasProject, NopPatcher()},
-			resource{ResourceAtlasDeployment, NopPatcher()},
-			resource{ResourceAtlasBackupSchedule, NopPatcher()},
-			resource{ResourceAtlasBackupPolicy, PatcherFunc(UnknownBackupPolicyFrequencyTypesPruner)},
-			resource{ResourceAtlasTeam, NopPatcher()},
-			resource{ResourceAtlasDataFederation, NopPatcher()},
-			resource{ResourceAtlasFederatedAuth, NopPatcher()},
-		},
-		"2.2.0": {
-			resource{ResourceAtlasDatabaseUser, NopPatcher()},
-			resource{ResourceAtlasProject, NopPatcher()},
-			resource{ResourceAtlasDeployment, NopPatcher()},
-			resource{ResourceAtlasBackupSchedule, NopPatcher()},
-			resource{ResourceAtlasBackupPolicy, NopPatcher()},
-			resource{ResourceAtlasTeam, NopPatcher()},
-			resource{ResourceAtlasDataFederation, NopPatcher()},
-			resource{ResourceAtlasFederatedAuth, NopPatcher()},
+			ResourceAtlasDatabaseUser,
+			ResourceAtlasProject,
+			ResourceAtlasDeployment,
+			ResourceAtlasBackupSchedule,
+			ResourceAtlasBackupPolicy,
+			ResourceAtlasTeam,
+			ResourceAtlasDataFederation,
+			ResourceAtlasFederatedAuth,
 		},
 	}
 )
 
-type resource struct {
-	name    string
-	patcher Patcher
-}
-
-func majorVersion(version string) string {
-	v := semver.MustParse(version)
-	return semver.New(v.Major(), v.Minor(), 0, "", "").String()
-}
-
 func GetResourcesForVersion(version string) ([]string, bool) {
-	resources, ok := versionsToResourcesMap[majorVersion(version)]
-	if !ok {
-		return nil, false
-	}
-	result := make([]string, 0, len(resources))
-	for i := range resources {
-		result = append(result, resources[i].name)
-	}
-	return result, true
+	v := semver.MustParse(version)
+	majorVersion := semver.New(v.Major(), v.Minor(), 0, "", "").String()
+	resources, ok := versionsToResourcesMap[majorVersion]
+	return resources, ok
 }
 
 func SupportedVersions() []string {
@@ -136,38 +99,19 @@ func CRDCompatibleVersion(operatorVersion string) (string, error) {
 }
 
 type AtlasCRDs struct {
-	resources map[string]*apiextensionsv1.JSONSchemaProps
-	patchers  map[string]Patcher
-}
-
-func (a *AtlasCRDs) Patch(obj runtime.Object) error {
-	// Despite marked as unsafe this pluralizer works well on our types.
-	plural, _ := meta.UnsafeGuessKindToResource(obj.GetObjectKind().GroupVersionKind())
-
-	crdSpec, ok := a.resources[plural.Resource]
-	if !ok {
-		return nil
-	}
-	patcher, ok := a.patchers[plural.Resource]
-	if !ok {
-		return nil
-	}
-	return patcher.Patch(crdSpec, obj)
+	resources map[string]*apiextensions.JSONSchemaProps
 }
 
 func NewAtlasCRDs(crdProvider crds.AtlasOperatorCRDProvider, version string) (*AtlasCRDs, error) {
-	resources, versionFound := versionsToResourcesMap[majorVersion(version)]
+	resources, versionFound := GetResourcesForVersion(version)
 	if !versionFound {
 		return nil, fmt.Errorf(ErrVersionNotSupportedFmt, version)
 	}
 
-	result := &AtlasCRDs{
-		resources: map[string]*apiextensionsv1.JSONSchemaProps{},
-		patchers:  map[string]Patcher{},
-	}
+	result := &AtlasCRDs{resources: map[string]*apiextensions.JSONSchemaProps{}}
 
 	for _, resource := range resources {
-		crd, err := crdProvider.GetAtlasOperatorResource(resource.name, version)
+		crd, err := crdProvider.GetAtlasOperatorResource(resource, version)
 		if err != nil {
 			return nil, fmt.Errorf(ErrDownloadResourceFailedFmt, resource, err)
 		}
@@ -176,8 +120,7 @@ func NewAtlasCRDs(crdProvider crds.AtlasOperatorCRDProvider, version string) (*A
 		if err != nil {
 			return nil, fmt.Errorf("failed to process CRD '%s:%s'. err: %w", resource, version, err)
 		}
-		result.resources[resource.name] = root
-		result.patchers[resource.name] = resource.patcher
+		result.resources[resource] = root
 	}
 
 	return result, nil
@@ -195,14 +138,14 @@ func (a *AtlasCRDs) FeatureExist(resourceName, featurePath string) bool {
 	return false
 }
 
-func pathExists(path string, data *apiextensionsv1.JSONSchemaProps) bool {
+func pathExists(path string, data *apiextensions.JSONSchemaProps) bool {
 	parts := strings.Split(path, ".")
 	if len(parts) == 0 || data == nil {
 		return false
 	}
 
-	var lookup func(path []string, data *apiextensionsv1.JSONSchemaProps, depth int) bool
-	lookup = func(path []string, data *apiextensionsv1.JSONSchemaProps, depth int) bool {
+	var lookup func(path []string, data *apiextensions.JSONSchemaProps, depth int) bool
+	lookup = func(path []string, data *apiextensions.JSONSchemaProps, depth int) bool {
 		if len(path) == 0 {
 			return true
 		}
@@ -230,7 +173,7 @@ func pathExists(path string, data *apiextensionsv1.JSONSchemaProps) bool {
 	return lookup(parts, data, maxDepth)
 }
 
-func getCRDRoot(document *apiextensionsv1.CustomResourceDefinition) (*apiextensionsv1.JSONSchemaProps, error) {
+func getCRDRoot(document *apiextensions.CustomResourceDefinition) (*apiextensions.JSONSchemaProps, error) {
 	if document == nil {
 		return nil, ErrDocumentIsEmpty
 	}

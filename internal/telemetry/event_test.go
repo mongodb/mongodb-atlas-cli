@@ -22,15 +22,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	"github.com/andreaangiolillo/mongocli-test/internal/version"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestWithCommandPath(t *testing.T) {
+	config.ToolName = config.AtlasCLI
 	testCmd := &cobra.Command{
 		Use: "test",
 	}
@@ -44,6 +45,7 @@ func TestWithCommandPath(t *testing.T) {
 }
 
 func TestWithCommandPathAndAlias(t *testing.T) {
+	config.ToolName = config.AtlasCLI
 	rootCmd := &cobra.Command{
 		Use: "root",
 	}
@@ -62,6 +64,7 @@ func TestWithCommandPathAndAlias(t *testing.T) {
 }
 
 func TestWithProfile(t *testing.T) {
+	config.ToolName = config.AtlasCLI
 	t.Run("default", func(t *testing.T) {
 		e := newEvent(withProfile(&configMock{name: config.DefaultProfile}))
 		assert.Equal(t, config.DefaultProfile, e.Properties["profile"])
@@ -78,9 +81,11 @@ func TestWithProfile(t *testing.T) {
 }
 
 func TestWithDuration(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(_ *cobra.Command, _ []string) {
+		Run: func(cmd *cobra.Command, args []string) {
 			time.Sleep(10 * time.Millisecond)
 		},
 	}
@@ -91,9 +96,11 @@ func TestWithDuration(t *testing.T) {
 }
 
 func TestWithFlags(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(_ *cobra.Command, _ []string) {
+		Run: func(cmd *cobra.Command, args []string) {
 			time.Sleep(10 * time.Millisecond)
 		},
 	}
@@ -107,6 +114,8 @@ func TestWithFlags(t *testing.T) {
 }
 
 func TestWithVersion(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
 	version.Version = "vTest"
 	version.GitCommit = "sha-test"
 
@@ -118,6 +127,8 @@ func TestWithVersion(t *testing.T) {
 }
 
 func TestWithOS(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
 	e := newEvent(withOS())
 
 	a := assert.New(t)
@@ -134,6 +145,7 @@ func TestWithUserAgent(t *testing.T) {
 }
 
 func TestWithAuthMethod(t *testing.T) {
+	config.ToolName = config.AtlasCLI
 	t.Run("api key", func(t *testing.T) {
 		c := &configMock{
 			publicKey:  "test-public",
@@ -151,6 +163,7 @@ func TestWithAuthMethod(t *testing.T) {
 }
 
 func TestWithService(t *testing.T) {
+	config.ToolName = config.AtlasCLI
 	const url = "http://host.test"
 	c := &configMock{
 		service: config.CloudService,
@@ -164,9 +177,10 @@ func TestWithService(t *testing.T) {
 }
 
 func TestWithProjectID(t *testing.T) {
+	config.ToolName = config.AtlasCLI
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(_ *cobra.Command, _ []string) {},
+		Run: func(cmd *cobra.Command, args []string) {},
 	}
 	var p string
 	cmd.Flags().StringVarP(&p, flag.ProjectID, "", "", "")
@@ -194,9 +208,11 @@ func TestWithProjectID(t *testing.T) {
 }
 
 func TestWithOrgID(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
 	cmd := &cobra.Command{
 		Use: "test-command",
-		Run: func(_ *cobra.Command, _ []string) {},
+		Run: func(cmd *cobra.Command, args []string) {},
 	}
 
 	const orgID = "test"
@@ -225,6 +241,8 @@ func TestWithOrgID(t *testing.T) {
 }
 
 func TestWithError(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
 	e := newEvent(withError(errors.New("test")))
 
 	a := assert.New(t)
@@ -279,6 +297,8 @@ func TestSanitizeSelectOption(t *testing.T) {
 }
 
 func TestWithPrompt(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
 	q := "random question"
 	k := "select"
 
@@ -290,6 +310,8 @@ func TestWithPrompt(t *testing.T) {
 }
 
 func TestWithChoice(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
 	c := "test choice"
 
 	e := newEvent(withChoice(c))
@@ -297,32 +319,42 @@ func TestWithChoice(t *testing.T) {
 }
 
 func TestWithDefault(t *testing.T) {
+	config.ToolName = config.AtlasCLI
 	e := newEvent(withDefault(true))
 	assert.Contains(t, e.Properties, "default")
 }
 
 func TestWithEmpty(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
 	e := newEvent(withEmpty(true))
 	assert.Contains(t, e.Properties, "empty")
 }
 
 func TestWithAnonymousID(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
 	e := newEvent(withAnonymousID())
 	assert.Contains(t, e.Properties, "device_id")
 }
 
 func TestWithDeploymentType(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
 	e := newEvent(WithDeploymentType("test"))
 	assert.Equal(t, "test", e.Properties["deployment_type"])
 }
 
 func TestWithSignal(t *testing.T) {
+	config.ToolName = config.AtlasCLI
+
 	q := "interrupt"
 	e := newEvent(withSignal(q))
 	assert.Equal(t, q, e.Properties["signal"])
 }
 
 func TestWithHelpCommand(t *testing.T) {
+	config.ToolName = config.AtlasCLI
 	testCmd := &cobra.Command{
 		Use: "test",
 	}
@@ -341,6 +373,7 @@ func TestWithHelpCommand(t *testing.T) {
 }
 
 func TestWithHelpCommand_NotFound(t *testing.T) {
+	config.ToolName = config.AtlasCLI
 	testCmd := &cobra.Command{
 		Use: "test",
 	}

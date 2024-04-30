@@ -24,23 +24,40 @@ import (
 	"testing"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/mocks"
+	"github.com/andreaangiolillo/mongocli-test/internal/test"
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 	"go.mongodb.org/atlas/auth"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		4,
-		[]string{},
-	)
+	type testCase struct {
+		name string
+		want int
+	}
+	tests := []testCase{
+		{name: config.MongoCLI, want: 3},
+		{name: config.AtlasCLI, want: 4},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			prevTool := config.ToolName
+			t.Cleanup(func() {
+				config.ToolName = prevTool
+			})
+			config.ToolName = tc.name
+			test.CmdValidator(
+				t,
+				Builder(),
+				tc.want,
+				[]string{},
+			)
+		})
+	}
 }
 
 func TestLoginBuilder(t *testing.T) {
@@ -48,7 +65,7 @@ func TestLoginBuilder(t *testing.T) {
 		t,
 		LoginBuilder(),
 		0,
-		[]string{"gov", "noBrowser"},
+		[]string{"gov", "cm", "noBrowser"},
 	)
 }
 
@@ -133,20 +150,18 @@ func Test_loginOpts_Run(t *testing.T) {
 	mockConfig.EXPECT().Set("access_token", "asdf").Times(1)
 	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
 	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
-	mockConfig.EXPECT().OrgID().Return("").AnyTimes()
-	mockConfig.EXPECT().ProjectID().Return("").AnyTimes()
 	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
 	mockConfig.EXPECT().Save().Return(nil).Times(2)
-	expectedOrgs := &admin.PaginatedOrganization{
-		TotalCount: pointer.Get(1),
-		Results: &[]admin.AtlasOrganization{
-			{Id: pointer.Get("o1"), Name: "Org1"},
+	expectedOrgs := &atlas.Organizations{
+		TotalCount: 1,
+		Results: []*atlas.Organization{
+			{ID: "o1", Name: "Org1"},
 		},
 	}
 	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
-	expectedProjects := &admin.PaginatedAtlasGroup{TotalCount: pointer.Get(1),
-		Results: &[]admin.Group{
-			{Id: pointer.Get("p1"), Name: "Project1"},
+	expectedProjects := &atlas.Projects{TotalCount: 1,
+		Results: []*atlas.Project{
+			{ID: "p1", Name: "Project1"},
 		},
 	}
 	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
@@ -177,7 +192,6 @@ func (confirmMock) Error(_ *survey.PromptConfig, err error) error {
 }
 
 func Test_shouldRetryAuthenticate(t *testing.T) {
-	t.Setenv("DO_NOT_TRACK", "1")
 	type args struct {
 		err error
 		p   survey.Prompt

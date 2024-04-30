@@ -15,13 +15,17 @@
 package store
 
 import (
-	"go.mongodb.org/atlas-sdk/v20231115012/admin"
+	"fmt"
+
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"go.mongodb.org/ops-manager/opsmngr"
 )
 
-//go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
+//go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
 
 type OrganizationAPIKeyAccessListLister interface {
-	OrganizationAPIKeyAccessLists(*admin.ListApiKeyAccessListsEntriesApiParams) (*admin.PaginatedApiUserAccessListResponse, error)
+	OrganizationAPIKeyAccessLists(string, string, *opsmngr.ListOptions) (*atlas.AccessListAPIKeys, error)
 }
 
 type OrganizationAPIKeyAccessListDeleter interface {
@@ -29,23 +33,47 @@ type OrganizationAPIKeyAccessListDeleter interface {
 }
 
 type OrganizationAPIKeyAccessListCreator interface {
-	CreateOrganizationAPIKeyAccessList(*admin.CreateApiKeyAccessListApiParams) (*admin.PaginatedApiUserAccessListResponse, error)
+	CreateOrganizationAPIKeyAccessList(string, string, []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error)
 }
 
 // CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateOrganizationAPIKeyAccessList(params *admin.CreateApiKeyAccessListApiParams) (*admin.PaginatedApiUserAccessListResponse, error) {
-	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateApiKeyAccessListWithParams(s.ctx, params).Execute()
-	return result, err
+func (s *Store) CreateOrganizationAPIKeyAccessList(orgID, apiKeyID string, opts []*atlas.AccessListAPIKeysReq) (*atlas.AccessListAPIKeys, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).AccessListAPIKeys.Create(s.ctx, orgID, apiKeyID, opts)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Create(s.ctx, orgID, apiKeyID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // DeleteOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress string) error {
-	_, _, err := s.clientv2.ProgrammaticAPIKeysApi.DeleteApiKeyAccessListEntry(s.ctx, orgID, apiKeyID, ipAddress).Execute()
-	return err
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		_, err := s.client.(*atlas.Client).AccessListAPIKeys.Delete(s.ctx, orgID, apiKeyID, ipAddress)
+		return err
+	case config.CloudManagerService, config.OpsManagerService:
+		_, err := s.client.(*opsmngr.Client).AccessListAPIKeys.Delete(s.ctx, orgID, apiKeyID, ipAddress)
+		return err
+	default:
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }
 
 // OrganizationAPIKeyAccessLists encapsulates the logic to manage different cloud providers.
-func (s *Store) OrganizationAPIKeyAccessLists(params *admin.ListApiKeyAccessListsEntriesApiParams) (*admin.PaginatedApiUserAccessListResponse, error) {
-	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.ListApiKeyAccessListsEntriesWithParams(s.ctx, params).Execute()
-	return result, err
+func (s *Store) OrganizationAPIKeyAccessLists(orgID, apiKeyID string, opts *atlas.ListOptions) (*atlas.AccessListAPIKeys, error) {
+	switch s.service {
+	case config.CloudService, config.CloudGovService:
+		result, _, err := s.client.(*atlas.Client).AccessListAPIKeys.List(s.ctx, orgID, apiKeyID, opts)
+		return result, err
+	case config.CloudManagerService, config.OpsManagerService:
+		result, _, err := s.client.(*opsmngr.Client).AccessListAPIKeys.List(s.ctx, orgID, apiKeyID, opts)
+		return result, err
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
 }

@@ -3,6 +3,3 @@
 
 # Docs maintained by Docs Cloud Team
 /docs/  @mongodb/docs-cloud-team
-
-/internal/kubernetes/operator/ @mongodb/atlas_kubernetes_team
-/internal/cli/atlas/kubernetes/ @mongodb/atlas_kubernetes_team

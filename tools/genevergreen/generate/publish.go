@@ -74,7 +74,7 @@ var distros = map[string]Platform{
 	},
 }
 
-func newPublishTask(taskName, extension, edition, distro, taskServerVersion, notaryKey, arch string, stable bool, dependency []shrub.TaskDependency) *shrub.Task {
+func newPublishTask(taskName, toolName, extension, edition, distro, taskServerVersion, notaryKey, arch string, stable bool, dependency []shrub.TaskDependency) *shrub.Task {
 	t := &shrub.Task{
 		Name: taskName,
 	}
@@ -85,6 +85,7 @@ func newPublishTask(taskName, extension, edition, distro, taskServerVersion, not
 		Function("clone").
 		Function("install curator").
 		FunctionWithVars("push", map[string]string{
+			"tool_name":       toolName,
 			"distro":          distro,
 			"ext":             extension,
 			"server_version":  taskServerVersion,
@@ -95,7 +96,7 @@ func newPublishTask(taskName, extension, edition, distro, taskServerVersion, not
 	return t
 }
 
-func publishVariant(c *shrub.Configuration, v *shrub.Variant, sv, stableSuffix string, dependency []shrub.TaskDependency, stable bool) {
+func publishVariant(c *shrub.Configuration, v *shrub.Variant, toolName, sv, stableSuffix string, dependency []shrub.TaskDependency, stable bool) {
 	taskServerVersion := fmt.Sprintf("%s.0", sv)
 	notaryKey := fmt.Sprintf("server-%s", sv)
 	taskSv := "_" + sv
@@ -106,8 +107,8 @@ func publishVariant(c *shrub.Configuration, v *shrub.Variant, sv, stableSuffix s
 	for _, r := range repos {
 		for k, d := range distros {
 			for _, a := range d.architectures {
-				taskName := fmt.Sprintf("push_atlascli_%s_%s_%s%s%s", k, r, a, strings.ReplaceAll(taskSv, ".", ""), stableSuffix)
-				t := newPublishTask(taskName, d.extension, r, k, taskServerVersion, notaryKey, a, stable, dependency)
+				taskName := fmt.Sprintf("push_%s_%s_%s_%s%s%s", toolName, k, r, a, strings.ReplaceAll(taskSv, ".", ""), stableSuffix)
+				t := newPublishTask(taskName, toolName, d.extension, r, k, taskServerVersion, notaryKey, a, stable, dependency)
 				c.Tasks = append(c.Tasks, t)
 				v.AddTasks(t.Name)
 			}

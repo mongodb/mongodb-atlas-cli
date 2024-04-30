@@ -18,11 +18,9 @@ STAGED_GO_FILES=$(git diff --cached --name-only | grep ".go$" | grep -v "mock")
 
 for FILE in ${STAGED_GO_FILES}
 do
-    if [ -f "${FILE}" ]; then
-        gofmt -w -s "${FILE}"
-        goimports -w "${FILE}"
-        git add "${FILE}"
-    fi
+    gofmt -w -s "${FILE}"
+    goimports -w "${FILE}"
+    git add "${FILE}"
 done
 
 if [[ -n "${STAGED_GO_FILES}" ]]; then

@@ -21,10 +21,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestMaintenanceWindows(t *testing.T) {
@@ -46,9 +46,11 @@ func TestMaintenanceWindows(t *testing.T) {
 			g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		expected := "Maintenance window updated.\n"
-		assert.Equal(t, expected, string(resp))
+		a.Equal(expected, string(resp))
 	})
 
 	t.Run("describe", func(t *testing.T) {
@@ -61,13 +63,14 @@ func TestMaintenanceWindows(t *testing.T) {
 			g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
 		var maintenanceWindow atlasv2.GroupMaintenanceWindow
 		require.NoError(t, json.Unmarshal(resp, &maintenanceWindow))
-		a := assert.New(t)
-		a.Equal(1, maintenanceWindow.GetDayOfWeek())
-		a.Equal(1, maintenanceWindow.GetHourOfDay())
+		a.Equal(1, maintenanceWindow.DayOfWeek)
+		a.Equal(1, maintenanceWindow.HourOfDay)
 	})
 
 	t.Run("clear", func(t *testing.T) {
@@ -79,8 +82,10 @@ func TestMaintenanceWindows(t *testing.T) {
 			g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
+
+		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		expected := "Maintenance window removed.\n"
-		assert.Equal(t, expected, string(resp))
+		a.Equal(expected, string(resp))
 	})
 }

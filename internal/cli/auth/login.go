@@ -21,26 +21,24 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli"
+	"github.com/andreaangiolillo/mongocli-test/internal/cli/require"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	"github.com/andreaangiolillo/mongocli-test/internal/log"
+	"github.com/andreaangiolillo/mongocli-test/internal/prerun"
+	"github.com/andreaangiolillo/mongocli-test/internal/telemetry"
+	"github.com/andreaangiolillo/mongocli-test/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/auth LoginConfig
+//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/cli/auth LoginConfig
 
 type LoginConfig interface {
 	config.SetSaver
 	AccessTokenSubject() (string, error)
-	OrgID() string
-	ProjectID() string
 }
 
 var (
@@ -51,12 +49,13 @@ var (
 type LoginOpts struct {
 	cli.DefaultSetterOpts
 	cli.RefresherOpts
-	AccessToken  string
-	RefreshToken string
-	IsGov        bool
-	NoBrowser    bool
-	SkipConfig   bool
-	config       LoginConfig
+	AccessToken    string
+	RefreshToken   string
+	IsGov          bool
+	isCloudManager bool
+	NoBrowser      bool
+	SkipConfig     bool
+	config         LoginConfig
 }
 
 // SyncWithOAuthAccessProfile returns a function that is synchronizing the oauth settings
@@ -68,6 +67,8 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 		switch {
 		case opts.IsGov:
 			opts.Service = config.CloudGovService
+		case opts.isCloudManager:
+			opts.Service = config.CloudManagerService
 		default:
 			opts.Service = config.CloudService
 		}
@@ -139,11 +140,11 @@ func (opts *LoginOpts) checkProfile(ctx context.Context) error {
 	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
-	if opts.config.OrgID() != "" && !opts.OrgExists(opts.config.OrgID()) {
+	if config.OrgID() != "" && !opts.OrgExists(config.OrgID()) {
 		opts.config.Set("org_id", "")
 	}
 
-	if opts.config.ProjectID() != "" && !opts.ProjectExists(opts.config.ProjectID()) {
+	if config.ProjectID() != "" && !opts.ProjectExists(config.ProjectID()) {
 		opts.config.Set("project_id", "")
 	}
 	return nil
@@ -160,7 +161,7 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 		}
 	}
 
-	if opts.config.OrgID() == "" || !opts.OrgExists(opts.config.OrgID()) {
+	if config.OrgID() == "" || !opts.OrgExists(config.OrgID()) {
 		if err := opts.AskOrg(); err != nil {
 			return err
 		}
@@ -168,7 +169,7 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 
 	opts.SetUpOrg()
 
-	if opts.config.ProjectID() == "" || !opts.ProjectExists(opts.config.ProjectID()) {
+	if config.ProjectID() == "" || !opts.ProjectExists(config.ProjectID()) {
 		if err := opts.AskProject(); err != nil {
 			return err
 		}
@@ -177,18 +178,18 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 
 	// Only make references to profile if user was asked about org or projects
 	if opts.AskedOrgsOrProjects && opts.ProjectID != "" && opts.OrgID != "" {
-		if !opts.ProjectExists(opts.config.ProjectID()) {
+		if !opts.ProjectExists(config.ProjectID()) {
 			return ErrProjectIDNotFound
 		}
 
-		if !opts.OrgExists(opts.config.OrgID()) {
+		if !opts.OrgExists(config.OrgID()) {
 			return ErrOrgIDNotFound
 		}
 
-		_, _ = fmt.Fprint(opts.OutWriter, `
+		_, _ = fmt.Fprintf(opts.OutWriter, `
 You have successfully configured your profile.
-You can use [atlas config set] to change your profile settings later.
-`)
+You can use [%s config set] to change your profile settings later.
+`, config.BinName())
 	}
 
 	return opts.config.Save()
@@ -283,16 +284,23 @@ func (opts *LoginOpts) LoginPreRun(ctx context.Context) func() error {
 	}
 }
 
+func tool() string {
+	if config.ToolName == config.MongoCLI {
+		return "Atlas or Cloud Manager"
+	}
+	return "Atlas"
+}
+
 func LoginBuilder() *cobra.Command {
 	opts := &LoginOpts{}
 
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
-		Example: `  # Log in to your MongoDB Atlas account in interactive mode:
-  atlas auth login
-`,
-		PreRunE: func(cmd *cobra.Command, _ []string) error {
+		Example: fmt.Sprintf(`  # Log in to your MongoDB %s account in interactive mode:
+  %s auth login
+`, tool(), config.BinName()),
+		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			defaultProfile := config.Default()
 			return prerun.ExecuteE(
@@ -303,10 +311,14 @@ func LoginBuilder() *cobra.Command {
 				validate.NoAccessToken,
 			)
 		},
-		RunE: func(cmd *cobra.Command, _ []string) error {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			return opts.LoginRun(cmd.Context())
 		},
 		Args: require.NoArgs,
+	}
+
+	if config.ToolName == config.MongoCLI {
+		cmd.Flags().BoolVar(&opts.isCloudManager, "cm", false, "Log in to Cloud Manager.")
 	}
 
 	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
@@ -328,8 +340,11 @@ func Builder() *cobra.Command {
 		LoginBuilder(),
 		WhoAmIBuilder(),
 		LogoutBuilder(),
-		RegisterBuilder(),
 	)
+
+	if config.ToolName == config.AtlasCLI {
+		cmd.AddCommand(RegisterBuilder())
+	}
 
 	return cmd
 }

@@ -21,19 +21,26 @@ import (
 	"os"
 	"testing"
 
-	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestConfig_MongoCLIConfigHome(t *testing.T) {
-	expHome, err := os.UserConfigDir()
-	require.NoError(t, err)
+	t.Run("with env set", func(t *testing.T) {
+		expHome, err := os.UserConfigDir()
+		expected := fmt.Sprintf("%s/mongocli", expHome)
+		if err != nil {
+			t.Fatalf("os.UserConfigDir() unexpected error: %v", err)
+		}
 
-	home, err := MongoCLIConfigHome()
-	require.NoError(t, err)
-	expected := fmt.Sprintf("%s/mongocli", expHome)
-	assert.Equal(t, expected, home)
+		home, err := MongoCLIConfigHome()
+		if err != nil {
+			t.Fatalf("MongoCLIConfigHome() unexpected error: %v", err)
+		}
+		if home != expected {
+			t.Errorf("MongoCLIConfigHome() = %s; want '%s'", home, expected)
+		}
+	})
 }
 
 func TestConfig_OldMongoCLIConfigHome(t *testing.T) {
@@ -150,12 +157,9 @@ func TestConfig_IsTrue(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run("", func(t *testing.T) {
-			t.Parallel()
-			if got := IsTrue(tt.input); got != tt.want {
-				t.Errorf("IsTrue() get: %v, want %v", got, tt.want)
-			}
-		})
+		if got := IsTrue(tt.input); got != tt.want {
+			t.Errorf("IsTrue() get: %v, want %v", got, tt.want)
+		}
 	}
 }
 
@@ -217,12 +221,12 @@ func Test_getConfigHostname(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		f := tt.fields
+		fields := tt.fields
 		expectedHostName := tt.expectedHostName
 		t.Run(tt.name, func(t *testing.T) {
-			t.Setenv(AtlasActionHostNameEnv, f.atlasActionEnv)
-			t.Setenv(GitHubActionsHostNameEnv, f.ghActionsEnv)
-			t.Setenv(ContainerizedHostNameEnv, f.containerizedEnv)
+			t.Setenv(AtlasActionHostNameEnv, fields.atlasActionEnv)
+			t.Setenv(GitHubActionsHostNameEnv, fields.ghActionsEnv)
+			t.Setenv(ContainerizedHostNameEnv, fields.containerizedEnv)
 			actualHostName := getConfigHostnameFromEnvs()
 
 			assert.Equal(t, expectedHostName, actualHostName)
@@ -230,80 +234,30 @@ func Test_getConfigHostname(t *testing.T) {
 	}
 }
 
-func TestProfile_Rename(t *testing.T) {
-	tests := []struct {
-		name    string
-		wantErr require.ErrorAssertionFunc
-	}{
-		{
-			name:    "default",
-			wantErr: require.NoError,
-		},
-		{
-			name:    "default-123",
-			wantErr: require.NoError,
-		},
-		{
-			name:    "default-test",
-			wantErr: require.NoError,
-		},
-		{
-			name:    "default.123",
-			wantErr: require.Error,
-		},
-		{
-			name:    "default.test",
-			wantErr: require.Error,
-		},
-	}
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			p := &Profile{
-				name: tt.name,
-				fs:   afero.NewMemMapFs(),
-			}
-			tt.wantErr(t, p.Rename(tt.name), fmt.Sprintf("Rename(%v)", tt.name))
-		})
-	}
+func TestConfig_SetName(t *testing.T) {
+	t.Run("valid", func(t *testing.T) {
+		require.NoError(t, SetName("default"))
+		require.NoError(t, SetName("default-123"))
+		require.NoError(t, SetName("default-test"))
+	})
+
+	t.Run("invalid", func(t *testing.T) {
+		require.Error(t, SetName("d.efault"))
+		require.Error(t, SetName("default.123"))
+		require.Error(t, SetName("default.test"))
+	})
 }
 
-func TestProfile_SetName(t *testing.T) {
-	tests := []struct {
-		name    string
-		wantErr require.ErrorAssertionFunc
-	}{
-		{
-			name:    "default",
-			wantErr: require.NoError,
-		},
-		{
-			name:    "default-123",
-			wantErr: require.NoError,
-		},
-		{
-			name:    "default-test",
-			wantErr: require.NoError,
-		},
-		{
-			name:    "default.123",
-			wantErr: require.Error,
-		},
-		{
-			name:    "default.test",
-			wantErr: require.Error,
-		},
-	}
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			p := &Profile{
-				name: tt.name,
-				fs:   afero.NewMemMapFs(),
-			}
-			tt.wantErr(t, p.SetName(tt.name), fmt.Sprintf("SetName(%v)", tt.name))
-		})
-	}
+func TestConfig_Rename(t *testing.T) {
+	t.Run("valid", func(t *testing.T) {
+		require.NoError(t, Rename("default"))
+		require.NoError(t, Rename("default-123"))
+		require.NoError(t, Rename("default-test"))
+	})
+
+	t.Run("invalid", func(t *testing.T) {
+		require.Error(t, Rename("d.efault"))
+		require.Error(t, Rename("default.123"))
+		require.Error(t, Rename("default.test"))
+	})
 }

@@ -20,13 +20,15 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/datafederation"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/dbusers"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/deployment"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/project"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/datafederation"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/dbusers"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/deployment"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/features"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/project"
+	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/resources"
+	"github.com/andreaangiolillo/mongocli-test/internal/store"
+	"github.com/andreaangiolillo/mongocli-test/internal/store/atlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -40,7 +42,7 @@ const (
 
 type ConfigExporter struct {
 	featureValidator        features.FeatureValidator
-	dataProvider            store.OperatorGenericStore
+	dataProvider            atlas.OperatorGenericStore
 	credsProvider           store.CredentialsGetter
 	projectID               string
 	clusterNames            []string
@@ -50,11 +52,6 @@ type ConfigExporter struct {
 	orgID                   string
 	dictionaryForAtlasNames map[string]string
 	dataFederationNames     []string
-	patcher                 Patcher
-}
-
-type Patcher interface {
-	Patch(obj runtime.Object) error
 }
 
 var (
@@ -62,7 +59,7 @@ var (
 	ErrNoCloudManagerClusters = errors.New("can not get 'advanced clusters' object")
 )
 
-func NewConfigExporter(dataProvider store.OperatorGenericStore, credsProvider store.CredentialsGetter, projectID, orgID string) *ConfigExporter {
+func NewConfigExporter(dataProvider atlas.OperatorGenericStore, credsProvider store.CredentialsGetter, projectID, orgID string) *ConfigExporter {
 	return &ConfigExporter{
 		dataProvider:            dataProvider,
 		credsProvider:           credsProvider,
@@ -106,11 +103,6 @@ func (e *ConfigExporter) WithDataFederationNames(dataFederations []string) *Conf
 	return e
 }
 
-func (e *ConfigExporter) WithPatcher(p Patcher) *ConfigExporter {
-	e.patcher = p
-	return e
-}
-
 func (e *ConfigExporter) Run() (string, error) {
 	// TODO: Add REST to OPERATOR entities matcher
 	output := bytes.NewBufferString(yamlSeparator)
@@ -142,13 +134,6 @@ func (e *ConfigExporter) Run() (string, error) {
 	r = append(r, dataFederationResource...)
 
 	for _, res := range r {
-		if e.patcher != nil {
-			err = e.patcher.Patch(res)
-			if err != nil {
-				return "", fmt.Errorf("error patching %v: %w", res.GetObjectKind().GroupVersionKind(), err)
-			}
-		}
-
 		err = serializer.Encode(res, output)
 		if err != nil {
 			return "", err
@@ -257,25 +242,28 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 	return result, nil
 }
 
-func fetchClusterNames(clustersProvider store.AllClustersLister, projectID string) ([]string, error) {
+func fetchClusterNames(clustersProvider atlas.AllClustersLister, projectID string) ([]string, error) {
 	result := make([]string, 0, DefaultClustersCount)
-	clusters, err := clustersProvider.ProjectClusters(projectID, &store.ListOptions{ItemsPerPage: maxClusters})
+	response, err := clustersProvider.ProjectClusters(projectID, &atlas.ListOptions{ItemsPerPage: maxClusters})
 	if err != nil {
 		return nil, err
 	}
 
-	if clusters == nil {
-		return nil, ErrNoCloudManagerClusters
-	}
-
-	for _, cluster := range clusters.GetResults() {
-		if reflect.ValueOf(cluster).IsZero() {
-			continue
+	if clusters, ok := response.(*atlasv2.PaginatedAdvancedClusterDescription); ok {
+		if clusters == nil {
+			return nil, ErrNoCloudManagerClusters
 		}
-		result = append(result, cluster.GetName())
+
+		for i := range clusters.Results {
+			cluster := clusters.Results[i]
+			if reflect.ValueOf(cluster).IsZero() {
+				continue
+			}
+			result = append(result, cluster.GetName())
+		}
 	}
 
-	serverlessInstances, err := clustersProvider.ServerlessInstances(projectID, &store.ListOptions{ItemsPerPage: maxClusters})
+	serverlessInstances, err := clustersProvider.ServerlessInstances(projectID, &atlas.ListOptions{ItemsPerPage: maxClusters})
 	if err != nil {
 		return nil, err
 	}
@@ -284,7 +272,8 @@ func fetchClusterNames(clustersProvider store.AllClustersLister, projectID strin
 		return result, nil
 	}
 
-	for _, cluster := range serverlessInstances.GetResults() {
+	for i := range serverlessInstances.Results {
+		cluster := serverlessInstances.Results[i]
 		result = append(result, *cluster.Name)
 	}
 

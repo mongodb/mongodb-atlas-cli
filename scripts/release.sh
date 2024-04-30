@@ -19,12 +19,12 @@ set -euo pipefail
 VERSION="${1-}"
 
 if [[ -z "${VERSION}" ]]; then
-	echo "Please provide a tag version in the format 'atlascli/vX.Y.Z'"
+	echo "Please provide a tag version in the format 'mongocli/vX.Y.Z' or 'atlascli/vX.Y.Z'"
 	exit 1
 fi
 
 if [[ "${VERSION}" != mongocli/v* ]] && [[ "${VERSION}" != atlascli/v* ]]; then
-	echo "Please provide a tag version in the format  'atlascli/vX.Y.Z'"
+	echo "Please provide a tag version in the format 'mongocli/vX.Y.Z' or 'atlascli/vX.Y.Z'"
 	exit 1
 fi
 

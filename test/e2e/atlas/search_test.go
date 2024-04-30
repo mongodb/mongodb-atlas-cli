@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 //go:build e2e || (atlas && search)
 
 package atlas_test
@@ -24,10 +23,10 @@ import (
 	"testing"
 	"text/template"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestSearch(t *testing.T) {
@@ -61,9 +60,9 @@ func TestSearch(t *testing.T) {
 
 		file, err := os.Create(fileName)
 		require.NoError(t, err)
-		t.Cleanup(func() {
+		defer func() {
 			require.NoError(t, os.Remove(fileName))
-		})
+		}()
 
 		tpl := template.Must(template.New("").Parse(`
 {
@@ -123,9 +122,11 @@ func TestSearch(t *testing.T) {
 
 		file, err := os.Create(fileName)
 		require.NoError(t, err)
-		t.Cleanup(func() {
-			require.NoError(t, os.Remove(fileName))
-		})
+		defer func() {
+			if e := os.Remove(fileName); e != nil {
+				t.Errorf("error deleting file '%v': %v", fileName, e)
+			}
+		}()
 
 		tpl := template.Must(template.New("").Parse(`
 {
@@ -188,7 +189,9 @@ func TestSearch(t *testing.T) {
 		file, err := os.Create(fileName)
 		r.NoError(err)
 		t.Cleanup(func() {
-			require.NoError(t, os.Remove(fileName))
+			if e := os.Remove(fileName); e != nil {
+				t.Errorf("error deleting file '%v': %v", fileName, e)
+			}
 		})
 
 		tpl := template.Must(template.New("").Parse(`
@@ -252,7 +255,9 @@ func TestSearch(t *testing.T) {
 		file, err := os.Create(fileName)
 		r.NoError(err)
 		t.Cleanup(func() {
-			require.NoError(t, os.Remove(fileName))
+			if e := os.Remove(fileName); e != nil {
+				t.Errorf("error deleting file '%v': %v", fileName, e)
+			}
 		})
 
 		tpl := template.Must(template.New("").Parse(`
@@ -358,7 +363,9 @@ func TestSearch(t *testing.T) {
 		file, err := os.Create(fileName)
 		r.NoError(err)
 		t.Cleanup(func() {
-			require.NoError(t, os.Remove(fileName))
+			if e := os.Remove(fileName); e != nil {
+				t.Errorf("error deleting file '%v': %v", fileName, e)
+			}
 		})
 
 		tpl := template.Must(template.New("").Parse(`

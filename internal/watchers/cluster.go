@@ -15,15 +15,16 @@
 package watchers
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
+	"github.com/andreaangiolillo/mongocli-test/internal/store"
 )
 
 const (
-	clusterDeleting = "DELETING"
-	clusterUpdating = "UPDATING"
-	clusterIdle     = "IDLE"
-	clusterCreating = "CREATING"
+	clusterDeleting  = "DELETING"
+	clusterUpdating  = "UPDATING"
+	clusterIdle      = "IDLE"
+	clusterCreating  = "CREATING"
+	clusterRepairing = "REPAIRING"
 
 	clusterNotFound = "CLUSTER_NOT_FOUND"
 )
@@ -38,8 +39,19 @@ var ClusterCreated = &StateTransition{
 	EndState:   pointer.Get(clusterIdle),
 }
 
+var ClusterUpdated = &StateTransition{
+	StartState: pointer.Get(clusterUpdating),
+	EndState:   pointer.Get(clusterIdle),
+}
+
+var ClusterUpgraded = &StateTransition{
+	StartState:          pointer.Get(clusterUpdating),
+	EndState:            pointer.Get(clusterIdle),
+	RetryableErrorCodes: []string{clusterNotFound},
+}
+
 type AtlasClusterStateDescriber struct {
-	store       store.ClusterDescriber
+	store       store.AtlasClusterDescriber
 	projectID   string
 	clusterName string
 }
@@ -53,7 +65,7 @@ func (describer *AtlasClusterStateDescriber) GetState() (string, error) {
 	return "", err
 }
 
-func NewAtlasClusterStateDescriber(s store.ClusterDescriber, projectID, clusterName string) *AtlasClusterStateDescriber {
+func NewAtlasClusterStateDescriber(s store.AtlasClusterDescriber, projectID, clusterName string) *AtlasClusterStateDescriber {
 	return &AtlasClusterStateDescriber{
 		store:       s,
 		projectID:   projectID,

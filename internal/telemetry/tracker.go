@@ -22,9 +22,9 @@ import (
 	"path/filepath"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/andreaangiolillo/mongocli-test/internal/log"
+	"github.com/andreaangiolillo/mongocli-test/internal/store"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
@@ -56,7 +56,7 @@ func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracke
 		return nil, err
 	}
 
-	cacheDir = filepath.Join(cacheDir, config.AtlasCLI)
+	cacheDir = filepath.Join(cacheDir, config.ToolName)
 
 	t := &tracker{
 		fs:               afero.NewOsFs(),

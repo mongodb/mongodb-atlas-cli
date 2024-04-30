@@ -23,10 +23,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/andreaangiolillo/mongocli-test/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
 )
 
 func TestAccessList(t *testing.T) {
@@ -34,6 +34,7 @@ func TestAccessList(t *testing.T) {
 	g.generateProject("accessList")
 
 	n, err := e2e.RandInt(255)
+	a := assert.New(t)
 	req := require.New(t)
 	req.NoError(err)
 
@@ -54,20 +55,21 @@ func TestAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		req.NoError(err)
 
 		var entries *atlasv2.PaginatedNetworkAccess
-		require.NoError(t, json.Unmarshal(resp, &entries))
+		err = json.Unmarshal(resp, &entries)
+		req.NoError(err)
 
 		found := false
-		for i := range entries.GetResults() {
-			if entries.GetResults()[i].GetIpAddress() == entry {
+		for i := range entries.Results {
+			if entries.Results[i].GetIpAddress() == entry {
 				found = true
 				break
 			}
 		}
 
-		assert.True(t, found)
+		a.True(found)
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -79,9 +81,10 @@ func TestAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err)
 		var entries *atlasv2.PaginatedNetworkAccess
-		require.NoError(t, json.Unmarshal(resp, &entries))
+		err = json.Unmarshal(resp, &entries)
+		req.NoError(err)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -94,9 +97,10 @@ func TestAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err)
 		var entry *atlasv2.NetworkPermissionEntry
-		require.NoError(t, json.Unmarshal(resp, &entry))
+		err = json.Unmarshal(resp, &entry)
+		req.NoError(err)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -109,10 +113,10 @@ func TestAccessList(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err)
 
 		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", entry)
-		assert.Equal(t, expected, string(resp))
+		a.Equal(expected, string(resp))
 	})
 
 	t.Run("Create Delete After", func(t *testing.T) {
@@ -127,19 +131,20 @@ func TestAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err)
 
 		var entries *atlasv2.PaginatedNetworkAccess
-		require.NoError(t, json.Unmarshal(resp, &entries))
+		err = json.Unmarshal(resp, &entries)
+		req.NoError(err)
 
 		found := false
-		for i := range entries.GetResults() {
-			if entries.GetResults()[i].GetIpAddress() == entry {
+		for i := range entries.Results {
+			if entries.Results[i].GetIpAddress() == entry {
 				found = true
 				break
 			}
 		}
-		assert.True(t, found)
+		a.True(found)
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -152,10 +157,10 @@ func TestAccessList(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err)
 
 		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", entry)
-		assert.Equal(t, expected, string(resp))
+		a.Equal(expected, string(resp))
 	})
 
 	t.Run("Create with CurrentIp", func(t *testing.T) {
@@ -169,16 +174,16 @@ func TestAccessList(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err)
 
 		var entries *atlasv2.PaginatedNetworkAccess
-		require.NoError(t, json.Unmarshal(resp, &entries))
+		err = json.Unmarshal(resp, &entries)
+		req.NoError(err)
 
-		a := assert.New(t)
-		a.NotEmpty(entries.GetResults())
-		a.Len(entries.GetResults(), 1)
+		a.NotEmpty(entries.Results)
+		a.Len(entries.Results, 1)
 
-		currentIPEntry = entries.GetResults()[0].GetIpAddress()
+		currentIPEntry = entries.Results[0].GetIpAddress()
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -191,9 +196,9 @@ func TestAccessList(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		req.NoError(err)
 
 		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", currentIPEntry)
-		assert.Equal(t, expected, string(resp))
+		a.Equal(expected, string(resp))
 	})
 }

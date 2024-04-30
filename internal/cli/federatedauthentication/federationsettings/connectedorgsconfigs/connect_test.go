@@ -41,21 +41,28 @@ func TestConnect_Run(t *testing.T) {
 		},
 	}
 
+	ids := []string{"id"}
+	expected := &atlasv2.ConnectedOrgConfig{
+		OrgId:                         "id",
+		DataAccessIdentityProviderIds: &ids,
+	}
+
 	mockStore.
 		EXPECT().
 		UpdateConnectedOrgConfig(gomock.Any()).
-		Return(&atlasv2.ConnectedOrgConfig{}, nil).
+		Return(expected, nil).
 		Times(1)
 
 	describeStore.
 		EXPECT().
 		GetConnectedOrgConfig(gomock.Any()).
-		Return(&atlasv2.ConnectedOrgConfig{}, nil).
+		Return(expected, nil).
 		Times(1)
 
 	if err := ConnectOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, connectTemplate, expected)
 }
 
 func TestConnectBuilder(t *testing.T) {

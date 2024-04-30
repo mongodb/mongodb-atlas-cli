@@ -21,7 +21,7 @@
       - name: Find JIRA team
         id: find
         run: |
-          assigned_team=$(git diff HEAD~1..HEAD -- go.mod | grep -v "// indirect" | grep -i "^\-" | grep -v "^\-\-\-" | awk '{print $2}' | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners.json" | sh | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners_jira.json" | sh | head -1)"  >> "${GITHUB_OUTPUT}
+          assigned_team=$(git diff HEAD~1..HEAD -- go.mod | grep -v "// indirect" | grep -i "^\-" | grep -v "^\-\-\-" | awk '{print $2}' | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners.json" | sh | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners_jira.json" | sh | head -1)"
           if [ -z "$assigned_team" ]; then
               echo "Variable assigned_team is empty or not defined. Defaulting to the mongocli team"
               assigned_team="mongocli"

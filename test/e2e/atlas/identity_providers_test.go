@@ -304,7 +304,7 @@ func TestIdentityProviders(t *testing.T) {
 		var config atlasv2.ConnectedOrgConfig
 		req.NoError(json.Unmarshal(resp, &config))
 
-		assert.NotEmpty(t, *config.DomainAllowList)
+		assert.NotEmpty(t, config.GetDomainAllowList())
 	})
 
 	t.Run("Update connected org config back", func(t *testing.T) {
@@ -327,7 +327,7 @@ func TestIdentityProviders(t *testing.T) {
 		var config atlasv2.ConnectedOrgConfig
 		req.NoError(json.Unmarshal(resp, &config))
 
-		assert.Empty(t, *config.DomainAllowList)
+		assert.Empty(t, config.GetDomainAllowList())
 	})
 
 	t.Run("List OIDC IdPs WORKFORCE", func(_ *testing.T) {

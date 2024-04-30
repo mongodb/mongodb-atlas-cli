@@ -149,7 +149,6 @@ func ApplyBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.ValidateOrgID,
 				opts.ValidateTargetNamespace,
 				opts.ValidateOperatorVersion,
 				opts.initStores(cmd.Context()),

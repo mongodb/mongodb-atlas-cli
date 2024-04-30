@@ -63,19 +63,26 @@ const (
 	prometheusIntegrationType       = "PROMETHEUS"
 )
 
+type AtlasProjectBuildRequest struct {
+	ProjectStore    store.OperatorProjectStore
+	Project         *atlasv2.Group
+	Validator       features.FeatureValidator
+	OrgID           string
+	ProjectID       string
+	TargetNamespace string
+	IncludeSecret   bool
+	Dictionary      map[string]string
+	Version         string
+}
+
 type AtlasProjectResult struct {
 	Project *akov2.AtlasProject
 	Secrets []*corev1.Secret
 	Teams   []*akov2.AtlasTeam
 }
 
-func BuildAtlasProject(projectStore store.OperatorProjectStore, validator features.FeatureValidator, orgID, projectID, targetNamespace string, includeSecret bool, dictionary map[string]string, version string) (*AtlasProjectResult, error) { //nolint:gocyclo
-	project, err := projectStore.Project(projectID)
-	if err != nil {
-		return nil, err
-	}
-
-	projectResult := newAtlasProject(project, dictionary, targetNamespace, version)
+func BuildAtlasProject(br *AtlasProjectBuildRequest) (*AtlasProjectResult, error) { //nolint:gocyclo
+	projectResult := newAtlasProject(br.Project, br.Dictionary, br.TargetNamespace, br.Version)
 
 	result := &AtlasProjectResult{
 		Project: projectResult,
@@ -83,16 +90,16 @@ func BuildAtlasProject(projectStore store.OperatorProjectStore, validator featur
 		Teams:   nil,
 	}
 
-	if validator.FeatureExist(features.ResourceAtlasProject, featureAccessLists) {
-		ipAccessList, ferr := buildAccessLists(projectStore, projectID)
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureAccessLists) {
+		ipAccessList, ferr := buildAccessLists(br.ProjectStore, br.ProjectID)
 		if ferr != nil {
 			return nil, ferr
 		}
 		projectResult.Spec.ProjectIPAccessList = ipAccessList
 	}
 
-	if validator.FeatureExist(features.ResourceAtlasProject, featureMaintenanceWindows) {
-		maintenanceWindows, ferr := buildMaintenanceWindows(projectStore, projectID)
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureMaintenanceWindows) {
+		maintenanceWindows, ferr := buildMaintenanceWindows(br.ProjectStore, br.ProjectID)
 		if ferr != nil {
 			return nil, ferr
 		}
@@ -100,13 +107,13 @@ func BuildAtlasProject(projectStore store.OperatorProjectStore, validator featur
 	}
 
 	secretRef := &akov2common.ResourceRefNamespaced{}
-	if includeSecret {
-		secretRef.Name = resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, project.Name), dictionary)
+	if br.IncludeSecret {
+		secretRef.Name = resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, br.Project.Name), br.Dictionary)
 	}
 	projectResult.Spec.ConnectionSecret = secretRef
 
-	if validator.FeatureExist(features.ResourceAtlasProject, featureIntegrations) {
-		integrations, intSecrets, ferr := buildIntegrations(projectStore, projectID, targetNamespace, true, dictionary)
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureIntegrations) {
+		integrations, intSecrets, ferr := buildIntegrations(br.ProjectStore, br.ProjectID, br.TargetNamespace, true, br.Dictionary)
 		if ferr != nil {
 			return nil, ferr
 		}
@@ -114,24 +121,24 @@ func BuildAtlasProject(projectStore store.OperatorProjectStore, validator featur
 		result.Secrets = intSecrets
 	}
 
-	if validator.FeatureExist(features.ResourceAtlasProject, featureNetworkPeering) {
-		networkPeering, ferr := buildNetworkPeering(projectStore, projectID)
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureNetworkPeering) {
+		networkPeering, ferr := buildNetworkPeering(br.ProjectStore, br.ProjectID)
 		if ferr != nil {
 			return nil, ferr
 		}
 		projectResult.Spec.NetworkPeers = networkPeering
 	}
 
-	if validator.FeatureExist(features.ResourceAtlasProject, featurePrivateEndpoints) {
-		privateEndpoints, ferr := buildPrivateEndpoints(projectStore, projectID)
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featurePrivateEndpoints) {
+		privateEndpoints, ferr := buildPrivateEndpoints(br.ProjectStore, br.ProjectID)
 		if ferr != nil {
 			return nil, ferr
 		}
 		projectResult.Spec.PrivateEndpoints = privateEndpoints
 	}
 
-	if validator.FeatureExist(features.ResourceAtlasProject, featureEncryptionAtRest) {
-		encryptionAtRest, secrets, ferr := buildEncryptionAtRest(projectStore, projectID, project.Name, targetNamespace, dictionary)
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureEncryptionAtRest) {
+		encryptionAtRest, secrets, ferr := buildEncryptionAtRest(br.ProjectStore, br.ProjectID, br.Project.Name, br.TargetNamespace, br.Dictionary)
 		if ferr != nil {
 			return nil, ferr
 		}
@@ -139,32 +146,32 @@ func BuildAtlasProject(projectStore store.OperatorProjectStore, validator featur
 		result.Secrets = append(result.Secrets, secrets...)
 	}
 
-	if validator.FeatureExist(features.ResourceAtlasProject, featureCloudProviderAccessRoles) {
-		cpa, ferr := buildCloudProviderAccessRoles(projectStore, projectID)
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureCloudProviderAccessRoles) {
+		cpa, ferr := buildCloudProviderAccessRoles(br.ProjectStore, br.ProjectID)
 		if ferr != nil {
 			return nil, ferr
 		}
 		projectResult.Spec.CloudProviderAccessRoles = cpa
 	}
 
-	if validator.FeatureExist(features.ResourceAtlasProject, featureProjectSettings) {
-		projectSettings, ferr := buildProjectSettings(projectStore, projectID)
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureProjectSettings) {
+		projectSettings, ferr := buildProjectSettings(br.ProjectStore, br.ProjectID)
 		if ferr != nil {
 			return nil, ferr
 		}
 		projectResult.Spec.Settings = projectSettings
 	}
 
-	if validator.FeatureExist(features.ResourceAtlasProject, featureAuditing) {
-		auditing, ferr := buildAuditing(projectStore, projectID)
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureAuditing) {
+		auditing, ferr := buildAuditing(br.ProjectStore, br.ProjectID)
 		if ferr != nil {
 			return nil, ferr
 		}
 		projectResult.Spec.Auditing = auditing
 	}
 
-	if validator.FeatureExist(features.ResourceAtlasProject, featureAlertConfiguration) {
-		alertConfigurations, secrets, ferr := buildAlertConfigurations(projectStore, projectID, project.Name, targetNamespace, dictionary)
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureAlertConfiguration) {
+		alertConfigurations, secrets, ferr := buildAlertConfigurations(br.ProjectStore, br.ProjectID, br.Project.Name, br.TargetNamespace, br.Dictionary)
 		if ferr != nil {
 			return nil, ferr
 		}
@@ -172,16 +179,16 @@ func BuildAtlasProject(projectStore store.OperatorProjectStore, validator featur
 		result.Secrets = append(result.Secrets, secrets...)
 	}
 
-	if validator.FeatureExist(features.ResourceAtlasProject, featureCustomRoles) {
-		customRoles, ferr := buildCustomRoles(projectStore, projectID)
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureCustomRoles) {
+		customRoles, ferr := buildCustomRoles(br.ProjectStore, br.ProjectID)
 		if ferr != nil {
 			return nil, ferr
 		}
 		projectResult.Spec.CustomRoles = customRoles
 	}
 
-	if validator.FeatureExist(features.ResourceAtlasProject, featureTeams) {
-		teamsRefs, teams, ferr := buildTeams(projectStore, orgID, projectID, project.Name, targetNamespace, version, dictionary)
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureTeams) {
+		teamsRefs, teams, ferr := buildTeams(br.ProjectStore, br.OrgID, br.ProjectID, br.Project.Name, br.TargetNamespace, br.Version, br.Dictionary)
 		if ferr != nil {
 			return nil, ferr
 		}
@@ -189,7 +196,7 @@ func BuildAtlasProject(projectStore store.OperatorProjectStore, validator featur
 		result.Teams = teams
 	}
 
-	return result, err
+	return result, nil
 }
 
 func newAtlasProject(project *atlasv2.Group, dictionary map[string]string, targetNamespace string, version string) *akov2.AtlasProject {

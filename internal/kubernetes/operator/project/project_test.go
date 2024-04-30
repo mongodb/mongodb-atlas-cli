@@ -279,7 +279,6 @@ func TestBuildAtlasProject(t *testing.T) {
 		containerListOptionAWS := &store.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderAWS)}
 		containerListOptionGCP := &store.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderGCP)}
 		containerListOptionAzure := &store.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderAzure)}
-		projectStore.EXPECT().Project(projectID).Return(p, nil)
 		projectStore.EXPECT().ProjectIPAccessLists(projectID, listOption).Return(ipAccessLists, nil)
 		projectStore.EXPECT().MaintenanceWindow(projectID).Return(mw, nil)
 		projectStore.EXPECT().Integrations(projectID).Return(thirdPartyIntegrations, nil)
@@ -313,7 +312,17 @@ func TestBuildAtlasProject(t *testing.T) {
 		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureTeams).Return(true)
 
 		dictionary := resources.AtlasNameToKubernetesName()
-		projectResult, err := BuildAtlasProject(projectStore, featureValidator, orgID, projectID, targetNamespace, true, dictionary, resourceVersion)
+		projectResult, err := BuildAtlasProject(&AtlasProjectBuildRequest{
+			ProjectStore:    projectStore,
+			Project:         p,
+			Validator:       featureValidator,
+			OrgID:           orgID,
+			ProjectID:       projectID,
+			TargetNamespace: targetNamespace,
+			IncludeSecret:   true,
+			Dictionary:      dictionary,
+			Version:         resourceVersion,
+		})
 		if err != nil {
 			t.Fatalf("%v", err)
 		}

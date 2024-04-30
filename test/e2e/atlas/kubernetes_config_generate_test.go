@@ -145,6 +145,7 @@ func TestEmptyProject(t *testing.T) {
 			"generate",
 			"--projectId",
 			generator.projectID,
+			"--orgId", "", // Empty org id does not make it fail
 			"--targetNamespace",
 			targetNamespace,
 			"--includeSecrets")

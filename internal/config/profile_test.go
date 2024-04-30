@@ -24,7 +24,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestConfig_MongoCLIConfigHome(t *testing.T) {
+func TestCLIConfigHome(t *testing.T) {
 	t.Run("with env set", func(t *testing.T) {
 		expHome, err := os.UserConfigDir()
 		expected := fmt.Sprintf("%s/mongocli", expHome)
@@ -32,7 +32,7 @@ func TestConfig_MongoCLIConfigHome(t *testing.T) {
 			t.Fatalf("os.UserConfigDir() unexpected error: %v", err)
 		}
 
-		home, err := MongoCLIConfigHome()
+		home, err := CLIConfigHome()
 		if err != nil {
 			t.Fatalf("MongoCLIConfigHome() unexpected error: %v", err)
 		}
@@ -42,7 +42,7 @@ func TestConfig_MongoCLIConfigHome(t *testing.T) {
 	})
 }
 
-func TestConfig_OldMongoCLIConfigHome(t *testing.T) {
+func TestOldMongoCLIConfigHome(t *testing.T) {
 	t.Run("old home with XDG_CONFIG_HOME", func(t *testing.T) {
 		const xdgHome = "my_config"
 		t.Setenv("XDG_CONFIG_HOME", xdgHome)

@@ -61,16 +61,6 @@ func (opts *SetOpts) Run() error {
 	return nil
 }
 
-func mongoCLIExample() string {
-	if config.BinName() == config.MongoCLI {
-		return fmt.Sprintf(`  Set the Ops Manager base URL in the profile myProfile to http://localhost:30700/:
-  %s config set ops_manager_url http://localhost:30700/ -P myProfile
-`, config.BinName())
-	}
-
-	return ""
-}
-
 func SetBuilder() *cobra.Command {
 	const argsN = 2
 	cmd := &cobra.Command{
@@ -85,9 +75,11 @@ func SetBuilder() *cobra.Command {
 			}
 			return nil
 		},
-		Example: fmt.Sprintf(`  %s
+		Example: `  Set the Ops Manager base URL in the profile myProfile to http://localhost:30700/:
+  mongocli config set ops_manager_url http://localhost:30700/ -P myProfile
+
   Set the organization ID in the default profile to 5dd5aaef7a3e5a6c5bd12de4:
-  %s config set org_id 5dd5aaef7a3e5a6c5bd12de4`, mongoCLIExample(), config.BinName()),
+  mongocli config set org_id 5dd5aaef7a3e5a6c5bd12de4`,
 		Annotations: map[string]string{
 			"propertyNameDesc": "Property to set in the profile. Valid values for Atlas CLI and MongoDB CLI are project_id, org_id, service, public_api_key, private_api_key, output, mongosh_path, skip_update_check, telemetry_enabled, access_token, and refresh_token. Additionally, values that are only valid for MongoDB CLI include ops_manager_url base_url, ops_manager_ca_certificate, and ops_manager_skip_verify.",
 			"valueDesc":        "Value for the property to set in the profile.",

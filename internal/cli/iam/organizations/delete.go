@@ -61,8 +61,8 @@ func DeleteBuilder() *cobra.Command {
 			"IDDesc": "Unique 24-digit string that identifies the organization.",
 			"output": opts.SuccessMessage(),
 		},
-		Example: fmt.Sprintf(`  # Remove the organization with the ID 5e2211c17a3e5a48f5497de3:
-  %s organizations delete 5e2211c17a3e5a48f5497de3`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Remove the organization with the ID 5e2211c17a3e5a48f5497de3:
+  mongocli iam organizations delete 5e2211c17a3e5a48f5497de3`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.initStore(cmd.Context())(); err != nil {
 				return err

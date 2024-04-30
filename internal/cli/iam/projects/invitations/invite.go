@@ -78,8 +78,8 @@ func InviteBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"emailDesc": "Email address that belongs to the user that you want to invite to the project.",
 		},
-		Example: fmt.Sprintf(`  # Invite the MongoDB user with the email user@example.com to the project with the ID 5f71e5255afec75a3d0f96dc with GROUP_READ_ONLY access:
-  %s projects invitations invite user@example.com --projectId 5f71e5255afec75a3d0f96dc --role GROUP_READ_ONLY --output json`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Invite the MongoDB user with the email user@example.com to the project with the ID 5f71e5255afec75a3d0f96dc with GROUP_READ_ONLY access:
+  mongocli iam projects invitations invite user@example.com --projectId 5f71e5255afec75a3d0f96dc --role GROUP_READ_ONLY --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			return opts.initStore(cmd.Context())()
@@ -89,12 +89,7 @@ func InviteBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-
-	if config.BinName() == config.MongoCLI {
-		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.MCLIProjectRole)
-	} else {
-		cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.ProjectRole)
-	}
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.MCLIProjectRole)
 	cmd.Flags().StringSliceVar(&opts.teamIDs, flag.TeamID, []string{}, usage.TeamID)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

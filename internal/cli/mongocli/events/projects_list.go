@@ -73,7 +73,7 @@ func ProjectListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: fmt.Sprintf(`  # Return a JSON-formatted list of events for the project with the ID 5e2211c17a3e5a48f5497de3:
-  %s events projects list --Id 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleAtlasEntryPoint()),
+  %s events projects list --Id 5e2211c17a3e5a48f5497de3 --output json`, cli.ExampleEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

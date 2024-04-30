@@ -76,4 +76,4 @@ Examples
 .. code-block::
 
    # Return a JSON-formatted list of pending invitations to the organization with the ID 5f71e5255afec75a3d0f96dc:
-   mongocli organizations invitations list --orgId 5f71e5255afec75a3d0f96dc --output json
+   mongocli iam organizations invitations list --orgId 5f71e5255afec75a3d0f96dc --output json

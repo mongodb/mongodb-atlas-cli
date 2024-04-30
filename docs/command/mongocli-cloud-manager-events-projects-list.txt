@@ -90,4 +90,4 @@ Examples
 .. code-block::
 
    # Return a JSON-formatted list of events for the project with the ID 5e2211c17a3e5a48f5497de3:
-   mongocli atlas events projects list --Id 5e2211c17a3e5a48f5497de3 --output json
+   mongocli [ops-manager|cloud-manager] events projects list --Id 5e2211c17a3e5a48f5497de3 --output json

@@ -95,10 +95,10 @@ Examples
 .. code-block::
 
    # Return a JSON-formatted list of all organizations:
-   mongocli organizations list --output json
+   mongocli iam organizations list --output json
    
    
 .. code-block::
 
    # Return a JSON-formatted list that includes the organizations named org1 and Org1, but doesn't return org123:
-   mongocli organizations list --name org1 --output json
+   mongocli iam organizations list --name org1 --output json

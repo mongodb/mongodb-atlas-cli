@@ -16,7 +16,7 @@ Assign the specified organization API key to your project and modify the API key
 
 When you modify the roles for an organization API key with this command, the values you specify overwrite the existing roles assigned to the API key.
 		
-To view possible values for the ID argument, run mongocli organizations apiKeys list.
+To view possible values for the ID argument, run mongocli iam organizations apiKeys list.
 
 Syntax
 ------
@@ -94,4 +94,4 @@ Examples
 .. code-block::
 
    # Assign an organization API key with the ID 5f46ae53d58b421fe3edc115 and grant the GROUP_DATA_ACCESS_READ_WRITE role for the project with ID 5e2211c17a3e5a48f5497de3:
-   mongocli projects apiKeys assign 5f46ae53d58b421fe3edc115 --projectId 5e1234c17a3e5a48f5497de3 --role GROUP_DATA_ACCESS_READ_WRITE --output json
+   mongocli iam projects apiKeys assign 5f46ae53d58b421fe3edc115 --projectId 5e1234c17a3e5a48f5497de3 --role GROUP_DATA_ACCESS_READ_WRITE --output json

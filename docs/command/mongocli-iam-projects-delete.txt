@@ -94,4 +94,4 @@ Examples
 .. code-block::
 
    # Remove the project with the ID 5e2211c17a3e5a48f5497de3:
-   mongocli projects delete 5e2211c17a3e5a48f5497de3
+   mongocli iam projects delete 5e2211c17a3e5a48f5497de3

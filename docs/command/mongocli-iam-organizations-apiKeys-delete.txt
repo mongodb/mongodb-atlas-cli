@@ -14,7 +14,7 @@ mongocli iam organizations apiKeys delete
 
 Remove the specified API key for your organization.
 
-To view possible values for the ID argument, run mongocli organizations apiKeys list.
+To view possible values for the ID argument, run mongocli iam organizations apiKeys list.
 
 To use this command, you must authenticate with a user account or an API key with the Organization User Admin role.
 
@@ -100,4 +100,4 @@ Examples
 .. code-block::
 
    # Remove the organization API key with the ID 5f24084d8dbffa3ad3f21234 for the organization with the ID 5a1b39eec902201990f12345:
-   mongocli organizations apiKeys delete 5f24084d8dbffa3ad3f21234 --orgId 5a1b39eec902201990f12345
+   mongocli iam organizations apiKeys delete 5f24084d8dbffa3ad3f21234 --orgId 5a1b39eec902201990f12345

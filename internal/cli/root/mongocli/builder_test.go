@@ -176,8 +176,8 @@ func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 A new version of %s is available '%v'!
 To upgrade, see: https://dochub.mongodb.org/core/install-%s.
 
-To disable this alert, run "%s config set skip_update_check true".
-`, config.MongoCLI, v, config.MongoCLI, config.BinName())
+To disable this alert, run "mongocli config set skip_update_check true".
+`, config.MongoCLI, v, config.MongoCLI)
 			}
 
 			if got := bufOut.String(); got != want {

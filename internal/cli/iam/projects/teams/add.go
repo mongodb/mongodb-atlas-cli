@@ -77,8 +77,8 @@ func AddBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"teamIdDesc": "Unique 24-digit string that identifies the team.",
 		},
-		Example: fmt.Sprintf(`  # Add the team with the ID 5dd58c647a3e5a6c5bce46c7 to the project with the ID 5e2211c17a3e5a48f5497de3 with GROUP_READ_ONLY project access:
-  %s projects teams add 5dd58c647a3e5a6c5bce46c7 --projectId 5e2211c17a3e5a48f5497de3 --role GROUP_READ_ONLY`, cli.ExampleAtlasEntryPoint()),
+		Example: `  # Add the team with the ID 5dd58c647a3e5a6c5bce46c7 to the project with the ID 5e2211c17a3e5a48f5497de3 with GROUP_READ_ONLY project access:
+  mongocli iam projects teams add 5dd58c647a3e5a6c5bce46c7 --projectId 5e2211c17a3e5a48f5497de3 --role GROUP_READ_ONLY`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.teamID = args[0]
 			return opts.PreRunE(

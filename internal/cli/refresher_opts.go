@@ -65,9 +65,8 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 		var target *opsmngr.ErrorResponse
 		if errors.As(err, &target) && target.ErrorCode == "INVALID_REFRESH_TOKEN" {
 			return fmt.Errorf(
-				"%w\n\nTo login, run: %s auth login",
-				ErrInvalidRefreshToken,
-				config.BinName())
+				"%w\n\nTo login, run: mongocli auth login",
+				ErrInvalidRefreshToken)
 		}
 		return err
 	}

@@ -96,4 +96,4 @@ Examples
 .. code-block::
 
    # Invite the MongoDB user with the email user@example.com to the project with the ID 5f71e5255afec75a3d0f96dc with GROUP_READ_ONLY access:
-   mongocli projects invitations invite user@example.com --projectId 5f71e5255afec75a3d0f96dc --role GROUP_READ_ONLY --output json
+   mongocli iam projects invitations invite user@example.com --projectId 5f71e5255afec75a3d0f96dc --role GROUP_READ_ONLY --output json

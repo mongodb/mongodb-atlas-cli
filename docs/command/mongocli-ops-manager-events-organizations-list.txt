@@ -90,4 +90,4 @@ Examples
 .. code-block::
 
    # Return a JSON-formatted list of events for the organization with the ID 5dd5a6b6f10fab1d71a58495:
-   mongocli atlas events organizations list --orgId 5dd5a6b6f10fab1d71a58495 --output json
+   mongocli [ops-manager|cloud-manager] events organizations list --orgId 5dd5a6b6f10fab1d71a58495 --output json

@@ -75,7 +75,7 @@ func UpdateBuilder() *cobra.Command {
   %s alerts settings update 5d1113b25a115342acc2d1aa --event JOINED_GROUP --enabled \
 		--notificationType USER --notificationEmailEnabled \
 		--notificationUsername john@example.com \
-		--output json --projectId 5df90590f10fab5e33de2305`, cli.ExampleAtlasEntryPoint()),
+		--output json --projectId 5df90590f10fab5e33de2305`, cli.ExampleEntryPoint()),
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

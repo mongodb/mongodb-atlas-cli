@@ -21,9 +21,9 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/andreaangiolillo/mongocli-test/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestAccessLogs(t *testing.T) {
@@ -47,10 +47,9 @@ func TestAccessLogs(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		require.NoError(t, err, string(resp))
 		var entries *atlasv2.MongoDBAccessLogsList
-		err = json.Unmarshal(resp, &entries)
-		req.NoError(err)
+		require.NoError(t, json.Unmarshal(resp, &entries))
 	})
 
 	t.Run("List by hostname", func(t *testing.T) {
@@ -62,9 +61,8 @@ func TestAccessLogs(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err)
+		require.NoError(t, err, string(resp))
 		var entries *atlasv2.MongoDBAccessLogsList
-		err = json.Unmarshal(resp, &entries)
-		req.NoError(err)
+		require.NoError(t, json.Unmarshal(resp, &entries))
 	})
 }

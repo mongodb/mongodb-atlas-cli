@@ -21,7 +21,7 @@ import (
 	"net/http"
 	"time"
 
-	apiextensions "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"sigs.k8s.io/yaml"
 )
 
@@ -30,9 +30,9 @@ const (
 	requestTimeout = 10 * time.Second
 )
 
-//go:generate mockgen -destination=../../../mocks/mock_atlas_operator_crd_provider.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/crds AtlasOperatorCRDProvider
+//go:generate mockgen -destination=../../../mocks/mock_atlas_operator_crd_provider.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/crds AtlasOperatorCRDProvider
 type AtlasOperatorCRDProvider interface {
-	GetAtlasOperatorResource(resourceName, version string) (*apiextensions.CustomResourceDefinition, error)
+	GetAtlasOperatorResource(resourceName, version string) (*apiextensionsv1.CustomResourceDefinition, error)
 }
 
 type GithubAtlasCRDProvider struct {
@@ -43,7 +43,7 @@ func NewGithubAtlasCRDProvider() *GithubAtlasCRDProvider {
 	return &GithubAtlasCRDProvider{client: &http.Client{}}
 }
 
-func (p *GithubAtlasCRDProvider) GetAtlasOperatorResource(resourceName, version string) (*apiextensions.CustomResourceDefinition, error) {
+func (p *GithubAtlasCRDProvider) GetAtlasOperatorResource(resourceName, version string) (*apiextensionsv1.CustomResourceDefinition, error) {
 	ctx, cancelF := context.WithTimeout(context.Background(), requestTimeout)
 	defer cancelF()
 
@@ -63,7 +63,7 @@ func (p *GithubAtlasCRDProvider) GetAtlasOperatorResource(resourceName, version 
 		return nil, err
 	}
 
-	decoded := &apiextensions.CustomResourceDefinition{}
+	decoded := &apiextensionsv1.CustomResourceDefinition{}
 	err = yaml.Unmarshal(data, decoded)
 	if err != nil {
 		return nil, err

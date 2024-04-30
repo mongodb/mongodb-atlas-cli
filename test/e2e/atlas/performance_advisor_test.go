@@ -20,7 +20,7 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/andreaangiolillo/mongocli-test/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/require"
 )
 

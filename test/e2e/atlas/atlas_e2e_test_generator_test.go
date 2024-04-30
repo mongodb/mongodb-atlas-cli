@@ -24,10 +24,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/andreaangiolillo/mongocli-test/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 const (
@@ -46,6 +46,7 @@ type atlasE2ETestGenerator struct {
 	teamUser       string
 	dbUser         string
 	tier           string
+	mDBVer         string
 	dataFedName    string
 	enableBackup   bool
 	firstProcess   *atlasv2.ApiHostViewAtlas
@@ -281,8 +282,8 @@ func deleteOrgTeams(t *testing.T, cliPath string) {
 	require.NoError(t, err, string(resp))
 	var teams atlasv2.PaginatedTeam
 	require.NoError(t, json.Unmarshal(resp, &teams), string(resp))
-	for _, team := range teams.Results {
-		assert.NoError(t, deleteTeam(team.GetId())) //nolint: testifylint // try to delete all
+	for _, team := range teams.GetResults() {
+		assert.NoError(t, deleteTeam(team.GetId()))
 	}
 }
 
@@ -333,7 +334,14 @@ func (g *atlasE2ETestGenerator) generateCluster() {
 		g.tier = e2eTier()
 	}
 
-	g.clusterName, g.clusterRegion, err = deployClusterForProject(g.projectID, g.tier, g.enableBackup)
+	if g.mDBVer == "" {
+		mdbVersion, e := MongoDBMajorVersion()
+		require.NoError(g.t, e)
+
+		g.mDBVer = mdbVersion
+	}
+
+	g.clusterName, g.clusterRegion, err = deployClusterForProject(g.projectID, g.tier, g.mDBVer, g.enableBackup)
 	if err != nil {
 		g.Logf("projectID=%q, clusterName=%q", g.projectID, g.clusterName)
 		g.t.Errorf("unexpected error deploying cluster: %v", err)
@@ -462,11 +470,11 @@ func (g *atlasE2ETestGenerator) getProcesses() ([]atlasv2.ApiHostViewAtlas, erro
 		g.t.Fatalf("unexpected error: project must be generated %s - %s", err, resp)
 	}
 
-	if len(processes.Results) == 0 {
+	if len(processes.GetResults()) == 0 {
 		g.t.Fatalf("got=%#v\nwant=%#v", 0, "len(processes) > 0")
 	}
 
-	return processes.Results, nil
+	return processes.GetResults(), nil
 }
 
 // runCommand runs a command on mongocli tool.

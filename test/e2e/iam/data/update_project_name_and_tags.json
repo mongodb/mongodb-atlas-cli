@@ -1,0 +1,13 @@
+{
+  "name": "{{ .SetProjectName }}",
+  "tags": [
+    {
+      "key": "env",
+      "value": "e2e"
+    },
+    {
+      "key": "app",
+      "value": "cli"
+    }
+  ]
+}

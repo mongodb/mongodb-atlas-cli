@@ -1,0 +1,9 @@
+{
+  "tags": [],
+  "diskSizeGB": 40,
+  "name": "Test",
+  "connectionStrings": {
+    "standard": "mongodb://clusterm10-shard-00-00.85xn1.mongodb.net:27017,clusterm10-shard-00-01.85xn1.mongodb.net:27017,clusterm10-shard-00-02.85xn1.mongodb.net:27017/?ssl=true\u0026authSource=admin\u0026replicaSet=atlas-zzw0ln-shard-0",
+    "standardSrv": "mongodb+srv://clusterm10.85xn1.mongodb.net"
+	}
+}

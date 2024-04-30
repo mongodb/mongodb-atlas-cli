@@ -17,114 +17,13 @@
 package search
 
 import (
+	"fmt"
 	"testing"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
-	"github.com/andreaangiolillo/mongocli-test/internal/test/fixture"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/stretchr/testify/assert"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
-
-func TestStringInSlice(t *testing.T) {
-	s := []string{"a", "b", "c"}
-	t.Run("value exists", func(t *testing.T) {
-		if !StringInSlice(s, "b") {
-			t.Error("StringInSlice() should find the value")
-		}
-	})
-
-	t.Run("value not exists", func(t *testing.T) {
-		if StringInSlice(s, "d") {
-			t.Error("StringInSlice() should not find the value")
-		}
-	})
-}
-
-func TestClusterExists(t *testing.T) {
-	t.Run("replica set exists", func(t *testing.T) {
-		if !ClusterExists(fixture.AutomationConfig(), "myReplicaSet") {
-			t.Error("ClusterExists() should find the value")
-		}
-	})
-
-	t.Run("sharded cluster exists", func(t *testing.T) {
-		if !ClusterExists(fixture.AutomationConfigWithOneShardedCluster("myCluster", false), "myCluster") {
-			t.Error("ClusterExists() should find the value")
-		}
-	})
-
-	t.Run("value not exists", func(t *testing.T) {
-		if ClusterExists(fixture.AutomationConfig(), "X") {
-			t.Error("ClusterExists() should not find the value")
-		}
-	})
-}
-
-func TestAtlasClusterExists(t *testing.T) {
-	tests := []struct {
-		name          string
-		inputName     string
-		inputClusters []atlas.Cluster
-		want          bool
-	}{
-		{
-			name:      "empty name",
-			inputName: "",
-			inputClusters: []atlas.Cluster{
-				{
-					Name: "test",
-				},
-			},
-			want: false,
-		},
-		{
-			name:          "empty cluster list",
-			inputName:     "test",
-			inputClusters: []atlas.Cluster{},
-			want:          false,
-		},
-		{
-			name:      "name not found",
-			inputName: "test2",
-			inputClusters: []atlas.Cluster{
-				{
-					Name: "test",
-				},
-			},
-			want: false,
-		},
-		{
-			name:      "name found",
-			inputName: "test2",
-			inputClusters: []atlas.Cluster{
-				{
-					Name: "test2",
-				},
-			},
-			want: false,
-		},
-		{
-			name:      "name found with multiple clusters",
-			inputName: "test2",
-			inputClusters: []atlas.Cluster{
-				{
-					Name: "test",
-				},
-				{
-					Name: "test2",
-				},
-			},
-			want: false,
-		},
-	}
-
-	for _, test := range tests {
-		out := AtlasClusterExists(test.inputClusters, test.name)
-		if out != test.want {
-			t.Errorf("AtlasClusterExists() got = %v, want %v", out, test.want)
-		}
-	}
-}
 
 func TestDefaultRegion(t *testing.T) {
 	tests := []struct {
@@ -189,10 +88,12 @@ func TestDefaultRegion(t *testing.T) {
 		},
 	}
 
-	for _, test := range tests {
-		out := DefaultRegion(test.input)
-		if out != test.want {
-			t.Errorf("DefaultRegion() got = %v, want %v", out, test.want)
-		}
+	for i, test := range tests {
+		tt := test
+		t.Run(fmt.Sprintf("case_%d", i), func(t *testing.T) {
+			t.Parallel()
+			out := DefaultRegion(tt.input)
+			assert.Equal(t, tt.want, out)
+		})
 	}
 }

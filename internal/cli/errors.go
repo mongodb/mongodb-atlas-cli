@@ -18,7 +18,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 )
 
 const requiredF = `required flag(s) "%s" not set`

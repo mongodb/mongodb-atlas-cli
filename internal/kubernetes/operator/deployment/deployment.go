@@ -17,21 +17,20 @@ package deployment
 import (
 	"fmt"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/features"
-	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/resources"
-	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
-	"github.com/andreaangiolillo/mongocli-test/internal/store"
-	"github.com/andreaangiolillo/mongocli-test/internal/store/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/convert"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
-	MaxItems                          = 500
 	featureProcessArgs                = "processArgs"
 	featureBackupSchedule             = "backupRef"
 	featureServerlessPrivateEndpoints = "serverlessSpec.privateEndpoints"
@@ -46,7 +45,7 @@ type AtlasDeploymentResult struct {
 	BackupPolicies []*akov2.AtlasBackupPolicy
 }
 
-func BuildAtlasAdvancedDeployment(deploymentStore atlas.OperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*AtlasDeploymentResult, error) {
+func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*AtlasDeploymentResult, error) {
 	deployment, err := deploymentStore.AtlasCluster(projectID, clusterID)
 	if err != nil {
 		return nil, err
@@ -111,11 +110,11 @@ func BuildAtlasAdvancedDeployment(deploymentStore atlas.OperatorClusterStore, va
 	}
 
 	atlasDeployment := &akov2.AtlasDeployment{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: metav1.TypeMeta{
 			Kind:       "AtlasDeployment",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: metav1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, clusterID), dictionary),
 			Namespace: targetNamespace,
 			Labels: map[string]string{
@@ -165,7 +164,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore atlas.OperatorClusterStore, va
 	}
 
 	if validator.FeatureExist(features.ResourceAtlasDeployment, featureGlobalDeployments) {
-		customZoneMapping, managedNamespaces, err := buildGlobalDeployment(deployment.ReplicationSpecs, deploymentStore, projectID, clusterID)
+		customZoneMapping, managedNamespaces, err := buildGlobalDeployment(deployment.GetReplicationSpecs(), deploymentStore, projectID, clusterID)
 		if err != nil {
 			return nil, err
 		}
@@ -173,7 +172,33 @@ func BuildAtlasAdvancedDeployment(deploymentStore atlas.OperatorClusterStore, va
 		advancedSpec.ManagedNamespaces = managedNamespaces
 	}
 
+	if hasTenantRegionConfig(atlasDeployment) {
+		atlasDeployment.Spec.DeploymentSpec.BiConnector = nil
+		atlasDeployment.Spec.DeploymentSpec.EncryptionAtRestProvider = ""
+		atlasDeployment.Spec.DeploymentSpec.DiskSizeGB = nil
+		atlasDeployment.Spec.DeploymentSpec.MongoDBMajorVersion = ""
+		atlasDeployment.Spec.DeploymentSpec.PitEnabled = nil
+		atlasDeployment.Spec.DeploymentSpec.BackupEnabled = nil
+	}
+
 	return deploymentResult, nil
+}
+
+func hasTenantRegionConfig(out *akov2.AtlasDeployment) bool {
+	if out.Spec.DeploymentSpec == nil {
+		return false
+	}
+	for _, spec := range out.Spec.DeploymentSpec.ReplicationSpecs {
+		if spec == nil {
+			continue
+		}
+		for _, c := range spec.RegionConfigs {
+			if c != nil && c.ProviderName == "TENANT" {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func buildGlobalDeployment(atlasRepSpec []atlasv2.ReplicationSpec, globalDeploymentProvider store.GlobalClusterDescriber, projectID, clusterID string) ([]akov2.CustomZoneMapping, []akov2.ManagedNamespace, error) {
@@ -202,8 +227,8 @@ func buildGlobalDeployment(atlasRepSpec []atlasv2.ReplicationSpec, globalDeploym
 		return customZoneMapping, nil, nil
 	}
 
-	managedNamespace := make([]akov2.ManagedNamespace, len(globalCluster.ManagedNamespaces))
-	for i, ns := range globalCluster.ManagedNamespaces {
+	managedNamespace := make([]akov2.ManagedNamespace, len(globalCluster.GetManagedNamespaces()))
+	for i, ns := range globalCluster.GetManagedNamespaces() {
 		managedNamespace[i] = akov2.ManagedNamespace{
 			Db:                     ns.Db,
 			Collection:             ns.Collection,
@@ -245,7 +270,7 @@ func isAdvancedDeploymentExportable(deployments *atlasv2.AdvancedClusterDescript
 }
 
 func isServerlessExportable(deployment *atlasv2.ServerlessInstanceDescription) bool {
-	stateName := atlas.StringOrEmpty(deployment.StateName)
+	stateName := store.StringOrEmpty(deployment.StateName)
 	if stateName == DeletingState || stateName == DeletedState {
 		return false
 	}
@@ -259,10 +284,10 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectName, projectI
 	}
 
 	// Although we have a for loop here, there should be only one policy per schedule. See Atlas API implementation
-	policies := make([]*akov2.AtlasBackupPolicy, 0, len(bs.Policies))
-	for _, p := range bs.Policies {
-		items := make([]akov2.AtlasBackupPolicyItem, 0, len(p.PolicyItems))
-		for _, pItem := range p.PolicyItems {
+	policies := make([]*akov2.AtlasBackupPolicy, 0, len(bs.GetPolicies()))
+	for _, p := range bs.GetPolicies() {
+		items := make([]akov2.AtlasBackupPolicyItem, 0, len(p.GetPolicyItems()))
+		for _, pItem := range p.GetPolicyItems() {
 			items = append(items, akov2.AtlasBackupPolicyItem{
 				FrequencyType:     pItem.FrequencyType,
 				FrequencyInterval: pItem.FrequencyInterval,
@@ -271,11 +296,11 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectName, projectI
 			})
 		}
 		policies = append(policies, &akov2.AtlasBackupPolicy{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasBackupPolicy",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName), dictionary),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
@@ -298,11 +323,11 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectName, projectI
 	}
 
 	schedule := &akov2.AtlasBackupSchedule{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: metav1.TypeMeta{
 			Kind:       "AtlasBackupSchedule",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: metav1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName), dictionary),
 			Namespace: targetNamespace,
 			Labels: map[string]string{
@@ -325,17 +350,17 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectName, projectI
 		Status: akov2status.BackupScheduleStatus{},
 	}
 
-	if len(bs.CopySettings) > 0 {
-		copySettings := make([]akov2.CopySetting, 0, len(bs.CopySettings))
+	if len(bs.GetCopySettings()) > 0 {
+		copySettings := make([]akov2.CopySetting, 0, len(bs.GetCopySettings()))
 
-		for _, copySetting := range bs.CopySettings {
+		for _, copySetting := range bs.GetCopySettings() {
 			copySettings = append(
 				copySettings,
 				akov2.CopySetting{
 					CloudProvider:    copySetting.CloudProvider,
 					RegionName:       copySetting.RegionName,
 					ShouldCopyOplogs: copySetting.ShouldCopyOplogs,
-					Frequencies:      copySetting.Frequencies,
+					Frequencies:      copySetting.GetFrequencies(),
 				},
 			)
 		}
@@ -361,11 +386,11 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*akov2.Advan
 		}
 
 		replicationSpec.RegionConfigs = make([]*akov2.AdvancedRegionConfig, 0, len(replicationSpec.RegionConfigs))
-		for _, rc := range rs.RegionConfigs {
+		for _, rc := range rs.GetRegionConfigs() {
 			var analyticsSpecs *akov2.Specs
 			if rc.AnalyticsSpecs != nil {
 				analyticsSpecs = &akov2.Specs{
-					DiskIOPS:      pointer.Get(int64(rc.AnalyticsSpecs.GetDiskIOPS())),
+					DiskIOPS:      convert.IntToInt64(rc.AnalyticsSpecs.DiskIOPS),
 					EbsVolumeType: rc.AnalyticsSpecs.GetEbsVolumeType(),
 					InstanceSize:  rc.AnalyticsSpecs.GetInstanceSize(),
 					NodeCount:     rc.AnalyticsSpecs.NodeCount,
@@ -374,7 +399,7 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*akov2.Advan
 			var electableSpecs *akov2.Specs
 			if rc.ElectableSpecs != nil {
 				electableSpecs = &akov2.Specs{
-					DiskIOPS:      pointer.Get(int64(rc.ElectableSpecs.GetDiskIOPS())),
+					DiskIOPS:      convert.IntToInt64(rc.ElectableSpecs.DiskIOPS),
 					EbsVolumeType: rc.ElectableSpecs.GetEbsVolumeType(),
 					InstanceSize:  rc.ElectableSpecs.GetInstanceSize(),
 					NodeCount:     rc.ElectableSpecs.NodeCount,
@@ -384,7 +409,7 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*akov2.Advan
 			var readOnlySpecs *akov2.Specs
 			if rc.ReadOnlySpecs != nil {
 				readOnlySpecs = &akov2.Specs{
-					DiskIOPS:      pointer.Get(int64(rc.ReadOnlySpecs.GetDiskIOPS())),
+					DiskIOPS:      convert.IntToInt64(rc.ReadOnlySpecs.DiskIOPS),
 					EbsVolumeType: rc.ReadOnlySpecs.GetEbsVolumeType(),
 					InstanceSize:  rc.ReadOnlySpecs.GetInstanceSize(),
 					NodeCount:     rc.ReadOnlySpecs.NodeCount,
@@ -428,7 +453,7 @@ func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*akov2.Advan
 	return result
 }
 
-func BuildServerlessDeployments(deploymentStore atlas.OperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*akov2.AtlasDeployment, error) {
+func BuildServerlessDeployments(deploymentStore store.OperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*akov2.AtlasDeployment, error) {
 	deployment, err := deploymentStore.GetServerlessInstance(projectID, clusterID)
 	if err != nil {
 		return nil, err
@@ -438,24 +463,24 @@ func BuildServerlessDeployments(deploymentStore atlas.OperatorClusterStore, vali
 		return nil, nil
 	}
 
-	providerSettings := &akov2.ProviderSettingsSpec{
+	providerSettings := &akov2.ServerlessProviderSettingsSpec{
 		BackingProviderName: deployment.ProviderSettings.BackingProviderName,
-		ProviderName:        akov2provider.ProviderName(atlas.StringOrEmpty(deployment.ProviderSettings.ProviderName)),
+		ProviderName:        akov2provider.ProviderName(store.StringOrEmpty(deployment.ProviderSettings.ProviderName)),
 		RegionName:          deployment.ProviderSettings.RegionName,
 	}
 
 	serverlessSpec := &akov2.ServerlessSpec{
-		Name:             atlas.StringOrEmpty(deployment.Name),
+		Name:             store.StringOrEmpty(deployment.Name),
 		ProviderSettings: providerSettings,
 	}
 
-	atlasName := fmt.Sprintf("%s-%s", projectName, atlas.StringOrEmpty(deployment.Name))
+	atlasName := fmt.Sprintf("%s-%s", projectName, store.StringOrEmpty(deployment.Name))
 	atlasDeployment := &akov2.AtlasDeployment{
-		TypeMeta: v1.TypeMeta{
+		TypeMeta: metav1.TypeMeta{
 			Kind:       "AtlasDeployment",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
-		ObjectMeta: v1.ObjectMeta{
+		ObjectMeta: metav1.ObjectMeta{
 			Name:      resources.NormalizeAtlasName(atlasName, dictionary),
 			Namespace: targetNamespace,
 			Labels: map[string]string{
@@ -479,7 +504,7 @@ func BuildServerlessDeployments(deploymentStore atlas.OperatorClusterStore, vali
 	}
 
 	if validator.FeatureExist(features.ResourceAtlasDeployment, featureServerlessPrivateEndpoints) {
-		privateEndpoints, err := buildServerlessPrivateEndpoints(deploymentStore, projectID, atlas.StringOrEmpty(deployment.Name))
+		privateEndpoints, err := buildServerlessPrivateEndpoints(deploymentStore, projectID, store.StringOrEmpty(deployment.Name))
 		if err != nil {
 			return nil, err
 		}

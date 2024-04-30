@@ -22,75 +22,60 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
+	"slices"
 	"sort"
 	"strings"
 	"time"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/search"
-	"github.com/andreaangiolillo/mongocli-test/internal/version"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/pelletier/go-toml"
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/config SetSaver
+//go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config SetSaver
 
 const (
-	MongoCLIEnvPrefix            = "MCLI"          // MongoCLIEnvPrefix prefix for MongoCLI ENV variables
-	AtlasCLIEnvPrefix            = "MONGODB_ATLAS" // AtlasCLIEnvPrefix prefix for AtlasCLI ENV variables
-	DefaultProfile               = "default"       // DefaultProfile default
-	CloudService                 = "cloud"         // CloudService setting when using Atlas API
-	CloudGovService              = "cloudgov"      // CloudGovService setting when using Atlas API for Government
-	CloudManagerService          = "cloud-manager" // CloudManagerService settings when using CLoud Manager API
-	OpsManagerService            = "ops-manager"   // OpsManagerService settings when using Ops Manager API
-	JSON                         = "json"          // JSON output format as json
-	projectID                    = "project_id"
-	orgID                        = "org_id"
-	mongoShellPath               = "mongosh_path"
-	configType                   = "toml"
-	service                      = "service"
-	publicAPIKey                 = "public_api_key"
-	privateAPIKey                = "private_api_key"
-	AccessTokenField             = "access_token"
-	RefreshTokenField            = "refresh_token"
-	ClientIDField                = "client_id"
-	OpsManagerURLField           = "ops_manager_url"
-	baseURL                      = "base_url"
-	opsManagerCACertificate      = "ops_manager_ca_certificate"
-	opsManagerSkipVerify         = "ops_manager_skip_verify"
-	opsManagerVersionManifestURL = "ops_manager_version_manifest_url"
-	output                       = "output"
-	fileFlags                    = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
-	configPerm                   = 0600
-	defaultPermissions           = 0700
-	skipUpdateCheck              = "skip_update_check"
-	TelemetryEnabledProperty     = "telemetry_enabled"
-	MongoCLI                     = "mongocli"
-	AtlasCLI                     = "atlascli"
-	ContainerizedHostNameEnv     = "MONGODB_ATLAS_IS_CONTAINERIZED"
-	GitHubActionsHostNameEnv     = "GITHUB_ACTIONS"
-	AtlasActionHostNameEnv       = "ATLAS_GITHUB_ACTION"
-	NativeHostName               = "native"
-	DockerContainerHostName      = "container"
-	GitHubActionsHostName        = "all_github_actions"
-	AtlasActionHostName          = "atlascli_github_action"
+	MongoCLIEnvPrefix        = "MCLI"          // MongoCLIEnvPrefix prefix for MongoCLI ENV variables
+	AtlasCLIEnvPrefix        = "MONGODB_ATLAS" // AtlasCLIEnvPrefix prefix for AtlasCLI ENV variables
+	DefaultProfile           = "default"       // DefaultProfile default
+	CloudService             = "cloud"         // CloudService setting when using Atlas API
+	CloudGovService          = "cloudgov"      // CloudGovService setting when using Atlas API for Government
+	projectID                = "project_id"
+	orgID                    = "org_id"
+	mongoShellPath           = "mongosh_path"
+	configType               = "toml"
+	service                  = "service"
+	publicAPIKey             = "public_api_key"
+	privateAPIKey            = "private_api_key"
+	AccessTokenField         = "access_token"
+	RefreshTokenField        = "refresh_token"
+	ClientIDField            = "client_id"
+	OpsManagerURLField       = "ops_manager_url"
+	baseURL                  = "base_url"
+	output                   = "output"
+	fileFlags                = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
+	configPerm               = 0600
+	defaultPermissions       = 0700
+	skipUpdateCheck          = "skip_update_check"
+	TelemetryEnabledProperty = "telemetry_enabled"
+	AtlasCLI                 = "atlascli"
+	ContainerizedHostNameEnv = "MONGODB_ATLAS_IS_CONTAINERIZED"
+	GitHubActionsHostNameEnv = "GITHUB_ACTIONS"
+	AtlasActionHostNameEnv   = "ATLAS_GITHUB_ACTION"
+	NativeHostName           = "native"
+	DockerContainerHostName  = "container"
+	GitHubActionsHostName    = "all_github_actions"
+	AtlasActionHostName      = "atlascli_github_action"
 )
 
 var (
-	ToolName       = MongoCLI
 	HostName       = getConfigHostnameFromEnvs()
-	UserAgent      = fmt.Sprintf("%s/%s (%s;%s;%s)", ToolName, version.Version, runtime.GOOS, runtime.GOARCH, HostName)
+	UserAgent      = fmt.Sprintf("%s/%s (%s;%s;%s)", AtlasCLI, version.Version, runtime.GOOS, runtime.GOARCH, HostName)
 	defaultProfile = newProfile()
 )
-
-func BinName() string {
-	if ToolName == AtlasCLI {
-		return "atlas"
-	}
-	return ToolName
-}
 
 type Setter interface {
 	Set(string, interface{})
@@ -127,8 +112,6 @@ func Properties() []string {
 		output,
 		OpsManagerURLField,
 		baseURL,
-		opsManagerCACertificate,
-		opsManagerSkipVerify,
 		mongoShellPath,
 		skipUpdateCheck,
 		TelemetryEnabledProperty,
@@ -153,7 +136,12 @@ func GlobalProperties() []string {
 }
 
 func IsTrue(s string) bool {
-	return search.StringInSlice([]string{"t", "T", "true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES", "1"}, s)
+	switch s {
+	case "t", "T", "true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES", "1":
+		return true
+	default:
+		return false
+	}
 }
 
 func Default() *Profile {
@@ -166,7 +154,7 @@ func List() []string {
 
 	keys := make([]string, 0, len(m))
 	for k := range m {
-		if !search.StringInSlice(Properties(), k) {
+		if !slices.Contains(Properties(), k) {
 			keys = append(keys, k)
 		}
 	}
@@ -177,7 +165,7 @@ func List() []string {
 
 // Exists returns true if there are any set settings for the profile name.
 func Exists(name string) bool {
-	return search.StringInSlice(List(), name)
+	return slices.Contains(List(), name)
 }
 
 // getConfigHostnameFromEnvs patches the agent hostname based on set env vars.
@@ -452,24 +440,6 @@ func (p *Profile) SetOpsManagerURL(v string) {
 	p.Set(OpsManagerURLField, v)
 }
 
-// OpsManagerCACertificate get configured ops manager CA certificate location.
-func OpsManagerCACertificate() string { return Default().OpsManagerCACertificate() }
-func (p *Profile) OpsManagerCACertificate() string {
-	return p.GetString(opsManagerCACertificate)
-}
-
-// OpsManagerSkipVerify get configured if transport should skip CA verification.
-func OpsManagerSkipVerify() string { return Default().OpsManagerSkipVerify() }
-func (p *Profile) OpsManagerSkipVerify() string {
-	return p.GetString(opsManagerSkipVerify)
-}
-
-// OpsManagerVersionManifestURL get configured ops manager version manifest base url.
-func OpsManagerVersionManifestURL() string { return Default().OpsManagerVersionManifestURL() }
-func (p *Profile) OpsManagerVersionManifestURL() string {
-	return p.GetString(opsManagerVersionManifestURL)
-}
-
 // ProjectID get configured project ID.
 func ProjectID() string { return Default().ProjectID() }
 func (p *Profile) ProjectID() string {
@@ -534,9 +504,8 @@ func boolEnv(key string) bool {
 }
 
 func isTelemetryFeatureAllowed() bool {
-	tool := ToolName == AtlasCLI
 	doNotTrack := boolEnv("DO_NOT_TRACK")
-	return tool && !doNotTrack
+	return !doNotTrack
 }
 
 // Output get configured output format.
@@ -562,9 +531,6 @@ func (p *Profile) ClientID() string {
 func IsAccessSet() bool { return Default().IsAccessSet() }
 func (p *Profile) IsAccessSet() bool {
 	isSet := p.PublicAPIKey() != "" && p.PrivateAPIKey() != ""
-	if p.Service() == OpsManagerService {
-		isSet = isSet && p.OpsManagerURL() != ""
-	}
 
 	return isSet
 }
@@ -689,15 +655,6 @@ func (p *Profile) LoadAtlasCLIConfig(readEnvironmentVars bool) error {
 	return p.load(readEnvironmentVars, AtlasCLIEnvPrefix)
 }
 
-func LoadMongoCLIConfig() error { return Default().LoadMongoCLIConfig(true) }
-func (p *Profile) LoadMongoCLIConfig(readEnvironmentVars bool) error {
-	if p.err != nil {
-		return p.err
-	}
-	viper.SetConfigName("config")
-	return p.load(readEnvironmentVars, MongoCLIEnvPrefix)
-}
-
 func hasMongoCLIEnvVars() bool {
 	envVars := os.Environ()
 	for _, v := range envVars {
@@ -789,10 +746,7 @@ func AtlasCLIConfigHome() (string, error) {
 
 // CLIConfigHome retrieves configHome path.
 func CLIConfigHome() (string, error) {
-	if ToolName == AtlasCLI {
-		return AtlasCLIConfigHome()
-	}
-	return MongoCLIConfigHome()
+	return AtlasCLIConfigHome()
 }
 
 func Path(f string) (string, error) {

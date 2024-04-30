@@ -19,15 +19,14 @@ package config
 import (
 	"testing"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/flag"
-	"github.com/andreaangiolillo/mongocli-test/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
 func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(),
-		6,
-		[]string{flag.Service},
+		7,
+		[]string{},
 	)
 }

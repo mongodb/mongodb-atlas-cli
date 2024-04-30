@@ -18,11 +18,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migration_validations.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store LiveMigrationValidationsCreator,LiveMigrationCutoverCreator,LiveMigrationValidationsDescriber
+//go:generate mockgen -destination=../mocks/mock_live_migration_validations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store LiveMigrationValidationsCreator,LiveMigrationCutoverCreator,LiveMigrationValidationsDescriber
 
 type LiveMigrationValidationsCreator interface {
 	CreateValidation(string, *atlasv2.LiveMigrationRequest) (*atlasv2.LiveImportValidation, error)
@@ -38,33 +38,27 @@ type LiveMigrationValidationsDescriber interface {
 
 // CreateValidation encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateValidation(groupID string, liveMigration *atlasv2.LiveMigrationRequest) (*atlasv2.LiveImportValidation, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.clientv2.CloudMigrationServiceApi.ValidateMigration(s.ctx, groupID, liveMigration).Execute()
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.clientv2.CloudMigrationServiceApi.ValidateMigration(s.ctx, groupID, liveMigration).Execute()
+	return result, err
 }
 
-// StartLiveMigrationCutover encapsulate the logic to manage different cloud providers.
+// CreateLiveMigrationCutover encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateLiveMigrationCutover(groupID, liveMigrationID string) error {
-	switch s.service {
-	case config.CloudService:
-		_, err := s.clientv2.CloudMigrationServiceApi.CutoverMigration(s.ctx, groupID, liveMigrationID).Execute()
-		return err
-	default:
+	if s.service == config.CloudGovService {
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	_, err := s.clientv2.CloudMigrationServiceApi.CutoverMigration(s.ctx, groupID, liveMigrationID).Execute()
+	return err
 }
 
 // GetValidationStatus encapsulate the logic to manage different cloud providers.
 func (s *Store) GetValidationStatus(groupID, liveMigrationID string) (*atlasv2.LiveImportValidation, error) {
-	switch s.service {
-	case config.CloudService:
-		result, _, err := s.clientv2.CloudMigrationServiceApi.GetValidationStatus(context.Background(), groupID, liveMigrationID).Execute()
-		return result, err
-	default:
+	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
+	result, _, err := s.clientv2.CloudMigrationServiceApi.GetValidationStatus(context.Background(), groupID, liveMigrationID).Execute()
+	return result, err
 }

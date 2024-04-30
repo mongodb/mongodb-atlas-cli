@@ -15,9 +15,6 @@
 package pointer
 
 import (
-	"time"
-
-	customTime "github.com/andreaangiolillo/mongocli-test/internal/time"
 	"golang.org/x/exp/constraints"
 )
 
@@ -38,28 +35,6 @@ func GetOrDefault[T any](ptr *T, defaultValue T) T {
 
 func Get[T any](val T) *T {
 	return &val
-}
-
-func GetStringPointerIfNotEmpty(input string) *string {
-	if input != "" {
-		return &input
-	}
-	return nil
-}
-
-func GetArrayPointerIfNotEmpty[T any](input []T) *[]T {
-	if len(input) > 0 {
-		return &input
-	}
-	return nil
-}
-
-func StringToTimePointer(value string) *time.Time {
-	var result *time.Time
-	if completedAfter, err := customTime.ParseTimestamp(value); err == nil {
-		result = &completedAfter
-	}
-	return result
 }
 
 func GetNonZeroValue[T constraints.Integer](val T) *T {

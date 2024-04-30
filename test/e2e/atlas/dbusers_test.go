@@ -27,10 +27,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/andreaangiolillo/mongocli-test/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 const (
@@ -49,7 +49,7 @@ func TestDBUserWithFlags(t *testing.T) {
 	require.NoError(t, err)
 
 	t.Run("Create", func(t *testing.T) {
-		pwd, err := generateRandomBase64String(14)
+		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
@@ -77,7 +77,7 @@ func TestDBUserWithFlags(t *testing.T) {
 		var users atlasv2.PaginatedApiAtlasDatabaseUser
 		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
 
-		if len(users.Results) == 0 {
+		if len(users.GetResults()) == 0 {
 			t.Fatalf("expected len(users) > 0, got 0")
 		}
 	})
@@ -105,7 +105,7 @@ func TestDBUserWithFlags(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		pwd, err := generateRandomBase64String(14)
+		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
@@ -139,7 +139,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 	}
 
 	t.Run("Create", func(t *testing.T) {
-		pwd, err := generateRandomBase64String(14)
+		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
@@ -192,11 +192,11 @@ func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 
 	a := assert.New(t)
 	a.Equal(username, user.Username)
-	if a.Len(user.Scopes, 2) {
-		a.Equal(clusterName0, user.Scopes[0].Name)
-		a.Equal(clusterType, user.Scopes[0].Type)
-		a.Equal(clusterName1, user.Scopes[1].Name)
-		a.Equal(clusterType, user.Scopes[1].Type)
+	if a.Len(user.GetScopes(), 2) {
+		a.Equal(clusterName0, user.GetScopes()[0].Name)
+		a.Equal(clusterType, user.GetScopes()[0].Type)
+		a.Equal(clusterName1, user.GetScopes()[1].Name)
+		a.Equal(clusterType, user.GetScopes()[1].Type)
 	}
 }
 
@@ -231,14 +231,14 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 
 	a := assert.New(t)
 	a.Equal(username, user.Username)
-	if a.Len(user.Roles, 1) {
-		a.Equal("admin", user.Roles[0].DatabaseName)
-		a.Equal(roleReadWrite, user.Roles[0].RoleName)
+	if a.Len(user.GetRoles(), 1) {
+		a.Equal("admin", user.GetRoles()[0].DatabaseName)
+		a.Equal(roleReadWrite, user.GetRoles()[0].RoleName)
 	}
 
-	a.Len(user.Scopes, 1)
-	a.Equal(clusterName0, user.Scopes[0].Name)
-	a.Equal(clusterType, user.Scopes[0].Type)
+	a.Len(user.GetScopes(), 1)
+	a.Equal(clusterName0, user.GetScopes()[0].Name)
+	a.Equal(clusterType, user.GetScopes()[0].Type)
 }
 
 func testDeleteUser(t *testing.T, cliPath, dbusersEntity, username string) {
@@ -282,7 +282,8 @@ func generateRandomASCIIString(length int) (string, error) {
 }
 
 // generateRandomBase64String generate a random ASCII string encoded using base64.
-func generateRandomBase64String(length int) (string, error) {
+func generateRandomBase64String() (string, error) {
+	length := 14
 	result, err := generateRandomASCIIString(length)
 	return base64.StdEncoding.EncodeToString([]byte(result))[:length], err
 }

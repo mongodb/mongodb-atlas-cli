@@ -20,7 +20,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	atlasauth "go.mongodb.org/atlas/auth"
 )
 
@@ -77,17 +77,6 @@ func TestWithBaseURL(t *testing.T) {
 
 	if c.baseURL != "http://test" {
 		t.Errorf("New() baseURL = %s; expected %s", c.baseURL, "http://test")
-	}
-}
-
-func TestSkipVerify(t *testing.T) {
-	c, err := New(Service(config.CloudService), SkipVerify())
-	if err != nil {
-		t.Fatalf("New() unexpected error: %v", err)
-	}
-
-	if !c.skipVerify {
-		t.Error("New() skipVerify not set")
 	}
 }
 

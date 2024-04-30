@@ -17,7 +17,7 @@ package require
 import (
 	"fmt"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/validate"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	"github.com/tangzero/inflector"
 )
@@ -51,7 +51,7 @@ func ExactArgs(n int) cobra.PositionalArgs {
 	}
 }
 
-// ExactArgsObjectID returns an error if there are not exactly n args and
+// ExactObjectIDArgs returns an error if there are not exactly n args and
 // any of those args is not an ObjectID.
 func ExactObjectIDArgs(n int) cobra.PositionalArgs {
 	return func(cmd *cobra.Command, args []string) error {

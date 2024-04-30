@@ -15,24 +15,16 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/andreaangiolillo/mongocli-test/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_global_cluster.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store GlobalClusterDescriber
+//go:generate mockgen -destination=../mocks/mock_global_cluster.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store GlobalClusterDescriber
 
 type GlobalClusterDescriber interface {
 	GlobalCluster(string, string) (*atlasv2.GeoSharding, error)
 }
 
 func (s *Store) GlobalCluster(projectID, instanceName string) (*atlasv2.GeoSharding, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.GlobalClustersApi.GetManagedNamespace(s.ctx, projectID, instanceName).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.GlobalClustersApi.GetManagedNamespace(s.ctx, projectID, instanceName).Execute()
+	return result, err
 }

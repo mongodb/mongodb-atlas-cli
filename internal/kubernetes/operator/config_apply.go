@@ -17,9 +17,10 @@ package operator
 import (
 	"context"
 	"errors"
+	"fmt"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes"
-	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/features"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -82,6 +83,13 @@ func (apply *ConfigApply) Run() error {
 
 	for _, objects := range sortedResources {
 		for _, object := range objects {
+			if apply.exporter.patcher != nil {
+				err = apply.exporter.patcher.Patch(object)
+				if err != nil {
+					return fmt.Errorf("error patching %v: %w", object.GetObjectKind().GroupVersionKind(), err)
+				}
+			}
+
 			ctrlObj, ok := object.(client.Object)
 			if !ok {
 				return errors.New("unable to apply resource")

@@ -19,19 +19,21 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"slices"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/log"
-	"github.com/andreaangiolillo/mongocli-test/internal/search"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 const (
-	listSearchIndexes = "$listSearchIndexes"
-	addFields         = "$addFields"
-	idField           = "id"
-	collectionField   = "collection"
-	databaseField     = "database"
+	listSearchIndexes      = "$listSearchIndexes"
+	addFields              = "$addFields"
+	idField                = "id"
+	collectionField        = "collection"
+	databaseField          = "database"
+	defaultSearchIndexType = "search"
 )
 
 var ErrSearchIndexNotFound = errors.New("search Index not found")
@@ -86,6 +88,10 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 						Value: idx.Name,
 					},
 					{
+						Key:   "type",
+						Value: pointer.GetOrDefault(idx.Type, defaultSearchIndexType),
+					},
+					{
 						Key:   "definition",
 						Value: index,
 					},
@@ -106,7 +112,7 @@ func removeFields(doc bson.D, fields ...string) bson.D {
 	cleanedDoc := bson.D{}
 
 	for _, elem := range doc {
-		if search.StringInSlice(fields, elem.Key) {
+		if slices.Contains(fields, elem.Key) {
 			continue
 		}
 

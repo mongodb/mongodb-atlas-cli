@@ -22,11 +22,11 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/cli/atlas/dbusers"
-	"github.com/andreaangiolillo/mongocli-test/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/dbusers"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestDBUserCerts(t *testing.T) {

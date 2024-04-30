@@ -24,25 +24,26 @@ import (
 	"testing"
 	"time"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/features"
-	"github.com/andreaangiolillo/mongocli-test/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
-	apisv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-const operatorNamespace = "atlas-operator"
-const maxAttempts = 12
-const deploymentMaxAttempts = 36
-const poolInterval = 10 * time.Second
+const (
+	operatorNamespace     = "atlas-operator"
+	maxAttempts           = 12
+	deploymentMaxAttempts = 36
+	poolInterval          = 10 * time.Second
+)
 
 func TestKubernetesOperatorInstall(t *testing.T) {
-	a := assert.New(t)
 	req := require.New(t)
 
 	cliPath, err := e2e.AtlasCLIBin()
@@ -57,8 +58,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--operatorVersion", "1.1.0")
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
-		req.Error(inErr, string(resp))
-		a.Equal("Error: version 1.1.0 is not supported\n", string(resp))
+		require.Error(t, inErr, string(resp))
+		assert.Equal(t, "Error: version 1.1.0 is not supported\n", string(resp))
 	})
 
 	t.Run("should failed to install a non-existing version of the operator", func(t *testing.T) {
@@ -69,8 +70,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--operatorVersion", "100.0.0")
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
-		req.Error(inErr, string(resp))
-		a.Equal("Error: version 100.0.0 is not supported\n", string(resp))
+		require.Error(t, inErr, string(resp))
+		assert.Equal(t, "Error: version 100.0.0 is not supported\n", string(resp))
 	})
 
 	t.Run("should failed when unable to setup connection to the cluster", func(t *testing.T) {
@@ -81,8 +82,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--kubeconfig", "/path/to/non/existing/config")
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
-		req.Error(inErr, string(resp))
-		a.Equal("Error: unable to prepare client configuration: invalid configuration: no configuration has been provided, try setting KUBERNETES_MASTER environment variable\n", string(resp))
+		require.Error(t, inErr, string(resp))
+		assert.Equal(t, "Error: unable to prepare client configuration: invalid configuration: no configuration has been provided, try setting KUBERNETES_MASTER environment variable\n", string(resp))
 	})
 
 	t.Run("should install operator with default options", func(t *testing.T) {
@@ -97,8 +98,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
-		req.NoError(inErr, string(resp))
-		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
+		require.NoError(t, inErr, string(resp))
+		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
 		checkDeployment(t, operator, "default")
 	})
@@ -117,8 +118,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
-		req.NoError(inErr, string(resp))
-		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
+		require.NoError(t, inErr, string(resp))
+		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
 		checkDeployment(t, operator, operatorNamespace)
 	})
@@ -141,8 +142,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
 		req.NoError(inErr, string(resp))
-		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
-
+		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 		checkDeployment(t, operator, operatorNamespace)
 	})
 
@@ -162,7 +162,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
 		req.NoError(inErr, string(resp))
-		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
+		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
 		checkDeployment(t, operator, operatorNamespace)
 	})
@@ -183,8 +183,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
-		req.NoError(inErr, string(resp))
-		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
+		require.NoError(t, inErr, string(resp))
+		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
 		checkDeployment(t, operator, operatorNamespace)
 
@@ -194,7 +194,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			projectSecret,
 			false,
 		)
-		req.NoError(inErr)
+		require.NoError(t, inErr)
 
 		orgSecret := &corev1.Secret{}
 		inErr = operator.getK8sObject(
@@ -202,7 +202,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			orgSecret,
 			false,
 		)
-		req.Error(inErr)
+		require.Error(t, inErr)
 
 		checkK8sAtlasProject(t, operator, client.ObjectKey{Name: prepareK8sName(projectName), Namespace: operatorNamespace})
 
@@ -259,11 +259,48 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
 		req.NoError(inErr, string(resp))
-		a.Equal("Atlas Kubernetes Operator installed successfully\n", string(resp))
+		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
 		checkDeployment(t, operator, operatorNamespace)
 		checkK8sAtlasProject(t, operator, client.ObjectKey{Name: prepareK8sName(g.projectName), Namespace: operatorNamespace})
 		checkK8sAtlasDeployment(t, operator, client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.clusterName)), Namespace: operatorNamespace})
+
+		cleanUpKeys(t, operator, operatorNamespace, cliPath)
+	})
+
+	t.Run("should install operator with deletion protection and sub resource protection disabled", func(t *testing.T) {
+		g := newAtlasE2ETestGenerator(t)
+		g.enableBackup = true
+		g.generateProject("k8sOperatorInstall")
+		g.generateCluster()
+
+		clusterName := "install-import-without-dp"
+		operator := setupCluster(t, clusterName, operatorNamespace)
+		context := fmt.Sprintf("kind-%s", clusterName)
+
+		cmd := exec.Command(cliPath,
+			"kubernetes",
+			"operator",
+			"install",
+			"--resourceDeletionProtection=false",
+			"--subresourceDeletionProtection=false",
+			"--targetNamespace", operatorNamespace,
+			"--kubeContext", context)
+		cmd.Env = os.Environ()
+		resp, inErr := cmd.CombinedOutput()
+		require.NoError(t, inErr, string(resp))
+		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
+
+		checkDeployment(t, operator, operatorNamespace)
+
+		deployment := &appsv1.Deployment{}
+		require.NoError(t, operator.getK8sObject(
+			client.ObjectKey{Name: "mongodb-atlas-operator", Namespace: operatorNamespace},
+			deployment,
+			false,
+		))
+		assert.Contains(t, deployment.Spec.Template.Spec.Containers[0].Args, "--resourceDeletionProtection=false")
+		assert.Contains(t, deployment.Spec.Template.Spec.Containers[0].Args, "--subresourceDeletionProtection=false")
 
 		cleanUpKeys(t, operator, operatorNamespace, cliPath)
 	})
@@ -286,7 +323,7 @@ func setupCluster(t *testing.T, name string, namespaces ...string) *operatorHelp
 
 	for _, namespace := range namespaces {
 		operatorNamespace := &corev1.Namespace{
-			ObjectMeta: apisv1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name: namespace,
 			},
 		}
@@ -449,7 +486,7 @@ func cleanUpKeys(t *testing.T, operator *operatorHelper, namespace string, cliPa
 	err = json.Unmarshal(resp, &keys)
 	require.NoError(t, err)
 
-	for _, key := range keys.Results {
+	for _, key := range keys.GetResults() {
 		keyID := *key.Id
 		desc := *key.Desc
 

@@ -17,10 +17,6 @@ package cli
 import (
 	"fmt"
 	"strings"
-
-	"github.com/andreaangiolillo/mongocli-test/internal/config"
-	"github.com/andreaangiolillo/mongocli-test/internal/flag"
-	"github.com/spf13/cobra"
 )
 
 type PerformanceAdvisorOpts struct {
@@ -36,20 +32,6 @@ func (opts *PerformanceAdvisorOpts) validateProcessName() error {
 		return fmt.Errorf("'%v' is not valid", opts.ProcessName)
 	}
 	return nil
-}
-
-// MarkRequiredFlagsByService marks processName or hostId as required in accordance with the service.
-//
-// Atlas: processName is required
-//
-// OM/CM: hostId is required.
-func (*PerformanceAdvisorOpts) MarkRequiredFlagsByService(cmd *cobra.Command) func() error {
-	return func() error {
-		if config.IsCloud() {
-			return cmd.MarkFlagRequired(flag.ProcessName)
-		}
-		return cmd.MarkFlagRequired(flag.HostID)
-	}
 }
 
 // Host returns the correct processName or the hostId in accordance with the service.

@@ -21,10 +21,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/andreaangiolillo/mongocli-test/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestExportBuckets(t *testing.T) {
@@ -56,10 +56,9 @@ func TestExportBuckets(t *testing.T) {
 
 		r.NoError(err, string(resp))
 
-		a := assert.New(t)
 		var exportBucket atlasv2.DiskBackupSnapshotAWSExportBucket
 		r.NoError(json.Unmarshal(resp, &exportBucket))
-		a.Equal(bucketName, exportBucket.GetBucketName())
+		assert.Equal(t, bucketName, exportBucket.GetBucketName())
 		bucketID = exportBucket.GetId()
 	})
 
@@ -107,6 +106,6 @@ func TestExportBuckets(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 }

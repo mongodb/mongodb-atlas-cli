@@ -15,9 +15,14 @@
 package cli
 
 import (
-	"github.com/andreaangiolillo/mongocli-test/internal/config"
-	"github.com/andreaangiolillo/mongocli-test/internal/flag"
+	"errors"
+	"fmt"
+
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 )
+
+var errUnsupportedService = errors.New("unsupported service")
 
 func InitProfile(profile string) error {
 	if profile != "" {
@@ -26,6 +31,10 @@ func InitProfile(profile string) error {
 		return config.SetName(profile)
 	} else if availableProfiles := config.List(); len(availableProfiles) == 1 {
 		return config.SetName(availableProfiles[0])
+	}
+
+	if !config.IsCloud() {
+		return fmt.Errorf("%w: %s", errUnsupportedService, config.Service())
 	}
 
 	return nil

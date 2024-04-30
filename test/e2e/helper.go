@@ -22,21 +22,19 @@ import (
 	"testing"
 	"time"
 
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 const (
-	iamEntity      = "iam"
 	projectsEntity = "projects"
 )
 
 func CreateProject(projectName string) (string, error) {
-	cliPath, err := Bin()
+	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		return "", err
 	}
 	cmd := exec.Command(cliPath,
-		iamEntity,
 		projectsEntity,
 		"create",
 		projectName,
@@ -47,21 +45,20 @@ func CreateProject(projectName string) (string, error) {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 
-	var project mongodbatlas.Project
+	var project atlasv2.Group
 	if err := json.Unmarshal(resp, &project); err != nil {
 		return "", fmt.Errorf("%w: %s", err, resp)
 	}
 
-	return project.ID, nil
+	return project.GetId(), nil
 }
 
 func deleteProject(projectID string) error {
-	cliPath, err := Bin()
+	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		return err
 	}
 	cmd := exec.Command(cliPath,
-		iamEntity,
 		projectsEntity,
 		"delete",
 		projectID,

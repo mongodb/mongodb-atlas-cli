@@ -23,9 +23,9 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/andreaangiolillo/mongocli-test/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestCleanup(t *testing.T) {
@@ -56,7 +56,7 @@ func TestCleanup(t *testing.T) {
 	var projects admin.PaginatedAtlasGroup
 	req.NoError(json.Unmarshal(resp, &projects), string(resp))
 	t.Logf("projects:\n%s\n", resp)
-	for _, project := range projects.Results {
+	for _, project := range projects.GetResults() {
 		projectID := project.GetId()
 		if projectID == os.Getenv("MCLI_PROJECT_ID") {
 			t.Log("skipping project", projectID)

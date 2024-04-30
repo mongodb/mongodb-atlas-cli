@@ -22,14 +22,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/config"
-	"github.com/andreaangiolillo/mongocli-test/internal/file"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/spf13/afero"
 )
 
 const (
-	atlasFormulaName = "mongodb-atlas-cli"
-	brewFileSubPath  = "/brew.yaml"
+	brewFileSubPath = "/brew.yaml"
 )
 
 type Checker struct {
@@ -45,24 +44,16 @@ func NewChecker(fileSystem afero.Fs) (*Checker, error) {
 	return &Checker{fs: fileSystem, path: filePath}, nil
 }
 
-func FormulaName(tool string) string {
-	if strings.Contains(tool, "atlas") {
-		return atlasFormulaName
-	}
-	return tool
-}
-
 // IsHomebrew checks if the cli was installed with homebrew.
-func (s Checker) IsHomebrew() bool {
+func (s *Checker) IsHomebrew() bool {
 	// Load from cache
 	h, err := s.load()
 	if h != nil && h.ExecutablePath != "" && h.FormulaPath != "" && err == nil {
 		return strings.HasPrefix(h.ExecutablePath, h.FormulaPath)
 	}
 
-	formula := FormulaName(config.BinName())
 	cmdResult := new(bytes.Buffer)
-	cmd := exec.Command("brew", "--prefix", formula)
+	cmd := exec.Command("brew", "--prefix", "mongodb-atlas-cli")
 
 	if err = cmd.Start(); err != nil {
 		return false

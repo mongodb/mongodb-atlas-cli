@@ -19,7 +19,7 @@ package decryption
 import (
 	"testing"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/test"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
 func TestKeyProvidersBuilder(t *testing.T) {

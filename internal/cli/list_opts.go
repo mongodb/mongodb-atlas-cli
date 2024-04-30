@@ -15,7 +15,7 @@
 package cli
 
 import (
-	store "github.com/andreaangiolillo/mongocli-test/internal/store/atlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -27,12 +27,14 @@ const (
 type ListOpts struct {
 	PageNum      int
 	ItemsPerPage int
+	OmitCount    bool
 }
 
 func (opts *ListOpts) NewListOptions() *mongodbatlas.ListOptions {
 	return &mongodbatlas.ListOptions{
 		PageNum:      opts.PageNum,
 		ItemsPerPage: opts.ItemsPerPage,
+		IncludeCount: !opts.OmitCount,
 	}
 }
 
@@ -40,5 +42,6 @@ func (opts *ListOpts) NewAtlasListOptions() *store.ListOptions {
 	return &store.ListOptions{
 		PageNum:      opts.PageNum,
 		ItemsPerPage: opts.ItemsPerPage,
+		IncludeCount: !opts.OmitCount,
 	}
 }

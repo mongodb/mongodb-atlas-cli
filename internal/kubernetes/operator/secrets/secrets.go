@@ -15,9 +15,9 @@
 package secrets
 
 import (
-	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/resources"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -36,13 +36,13 @@ const (
 type AtlasSecretBuilder func() (*corev1.Secret, map[string]string)
 
 func NewAtlasSecretBuilder(name, namespace string, dictionary map[string]string) AtlasSecretBuilder {
-	return AtlasSecretBuilder(func() (*corev1.Secret, map[string]string) {
+	return func() (*corev1.Secret, map[string]string) {
 		secret := &corev1.Secret{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "Secret",
 				APIVersion: "v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(name, dictionary),
 				Namespace: namespace,
 				Labels: map[string]string{
@@ -51,28 +51,28 @@ func NewAtlasSecretBuilder(name, namespace string, dictionary map[string]string)
 			},
 		}
 		return secret, dictionary
-	})
+	}
 }
 
 func (a AtlasSecretBuilder) WithData(data map[string][]byte) AtlasSecretBuilder {
-	return AtlasSecretBuilder(func() (*corev1.Secret, map[string]string) {
+	return func() (*corev1.Secret, map[string]string) {
 		s, d := a()
 		s.Data = data
 		return s, d
-	})
+	}
 }
 
 func (a AtlasSecretBuilder) WithProjectLabels(id, name string) AtlasSecretBuilder {
-	return AtlasSecretBuilder(func() (*corev1.Secret, map[string]string) {
+	return func() (*corev1.Secret, map[string]string) {
 		s, d := a()
 		s.Labels[ProjectIDLabelKey] = resources.NormalizeAtlasName(id, d)
 		s.Labels[ProjectNameLabelKey] = resources.NormalizeAtlasName(name, d)
 		return s, d
-	})
+	}
 }
 
 func (a AtlasSecretBuilder) WithNotifierLabels(id *string, typeName string) AtlasSecretBuilder {
-	return AtlasSecretBuilder(func() (*corev1.Secret, map[string]string) {
+	return func() (*corev1.Secret, map[string]string) {
 		s, d := a()
 		if id == nil {
 			return s, d
@@ -80,7 +80,7 @@ func (a AtlasSecretBuilder) WithNotifierLabels(id *string, typeName string) Atla
 		s.Labels[NotifierIDLabelKey] = resources.NormalizeAtlasName(*id, d)
 		s.Labels[NotifierNameLabelKey] = typeName // don't normalize type name, as it is already a short form
 		return s, d
-	})
+	}
 }
 
 func (a AtlasSecretBuilder) Build() *corev1.Secret {

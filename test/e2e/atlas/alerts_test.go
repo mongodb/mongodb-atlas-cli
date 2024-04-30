@@ -22,10 +22,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/andreaangiolillo/mongocli-test/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 const (
@@ -51,8 +51,8 @@ func TestAlerts(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		var alerts atlasv2.PaginatedAlert
 		require.NoError(t, json.Unmarshal(resp, &alerts))
-		if len(alerts.Results) != 0 {
-			alertID = alerts.Results[0].GetId()
+		if len(alerts.GetResults()) != 0 {
+			alertID = alerts.GetResults()[0].GetId()
 		}
 	})
 

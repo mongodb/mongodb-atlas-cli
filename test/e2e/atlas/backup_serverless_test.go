@@ -21,10 +21,10 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/andreaangiolillo/mongocli-test/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestServerlessBackup(t *testing.T) {
@@ -55,7 +55,7 @@ func TestServerlessBackup(t *testing.T) {
 		var r atlasv2.PaginatedApiAtlasServerlessBackupSnapshot
 		require.NoError(t, json.Unmarshal(resp, &r), string(resp))
 		assert.NotEmpty(t, r)
-		snapshotID = r.Results[0].GetId()
+		snapshotID = r.GetResults()[0].GetId()
 		t.Log("snapshotID", snapshotID)
 		require.NotEmpty(t, snapshotID)
 	})

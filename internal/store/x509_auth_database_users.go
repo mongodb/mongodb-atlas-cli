@@ -15,13 +15,10 @@
 package store
 
 import (
-	"fmt"
-
-	"github.com/andreaangiolillo/mongocli-test/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_x509_certificate_store.go -package=mocks github.com/andreaangiolillo/mongocli-test/internal/store X509CertificateConfDescriber,X509CertificateConfSaver,X509CertificateConfDisabler
+//go:generate mockgen -destination=../mocks/mock_x509_certificate_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store X509CertificateConfDescriber,X509CertificateConfSaver,X509CertificateConfDisabler
 
 type X509CertificateConfDescriber interface {
 	X509Configuration(string) (*atlasv2.UserSecurity, error)
@@ -43,38 +40,23 @@ type X509CertificateStore interface {
 
 // X509Configuration retrieves the current user managed certificates for a database user.
 func (s *Store) X509Configuration(projectID string) (*atlasv2.UserSecurity, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		result, _, err := s.clientv2.LDAPConfigurationApi.GetLDAPConfiguration(s.ctx, projectID).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	result, _, err := s.clientv2.LDAPConfigurationApi.GetLDAPConfiguration(s.ctx, projectID).Execute()
+	return result, err
 }
 
 // SaveX509Configuration saves a customer-managed X.509 configuration for an Atlas project.
 func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlasv2.UserSecurity, error) {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		userCertificate := atlasv2.UserSecurity{
-			CustomerX509: &atlasv2.DBUserTLSX509Settings{
-				Cas: &certificate,
-			},
-		}
-		result, _, err := s.clientv2.LDAPConfigurationApi.SaveLDAPConfiguration(s.ctx, projectID, &userCertificate).Execute()
-		return result, err
-	default:
-		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	userCertificate := atlasv2.UserSecurity{
+		CustomerX509: &atlasv2.DBUserTLSX509Settings{
+			Cas: &certificate,
+		},
 	}
+	result, _, err := s.clientv2.LDAPConfigurationApi.SaveLDAPConfiguration(s.ctx, projectID, &userCertificate).Execute()
+	return result, err
 }
 
 // DisableX509Configuration disables customer-managed X.509 configuration for an Atlas project.
 func (s *Store) DisableX509Configuration(projectID string) error {
-	switch s.service {
-	case config.CloudService, config.CloudGovService:
-		_, _, err := s.clientv2.X509AuthenticationApi.DisableCustomerManagedX509(s.ctx, projectID).Execute()
-		return err
-	default:
-		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
-	}
+	_, _, err := s.clientv2.X509AuthenticationApi.DisableCustomerManagedX509(s.ctx, projectID).Execute()
+	return err
 }

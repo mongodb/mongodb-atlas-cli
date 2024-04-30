@@ -17,10 +17,10 @@ package config
 import (
 	"fmt"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/cli/require"
-	"github.com/andreaangiolillo/mongocli-test/internal/config"
-	"github.com/andreaangiolillo/mongocli-test/internal/prompt"
-	"github.com/andreaangiolillo/mongocli-test/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/spf13/cobra"
 )
 
@@ -66,14 +66,14 @@ func RenameBuilder() *cobra.Command {
 		Use:     "rename <oldProfileName> <newProfileName>",
 		Aliases: []string{"mv"},
 		Short:   "Rename a profile.",
-		Example: fmt.Sprintf(`  # Rename a profile called myProfile to testProfile:
-  %s config rename myProfile testProfile`, config.BinName()),
+		Example: `  # Rename a profile called myProfile to testProfile:
+  atlas config rename myProfile testProfile`,
 		Annotations: map[string]string{
 			"oldProfileNameDesc": "Name of the profile to rename.",
 			"newProfileNameDesc": "New name of the profile.",
 		},
 		Args: require.ExactArgs(argsN),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			o.oldName = args[0]
 			o.newName = args[1]
 			return o.Run()

@@ -16,7 +16,7 @@
 
 set -Eeou pipefail
 
-VERSION="$(git tag --list "${tool_name:?}/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
 if [[ "${unstable-}" == "-unstable" ]]; then
   VERSION="${VERSION}-next"
@@ -29,6 +29,8 @@ META_FILENAME_ARM="${meta_package_name-}_${VERSION}_linux_arm64"
 
 pushd dist
 
+mv ../bin/*.msi . # move msi
+
 mkdir -p yum/x86_64 yum/arm64 apt/x86_64 apt/arm64
 
 function rename {
@@ -39,19 +41,12 @@ function rename {
 }
 
 # we could generate a similar name with goreleaser but we want to keep the vars evg compatible to use later
-if [[ "${package_name:?}" == mongocli ]]; then
-	rename "${FILENAME}.deb" "apt/x86_64/mongodb-cli${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
-	rename "${FILENAME_ARM}.deb" "apt/arm64/mongodb-cli${unstable-}_${VERSION}${latest_deb-}_arm64.deb"
-	rename "${FILENAME}.rpm" "yum/x86_64/mongodb-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
-	rename "${FILENAME_ARM}.rpm" "yum/arm64/mongodb-cli${unstable-}-${VERSION}${latest_rpm-}.aarch64.rpm"
-else
-	rename "${FILENAME}.deb" "apt/x86_64/mongodb-atlas-cli${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
-	rename "${FILENAME_ARM}.deb" "apt/arm64/mongodb-atlas-cli${unstable-}_${VERSION}${latest_deb-}_arm64.deb"
-	rename "${FILENAME}.rpm" "yum/x86_64/mongodb-atlas-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
-	rename "${FILENAME_ARM}.rpm" "yum/arm64/mongodb-atlas-cli${unstable-}-${VERSION}${latest_rpm-}.aarch64.rpm"
+rename "${FILENAME}.deb" "apt/x86_64/mongodb-atlas-cli${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
+rename "${FILENAME_ARM}.deb" "apt/arm64/mongodb-atlas-cli${unstable-}_${VERSION}${latest_deb-}_arm64.deb"
+rename "${FILENAME}.rpm" "yum/x86_64/mongodb-atlas-cli${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
+rename "${FILENAME_ARM}.rpm" "yum/arm64/mongodb-atlas-cli${unstable-}-${VERSION}${latest_rpm-}.aarch64.rpm"
 
-	rename "${META_FILENAME}.deb" "apt/x86_64/mongodb-atlas${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
-	rename "${META_FILENAME_ARM}.deb" "apt/arm64/mongodb-atlas${unstable-}_${VERSION}${latest_deb-}_arm64.deb"
-	rename "${META_FILENAME}.rpm" "yum/x86_64/mongodb-atlas${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
-	rename "${META_FILENAME_ARM}.rpm" "yum/arm64/mongodb-atlas${unstable-}-${VERSION}${latest_rpm-}.aarch64.rpm"
-fi
+rename "${META_FILENAME}.deb" "apt/x86_64/mongodb-atlas${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
+rename "${META_FILENAME_ARM}.deb" "apt/arm64/mongodb-atlas${unstable-}_${VERSION}${latest_deb-}_arm64.deb"
+rename "${META_FILENAME}.rpm" "yum/x86_64/mongodb-atlas${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
+rename "${META_FILENAME_ARM}.rpm" "yum/arm64/mongodb-atlas${unstable-}-${VERSION}${latest_rpm-}.aarch64.rpm"

@@ -22,16 +22,15 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/andreaangiolillo/mongocli-test/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestRestores(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
-	r := require.New(t)
-	r.NoError(err)
+	require.NoError(t, err)
 
 	var snapshotID, restoreJobID string
 
@@ -57,12 +56,11 @@ func TestRestores(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
-		a := assert.New(t)
 		var snapshot atlasv2.DiskBackupSnapshot
 		require.NoError(t, json.Unmarshal(resp, &snapshot))
-		a.Equal("test-snapshot", snapshot.GetDescription())
+		assert.Equal(t, "test-snapshot", snapshot.GetDescription())
 		snapshotID = snapshot.GetId()
 	})
 
@@ -101,7 +99,7 @@ func TestRestores(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 		var result atlasv2.DiskBackupSnapshotRestoreJob
 		require.NoError(t, json.Unmarshal(resp, &result))
 		restoreJobID = result.GetId()
@@ -121,7 +119,7 @@ func TestRestores(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Restores List", func(t *testing.T) {
@@ -136,12 +134,10 @@ func TestRestores(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		r.NoError(err, string(resp))
-
-		a := assert.New(t)
+		require.NoError(t, err, string(resp))
 		var result atlasv2.PaginatedCloudBackupRestoreJob
 		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
-		a.NotEmpty(result)
+		assert.NotEmpty(t, result)
 	})
 
 	t.Run("Restores Describe", func(t *testing.T) {
@@ -158,12 +154,11 @@ func TestRestores(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
-		a := assert.New(t)
 		var result atlasv2.DiskBackupSnapshotRestoreJob
 		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
-		a.NotEmpty(result)
+		assert.NotEmpty(t, result)
 	})
 
 	t.Run("Delete snapshot", func(t *testing.T) {
@@ -179,7 +174,7 @@ func TestRestores(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch snapshot deletion", func(t *testing.T) {

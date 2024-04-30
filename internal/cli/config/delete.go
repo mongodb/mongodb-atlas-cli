@@ -17,11 +17,11 @@ package config
 import (
 	"fmt"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/cli"
-	"github.com/andreaangiolillo/mongocli-test/internal/cli/require"
-	"github.com/andreaangiolillo/mongocli-test/internal/config"
-	"github.com/andreaangiolillo/mongocli-test/internal/flag"
-	"github.com/andreaangiolillo/mongocli-test/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -63,7 +63,7 @@ func DeleteBuilder() *cobra.Command {
 			"nameDesc": "Name of the profile.",
 			"output":   opts.SuccessMessage(),
 		},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(_ *cobra.Command, args []string) error {
 			opts.Entry = args[0]
 			if !config.Exists(opts.Entry) {
 				return fmt.Errorf("profile %v does not exist", opts.Entry)
@@ -71,7 +71,7 @@ func DeleteBuilder() *cobra.Command {
 
 			return opts.Prompt()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

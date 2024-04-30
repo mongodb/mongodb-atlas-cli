@@ -17,38 +17,37 @@ package dbusers
 import (
 	"fmt"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/features"
-	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/resources"
-	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/secrets"
-	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
-	"github.com/andreaangiolillo/mongocli-test/internal/store/atlas"
 	"github.com/google/uuid"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/secrets"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const timeFormatISO8601 = "2006-01-02T15:04:05.999Z"
 
-func BuildDBUsers(provider atlas.OperatorDBUsersStore, projectID, projectName, targetNamespace string, dictionary map[string]string, version string) ([]*akov2.AtlasDatabaseUser, []*corev1.Secret, error) {
-	users, err := provider.DatabaseUsers(projectID, &atlas.ListOptions{})
+func BuildDBUsers(provider store.OperatorDBUsersStore, projectID, projectName, targetNamespace string, dictionary map[string]string, version string) ([]*akov2.AtlasDatabaseUser, []*corev1.Secret, error) {
+	users, err := provider.DatabaseUsers(projectID, &store.ListOptions{})
 	if err != nil {
 		return nil, nil, err
 	}
 
-	if len(users.Results) == 0 {
+	if len(users.GetResults()) == 0 {
 		return nil, nil, nil
 	}
 
 	mappedUsers := map[string]*akov2.AtlasDatabaseUser{}
-	relatedSecrets := make([]*corev1.Secret, 0, len(users.Results))
+	relatedSecrets := make([]*corev1.Secret, 0, len(users.GetResults()))
 
-	for i := range users.Results {
-		user := &users.Results[i]
-
+	for _, u := range users.GetResults() {
+		user := pointer.Get(u)
 		resourceName := suggestResourceName(projectName, user.Username, mappedUsers, dictionary)
 		labels := convertUserLabels(user)
 		roles := convertUserRoles(user)
@@ -58,11 +57,11 @@ func BuildDBUsers(provider atlas.OperatorDBUsersStore, projectID, projectName, t
 		scopes := convertUserScopes(user)
 
 		mappedUsers[resourceName] = &akov2.AtlasDatabaseUser{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasDatabaseUser",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      resourceName,
 				Namespace: targetNamespace,
 				Labels: map[string]string{
@@ -99,7 +98,7 @@ func BuildDBUsers(provider atlas.OperatorDBUsersStore, projectID, projectName, t
 		}
 	}
 
-	result := make([]*akov2.AtlasDatabaseUser, 0, len(users.Results))
+	result := make([]*akov2.AtlasDatabaseUser, 0, len(users.GetResults()))
 	for _, mappedUser := range mappedUsers {
 		result = append(result, mappedUser)
 	}
@@ -123,8 +122,8 @@ func buildUserSecret(resourceName, targetNamespace, projectID, projectName strin
 }
 
 func convertUserScopes(user *atlasv2.CloudDatabaseUser) []akov2.ScopeSpec {
-	result := make([]akov2.ScopeSpec, 0, len(user.Scopes))
-	for _, scope := range user.Scopes {
+	result := make([]akov2.ScopeSpec, 0, len(user.GetScopes()))
+	for _, scope := range user.GetScopes() {
 		result = append(result, akov2.ScopeSpec{
 			Name: scope.Name,
 			Type: akov2.ScopeType(scope.Type),
@@ -134,11 +133,11 @@ func convertUserScopes(user *atlasv2.CloudDatabaseUser) []akov2.ScopeSpec {
 }
 
 func convertUserRoles(user *atlasv2.CloudDatabaseUser) []akov2.RoleSpec {
-	if len(user.Roles) == 0 {
+	if len(user.GetRoles()) == 0 {
 		return nil
 	}
-	result := make([]akov2.RoleSpec, 0, len(user.Roles))
-	for _, role := range user.Roles {
+	result := make([]akov2.RoleSpec, 0, len(user.GetRoles()))
+	for _, role := range user.GetRoles() {
 		result = append(result, akov2.RoleSpec{
 			RoleName:       role.RoleName,
 			DatabaseName:   role.DatabaseName,
@@ -149,8 +148,8 @@ func convertUserRoles(user *atlasv2.CloudDatabaseUser) []akov2.RoleSpec {
 }
 
 func convertUserLabels(user *atlasv2.CloudDatabaseUser) []akov2common.LabelSpec {
-	result := make([]akov2common.LabelSpec, 0, len(user.Labels))
-	for _, label := range user.Labels {
+	result := make([]akov2common.LabelSpec, 0, len(user.GetLabels()))
+	for _, label := range user.GetLabels() {
 		result = append(result, akov2common.LabelSpec{
 			Key:   *label.Key,
 			Value: *label.Value,

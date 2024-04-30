@@ -19,8 +19,8 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
+	"slices"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/search"
 	"github.com/spf13/afero"
 	"gopkg.in/yaml.v3"
 )
@@ -48,7 +48,7 @@ func configType(filename string, supported []string) (string, error) {
 	}
 
 	t := ext[1:]
-	if !search.StringInSlice(supported, t) {
+	if !slices.Contains(supported, t) {
 		return "", fmt.Errorf("%w: %s", ErrUnsupportedFileType, t)
 	}
 	return t, nil

@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/cli/require"
-	"github.com/andreaangiolillo/mongocli-test/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -50,13 +50,13 @@ func WhoAmIBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "whoami",
 		Short: "Verifies and displays information about your authentication state.",
-		Example: fmt.Sprintf(`  # See the logged account:
-  %s auth whoami
-`, config.BinName()),
-		PreRun: func(cmd *cobra.Command, args []string) {
+		Example: `  # See the logged account:
+  atlas auth whoami
+`,
+		PreRun: func(cmd *cobra.Command, _ []string) {
 			opts.OutWriter = cmd.OutOrStdout()
 		},
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			var err error
 			if opts.account, err = AccountWithAccessToken(); err != nil {
 				return err

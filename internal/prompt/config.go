@@ -19,19 +19,10 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/andreaangiolillo/mongocli-test/internal/config"
-	"github.com/andreaangiolillo/mongocli-test/internal/validate"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
-
-func NewOMURLInput() survey.Prompt {
-	return &survey.Input{
-		Message: "URL to Access Ops Manager:",
-		Help:    "FQDN and port number of the Ops Manager Application.",
-		Default: config.OpsManagerURL(),
-	}
-}
 
 func NewOrgIDInput() survey.Prompt {
 	return &survey.Input{
@@ -49,12 +40,8 @@ func NewProjectIDInput() survey.Prompt {
 	}
 }
 
-func AccessQuestions(isOM bool) []*survey.Question {
+func AccessQuestions() []*survey.Question {
 	helpLink := "Please provide your API keys. To create new keys, see the documentation: https://docs.atlas.mongodb.com/configure-api-access/"
-	if isOM {
-		helpLink = "Please provide your API keys. To create new keys, see the documentation: https://docs.opsmanager.mongodb.com/current/tutorial/configure-public-api-access/"
-	}
-
 	q := []*survey.Question{
 		{
 			Name: "publicAPIKey",
@@ -71,16 +58,6 @@ func AccessQuestions(isOM bool) []*survey.Question {
 				Help:    helpLink,
 			},
 		},
-	}
-	if isOM {
-		omQuestions := []*survey.Question{
-			{
-				Name:     "opsManagerURL",
-				Prompt:   NewOMURLInput(),
-				Validate: validate.OptionalURL,
-			},
-		}
-		q = append(omQuestions, q...)
 	}
 	return q
 }
@@ -113,38 +90,18 @@ func NewProfileReplaceConfirm(entry string) survey.Prompt {
 func NewOrgSelect(options []atlasv2.AtlasOrganization) survey.Prompt {
 	opt := make([]string, len(options))
 	for i, o := range options {
-		opt[i] = *o.Id
+		opt[i] = o.GetId()
 	}
 
 	return &survey.Select{
 		Message: "Choose a default organization:",
 		Options: opt,
 		Description: func(_ string, i int) string {
-			return options[i].Name
+			return options[i].GetName()
 		},
 		Filter: func(filter string, _ string, i int) bool {
 			filter = strings.ToLower(filter)
-			return strings.HasPrefix(strings.ToLower(options[i].Name), filter) || strings.HasPrefix(*options[i].Id, filter)
-		},
-	}
-}
-
-// NewOnPremOrgSelect create a prompt to choice the organization.
-func NewOnPremOrgSelect(options []*atlas.Organization) survey.Prompt {
-	opt := make([]string, len(options))
-	for i, o := range options {
-		opt[i] = o.ID
-	}
-
-	return &survey.Select{
-		Message: "Choose a default organization:",
-		Options: opt,
-		Description: func(_ string, i int) string {
-			return options[i].Name
-		},
-		Filter: func(filter string, _ string, i int) bool {
-			filter = strings.ToLower(filter)
-			return strings.HasPrefix(strings.ToLower(options[i].Name), filter) || strings.HasPrefix(options[i].ID, filter)
+			return strings.HasPrefix(strings.ToLower(options[i].GetName()), filter) || strings.HasPrefix(options[i].GetId(), filter)
 		},
 	}
 }

@@ -17,15 +17,14 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
 
-	"github.com/andreaangiolillo/mongocli-test/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestSnapshots(t *testing.T) {
@@ -35,7 +34,9 @@ func TestSnapshots(t *testing.T) {
 
 	clusterName, err := RandClusterName()
 	r.NoError(err)
-	fmt.Println(clusterName)
+
+	mdbVersion, err := MongoDBMajorVersion()
+	r.NoError(err)
 
 	var snapshotID string
 
@@ -48,15 +49,15 @@ func TestSnapshots(t *testing.T) {
 			"--tier", tierM10,
 			"--region=US_EAST_1",
 			"--provider", e2eClusterProvider,
-			"--mdbVersion", e2eSharedMDBVer,
+			"--mdbVersion", mdbVersion,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
 		var cluster *atlasv2.AdvancedClusterDescription
-		r.NoError(json.Unmarshal(resp, &cluster))
-		ensureCluster(t, cluster, clusterName, e2eSharedMDBVer, 10, false)
+		require.NoError(t, json.Unmarshal(resp, &cluster))
+		ensureCluster(t, cluster, clusterName, mdbVersion, 10, false)
 	})
 	t.Cleanup(func() {
 		require.NoError(t, deleteClusterForProject("", clusterName))
@@ -75,12 +76,11 @@ func TestSnapshots(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
-		a := assert.New(t)
 		var snapshot atlasv2.DiskBackupSnapshot
 		require.NoError(t, json.Unmarshal(resp, &snapshot))
-		a.Equal("test-snapshot", snapshot.GetDescription())
+		assert.Equal(t, "test-snapshot", snapshot.GetDescription())
 		snapshotID = snapshot.GetId()
 	})
 
@@ -93,8 +93,8 @@ func TestSnapshots(t *testing.T) {
 			"--clusterName",
 			clusterName)
 		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
-		t.Log(string(resp))
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("List", func(t *testing.T) {
@@ -107,12 +107,10 @@ func TestSnapshots(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		r.NoError(err, string(resp))
-
+		require.NoError(t, err, string(resp))
 		var backups atlasv2.PaginatedCloudBackupReplicaSet
-		a := assert.New(t)
-		r.NoError(json.Unmarshal(resp, &backups))
-		a.NotEmpty(backups)
+		require.NoError(t, json.Unmarshal(resp, &backups))
+		assert.NotEmpty(t, backups)
 	})
 
 	t.Run("Describe", func(t *testing.T) {
@@ -127,12 +125,11 @@ func TestSnapshots(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 
-		a := assert.New(t)
 		var result atlasv2.DiskBackupReplicaSet
-		r.NoError(json.Unmarshal(resp, &result))
-		a.Equal(snapshotID, result.GetId())
+		require.NoError(t, json.Unmarshal(resp, &result))
+		assert.Equal(t, snapshotID, result.GetId())
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -146,8 +143,7 @@ func TestSnapshots(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-
-		r.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Watch deletion", func(t *testing.T) {

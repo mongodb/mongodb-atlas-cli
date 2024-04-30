@@ -16,14 +16,14 @@ package config
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/cli"
-	"github.com/andreaangiolillo/mongocli-test/internal/cli/require"
-	"github.com/andreaangiolillo/mongocli-test/internal/config"
-	"github.com/andreaangiolillo/mongocli-test/internal/mongosh"
-	"github.com/andreaangiolillo/mongocli-test/internal/search"
-	"github.com/andreaangiolillo/mongocli-test/internal/validate"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongosh"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -46,10 +46,10 @@ func (opts *SetOpts) Run() error {
 	}
 	var value interface{}
 	value = opts.val
-	if search.StringInSlice(config.BooleanProperties(), opts.prop) {
+	if slices.Contains(config.BooleanProperties(), opts.prop) {
 		value = config.IsTrue(opts.val)
 	}
-	if search.StringInSlice(config.GlobalProperties(), opts.prop) {
+	if slices.Contains(config.GlobalProperties(), opts.prop) {
 		opts.store.SetGlobal(opts.prop, value)
 	} else {
 		opts.store.Set(opts.prop, value)
@@ -69,16 +69,6 @@ func (opts *SetOpts) Run() error {
 	return nil
 }
 
-func mongoCLIExample() string {
-	if config.BinName() == config.MongoCLI {
-		return fmt.Sprintf(`  Set the Ops Manager base URL in the profile myProfile to http://localhost:30700/:
-  %s config set ops_manager_url http://localhost:30700/ -P myProfile
-`, config.BinName())
-	}
-
-	return ""
-}
-
 func SetBuilder() *cobra.Command {
 	const argsN = 2
 	cmd := &cobra.Command{
@@ -88,20 +78,20 @@ func SetBuilder() *cobra.Command {
 			if err := require.ExactArgs(argsN)(cmd, args); err != nil {
 				return err
 			}
-			if !search.StringInSlice(cmd.ValidArgs, args[0]) {
+			if !slices.Contains(cmd.ValidArgs, args[0]) {
 				return fmt.Errorf("invalid property: %q", args[0])
 			}
 			return nil
 		},
-		Example: fmt.Sprintf(`  %s
+		Example: `
   Set the organization ID in the default profile to 5dd5aaef7a3e5a6c5bd12de4:
-  %s config set org_id 5dd5aaef7a3e5a6c5bd12de4`, mongoCLIExample(), config.BinName()),
+  atlas config set org_id 5dd5aaef7a3e5a6c5bd12de4`,
 		Annotations: map[string]string{
 			"propertyNameDesc": "Property to set in the profile. Valid values for Atlas CLI and MongoDB CLI are project_id, org_id, service, public_api_key, private_api_key, output, mongosh_path, skip_update_check, telemetry_enabled, access_token, and refresh_token. Additionally, values that are only valid for MongoDB CLI include ops_manager_url base_url, ops_manager_ca_certificate, and ops_manager_skip_verify.",
 			"valueDesc":        "Value for the property to set in the profile.",
 		},
 		ValidArgs: config.Properties(),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, args []string) error {
 			opts := &SetOpts{
 				store: config.Default(),
 				prop:  args[0],

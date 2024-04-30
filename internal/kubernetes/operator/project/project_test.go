@@ -18,29 +18,29 @@ package project
 
 import (
 	"fmt"
+	"log"
 	"reflect"
 	"strings"
 	"testing"
 	"time"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/features"
-	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/resources"
-	"github.com/andreaangiolillo/mongocli-test/internal/kubernetes/operator/secrets"
-	mocks "github.com/andreaangiolillo/mongocli-test/internal/mocks"
-	atlasmocks "github.com/andreaangiolillo/mongocli-test/internal/mocks/atlas"
-	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
-	"github.com/andreaangiolillo/mongocli-test/internal/store/atlas"
 	"github.com/go-test/deep"
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/secrets"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -53,7 +53,7 @@ const (
 
 func TestBuildAtlasProject(t *testing.T) {
 	ctl := gomock.NewController(t)
-	projectStore := atlasmocks.NewMockOperatorProjectStore(ctl)
+	projectStore := mocks.NewMockOperatorProjectStore(ctl)
 	featureValidator := mocks.NewMockFeatureValidator(ctl)
 	t.Run("Can convert Project entity with secrets data", func(t *testing.T) {
 		p := &atlasv2.Group{
@@ -66,7 +66,7 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		ipAccessLists := &atlasv2.PaginatedNetworkAccess{
 			Links: nil,
-			Results: []atlasv2.NetworkPermissionEntry{
+			Results: &[]atlasv2.NetworkPermissionEntry{
 				{
 					AwsSecurityGroup: pointer.Get("TestSecurity group"),
 					CidrBlock:        pointer.Get("0.0.0.0/0"),
@@ -90,7 +90,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		createDate, _ := time.Parse(time.RFC3339, "01-02-2001")
 
 		cpas := &atlasv2.CloudProviderAccessRoles{
-			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
+			AwsIamRoles: &[]atlasv2.CloudProviderAccessAWSIAMRole{
 				{
 					AtlasAWSAccountArn:         pointer.Get("TestARN"),
 					AtlasAssumedRoleExternalId: pointer.Get("TestExternalRoleID"),
@@ -116,7 +116,7 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		thirdPartyIntegrations := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: []atlasv2.ThridPartyIntegration{
+			Results: &[]atlasv2.ThirdPartyIntegration{
 				{
 					Type:             pointer.Get("PROMETHEUS"),
 					Username:         pointer.Get("TestPrometheusUserName"),
@@ -129,7 +129,7 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		mw := &atlasv2.GroupMaintenanceWindow{
 			DayOfWeek:            1,
-			HourOfDay:            10,
+			HourOfDay:            pointer.Get(10),
 			StartASAP:            pointer.Get(false),
 			AutoDeferOnceEnabled: pointer.Get(false),
 		}
@@ -161,15 +161,15 @@ func TestBuildAtlasProject(t *testing.T) {
 		privateEndpoints := []atlasv2.EndpointService{privateAWSEndpoint}
 
 		alertConfigResult := &atlasv2.PaginatedAlertConfig{
-			Results: []atlasv2.GroupAlertsConfig{
+			Results: &[]atlasv2.GroupAlertsConfig{
 				{
 					Enabled:       pointer.Get(true),
 					EventTypeName: pointer.Get("TestEventTypeName"),
-					Matchers: []map[string]interface{}{
+					Matchers: &[]atlasv2.StreamsMatcher{
 						{
-							"FieldName": "TestFieldName",
-							"Operator":  "TestOperator",
-							"Value":     "TestValue",
+							FieldName: "TestFieldName",
+							Operator:  "TestOperator",
+							Value:     "TestValue",
 						},
 					},
 					MetricThreshold: &atlasv2.ServerlessMetricThreshold{
@@ -184,7 +184,7 @@ func TestBuildAtlasProject(t *testing.T) {
 						Units:     pointer.Get("TestUnits"),
 						Threshold: pointer.Get(10),
 					},
-					Notifications: []atlasv2.AlertsNotificationRootForGroup{
+					Notifications: &[]atlasv2.AlertsNotificationRootForGroup{
 						{
 							ChannelName:         pointer.Get("TestChannelName"),
 							DatadogApiKey:       pointer.Get("TestDatadogAPIKey"),
@@ -204,7 +204,7 @@ func TestBuildAtlasProject(t *testing.T) {
 							Username:            pointer.Get("TestUserName"),
 							VictorOpsApiKey:     pointer.Get("TestVictorOpsAPIKey"),
 							VictorOpsRoutingKey: pointer.Get("TestVictorOpsRoutingKey"),
-							Roles:               []string{"Role1", "Role2"},
+							Roles:               &[]string{"Role1", "Role2"},
 						},
 					},
 				},
@@ -222,10 +222,10 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		customRoles := []atlasv2.UserCustomDBRole{
 			{
-				Actions: []atlasv2.DatabasePrivilegeAction{
+				Actions: &[]atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "Action-1",
-						Resources: []atlasv2.DatabasePermittedNamespaceResource{
+						Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
 							{
 								Collection: "Collection-1",
 								Db:         "DB-1",
@@ -234,7 +234,7 @@ func TestBuildAtlasProject(t *testing.T) {
 						},
 					},
 				},
-				InheritedRoles: []atlasv2.DatabaseInheritedRole{
+				InheritedRoles: &[]atlasv2.DatabaseInheritedRole{
 					{
 						Db:   "Inherited-DB",
 						Role: "Inherited-ROLE",
@@ -246,10 +246,10 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		projectTeams := &atlasv2.PaginatedTeamRole{
 			Links: nil,
-			Results: []atlasv2.TeamRole{
+			Results: &[]atlasv2.TeamRole{
 				{
 					TeamId:    pointer.Get(teamID),
-					RoleNames: []string{string(akov2.TeamRoleClusterManager)},
+					RoleNames: &[]string{string(akov2.TeamRoleClusterManager)},
 				},
 			},
 			TotalCount: pointer.Get(1),
@@ -260,7 +260,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 
 		teamUsers := &atlasv2.PaginatedApiAppUser{
-			Results: []atlasv2.CloudAppUser{
+			Results: &[]atlasv2.CloudAppUser{
 				{
 					EmailAddress: "testuser@mooooongodb.com",
 					FirstName:    "TestName",
@@ -271,14 +271,14 @@ func TestBuildAtlasProject(t *testing.T) {
 			TotalCount: pointer.Get(1),
 		}
 
-		listOption := &atlas.ListOptions{ItemsPerPage: MaxItems}
+		listOption := &store.ListOptions{ItemsPerPage: MaxItems}
 		listAlterOpt := &atlasv2.ListAlertConfigurationsApiParams{
 			GroupId:      projectID,
 			ItemsPerPage: &listOption.ItemsPerPage,
 		}
-		containerListOptionAWS := &atlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderAWS)}
-		containerListOptionGCP := &atlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderGCP)}
-		containerListOptionAzure := &atlas.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderAzure)}
+		containerListOptionAWS := &store.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderAWS)}
+		containerListOptionGCP := &store.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderGCP)}
+		containerListOptionAzure := &store.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderAzure)}
 		projectStore.EXPECT().Project(projectID).Return(p, nil)
 		projectStore.EXPECT().ProjectIPAccessLists(projectID, listOption).Return(ipAccessLists, nil)
 		projectStore.EXPECT().MaintenanceWindow(projectID).Return(mw, nil)
@@ -295,7 +295,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		projectStore.EXPECT().Auditing(projectID).Return(auditing, nil)
 		projectStore.EXPECT().AlertConfigurations(listAlterOpt).Return(alertConfigResult, nil)
 		projectStore.EXPECT().DatabaseRoles(projectID).Return(customRoles, nil)
-		projectStore.EXPECT().ProjectTeams(projectID).Return(projectTeams, nil)
+		projectStore.EXPECT().ProjectTeams(projectID, nil).Return(projectTeams, nil)
 		projectStore.EXPECT().TeamByID(orgID, teamID).Return(teams, nil)
 		projectStore.EXPECT().TeamUsers(orgID, teamID).Return(teamUsers, nil)
 
@@ -320,17 +320,17 @@ func TestBuildAtlasProject(t *testing.T) {
 		gotProject := projectResult.Project
 		gotTeams := projectResult.Teams
 
-		alertConfigs := alertConfigResult.Results
+		alertConfigs := alertConfigResult.GetResults()
 		expectedThreshold := &akov2.Threshold{
-			Operator:  atlas.StringOrEmpty(alertConfigs[0].Threshold.Operator),
-			Units:     atlas.StringOrEmpty(alertConfigs[0].Threshold.Units),
+			Operator:  store.StringOrEmpty(alertConfigs[0].Threshold.Operator),
+			Units:     store.StringOrEmpty(alertConfigs[0].Threshold.Units),
 			Threshold: fmt.Sprintf("%d", pointer.GetOrDefault(alertConfigs[0].Threshold.Threshold, 0)),
 		}
 		expectedMatchers := []akov2.Matcher{
 			{
-				FieldName: (alertConfigs[0].Matchers[0]["FieldName"]).(string),
-				Operator:  (alertConfigs[0].Matchers[0]["Operator"]).(string),
-				Value:     (alertConfigs[0].Matchers[0]["Value"]).(string),
+				FieldName: (alertConfigs[0].GetMatchers()[0].GetFieldName()),
+				Operator:  (alertConfigs[0].GetMatchers()[0].GetOperator()),
+				Value:     (alertConfigs[0].GetMatchers()[0].GetValue()),
 			},
 		}
 		expectedNotifications := []akov2.Notification{
@@ -339,18 +339,18 @@ func TestBuildAtlasProject(t *testing.T) {
 					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].APITokenRef.Name,
 					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].APITokenRef.Namespace,
 				},
-				ChannelName:   atlas.StringOrEmpty(alertConfigs[0].Notifications[0].ChannelName),
-				DatadogRegion: atlas.StringOrEmpty(alertConfigs[0].Notifications[0].DatadogRegion),
+				ChannelName:   store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].ChannelName),
+				DatadogRegion: store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].DatadogRegion),
 				DatadogAPIKeyRef: akov2common.ResourceRefNamespaced{
 					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].DatadogAPIKeyRef.Name,
 					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].DatadogAPIKeyRef.Namespace,
 				},
-				DelayMin:       alertConfigs[0].Notifications[0].DelayMin,
-				EmailAddress:   atlas.StringOrEmpty(alertConfigs[0].Notifications[0].EmailAddress),
-				EmailEnabled:   alertConfigs[0].Notifications[0].EmailEnabled,
-				IntervalMin:    pointer.GetOrDefault(alertConfigs[0].Notifications[0].IntervalMin, 0),
-				MobileNumber:   atlas.StringOrEmpty(alertConfigs[0].Notifications[0].MobileNumber),
-				OpsGenieRegion: atlas.StringOrEmpty(alertConfigs[0].Notifications[0].OpsGenieRegion),
+				DelayMin:       alertConfigs[0].GetNotifications()[0].DelayMin,
+				EmailAddress:   store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].EmailAddress),
+				EmailEnabled:   alertConfigs[0].GetNotifications()[0].EmailEnabled,
+				IntervalMin:    pointer.GetOrDefault(alertConfigs[0].GetNotifications()[0].IntervalMin, 0),
+				MobileNumber:   store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].MobileNumber),
+				OpsGenieRegion: store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].OpsGenieRegion),
 				OpsGenieAPIKeyRef: akov2common.ResourceRefNamespaced{
 					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].OpsGenieAPIKeyRef.Name,
 					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].OpsGenieAPIKeyRef.Namespace,
@@ -359,12 +359,12 @@ func TestBuildAtlasProject(t *testing.T) {
 					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].ServiceKeyRef.Name,
 					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].ServiceKeyRef.Namespace,
 				},
-				SMSEnabled: alertConfigs[0].Notifications[0].SmsEnabled,
-				TeamID:     atlas.StringOrEmpty(alertConfigs[0].Notifications[0].TeamId),
-				TeamName:   atlas.StringOrEmpty(alertConfigs[0].Notifications[0].TeamName),
-				TypeName:   atlas.StringOrEmpty(alertConfigs[0].Notifications[0].TypeName),
-				Username:   atlas.StringOrEmpty(alertConfigs[0].Notifications[0].Username),
-				Roles:      alertConfigs[0].Notifications[0].Roles,
+				SMSEnabled: alertConfigs[0].GetNotifications()[0].SmsEnabled,
+				TeamID:     store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].TeamId),
+				TeamName:   store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].TeamName),
+				TypeName:   store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].TypeName),
+				Username:   store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].Username),
+				Roles:      alertConfigs[0].GetNotifications()[0].GetRoles(),
 				VictorOpsSecretRef: akov2common.ResourceRefNamespaced{
 					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].VictorOpsSecretRef.Name,
 					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].VictorOpsSecretRef.Namespace,
@@ -373,19 +373,19 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 		expectedMetricThreshold := &akov2.MetricThreshold{
 			MetricName: alertConfigs[0].MetricThreshold.MetricName,
-			Operator:   atlas.StringOrEmpty(alertConfigs[0].MetricThreshold.Operator),
+			Operator:   store.StringOrEmpty(alertConfigs[0].MetricThreshold.Operator),
 			Threshold:  fmt.Sprintf("%f", pointer.GetOrDefault(alertConfigs[0].MetricThreshold.Threshold, 0.0)),
-			Units:      atlas.StringOrEmpty(alertConfigs[0].MetricThreshold.Units),
-			Mode:       atlas.StringOrEmpty(alertConfigs[0].MetricThreshold.Mode),
+			Units:      store.StringOrEmpty(alertConfigs[0].MetricThreshold.Units),
+			Mode:       store.StringOrEmpty(alertConfigs[0].MetricThreshold.Mode),
 		}
-		teamsName := atlas.StringOrEmpty(teams.Name)
+		teamsName := store.StringOrEmpty(teams.Name)
 		expectedTeams := []*akov2.AtlasTeam{
 			{
-				TypeMeta: v1.TypeMeta{
+				TypeMeta: metav1.TypeMeta{
 					Kind:       "AtlasTeam",
 					APIVersion: "atlas.mongodb.com/v1",
 				},
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(p.Name), strings.ToLower(teamsName)),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
@@ -394,7 +394,7 @@ func TestBuildAtlasProject(t *testing.T) {
 				},
 				Spec: akov2.TeamSpec{
 					Name:      teamsName,
-					Usernames: []akov2.TeamUser{akov2.TeamUser(teamUsers.Results[0].Username)},
+					Usernames: []akov2.TeamUser{akov2.TeamUser(teamUsers.GetResults()[0].Username)},
 				},
 				Status: akov2status.TeamStatus{
 					Common: akov2status.Common{
@@ -404,11 +404,11 @@ func TestBuildAtlasProject(t *testing.T) {
 			},
 		}
 		expectedProject := &akov2.AtlasProject{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasProject",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(p.Name, dictionary),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
@@ -422,25 +422,25 @@ func TestBuildAtlasProject(t *testing.T) {
 				},
 				ProjectIPAccessList: []akov2project.IPAccessList{
 					{
-						AwsSecurityGroup: ipAccessLists.Results[0].GetAwsSecurityGroup(),
-						CIDRBlock:        ipAccessLists.Results[0].GetCidrBlock(),
-						Comment:          ipAccessLists.Results[0].GetComment(),
-						DeleteAfterDate:  ipAccessLists.Results[0].GetDeleteAfterDate().String(),
-						IPAddress:        ipAccessLists.Results[0].GetIpAddress(),
+						AwsSecurityGroup: ipAccessLists.GetResults()[0].GetAwsSecurityGroup(),
+						CIDRBlock:        ipAccessLists.GetResults()[0].GetCidrBlock(),
+						Comment:          ipAccessLists.GetResults()[0].GetComment(),
+						DeleteAfterDate:  ipAccessLists.GetResults()[0].GetDeleteAfterDate().String(),
+						IPAddress:        ipAccessLists.GetResults()[0].GetIpAddress(),
 					},
 				},
 				MaintenanceWindow: akov2project.MaintenanceWindow{
 					DayOfWeek: mw.DayOfWeek,
-					HourOfDay: mw.HourOfDay,
-					AutoDefer: pointer.GetOrDefault(mw.AutoDeferOnceEnabled, false),
-					StartASAP: pointer.GetOrDefault(mw.StartASAP, false),
+					HourOfDay: mw.GetHourOfDay(),
+					AutoDefer: mw.GetAutoDeferOnceEnabled(),
+					StartASAP: mw.GetStartASAP(),
 					Defer:     false,
 				},
 				PrivateEndpoints: []akov2.PrivateEndpoint{
 					{
 						Provider:          akov2provider.ProviderAWS,
 						Region:            *privateAWSEndpoint.RegionName,
-						ID:                firstElementOrZeroValue(privateAWSEndpoint.InterfaceEndpoints),
+						ID:                firstElementOrZeroValue(privateAWSEndpoint.GetInterfaceEndpoints()),
 						IP:                "",
 						GCPProjectID:      "",
 						EndpointGroupName: "",
@@ -449,14 +449,14 @@ func TestBuildAtlasProject(t *testing.T) {
 				},
 				CloudProviderAccessRoles: []akov2.CloudProviderAccessRole{
 					{
-						ProviderName:      cpas.AwsIamRoles[0].ProviderName,
-						IamAssumedRoleArn: *cpas.AwsIamRoles[0].IamAssumedRoleArn,
+						ProviderName:      cpas.GetAwsIamRoles()[0].ProviderName,
+						IamAssumedRoleArn: *cpas.GetAwsIamRoles()[0].IamAssumedRoleArn,
 					},
 				},
 				AlertConfigurations: []akov2.AlertConfiguration{
 					{
 						Enabled:         *alertConfigs[0].Enabled,
-						EventTypeName:   atlas.StringOrEmpty(alertConfigs[0].EventTypeName),
+						EventTypeName:   store.StringOrEmpty(alertConfigs[0].EventTypeName),
 						Matchers:        expectedMatchers,
 						Threshold:       expectedThreshold,
 						Notifications:   expectedNotifications,
@@ -479,15 +479,15 @@ func TestBuildAtlasProject(t *testing.T) {
 				X509CertRef:               nil,
 				Integrations: []akov2project.Integration{
 					{
-						Type:     thirdPartyIntegrations.Results[0].GetType(),
-						UserName: thirdPartyIntegrations.Results[0].GetUsername(),
+						Type:     thirdPartyIntegrations.GetResults()[0].GetType(),
+						UserName: thirdPartyIntegrations.GetResults()[0].GetUsername(),
 						PasswordRef: akov2common.ResourceRefNamespaced{
 							Name: fmt.Sprintf("%s-integration-%s",
 								strings.ToLower(projectID),
-								strings.ToLower(thirdPartyIntegrations.Results[0].GetType())),
+								strings.ToLower(thirdPartyIntegrations.GetResults()[0].GetType())),
 							Namespace: targetNamespace,
 						},
-						ServiceDiscovery: thirdPartyIntegrations.Results[0].GetServiceDiscovery(),
+						ServiceDiscovery: thirdPartyIntegrations.GetResults()[0].GetServiceDiscovery(),
 					},
 				},
 				EncryptionAtRest: &akov2.EncryptionAtRest{
@@ -528,18 +528,18 @@ func TestBuildAtlasProject(t *testing.T) {
 						Name: customRoles[0].RoleName,
 						InheritedRoles: []akov2.Role{
 							{
-								Name:     customRoles[0].InheritedRoles[0].Role,
-								Database: customRoles[0].InheritedRoles[0].Db,
+								Name:     customRoles[0].GetInheritedRoles()[0].Role,
+								Database: customRoles[0].GetInheritedRoles()[0].Db,
 							},
 						},
 						Actions: []akov2.Action{
 							{
-								Name: customRoles[0].Actions[0].Action,
+								Name: customRoles[0].GetActions()[0].Action,
 								Resources: []akov2.Resource{
 									{
-										Cluster:    &customRoles[0].Actions[0].Resources[0].Cluster,
-										Database:   &customRoles[0].Actions[0].Resources[0].Db,
-										Collection: &customRoles[0].Actions[0].Resources[0].Collection,
+										Cluster:    &customRoles[0].GetActions()[0].GetResources()[0].Cluster,
+										Database:   &customRoles[0].GetActions()[0].GetResources()[0].Db,
+										Collection: &customRoles[0].GetActions()[0].GetResources()[0].Collection,
 									},
 								},
 							},
@@ -552,7 +552,7 @@ func TestBuildAtlasProject(t *testing.T) {
 							Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(p.Name), strings.ToLower(teamsName)),
 							Namespace: targetNamespace,
 						},
-						Roles: []akov2.TeamRole{akov2.TeamRole(projectTeams.Results[0].RoleNames[0])},
+						Roles: []akov2.TeamRole{akov2.TeamRole(projectTeams.GetResults()[0].GetRoleNames()[0])},
 					},
 				},
 			},
@@ -586,11 +586,11 @@ func TestBuildProjectConnectionSecret(t *testing.T) {
 			orgID, true, dictionary)
 
 		expected := &corev1.Secret{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "Secret",
 				APIVersion: "v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-credentials", name)),
 				Namespace: namespace,
 				Labels: map[string]string{
@@ -616,11 +616,11 @@ func TestBuildProjectConnectionSecret(t *testing.T) {
 			orgID, false, dictionary)
 
 		expected := &corev1.Secret{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "Secret",
 				APIVersion: "v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-credentials", name)),
 				Namespace: namespace,
 				Labels: map[string]string{
@@ -643,11 +643,11 @@ func TestBuildProjectConnectionSecret(t *testing.T) {
 func Test_buildAccessLists(t *testing.T) {
 	ctl := gomock.NewController(t)
 
-	alProvider := atlasmocks.NewMockProjectIPAccessListLister(ctl)
+	alProvider := mocks.NewMockProjectIPAccessListLister(ctl)
 	t.Run("Can convert Access Lists", func(t *testing.T) {
 		data := &atlasv2.PaginatedNetworkAccess{
 			Links: nil,
-			Results: []atlasv2.NetworkPermissionEntry{
+			Results: &[]atlasv2.NetworkPermissionEntry{
 				{
 					AwsSecurityGroup: pointer.Get("TestSecGroup"),
 					CidrBlock:        pointer.Get("0.0.0.0/0"),
@@ -660,7 +660,7 @@ func Test_buildAccessLists(t *testing.T) {
 			TotalCount: pointer.Get(1),
 		}
 
-		listOptions := &atlas.ListOptions{ItemsPerPage: MaxItems}
+		listOptions := &store.ListOptions{ItemsPerPage: MaxItems}
 
 		alProvider.EXPECT().ProjectIPAccessLists(projectID, listOptions).Return(data, nil)
 
@@ -671,11 +671,11 @@ func Test_buildAccessLists(t *testing.T) {
 
 		expected := []akov2project.IPAccessList{
 			{
-				AwsSecurityGroup: data.Results[0].GetAwsSecurityGroup(),
-				CIDRBlock:        data.Results[0].GetCidrBlock(),
-				Comment:          data.Results[0].GetComment(),
-				DeleteAfterDate:  data.Results[0].GetDeleteAfterDate().String(),
-				IPAddress:        data.Results[0].GetIpAddress(),
+				AwsSecurityGroup: data.GetResults()[0].GetAwsSecurityGroup(),
+				CIDRBlock:        data.GetResults()[0].GetCidrBlock(),
+				Comment:          data.GetResults()[0].GetComment(),
+				DeleteAfterDate:  data.GetResults()[0].GetDeleteAfterDate().String(),
+				IPAddress:        data.GetResults()[0].GetIpAddress(),
 			},
 		}
 
@@ -722,7 +722,7 @@ func Test_buildCloudProviderAccessRoles(t *testing.T) {
 	cpaProvider := mocks.NewMockCloudProviderAccessRoleLister(ctl)
 	t.Run("Can convert CPA roles", func(t *testing.T) {
 		data := &atlasv2.CloudProviderAccessRoles{
-			AwsIamRoles: []atlasv2.CloudProviderAccessAWSIAMRole{
+			AwsIamRoles: &[]atlasv2.CloudProviderAccessAWSIAMRole{
 				{
 					AtlasAWSAccountArn:         pointer.Get("TestARN"),
 					AtlasAssumedRoleExternalId: pointer.Get("TestRoleID"),
@@ -745,8 +745,8 @@ func Test_buildCloudProviderAccessRoles(t *testing.T) {
 
 		expected := []akov2.CloudProviderAccessRole{
 			{
-				ProviderName:      data.AwsIamRoles[0].ProviderName,
-				IamAssumedRoleArn: *data.AwsIamRoles[0].IamAssumedRoleArn,
+				ProviderName:      data.GetAwsIamRoles()[0].ProviderName,
+				IamAssumedRoleArn: *data.GetAwsIamRoles()[0].IamAssumedRoleArn,
 			},
 		}
 
@@ -920,7 +920,7 @@ func Test_buildIntegrations(t *testing.T) {
 		const includeSecrets = true
 		ints := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: []atlasv2.ThridPartyIntegration{
+			Results: &[]atlasv2.ThirdPartyIntegration{
 				{
 					Type:             pointer.Get("PROMETHEUS"),
 					Password:         pointer.Get("PrometheusTestPassword"),
@@ -940,13 +940,13 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expected := []akov2project.Integration{
 			{
-				Type:             ints.Results[0].GetType(),
-				ServiceDiscovery: ints.Results[0].GetServiceDiscovery(),
-				UserName:         ints.Results[0].GetUsername(),
+				Type:             ints.GetResults()[0].GetType(),
+				ServiceDiscovery: ints.GetResults()[0].GetServiceDiscovery(),
+				UserName:         ints.GetResults()[0].GetUsername(),
 				PasswordRef: akov2common.ResourceRefNamespaced{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].GetType())),
+						strings.ToLower(ints.GetResults()[0].GetType())),
 					Namespace: targetNamespace,
 				},
 			},
@@ -954,21 +954,21 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expectedSecrets := []*corev1.Secret{
 			{
-				TypeMeta: v1.TypeMeta{
+				TypeMeta: metav1.TypeMeta{
 					Kind:       "Secret",
 					APIVersion: "v1",
 				},
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].GetType())),
+						strings.ToLower(ints.GetResults()[0].GetType())),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
 						secrets.TypeLabelKey: secrets.CredLabelVal,
 					},
 				},
 				Data: map[string][]byte{
-					secrets.PasswordField: []byte(ints.Results[0].GetPassword()),
+					secrets.PasswordField: []byte(ints.GetResults()[0].GetPassword()),
 				},
 			},
 		}
@@ -986,7 +986,7 @@ func Test_buildIntegrations(t *testing.T) {
 		const includeSecrets = false
 		ints := &atlasv2.PaginatedIntegration{
 			Links: nil,
-			Results: []atlasv2.ThridPartyIntegration{
+			Results: &[]atlasv2.ThirdPartyIntegration{
 				{
 
 					Type:             pointer.Get("PROMETHEUS"),
@@ -1005,13 +1005,13 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expected := []akov2project.Integration{
 			{
-				Type:             ints.Results[0].GetType(),
-				ServiceDiscovery: ints.Results[0].GetServiceDiscovery(),
-				UserName:         ints.Results[0].GetUsername(),
+				Type:             ints.GetResults()[0].GetType(),
+				ServiceDiscovery: ints.GetResults()[0].GetServiceDiscovery(),
+				UserName:         ints.GetResults()[0].GetUsername(),
 				PasswordRef: akov2common.ResourceRefNamespaced{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].GetType())),
+						strings.ToLower(ints.GetResults()[0].GetType())),
 					Namespace: targetNamespace,
 				},
 			},
@@ -1019,14 +1019,14 @@ func Test_buildIntegrations(t *testing.T) {
 
 		expectedSecrets := []*corev1.Secret{
 			{
-				TypeMeta: v1.TypeMeta{
+				TypeMeta: metav1.TypeMeta{
 					Kind:       "Secret",
 					APIVersion: "v1",
 				},
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name: fmt.Sprintf("%s-integration-%s",
 						strings.ToLower(projectID),
-						strings.ToLower(ints.Results[0].GetType())),
+						strings.ToLower(ints.GetResults()[0].GetType())),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
 						secrets.TypeLabelKey: secrets.CredLabelVal,
@@ -1055,7 +1055,7 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 	t.Run("Can convert maintenance window", func(t *testing.T) {
 		mw := &atlasv2.GroupMaintenanceWindow{
 			DayOfWeek:            3,
-			HourOfDay:            10,
+			HourOfDay:            pointer.Get(10),
 			StartASAP:            pointer.Get(false),
 			AutoDeferOnceEnabled: pointer.Get(false),
 		}
@@ -1069,9 +1069,9 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 
 		expected := akov2project.MaintenanceWindow{
 			DayOfWeek: mw.DayOfWeek,
-			HourOfDay: mw.HourOfDay,
-			AutoDefer: *mw.AutoDeferOnceEnabled,
-			StartASAP: *mw.StartASAP,
+			HourOfDay: mw.GetHourOfDay(),
+			AutoDefer: mw.GetAutoDeferOnceEnabled(),
+			StartASAP: mw.GetStartASAP(),
 			Defer:     false,
 		}
 
@@ -1084,7 +1084,7 @@ func Test_buildMaintenanceWindows(t *testing.T) {
 func Test_buildNetworkPeering(t *testing.T) {
 	ctl := gomock.NewController(t)
 
-	peerProvider := atlasmocks.NewMockPeeringConnectionLister(ctl)
+	peerProvider := mocks.NewMockPeeringConnectionLister(ctl)
 	t.Run("Can convert Peering connections", func(t *testing.T) {
 		peeringConnectionAWS := &atlasv2.BaseNetworkPeeringConnectionSettings{
 			AccepterRegionName:  pointer.Get("TestRegionName"),
@@ -1103,10 +1103,10 @@ func Test_buildNetworkPeering(t *testing.T) {
 			*peeringConnectionAWS,
 		}
 
-		listOptions := atlas.ListOptions{ItemsPerPage: MaxItems}
-		containerListOptionAWS := &atlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(akov2provider.ProviderAWS)}
-		containerListOptionGCP := &atlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(akov2provider.ProviderGCP)}
-		containerListOptionAzure := &atlas.ContainersListOptions{ListOptions: listOptions, ProviderName: string(akov2provider.ProviderAzure)}
+		listOptions := store.ListOptions{ItemsPerPage: MaxItems}
+		containerListOptionAWS := &store.ContainersListOptions{ListOptions: listOptions, ProviderName: string(akov2provider.ProviderAWS)}
+		containerListOptionGCP := &store.ContainersListOptions{ListOptions: listOptions, ProviderName: string(akov2provider.ProviderGCP)}
+		containerListOptionAzure := &store.ContainersListOptions{ListOptions: listOptions, ProviderName: string(akov2provider.ProviderAzure)}
 
 		peerProvider.EXPECT().PeeringConnections(projectID, containerListOptionAWS).Return(peeringConnections, nil)
 		peerProvider.EXPECT().PeeringConnections(projectID, containerListOptionGCP).Return(nil, nil)
@@ -1147,7 +1147,7 @@ func Test_buildPrivateEndpoints(t *testing.T) {
 			RegionName:          pointer.Get("US_EAST_1"),
 			EndpointServiceName: nil,
 			ErrorMessage:        nil,
-			InterfaceEndpoints:  []string{"vpce-123456"},
+			InterfaceEndpoints:  &[]string{"vpce-123456"},
 			Status:              nil,
 		}
 
@@ -1254,10 +1254,10 @@ func Test_buildCustomRoles(t *testing.T) {
 	t.Run("Can build custom roles", func(t *testing.T) {
 		data := []atlasv2.UserCustomDBRole{
 			{
-				Actions: []atlasv2.DatabasePrivilegeAction{
+				Actions: &[]atlasv2.DatabasePrivilegeAction{
 					{
 						Action: "TestAction",
-						Resources: []atlasv2.DatabasePermittedNamespaceResource{
+						Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
 							{
 								Collection: "TestCollection",
 								Db:         "TestDB",
@@ -1266,7 +1266,7 @@ func Test_buildCustomRoles(t *testing.T) {
 						},
 					},
 				},
-				InheritedRoles: []atlasv2.DatabaseInheritedRole{
+				InheritedRoles: &[]atlasv2.DatabaseInheritedRole{
 					{
 						Db:   "TestDBMAIN",
 						Role: "ADMIN",
@@ -1284,18 +1284,18 @@ func Test_buildCustomRoles(t *testing.T) {
 				Name: role.RoleName,
 				InheritedRoles: []akov2.Role{
 					{
-						Name:     role.InheritedRoles[0].Role,
-						Database: role.InheritedRoles[0].Db,
+						Name:     role.GetInheritedRoles()[0].Role,
+						Database: role.GetInheritedRoles()[0].Db,
 					},
 				},
 				Actions: []akov2.Action{
 					{
-						Name: role.Actions[0].Action,
+						Name: role.GetActions()[0].Action,
 						Resources: []akov2.Resource{
 							{
-								Cluster:    &role.Actions[0].Resources[0].Cluster,
-								Database:   &role.Actions[0].Resources[0].Db,
-								Collection: &role.Actions[0].Resources[0].Collection,
+								Cluster:    &role.GetActions()[0].GetResources()[0].Cluster,
+								Database:   &role.GetActions()[0].GetResources()[0].Db,
+								Collection: &role.GetActions()[0].GetResources()[0].Collection,
 							},
 						},
 					},
@@ -1326,4 +1326,59 @@ func Test_firstElementOrEmpty(t *testing.T) {
 	t.Run("should return first item when slice has multiple items", func(t *testing.T) {
 		assert.Equal(t, "1", firstElementOrZeroValue([]string{"1", "2", "3"}))
 	})
+}
+
+func TestToMatcherErrors(t *testing.T) {
+	testCases := []struct {
+		title            string
+		m                atlasv2.StreamsMatcher
+		expectedErrorMsg string
+	}{
+		{
+			title:            "Empty map renders nil map error",
+			m:                atlasv2.StreamsMatcher{},
+			expectedErrorMsg: "matcher is empty",
+		},
+		{
+			title:            "Missing fieldName renders key not set error",
+			m:                atlasv2.StreamsMatcher{Operator: "op", Value: "value"},
+			expectedErrorMsg: "fieldName is not set",
+		},
+		{
+			title:            "Misnamed fieldName renders key not found error",
+			m:                atlasv2.StreamsMatcher{Operator: "op"},
+			expectedErrorMsg: "fieldName is not set",
+		},
+		{
+			title:            "Missing operator renders key not found error",
+			m:                atlasv2.StreamsMatcher{FieldName: "name"},
+			expectedErrorMsg: "operator is not set",
+		},
+		{
+			title:            "Missing value renders key not found error",
+			m:                atlasv2.StreamsMatcher{Operator: "op", FieldName: "fieldName"},
+			expectedErrorMsg: "value is not set",
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.title, func(t *testing.T) {
+			_, err := toMatcher(tc.m)
+			log.Printf("err=%v", err)
+			assert.ErrorContains(t, err, tc.expectedErrorMsg)
+		})
+	}
+}
+
+func TestConvertMatchers(t *testing.T) {
+	configs := []atlasv2.StreamsMatcher{
+		{},
+		{FieldName: "field"},
+		{FieldName: "field", Operator: "op"},
+		{FieldName: "field", Operator: "op", Value: "value"},
+	}
+	expected := []akov2.Matcher{
+		{FieldName: "field", Operator: "op", Value: "value"},
+	}
+	matchers := convertMatchers(configs)
+	assert.Equal(t, expected, matchers)
 }

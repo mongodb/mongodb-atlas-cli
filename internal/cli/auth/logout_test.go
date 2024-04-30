@@ -21,11 +21,11 @@ import (
 	"context"
 	"testing"
 
-	"github.com/andreaangiolillo/mongocli-test/internal/cli"
-	"github.com/andreaangiolillo/mongocli-test/internal/flag"
-	"github.com/andreaangiolillo/mongocli-test/internal/mocks"
-	"github.com/andreaangiolillo/mongocli-test/internal/test"
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
 )
 
@@ -88,6 +88,28 @@ func Test_logoutOpts_Run_Keep(t *testing.T) {
 		EXPECT().
 		RevokeToken(ctx, gomock.Any(), gomock.Any()).
 		Return(nil, nil).
+		Times(1)
+
+	mockConfig.
+		EXPECT().
+		SetAccessToken("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetRefreshToken("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetProjectID("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetOrgID("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		Save().
+		Return(nil).
 		Times(1)
 
 	require.NoError(t, opts.Run(ctx))

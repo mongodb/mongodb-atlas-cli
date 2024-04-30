@@ -22,10 +22,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/andreaangiolillo/mongocli-test/test/e2e"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 func TestEvents(t *testing.T) {
@@ -36,15 +36,16 @@ func TestEvents(t *testing.T) {
 			eventsEntity,
 			projectEntity,
 			"list",
+			"--omitCount",
 			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		require.NoError(t, err, string(resp))
 		var events admin.GroupPaginatedEvent
 		require.NoError(t, json.Unmarshal(resp, &events))
-		assert.NotEmpty(t, events.Results)
+		assert.NotEmpty(t, events.GetResults())
 	})
 
 	t.Run("List Organization Events", func(t *testing.T) {
@@ -52,15 +53,16 @@ func TestEvents(t *testing.T) {
 			eventsEntity,
 			orgEntity,
 			"list",
-			"--minDate="+time.Now().Add(-time.Hour*time.Duration(24)).Format("2006-01-02"),
+			"--omitCount",
+			"--minDate="+time.Now().Add(-time.Hour*time.Duration(24)).Format("2006-01-02T15:04:05-0700"),
 			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		require.NoError(t, err, string(resp))
 		var events admin.OrgPaginatedEvent
 		require.NoError(t, json.Unmarshal(resp, &events))
-		assert.NotEmpty(t, events.Results)
+		assert.NotEmpty(t, events.GetResults())
 	})
 }

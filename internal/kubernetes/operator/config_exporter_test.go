@@ -19,11 +19,11 @@ package operator
 import (
 	"testing"
 
-	mocks "github.com/andreaangiolillo/mongocli-test/internal/mocks/atlas"
-	"github.com/andreaangiolillo/mongocli-test/internal/pointer"
 	"github.com/go-test/deep"
 	"github.com/golang/mock/gomock"
-	"go.mongodb.org/atlas-sdk/v20231115002/admin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"go.mongodb.org/atlas-sdk/v20231115012/admin"
 )
 
 const projectID = "TestProjectID"

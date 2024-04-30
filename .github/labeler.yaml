@@ -3,7 +3,7 @@ issues: True
 labels:
   - label: "kubernetes"
     type: "issue"
-    body: "^kubernetes*"
+    body: "kubernetes*"
   - label: "need-doc-review"
     type: "pull_request"
     draft: False

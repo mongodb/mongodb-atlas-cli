@@ -53,11 +53,17 @@ func (opts *UpdateOpts) InitStore(ctx context.Context) func() error {
 	}
 }
 
+func (opts *UpdateOpts) fillReadOnlyValues(config *atlasv2.ConnectedOrgConfig) {
+	config.OrgId = opts.ConfigOrgID()
+}
+
 func (opts *UpdateOpts) Run() error {
 	orgConfig := new(atlasv2.ConnectedOrgConfig)
 	if err := file.Load(opts.fs, opts.file, orgConfig); err != nil {
 		return err
 	}
+
+	opts.fillReadOnlyValues(orgConfig)
 
 	params := &atlasv2.UpdateConnectedOrgConfigApiParams{
 		FederationSettingsId: opts.federationSettingsID,

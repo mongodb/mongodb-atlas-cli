@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
 )
 
 type UpdateOpts struct {
@@ -88,7 +88,7 @@ func UpdateBuilder() *cobra.Command {
 		Use:   "update",
 		Short: "Update One Org Config Connected to One Federation Setting.",
 		Args:  cobra.NoArgs,
-		Example: `  # Update connected orgs config the current profile org  and federationSettingsId 5d1113b25a115342acc2d1aa 
+		Example: `  # Update the connected orgs config the current profile org  and federationSettingsId 5d1113b25a115342acc2d1aa 
 			atlas federatedAuthentication connectedOrgs update  --federationSettingsId 5d1113b25a115342acc2d1aa 
 		`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {

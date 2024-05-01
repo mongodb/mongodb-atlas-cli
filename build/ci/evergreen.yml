@@ -218,6 +218,7 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,generic
+          IDENTITY_PROVIDER_ID: ${identity_provider_id}
   - name: atlas_gov_generic_e2e
     tags: ["e2e","generic","atlas"]
     must_have_test_results: true

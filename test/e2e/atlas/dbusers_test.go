@@ -167,6 +167,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 			"--username", oidcUsername,
 			"--oidcType",
 			"IDP_GROUP",
+			"--scope", scopeClusterDataLake,
 			"-o=json",
 		)
 

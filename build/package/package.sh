@@ -27,7 +27,7 @@ export VERSION_GIT
 
 echo "$GITHUB_APP_PEM" > app.pem
 GITHUB_TOKEN="$(go run ./tools/github-token -pem app.pem -app_id "$GITHUB_APP_ID" -owner 'mongodb' -repo 'mongodb-atlas-cli')"
-
+rm app.pem
 export GITHUB_TOKEN
 
 VERSION_GIT="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"

@@ -7,3 +7,5 @@ labels:
   - label: "need-doc-review"
     type: "pull_request"
     draft: False
+    files:
+      - "*.txt"

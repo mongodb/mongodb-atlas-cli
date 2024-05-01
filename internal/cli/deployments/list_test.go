@@ -33,7 +33,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/v20231115012/admin"
+	"go.mongodb.org/atlas-sdk/v20231115013/admin"
 )
 
 func TestList_Run(t *testing.T) {

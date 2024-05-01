@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	admin "go.mongodb.org/atlas-sdk/v20231115013/admin"
 )
 
 // MockOrganizationEventLister is a mock of OrganizationEventLister interface.

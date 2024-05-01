@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
 )
 
 func TestIdentityProviders(t *testing.T) {
@@ -284,6 +284,52 @@ func TestIdentityProviders(t *testing.T) {
 		assert.NotContains(t, config.GetDataAccessIdentityProviderIds(), oidcIWorkforceIdpID)
 	})
 
+	t.Run("Update connected org config", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			connectedOrgsConfigsEntity,
+			"update",
+			"--federationSettingsId",
+			federationSettingsID,
+			"--file",
+			"data/connected_org_config.json",
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var config atlasv2.ConnectedOrgConfig
+		req.NoError(json.Unmarshal(resp, &config))
+
+		assert.NotEmpty(t, config.GetDomainAllowList())
+	})
+
+	t.Run("Update connected org config back", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			connectedOrgsConfigsEntity,
+			"update",
+			"--federationSettingsId",
+			federationSettingsID,
+			"--file",
+			"data/connected_org_config_update.json",
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var config atlasv2.ConnectedOrgConfig
+		req.NoError(json.Unmarshal(resp, &config))
+
+		assert.Empty(t, config.GetDomainAllowList())
+	})
+
 	t.Run("List OIDC IdPs WORKFORCE", func(_ *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
@@ -372,6 +418,23 @@ func TestIdentityProviders(t *testing.T) {
 		assert.NotEmpty(t, provider.GetId())
 	})
 
+	t.Run("Revoke JWK from OIDC IdP WORKFORCE", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			identityProviderEntity,
+			"revokeJwk",
+			oidcIWorkforceIdpID,
+			"--federationSettingsId",
+			federationSettingsID,
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+	})
+
 	t.Run("Delete OIDC IdP WORKFORCE", func(_ *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
@@ -382,6 +445,23 @@ func TestIdentityProviders(t *testing.T) {
 			"--federationSettingsId",
 			federationSettingsID,
 			"--force",
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+	})
+
+	t.Run("Revoke JWK from OIDC IdP WORKLOAD", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			identityProviderEntity,
+			"revokeJwk",
+			oidcWorkloadIdpID,
+			"--federationSettingsId",
+			federationSettingsID,
 			"-o=json",
 		)
 

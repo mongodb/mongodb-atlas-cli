@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"io"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_streams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store StreamsLister,StreamsDescriber,StreamsCreator,StreamsDeleter,StreamsUpdater,StreamsDownloader,ConnectionCreator,ConnectionDeleter,ConnectionUpdater,StreamsConnectionDescriber,StreamsConnectionLister

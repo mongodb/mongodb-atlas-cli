@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
 )
 
 type ConnectOpts struct {
@@ -42,7 +42,7 @@ const (
 	saml = "SAML"
 )
 
-const updateTemplate = `Connected Org Config with {{range $index, $element := .DataAccessIdentityProviderIds}}{{if $index}}, {{end}}{{$element}}{{end}}.`
+const connectTemplate = `Connected Org Config with {{range $index, $element := .DataAccessIdentityProviderIds}}{{if $index}}, {{end}}{{$element}}{{end}}.`
 
 func (opts *ConnectOpts) InitStore(ctx context.Context) func() error {
 	return func() error {
@@ -114,7 +114,7 @@ func ConnectBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.ValidateOrgID,
 				opts.InitStore(cmd.Context()),
-				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
+				opts.InitOutput(cmd.OutOrStdout(), connectTemplate),
 			)
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {

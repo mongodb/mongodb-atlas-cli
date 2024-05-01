@@ -53,6 +53,7 @@ Related Commands
 * :ref:`atlas-federatedAuthentication-federationSettings-identityProvider-delete` - Remove the specified identity provider from your federation settings.
 * :ref:`atlas-federatedAuthentication-federationSettings-identityProvider-describe` - Describe the specified identity provider from your federation settings.
 * :ref:`atlas-federatedAuthentication-federationSettings-identityProvider-list` - List the identity providers from your federation settings.
+* :ref:`atlas-federatedAuthentication-federationSettings-identityProvider-revokeJwk` - Revoke the JWK token from the specified identity provider from your federation settings.
 * :ref:`atlas-federatedAuthentication-federationSettings-identityProvider-update` - Update Federated Authentication Identity Providers.
 
 
@@ -63,5 +64,6 @@ Related Commands
    delete </command/atlas-federatedAuthentication-federationSettings-identityProvider-delete>
    describe </command/atlas-federatedAuthentication-federationSettings-identityProvider-describe>
    list </command/atlas-federatedAuthentication-federationSettings-identityProvider-list>
+   revokeJwk </command/atlas-federatedAuthentication-federationSettings-identityProvider-revokeJwk>
    update </command/atlas-federatedAuthentication-federationSettings-identityProvider-update>
 

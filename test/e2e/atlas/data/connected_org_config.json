@@ -1,13 +1,4 @@
 {
   "domainAllowList": ["https://accounts.google.com"],
-  "domainRestrictionEnabled": false,
-  "userConflicts": [
-    {
-    "emailAddress": "user@example.com",
-    "federationSettingsId": "32b6e34b3d91647abb20e7b8",
-    "firstName": "test",
-    "lastName": "test",
-    "userId": "32b6e34b3d91647abb20e7b8"
-    }
-  ]
+  "domainRestrictionEnabled": false
 }

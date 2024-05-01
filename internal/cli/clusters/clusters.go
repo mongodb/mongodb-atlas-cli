@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/sampledata"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/search"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

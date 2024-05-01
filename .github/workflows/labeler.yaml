@@ -8,8 +8,6 @@ on:
       - reopened
       - synchronize
       - ready_for_review
-    paths:
-      - 'docs/**'
 jobs:
   labeler:
     name: Add Label to PRs and Issues

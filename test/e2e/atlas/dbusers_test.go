@@ -133,7 +133,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	oidcUsername := fmt.Sprintf("6627fbb7bb5b243e1ebca816/%s", username)
+	oidcUsername := "6627fbb7bb5b243e1ebca816/" + username
 
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {

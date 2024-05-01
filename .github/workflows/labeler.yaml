@@ -1,9 +1,12 @@
-name: Issue Labeler
+name: Issue and PRs Labeler
 on:
   issues:
     types: [opened, edited]
   pull_request:
     types:
+      - opened
+      - reopened
+      - synchronize
       - ready_for_review
 jobs:
   labeler:

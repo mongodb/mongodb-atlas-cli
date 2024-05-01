@@ -107,7 +107,7 @@ func TestAtlasProjects(t *testing.T) {
 		a.ElementsMatch(expectedTags, project.GetTags())
 	})
 
-	updatedProjectName := fmt.Sprintf("%s-updated", projectName)
+	updatedProjectName := projectName + "-updated"
 	updateTests := []struct {
 		name                string
 		filename            string

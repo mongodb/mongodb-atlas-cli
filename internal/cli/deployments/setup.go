@@ -794,7 +794,7 @@ func (opts *SetupOpts) runAtlas(ctx context.Context) error {
 
 	// replace deployment name with cluster name
 	if opts.DeploymentName != "" {
-		newArgs = append(newArgs, fmt.Sprintf("--%s", flag.ClusterName), opts.DeploymentName)
+		newArgs = append(newArgs, "--"+flag.ClusterName, opts.DeploymentName)
 	}
 
 	// update args

@@ -16,7 +16,6 @@
 package brew_test
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -36,7 +35,7 @@ func TestAtlasCLIConfig(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	tempDirEnv := fmt.Sprintf("XDG_CONFIG_HOME=%s", os.TempDir()) // make sure no config.toml is detected
+	tempDirEnv := "XDG_CONFIG_HOME=" + os.TempDir() // make sure no config.toml is detected
 
 	t.Run("config ls", func(t *testing.T) {
 		cmd := exec.Command(cliPath, "config", "ls")

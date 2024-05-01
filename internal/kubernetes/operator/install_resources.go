@@ -305,7 +305,7 @@ func (ir *InstallResources) addDeployment(ctx context.Context, config map[string
 		for i := range obj.Spec.Template.Spec.Containers[0].Args {
 			arg := obj.Spec.Template.Spec.Containers[0].Args[i]
 			if arg == "--atlas-domain=https://cloud.mongodb.com/" {
-				obj.Spec.Template.Spec.Containers[0].Args[i] = fmt.Sprintf("--atlas-domain=%s", atlasDomain)
+				obj.Spec.Template.Spec.Containers[0].Args[i] = "--atlas-domain=" + atlasDomain
 			}
 		}
 

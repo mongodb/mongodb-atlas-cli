@@ -601,7 +601,7 @@ func TestBuildProjectConnectionSecret(t *testing.T) {
 				APIVersion: "v1",
 			},
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      strings.ToLower(fmt.Sprintf("%s-credentials", name)),
+				Name:      strings.ToLower(name + credentialSuffix),
 				Namespace: namespace,
 				Labels: map[string]string{
 					secrets.TypeLabelKey: secrets.CredLabelVal,
@@ -631,7 +631,7 @@ func TestBuildProjectConnectionSecret(t *testing.T) {
 				APIVersion: "v1",
 			},
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      strings.ToLower(fmt.Sprintf("%s-credentials", name)),
+				Name:      strings.ToLower(name + credentialSuffix),
 				Namespace: namespace,
 				Labels: map[string]string{
 					secrets.TypeLabelKey: secrets.CredLabelVal,

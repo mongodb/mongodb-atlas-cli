@@ -15,8 +15,6 @@
 package setup
 
 import (
-	"fmt"
-
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
@@ -49,7 +47,7 @@ func newClusterProviderQuestion() *survey.Question {
 func newAccessListQuestion(publicIP, message string) survey.Prompt {
 	extraInfo := "  Set to 0.0.0.0/0 if you want to enable connection from anywhere; use comma (,) to separate multiple entries."
 	return &survey.Input{
-		Message: fmt.Sprintf("IP Access List Entry%s", message),
+		Message: "IP Access List Entry" + message,
 		Help:    usage.NetworkAccessListIPEntry + extraInfo,
 		Default: publicIP,
 	}
@@ -72,7 +70,7 @@ func newDBUserPasswordQuestion(password, message string) *survey.Question {
 	return &survey.Question{
 		Name: "DBUserPassword",
 		Prompt: &survey.Input{
-			Message: fmt.Sprintf("Database User Password%s", message),
+			Message: "Database User Password" + message,
 			Help:    usage.Password,
 			Default: password,
 		},

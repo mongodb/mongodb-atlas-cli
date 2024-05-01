@@ -88,7 +88,7 @@ func (v *OperatorVersion) DownloadResource(ctx context.Context, version, path st
 		operatorRepository,
 		path,
 		&github.RepositoryContentGetOptions{
-			Ref: fmt.Sprintf("v%s", version),
+			Ref: "v" + version,
 		})
 
 	if err != nil {

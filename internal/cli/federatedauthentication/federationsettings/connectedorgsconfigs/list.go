@@ -16,7 +16,6 @@ package connectedorgsconfigs
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
@@ -24,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
 )
 
 type ListOpts struct {
@@ -43,14 +42,12 @@ func (opts *ListOpts) Run() error {
 	params := &atlasv2.ListConnectedOrgConfigsApiParams{
 		FederationSettingsId: opts.federationSettingsID,
 	}
-	fmt.Println("HELLO")
 
 	r, err := opts.store.ListConnectedOrgConfigs(params)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("passed here")
 	return opts.Print(r)
 }
 
@@ -74,9 +71,7 @@ func ListBuilder() *cobra.Command {
 		Short: "Describe a Connected Org Config.",
 		Args:  cobra.NoArgs,
 		Example: `  # List all connected org config with federationSettingsId 5d1113b25a115342acc2d1aa 
-			atlas federatedAuthentication connectedOrgsConfig connect --federationSettingsId 5d1113b25a115342acc2d1aa 
-			# Describe a connected org config with the org with ID 7d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa 
-			atlas federatedAuthentication connectedOrgs connect --orgId 7d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
+			atlas federatedAuthentication connectedOrgsConfig list --federationSettingsId 5d1113b25a115342acc2d1aa 
 		`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

@@ -316,7 +316,7 @@ func TestIdentityProviders(t *testing.T) {
 			"--federationSettingsId",
 			federationSettingsID,
 			"--file",
-			"data/connected_org_config_upadte.json",
+			"data/connected_org_config_update.json",
 			"-o=json",
 		)
 

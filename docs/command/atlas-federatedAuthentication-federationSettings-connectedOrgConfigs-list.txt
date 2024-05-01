@@ -82,5 +82,5 @@ Examples
 .. code-block::
 
    # List all connected org config with federationSettingsId 5d1113b25a115342acc2d1aa 
- 			atlas federatedAuthentication connectedOrgsConfig list --federationSettingsId 5d1113b25a115342acc2d1aa 
- 		
+   atlas federatedAuthentication connectedOrgsConfig list --federationSettingsId 5d1113b25a115342acc2d1aa 
+

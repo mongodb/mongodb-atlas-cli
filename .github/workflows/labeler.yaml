@@ -3,7 +3,11 @@ on:
   issues:
     types: [opened, edited]
   pull_request:
-    types: [ready_for_review]
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
   workflow_dispatch:
 jobs:
   labeler:

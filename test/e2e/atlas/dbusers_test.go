@@ -133,6 +133,8 @@ func TestDBUsersWithStdin(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
+	oidcUsername := fmt.Sprintf("6627fbb7bb5b243e1ebca816/%s", username)
+
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -156,8 +158,24 @@ func TestDBUsersWithStdin(t *testing.T) {
 		testCreateUserCmd(t, cmd, username)
 	})
 
+	t.Run("Create OIDC user", func(t *testing.T) {
+		require.NoError(t, err)
+		cmd := exec.Command(cliPath,
+			dbusersEntity,
+			"create",
+			"atlasAdmin",
+			"--username", oidcUsername,
+			"--oidcType",
+			"IDP_GROUP",
+			"-o=json",
+		)
+
+		testCreateUserCmd(t, cmd, oidcUsername)
+	})
+
 	t.Run("Describe", func(t *testing.T) {
 		testDescribeUser(t, cliPath, username)
+		testDescribeUser(t, cliPath, oidcUsername)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -176,6 +194,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		testDeleteUser(t, cliPath, dbusersEntity, username)
+		testDeleteUser(t, cliPath, dbusersEntity, oidcUsername)
 	})
 }
 

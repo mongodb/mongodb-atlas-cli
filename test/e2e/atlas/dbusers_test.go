@@ -134,6 +134,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 	}
 
 	idpID, _ := os.LookupEnv("IDENTITY_PROVIDER_ID")
+	require.NotEmpty(t, idpID)
 	oidcUsername := idpID + "/" + username
 
 	cliPath, err := e2e.AtlasCLIBin()
@@ -160,7 +161,6 @@ func TestDBUsersWithStdin(t *testing.T) {
 	})
 
 	t.Run("Create OIDC user", func(t *testing.T) {
-		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"create",

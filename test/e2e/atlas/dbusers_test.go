@@ -133,8 +133,8 @@ func TestDBUsersWithStdin(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	idpId, _ := os.LookupEnv("IDENTITY_PROVIDER_ID")
-	oidcUsername := idpId + "/" + username
+	idpID, _ := os.LookupEnv("IDENTITY_PROVIDER_ID")
+	oidcUsername := idpID + "/" + username
 
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {

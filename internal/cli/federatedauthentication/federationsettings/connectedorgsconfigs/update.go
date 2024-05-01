@@ -88,8 +88,8 @@ func UpdateBuilder() *cobra.Command {
 		Use:   "update",
 		Short: "Update One Org Config Connected to One Federation Setting.",
 		Args:  cobra.NoArgs,
-		Example: `  # Update the connected orgs config the current profile org and federationSettingsId 5d1113b25a115342acc2d1aa and file in /tmp/config.json
-			atlas federatedAuthentication connectedOrgs update --federationSettingsId 5d1113b25a115342acc2d1aa --file /tmp/config.json
+		Example: `  # Update the connected orgs config the current profile org and federationSettingsId 5d1113b25a115342acc2d1aa using the JSON configuration file config.json
+			atlas federatedAuthentication connectedOrgs update --federationSettingsId 5d1113b25a115342acc2d1aa --file config.json
 		`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

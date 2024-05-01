@@ -397,6 +397,30 @@ func TestIdentityProviders(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &provider))
 	})
 
+	t.Run("List connectedOrgsConfig", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			connectedOrgsConfigsEntity,
+			"list",
+			"--federationSettingsId",
+			federationSettingsID,
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		req.NoError(err, string(resp))
+
+		var config atlasv2.PaginatedConnectedOrgConfigs
+		req.NoError(json.Unmarshal(resp, &config))
+
+		assert.NotEmpty(t, config.GetResults())
+		assert.Len(t, config.GetResults(), 1)
+		assert.NotContains(t, config.GetResults()[0].GetDataAccessIdentityProviderIds(), oidcIWorkforceIdpID)
+		assert.NotContains(t, config.GetResults()[0].GetDataAccessIdentityProviderIds(), oidcWorkloadIdpID)
+	})
+
 	t.Run("Describe OIDC IdP WORKFORCE", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,

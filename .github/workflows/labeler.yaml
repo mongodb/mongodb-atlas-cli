@@ -8,6 +8,9 @@ on:
       - reopened
       - synchronize
       - ready_for_review
+    paths:
+      - 'docs/**'
+
   workflow_dispatch:
 jobs:
   labeler:

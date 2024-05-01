@@ -30,7 +30,7 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.InputOpts
-	*cli.ListOpts
+	cli.ListOpts
 	store store.ConnectedOrgConfigsLister
 
 	federationSettingsID string
@@ -68,7 +68,7 @@ func (opts *ListOpts) InitStore(ctx context.Context) func() error {
 
 // atlas federatedAuthentication connectedOrgsConfig list --federationSettingsId federationSettingsId [-o/--output output].
 func ListBuilder() *cobra.Command {
-	opts := &ListOpts{ListOpts: &cli.ListOpts{}}
+	opts := new(ListOpts)
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "Describe a Connected Org Config.",

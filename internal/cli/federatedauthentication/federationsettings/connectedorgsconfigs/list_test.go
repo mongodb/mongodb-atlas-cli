@@ -37,7 +37,7 @@ func TestList_Run(t *testing.T) {
 		OutputOpts: cli.OutputOpts{
 			Template: listTemplate,
 		},
-		ListOpts: &cli.ListOpts{},
+		ListOpts: cli.ListOpts{},
 	}
 
 	idpID := "id"

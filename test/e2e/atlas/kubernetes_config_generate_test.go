@@ -274,7 +274,7 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 			strconv.Itoa(*newAlertConfig.Notifications[0].DelayMin),
 			fmt.Sprintf("--notificationSmsEnabled=%v", pointer.GetOrZero(newAlertConfig.Notifications[0].SMSEnabled)),
 			fmt.Sprintf("--notificationEmailEnabled=%v", pointer.GetOrZero(newAlertConfig.Notifications[0].EmailEnabled)),
-			"--matcherFieldNames",
+			"--matcherFieldName",
 			newAlertConfig.Matchers[0].FieldName,
 			"--matcherOperator",
 			newAlertConfig.Matchers[0].Operator,

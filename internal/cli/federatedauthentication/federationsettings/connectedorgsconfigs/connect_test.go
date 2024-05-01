@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
 )
 
 func TestConnect_Run(t *testing.T) {
@@ -41,21 +41,28 @@ func TestConnect_Run(t *testing.T) {
 		},
 	}
 
+	ids := []string{"id"}
+	expected := &atlasv2.ConnectedOrgConfig{
+		OrgId:                         "id",
+		DataAccessIdentityProviderIds: &ids,
+	}
+
 	mockStore.
 		EXPECT().
 		UpdateConnectedOrgConfig(gomock.Any()).
-		Return(&atlasv2.ConnectedOrgConfig{}, nil).
+		Return(expected, nil).
 		Times(1)
 
 	describeStore.
 		EXPECT().
 		GetConnectedOrgConfig(gomock.Any()).
-		Return(&atlasv2.ConnectedOrgConfig{}, nil).
+		Return(expected, nil).
 		Times(1)
 
 	if err := ConnectOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+	test.VerifyOutputTemplate(t, connectTemplate, expected)
 }
 
 func TestConnectBuilder(t *testing.T) {

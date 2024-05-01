@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
 )
 
 type CreateOpts struct {
@@ -83,7 +83,7 @@ func (opts *CreateOpts) isOIDCSet() bool {
 }
 
 func (opts *CreateOpts) isExternal() bool {
-	return opts.isX509Set() || opts.isAWSIAMSet() || opts.isLDAPSet() || opts.isOIDCSet()
+	return opts.isX509Set() || opts.isAWSIAMSet() || opts.isLDAPSet()
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -144,7 +144,7 @@ func (opts *CreateOpts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 }
 
 func (opts *CreateOpts) Prompt() error {
-	if opts.isExternal() || opts.password != "" {
+	if opts.isExternal() || opts.isOIDCSet() || opts.password != "" {
 		return nil
 	}
 
@@ -197,7 +197,7 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create [builtInRole]...",
 		Short: "Create a database user for your project.",
-		Long: `If you set --ldapType, --x509Type, and --awsIAMType to NONE, Atlas authenticates this user through SCRAM-SHA. To learn more, see https://www.mongodb.com/docs/manual/core/security-scram/.
+		Long: `If you set --ldapType, --x509Type, --oidcType and --awsIAMType to NONE, Atlas authenticates this user through SCRAM-SHA. To learn more, see https://www.mongodb.com/docs/manual/core/security-scram/.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: `  # Create an Atlas database admin user named myAdmin for the project with ID 5e2211c17a3e5a48f5497de3:

@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
 )
 
 const (
@@ -133,6 +133,10 @@ func TestDBUsersWithStdin(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
+	idpID, _ := os.LookupEnv("IDENTITY_PROVIDER_ID")
+	require.NotEmpty(t, idpID)
+	oidcUsername := idpID + "/" + username
+
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -156,8 +160,24 @@ func TestDBUsersWithStdin(t *testing.T) {
 		testCreateUserCmd(t, cmd, username)
 	})
 
+	t.Run("Create OIDC user", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			dbusersEntity,
+			"create",
+			"atlasAdmin",
+			"--username", oidcUsername,
+			"--oidcType",
+			"IDP_GROUP",
+			"--scope", scopeClusterDataLake,
+			"-o=json",
+		)
+
+		testCreateUserCmd(t, cmd, oidcUsername)
+	})
+
 	t.Run("Describe", func(t *testing.T) {
 		testDescribeUser(t, cliPath, username)
+		testDescribeUser(t, cliPath, oidcUsername)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -176,6 +196,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		testDeleteUser(t, cliPath, dbusersEntity, username)
+		testDeleteUser(t, cliPath, dbusersEntity, oidcUsername)
 	})
 }
 

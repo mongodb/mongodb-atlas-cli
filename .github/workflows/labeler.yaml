@@ -1,15 +1,28 @@
-name: Issue Labeler
+name: Issue and PRs Labeler
 on:
   issues:
     types: [opened, edited]
-
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
 jobs:
-  triage:
+  labeler:
+    name: Add Label to PRs and Issues
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # Needed by labeler
+      issues: write # Needed by labeler
     steps:
-      - uses: github/issue-labeler@v3.4
+      - name: Checkout repo
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - name: Add Labels
+        uses: srvaroa/labeler@1eec6d9e7c5fa5864840279978680302f955fc37
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          configuration-path: .github/labeler.yaml
-          not-before: 2020-01-15T02:54:32Z
-          enable-versioned-regex: 0
+          config_path: .github/labeler.yaml
+          use_local_config: true

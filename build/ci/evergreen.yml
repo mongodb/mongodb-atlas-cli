@@ -84,6 +84,7 @@ functions:
           - E2E_TIMEOUT
           - E2E_SERVERLESS_INSTANCE_NAME
           - E2E_PARALLEL
+          - IDENTITY_PROVIDER_ID
           - revision
         env:
           <<: *go_env
@@ -218,6 +219,7 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,generic
+          IDENTITY_PROVIDER_ID: ${identity_provider_id}
   - name: atlas_gov_generic_e2e
     tags: ["e2e","generic","atlas"]
     must_have_test_results: true
@@ -236,6 +238,7 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
           E2E_TAGS: atlas,generic
+          IDENTITY_PROVIDER_ID: ${identity_provider_id}
   # This is all about cluster which tends to be slow to get a healthy one
   - name: atlas_clusters_flags_e2e
     tags: ["e2e","clusters","atlas"]

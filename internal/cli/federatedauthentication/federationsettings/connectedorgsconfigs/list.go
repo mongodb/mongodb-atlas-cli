@@ -30,17 +30,20 @@ type ListOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	cli.InputOpts
-	store store.ConnectedOrgConfigLister
+	*cli.ListOpts
+	store store.ConnectedOrgConfigsLister
 
 	federationSettingsID string
 }
 
-const listTemplate = `ORG ID	DENTITY PROVIDER ID	DATA ACCESS IDENTITY PRODIVER IDs{{range valueOrEmptySlice .Results}}
+const listTemplate = `ORG ID	IDENTITY PROVIDER ID	DATA ACCESS IDENTITY PRODIVER IDs{{range valueOrEmptySlice .Results}}
 {{.OrgId}}	{{if .IdentityProviderId }}	{{ .IdentityProviderId }}{{else}}N/A{{end}}	{{if and .DataAccessIdentityProviderIds (gt (len .DataAccessIdentityProviderIds) 0)}}{{range $index, $element := .DataAccessIdentityProviderIds}}{{if $index}}, {{end}}{{$element}}{{end}}{{else}}N/A{{end}}{{end}}`
 
 func (opts *ListOpts) Run() error {
 	params := &atlasv2.ListConnectedOrgConfigsApiParams{
 		FederationSettingsId: opts.federationSettingsID,
+		ItemsPerPage:         &opts.ItemsPerPage,
+		PageNum:              &opts.PageNum,
 	}
 
 	r, err := opts.store.ListConnectedOrgConfigs(params)
@@ -65,7 +68,7 @@ func (opts *ListOpts) InitStore(ctx context.Context) func() error {
 
 // atlas federatedAuthentication connectedOrgsConfig list --federationSettingsId federationSettingsId [-o/--output output].
 func ListBuilder() *cobra.Command {
-	opts := &ListOpts{}
+	opts := &ListOpts{ListOpts: &cli.ListOpts{}}
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "Describe a Connected Org Config.",
@@ -87,6 +90,8 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.federationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())

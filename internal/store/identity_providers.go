@@ -15,10 +15,10 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_identity_providers_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store IdentityProviderLister,IdentityProviderDescriber,IdentityProviderCreator,IdentityProviderDeleter,IdentityProviderUpdater
+//go:generate mockgen -destination=../mocks/mock_identity_providers_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store IdentityProviderLister,IdentityProviderDescriber,IdentityProviderCreator,IdentityProviderDeleter,IdentityProviderUpdater,IdentityProviderJwkRevoker
 
 type IdentityProviderLister interface {
 	IdentityProviders(opts *atlasv2.ListIdentityProvidersApiParams) (*atlasv2.PaginatedFederationIdentityProvider, error)
@@ -34,6 +34,10 @@ type IdentityProviderCreator interface {
 
 type IdentityProviderDeleter interface {
 	DeleteIdentityProvider(string, string) error
+}
+
+type IdentityProviderJwkRevoker interface {
+	RevokeJwksFromIdentityProvider(string, string) error
 }
 
 type IdentityProviderUpdater interface {
@@ -68,4 +72,10 @@ func (s *Store) DeleteIdentityProvider(federationSettingsID string, identityProv
 func (s *Store) UpdateIdentityProvider(opts *atlasv2.UpdateIdentityProviderApiParams) (*atlasv2.FederationIdentityProvider, error) {
 	result, _, err := s.clientv2.FederatedAuthenticationApi.UpdateIdentityProviderWithParams(s.ctx, opts).Execute()
 	return result, err
+}
+
+// RevokeJwksFromIdentityProvider encapsulate the logic to manage different cloud providers.
+func (s *Store) RevokeJwksFromIdentityProvider(federationSettingsID string, identityProviderID string) error {
+	_, err := s.clientv2.FederatedAuthenticationApi.RevokeJwksFromIdentityProvider(s.ctx, federationSettingsID, identityProviderID).Execute()
+	return err
 }

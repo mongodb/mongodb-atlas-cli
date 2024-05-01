@@ -79,7 +79,8 @@ functions:
           - notary_service_secret
           - notary_service_url
           - goreleaser_key
-          - github_token
+          - github_app_id
+          - github_app_pem
           - unstable
         binary: build/package/package.sh
   "install go-msi":

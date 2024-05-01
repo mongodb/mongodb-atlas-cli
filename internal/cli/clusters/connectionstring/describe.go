@@ -50,6 +50,9 @@ var describeTemplateStandard = `STANDARD CONNECTION STRING
 var describeTemplatePrivate = `PRIVATE CONNECTION STRING
 {{.PrivateSrv}}
 `
+var describeTemplateShardOptimized = `SHARD OPTIMIZED CONNECTION STRING
+{{range valueOrEmptySlice .PrivateEndpoint.SrvShardOptimizedConnectionString }}
+`
 
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
@@ -85,6 +88,10 @@ func DescribeBuilder() *cobra.Command {
 
 			if opts.csType == "private" {
 				opts.Template = describeTemplatePrivate
+			}
+
+			if opts.csType == "privateEndpoint" {
+				opts.Template = describeTemplateShardOptimized
 			}
 			return opts.Run()
 		},

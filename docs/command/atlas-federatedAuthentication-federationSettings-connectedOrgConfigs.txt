@@ -54,6 +54,7 @@ Related Commands
 * :ref:`atlas-federatedAuthentication-federationSettings-connectedOrgConfigs-describe` - Describe a Connected Org Config.
 * :ref:`atlas-federatedAuthentication-federationSettings-connectedOrgConfigs-disconnect` - Connect an Identity Provider to an Organization.
 * :ref:`atlas-federatedAuthentication-federationSettings-connectedOrgConfigs-list` - Describe a Connected Org Config.
+* :ref:`atlas-federatedAuthentication-federationSettings-connectedOrgConfigs-update` - Update One Org Config Connected to One Federation Setting.
 
 
 .. toctree::
@@ -64,4 +65,5 @@ Related Commands
    describe </command/atlas-federatedAuthentication-federationSettings-connectedOrgConfigs-describe>
    disconnect </command/atlas-federatedAuthentication-federationSettings-connectedOrgConfigs-disconnect>
    list </command/atlas-federatedAuthentication-federationSettings-connectedOrgConfigs-list>
+   update </command/atlas-federatedAuthentication-federationSettings-connectedOrgConfigs-update>
 

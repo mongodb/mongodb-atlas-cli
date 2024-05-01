@@ -20,31 +20,43 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
+	"github.com/spf13/afero"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
 )
 
-func TestConnect_Run(t *testing.T) {
+func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockConnectedOrgConfigsUpdater(ctrl)
-	describeStore := mocks.NewMockConnectedOrgConfigsDescriber(ctrl)
 
-	ConnectOpts := &ConnectOpts{
+	updateOpts := &UpdateOpts{
 		store:                mockStore,
 		federationSettingsID: "federationSettingsID",
-		identityProviderID:   "id",
-		protocol:             oidc,
-		DescribeOrgConfigsOpts: &DescribeOrgConfigsOpts{
-			describeStore: describeStore,
+		file:                 "config.json",
+		fs:                   afero.NewMemMapFs(),
+		GlobalOpts: cli.GlobalOpts{
+			OrgID: "6627f3ee0c9eba75f37240b3",
 		},
 	}
 
-	ids := []string{"id"}
+	fileContents := `
+	{
+		"domainAllowList": ["test.com"],
+		"domainRestrictionEnabled": false,
+		"orgId": "6627f3ee0c9eba75f37240b3",
+		"roleMappings": []
+	}`
+	require.NoError(t, afero.WriteFile(updateOpts.fs, updateOpts.file, []byte(fileContents), 0600))
+
+	domains := []string{"test.com"}
 	expected := &atlasv2.ConnectedOrgConfig{
-		OrgId:                         "id",
-		DataAccessIdentityProviderIds: &ids,
+		OrgId:                    "6627f3ee0c9eba75f37240b3",
+		DomainAllowList:          &domains,
+		DomainRestrictionEnabled: false,
 	}
 
 	mockStore.
@@ -53,23 +65,17 @@ func TestConnect_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	describeStore.
-		EXPECT().
-		GetConnectedOrgConfig(gomock.Any()).
-		Return(expected, nil).
-		Times(1)
-
-	if err := ConnectOpts.Run(); err != nil {
+	if err := updateOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-	test.VerifyOutputTemplate(t, connectTemplate, expected)
+	test.VerifyOutputTemplate(t, updateTemplate, expected)
 }
 
-func TestConnectBuilder(t *testing.T) {
+func TestUpdateBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		ConnectBuilder(),
+		UpdateBuilder(),
 		0,
-		[]string{flag.Output, flag.FederationSettingsID, flag.IdentityProviderID, flag.Protocol, flag.OrgID},
+		[]string{flag.Output, flag.FederationSettingsID, flag.OrgID},
 	)
 }

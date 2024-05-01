@@ -38,7 +38,7 @@ import (
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -279,7 +279,6 @@ func TestBuildAtlasProject(t *testing.T) {
 		containerListOptionAWS := &store.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderAWS)}
 		containerListOptionGCP := &store.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderGCP)}
 		containerListOptionAzure := &store.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderAzure)}
-		projectStore.EXPECT().Project(projectID).Return(p, nil)
 		projectStore.EXPECT().ProjectIPAccessLists(projectID, listOption).Return(ipAccessLists, nil)
 		projectStore.EXPECT().MaintenanceWindow(projectID).Return(mw, nil)
 		projectStore.EXPECT().Integrations(projectID).Return(thirdPartyIntegrations, nil)
@@ -313,7 +312,17 @@ func TestBuildAtlasProject(t *testing.T) {
 		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureTeams).Return(true)
 
 		dictionary := resources.AtlasNameToKubernetesName()
-		projectResult, err := BuildAtlasProject(projectStore, featureValidator, orgID, projectID, targetNamespace, true, dictionary, resourceVersion)
+		projectResult, err := BuildAtlasProject(&AtlasProjectBuildRequest{
+			ProjectStore:    projectStore,
+			Project:         p,
+			Validator:       featureValidator,
+			OrgID:           orgID,
+			ProjectID:       projectID,
+			TargetNamespace: targetNamespace,
+			IncludeSecret:   true,
+			Dictionary:      dictionary,
+			Version:         resourceVersion,
+		})
 		if err != nil {
 			t.Fatalf("%v", err)
 		}

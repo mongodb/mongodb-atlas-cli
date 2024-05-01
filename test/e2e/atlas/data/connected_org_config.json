@@ -1,0 +1,4 @@
+{
+  "domainAllowList": ["https://accounts.google.com"],
+  "domainRestrictionEnabled": false
+}

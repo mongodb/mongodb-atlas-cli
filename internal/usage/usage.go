@@ -45,7 +45,7 @@ const (
 	Forever                                  = "Option that acknowledges an alert 'forever'. You can't set both the forever option and the until option in the same command."
 	Status                                   = "State of the alert. Valid values include TRACKING, OPEN, CLOSED, and CANCELLED."
 	Until                                    = "ISO 8601-formatted time until which the alert is acknowledged. This command returns this value if a MongoDB user previously acknowledged the alert. After this date, the alert becomes unacknowledged."
-	ConnectionStringType                     = "Type of connection string. If you specify 'private', this option retrieves the connection string for the network peering endpoint. This value defaults to 'standard'."
+	ConnectionStringType                     = "Type of connection string. If you specify 'private', this option retrieves the connection string for the network peering endpoint. If you specify 'privateEndpoint', this option retrieves the shard optimized connection strings for the private endpoints."
 	Limit                                    = "Number of items per results page, up to a maximum of 500. If you have more than 500 results, specify the --page option to change the results page."
 	OmitCount                                = "Flag that indicates whether the JSON response returns the total number of items (totalCount) in the JSON response."
 	Username                                 = "Name that identifies the user. You must specify a valid email address."

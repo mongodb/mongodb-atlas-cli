@@ -466,6 +466,7 @@ func (opts *SetupOpts) generateDeploymentName() {
 func (opts *SetupOpts) promptDeploymentName() error {
 	p := &survey.Input{
 		Message: "Deployment Name [You can't change this value later]",
+		Help:    usage.ClusterName,
 		Default: opts.DeploymentName,
 	}
 

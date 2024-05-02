@@ -51,7 +51,7 @@ var describeTemplatePrivate = `PRIVATE CONNECTION STRING
 {{.PrivateSrv}}
 `
 var describeTemplateShardOptimized = `SHARD OPTIMIZED CONNECTION STRING
-{{range valueOrEmptySlice .PrivateEndpoint.SrvShardOptimizedConnectionString }}
+{{range .PrivateEndpoint }}{{.SrvShardOptimizedConnectionString}}{{end}}
 `
 
 func (opts *DescribeOpts) Run() error {

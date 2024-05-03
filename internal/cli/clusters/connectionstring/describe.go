@@ -17,6 +17,7 @@ package connectionstring
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -49,6 +50,9 @@ var describeTemplateStandard = `STANDARD CONNECTION STRING
 
 var describeTemplatePrivate = `PRIVATE CONNECTION STRING
 {{.PrivateSrv}}
+`
+var describeTemplateShardOptimized = `SHARD OPTIMIZED CONNECTION STRING
+{{range .PrivateEndpoint }}{{.SrvShardOptimizedConnectionString}}{{end}}
 `
 
 func (opts *DescribeOpts) Run() error {
@@ -83,9 +87,15 @@ func DescribeBuilder() *cobra.Command {
 		RunE: func(_ *cobra.Command, args []string) error {
 			opts.name = args[0]
 
-			if opts.csType == "private" {
+			switch strings.ToLower(opts.csType) {
+			case "private":
 				opts.Template = describeTemplatePrivate
+			case "privateendpoint", "privateendpoints":
+				opts.Template = describeTemplateShardOptimized
+			default:
+				opts.Template = describeTemplateStandard
 			}
+
 			return opts.Run()
 		},
 	}

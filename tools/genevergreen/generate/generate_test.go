@@ -33,6 +33,6 @@ func TestPublishSnapshotTasks(t *testing.T) {
 func TestPublishStableTasks(t *testing.T) {
 	c := &shrub.Configuration{}
 	PublishStableTasks(c)
-	assert.Len(t, c.Variants, 4)
-	assert.Len(t, c.Tasks, 136)
+	assert.Len(t, c.Variants, 3)
+	assert.Len(t, c.Tasks, 102)
 }

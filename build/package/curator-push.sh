@@ -18,17 +18,14 @@ export NOTARY_KEY_NAME
 export BARQUE_USERNAME
 export BARQUE_API_KEY
 case "${NOTARY_KEY_NAME}" in
-server-4.4)
-	export NOTARY_TOKEN=${signing_auth_token_44:?}
-	;;
-server-4.6)
-	export NOTARY_TOKEN=${signing_auth_token_46:?}
-	;;
 server-5.0)
 	export NOTARY_TOKEN=${signing_auth_token_50:?}
 	;;
 server-6.0)
 	export NOTARY_TOKEN=${signing_auth_token_60:?}
+	;;
+server-7.0)
+	export NOTARY_TOKEN=${signing_auth_token_70:?}
 	;;
 esac
 

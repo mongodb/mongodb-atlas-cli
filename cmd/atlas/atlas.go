@@ -83,7 +83,7 @@ func shouldCopyConfig(atlasConfigPath string) bool {
 
 // createConfigFromMongoCLIConfig creates the atlasCLI config file from the mongocli config file.
 func createConfigFromMongoCLIConfig() {
-	atlasConfigHomePath, err := config.AtlasCLIConfigHome()
+	atlasConfigHomePath, err := config.CLIConfigHome()
 	if err != nil {
 		return
 	}
@@ -145,7 +145,7 @@ func mongoCLIConfigFilePath() (configPath string, err error) {
 	}
 
 	if configDir, err := config.OldMongoCLIConfigHome(); err == nil { //nolint:staticcheck // Deprecated before fully removing support in the future
-		configPath = fmt.Sprintf("%s/mongocli.toml", configDir)
+		configPath = path.Join(configDir, "mongocli.toml")
 	}
 
 	if _, err := os.Stat(configPath); err != nil {

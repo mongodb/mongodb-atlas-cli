@@ -734,19 +734,14 @@ func MongoCLIConfigHome() (string, error) {
 	return path.Join(home, "mongocli"), nil
 }
 
-// AtlasCLIConfigHome retrieves configHome path based used by AtlasCLI.
-func AtlasCLIConfigHome() (string, error) {
+// CLIConfigHome retrieves configHome path.
+func CLIConfigHome() (string, error) {
 	home, err := os.UserConfigDir()
 	if err != nil {
 		return "", err
 	}
 
 	return path.Join(home, "atlascli"), nil
-}
-
-// CLIConfigHome retrieves configHome path.
-func CLIConfigHome() (string, error) {
-	return AtlasCLIConfigHome()
 }
 
 func Path(f string) (string, error) {

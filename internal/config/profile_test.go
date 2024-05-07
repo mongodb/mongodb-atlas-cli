@@ -19,6 +19,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"path"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -26,7 +27,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestConfig_MongoCLIConfigHome(t *testing.T) {
+func TestMongoCLIConfigHome(t *testing.T) {
 	expHome, err := os.UserConfigDir()
 	require.NoError(t, err)
 
@@ -36,7 +37,7 @@ func TestConfig_MongoCLIConfigHome(t *testing.T) {
 	assert.Equal(t, expected, home)
 }
 
-func TestConfig_OldMongoCLIConfigHome(t *testing.T) {
+func TestOldMongoCLIConfigHome(t *testing.T) {
 	t.Run("old home with XDG_CONFIG_HOME", func(t *testing.T) {
 		const xdgHome = "my_config"
 		t.Setenv("XDG_CONFIG_HOME", xdgHome)
@@ -61,22 +62,19 @@ func TestConfig_OldMongoCLIConfigHome(t *testing.T) {
 	})
 }
 
-func TestConfig_AtlasCLIConfigHome(t *testing.T) {
-	t.Run("with env set", func(t *testing.T) {
-		expHome, err := os.UserConfigDir()
-		expected := fmt.Sprintf("%s/atlascli", expHome)
-		if err != nil {
-			t.Fatalf("os.UserConfigDir() unexpected error: %v", err)
-		}
-
-		home, err := AtlasCLIConfigHome()
-		if err != nil {
-			t.Fatalf("AtlasCLIConfigHome() unexpected error: %v", err)
-		}
-		if home != expected {
-			t.Errorf("AtlasCLIConfigHome() = %s; want '%s'", home, expected)
-		}
-	})
+func TestCLIConfigHome(t *testing.T) {
+	expHome, err := os.UserConfigDir()
+	if err != nil {
+		t.Fatalf("os.UserConfigDir() unexpected error: %v", err)
+	}
+	home, err := CLIConfigHome()
+	if err != nil {
+		t.Fatalf("AtlasCLIConfigHome() unexpected error: %v", err)
+	}
+	expected := path.Join(expHome, "atlascli")
+	if home != expected {
+		t.Errorf("AtlasCLIConfigHome() = %s; want '%s'", home, expected)
+	}
 }
 
 func TestConfig_IsTrue(t *testing.T) {

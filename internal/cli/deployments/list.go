@@ -69,7 +69,7 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 }
 
 func (opts *ListOpts) runLocal(ctx context.Context) ([]options.Deployment, error) {
-	if !opts.IsLocalDeploymentType() {
+	if !opts.IsLocalDeploymentType() && !opts.NoDeploymentTypeSet() {
 		return nil, nil
 	}
 
@@ -85,7 +85,7 @@ func (opts *ListOpts) runLocal(ctx context.Context) ([]options.Deployment, error
 }
 
 func (opts *ListOpts) runAtlas() ([]options.Deployment, error) {
-	if !opts.IsAtlasDeploymentType() || !opts.NoDeploymentTypeSet() {
+	if !opts.IsAtlasDeploymentType() && !opts.NoDeploymentTypeSet() {
 		return nil, nil
 	}
 

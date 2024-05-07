@@ -47,7 +47,6 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 	req := require.New(t)
 
 	cliPath, err := e2e.AtlasCLIBin()
-	t.Log(cliPath)
 	req.NoError(err)
 
 	t.Run("should failed to install old and not supported version of the operator", func(t *testing.T) {

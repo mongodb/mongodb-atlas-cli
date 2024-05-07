@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && cluster && kubernetes)
+//go:build e2e || (atlas && cluster && kubernetes && apply)
 
 package atlas_test
 
@@ -37,9 +37,7 @@ import (
 func TestKubernetesConfigApply(t *testing.T) {
 	a := assert.New(t)
 	req := require.New(t)
-
 	cliPath, err := e2e.AtlasCLIBin()
-	t.Log(cliPath)
 	req.NoError(err)
 
 	t.Run("should failed to apply resources when namespace doesn't exist", func(t *testing.T) {

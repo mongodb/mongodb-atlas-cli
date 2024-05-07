@@ -49,7 +49,7 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 	}
 
 	atlasClusters, atlasErr := opts.runAtlas()
-	if localErr != nil {
+	if atlasErr != nil {
 		_, _ = fmt.Fprintln(os.Stderr, atlasErr)
 	}
 

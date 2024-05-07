@@ -96,8 +96,8 @@ func newPublishTask(taskName, extension, edition, distro, taskServerVersion, not
 }
 
 func publishVariant(c *shrub.Configuration, v *shrub.Variant, sv, stableSuffix string, dependency []shrub.TaskDependency, stable bool) {
-	taskServerVersion := fmt.Sprintf("%s.0", sv)
-	notaryKey := fmt.Sprintf("server-%s", sv)
+	taskServerVersion := sv + ".0"
+	notaryKey := "server-" + sv
 	taskSv := "_" + sv
 	if !stable {
 		taskServerVersion += "-rc1"

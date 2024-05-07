@@ -31,7 +31,7 @@ import (
 var errEmptyLocalDeployments = errors.New("currently there are no deployment in your local system")
 var errNoDeployments = errors.New("currently there are no deployments")
 var ErrDeploymentNotFound = errors.New("deployment not found")
-var errDeploymentRequiredOnPipe = fmt.Errorf("deployment name is required  when piping the output of the command")
+var errDeploymentRequiredOnPipe = errors.New("deployment name is required  when piping the output of the command")
 
 func (opts *DeploymentOpts) findMongoDContainer(ctx context.Context) (*podman.InspectContainerData, error) {
 	containers, err := opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname())

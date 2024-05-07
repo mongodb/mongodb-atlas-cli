@@ -17,7 +17,7 @@
 package operator
 
 import (
-	"fmt"
+	"errors"
 	"testing"
 
 	"github.com/go-test/deep"
@@ -109,7 +109,7 @@ func TestProjectWithWrongOrgID(t *testing.T) {
 			projectID, "wrong-org-id",
 		)
 		_, got := ce.Run()
-		expected := fmt.Errorf("the project test-project (project-id) is not part of the " +
+		expected := errors.New("the project test-project (project-id) is not part of the " +
 			"organization \"wrong-org-id\", please confirm the arguments provided " +
 			"to the command or you are using the correct profile")
 		if diff := deep.Equal(got, expected); diff != nil {

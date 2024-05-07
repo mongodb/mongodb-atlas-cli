@@ -594,7 +594,7 @@ func getFirstOrgUser() (string, error) {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 	if users.GetTotalCount() == 0 {
-		return "", fmt.Errorf("no users found")
+		return "", errors.New("no users found")
 	}
 
 	return users.GetResults()[0].Username, nil

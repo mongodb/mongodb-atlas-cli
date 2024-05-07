@@ -15,7 +15,7 @@
 package store
 
 import (
-	"fmt"
+	"errors"
 	"io"
 
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
@@ -34,7 +34,7 @@ func (s *Store) DownloadLog(params *atlasv2.GetHostLogsApiParams) (io.ReadCloser
 		return nil, err
 	}
 	if result == nil {
-		return nil, fmt.Errorf("returned file is empty")
+		return nil, errors.New("returned file is empty")
 	}
 	return result, nil
 }

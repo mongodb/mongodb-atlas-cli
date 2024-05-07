@@ -66,7 +66,7 @@ func (opts *EnableOpts) enableWatcher() (any, bool, error) {
 	}
 	opts.policy = res
 	if res.GetState() == "" {
-		return nil, false, fmt.Errorf("could not access State field")
+		return nil, false, errors.New("could not access State field")
 	}
 	return nil, res.GetState() == active, nil
 }

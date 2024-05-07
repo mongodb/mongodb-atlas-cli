@@ -39,8 +39,8 @@ const listTemplate = `NAME	TYPE	MDB VER	STATE
 {{range valueOrEmptySlice .}}{{.Name}}	{{.Type}}	{{.MongoDBVersion}}	{{.StateName}}
 {{end}}`
 
-const errAtlas = "failed to retrieve Atlas deployments with: %s"
-const errLocal = "failed to retrieve local deployments with: %s"
+const errAtlas = "failed to retrieve Atlas deployments with: %w"
+const errLocal = "failed to retrieve local deployments with: %w"
 
 func (opts *ListOpts) Run(ctx context.Context) error {
 	localDeployments, localErr := opts.runLocal(ctx)
@@ -79,7 +79,7 @@ func (opts *ListOpts) runLocal(ctx context.Context) ([]options.Deployment, error
 
 	mdbContainers, err := opts.GetLocalDeployments(ctx)
 	if err != nil && !errors.Is(err, podman.ErrPodmanNotFound) {
-		return nil, fmt.Errorf(errLocal, err.Error())
+		return nil, fmt.Errorf(errLocal, err)
 	}
 	return mdbContainers, nil
 }
@@ -95,7 +95,7 @@ func (opts *ListOpts) runAtlas() ([]options.Deployment, error) {
 
 	atlasClusters, err := opts.AtlasDeployments(opts.ProjectID)
 	if err != nil {
-		return nil, fmt.Errorf(errAtlas, err.Error())
+		return nil, fmt.Errorf(errAtlas, err)
 	}
 
 	return atlasClusters, nil

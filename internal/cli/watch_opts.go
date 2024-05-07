@@ -15,12 +15,12 @@
 package cli
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"time"
 
 	"github.com/briandowns/spinner"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/watchers"
 )
 
@@ -28,7 +28,7 @@ type WatchOpts struct {
 	OutputOpts
 	s              *spinner.Spinner
 	EnableWatch    bool
-	DefaultWait    *time.Duration
+	DefaultWait    time.Duration
 	Timeout        uint
 	IsRetryableErr func(err error) bool
 }
@@ -103,5 +103,5 @@ func (opts *WatchOpts) stop() {
 }
 
 func (opts *WatchOpts) GetDefaultWait() time.Duration {
-	return pointer.GetOrDefault(opts.DefaultWait, defaultWait)
+	return cmp.Or(opts.DefaultWait, defaultWait)
 }

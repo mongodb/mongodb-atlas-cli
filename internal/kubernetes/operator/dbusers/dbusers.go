@@ -141,7 +141,7 @@ func convertUserRoles(user *atlasv2.CloudDatabaseUser) []akov2.RoleSpec {
 		result = append(result, akov2.RoleSpec{
 			RoleName:       role.RoleName,
 			DatabaseName:   role.DatabaseName,
-			CollectionName: pointer.GetOrDefault(role.CollectionName, ""),
+			CollectionName: role.GetCollectionName(),
 		})
 	}
 	return result

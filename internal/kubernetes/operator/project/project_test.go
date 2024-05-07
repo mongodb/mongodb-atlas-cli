@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -331,15 +332,15 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		alertConfigs := alertConfigResult.GetResults()
 		expectedThreshold := &akov2.Threshold{
-			Operator:  store.StringOrEmpty(alertConfigs[0].Threshold.Operator),
-			Units:     store.StringOrEmpty(alertConfigs[0].Threshold.Units),
-			Threshold: fmt.Sprintf("%d", pointer.GetOrDefault(alertConfigs[0].Threshold.Threshold, 0)),
+			Operator:  alertConfigs[0].Threshold.GetOperator(),
+			Units:     alertConfigs[0].Threshold.GetUnits(),
+			Threshold: strconv.Itoa(alertConfigs[0].Threshold.GetThreshold()),
 		}
 		expectedMatchers := []akov2.Matcher{
 			{
-				FieldName: (alertConfigs[0].GetMatchers()[0].GetFieldName()),
-				Operator:  (alertConfigs[0].GetMatchers()[0].GetOperator()),
-				Value:     (alertConfigs[0].GetMatchers()[0].GetValue()),
+				FieldName: alertConfigs[0].GetMatchers()[0].GetFieldName(),
+				Operator:  alertConfigs[0].GetMatchers()[0].GetOperator(),
+				Value:     alertConfigs[0].GetMatchers()[0].GetValue(),
 			},
 		}
 		expectedNotifications := []akov2.Notification{
@@ -348,18 +349,18 @@ func TestBuildAtlasProject(t *testing.T) {
 					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].APITokenRef.Name,
 					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].APITokenRef.Namespace,
 				},
-				ChannelName:   store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].ChannelName),
-				DatadogRegion: store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].DatadogRegion),
+				ChannelName:   alertConfigs[0].GetNotifications()[0].GetChannelName(),
+				DatadogRegion: alertConfigs[0].GetNotifications()[0].GetDatadogRegion(),
 				DatadogAPIKeyRef: akov2common.ResourceRefNamespaced{
 					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].DatadogAPIKeyRef.Name,
 					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].DatadogAPIKeyRef.Namespace,
 				},
 				DelayMin:       alertConfigs[0].GetNotifications()[0].DelayMin,
-				EmailAddress:   store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].EmailAddress),
+				EmailAddress:   alertConfigs[0].GetNotifications()[0].GetEmailAddress(),
 				EmailEnabled:   alertConfigs[0].GetNotifications()[0].EmailEnabled,
-				IntervalMin:    pointer.GetOrDefault(alertConfigs[0].GetNotifications()[0].IntervalMin, 0),
-				MobileNumber:   store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].MobileNumber),
-				OpsGenieRegion: store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].OpsGenieRegion),
+				IntervalMin:    alertConfigs[0].GetNotifications()[0].GetIntervalMin(),
+				MobileNumber:   alertConfigs[0].GetNotifications()[0].GetMobileNumber(),
+				OpsGenieRegion: alertConfigs[0].GetNotifications()[0].GetOpsGenieRegion(),
 				OpsGenieAPIKeyRef: akov2common.ResourceRefNamespaced{
 					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].OpsGenieAPIKeyRef.Name,
 					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].OpsGenieAPIKeyRef.Namespace,
@@ -369,10 +370,10 @@ func TestBuildAtlasProject(t *testing.T) {
 					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].ServiceKeyRef.Namespace,
 				},
 				SMSEnabled: alertConfigs[0].GetNotifications()[0].SmsEnabled,
-				TeamID:     store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].TeamId),
-				TeamName:   store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].TeamName),
-				TypeName:   store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].TypeName),
-				Username:   store.StringOrEmpty(alertConfigs[0].GetNotifications()[0].Username),
+				TeamID:     alertConfigs[0].GetNotifications()[0].GetTeamId(),
+				TeamName:   alertConfigs[0].GetNotifications()[0].GetTeamName(),
+				TypeName:   alertConfigs[0].GetNotifications()[0].GetTypeName(),
+				Username:   alertConfigs[0].GetNotifications()[0].GetUsername(),
 				Roles:      alertConfigs[0].GetNotifications()[0].GetRoles(),
 				VictorOpsSecretRef: akov2common.ResourceRefNamespaced{
 					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].VictorOpsSecretRef.Name,
@@ -382,12 +383,12 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 		expectedMetricThreshold := &akov2.MetricThreshold{
 			MetricName: alertConfigs[0].MetricThreshold.MetricName,
-			Operator:   store.StringOrEmpty(alertConfigs[0].MetricThreshold.Operator),
-			Threshold:  fmt.Sprintf("%f", pointer.GetOrDefault(alertConfigs[0].MetricThreshold.Threshold, 0.0)),
-			Units:      store.StringOrEmpty(alertConfigs[0].MetricThreshold.Units),
-			Mode:       store.StringOrEmpty(alertConfigs[0].MetricThreshold.Mode),
+			Operator:   alertConfigs[0].MetricThreshold.GetOperator(),
+			Threshold:  fmt.Sprintf("%f", alertConfigs[0].MetricThreshold.GetThreshold()),
+			Units:      alertConfigs[0].MetricThreshold.GetUnits(),
+			Mode:       alertConfigs[0].MetricThreshold.GetMode(),
 		}
-		teamsName := store.StringOrEmpty(teams.Name)
+		teamsName := teams.GetName()
 		expectedTeams := []*akov2.AtlasTeam{
 			{
 				TypeMeta: metav1.TypeMeta{
@@ -464,8 +465,8 @@ func TestBuildAtlasProject(t *testing.T) {
 				},
 				AlertConfigurations: []akov2.AlertConfiguration{
 					{
-						Enabled:         *alertConfigs[0].Enabled,
-						EventTypeName:   store.StringOrEmpty(alertConfigs[0].EventTypeName),
+						Enabled:         alertConfigs[0].GetEnabled(),
+						EventTypeName:   alertConfigs[0].GetEventTypeName(),
 						Matchers:        expectedMatchers,
 						Threshold:       expectedThreshold,
 						Notifications:   expectedNotifications,
@@ -479,7 +480,7 @@ func TestBuildAtlasProject(t *testing.T) {
 						ContainerRegion:     "",
 						AWSAccountID:        peeringConnectionAWS.GetAwsAccountId(),
 						ContainerID:         peeringConnectionAWS.ContainerId,
-						ProviderName:        akov2provider.ProviderName(*peeringConnectionAWS.ProviderName),
+						ProviderName:        akov2provider.ProviderName(peeringConnectionAWS.GetProviderName()),
 						RouteTableCIDRBlock: peeringConnectionAWS.GetRouteTableCidrBlock(),
 						VpcID:               peeringConnectionAWS.GetVpcId(),
 					},
@@ -521,9 +522,9 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 				},
 				Auditing: &akov2.Auditing{
-					AuditAuthorizationSuccess: pointer.GetOrZero(auditing.AuditAuthorizationSuccess),
-					AuditFilter:               pointer.GetOrZero(auditing.AuditFilter),
-					Enabled:                   pointer.GetOrZero(auditing.Enabled),
+					AuditAuthorizationSuccess: auditing.GetAuditAuthorizationSuccess(),
+					AuditFilter:               auditing.GetAuditFilter(),
+					Enabled:                   auditing.GetEnabled(),
 				},
 				Settings: &akov2.ProjectSettings{
 					IsCollectDatabaseSpecificsStatisticsEnabled: projectSettings.IsCollectDatabaseSpecificsStatisticsEnabled,
@@ -714,9 +715,9 @@ func Test_buildAuditing(t *testing.T) {
 		}
 
 		expected := &akov2.Auditing{
-			AuditAuthorizationSuccess: pointer.GetOrZero(data.AuditAuthorizationSuccess),
-			AuditFilter:               pointer.GetOrZero(data.AuditFilter),
-			Enabled:                   pointer.GetOrZero(data.Enabled),
+			AuditAuthorizationSuccess: data.GetAuditAuthorizationSuccess(),
+			AuditFilter:               data.GetAuditFilter(),
+			Enabled:                   data.GetEnabled(),
 		}
 
 		if !reflect.DeepEqual(expected, got) {

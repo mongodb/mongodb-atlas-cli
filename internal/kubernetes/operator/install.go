@@ -120,14 +120,14 @@ func (i *Install) Run(ctx context.Context, orgID string) error {
 		ctx,
 		i.namespace,
 		orgID,
-		store.StringOrEmpty(keys.PublicKey),
-		store.StringOrEmpty(keys.PrivateKey),
+		keys.GetPublicKey(),
+		keys.GetPrivateKey(),
 		i.projectName); err != nil {
 		return err
 	}
 
 	if i.importResources {
-		if err = i.importAtlasResources(orgID, store.StringOrEmpty(keys.Id)); err != nil {
+		if err = i.importAtlasResources(orgID, keys.GetId()); err != nil {
 			return err
 		}
 
@@ -188,7 +188,7 @@ func (i *Install) generateKeys(orgID string) (*admin.ApiKeyUserDetails, error) {
 			roleProjectOwner,
 		},
 	}
-	keys, err := i.atlasStore.CreateProjectAPIKey(store.StringOrEmpty(project.Id), input)
+	keys, err := i.atlasStore.CreateProjectAPIKey(project.GetId(), input)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate project keys: %w", err)
 	}
@@ -205,7 +205,7 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 			return err
 		}
 
-		projectsIDs = append(projectsIDs, store.StringOrEmpty(project.Id))
+		projectsIDs = append(projectsIDs, project.GetId())
 	} else {
 		projectsData, err := i.atlasStore.GetOrgProjects(orgID, &store.ListOptions{})
 		if err != nil {
@@ -213,7 +213,7 @@ func (i *Install) importAtlasResources(orgID, apiKeyID string) error {
 		}
 
 		for _, project := range projectsData.GetResults() {
-			projectsIDs = append(projectsIDs, store.StringOrEmpty(project.Id))
+			projectsIDs = append(projectsIDs, project.GetId())
 		}
 	}
 

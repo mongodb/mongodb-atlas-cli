@@ -26,13 +26,6 @@ func GetOrZero[T any](ptr *T) T {
 	return *ptr
 }
 
-func GetOrDefault[T any](ptr *T, defaultValue T) T {
-	if ptr != nil {
-		return *ptr
-	}
-	return defaultValue
-}
-
 func Get[T any](val T) *T {
 	return &val
 }

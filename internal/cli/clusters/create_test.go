@@ -19,7 +19,6 @@ package clusters
 import (
 	"bytes"
 	"testing"
-	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -179,7 +178,6 @@ func TestCreateOpts_PostRun_EnableWatch(t *testing.T) {
 		},
 		WatchOpts: cli.WatchOpts{
 			EnableWatch: true,
-			DefaultWait: pointer.Get(time.Duration(0)),
 			OutputOpts: cli.OutputOpts{
 				Template:  createTemplate,
 				OutWriter: buf,

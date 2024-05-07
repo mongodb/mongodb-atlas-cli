@@ -74,7 +74,7 @@ func (opts *ListOpts) runLocal(ctx context.Context) ([]options.Deployment, error
 	}
 
 	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
-		return nil, fmt.Errorf(errLocal, err.Error())
+		return nil, fmt.Errorf(errLocal, err)
 	}
 
 	mdbContainers, err := opts.GetLocalDeployments(ctx)

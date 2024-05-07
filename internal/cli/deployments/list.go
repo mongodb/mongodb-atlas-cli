@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
@@ -39,35 +40,65 @@ const listTemplate = `NAME	TYPE	MDB VER	STATE
 {{end}}`
 
 const errAtlas = "failed to retrieve Atlas deployments with: %s"
+const errLocal = "failed to retrieve local deployments with: %s"
 
 func (opts *ListOpts) Run(ctx context.Context) error {
-	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
-		return err
+	localDeployments, localErr := opts.runLocal(ctx)
+	if localErr != nil {
+		_, _ = fmt.Fprintln(os.Stderr, localErr)
 	}
 
-	var mdbContainers []options.Deployment
-	if opts.IsLocalDeploymentType() || opts.NoDeploymentTypeSet() {
-		var err error
-		mdbContainers, err = opts.GetLocalDeployments(ctx)
-		if err != nil && !errors.Is(err, podman.ErrPodmanNotFound) {
-			return err
-		}
+	atlasClusters, atlasErr := opts.runAtlas()
+	if localErr != nil {
+		_, _ = fmt.Fprintln(os.Stderr, atlasErr)
 	}
-	var atlasClusters []options.Deployment
-	var atlasErr error
-	if opts.IsAtlasDeploymentType() || opts.NoDeploymentTypeSet() {
-		if opts.IsCliAuthenticated() && cli.TokenRefreshed {
-			atlasClusters, atlasErr = opts.AtlasDeployments(opts.ProjectID)
-		}
+
+	if localErr == nil && atlasErr == nil {
+		return opts.Print(append(atlasClusters, localDeployments...))
 	}
-	if err := opts.Print(append(atlasClusters, mdbContainers...)); err != nil {
-		return err
+
+	if atlasErr != nil && localErr == nil {
+		return opts.Print(localDeployments)
 	}
-	if atlasErr != nil {
-		return fmt.Errorf(errAtlas, atlasErr.Error())
+
+	if localErr != nil && atlasErr == nil {
+		return opts.Print(atlasClusters)
 	}
 
 	return nil
+}
+
+func (opts *ListOpts) runLocal(ctx context.Context) ([]options.Deployment, error) {
+	if !opts.IsLocalDeploymentType() {
+		return nil, nil
+	}
+
+	if err := opts.LocalDeploymentPreRun(ctx); err != nil {
+		return nil, fmt.Errorf(errLocal, err.Error())
+	}
+
+	mdbContainers, err := opts.GetLocalDeployments(ctx)
+	if err != nil && !errors.Is(err, podman.ErrPodmanNotFound) {
+		return nil, fmt.Errorf(errLocal, err.Error())
+	}
+	return mdbContainers, nil
+}
+
+func (opts *ListOpts) runAtlas() ([]options.Deployment, error) {
+	if !opts.IsAtlasDeploymentType() || !opts.NoDeploymentTypeSet() {
+		return nil, nil
+	}
+
+	if !opts.IsCliAuthenticated() || !cli.TokenRefreshed {
+		return nil, nil
+	}
+
+	atlasClusters, err := opts.AtlasDeployments(opts.ProjectID)
+	if err != nil {
+		return nil, fmt.Errorf(errAtlas, err.Error())
+	}
+
+	return atlasClusters, nil
 }
 
 func (opts *ListOpts) PostRun() error {

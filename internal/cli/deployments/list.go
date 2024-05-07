@@ -89,7 +89,7 @@ func (opts *ListOpts) runAtlas() ([]options.Deployment, error) {
 		return nil, nil
 	}
 
-	if !opts.IsCliAuthenticated() || !cli.TokenRefreshed {
+	if !opts.IsCliAuthenticated() {
 		return nil, nil
 	}
 

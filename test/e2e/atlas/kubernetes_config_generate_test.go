@@ -150,22 +150,9 @@ func TestEmptyProject(t *testing.T) {
 		require.NotEmpty(t, objects)
 
 		checkProject(t, objects, expectedProject)
-		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
-			found := false
-			var secret *corev1.Secret
-			var ok bool
-			for i := range objects {
-				secret, ok = objects[i].(*corev1.Secret)
-				if ok {
-					found = true
-					break
-				}
-			}
-			if !found {
-				t.Fatal("Secret is not found in results")
-			}
-			assert.Equal(t, targetNamespace, secret.Namespace)
-		})
+		secret, found := findSecret(objects)
+		require.True(t, found, "Secret is not found in results")
+		assert.Equal(t, targetNamespace, secret.Namespace)
 	})
 }
 
@@ -584,12 +571,9 @@ func TestProjectWithMaintenanceWindow(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
-
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
 		checkProject(t, objects, expectedProject)
 	})
 }
@@ -652,12 +636,9 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
-
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
 		checkProject(t, objects, expectedProject)
 	})
 }
@@ -1367,9 +1348,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		require.NoError(t, err, "should not fail on decode")
 		require.NotEmpty(t, objects)
 		p, found := findAtlasProject(objects)
-		if !found {
-			t.Fatal("AtlasProject is not found in results")
-		}
+		require.True(t, found, "AtlasProject is not found in results")
 		assert.Equal(t, targetNamespace, p.Namespace)
 		ds := atlasDeployments(objects)
 		checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)

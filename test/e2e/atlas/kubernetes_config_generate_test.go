@@ -1256,7 +1256,6 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 			g.clusterName)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 	})
 
@@ -1279,52 +1278,36 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects, "result should not be empty")
-		})
 
-		t.Run("Project present with valid name", func(t *testing.T) {
-			p, found := findAtlasProject(objects)
-			require.True(t, found, "AtlasProject is not found in results")
-			assert.Equal(t, targetNamespace, p.Namespace)
-		})
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects, "result should not be empty")
 
-		t.Run("Deployment present with valid data", func(t *testing.T) {
-			found := false
-			var deployment *akov2.AtlasDeployment
-			var ok bool
-			for i := range objects {
-				deployment, ok = objects[i].(*akov2.AtlasDeployment)
-				if ok {
-					found = true
-					break
-				}
+		p, found := findAtlasProject(objects)
+		require.True(t, found, "AtlasProject is not found in results")
+		assert.Equal(t, targetNamespace, p.Namespace)
+		found = false
+		var deployment *akov2.AtlasDeployment
+		var ok bool
+		for i := range objects {
+			deployment, ok = objects[i].(*akov2.AtlasDeployment)
+			if ok {
+				found = true
+				break
 			}
-			if !found {
-				t.Fatal("AtlasDeployment is not found in results")
-			}
-			assert.Equal(t, expectedDeployment, deployment)
-		})
+		}
+		require.True(t, found, "AtlasDeployment is not found in results")
+		assert.Equal(t, expectedDeployment, deployment)
 
-		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
-			secret, found := findSecret(objects)
-			require.True(t, found, "Secret is not found in results")
-			assert.Equal(t, targetNamespace, secret.Namespace)
-		})
-
-		t.Run("Backup Schedule present with valid data", func(t *testing.T) {
-			schedule, found := atlasBackupSchedule(objects)
-			require.True(t, found, "AtlasBackupSchedule is not found in results")
-			assert.Equal(t, expectedBackupSchedule, schedule)
-		})
-
-		t.Run("Backup policy present with valid data", func(t *testing.T) {
-			policy, found := atlasBackupPolicy(objects)
-			require.True(t, found, "AtlasBackupPolicy is not found in results")
-			assert.Equal(t, expectedBackupPolicy, policy)
-		})
+		secret, found := findSecret(objects)
+		require.True(t, found, "Secret is not found in results")
+		assert.Equal(t, targetNamespace, secret.Namespace)
+		schedule, found := atlasBackupSchedule(objects)
+		require.True(t, found, "AtlasBackupSchedule is not found in results")
+		assert.Equal(t, expectedBackupSchedule, schedule)
+		policy, found := atlasBackupPolicy(objects)
+		require.True(t, found, "AtlasBackupPolicy is not found in results")
+		assert.Equal(t, expectedBackupPolicy, policy)
 	})
 
 	t.Run("Generate valid resources of ONE project and TWO clusters", func(t *testing.T) {
@@ -1335,7 +1318,9 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"--clusterName",
-			fmt.Sprintf("%s,%s", g.clusterName, g.serverlessName),
+			g.clusterName,
+			"--clusterName",
+			g.serverlessName,
 			"--targetNamespace",
 			targetNamespace,
 			"--includeSecrets")
@@ -1346,33 +1331,19 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
+		p, found := findAtlasProject(objects)
+		require.True(t, found, "AtlasProject is not found in results")
+		assert.Equal(t, targetNamespace, p.Namespace)
 
-		t.Run("Project present with valid name", func(t *testing.T) {
-			p, found := findAtlasProject(objects)
-			if !found {
-				t.Fatal("AtlasProject is not found in results")
-			}
-			assert.Equal(t, targetNamespace, p.Namespace)
-		})
-
-		t.Run("Deployments present with valid data", func(t *testing.T) {
-			ds := atlasDeployments(objects)
-			require.Len(t, ds, 2)
-			checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
-		})
-
-		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
-			secret, found := findSecret(objects)
-			if !found {
-				t.Fatal("Secret is not found in results")
-			}
-			assert.Equal(t, targetNamespace, secret.Namespace)
-		})
+		ds := atlasDeployments(objects)
+		require.Len(t, ds, 2)
+		checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
+		secret, found := findSecret(objects)
+		require.True(t, found, "Secret is not found in results")
+		assert.Equal(t, targetNamespace, secret.Namespace)
 	})
 
 	t.Run("Generate valid resources of ONE project and TWO clusters without listing clusters", func(t *testing.T) {
@@ -1392,32 +1363,19 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
-
-		t.Run("Project present with valid name", func(t *testing.T) {
-			p, found := findAtlasProject(objects)
-			if !found {
-				t.Fatal("AtlasProject is not found in results")
-			}
-			assert.Equal(t, targetNamespace, p.Namespace)
-		})
-
-		t.Run("Deployments present with valid data", func(t *testing.T) {
-			ds := atlasDeployments(objects)
-			checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
-		})
-
-		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
-			secret, found := findSecret(objects)
-			if !found {
-				t.Fatal("Secret is not found in results")
-			}
-			assert.Equal(t, targetNamespace, secret.Namespace)
-		})
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
+		p, found := findAtlasProject(objects)
+		if !found {
+			t.Fatal("AtlasProject is not found in results")
+		}
+		assert.Equal(t, targetNamespace, p.Namespace)
+		ds := atlasDeployments(objects)
+		checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
+		secret, found := findSecret(objects)
+		require.True(t, found, "Secret is not found in results")
+		assert.Equal(t, targetNamespace, secret.Namespace)
 	})
 }
 
@@ -1461,33 +1419,19 @@ func TestKubernetesConfigGenerateSharedCluster(t *testing.T) {
 	t.Log(string(resp))
 	require.NoError(t, err, string(resp))
 	var objects []runtime.Object
-	t.Run("Output can be decoded", func(t *testing.T) {
-		objects, err = getK8SEntities(resp)
-		require.NoError(t, err, "should not fail on decode")
-		require.NotEmpty(t, objects)
-	})
+	objects, err = getK8SEntities(resp)
+	require.NoError(t, err, "should not fail on decode")
+	require.NotEmpty(t, objects)
 
-	t.Run("Project present with valid name", func(t *testing.T) {
-		p, found := findAtlasProject(objects)
-		if !found {
-			t.Fatal("AtlasProject is not found in results")
-		}
-		assert.Equal(t, targetNamespace, p.Namespace)
-	})
-
-	t.Run("Deployment present with valid data", func(t *testing.T) {
-		ds := atlasDeployments(objects)
-		assert.Len(t, ds, 1)
-		assert.Equal(t, expectedDeployment, ds[0])
-	})
-
-	t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
-		secret, found := findSecret(objects)
-		if !found {
-			t.Fatal("Secret is not found in results")
-		}
-		assert.Equal(t, targetNamespace, secret.Namespace)
-	})
+	p, found := findAtlasProject(objects)
+	require.True(t, found, "AtlasProject is not found in results")
+	assert.Equal(t, targetNamespace, p.Namespace)
+	ds := atlasDeployments(objects)
+	assert.Len(t, ds, 1)
+	assert.Equal(t, expectedDeployment, ds[0])
+	secret, found := findSecret(objects)
+	require.True(t, found, "Secret is not found in results")
+	assert.Equal(t, targetNamespace, secret.Namespace)
 }
 
 func atlasDeployments(objects []runtime.Object) []*akov2.AtlasDeployment {

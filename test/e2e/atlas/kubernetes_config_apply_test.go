@@ -71,7 +71,6 @@ func TestKubernetesConfigApply(t *testing.T) {
 				Name: "e2e-autodetect-parameters",
 			},
 		}
-		t.Logf("adding namespace %s", e2eNamespace)
 		require.NoError(t, operator.createK8sObject(e2eNamespace))
 		g.t.Cleanup(func() {
 			require.NoError(t, operator.deleteK8sObject(e2eNamespace))
@@ -105,7 +104,6 @@ func TestKubernetesConfigApply(t *testing.T) {
 				Name: "e2e-autodetect-operator-version",
 			},
 		}
-		t.Logf("adding namespace %s", e2eNamespace)
 		require.NoError(t, operator.createK8sObject(e2eNamespace))
 		g.t.Cleanup(func() {
 			require.NoError(t, operator.deleteK8sObject(e2eNamespace))
@@ -139,7 +137,6 @@ func TestKubernetesConfigApply(t *testing.T) {
 				Name: "e2e-export-atlas-resource",
 			},
 		}
-		t.Logf("adding namespace %s", e2eNamespace)
 		require.NoError(t, operator.createK8sObject(e2eNamespace))
 		g.t.Cleanup(func() {
 			require.NoError(t, operator.deleteK8sObject(e2eNamespace))
@@ -160,24 +157,28 @@ func TestKubernetesConfigApply(t *testing.T) {
 		})
 
 		akoProject := akov2.AtlasProject{}
-		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(g.projectName), Namespace: e2eNamespace.Name},
-			&akoProject,
-			true,
+		require.NoError(
+			t,
+			operator.getK8sObject(
+				client.ObjectKey{Name: prepareK8sName(g.projectName), Namespace: e2eNamespace.Name},
+				&akoProject,
+				true,
+			),
 		)
-		require.NoError(t, err)
 		assert.NotEmpty(t, akoProject.Spec.AlertConfigurations)
 		akoProject.Spec.AlertConfigurations = nil
 		assert.Equal(t, referenceExportedProject(g.projectName, g.teamName, &akoProject).Spec, akoProject.Spec)
 
 		// Assert Database User
 		akoDBUser := akov2.AtlasDatabaseUser{}
-		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.dbUser)), Namespace: e2eNamespace.Name},
-			&akoDBUser,
-			true,
+		require.NoError(
+			t,
+			operator.getK8sObject(
+				client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.dbUser)), Namespace: e2eNamespace.Name},
+				&akoDBUser,
+				true,
+			),
 		)
-		require.NoError(t, err)
 		assert.Equal(t, referenceExportedDBUser(g.projectName, g.dbUser, e2eNamespace.Name).Spec, akoDBUser.Spec)
 
 		// Assert Team
@@ -206,12 +207,14 @@ func TestKubernetesConfigApply(t *testing.T) {
 
 		// Assert Backup Schedule
 		akoBkpSchedule := akov2.AtlasBackupSchedule{}
-		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s-backupschedule", g.projectName, g.clusterName)), Namespace: e2eNamespace.Name},
-			&akoBkpSchedule,
-			true,
+		require.NoError(
+			t,
+			operator.getK8sObject(
+				client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s-backupschedule", g.projectName, g.clusterName)), Namespace: e2eNamespace.Name},
+				&akoBkpSchedule,
+				true,
+			),
 		)
-		require.NoError(t, err)
 		assert.Equal(
 			t,
 			referenceExportedBackupSchedule(g.projectName, g.clusterName, e2eNamespace.Name, akoBkpSchedule.Spec.ReferenceHourOfDay, akoBkpSchedule.Spec.ReferenceMinuteOfHour).Spec,

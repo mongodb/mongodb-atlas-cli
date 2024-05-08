@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && cluster && kubernetes)
+//go:build e2e || (atlas && cluster && kubernetes && generate)
 
 package atlas_test
 
@@ -83,28 +83,24 @@ func getK8SEntities(data []byte) ([]runtime.Object, error) {
 }
 
 type KubernetesConfigGenerateProjectSuite struct {
-	t               *testing.T
-	assertions      *assert.Assertions
 	generator       *atlasE2ETestGenerator
 	expectedProject *akov2.AtlasProject
 	cliPath         string
 }
 
+const projectPrefix = "Kubernetes-"
+
 func InitialSetupWithTeam(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	t.Helper()
-	s := KubernetesConfigGenerateProjectSuite{
-		t: t,
-	}
+	s := KubernetesConfigGenerateProjectSuite{}
 	s.generator = newAtlasE2ETestGenerator(t)
 	s.generator.generateTeam("Kubernetes")
-	s.generator.generateEmptyProject(fmt.Sprintf("Kubernetes-%s", s.generator.projectName))
+	s.generator.generateEmptyProject(projectPrefix + s.generator.projectName)
 	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 	s.cliPath = cliPath
-
-	s.assertions = assert.New(t)
 
 	// always register atlas entities
 	require.NoError(t, akov2.AddToScheme(scheme.Scheme))
@@ -113,18 +109,14 @@ func InitialSetupWithTeam(t *testing.T) KubernetesConfigGenerateProjectSuite {
 
 func InitialSetup(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	t.Helper()
-	s := KubernetesConfigGenerateProjectSuite{
-		t: t,
-	}
+	s := KubernetesConfigGenerateProjectSuite{}
 	s.generator = newAtlasE2ETestGenerator(t)
-	s.generator.generateEmptyProject(fmt.Sprintf("Kubernetes-%s", s.generator.projectName))
+	s.generator.generateEmptyProject(projectPrefix + s.generator.projectName)
 	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 	s.cliPath = cliPath
-
-	s.assertions = assert.New(t)
 
 	// always register atlas entities
 	require.NoError(t, akov2.AddToScheme(scheme.Scheme))
@@ -136,7 +128,6 @@ func TestEmptyProject(t *testing.T) {
 	cliPath := s.cliPath
 	generator := s.generator
 	expectedProject := s.expectedProject
-	assertions := s.assertions
 
 	t.Run("Generate valid resources of ONE project", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -156,29 +147,14 @@ func TestEmptyProject(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
 
-		checkProject(t, objects, expectedProject, assertions)
-		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
-			found := false
-			var secret *corev1.Secret
-			var ok bool
-			for i := range objects {
-				secret, ok = objects[i].(*corev1.Secret)
-				if ok {
-					found = true
-					break
-				}
-			}
-			if !found {
-				t.Fatal("Secret is not found in results")
-			}
-			assert.Equal(t, targetNamespace, secret.Namespace)
-		})
+		checkProject(t, objects, expectedProject)
+		secret, found := findSecret(objects)
+		require.True(t, found, "Secret is not found in results")
+		assert.Equal(t, targetNamespace, secret.Namespace)
 	})
 }
 
@@ -187,7 +163,6 @@ func TestProjectWithNonDefaultSettings(t *testing.T) {
 	cliPath := s.cliPath
 	generator := s.generator
 	expectedProject := s.expectedProject
-	assertions := s.assertions
 	expectedProject.Spec.Settings.IsCollectDatabaseSpecificsStatisticsEnabled = pointer.Get(false)
 
 	t.Run("Change project settings and generate", func(t *testing.T) {
@@ -200,8 +175,8 @@ func TestProjectWithNonDefaultSettings(t *testing.T) {
 			"--projectId",
 			generator.projectID)
 		cmd.Env = os.Environ()
-		_, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		settingsResp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(settingsResp))
 
 		cmd = exec.Command(cliPath,
 			"kubernetes",
@@ -219,13 +194,10 @@ func TestProjectWithNonDefaultSettings(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err)
-			require.NotEmpty(t, objects)
-		})
-
-		checkProject(t, objects, expectedProject, assertions)
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err)
+		require.NotEmpty(t, objects)
+		checkProject(t, objects, expectedProject)
 	})
 }
 
@@ -235,7 +207,6 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 	cliPath := s.cliPath
 	generator := s.generator
 	expectedProject := s.expectedProject
-	assertions := s.assertions
 
 	newAlertConfig := akov2.AlertConfiguration{
 		Threshold:       &akov2.Threshold{},
@@ -250,23 +221,23 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 				SMSEnabled:   pointer.Get(false),
 				EmailEnabled: pointer.Get(true),
 				APITokenRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-api-token-0", expectedProject.Name), dictionary),
+					Name:      resources.NormalizeAtlasName(expectedProject.Name+"-api-token-0", dictionary),
 					Namespace: targetNamespace,
 				},
 				DatadogAPIKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-datadog-api-key-0", expectedProject.Name), dictionary),
+					Name:      resources.NormalizeAtlasName(expectedProject.Name+"-datadog-api-key-0", dictionary),
 					Namespace: targetNamespace,
 				},
 				OpsGenieAPIKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-ops-genie-api-key-0", expectedProject.Name), dictionary),
+					Name:      resources.NormalizeAtlasName(expectedProject.Name+"-ops-genie-api-key-0", dictionary),
 					Namespace: targetNamespace,
 				},
 				ServiceKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-service-key-0", expectedProject.Name), dictionary),
+					Name:      resources.NormalizeAtlasName(expectedProject.Name+"%s-service-key-0", dictionary),
 					Namespace: targetNamespace,
 				},
 				VictorOpsSecretRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-victor-ops-credentials-0", expectedProject.Name), dictionary),
+					Name:      resources.NormalizeAtlasName(expectedProject.Name+"-victor-ops-credentials-0", dictionary),
 					Namespace: targetNamespace,
 				},
 			},
@@ -306,8 +277,8 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 			fmt.Sprintf("--matcherValue=%s", newAlertConfig.Matchers[0].Value),
 			"-o=json")
 		cmd.Env = os.Environ()
-		_, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		alertConfigResp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(alertConfigResp))
 
 		cmd = exec.Command(cliPath,
 			"kubernetes",
@@ -325,13 +296,10 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err)
-			require.NotEmpty(t, objects)
-		})
-
-		checkProject(t, objects, expectedProject, assertions)
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err)
+		require.NotEmpty(t, objects)
+		checkProject(t, objects, expectedProject)
 	})
 }
 
@@ -340,7 +308,6 @@ func TestProjectWithAccessList(t *testing.T) {
 	cliPath := s.cliPath
 	generator := s.generator
 	expectedProject := s.expectedProject
-	assertions := s.assertions
 
 	entry := "192.168.0.10"
 	newIPAccess := akov2project.IPAccessList{
@@ -356,15 +323,16 @@ func TestProjectWithAccessList(t *testing.T) {
 			accessListEntity,
 			"create",
 			newIPAccess.IPAddress,
-			fmt.Sprintf("--comment=%s", newIPAccess.Comment),
+			"--comment",
+			newIPAccess.Comment,
 			"--projectId",
 			generator.projectID,
 			"--type",
 			"ipAddress",
 			"-o=json")
 		cmd.Env = os.Environ()
-		_, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		accessListResp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(accessListResp))
 
 		cmd = exec.Command(cliPath,
 			"kubernetes",
@@ -382,13 +350,10 @@ func TestProjectWithAccessList(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
-
-		checkProject(t, objects, expectedProject, assertions)
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
+		checkProject(t, objects, expectedProject)
 	})
 }
 
@@ -397,7 +362,6 @@ func TestProjectWithAccessRole(t *testing.T) {
 	cliPath := s.cliPath
 	generator := s.generator
 	expectedProject := s.expectedProject
-	assertions := s.assertions
 
 	newIPAccess := akov2.CloudProviderAccessRole{
 		ProviderName: string(akov2provider.ProviderAWS),
@@ -416,8 +380,8 @@ func TestProjectWithAccessRole(t *testing.T) {
 			generator.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		_, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		accessRoleResp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(accessRoleResp))
 
 		cmd = exec.Command(cliPath,
 			"kubernetes",
@@ -435,13 +399,10 @@ func TestProjectWithAccessRole(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err)
-			require.NotEmpty(t, objects)
-		})
-
-		checkProject(t, objects, expectedProject, assertions)
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err)
+		require.NotEmpty(t, objects)
+		checkProject(t, objects, expectedProject)
 	})
 }
 
@@ -450,7 +411,6 @@ func TestProjectWithCustomRole(t *testing.T) {
 	cliPath := s.cliPath
 	generator := s.generator
 	expectedProject := s.expectedProject
-	assertions := s.assertions
 
 	newCustomRole := akov2.CustomRole{
 		Name: "test-role",
@@ -482,8 +442,8 @@ func TestProjectWithCustomRole(t *testing.T) {
 			generator.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		_, err := cmd.CombinedOutput()
-		require.NoError(t, err)
+		dbRoleResp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(dbRoleResp))
 
 		cmd = exec.Command(cliPath,
 			"kubernetes",
@@ -501,13 +461,10 @@ func TestProjectWithCustomRole(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
-
-		checkProject(t, objects, expectedProject, assertions)
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
+		checkProject(t, objects, expectedProject)
 	})
 }
 
@@ -516,7 +473,6 @@ func TestProjectWithIntegration(t *testing.T) {
 	cliPath := s.cliPath
 	generator := s.generator
 	expectedProject := s.expectedProject
-	assertions := s.assertions
 
 	datadogKey := "00000000000000000000000000000012"
 	newIntegration := akov2project.Integration{
@@ -561,18 +517,17 @@ func TestProjectWithIntegration(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
 
-		checkProject(t, objects, expectedProject, assertions)
-		assertions.Len(objects, 3, "should have 3 objects in the output: project, integration secret, atlas secret")
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
+
+		checkProject(t, objects, expectedProject)
+		assert.Len(t, objects, 3, "should have 3 objects in the output: project, integration secret, atlas secret")
 		integrationSecret := objects[1].(*corev1.Secret)
 		password, ok := integrationSecret.Data["password"]
-		assertions.True(ok, "should have password field in the integration secret")
-		assertions.True(compareStingsWithHiddenPart(datadogKey, string(password), uint8('*')), "should have correct password in the integration secret")
+		assert.True(t, ok, "should have password field in the integration secret")
+		assert.True(t, compareStingsWithHiddenPart(datadogKey, string(password), uint8('*')), "should have correct password in the integration secret")
 	})
 }
 
@@ -581,8 +536,6 @@ func TestProjectWithMaintenanceWindow(t *testing.T) {
 	cliPath := s.cliPath
 	generator := s.generator
 	expectedProject := s.expectedProject
-	assertions := s.assertions
-
 	newMaintenanceWindow := akov2project.MaintenanceWindow{
 		DayOfWeek: 1,
 		HourOfDay: 1,
@@ -621,13 +574,10 @@ func TestProjectWithMaintenanceWindow(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
-
-		checkProject(t, objects, expectedProject, assertions)
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
+		checkProject(t, objects, expectedProject)
 	})
 }
 
@@ -636,7 +586,6 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 	cliPath := s.cliPath
 	generator := s.generator
 	expectedProject := s.expectedProject
-	assertions := s.assertions
 
 	atlasCidrBlock := "10.8.0.0/18"
 	networkPeer := akov2.NetworkPeer{
@@ -690,13 +639,10 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
-
-		checkProject(t, objects, expectedProject, assertions)
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
+		checkProject(t, objects, expectedProject)
 	})
 }
 
@@ -705,7 +651,6 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 	cliPath := s.cliPath
 	generator := s.generator
 	expectedProject := s.expectedProject
-	assertions := s.assertions
 
 	const region = "northeurope"
 	newPrivateEndpoint := akov2.PrivateEndpoint{
@@ -762,13 +707,10 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
-
-		checkProject(t, objects, expectedProject, assertions)
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
+		checkProject(t, objects, expectedProject)
 	})
 }
 
@@ -777,7 +719,6 @@ func TestProjectAndTeams(t *testing.T) {
 	cliPath := s.cliPath
 	generator := s.generator
 	expectedProject := s.expectedProject
-	assertions := s.assertions
 
 	teamRole := "GROUP_OWNER"
 
@@ -828,17 +769,14 @@ func TestProjectAndTeams(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
-
-		checkProject(t, objects, expectedProject, assertions)
-		t.Run("Team is created", func(_ *testing.T) {
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
+		checkProject(t, objects, expectedProject)
+		t.Run("Team is created", func(t *testing.T) {
 			for _, obj := range objects {
 				if team, ok := obj.(*akov2.AtlasTeam); ok {
-					assertions.Equal(expectedTeam, team)
+					assert.Equal(t, expectedTeam, team)
 				}
 			}
 		})
@@ -870,46 +808,42 @@ func referenceTeam(name, namespace string, users []akov2.TeamUser, projectName s
 	}
 }
 
-func checkProject(t *testing.T, output []runtime.Object, expected *akov2.AtlasProject, asserts *assert.Assertions) {
+func checkProject(t *testing.T, output []runtime.Object, expected *akov2.AtlasProject) {
 	t.Helper()
-	t.Run("Project presents with expected data", func(t *testing.T) {
-		found := false
-		var p *akov2.AtlasProject
-		var ok bool
-		for i := range output {
-			p, ok = output[i].(*akov2.AtlasProject)
-			if ok {
-				found = true
-				break
-			}
+	found := false
+	var p *akov2.AtlasProject
+	var ok bool
+	for i := range output {
+		p, ok = output[i].(*akov2.AtlasProject)
+		if ok {
+			found = true
+			break
 		}
-		if !found {
-			t.Fatal("AtlasProject is not found in results")
+	}
+	require.True(t, found, "AtlasProject is not found in results")
+
+	// secretref names are randomly generated so we can't determine those in forehand
+	expected.Spec.EncryptionAtRest.AwsKms = p.Spec.EncryptionAtRest.AwsKms
+	expected.Spec.EncryptionAtRest.GoogleCloudKms = p.Spec.EncryptionAtRest.GoogleCloudKms
+	expected.Spec.EncryptionAtRest.AzureKeyVault = p.Spec.EncryptionAtRest.AzureKeyVault
+
+	for i := range p.Spec.AlertConfigurations {
+		alertConfig := &p.Spec.AlertConfigurations[i]
+		for j := range alertConfig.Notifications {
+			expected.Spec.AlertConfigurations[i].Notifications[j].APITokenRef = p.Spec.AlertConfigurations[i].Notifications[j].APITokenRef
+			expected.Spec.AlertConfigurations[i].Notifications[j].DatadogAPIKeyRef = p.Spec.AlertConfigurations[i].Notifications[j].DatadogAPIKeyRef
+			expected.Spec.AlertConfigurations[i].Notifications[j].OpsGenieAPIKeyRef = p.Spec.AlertConfigurations[i].Notifications[j].OpsGenieAPIKeyRef
+			expected.Spec.AlertConfigurations[i].Notifications[j].ServiceKeyRef = p.Spec.AlertConfigurations[i].Notifications[j].ServiceKeyRef
+			expected.Spec.AlertConfigurations[i].Notifications[j].VictorOpsSecretRef = p.Spec.AlertConfigurations[i].Notifications[j].VictorOpsSecretRef
 		}
-
-		// secretref names are randomly generated so we can't determine those in forehand
-		expected.Spec.EncryptionAtRest.AwsKms = p.Spec.EncryptionAtRest.AwsKms
-		expected.Spec.EncryptionAtRest.GoogleCloudKms = p.Spec.EncryptionAtRest.GoogleCloudKms
-		expected.Spec.EncryptionAtRest.AzureKeyVault = p.Spec.EncryptionAtRest.AzureKeyVault
-
-		for i := range p.Spec.AlertConfigurations {
-			alertConfig := &p.Spec.AlertConfigurations[i]
-			for j := range alertConfig.Notifications {
-				expected.Spec.AlertConfigurations[i].Notifications[j].APITokenRef = p.Spec.AlertConfigurations[i].Notifications[j].APITokenRef
-				expected.Spec.AlertConfigurations[i].Notifications[j].DatadogAPIKeyRef = p.Spec.AlertConfigurations[i].Notifications[j].DatadogAPIKeyRef
-				expected.Spec.AlertConfigurations[i].Notifications[j].OpsGenieAPIKeyRef = p.Spec.AlertConfigurations[i].Notifications[j].OpsGenieAPIKeyRef
-				expected.Spec.AlertConfigurations[i].Notifications[j].ServiceKeyRef = p.Spec.AlertConfigurations[i].Notifications[j].ServiceKeyRef
-				expected.Spec.AlertConfigurations[i].Notifications[j].VictorOpsSecretRef = p.Spec.AlertConfigurations[i].Notifications[j].VictorOpsSecretRef
-			}
-			for k := range alertConfig.Matchers {
-				expected.Spec.AlertConfigurations[i].Matchers[k].FieldName = p.Spec.AlertConfigurations[i].Matchers[k].FieldName
-				expected.Spec.AlertConfigurations[i].Matchers[k].Operator = p.Spec.AlertConfigurations[i].Matchers[k].Operator
-				expected.Spec.AlertConfigurations[i].Matchers[k].Value = p.Spec.AlertConfigurations[i].Matchers[k].Value
-			}
+		for k := range alertConfig.Matchers {
+			expected.Spec.AlertConfigurations[i].Matchers[k].FieldName = p.Spec.AlertConfigurations[i].Matchers[k].FieldName
+			expected.Spec.AlertConfigurations[i].Matchers[k].Operator = p.Spec.AlertConfigurations[i].Matchers[k].Operator
+			expected.Spec.AlertConfigurations[i].Matchers[k].Value = p.Spec.AlertConfigurations[i].Matchers[k].Value
 		}
+	}
 
-		asserts.Equal(expected, p)
-	})
+	assert.Equal(t, expected, p)
 }
 
 func referenceProject(name, namespace string, labels map[string]string) *akov2.AtlasProject {
@@ -932,7 +866,7 @@ func referenceProject(name, namespace string, labels map[string]string) *akov2.A
 		Spec: akov2.AtlasProjectSpec{
 			Name: name,
 			ConnectionSecret: &akov2common.ResourceRefNamespaced{
-				Name: resources.NormalizeAtlasName(fmt.Sprintf("%s-credentials", name), dictionary),
+				Name: resources.NormalizeAtlasName(name+"-credentials", dictionary),
 			},
 			Settings: &akov2.ProjectSettings{
 				IsCollectDatabaseSpecificsStatisticsEnabled: pointer.Get(true),
@@ -950,21 +884,21 @@ func referenceProject(name, namespace string, labels map[string]string) *akov2.A
 					Enabled: pointer.Get(false),
 					Valid:   pointer.Get(false),
 					SecretRef: akov2common.ResourceRefNamespaced{
-						Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-aws-credentials", name), dictionary),
+						Name:      resources.NormalizeAtlasName(name+"-aws-credentials", dictionary),
 						Namespace: namespace,
 					},
 				},
 				AzureKeyVault: akov2.AzureKeyVault{
 					Enabled: pointer.Get(false),
 					SecretRef: akov2common.ResourceRefNamespaced{
-						Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-azure-credentials", name), dictionary),
+						Name:      resources.NormalizeAtlasName(name+"-azure-credentials", dictionary),
 						Namespace: namespace,
 					},
 				},
 				GoogleCloudKms: akov2.GoogleCloudKms{
 					Enabled: pointer.Get(false),
 					SecretRef: akov2common.ResourceRefNamespaced{
-						Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-gcp-credentials", name), dictionary),
+						Name:      resources.NormalizeAtlasName(name+"-gcp-credentials", dictionary),
 						Namespace: namespace,
 					},
 				},
@@ -1306,7 +1240,6 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 			g.clusterName)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 	})
 
@@ -1329,52 +1262,36 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects, "result should not be empty")
-		})
 
-		t.Run("Project present with valid name", func(t *testing.T) {
-			p, found := findAtlasProject(objects)
-			require.True(t, found, "AtlasProject is not found in results")
-			assert.Equal(t, targetNamespace, p.Namespace)
-		})
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects, "result should not be empty")
 
-		t.Run("Deployment present with valid data", func(t *testing.T) {
-			found := false
-			var deployment *akov2.AtlasDeployment
-			var ok bool
-			for i := range objects {
-				deployment, ok = objects[i].(*akov2.AtlasDeployment)
-				if ok {
-					found = true
-					break
-				}
+		p, found := findAtlasProject(objects)
+		require.True(t, found, "AtlasProject is not found in results")
+		assert.Equal(t, targetNamespace, p.Namespace)
+		found = false
+		var deployment *akov2.AtlasDeployment
+		var ok bool
+		for i := range objects {
+			deployment, ok = objects[i].(*akov2.AtlasDeployment)
+			if ok {
+				found = true
+				break
 			}
-			if !found {
-				t.Fatal("AtlasDeployment is not found in results")
-			}
-			assert.Equal(t, expectedDeployment, deployment)
-		})
+		}
+		require.True(t, found, "AtlasDeployment is not found in results")
+		assert.Equal(t, expectedDeployment, deployment)
 
-		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
-			secret, found := findSecret(objects)
-			require.True(t, found, "Secret is not found in results")
-			assert.Equal(t, targetNamespace, secret.Namespace)
-		})
-
-		t.Run("Backup Schedule present with valid data", func(t *testing.T) {
-			schedule, found := atlasBackupSchedule(objects)
-			require.True(t, found, "AtlasBackupSchedule is not found in results")
-			assert.Equal(t, expectedBackupSchedule, schedule)
-		})
-
-		t.Run("Backup policy present with valid data", func(t *testing.T) {
-			policy, found := atlasBackupPolicy(objects)
-			require.True(t, found, "AtlasBackupPolicy is not found in results")
-			assert.Equal(t, expectedBackupPolicy, policy)
-		})
+		secret, found := findSecret(objects)
+		require.True(t, found, "Secret is not found in results")
+		assert.Equal(t, targetNamespace, secret.Namespace)
+		schedule, found := atlasBackupSchedule(objects)
+		require.True(t, found, "AtlasBackupSchedule is not found in results")
+		assert.Equal(t, expectedBackupSchedule, schedule)
+		policy, found := atlasBackupPolicy(objects)
+		require.True(t, found, "AtlasBackupPolicy is not found in results")
+		assert.Equal(t, expectedBackupPolicy, policy)
 	})
 
 	t.Run("Generate valid resources of ONE project and TWO clusters", func(t *testing.T) {
@@ -1385,7 +1302,9 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"--clusterName",
-			fmt.Sprintf("%s,%s", g.clusterName, g.serverlessName),
+			g.clusterName,
+			"--clusterName",
+			g.serverlessName,
 			"--targetNamespace",
 			targetNamespace,
 			"--includeSecrets")
@@ -1396,33 +1315,19 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
+		p, found := findAtlasProject(objects)
+		require.True(t, found, "AtlasProject is not found in results")
+		assert.Equal(t, targetNamespace, p.Namespace)
 
-		t.Run("Project present with valid name", func(t *testing.T) {
-			p, found := findAtlasProject(objects)
-			if !found {
-				t.Fatal("AtlasProject is not found in results")
-			}
-			assert.Equal(t, targetNamespace, p.Namespace)
-		})
-
-		t.Run("Deployments present with valid data", func(t *testing.T) {
-			ds := atlasDeployments(objects)
-			require.Len(t, ds, 2)
-			checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
-		})
-
-		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
-			secret, found := findSecret(objects)
-			if !found {
-				t.Fatal("Secret is not found in results")
-			}
-			assert.Equal(t, targetNamespace, secret.Namespace)
-		})
+		ds := atlasDeployments(objects)
+		require.Len(t, ds, 2)
+		checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
+		secret, found := findSecret(objects)
+		require.True(t, found, "Secret is not found in results")
+		assert.Equal(t, targetNamespace, secret.Namespace)
 	})
 
 	t.Run("Generate valid resources of ONE project and TWO clusters without listing clusters", func(t *testing.T) {
@@ -1442,32 +1347,17 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
-
-		t.Run("Project present with valid name", func(t *testing.T) {
-			p, found := findAtlasProject(objects)
-			if !found {
-				t.Fatal("AtlasProject is not found in results")
-			}
-			assert.Equal(t, targetNamespace, p.Namespace)
-		})
-
-		t.Run("Deployments present with valid data", func(t *testing.T) {
-			ds := atlasDeployments(objects)
-			checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
-		})
-
-		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
-			secret, found := findSecret(objects)
-			if !found {
-				t.Fatal("Secret is not found in results")
-			}
-			assert.Equal(t, targetNamespace, secret.Namespace)
-		})
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
+		p, found := findAtlasProject(objects)
+		require.True(t, found, "AtlasProject is not found in results")
+		assert.Equal(t, targetNamespace, p.Namespace)
+		ds := atlasDeployments(objects)
+		checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
+		secret, found := findSecret(objects)
+		require.True(t, found, "Secret is not found in results")
+		assert.Equal(t, targetNamespace, secret.Namespace)
 	})
 }
 
@@ -1496,50 +1386,34 @@ func TestKubernetesConfigGenerateSharedCluster(t *testing.T) {
 	// always register atlas entities
 	require.NoError(t, akov2.AddToScheme(scheme.Scheme))
 
-	t.Run("Generate valid resources of ONE project and TWO clusters without listing clusters", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			"kubernetes",
-			"config",
-			"generate",
-			"--projectId",
-			g.projectID,
-			"--targetNamespace",
-			targetNamespace,
-			"--includeSecrets")
-		cmd.Env = os.Environ()
+	cmd := exec.Command(cliPath,
+		"kubernetes",
+		"config",
+		"generate",
+		"--projectId",
+		g.projectID,
+		"--targetNamespace",
+		targetNamespace,
+		"--includeSecrets")
+	cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
-		t.Log(string(resp))
-		require.NoError(t, err, string(resp))
-		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
+	resp, err := cmd.CombinedOutput()
+	t.Log(string(resp))
+	require.NoError(t, err, string(resp))
+	var objects []runtime.Object
+	objects, err = getK8SEntities(resp)
+	require.NoError(t, err, "should not fail on decode")
+	require.NotEmpty(t, objects)
 
-		t.Run("Project present with valid name", func(t *testing.T) {
-			p, found := findAtlasProject(objects)
-			if !found {
-				t.Fatal("AtlasProject is not found in results")
-			}
-			assert.Equal(t, targetNamespace, p.Namespace)
-		})
-
-		t.Run("Deployment present with valid data", func(t *testing.T) {
-			ds := atlasDeployments(objects)
-			assert.Len(t, ds, 1)
-			assert.Equal(t, expectedDeployment, ds[0])
-		})
-
-		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
-			secret, found := findSecret(objects)
-			if !found {
-				t.Fatal("Secret is not found in results")
-			}
-			assert.Equal(t, targetNamespace, secret.Namespace)
-		})
-	})
+	p, found := findAtlasProject(objects)
+	require.True(t, found, "AtlasProject is not found in results")
+	assert.Equal(t, targetNamespace, p.Namespace)
+	ds := atlasDeployments(objects)
+	assert.Len(t, ds, 1)
+	assert.Equal(t, expectedDeployment, ds[0])
+	secret, found := findSecret(objects)
+	require.True(t, found, "Secret is not found in results")
+	assert.Equal(t, targetNamespace, secret.Namespace)
 }
 
 func atlasDeployments(objects []runtime.Object) []*akov2.AtlasDeployment {
@@ -1653,34 +1527,25 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects, "result should not be empty")
-		})
-		t.Run("Project present with valid name", func(t *testing.T) {
-			p, found := findAtlasProject(objects)
-			if !found {
-				t.Fatal("AtlasProject is not found in results")
+
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects, "result should not be empty")
+
+		p, found := findAtlasProject(objects)
+		require.True(t, found, "AtlasProject is not found in results")
+		assert.Equal(t, targetNamespace, p.Namespace)
+		var datafederation *akov2.AtlasDataFederation
+		var ok bool
+		for i := range objects {
+			datafederation, ok = objects[i].(*akov2.AtlasDataFederation)
+			if ok {
+				found = true
+				break
 			}
-			assert.Equal(t, targetNamespace, p.Namespace)
-		})
-		t.Run("Deployment present with valid data", func(t *testing.T) {
-			found := false
-			var datafederation *akov2.AtlasDataFederation
-			var ok bool
-			for i := range objects {
-				datafederation, ok = objects[i].(*akov2.AtlasDataFederation)
-				if ok {
-					found = true
-					break
-				}
-			}
-			if !found {
-				t.Fatal("AtlasDataFederation is not found in results")
-			}
-			assert.Equal(t, expectedDataFederation, datafederation)
-		})
+		}
+		require.True(t, found, "AtlasDataFederation is not found in results")
+		assert.Equal(t, expectedDataFederation, datafederation)
 	})
 
 	t.Run("Generate valid resources of ONE project and TWO data federation", func(t *testing.T) {
@@ -1691,7 +1556,9 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"--dataFederationName",
-			fmt.Sprintf("%s,%s", storeNames[0], storeNames[1]),
+			storeNames[0],
+			"--dataFederationName",
+			storeNames[1],
 			"--targetNamespace",
 			targetNamespace)
 		cmd.Env = os.Environ()
@@ -1701,23 +1568,15 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects, "result should not be empty")
-		})
-		t.Run("Project present with valid name", func(t *testing.T) {
-			p, found := findAtlasProject(objects)
-			if !found {
-				t.Fatal("AtlasProject is not found in results")
-			}
-			assert.Equal(t, targetNamespace, p.Namespace)
-		})
-		t.Run("Deployments present with valid data", func(t *testing.T) {
-			dataFeds := atlasDataFederations(objects)
-			require.Len(t, dataFeds, len(storeNames))
-			checkDataFederationData(t, dataFeds, storeNames, targetNamespace, g.projectName)
-		})
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects, "result should not be empty")
+		p, found := findAtlasProject(objects)
+		require.True(t, found, "AtlasProject is not found in results")
+		assert.Equal(t, targetNamespace, p.Namespace)
+		dataFeds := atlasDataFederations(objects)
+		require.Len(t, dataFeds, len(storeNames))
+		checkDataFederationData(t, dataFeds, storeNames, targetNamespace, g.projectName)
 	})
 
 	t.Run("Generate valid resources of ONE project and TWO data federation without listing data federation instances", func(t *testing.T) {
@@ -1736,22 +1595,14 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects, "result should not be empty")
-		})
-		t.Run("Project present with valid name", func(t *testing.T) {
-			p, found := findAtlasProject(objects)
-			if !found {
-				t.Fatal("AtlasProject is not found in results")
-			}
-			assert.Equal(t, targetNamespace, p.Namespace)
-		})
-		t.Run("Deployments present with valid data", func(t *testing.T) {
-			dataFeds := atlasDataFederations(objects)
-			checkDataFederationData(t, dataFeds, storeNames, targetNamespace, g.projectName)
-		})
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects, "result should not be empty")
+		p, found := findAtlasProject(objects)
+		require.True(t, found, "AtlasProject is not found in results")
+		assert.Equal(t, targetNamespace, p.Namespace)
+		dataFeds := atlasDataFederations(objects)
+		checkDataFederationData(t, dataFeds, storeNames, targetNamespace, g.projectName)
 	})
 }
 
@@ -1778,6 +1629,5 @@ func checkDataFederationData(t *testing.T, dataFederations []*akov2.AtlasDataFed
 			entries = append(entries, name)
 		}
 	}
-	assert.Len(t, entries, len(dataFedNames))
 	assert.ElementsMatch(t, dataFedNames, entries)
 }

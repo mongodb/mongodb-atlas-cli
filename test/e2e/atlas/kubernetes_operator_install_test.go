@@ -48,7 +48,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 
 	cliPath, err := e2e.AtlasCLIBin()
 	req.NoError(err)
-
+	const contextPrefix = "kind-"
 	t.Run("should failed to install old and not supported version of the operator", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			"kubernetes",
@@ -88,7 +88,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 	t.Run("should install operator with default options", func(t *testing.T) {
 		clusterName := "install-default"
 		operator := setupCluster(t, clusterName)
-		context := fmt.Sprintf("kind-%s", clusterName)
+		context := contextPrefix + clusterName
 
 		cmd := exec.Command(cliPath,
 			"kubernetes",
@@ -106,7 +106,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 	t.Run("should install latest major version of operator in its own namespace with cluster-wide config", func(t *testing.T) {
 		clusterName := "install-clusterwide"
 		operator := setupCluster(t, clusterName, operatorNamespace)
-		context := fmt.Sprintf("kind-%s", clusterName)
+		context := contextPrefix + clusterName
 
 		cmd := exec.Command(cliPath,
 			"kubernetes",
@@ -128,7 +128,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		operatorWatch1 := "atlas-watch1"
 		operatorWatch2 := "atlas-watch2"
 		operator := setupCluster(t, clusterName, operatorNamespace, operatorWatch1, operatorWatch2)
-		context := fmt.Sprintf("kind-%s", clusterName)
+		context := contextPrefix + clusterName
 
 		cmd := exec.Command(cliPath,
 			"kubernetes",
@@ -136,7 +136,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"install",
 			"--operatorVersion", features.LatestOperatorMajorVersion,
 			"--targetNamespace", operatorNamespace,
-			"--watchNamespace", fmt.Sprintf("%s,%s", operatorWatch1, operatorWatch2),
+			"--watchNamespace", operatorWatch1,
+			"--watchNamespace", operatorWatch2,
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
 		resp, inErr := cmd.CombinedOutput()
@@ -148,7 +149,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 	t.Run("should install latest major version of operator in a single namespaced config", func(t *testing.T) {
 		clusterName := "install-namespaced"
 		operator := setupCluster(t, clusterName, operatorNamespace)
-		context := fmt.Sprintf("kind-%s", clusterName)
+		context := contextPrefix + clusterName
 
 		cmd := exec.Command(cliPath,
 			"kubernetes",
@@ -169,7 +170,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 	t.Run("should install operator starting a new project", func(t *testing.T) {
 		clusterName := "install-new-project"
 		operator := setupCluster(t, clusterName, operatorNamespace)
-		context := fmt.Sprintf("kind-%s", clusterName)
+		context := contextPrefix + clusterName
 		projectName := "MyK8sProject"
 
 		cmd := exec.Command(cliPath,
@@ -245,7 +246,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 
 		clusterName := "install-import"
 		operator := setupCluster(t, clusterName, operatorNamespace)
-		context := fmt.Sprintf("kind-%s", clusterName)
+		context := contextPrefix + clusterName
 
 		cmd := exec.Command(cliPath,
 			"kubernetes",
@@ -275,7 +276,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 
 		clusterName := "install-import-without-dp"
 		operator := setupCluster(t, clusterName, operatorNamespace)
-		context := fmt.Sprintf("kind-%s", clusterName)
+		context := contextPrefix + clusterName
 
 		cmd := exec.Command(cliPath,
 			"kubernetes",

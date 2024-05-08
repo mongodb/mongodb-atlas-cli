@@ -88,12 +88,14 @@ type KubernetesConfigGenerateProjectSuite struct {
 	cliPath         string
 }
 
+const projectPrefix = "Kubernetes-"
+
 func InitialSetupWithTeam(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	t.Helper()
 	s := KubernetesConfigGenerateProjectSuite{}
 	s.generator = newAtlasE2ETestGenerator(t)
 	s.generator.generateTeam("Kubernetes")
-	s.generator.generateEmptyProject(fmt.Sprintf("Kubernetes-%s", s.generator.projectName))
+	s.generator.generateEmptyProject(projectPrefix + s.generator.projectName)
 	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
@@ -109,7 +111,7 @@ func InitialSetup(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	t.Helper()
 	s := KubernetesConfigGenerateProjectSuite{}
 	s.generator = newAtlasE2ETestGenerator(t)
-	s.generator.generateEmptyProject(fmt.Sprintf("Kubernetes-%s", s.generator.projectName))
+	s.generator.generateEmptyProject(projectPrefix + s.generator.projectName)
 	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
@@ -219,23 +221,23 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 				SMSEnabled:   pointer.Get(false),
 				EmailEnabled: pointer.Get(true),
 				APITokenRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-api-token-0", expectedProject.Name), dictionary),
+					Name:      resources.NormalizeAtlasName(expectedProject.Name+"-api-token-0", dictionary),
 					Namespace: targetNamespace,
 				},
 				DatadogAPIKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-datadog-api-key-0", expectedProject.Name), dictionary),
+					Name:      resources.NormalizeAtlasName(expectedProject.Name+"-datadog-api-key-0", dictionary),
 					Namespace: targetNamespace,
 				},
 				OpsGenieAPIKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-ops-genie-api-key-0", expectedProject.Name), dictionary),
+					Name:      resources.NormalizeAtlasName(expectedProject.Name+"-ops-genie-api-key-0", dictionary),
 					Namespace: targetNamespace,
 				},
 				ServiceKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-service-key-0", expectedProject.Name), dictionary),
+					Name:      resources.NormalizeAtlasName(expectedProject.Name+"%s-service-key-0", dictionary),
 					Namespace: targetNamespace,
 				},
 				VictorOpsSecretRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-victor-ops-credentials-0", expectedProject.Name), dictionary),
+					Name:      resources.NormalizeAtlasName(expectedProject.Name+"-victor-ops-credentials-0", dictionary),
 					Namespace: targetNamespace,
 				},
 			},
@@ -321,7 +323,8 @@ func TestProjectWithAccessList(t *testing.T) {
 			accessListEntity,
 			"create",
 			newIPAccess.IPAddress,
-			fmt.Sprintf("--comment=%s", newIPAccess.Comment),
+			"--comment",
+			newIPAccess.Comment,
 			"--projectId",
 			generator.projectID,
 			"--type",
@@ -863,7 +866,7 @@ func referenceProject(name, namespace string, labels map[string]string) *akov2.A
 		Spec: akov2.AtlasProjectSpec{
 			Name: name,
 			ConnectionSecret: &akov2common.ResourceRefNamespaced{
-				Name: resources.NormalizeAtlasName(fmt.Sprintf("%s-credentials", name), dictionary),
+				Name: resources.NormalizeAtlasName(name+"-credentials", dictionary),
 			},
 			Settings: &akov2.ProjectSettings{
 				IsCollectDatabaseSpecificsStatisticsEnabled: pointer.Get(true),
@@ -881,21 +884,21 @@ func referenceProject(name, namespace string, labels map[string]string) *akov2.A
 					Enabled: pointer.Get(false),
 					Valid:   pointer.Get(false),
 					SecretRef: akov2common.ResourceRefNamespaced{
-						Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-aws-credentials", name), dictionary),
+						Name:      resources.NormalizeAtlasName(name+"-aws-credentials", dictionary),
 						Namespace: namespace,
 					},
 				},
 				AzureKeyVault: akov2.AzureKeyVault{
 					Enabled: pointer.Get(false),
 					SecretRef: akov2common.ResourceRefNamespaced{
-						Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-azure-credentials", name), dictionary),
+						Name:      resources.NormalizeAtlasName(name+"-azure-credentials", dictionary),
 						Namespace: namespace,
 					},
 				},
 				GoogleCloudKms: akov2.GoogleCloudKms{
 					Enabled: pointer.Get(false),
 					SecretRef: akov2common.ResourceRefNamespaced{
-						Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-gcp-credentials", name), dictionary),
+						Name:      resources.NormalizeAtlasName(name+"-gcp-credentials", dictionary),
 						Namespace: namespace,
 					},
 				},
@@ -1553,7 +1556,9 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"--dataFederationName",
-			fmt.Sprintf("%s,%s", storeNames[0], storeNames[1]),
+			storeNames[0],
+			"--dataFederationName",
+			storeNames[1],
 			"--targetNamespace",
 			targetNamespace)
 		cmd.Env = os.Environ()

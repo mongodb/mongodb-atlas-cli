@@ -241,6 +241,13 @@ repos:
     repos:
       - yum/amazon/2/mongodb-enterprise
 
+  - name: amazon2
+    type: rpm
+    edition: enterprise
+    bucket: repo.mongodb.com
+    repos:
+      - yum/amazon/2023/mongodb-enterprise
+
   - name: suse11
     type: rpm
     edition: enterprise

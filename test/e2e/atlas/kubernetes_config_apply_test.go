@@ -38,7 +38,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("should failed to apply resources when namespace doesn't exist", func(t *testing.T) {
+	t.Run("should fail to apply resources when namespace do not exist", func(t *testing.T) {
 		g := newAtlasE2ETestGenerator(t)
 		g.generateProject("k8sConfigApplyWrongNs")
 		cmd := exec.Command(cliPath,
@@ -55,7 +55,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		assert.Equal(t, "Error: namespaces \"a-wrong-namespace\" not found\n", string(resp))
 	})
 
-	t.Run("should failed to apply resources when unable to autodetect parameters", func(t *testing.T) {
+	t.Run("should fail to apply resources when unable to autodetect parameters", func(t *testing.T) {
 		g := newAtlasE2ETestGenerator(t)
 		g.generateProject("k8sConfigApplyNoAutoDetect")
 
@@ -88,7 +88,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		assert.Equal(t, "Error: unable to auto detect params: couldn't find an operator installed in any accessible namespace\n", string(resp))
 	})
 
-	t.Run("should failed to apply resources when unable to autodetect operator version", func(t *testing.T) {
+	t.Run("should fail to apply resources when unable to autodetect operator version", func(t *testing.T) {
 		g := newAtlasE2ETestGenerator(t)
 		g.generateProject("k8sConfigApplyFailVersion")
 

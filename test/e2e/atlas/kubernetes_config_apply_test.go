@@ -45,7 +45,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 			"config",
 			"apply",
 			"--targetNamespace", "a-wrong-namespace",
-			"--projectId", primitive.NewObjectID().String())
+			"--projectId", primitive.NewObjectID().Hex())
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.Error(t, err, string(resp))

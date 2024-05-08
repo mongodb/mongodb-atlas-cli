@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && cluster && kubernetes)
+//go:build e2e || (atlas && cluster && kubernetes && generate)
 
 package atlas_test
 
@@ -1446,49 +1446,47 @@ func TestKubernetesConfigGenerateSharedCluster(t *testing.T) {
 	// always register atlas entities
 	require.NoError(t, akov2.AddToScheme(scheme.Scheme))
 
-	t.Run("Generate valid resources of ONE project and TWO clusters without listing clusters", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			"kubernetes",
-			"config",
-			"generate",
-			"--projectId",
-			g.projectID,
-			"--targetNamespace",
-			targetNamespace,
-			"--includeSecrets")
-		cmd.Env = os.Environ()
+	cmd := exec.Command(cliPath,
+		"kubernetes",
+		"config",
+		"generate",
+		"--projectId",
+		g.projectID,
+		"--targetNamespace",
+		targetNamespace,
+		"--includeSecrets")
+	cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
-		t.Log(string(resp))
-		require.NoError(t, err, string(resp))
-		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects)
-		})
+	resp, err := cmd.CombinedOutput()
+	t.Log(string(resp))
+	require.NoError(t, err, string(resp))
+	var objects []runtime.Object
+	t.Run("Output can be decoded", func(t *testing.T) {
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
+	})
 
-		t.Run("Project present with valid name", func(t *testing.T) {
-			p, found := findAtlasProject(objects)
-			if !found {
-				t.Fatal("AtlasProject is not found in results")
-			}
-			assert.Equal(t, targetNamespace, p.Namespace)
-		})
+	t.Run("Project present with valid name", func(t *testing.T) {
+		p, found := findAtlasProject(objects)
+		if !found {
+			t.Fatal("AtlasProject is not found in results")
+		}
+		assert.Equal(t, targetNamespace, p.Namespace)
+	})
 
-		t.Run("Deployment present with valid data", func(t *testing.T) {
-			ds := atlasDeployments(objects)
-			assert.Len(t, ds, 1)
-			assert.Equal(t, expectedDeployment, ds[0])
-		})
+	t.Run("Deployment present with valid data", func(t *testing.T) {
+		ds := atlasDeployments(objects)
+		assert.Len(t, ds, 1)
+		assert.Equal(t, expectedDeployment, ds[0])
+	})
 
-		t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
-			secret, found := findSecret(objects)
-			if !found {
-				t.Fatal("Secret is not found in results")
-			}
-			assert.Equal(t, targetNamespace, secret.Namespace)
-		})
+	t.Run("Connection Secret present with non-empty credentials", func(t *testing.T) {
+		secret, found := findSecret(objects)
+		if !found {
+			t.Fatal("Secret is not found in results")
+		}
+		assert.Equal(t, targetNamespace, secret.Namespace)
 	})
 }
 
@@ -1603,34 +1601,25 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects, "result should not be empty")
-		})
-		t.Run("Project present with valid name", func(t *testing.T) {
-			p, found := findAtlasProject(objects)
-			if !found {
-				t.Fatal("AtlasProject is not found in results")
+
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects, "result should not be empty")
+
+		p, found := findAtlasProject(objects)
+		require.True(t, found, "AtlasProject is not found in results")
+		assert.Equal(t, targetNamespace, p.Namespace)
+		var datafederation *akov2.AtlasDataFederation
+		var ok bool
+		for i := range objects {
+			datafederation, ok = objects[i].(*akov2.AtlasDataFederation)
+			if ok {
+				found = true
+				break
 			}
-			assert.Equal(t, targetNamespace, p.Namespace)
-		})
-		t.Run("Deployment present with valid data", func(t *testing.T) {
-			found := false
-			var datafederation *akov2.AtlasDataFederation
-			var ok bool
-			for i := range objects {
-				datafederation, ok = objects[i].(*akov2.AtlasDataFederation)
-				if ok {
-					found = true
-					break
-				}
-			}
-			if !found {
-				t.Fatal("AtlasDataFederation is not found in results")
-			}
-			assert.Equal(t, expectedDataFederation, datafederation)
-		})
+		}
+		require.True(t, found, "AtlasDataFederation is not found in results")
+		assert.Equal(t, expectedDataFederation, datafederation)
 	})
 
 	t.Run("Generate valid resources of ONE project and TWO data federation", func(t *testing.T) {
@@ -1651,23 +1640,15 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects, "result should not be empty")
-		})
-		t.Run("Project present with valid name", func(t *testing.T) {
-			p, found := findAtlasProject(objects)
-			if !found {
-				t.Fatal("AtlasProject is not found in results")
-			}
-			assert.Equal(t, targetNamespace, p.Namespace)
-		})
-		t.Run("Deployments present with valid data", func(t *testing.T) {
-			dataFeds := atlasDataFederations(objects)
-			require.Len(t, dataFeds, len(storeNames))
-			checkDataFederationData(t, dataFeds, storeNames, targetNamespace, g.projectName)
-		})
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects, "result should not be empty")
+		p, found := findAtlasProject(objects)
+		require.True(t, found, "AtlasProject is not found in results")
+		assert.Equal(t, targetNamespace, p.Namespace)
+		dataFeds := atlasDataFederations(objects)
+		require.Len(t, dataFeds, len(storeNames))
+		checkDataFederationData(t, dataFeds, storeNames, targetNamespace, g.projectName)
 	})
 
 	t.Run("Generate valid resources of ONE project and TWO data federation without listing data federation instances", func(t *testing.T) {
@@ -1686,22 +1667,14 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 		require.NoError(t, err, string(resp))
 
 		var objects []runtime.Object
-		t.Run("Output can be decoded", func(t *testing.T) {
-			objects, err = getK8SEntities(resp)
-			require.NoError(t, err, "should not fail on decode")
-			require.NotEmpty(t, objects, "result should not be empty")
-		})
-		t.Run("Project present with valid name", func(t *testing.T) {
-			p, found := findAtlasProject(objects)
-			if !found {
-				t.Fatal("AtlasProject is not found in results")
-			}
-			assert.Equal(t, targetNamespace, p.Namespace)
-		})
-		t.Run("Deployments present with valid data", func(t *testing.T) {
-			dataFeds := atlasDataFederations(objects)
-			checkDataFederationData(t, dataFeds, storeNames, targetNamespace, g.projectName)
-		})
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects, "result should not be empty")
+		p, found := findAtlasProject(objects)
+		require.True(t, found, "AtlasProject is not found in results")
+		assert.Equal(t, targetNamespace, p.Namespace)
+		dataFeds := atlasDataFederations(objects)
+		checkDataFederationData(t, dataFeds, storeNames, targetNamespace, g.projectName)
 	})
 }
 
@@ -1728,6 +1701,5 @@ func checkDataFederationData(t *testing.T, dataFederations []*akov2.AtlasDataFed
 			entries = append(entries, name)
 		}
 	}
-	assert.Len(t, entries, len(dataFedNames))
 	assert.ElementsMatch(t, dataFedNames, entries)
 }

@@ -29,7 +29,6 @@ import (
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -40,12 +39,16 @@ func TestKubernetesConfigApply(t *testing.T) {
 	require.NoError(t, err)
 
 	t.Run("should failed to apply resources when namespace doesn't exist", func(t *testing.T) {
+		g := newAtlasE2ETestGenerator(t)
+		g.generateProject("k8sConfigApplyWrongNs")
 		cmd := exec.Command(cliPath,
 			"kubernetes",
 			"config",
 			"apply",
-			"--targetNamespace", "a-wrong-namespace",
-			"--projectId", primitive.NewObjectID().Hex())
+			"--targetNamespace",
+			"a-wrong-namespace",
+			"--projectId",
+			g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.Error(t, err, string(resp))

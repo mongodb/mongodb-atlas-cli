@@ -445,7 +445,7 @@ buildvariants:
     display_name: "Release AtlasCLI (goreleaser)"
     git_tag_only: true
     run_on:
-      - rhel80-small
+      - rhel90-small
     expansions:
       <<: *go_linux_version
       server_version: "4.4.0-rc3"

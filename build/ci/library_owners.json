@@ -10,7 +10,6 @@
 	"github.com/aws/aws-sdk-go-v2/config": "mongocli",
 	"github.com/aws/aws-sdk-go-v2/credentials": "mongocli",
 	"github.com/aws/aws-sdk-go-v2/service/kms": "mongocli",
-	"github.com/bradleyfalzon/ghinstallation/v2": "mongocli",
 	"github.com/briandowns/spinner": "mongocli",
 	"github.com/evergreen-ci/shrub": "mongocli",
 	"github.com/go-test/deep": "mongocli",

@@ -41,6 +41,8 @@ else
 	./bin/goreleaser --config "build/package/.goreleaser.yml" --rm-dist --release-notes "CHANGELOG.md" -p 1
 fi
 
+gh-token revoke -t "$GITHUB_TOKEN"
+
 # check that the notarization service signed the mac binaries
 SIGNED_FILE_NAME=mongodb-atlas-cli_macos_signed.zip
 if [[ -f "dist/$SIGNED_FILE_NAME" ]]; then

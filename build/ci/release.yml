@@ -287,7 +287,6 @@ tasks:
     commands:
       - func: "generate notices"
       - func: "install goreleaser"
-      - func: "install podman"
       - func: "install macos notarization service"
       - func: "install gh-token"
       - command: subprocess.exec

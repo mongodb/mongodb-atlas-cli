@@ -25,6 +25,15 @@ variables:
     env:
       <<: *go_env
 functions:
+  "install gh-token":
+    - command: shell.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        script: |
+          set -Eeou pipefail
+          curl --output gh-token -sfL https://github.com/Link-/gh-token/releases/download/v2.0.1/linux-amd64
+          chmod 755 ./gh-token
   "install goreleaser":
     - command: shell.exec
       type: setup
@@ -280,6 +289,7 @@ tasks:
       - func: "install goreleaser"
       - func: "install podman"
       - func: "install macos notarization service"
+      - func: "install gh-token"
       - command: subprocess.exec
         type: test
         params:

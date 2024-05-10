@@ -306,6 +306,11 @@ tasks:
         params:
           include_expansions_in_env:
             - unstable
+          env:
+            ARTIFACTORY_USERNAME: ${artifactory_username}
+            ARTIFACTORY_PASSWORD: ${artifactory_password}
+            GRS_USERNAME: ${garasign_username}
+            GRS_PASSWORD: ${garasign_password}
           working_dir: src/github.com/mongodb/mongodb-atlas-cli
           binary: build/package/windows_notarize.sh
       - func: "package"

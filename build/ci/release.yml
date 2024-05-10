@@ -25,6 +25,15 @@ variables:
     env:
       <<: *go_env
 functions:
+  "install gh-token":
+    - command: shell.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        script: |
+          set -Eeou pipefail
+          curl --output gh-token -sfL https://github.com/Link-/gh-token/releases/download/v2.0.1/linux-amd64
+          chmod 755 ./gh-token
   "install goreleaser":
     - command: shell.exec
       type: setup
@@ -260,8 +269,8 @@ tasks:
     commands:
       - func: "generate notices"
       - func: "install goreleaser"
-      - func: "install podman"
       - func: "install macos notarization service"
+      - func: "install gh-token"
       - command: subprocess.exec
         type: test
         params:
@@ -274,6 +283,18 @@ tasks:
             BUCKET: mongodb-mongocli-build
             unstable: ${unstable}
           binary: build/package/download-win-binaries.sh
+      - command: subprocess.exec
+        type: test
+        params:
+          include_expansions_in_env:
+            - unstable
+          env:
+            ARTIFACTORY_USERNAME: ${artifactory_username}
+            ARTIFACTORY_PASSWORD: ${artifactory_password}
+            GRS_USERNAME: ${garasign_username}
+            GRS_PASSWORD: ${garasign_password}
+          working_dir: src/github.com/mongodb/mongodb-atlas-cli
+          binary: build/package/windows_notarize.sh
       - func: "package"
         vars:
           unstable: ${unstable}
@@ -386,7 +407,7 @@ buildvariants:
   - name: goreleaser_mongocli_snapshot
     display_name: "Packaging MongoCLI (goreleaser)"
     run_on:
-      - rhel80-small
+      - rhel90-small
     expansions:
       <<: *go_linux_version
       server_version: "4.4.0-rc3"
@@ -404,7 +425,7 @@ buildvariants:
   - name: publish_mongocli_snapshot
     display_name: "Publish MongoCLI Snapshot"
     run_on:
-      - rhel80-small
+      - rhel90-small
     expansions:
       <<: *go_linux_version
       server_version: "4.4.0-rc3"

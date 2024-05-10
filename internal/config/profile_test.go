@@ -27,16 +27,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMongoCLIConfigHome(t *testing.T) {
-	expHome, err := os.UserConfigDir()
-	require.NoError(t, err)
-
-	home, err := MongoCLIConfigHome()
-	require.NoError(t, err)
-	expected := fmt.Sprintf("%s/mongocli", expHome)
-	assert.Equal(t, expected, home)
-}
-
 func TestCLIConfigHome(t *testing.T) {
 	expHome, err := os.UserConfigDir()
 	if err != nil {

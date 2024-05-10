@@ -167,8 +167,8 @@ tasks:
           shell: bash
           script: |
             set -Eeou pipefail
-            mkdir "$XDG_CONFIG_HOME/mongocli"
-            cat <<EOF > "$XDG_CONFIG_HOME/mongocli/config.toml"
+            mkdir "$XDG_CONFIG_HOME/atlascli"
+            cat <<EOF > "$XDG_CONFIG_HOME/atlascli/config.toml"
             [e2e]
               org_id = "5e429e7706822c6eac4d5971"
               public_api_key = "AAUMGJXA"

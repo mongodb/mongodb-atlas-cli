@@ -708,32 +708,6 @@ func (p *Profile) Save() error {
 	return viper.WriteConfigAs(p.Filename())
 }
 
-// OldMongoCLIConfigHome retrieves configHome path based used by MongoCLI.
-//
-// Deprecated: MongoCLI versions below v1.24.0 use this path.
-func OldMongoCLIConfigHome() (string, error) {
-	if home := os.Getenv("XDG_CONFIG_HOME"); home != "" {
-		return home, nil
-	}
-
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return "", err
-	}
-
-	return path.Join(home, ".config"), nil
-}
-
-// MongoCLIConfigHome retrieves configHome path based used by MongoCLI.
-func MongoCLIConfigHome() (string, error) {
-	home, err := os.UserConfigDir()
-	if err != nil {
-		return "", err
-	}
-
-	return path.Join(home, "mongocli"), nil
-}
-
 // CLIConfigHome retrieves configHome path.
 func CLIConfigHome() (string, error) {
 	home, err := os.UserConfigDir()

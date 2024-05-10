@@ -301,6 +301,13 @@ tasks:
             BUCKET: mongodb-mongocli-build
             unstable: ${unstable}
           binary: build/package/download-win-binaries.sh
+      - command: subprocess.exec
+        type: test
+        params:
+          include_expansions_in_env:
+            - unstable
+          working_dir: src/github.com/mongodb/mongodb-atlas-cli
+          binary: build/package/windows_notarize.sh
       - func: "package"
         vars:
           unstable: ${unstable}

@@ -102,12 +102,6 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
-  "install podman":
-    - command: subprocess.exec
-      type: setup
-      params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
-        binary: ../build/ci/install_podman.sh
   "setup operator":
     command: subprocess.exec
     type: setup
@@ -1125,7 +1119,6 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "install podman"
       - command: shell.exec
         type: setup
         params:
@@ -1159,7 +1152,6 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "install podman"
       - command: shell.exec
         type: setup
         params:
@@ -1327,7 +1319,7 @@ buildvariants:
   - name: e2e_local_deployments
     display_name: "E2E Local Deployments Tests"
     run_on:
-      - rhel80-small
+      - rhel90-small
     expansions:
       <<: *go_linux_version
     tasks:

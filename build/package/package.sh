@@ -26,7 +26,8 @@ export GORELEASER_KEY=${goreleaser_key:?}
 export VERSION_GIT
 
 echo "$GITHUB_APP_PEM" > app.pem
-GITHUB_TOKEN="$(go run ./tools/github-token -pem app.pem -app_id "$GITHUB_APP_ID" -owner 'mongodb' -repo 'mongodb-atlas-cli')"
+GITHUB_INSTALLATION_ID=$(gh-token installations --app-id "$GITHUB_APP_ID" --key ./app.pem | jq '.[] | select(.account.login == "mongodb") | .id' | head -1)
+GITHUB_TOKEN=$(gh-token generate --app-id "$GITHUB_APP_ID" --key ./app.pem --installation-id "$GITHUB_INSTALLATION_ID" -t)
 rm -rf app.pem
 export GITHUB_TOKEN
 
@@ -39,6 +40,8 @@ else
 	# avoid race conditions on the notarization step by using `-p 1`
 	./bin/goreleaser --config "build/package/.goreleaser.yml" --rm-dist --release-notes "CHANGELOG.md" -p 1
 fi
+
+gh-token revoke -t "$GITHUB_TOKEN"
 
 # check that the notarization service signed the mac binaries
 SIGNED_FILE_NAME=mongodb-atlas-cli_macos_signed.zip

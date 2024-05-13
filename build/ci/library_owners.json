@@ -2,7 +2,6 @@
 	"github.com/AlecAivazis/survey/v2": "mongocli",
 	"github.com/Masterminds/semver/v3": "mongocli",
 	"github.com/PaesslerAG/jsonpath": "mongocli",
-	"github.com/bradleyfalzon/ghinstallation/v2": "mongocli",
 	"github.com/briandowns/spinner": "mongocli",
 	"github.com/evergreen-ci/shrub": "mongocli",
 	"github.com/gemalto/kmip-go": "mongocli",

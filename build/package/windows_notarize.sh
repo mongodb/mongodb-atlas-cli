@@ -16,8 +16,14 @@
 
 set -Eeou pipefail
 
+VERSION_GIT="$(git tag --list "mongocli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION_NAME="$VERSION_GIT"
+if [[ "${unstable-}" == "-unstable" ]]; then
+	VERSION_NAME="$VERSION_GIT-next"
+fi
+
 EXE_FILE="bin/mongocli.exe"
-MSI_FILE="bin/mongocli_${VERSION}_windows_x86_64.msi"
+MSI_FILE="bin/mongocli_${VERSION_NAME}_windows_x86_64.msi"
 
 if [[ -f "$EXE_FILE" && -f "$MSI_FILE" ]]; then
 	echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com

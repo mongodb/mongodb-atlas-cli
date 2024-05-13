@@ -35,12 +35,6 @@ builds:
     goamd64: [v1]
     prebuilt:
       path: ./bin/mongocli.exe
-    hooks:
-      post:
-        - cmd: ./build/package/windows_notarize.sh
-          env:
-            - VERSION={{ .Version }}
-          output: true
 gomod: # https://goreleaser.com/customization/verifiable_builds/
   # Proxy a module from proxy.golang.org, making the builds verifiable.
   # This will only be effective if running against a tag. Snapshots will ignore

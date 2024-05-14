@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 func Test_autoCompleteOpts_tierSuggestions(t *testing.T) {

@@ -322,13 +322,13 @@ func setupCluster(t *testing.T, name string, namespaces ...string) *operatorHelp
 	require.NoError(t, err)
 
 	for _, namespace := range namespaces {
-		operatorNamespace := &corev1.Namespace{
+		namespaceObj := &corev1.Namespace{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: namespace,
 			},
 		}
 		t.Logf("adding namespace %s", namespace)
-		require.NoError(t, operator.createK8sObject(operatorNamespace))
+		require.NoError(t, operator.createK8sObject(namespaceObj))
 	}
 
 	return operator

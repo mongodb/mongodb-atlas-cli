@@ -18,11 +18,14 @@ package atlas_test
 import (
 	"context"
 	"errors"
+	"os"
+	"os/exec"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -34,12 +37,13 @@ import (
 	"sigs.k8s.io/kind/pkg/cluster"
 )
 
+const defaultOperatorNamespace = "mongodb-atlas-system"
+
 type operatorHelper struct {
 	t         *testing.T
 	k8sClient client.Client
 
 	resourcesTracked []client.Object
-	deployment       *appsv1.Deployment
 }
 
 func newOperatorHelper(t *testing.T) (*operatorHelper, error) {
@@ -147,10 +151,29 @@ func (oh *operatorHelper) getOperatorSecretes(namespace string) ([]corev1.Secret
 	return secretList.Items, nil
 }
 
+func (oh *operatorHelper) installOperator(namespace, version string) {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		oh.t.Errorf("unable to get atlasCli binary path: %v", err)
+	}
+
+	cmd := exec.Command(
+		cliPath,
+		"kubernetes", "operator", "install",
+		"--operatorVersion", version,
+		"--targetNamespace", namespace,
+	)
+	cmd.Env = os.Environ()
+	_, err = cmd.CombinedOutput()
+	if err != nil {
+		oh.t.Errorf("unable install the operator: %v", err)
+	}
+}
+
 func (oh *operatorHelper) stopOperator() {
 	deployment := appsv1.Deployment{}
 	err := oh.getK8sObject(
-		client.ObjectKey{Name: "mongodb-atlas-operator", Namespace: "mongodb-atlas-system"},
+		client.ObjectKey{Name: "mongodb-atlas-operator", Namespace: defaultOperatorNamespace},
 		&deployment,
 		false,
 	)
@@ -182,37 +205,6 @@ func (oh *operatorHelper) startOperator() {
 	err = oh.k8sClient.Update(context.Background(), &deployment, &client.UpdateOptions{})
 	if err != nil {
 		oh.t.Errorf("unable to start operator: %v", err)
-	}
-}
-
-func (oh *operatorHelper) deleteOperator() {
-	deployment := appsv1.Deployment{}
-	err := oh.getK8sObject(
-		client.ObjectKey{Name: "mongodb-atlas-operator", Namespace: "mongodb-atlas-system"},
-		&deployment,
-		false,
-	)
-	if err != nil {
-		oh.t.Errorf("unable to retrieve operator deployment: %v", err)
-	}
-
-	oh.deployment = &deployment
-
-	err = oh.k8sClient.Delete(context.Background(), &deployment, &client.DeleteOptions{})
-	if err != nil {
-		oh.t.Errorf("unable to delete operator: %v", err)
-	}
-}
-
-func (oh *operatorHelper) restoreOperator() {
-	if oh.deployment == nil {
-		oh.t.Errorf("unable to restore operator. unknown previous state")
-	}
-
-	oh.deployment.ResourceVersion = ""
-	err := oh.k8sClient.Create(context.Background(), oh.deployment, &client.CreateOptions{})
-	if err != nil {
-		oh.t.Errorf("unable to restore operator: %v", err)
 	}
 }
 

@@ -166,7 +166,7 @@ dbName and collection are required only for built-in roles.`
 	MonthsUntilExpiration                     = "Number of months until the X.509 certificate expires."
 	Collection                                = "Name of the collection."
 	Append                                    = "Input action and inheritedRoles to append to the existing role."
-	PrivilegeAction                           = "List of actions per database and collection. If no database or collections are provided, cluster scope is assumed."
+	PrivilegeAction                           = "List of actions per database and collection. If no database or collections are provided, cluster scope is assumed. For details on actions specific to clusters, databases, or collections, see https://dochub.mongodb.org/core/privilege-actions."
 	InheritedRoles                            = "List of inherited roles and the database on which the role is granted."
 	Analyzer                                  = "Analyzer to use when creating the index."
 	SearchAnalyzer                            = "Analyzer to use when searching the index."

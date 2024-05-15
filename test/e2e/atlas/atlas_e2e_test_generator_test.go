@@ -36,21 +36,23 @@ const (
 
 // atlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests.
 type atlasE2ETestGenerator struct {
-	projectID      string
-	projectName    string
-	clusterName    string
-	clusterRegion  string
-	serverlessName string
-	teamName       string
-	teamID         string
-	teamUser       string
-	dbUser         string
-	tier           string
-	mDBVer         string
-	dataFedName    string
-	enableBackup   bool
-	firstProcess   *atlasv2.ApiHostViewAtlas
-	t              *testing.T
+	projectID            string
+	projectName          string
+	clusterName          string
+	clusterRegion        string
+	serverlessName       string
+	teamName             string
+	teamID               string
+	teamUser             string
+	dbUser               string
+	tier                 string
+	mDBVer               string
+	dataFedName          string
+	streamInstanceName   string
+	streamConnectionName string
+	enableBackup         bool
+	firstProcess         *atlasv2.ApiHostViewAtlas
+	t                    *testing.T
 }
 
 // Log formats its arguments using default formatting, analogous to Println,
@@ -389,6 +391,60 @@ func (g *atlasE2ETestGenerator) generateDataFederation() {
 
 		deleteDataFederationForProject(g.t, cliPath, g.projectID, storeName)
 		g.Logf("data federation %q successfully deleted", storeName)
+	})
+}
+
+func (g *atlasE2ETestGenerator) generateStreamsInstance(name string) {
+	g.t.Helper()
+
+	if g.projectID == "" {
+		g.t.Fatal("unexpected error: project must be generated")
+	}
+
+	var err error
+	g.streamInstanceName, err = createStreamsInstance(g.t, g.projectID, name)
+	instanceName := g.streamInstanceName
+	if err != nil {
+		g.Logf("projectID=%q, streamsInstanceName=%q", g.projectID, g.streamInstanceName)
+		g.t.Errorf("unexpected error deploying streams instance: %v", err)
+	} else {
+		g.Logf("streamsInstanceName=%q", g.streamInstanceName)
+	}
+
+	g.t.Cleanup(func() {
+		g.Logf("Streams instance cleanup %q\n", instanceName)
+
+		require.NoError(g.t, deleteStreamsInstance(g.t, g.projectID, instanceName))
+		g.Logf("streams instance %q successfully deleted", instanceName)
+	})
+}
+
+func (g *atlasE2ETestGenerator) generateStreamsConnection(name string) {
+	g.t.Helper()
+
+	if g.projectID == "" {
+		g.t.Fatal("unexpected error: project must be generated")
+	}
+
+	if g.streamInstanceName == "" {
+		g.t.Fatal("unexpected error: streams instance must be generated")
+	}
+
+	var err error
+	g.streamConnectionName, err = createStreamsConnection(g.t, g.projectID, g.streamInstanceName, name)
+	connectionName := g.streamConnectionName
+	if err != nil {
+		g.Logf("projectID=%q, streamsConnectionName=%q", g.projectID, g.streamConnectionName)
+		g.t.Errorf("unexpected error deploying streams instance: %v", err)
+	} else {
+		g.Logf("streamsConnectionName=%q", g.streamConnectionName)
+	}
+
+	g.t.Cleanup(func() {
+		g.Logf("Streams connection cleanup %q\n", connectionName)
+
+		require.NoError(g.t, deleteStreamsConnection(g.t, g.projectID, g.streamInstanceName, connectionName))
+		g.Logf("streams connection %q successfully deleted", connectionName)
 	})
 }
 

@@ -33,6 +33,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/kubernetes/scheme"
+	"k8s.io/client-go/util/retry"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/kind/pkg/apis/config/v1alpha4"
@@ -201,80 +202,92 @@ func (oh *operatorHelper) installOperator(namespace, version string) {
 }
 
 func (oh *operatorHelper) stopOperator() {
-	deployment := appsv1.Deployment{}
-	err := oh.getK8sObject(
-		client.ObjectKey{Name: "mongodb-atlas-operator", Namespace: defaultOperatorNamespace},
-		&deployment,
-		false,
-	)
-	if err != nil {
-		oh.t.Errorf("unable to retrieve operator deployment: %v", err)
-	}
+	err := retry.RetryOnConflict(retry.DefaultBackoff, func() error {
+		deployment := appsv1.Deployment{}
+		err := oh.getK8sObject(
+			client.ObjectKey{Name: "mongodb-atlas-operator", Namespace: defaultOperatorNamespace},
+			&deployment,
+			false,
+		)
+		if err != nil {
+			return err
+		}
 
-	deployment.Spec.Replicas = pointer.Get[int32](0)
+		deployment.Spec.Replicas = pointer.Get[int32](0)
 
-	err = oh.k8sClient.Update(context.Background(), &deployment, &client.UpdateOptions{})
+		return oh.k8sClient.Update(context.Background(), &deployment, &client.UpdateOptions{})
+	})
+
 	if err != nil {
 		oh.t.Errorf("unable to stop operator: %v", err)
 	}
 }
 
 func (oh *operatorHelper) startOperator() {
-	deployment := appsv1.Deployment{}
-	err := oh.getK8sObject(
-		client.ObjectKey{Name: "mongodb-atlas-operator", Namespace: "mongodb-atlas-system"},
-		&deployment,
-		false,
-	)
-	if err != nil {
-		oh.t.Errorf("unable to retrieve operator deployment: %v", err)
-	}
+	err := retry.RetryOnConflict(retry.DefaultBackoff, func() error {
+		deployment := appsv1.Deployment{}
+		err := oh.getK8sObject(
+			client.ObjectKey{Name: "mongodb-atlas-operator", Namespace: "mongodb-atlas-system"},
+			&deployment,
+			false,
+		)
+		if err != nil {
+			return err
+		}
 
-	deployment.Spec.Replicas = pointer.Get[int32](1)
+		deployment.Spec.Replicas = pointer.Get[int32](1)
 
-	err = oh.k8sClient.Update(context.Background(), &deployment, &client.UpdateOptions{})
+		return oh.k8sClient.Update(context.Background(), &deployment, &client.UpdateOptions{})
+	})
+
 	if err != nil {
 		oh.t.Errorf("unable to start operator: %v", err)
 	}
 }
 
 func (oh *operatorHelper) emulateCertifiedOperator() {
-	deployment := appsv1.Deployment{}
-	err := oh.getK8sObject(
-		client.ObjectKey{Name: "mongodb-atlas-operator", Namespace: "mongodb-atlas-system"},
-		&deployment,
-		false,
-	)
-	if err != nil {
-		oh.t.Errorf("unable to retrieve operator deployment: %v", err)
-	}
+	err := retry.RetryOnConflict(retry.DefaultBackoff, func() error {
+		deployment := appsv1.Deployment{}
+		err := oh.getK8sObject(
+			client.ObjectKey{Name: "mongodb-atlas-operator", Namespace: "mongodb-atlas-system"},
+			&deployment,
+			false,
+		)
+		if err != nil {
+			return err
+		}
 
-	container := deployment.Spec.Template.Spec.Containers[0]
-	container.Image = "quay.io/" + container.Image
-	deployment.Spec.Template.Spec.Containers[0] = container
+		container := deployment.Spec.Template.Spec.Containers[0]
+		container.Image = "quay.io/" + container.Image
+		deployment.Spec.Template.Spec.Containers[0] = container
 
-	err = oh.k8sClient.Update(context.Background(), &deployment, &client.UpdateOptions{})
+		return oh.k8sClient.Update(context.Background(), &deployment, &client.UpdateOptions{})
+	})
+
 	if err != nil {
 		oh.t.Errorf("unable to emulate certified operator: %v", err)
 	}
 }
 
 func (oh *operatorHelper) restoreOperatorImage() {
-	deployment := appsv1.Deployment{}
-	err := oh.getK8sObject(
-		client.ObjectKey{Name: "mongodb-atlas-operator", Namespace: "mongodb-atlas-system"},
-		&deployment,
-		false,
-	)
-	if err != nil {
-		oh.t.Errorf("unable to retrieve operator deployment: %v", err)
-	}
+	err := retry.RetryOnConflict(retry.DefaultBackoff, func() error {
+		deployment := appsv1.Deployment{}
+		err := oh.getK8sObject(
+			client.ObjectKey{Name: "mongodb-atlas-operator", Namespace: "mongodb-atlas-system"},
+			&deployment,
+			false,
+		)
+		if err != nil {
+			return err
+		}
 
-	container := deployment.Spec.Template.Spec.Containers[0]
-	container.Image = strings.Trim(container.Image, "quay.io/")
-	deployment.Spec.Template.Spec.Containers[0] = container
+		container := deployment.Spec.Template.Spec.Containers[0]
+		container.Image = strings.Trim(container.Image, "quay.io/")
+		deployment.Spec.Template.Spec.Containers[0] = container
 
-	err = oh.k8sClient.Update(context.Background(), &deployment, &client.UpdateOptions{})
+		return oh.k8sClient.Update(context.Background(), &deployment, &client.UpdateOptions{})
+	})
+
 	if err != nil {
 		oh.t.Errorf("unable to restore operator image: %v", err)
 	}

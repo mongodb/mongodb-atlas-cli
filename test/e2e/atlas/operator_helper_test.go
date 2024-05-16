@@ -18,6 +18,8 @@ package atlas_test
 import (
 	"context"
 	"errors"
+	"github.com/stretchr/testify/require"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"os"
 	"os/exec"
 	"strings"
@@ -111,6 +113,34 @@ func (oh *operatorHelper) createK8sObject(object client.Object) error {
 
 func (oh *operatorHelper) deleteK8sObject(object client.Object) error {
 	return oh.k8sClient.Delete(context.Background(), object, &client.DeleteOptions{})
+}
+
+func setupCluster(t *testing.T, name string, namespaces ...string) *operatorHelper {
+	t.Helper()
+
+	t.Logf("creating cluster %s", name)
+	err := createK8SCluster(name)
+	require.NoError(t, err)
+
+	t.Cleanup(func() {
+		err = deleteK8SCluster(name)
+		require.NoError(t, err)
+	})
+
+	operator, err := newOperatorHelper(t)
+	require.NoError(t, err)
+
+	for _, namespace := range namespaces {
+		namespaceObj := &corev1.Namespace{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: namespace,
+			},
+		}
+		t.Logf("adding namespace %s", namespace)
+		require.NoError(t, operator.createK8sObject(namespaceObj))
+	}
+
+	return operator
 }
 
 func (oh *operatorHelper) getPodFromDeployment(deployment *appsv1.Deployment) ([]corev1.Pod, error) {

@@ -86,6 +86,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Delete a search node for the cluster named myCluster:
    atlas clusters search nodes delete --clusterName myCluster

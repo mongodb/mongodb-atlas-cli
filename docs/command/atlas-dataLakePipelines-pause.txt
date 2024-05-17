@@ -86,6 +86,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # pause pipeline 'Pipeline1':
    atlas dataLakePipelines pause Pipeline1

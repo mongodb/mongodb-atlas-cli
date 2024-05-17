@@ -96,6 +96,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Update a project with the ID 5e2211c17a3e5a48f5497de3 using the JSON file named myProject.json:
    atlas projects update 5f4007f327a3bd7b6f4103c5 --file myProject.json --output json

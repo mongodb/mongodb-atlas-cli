@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && cluster && kubernetes)
+//go:build e2e || (atlas && cluster && kubernetes && apply)
 
 package atlas_test
 
@@ -35,35 +35,32 @@ import (
 )
 
 func TestKubernetesConfigApply(t *testing.T) {
-	a := assert.New(t)
-	req := require.New(t)
-
 	cliPath, err := e2e.AtlasCLIBin()
-	t.Log(cliPath)
-	req.NoError(err)
+	require.NoError(t, err)
 
-	t.Run("should failed to apply resources when namespace doesn't exist", func(t *testing.T) {
+	t.Run("should fail to apply resources when namespace do not exist", func(t *testing.T) {
 		g := newAtlasE2ETestGenerator(t)
 		g.generateProject("k8sConfigApplyWrongNs")
-
 		cmd := exec.Command(cliPath,
 			"kubernetes",
 			"config",
 			"apply",
-			"--targetNamespace", "a-wrong-namespace",
-			"--projectId", g.projectID)
+			"--targetNamespace",
+			"a-wrong-namespace",
+			"--projectId",
+			g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.Error(err, string(resp))
-		a.Equal("Error: namespaces \"a-wrong-namespace\" not found\n", string(resp))
+		require.Error(t, err, string(resp))
+		assert.Equal(t, "Error: namespaces \"a-wrong-namespace\" not found\n", string(resp))
 	})
 
-	t.Run("should failed to apply resources when unable to autodetect parameters", func(t *testing.T) {
+	t.Run("should fail to apply resources when unable to autodetect parameters", func(t *testing.T) {
 		g := newAtlasE2ETestGenerator(t)
 		g.generateProject("k8sConfigApplyNoAutoDetect")
 
 		operator, err := newOperatorHelper(t)
-		req.NoError(err)
+		require.NoError(t, err)
 		operator.deleteOperator()
 		g.t.Cleanup(func() {
 			operator.restoreOperator()
@@ -74,10 +71,9 @@ func TestKubernetesConfigApply(t *testing.T) {
 				Name: "e2e-autodetect-parameters",
 			},
 		}
-		t.Logf("adding namespace %s", e2eNamespace)
 		require.NoError(t, operator.createK8sObject(e2eNamespace))
 		g.t.Cleanup(func() {
-			req.NoError(operator.deleteK8sObject(e2eNamespace))
+			require.NoError(t, operator.deleteK8sObject(e2eNamespace))
 		})
 
 		cmd := exec.Command(cliPath,
@@ -88,16 +84,16 @@ func TestKubernetesConfigApply(t *testing.T) {
 			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.Error(err, string(resp))
-		a.Equal("Error: unable to auto detect params: couldn't find an operator installed in any accessible namespace\n", string(resp))
+		require.Error(t, err, string(resp))
+		assert.Equal(t, "Error: unable to auto detect params: couldn't find an operator installed in any accessible namespace\n", string(resp))
 	})
 
-	t.Run("should failed to apply resources when unable to autodetect operator version", func(t *testing.T) {
+	t.Run("should fail to apply resources when unable to autodetect operator version", func(t *testing.T) {
 		g := newAtlasE2ETestGenerator(t)
 		g.generateProject("k8sConfigApplyFailVersion")
 
 		operator, err := newOperatorHelper(t)
-		req.NoError(err)
+		require.NoError(t, err)
 		operator.emulateCertifiedOperator()
 		g.t.Cleanup(func() {
 			operator.restoreOperatorImage()
@@ -108,10 +104,9 @@ func TestKubernetesConfigApply(t *testing.T) {
 				Name: "e2e-autodetect-operator-version",
 			},
 		}
-		t.Logf("adding namespace %s", e2eNamespace)
 		require.NoError(t, operator.createK8sObject(e2eNamespace))
 		g.t.Cleanup(func() {
-			req.NoError(operator.deleteK8sObject(e2eNamespace))
+			require.NoError(t, operator.deleteK8sObject(e2eNamespace))
 		})
 
 		cmd := exec.Command(cliPath,
@@ -122,15 +117,15 @@ func TestKubernetesConfigApply(t *testing.T) {
 			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.Error(err, string(resp))
-		a.Equal("Error: unable to auto detect operator version. you should explicitly set operator version if you are running an openshift certified installation\n", string(resp))
+		require.Error(t, err, string(resp))
+		assert.Equal(t, "Error: unable to auto detect operator version. you should explicitly set operator version if you are running an openshift certified installation\n", string(resp))
 	})
 
 	t.Run("export and apply atlas resource to kubernetes cluster", func(t *testing.T) {
 		g := setupAtlasResources(t)
 
 		operator, err := newOperatorHelper(t)
-		req.NoError(err)
+		require.NoError(t, err)
 		// we don't want the operator to do reconcile and avoid conflict with cli actions
 		operator.stopOperator()
 		g.t.Cleanup(func() {
@@ -142,10 +137,9 @@ func TestKubernetesConfigApply(t *testing.T) {
 				Name: "e2e-export-atlas-resource",
 			},
 		}
-		t.Logf("adding namespace %s", e2eNamespace)
 		require.NoError(t, operator.createK8sObject(e2eNamespace))
 		g.t.Cleanup(func() {
-			req.NoError(operator.deleteK8sObject(e2eNamespace))
+			require.NoError(t, operator.deleteK8sObject(e2eNamespace))
 		})
 
 		cmd := exec.Command(cliPath,
@@ -156,75 +150,88 @@ func TestKubernetesConfigApply(t *testing.T) {
 			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
-		req.NoError(err, string(resp))
+		require.NoError(t, err, string(resp))
 		t.Log(string(resp))
 		g.t.Cleanup(func() {
 			operator.cleanUpResources()
 		})
 
 		akoProject := akov2.AtlasProject{}
-		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(g.projectName), Namespace: e2eNamespace.Name},
-			&akoProject,
-			true,
+		require.NoError(
+			t,
+			operator.getK8sObject(
+				client.ObjectKey{Name: prepareK8sName(g.projectName), Namespace: e2eNamespace.Name},
+				&akoProject,
+				true,
+			),
 		)
-		req.NoError(err)
-		a.NotEmpty(akoProject.Spec.AlertConfigurations)
+		assert.NotEmpty(t, akoProject.Spec.AlertConfigurations)
 		akoProject.Spec.AlertConfigurations = nil
-		a.Equal(referenceExportedProject(g.projectName, g.teamName, &akoProject).Spec, akoProject.Spec)
+		assert.Equal(t, referenceExportedProject(g.projectName, g.teamName, &akoProject).Spec, akoProject.Spec)
 
 		// Assert Database User
 		akoDBUser := akov2.AtlasDatabaseUser{}
-		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.dbUser)), Namespace: e2eNamespace.Name},
-			&akoDBUser,
-			true,
+		require.NoError(
+			t,
+			operator.getK8sObject(
+				client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.dbUser)), Namespace: e2eNamespace.Name},
+				&akoDBUser,
+				true,
+			),
 		)
-		req.NoError(err)
-		a.Equal(referenceExportedDBUser(g.projectName, g.dbUser, e2eNamespace.Name).Spec, akoDBUser.Spec)
+		assert.Equal(t, referenceExportedDBUser(g.projectName, g.dbUser, e2eNamespace.Name).Spec, akoDBUser.Spec)
 
 		// Assert Team
 		akoTeam := akov2.AtlasTeam{}
-		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-team-%s", g.projectName, g.teamName)), Namespace: e2eNamespace.Name},
-			&akoTeam,
-			true,
+		require.NoError(
+			t,
+			operator.getK8sObject(
+				client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-team-%s", g.projectName, g.teamName)), Namespace: e2eNamespace.Name},
+				&akoTeam,
+				true,
+			),
 		)
-		req.NoError(err)
-		a.Equal(referenceExportedTeam(g.teamName, g.teamUser).Spec, akoTeam.Spec)
+		assert.Equal(t, referenceExportedTeam(g.teamName, g.teamUser).Spec, akoTeam.Spec)
 
 		// Assert Backup Policy
 		akoBkpPolicy := akov2.AtlasBackupPolicy{}
-		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s-backuppolicy", g.projectName, g.clusterName)), Namespace: e2eNamespace.Name},
-			&akoBkpPolicy,
-			true,
+		require.NoError(
+			t,
+			operator.getK8sObject(
+				client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s-backuppolicy", g.projectName, g.clusterName)), Namespace: e2eNamespace.Name},
+				&akoBkpPolicy,
+				true,
+			),
 		)
-		req.NoError(err)
-		a.Equal(referenceExportedBackupPolicy().Spec, akoBkpPolicy.Spec)
+		assert.Equal(t, referenceExportedBackupPolicy().Spec, akoBkpPolicy.Spec)
 
 		// Assert Backup Schedule
 		akoBkpSchedule := akov2.AtlasBackupSchedule{}
-		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s-backupschedule", g.projectName, g.clusterName)), Namespace: e2eNamespace.Name},
-			&akoBkpSchedule,
-			true,
+		require.NoError(
+			t,
+			operator.getK8sObject(
+				client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s-backupschedule", g.projectName, g.clusterName)), Namespace: e2eNamespace.Name},
+				&akoBkpSchedule,
+				true,
+			),
 		)
-		req.NoError(err)
-		a.Equal(
+		assert.Equal(
+			t,
 			referenceExportedBackupSchedule(g.projectName, g.clusterName, e2eNamespace.Name, akoBkpSchedule.Spec.ReferenceHourOfDay, akoBkpSchedule.Spec.ReferenceMinuteOfHour).Spec,
 			akoBkpSchedule.Spec,
 		)
 
 		// Assert Deployment
 		akoDeployment := akov2.AtlasDeployment{}
-		err = operator.getK8sObject(
-			client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.clusterName)), Namespace: e2eNamespace.Name},
-			&akoDeployment,
-			true,
+		require.NoError(
+			t,
+			operator.getK8sObject(
+				client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.clusterName)), Namespace: e2eNamespace.Name},
+				&akoDeployment,
+				true,
+			),
 		)
-		req.NoError(err)
-		a.Equal(referenceExportedDeployment(g.projectName, g.clusterName, e2eNamespace.Name).Spec, akoDeployment.Spec)
+		assert.Equal(t, referenceExportedDeployment(g.projectName, g.clusterName, e2eNamespace.Name).Spec, akoDeployment.Spec)
 	})
 }
 
@@ -493,9 +500,7 @@ func deleteTeamFromProject(t *testing.T, cliPath, projectID, teamID string) {
 		"--force")
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
-	if err != nil {
-		t.Errorf("%s (%v)", string(resp), err)
-	}
+	require.NoError(t, err, string(resp))
 }
 
 func prepareK8sName(pattern string) string {

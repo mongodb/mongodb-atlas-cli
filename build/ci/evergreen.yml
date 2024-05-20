@@ -102,12 +102,6 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
-  "install podman":
-    - command: subprocess.exec
-      type: setup
-      params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
-        binary: ../build/ci/install_podman.sh
   "setup operator":
     command: subprocess.exec
     type: setup
@@ -173,8 +167,8 @@ tasks:
           shell: bash
           script: |
             set -Eeou pipefail
-            mkdir "$XDG_CONFIG_HOME/mongocli"
-            cat <<EOF > "$XDG_CONFIG_HOME/mongocli/config.toml"
+            mkdir "$XDG_CONFIG_HOME/atlascli"
+            cat <<EOF > "$XDG_CONFIG_HOME/atlascli/config.toml"
             [e2e]
               org_id = "5e429e7706822c6eac4d5971"
               public_api_key = "AAUMGJXA"
@@ -312,7 +306,7 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,clusters,m0
-  - name: atlas_kubernetes_e2e
+  - name: atlas_kubernetes_generate_e2e
     tags: ["e2e","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernetes_atlas"]
     must_have_test_results: true
     depends_on:
@@ -330,7 +324,26 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,cluster,kubernetes
+          E2E_TAGS: atlas,cluster,kubernetes,generate
+  - name: atlas_kubernetes_apply_e2e
+    tags: [ "e2e","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernetes_atlas" ]
+    must_have_test_results: true
+    depends_on:
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "setup operator"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,cluster,kubernetes,apply
   - name: atlas_clusters_upgrade_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -1106,7 +1119,6 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "install podman"
       - command: shell.exec
         type: setup
         params:
@@ -1140,7 +1152,6 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "install podman"
       - command: shell.exec
         type: setup
         params:
@@ -1308,7 +1319,7 @@ buildvariants:
   - name: e2e_local_deployments
     display_name: "E2E Local Deployments Tests"
     run_on:
-      - rhel80-small
+      - rhel90-small
     expansions:
       <<: *go_linux_version
     tasks:

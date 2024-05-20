@@ -30,7 +30,7 @@ import (
 	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8snames "k8s.io/apiserver/pkg/storage/names"
@@ -221,7 +221,7 @@ func newAtlasProject(project *atlasv2.Group, dictionary map[string]string, targe
 			AlertConfigurations:           nil,
 			AlertConfigurationSyncEnabled: false,
 			NetworkPeers:                  nil,
-			WithDefaultAlertsSettings:     pointer.GetOrDefault(project.WithDefaultAlertsSettings, false),
+			WithDefaultAlertsSettings:     project.GetWithDefaultAlertsSettings(),
 			X509CertRef:                   nil, // not available for import
 			Integrations:                  nil,
 			EncryptionAtRest:              nil,
@@ -229,7 +229,7 @@ func newAtlasProject(project *atlasv2.Group, dictionary map[string]string, targe
 			Settings:                      nil,
 			CustomRoles:                   nil,
 			Teams:                         nil,
-			RegionUsageRestrictions:       store.StringOrEmpty(project.RegionUsageRestrictions),
+			RegionUsageRestrictions:       project.GetRegionUsageRestrictions(),
 		},
 		Status: akov2status.AtlasProjectStatus{
 			Common: akov2status.Common{
@@ -677,9 +677,9 @@ func buildAuditing(auditingProvider store.AuditingDescriber, projectID string) (
 	}
 
 	return &akov2.Auditing{
-		AuditAuthorizationSuccess: pointer.GetOrZero(data.AuditAuthorizationSuccess),
-		AuditFilter:               pointer.GetOrZero(data.AuditFilter),
-		Enabled:                   pointer.GetOrZero(data.Enabled),
+		AuditAuthorizationSuccess: data.GetAuditAuthorizationSuccess(),
+		AuditFilter:               data.GetAuditFilter(),
+		Enabled:                   data.GetEnabled(),
 	}, nil
 }
 
@@ -700,19 +700,19 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 
 		for _, atlasNotification := range atlasNotifications {
 			akoNotification := akov2.Notification{
-				ChannelName:    store.StringOrEmpty(atlasNotification.ChannelName),
-				DatadogRegion:  store.StringOrEmpty(atlasNotification.DatadogRegion),
+				ChannelName:    atlasNotification.GetChannelName(),
+				DatadogRegion:  atlasNotification.GetDatadogRegion(),
 				DelayMin:       atlasNotification.DelayMin,
-				EmailAddress:   store.StringOrEmpty(atlasNotification.EmailAddress),
+				EmailAddress:   atlasNotification.GetEmailAddress(),
 				EmailEnabled:   atlasNotification.EmailEnabled,
-				IntervalMin:    pointer.GetOrDefault(atlasNotification.IntervalMin, 0),
-				MobileNumber:   store.StringOrEmpty(atlasNotification.MobileNumber),
-				OpsGenieRegion: store.StringOrEmpty(atlasNotification.OpsGenieRegion),
+				IntervalMin:    atlasNotification.GetIntervalMin(),
+				MobileNumber:   atlasNotification.GetMobileNumber(),
+				OpsGenieRegion: atlasNotification.GetOpsGenieRegion(),
 				SMSEnabled:     atlasNotification.SmsEnabled,
-				TeamID:         store.StringOrEmpty(atlasNotification.TeamId),
-				TeamName:       store.StringOrEmpty(atlasNotification.TeamName),
-				TypeName:       store.StringOrEmpty(atlasNotification.TypeName),
-				Username:       store.StringOrEmpty(atlasNotification.Username),
+				TeamID:         atlasNotification.GetTeamId(),
+				TeamName:       atlasNotification.GetTeamName(),
+				TypeName:       atlasNotification.GetTypeName(),
+				Username:       atlasNotification.GetUsername(),
 				Roles:          atlasNotification.GetRoles(),
 			}
 
@@ -798,8 +798,8 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 		secretResults = append(secretResults, notificationSecrets...)
 
 		results = append(results, akov2.AlertConfiguration{
-			EventTypeName:   store.StringOrEmpty(alertConfig.EventTypeName),
-			Enabled:         pointer.GetOrDefault(alertConfig.Enabled, false),
+			EventTypeName:   alertConfig.GetEventTypeName(),
+			Enabled:         alertConfig.GetEnabled(),
 			Matchers:        convertMatchers(alertConfig.GetMatchers()),
 			MetricThreshold: convertMetricThreshold(alertConfig.MetricThreshold),
 			Threshold:       convertThreshold(alertConfig.Threshold),
@@ -850,7 +850,7 @@ func convertMetricThreshold(atlasMT *atlasv2.ServerlessMetricThreshold) *akov2.M
 	}
 	return &akov2.MetricThreshold{
 		MetricName: atlasMT.MetricName,
-		Operator:   store.StringOrEmpty(atlasMT.Operator),
+		Operator:   atlasMT.GetOperator(),
 		Threshold:  fmt.Sprintf("%f", atlasMT.GetThreshold()),
 		Units:      atlasMT.GetUnits(),
 		Mode:       atlasMT.GetMode(),
@@ -862,8 +862,8 @@ func convertThreshold(atlasT *atlasv2.GreaterThanRawThreshold) *akov2.Threshold 
 		return &akov2.Threshold{}
 	}
 	return &akov2.Threshold{
-		Operator:  store.StringOrEmpty(atlasT.Operator),
-		Units:     store.StringOrEmpty(atlasT.Units),
+		Operator:  atlasT.GetOperator(),
+		Units:     atlasT.GetUnits(),
 		Threshold: fmt.Sprintf("%d", atlasT.GetThreshold()),
 	}
 }
@@ -917,7 +917,7 @@ func buildTeams(teamsProvider store.OperatorTeamsStore, orgID, projectID, projec
 	atlasTeamCRs := make([]*akov2.AtlasTeam, 0, len(projectTeams.GetResults()))
 
 	for _, teamRef := range projectTeams.GetResults() {
-		teamID := store.StringOrEmpty(teamRef.TeamId)
+		teamID := teamRef.GetTeamId()
 
 		team, err := teamsProvider.TeamByID(orgID, teamID)
 		if err != nil {
@@ -925,7 +925,7 @@ func buildTeams(teamsProvider store.OperatorTeamsStore, orgID, projectID, projec
 				teamID, projectName, projectID, err)
 		}
 
-		teamName := store.StringOrEmpty(team.Name)
+		teamName := team.GetName()
 		crName := resources.NormalizeAtlasName(fmt.Sprintf("%s-team-%s", projectName, teamName), dictionary)
 		teamsRefs = append(teamsRefs, akov2.Team{
 			TeamRef: akov2common.ResourceRefNamespaced{
@@ -935,7 +935,7 @@ func buildTeams(teamsProvider store.OperatorTeamsStore, orgID, projectID, projec
 			Roles: convertRoleNames(teamRef.GetRoleNames()),
 		})
 
-		users, err := fetchUsers(store.StringOrEmpty(team.Id))
+		users, err := fetchUsers(team.GetId())
 		if err != nil {
 			return nil, nil, err
 		}
@@ -953,7 +953,7 @@ func buildTeams(teamsProvider store.OperatorTeamsStore, orgID, projectID, projec
 				},
 			},
 			Spec: akov2.TeamSpec{
-				Name:      store.StringOrEmpty(team.Name),
+				Name:      team.GetName(),
 				Usernames: convertUserNames(users),
 			},
 			Status: akov2status.TeamStatus{

@@ -16,6 +16,7 @@ package restores
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -26,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 const (
@@ -59,7 +60,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 
 var createTemplate = "Restore job '{{.Id}}' successfully started\n"
 
-var ErrInvalidDeliveryType = fmt.Errorf("delivery type invalid, choose 'automated', 'download' or 'pointInTime'")
+var ErrInvalidDeliveryType = errors.New("delivery type invalid, choose 'automated', 'download' or 'pointInTime'")
 
 func (opts *CreateOpts) Run() error {
 	request := opts.newCloudProviderSnapshotRestoreJob()

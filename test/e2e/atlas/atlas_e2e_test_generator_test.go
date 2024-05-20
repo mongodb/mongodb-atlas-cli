@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 const (
@@ -477,7 +477,7 @@ func (g *atlasE2ETestGenerator) getProcesses() ([]atlasv2.ApiHostViewAtlas, erro
 	return processes.GetResults(), nil
 }
 
-// runCommand runs a command on mongocli tool.
+// runCommand runs a command on atlascli.
 func (g *atlasE2ETestGenerator) runCommand(args ...string) ([]byte, error) {
 	g.t.Helper()
 

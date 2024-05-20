@@ -68,7 +68,7 @@ Options
    * - --privilege
      - strings
      - false
-     - List of actions per database and collection. If no database or collections are provided, cluster scope is assumed.
+     - List of actions per database and collection. If no database or collections are provided, cluster scope is assumed. For details on actions specific to clusters, databases, or collections, see https://dochub.mongodb.org/core/privilege-actions.
    * - --projectId
      - string
      - false

@@ -19,6 +19,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"path"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -26,57 +27,19 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestConfig_MongoCLIConfigHome(t *testing.T) {
+func TestCLIConfigHome(t *testing.T) {
 	expHome, err := os.UserConfigDir()
-	require.NoError(t, err)
-
-	home, err := MongoCLIConfigHome()
-	require.NoError(t, err)
-	expected := fmt.Sprintf("%s/mongocli", expHome)
-	assert.Equal(t, expected, home)
-}
-
-func TestConfig_OldMongoCLIConfigHome(t *testing.T) {
-	t.Run("old home with XDG_CONFIG_HOME", func(t *testing.T) {
-		const xdgHome = "my_config"
-		t.Setenv("XDG_CONFIG_HOME", xdgHome)
-		home, err := OldMongoCLIConfigHome()
-		if err != nil {
-			t.Fatalf("OldMongoCLIConfigHome() unexpected error: %v", err)
-		}
-		if home != xdgHome {
-			t.Errorf("MongoCLIConfigHome() = %s; want '%s'", home, xdgHome)
-		}
-	})
-	t.Run("old home without XDG_CONFIG_HOME", func(t *testing.T) {
-		t.Setenv("XDG_CONFIG_HOME", "")
-		home, err := OldMongoCLIConfigHome()
-		if err != nil {
-			t.Fatalf("OldMongoCLIConfigHome() unexpected error: %v", err)
-		}
-		osHome, _ := os.UserHomeDir()
-		if home != osHome+"/.config" {
-			t.Errorf("OldMongoCLIConfigHome() = %s; want '%s/.config'", home, osHome)
-		}
-	})
-}
-
-func TestConfig_AtlasCLIConfigHome(t *testing.T) {
-	t.Run("with env set", func(t *testing.T) {
-		expHome, err := os.UserConfigDir()
-		expected := fmt.Sprintf("%s/atlascli", expHome)
-		if err != nil {
-			t.Fatalf("os.UserConfigDir() unexpected error: %v", err)
-		}
-
-		home, err := AtlasCLIConfigHome()
-		if err != nil {
-			t.Fatalf("AtlasCLIConfigHome() unexpected error: %v", err)
-		}
-		if home != expected {
-			t.Errorf("AtlasCLIConfigHome() = %s; want '%s'", home, expected)
-		}
-	})
+	if err != nil {
+		t.Fatalf("os.UserConfigDir() unexpected error: %v", err)
+	}
+	home, err := CLIConfigHome()
+	if err != nil {
+		t.Fatalf("AtlasCLIConfigHome() unexpected error: %v", err)
+	}
+	expected := path.Join(expHome, "atlascli")
+	if home != expected {
+		t.Errorf("AtlasCLIConfigHome() = %s; want '%s'", home, expected)
+	}
 }
 
 func TestConfig_IsTrue(t *testing.T) {

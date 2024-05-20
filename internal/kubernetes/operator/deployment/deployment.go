@@ -26,7 +26,7 @@ import (
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -270,7 +270,7 @@ func isAdvancedDeploymentExportable(deployments *atlasv2.AdvancedClusterDescript
 }
 
 func isServerlessExportable(deployment *atlasv2.ServerlessInstanceDescription) bool {
-	stateName := store.StringOrEmpty(deployment.StateName)
+	stateName := deployment.GetStateName()
 	if stateName == DeletingState || stateName == DeletedState {
 		return false
 	}
@@ -335,17 +335,17 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectName, projectI
 			},
 		},
 		Spec: akov2.AtlasBackupScheduleSpec{
-			AutoExportEnabled: pointer.GetOrDefault(bs.AutoExportEnabled, false),
+			AutoExportEnabled: bs.GetAutoExportEnabled(),
 			Export:            export,
 			PolicyRef: akov2common.ResourceRefNamespaced{
 				Name:      resources.NormalizeAtlasName(policies[0].Name, dictionary),
 				Namespace: policies[0].Namespace,
 			},
-			ReferenceHourOfDay:                int64(pointer.GetOrDefault(bs.ReferenceHourOfDay, 0)),
-			ReferenceMinuteOfHour:             int64(pointer.GetOrDefault(bs.ReferenceMinuteOfHour, 0)),
-			RestoreWindowDays:                 int64(pointer.GetOrDefault(bs.RestoreWindowDays, 0)),
-			UpdateSnapshots:                   pointer.GetOrDefault(bs.UpdateSnapshots, false),
-			UseOrgAndGroupNamesInExportPrefix: pointer.GetOrDefault(bs.UseOrgAndGroupNamesInExportPrefix, false),
+			ReferenceHourOfDay:                int64(bs.GetReferenceHourOfDay()),
+			ReferenceMinuteOfHour:             int64(bs.GetReferenceMinuteOfHour()),
+			RestoreWindowDays:                 int64(bs.GetRestoreWindowDays()),
+			UpdateSnapshots:                   bs.GetUpdateSnapshots(),
+			UseOrgAndGroupNamesInExportPrefix: bs.GetUseOrgAndGroupNamesInExportPrefix(),
 		},
 		Status: akov2status.BackupScheduleStatus{},
 	}
@@ -465,16 +465,16 @@ func BuildServerlessDeployments(deploymentStore store.OperatorClusterStore, vali
 
 	providerSettings := &akov2.ServerlessProviderSettingsSpec{
 		BackingProviderName: deployment.ProviderSettings.BackingProviderName,
-		ProviderName:        akov2provider.ProviderName(store.StringOrEmpty(deployment.ProviderSettings.ProviderName)),
+		ProviderName:        akov2provider.ProviderName(deployment.ProviderSettings.GetProviderName()),
 		RegionName:          deployment.ProviderSettings.RegionName,
 	}
 
 	serverlessSpec := &akov2.ServerlessSpec{
-		Name:             store.StringOrEmpty(deployment.Name),
+		Name:             deployment.GetName(),
 		ProviderSettings: providerSettings,
 	}
 
-	atlasName := fmt.Sprintf("%s-%s", projectName, store.StringOrEmpty(deployment.Name))
+	atlasName := fmt.Sprintf("%s-%s", projectName, deployment.GetName())
 	atlasDeployment := &akov2.AtlasDeployment{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "AtlasDeployment",
@@ -504,7 +504,7 @@ func BuildServerlessDeployments(deploymentStore store.OperatorClusterStore, vali
 	}
 
 	if validator.FeatureExist(features.ResourceAtlasDeployment, featureServerlessPrivateEndpoints) {
-		privateEndpoints, err := buildServerlessPrivateEndpoints(deploymentStore, projectID, store.StringOrEmpty(deployment.Name))
+		privateEndpoints, err := buildServerlessPrivateEndpoints(deploymentStore, projectID, deployment.GetName())
 		if err != nil {
 			return nil, err
 		}

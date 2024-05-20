@@ -31,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -594,7 +594,7 @@ func getFirstOrgUser() (string, error) {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 	if users.GetTotalCount() == 0 {
-		return "", fmt.Errorf("no users found")
+		return "", errors.New("no users found")
 	}
 
 	return users.GetResults()[0].Username, nil

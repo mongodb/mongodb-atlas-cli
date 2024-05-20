@@ -17,14 +17,14 @@
 package operator
 
 import (
-	"fmt"
+	"errors"
 	"testing"
 
 	"github.com/go-test/deep"
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"go.mongodb.org/atlas-sdk/v20231115013/admin"
+	"go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 const projectID = "TestProjectID"
@@ -109,7 +109,7 @@ func TestProjectWithWrongOrgID(t *testing.T) {
 			projectID, "wrong-org-id",
 		)
 		_, got := ce.Run()
-		expected := fmt.Errorf("the project test-project (project-id) is not part of the " +
+		expected := errors.New("the project test-project (project-id) is not part of the " +
 			"organization \"wrong-org-id\", please confirm the arguments provided " +
 			"to the command or you are using the correct profile")
 		if diff := deep.Equal(got, expected); diff != nil {

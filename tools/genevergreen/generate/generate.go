@@ -27,7 +27,6 @@ const (
 
 var (
 	serverVersions = []string{
-		"4.4",
 		"5.0",
 		"6.0",
 		"7.0",
@@ -56,15 +55,16 @@ var (
 		"debian12":     "debian12-deb",
 	}
 	newOs = map[string]string{
-		"centos7":      "rhel70",
-		"centos8":      "rhel80",
-		"rhel9":        "rhel90",
-		"amazonlinux2": "amazon2",
-		"ubuntu20.04":  "ubuntu2004",
-		"ubuntu22.04":  "ubuntu2204",
-		"debian10":     "debian10",
-		"debian11":     "debian11",
-		"debian12":     "debian12",
+		"centos7":         "rhel70",
+		"centos8":         "rhel80",
+		"rhel9":           "rhel90",
+		"amazonlinux2":    "amazon2",
+		"amazonlinux2023": "amazon2023",
+		"ubuntu20.04":     "ubuntu2004",
+		"ubuntu22.04":     "ubuntu2204",
+		"debian10":        "debian10",
+		"debian11":        "debian11",
+		"debian12":        "debian12",
 	}
 )
 

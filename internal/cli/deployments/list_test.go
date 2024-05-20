@@ -19,6 +19,7 @@ package deployments
 import (
 	"bytes"
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -33,7 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/v20231115013/admin"
+	"go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 func TestList_Run(t *testing.T) {
@@ -136,6 +137,184 @@ atlasCluster2   ATLAS   7.0.0     IDLE
 atlasCluster1   ATLAS   7.0.0     IDLE
 localTest1      LOCAL   7.0.0     IDLE
 localTest2      LOCAL   6.0.9     IDLE
+`, buf.String())
+	t.Log(buf.String())
+}
+
+func TestList_Run_NoLocal(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockClusterLister(ctrl)
+	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
+	mockProfileReader := mocks.NewMockProfileReader(ctrl)
+	mockPodman := mocks.NewMockClient(ctrl)
+	ctx := context.Background()
+
+	cli.TokenRefreshed = true
+	t.Cleanup(func() {
+		cli.TokenRefreshed = false
+	})
+
+	expectedAtlasClusters := &admin.PaginatedAdvancedClusterDescription{
+		Results: &[]admin.AdvancedClusterDescription{
+			{
+				Name:           pointer.Get("atlasCluster2"),
+				Id:             pointer.Get("123"),
+				MongoDBVersion: pointer.Get("7.0.0"),
+				StateName:      pointer.Get("IDLE"),
+				Paused:         pointer.Get(false),
+			},
+			{
+				Name:           pointer.Get("atlasCluster1"),
+				Id:             pointer.Get("123"),
+				MongoDBVersion: pointer.Get("7.0.0"),
+				StateName:      pointer.Get("IDLE"),
+				Paused:         pointer.Get(false),
+			},
+		},
+	}
+
+	buf := new(bytes.Buffer)
+	listOpts := &ListOpts{
+		DeploymentOpts: options.DeploymentOpts{
+			PodmanClient:          mockPodman,
+			CredStore:             mockCredentialsGetter,
+			AtlasClusterListStore: mockStore,
+			Config:                mockProfileReader,
+		},
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: "64f670f0bf789926667dad1a",
+		},
+		OutputOpts: cli.OutputOpts{
+			Template:  listTemplate,
+			OutWriter: buf,
+		},
+	}
+
+	mockStore.
+		EXPECT().
+		ProjectClusters(listOpts.ProjectID,
+			&store.ListOptions{
+				PageNum:      cli.DefaultPage,
+				ItemsPerPage: options.MaxItemsPerPage,
+			},
+		).
+		Return(expectedAtlasClusters, nil).
+		Times(1)
+
+	mockCredentialsGetter.
+		EXPECT().
+		AuthType().
+		Return(config.OAuth).
+		Times(2)
+
+	mockPodman.
+		EXPECT().
+		Ready(ctx).
+		Return(nil).
+		Times(1)
+
+	mockPodman.
+		EXPECT().
+		ListContainers(ctx, options.MongodHostnamePrefix).
+		Return(nil, errors.New("this is an error")).
+		Times(1)
+
+	if err := listOpts.Run(ctx); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+
+	assert.Equal(t, `NAME            TYPE    MDB VER   STATE
+atlasCluster2   ATLAS   7.0.0     IDLE
+atlasCluster1   ATLAS   7.0.0     IDLE
+`, buf.String())
+	t.Log(buf.String())
+}
+
+func TestList_Run_NoAtlas(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockClusterLister(ctrl)
+	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
+	mockProfileReader := mocks.NewMockProfileReader(ctrl)
+	mockPodman := mocks.NewMockClient(ctrl)
+	ctx := context.Background()
+
+	cli.TokenRefreshed = true
+	t.Cleanup(func() {
+		cli.TokenRefreshed = false
+	})
+
+	expectedAtlasClusters := &admin.PaginatedAdvancedClusterDescription{
+		Results: &[]admin.AdvancedClusterDescription{
+			{
+				Name:           pointer.Get("atlasCluster2"),
+				Id:             pointer.Get("123"),
+				MongoDBVersion: pointer.Get("7.0.0"),
+				StateName:      pointer.Get("IDLE"),
+				Paused:         pointer.Get(false),
+			},
+			{
+				Name:           pointer.Get("atlasCluster1"),
+				Id:             pointer.Get("123"),
+				MongoDBVersion: pointer.Get("7.0.0"),
+				StateName:      pointer.Get("IDLE"),
+				Paused:         pointer.Get(false),
+			},
+		},
+	}
+
+	buf := new(bytes.Buffer)
+	listOpts := &ListOpts{
+		DeploymentOpts: options.DeploymentOpts{
+			PodmanClient:          mockPodman,
+			CredStore:             mockCredentialsGetter,
+			AtlasClusterListStore: mockStore,
+			Config:                mockProfileReader,
+		},
+		GlobalOpts: cli.GlobalOpts{
+			ProjectID: "64f670f0bf789926667dad1a",
+		},
+		OutputOpts: cli.OutputOpts{
+			Template:  listTemplate,
+			OutWriter: buf,
+		},
+	}
+
+	mockStore.
+		EXPECT().
+		ProjectClusters(listOpts.ProjectID,
+			&store.ListOptions{
+				PageNum:      cli.DefaultPage,
+				ItemsPerPage: options.MaxItemsPerPage,
+			},
+		).
+		Return(expectedAtlasClusters, nil).
+		Times(1)
+
+	mockCredentialsGetter.
+		EXPECT().
+		AuthType().
+		Return(config.OAuth).
+		Times(2)
+
+	mockPodman.
+		EXPECT().
+		Ready(ctx).
+		Return(nil).
+		Times(1)
+
+	mockPodman.
+		EXPECT().
+		ListContainers(ctx, options.MongodHostnamePrefix).
+		Return(nil, errors.New("new error test")).
+		Times(1)
+
+	if err := listOpts.Run(ctx); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+
+	assert.Equal(t, `NAME            TYPE    MDB VER   STATE
+atlasCluster2   ATLAS   7.0.0     IDLE
+atlasCluster1   ATLAS   7.0.0     IDLE
 `, buf.String())
 	t.Log(buf.String())
 }

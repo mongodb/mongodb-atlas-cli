@@ -104,6 +104,7 @@ const (
 	connectedOrgsConfigsEntity    = "connectedOrgConfigs"
 	deletingState                 = "DELETING"
 	authEntity                    = "auth"
+	streamsEntity                 = "streams"
 )
 
 // AlertConfig constants.
@@ -1125,4 +1126,123 @@ func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atl
 // the output has some dots in the beginning (depending on how long it took to finish) that need to be removed.
 func removeDotsFromWatching(consoleOutput []byte) []byte {
 	return []byte(strings.TrimLeft(string(consoleOutput), "."))
+}
+
+func createStreamsInstance(t *testing.T, projectID, name string) (string, error) {
+	t.Helper()
+
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return "", err
+	}
+
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	instanceName := fmt.Sprintf("e2e-%s-%v", name, n)
+
+	cmd := exec.Command(
+		cliPath,
+		streamsEntity,
+		"instance",
+		"create",
+		instanceName,
+		"--projectId", projectID,
+		"--provider", "AWS",
+		"--region", "VIRGINIA_USA",
+	)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return instanceName, nil
+}
+
+func deleteStreamsInstance(t *testing.T, projectID, name string) error {
+	t.Helper()
+
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+
+	cmd := exec.Command(
+		cliPath,
+		streamsEntity,
+		"instance",
+		"delete",
+		name,
+		"--projectId", projectID,
+		"--force",
+	)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return nil
+}
+
+func createStreamsConnection(t *testing.T, projectID, instanceName, name string) (string, error) {
+	t.Helper()
+
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return "", err
+	}
+
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	connectionName := fmt.Sprintf("e2e-%s-%v", name, n)
+
+	cmd := exec.Command(
+		cliPath,
+		streamsEntity,
+		"connection",
+		"create",
+		connectionName,
+		"--file", "data/create_streams_connection_test.json",
+		"--instance", instanceName,
+		"--projectId", projectID,
+	)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return connectionName, nil
+}
+
+func deleteStreamsConnection(t *testing.T, projectID, instanceName, name string) error {
+	t.Helper()
+
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+
+	cmd := exec.Command(
+		cliPath,
+		streamsEntity,
+		"connection",
+		"delete",
+		name,
+		"--instance", instanceName,
+		"--projectId", projectID,
+		"--force",
+	)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return nil
 }

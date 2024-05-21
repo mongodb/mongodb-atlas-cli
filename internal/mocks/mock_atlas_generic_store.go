@@ -439,6 +439,21 @@ func (mr *MockOperatorGenericStoreMockRecorder) ProjectSettings(arg0 interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectSettings", reflect.TypeOf((*MockOperatorGenericStore)(nil).ProjectSettings), arg0)
 }
 
+// ProjectStreams mocks base method.
+func (m *MockOperatorGenericStore) ProjectStreams(arg0 *admin.ListStreamInstancesApiParams) (*admin.PaginatedApiStreamsTenant, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ProjectStreams", arg0)
+	ret0, _ := ret[0].(*admin.PaginatedApiStreamsTenant)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ProjectStreams indicates an expected call of ProjectStreams.
+func (mr *MockOperatorGenericStoreMockRecorder) ProjectStreams(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProjectStreams", reflect.TypeOf((*MockOperatorGenericStore)(nil).ProjectStreams), arg0)
+}
+
 // ProjectTeams mocks base method.
 func (m *MockOperatorGenericStore) ProjectTeams(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedTeamRole, error) {
 	m.ctrl.T.Helper()
@@ -497,6 +512,21 @@ func (m *MockOperatorGenericStore) ServerlessPrivateEndpoints(arg0, arg1 string)
 func (mr *MockOperatorGenericStoreMockRecorder) ServerlessPrivateEndpoints(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServerlessPrivateEndpoints", reflect.TypeOf((*MockOperatorGenericStore)(nil).ServerlessPrivateEndpoints), arg0, arg1)
+}
+
+// StreamsConnections mocks base method.
+func (m *MockOperatorGenericStore) StreamsConnections(arg0, arg1 string) (*admin.PaginatedApiStreamsConnection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StreamsConnections", arg0, arg1)
+	ret0, _ := ret[0].(*admin.PaginatedApiStreamsConnection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// StreamsConnections indicates an expected call of StreamsConnections.
+func (mr *MockOperatorGenericStoreMockRecorder) StreamsConnections(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StreamsConnections", reflect.TypeOf((*MockOperatorGenericStore)(nil).StreamsConnections), arg0, arg1)
 }
 
 // TeamByID mocks base method.

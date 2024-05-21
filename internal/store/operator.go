@@ -81,10 +81,16 @@ type OperatorOrgStore interface {
 	ProjectAPIKeyAssigner
 }
 
+type StreamProcessingStore interface {
+	StreamsLister
+	StreamsConnectionLister
+}
+
 type OperatorGenericStore interface {
 	OperatorOrgStore
 	OperatorProjectStore
 	OperatorClusterStore
 	OperatorDBUsersStore
 	DataFederationStore
+	StreamProcessingStore
 }

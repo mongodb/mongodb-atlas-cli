@@ -41,7 +41,8 @@ func TestKubernetesConfigApply(t *testing.T) {
 
 	t.Run("should fail to apply resources when namespace do not exist", func(t *testing.T) {
 		operator := setupCluster(t, "k8s-config-apply-wrong-ns", defaultOperatorNamespace)
-		operator.installOperator(defaultOperatorNamespace, features.LatestOperatorMajorVersion)
+		err = operator.installOperator(defaultOperatorNamespace, features.LatestOperatorMajorVersion)
+		require.NoError(t, err)
 
 		g := newAtlasE2ETestGenerator(t)
 		g.generateProject("k8sConfigApplyWrongNs")
@@ -83,7 +84,9 @@ func TestKubernetesConfigApply(t *testing.T) {
 		g := newAtlasE2ETestGenerator(t)
 
 		operator := setupCluster(t, "k8s-config-apply-fail-version", defaultOperatorNamespace)
-		operator.installOperator(defaultOperatorNamespace, features.LatestOperatorMajorVersion)
+		err = operator.installOperator(defaultOperatorNamespace, features.LatestOperatorMajorVersion)
+		require.NoError(t, err)
+
 		operator.emulateCertifiedOperator()
 		g.t.Cleanup(func() {
 			operator.restoreOperatorImage()
@@ -115,7 +118,9 @@ func TestKubernetesConfigApply(t *testing.T) {
 
 	t.Run("export and apply atlas resource to kubernetes cluster", func(t *testing.T) {
 		operator := setupCluster(t, "k8s-config-apply", defaultOperatorNamespace)
-		operator.installOperator(defaultOperatorNamespace, features.LatestOperatorMajorVersion)
+		err = operator.installOperator(defaultOperatorNamespace, features.LatestOperatorMajorVersion)
+		require.NoError(t, err)
+
 		// we don't want the operator to do reconcile and avoid conflict with cli actions
 		operator.stopOperator()
 		t.Cleanup(func() {

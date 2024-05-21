@@ -18,6 +18,7 @@ package atlas_test
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -62,7 +63,15 @@ func newOperatorHelper(t *testing.T) (*operatorHelper, error) {
 		return nil, err
 	}
 
-	k8sClient, err := client.New(cfg, client.Options{Scheme: scheme.Scheme})
+	k8sClient, err := client.New(
+		cfg,
+		client.Options{
+			Scheme: scheme.Scheme,
+			WarningHandler: client.WarningHandlerOptions{
+				SuppressWarnings: true,
+			},
+		},
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -182,10 +191,12 @@ func (oh *operatorHelper) getOperatorSecretes(namespace string) ([]corev1.Secret
 	return secretList.Items, nil
 }
 
-func (oh *operatorHelper) installOperator(namespace, version string) {
+func (oh *operatorHelper) installOperator(namespace, version string) error {
+	oh.t.Helper()
+
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
-		oh.t.Errorf("unable to get atlasCli binary path: %v", err)
+		return fmt.Errorf("unable to get atlasCli binary path: %w", err)
 	}
 
 	cmd := exec.Command(
@@ -195,10 +206,13 @@ func (oh *operatorHelper) installOperator(namespace, version string) {
 		"--targetNamespace", namespace,
 	)
 	cmd.Env = os.Environ()
-	_, err = cmd.CombinedOutput()
+	out, err := cmd.CombinedOutput()
 	if err != nil {
-		oh.t.Errorf("unable install the operator: %v", err)
+		fmt.Println(string(out))
+		return fmt.Errorf("unable install the operator: %w", err)
 	}
+
+	return nil
 }
 
 func (oh *operatorHelper) stopOperator() {

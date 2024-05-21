@@ -22,6 +22,7 @@ import (
 
 	"github.com/go-test/deep"
 	"github.com/golang/mock/gomock"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
@@ -129,20 +130,39 @@ func TestProjectWithWrongOrgID(t *testing.T) {
 }
 
 func TestExportAtlasStreamProcessing(t *testing.T) {
-	ctl := gomock.NewController(t)
-	atlasOperatorGenericStore := mocks.NewMockOperatorGenericStore(ctl)
+	t.Run("should return nil when resource is not supported", func(t *testing.T) {
+		ctl := gomock.NewController(t)
+		atlasOperatorGenericStore := mocks.NewMockOperatorGenericStore(ctl)
+		featureValidator := mocks.NewMockFeatureValidator(ctl)
+		featureValidator.EXPECT().
+			IsResourceSupported(features.ResourceAtlasStreamInstance).
+			Return(false)
+
+		ce := NewConfigExporter(atlasOperatorGenericStore, nil, projectID, orgID).
+			WithFeatureValidator(featureValidator)
+
+		resources, err := ce.exportAtlasStreamProcessing("my-project")
+		require.NoError(t, err)
+		assert.Nil(t, resources)
+	})
 
 	t.Run("should return error when fail to list streams instances", func(t *testing.T) {
+		ctl := gomock.NewController(t)
+		atlasOperatorGenericStore := mocks.NewMockOperatorGenericStore(ctl)
 		atlasOperatorGenericStore.EXPECT().
 			ProjectStreams(&admin.ListStreamInstancesApiParams{GroupId: projectID}).
 			Return(nil, errors.New("failed to list streams instances"))
 
-		ce := NewConfigExporter(
-			atlasOperatorGenericStore,
-			nil,
-			projectID,
-			orgID,
-		)
+		featureValidator := mocks.NewMockFeatureValidator(ctl)
+		featureValidator.EXPECT().
+			IsResourceSupported(features.ResourceAtlasStreamInstance).
+			Return(true)
+		featureValidator.EXPECT().
+			IsResourceSupported(features.ResourceAtlasStreamConnection).
+			Return(true)
+
+		ce := NewConfigExporter(atlasOperatorGenericStore, nil, projectID, orgID).
+			WithFeatureValidator(featureValidator)
 
 		resources, err := ce.exportAtlasStreamProcessing("my-project")
 		require.ErrorContains(t, err, "failed to list streams instances")
@@ -150,6 +170,8 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 	})
 
 	t.Run("should return error when fail to list streams connections", func(t *testing.T) {
+		ctl := gomock.NewController(t)
+		atlasOperatorGenericStore := mocks.NewMockOperatorGenericStore(ctl)
 		atlasOperatorGenericStore.EXPECT().
 			ProjectStreams(&admin.ListStreamInstancesApiParams{GroupId: projectID}).
 			Return(&admin.PaginatedApiStreamsTenant{Results: &[]admin.StreamsTenant{{Name: pointer.Get("instance-0")}}}, nil)
@@ -157,12 +179,16 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 			StreamsConnections(projectID, "instance-0").
 			Return(nil, errors.New("failed to list streams connections"))
 
-		ce := NewConfigExporter(
-			atlasOperatorGenericStore,
-			nil,
-			projectID,
-			orgID,
-		)
+		featureValidator := mocks.NewMockFeatureValidator(ctl)
+		featureValidator.EXPECT().
+			IsResourceSupported(features.ResourceAtlasStreamInstance).
+			Return(true)
+		featureValidator.EXPECT().
+			IsResourceSupported(features.ResourceAtlasStreamConnection).
+			Return(true)
+
+		ce := NewConfigExporter(atlasOperatorGenericStore, nil, projectID, orgID).
+			WithFeatureValidator(featureValidator)
 
 		resources, err := ce.exportAtlasStreamProcessing("my-project")
 		require.ErrorContains(t, err, "failed to list streams connections")
@@ -170,6 +196,8 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 	})
 
 	t.Run("should return error when fail to build resources", func(t *testing.T) {
+		ctl := gomock.NewController(t)
+		atlasOperatorGenericStore := mocks.NewMockOperatorGenericStore(ctl)
 		atlasOperatorGenericStore.EXPECT().
 			ProjectStreams(&admin.ListStreamInstancesApiParams{GroupId: projectID}).
 			Return(&admin.PaginatedApiStreamsTenant{Results: &[]admin.StreamsTenant{{Name: pointer.Get("instance-0")}}}, nil)
@@ -184,12 +212,16 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 				nil,
 			)
 
-		ce := NewConfigExporter(
-			atlasOperatorGenericStore,
-			nil,
-			projectID,
-			orgID,
-		)
+		featureValidator := mocks.NewMockFeatureValidator(ctl)
+		featureValidator.EXPECT().
+			IsResourceSupported(features.ResourceAtlasStreamInstance).
+			Return(true)
+		featureValidator.EXPECT().
+			IsResourceSupported(features.ResourceAtlasStreamConnection).
+			Return(true)
+
+		ce := NewConfigExporter(atlasOperatorGenericStore, nil, projectID, orgID).
+			WithFeatureValidator(featureValidator)
 
 		resources, err := ce.exportAtlasStreamProcessing("my-project")
 		require.ErrorContains(t, err, "trying to generate an unsupported connection type")
@@ -197,6 +229,8 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 	})
 
 	t.Run("should return exported resources", func(t *testing.T) {
+		ctl := gomock.NewController(t)
+		atlasOperatorGenericStore := mocks.NewMockOperatorGenericStore(ctl)
 		atlasOperatorGenericStore.EXPECT().
 			ProjectStreams(&admin.ListStreamInstancesApiParams{GroupId: projectID}).
 			Return(
@@ -246,7 +280,16 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 				nil,
 			)
 
+		featureValidator := mocks.NewMockFeatureValidator(ctl)
+		featureValidator.EXPECT().
+			IsResourceSupported(features.ResourceAtlasStreamInstance).
+			Return(true)
+		featureValidator.EXPECT().
+			IsResourceSupported(features.ResourceAtlasStreamConnection).
+			Return(true)
+
 		ce := NewConfigExporter(atlasOperatorGenericStore, nil, projectID, orgID).
+			WithFeatureValidator(featureValidator).
 			WithTargetNamespace("test").
 			WithTargetOperatorVersion("2.3.0")
 

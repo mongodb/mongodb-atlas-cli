@@ -351,6 +351,11 @@ func (e *ConfigExporter) fetchDataFederationNames() ([]string, error) {
 }
 
 func (e *ConfigExporter) exportAtlasStreamProcessing(projectName string) ([]runtime.Object, error) {
+	if !e.featureValidator.IsResourceSupported(features.ResourceAtlasStreamInstance) ||
+		!e.featureValidator.IsResourceSupported(features.ResourceAtlasStreamConnection) {
+		return nil, nil
+	}
+
 	instancesList, err := e.dataProvider.ProjectStreams(&admin.ListStreamInstancesApiParams{GroupId: e.projectID})
 	if err != nil {
 		return nil, err

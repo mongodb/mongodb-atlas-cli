@@ -187,6 +187,12 @@ func NewAtlasCRDs(crdProvider crds.AtlasOperatorCRDProvider, version string) (*A
 	return result, nil
 }
 
+func (a *AtlasCRDs) IsResourceSupported(resourceName string) bool {
+	_, ok := a.resources[resourceName]
+
+	return ok
+}
+
 // FeatureExist
 // resourceName: one of SupportedResources
 // featurePath: dot-separated string - path in CRD spec to check.

@@ -206,9 +206,8 @@ func (oh *operatorHelper) installOperator(namespace, version string) error {
 		"--targetNamespace", namespace,
 	)
 	cmd.Env = os.Environ()
-	out, err := cmd.CombinedOutput()
+	_, err = cmd.CombinedOutput()
 	if err != nil {
-		fmt.Println(string(out))
 		return fmt.Errorf("unable install the operator: %w", err)
 	}
 

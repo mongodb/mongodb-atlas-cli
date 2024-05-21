@@ -102,19 +102,6 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
-  "setup operator":
-    command: subprocess.exec
-    type: setup
-    params:
-      working_dir: src/github.com/mongodb/mongodb-atlas-cli
-      env:
-        MCLI_ORG_ID: ${atlas_org_id}
-        MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-        MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-        MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-      include_expansions_in_env:
-        - workdir
-      binary: ./build/ci/setup_operator.sh
   "generate evergreen":
     - command: subprocess.exec
       type: test
@@ -315,7 +302,6 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "setup operator"
       - func: "e2e test"
         vars:
           MCLI_ORG_ID: ${atlas_org_id}
@@ -334,7 +320,6 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "setup operator"
       - func: "e2e test"
         vars:
           MCLI_ORG_ID: ${atlas_org_id}

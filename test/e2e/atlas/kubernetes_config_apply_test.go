@@ -22,6 +22,7 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
@@ -39,8 +40,12 @@ func TestKubernetesConfigApply(t *testing.T) {
 	require.NoError(t, err)
 
 	t.Run("should fail to apply resources when namespace do not exist", func(t *testing.T) {
+		operator := setupCluster(t, "k8s-config-apply-wrong-ns", defaultOperatorNamespace)
+		operator.installOperator(defaultOperatorNamespace, features.LatestOperatorMajorVersion)
+
 		g := newAtlasE2ETestGenerator(t)
 		g.generateProject("k8sConfigApplyWrongNs")
+
 		cmd := exec.Command(cliPath,
 			"kubernetes",
 			"config",
@@ -57,24 +62,10 @@ func TestKubernetesConfigApply(t *testing.T) {
 
 	t.Run("should fail to apply resources when unable to autodetect parameters", func(t *testing.T) {
 		g := newAtlasE2ETestGenerator(t)
+
+		setupCluster(t, "k8s-config-apply-no-auto-detect", defaultOperatorNamespace)
+
 		g.generateProject("k8sConfigApplyNoAutoDetect")
-
-		operator, err := newOperatorHelper(t)
-		require.NoError(t, err)
-		operator.deleteOperator()
-		g.t.Cleanup(func() {
-			operator.restoreOperator()
-		})
-
-		e2eNamespace := &corev1.Namespace{
-			ObjectMeta: metav1.ObjectMeta{
-				Name: "e2e-autodetect-parameters",
-			},
-		}
-		require.NoError(t, operator.createK8sObject(e2eNamespace))
-		g.t.Cleanup(func() {
-			require.NoError(t, operator.deleteK8sObject(e2eNamespace))
-		})
 
 		cmd := exec.Command(cliPath,
 			"kubernetes",
@@ -90,14 +81,15 @@ func TestKubernetesConfigApply(t *testing.T) {
 
 	t.Run("should fail to apply resources when unable to autodetect operator version", func(t *testing.T) {
 		g := newAtlasE2ETestGenerator(t)
-		g.generateProject("k8sConfigApplyFailVersion")
 
-		operator, err := newOperatorHelper(t)
-		require.NoError(t, err)
+		operator := setupCluster(t, "k8s-config-apply-fail-version", defaultOperatorNamespace)
+		operator.installOperator(defaultOperatorNamespace, features.LatestOperatorMajorVersion)
 		operator.emulateCertifiedOperator()
 		g.t.Cleanup(func() {
 			operator.restoreOperatorImage()
 		})
+
+		g.generateProject("k8sConfigApplyFailVersion")
 
 		e2eNamespace := &corev1.Namespace{
 			ObjectMeta: metav1.ObjectMeta{
@@ -113,7 +105,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 			"kubernetes",
 			"config",
 			"apply",
-			"--targetNamespace", "e2e-autodetect-operator-version",
+			"--targetNamespace", defaultOperatorNamespace,
 			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -122,15 +114,15 @@ func TestKubernetesConfigApply(t *testing.T) {
 	})
 
 	t.Run("export and apply atlas resource to kubernetes cluster", func(t *testing.T) {
-		g := setupAtlasResources(t)
-
-		operator, err := newOperatorHelper(t)
-		require.NoError(t, err)
+		operator := setupCluster(t, "k8s-config-apply", defaultOperatorNamespace)
+		operator.installOperator(defaultOperatorNamespace, features.LatestOperatorMajorVersion)
 		// we don't want the operator to do reconcile and avoid conflict with cli actions
 		operator.stopOperator()
-		g.t.Cleanup(func() {
+		t.Cleanup(func() {
 			operator.startOperator()
 		})
+
+		g := setupAtlasResources(t)
 
 		e2eNamespace := &corev1.Namespace{
 			ObjectMeta: metav1.ObjectMeta{

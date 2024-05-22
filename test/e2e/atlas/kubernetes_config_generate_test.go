@@ -31,6 +31,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
@@ -95,6 +96,7 @@ func InitialSetupWithTeam(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	s := KubernetesConfigGenerateProjectSuite{}
 	s.generator = newAtlasE2ETestGenerator(t)
 	s.generator.generateTeam("Kubernetes")
+
 	s.generator.generateEmptyProject(projectPrefix + s.generator.projectName)
 	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace, expectedLabels)
 
@@ -233,7 +235,7 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 					Namespace: targetNamespace,
 				},
 				ServiceKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(expectedProject.Name+"%s-service-key-0", dictionary),
+					Name:      resources.NormalizeAtlasName(expectedProject.Name+"-service-key-0", dictionary),
 					Namespace: targetNamespace,
 				},
 				VictorOpsSecretRef: akov2common.ResourceRefNamespaced{
@@ -263,18 +265,21 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 			generator.projectID,
 			"--event",
 			newAlertConfig.EventTypeName,
-			fmt.Sprintf("--enabled=%s", strconv.FormatBool(newAlertConfig.Enabled)),
+			fmt.Sprintf("--enabled=%t", newAlertConfig.Enabled),
 			"--notificationType",
 			newAlertConfig.Notifications[0].TypeName,
 			"--notificationIntervalMin",
 			strconv.Itoa(newAlertConfig.Notifications[0].IntervalMin),
 			"--notificationDelayMin",
 			strconv.Itoa(*newAlertConfig.Notifications[0].DelayMin),
-			fmt.Sprintf("--notificationSmsEnabled=%s", strconv.FormatBool(pointer.GetOrZero(newAlertConfig.Notifications[0].SMSEnabled))),
-			fmt.Sprintf("--notificationEmailEnabled=%s", strconv.FormatBool(pointer.GetOrZero(newAlertConfig.Notifications[0].EmailEnabled))),
-			fmt.Sprintf("--matcherFieldName=%s", newAlertConfig.Matchers[0].FieldName),
-			fmt.Sprintf("--matcherOperator=%s", newAlertConfig.Matchers[0].Operator),
-			fmt.Sprintf("--matcherValue=%s", newAlertConfig.Matchers[0].Value),
+			fmt.Sprintf("--notificationSmsEnabled=%v", pointer.GetOrZero(newAlertConfig.Notifications[0].SMSEnabled)),
+			fmt.Sprintf("--notificationEmailEnabled=%v", pointer.GetOrZero(newAlertConfig.Notifications[0].EmailEnabled)),
+			"--matcherFieldName",
+			newAlertConfig.Matchers[0].FieldName,
+			"--matcherOperator",
+			newAlertConfig.Matchers[0].Operator,
+			"--matcherValue",
+			newAlertConfig.Matchers[0].Value,
 			"-o=json")
 		cmd.Env = os.Environ()
 		alertConfigResp, err := cmd.CombinedOutput()
@@ -780,6 +785,163 @@ func TestProjectAndTeams(t *testing.T) {
 				}
 			}
 		})
+	})
+}
+
+func TestProjectWithStreamsProcessing(t *testing.T) {
+	s := InitialSetup(t)
+	s.generator.generateStreamsInstance("test-instance")
+	s.generator.generateStreamsConnection("test-connection")
+
+	cliPath := s.cliPath
+	generator := s.generator
+
+	t.Run("should export streams instance and connection resources", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			"kubernetes",
+			"config",
+			"generate",
+			"--projectId",
+			generator.projectID,
+			"--targetNamespace",
+			targetNamespace,
+			"--includeSecrets")
+		cmd.Env = os.Environ()
+
+		resp, err := cmd.CombinedOutput()
+		t.Log(string(resp))
+		require.NoError(t, err, string(resp))
+
+		var objects []runtime.Object
+		objects, err = getK8SEntities(resp)
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
+
+		for i := range objects {
+			object := objects[i]
+
+			if instance, ok := object.(*akov2.AtlasStreamInstance); ok {
+				assert.Equal(
+					t,
+					&akov2.AtlasStreamInstance{
+						TypeMeta: metav1.TypeMeta{
+							Kind:       "AtlasStreamInstance",
+							APIVersion: "atlas.mongodb.com/v1",
+						},
+						ObjectMeta: metav1.ObjectMeta{
+							Name: resources.NormalizeAtlasName(
+								fmt.Sprintf("%s-%s", generator.projectName, generator.streamInstanceName),
+								resources.AtlasNameToKubernetesName(),
+							),
+							Namespace: targetNamespace,
+							Labels: map[string]string{
+								"mongodb.com/atlas-resource-version": "2.3.0",
+							},
+						},
+						Spec: akov2.AtlasStreamInstanceSpec{
+							Name: generator.streamInstanceName,
+							Config: akov2.Config{
+								Provider: "AWS",
+								Region:   "VIRGINIA_USA",
+								Tier:     "SP30",
+							},
+							Project: akov2common.ResourceRefNamespaced{
+								Name:      resources.NormalizeAtlasName(generator.projectName, resources.AtlasNameToKubernetesName()),
+								Namespace: targetNamespace,
+							},
+							ConnectionRegistry: []akov2common.ResourceRefNamespaced{
+								{
+									Name: resources.NormalizeAtlasName(
+										fmt.Sprintf("%s-%s-%s", generator.projectName, generator.streamInstanceName, generator.streamConnectionName),
+										resources.AtlasNameToKubernetesName(),
+									),
+									Namespace: targetNamespace,
+								},
+							},
+						},
+						Status: akov2status.AtlasStreamInstanceStatus{
+							Common: akov2status.Common{
+								Conditions: []akov2status.Condition{},
+							},
+						},
+					},
+					instance,
+				)
+			}
+
+			if connection, ok := object.(*akov2.AtlasStreamConnection); ok {
+				assert.Equal(
+					t,
+					&akov2.AtlasStreamConnection{
+						TypeMeta: metav1.TypeMeta{
+							Kind:       "AtlasStreamConnection",
+							APIVersion: "atlas.mongodb.com/v1",
+						},
+						ObjectMeta: metav1.ObjectMeta{
+							Name: resources.NormalizeAtlasName(
+								fmt.Sprintf("%s-%s-%s", generator.projectName, generator.streamInstanceName, generator.streamConnectionName),
+								resources.AtlasNameToKubernetesName(),
+							),
+							Namespace: targetNamespace,
+							Labels: map[string]string{
+								"mongodb.com/atlas-resource-version": "2.3.0",
+							},
+						},
+						Spec: akov2.AtlasStreamConnectionSpec{
+							Name:           generator.streamConnectionName,
+							ConnectionType: "Kafka",
+							KafkaConfig: &akov2.StreamsKafkaConnection{
+								Authentication: akov2.StreamsKafkaAuthentication{
+									Mechanism: "SCRAM-256",
+									Credentials: akov2common.ResourceRefNamespaced{
+										Name: resources.NormalizeAtlasName(
+											fmt.Sprintf("%s-%s-%s-userpass", generator.projectName, generator.streamInstanceName, generator.streamConnectionName),
+											resources.AtlasNameToKubernetesName(),
+										),
+										Namespace: targetNamespace,
+									},
+								},
+								BootstrapServers: "example.com:8080,fraud.example.com:8000",
+								Security: akov2.StreamsKafkaSecurity{
+									Protocol: "PLAINTEXT",
+								},
+								Config: map[string]string{"auto.offset.reset": "earliest"},
+							},
+						},
+						Status: akov2status.AtlasStreamConnectionStatus{
+							Common: akov2status.Common{
+								Conditions: []akov2status.Condition{},
+							},
+						},
+					},
+					connection,
+				)
+			}
+
+			if secret, ok := object.(*corev1.Secret); ok && strings.Contains(secret.Name, "userpass") {
+				assert.Equal(
+					t,
+					&corev1.Secret{
+						TypeMeta: metav1.TypeMeta{
+							Kind:       "Secret",
+							APIVersion: "v1",
+						},
+						ObjectMeta: metav1.ObjectMeta{
+							Name: resources.NormalizeAtlasName(
+								fmt.Sprintf("%s-%s-%s-userpass", generator.projectName, generator.streamInstanceName, generator.streamConnectionName),
+								resources.AtlasNameToKubernetesName(),
+							),
+							Namespace: targetNamespace,
+							Labels: map[string]string{
+								secrets.TypeLabelKey: secrets.CredLabelVal,
+							},
+						},
+						Data: map[string][]byte{secrets.UsernameField: []byte("admin"), secrets.PasswordField: []byte("")},
+					},
+					secret,
+				)
+			}
+		}
 	})
 }
 

@@ -51,7 +51,7 @@ func TestDBRoles(t *testing.T) {
 			customDBRoleEntity,
 			"create",
 			roleName,
-			"--privilege", fmt.Sprintf("%s@db.collection", createPrivilege),
+			"--privilege", createPrivilege+"@db.collection",
 			"--inheritedRole", enableShardingInheritedRole,
 			"-o=json",
 		)
@@ -113,7 +113,7 @@ func TestDBRoles(t *testing.T) {
 			roleName,
 			"--inheritedRole", readInheritedRole,
 			"--privilege", updatePrivilege,
-			"--privilege", fmt.Sprintf("%s@db2.collection", createPrivilege),
+			"--privilege", createPrivilege+"@db2.collection",
 			"--append",
 			"-o=json")
 		cmd.Env = os.Environ()

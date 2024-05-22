@@ -163,7 +163,7 @@ For commands that create or modify complex data structures, the use of configura
 Before adding a command please make sure that your api exists in the GO SDK. 
 
 > [!TIP]  
-> Atlas CLI provides an experimental generator, make sure to try it out in [tools/cli-generator](./tools/cli-generator/)
+> Atlas CLI provides an experimental generator, make sure to try it out in [tools/cli-generator](./tools/cli-generator)
 
 ### API Interactions
 
@@ -245,20 +245,3 @@ make update-atlas-sdk
 
 > [!IMPORTANT]  
 > Command can make import changes to +500 files. Please make sure that you perform update on main branch without any uncommited changes.
-
-
-### Stable Methods
-
-Each Go SDK method used in the Atlas CLI should be marked as stable.
-Stable methods are listed in the SDK GO [operations.stable.json](https://github.com/mongodb/atlas-sdk-go/blob/main/tools/transformer/src/operations.stable.json) file.
-
-We have developed automation that lists stable methods.
-Generate list from Atlas CLI run:
-
-```sh
-go run ./tools/sdk-usage/main.go ./internal/store ./operations.stable.json
-```
-
-After the file is created please create PR directly in the GO SDK containing the updated file.
-
-in order to update `operations.stable.json` file in the Go SDK.

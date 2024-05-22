@@ -18,7 +18,6 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -62,18 +61,18 @@ func TestCleanup(t *testing.T) {
 			t.Log("skipping project", projectID)
 			continue
 		}
-		t.Run(fmt.Sprintf("trying to delete project %s", projectID), func(t *testing.T) {
+		t.Run("trying to delete project "+projectID, func(t *testing.T) {
 			t.Parallel()
 			t.Cleanup(func() {
 				deleteProjectWithRetry(t, projectID)
 			})
 			for _, provider := range []string{"aws", "gcp", "azure"} {
 				p := provider
-				t.Run(fmt.Sprintf("delete network peers for %s", p), func(t *testing.T) {
+				t.Run("delete network peers for "+p, func(t *testing.T) {
 					t.Parallel()
 					deleteAllNetworkPeers(t, cliPath, projectID, p)
 				})
-				t.Run(fmt.Sprintf("delete private endpoints for %s", p), func(t *testing.T) {
+				t.Run("delete private endpoints for "+p, func(t *testing.T) {
 					t.Parallel()
 					deleteAllPrivateEndpoints(t, cliPath, projectID, p)
 				})

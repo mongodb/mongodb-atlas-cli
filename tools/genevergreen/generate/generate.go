@@ -71,7 +71,7 @@ var (
 func newDependency(os, serverVersion, repo string) shrub.TaskDependency {
 	return shrub.TaskDependency{
 		Name:    fmt.Sprintf("push_atlascli_%s_%s_%s_%s_stable", newOs[os], repo, x86_64, strings.ReplaceAll(serverVersion, ".", "")),
-		Variant: fmt.Sprintf("generated_release_atlascli_publish_%s", strings.ReplaceAll(serverVersion, ".", "")),
+		Variant: buildNamePrefix + strings.ReplaceAll(serverVersion, ".", ""),
 	}
 }
 
@@ -150,7 +150,7 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 
 	for _, os := range oses {
 		t := &shrub.Task{
-			Name: fmt.Sprintf("pkg_test_atlascli_meta_docker_%s", os),
+			Name: "pkg_test_atlascli_meta_docker_" + os,
 		}
 		t = t.Dependency(shrub.TaskDependency{
 			Name:    "package_goreleaser",
@@ -166,6 +166,8 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 	c.Variants = append(c.Variants, v)
 }
 
+const buildNamePrefix = "generated_release_atlascli_publish_"
+
 func PublishStableTasks(c *shrub.Configuration) {
 	dependency := []shrub.TaskDependency{
 		{
@@ -177,10 +179,11 @@ func PublishStableTasks(c *shrub.Configuration) {
 			Variant: "release_atlascli_github",
 		},
 	}
+
 	for _, sv := range serverVersions {
 		v := &shrub.Variant{
-			BuildName:        fmt.Sprintf("generated_release_atlascli_publish_%s", strings.ReplaceAll(sv, ".", "")),
-			BuildDisplayName: fmt.Sprintf("Publish atlascli yum/apt %s", sv),
+			BuildName:        buildNamePrefix + strings.ReplaceAll(sv, ".", ""),
+			BuildDisplayName: "Publish atlascli yum/apt " + sv,
 			DistroRunOn:      []string{"rhel80-small"},
 		}
 		publishVariant(

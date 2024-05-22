@@ -71,11 +71,11 @@ func UpdateBuilder() *cobra.Command {
 		Aliases: []string{"updates"},
 		Args:    require.ExactArgs(1),
 		Short:   "Modify the roles or description for the specified organization API key.",
-		Long: fmt.Sprintf(`When you modify the roles for an organization API key with this command, the values you specify overwrite the existing roles assigned to the API key.
+		Long: `When you modify the roles for an organization API key with this command, the values you specify overwrite the existing roles assigned to the API key.
 		
 To view possible values for the apiKeyId argument, run atlas organizations apiKeys list.
 
-%s`, fmt.Sprintf(usage.RequiredRole, "Organization User Admin")),
+` + fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
 		Annotations: map[string]string{
 			"apiKeyIdDesc": "Unique 24-digit string that identifies your API key.",
 			"output":       updateTemplate,

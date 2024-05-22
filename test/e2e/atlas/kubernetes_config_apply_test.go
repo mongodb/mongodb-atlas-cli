@@ -264,12 +264,14 @@ func setupAtlasResources(t *testing.T) *atlasE2ETestGenerator {
 	return g
 }
 
+const credSuffix = "-credentials"
+
 func referenceExportedProject(projectName, teamName string, expectedProject *akov2.AtlasProject) *akov2.AtlasProject {
 	return &akov2.AtlasProject{
 		Spec: akov2.AtlasProjectSpec{
 			Name: projectName,
 			ConnectionSecret: &akov2common.ResourceRefNamespaced{
-				Name: prepareK8sName(fmt.Sprintf("%s-credentials", projectName)),
+				Name: prepareK8sName(projectName + credSuffix),
 			},
 			WithDefaultAlertsSettings: true,
 			Settings: &akov2.ProjectSettings{

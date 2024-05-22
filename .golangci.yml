@@ -122,6 +122,7 @@ linters:
     - nakedret # Finds naked returns in functions greater than a specified function length [fast: true, auto-fix: false]
     - noctx # noctx finds sending http request without context.Context [fast: false, auto-fix: false]
     - nolintlint # Reports ill-formed or insufficient nolint directives [fast: true, auto-fix: false]
+    - perfsprint # Checks that fmt.Sprintf can be replaced with a faster alternative.
     - prealloc # Finds slice declarations that could potentially be pre-allocated [fast: true, auto-fix: false]
     - predeclared # find code that shadows one of Go's predeclared identifiers [fast: true, auto-fix: false]
     - revive # Fast, configurable, extensible, flexible, and beautiful linter for Go. Drop-in replacement of golint. [fast: false, auto-fix: false]
@@ -129,6 +130,7 @@ linters:
     - staticcheck # (megacheck) It's a set of rules from staticcheck. It's not the same thing as the staticcheck binary. The author of staticcheck doesn't support or approve the use of staticcheck as a library inside golangci-lint. [fast: false, auto-fix: false]
     - stylecheck # Stylecheck is a replacement for golint [fast: false, auto-fix: false]
     - tenv # tenv is analyzer that detects using os.Setenv instead of t.Setenv since Go1.17 [fast: false, auto-fix: false]
+    - testableexamples # linter checks if examples are testable (have an expected output)
     - testifylint # Checks usage of github.com/stretchr/testify. [fast: false, auto-fix: false]
     - thelper # thelper detects golang test helpers without t.Helper() call and checks the consistency of test helpers [fast: false, auto-fix: false]
     - typecheck # Like the front-end of a Go compiler, parses and type-checks Go code [fast: false, auto-fix: false]

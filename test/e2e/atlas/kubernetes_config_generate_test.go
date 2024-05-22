@@ -96,6 +96,7 @@ func InitialSetupWithTeam(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	s := KubernetesConfigGenerateProjectSuite{}
 	s.generator = newAtlasE2ETestGenerator(t)
 	s.generator.generateTeam("Kubernetes")
+
 	s.generator.generateEmptyProject(projectPrefix + s.generator.projectName)
 	s.expectedProject = referenceProject(s.generator.projectName, targetNamespace, expectedLabels)
 
@@ -234,7 +235,7 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 					Namespace: targetNamespace,
 				},
 				ServiceKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(expectedProject.Name+"%s-service-key-0", dictionary),
+					Name:      resources.NormalizeAtlasName(expectedProject.Name+"-service-key-0", dictionary),
 					Namespace: targetNamespace,
 				},
 				VictorOpsSecretRef: akov2common.ResourceRefNamespaced{
@@ -264,18 +265,21 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 			generator.projectID,
 			"--event",
 			newAlertConfig.EventTypeName,
-			fmt.Sprintf("--enabled=%s", strconv.FormatBool(newAlertConfig.Enabled)),
+			fmt.Sprintf("--enabled=%t", newAlertConfig.Enabled),
 			"--notificationType",
 			newAlertConfig.Notifications[0].TypeName,
 			"--notificationIntervalMin",
 			strconv.Itoa(newAlertConfig.Notifications[0].IntervalMin),
 			"--notificationDelayMin",
 			strconv.Itoa(*newAlertConfig.Notifications[0].DelayMin),
-			fmt.Sprintf("--notificationSmsEnabled=%s", strconv.FormatBool(pointer.GetOrZero(newAlertConfig.Notifications[0].SMSEnabled))),
-			fmt.Sprintf("--notificationEmailEnabled=%s", strconv.FormatBool(pointer.GetOrZero(newAlertConfig.Notifications[0].EmailEnabled))),
-			fmt.Sprintf("--matcherFieldName=%s", newAlertConfig.Matchers[0].FieldName),
-			fmt.Sprintf("--matcherOperator=%s", newAlertConfig.Matchers[0].Operator),
-			fmt.Sprintf("--matcherValue=%s", newAlertConfig.Matchers[0].Value),
+			fmt.Sprintf("--notificationSmsEnabled=%v", pointer.GetOrZero(newAlertConfig.Notifications[0].SMSEnabled)),
+			fmt.Sprintf("--notificationEmailEnabled=%v", pointer.GetOrZero(newAlertConfig.Notifications[0].EmailEnabled)),
+			"--matcherFieldName",
+			newAlertConfig.Matchers[0].FieldName,
+			"--matcherOperator",
+			newAlertConfig.Matchers[0].Operator,
+			"--matcherValue",
+			newAlertConfig.Matchers[0].Value,
 			"-o=json")
 		cmd.Env = os.Environ()
 		alertConfigResp, err := cmd.CombinedOutput()

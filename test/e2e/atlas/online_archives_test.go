@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -152,7 +153,7 @@ func pauseOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
 	const expireAfterDays = 4
-	expireAfterDaysStr := fmt.Sprintf("%d", expireAfterDays)
+	expireAfterDaysStr := strconv.Itoa(expireAfterDays)
 	cmd := exec.Command(cliPath,
 		clustersEntity,
 		onlineArchiveEntity,

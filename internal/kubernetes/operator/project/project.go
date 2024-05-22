@@ -17,6 +17,7 @@ package project
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
@@ -239,8 +240,10 @@ func newAtlasProject(project *atlasv2.Group, dictionary map[string]string, targe
 	}
 }
 
+const credentialSuffix = "-credentials"
+
 func BuildProjectConnectionSecret(credsProvider store.CredentialsGetter, name, namespace, orgID string, includeCreds bool, dictionary map[string]string) *corev1.Secret {
-	secret := secrets.NewAtlasSecretBuilder(fmt.Sprintf("%s-credentials", name), namespace, dictionary).
+	secret := secrets.NewAtlasSecretBuilder(name+credentialSuffix, namespace, dictionary).
 		WithData(map[string][]byte{
 			secrets.CredOrgID:         []byte(""),
 			secrets.CredPublicAPIKey:  []byte(""),
@@ -864,7 +867,7 @@ func convertThreshold(atlasT *atlasv2.GreaterThanRawThreshold) *akov2.Threshold 
 	return &akov2.Threshold{
 		Operator:  atlasT.GetOperator(),
 		Units:     atlasT.GetUnits(),
-		Threshold: fmt.Sprintf("%d", atlasT.GetThreshold()),
+		Threshold: strconv.Itoa(atlasT.GetThreshold()),
 	}
 }
 

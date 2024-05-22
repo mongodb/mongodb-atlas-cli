@@ -135,19 +135,19 @@ func (opts *DeploymentOpts) LocalCheckHostname() string {
 }
 
 func (opts *DeploymentOpts) LocalNetworkName() string {
-	return fmt.Sprintf("mdb-local-%s", opts.DeploymentName)
+	return "mdb-local-" + opts.DeploymentName
 }
 
 func (opts *DeploymentOpts) LocalMongotDataVolume() string {
-	return fmt.Sprintf("mongot-local-data-%s", opts.DeploymentName)
+	return "mongot-local-data-" + opts.DeploymentName
 }
 
 func (opts *DeploymentOpts) LocalMongodDataVolume() string {
-	return fmt.Sprintf("mongod-local-data-%s", opts.DeploymentName)
+	return "mongod-local-data-" + opts.DeploymentName
 }
 
 func (opts *DeploymentOpts) LocalMongoMetricsVolume() string {
-	return fmt.Sprintf("mongot-local-metrics-%s", opts.DeploymentName)
+	return "mongot-local-metrics-" + opts.DeploymentName
 }
 
 func (opts *DeploymentOpts) MongodDockerImageName() string {
@@ -155,7 +155,7 @@ func (opts *DeploymentOpts) MongodDockerImageName() string {
 }
 
 func LocalDeploymentName(hostname string) string {
-	return strings.TrimPrefix(hostname, fmt.Sprintf("%s-", MongodHostnamePrefix))
+	return strings.TrimPrefix(hostname, MongodHostnamePrefix+"-")
 }
 
 func (opts *DeploymentOpts) StartSpinner() {

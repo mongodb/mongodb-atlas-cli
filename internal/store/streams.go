@@ -15,7 +15,7 @@
 package store
 
 import (
-	"fmt"
+	"errors"
 	"io"
 
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
@@ -98,7 +98,7 @@ func (s *Store) DownloadAuditLog(request *atlasv2.DownloadStreamTenantAuditLogsA
 		return nil, err
 	}
 	if result == nil {
-		return nil, fmt.Errorf("returned file is empty")
+		return nil, errors.New("returned file is empty")
 	}
 	return result, nil
 }

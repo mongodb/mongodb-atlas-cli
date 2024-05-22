@@ -19,7 +19,6 @@ import (
 	"bytes"
 	"embed"
 	"encoding/json"
-	"fmt"
 	"io/fs"
 	"os"
 	"path"
@@ -30,7 +29,7 @@ import (
 )
 
 func GenerateFileName(dir, suffix string) string {
-	return path.Join(dir, fmt.Sprintf("test-%s", suffix))
+	return path.Join(dir, "test-"+suffix)
 }
 
 func DumpToTemp(files embed.FS, srcFile, destFile string) error {

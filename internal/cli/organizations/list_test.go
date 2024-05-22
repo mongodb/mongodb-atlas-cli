@@ -28,26 +28,6 @@ import (
 )
 
 func TestList_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationLister(ctrl)
-
-	expected := &atlasv2.PaginatedOrganization{}
-
-	listOpts := &ListOpts{store: mockStore}
-
-	mockStore.
-		EXPECT().
-		Organizations(listOpts.newOrganizationListOptions()).
-		Return(expected, nil).
-		Times(1)
-
-	if err := listOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-	test.VerifyOutputTemplate(t, listTemplate, expected)
-}
-
-func TestList_Run_Nil_Result(t *testing.T) {
 	tests := []struct {
 		name      string
 		expected  *atlasv2.PaginatedOrganization

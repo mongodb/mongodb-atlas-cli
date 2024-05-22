@@ -22,6 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
@@ -44,6 +45,80 @@ func TestList_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	test.VerifyOutputTemplate(t, listTemplate, expected)
+}
+
+func TestList_Run_Nil_Result(t *testing.T) {
+	tests := []struct {
+		name      string
+		expected  *atlasv2.PaginatedOrganization
+		returnErr error
+	}{
+		{
+			name: "non-nil result",
+			expected: &atlasv2.PaginatedOrganization{
+				Results: &[]atlasv2.AtlasOrganization{{}, {}, {}},
+			},
+			returnErr: nil,
+		},
+		{
+			name: "nil result",
+			expected: &atlasv2.PaginatedOrganization{
+				Results: nil,
+			},
+			returnErr: nil,
+		},
+		{
+			name:      "no results",
+			expected:  &atlasv2.PaginatedOrganization{},
+			returnErr: nil,
+		},
+		{
+			name: "no results",
+			expected: &atlasv2.PaginatedOrganization{
+				Results: &[]atlasv2.AtlasOrganization{},
+			},
+			returnErr: nil,
+		},
+		{
+			name: "with results",
+			expected: &atlasv2.PaginatedOrganization{
+				Results: &[]atlasv2.AtlasOrganization{
+					{
+						Id:   pointer.Get("test"),
+						Name: "test",
+					},
+				},
+			},
+			returnErr: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			mockStore := mocks.NewMockOrganizationLister(ctrl)
+			listOpts := &ListOpts{store: mockStore}
+
+			mockStore.
+				EXPECT().
+				Organizations(listOpts.newOrganizationListOptions()).
+				Return(tt.expected, tt.returnErr).
+				Times(1)
+
+			if err := listOpts.Run(); err != nil {
+				t.Fatalf("Run() unexpected error: %v", err)
+			}
+
+			err := listOpts.Print(tt.expected)
+			if err != nil {
+				t.Fatalf("Print() unexpected error: %v", err)
+			}
+
+			test.VerifyOutputTemplate(t, listTemplate, tt.expected)
+		})
+	}
 }
 
 func TestListBuilder(t *testing.T) {

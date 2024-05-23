@@ -323,4 +323,6 @@ const (
 	RequestedScope                            = "requestedScope"                            // RequestedScope flag
 	Protocol                                  = "protocol"                                  // Protocol flag
 	IdentityProviderID                        = "identityProviderId"                        // IdentityProviderId flag
+	AuditAuthorizationSuccess                 = "auditAuthorizationSuccess"                 // AuditAuthorizationSuccess flag
+	AuditFilter                               = "auditFilter"                               // AuditFilter flag
 )

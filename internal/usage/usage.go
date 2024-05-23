@@ -107,6 +107,7 @@ dbName and collection are required only for built-in roles.`
 	MaxDate                                   = "Maximum created date. This option returns events whose created date is less than or equal to the specified value."
 	MinDate                                   = "Minimum created date. This option returns events whose created date is greater than or equal to the specified value."
 	ClusterFilename                           = "Path to an optional JSON configuration file that defines cluster settings. To learn more about cluster configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/cluster-config-file-atlascli. To learn more about cluster configuration files for MongoCLI, see https://dochub.mongodb.org/core/mms-cluster-settings-file-mcli."
+	AuditingFilename                          = "Path to an optional JSON configuration file that defines auditing filters. To learn more about auditing configuration files for the Atlas CLI, see https://www.mongodb.com/docs/atlas/database-auditing/#example-auditing-filters"
 	IndexFilename                             = "Path to an optional JSON configuration file that defines index settings."
 	BackupFilename                            = "Path to an optional JSON configuration file that defines backup schedule settings. To learn about the cloud backup configuration file for the Atlas CLI, see https://dochub.mongodb.org/core/cloud-backup-config-file."
 	SearchFilename                            = "Name of the JSON index configuration file to use. To learn about the Atlas Search and Atlas Vector Search index configuration file, see https://dochub.mongodb.org/core/search-index-config-file-atlascli. To learn about the Atlas Search index syntax and options that you can define in your configuration file, see https://dochub.mongodb.org/core/index-definitions-fts. To learn about the Atlas Vector Search index syntax and options that you can define in your configuration file, see https://dochub.mongodb.org/core/index-definition-avs."
@@ -119,6 +120,8 @@ dbName and collection are required only for built-in roles.`
 	AccessLogIP                               = "IP address that attempted to authenticate with the database. Atlas filters the returned logs to include documents with only this IP address."
 	Event                                     = "Type of event that triggered the alert. To learn which values the CLI accepts, see the Enum for eventTypeName in the Atlas Admin API spec: https://dochub.mongodb.org/core/atlas-event-names."
 	Enabled                                   = "Flag that indicates whether to enable the alert configuration."
+	EnabledAuditing                           = "Flag that indicates whether someone enabled database auditing for the specified project."
+	AuditAuthorizationSuccess                 = "Flag that indicates whether someone set auditing to track successful authentications. This only applies to the \"atype\" : \"authCheck\" audit filter. Setting this parameter to true degrades cluster performance."
 	MatcherFieldName                          = "Name of the field in the target object to match on. To learn the valid values, run atlas alerts settings fields type."
 	MatcherOperator                           = "Comparison operator to apply when checking the current metric against matcherValue. Valid values are CONTAINS, ENDS_WITH, EQUALS, NOT_CONTAINS, NOT_EQUALS, REGEX, STARTS_WITH."
 	MatcherValue                              = "Value to test with the specified operator. If matcherFieldName is set to TYPE_NAME, you can match on the following values: CONFIG, MONGOS, PRIMARY, SECONDARY, STANDALONE."
@@ -402,4 +405,5 @@ dbName and collection are required only for built-in roles.`
 	Protocol                   = "Protocol used to authenticate the user. Valid value is OIDC or SAML."
 	IdentityProviderID         = "Unique identifier of the identity provider."
 	ConnectedOrgConfigFilename = "Path to a JSON configuration file that defines connected orgs configurations. To learn more about connected org configuration file format, see the request body in https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Federated-Authentication/operation/updateConnectedOrgConfig."
+	AuditFilter                = "JSON document that specifies which events to record. Escape any characters that may prevent parsing, such as single or double quotes, using a backslash (\\)."
 )

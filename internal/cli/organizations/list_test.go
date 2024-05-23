@@ -38,26 +38,22 @@ func TestList_Run(t *testing.T) {
 			expected: &atlasv2.PaginatedOrganization{
 				Results: &[]atlasv2.AtlasOrganization{{}, {}, {}},
 			},
-			returnErr: nil,
 		},
 		{
 			name: "nil result",
 			expected: &atlasv2.PaginatedOrganization{
 				Results: nil,
 			},
-			returnErr: nil,
 		},
 		{
-			name:      "no results",
-			expected:  &atlasv2.PaginatedOrganization{},
-			returnErr: nil,
+			name:     "no results",
+			expected: &atlasv2.PaginatedOrganization{},
 		},
 		{
 			name: "no results",
 			expected: &atlasv2.PaginatedOrganization{
 				Results: &[]atlasv2.AtlasOrganization{},
 			},
-			returnErr: nil,
 		},
 		{
 			name: "with results",
@@ -69,12 +65,12 @@ func TestList_Run(t *testing.T) {
 					},
 				},
 			},
-			returnErr: nil,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
@@ -84,7 +80,7 @@ func TestList_Run(t *testing.T) {
 			mockStore.
 				EXPECT().
 				Organizations(listOpts.newOrganizationListOptions()).
-				Return(tt.expected, tt.returnErr).
+				Return(tt.expected, nil).
 				Times(1)
 
 			if err := listOpts.Run(); err != nil {

@@ -180,7 +180,7 @@ Flags are a way to modify the command, also may be called "options". Flags alway
 - `--booleanFlag`: this flag represents a boolean and it sets the related variable to true when the flag is used, false otherwise. Example: `--force`
 - `--flagName value1,value2,..,valueN`: you will also find flags that accept a list of values. This type of flag can be very useful to represent data structures as `--role roleName1@db,roleName2@db`, `--privilege action@dbName.collection,action2@dbName.collection`, or `--key field:type`.
   As shown in the examples, the standard format used to represent data structures consists of splitting the first value with the second one by at sign `@` or colon `:`, and the second value with the third one by a full stop `.`.
-  We recommend using configuration files for complex data structures that require more than three values. For an example of configuration files, see [mongocli atlas cluster create](https://github.com/mongodb/mongodb-atlas-cli/blob/f2e6d661a3eb2cfcf9baab5f9e0b1c0f872b8c14/internal/cli/atlas/clusters/create.go#L235).
+  We recommend using configuration files for complex data structures that require more than three values. For an example of configuration files, see [atlas cluster create](https://github.com/mongodb/mongodb-atlas-cli/blob/f2e6d661a3eb2cfcf9baab5f9e0b1c0f872b8c14/internal/cli/atlas/clusters/create.go#L235).
 
 #### Documentation Requirements
 

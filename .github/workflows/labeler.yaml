@@ -8,7 +8,6 @@ on:
       - reopened
       - synchronize
       - ready_for_review
-      - labeled
 jobs:
   labeler:
     name: Add Label to PRs and Issues

@@ -34,6 +34,11 @@ jobs:
     permissions:
       pull-requests: write # Needed by sticky-pull-request-comment
     steps:
+      # Delete a previous comment when the issue has been resolved
+      - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        with:
+          header: pr-title-slack-doc
+          delete: true
       - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
         with:
           header: pr-title-slack-doc

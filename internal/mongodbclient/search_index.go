@@ -15,7 +15,6 @@
 package mongodbclient
 
 import (
-	"cmp"
 	"context"
 	"encoding/json"
 	"errors"
@@ -25,6 +24,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"go.mongodb.org/atlas-sdk/v20231115014/admin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 const (
@@ -72,37 +73,16 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 	}
 
 	// Empty these fields so that they are not included into the index definition for the MongoDB command
-	index = removeFields(index, "id", "collectionName", "database", "type")
+	index = removeFields(index, "id", "collectionName", "database")
 
-	indexCommand := bson.D{
-		{
-			Key:   "createSearchIndexes",
-			Value: collection,
-		},
-		{
-			Key: "indexes",
-			Value: []bson.D{
-				{
-					{
-						Key:   "name",
-						Value: idx.Name,
-					},
-					{
-						Key:   "type",
-						Value: cmp.Or(idx.GetType(), defaultSearchIndexType),
-					},
-					{
-						Key:   "definition",
-						Value: index,
-					},
-				},
-			},
-		},
-	}
+	_, err = o.db.Collection(collection).SearchIndexes().CreateOne(ctx, mongo.SearchIndexModel{
+		Definition: index,
+		Options:    options.SearchIndexes().SetName(idx.Name),
+	})
 
 	_, _ = log.Debugln("Creating search index with definition: ", index)
-	if result := o.db.RunCommand(ctx, indexCommand); result.Err() != nil {
-		return nil, result.Err()
+	if err != nil {
+		return nil, err
 	}
 
 	return o.SearchIndexByName(ctx, idx.Name, collection)

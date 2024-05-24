@@ -29,11 +29,22 @@ jobs:
           config_path: .github/labeler.yaml
   slack-notification-doc-team:
     needs: labeler
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'need-doc-review') }}
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write # Needed by sticky-pull-request-comment
     steps:
+      - name: TEST
+        id: create
+        shell: bash
+        env:
+          ISSUE_NUMBER: ${{ github.event.pull_request.labels.*.name }}
+          ISSUE_URL: ${{ github.event.pull_request }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_ASSIGNEE: ${{ secrets.ASSIGNEE_JIRA_TICKET }}
+        run: |
+          echo $ISSUE_NUMBER
+          echo "ANDREA"
+          echo $ISSUE_URL
       - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
         with:
           header: pr-title-slack-doc

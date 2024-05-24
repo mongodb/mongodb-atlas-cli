@@ -8,6 +8,7 @@ on:
       - reopened
       - synchronize
       - ready_for_review
+      - labeled
 jobs:
   labeler:
     name: Add Label to PRs and Issues
@@ -31,7 +32,7 @@ jobs:
           use_local_config: true
   slack-notification-doc-team:
     needs: labeler
-    if: ${{ github.event.label.name == 'need-doc-review' }}
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'need-doc-review') }}
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write # Needed by sticky-pull-request-comment

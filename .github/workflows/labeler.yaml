@@ -38,13 +38,9 @@ jobs:
         shell: bash
         env:
           ISSUE_NUMBER: ${{ github.event.pull_request.labels.*.name }}
-          ISSUE_URL: ${{ github.event.pull_request }}
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          JIRA_ASSIGNEE: ${{ secrets.ASSIGNEE_JIRA_TICKET }}
         run: |
           echo $ISSUE_NUMBER
           echo "ANDREA"
-          echo $ISSUE_URL
       - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
         with:
           header: pr-title-slack-doc

@@ -31,7 +31,7 @@ jobs:
           use_local_config: true
   slack-notification-doc-team:
     needs: labeler
-    if: ${{ github.event.label.name == 'need-doc-review' }}
+    if: contains(github.event.pull_request.labels.*.name, 'need-doc-review')
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write # Needed by sticky-pull-request-comment
@@ -56,6 +56,10 @@ jobs:
                 }
               ]
             }
+      - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        with:
+          header: pr-title-slack-doc
+          delete: true
       - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
         with:
           header: pr-title-slack-doc

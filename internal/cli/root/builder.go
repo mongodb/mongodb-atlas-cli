@@ -295,7 +295,10 @@ func shouldCheckCredentials(cmd *cobra.Command) AuthRequirements {
 		fmt.Sprintf("%s %s", atlas, "completion"):  NoAuth,       // completion commands do not require credentials
 		fmt.Sprintf("%s %s", atlas, "config"):      NoAuth,       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "auth"):        NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "register"):    NoAuth,       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "login"):       NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "logout"):      NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "whoami"):      NoAuth,       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "setup"):       NoAuth,       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "register"):    NoAuth,       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "quickstart"):  NoAuth,       // command supports login

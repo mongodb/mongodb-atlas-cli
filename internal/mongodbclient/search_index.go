@@ -73,11 +73,16 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 	}
 
 	// Empty these fields so that they are not included into the index definition for the MongoDB command
-	index = removeFields(index, "id", "collectionName", "database")
+	index = removeFields(index, "id", "collectionName", "database", "type")
+
+	options := options.SearchIndexes().SetName(idx.Name)
+	if idx.Type != nil {
+		options.SetType(*idx.Type)
+	}
 
 	_, err = o.db.Collection(collection).SearchIndexes().CreateOne(ctx, mongo.SearchIndexModel{
 		Definition: index,
-		Options:    options.SearchIndexes().SetName(idx.Name),
+		Options:    options,
 	})
 
 	_, _ = log.Debugln("Creating search index with definition: ", index)

@@ -51,7 +51,7 @@ func TestDBRoles(t *testing.T) {
 			customDBRoleEntity,
 			"create",
 			roleName,
-			"--privilege", fmt.Sprintf("%s@db.collection,%s@db.collection2", createPrivilege, createPrivilege),
+			"--privilege", fmt.Sprintf("%s@db.collection,%s@db.collection2", createPrivilege, updatePrivilege),
 			"--inheritedRole", enableShardingInheritedRole,
 			"-o=json",
 		)

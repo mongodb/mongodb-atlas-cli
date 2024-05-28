@@ -90,6 +90,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # retrieves pipeline run '507f1f77bcf86cd799439011':
    atlas dataLakePipelines runs describe 507f1f77bcf86cd799439011

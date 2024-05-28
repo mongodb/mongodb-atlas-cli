@@ -102,5 +102,6 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    atlas cluster onlineArchive watch archiveIdSample --clusterName clusterNameSample

@@ -105,6 +105,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Create an automated restore:
    atlas serverless backup restore create \
@@ -116,6 +117,7 @@ Examples
 
    
 .. code-block::
+   :copyable: false
 
    # Create a point-in-time restore:
    atlas serverless backup restore create \
@@ -127,6 +129,7 @@ Examples
    
    
 .. code-block::
+   :copyable: false
 
    # Create a download restore:
    atlas serverless backup restore create \

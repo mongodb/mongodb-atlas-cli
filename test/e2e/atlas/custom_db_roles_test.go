@@ -64,7 +64,7 @@ func TestDBRoles(t *testing.T) {
 
 		a := assert.New(t)
 		a.Equal(roleName, role.RoleName)
-		a.Len(role.GetActions(), 1)
+		a.Len(role.GetActions(), 2)
 		a.Equal(createPrivilege, role.GetActions()[0].Action)
 		a.Len(role.GetInheritedRoles(), 1)
 		a.Equal(enableShardingRole, role.GetInheritedRoles()[0].Role)

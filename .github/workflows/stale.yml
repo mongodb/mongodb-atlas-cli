@@ -14,6 +14,9 @@ jobs:
       issues: write
       pull-requests: write
     steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
       - uses: actions/stale@v9
         id: stale
         with:

@@ -104,6 +104,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Create a search index for the cluster named myCluster using a JSON index configuration file named search-config.json:
    atlas clusters search indexes create --clusterName myCluster --file search-config.json --output json

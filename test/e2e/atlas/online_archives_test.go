@@ -21,13 +21,14 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 func TestOnlineArchives(t *testing.T) {
@@ -152,7 +153,7 @@ func pauseOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
 	const expireAfterDays = 4
-	expireAfterDaysStr := fmt.Sprintf("%d", expireAfterDays)
+	expireAfterDaysStr := strconv.Itoa(expireAfterDays)
 	cmd := exec.Command(cliPath,
 		clustersEntity,
 		onlineArchiveEntity,

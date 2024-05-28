@@ -20,6 +20,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const longDesc = `To view possible values for the ID argument, run atlas organizations apiKeys list.
+
+`
+
 func Builder() *cobra.Command {
 	const use = "apiKeys"
 	var cmd = &cobra.Command{

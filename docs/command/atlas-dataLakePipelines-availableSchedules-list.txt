@@ -74,6 +74,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # list available schedules for data lake pipeline called 'Pipeline1':
    atlas dataLakePipelines availableSchedules list Pipeline1

@@ -17,6 +17,7 @@ package project
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
@@ -30,7 +31,7 @@ import (
 	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8snames "k8s.io/apiserver/pkg/storage/names"
@@ -239,8 +240,10 @@ func newAtlasProject(project *atlasv2.Group, dictionary map[string]string, targe
 	}
 }
 
+const credentialSuffix = "-credentials"
+
 func BuildProjectConnectionSecret(credsProvider store.CredentialsGetter, name, namespace, orgID string, includeCreds bool, dictionary map[string]string) *corev1.Secret {
-	secret := secrets.NewAtlasSecretBuilder(fmt.Sprintf("%s-credentials", name), namespace, dictionary).
+	secret := secrets.NewAtlasSecretBuilder(name+credentialSuffix, namespace, dictionary).
 		WithData(map[string][]byte{
 			secrets.CredOrgID:         []byte(""),
 			secrets.CredPublicAPIKey:  []byte(""),
@@ -864,7 +867,7 @@ func convertThreshold(atlasT *atlasv2.GreaterThanRawThreshold) *akov2.Threshold 
 	return &akov2.Threshold{
 		Operator:  atlasT.GetOperator(),
 		Units:     atlasT.GetUnits(),
-		Threshold: fmt.Sprintf("%d", atlasT.GetThreshold()),
+		Threshold: strconv.Itoa(atlasT.GetThreshold()),
 	}
 }
 

@@ -100,6 +100,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # watches the pipeline 'Pipeline1':
    atlas dataLakePipelines watch Pipeline1

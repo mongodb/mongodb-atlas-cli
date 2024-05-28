@@ -16,18 +16,15 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"path"
 	"strings"
 
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/AlecAivazis/survey/v2/core"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/root"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/terminal"
 	"github.com/spf13/cobra"
 )
 
@@ -61,28 +58,8 @@ func loadConfig() error {
 	return nil
 }
 
-func shouldCopyConfig(atlasConfigPath string) bool {
-	// Keep backward compatibility and copy if non-tty. If any shows as non-tty, then we can't ask
-	// questions.
-	if !terminal.IsTerminal(os.Stdout) || !terminal.IsTerminal(os.Stderr) || !terminal.IsTerminalInput(os.Stdin) {
-		return true
-	}
-
-	var response bool
-	question := &survey.Confirm{
-		Message: fmt.Sprintf("Atlas CLI has found an existing MongoDB CLI configuration file, would you like to copy its content? (destination:%s)", atlasConfigPath),
-		Default: true,
-	}
-
-	if err := telemetry.TrackAskOne(question, &response); err != nil {
-		return false
-	}
-
-	return response
-}
-
-// createConfigFromMongoCLIConfig creates the atlasCLI config file from the mongocli config file.
-func createConfigFromMongoCLIConfig() {
+// createConfig creates the atlasCLI config file if not existent.
+func createConfig() {
 	atlasConfigHomePath, err := config.CLIConfigHome()
 	if err != nil {
 		return
@@ -94,64 +71,6 @@ func createConfigFromMongoCLIConfig() {
 		f.Close()
 		return
 	}
-
-	p, err := mongoCLIConfigFilePath()
-	if err != nil {
-		return
-	}
-
-	in, err := os.Open(p)
-	if err != nil {
-		return
-	}
-	defer in.Close()
-
-	_, err = os.Stat(atlasConfigHomePath) // check if the dir is already there
-	if err != nil {
-		defaultPermissions := 0700
-		if err = os.Mkdir(atlasConfigHomePath, os.FileMode(defaultPermissions)); err != nil {
-			return
-		}
-	}
-
-	if !shouldCopyConfig(atlasConfigPath) {
-		return
-	}
-
-	out, err := os.Create(atlasConfigPath)
-	if err != nil {
-		return
-	}
-	defer out.Close()
-
-	if _, err = io.Copy(out, in); err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "There was an error generating %s: %v", atlasConfigPath, err)
-		return
-	}
-
-	_, _ = fmt.Fprintf(os.Stderr, `AtlasCLI has copied your MongoCLI configuration to: %s
-
-`, atlasConfigPath)
-}
-
-func mongoCLIConfigFilePath() (configPath string, err error) {
-	if configDir, err := config.MongoCLIConfigHome(); err == nil {
-		configPath = path.Join(configDir, "config.toml")
-	}
-
-	// Check if file exists, if any error is detected try to get older file
-	if _, err := os.Stat(configPath); err == nil {
-		return configPath, nil
-	}
-
-	if configDir, err := config.OldMongoCLIConfigHome(); err == nil { //nolint:staticcheck // Deprecated before fully removing support in the future
-		configPath = path.Join(configDir, "mongocli.toml")
-	}
-
-	if _, err := os.Stat(configPath); err != nil {
-		return "", err
-	}
-	return configPath, nil
 }
 
 func trackInitError(e error) {
@@ -181,7 +100,7 @@ func main() {
 	}
 
 	initTrack()
-	createConfigFromMongoCLIConfig()
+	createConfig()
 	trackInitError(loadConfig())
 
 	Execute()

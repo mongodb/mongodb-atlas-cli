@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20231115013/admin"
+	"go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 func TestAtlasProjects(t *testing.T) {
@@ -107,7 +107,7 @@ func TestAtlasProjects(t *testing.T) {
 		a.ElementsMatch(expectedTags, project.GetTags())
 	})
 
-	updatedProjectName := fmt.Sprintf("%s-updated", projectName)
+	updatedProjectName := projectName + "-updated"
 	updateTests := []struct {
 		name                string
 		filename            string

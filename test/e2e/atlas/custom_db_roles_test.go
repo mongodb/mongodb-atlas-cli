@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 const (
@@ -51,7 +51,7 @@ func TestDBRoles(t *testing.T) {
 			customDBRoleEntity,
 			"create",
 			roleName,
-			"--privilege", fmt.Sprintf("%s@db.collection", createPrivilege),
+			"--privilege", createPrivilege+"@db.collection",
 			"--inheritedRole", enableShardingInheritedRole,
 			"-o=json",
 		)
@@ -113,7 +113,7 @@ func TestDBRoles(t *testing.T) {
 			roleName,
 			"--inheritedRole", readInheritedRole,
 			"--privilege", updatePrivilege,
-			"--privilege", fmt.Sprintf("%s@db2.collection", createPrivilege),
+			"--privilege", createPrivilege+"@db2.collection",
 			"--append",
 			"-o=json")
 		cmd.Env = os.Environ()

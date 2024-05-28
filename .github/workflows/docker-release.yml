@@ -12,6 +12,9 @@ jobs:
       STAGING_IMAGE_REPOSITORY: mongodb/apix_test
       PLATFORMS: linux/amd64,linux/arm64
     steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Check out code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - name: Set date

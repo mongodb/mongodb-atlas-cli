@@ -17,6 +17,9 @@ jobs:
       pull-requests: write # Needed by labeler
       issues: write # Needed by labeler
     steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repo
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - name: Add Labels
@@ -28,11 +31,14 @@ jobs:
           use_local_config: true
   slack-notification-doc-team:
     needs: labeler
-    if: ${{ github.event.label.name == 'need-doc-review' }}
+    if: contains(github.event.pull_request.labels.*.name, 'need-doc-review')
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write # Needed by sticky-pull-request-comment
     steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
       - uses: slackapi/slack-github-action@70cd7be8e40a46e8b0eced40b0de447bdb42f68e
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DOCS }}
@@ -50,6 +56,10 @@ jobs:
                 }
               ]
             }
+      - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        with:
+          header: pr-title-slack-doc
+          delete: true
       - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
         with:
           header: pr-title-slack-doc

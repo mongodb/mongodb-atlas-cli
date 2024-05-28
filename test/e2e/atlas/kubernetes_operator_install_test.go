@@ -29,10 +29,9 @@ import (
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -304,34 +303,6 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 
 		cleanUpKeys(t, operator, operatorNamespace, cliPath)
 	})
-}
-
-func setupCluster(t *testing.T, name string, namespaces ...string) *operatorHelper {
-	t.Helper()
-
-	t.Logf("creating cluster %s", name)
-	err := createK8SCluster(name)
-	require.NoError(t, err)
-
-	t.Cleanup(func() {
-		err = deleteK8SCluster(name)
-		require.NoError(t, err)
-	})
-
-	operator, err := newOperatorHelper(t)
-	require.NoError(t, err)
-
-	for _, namespace := range namespaces {
-		operatorNamespace := &corev1.Namespace{
-			ObjectMeta: metav1.ObjectMeta{
-				Name: namespace,
-			},
-		}
-		t.Logf("adding namespace %s", namespace)
-		require.NoError(t, operator.createK8sObject(operatorNamespace))
-	}
-
-	return operator
 }
 
 func checkDeployment(t *testing.T, operator *operatorHelper, namespace string) {

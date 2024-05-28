@@ -101,8 +101,8 @@ func generateFile(name, version string) error {
 			*newPlatform(version, "arm64", "linux", "Linux (arm64)", []string{"tar.gz"}),
 			*newPlatform(version, "x86_64", "linux", "Debian 10, 11, 12 / Ubuntu 20.04, 22.04, 24.04 (x86_64)", []string{"deb"}),
 			*newPlatform(version, "arm64", "linux", "Debian 10, 11, 12 / Ubuntu 20.04, 22.04, 24.04 (arm64)", []string{"deb"}),
-			*newPlatform(version, "x86_64", "linux", "Red Hat + CentOS 7, 8, 9 / SUSE 12 + 15 / Amazon Linux 2 (x86_64)", []string{"rpm"}),
-			*newPlatform(version, "arm64", "linux", "Red Hat + CentOS 7, 8, 9 / SUSE 12 + 15 / Amazon Linux 2 (arm64)", []string{"rpm"}),
+			*newPlatform(version, "x86_64", "linux", "Red Hat + CentOS 7, 8, 9 / SUSE 12 + 15 / Amazon Linux 2, 2023 (x86_64)", []string{"rpm"}),
+			*newPlatform(version, "arm64", "linux", "Red Hat + CentOS 7, 8, 9 / SUSE 12 + 15 / Amazon Linux 2, 2023 (arm64)", []string{"rpm"}),
 			*newPlatform(version, "x86_64", "windows", "Microsoft Windows", []string{"msi", "zip"}),
 			*newPlatform(version, "x86_64", "macos", "macOS (x86_64)", []string{"zip"}),
 			*newPlatform(version, "arm64", "macos", "macOS (arm64)", []string{"zip"}),
@@ -119,8 +119,8 @@ func Builder() *cobra.Command {
 		Use:   "main",
 		Short: "Generate the download center json file",
 		Example: `
-  # Generate the download center json file for mongocli
-  $ main --version 1.23.0 --file mongocli.json`,
+  # Generate the download center json file for cli
+  $ main --version 1.23.0 --file atlascli.json`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			cmd.Printf("Generating JSON: %s\n", opts.fileName)
 			return generateFile(opts.fileName, opts.version)
@@ -131,7 +131,7 @@ func Builder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.version, flag.Version, "", "release version.")
-	cmd.Flags().StringVar(&opts.fileName, flag.File, "mongocli.json", "file name of the download center json file.")
+	cmd.Flags().StringVar(&opts.fileName, flag.File, "atlascli.json", "file name of the download center json file.")
 
 	_ = cmd.MarkFlagFilename(flag.File)
 	_ = cmd.MarkFlagRequired(flag.Version)

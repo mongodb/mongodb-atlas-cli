@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 type UpdateOpts struct {
@@ -71,11 +71,11 @@ func UpdateBuilder() *cobra.Command {
 		Aliases: []string{"updates"},
 		Args:    require.ExactArgs(1),
 		Short:   "Modify the roles or description for the specified organization API key.",
-		Long: fmt.Sprintf(`When you modify the roles for an organization API key with this command, the values you specify overwrite the existing roles assigned to the API key.
+		Long: `When you modify the roles for an organization API key with this command, the values you specify overwrite the existing roles assigned to the API key.
 		
 To view possible values for the apiKeyId argument, run atlas organizations apiKeys list.
 
-%s`, fmt.Sprintf(usage.RequiredRole, "Organization User Admin")),
+` + fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
 		Annotations: map[string]string{
 			"apiKeyIdDesc": "Unique 24-digit string that identifies your API key.",
 			"output":       updateTemplate,

@@ -15,10 +15,10 @@
 package store
 
 import (
-	"fmt"
+	"errors"
 	"io"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115013/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_streams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store StreamsLister,StreamsDescriber,StreamsCreator,StreamsDeleter,StreamsUpdater,StreamsDownloader,ConnectionCreator,ConnectionDeleter,ConnectionUpdater,StreamsConnectionDescriber,StreamsConnectionLister
@@ -98,7 +98,7 @@ func (s *Store) DownloadAuditLog(request *atlasv2.DownloadStreamTenantAuditLogsA
 		return nil, err
 	}
 	if result == nil {
-		return nil, fmt.Errorf("returned file is empty")
+		return nil, errors.New("returned file is empty")
 	}
 	return result, nil
 }

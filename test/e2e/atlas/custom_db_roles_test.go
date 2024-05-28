@@ -30,6 +30,7 @@ import (
 
 const (
 	createPrivilege             = "UPDATE"
+	findPrivilege               = "FIND"
 	updatePrivilege             = "LIST_SESSIONS"
 	enableShardingRole          = "enableSharding"
 	enableShardingInheritedRole = "enableSharding@admin"
@@ -51,7 +52,7 @@ func TestDBRoles(t *testing.T) {
 			customDBRoleEntity,
 			"create",
 			roleName,
-			"--privilege", fmt.Sprintf("%s@db.collection,%s@db.collection2", createPrivilege, updatePrivilege),
+			"--privilege", fmt.Sprintf("%s@db.collection,%s@db.collection2", createPrivilege, findPrivilege),
 			"--inheritedRole", enableShardingInheritedRole,
 			"-o=json",
 		)
@@ -125,10 +126,10 @@ func TestDBRoles(t *testing.T) {
 
 		a := assert.New(t)
 		a.Equal(roleName, role.RoleName)
-		a.Len(role.GetActions(), 2)
+		a.Len(role.GetActions(), 3)
 		a.ElementsMatch(
 			[]string{role.GetActions()[0].Action, role.GetActions()[1].Action},
-			[]string{updatePrivilege, createPrivilege})
+			[]string{updatePrivilege, createPrivilege, findPrivilege})
 		a.ElementsMatch(
 			[]string{enableShardingRole, readRole},
 			[]string{role.GetInheritedRoles()[0].Role, role.GetInheritedRoles()[1].Role})

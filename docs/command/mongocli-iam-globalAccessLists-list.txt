@@ -83,6 +83,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Return a JSON-formatted list of all access list entries for the global API key:
    mongocli iam globalAccessLists list --output json

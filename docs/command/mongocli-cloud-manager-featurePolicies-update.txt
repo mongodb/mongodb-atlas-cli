@@ -86,12 +86,14 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Disable user management for a project:
    mongocli ops-manager featurePolicies update --projectId <projectId> --name Operator --policy DISABLE_USER_MANAGEMENT
 
    
 .. code-block::
+   :copyable: false
 
    # Update policies from a JSON configuration file:
    mongocli atlas featurePolicies update --projectId <projectId> --file <path/to/file.json>

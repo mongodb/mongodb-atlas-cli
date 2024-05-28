@@ -66,5 +66,6 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    mongocli config ls

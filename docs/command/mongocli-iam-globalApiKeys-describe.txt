@@ -80,6 +80,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Return the JSON-formatted details for the global API key with the ID 5f5bad7a57aef32b04ed0210:
    mongocli iam globalApiKeys describe 5f5bad7a57aef32b04ed0210 --output json

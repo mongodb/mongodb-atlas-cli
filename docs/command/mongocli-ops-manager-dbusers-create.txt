@@ -84,10 +84,12 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    #
    
 .. code-block::
+   :copyable: false
 
    # Create a user with readWriteAnyDatabase and clusterMonitor access
    mongocli om dbuser create --username <username>  --role readWriteAnyDatabase,clusterMonitor --mechanisms SCRAM-SHA-256 --projectId <projectId>

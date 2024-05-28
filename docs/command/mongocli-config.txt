@@ -70,26 +70,31 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    #
    
 .. code-block::
+   :copyable: false
 
    # Configure a profile to interact with Atlas:
    mongocli config
    
 .. code-block::
+   :copyable: false
 
    # Configure a profile to interact with Atlas for Government:
    mongocli config --service cloudgov
    
    
 .. code-block::
+   :copyable: false
 
    # Configure a profile to interact with Cloud Manager:
    mongocli config --service cloud-manager
    
 .. code-block::
+   :copyable: false
 
    # Configure a profile to interact with Ops Manager:
    mongocli config --service ops-manager

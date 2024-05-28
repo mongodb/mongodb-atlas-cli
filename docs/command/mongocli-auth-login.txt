@@ -64,6 +64,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Log in to your MongoDB Cloud Manager account in interactive mode:
    mongocli auth login

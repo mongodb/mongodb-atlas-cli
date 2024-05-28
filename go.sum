@@ -144,8 +144,8 @@ github.com/mitchellh/mapstructure v1.5.0 h1:jeMsZIYE/09sWLaz43PL7Gy6RuMjD2eJVyua
 github.com/mitchellh/mapstructure v1.5.0/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/mongodb-forks/digest v1.1.0 h1:7eUdsR1BtqLv0mdNm4OXs6ddWvR4X2/OsLwdKksrOoc=
 github.com/mongodb-forks/digest v1.1.0/go.mod h1:rb+EX8zotClD5Dj4NdgxnJXG9nwrlx3NWKJ8xttz1Dg=
-github.com/mongodb-labs/cobra2snooty v0.18.1 h1:0HWXJofuKPR+yu1P+0gr4z/uGXWqhu/ec2CvbMqnxYs=
-github.com/mongodb-labs/cobra2snooty v0.18.1/go.mod h1:WnzqCFmx4f72Yj9dL/ulBUqcatfURGdKFf8DLT4h7zQ=
+github.com/mongodb-labs/cobra2snooty v0.18.2 h1:qWpLCMWbQb5FSZ5ehiWN2URmieMJhQtQPxT0uhIK62A=
+github.com/mongodb-labs/cobra2snooty v0.18.2/go.mod h1:WnzqCFmx4f72Yj9dL/ulBUqcatfURGdKFf8DLT4h7zQ=
 github.com/pelletier/go-toml v1.9.5 h1:4yBQzkHv+7BHq2PQUZF3Mx0IYxG7LsP222s7Agd3ve8=
 github.com/pelletier/go-toml v1.9.5/go.mod h1:u1nR/EPcESfeI/szUZKdtJ0xRNbUoANCkoOuaOx1Y+c=
 github.com/pelletier/go-toml/v2 v2.1.0 h1:FnwAJ4oYMvbT/34k9zzHuZNrhlz48GB3/s6at6/MHO4=

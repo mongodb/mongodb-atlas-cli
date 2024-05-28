@@ -88,6 +88,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Return a JSON-formatted list of events for the organization with the ID 5dd5a6b6f10fab1d71a58495:
    mongocli [ops-manager|cloud-manager] events organizations list --orgId 5dd5a6b6f10fab1d71a58495 --output json

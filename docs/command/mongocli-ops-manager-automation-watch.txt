@@ -69,5 +69,6 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    mongocli ops-manager automation watch

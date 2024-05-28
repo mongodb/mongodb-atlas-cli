@@ -80,6 +80,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    Set the Ops Manager base URL in the profile myProfile to http://localhost:30700/:
    mongocli config set ops_manager_url http://localhost:30700/ -P myProfile

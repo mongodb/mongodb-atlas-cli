@@ -92,15 +92,18 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    #
    
 .. code-block::
+   :copyable: false
 
    # For audit logs in BSON format:
    mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.bson --out /path/to/file.json
    
 .. code-block::
+   :copyable: false
 
    # For audit logs in JSON format:
    mongocli ops-manager logs decrypt --localKeyFile /path/to/keyFile --file /path/to/logFile.json --out /path/to/file.json

@@ -93,12 +93,14 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Return a JSON-formatted list of all organizations:
    mongocli iam organizations list --output json
    
    
 .. code-block::
+   :copyable: false
 
    # Return a JSON-formatted list that includes the organizations named org1 and Org1, but doesn't return org123:
    mongocli iam organizations list --name org1 --output json

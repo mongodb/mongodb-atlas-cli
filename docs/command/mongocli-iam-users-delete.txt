@@ -90,6 +90,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Remove the Ops Manager user with the ID 5e44445ef10fab20b49c0f31:
    mongocli iam users delete 5e44445ef10fab20b49c0f31

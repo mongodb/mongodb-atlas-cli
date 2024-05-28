@@ -21,7 +21,7 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/google/go-github/v50/github"
+	"github.com/google/go-github/v61/github"
 )
 
 const (
@@ -88,7 +88,7 @@ func (v *OperatorVersion) DownloadResource(ctx context.Context, version, path st
 		operatorRepository,
 		path,
 		&github.RepositoryContentGetOptions{
-			Ref: fmt.Sprintf("v%s", version),
+			Ref: "v" + version,
 		})
 
 	if err != nil {

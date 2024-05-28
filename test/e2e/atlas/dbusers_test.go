@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 const (
@@ -49,7 +49,7 @@ func TestDBUserWithFlags(t *testing.T) {
 	require.NoError(t, err)
 
 	t.Run("Create", func(t *testing.T) {
-		pwd, err := generateRandomBase64String(14)
+		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
@@ -105,7 +105,7 @@ func TestDBUserWithFlags(t *testing.T) {
 	})
 
 	t.Run("Update", func(t *testing.T) {
-		pwd, err := generateRandomBase64String(14)
+		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
@@ -133,13 +133,17 @@ func TestDBUsersWithStdin(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
+	idpID, _ := os.LookupEnv("IDENTITY_PROVIDER_ID")
+	require.NotEmpty(t, idpID)
+	oidcUsername := idpID + "/" + username
+
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	t.Run("Create", func(t *testing.T) {
-		pwd, err := generateRandomBase64String(14)
+		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
@@ -156,8 +160,24 @@ func TestDBUsersWithStdin(t *testing.T) {
 		testCreateUserCmd(t, cmd, username)
 	})
 
+	t.Run("Create OIDC user", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			dbusersEntity,
+			"create",
+			"atlasAdmin",
+			"--username", oidcUsername,
+			"--oidcType",
+			"IDP_GROUP",
+			"--scope", scopeClusterDataLake,
+			"-o=json",
+		)
+
+		testCreateUserCmd(t, cmd, oidcUsername)
+	})
+
 	t.Run("Describe", func(t *testing.T) {
 		testDescribeUser(t, cliPath, username)
+		testDescribeUser(t, cliPath, oidcUsername)
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -176,6 +196,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		testDeleteUser(t, cliPath, dbusersEntity, username)
+		testDeleteUser(t, cliPath, dbusersEntity, oidcUsername)
 	})
 }
 
@@ -282,7 +303,8 @@ func generateRandomASCIIString(length int) (string, error) {
 }
 
 // generateRandomBase64String generate a random ASCII string encoded using base64.
-func generateRandomBase64String(length int) (string, error) {
+func generateRandomBase64String() (string, error) {
+	length := 14
 	result, err := generateRandomASCIIString(length)
 	return base64.StdEncoding.EncodeToString([]byte(result))[:length], err
 }

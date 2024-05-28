@@ -35,6 +35,7 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(
 		ListBuilder(),
 		CreateBuilder(),
+		UpdateBuilder(),
 		DeleteBuilder(),
 		DescribeBuilder(),
 		apikeys.Builder(),

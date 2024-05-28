@@ -34,7 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 var indexID = "6509bc5080b2f007e6a2a0ce"
@@ -159,7 +159,6 @@ func TestCreate_RunLocal(t *testing.T) {
 	if err := opts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-
 	if err := opts.PostRun(ctx); err != nil {
 		t.Fatalf("PostRun() unexpected error: %v", err)
 	}

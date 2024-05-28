@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 var inviteTemplate = "The user '{{.Username}}' has been invited.\nInvited users do not have access to the project until they accept the invitation.\n"
@@ -175,16 +175,16 @@ func InviteBuilder() *cobra.Command {
 	opts := &InviteOpts{}
 	cmd := &cobra.Command{
 		Use:   "invite",
-		Short: "Create a MongoDB user for your MongoDB application and invite the MongoDB user to your organizations and projects.",
-		Long:  `A MongoDB user account grants access only to the the MongoDB application. To grant database access, create a database user with atlas dbusers create.`,
+		Short: "Create an Atlas user for your MongoDB Atlas application and invite the Atlas user to your organizations and projects.",
+		Long:  `An Atlas user account grants access only to the the MongoDB Atlas application. To grant database access, create a database user with atlas dbusers create.`,
 		Args:  require.NoArgs,
 		Annotations: map[string]string{
 			"output": inviteTemplate,
 		},
-		Example: `  # Create the MongoDB user with the username user@example.com and invite them to the organization with the ID 5dd56c847a3e5a1f363d424d with ORG_OWNER access:
+		Example: `  # Create the Atlas user with the username user@example.com and invite them to the organization with the ID 5dd56c847a3e5a1f363d424d with ORG_OWNER access:
   atlas users invite --email user@example.com --username user@example.com --orgRole 5dd56c847a3e5a1f363d424d:ORG_OWNER --firstName Example --lastName User --country US --output json
   
-  # Create the MongoDB user with the username user@example.com and invite them to the project with the ID 5f71e5255afec75a3d0f96dc with GROUP_READ_ONLY access:
+  # Create the Atlas user with the username user@example.com and invite them to the project with the ID 5f71e5255afec75a3d0f96dc with GROUP_READ_ONLY access:
   atlas users invite --email user@example.com --username user@example.com --projectRole 5f71e5255afec75a3d0f96dc:GROUP_READ_ONLY --firstName Example --lastName User --country US --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return prerun.ExecuteE(

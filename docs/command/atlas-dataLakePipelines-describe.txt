@@ -86,6 +86,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # retrieves pipeline 'Pipeline1':
    atlas dataLakePipelines describe Pipeline1

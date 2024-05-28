@@ -16,6 +16,7 @@ package keyproviders
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"hash/crc32"
 
@@ -26,7 +27,7 @@ import (
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
-var ErrDataCorruptedInTransit = fmt.Errorf("decrypt: response corrupted in-transit")
+var ErrDataCorruptedInTransit = errors.New("decrypt: response corrupted in-transit")
 
 type GCPKeyIdentifier struct {
 	KeyStoreIdentifier

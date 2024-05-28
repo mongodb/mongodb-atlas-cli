@@ -483,14 +483,14 @@ func getRelatedTemplateType(pkg *packages.Package, commandOptsStruct *ast.TypeSp
 			case *ast.Ident:
 				// Make sure the declaration is not null
 				if arg.Obj == nil || arg.Obj.Decl == nil {
-					errs = append(errs, fmt.Errorf("found ident but obj declaration is nil"))
+					errs = append(errs, errors.New("found ident but obj declaration is nil"))
 					return true
 				}
 
 				// Make sure that the declaration is assign statement
 				argAssignStmt, ok := arg.Obj.Decl.(*ast.AssignStmt)
 				if !ok {
-					errs = append(errs, fmt.Errorf("found ident but obj declaration is not of the type *ast.AssignStmt"))
+					errs = append(errs, errors.New("found ident but obj declaration is not of the type *ast.AssignStmt"))
 					return true
 				}
 

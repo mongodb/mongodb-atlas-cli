@@ -96,6 +96,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # deletes pipeline 'Pipeline1':
    atlas dataLakePipelines delete Pipeline1

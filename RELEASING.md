@@ -16,7 +16,7 @@ Use the instructions bellow as a fallback.
 
 ## Package Managers
 
-Package Managers are published after a stable release happens, in which binaries are stored in github releases and also uploaded to our download center (https://www.mongodb.com/try/download/atlascli and https://www.mongodb.com/try/download/mongocli).
+Package Managers are published after a stable release happens, in which binaries are stored in github releases and also uploaded to our download center (https://www.mongodb.com/try/download/atlascli.
 
 * [Chocolatey](http://chocolatey.org) release is triggered in https://github.com/mongodb-forks/chocolatey-packages/, the Github Action will trigger every weekday at 4pm (UTC) to check if there are any new releases in https://github.com/mongodb/mongodb-atlas-cli/releases/.
 
@@ -68,7 +68,7 @@ go version -m <path_to_atlasCLI_binary>
 ```
 
 ## Atlas CLI Docker image
-We use `docker sbom` to generate the SBOM for the AtlasCLI docker image. You can generate the SBOM via the following command:
+We use `docker sbom` to generate the SBOM for the Atlas CLI docker image. You can generate the SBOM via the following command:
 ```bash
 docker sbom mongodb/atlas:latest
 ```

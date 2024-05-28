@@ -31,75 +31,80 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
-	eventsEntity                 = "events"
-	clustersEntity               = "clusters"
-	processesEntity              = "processes"
-	metricsEntity                = "metrics"
-	searchEntity                 = "search"
-	indexEntity                  = "index"
-	nodesEntity                  = "nodes"
-	datafederationEntity         = "datafederation"
-	datalakePipelineEntity       = "datalakepipeline"
-	alertsEntity                 = "alerts"
-	configEntity                 = "settings"
-	dbusersEntity                = "dbusers"
-	certsEntity                  = "certs"
-	privateEndpointsEntity       = "privateendpoints"
-	queryLimitsEntity            = "querylimits"
-	onlineArchiveEntity          = "onlineArchives"
-	projectEntity                = "project"
-	orgEntity                    = "org"
-	invitationsEntity            = "invitations"
-	maintenanceEntity            = "maintenanceWindows"
-	integrationsEntity           = "integrations"
-	securityEntity               = "security"
-	ldapEntity                   = "ldap"
-	awsEntity                    = "aws"
-	azureEntity                  = "azure"
-	gcpEntity                    = "gcp"
-	customDNSEntity              = "customDns"
-	logsEntity                   = "logs"
-	cloudProvidersEntity         = "cloudProviders"
-	accessRolesEntity            = "accessRoles"
-	customDBRoleEntity           = "customDbRoles"
-	regionalModeEntity           = "regionalModes"
-	serverlessEntity             = "serverless"
-	liveMigrationsEntity         = "liveMigrations"
-	auditingEntity               = "auditing"
-	accessLogsEntity             = "accessLogs"
-	accessListEntity             = "accessList"
-	performanceAdvisorEntity     = "performanceAdvisor"
-	slowQueryLogsEntity          = "slowQueryLogs"
-	namespacesEntity             = "namespaces"
-	networkingEntity             = "networking"
-	networkPeeringEntity         = "peering"
-	suggestedIndexesEntity       = "suggestedIndexes"
-	slowOperationThresholdEntity = "slowOperationThreshold"
-	tierM10                      = "M10"
-	tierM0                       = "M0"
-	tierM2                       = "M2"
-	diskSizeGB40                 = "40"
-	diskSizeGB30                 = "30"
-	projectsEntity               = "projects"
-	settingsEntity               = "settings"
-	backupsEntity                = "backups"
-	exportsEntity                = "exports"
-	bucketsEntity                = "buckets"
-	jobsEntity                   = "jobs"
-	snapshotsEntity              = "snapshots"
-	restoresEntity               = "restores"
-	compliancePolicyEntity       = "compliancepolicy"
-	policiesEntity               = "policies"
-	teamsEntity                  = "teams"
-	setupEntity                  = "setup"
-	deploymentEntity             = "deployments"
-	deletingState                = "DELETING"
-	authEntity                   = "auth"
+	eventsEntity                  = "events"
+	clustersEntity                = "clusters"
+	processesEntity               = "processes"
+	metricsEntity                 = "metrics"
+	searchEntity                  = "search"
+	indexEntity                   = "index"
+	nodesEntity                   = "nodes"
+	datafederationEntity          = "datafederation"
+	datalakePipelineEntity        = "datalakepipeline"
+	alertsEntity                  = "alerts"
+	configEntity                  = "settings"
+	dbusersEntity                 = "dbusers"
+	certsEntity                   = "certs"
+	privateEndpointsEntity        = "privateendpoints"
+	queryLimitsEntity             = "querylimits"
+	onlineArchiveEntity           = "onlineArchives"
+	projectEntity                 = "project"
+	orgEntity                     = "org"
+	invitationsEntity             = "invitations"
+	maintenanceEntity             = "maintenanceWindows"
+	integrationsEntity            = "integrations"
+	securityEntity                = "security"
+	ldapEntity                    = "ldap"
+	awsEntity                     = "aws"
+	azureEntity                   = "azure"
+	gcpEntity                     = "gcp"
+	customDNSEntity               = "customDns"
+	logsEntity                    = "logs"
+	cloudProvidersEntity          = "cloudProviders"
+	accessRolesEntity             = "accessRoles"
+	customDBRoleEntity            = "customDbRoles"
+	regionalModeEntity            = "regionalModes"
+	serverlessEntity              = "serverless"
+	liveMigrationsEntity          = "liveMigrations"
+	auditingEntity                = "auditing"
+	accessLogsEntity              = "accessLogs"
+	accessListEntity              = "accessList"
+	performanceAdvisorEntity      = "performanceAdvisor"
+	slowQueryLogsEntity           = "slowQueryLogs"
+	namespacesEntity              = "namespaces"
+	networkingEntity              = "networking"
+	networkPeeringEntity          = "peering"
+	suggestedIndexesEntity        = "suggestedIndexes"
+	slowOperationThresholdEntity  = "slowOperationThreshold"
+	tierM10                       = "M10"
+	tierM0                        = "M0"
+	tierM2                        = "M2"
+	diskSizeGB40                  = "40"
+	diskSizeGB30                  = "30"
+	projectsEntity                = "projects"
+	settingsEntity                = "settings"
+	backupsEntity                 = "backups"
+	exportsEntity                 = "exports"
+	bucketsEntity                 = "buckets"
+	jobsEntity                    = "jobs"
+	snapshotsEntity               = "snapshots"
+	restoresEntity                = "restores"
+	compliancePolicyEntity        = "compliancepolicy"
+	policiesEntity                = "policies"
+	teamsEntity                   = "teams"
+	setupEntity                   = "setup"
+	deploymentEntity              = "deployments"
+	federatedAuthenticationEntity = "federatedAuthentication"
+	federationSettingsEntity      = "federationSettings"
+	identityProviderEntity        = "identityProvider"
+	connectedOrgsConfigsEntity    = "connectedOrgConfigs"
+	deletingState                 = "DELETING"
+	authEntity                    = "auth"
+	streamsEntity                 = "streams"
 )
 
 // AlertConfig constants.
@@ -456,6 +461,17 @@ func RandClusterName() (string, error) {
 	return fmt.Sprintf("cluster-%v", n), nil
 }
 
+func RandIdentityProviderName() (string, error) {
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	if revision, ok := os.LookupEnv("revision"); ok {
+		return fmt.Sprintf("idp-%v-%s", n, revision), nil
+	}
+	return fmt.Sprintf("idp-%v", n), nil
+}
+
 func RandTeamName() (string, error) {
 	n, err := e2e.RandInt(1000)
 	if err != nil {
@@ -579,7 +595,7 @@ func getFirstOrgUser() (string, error) {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
 	if users.GetTotalCount() == 0 {
-		return "", fmt.Errorf("no users found")
+		return "", errors.New("no users found")
 	}
 
 	return users.GetResults()[0].Username, nil
@@ -1110,4 +1126,123 @@ func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atl
 // the output has some dots in the beginning (depending on how long it took to finish) that need to be removed.
 func removeDotsFromWatching(consoleOutput []byte) []byte {
 	return []byte(strings.TrimLeft(string(consoleOutput), "."))
+}
+
+func createStreamsInstance(t *testing.T, projectID, name string) (string, error) {
+	t.Helper()
+
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return "", err
+	}
+
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	instanceName := fmt.Sprintf("e2e-%s-%v", name, n)
+
+	cmd := exec.Command(
+		cliPath,
+		streamsEntity,
+		"instance",
+		"create",
+		instanceName,
+		"--projectId", projectID,
+		"--provider", "AWS",
+		"--region", "VIRGINIA_USA",
+	)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return instanceName, nil
+}
+
+func deleteStreamsInstance(t *testing.T, projectID, name string) error {
+	t.Helper()
+
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+
+	cmd := exec.Command(
+		cliPath,
+		streamsEntity,
+		"instance",
+		"delete",
+		name,
+		"--projectId", projectID,
+		"--force",
+	)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return nil
+}
+
+func createStreamsConnection(t *testing.T, projectID, instanceName, name string) (string, error) {
+	t.Helper()
+
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return "", err
+	}
+
+	n, err := e2e.RandInt(1000)
+	if err != nil {
+		return "", err
+	}
+	connectionName := fmt.Sprintf("e2e-%s-%v", name, n)
+
+	cmd := exec.Command(
+		cliPath,
+		streamsEntity,
+		"connection",
+		"create",
+		connectionName,
+		"--file", "data/create_streams_connection_test.json",
+		"--instance", instanceName,
+		"--projectId", projectID,
+	)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return connectionName, nil
+}
+
+func deleteStreamsConnection(t *testing.T, projectID, instanceName, name string) error {
+	t.Helper()
+
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+
+	cmd := exec.Command(
+		cliPath,
+		streamsEntity,
+		"connection",
+		"delete",
+		name,
+		"--instance", instanceName,
+		"--projectId", projectID,
+		"--force",
+	)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return nil
 }

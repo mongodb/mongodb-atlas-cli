@@ -3,21 +3,6 @@
 Thanks for your interest in contributing to MongoDB Atlas CLI and MongoDB CLI,
 this document describes some guidelines necessary to participate in the community.
 
-## Table of Contents
-
-- [Asking Support Questions](#asking-support-questions)
-- [Feature Requests](#feature-requests)
-- [Reporting Issues](#reporting-issues)
-- [Auto-close stale issues and PRs](#auto-close-stale-issues-and-pull-requests)
-- [Submitting Patches](#submitting-patches)
-  - [Code Contribution Guidelines](#code-contribution-guidelines)
-  - [Development Setup](#development-setup)
-  - [Building and Testing](#building-and-testing)
-  - [Contributing New Command Group](#contributing-new-command-group)
-  - [Adding a New Command](#adding-a-new-command)
-  - [Third Party Dependencies](#third-party-dependencies)
-- [Maintainer's Guide](#maintainers-guide)
-
 ## Asking Support Questions
 
 MongoDB support is provided under MongoDB Atlas or Enterprise Advanced [support plans](https://support.mongodb.com/welcome).
@@ -126,7 +111,7 @@ Review and replace command name and arguments depending on the command you are u
             "args": [
               "login"
             ]
-      },
+      }
     ]
 } 
 
@@ -134,7 +119,7 @@ Review and replace command name and arguments depending on the command you are u
 
 ### Contributing New Command Group
 
-`Atlas CLI` and `MongoDB CLI` are using the [Cobra Framework](https://umarcor.github.io/cobra/).
+`Atlas CLI` uses the [Cobra Framework](https://umarcor.github.io/cobra/).
 
 Depending on the feature you are building you might choose to:
 
@@ -157,7 +142,7 @@ For example please edit `./root/atlas/builder.go` to add your command builder me
 
 ### Adding a New Command
 
-`atlascli` have defined a basic structure for individual commands that should be followed.
+`atlas` has defined a basic structure for individual commands that should be followed.
 For a `atlas scope newCommand` command, a file `internal/cli/scope/new_command.go` should implement:
 
 - A `ScopeNewCommandOpts` struct which handles the different options for the command.
@@ -170,34 +155,32 @@ For that reason, command arguments tend to match the path and query params of th
 with the last param being a required argument and the rest handled via flag options.
 For commands that create or modify complex data structures, the use of configuration files is preferred over flag options.
 
+> [!TIP]  
+> During the development of the commands we recommend setting `Hidden: true` property to make commands invisible to the end users and documentation.
 
-> NOTE: During the development of the commands we recommend setting `Hidden: true` property to make commands invisible to the end users and documentation.
-
-> NOTE: Commands are executing network requests by using `./internal/store` interface that wraps [Atlas Go SDK](https://github.com/mongodb/atlas-sdk-go). 
+> [!IMPORTANT]  
+> Commands are executing network requests by using `./internal/store` interface that wraps [Atlas Go SDK](https://github.com/mongodb/atlas-sdk-go). 
 Before adding a command please make sure that your api exists in the GO SDK. 
 
-> NOTE: Atlas CLI provides an experimental generator, make sure to try it out in [tools/cli-generator](./tools/cli-generator/)
+> [!TIP]  
+> Atlas CLI provides an experimental generator, make sure to try it out in [tools/cli-generator](./tools/cli-generator)
 
 ### API Interactions
 
 Atlas CLI use [atlas-sdk-go](https://github.com/mongodb/atlas-sdk-go) for all backend integration.
 This SDK is updated automatically based on Atlas OpenAPI file.
 
-MongoDB CLI use [go-client-mongodb-atlas](https://github.com/mongodb/go-client-mongodb-atlas/) 
-and [go-client-mongodb-ops-manager](https://github.com/mongodb/go-client-mongodb-ops-manager/) to interact with Atlas or Ops Manager/Cloud Manager.
-Any new feature requires a manual update from the respective client.
-
 #### How to define flags:
 
 Flags are a way to modify the command, also may be called "options". Flags always have a long version with two dashes (--state) but may also have a shortcut with one dash and one letter (-s).
 
-`atlascli` uses the following types of flags:
+`atlas` uses the following types of flags:
 
 - `--flagName value`: this type of flag passes the value to the command. Examples: `--projectId 5efda6aea3f2ed2e7dd6ce05`
 - `--booleanFlag`: this flag represents a boolean and it sets the related variable to true when the flag is used, false otherwise. Example: `--force`
 - `--flagName value1,value2,..,valueN`: you will also find flags that accept a list of values. This type of flag can be very useful to represent data structures as `--role roleName1@db,roleName2@db`, `--privilege action@dbName.collection,action2@dbName.collection`, or `--key field:type`.
   As shown in the examples, the standard format used to represent data structures consists of splitting the first value with the second one by at sign `@` or colon `:`, and the second value with the third one by a full stop `.`.
-  We recommend using configuration files for complex data structures that require more than three values. For an example of configuration files, see [mongocli atlas cluster create](https://github.com/mongodb/mongodb-atlas-cli/blob/f2e6d661a3eb2cfcf9baab5f9e0b1c0f872b8c14/internal/cli/atlas/clusters/create.go#L235).
+  We recommend using configuration files for complex data structures that require more than three values. For an example of configuration files, see [atlas cluster create](https://github.com/mongodb/mongodb-atlas-cli/blob/f2e6d661a3eb2cfcf9baab5f9e0b1c0f872b8c14/internal/cli/atlas/clusters/create.go#L235).
 
 #### Documentation Requirements
 
@@ -231,7 +214,7 @@ Atlas CLI uses [atlas-sdk-go](https://github.com/mongodb/atlas-sdk-go) for API i
 Go SDK will be automatically updated for the new versions using dependabot.
 In situations when SDK does new major releases developers need to specify the version explicitly in the go update command. For example:
 
-```
+```sh
 go get go.mongodb.org/atlas-sdk/v20230501001
 ```
 
@@ -257,23 +240,8 @@ To update Atlas SDK run:
 make update-atlas-sdk
 ```
 
-> NOTE: Update mechanism is only needed for major releases. Any other releases will be supported by dependabot.
+> [!NOTE]  
+> Update mechanism is only needed for major releases. Any other releases will be supported by dependabot.
 
-> NOTE: Command can make import changes to +500 files. Please make sure that you perform update on main branch without any uncommited changes.
-
-
-### Stable Methods
-
-Each Go SDK method used in the Atlas CLI should be marked as stable.
-Stable methods are listed in the SDK GO [operations.stable.json](https://github.com/mongodb/atlas-sdk-go/blob/main/tools/transformer/src/operations.stable.json) file.
-
-We have developed automation that lists stable methods.
-Generate list from Atlas CLI run:
-
-```
-go run ./tools/sdk-usage/main.go ./internal/store ./operations.stable.json
-```
-
-After the file is created please create PR directly in the GO SDK containing the updated file.
-
-in order to update `operations.stable.json` file in the Go SDK.
+> [!IMPORTANT]  
+> Command can make import changes to +500 files. Please make sure that you perform update on main branch without any uncommited changes.

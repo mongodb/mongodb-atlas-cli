@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20231115008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 type StartOpts struct {
@@ -121,6 +121,11 @@ func (opts *StartOpts) RunAtlas() error {
 	return opts.Print(r)
 }
 
+func (opts *StartOpts) PostRun() error {
+	opts.DeploymentTelemetry.AppendDeploymentType()
+	return opts.PostRunMessages()
+}
+
 func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{
@@ -146,7 +151,7 @@ func StartBuilder() *cobra.Command {
 			return opts.Run(cmd.Context())
 		},
 		PostRunE: func(_ *cobra.Command, _ []string) error {
-			return opts.PostRunMessages()
+			return opts.PostRun()
 		},
 	}
 

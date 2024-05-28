@@ -63,9 +63,7 @@ func DescribeBuilder() *cobra.Command {
 		Aliases: []string{"show"},
 		Args:    require.ExactArgs(1),
 		Short:   "Return the details for the specified API key for your organization.",
-		Long: fmt.Sprintf(`To view possible values for the ID argument, run atlas organizations apiKeys list.
-
-%s`, fmt.Sprintf(usage.RequiredRole, "Organization Member")),
+		Long:    longDesc + fmt.Sprintf(usage.RequiredRole, "Organization Member"),
 		Annotations: map[string]string{
 			"IDDesc": "Unique 24-digit string that identifies your API key.",
 			"output": describeTemplate,

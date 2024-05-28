@@ -18,7 +18,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 const (
@@ -79,7 +79,7 @@ func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *atlasv2.GroupAl
 	out.Enabled = &opts.enabled
 
 	if opts.matcherFieldName != "" {
-		out.Matchers = &[]map[string]interface{}{opts.newMatcher()}
+		out.Matchers = &[]atlasv2.StreamsMatcher{opts.newMatcher()}
 	}
 
 	if opts.metricThresholdMetricName != "" {
@@ -166,12 +166,12 @@ func (opts *ConfigOpts) newMetricThreshold() *atlasv2.ServerlessMetricThreshold 
 	return result
 }
 
-func (opts *ConfigOpts) newMatcher() map[string]interface{} {
-	result := make(map[string]interface{})
-	result["FieldName"] = strings.ToUpper(opts.matcherFieldName)
-	result["Operator"] = strings.ToUpper(opts.matcherOperator)
-	result["Value"] = strings.ToUpper(opts.matcherValue)
-	return result
+func (opts *ConfigOpts) newMatcher() atlasv2.StreamsMatcher {
+	return atlasv2.StreamsMatcher{
+		FieldName: strings.ToUpper(opts.matcherFieldName),
+		Operator:  strings.ToUpper(opts.matcherOperator),
+		Value:     strings.ToUpper(opts.matcherValue),
+	}
 }
 
 func Builder() *cobra.Command {

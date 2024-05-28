@@ -17,7 +17,7 @@ package secrets
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -27,7 +27,9 @@ const (
 	NotifierIDLabelKey   = "atlas.mongodb.com/notifier-id"
 	NotifierNameLabelKey = "atlas.mongodb.com/notifier-type-name"
 	CredLabelVal         = "credentials"
+	UsernameField        = "username"
 	PasswordField        = "password"
+	CertificateField     = "certificate"
 	CredPrivateAPIKey    = "privateApiKey"
 	CredPublicAPIKey     = "publicApiKey"
 	CredOrgID            = "orgId"
@@ -38,11 +40,11 @@ type AtlasSecretBuilder func() (*corev1.Secret, map[string]string)
 func NewAtlasSecretBuilder(name, namespace string, dictionary map[string]string) AtlasSecretBuilder {
 	return func() (*corev1.Secret, map[string]string) {
 		secret := &corev1.Secret{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "Secret",
 				APIVersion: "v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(name, dictionary),
 				Namespace: namespace,
 				Labels: map[string]string{

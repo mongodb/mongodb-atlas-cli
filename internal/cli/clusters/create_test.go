@@ -19,7 +19,6 @@ package clusters
 import (
 	"bytes"
 	"testing"
-	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -29,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 func TestCreateOpts_Run(t *testing.T) {
@@ -179,7 +178,6 @@ func TestCreateOpts_PostRun_EnableWatch(t *testing.T) {
 		},
 		WatchOpts: cli.WatchOpts{
 			EnableWatch: true,
-			DefaultWait: pointer.Get(time.Duration(0)),
 			OutputOpts: cli.OutputOpts{
 				Template:  createTemplate,
 				OutWriter: buf,

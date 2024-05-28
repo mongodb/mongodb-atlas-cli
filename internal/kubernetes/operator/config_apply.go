@@ -79,7 +79,12 @@ func (apply *ConfigApply) Run() error {
 		return err
 	}
 
-	sortedResources := sortResources(ProjectResources, DeploymentResources, apply.Version)
+	streamsResources, err := apply.exporter.exportAtlasStreamProcessing(projectName)
+	if err != nil {
+		return err
+	}
+
+	sortedResources := sortResources(ProjectResources, DeploymentResources, streamsResources, apply.Version)
 
 	for _, objects := range sortedResources {
 		for _, object := range objects {
@@ -105,7 +110,10 @@ func (apply *ConfigApply) Run() error {
 	return nil
 }
 
-func sortResources(projectResources, deploymentResources []runtime.Object, version string) [][]runtime.Object {
+func sortResources(
+	projectResources, deploymentResources, streamsResources []runtime.Object,
+	version string,
+) [][]runtime.Object {
 	resources, versionFound := features.GetResourcesForVersion(version)
 	if !versionFound {
 		return nil
@@ -142,6 +150,20 @@ func sortResources(projectResources, deploymentResources []runtime.Object, versi
 
 		if _, ok := resource.(*akov2.AtlasDeployment); ok {
 			sortedResources[6] = append(sortedResources[6], resource)
+		}
+	}
+
+	for _, resource := range streamsResources {
+		if _, ok := resource.(*corev1.Secret); ok {
+			sortedResources[0] = append(sortedResources[0], resource)
+		}
+
+		if _, ok := resource.(*akov2.AtlasStreamConnection); ok {
+			sortedResources[7] = append(sortedResources[7], resource)
+		}
+
+		if _, ok := resource.(*akov2.AtlasStreamInstance); ok {
+			sortedResources[8] = append(sortedResources[8], resource)
 		}
 	}
 

@@ -90,6 +90,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # trigger pipeline 'Pipeline1':
    atlas dataLakePipelines trigger Pipeline1

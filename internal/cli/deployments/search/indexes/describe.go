@@ -103,6 +103,10 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
+func (opts *DescribeOpts) PostRun() {
+	opts.DeploymentTelemetry.AppendDeploymentType()
+}
+
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
@@ -128,6 +132,9 @@ func DescribeBuilder() *cobra.Command {
 				opts.indexID = args[0]
 			}
 			return opts.Run(cmd.Context())
+		},
+		PostRun: func(_ *cobra.Command, _ []string) {
+			opts.PostRun()
 		},
 	}
 

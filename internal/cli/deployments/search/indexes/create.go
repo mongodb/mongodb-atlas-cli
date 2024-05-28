@@ -31,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20231115008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115014/admin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -43,7 +43,6 @@ const (
 )
 
 var ErrSearchIndexDuplicated = errors.New("search index is duplicated")
-var ErrWatchNotAvailable = errors.New("watch is not available for Atlas resources")
 
 type CreateOpts struct {
 	cli.WatchOpts
@@ -160,27 +159,48 @@ func (opts *CreateOpts) status(ctx context.Context) (string, error) {
 	return status, nil
 }
 
-func (opts *CreateOpts) watch(ctx context.Context) (any, bool, error) {
+func (opts *CreateOpts) watchLocal(ctx context.Context) (any, bool, error) {
 	state, err := opts.status(ctx)
 	if err != nil {
 		return nil, false, err
 	}
 	if state == "READY" {
-		return nil, true, nil
+		opts.index.Status = &state
+		return opts.index, true, nil
+	}
+	return nil, false, nil
+}
+
+func (opts *CreateOpts) watchAtlas(_ context.Context) (any, bool, error) {
+	index, err := opts.store.SearchIndex(opts.ConfigProjectID(), opts.DeploymentName, *opts.index.IndexID)
+	if err != nil {
+		return nil, false, err
+	}
+	if index.GetStatus() == "STEADY" {
+		return index, true, nil
 	}
 	return nil, false, nil
 }
 
 func (opts *CreateOpts) PostRun(ctx context.Context) error {
+	opts.AppendDeploymentType()
 	if !opts.EnableWatch {
 		return opts.Print(opts.index)
 	}
 
-	if _, err := opts.Watch(func() (any, bool, error) {
-		return opts.watch(ctx)
-	}); err != nil {
+	watch := opts.watchLocal
+	if opts.IsAtlasDeploymentType() {
+		watch = opts.watchAtlas
+	}
+
+	watchResult, err := opts.Watch(func() (any, bool, error) {
+		return watch(ctx)
+	})
+
+	if err != nil {
 		return err
 	}
+	opts.index = watchResult.(*admin.ClusterSearchIndex)
 
 	if err := opts.Print(opts.index); err != nil {
 		return err
@@ -242,10 +262,6 @@ func CreateBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			w := cmd.OutOrStdout()
 			opts.WatchOpts.OutWriter = w
-
-			if opts.DeploymentType == "atlas" && opts.EnableWatch {
-				return ErrWatchNotAvailable
-			}
 
 			if opts.Filename != "" && (opts.DBName != "" || opts.Collection != "") {
 				return errors.New("the '-file' flag cannot be used in conjunction with the 'db' and 'collection' flags, please choose either 'file' or 'db' and '-collection', but not both")

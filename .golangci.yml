@@ -6,10 +6,45 @@ linters-settings:
     min-occurrences: 2
   gocyclo:
     min-complexity: 15
-  govet:
-    check-shadowing: true
-  maligned:
-    suggest-new: true
+  importas:
+    no-extra-aliases: true
+    alias:
+      - pkg: go.mongodb.org/atlas-sdk/v[\d]+/admin
+        alias: atlasv2
+      - pkg: go.mongodb.org/atlas/mongodbatlas
+        alias: atlas
+      - pkg: go.mongodb.org/atlas/auth
+        alias: atlasauth
+      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1
+        alias: akov2
+      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common
+        alias: akov2common
+      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider
+        alias: akov2provider
+      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status
+        alias: akov2status
+      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project
+        alias: akov2project
+      - pkg: k8s.io/apimachinery/pkg/apis/meta/v1
+        alias: metav1
+      - pkg: k8s.io/api/apps/v1
+        alias: appsv1
+      - pkg: k8s.io/api/core/v1
+        alias: corev1
+      - pkg: k8s.io/api/rbac/v1
+        alias: rbacv1
+      - pkg: k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1
+        alias: apiextensionsv1
+      - pkg: k8s.io/apiserver/pkg/storage/names
+        alias: k8snames
+      - pkg: github.com/AlecAivazis/survey/v2/core
+        alias: survey
+      - pkg: github.com/creack/pty
+        alias: pseudotty
+      - pkg: cloud.google.com/go/kms/apiv1
+        alias: kmsv1
+      - pkg: github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/config
+        alias: cliconfig
   misspell:
     locale: US
     ignore-words:
@@ -59,8 +94,6 @@ linters-settings:
     sections:
       - standard
       - default
-    section-separators:
-      - newLine
 linters:
   disable-all: true
   enable:
@@ -83,11 +116,13 @@ linters:
     - gosimple # (megacheck) Linter for Go source code that specializes in simplifying code [fast: false, auto-fix: false]
     - govet # (vet, vetshadow) Vet examines Go source code and reports suspicious constructs, such as Printf calls whose arguments do not align with the format string [fast: false, auto-fix: false]
     - ineffassign # Detects when assignments to existing variables are not used [fast: true, auto-fix: false]
+    - importas # Enforces consistent import aliases [fast: false, auto-fix: false]
     - makezero # Finds slice declarations with non-zero initial length [fast: false, auto-fix: false]
     - misspell # Finds commonly misspelled English words in comments [fast: true, auto-fix: true]
     - nakedret # Finds naked returns in functions greater than a specified function length [fast: true, auto-fix: false]
     - noctx # noctx finds sending http request without context.Context [fast: false, auto-fix: false]
     - nolintlint # Reports ill-formed or insufficient nolint directives [fast: true, auto-fix: false]
+    - perfsprint # Checks that fmt.Sprintf can be replaced with a faster alternative.
     - prealloc # Finds slice declarations that could potentially be pre-allocated [fast: true, auto-fix: false]
     - predeclared # find code that shadows one of Go's predeclared identifiers [fast: true, auto-fix: false]
     - revive # Fast, configurable, extensible, flexible, and beautiful linter for Go. Drop-in replacement of golint. [fast: false, auto-fix: false]
@@ -95,6 +130,7 @@ linters:
     - staticcheck # (megacheck) It's a set of rules from staticcheck. It's not the same thing as the staticcheck binary. The author of staticcheck doesn't support or approve the use of staticcheck as a library inside golangci-lint. [fast: false, auto-fix: false]
     - stylecheck # Stylecheck is a replacement for golint [fast: false, auto-fix: false]
     - tenv # tenv is analyzer that detects using os.Setenv instead of t.Setenv since Go1.17 [fast: false, auto-fix: false]
+    - testableexamples # linter checks if examples are testable (have an expected output)
     - testifylint # Checks usage of github.com/stretchr/testify. [fast: false, auto-fix: false]
     - thelper # thelper detects golang test helpers without t.Helper() call and checks the consistency of test helpers [fast: false, auto-fix: false]
     - typecheck # Like the front-end of a Go compiler, parses and type-checks Go code [fast: false, auto-fix: false]
@@ -138,7 +174,6 @@ linters:
   # - gomodguard # Allow and block list linter for direct Go module dependencies. This is different from depguard where there are different block types for example version constraints and module recommendations. [fast: true, auto-fix: false]
   # - grouper # An analyzer to analyze expression groups. [fast: true, auto-fix: false]
   # - ifshort # [deprecated] Checks that your code uses short syntax for if-statements whenever possible [fast: true, auto-fix: false]
-  # - importas # Enforces consistent import aliases [fast: false, auto-fix: false]
   # - interfacebloat # A linter that checks the number of methods inside an interface. [fast: true, auto-fix: false]
   # - interfacer # [deprecated]: Linter that suggests narrower interface types [fast: false, auto-fix: false]
   # - ireturn # Accept Interfaces, Return Concrete Types [fast: false, auto-fix: false]
@@ -174,8 +209,6 @@ run:
     - e2e
     - unit
     - integration
-  skip-dirs:
-    - internal/mocks
   modules-download-mode: readonly
 
 issues:

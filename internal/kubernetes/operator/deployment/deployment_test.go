@@ -29,13 +29,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const resourceVersion = "x.y.z"
@@ -142,7 +141,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 			SampleRefreshIntervalBIConnector: pointer.Get(10),
 		}
 		processArgs.OplogSizeMB = pointer.Get(10)
-		processArgs.OplogMinRetentionHours = pointer.Get(float64(10.1))
+		processArgs.OplogMinRetentionHours = pointer.Get[float64](10.1)
 		backupSchedule := &atlasv2.DiskBackupSnapshotSchedule{
 			ClusterId:             pointer.Get("testClusterID"),
 			ClusterName:           pointer.Get(clusterName),
@@ -206,11 +205,11 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		clusterStore.EXPECT().DescribeSchedule(projectName, clusterName).Return(backupSchedule, nil)
 
 		expectCluster := &akov2.AtlasDeployment{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasDeployment",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-%s", projectName, clusterName)),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
@@ -331,11 +330,11 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 
 		expectPolicies := []*akov2.AtlasBackupPolicy{
 			{
-				TypeMeta: v1.TypeMeta{
+				TypeMeta: metav1.TypeMeta{
 					Kind:       "AtlasBackupPolicy",
 					APIVersion: "atlas.mongodb.com/v1",
 				},
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      strings.ToLower(fmt.Sprintf("%s-%s-backuppolicy", projectName, clusterName)),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
@@ -357,11 +356,11 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		}
 
 		expectSchedule := &akov2.AtlasBackupSchedule{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasBackupSchedule",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName)),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
@@ -467,11 +466,11 @@ func TestBuildServerlessDeployments(t *testing.T) {
 		clusterStore.EXPECT().ServerlessPrivateEndpoints(projectName, clusterName).Return(spe, nil)
 
 		expected := &akov2.AtlasDeployment{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasDeployment",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      strings.ToLower(fmt.Sprintf("%s-%s", projectName, clusterName)),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
@@ -485,10 +484,10 @@ func TestBuildServerlessDeployments(t *testing.T) {
 				},
 				BackupScheduleRef: akov2common.ResourceRefNamespaced{},
 				ServerlessSpec: &akov2.ServerlessSpec{
-					Name: store.StringOrEmpty(cluster.Name),
-					ProviderSettings: &akov2.ProviderSettingsSpec{
+					Name: cluster.GetName(),
+					ProviderSettings: &akov2.ServerlessProviderSettingsSpec{
 						BackingProviderName: cluster.ProviderSettings.BackingProviderName,
-						ProviderName:        akov2provider.ProviderName(store.StringOrEmpty(cluster.ProviderSettings.ProviderName)),
+						ProviderName:        akov2provider.ProviderName(cluster.ProviderSettings.GetProviderName()),
 						RegionName:          cluster.ProviderSettings.RegionName,
 					},
 					PrivateEndpoints: []akov2.ServerlessPrivateEndpoint{

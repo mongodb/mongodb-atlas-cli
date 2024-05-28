@@ -26,7 +26,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/project"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/streamsprocessing"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	"go.mongodb.org/atlas-sdk/v20231115014/admin"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -141,6 +143,12 @@ func (e *ConfigExporter) Run() (string, error) {
 	}
 	r = append(r, dataFederationResource...)
 
+	streamProcessingResources, err := e.exportAtlasStreamProcessing(projectName)
+	if err != nil {
+		return "", err
+	}
+	r = append(r, streamProcessingResources...)
+
 	for _, res := range r {
 		if e.patcher != nil {
 			err = e.patcher.Patch(res)
@@ -160,18 +168,33 @@ func (e *ConfigExporter) Run() (string, error) {
 }
 
 func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
-	// Project
-	projectData, err := project.BuildAtlasProject(
-		e.dataProvider,
-		e.featureValidator,
-		e.orgID, e.projectID,
-		e.targetNamespace,
-		e.includeSecretsData,
-		e.dictionaryForAtlasNames,
-		e.operatorVersion)
+	atlasProject, err := e.dataProvider.Project(e.projectID)
 	if err != nil {
 		return nil, "", err
 	}
+	if e.orgID != "" && e.orgID != atlasProject.OrgId {
+		return nil, "", fmt.Errorf("the project %s (%s) is not part of the organization %q, "+
+			"please confirm the arguments provided to the command or you are using the correct profile",
+			atlasProject.GetName(), atlasProject.GetId(), e.orgID)
+	}
+	e.orgID = atlasProject.OrgId
+
+	// Project
+	projectData, err := project.BuildAtlasProject(&project.AtlasProjectBuildRequest{
+		ProjectStore:    e.dataProvider,
+		Project:         atlasProject,
+		Validator:       e.featureValidator,
+		OrgID:           e.orgID,
+		ProjectID:       e.projectID,
+		TargetNamespace: e.targetNamespace,
+		IncludeSecret:   e.includeSecretsData,
+		Dictionary:      e.dictionaryForAtlasNames,
+		Version:         e.operatorVersion,
+	})
+	if err != nil {
+		return nil, "", err
+	}
+
 	var r []runtime.Object //nolint:prealloc
 	r = append(r, projectData.Project)
 	for _, secret := range projectData.Secrets {
@@ -324,5 +347,51 @@ func (e *ConfigExporter) fetchDataFederationNames() ([]string, error) {
 		}
 		result = append(result, name)
 	}
+	return result, nil
+}
+
+func (e *ConfigExporter) exportAtlasStreamProcessing(projectName string) ([]runtime.Object, error) {
+	if !e.featureValidator.IsResourceSupported(features.ResourceAtlasStreamInstance) ||
+		!e.featureValidator.IsResourceSupported(features.ResourceAtlasStreamConnection) {
+		return nil, nil
+	}
+
+	instancesList, err := e.dataProvider.ProjectStreams(&admin.ListStreamInstancesApiParams{GroupId: e.projectID})
+	if err != nil {
+		return nil, err
+	}
+	instances := instancesList.GetResults()
+	result := make([]runtime.Object, 0, len(instances))
+
+	for i := range instances {
+		instance := instances[i]
+		connectionsList, err := e.dataProvider.StreamsConnections(e.projectID, instance.GetName())
+		if err != nil {
+			return nil, err
+		}
+
+		akoInstance, akoConnections, akoSecrets, err := streamsprocessing.BuildAtlasStreamsProcessing(
+			e.targetNamespace,
+			e.operatorVersion,
+			projectName,
+			&instance,
+			connectionsList.GetResults(),
+			e.dictionaryForAtlasNames,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		result = append(result, akoInstance)
+
+		for x := range akoConnections {
+			result = append(result, akoConnections[x])
+		}
+
+		for x := range akoSecrets {
+			result = append(result, akoSecrets[x])
+		}
+	}
+
 	return result, nil
 }

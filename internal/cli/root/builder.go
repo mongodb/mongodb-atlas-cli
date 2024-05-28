@@ -42,6 +42,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/dbusers"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/events"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/federatedauthentication"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/integrations"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/kubernetes"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/livemigrations"
@@ -243,6 +244,7 @@ Use the --help flag with any command for more info on that command.`,
 		datafederation.Builder(),
 		auditing.Builder(),
 		deployments.Builder(),
+		federatedauthentication.Builder(),
 	)
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)
@@ -293,7 +295,10 @@ func shouldCheckCredentials(cmd *cobra.Command) AuthRequirements {
 		fmt.Sprintf("%s %s", atlas, "completion"):  NoAuth,       // completion commands do not require credentials
 		fmt.Sprintf("%s %s", atlas, "config"):      NoAuth,       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "auth"):        NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "register"):    NoAuth,       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "login"):       NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "logout"):      NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "whoami"):      NoAuth,       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "setup"):       NoAuth,       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "register"):    NoAuth,       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "quickstart"):  NoAuth,       // command supports login

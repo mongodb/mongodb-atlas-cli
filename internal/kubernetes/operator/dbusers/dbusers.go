@@ -26,9 +26,9 @@ import (
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 	corev1 "k8s.io/api/core/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const timeFormatISO8601 = "2006-01-02T15:04:05.999Z"
@@ -57,11 +57,11 @@ func BuildDBUsers(provider store.OperatorDBUsersStore, projectID, projectName, t
 		scopes := convertUserScopes(user)
 
 		mappedUsers[resourceName] = &akov2.AtlasDatabaseUser{
-			TypeMeta: v1.TypeMeta{
+			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasDatabaseUser",
 				APIVersion: "atlas.mongodb.com/v1",
 			},
-			ObjectMeta: v1.ObjectMeta{
+			ObjectMeta: metav1.ObjectMeta{
 				Name:      resourceName,
 				Namespace: targetNamespace,
 				Labels: map[string]string{
@@ -141,7 +141,7 @@ func convertUserRoles(user *atlasv2.CloudDatabaseUser) []akov2.RoleSpec {
 		result = append(result, akov2.RoleSpec{
 			RoleName:       role.RoleName,
 			DatabaseName:   role.DatabaseName,
-			CollectionName: pointer.GetOrDefault(role.CollectionName, ""),
+			CollectionName: role.GetCollectionName(),
 		})
 	}
 	return result

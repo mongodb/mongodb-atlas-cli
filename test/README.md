@@ -373,3 +373,4 @@
 | `kubernetes config generate`                            | Y         | Y
 | `kubernetes config apply`                               | Y         | Y
 | `kubernetes operator install`                           | Y         | Y
+| `federatedAuthentication federationSettings describe`   | Y         | Y

@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
@@ -30,11 +31,12 @@ import (
 var errEmptyLocalDeployments = errors.New("currently there are no deployment in your local system")
 var errNoDeployments = errors.New("currently there are no deployments")
 var ErrDeploymentNotFound = errors.New("deployment not found")
-var errDeploymentRequiredOnPipe = fmt.Errorf("deployment name is required  when piping the output of the command")
+var errDeploymentRequiredOnPipe = errors.New("deployment name is required  when piping the output of the command")
 
 func (opts *DeploymentOpts) findMongoDContainer(ctx context.Context) (*podman.InspectContainerData, error) {
 	containers, err := opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname())
 	if err != nil {
+		_, _ = log.Debugf("Error: failed to retrieve Local deployments because %q\n", err.Error())
 		return nil, fmt.Errorf("%w: %s", ErrDeploymentNotFound, opts.DeploymentName)
 	}
 
@@ -104,7 +106,7 @@ func (opts *DeploymentOpts) Select(deployments []Deployment) (Deployment, error)
 		opts.DeploymentName = deployments[0].Name
 		opts.DeploymentType = strings.ToLower(deployments[0].Type)
 
-		opts.AppendDeploymentType()
+		opts.UpdateDeploymentTelemetry()
 		return deployments[0], nil
 	}
 
@@ -131,6 +133,6 @@ func (opts *DeploymentOpts) Select(deployments []Deployment) (Deployment, error)
 	deployment := deploymentsByDisplayName[displayName]
 	opts.DeploymentName = deployment.Name
 	opts.DeploymentType = strings.ToLower(deployment.Type)
-	opts.AppendDeploymentType()
+	opts.UpdateDeploymentTelemetry()
 	return deployment, nil
 }

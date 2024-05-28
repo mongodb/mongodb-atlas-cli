@@ -19,22 +19,25 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"go.mongodb.org/atlas-sdk/v20231115008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 func NewMockAtlasDeploymentOpts(ctrl *gomock.Controller, deploymentName string) MockDeploymentOpts {
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockAtlasClusterListStore := mocks.NewMockClusterLister(ctrl)
+	mockDeploymentTelemetry := mocks.NewMockDeploymentTelemetry(ctrl)
 
 	return MockDeploymentOpts{
 		ctrl:                      ctrl,
 		MockCredentialsGetter:     mockCredentialsGetter,
 		MockAtlasClusterListStore: mockAtlasClusterListStore,
+		MockDeploymentTelemetry:   mockDeploymentTelemetry,
 		Opts: &options.DeploymentOpts{
 			CredStore:             mockCredentialsGetter,
 			AtlasClusterListStore: mockAtlasClusterListStore,
 			DeploymentName:        deploymentName,
 			DeploymentType:        "atlas",
+			DeploymentTelemetry:   mockDeploymentTelemetry,
 		},
 	}
 }
@@ -64,5 +67,10 @@ func (m *MockDeploymentOpts) CommonAtlasMocks(projectID string) {
 		EXPECT().
 		ProjectClusters(projectID, gomock.Any()).
 		Return(m.MockPaginatedAdvancedClusterDescription(), nil).
+		Times(1)
+
+	m.MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
 		Times(1)
 }

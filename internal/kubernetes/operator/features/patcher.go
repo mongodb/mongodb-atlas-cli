@@ -19,25 +19,25 @@ import (
 	"strings"
 
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
-	v1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
 // Patcher is the type that is able to patch Kubernetes objects using a CRD specification.
 type Patcher interface {
-	Patch(crdSpec *v1.JSONSchemaProps, obj runtime.Object) error
+	Patch(crdSpec *apiextensionsv1.JSONSchemaProps, obj runtime.Object) error
 }
 
 // PatcherFunc is a convenience function wrapper around Patcher.
-type PatcherFunc func(crdSpec *v1.JSONSchemaProps, obj runtime.Object) error
+type PatcherFunc func(crdSpec *apiextensionsv1.JSONSchemaProps, obj runtime.Object) error
 
-func (pf PatcherFunc) Patch(crdSpec *v1.JSONSchemaProps, obj runtime.Object) error {
+func (pf PatcherFunc) Patch(crdSpec *apiextensionsv1.JSONSchemaProps, obj runtime.Object) error {
 	return pf(crdSpec, obj)
 }
 
 // NopPatcher does not patch anything.
 func NopPatcher() Patcher {
-	return PatcherFunc(func(*v1.JSONSchemaProps, runtime.Object) error {
+	return PatcherFunc(func(*apiextensionsv1.JSONSchemaProps, runtime.Object) error {
 		return nil
 	})
 }
@@ -45,7 +45,7 @@ func NopPatcher() Patcher {
 // UnknownBackupPolicyFrequencyTypesPruner removes backup policy items from a backup policy
 // with unknown frequency types.
 // It inspects the CRD definition to determine supported frequency types.
-func UnknownBackupPolicyFrequencyTypesPruner(crdSpec *v1.JSONSchemaProps, obj runtime.Object) error {
+func UnknownBackupPolicyFrequencyTypesPruner(crdSpec *apiextensionsv1.JSONSchemaProps, obj runtime.Object) error {
 	// we are not defensive here as this function assumes the invariant
 	// of a stable CRD definition for a given version of Kubernetes Atlas Operator.
 	frequencyTypePropsEnum := crdSpec.Properties["items"].Items.Schema.Properties["frequencyType"].Enum

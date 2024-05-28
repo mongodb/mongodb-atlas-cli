@@ -15,10 +15,10 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectLister,ProjectCreator,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter,OrgProjectLister
+//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectLister,ProjectCreator,ProjectUpdater,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter,OrgProjectLister
 
 type ProjectLister interface {
 	Projects(*ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
@@ -31,6 +31,10 @@ type OrgProjectLister interface {
 
 type ProjectCreator interface {
 	CreateProject(*atlasv2.CreateProjectApiParams) (*atlasv2.Group, error)
+}
+
+type ProjectUpdater interface {
+	UpdateProject(*atlasv2.UpdateProjectApiParams) (*atlasv2.Group, error)
 }
 
 type ProjectDeleter interface {
@@ -96,6 +100,12 @@ func (s *Store) ProjectByName(name string) (*atlasv2.Group, error) {
 // CreateProject encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateProject(params *atlasv2.CreateProjectApiParams) (*atlasv2.Group, error) {
 	result, _, err := s.clientv2.ProjectsApi.CreateProjectWithParams(s.ctx, params).Execute()
+	return result, err
+}
+
+// UpdateProject encapsulates the logic to manage different cloud providers.
+func (s *Store) UpdateProject(params *atlasv2.UpdateProjectApiParams) (*atlasv2.Group, error) {
+	result, _, err := s.clientv2.ProjectsApi.UpdateProjectWithParams(s.ctx, params).Execute()
 	return result, err
 }
 

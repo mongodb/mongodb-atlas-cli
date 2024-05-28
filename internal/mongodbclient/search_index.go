@@ -15,6 +15,7 @@
 package mongodbclient
 
 import (
+	"cmp"
 	"context"
 	"encoding/json"
 	"errors"
@@ -22,8 +23,7 @@ import (
 	"slices"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"go.mongodb.org/atlas-sdk/v20231115008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115014/admin"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -89,7 +89,7 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 					},
 					{
 						Key:   "type",
-						Value: pointer.GetOrDefault(idx.Type, defaultSearchIndexType),
+						Value: cmp.Or(idx.GetType(), defaultSearchIndexType),
 					},
 					{
 						Key:   "definition",

@@ -25,6 +25,15 @@ variables:
     env:
       <<: *go_env
 functions:
+  "install gh-token":
+    - command: shell.exec
+      type: setup
+      params:
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        script: |
+          set -Eeou pipefail
+          curl --output gh-token -sfL https://github.com/Link-/gh-token/releases/download/v2.0.1/linux-amd64
+          chmod 755 ./gh-token
   "install goreleaser":
     - command: shell.exec
       type: setup
@@ -79,7 +88,8 @@ functions:
           - notary_service_secret
           - notary_service_url
           - goreleaser_key
-          - github_token
+          - github_app_id
+          - github_app_pem
           - unstable
         binary: build/package/package.sh
   "install go-msi":
@@ -188,14 +198,14 @@ functions:
           - revision
           - created_at
           - ext
-          - signing_auth_token_44
           - signing_auth_token_46
           - signing_auth_token_50
           - signing_auth_token_60
+          - signing_auth_token_70
           - arch
         env:
           <<: *go_env
-          NOTARY_KEY_NAME: ${notary_key_name|server-4.4}
+          NOTARY_KEY_NAME: ${notary_key_name|server-5.0}
           BARQUE_USERNAME: ${barque_user}
           BARQUE_API_KEY: ${barque_api_key}
         binary: build/package/curator-push.sh
@@ -277,8 +287,8 @@ tasks:
     commands:
       - func: "generate notices"
       - func: "install goreleaser"
-      - func: "install podman"
       - func: "install macos notarization service"
+      - func: "install gh-token"
       - command: subprocess.exec
         type: test
         params:
@@ -291,6 +301,18 @@ tasks:
             BUCKET: mongodb-mongocli-build
             unstable: ${unstable}
           binary: build/package/download-win-binaries.sh
+      - command: subprocess.exec
+        type: test
+        params:
+          include_expansions_in_env:
+            - unstable
+          env:
+            ARTIFACTORY_USERNAME: ${artifactory_username}
+            ARTIFACTORY_PASSWORD: ${artifactory_password}
+            GRS_USERNAME: ${garasign_username}
+            GRS_PASSWORD: ${garasign_password}
+          working_dir: src/github.com/mongodb/mongodb-atlas-cli
+          binary: build/package/windows_notarize.sh
       - func: "package"
         vars:
           unstable: ${unstable}
@@ -390,8 +412,8 @@ tasks:
   - name: pkg_test_windows
     tags: [ "smoke-test", "windows" ]
     depends_on:
-      - name: package_msi
-        variant: go_atlascli_msi_snapshot
+      - name: package_goreleaser
+        variant: goreleaser_atlascli_snapshot
     commands:
       - func: "powershell build"
         vars:
@@ -409,7 +431,7 @@ buildvariants:
   - name: goreleaser_atlascli_snapshot
     display_name: "Packaging AtlasCLI (goreleaser)"
     run_on:
-      - rhel80-small
+      - rhel90-small
     expansions:
       <<: *go_linux_version
       server_version: "4.4.0-rc3"
@@ -435,7 +457,7 @@ buildvariants:
     display_name: "Release AtlasCLI (goreleaser)"
     git_tag_only: true
     run_on:
-      - rhel80-small
+      - rhel90-small
     expansions:
       <<: *go_linux_version
       server_version: "4.4.0-rc3"

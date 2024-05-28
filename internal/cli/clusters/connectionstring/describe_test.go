@@ -22,16 +22,21 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20231115008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
-func TestDescribe_Run(t *testing.T) {
+func TestDescribe_Run_StandardConnectionString(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterDescriber(ctrl)
 
-	expected := &admin.AdvancedClusterDescription{}
+	expected := &admin.AdvancedClusterDescription{
+		ConnectionStrings: &admin.ClusterConnectionStrings{
+			StandardSrv: pointer.Get("test"),
+		},
+	}
 
 	describeOpts := &DescribeOpts{
 		name:  "test",
@@ -46,6 +51,68 @@ func TestDescribe_Run(t *testing.T) {
 
 	err := describeOpts.Run()
 	require.NoError(t, err)
+	test.VerifyOutputTemplate(t, describeTemplateStandard, expected.ConnectionStrings)
+}
+
+func TestDescribe_Run_PrivateConnectionString(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockClusterDescriber(ctrl)
+
+	expected := &admin.AdvancedClusterDescription{
+		ConnectionStrings: &admin.ClusterConnectionStrings{
+			StandardSrv: pointer.Get("test"),
+			PrivateSrv:  pointer.Get("test"),
+		},
+	}
+
+	describeOpts := &DescribeOpts{
+		name:   "test",
+		store:  mockStore,
+		csType: "private",
+	}
+
+	mockStore.
+		EXPECT().
+		AtlasCluster(describeOpts.ProjectID, describeOpts.name).
+		Return(expected, nil).
+		Times(1)
+
+	err := describeOpts.Run()
+	require.NoError(t, err)
+	test.VerifyOutputTemplate(t, describeTemplatePrivate, expected.ConnectionStrings)
+}
+
+func TestDescribe_Run_PrivateEndpointsConnectionString(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockClusterDescriber(ctrl)
+
+	expected := &admin.AdvancedClusterDescription{
+		ConnectionStrings: &admin.ClusterConnectionStrings{
+			StandardSrv: pointer.Get("test"),
+			PrivateSrv:  pointer.Get("test"),
+			PrivateEndpoint: &[]admin.ClusterDescriptionConnectionStringsPrivateEndpoint{
+				{
+					SrvShardOptimizedConnectionString: pointer.Get("test"),
+				},
+			},
+		},
+	}
+
+	describeOpts := &DescribeOpts{
+		name:   "test",
+		store:  mockStore,
+		csType: "privateEndpoints",
+	}
+
+	mockStore.
+		EXPECT().
+		AtlasCluster(describeOpts.ProjectID, describeOpts.name).
+		Return(expected, nil).
+		Times(1)
+
+	err := describeOpts.Run()
+	require.NoError(t, err)
+	test.VerifyOutputTemplate(t, describeTemplateShardOptimized, expected.ConnectionStrings)
 }
 
 func TestDescribeBuilder(t *testing.T) {

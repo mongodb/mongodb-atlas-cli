@@ -46,3 +46,17 @@ func (mr *MockFeatureValidatorMockRecorder) FeatureExist(arg0, arg1 interface{})
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FeatureExist", reflect.TypeOf((*MockFeatureValidator)(nil).FeatureExist), arg0, arg1)
 }
+
+// IsResourceSupported mocks base method.
+func (m *MockFeatureValidator) IsResourceSupported(arg0 string) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsResourceSupported", arg0)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// IsResourceSupported indicates an expected call of IsResourceSupported.
+func (mr *MockFeatureValidatorMockRecorder) IsResourceSupported(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsResourceSupported", reflect.TypeOf((*MockFeatureValidator)(nil).IsResourceSupported), arg0)
+}

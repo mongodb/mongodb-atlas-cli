@@ -33,7 +33,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20231115008/admin"
+	"go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 type DownloadOpts struct {
@@ -181,6 +181,10 @@ func (opts *DownloadOpts) validateAtlasFlags() error {
 	return nil
 }
 
+func (opts *DownloadOpts) PostRun() {
+	opts.DeploymentTelemetry.AppendDeploymentType()
+}
+
 // atlas deployments logs.
 func LogsBuilder() *cobra.Command {
 	opts := &DownloadOpts{
@@ -203,6 +207,9 @@ func LogsBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd.Context())
+		},
+		PostRun: func(_ *cobra.Command, _ []string) {
+			opts.PostRun()
 		},
 	}
 

@@ -21,7 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 func TestDBUserCreateOpts_Run(t *testing.T) {
@@ -51,6 +51,7 @@ func TestCreateOpts_validate(t *testing.T) {
 	type fields struct {
 		x509Type   string
 		awsIamType string
+		oidcType   string
 		ldapType   string
 		password   string
 		roles      []string
@@ -71,6 +72,7 @@ func TestCreateOpts_validate(t *testing.T) {
 				roles:      []string{"test"},
 				awsIamType: none,
 				ldapType:   none,
+				oidcType:   none,
 				x509Type:   "invalid",
 			},
 			wantErr: true,
@@ -80,6 +82,7 @@ func TestCreateOpts_validate(t *testing.T) {
 			fields: fields{
 				roles:      []string{"test"},
 				awsIamType: none,
+				oidcType:   none,
 				ldapType:   "invalid",
 				x509Type:   none,
 			},
@@ -92,6 +95,18 @@ func TestCreateOpts_validate(t *testing.T) {
 				awsIamType: "invalid",
 				ldapType:   none,
 				x509Type:   none,
+				oidcType:   none,
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid oidcType",
+			fields: fields{
+				roles:      []string{"test"},
+				oidcType:   "invalid",
+				awsIamType: none,
+				ldapType:   none,
+				x509Type:   none,
 			},
 			wantErr: true,
 		},
@@ -101,48 +116,9 @@ func TestCreateOpts_validate(t *testing.T) {
 				roles:      []string{"test"},
 				awsIamType: user,
 				ldapType:   none,
+				oidcType:   none,
 				x509Type:   none,
 				password:   "password",
-			},
-			wantErr: true,
-		},
-		{
-			name: "set both x509 and LDAP",
-			fields: fields{
-				roles:      []string{"test"},
-				awsIamType: user,
-				ldapType:   user,
-				x509Type:   X509TypeManaged,
-			},
-			wantErr: true,
-		},
-		{
-			name: "set both x509 and AWS IAM",
-			fields: fields{
-				roles:      []string{"test"},
-				awsIamType: user,
-				ldapType:   none,
-				x509Type:   X509TypeManaged,
-			},
-			wantErr: true,
-		},
-		{
-			name: "set both LDAP and AWS IAM",
-			fields: fields{
-				roles:      []string{"test"},
-				awsIamType: user,
-				ldapType:   user,
-				x509Type:   none,
-			},
-			wantErr: true,
-		},
-		{
-			name: "set both LDAP and AWS IAM and x509",
-			fields: fields{
-				roles:      []string{"test"},
-				awsIamType: user,
-				ldapType:   user,
-				x509Type:   X509TypeManaged,
 			},
 			wantErr: true,
 		},
@@ -153,6 +129,7 @@ func TestCreateOpts_validate(t *testing.T) {
 				awsIamType: none,
 				ldapType:   none,
 				x509Type:   none,
+				oidcType:   none,
 			},
 			wantErr: false,
 		},
@@ -162,6 +139,7 @@ func TestCreateOpts_validate(t *testing.T) {
 				roles:      []string{"test"},
 				awsIamType: none,
 				ldapType:   none,
+				oidcType:   none,
 				x509Type:   none,
 				password:   "password",
 			},
@@ -173,6 +151,7 @@ func TestCreateOpts_validate(t *testing.T) {
 				roles:      []string{"test"},
 				awsIamType: user,
 				ldapType:   none,
+				oidcType:   none,
 				x509Type:   none,
 			},
 			wantErr: false,
@@ -187,6 +166,7 @@ func TestCreateOpts_validate(t *testing.T) {
 				x509Type:   fields.x509Type,
 				awsIamType: fields.awsIamType,
 				ldapType:   fields.ldapType,
+				oidcType:   fields.oidcType,
 				roles:      fields.roles,
 				password:   fields.password,
 			}

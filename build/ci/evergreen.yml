@@ -84,6 +84,7 @@ functions:
           - E2E_TIMEOUT
           - E2E_SERVERLESS_INSTANCE_NAME
           - E2E_PARALLEL
+          - IDENTITY_PROVIDER_ID
           - revision
         env:
           <<: *go_env
@@ -101,25 +102,6 @@ functions:
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
           curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
-  "install podman":
-    - command: subprocess.exec
-      type: setup
-      params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
-        binary: ../build/ci/install_podman.sh
-  "setup operator":
-    command: subprocess.exec
-    type: setup
-    params:
-      working_dir: src/github.com/mongodb/mongodb-atlas-cli
-      env:
-        MCLI_ORG_ID: ${atlas_org_id}
-        MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-        MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-        MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-      include_expansions_in_env:
-        - workdir
-      binary: ./build/ci/setup_operator.sh
   "generate evergreen":
     - command: subprocess.exec
       type: test
@@ -172,8 +154,8 @@ tasks:
           shell: bash
           script: |
             set -Eeou pipefail
-            mkdir "$XDG_CONFIG_HOME/mongocli"
-            cat <<EOF > "$XDG_CONFIG_HOME/mongocli/config.toml"
+            mkdir "$XDG_CONFIG_HOME/atlascli"
+            cat <<EOF > "$XDG_CONFIG_HOME/atlascli/config.toml"
             [e2e]
               org_id = "5e429e7706822c6eac4d5971"
               public_api_key = "AAUMGJXA"
@@ -218,6 +200,7 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,generic
+          IDENTITY_PROVIDER_ID: ${identity_provider_id}
   - name: atlas_gov_generic_e2e
     tags: ["e2e","generic","atlas"]
     must_have_test_results: true
@@ -236,6 +219,7 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MCLI_SERVICE: cloudgov
           E2E_TAGS: atlas,generic
+          IDENTITY_PROVIDER_ID: ${identity_provider_id}
   # This is all about cluster which tends to be slow to get a healthy one
   - name: atlas_clusters_flags_e2e
     tags: ["e2e","clusters","atlas"]
@@ -309,7 +293,7 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,clusters,m0
-  - name: atlas_kubernetes_e2e
+  - name: atlas_kubernetes_generate_e2e
     tags: ["e2e","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernetes_atlas"]
     must_have_test_results: true
     depends_on:
@@ -318,7 +302,6 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "setup operator"
       - func: "e2e test"
         vars:
           MCLI_ORG_ID: ${atlas_org_id}
@@ -327,7 +310,25 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,cluster,kubernetes
+          E2E_TAGS: atlas,cluster,kubernetes,generate
+  - name: atlas_kubernetes_apply_e2e
+    tags: [ "e2e","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernetes_atlas" ]
+    must_have_test_results: true
+    depends_on:
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,cluster,kubernetes,apply
   - name: atlas_clusters_upgrade_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -855,6 +856,24 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,streams
+  - name: atlas_streams_with_cluster
+    tags: [ "e2e","streams","atlas","assigned_to_jira_team_cloudp_atlas_streams"]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,streams_with_cluster
   - name: atlas_decrypt_e2e
     tags: [ "e2e","decrypt" ]
     must_have_test_results: true
@@ -1075,6 +1094,8 @@ tasks:
           E2E_PARALLEL: 16
   - name: atlas_deployments_local_noauth_e2e
     tags: ["e2e","deployments","local","noauth"]
+    # This test will be enabled in CLOUDP-237038
+    patch_only: true
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
@@ -1083,7 +1104,6 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "install podman"
       - command: shell.exec
         type: setup
         params:
@@ -1107,6 +1127,8 @@ tasks:
           E2E_TIMEOUT: 3h
   - name: atlas_deployments_local_auth_e2e
     tags: ["e2e","deployments","local","auth"]
+    # This test will be enabled in CLOUDP-237038
+    patch_only: true
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
@@ -1115,7 +1137,6 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "install podman"
       - command: shell.exec
         type: setup
         params:
@@ -1280,14 +1301,21 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .atlas"
-# This variant will be enabled in CLOUDP-237038
-#  - name: e2e_local_deployments
-#    display_name: "E2E Local Deployments Tests"
-#    run_on:
-#      - rhel80-small
-#    expansions:
-#      <<: *go_linux_version
-#    tasks:
-#      - name: ".e2e .deployments .local"
+  - name: e2e_local_deployments
+    display_name: "E2E Local Deployments Tests"
+    run_on:
+      - rhel90-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+  - name: e2e_atlas_streams_with_clusters
+    display_name: "E2E Atlas Streams with Clusters Tests"
+    run_on:
+      - ubuntu2204-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .atlas .streams"
 include:
   - filename: build/ci/release.yml

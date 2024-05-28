@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 const createTemplate = "Custom database role '{{.RoleName}}' successfully created.\n"
@@ -87,6 +87,9 @@ func CreateBuilder() *cobra.Command {
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: `# Create a custom database role
   atlas customDbRoles create customRole --privilege FIND@databaseName,UPDATE@databaseName.collectionName
+
+  # Create a custom database role on multiple collections
+  atlas customDbRoles create customRole --privilege FIND@databaseName,UPDATE@databaseName.firstCollectionName,UPDATE@databaseName.secondCollectionName
 
   # Create a customer database role with granted action on the cluster resource
   atlas customDbRoles create customRole --privilege GET_CMD_LINE_OPTS

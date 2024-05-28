@@ -466,6 +466,7 @@ func (opts *SetupOpts) generateDeploymentName() {
 func (opts *SetupOpts) promptDeploymentName() error {
 	p := &survey.Input{
 		Message: "Deployment Name [You can't change this value later]",
+		Help:    usage.ClusterName,
 		Default: opts.DeploymentName,
 	}
 
@@ -793,7 +794,7 @@ func (opts *SetupOpts) runAtlas(ctx context.Context) error {
 
 	// replace deployment name with cluster name
 	if opts.DeploymentName != "" {
-		newArgs = append(newArgs, fmt.Sprintf("--%s", flag.ClusterName), opts.DeploymentName)
+		newArgs = append(newArgs, "--"+flag.ClusterName, opts.DeploymentName)
 	}
 
 	// update args
@@ -821,6 +822,10 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 	}
 
 	return opts.runAtlas(ctx)
+}
+
+func (opts *SetupOpts) PostRun() {
+	opts.DeploymentTelemetry.AppendDeploymentType()
 }
 
 // atlas deployments setup.
@@ -855,6 +860,9 @@ func SetupBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd.Context())
+		},
+		PostRun: func(_ *cobra.Command, _ []string) {
+			opts.PostRun()
 		},
 	}
 

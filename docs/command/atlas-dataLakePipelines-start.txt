@@ -86,6 +86,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # start pipeline 'Pipeline1':
    atlas dataLakePipelines start Pipeline1

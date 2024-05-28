@@ -152,6 +152,14 @@ func FlagInSlice(value, flag string, validValues []string) error {
 	return fmt.Errorf(`invalid value for "%s", allowed values: "%s"`, flag, strings.Join(validValues, `", "`))
 }
 
+func ConditionalFlagNotInSlice(conditionalFlag string, conditionalFlagValue string, flag string, invalidFlags []string) error {
+	if !slices.Contains(invalidFlags, flag) {
+		return nil
+	}
+
+	return fmt.Errorf(`invalid flag "%s" in combination with "%s=%s", not allowed values: "%s"`, flag, conditionalFlag, conditionalFlagValue, strings.Join(invalidFlags, `", "`))
+}
+
 var ErrInvalidPath = errors.New("invalid path")
 
 func Path(val interface{}) error {

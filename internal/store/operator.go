@@ -14,10 +14,6 @@
 
 package store
 
-import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-)
-
 //go:generate mockgen -destination=../mocks/mock_atlas_operator_cluster_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OperatorClusterStore
 //go:generate mockgen -destination=../mocks/mock_atlas_operator_project_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OperatorProjectStore
 //go:generate mockgen -destination=../mocks/mock_atlas_operator_db_users_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OperatorDBUsersStore
@@ -33,10 +29,6 @@ type ListOptions struct {
 type ContainersListOptions struct {
 	ListOptions
 	ProviderName string
-}
-
-func StringOrEmpty(s *string) string {
-	return pointer.GetOrDefault(s, "")
 }
 
 type OperatorProjectStore interface {
@@ -89,10 +81,16 @@ type OperatorOrgStore interface {
 	ProjectAPIKeyAssigner
 }
 
+type StreamProcessingStore interface {
+	StreamsLister
+	StreamsConnectionLister
+}
+
 type OperatorGenericStore interface {
 	OperatorOrgStore
 	OperatorProjectStore
 	OperatorClusterStore
 	OperatorDBUsersStore
 	DataFederationStore
+	StreamProcessingStore
 }

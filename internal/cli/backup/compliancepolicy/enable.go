@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 type EnableOpts struct {
@@ -66,7 +66,7 @@ func (opts *EnableOpts) enableWatcher() (any, bool, error) {
 	}
 	opts.policy = res
 	if res.GetState() == "" {
-		return nil, false, fmt.Errorf("could not access State field")
+		return nil, false, errors.New("could not access State field")
 	}
 	return nil, res.GetState() == active, nil
 }

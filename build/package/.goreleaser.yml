@@ -36,12 +36,6 @@ builds:
     goamd64: [v1]
     prebuilt:
       path: ./bin/atlas.exe
-    hooks:
-      post:
-        - cmd: ./build/package/windows_notarize.sh
-          env:
-            - VERSION={{ .Version }}
-          output: true
 gomod: # https://goreleaser.com/customization/verifiable_builds/
   # Proxy a module from proxy.golang.org, making the builds verifiable.
   # This will only be effective if running against a tag. Snapshots will ignore
@@ -117,6 +111,8 @@ nfpms:
   meta: true
 checksum:
   name_template: checksums.txt
+  extra_files:
+    - glob: ./bin/*.msi
 snapshot:
   name_template: "{{ .Env.VERSION_GIT }}-next"
 changelog:

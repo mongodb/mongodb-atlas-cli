@@ -15,10 +15,10 @@
 package store
 
 import (
-	"fmt"
+	"errors"
 	"io"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store LogsDownloader
@@ -34,7 +34,7 @@ func (s *Store) DownloadLog(params *atlasv2.GetHostLogsApiParams) (io.ReadCloser
 		return nil, err
 	}
 	if result == nil {
-		return nil, fmt.Errorf("returned file is empty")
+		return nil, errors.New("returned file is empty")
 	}
 	return result, nil
 }

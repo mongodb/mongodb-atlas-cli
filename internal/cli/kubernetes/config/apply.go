@@ -72,7 +72,7 @@ func (opts *ApplyOpts) autoDetectParams(kubeCtl *kubernetes.KubeCtl) error {
 	}
 
 	if opts.operatorVersion == "" {
-		if !strings.HasPrefix(operatorDeployment.Spec.Template.Spec.Containers[0].Image, fmt.Sprintf("%s:", containerImage)) {
+		if !strings.HasPrefix(operatorDeployment.Spec.Template.Spec.Containers[0].Image, containerImage+":") {
 			return errors.New("unable to auto detect operator version. you should explicitly set operator version if you are running an openshift certified installation")
 		}
 
@@ -149,7 +149,6 @@ func ApplyBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
-				opts.ValidateOrgID,
 				opts.ValidateTargetNamespace,
 				opts.ValidateOperatorVersion,
 				opts.initStores(cmd.Context()),
@@ -174,7 +173,7 @@ func ApplyBuilder() *cobra.Command {
 }
 
 func getOperatorMajorVersion(image string) string {
-	version := strings.Trim(image, fmt.Sprintf("%s:", containerImage))
+	version := strings.TrimPrefix(image, containerImage+":")
 
 	semVer := strings.Split(version, ".")
 	semVer[2] = "0"

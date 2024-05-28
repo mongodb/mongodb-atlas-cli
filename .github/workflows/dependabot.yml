@@ -41,7 +41,7 @@
                   "project": {
                       "id": "10984"
                   },
-                  "summary": "AtlasCLI Dependency Update n. '"${PR_NUMBER}"'",
+                  "summary": "MongoCLI Dependency Update n. '"${PR_NUMBER}"'",
                   "issuetype": {
                       "id": "12"
                   },
@@ -51,7 +51,7 @@
                   "description": "This ticket tracks the following GitHub pull request: '"${PR_URL}"'.",
                   "components": [
                       {
-                          "id": "30450"
+                          "id": "28030"
                       }
                   ],
                   "assignee": {

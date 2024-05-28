@@ -40,6 +40,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Display the help menu for the config command:
    mongocli config --help

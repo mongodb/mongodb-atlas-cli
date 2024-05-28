@@ -84,5 +84,6 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    mongocli ops-manager serverUsage download --endDate 2022-12-12 --startDate 2022-01-01

@@ -88,6 +88,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Modify the roles and description for the global API key with the ID 5f5bad7a57aef32b04ed0210:
    mongocli iam globalApiKeys update 5f5bad7a57aef32b04ed0210 --desc "My Sample Global API Key" --role GLOBAL_MONITORING_ADMIN --output json

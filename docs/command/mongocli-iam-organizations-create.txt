@@ -90,6 +90,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Create an Ops Manager organization with the name myOrg:
    mongocli iam organizations create myOrg --output json

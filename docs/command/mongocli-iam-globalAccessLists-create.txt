@@ -72,6 +72,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Create an access list entry for your global API key to allow access from 192.0.2.0/24:
    mongocli iam globalAccessLists create --cidr 192.0.2.0/24 --desc "My Global IP" --output json

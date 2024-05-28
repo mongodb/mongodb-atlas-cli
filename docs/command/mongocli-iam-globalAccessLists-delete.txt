@@ -80,6 +80,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Remove the IP access list entry with the ID 5f5bad7a57aef32b04ed0210 from the access list for the global API key:
    mongocli iam globalAccessLists delete 5f5bad7a57aef32b04ed0210

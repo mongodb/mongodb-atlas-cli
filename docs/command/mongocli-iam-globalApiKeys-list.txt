@@ -72,6 +72,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Return a JSON-formatted list of global API keys:
    mongocli iam globalApiKeys list --output json

@@ -68,6 +68,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
   
    mongocli ops-manager listKeyProvider --file log.gz

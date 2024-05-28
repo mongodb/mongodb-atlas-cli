@@ -89,6 +89,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Return a JSON-formatted list of all projects:
    mongocli iam projects list --output json

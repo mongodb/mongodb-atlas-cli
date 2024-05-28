@@ -80,6 +80,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Remove the global API key with the ID 5f5bad7a57aef32b04ed0210 from your Ops Manager instance:
    mongocli iam globalApiKeys delete 5f5bad7a57aef32b04ed0210

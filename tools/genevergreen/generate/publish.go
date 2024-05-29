@@ -76,6 +76,10 @@ var distros = map[string]Platform{
 		extension:     deb,
 		architectures: []string{x86_64, arm64},
 	},
+	"ubuntu2404": {
+		extension:     deb,
+		architectures: []string{x86_64, arm64},
+	},
 }
 
 func newPublishTask(taskName, extension, edition, distro, taskServerVersion, notaryKey, arch string, stable bool, dependency []shrub.TaskDependency) *shrub.Task {

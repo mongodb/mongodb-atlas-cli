@@ -195,7 +195,7 @@ repos:
     repos:
       - apt/ubuntu/dists/jammy/mongodb-org
 
-  - name: ubuntu2204
+  - name: ubuntu2404
     type: deb
     code_name: "noble"
     edition: org

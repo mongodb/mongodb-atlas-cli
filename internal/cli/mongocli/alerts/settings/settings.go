@@ -18,7 +18,6 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -72,20 +71,20 @@ func (opts *ConfigOpts) NewAlertConfiguration(projectID string) *opsmngr.AlertCo
 	out.Enabled = &opts.enabled
 
 	if opts.matcherFieldName != "" {
-		out.Matchers = []atlas.Matcher{*opts.newMatcher()}
+		out.Matchers = []opsmngr.Matcher{*opts.newMatcher()}
 	}
 
 	if opts.metricThresholdMetricName != "" {
 		out.MetricThreshold = opts.newMetricThreshold()
 	}
 
-	out.Notifications = []atlas.Notification{*opts.newNotification()}
+	out.Notifications = []opsmngr.Notification{*opts.newNotification()}
 
 	return out
 }
 
-func (opts *ConfigOpts) newNotification() *atlas.Notification {
-	out := new(atlas.Notification)
+func (opts *ConfigOpts) newNotification() *opsmngr.Notification {
+	out := new(opsmngr.Notification)
 	out.TypeName = strings.ToUpper(opts.notificationType)
 	out.DelayMin = &opts.notificationDelayMin
 	out.IntervalMin = opts.notificationIntervalMin
@@ -128,8 +127,8 @@ func (opts *ConfigOpts) newNotification() *atlas.Notification {
 	return out
 }
 
-func (opts *ConfigOpts) newMetricThreshold() *atlas.MetricThreshold {
-	return &atlas.MetricThreshold{
+func (opts *ConfigOpts) newMetricThreshold() *opsmngr.MetricThreshold {
+	return &opsmngr.MetricThreshold{
 		MetricName: strings.ToUpper(opts.metricThresholdMetricName),
 		Operator:   strings.ToUpper(opts.metricThresholdOperator),
 		Threshold:  opts.metricThresholdThreshold,
@@ -138,8 +137,8 @@ func (opts *ConfigOpts) newMetricThreshold() *atlas.MetricThreshold {
 	}
 }
 
-func (opts *ConfigOpts) newMatcher() *atlas.Matcher {
-	return &atlas.Matcher{
+func (opts *ConfigOpts) newMatcher() *opsmngr.Matcher {
+	return &opsmngr.Matcher{
 		FieldName: strings.ToUpper(opts.matcherFieldName),
 		Operator:  strings.ToUpper(opts.matcherOperator),
 		Value:     strings.ToUpper(opts.matcherValue),

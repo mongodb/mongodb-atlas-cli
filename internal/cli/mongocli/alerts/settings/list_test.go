@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/pointer"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas/mongodbatlas"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -55,7 +54,7 @@ func TestConfigList_Run(t *testing.T) {
 			ClusterID:              "test",
 			ClusterName:            "test",
 			SourceTypeName:         "test",
-			CurrentValue: &mongodbatlas.CurrentValue{
+			CurrentValue: &opsmngr.CurrentValue{
 				Number: pointer.Get(1.2),
 				Units:  "test",
 			},

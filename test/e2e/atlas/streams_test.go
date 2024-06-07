@@ -59,7 +59,7 @@ func TestStreams(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var instances atlasv2.PaginatedApiStreamsTenant
@@ -87,7 +87,7 @@ func TestStreams(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var instance atlasv2.StreamsTenant
@@ -114,7 +114,7 @@ func TestStreams(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -129,7 +129,7 @@ func TestStreams(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var instances atlasv2.PaginatedApiStreamsTenant
@@ -154,7 +154,7 @@ func TestStreams(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var instance atlasv2.StreamsTenant
@@ -183,7 +183,7 @@ func TestStreams(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var instance atlasv2.StreamsTenant
@@ -212,7 +212,7 @@ func TestStreams(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var connection atlasv2.StreamsConnection
@@ -235,7 +235,7 @@ func TestStreams(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var connection atlasv2.StreamsConnection
@@ -260,7 +260,7 @@ func TestStreams(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var response atlasv2.PaginatedApiStreamsConnection
@@ -290,7 +290,7 @@ func TestStreams(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var connection atlasv2.StreamsConnection
@@ -314,7 +314,7 @@ func TestStreams(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Atlas Stream Processing connection '%s' deleted\n", connectionName)
@@ -335,7 +335,7 @@ func TestStreams(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Atlas Streams processor instance '%s' deleted\n", instanceName)

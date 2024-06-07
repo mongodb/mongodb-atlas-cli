@@ -54,7 +54,7 @@ func TestAlertConfig(t *testing.T) {
 			"--notificationEmailEnabled=true",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var alert admin.GroupAlertsConfig
 		require.NoError(t, json.Unmarshal(resp, &alert))
@@ -79,7 +79,7 @@ func TestAlertConfig(t *testing.T) {
 			alertID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var config admin.GroupAlertsConfig
 		require.NoError(t, json.Unmarshal(resp, &config))
@@ -93,7 +93,7 @@ func TestAlertConfig(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var config admin.PaginatedAlertConfig
 		require.NoError(t, json.Unmarshal(resp, &config))
@@ -108,7 +108,7 @@ func TestAlertConfig(t *testing.T) {
 			"-c",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var config []admin.GroupAlertsConfig
 		require.NoError(t, json.Unmarshal(resp, &config))
@@ -133,7 +133,7 @@ func TestAlertConfig(t *testing.T) {
 			"--notificationEmailEnabled=true",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -175,7 +175,7 @@ func TestAlertConfig(t *testing.T) {
 			"--file", fileName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -190,7 +190,7 @@ func TestAlertConfig(t *testing.T) {
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath, alertsEntity, configEntity, "delete", alertID, "--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -202,7 +202,7 @@ func TestAlertConfig(t *testing.T) {
 			"type",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var fields []string

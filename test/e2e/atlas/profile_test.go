@@ -36,7 +36,7 @@ func validateProfile(t *testing.T, cliPath string, profile string, profileValid 
 	cmd.Env = os.Environ()
 
 	// Execute the command
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 
 	// We only care about errors that happened due to something other than a non-zero exit code
 	if err != nil {

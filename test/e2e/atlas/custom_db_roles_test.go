@@ -56,7 +56,7 @@ func TestDBRoles(t *testing.T) {
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var role atlasv2.UserCustomDBRole
@@ -76,7 +76,7 @@ func TestDBRoles(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var roles []atlasv2.UserCustomDBRole
@@ -92,7 +92,7 @@ func TestDBRoles(t *testing.T) {
 			roleName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var role atlasv2.UserCustomDBRole
@@ -117,7 +117,7 @@ func TestDBRoles(t *testing.T) {
 			"--append",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var role atlasv2.UserCustomDBRole
@@ -143,7 +143,7 @@ func TestDBRoles(t *testing.T) {
 			"--privilege", updatePrivilege,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var role atlasv2.UserCustomDBRole
@@ -164,7 +164,7 @@ func TestDBRoles(t *testing.T) {
 			roleName,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)

@@ -48,7 +48,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"--role=ORG_READ_ONLY",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.ApiKeyUserDetails
 		require.NoError(t, json.Unmarshal(resp, &key))
@@ -64,7 +64,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var keys atlasv2.PaginatedApiApiUser
 		require.NoError(t, json.Unmarshal(resp, &keys))
@@ -79,7 +79,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"-c",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var keys []atlasv2.ApiKeyUserDetails
@@ -99,7 +99,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"--role=ORG_READ_ONLY",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.ApiKeyUserDetails
 		require.NoError(t, json.Unmarshal(resp, &key))
@@ -114,7 +114,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			ID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.ApiKeyUserDetails
 		require.NoError(t, json.Unmarshal(resp, &key))
@@ -129,7 +129,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			ID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
 		assert.Equal(t, expected, string(resp))

@@ -46,7 +46,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var sampleDatasetJob *atlasv2.SampleDatasetStatus
@@ -63,7 +63,7 @@ func TestDataLakePipelines(t *testing.T) {
 			sampleDatasetJob.GetId(),
 			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
-		resp, err = cmd.CombinedOutput()
+		resp, err = e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 		t.Log(string(resp))
 	})
@@ -78,7 +78,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var snapshot *atlasv2.BackupSnapshot
@@ -94,7 +94,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--clusterName", g.clusterName,
 			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
-		resp, err = cmd.CombinedOutput()
+		resp, err = e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 		t.Log(string(resp))
 	})
@@ -118,7 +118,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		req.NoError(err, string(resp))
 
@@ -135,7 +135,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"watch", pipelineName,
 			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 		t.Log(string(resp))
 	})
@@ -147,7 +147,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		a := assert.New(t)
@@ -163,7 +163,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var r []atlasv2.DataLakeIngestionPipeline
@@ -182,7 +182,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		req.NoError(err, string(resp))
 
@@ -200,7 +200,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		req.NoError(err, string(resp))
 
@@ -218,7 +218,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		req.NoError(err, string(resp))
 
@@ -235,7 +235,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		req.NoError(err, string(resp))
 
@@ -254,7 +254,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var r *atlasv2.PaginatedPipelineRun
@@ -272,7 +272,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		a := assert.New(t)
@@ -290,7 +290,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--pipeline", pipelineName,
 			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 		t.Log(string(resp))
 	})
@@ -304,7 +304,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--projectId", g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 		t.Log(string(resp))
 	})
@@ -318,7 +318,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var r []atlasv2.DiskBackupApiPolicyItem
@@ -336,7 +336,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var r *atlasv2.PaginatedBackupSnapshot
@@ -352,7 +352,7 @@ func TestDataLakePipelines(t *testing.T) {
 			"--projectId", g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("'%s' deleted\n", pipelineName)

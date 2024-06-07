@@ -53,7 +53,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 		cmd.Env = os.Environ()
 
 		a := assert.New(t)
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r atlasv2.PaginatedPrivateNetworkEndpointIdEntry
 		require.NoError(t, json.Unmarshal(resp, &r))
@@ -71,7 +71,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 		var r atlasv2.PrivateNetworkEndpointIdEntry
@@ -88,7 +88,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -108,7 +108,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("'%s' deleted\n", vpcID)

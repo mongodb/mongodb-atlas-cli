@@ -53,7 +53,7 @@ func TestAccessList(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err)
 
 		var entries *atlasv2.PaginatedNetworkAccess
@@ -78,7 +78,7 @@ func TestAccessList(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var entries *atlasv2.PaginatedNetworkAccess
 		require.NoError(t, json.Unmarshal(resp, &entries))
@@ -93,7 +93,7 @@ func TestAccessList(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var entry *atlasv2.NetworkPermissionEntry
 		require.NoError(t, json.Unmarshal(resp, &entry))
@@ -108,7 +108,7 @@ func TestAccessList(t *testing.T) {
 			g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", entry)
@@ -126,7 +126,7 @@ func TestAccessList(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var entries *atlasv2.PaginatedNetworkAccess
@@ -151,7 +151,7 @@ func TestAccessList(t *testing.T) {
 			g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", entry)
@@ -168,7 +168,7 @@ func TestAccessList(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var entries *atlasv2.PaginatedNetworkAccess
@@ -190,7 +190,7 @@ func TestAccessList(t *testing.T) {
 			g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", currentIPEntry)

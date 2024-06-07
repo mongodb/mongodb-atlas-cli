@@ -63,7 +63,7 @@ func TestShardedCluster(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var cluster atlasv2.AdvancedClusterDescription
@@ -75,7 +75,7 @@ func TestShardedCluster(t *testing.T) {
 	t.Run("Delete sharded cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath, clustersEntity, "delete", shardedClusterName, "--projectId", g.projectID, "--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("Deleting cluster '%s'", shardedClusterName)
@@ -92,7 +92,7 @@ func TestShardedCluster(t *testing.T) {
 		cmd.Env = os.Environ()
 		// this command will fail with 404 once the cluster is deleted
 		// we just need to wait for this to close the project
-		resp, _ := cmd.CombinedOutput()
+		resp, _ := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 }

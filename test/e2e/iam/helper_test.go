@@ -59,7 +59,7 @@ func createOrgAPIKey() (string, error) {
 		"--role=ORG_READ_ONLY",
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 
 	if err != nil {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
@@ -110,7 +110,7 @@ func createTeam(teamName string) (string, error) {
 		username,
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
@@ -155,7 +155,7 @@ func OrgNUser(n int) (username, userID string, err error) {
 		strconv.Itoa(n+1),
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		return "", "", fmt.Errorf("error loading org users: %w (%s)", err, string(resp))
 	}

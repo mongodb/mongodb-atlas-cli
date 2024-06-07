@@ -35,7 +35,7 @@ func TestAtlasCLIAutocomplete(t *testing.T) {
 		t.Run(option, func(t *testing.T) {
 			cmd := exec.Command(cliPath, completionEntity, option)
 			cmd.Env = os.Environ()
-			if resp, err := cmd.CombinedOutput(); err != nil {
+			if resp, err := e2e.RunAndGetStdOut(cmd); err != nil {
 				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 			}
 		})

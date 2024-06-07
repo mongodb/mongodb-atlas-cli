@@ -52,7 +52,7 @@ func TestSnapshots(t *testing.T) {
 			"--mdbVersion", mdbVersion,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var cluster *atlasv2.AdvancedClusterDescription
@@ -74,7 +74,7 @@ func TestSnapshots(t *testing.T) {
 			"test-snapshot",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 
@@ -93,7 +93,7 @@ func TestSnapshots(t *testing.T) {
 			"--clusterName",
 			clusterName)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -105,7 +105,7 @@ func TestSnapshots(t *testing.T) {
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 		var backups atlasv2.PaginatedCloudBackupReplicaSet
@@ -123,7 +123,7 @@ func TestSnapshots(t *testing.T) {
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 
@@ -142,7 +142,7 @@ func TestSnapshots(t *testing.T) {
 			clusterName,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -155,7 +155,7 @@ func TestSnapshots(t *testing.T) {
 			"--clusterName",
 			clusterName)
 		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
+		resp, _ := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 }

@@ -52,7 +52,7 @@ func TestProjectSettings(t *testing.T) {
 			"get",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var settings map[string]interface{}
 		if err := json.Unmarshal(resp, &settings); err != nil {
@@ -74,7 +74,7 @@ func TestProjectSettings(t *testing.T) {
 			"--disableCollectDatabaseSpecificsStatistics",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var settings atlasv2.GroupSettings
 		require.NoError(t, json.Unmarshal(resp, &settings))

@@ -46,7 +46,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 			"--tag", "env=e2e",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		require.NoError(t, watchCluster(g.projectID, g.clusterName))
 		cluster := fetchCluster(t, cliPath, g.projectID, g.clusterName)
@@ -65,7 +65,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 			"--tag", "env=e2e",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		require.NoError(t, watchCluster(g.projectID, g.clusterName))
 		cluster := fetchCluster(t, cliPath, g.projectID, g.clusterName)
@@ -84,7 +84,7 @@ func fetchCluster(t *testing.T, cliPath, projectID, clusterName string) *atlasv2
 		"--projectId", projectID,
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	req := require.New(t)
 	req.NoError(err, string(resp))
 	var c *atlasv2.AdvancedClusterDescription

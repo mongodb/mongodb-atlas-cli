@@ -48,7 +48,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"ORG_MEMBER",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
@@ -66,7 +66,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
@@ -84,7 +84,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			orgInvitationID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
@@ -106,7 +106,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			roleNameOrg,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
@@ -127,7 +127,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			roleNameOrg,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
@@ -145,7 +145,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			orgInvitationID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Invitation '%s' deleted\n", orgInvitationID)

@@ -17,7 +17,6 @@ package deployments
 import (
 	"context"
 	"errors"
-	"os/exec"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
@@ -71,7 +70,7 @@ func (opts *PauseOpts) Run(ctx context.Context) error {
 }
 
 func (opts *PauseOpts) RunLocal(ctx context.Context, deployment options.Deployment) error {
-	if err := opts.pauseContainer(ctx, deployment); err != nil {
+	if err := opts.stopContainer(ctx, deployment); err != nil {
 		return err
 	}
 
@@ -81,7 +80,7 @@ func (opts *PauseOpts) RunLocal(ctx context.Context, deployment options.Deployme
 		})
 }
 
-func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.Deployment) error {
+func (opts *PauseOpts) stopContainer(ctx context.Context, deployment options.Deployment) error {
 	if deployment.StateName == options.PausedState || deployment.StateName == options.StoppedState {
 		return nil
 	}
@@ -92,11 +91,7 @@ func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.De
 	opts.StartSpinner()
 	defer opts.StopSpinner()
 
-	err := opts.PodmanClient.Exec(ctx, opts.LocalMongodHostname(), "mongod", "--shutdown")
-	var exitErr *exec.ExitError
-	if errors.As(err, &exitErr) && exitErr.ExitCode() == podmanContainerTerminatedExitCode {
-		return nil
-	}
+	_, err := opts.PodmanClient.StopContainers(ctx, opts.LocalMongodHostname())
 	return err
 }
 
@@ -110,10 +105,6 @@ func (opts *PauseOpts) RunAtlas() error {
 	}
 
 	return opts.Print(r)
-}
-
-func (opts *PauseOpts) StopMongoD(ctx context.Context, names string) error {
-	return opts.PodmanClient.Exec(ctx, "-d", names, "mongod", "--shutdown")
 }
 
 func (opts *PauseOpts) PostRun() error {

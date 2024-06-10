@@ -57,14 +57,11 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 	}
 
 	var err error
-	d.Containers, err = opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname())
+	d.Containers, err = opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname())
 	if err != nil {
 		d.Errors = append(d.Errors, err)
 	}
 
-	if d.Logs.MongoT, err = opts.PodmanClient.ContainerLogs(ctx, opts.LocalMongotHostname()); err != nil {
-		d.Errors = append(d.Errors, err)
-	}
 	if d.Logs.MongoD, err = opts.PodmanClient.ContainerLogs(ctx, opts.LocalMongodHostname()); err != nil {
 		d.Errors = append(d.Errors, err)
 	}

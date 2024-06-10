@@ -92,12 +92,6 @@ func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.De
 	opts.StartSpinner()
 	defer opts.StopSpinner()
 
-	// search for a process "java ... mongot", extract the process ID, kill the process with SIGTERM (15)
-	const stopMongot = "grep -l java.*mongot /proc/*/cmdline | awk -F'/' '{print $3; exit}' | while read -r pid; do kill -15 $pid; done"
-	if err := opts.PodmanClient.Exec(ctx, opts.LocalMongotHostname(), "/bin/sh", "-c", stopMongot); err != nil {
-		return err
-	}
-
 	err := opts.PodmanClient.Exec(ctx, opts.LocalMongodHostname(), "mongod", "--shutdown")
 	var exitErr *exec.ExitError
 	if errors.As(err, &exitErr) && exitErr.ExitCode() == podmanContainerTerminatedExitCode {

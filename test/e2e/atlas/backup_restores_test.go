@@ -54,7 +54,7 @@ func TestRestores(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 
@@ -75,7 +75,7 @@ func TestRestores(t *testing.T) {
 			"--projectId",
 			g.projectID)
 		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
+		resp, _ := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 
@@ -97,7 +97,7 @@ func TestRestores(t *testing.T) {
 			g2.clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 		var result atlasv2.DiskBackupSnapshotRestoreJob
@@ -117,7 +117,7 @@ func TestRestores(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})
@@ -132,7 +132,7 @@ func TestRestores(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 		var result atlasv2.PaginatedCloudBackupRestoreJob
@@ -152,7 +152,7 @@ func TestRestores(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 
@@ -173,7 +173,7 @@ func TestRestores(t *testing.T) {
 			g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -188,7 +188,7 @@ func TestRestores(t *testing.T) {
 			"--projectId",
 			g.projectID)
 		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
+		resp, _ := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 }

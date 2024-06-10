@@ -90,7 +90,7 @@ func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 		"--force")
 
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	expected := fmt.Sprintf("Archive '%s' deleted\n", archiveID)
 	assert.Equal(t, expected, string(resp))
@@ -165,7 +165,7 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 		"-o=json")
 
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
@@ -188,7 +188,7 @@ func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiv
 		"-o=json")
 
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
@@ -211,7 +211,7 @@ func listOnlineArchives(t *testing.T, cliPath, projectID, clusterName string) {
 		"-o=json")
 
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
@@ -239,7 +239,7 @@ func createOnlineArchive(t *testing.T, cliPath, projectID, clusterName string) s
 		"-o=json")
 
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}

@@ -62,7 +62,7 @@ func TestExportJobs(t *testing.T) {
 			"--mdbVersion", mdbVersion,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
 		var cluster *atlasv2.AdvancedClusterDescription
@@ -87,7 +87,7 @@ func TestExportJobs(t *testing.T) {
 			iamRoleID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 		var exportBucket atlasv2.DiskBackupSnapshotAWSExportBucket
 		r.NoError(json.Unmarshal(resp, &exportBucket))
@@ -105,7 +105,7 @@ func TestExportJobs(t *testing.T) {
 			"test-snapshot",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
 
@@ -125,7 +125,7 @@ func TestExportJobs(t *testing.T) {
 			"--clusterName",
 			clusterName)
 		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
+		resp, _ := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 
@@ -143,7 +143,7 @@ func TestExportJobs(t *testing.T) {
 			snapshotID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
 		var job atlasv2.DiskBackupExportJob
@@ -162,7 +162,7 @@ func TestExportJobs(t *testing.T) {
 			"--clusterName",
 			clusterName)
 		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
+		resp, _ := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 
@@ -178,7 +178,7 @@ func TestExportJobs(t *testing.T) {
 			exportJobID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
 
@@ -196,7 +196,7 @@ func TestExportJobs(t *testing.T) {
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
 		var jobs atlasv2.PaginatedApiAtlasDiskBackupExportJob
@@ -214,7 +214,7 @@ func TestExportJobs(t *testing.T) {
 			clusterName,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -227,7 +227,7 @@ func TestExportJobs(t *testing.T) {
 			"--clusterName",
 			clusterName)
 		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
+		resp, _ := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 }

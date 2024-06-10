@@ -120,7 +120,7 @@ func TestConfig(t *testing.T) {
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath, configEntity, "ls")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
@@ -138,7 +138,7 @@ func TestConfig(t *testing.T) {
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
@@ -162,7 +162,7 @@ func TestConfig(t *testing.T) {
 			"renamed",
 		)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
@@ -174,7 +174,7 @@ func TestConfig(t *testing.T) {
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath, configEntity, "delete", "renamed", "--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))

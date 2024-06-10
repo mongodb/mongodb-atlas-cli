@@ -51,7 +51,7 @@ func TestDeploymentsLocal(t *testing.T) {
 
 			cmd.Env = os.Environ()
 
-			r, errDiag := cmd.CombinedOutput()
+			r, errDiag := e2e.RunAndGetStdOut(cmd)
 			t.Log("Diagnostics")
 			t.Log(errDiag, string(r))
 		}(t)
@@ -67,7 +67,7 @@ func TestDeploymentsLocal(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, setupErr := cmd.CombinedOutput()
+		r, setupErr := e2e.RunAndGetStdOut(cmd)
 		req.NoError(setupErr, string(r))
 	})
 
@@ -83,7 +83,7 @@ func TestDeploymentsLocal(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, delErr := cmd.CombinedOutput()
+		r, delErr := e2e.RunAndGetStdOut(cmd)
 		req.NoError(delErr, string(r))
 	})
 
@@ -128,7 +128,7 @@ func TestDeploymentsLocal(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, err := cmd.CombinedOutput()
+		r, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(r))
 
 		connectionString := strings.TrimSpace(string(r))
@@ -185,7 +185,7 @@ func TestDeploymentsLocal(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, err := cmd.CombinedOutput()
+		r, err := e2e.RunAndGetStdOut(cmd)
 		out := string(r)
 		require.NoError(t, err, out)
 		assert.Contains(t, out, "Search index created with ID:")
@@ -235,7 +235,7 @@ func TestDeploymentsLocal(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, err := cmd.CombinedOutput()
+		r, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(r))
 	})
 
@@ -298,7 +298,7 @@ func TestDeploymentsLocal(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, err := cmd.CombinedOutput()
+		r, err := e2e.RunAndGetStdOut(cmd)
 		out := string(r)
 		require.NoError(t, err, out)
 		assert.Contains(t, out, "Search index created with ID:")

@@ -59,7 +59,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
@@ -84,7 +84,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 			teamID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 		var teams atlasv2.PaginatedApiAppUser
@@ -102,7 +102,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 			teamID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 		var teams []atlasv2.CloudAppUser
@@ -120,7 +120,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 			teamID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)

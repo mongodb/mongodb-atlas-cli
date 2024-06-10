@@ -93,7 +93,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, err := cmd.CombinedOutput()
+		r, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(r))
 
 		connectionString := strings.TrimSpace(string(r))
@@ -137,7 +137,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		assert.Contains(t, string(resp), fmt.Sprintf("Starting deployment '%s'", clusterName))
 	})
@@ -162,7 +162,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 
-		r, err := cmd.CombinedOutput()
+		r, err := e2e.RunAndGetStdOut(cmd)
 		out := string(r)
 		require.NoError(t, err, out)
 		assert.Contains(t, out, "Search index created")
@@ -181,7 +181,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		expected := "Deployment '" + clusterName + "' deleted\n<nil>\n"

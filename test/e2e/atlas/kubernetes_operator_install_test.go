@@ -55,7 +55,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"install",
 			"--operatorVersion", "1.1.0")
 		cmd.Env = os.Environ()
-		resp, inErr := cmd.CombinedOutput()
+		resp, inErr := e2e.RunAndGetStdOut(cmd)
 		require.Error(t, inErr, string(resp))
 		assert.Equal(t, "Error: version 1.1.0 is not supported\n", string(resp))
 	})
@@ -67,7 +67,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"install",
 			"--operatorVersion", "100.0.0")
 		cmd.Env = os.Environ()
-		resp, inErr := cmd.CombinedOutput()
+		resp, inErr := e2e.RunAndGetStdOut(cmd)
 		require.Error(t, inErr, string(resp))
 		assert.Equal(t, "Error: version 100.0.0 is not supported\n", string(resp))
 	})
@@ -79,7 +79,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"install",
 			"--kubeconfig", "/path/to/non/existing/config")
 		cmd.Env = os.Environ()
-		resp, inErr := cmd.CombinedOutput()
+		resp, inErr := e2e.RunAndGetStdOut(cmd)
 		require.Error(t, inErr, string(resp))
 		assert.Equal(t, "Error: unable to prepare client configuration: invalid configuration: no configuration has been provided, try setting KUBERNETES_MASTER environment variable\n", string(resp))
 	})
@@ -95,7 +95,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"install",
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
-		resp, inErr := cmd.CombinedOutput()
+		resp, inErr := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, inErr, string(resp))
 		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
@@ -115,7 +115,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--targetNamespace", operatorNamespace,
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
-		resp, inErr := cmd.CombinedOutput()
+		resp, inErr := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, inErr, string(resp))
 		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
@@ -139,7 +139,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--watchNamespace", operatorWatch2,
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
-		resp, inErr := cmd.CombinedOutput()
+		resp, inErr := e2e.RunAndGetStdOut(cmd)
 		req.NoError(inErr, string(resp))
 		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 		checkDeployment(t, operator, operatorNamespace)
@@ -159,7 +159,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--watchNamespace", operatorNamespace,
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
-		resp, inErr := cmd.CombinedOutput()
+		resp, inErr := e2e.RunAndGetStdOut(cmd)
 		req.NoError(inErr, string(resp))
 		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
@@ -181,7 +181,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--import",
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
-		resp, inErr := cmd.CombinedOutput()
+		resp, inErr := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, inErr, string(resp))
 		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
@@ -256,7 +256,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--import",
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
-		resp, inErr := cmd.CombinedOutput()
+		resp, inErr := e2e.RunAndGetStdOut(cmd)
 		req.NoError(inErr, string(resp))
 		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
@@ -286,7 +286,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--targetNamespace", operatorNamespace,
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
-		resp, inErr := cmd.CombinedOutput()
+		resp, inErr := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, inErr, string(resp))
 		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
@@ -450,7 +450,7 @@ func cleanUpKeys(t *testing.T, operator *operatorHelper, namespace string, cliPa
 		"ls",
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	var keys atlasv2.PaginatedApiApiUser
@@ -469,7 +469,7 @@ func cleanUpKeys(t *testing.T, operator *operatorHelper, namespace string, cliPa
 				keyID,
 				"--force")
 			cmd.Env = os.Environ()
-			_, err = cmd.CombinedOutput()
+			_, err = e2e.RunAndGetStdOut(cmd)
 			require.NoError(t, err)
 		}
 	}

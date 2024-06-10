@@ -47,7 +47,7 @@ func TestAlerts(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var alerts atlasv2.PaginatedAlert
 		require.NoError(t, json.Unmarshal(resp, &alerts))
@@ -66,7 +66,7 @@ func TestAlerts(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -78,7 +78,7 @@ func TestAlerts(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -94,7 +94,7 @@ func TestAlerts(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		var alert atlasv2.AlertViewForNdsGroup
@@ -116,7 +116,7 @@ func TestAlerts(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var alert atlasv2.AlertViewForNdsGroup
 		require.NoError(t, json.Unmarshal(resp, &alert))
@@ -135,7 +135,7 @@ func TestAlerts(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var alert atlasv2.AlertViewForNdsGroup
 		require.NoError(t, json.Unmarshal(resp, &alert))
@@ -153,7 +153,7 @@ func TestAlerts(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		var alert atlasv2.AlertViewForNdsGroup

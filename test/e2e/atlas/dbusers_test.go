@@ -71,7 +71,7 @@ func TestDBUserWithFlags(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var users atlasv2.PaginatedApiAtlasDatabaseUser
@@ -89,7 +89,7 @@ func TestDBUserWithFlags(t *testing.T) {
 			"-c",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var users []atlasv2.CloudDatabaseUser
@@ -205,7 +205,7 @@ func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 
 	cmd.Env = os.Environ()
 
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	var user atlasv2.CloudDatabaseUser
@@ -230,7 +230,7 @@ func testDescribeUser(t *testing.T, cliPath, username string) {
 		username,
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	var user atlasv2.CloudDatabaseUser
@@ -244,7 +244,7 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	t.Helper()
 
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	var user atlasv2.CloudDatabaseUser
@@ -273,7 +273,7 @@ func testDeleteUser(t *testing.T, cliPath, dbusersEntity, username string) {
 		"--authDB",
 		"admin")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	expected := fmt.Sprintf("DB user '%s' deleted\n", username)

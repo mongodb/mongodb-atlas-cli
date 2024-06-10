@@ -76,7 +76,7 @@ func TestSearchNodes(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
 		require.NoError(t, err, resp)
@@ -104,7 +104,7 @@ func TestSearchNodes(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
 		require.NoError(t, err, resp)
@@ -134,7 +134,7 @@ func TestSearchNodes(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
 		require.NoError(t, err, resp)
@@ -162,7 +162,7 @@ func TestSearchNodes(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
 		require.NoError(t, err, resp)
@@ -192,7 +192,7 @@ func TestSearchNodes(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		respStr := strings.TrimLeft(string(resp), ".")
 
 		require.NoError(t, err, respStr)

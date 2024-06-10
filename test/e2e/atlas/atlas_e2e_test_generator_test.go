@@ -261,7 +261,7 @@ func deleteOrgInvitations(t *testing.T, cliPath string) {
 		"ls",
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	t.Logf("%s\n", resp)
 	require.NoError(t, err, string(resp))
 	var invitations []atlasv2.OrganizationInvitation
@@ -279,7 +279,7 @@ func deleteOrgTeams(t *testing.T, cliPath string) {
 		"ls",
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	t.Logf("%s\n", resp)
 	require.NoError(t, err, string(resp))
 	var teams atlasv2.PaginatedTeam
@@ -298,7 +298,7 @@ func deleteOrgInvitation(t *testing.T, cliPath string, id string) {
 		id,
 		"--force")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 }
 
@@ -544,5 +544,5 @@ func (g *atlasE2ETestGenerator) runCommand(args ...string) ([]byte, error) {
 	cmd := exec.Command(cliPath, args...)
 
 	cmd.Env = os.Environ()
-	return cmd.CombinedOutput()
+	return e2e.RunAndGetStdOut(cmd)
 }

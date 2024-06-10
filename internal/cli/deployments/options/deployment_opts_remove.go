@@ -31,10 +31,6 @@ func (opts *DeploymentOpts) RemoveLocal(ctx context.Context) error {
 		return errRemove
 	}
 
-	if _, errRemove := opts.PodmanClient.RemoveNetworks(ctx, opts.LocalNetworkName()); errRemove != nil {
-		return errRemove
-	}
-
 	if _, errRemove := opts.PodmanClient.RemoveVolumes(ctx, volumes...); errRemove != nil {
 		return errRemove
 	}

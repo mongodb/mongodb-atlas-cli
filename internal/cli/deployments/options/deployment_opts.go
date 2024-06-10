@@ -44,19 +44,18 @@ const (
 	CheckHostnamePrefix  = "check"
 	spinnerSpeed         = 100 * time.Millisecond
 	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
-	clusterNamePattern    = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
-	MongotDockerImageName = "docker.io/mongodb/mongodb-atlas-search:preview"
-	PausedState           = "PAUSED"
-	StoppedState          = "STOPPED"
-	IdleState             = "IDLE"
-	DeletingState         = "DELETING"
-	RestartingState       = "RESTARTING"
-	LocalCluster          = "local"
-	AtlasCluster          = "atlas"
-	CompassConnect        = "compass"
-	MongoshConnect        = "mongosh"
-	PromptTypeMessage     = "What type of deployment would you like to work with?"
-	MaxItemsPerPage       = 500
+	clusterNamePattern = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
+	PausedState        = "PAUSED"
+	StoppedState       = "STOPPED"
+	IdleState          = "IDLE"
+	DeletingState      = "DELETING"
+	RestartingState    = "RESTARTING"
+	LocalCluster       = "local"
+	AtlasCluster       = "atlas"
+	CompassConnect     = "compass"
+	MongoshConnect     = "mongosh"
+	PromptTypeMessage  = "What type of deployment would you like to work with?"
+	MaxItemsPerPage    = 500
 )
 
 var (
@@ -134,10 +133,6 @@ func (opts *DeploymentOpts) LocalCheckHostname() string {
 	return fmt.Sprintf("%s-%s", CheckHostnamePrefix, opts.DeploymentName)
 }
 
-func (opts *DeploymentOpts) LocalNetworkName() string {
-	return "mdb-local-" + opts.DeploymentName
-}
-
 func (opts *DeploymentOpts) LocalMongotDataVolume() string {
 	return "mongot-local-data-" + opts.DeploymentName
 }
@@ -151,7 +146,7 @@ func (opts *DeploymentOpts) LocalMongoMetricsVolume() string {
 }
 
 func (opts *DeploymentOpts) MongodDockerImageName() string {
-	return fmt.Sprintf("docker.io/mongodb/mongodb-enterprise-server:%s-ubi8", opts.MdbVersion)
+	return "docker.io/mongodb/mongodb-atlas-local:" + opts.MdbVersion
 }
 
 func LocalDeploymentName(hostname string) string {

@@ -70,15 +70,6 @@ func (opts *StartOpts) RunLocal(ctx context.Context, deployment options.Deployme
 		return err
 	}
 
-	mongotIPAddress, errIP := opts.MongotIP(ctx)
-	if errIP != nil {
-		return errIP
-	}
-
-	if err := opts.WaitForMongot(ctx, mongotIPAddress); err != nil {
-		return err
-	}
-
 	return opts.Print(
 		admin.AdvancedClusterDescription{
 			Name: &opts.DeploymentName,

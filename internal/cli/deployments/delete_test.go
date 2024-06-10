@@ -95,13 +95,6 @@ func TestDelete_Run_Local(t *testing.T) {
 		Return(nil, nil).
 		Times(1)
 
-	deploymentsTest.
-		MockPodman.
-		EXPECT().
-		RemoveNetworks(ctx, "mdb-local-"+opts.DeploymentName).
-		Return(nil, nil).
-		Times(1)
-
 	const mongodLocalData = "mongod-local-data-"
 	deploymentsTest.
 		MockPodman.

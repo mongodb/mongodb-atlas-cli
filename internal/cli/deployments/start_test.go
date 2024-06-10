@@ -27,7 +27,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -56,30 +55,6 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 
 	expected := deploymentsTest.MockContainerWithState("paused")
 	deploymentsTest.LocalMockFlowWithMockContainer(ctx, expected)
-
-	mockPodman.
-		EXPECT().
-		ContainerInspect(ctx, startOpts.LocalMongotHostname()).
-		Return([]*podman.InspectContainerData{
-			{
-				NetworkSettings: &podman.InspectNetworkSettings{
-					Networks: map[string]*podman.InspectAdditionalNetwork{
-						startOpts.LocalNetworkName(): {
-							InspectBasicNetworkConfig: podman.InspectBasicNetworkConfig{
-								IPAddress: "1.2.3.4",
-							},
-						},
-					},
-				},
-			},
-		}, nil).
-		Times(1)
-
-	mockPodman.
-		EXPECT().
-		Exec(gomock.Any(), startOpts.LocalMongodHostname(), "/bin/sh", "-c", gomock.Any()).
-		Return(nil).
-		Times(1)
 
 	mockPodman.
 		EXPECT().
@@ -113,30 +88,6 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 
 	expected := deploymentsTest.MockContainerWithState("exited")
 	deploymentsTest.LocalMockFlowWithMockContainer(ctx, expected)
-
-	mockPodman.
-		EXPECT().
-		ContainerInspect(ctx, startOpts.LocalMongotHostname()).
-		Return([]*podman.InspectContainerData{
-			{
-				NetworkSettings: &podman.InspectNetworkSettings{
-					Networks: map[string]*podman.InspectAdditionalNetwork{
-						startOpts.LocalNetworkName(): {
-							InspectBasicNetworkConfig: podman.InspectBasicNetworkConfig{
-								IPAddress: "1.2.3.4",
-							},
-						},
-					},
-				},
-			},
-		}, nil).
-		Times(1)
-
-	mockPodman.
-		EXPECT().
-		Exec(gomock.Any(), startOpts.LocalMongodHostname(), "/bin/sh", "-c", gomock.Any()).
-		Return(nil).
-		Times(1)
 
 	mockPodman.
 		EXPECT().

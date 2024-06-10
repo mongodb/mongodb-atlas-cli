@@ -40,7 +40,6 @@ type diagnostic struct {
 	Diagnostic *podman.Diagnostic
 	Containers []*podman.InspectContainerData
 	Logs       diagnosticLogs
-	Network    *podman.Network
 	Errors     []error
 }
 type machineDiagnostic struct {
@@ -61,14 +60,6 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 	d.Containers, err = opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname())
 	if err != nil {
 		d.Errors = append(d.Errors, err)
-	}
-
-	n, nErr := opts.PodmanClient.Network(ctx, opts.LocalNetworkName())
-	if nErr != nil {
-		d.Errors = append(d.Errors, nErr)
-	}
-	if len(n) > 0 {
-		d.Network = n[0]
 	}
 
 	if d.Logs.MongoT, err = opts.PodmanClient.ContainerLogs(ctx, opts.LocalMongotHostname()); err != nil {

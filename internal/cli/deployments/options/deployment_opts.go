@@ -125,16 +125,8 @@ func (opts *DeploymentOpts) LocalMongodHostname() string {
 	return fmt.Sprintf("%s-%s", MongodHostnamePrefix, opts.DeploymentName)
 }
 
-func (opts *DeploymentOpts) LocalMongotHostname() string {
-	return fmt.Sprintf("%s-%s", MongotHostnamePrefix, opts.DeploymentName)
-}
-
 func (opts *DeploymentOpts) LocalCheckHostname() string {
 	return fmt.Sprintf("%s-%s", CheckHostnamePrefix, opts.DeploymentName)
-}
-
-func (opts *DeploymentOpts) LocalMongotDataVolume() string {
-	return "mongot-local-data-" + opts.DeploymentName
 }
 
 func (opts *DeploymentOpts) LocalMongodDataVolume() string {

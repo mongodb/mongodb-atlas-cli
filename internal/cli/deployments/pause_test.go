@@ -55,24 +55,11 @@ func TestPause_RunLocal(t *testing.T) {
 
 	deploymentTest.LocalMockFlow(ctx)
 
-	const stopMongot = "grep -l java.*mongot /proc/*/cmdline | awk -F'/' '{print $3; exit}' | while read -r pid; do kill -15 $pid; done"
-	mockPodman.
-		EXPECT().
-		Exec(ctx, pauseOpts.LocalMongotHostname(), "/bin/sh", "-c", stopMongot).
-		Return(nil).
-		Times(1)
-
 	mockPodman.
 		EXPECT().
 		Exec(ctx, pauseOpts.LocalMongodHostname(), "mongod", "--shutdown").
 		Return(nil).
 		Times(1)
-
-	mockPodman.
-		EXPECT().
-		StopContainers(ctx, pauseOpts.LocalMongotHostname()).
-		Return(nil, nil).
-		Times(0)
 
 	if err := pauseOpts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

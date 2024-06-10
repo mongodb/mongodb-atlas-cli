@@ -101,7 +101,6 @@ func TestDelete_Run_Local(t *testing.T) {
 		EXPECT().
 		RemoveVolumes(ctx,
 			mongodLocalData+opts.DeploymentName,
-			"mongot-local-data-"+opts.DeploymentName,
 			"mongot-local-metrics-"+opts.DeploymentName,
 		).
 		Return(nil, nil).

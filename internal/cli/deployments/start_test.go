@@ -58,7 +58,7 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 
 	mockPodman.
 		EXPECT().
-		UnpauseContainers(ctx, startOpts.LocalMongodHostname(), startOpts.LocalMongotHostname()).
+		UnpauseContainers(ctx, startOpts.LocalMongodHostname()).
 		Return(nil, nil).
 		Times(1)
 
@@ -91,7 +91,7 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 
 	mockPodman.
 		EXPECT().
-		StartContainers(ctx, startOpts.LocalMongodHostname(), startOpts.LocalMongotHostname()).
+		StartContainers(ctx, startOpts.LocalMongodHostname()).
 		Return(nil, nil).
 		Times(1)
 

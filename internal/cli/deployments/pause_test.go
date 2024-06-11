@@ -57,8 +57,8 @@ func TestPause_RunLocal(t *testing.T) {
 
 	mockPodman.
 		EXPECT().
-		Exec(ctx, pauseOpts.LocalMongodHostname(), "mongod", "--shutdown").
-		Return(nil).
+		StopContainers(ctx, pauseOpts.LocalMongodHostname()).
+		Return([]byte{}, nil).
 		Times(1)
 
 	if err := pauseOpts.Run(ctx); err != nil {

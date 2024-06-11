@@ -16,6 +16,7 @@ package container
 
 import (
 	"context"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 )
@@ -76,4 +77,30 @@ func (e *podmanImpl) ContainerRun(ctx context.Context, image string, flags *Cont
 
 	buf, err := e.client.RunContainer(ctx, podmanOpts)
 	return string(buf), err
+}
+
+func (e *podmanImpl) ContainerList(ctx context.Context, nameFilter ...string) ([]Container, error) {
+	containers, err := e.client.ListContainers(ctx, strings.Join(nameFilter, " "))
+	if err != nil {
+		return nil, err
+	}
+	result := make([]Container, 0, len(containers))
+	for _, c := range containers {
+		ports := make([]Port, 0, len(c.Ports))
+		for _, p := range c.Ports {
+			ports = append(ports, Port{
+				ContainerPort: p.ContainerPort,
+				HostPort:      p.HostPort,
+			})
+		}
+		result = append(result, Container{
+			ID:     c.ID,
+			Image:  c.Image,
+			Names:  c.Names,
+			State:  c.State,
+			Ports:  ports,
+			Labels: c.Labels,
+		})
+	}
+	return result, nil
 }

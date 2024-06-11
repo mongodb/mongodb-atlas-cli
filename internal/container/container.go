@@ -42,6 +42,7 @@ type ContainerRunFlags struct {
 type Engine interface {
 	ContainerLogs(context.Context, string) ([]string, error)
 	ContainerRun(context.Context, string, *ContainerRunFlags) (string, error)
+	ContainerList(context.Context, ...string) ([]Container, error)
 }
 
 type Container struct {

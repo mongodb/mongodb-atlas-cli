@@ -176,7 +176,7 @@ func (opts *DeploymentOpts) IsCliAuthenticated() bool {
 }
 
 func (opts *DeploymentOpts) GetLocalDeployments(ctx context.Context) ([]Deployment, error) {
-	mdbContainers, err := opts.PodmanClient.ListContainers(ctx, MongodHostnamePrefix)
+	mdbContainers, err := opts.ContainerEngine.ContainerList(ctx, MongodHostnamePrefix)
 	if err != nil {
 		return nil, err
 	}

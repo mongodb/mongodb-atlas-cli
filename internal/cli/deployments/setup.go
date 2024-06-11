@@ -140,7 +140,7 @@ func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, st
 	opts.logStepStarted("Starting your local environment...", currentStep, steps)
 	defer opts.stop()
 
-	containers, errList := opts.PodmanClient.ListContainers(ctx, options.MongodHostnamePrefix)
+	containers, errList := opts.ContainerEngine.ContainerList(ctx, options.MongodHostnamePrefix)
 	if errList != nil {
 		return errList
 	}
@@ -225,7 +225,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 	return err
 }
 
-func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Container) error {
+func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []container.Container) error {
 	mongodContainerName := opts.LocalMongodHostname()
 	for _, c := range containers {
 		for _, n := range c.Names {

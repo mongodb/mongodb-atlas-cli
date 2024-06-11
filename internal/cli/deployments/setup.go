@@ -134,13 +134,6 @@ func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, current
 	return nil
 }
 
-func (opts *SetupOpts) setupPodman(ctx context.Context, currentStep int, steps int) error {
-	opts.logStepStarted("Downloading and completing the configuration...", currentStep, steps)
-	defer opts.stop()
-
-	return opts.PodmanClient.Ready(ctx)
-}
-
 func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, steps int) error {
 	opts.logStepStarted("Starting your local environment...", currentStep, steps)
 	defer opts.stop()
@@ -153,18 +146,11 @@ func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, st
 	return opts.validateLocalDeploymentsSettings(containers)
 }
 
-func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needPodmanSetup bool, needToPullImages bool) {
+func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needToPullImages bool) {
 	steps = 2
-	needPodmanSetup = false
 	needToPullImages = false
 
 	setupState := opts.PodmanClient.Diagnostics(ctx)
-
-	if setupState.MachineRequired &&
-		(!setupState.MachineFound || setupState.MachineState != "running") {
-		steps++
-		needPodmanSetup = true
-	}
 
 	foundMongod := false
 	for _, image := range setupState.Images {
@@ -175,11 +161,11 @@ func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needPodmanSetu
 		steps++
 		needToPullImages = true
 	}
-	return steps, needPodmanSetup, needToPullImages
+	return steps, needToPullImages
 }
 
 func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
-	steps, needPodmanSetup, needToPullImages := opts.planSteps(ctx)
+	steps, needToPullImages := opts.planSteps(ctx)
 	currentStep := 1
 	longWaitWarning := ""
 	if steps > shortStepCount {
@@ -187,14 +173,6 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	}
 
 	_, _ = log.Warningf("Creating your cluster %s%s\n", opts.DeploymentName, longWaitWarning)
-
-	// podman config
-	if needPodmanSetup {
-		if err := opts.setupPodman(ctx, currentStep, steps); err != nil {
-			return err
-		}
-		currentStep++
-	}
 
 	// containers check
 	if err := opts.startEnvironment(ctx, currentStep, steps); err != nil {

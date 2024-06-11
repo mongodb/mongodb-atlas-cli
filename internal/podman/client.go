@@ -25,25 +25,11 @@ import (
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/shirou/gopsutil/v3/mem"
 )
 
 var (
 	ErrPodmanNotFound  = errors.New("podman not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs")
 	ErrNetworkNotFound = errors.New("network ip range was not found")
-)
-
-const (
-	defaultMachineCPUs       = "2"
-	defaultMachineMemory     = "2048"
-	notEnoughMemoryAvailable = `
-Your available memory '%d' is below '%s'. Using default podman memory settings.
-
-`
-	notEnoughCPUsAvailable = `
-Your available CPU cores '%d' is below '%s'. Using default podman CPU settings.
-
-`
 )
 
 type Diagnostic struct {
@@ -201,49 +187,6 @@ func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	return d
 }
 
-func (o *client) machineInit(ctx context.Context) error {
-	_, err := o.machineInspect(ctx)
-	if err == nil { // machine is already present
-		return nil
-	}
-
-	if _, err = o.runPodman(ctx, newMachineInitArgs()...); err != nil {
-		return err
-	}
-	return nil
-}
-
-func newMachineInitArgs() []string {
-	args := []string{"machine", "init"}
-	memory, _ := mem.VirtualMemory()
-	defaultMachineMemoryUint64, err := strconv.ParseUint(defaultMachineMemory, 10, 64)
-	if err != nil {
-		_, _ = log.Warning(err)
-		return args
-	}
-
-	if memory.Available > defaultMachineMemoryUint64 {
-		args = append(args, "--memory", defaultMachineMemory)
-	} else {
-		_, _ = log.Warningf(notEnoughMemoryAvailable, memory.Available, defaultMachineMemory)
-	}
-
-	cores := runtime.NumCPU()
-	defaultCPUs, err := strconv.Atoi(defaultMachineCPUs)
-	if err != nil {
-		_, _ = log.Warning(err)
-		return args
-	}
-
-	if cores >= defaultCPUs {
-		args = append(args, "--cpus", defaultMachineCPUs)
-	} else {
-		_, _ = log.Warningf(notEnoughCPUsAvailable, cores, defaultMachineCPUs)
-	}
-
-	return args
-}
-
 func (o *client) machineInspect(ctx context.Context) (*InspectInfo, error) {
 	b, err := o.runPodman(ctx, "machine", "inspect", DefaultMachineName)
 	if err != nil {
@@ -254,21 +197,6 @@ func (o *client) machineInspect(ctx context.Context) (*InspectInfo, error) {
 		return nil, err
 	}
 	return &info[0], nil
-}
-
-func (o *client) machineStart(ctx context.Context) error {
-	info, err := o.machineInspect(ctx)
-	if err != nil {
-		return err
-	}
-	if info.State != Running {
-		_, err := o.runPodman(ctx, "machine", "start")
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
 func Installed() error {
@@ -288,15 +216,7 @@ func (o *client) Ready(ctx context.Context) error {
 		return err
 	}
 
-	if !podmanMachineIsRequired() {
-		return nil
-	}
-
-	if err := o.machineInit(ctx); err != nil {
-		return err
-	}
-
-	return o.machineStart(ctx)
+	return nil
 }
 
 func extractErrorMessage(exitErr *exec.ExitError) error {

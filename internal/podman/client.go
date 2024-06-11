@@ -211,12 +211,8 @@ func podmanMachineIsRequired() bool {
 	return runtime.GOOS == "windows" || runtime.GOOS == "darwin"
 }
 
-func (o *client) Ready(ctx context.Context) error {
-	if err := Installed(); err != nil {
-		return err
-	}
-
-	return nil
+func (*client) Ready(_ context.Context) error {
+	return Installed()
 }
 
 func extractErrorMessage(exitErr *exec.ExitError) error {

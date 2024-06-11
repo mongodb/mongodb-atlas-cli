@@ -216,7 +216,7 @@ func PublishSnapshotTasks(c *shrub.Configuration) {
 	publishVariant(
 		c,
 		v,
-		"5.0",
+		"8.0",
 		"",
 		dependency,
 		false,

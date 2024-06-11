@@ -33,11 +33,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/setup"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/workflows"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/compass"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/templatewriter"
@@ -207,22 +209,18 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 		envVars["MONGODB_INITDB_ROOT_PASSWORD"] = opts.DBUserPassword
 	}
 
-	_, err := opts.PodmanClient.RunContainer(ctx,
-		podman.RunContainerOpts{
-			Detach:   true,
-			Image:    opts.MongodDockerImageName(),
-			Name:     opts.LocalMongodHostname(),
-			Hostname: opts.LocalMongodHostname(),
-			EnvVars:  envVars,
-			Volumes: map[string]string{
-				mongodDataVolume: "/data/db",
-			},
-			Ports: map[int]int{
-				opts.Port: internalMongodPort,
-			},
-			BindIPAll: opts.bindIPAll,
-			IP:        opts.mongodIP,
-		})
+	flags := container.ContainerRunFlags{}
+	flags.Detach = pointer.Get(true)
+	flags.Name = pointer.Get(opts.LocalMongodHostname())
+	flags.Hostname = pointer.Get(opts.LocalMongodHostname())
+	flags.Env = envVars
+	flags.Volumes = map[string]string{
+		mongodDataVolume: "/data/db",
+	}
+	flags.BindIPAll = &opts.bindIPAll
+	flags.IP = &opts.mongodIP
+	flags.Ports = []container.Port{{HostPort: opts.Port, ContainerPort: internalMongodPort}}
+	_, err := opts.ContainerEngine.ContainerRun(ctx, opts.MongodDockerImageName(), &flags)
 
 	return err
 }

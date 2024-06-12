@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
@@ -233,8 +234,8 @@ func newAtlasProject(project *atlasv2.Group, dictionary map[string]string, targe
 			RegionUsageRestrictions:       project.GetRegionUsageRestrictions(),
 		},
 		Status: akov2status.AtlasProjectStatus{
-			Common: akov2status.Common{
-				Conditions: []akov2status.Condition{},
+			Common: api.Common{
+				Conditions: []api.Condition{},
 			},
 		},
 	}
@@ -960,8 +961,8 @@ func buildTeams(teamsProvider store.OperatorTeamsStore, orgID, projectID, projec
 				Usernames: convertUserNames(users),
 			},
 			Status: akov2status.TeamStatus{
-				Common: akov2status.Common{
-					Conditions: []akov2status.Condition{},
+				Common: api.Common{
+					Conditions: []api.Condition{},
 				},
 			},
 		})

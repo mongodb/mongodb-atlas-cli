@@ -35,7 +35,7 @@ func (e *podmanImpl) ContainerLogs(ctx context.Context, name string) ([]string, 
 	return e.client.ContainerLogs(ctx, name)
 }
 
-func (e *podmanImpl) ContainerRun(ctx context.Context, image string, flags *ContainerRunFlags) (string, error) {
+func (e *podmanImpl) ContainerRun(ctx context.Context, image string, flags *RunFlags) (string, error) {
 	podmanOpts := podman.RunContainerOpts{
 		Image: image,
 	}

@@ -209,7 +209,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 		envVars["MONGODB_INITDB_ROOT_PASSWORD"] = opts.DBUserPassword
 	}
 
-	flags := container.ContainerRunFlags{}
+	flags := container.RunFlags{}
 	flags.Detach = pointer.Get(true)
 	flags.Name = pointer.Get(opts.LocalMongodHostname())
 	flags.Hostname = pointer.Get(opts.LocalMongodHostname())

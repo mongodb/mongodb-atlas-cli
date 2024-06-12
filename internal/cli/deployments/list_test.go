@@ -27,9 +27,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
@@ -43,6 +43,7 @@ func TestList_Run(t *testing.T) {
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockProfileReader := mocks.NewMockProfileReader(ctrl)
 	mockPodman := mocks.NewMockClient(ctrl)
+	mockContainerEngine := mocks.NewMockEngine(ctrl)
 	ctx := context.Background()
 
 	cli.TokenRefreshed = true
@@ -69,7 +70,7 @@ func TestList_Run(t *testing.T) {
 		},
 	}
 
-	expectedLocalDeployments := []*podman.Container{
+	expectedLocalDeployments := []container.Container{
 		{
 			Names:  []string{"localTest2"},
 			State:  "running",
@@ -86,6 +87,7 @@ func TestList_Run(t *testing.T) {
 	listOpts := &ListOpts{
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:          mockPodman,
+			ContainerEngine:       mockContainerEngine,
 			CredStore:             mockCredentialsGetter,
 			AtlasClusterListStore: mockStore,
 			Config:                mockProfileReader,
@@ -122,9 +124,9 @@ func TestList_Run(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	mockPodman.
+	mockContainerEngine.
 		EXPECT().
-		ListContainers(ctx, options.MongodHostnamePrefix).
+		ContainerList(ctx, options.MongodHostnamePrefix).
 		Return(expectedLocalDeployments, nil).
 		Times(1)
 
@@ -147,6 +149,7 @@ func TestList_Run_NoLocal(t *testing.T) {
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockProfileReader := mocks.NewMockProfileReader(ctrl)
 	mockPodman := mocks.NewMockClient(ctrl)
+	mockContainerEngine := mocks.NewMockEngine(ctrl)
 	ctx := context.Background()
 
 	cli.TokenRefreshed = true
@@ -177,6 +180,7 @@ func TestList_Run_NoLocal(t *testing.T) {
 	listOpts := &ListOpts{
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:          mockPodman,
+			ContainerEngine:       mockContainerEngine,
 			CredStore:             mockCredentialsGetter,
 			AtlasClusterListStore: mockStore,
 			Config:                mockProfileReader,
@@ -213,9 +217,9 @@ func TestList_Run_NoLocal(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	mockPodman.
+	mockContainerEngine.
 		EXPECT().
-		ListContainers(ctx, options.MongodHostnamePrefix).
+		ContainerList(ctx, options.MongodHostnamePrefix).
 		Return(nil, errors.New("this is an error")).
 		Times(1)
 
@@ -236,6 +240,7 @@ func TestList_Run_NoAtlas(t *testing.T) {
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockProfileReader := mocks.NewMockProfileReader(ctrl)
 	mockPodman := mocks.NewMockClient(ctrl)
+	mockContainerEngine := mocks.NewMockEngine(ctrl)
 	ctx := context.Background()
 
 	cli.TokenRefreshed = true
@@ -266,6 +271,7 @@ func TestList_Run_NoAtlas(t *testing.T) {
 	listOpts := &ListOpts{
 		DeploymentOpts: options.DeploymentOpts{
 			PodmanClient:          mockPodman,
+			ContainerEngine:       mockContainerEngine,
 			CredStore:             mockCredentialsGetter,
 			AtlasClusterListStore: mockStore,
 			Config:                mockProfileReader,
@@ -302,9 +308,9 @@ func TestList_Run_NoAtlas(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	mockPodman.
+	mockContainerEngine.
 		EXPECT().
-		ListContainers(ctx, options.MongodHostnamePrefix).
+		ContainerList(ctx, options.MongodHostnamePrefix).
 		Return(nil, errors.New("new error test")).
 		Times(1)
 

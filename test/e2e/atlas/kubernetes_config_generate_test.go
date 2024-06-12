@@ -34,7 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
-	"github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api"
+	akoapi "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
@@ -861,8 +861,8 @@ func TestProjectWithStreamsProcessing(t *testing.T) {
 							},
 						},
 						Status: akov2status.AtlasStreamInstanceStatus{
-							Common: api.Common{
-								Conditions: []api.Condition{},
+							Common: akoapi.Common{
+								Conditions: []akoapi.Condition{},
 							},
 						},
 					},
@@ -910,8 +910,8 @@ func TestProjectWithStreamsProcessing(t *testing.T) {
 							},
 						},
 						Status: akov2status.AtlasStreamConnectionStatus{
-							Common: api.Common{
-								Conditions: []api.Condition{},
+							Common: akoapi.Common{
+								Conditions: []akoapi.Condition{},
 							},
 						},
 					},
@@ -964,8 +964,8 @@ func referenceTeam(name, namespace string, users []akov2.TeamUser, projectName s
 			Usernames: users,
 		},
 		Status: akov2status.TeamStatus{
-			Common: api.Common{
-				Conditions: []api.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 	}
@@ -1022,8 +1022,8 @@ func referenceProject(name, namespace string, labels map[string]string) *akov2.A
 			Labels:    labels,
 		},
 		Status: akov2status.AtlasProjectStatus{
-			Common: api.Common{
-				Conditions: []api.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 		Spec: akov2.AtlasProjectSpec{
@@ -1153,8 +1153,8 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 			},
 		},
 		Status: akov2status.AtlasDeploymentStatus{
-			Common: api.Common{
-				Conditions: []api.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 	}
@@ -1187,8 +1187,8 @@ func referenceServerless(name, region, namespace, projectName string, labels map
 			},
 		},
 		Status: akov2status.AtlasDeploymentStatus{
-			Common: api.Common{
-				Conditions: []api.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 	}
@@ -1646,8 +1646,8 @@ func referenceDataFederation(name, namespace, projectName string, labels map[str
 			},
 		},
 		Status: akov2status.DataFederationStatus{
-			Common: api.Common{
-				Conditions: []api.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 	}

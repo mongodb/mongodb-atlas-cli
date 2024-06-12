@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	"github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api"
+	akoapi "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
@@ -132,8 +132,8 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, va
 			ProcessArgs:    nil,
 		},
 		Status: akov2status.AtlasDeploymentStatus{
-			Common: api.Common{
-				Conditions: []api.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 	}
@@ -498,8 +498,8 @@ func BuildServerlessDeployments(deploymentStore store.OperatorClusterStore, vali
 			ProcessArgs:       nil,
 		},
 		Status: akov2status.AtlasDeploymentStatus{
-			Common: api.Common{
-				Conditions: []api.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 	}

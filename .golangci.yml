@@ -15,6 +15,8 @@ linters-settings:
         alias: atlas
       - pkg: go.mongodb.org/atlas/auth
         alias: atlasauth
+      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api
+        alias: akoapi
       - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1
         alias: akov2
       - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common

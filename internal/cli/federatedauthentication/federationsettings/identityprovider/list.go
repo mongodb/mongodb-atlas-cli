@@ -83,7 +83,7 @@ func (opts *ListOpts) Validate() error {
 	return validate.FlagInSlice(opts.protocol, flag.Protocol, []string{oidc, saml})
 }
 
-// atlas federatedAuthentication identityProvider list --federationSettingsId federationSettingsId -[-idpType idpType] [--page page] [--itemsPerPage itemsPerPage] [--output output].
+// atlas federatedAuthentication federationSettings identityProvider list --federationSettingsId federationSettingsId -[-idpType idpType] [--page page] [--itemsPerPage itemsPerPage] [--output output].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{
 		ListOpts: &cli.ListOpts{},
@@ -98,7 +98,7 @@ func ListBuilder() *cobra.Command {
 			"output":                 listTemplate,
 		},
 		Example: `  # List the identity providers from your federation settings with federationSettingsId 5d1113b25a115342acc2d1aa and idpType WORKLOAD
-	atlas federatedAuthentication identityProvider list --federationSettingsId 5d1113b25a115342acc2d1aa --idpType WORKLOAD
+	atlas federatedAuthentication federationSettings identityProvider list --federationSettingsId 5d1113b25a115342acc2d1aa --idpType WORKLOAD
 `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

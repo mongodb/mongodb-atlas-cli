@@ -113,10 +113,10 @@ func DisconnectBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": disconnectTemplate,
 		},
-		Example: `  # Disconnect the current profile org from identity provider with ID 5d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa 
-			atlas federatedAuthentication federationSettings connectedOrgConfigs disconnect --identityProviderId 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
-			# Disconnect the org with ID 7d1113b25a115342acc2d1aa to identity provider with ID 5d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa 
-			atlas federatedAuthentication federationSettings connectedOrgConfigs disconnect --orgId 7d1113b25a115342acc2d1aa --identityProviderId 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
+		Example: `  # Disconnect the current profile org from identity provider with ID 5d1113b25a115342acc2d1aa and federationSettingsId 7d1113b25a115342acc2d1aa 
+			atlas federatedAuthentication federationSettings connectedOrgConfigs disconnect --identityProviderId 5d1113b25a115342acc2d1aa --federationSettingsId 7d1113b25a115342acc2d1aa 
+			# Disconnect the org with ID 7d1113b25a115342acc2d1aa to identity provider with ID 5d1113b25a115342acc2d1aa and federationSettingsId 7d1113b25a115342acc2d1aa 
+			atlas federatedAuthentication federationSettings connectedOrgConfigs disconnect --orgId 7d1113b25a115342acc2d1aa --identityProviderId 5d1113b25a115342acc2d1aa --federationSettingsId 7d1113b25a115342acc2d1aa 
 		`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

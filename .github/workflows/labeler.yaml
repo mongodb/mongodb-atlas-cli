@@ -29,17 +29,19 @@ jobs:
           config_path: .github/labeler.yaml
   slack-notification-doc-team:
     needs: labeler
-    if: contains(github.event.pull_request.labels.*.name, 'need-doc-review')
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write # Needed by sticky-pull-request-comment
     steps:
-      # Delete a previous comment when the issue has been resolved
+      - name: Print PR labels
+        run: echo "${{ github.event.pull_request.labels.*.name }}"
       - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        if: contains(github.event.pull_request.labels.*.name, 'need-doc-review')
         with:
           header: pr-title-slack-doc
           delete: true
       - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        if: contains(github.event.pull_request.labels.*.name, 'need-doc-review')
         with:
           header: pr-title-slack-doc
           append: true

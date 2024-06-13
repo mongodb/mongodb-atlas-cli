@@ -172,7 +172,7 @@ func (opts *OidcOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas federatedAuthentication identityProvider update oidc <identityProviderId> --federationSettingsId federationSettingsId --idpType idpType [--audience audience] [--authorizationType authorizationType] [--clientId clientId] [--description description] [--displayName displayName] [--groupsClaim groupsClaim] [--userClaim userClaim] [--issuerUri issuerUri] [--associatedDomain associatedDomains] [--requestedScope requestedScopes][-o/--output output].
+// atlas federatedAuthentication federationSettings identityProvider update oidc <identityProviderId> --federationSettingsId federationSettingsId --idpType idpType [--audience audience] [--authorizationType authorizationType] [--clientId clientId] [--description description] [--displayName displayName] [--groupsClaim groupsClaim] [--userClaim userClaim] [--issuerUri issuerUri] [--associatedDomain associatedDomains] [--requestedScope requestedScopes][-o/--output output].
 func OIDCBuilder() *cobra.Command {
 	opts := &OidcOpts{
 		protocol: oidc,
@@ -186,7 +186,7 @@ func OIDCBuilder() *cobra.Command {
 			"output":                 updateTemplate,
 		},
 		Example: `  # Update the audience of the identity provider with ID aa2223b25a115342acc1f108 and from your federation settings with federationSettingsId 5d1113b25a115342acc2d1aa with IdpType WORKFORCE
-			atlas federatedAuthentication identityProvider update aa2223b25a115342acc1f108 --federationSettingsId 5d1113b25a115342acc2d1aa --idpType WORKFORCE --audience newAudience
+			atlas federatedAuthentication federationSettings identityProvider update aa2223b25a115342acc1f108 --federationSettingsId 5d1113b25a115342acc2d1aa --idpType WORKFORCE --audience newAudience
 		`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.protocol = oidc

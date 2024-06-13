@@ -57,7 +57,7 @@ func TestAtlasTeams(t *testing.T) {
 			username,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -77,7 +77,7 @@ func TestAtlasTeams(t *testing.T) {
 			teamID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var team atlasv2.TeamResponse
@@ -93,7 +93,7 @@ func TestAtlasTeams(t *testing.T) {
 			teamName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var team atlasv2.TeamResponse
 		require.NoError(t, json.Unmarshal(resp, &team))
@@ -110,7 +110,7 @@ func TestAtlasTeams(t *testing.T) {
 			teamID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var team atlasv2.TeamResponse
@@ -125,7 +125,7 @@ func TestAtlasTeams(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var teams atlasv2.PaginatedTeam
@@ -140,7 +140,7 @@ func TestAtlasTeams(t *testing.T) {
 			"-c",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var teams []atlasv2.TeamResponse
@@ -155,7 +155,7 @@ func TestAtlasTeams(t *testing.T) {
 			teamID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Team '%s' deleted\n", teamID)
 		assert.Equal(t, expected, string(resp))

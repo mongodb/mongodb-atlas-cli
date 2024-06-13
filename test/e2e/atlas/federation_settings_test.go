@@ -47,7 +47,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var settings atlasv2.OrgFederationSettings
@@ -90,7 +90,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var provider atlasv2.FederationIdentityProvider
@@ -114,7 +114,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var config atlasv2.ConnectedOrgConfig
@@ -160,7 +160,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var provider atlasv2.FederationIdentityProvider
@@ -183,7 +183,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var provider atlasv2.FederationIdentityProvider
@@ -206,7 +206,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var config atlasv2.ConnectedOrgConfig
@@ -228,7 +228,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var config atlasv2.ConnectedOrgConfig
@@ -252,7 +252,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var config atlasv2.ConnectedOrgConfig
@@ -275,7 +275,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var config atlasv2.ConnectedOrgConfig
@@ -298,7 +298,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var config atlasv2.ConnectedOrgConfig
@@ -321,7 +321,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var config atlasv2.ConnectedOrgConfig
@@ -346,7 +346,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var provider atlasv2.FederationIdentityProvider
@@ -369,7 +369,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var provider atlasv2.FederationIdentityProvider
@@ -390,7 +390,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var provider atlasv2.FederationIdentityProvider
@@ -409,7 +409,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var config atlasv2.PaginatedConnectedOrgConfigs
@@ -434,7 +434,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var provider atlasv2.FederationIdentityProvider
@@ -455,7 +455,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 	})
 
@@ -473,7 +473,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 	})
 
@@ -490,7 +490,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 	})
 
@@ -508,7 +508,7 @@ func TestIdentityProviders(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 	})
 }

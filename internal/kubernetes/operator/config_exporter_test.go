@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	akoapi "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
@@ -333,8 +334,8 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 						},
 					},
 					Status: akov2status.AtlasStreamInstanceStatus{
-						Common: akov2status.Common{
-							Conditions: []akov2status.Condition{},
+						Common: akoapi.Common{
+							Conditions: []akoapi.Condition{},
 						},
 					},
 				},
@@ -355,8 +356,8 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 						ConnectionType: "Sample",
 					},
 					Status: akov2status.AtlasStreamConnectionStatus{
-						Common: akov2status.Common{
-							Conditions: []akov2status.Condition{},
+						Common: akoapi.Common{
+							Conditions: []akoapi.Condition{},
 						},
 					},
 				},
@@ -391,8 +392,8 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 						},
 					},
 					Status: akov2status.AtlasStreamConnectionStatus{
-						Common: akov2status.Common{
-							Conditions: []akov2status.Condition{},
+						Common: akoapi.Common{
+							Conditions: []akoapi.Condition{},
 						},
 					},
 				},

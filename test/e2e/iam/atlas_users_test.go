@@ -45,7 +45,7 @@ func TestAtlasUsers(t *testing.T) {
 			"list",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var users atlasv2.PaginatedApiAppUser
@@ -63,7 +63,7 @@ func TestAtlasUsers(t *testing.T) {
 			username,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var user atlasv2.CloudAppUser
@@ -86,7 +86,7 @@ func TestAtlasUsers(t *testing.T) {
 			userID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var user atlasv2.CloudAppUser
@@ -114,7 +114,7 @@ func TestAtlasUsers(t *testing.T) {
 			"--orgRole", orgID+":ORG_READ_ONLY",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var user atlasv2.CloudAppUser

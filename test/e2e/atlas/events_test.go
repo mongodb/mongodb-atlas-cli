@@ -41,7 +41,7 @@ func TestEvents(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var events admin.GroupPaginatedEvent
 		require.NoError(t, json.Unmarshal(resp, &events))
@@ -59,7 +59,7 @@ func TestEvents(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var events admin.OrgPaginatedEvent
 		require.NoError(t, json.Unmarshal(resp, &events))

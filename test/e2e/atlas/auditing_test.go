@@ -40,7 +40,7 @@ func TestAuditing(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var setting *atlasv2.AuditLog
 		require.NoError(t, json.Unmarshal(resp, &setting), string(resp))

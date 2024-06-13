@@ -100,6 +100,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Delete the specified identity provider from your federation settings with ID 5d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa.
  	atlas federatedAuthentication identityProvider delete 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa

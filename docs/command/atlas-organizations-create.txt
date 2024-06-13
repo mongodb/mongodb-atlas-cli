@@ -94,6 +94,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Create an Atlas organization with the name myOrg:
    atlas organizations create myOrg --output json

@@ -40,7 +40,7 @@ func TestAtlasCLIConfig(t *testing.T) {
 	t.Run("config ls", func(t *testing.T) {
 		cmd := exec.Command(cliPath, "config", "ls")
 		cmd.Env = append(os.Environ(), tempDirEnv)
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
@@ -59,9 +59,9 @@ func TestAtlasCLIConfig(t *testing.T) {
 		if err == nil {
 			t.Fatalf("expected error, resp: %v", string(resp))
 		}
-		got := strings.TrimSpace(string(resp))
+		got := string(resp)
 
-		if !strings.HasPrefix(got, errorMessage) {
+		if !strings.Contains(got, errorMessage) {
 			t.Errorf("want %q; got %q\n", errorMessage, got)
 		}
 	})
@@ -69,7 +69,7 @@ func TestAtlasCLIConfig(t *testing.T) {
 	t.Run("help", func(t *testing.T) {
 		cmd := exec.Command(cliPath, "help")
 		cmd.Env = append(os.Environ(), tempDirEnv)
-		if resp, err := cmd.CombinedOutput(); err != nil {
+		if resp, err := e2e.RunAndGetStdOut(cmd); err != nil {
 			t.Fatalf("unexpected error, resp: %v", string(resp))
 		}
 	})

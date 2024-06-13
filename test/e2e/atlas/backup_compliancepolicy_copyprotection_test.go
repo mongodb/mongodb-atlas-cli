@@ -50,7 +50,7 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 			"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
 		)
 		cmd.Env = os.Environ()
-		resp, outputErr := cmd.CombinedOutput()
+		resp, outputErr := e2e.RunAndGetStdOut(cmd)
 		r.NoError(outputErr, string(resp))
 
 		trimmedResponse := removeDotsFromWatching(resp)
@@ -73,7 +73,7 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 			g.projectID,
 		)
 		cmd.Env = os.Environ()
-		resp, outputErr := cmd.CombinedOutput()
+		resp, outputErr := e2e.RunAndGetStdOut(cmd)
 		r.NoError(outputErr, string(resp))
 
 		var compliancepolicy atlasv2.DataProtectionSettings20231001

@@ -74,6 +74,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # list all pipeline runs:
    atlas dataLakePipelines runs list

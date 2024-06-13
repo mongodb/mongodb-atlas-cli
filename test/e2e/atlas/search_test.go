@@ -91,7 +91,7 @@ func TestSearch(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -110,7 +110,7 @@ func TestSearch(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -156,7 +156,7 @@ func TestSearch(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -176,7 +176,7 @@ func TestSearch(t *testing.T) {
 			"--projectId", g.projectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Index '%s' deleted\n", indexID)
 		assert.Equal(t, expected, string(resp))
@@ -239,7 +239,7 @@ func TestSearch(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -342,7 +342,7 @@ func TestSearch(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -398,7 +398,7 @@ func TestSearch(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -418,7 +418,7 @@ func TestSearch(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var indexes []atlasv2.ClusterSearchIndex

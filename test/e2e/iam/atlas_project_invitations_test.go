@@ -58,7 +58,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
@@ -78,7 +78,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
@@ -97,7 +97,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
@@ -122,7 +122,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
@@ -146,7 +146,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
@@ -166,7 +166,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			"--projectId",
 			projectID)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Invitation '%s' deleted\n", invitationID)

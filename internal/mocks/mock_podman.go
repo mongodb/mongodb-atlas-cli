@@ -227,26 +227,6 @@ func (mr *MockClientMockRecorder) RemoveContainers(arg0 interface{}, arg1 ...int
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveContainers", reflect.TypeOf((*MockClient)(nil).RemoveContainers), varargs...)
 }
 
-// RemoveVolumes mocks base method.
-func (m *MockClient) RemoveVolumes(arg0 context.Context, arg1 ...string) ([]byte, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0}
-	for _, a := range arg1 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "RemoveVolumes", varargs...)
-	ret0, _ := ret[0].([]byte)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// RemoveVolumes indicates an expected call of RemoveVolumes.
-func (mr *MockClientMockRecorder) RemoveVolumes(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0}, arg1...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveVolumes", reflect.TypeOf((*MockClient)(nil).RemoveVolumes), varargs...)
-}
-
 // RunContainer mocks base method.
 func (m *MockClient) RunContainer(arg0 context.Context, arg1 podman.RunContainerOpts) ([]byte, error) {
 	m.ctrl.T.Helper()

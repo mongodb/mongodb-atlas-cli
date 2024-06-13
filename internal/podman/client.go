@@ -131,7 +131,6 @@ type Client interface {
 	StartContainers(ctx context.Context, names ...string) ([]byte, error)
 	UnpauseContainers(ctx context.Context, names ...string) ([]byte, error)
 	RemoveContainers(ctx context.Context, names ...string) ([]byte, error)
-	RemoveVolumes(ctx context.Context, names ...string) ([]byte, error)
 	ListContainers(ctx context.Context, nameFilter string) ([]*Container, error)
 	ListImages(ctx context.Context, nameFilter string) ([]*Image, error)
 	PullImage(ctx context.Context, name string) ([]byte, error)
@@ -326,11 +325,7 @@ func (o *client) UnpauseContainers(ctx context.Context, names ...string) ([]byte
 }
 
 func (o *client) RemoveContainers(ctx context.Context, names ...string) ([]byte, error) {
-	return o.runPodman(ctx, append([]string{"rm", "-f"}, names...)...)
-}
-
-func (o *client) RemoveVolumes(ctx context.Context, names ...string) ([]byte, error) {
-	return o.runPodman(ctx, append([]string{"volume", "rm", "-f"}, names...)...)
+	return o.runPodman(ctx, append([]string{"rm", "-f", "-v"}, names...)...)
 }
 
 func (o *client) ListContainers(ctx context.Context, nameFilter string) ([]*Container, error) {

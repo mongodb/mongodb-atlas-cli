@@ -31,7 +31,6 @@ jobs:
           use_local_config: true
   slack-notification-doc-team:
     needs: labeler
-    if: contains(github.event.pull_request.labels.*.name, 'need-doc-review')
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write # Needed by sticky-pull-request-comment
@@ -39,7 +38,20 @@ jobs:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
+      - name: Get PR labels
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          labels=$(gh api repos/"$OWNER"/"$REPO_NAME"/pulls/"$PULL_REQUEST_NUMBER" --jq '.labels.[].name')
+          echo "Labels: $labels"
+          if echo "$labels" | grep -q "need-doc-review"; then
+            echo "review_needed=true" >> "$GITHUB_ENV"
+          fi
       - uses: slackapi/slack-github-action@70cd7be8e40a46e8b0eced40b0de447bdb42f68e
+        if: env.review_needed == 'true'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DOCS }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
@@ -57,10 +69,12 @@ jobs:
               ]
             }
       - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        if: env.review_needed == 'true'
         with:
           header: pr-title-slack-doc
           delete: true
       - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        if: env.review_needed == 'true'
         with:
           header: pr-title-slack-doc
           append: true

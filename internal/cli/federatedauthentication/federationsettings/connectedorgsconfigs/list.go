@@ -74,7 +74,7 @@ func ListBuilder() *cobra.Command {
 		Short: "Describe a Connected Org Config.",
 		Args:  cobra.NoArgs,
 		Example: `  # List all connected org config with federationSettingsId 5d1113b25a115342acc2d1aa 
-  atlas federatedAuthentication connectedOrgsConfig list --federationSettingsId 5d1113b25a115342acc2d1aa 
+  atlas federatedAuthentication federationSettings connectedOrgsConfig list --federationSettingsId 5d1113b25a115342acc2d1aa 
 `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

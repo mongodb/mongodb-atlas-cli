@@ -50,9 +50,9 @@ func DescribeBuilder() *cobra.Command {
 		Use:   "describe",
 		Short: "Describe a Connected Org Config.",
 		Args:  cobra.NoArgs,
-		Example: `  # Describe a connected org config with the current profile org and federationSettingsId 5d1113b25a115342acc2d1aa 
+		Example: `  # Describe a connected org config from the current profile org and federationSettingsId 5d1113b25a115342acc2d1aa 
 			atlas federatedAuthentication federationSettings connectedOrgConfigsConfig connect --federationSettingsId 5d1113b25a115342acc2d1aa 
-			# Describe a connected org config with the org with ID 7d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa 
+			# Describe a connected org config from the org with ID 7d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa 
 			atlas federatedAuthentication federationSettings connectedOrgConfigs connect --orgId 7d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
 		`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {

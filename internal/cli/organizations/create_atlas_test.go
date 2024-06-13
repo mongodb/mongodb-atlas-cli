@@ -44,7 +44,7 @@ func TestCreateAtlasOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationCreator(ctrl)
 
-	federationSettings := "test"
+	federationSettings := "federationId"
 	expected := &atlasv2.CreateOrganizationRequest{
 		ApiKey:               nil,
 		Name:                 "Org 0",

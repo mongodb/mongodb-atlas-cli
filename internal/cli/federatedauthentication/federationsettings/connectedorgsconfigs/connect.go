@@ -108,7 +108,7 @@ func ConnectBuilder() *cobra.Command {
 		Example: `  # Connect the current profile org to identity provider with ID 5d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa 
 			atlas federatedAuthentication federationSettings connectedOrgConfigs connect --identityProviderId 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
 			# Connect the org with ID 7d1113b25a115342acc2d1aa to identity provider with ID 5d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa 
-			atlas federatedAuthentication  federationSettings connectedOrgConfigs connect --orgId 7d1113b25a115342acc2d1aa --identityProviderId 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
+			atlas federatedAuthentication federationSettings connectedOrgConfigs connect --orgId 7d1113b25a115342acc2d1aa --identityProviderId 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
 		`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

@@ -38,7 +38,7 @@ Options
    * - --federationSettingsId
      - string
      - true
-     - Unique identifier of the federation settings.
+     - Unique 24-hexadecimal digit string that identifies the federation settings.
    * - -h, --help
      - 
      - false

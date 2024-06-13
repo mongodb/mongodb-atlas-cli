@@ -34,11 +34,12 @@ var createAtlasTemplate = "Organization '{{.Organization.Id}}' created.\n"
 
 type CreateAtlasOpts struct {
 	cli.OutputOpts
-	name              string
-	ownerID           string
-	apiKeyDescription string
-	apiKeyRole        []string
-	store             store.OrganizationCreator
+	name                 string
+	ownerID              string
+	apiKeyDescription    string
+	apiKeyRole           []string
+	federationSettingsID string
+	store                store.OrganizationCreator
 }
 
 func (opts *CreateAtlasOpts) initStore(ctx context.Context) func() error {
@@ -56,6 +57,11 @@ func (opts *CreateAtlasOpts) Run() error {
 	if opts.ownerID != "" {
 		o.OrgOwnerId = &opts.ownerID
 	}
+
+	if opts.federationSettingsID != "" {
+		o.FederationSettingsId = &opts.federationSettingsID
+	}
+
 	if len(opts.apiKeyRole) > 0 {
 		o.ApiKey = &atlasv2.CreateAtlasOrganizationApiKey{}
 		o.ApiKey.Roles = opts.apiKeyRole
@@ -155,6 +161,7 @@ Private API Key '{{.APIKey.PrivateKey}}'
 	}
 	cmd.Flags().StringVar(&opts.ownerID, flag.OwnerID, "", usage.OrgOwnerID)
 	cmd.Flags().StringVar(&opts.apiKeyDescription, flag.APIKeyDescription, "", usage.AtlasAPIKeyDescription)
+	cmd.Flags().StringVar(&opts.federationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
 	cmd.Flags().StringSliceVar(&opts.apiKeyRole, flag.APIKeyRole, []string{}, usage.AtlasAPIKeyRoles)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())

@@ -60,7 +60,7 @@ func TestCreateAtlasOpts_Run(t *testing.T) {
 	createOpts := &CreateAtlasOpts{
 		store:                mockStore,
 		name:                 "Org 0",
-		federationSettingsID: "test",
+		federationSettingsID: federationSettings,
 	}
 	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

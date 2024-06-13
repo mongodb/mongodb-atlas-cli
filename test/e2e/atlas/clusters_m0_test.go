@@ -54,7 +54,7 @@ func TestClustersM0Flags(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var cluster *atlasv2.AdvancedClusterDescription
@@ -72,7 +72,7 @@ func TestClustersM0Flags(t *testing.T) {
 			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		a := assert.New(t)
@@ -88,7 +88,7 @@ func TestClustersM0Flags(t *testing.T) {
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var cluster atlasv2.AdvancedClusterDescription
@@ -108,7 +108,7 @@ func TestClustersM0Flags(t *testing.T) {
 			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
@@ -126,7 +126,7 @@ func TestClustersM0Flags(t *testing.T) {
 		cmd.Env = os.Environ()
 		// this command will fail with 404 once the cluster is deleted
 		// we just need to wait for this to close the project
-		resp, _ := cmd.CombinedOutput()
+		resp, _ := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 }

@@ -100,6 +100,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # delete dataset '507f1f77bcf86cd799439011' for data lake pipeline called 'Pipeline1':
    atlas dataLakePipelines datasets delete 507f1f77bcf86cd799439011 --pipeline Pipeline1

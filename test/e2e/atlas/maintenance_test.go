@@ -45,7 +45,7 @@ func TestMaintenanceWindows(t *testing.T) {
 			"--projectId",
 			g.projectID)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := "Maintenance window updated.\n"
 		assert.Equal(t, expected, string(resp))
@@ -60,7 +60,7 @@ func TestMaintenanceWindows(t *testing.T) {
 			"--projectId",
 			g.projectID)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var maintenanceWindow atlasv2.GroupMaintenanceWindow
@@ -78,7 +78,7 @@ func TestMaintenanceWindows(t *testing.T) {
 			"--projectId",
 			g.projectID)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := "Maintenance window removed.\n"
 		assert.Equal(t, expected, string(resp))

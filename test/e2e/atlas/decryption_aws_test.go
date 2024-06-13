@@ -54,7 +54,7 @@ func TestDecryptWithAWS(t *testing.T) {
 	)
 	cmd.Env = os.Environ()
 
-	gotContents, err := cmd.CombinedOutput()
+	gotContents, err := e2e.RunAndGetStdOut(cmd)
 	req.NoError(err, string(gotContents))
 	decryption.LogsAreEqual(t, expectedContents, gotContents)
 }

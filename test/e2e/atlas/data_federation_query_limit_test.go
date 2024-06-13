@@ -54,7 +54,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			testBucket,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
 
@@ -80,7 +80,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		cmd.Env = os.Environ()
 
 		a := assert.New(t)
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r atlasv2.DataFederationTenantQueryLimit
 		require.NoError(t, json.Unmarshal(resp, &r))
@@ -97,7 +97,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			dataFederationName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 		var r atlasv2.DataFederationTenantQueryLimit
@@ -114,7 +114,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			dataFederationName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -134,7 +134,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("'%s' deleted\n", limitName)
@@ -149,7 +149,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("'%s' deleted\n", dataFederationName)

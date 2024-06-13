@@ -44,7 +44,7 @@ func TestProcesses(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		require.NoError(t, json.Unmarshal(resp, &processes))
 		require.NotEmpty(t, processes.Results)
@@ -59,7 +59,7 @@ func TestProcesses(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var hostViewsCompact []atlasv2.ApiHostViewAtlas
 		require.NoError(t, json.Unmarshal(resp, &hostViewsCompact))
@@ -75,7 +75,7 @@ func TestProcesses(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var p *atlasv2.ApiHostViewAtlas
 		require.NoError(t, json.Unmarshal(resp, &p))

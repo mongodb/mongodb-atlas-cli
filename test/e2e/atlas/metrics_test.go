@@ -67,7 +67,7 @@ func process(t *testing.T, cliPath, hostname, projectID string) {
 		"-o=json")
 
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	var metrics *atlasv2.ApiMeasurementsGeneralViewAtlas
 	require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))
@@ -87,7 +87,7 @@ func processWithType(t *testing.T, cliPath, hostname, projectID string) {
 		"-o=json")
 
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	var metrics *atlasv2.ApiMeasurementsGeneralViewAtlas
 	require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))
@@ -106,7 +106,7 @@ func databases(t *testing.T, cliPath, hostname, projectID string) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var db atlasv2.PaginatedDatabase
 		require.NoError(t, json.Unmarshal(resp, &db), string(resp))
@@ -126,7 +126,7 @@ func databases(t *testing.T, cliPath, hostname, projectID string) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var metrics atlasv2.ApiMeasurementsGeneralViewAtlas
 		require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))
@@ -146,7 +146,7 @@ func disks(t *testing.T, cliPath, hostname, projectID string) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var d atlasv2.PaginatedDiskPartition
 		require.NoError(t, json.Unmarshal(resp, &d), string(resp))
@@ -166,7 +166,7 @@ func disks(t *testing.T, cliPath, hostname, projectID string) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var metrics atlasv2.ApiMeasurementsGeneralViewAtlas
 		require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))

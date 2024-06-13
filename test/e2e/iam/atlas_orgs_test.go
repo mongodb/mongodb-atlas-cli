@@ -41,7 +41,7 @@ func TestAtlasOrgs(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err2 := cmd.CombinedOutput()
+		resp, err2 := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err2, string(resp))
 		var orgs admin.PaginatedOrganization
 		err = json.Unmarshal(resp, &orgs)
@@ -58,7 +58,7 @@ func TestAtlasOrgs(t *testing.T) {
 			orgID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err2 := cmd.CombinedOutput()
+		resp, err2 := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err2, string(resp))
 	})
 
@@ -72,7 +72,7 @@ func TestAtlasOrgs(t *testing.T) {
 			orgID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err2 := cmd.CombinedOutput()
+		resp, err2 := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err2, string(resp))
 		var users admin.PaginatedApiAppUser
 		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
@@ -102,7 +102,7 @@ func TestAtlasOrgs(t *testing.T) {
 			"test",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var org admin.CreateOrganizationResponse
 		require.NoError(t, json.Unmarshal(resp, &org), string(resp))
@@ -128,7 +128,7 @@ func TestAtlasOrgs(t *testing.T) {
 			"--force",
 		)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 }

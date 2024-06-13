@@ -49,7 +49,7 @@ func TestServerlessBackup(t *testing.T) {
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var r atlasv2.PaginatedApiAtlasServerlessBackupSnapshot
@@ -72,7 +72,7 @@ func TestServerlessBackup(t *testing.T) {
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 		var result atlasv2.ServerlessBackupSnapshot
@@ -100,7 +100,7 @@ func TestServerlessBackup(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 		var result atlasv2.ServerlessBackupRestoreJob
@@ -122,7 +122,7 @@ func TestServerlessBackup(t *testing.T) {
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})
@@ -136,7 +136,7 @@ func TestServerlessBackup(t *testing.T) {
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var result atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob
@@ -156,7 +156,7 @@ func TestServerlessBackup(t *testing.T) {
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var result atlasv2.ServerlessBackupRestoreJob
 		require.NoError(t, json.Unmarshal(resp, &result))

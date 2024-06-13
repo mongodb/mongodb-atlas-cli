@@ -41,6 +41,7 @@ var (
 		"debian12",
 		"ubuntu20.04",
 		"ubuntu22.04",
+		"ubuntu24.04",
 	}
 	repos      = []string{"org", "enterprise"}
 	postPkgImg = map[string]string{
@@ -50,6 +51,7 @@ var (
 		"amazonlinux2": "amazonlinux2-rpm",
 		"ubuntu20.04":  "ubuntu20.04-deb",
 		"ubuntu22.04":  "ubuntu22.04-deb",
+		"ubuntu24.04":  "ubuntu24.04-deb",
 		"debian10":     "debian10-deb",
 		"debian11":     "debian11-deb",
 		"debian12":     "debian12-deb",
@@ -59,12 +61,13 @@ var (
 		"centos8":         "rhel80",
 		"rhel9":           "rhel90",
 		"amazonlinux2":    "amazon2",
-		"amazonlinux2023": "amazon2023",
 		"ubuntu20.04":     "ubuntu2004",
 		"ubuntu22.04":     "ubuntu2204",
+		"ubuntu24.04":     "ubuntu2404",
 		"debian10":        "debian10",
 		"debian11":        "debian11",
 		"debian12":        "debian12",
+		"amazonlinux2023": "amazon2023",
 	}
 )
 

@@ -76,6 +76,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Update the connected orgs config the current profile org and federationSettingsId 5d1113b25a115342acc2d1aa using the JSON configuration file config.json
  			atlas federatedAuthentication connectedOrgs update --federationSettingsId 5d1113b25a115342acc2d1aa --file config.json

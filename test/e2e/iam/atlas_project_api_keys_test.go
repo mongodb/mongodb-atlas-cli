@@ -49,7 +49,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			"--role=GROUP_READ_ONLY",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.ApiKeyUserDetails
@@ -74,7 +74,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			"--role=GROUP_DATA_ACCESS_READ_ONLY",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -85,7 +85,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
@@ -105,7 +105,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			"-c",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
@@ -125,7 +125,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			ID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
 		assert.Equal(t, expected, string(resp))

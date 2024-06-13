@@ -96,6 +96,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # Update a search node for the cluster named myCluster using a JSON node spec configuration file named spec.json:
    atlas clusters search nodes update --clusterName myCluster --file spec.json --output json

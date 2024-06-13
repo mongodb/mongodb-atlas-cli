@@ -50,7 +50,7 @@ func TestLinkToken(t *testing.T) {
 			"--accessListIp",
 			"1.2.3.4,5.6.7.8")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})
@@ -62,7 +62,7 @@ func TestLinkToken(t *testing.T) {
 			"delete",
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})

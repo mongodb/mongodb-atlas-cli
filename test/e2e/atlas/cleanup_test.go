@@ -50,7 +50,7 @@ func TestCleanup(t *testing.T) {
 	}
 	cmd := exec.Command(cliPath, args...)
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	req.NoError(err, string(resp))
 	var projects admin.PaginatedAtlasGroup
 	req.NoError(json.Unmarshal(resp, &projects), string(resp))

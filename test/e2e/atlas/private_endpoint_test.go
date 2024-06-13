@@ -62,7 +62,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r atlasv2.EndpointService
 		require.NoError(t, json.Unmarshal(resp, &r))
@@ -80,7 +80,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			g.projectID)
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -94,7 +94,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r atlasv2.EndpointService
 		require.NoError(t, json.Unmarshal(resp, &r))
@@ -110,7 +110,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r []atlasv2.EndpointService
 		require.NoError(t, json.Unmarshal(resp, &r))
@@ -128,7 +128,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Private endpoint '%s' deleted\n", id)
 		assert.Equal(t, expected, string(resp))
@@ -183,7 +183,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r atlasv2.EndpointService
 		require.NoError(t, json.Unmarshal(resp, &r))
@@ -202,7 +202,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"--projectId",
 			g.projectID)
 		cmd.Env = os.Environ()
-		_, err := cmd.CombinedOutput()
+		_, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err)
 	})
 
@@ -216,7 +216,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r atlasv2.EndpointService
 		require.NoError(t, json.Unmarshal(resp, &r))
@@ -232,7 +232,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r []atlasv2.EndpointService
 		require.NoError(t, json.Unmarshal(resp, &r))
@@ -250,7 +250,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			g.projectID)
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Private endpoint '%s' deleted\n", id)
 		assert.Equal(t, expected, string(resp))
@@ -310,7 +310,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r atlasv2.EndpointService
 		require.NoError(t, json.Unmarshal(resp, &r))
@@ -328,7 +328,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			g.projectID)
 		cmd.Env = os.Environ()
 
-		_, err := cmd.CombinedOutput()
+		_, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err)
 	})
 
@@ -342,7 +342,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r atlasv2.EndpointService
 		require.NoError(t, json.Unmarshal(resp, &r))
@@ -358,7 +358,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r []atlasv2.EndpointService
 		require.NoError(t, json.Unmarshal(resp, &r))
@@ -376,7 +376,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			g.projectID)
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Private endpoint '%s' deleted\n", id)
 		assert.Equal(t, expected, string(resp))
@@ -415,7 +415,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			g.projectID)
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		assert.Equal(t, "Regionalized private endpoint setting enabled.\n", string(resp))
 	})
@@ -429,7 +429,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			g.projectID)
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		assert.Equal(t, "Regionalized private endpoint setting disabled.\n", string(resp))
 	})
@@ -444,7 +444,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			"-o=json")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r atlasv2.ProjectSettingItem
 		require.NoError(t, json.Unmarshal(resp, &r))

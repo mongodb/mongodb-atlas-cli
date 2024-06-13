@@ -46,7 +46,7 @@ func TestAccessLogs(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var entries *atlasv2.MongoDBAccessLogsList
 		require.NoError(t, json.Unmarshal(resp, &entries))
@@ -60,7 +60,7 @@ func TestAccessLogs(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var entries *atlasv2.MongoDBAccessLogsList
 		require.NoError(t, json.Unmarshal(resp, &entries))

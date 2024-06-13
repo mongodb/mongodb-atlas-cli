@@ -45,7 +45,7 @@ func TestBackupCompliancePolicyDescribe(t *testing.T) {
 		g.projectID,
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, outputErr := cmd.CombinedOutput()
+	resp, outputErr := e2e.RunAndGetStdOut(cmd)
 
 	r.NoError(outputErr, string(resp))
 

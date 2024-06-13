@@ -64,7 +64,7 @@ func TestStreamsWithClusters(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var instance atlasv2.StreamsTenant
@@ -94,7 +94,7 @@ func TestStreamsWithClusters(t *testing.T) {
 		)
 
 		streamsCmd.Env = os.Environ()
-		streamsResp, streamsErr := streamsCmd.CombinedOutput()
+		streamsResp, streamsErr := e2e.RunAndGetStdOut(streamsCmd)
 		req.NoError(streamsErr, string(streamsResp))
 
 		var connection atlasv2.StreamsConnection

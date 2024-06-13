@@ -188,7 +188,7 @@ func deployServerlessInstanceForProject(projectID string) (string, error) {
 	}
 	create := exec.Command(cliPath, args...)
 	create.Env = os.Environ()
-	if resp, err := create.CombinedOutput(); err != nil {
+	if resp, err := e2e.RunAndGetStdOut(create); err != nil {
 		return "", fmt.Errorf("error creating serverless instance %w: %s", err, string(resp))
 	}
 
@@ -202,7 +202,7 @@ func deployServerlessInstanceForProject(projectID string) (string, error) {
 	}
 	watch := exec.Command(cliPath, watchArgs...)
 	watch.Env = os.Environ()
-	if resp, err := watch.CombinedOutput(); err != nil {
+	if resp, err := e2e.RunAndGetStdOut(watch); err != nil {
 		return "", fmt.Errorf("error watching serverless instance %w: %s", err, string(resp))
 	}
 	return clusterName, nil
@@ -224,7 +224,7 @@ func watchServerlessInstanceForProject(projectID, clusterName string) error {
 	}
 	watchCmd := exec.Command(cliPath, watchArgs...)
 	watchCmd.Env = os.Environ()
-	if resp, err := watchCmd.CombinedOutput(); err != nil {
+	if resp, err := e2e.RunAndGetStdOut(watchCmd); err != nil {
 		return fmt.Errorf("error watching serverless instance %w: %s", err, string(resp))
 	}
 	return nil
@@ -244,7 +244,7 @@ func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, cluste
 	}
 	deleteCmd := exec.Command(cliPath, args...)
 	deleteCmd.Env = os.Environ()
-	resp, err := deleteCmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(deleteCmd)
 	require.NoError(t, err, string(resp))
 
 	_ = watchServerlessInstanceForProject(projectID, clusterName)
@@ -281,7 +281,7 @@ func deployClusterForProject(projectID, tier, mDBVersion string, enableBackup bo
 	}
 	create := exec.Command(cliPath, args...)
 	create.Env = os.Environ()
-	if resp, err := create.CombinedOutput(); err != nil {
+	if resp, err := e2e.RunAndGetStdOut(create); err != nil {
 		return "", "", fmt.Errorf("error creating cluster %w: %s", err, string(resp))
 	}
 
@@ -295,7 +295,7 @@ func deployClusterForProject(projectID, tier, mDBVersion string, enableBackup bo
 	}
 	watch := exec.Command(cliPath, watchArgs...)
 	watch.Env = os.Environ()
-	if resp, err := watch.CombinedOutput(); err != nil {
+	if resp, err := e2e.RunAndGetStdOut(watch); err != nil {
 		return "", "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
 	}
 	return clusterName, region, nil
@@ -325,7 +325,7 @@ func internalDeleteClusterForProject(projectID, clusterName string) error {
 	}
 	deleteCmd := exec.Command(cliPath, args...)
 	deleteCmd.Env = os.Environ()
-	if resp, err := deleteCmd.CombinedOutput(); err != nil {
+	if resp, err := e2e.RunAndGetStdOut(deleteCmd); err != nil {
 		return fmt.Errorf("error deleting cluster %w: %s", err, string(resp))
 	}
 
@@ -350,7 +350,7 @@ func watchCluster(projectID, clusterName string) error {
 	}
 	watchCmd := exec.Command(cliPath, watchArgs...)
 	watchCmd.Env = os.Environ()
-	if resp, err := watchCmd.CombinedOutput(); err != nil {
+	if resp, err := e2e.RunAndGetStdOut(watchCmd); err != nil {
 		return fmt.Errorf("error waiting for cluster %w: %s", err, string(resp))
 	}
 	return nil
@@ -372,7 +372,7 @@ func removeTerminationProtectionFromCluster(projectID, clusterName string) error
 	}
 	updateCmd := exec.Command(cliPath, args...)
 	updateCmd.Env = os.Environ()
-	if resp, err := updateCmd.CombinedOutput(); err != nil {
+	if resp, err := e2e.RunAndGetStdOut(updateCmd); err != nil {
 		return fmt.Errorf("error updating cluster %w: %s", err, string(resp))
 	}
 
@@ -405,7 +405,7 @@ func deleteDatalakeForProject(cliPath, projectID, id string) error {
 	}
 	deleteCmd := exec.Command(cliPath, args...)
 	deleteCmd.Env = os.Environ()
-	if resp, err := deleteCmd.CombinedOutput(); err != nil {
+	if resp, err := e2e.RunAndGetStdOut(deleteCmd); err != nil {
 		return fmt.Errorf("error deleting datalake %w: %s", err, string(resp))
 	}
 	return nil
@@ -431,7 +431,7 @@ func newAvailableRegion(projectID, tier, provider string) (string, error) {
 	}
 	cmd := exec.Command(cliPath, args...)
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 
 	if err != nil {
 		return "", fmt.Errorf("error getting regions %w: %s", err, string(resp))
@@ -585,7 +585,7 @@ func getFirstOrgUser() (string, error) {
 	}
 	cmd := exec.Command(cliPath, args...)
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		return "", fmt.Errorf("%s (%w)", string(resp), err)
 	}
@@ -616,7 +616,7 @@ func createTeam(teamName, userName string) (string, error) {
 	}
 	cmd := exec.Command(cliPath, args...)
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		return "", fmt.Errorf("%s (%w)", string(resp), err)
 	}
@@ -645,7 +645,7 @@ func createProject(projectName string) (string, error) {
 	}
 	cmd := exec.Command(cliPath, args...)
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		return "", fmt.Errorf("%s (%w)", string(resp), err)
 	}
@@ -675,7 +675,7 @@ func createProjectWithoutAlertSettings(projectName string) (string, error) {
 	}
 	cmd := exec.Command(cliPath, args...)
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		return "", fmt.Errorf("%s (%w)", string(resp), err)
 	}
@@ -696,7 +696,7 @@ func listClustersForProject(t *testing.T, cliPath, projectID string) atlasv2.Pag
 		"--projectId", projectID,
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	t.Log(string(resp))
 	require.NoError(t, err, string(resp))
 	var clusters atlasv2.PaginatedAdvancedClusterDescription
@@ -729,7 +729,7 @@ func deleteDatapipelinesForProject(t *testing.T, cliPath, projectID string) {
 		"--projectId", projectID,
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	t.Log(string(resp))
 	require.NoError(t, err, string(resp))
 	var pipelines []atlasv2.DataLakeIngestionPipeline
@@ -752,7 +752,7 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 		"-o=json",
 	)
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	t.Log("available network peers", string(resp))
 	require.NoError(t, err, string(resp))
 	var networkPeers []atlasv2.BaseNetworkPeeringConnectionSettings
@@ -770,7 +770,7 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 			"--force",
 		)
 		cmd.Env = os.Environ()
-		resp, err = cmd.CombinedOutput()
+		resp, err = e2e.RunAndGetStdOut(cmd)
 		assert.NoError(t, err, string(resp))
 	}
 }
@@ -810,7 +810,7 @@ func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider st
 		"-o=json",
 	)
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	t.Log(string(resp))
 	require.NoError(t, err, string(resp))
 	var privateEndpoints []atlasv2.EndpointService
@@ -832,7 +832,7 @@ func deletePrivateEndpoint(t *testing.T, cliPath, projectID, provider, endpointI
 		"--force",
 	)
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 }
 
@@ -847,7 +847,7 @@ func deleteTeam(teamID string) error {
 		teamID,
 		"--force")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		return fmt.Errorf("%s (%w)", string(resp), err)
 	}
@@ -865,7 +865,7 @@ func deleteProject(projectID string) error {
 		projectID,
 		"--force")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		return fmt.Errorf("%s (%w)", string(resp), err)
 	}
@@ -886,7 +886,7 @@ func createDBUserWithCert(projectID, username string) error {
 		"--x509Type", "MANAGED",
 		"--projectId", projectID)
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		return fmt.Errorf("%s (%w)", string(resp), err)
 	}
@@ -913,7 +913,7 @@ func createDataFederationForProject(projectID string) (string, error) {
 		"--projectId", projectID,
 		"--region", "DUBLIN_IRL")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		return "", fmt.Errorf("%s (%w)", string(resp), err)
 	}
@@ -930,7 +930,7 @@ func listDataFederationsByProject(t *testing.T, cliPath, projectID string) []atl
 		"--projectId", projectID,
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	t.Log("available datafederations", string(resp))
 	require.NoError(t, err, string(resp))
 
@@ -950,7 +950,7 @@ func listServerlessByProject(t *testing.T, cliPath, projectID string) *atlasv2.P
 		"--projectId", projectID,
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	var serverlessInstances *atlasv2.PaginatedServerlessInstanceDescription
@@ -1000,7 +1000,7 @@ func deleteDataFederationForProject(t *testing.T, cliPath, projectID, dataFedNam
 		"--projectId", projectID,
 		"--force")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 }
 
@@ -1070,7 +1070,7 @@ func enableCompliancePolicy(projectID string) error {
 		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
 	)
 	cmd.Env = os.Environ()
-	output, outputErr := cmd.CombinedOutput()
+	output, outputErr := e2e.RunAndGetStdOut(cmd)
 	if outputErr != nil {
 		return fmt.Errorf("%w\n %s", outputErr, string(output))
 	}
@@ -1109,7 +1109,7 @@ func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atl
 	)
 
 	cmd.Env = os.Environ()
-	resp, outputErr := cmd.CombinedOutput()
+	resp, outputErr := e2e.RunAndGetStdOut(cmd)
 	if outputErr != nil {
 		return nil, fmt.Errorf("%w\n %s", outputErr, string(resp))
 	}
@@ -1153,7 +1153,7 @@ func createStreamsInstance(t *testing.T, projectID, name string) (string, error)
 		"--region", "VIRGINIA_USA",
 	)
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		return "", fmt.Errorf("%s (%w)", string(resp), err)
 	}
@@ -1179,7 +1179,7 @@ func deleteStreamsInstance(t *testing.T, projectID, name string) error {
 		"--force",
 	)
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		return fmt.Errorf("%s (%w)", string(resp), err)
 	}
@@ -1212,7 +1212,7 @@ func createStreamsConnection(t *testing.T, projectID, instanceName, name string)
 		"--projectId", projectID,
 	)
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		return "", fmt.Errorf("%s (%w)", string(resp), err)
 	}
@@ -1239,7 +1239,7 @@ func deleteStreamsConnection(t *testing.T, projectID, instanceName, name string)
 		"--force",
 	)
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	if err != nil {
 		return fmt.Errorf("%s (%w)", string(resp), err)
 	}

@@ -57,7 +57,7 @@ func TestDataFederation(t *testing.T) {
 			testBucket,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
 
@@ -73,7 +73,7 @@ func TestDataFederation(t *testing.T) {
 			dataFederationName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
 		var dataLake atlasv2.DataLakeTenant
@@ -87,7 +87,7 @@ func TestDataFederation(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
 		var r []atlasv2.DataLakeTenant
@@ -105,7 +105,7 @@ func TestDataFederation(t *testing.T) {
 			updateRegion,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
 		var dataLake atlasv2.DataLakeTenant
@@ -127,7 +127,7 @@ func TestDataFederation(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -139,7 +139,7 @@ func TestDataFederation(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("'%s' deleted\n", dataFederationName)

@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/secrets"
+	akoapi "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
@@ -110,8 +111,8 @@ func buildAtlasStreamInstance(
 			ConnectionRegistry: make([]akov2common.ResourceRefNamespaced, 0, len(connections)),
 		},
 		Status: akov2status.AtlasStreamInstanceStatus{
-			Common: akov2status.Common{
-				Conditions: []akov2status.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 	}
@@ -194,8 +195,8 @@ func buildAtlasStreamSampleConnection(
 			ConnectionType: connection.GetType(),
 		},
 		Status: akov2status.AtlasStreamConnectionStatus{
-			Common: akov2status.Common{
-				Conditions: []akov2status.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 	}
@@ -234,8 +235,8 @@ func buildAtlasStreamClusterConnection(
 			},
 		},
 		Status: akov2status.AtlasStreamConnectionStatus{
-			Common: akov2status.Common{
-				Conditions: []akov2status.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 	}
@@ -289,8 +290,8 @@ func buildAtlasStreamKafkaConnection(
 			},
 		},
 		Status: akov2status.AtlasStreamConnectionStatus{
-			Common: akov2status.Common{
-				Conditions: []akov2status.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 	}

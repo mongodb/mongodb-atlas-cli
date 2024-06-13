@@ -23,7 +23,7 @@ if [[ -z "${VERSION}" ]]; then
 	exit 1
 fi
 
-if [[ "${VERSION}" != mongocli/v* ]] && [[ "${VERSION}" != atlascli/v* ]]; then
+if [[ "${VERSION}" != atlascli/v* ]]; then
 	echo "Please provide a tag version in the format  'atlascli/vX.Y.Z'"
 	exit 1
 fi

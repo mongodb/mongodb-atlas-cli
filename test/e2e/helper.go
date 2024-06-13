@@ -15,6 +15,7 @@
 package e2e
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -40,7 +41,7 @@ func CreateProject(projectName string) (string, error) {
 		projectName,
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := RunAndGetStdOut(cmd)
 	if err != nil {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
 	}
@@ -89,4 +90,19 @@ func DeleteProjectWithRetry(t *testing.T, projectID string) {
 	if !deleted {
 		t.Errorf("we could not delete the project %q", projectID)
 	}
+}
+
+func RunAndGetStdOut(cmd *exec.Cmd) ([]byte, error) {
+	cmd.Stderr = os.Stderr
+	var b bytes.Buffer
+	cmd.Stdout = &b
+
+	err := cmd.Run()
+	resp := b.Bytes()
+
+	if err != nil {
+		return nil, fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return resp, nil
 }

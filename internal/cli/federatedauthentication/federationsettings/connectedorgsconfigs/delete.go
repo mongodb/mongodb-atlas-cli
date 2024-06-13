@@ -50,7 +50,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteConnectedOrgConfig, opts.federationSettingsID)
 }
 
-// atlas federatedAuthentication connectedOrgs delete --federationSettingsId federationSettingsId [-o/--output output].
+// atlas federatedAuthentication federationSettings connectedOrgConfigs delete --federationSettingsId federationSettingsId [-o/--output output].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Connected Org Config with OrgID %s deleted.\n", "Connected Org Config with OrgID %s not deleted."),
@@ -60,9 +60,9 @@ func DeleteBuilder() *cobra.Command {
 		Short: "Delete a connected org config Organization.",
 		Args:  cobra.NoArgs,
 		Example: `  # Delete a connected org config from the current profile org and federationSettingsId 5d1113b25a115342acc2d1aa 
-			atlas federatedAuthentication connectedOrgs delete --federationSettingsId 5d1113b25a115342acc2d1aa 
+			atlas federatedAuthentication federationSettings connectedOrgConfigs delete --federationSettingsId 5d1113b25a115342acc2d1aa 
 			# Delete a connected org config from the org with ID 7d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa 
-			atlas federatedAuthentication connectedOrgs connect --orgId 7d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
+			atlas federatedAuthentication federationSettings connectedOrgConfigs connect --orgId 7d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
 		`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			err := opts.PreRunE(

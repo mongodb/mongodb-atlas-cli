@@ -66,7 +66,7 @@ func (opts *ListOpts) InitStore(ctx context.Context) func() error {
 	}
 }
 
-// atlas federatedAuthentication connectedOrgsConfig list --federationSettingsId federationSettingsId [-o/--output output].
+// atlas federatedAuthentication federationSettings connectedOrgsConfig list --federationSettingsId federationSettingsId [-o/--output output].
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{

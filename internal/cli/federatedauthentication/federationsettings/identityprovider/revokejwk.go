@@ -47,7 +47,7 @@ func (opts *RevokeOpts) Run() error {
 	return opts.Delete(opts.store.RevokeJwksFromIdentityProvider, opts.FederationSettingsID)
 }
 
-// atlas federatedAuthentication identityProvider revokeJwk <identityProviderId> --federationSettingsId federationSettingsId [--output output].
+// atlas federatedAuthentication federationSettings identityProvider revokeJwk <identityProviderId> --federationSettingsId federationSettingsId [--output output].
 func RevokeBuilder() *cobra.Command {
 	opts := &RevokeOpts{
 		DeleteOpts: cli.NewDeleteOpts("Identity Provider %s JWK token revoked.\n", "Identity Provider %s JWK token not revoked.\n"),
@@ -61,7 +61,7 @@ func RevokeBuilder() *cobra.Command {
 			"identityProviderIdDesc": "ID of the identityProvider.",
 		},
 		Example: `  # Revoke the Jwk from the specified identity provider from your federation settings with ID 5d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa.
-	atlas federatedAuthentication identityProvider revokeJwk 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa
+	atlas federatedAuthentication federationSettings identityProvider revokeJwk 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.Entry = args[0]

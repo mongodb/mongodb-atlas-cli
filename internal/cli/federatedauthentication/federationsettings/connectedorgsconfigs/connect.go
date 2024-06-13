@@ -96,7 +96,7 @@ func (opts *ConnectOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas federatedAuthentication connectedOrgs connect --identityProviderId identityProviderId --federationSettingsId federationSettingsId [-o/--output output].
+// atlas federatedAuthentication federationSettings connectedOrgConfigs connect --identityProviderId identityProviderId --federationSettingsId federationSettingsId [-o/--output output].
 func ConnectBuilder() *cobra.Command {
 	opts := &ConnectOpts{
 		DescribeOrgConfigsOpts: &DescribeOrgConfigsOpts{},
@@ -106,9 +106,9 @@ func ConnectBuilder() *cobra.Command {
 		Short: "Connect an Identity Provider to an Organization.",
 		Args:  cobra.NoArgs,
 		Example: `  # Connect the current profile org to identity provider with ID 5d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa 
-			atlas federatedAuthentication connectedOrgs connect --identityProviderId 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
+			atlas federatedAuthentication federationSettings connectedOrgConfigs connect --identityProviderId 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
 			# Connect the org with ID 7d1113b25a115342acc2d1aa to identity provider with ID 5d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa 
-			atlas federatedAuthentication connectedOrgs connect --orgId 7d1113b25a115342acc2d1aa --identityProviderId 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
+			atlas federatedAuthentication  federationSettings connectedOrgConfigs connect --orgId 7d1113b25a115342acc2d1aa --identityProviderId 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
 		`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

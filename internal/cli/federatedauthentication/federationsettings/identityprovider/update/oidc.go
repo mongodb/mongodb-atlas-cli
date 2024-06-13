@@ -185,8 +185,8 @@ func OIDCBuilder() *cobra.Command {
 			"identityProviderIdDesc": "The Identity Provider ID.",
 			"output":                 updateTemplate,
 		},
-		Example: `  # Update the audience for the specified identity provider from your federation settings with ID 5d1113b25a115342acc2d1aa, federationSettingsId 5d1113b25a115342acc2d1aa and IdpType WORKFORCE
-			atlas federatedAuthentication identityProvider update 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa --idpType WORKFORCE --audience newAudience
+		Example: `  # Update the audience of the identity provider with ID aa2223b25a115342acc1f108 and from your federation settings with federationSettingsId 5d1113b25a115342acc2d1aa with IdpType WORKFORCE
+			atlas federatedAuthentication identityProvider update aa2223b25a115342acc1f108 --federationSettingsId 5d1113b25a115342acc2d1aa --idpType WORKFORCE --audience newAudience
 		`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.protocol = oidc

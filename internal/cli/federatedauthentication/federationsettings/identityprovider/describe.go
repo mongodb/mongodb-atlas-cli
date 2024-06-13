@@ -74,8 +74,8 @@ func DescribeBuilder() *cobra.Command {
 			"identityProviderIdDesc": "ID of the identityProvider.",
 			"output":                 describeTemplate,
 		},
-		Example: `  # Describe the specified identity provider from your federation settings with ID 5d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa.
-	atlas federatedAuthentication federationSettings identityProvider describe 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa
+		Example: `  # Describe the identity provider with ID aa2223b25a115342acc1f108 with federationSettingsId 5d1113b25a115342acc2d1aa.
+	atlas federatedAuthentication federationSettings identityProvider describe aa2223b25a115342acc1f108 --federationSettingsId 5d1113b25a115342acc2d1aa
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.IdentityProviderID = args[0]

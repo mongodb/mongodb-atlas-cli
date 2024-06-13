@@ -123,6 +123,9 @@ func OIDCBuilder() *cobra.Command {
 			"displayNameDesc": "The Identity Provider display name.",
 			"output":          createTemplate,
 		},
+		Example: `  # Create an identity provider with name IDPName and from your federation settings with federationSettingsId 5d1113b25a115342acc2d1aa.
+		atlas federatedAuthentication identityProvider create oidc IDPName --audience "audience" --authorizationType "GROUP" --clientId clientId --desc "IDPName test" --federationSettingsId "5d1113b25a115342acc2d1aa" --groupsClaim "groups" --idpType "WORKLOAD" --issuerUri uri" --userClaim "user"  --associatedDomain "domain"
+	`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.protocol = oidc
 			return opts.PreRunE(

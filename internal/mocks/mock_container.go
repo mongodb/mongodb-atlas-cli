@@ -84,3 +84,37 @@ func (mr *MockEngineMockRecorder) ContainerRun(arg0, arg1, arg2 interface{}) *go
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerRun", reflect.TypeOf((*MockEngine)(nil).ContainerRun), arg0, arg1, arg2)
 }
+
+// ImageList mocks base method.
+func (m *MockEngine) ImageList(arg0 context.Context, arg1 ...string) ([]container.Image, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ImageList", varargs...)
+	ret0, _ := ret[0].([]container.Image)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ImageList indicates an expected call of ImageList.
+func (mr *MockEngineMockRecorder) ImageList(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageList", reflect.TypeOf((*MockEngine)(nil).ImageList), varargs...)
+}
+
+// ImagePull mocks base method.
+func (m *MockEngine) ImagePull(arg0 context.Context, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ImagePull", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ImagePull indicates an expected call of ImagePull.
+func (mr *MockEngineMockRecorder) ImagePull(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImagePull", reflect.TypeOf((*MockEngine)(nil).ImagePull), arg0, arg1)
+}

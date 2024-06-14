@@ -104,3 +104,32 @@ func (e *podmanImpl) ContainerList(ctx context.Context, nameFilter ...string) ([
 	}
 	return result, nil
 }
+
+func (e *podmanImpl) ImageList(ctx context.Context, nameFilter ...string) ([]Image, error) {
+	images, err := e.client.ListImages(ctx, strings.Join(nameFilter, " "))
+	if err != nil {
+		return nil, err
+	}
+	result := make([]Image, 0, len(images))
+	for _, c := range images {
+		result = append(result, Image{
+			ID:          c.ID,
+			RepoTags:    c.RepoTags,
+			RepoDigests: c.RepoDigests,
+			Created:     c.Created,
+			CreatedAt:   c.CreatedAt,
+			Size:        c.Size,
+			SharedSize:  c.SharedSize,
+			VirtualSize: c.VirtualSize,
+			Labels:      c.Labels,
+			Containers:  c.Containers,
+			Names:       c.Names,
+		})
+	}
+	return result, nil
+}
+
+func (e *podmanImpl) ImagePull(ctx context.Context, name string) error {
+	_, err := e.client.PullImage(ctx, name)
+	return err
+}

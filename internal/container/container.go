@@ -45,6 +45,28 @@ type Engine interface {
 	ContainerLogs(context.Context, string) ([]string, error)
 	ContainerRun(context.Context, string, *RunFlags) (string, error)
 	ContainerList(context.Context, ...string) ([]Container, error)
+	ImageList(context.Context, ...string) ([]Image, error)
+	ImagePull(context.Context, string) error
+}
+
+type Image struct {
+	ID          string
+	RepoTags    string
+	RepoDigests []string
+	Created     int
+	CreatedAt   string
+	Size        int
+	SharedSize  int
+	VirtualSize int
+	Labels      struct {
+		Architecture string `json:"architecture"`
+		BuildDate    string `json:"build-date"`
+		Description  string `json:"description"`
+		Name         string `json:"name"`
+		Version      string `json:"version"`
+	}
+	Containers int
+	Names      []string
 }
 
 type Container struct {

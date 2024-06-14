@@ -38,7 +38,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongosh"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
@@ -120,15 +119,15 @@ func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, current
 	opts.logStepStarted("Downloading the MongoDB binaries to your local environment...", currentStep, steps)
 	defer opts.stop()
 
-	var mongodImages []*podman.Image
+	var mongodImages []container.Image
 	var err error
 
-	if mongodImages, err = opts.PodmanClient.ListImages(ctx, opts.MongodDockerImageName()); err != nil {
+	if mongodImages, err = opts.ContainerEngine.ImageList(ctx, opts.MongodDockerImageName()); err != nil {
 		return err
 	}
 
 	if len(mongodImages) == 0 {
-		if _, err = opts.PodmanClient.PullImage(ctx, opts.MongodDockerImageName()); err != nil {
+		if err = opts.ContainerEngine.ImagePull(ctx, opts.MongodDockerImageName()); err != nil {
 			return err
 		}
 	}
@@ -148,26 +147,30 @@ func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, st
 	return opts.validateLocalDeploymentsSettings(containers)
 }
 
-func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needToPullImages bool) {
+func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needToPullImages bool, err error) {
 	steps = 2
 	needToPullImages = false
 
-	setupState := opts.PodmanClient.Diagnostics(ctx)
+	images, err := opts.ContainerEngine.ImageList(ctx, opts.MongodDockerImageName())
 
-	foundMongod := false
-	for _, image := range setupState.Images {
-		foundMongod = foundMongod || image == opts.MongodDockerImageName()
+	if err != nil {
+		return 0, false, err
 	}
+
+	foundMongod := len(images) > 0
 
 	if !foundMongod {
 		steps++
 		needToPullImages = true
 	}
-	return steps, needToPullImages
+	return steps, needToPullImages, nil
 }
 
 func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
-	steps, needToPullImages := opts.planSteps(ctx)
+	steps, needToPullImages, err := opts.planSteps(ctx)
+	if err != nil {
+		return err
+	}
 	currentStep := 1
 	longWaitWarning := ""
 	if steps > shortStepCount {

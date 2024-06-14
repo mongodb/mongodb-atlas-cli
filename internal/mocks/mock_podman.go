@@ -85,21 +85,6 @@ func (mr *MockClientMockRecorder) CopyFileToContainer(arg0, arg1, arg2, arg3 int
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CopyFileToContainer", reflect.TypeOf((*MockClient)(nil).CopyFileToContainer), arg0, arg1, arg2, arg3)
 }
 
-// CreateNetwork mocks base method.
-func (m *MockClient) CreateNetwork(arg0 context.Context, arg1 string) ([]byte, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateNetwork", arg0, arg1)
-	ret0, _ := ret[0].([]byte)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateNetwork indicates an expected call of CreateNetwork.
-func (mr *MockClientMockRecorder) CreateNetwork(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateNetwork", reflect.TypeOf((*MockClient)(nil).CreateNetwork), arg0, arg1)
-}
-
 // CreateVolume mocks base method.
 func (m *MockClient) CreateVolume(arg0 context.Context, arg1 string) ([]byte, error) {
 	m.ctrl.T.Helper()
@@ -193,26 +178,6 @@ func (mr *MockClientMockRecorder) Logs(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Logs", reflect.TypeOf((*MockClient)(nil).Logs), arg0)
 }
 
-// Network mocks base method.
-func (m *MockClient) Network(arg0 context.Context, arg1 ...string) ([]*podman.Network, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0}
-	for _, a := range arg1 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Network", varargs...)
-	ret0, _ := ret[0].([]*podman.Network)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Network indicates an expected call of Network.
-func (mr *MockClientMockRecorder) Network(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0}, arg1...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Network", reflect.TypeOf((*MockClient)(nil).Network), varargs...)
-}
-
 // PullImage mocks base method.
 func (m *MockClient) PullImage(arg0 context.Context, arg1 string) ([]byte, error) {
 	m.ctrl.T.Helper()
@@ -260,46 +225,6 @@ func (mr *MockClientMockRecorder) RemoveContainers(arg0 interface{}, arg1 ...int
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0}, arg1...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveContainers", reflect.TypeOf((*MockClient)(nil).RemoveContainers), varargs...)
-}
-
-// RemoveNetworks mocks base method.
-func (m *MockClient) RemoveNetworks(arg0 context.Context, arg1 ...string) ([]byte, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0}
-	for _, a := range arg1 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "RemoveNetworks", varargs...)
-	ret0, _ := ret[0].([]byte)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// RemoveNetworks indicates an expected call of RemoveNetworks.
-func (mr *MockClientMockRecorder) RemoveNetworks(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0}, arg1...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveNetworks", reflect.TypeOf((*MockClient)(nil).RemoveNetworks), varargs...)
-}
-
-// RemoveVolumes mocks base method.
-func (m *MockClient) RemoveVolumes(arg0 context.Context, arg1 ...string) ([]byte, error) {
-	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0}
-	for _, a := range arg1 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "RemoveVolumes", varargs...)
-	ret0, _ := ret[0].([]byte)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// RemoveVolumes indicates an expected call of RemoveVolumes.
-func (mr *MockClientMockRecorder) RemoveVolumes(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0}, arg1...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveVolumes", reflect.TypeOf((*MockClient)(nil).RemoveVolumes), varargs...)
 }
 
 // RunContainer mocks base method.

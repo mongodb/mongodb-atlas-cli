@@ -123,7 +123,6 @@ type Version struct {
 type Client interface {
 	Ready(ctx context.Context) error
 	Diagnostics(ctx context.Context) *Diagnostic
-	CreateNetwork(ctx context.Context, name string) ([]byte, error)
 	CreateVolume(ctx context.Context, name string) ([]byte, error)
 	RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error)
 	CopyFileToContainer(ctx context.Context, localFile string, containerName string, filePathInContainer string) ([]byte, error)
@@ -132,15 +131,12 @@ type Client interface {
 	StartContainers(ctx context.Context, names ...string) ([]byte, error)
 	UnpauseContainers(ctx context.Context, names ...string) ([]byte, error)
 	RemoveContainers(ctx context.Context, names ...string) ([]byte, error)
-	RemoveVolumes(ctx context.Context, names ...string) ([]byte, error)
-	RemoveNetworks(ctx context.Context, names ...string) ([]byte, error)
 	ListContainers(ctx context.Context, nameFilter string) ([]*Container, error)
 	ListImages(ctx context.Context, nameFilter string) ([]*Image, error)
 	PullImage(ctx context.Context, name string) ([]byte, error)
 	Version(ctx context.Context) (*Version, error)
 	Logs(ctx context.Context) (map[string]interface{}, []error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
-	Network(ctx context.Context, names ...string) ([]*Network, error)
 	Exec(ctx context.Context, name string, args ...string) error
 }
 
@@ -242,10 +238,6 @@ func (*client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
 	return output, err
 }
 
-func (o *client) CreateNetwork(ctx context.Context, name string) ([]byte, error) {
-	return o.runPodman(ctx, "network", "create", name)
-}
-
 func (o *client) CreateVolume(ctx context.Context, name string) ([]byte, error) {
 	return o.runPodman(ctx, "volume", "create", name)
 }
@@ -333,15 +325,7 @@ func (o *client) UnpauseContainers(ctx context.Context, names ...string) ([]byte
 }
 
 func (o *client) RemoveContainers(ctx context.Context, names ...string) ([]byte, error) {
-	return o.runPodman(ctx, append([]string{"rm", "-f"}, names...)...)
-}
-
-func (o *client) RemoveVolumes(ctx context.Context, names ...string) ([]byte, error) {
-	return o.runPodman(ctx, append([]string{"volume", "rm", "-f"}, names...)...)
-}
-
-func (o *client) RemoveNetworks(ctx context.Context, names ...string) ([]byte, error) {
-	return o.runPodman(ctx, append([]string{"network", "rm", "-f"}, names...)...)
+	return o.runPodman(ctx, append([]string{"rm", "-f", "-v"}, names...)...)
 }
 
 func (o *client) ListContainers(ctx context.Context, nameFilter string) ([]*Container, error) {
@@ -432,26 +416,6 @@ func (o *client) ContainerLogs(ctx context.Context, name string) ([]string, erro
 
 	logs := strings.Split(string(output), "\n")
 	return logs, nil
-}
-
-func (o *client) Network(ctx context.Context, names ...string) ([]*Network, error) {
-	args := []string{"network", "inspect", "--format", "json"}
-	args = append(args, names...)
-	output, err := o.runPodman(ctx, args...)
-	if err != nil {
-		return nil, err
-	}
-
-	var n []*Network
-	if err = json.Unmarshal(output, &n); err != nil {
-		return nil, err
-	}
-
-	if len(n) == 0 {
-		return nil, ErrNetworkNotFound
-	}
-
-	return n, err
 }
 
 func (o *client) Exec(ctx context.Context, name string, args ...string) error {

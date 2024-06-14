@@ -196,11 +196,6 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 }
 
 func (opts *SetupOpts) configureMongod(ctx context.Context) error {
-	mongodDataVolume := opts.LocalMongodDataVolume()
-	if _, err := opts.PodmanClient.CreateVolume(ctx, mongodDataVolume); err != nil {
-		return err
-	}
-
 	envVars := map[string]string{}
 	if opts.IsAuthEnabled() {
 		envVars["MONGODB_INITDB_ROOT_USERNAME"] = opts.DBUsername
@@ -214,9 +209,6 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 			Name:     opts.LocalMongodHostname(),
 			Hostname: opts.LocalMongodHostname(),
 			EnvVars:  envVars,
-			Volumes: map[string]string{
-				mongodDataVolume: "/data/db",
-			},
 			Ports: map[int]int{
 				opts.Port: internalMongodPort,
 			},

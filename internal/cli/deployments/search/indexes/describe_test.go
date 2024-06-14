@@ -84,11 +84,6 @@ func TestDescribe_RunLocal(t *testing.T) {
 						},
 					},
 				},
-				Mounts: []podman.InspectMount{
-					{
-						Name: opts.DeploymentOpts.LocalMongodDataVolume(),
-					},
-				},
 			},
 		}, nil).
 		Times(1)

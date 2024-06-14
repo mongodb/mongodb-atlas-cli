@@ -129,14 +129,6 @@ func (opts *DeploymentOpts) LocalCheckHostname() string {
 	return fmt.Sprintf("%s-%s", CheckHostnamePrefix, opts.DeploymentName)
 }
 
-func (opts *DeploymentOpts) LocalMongodDataVolume() string {
-	return "mongod-local-data-" + opts.DeploymentName
-}
-
-func (opts *DeploymentOpts) LocalMongoMetricsVolume() string {
-	return "mongot-local-metrics-" + opts.DeploymentName
-}
-
 func (opts *DeploymentOpts) MongodDockerImageName() string {
 	return "docker.io/mongodb/mongodb-atlas-local:" + opts.MdbVersion
 }

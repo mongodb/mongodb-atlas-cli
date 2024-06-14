@@ -42,6 +42,7 @@ type RunFlags struct {
 //go:generate mockgen -destination=../mocks/mock_container.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container Engine
 
 type Engine interface {
+	Ready(context.Context) error
 	ContainerLogs(context.Context, string) ([]string, error)
 	ContainerRun(context.Context, string, *RunFlags) (string, error)
 	ContainerList(context.Context, ...string) ([]Container, error)

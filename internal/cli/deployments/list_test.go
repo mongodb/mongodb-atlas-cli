@@ -118,7 +118,7 @@ func TestList_Run(t *testing.T) {
 		Return(config.OAuth).
 		Times(2)
 
-	mockPodman.
+	mockContainerEngine.
 		EXPECT().
 		Ready(ctx).
 		Return(nil).
@@ -211,7 +211,7 @@ func TestList_Run_NoLocal(t *testing.T) {
 		Return(config.OAuth).
 		Times(2)
 
-	mockPodman.
+	mockContainerEngine.
 		EXPECT().
 		Ready(ctx).
 		Return(nil).
@@ -302,7 +302,7 @@ func TestList_Run_NoAtlas(t *testing.T) {
 		Return(config.OAuth).
 		Times(2)
 
-	mockPodman.
+	mockContainerEngine.
 		EXPECT().
 		Ready(ctx).
 		Return(nil).

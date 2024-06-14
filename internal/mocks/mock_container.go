@@ -118,3 +118,17 @@ func (mr *MockEngineMockRecorder) ImagePull(arg0, arg1 interface{}) *gomock.Call
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImagePull", reflect.TypeOf((*MockEngine)(nil).ImagePull), arg0, arg1)
 }
+
+// Ready mocks base method.
+func (m *MockEngine) Ready(arg0 context.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Ready", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Ready indicates an expected call of Ready.
+func (mr *MockEngineMockRecorder) Ready(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ready", reflect.TypeOf((*MockEngine)(nil).Ready), arg0)
+}

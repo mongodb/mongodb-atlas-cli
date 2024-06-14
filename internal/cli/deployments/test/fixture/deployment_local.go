@@ -43,7 +43,7 @@ func NewMockLocalDeploymentOpts(ctrl *gomock.Controller, deploymentName string) 
 }
 
 func (m *MockDeploymentOpts) LocalMockFlowWithMockContainer(ctx context.Context, mockContainer []container.Container) {
-	m.MockPodman.
+	m.MockContainerEngine.
 		EXPECT().
 		Ready(ctx).
 		Return(nil).

@@ -91,8 +91,7 @@ func (opts *PauseOpts) stopContainer(ctx context.Context, deployment options.Dep
 	opts.StartSpinner()
 	defer opts.StopSpinner()
 
-	_, err := opts.PodmanClient.StopContainers(ctx, opts.LocalMongodHostname())
-	return err
+	return opts.ContainerEngine.ContainerStop(ctx, opts.LocalMongodHostname())
 }
 
 func (opts *PauseOpts) RunAtlas() error {

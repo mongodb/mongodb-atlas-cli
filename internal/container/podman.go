@@ -141,3 +141,18 @@ func (e *podmanImpl) ContainerRm(ctx context.Context, names ...string) error {
 	_, err := e.client.RemoveContainers(ctx, names...)
 	return err
 }
+
+func (e *podmanImpl) ContainerStart(ctx context.Context, names ...string) error {
+	_, err := e.client.StartContainers(ctx, names...)
+	return err
+}
+
+func (e *podmanImpl) ContainerStop(ctx context.Context, names ...string) error {
+	_, err := e.client.StopContainers(ctx, names...)
+	return err
+}
+
+func (e *podmanImpl) ContainerUnpause(ctx context.Context, names ...string) error {
+	_, err := e.client.UnpauseContainers(ctx, names...)
+	return err
+}

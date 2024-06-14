@@ -39,7 +39,6 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 	ctx := context.Background()
 
 	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
-	mockPodman := deploymentsTest.MockPodman
 
 	buf := new(bytes.Buffer)
 	startOpts := &StartOpts{
@@ -56,10 +55,10 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 	expected := deploymentsTest.MockContainerWithState("paused")
 	deploymentsTest.LocalMockFlowWithMockContainer(ctx, expected)
 
-	mockPodman.
+	deploymentsTest.MockContainerEngine.
 		EXPECT().
-		UnpauseContainers(ctx, startOpts.LocalMongodHostname()).
-		Return(nil, nil).
+		ContainerUnpause(ctx, startOpts.LocalMongodHostname()).
+		Return(nil).
 		Times(1)
 
 	require.NoError(t, startOpts.Run(ctx))
@@ -72,7 +71,6 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 	ctx := context.Background()
 
 	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
-	mockPodman := deploymentsTest.MockPodman
 
 	buf := new(bytes.Buffer)
 	startOpts := &StartOpts{
@@ -89,10 +87,10 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 	expected := deploymentsTest.MockContainerWithState("exited")
 	deploymentsTest.LocalMockFlowWithMockContainer(ctx, expected)
 
-	mockPodman.
+	deploymentsTest.MockContainerEngine.
 		EXPECT().
-		StartContainers(ctx, startOpts.LocalMongodHostname()).
-		Return(nil, nil).
+		ContainerStart(ctx, startOpts.LocalMongodHostname()).
+		Return(nil).
 		Times(1)
 
 	require.NoError(t, startOpts.Run(ctx))

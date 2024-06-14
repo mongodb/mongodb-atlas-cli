@@ -104,6 +104,63 @@ func (mr *MockEngineMockRecorder) ContainerRun(arg0, arg1, arg2 interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerRun", reflect.TypeOf((*MockEngine)(nil).ContainerRun), arg0, arg1, arg2)
 }
 
+// ContainerStart mocks base method.
+func (m *MockEngine) ContainerStart(arg0 context.Context, arg1 ...string) error {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ContainerStart", varargs...)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ContainerStart indicates an expected call of ContainerStart.
+func (mr *MockEngineMockRecorder) ContainerStart(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerStart", reflect.TypeOf((*MockEngine)(nil).ContainerStart), varargs...)
+}
+
+// ContainerStop mocks base method.
+func (m *MockEngine) ContainerStop(arg0 context.Context, arg1 ...string) error {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ContainerStop", varargs...)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ContainerStop indicates an expected call of ContainerStop.
+func (mr *MockEngineMockRecorder) ContainerStop(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerStop", reflect.TypeOf((*MockEngine)(nil).ContainerStop), varargs...)
+}
+
+// ContainerUnpause mocks base method.
+func (m *MockEngine) ContainerUnpause(arg0 context.Context, arg1 ...string) error {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ContainerUnpause", varargs...)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ContainerUnpause indicates an expected call of ContainerUnpause.
+func (mr *MockEngineMockRecorder) ContainerUnpause(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerUnpause", reflect.TypeOf((*MockEngine)(nil).ContainerUnpause), varargs...)
+}
+
 // ImageList mocks base method.
 func (m *MockEngine) ImageList(arg0 context.Context, arg1 ...string) ([]container.Image, error) {
 	m.ctrl.T.Helper()

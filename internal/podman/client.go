@@ -123,7 +123,6 @@ type Version struct {
 type Client interface {
 	Ready(ctx context.Context) error
 	Diagnostics(ctx context.Context) *Diagnostic
-	CreateVolume(ctx context.Context, name string) ([]byte, error)
 	RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error)
 	CopyFileToContainer(ctx context.Context, localFile string, containerName string, filePathInContainer string) ([]byte, error)
 	ContainerInspect(ctx context.Context, names ...string) ([]*InspectContainerData, error)
@@ -236,10 +235,6 @@ func (*client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
 	}
 
 	return output, err
-}
-
-func (o *client) CreateVolume(ctx context.Context, name string) ([]byte, error) {
-	return o.runPodman(ctx, "volume", "create", name)
 }
 
 func (o *client) ContainerInspect(ctx context.Context, names ...string) ([]*InspectContainerData, error) {

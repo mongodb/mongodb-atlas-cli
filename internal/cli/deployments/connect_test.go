@@ -76,11 +76,6 @@ func TestRun_ConnectLocal(t *testing.T) {
 						},
 					},
 				},
-				Mounts: []podman.InspectMount{
-					{
-						Name: connectOpts.DeploymentOpts.LocalMongodDataVolume(),
-					},
-				},
 			},
 		}, nil).
 		Times(1)

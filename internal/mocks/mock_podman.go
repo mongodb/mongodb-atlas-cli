@@ -85,21 +85,6 @@ func (mr *MockClientMockRecorder) CopyFileToContainer(arg0, arg1, arg2, arg3 int
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CopyFileToContainer", reflect.TypeOf((*MockClient)(nil).CopyFileToContainer), arg0, arg1, arg2, arg3)
 }
 
-// CreateVolume mocks base method.
-func (m *MockClient) CreateVolume(arg0 context.Context, arg1 string) ([]byte, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateVolume", arg0, arg1)
-	ret0, _ := ret[0].([]byte)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateVolume indicates an expected call of CreateVolume.
-func (mr *MockClientMockRecorder) CreateVolume(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateVolume", reflect.TypeOf((*MockClient)(nil).CreateVolume), arg0, arg1)
-}
-
 // Diagnostics mocks base method.
 func (m *MockClient) Diagnostics(arg0 context.Context) *podman.Diagnostic {
 	m.ctrl.T.Helper()

@@ -16,9 +16,5 @@ package options
 import "context"
 
 func (opts *DeploymentOpts) RemoveLocal(ctx context.Context) error {
-	if _, errRemove := opts.PodmanClient.RemoveContainers(ctx, opts.LocalMongodHostname()); errRemove != nil {
-		return errRemove
-	}
-
-	return nil
+	return opts.ContainerEngine.ContainerRm(ctx, opts.LocalMongodHostname())
 }

@@ -136,3 +136,8 @@ func (e *podmanImpl) ImagePull(ctx context.Context, name string) error {
 	_, err := e.client.PullImage(ctx, name)
 	return err
 }
+
+func (e *podmanImpl) ContainerRm(ctx context.Context, names ...string) error {
+	_, err := e.client.RemoveContainers(ctx, names...)
+	return err
+}

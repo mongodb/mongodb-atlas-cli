@@ -45,6 +45,7 @@ type Engine interface {
 	ContainerLogs(context.Context, string) ([]string, error)
 	ContainerRun(context.Context, string, *RunFlags) (string, error)
 	ContainerList(context.Context, ...string) ([]Container, error)
+	ContainerRm(context.Context, ...string) error
 	ImageList(context.Context, ...string) ([]Image, error)
 	ImagePull(context.Context, string) error
 }

@@ -70,6 +70,25 @@ func (mr *MockEngineMockRecorder) ContainerLogs(arg0, arg1 interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerLogs", reflect.TypeOf((*MockEngine)(nil).ContainerLogs), arg0, arg1)
 }
 
+// ContainerRm mocks base method.
+func (m *MockEngine) ContainerRm(arg0 context.Context, arg1 ...string) error {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ContainerRm", varargs...)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ContainerRm indicates an expected call of ContainerRm.
+func (mr *MockEngineMockRecorder) ContainerRm(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerRm", reflect.TypeOf((*MockEngine)(nil).ContainerRm), varargs...)
+}
+
 // ContainerRun mocks base method.
 func (m *MockEngine) ContainerRun(arg0 context.Context, arg1 string, arg2 *container.RunFlags) (string, error) {
 	m.ctrl.T.Helper()

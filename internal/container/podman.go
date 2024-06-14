@@ -74,7 +74,6 @@ func (e *podmanImpl) ContainerRun(ctx context.Context, image string, flags *RunF
 		for _, entry := range flags.Ports {
 			podmanOpts.Ports[entry.HostPort] = entry.ContainerPort
 		}
-		podmanOpts.Volumes = flags.Volumes
 		podmanOpts.Args = flags.Args
 		podmanOpts.EnvVars = flags.Env
 	}

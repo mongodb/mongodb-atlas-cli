@@ -32,7 +32,6 @@ type RunFlags struct {
 	Env        map[string]string
 	Cmd        *string
 	Args       []string
-	Volumes    map[string]string
 	Network    *string
 	IP         *string
 	Entrypoint *string

@@ -93,11 +93,6 @@ func TestCreate_RunLocal(t *testing.T) {
 						},
 					},
 				},
-				Mounts: []podman.InspectMount{
-					{
-						Name: opts.DeploymentOpts.LocalMongodDataVolume(),
-					},
-				},
 			},
 		}, nil).
 		Times(1)
@@ -213,11 +208,6 @@ func TestCreate_Duplicated(t *testing.T) {
 								HostPort: "27017",
 							},
 						},
-					},
-				},
-				Mounts: []podman.InspectMount{
-					{
-						Name: opts.DeploymentOpts.LocalMongodDataVolume(),
 					},
 				},
 			},

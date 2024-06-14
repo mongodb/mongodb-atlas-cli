@@ -201,17 +201,13 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 }
 
 func (opts *SetupOpts) configureMongod(ctx context.Context) error {
-	mongodDataVolume := opts.LocalMongodDataVolume()
-	if _, err := opts.PodmanClient.CreateVolume(ctx, mongodDataVolume); err != nil {
-		return err
-	}
-
 	envVars := map[string]string{}
 	if opts.IsAuthEnabled() {
 		envVars["MONGODB_INITDB_ROOT_USERNAME"] = opts.DBUsername
 		envVars["MONGODB_INITDB_ROOT_PASSWORD"] = opts.DBUserPassword
 	}
 
+<<<<<<< HEAD
 	flags := container.RunFlags{}
 	flags.Detach = pointer.Get(true)
 	flags.Name = pointer.Get(opts.LocalMongodHostname())
@@ -224,6 +220,21 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 	flags.IP = &opts.mongodIP
 	flags.Ports = []container.Port{{HostPort: opts.Port, ContainerPort: internalMongodPort}}
 	_, err := opts.ContainerEngine.ContainerRun(ctx, opts.MongodDockerImageName(), &flags)
+=======
+	_, err := opts.PodmanClient.RunContainer(ctx,
+		podman.RunContainerOpts{
+			Detach:   true,
+			Image:    opts.MongodDockerImageName(),
+			Name:     opts.LocalMongodHostname(),
+			Hostname: opts.LocalMongodHostname(),
+			EnvVars:  envVars,
+			Ports: map[int]int{
+				opts.Port: internalMongodPort,
+			},
+			BindIPAll: opts.bindIPAll,
+			IP:        opts.mongodIP,
+		})
+>>>>>>> @{-1}
 
 	return err
 }

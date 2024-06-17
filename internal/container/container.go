@@ -49,6 +49,7 @@ type Engine interface {
 	ContainerStart(context.Context, ...string) error
 	ContainerStop(context.Context, ...string) error
 	ContainerUnpause(context.Context, ...string) error
+	ContainerInspect(context.Context, ...string) ([]*ContainerInspectData, error)
 	ImageList(context.Context, ...string) ([]Image, error)
 	ImagePull(context.Context, string) error
 }
@@ -80,6 +81,26 @@ type Container struct {
 	Image  string
 	Ports  []Port
 	Labels map[string]string
+}
+
+type ContainerInspectDataConfig struct {
+	Labels map[string]string `json:"Labels"`
+}
+
+type ContainerInspectData struct {
+	ID         string                          `json:"Id"`
+	Name       string                          `json:"Name"`
+	Config     *ContainerInspectDataConfig     `json:"Config"`
+	HostConfig *ContainerInspectDataHostConfig `json:"HostConfig"`
+}
+
+type ContainerInspectDataHostConfig struct {
+	PortBindings map[string][]ContainerInspectDataHostPort `json:"PortBindings"`
+}
+
+type ContainerInspectDataHostPort struct {
+	HostIP   string `json:"HostIp"`
+	HostPort string `json:"HostPort"`
 }
 
 func New() Engine {

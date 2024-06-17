@@ -156,3 +156,37 @@ func (e *podmanImpl) ContainerUnpause(ctx context.Context, names ...string) erro
 	_, err := e.client.UnpauseContainers(ctx, names...)
 	return err
 }
+
+func (e *podmanImpl) ContainerInspect(ctx context.Context, names ...string) ([]*ContainerInspectData, error) {
+	res, err := e.client.ContainerInspect(ctx, names...)
+	if err != nil {
+		return nil, err
+	}
+
+	results := []*ContainerInspectData{}
+	for _, data := range res {
+		portBidings := map[string][]ContainerInspectDataHostPort{}
+
+		for key, values := range data.HostConfig.PortBindings {
+			for _, value := range values {
+				portBidings[key] = append(portBidings[key], ContainerInspectDataHostPort{
+					HostIP:   value.HostIP,
+					HostPort: value.HostPort,
+				})
+			}
+		}
+
+		results = append(results, &ContainerInspectData{
+			ID:   data.ID,
+			Name: data.Name,
+			Config: &ContainerInspectDataConfig{
+				Labels: data.Config.Labels,
+			},
+			HostConfig: &ContainerInspectDataHostConfig{
+				PortBindings: portBidings,
+			},
+		})
+	}
+
+	return results, nil
+}

@@ -35,6 +35,26 @@ func (m *MockEngine) EXPECT() *MockEngineMockRecorder {
 	return m.recorder
 }
 
+// ContainerInspect mocks base method.
+func (m *MockEngine) ContainerInspect(arg0 context.Context, arg1 ...string) ([]*container.ContainerInspectData, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ContainerInspect", varargs...)
+	ret0, _ := ret[0].([]*container.ContainerInspectData)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ContainerInspect indicates an expected call of ContainerInspect.
+func (mr *MockEngineMockRecorder) ContainerInspect(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerInspect", reflect.TypeOf((*MockEngine)(nil).ContainerInspect), varargs...)
+}
+
 // ContainerList mocks base method.
 func (m *MockEngine) ContainerList(arg0 context.Context, arg1 ...string) ([]container.Container, error) {
 	m.ctrl.T.Helper()

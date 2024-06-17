@@ -27,10 +27,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/search"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -53,7 +53,6 @@ func TestCreate_RunLocal(t *testing.T) {
 	ctx := context.Background()
 
 	testDeployments := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
-	mockPodman := testDeployments.MockPodman
 
 	buf := new(bytes.Buffer)
 	opts := &CreateOpts{
@@ -72,19 +71,19 @@ func TestCreate_RunLocal(t *testing.T) {
 
 	testDeployments.LocalMockFlow(ctx)
 
-	mockPodman.
+	testDeployments.MockContainerEngine.
 		EXPECT().
 		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
-		Return([]*podman.InspectContainerData{
+		Return([]*container.ContainerInspectData{
 			{
 				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
-				Config: &podman.InspectContainerConfig{
+				Config: &container.ContainerInspectDataConfig{
 					Labels: map[string]string{
 						"version": "7.0.1",
 					},
 				},
-				HostConfig: &podman.InspectContainerHostConfig{
-					PortBindings: map[string][]podman.InspectHostPort{
+				HostConfig: &container.ContainerInspectDataHostConfig{
+					PortBindings: map[string][]container.ContainerInspectDataHostPort{
 						"27017/tcp": {
 							{
 								HostIP:   "127.0.0.1",
@@ -170,7 +169,6 @@ func TestCreate_Duplicated(t *testing.T) {
 	ctx := context.Background()
 
 	testDeployments := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
-	mockPodman := testDeployments.MockPodman
 
 	buf := new(bytes.Buffer)
 	opts := &CreateOpts{
@@ -189,19 +187,19 @@ func TestCreate_Duplicated(t *testing.T) {
 
 	testDeployments.LocalMockFlow(ctx)
 
-	mockPodman.
+	testDeployments.MockContainerEngine.
 		EXPECT().
 		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
-		Return([]*podman.InspectContainerData{
+		Return([]*container.ContainerInspectData{
 			{
 				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
-				Config: &podman.InspectContainerConfig{
+				Config: &container.ContainerInspectDataConfig{
 					Labels: map[string]string{
 						"version": "7.0.1",
 					},
 				},
-				HostConfig: &podman.InspectContainerHostConfig{
-					PortBindings: map[string][]podman.InspectHostPort{
+				HostConfig: &container.ContainerInspectDataHostConfig{
+					PortBindings: map[string][]container.ContainerInspectDataHostPort{
 						"27017/tcp": {
 							{
 								HostIP:   "127.0.0.1",

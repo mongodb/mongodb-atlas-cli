@@ -54,6 +54,7 @@ const (
 	RefreshTokenField        = "refresh_token"
 	ClientIDField            = "client_id"
 	OpsManagerURLField       = "ops_manager_url"
+	SourceField              = "source" // SourceField is used to separate MongoDB University users from normal user
 	baseURL                  = "base_url"
 	output                   = "output"
 	fileFlags                = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
@@ -111,6 +112,7 @@ func Properties() []string {
 		privateAPIKey,
 		output,
 		OpsManagerURLField,
+		SourceField,
 		baseURL,
 		mongoShellPath,
 		skipUpdateCheck,
@@ -438,6 +440,18 @@ func (p *Profile) OpsManagerURL() string {
 func SetOpsManagerURL(v string) { Default().SetOpsManagerURL(v) }
 func (p *Profile) SetOpsManagerURL(v string) {
 	p.Set(OpsManagerURLField, v)
+}
+
+// Source get configured source property.
+func Source() string { return Default().Source() }
+func (p *Profile) Source() string {
+	return p.GetString(SourceField)
+}
+
+// SetSource set configured source property.
+func SetSource(v string) { Default().SetSource(v) }
+func (p *Profile) SetSource(v string) {
+	p.Set(SourceField, v)
 }
 
 // ProjectID get configured project ID.

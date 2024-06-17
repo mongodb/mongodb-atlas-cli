@@ -163,6 +163,17 @@ func TestWithService(t *testing.T) {
 	a.Equal(url, e.Properties["ops_manager_url"])
 }
 
+func TestWithSource(t *testing.T) {
+	const university = "university"
+	c := &configMock{
+		source: university,
+	}
+	e := newEvent(withSource(c))
+
+	a := assert.New(t)
+	a.Equal(university, e.Properties["source"])
+}
+
 func TestWithProjectID(t *testing.T) {
 	cmd := &cobra.Command{
 		Use: "test-command",
@@ -366,6 +377,7 @@ type configMock struct {
 	url         string
 	project     string
 	org         string
+	source      string
 }
 
 var _ Authenticator = configMock{}
@@ -397,6 +409,11 @@ func (c configMock) PublicAPIKey() string {
 func (c configMock) PrivateAPIKey() string {
 	return c.privateKey
 }
+
 func (c configMock) AccessToken() string {
 	return c.accessToken
+}
+
+func (c configMock) Source() string {
+	return c.source
 }

@@ -259,6 +259,18 @@ func withProjectID(cmd CmdFlags, c ProjectIDGetter) EventOpt {
 	}
 }
 
+type SourceGetter interface {
+	Source() string
+}
+
+func withSource(c SourceGetter) EventOpt {
+	return func(event Event) {
+		if c.Source() != "" {
+			event.Properties["source"] = c.Source()
+		}
+	}
+}
+
 type OrgIDGetter interface {
 	OrgID() string
 }

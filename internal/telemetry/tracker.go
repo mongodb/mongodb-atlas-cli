@@ -101,6 +101,7 @@ func (t *tracker) defaultCommandOptions() []EventOpt {
 		withUserAgent(),
 		withAnonymousID(),
 		withCI(),
+		withSource(config.Default()),
 		withSkipUpdateCheck(config.Default()),
 	}
 }

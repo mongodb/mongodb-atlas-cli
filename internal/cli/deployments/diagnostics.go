@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/spf13/cobra"
 )
@@ -31,15 +32,11 @@ type diagnosticsOpts struct {
 	options.DeploymentOpts
 }
 
-type diagnosticLogs struct {
-	MongoD []string
-	MongoT []string
-}
 type diagnostic struct {
 	Machine    machineDiagnostic
 	Diagnostic *podman.Diagnostic
-	Containers []*podman.InspectContainerData
-	Logs       diagnosticLogs
+	Containers []*container.ContainerInspectData
+	Logs       []string
 	Errors     []error
 }
 type machineDiagnostic struct {
@@ -57,12 +54,12 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 	}
 
 	var err error
-	d.Containers, err = opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname())
+	d.Containers, err = opts.ContainerEngine.ContainerInspect(ctx, opts.LocalMongodHostname())
 	if err != nil {
 		d.Errors = append(d.Errors, err)
 	}
 
-	if d.Logs.MongoD, err = opts.PodmanClient.ContainerLogs(ctx, opts.LocalMongodHostname()); err != nil {
+	if d.Logs, err = opts.ContainerEngine.ContainerLogs(ctx, opts.LocalMongodHostname()); err != nil {
 		d.Errors = append(d.Errors, err)
 	}
 

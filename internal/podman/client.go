@@ -119,7 +119,6 @@ type Client interface {
 	Ready(ctx context.Context) error
 	Diagnostics(ctx context.Context) *Diagnostic
 	RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error)
-	CopyFileToContainer(ctx context.Context, localFile string, containerName string, filePathInContainer string) ([]byte, error)
 	ContainerInspect(ctx context.Context, names ...string) ([]*InspectContainerData, error)
 	StopContainers(ctx context.Context, names ...string) ([]byte, error)
 	StartContainers(ctx context.Context, names ...string) ([]byte, error)
@@ -128,10 +127,8 @@ type Client interface {
 	ListContainers(ctx context.Context, nameFilter string) ([]*Container, error)
 	ListImages(ctx context.Context, nameFilter string) ([]*Image, error)
 	PullImage(ctx context.Context, name string) ([]byte, error)
-	Version(ctx context.Context) (*Version, error)
 	Logs(ctx context.Context) (map[string]interface{}, []error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
-	Exec(ctx context.Context, name string, args ...string) error
 }
 
 type client struct{}
@@ -147,7 +144,7 @@ func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 		d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman installed: %w", err).Error())
 	}
 
-	d.Version, err = o.Version(ctx)
+	d.Version, err = o.version(ctx)
 	if err != nil {
 		d.Errors = append(d.Errors, fmt.Errorf("failed to collect podman version: %w", err).Error())
 	}
@@ -264,10 +261,6 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 	return o.runPodman(ctx, arg...)
 }
 
-func (o *client) CopyFileToContainer(ctx context.Context, localFile string, containerName string, filePathInContainer string) ([]byte, error) {
-	return o.runPodman(ctx, "cp", localFile, containerName+":"+filePathInContainer)
-}
-
 func (o *client) StopContainers(ctx context.Context, names ...string) ([]byte, error) {
 	return o.runPodman(ctx, append([]string{"stop"}, names...)...)
 }
@@ -327,7 +320,7 @@ func (o *client) PullImage(ctx context.Context, name string) ([]byte, error) {
 	return o.runPodman(ctx, "pull", name)
 }
 
-func (o *client) Version(ctx context.Context) (version *Version, err error) {
+func (o *client) version(ctx context.Context) (version *Version, err error) {
 	output, err := o.runPodman(ctx, "version", "--format", "json")
 	if err != nil {
 		return nil, err
@@ -376,11 +369,6 @@ func (o *client) ContainerLogs(ctx context.Context, name string) ([]string, erro
 
 	logs := strings.Split(string(output), "\n")
 	return logs, nil
-}
-
-func (o *client) Exec(ctx context.Context, name string, args ...string) error {
-	_, err := o.runPodman(ctx, append([]string{"exec", name}, args...)...)
-	return err
 }
 
 func NewClient() Client {

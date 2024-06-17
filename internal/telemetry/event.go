@@ -263,11 +263,9 @@ type SourceGetter interface {
 	Source() string
 }
 
-func withSource(c SourceGetter) EventOpt {
+func withUserType() EventOpt {
 	return func(event Event) {
-		if c.Source() != "" {
-			event.Properties["source"] = c.Source()
-		}
+		event.Properties["user_type"] = config.UserType
 	}
 }
 

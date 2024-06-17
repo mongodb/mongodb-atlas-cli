@@ -163,15 +163,14 @@ func TestWithService(t *testing.T) {
 	a.Equal(url, e.Properties["ops_manager_url"])
 }
 
-func TestWithSource(t *testing.T) {
-	const university = "university"
-	c := &configMock{
-		source: university,
-	}
-	e := newEvent(withSource(c))
-
+func TestWithUserType(t *testing.T) {
 	a := assert.New(t)
-	a.Equal(university, e.Properties["source"])
+	e := newEvent(withUserType())
+	a.Equal(config.DefaultUser, e.Properties["user_type"])
+
+	config.UserType = config.UniversityUser
+	e = newEvent(withUserType())
+	a.Equal(config.UniversityUser, e.Properties["user_type"])
 }
 
 func TestWithProjectID(t *testing.T) {
@@ -377,7 +376,7 @@ type configMock struct {
 	url         string
 	project     string
 	org         string
-	source      string
+	userType    string
 }
 
 var _ Authenticator = configMock{}
@@ -412,8 +411,4 @@ func (c configMock) PrivateAPIKey() string {
 
 func (c configMock) AccessToken() string {
 	return c.accessToken
-}
-
-func (c configMock) Source() string {
-	return c.source
 }

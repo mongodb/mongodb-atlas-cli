@@ -20,7 +20,6 @@ import (
 	"errors"
 	"fmt"
 	"os/exec"
-	"runtime"
 	"strconv"
 	"strings"
 
@@ -33,14 +32,10 @@ var (
 )
 
 type Diagnostic struct {
-	Installed       bool
-	MachineRequired bool
-	MachineFound    bool
-	MachineState    string
-	MachineInfo     *InspectInfo
-	Version         *Version
-	Images          []string
-	Errors          []string
+	Installed bool
+	Version   *Version
+	Images    []string
+	Errors    []string
 }
 
 type RunContainerOpts struct {
@@ -143,9 +138,7 @@ type client struct{}
 
 func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	d := &Diagnostic{
-		Installed:       true,
-		MachineRequired: podmanMachineIsRequired(),
-		MachineFound:    true,
+		Installed: true,
 	}
 
 	err := Installed()
@@ -157,17 +150,6 @@ func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	d.Version, err = o.Version(ctx)
 	if err != nil {
 		d.Errors = append(d.Errors, fmt.Errorf("failed to collect podman version: %w", err).Error())
-	}
-
-	info, err := o.machineInspect(ctx)
-	if err != nil {
-		d.MachineFound = false
-		if d.MachineRequired {
-			d.Errors = append(d.Errors, fmt.Sprintf("failed to detect podman machine: %s", err))
-		}
-	} else {
-		d.MachineInfo = info
-		d.MachineState = info.State
 	}
 
 	images, err := o.ListImages(ctx, "")
@@ -182,28 +164,11 @@ func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
 	return d
 }
 
-func (o *client) machineInspect(ctx context.Context) (*InspectInfo, error) {
-	b, err := o.runPodman(ctx, "machine", "inspect", DefaultMachineName)
-	if err != nil {
-		return nil, err
-	}
-	var info []InspectInfo
-	if err := json.Unmarshal(b, &info); err != nil {
-		return nil, err
-	}
-	return &info[0], nil
-}
-
 func Installed() error {
 	if _, err := exec.LookPath("podman"); err != nil {
 		return ErrPodmanNotFound
 	}
 	return nil
-}
-
-func podmanMachineIsRequired() bool {
-	// macOS and Windows require VMs
-	return runtime.GOOS == "windows" || runtime.GOOS == "darwin"
 }
 
 func (*client) Ready(_ context.Context) error {

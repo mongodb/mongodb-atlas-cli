@@ -88,10 +88,10 @@ func TestDelete_Run_Local(t *testing.T) {
 	deploymentsTest.LocalMockFlow(ctx)
 
 	deploymentsTest.
-		MockPodman.
+		MockContainerEngine.
 		EXPECT().
-		RemoveContainers(ctx, options.MongodHostnamePrefix+"-"+opts.DeploymentName).
-		Return(nil, nil).
+		ContainerRm(ctx, options.MongodHostnamePrefix+"-"+opts.DeploymentName).
+		Return(nil).
 		Times(1)
 
 	if err := opts.Run(ctx); err != nil {

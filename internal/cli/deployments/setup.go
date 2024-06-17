@@ -33,11 +33,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/setup"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/workflows"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/compass"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongosh"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/templatewriter"
@@ -118,15 +119,15 @@ func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, current
 	opts.logStepStarted("Downloading the MongoDB binaries to your local environment...", currentStep, steps)
 	defer opts.stop()
 
-	var mongodImages []*podman.Image
+	var mongodImages []container.Image
 	var err error
 
-	if mongodImages, err = opts.PodmanClient.ListImages(ctx, opts.MongodDockerImageName()); err != nil {
+	if mongodImages, err = opts.ContainerEngine.ImageList(ctx, opts.MongodDockerImageName()); err != nil {
 		return err
 	}
 
 	if len(mongodImages) == 0 {
-		if _, err = opts.PodmanClient.PullImage(ctx, opts.MongodDockerImageName()); err != nil {
+		if err = opts.ContainerEngine.ImagePull(ctx, opts.MongodDockerImageName()); err != nil {
 			return err
 		}
 	}
@@ -138,7 +139,7 @@ func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, st
 	opts.logStepStarted("Starting your local environment...", currentStep, steps)
 	defer opts.stop()
 
-	containers, errList := opts.PodmanClient.ListContainers(ctx, options.MongodHostnamePrefix)
+	containers, errList := opts.ContainerEngine.ContainerList(ctx, options.MongodHostnamePrefix)
 	if errList != nil {
 		return errList
 	}
@@ -146,26 +147,30 @@ func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, st
 	return opts.validateLocalDeploymentsSettings(containers)
 }
 
-func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needToPullImages bool) {
+func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needToPullImages bool, err error) {
 	steps = 2
 	needToPullImages = false
 
-	setupState := opts.PodmanClient.Diagnostics(ctx)
+	images, err := opts.ContainerEngine.ImageList(ctx, opts.MongodDockerImageName())
 
-	foundMongod := false
-	for _, image := range setupState.Images {
-		foundMongod = foundMongod || image == opts.MongodDockerImageName()
+	if err != nil {
+		return 0, false, err
 	}
+
+	foundMongod := len(images) > 0
 
 	if !foundMongod {
 		steps++
 		needToPullImages = true
 	}
-	return steps, needToPullImages
+	return steps, needToPullImages, nil
 }
 
 func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
-	steps, needToPullImages := opts.planSteps(ctx)
+	steps, needToPullImages, err := opts.planSteps(ctx)
+	if err != nil {
+		return err
+	}
 	currentStep := 1
 	longWaitWarning := ""
 	if steps > shortStepCount {
@@ -202,24 +207,20 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 		envVars["MONGODB_INITDB_ROOT_PASSWORD"] = opts.DBUserPassword
 	}
 
-	_, err := opts.PodmanClient.RunContainer(ctx,
-		podman.RunContainerOpts{
-			Detach:   true,
-			Image:    opts.MongodDockerImageName(),
-			Name:     opts.LocalMongodHostname(),
-			Hostname: opts.LocalMongodHostname(),
-			EnvVars:  envVars,
-			Ports: map[int]int{
-				opts.Port: internalMongodPort,
-			},
-			BindIPAll: opts.bindIPAll,
-			IP:        opts.mongodIP,
-		})
+	flags := container.RunFlags{}
+	flags.Detach = pointer.Get(true)
+	flags.Name = pointer.Get(opts.LocalMongodHostname())
+	flags.Hostname = pointer.Get(opts.LocalMongodHostname())
+	flags.Env = envVars
+	flags.BindIPAll = &opts.bindIPAll
+	flags.IP = &opts.mongodIP
+	flags.Ports = []container.PortMapping{{HostPort: opts.Port, ContainerPort: internalMongodPort}}
+	_, err := opts.ContainerEngine.ContainerRun(ctx, opts.MongodDockerImageName(), &flags)
 
 	return err
 }
 
-func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []*podman.Container) error {
+func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []container.Container) error {
 	mongodContainerName := opts.LocalMongodHostname()
 	for _, c := range containers {
 		for _, n := range c.Names {

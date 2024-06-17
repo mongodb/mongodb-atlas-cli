@@ -20,7 +20,6 @@ import (
 	"errors"
 	"fmt"
 	"os/exec"
-	"runtime"
 	"strconv"
 	"strings"
 
@@ -31,17 +30,6 @@ var (
 	ErrPodmanNotFound  = errors.New("podman not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs")
 	ErrNetworkNotFound = errors.New("network ip range was not found")
 )
-
-type Diagnostic struct {
-	Installed       bool
-	MachineRequired bool
-	MachineFound    bool
-	MachineState    string
-	MachineInfo     *InspectInfo
-	Version         *Version
-	Images          []string
-	Errors          []string
-}
 
 type RunContainerOpts struct {
 	Detach   bool
@@ -94,37 +82,12 @@ type Image struct {
 	Names      []string
 }
 
-type Version struct {
-	Client struct {
-		APIVersion string `json:"APIVersion"`
-		Version    string `json:"Version"`
-		GoVersion  string `json:"GoVersion"`
-		GitCommit  string `json:"GitCommit"`
-		BuiltTime  string `json:"BuiltTime"`
-		Built      int    `json:"Built"`
-		OsArch     string `json:"OsArch"`
-		Os         string `json:"Os"`
-	} `json:"Client"`
-
-	Server struct {
-		APIVersion string `json:"APIVersion"`
-		Version    string `json:"Version"`
-		GoVersion  string `json:"GoVersion"`
-		GitCommit  string `json:"GitCommit"`
-		BuiltTime  string `json:"BuiltTime"`
-		Built      int    `json:"Built"`
-		OsArch     string `json:"OsArch"`
-		Os         string `json:"Os"`
-	} `json:"Server"`
-}
-
 //go:generate mockgen -destination=../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman Client
 
 type Client interface {
 	Ready(ctx context.Context) error
-	Diagnostics(ctx context.Context) *Diagnostic
+	Version(ctx context.Context) (map[string]any, error)
 	RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error)
-	CopyFileToContainer(ctx context.Context, localFile string, containerName string, filePathInContainer string) ([]byte, error)
 	ContainerInspect(ctx context.Context, names ...string) ([]*InspectContainerData, error)
 	StopContainers(ctx context.Context, names ...string) ([]byte, error)
 	StartContainers(ctx context.Context, names ...string) ([]byte, error)
@@ -133,77 +96,17 @@ type Client interface {
 	ListContainers(ctx context.Context, nameFilter string) ([]*Container, error)
 	ListImages(ctx context.Context, nameFilter string) ([]*Image, error)
 	PullImage(ctx context.Context, name string) ([]byte, error)
-	Version(ctx context.Context) (*Version, error)
 	Logs(ctx context.Context) (map[string]interface{}, []error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
-	Exec(ctx context.Context, name string, args ...string) error
 }
 
 type client struct{}
-
-func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
-	d := &Diagnostic{
-		Installed:       true,
-		MachineRequired: podmanMachineIsRequired(),
-		MachineFound:    true,
-	}
-
-	err := Installed()
-	if err != nil {
-		d.Installed = false
-		d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman installed: %w", err).Error())
-	}
-
-	d.Version, err = o.Version(ctx)
-	if err != nil {
-		d.Errors = append(d.Errors, fmt.Errorf("failed to collect podman version: %w", err).Error())
-	}
-
-	info, err := o.machineInspect(ctx)
-	if err != nil {
-		d.MachineFound = false
-		if d.MachineRequired {
-			d.Errors = append(d.Errors, fmt.Sprintf("failed to detect podman machine: %s", err))
-		}
-	} else {
-		d.MachineInfo = info
-		d.MachineState = info.State
-	}
-
-	images, err := o.ListImages(ctx, "")
-	if err != nil {
-		d.Errors = append(d.Errors, fmt.Errorf("failed to list podman images: %w", err).Error())
-	} else {
-		d.Images = make([]string, 0, len(images))
-		for _, img := range images {
-			d.Images = append(d.Images, img.Names...)
-		}
-	}
-	return d
-}
-
-func (o *client) machineInspect(ctx context.Context) (*InspectInfo, error) {
-	b, err := o.runPodman(ctx, "machine", "inspect", DefaultMachineName)
-	if err != nil {
-		return nil, err
-	}
-	var info []InspectInfo
-	if err := json.Unmarshal(b, &info); err != nil {
-		return nil, err
-	}
-	return &info[0], nil
-}
 
 func Installed() error {
 	if _, err := exec.LookPath("podman"); err != nil {
 		return ErrPodmanNotFound
 	}
 	return nil
-}
-
-func podmanMachineIsRequired() bool {
-	// macOS and Windows require VMs
-	return runtime.GOOS == "windows" || runtime.GOOS == "darwin"
 }
 
 func (*client) Ready(_ context.Context) error {
@@ -299,10 +202,6 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 	return o.runPodman(ctx, arg...)
 }
 
-func (o *client) CopyFileToContainer(ctx context.Context, localFile string, containerName string, filePathInContainer string) ([]byte, error) {
-	return o.runPodman(ctx, "cp", localFile, containerName+":"+filePathInContainer)
-}
-
 func (o *client) StopContainers(ctx context.Context, names ...string) ([]byte, error) {
 	return o.runPodman(ctx, append([]string{"stop"}, names...)...)
 }
@@ -362,17 +261,17 @@ func (o *client) PullImage(ctx context.Context, name string) ([]byte, error) {
 	return o.runPodman(ctx, "pull", name)
 }
 
-func (o *client) Version(ctx context.Context) (version *Version, err error) {
+func (o *client) Version(ctx context.Context) (map[string]any, error) {
 	output, err := o.runPodman(ctx, "version", "--format", "json")
 	if err != nil {
 		return nil, err
 	}
 
-	var v *Version
-	if err = json.Unmarshal(output, &v); err != nil {
+	var version map[string]any
+	if err = json.Unmarshal(output, &version); err != nil {
 		return nil, err
 	}
-	return v, err
+	return version, err
 }
 
 func (o *client) Logs(ctx context.Context) (map[string]interface{}, []error) {
@@ -411,11 +310,6 @@ func (o *client) ContainerLogs(ctx context.Context, name string) ([]string, erro
 
 	logs := strings.Split(string(output), "\n")
 	return logs, nil
-}
-
-func (o *client) Exec(ctx context.Context, name string, args ...string) error {
-	_, err := o.runPodman(ctx, append([]string{"exec", name}, args...)...)
-	return err
 }
 
 func NewClient() Client {

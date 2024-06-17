@@ -82,19 +82,11 @@ func (opts *StartOpts) startContainer(ctx context.Context, deployment options.De
 	}
 
 	if deployment.StateName == options.StoppedState {
-		if _, err := opts.PodmanClient.StartContainers(ctx, opts.LocalMongodHostname()); err != nil {
-			return err
-		}
-
-		return nil
+		return opts.ContainerEngine.ContainerStart(ctx, opts.LocalMongodHostname())
 	}
 
 	if deployment.StateName == options.PausedState {
-		if _, err := opts.PodmanClient.UnpauseContainers(ctx, opts.LocalMongodHostname()); err != nil {
-			return err
-		}
-
-		return nil
+		return opts.ContainerEngine.ContainerUnpause(ctx, opts.LocalMongodHostname())
 	}
 
 	return ErrDeploymentIsDeleting

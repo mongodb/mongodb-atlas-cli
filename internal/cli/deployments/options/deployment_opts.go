@@ -29,8 +29,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/setup"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
@@ -89,7 +89,7 @@ type DeploymentOpts struct {
 	Port                  int
 	DBUsername            string
 	DBUserPassword        string
-	PodmanClient          podman.Client
+	ContainerEngine       container.Engine
 	CredStore             store.CredentialsGetter
 	s                     *spinner.Spinner
 	DefaultSetter         cli.DefaultSetterOpts
@@ -108,7 +108,7 @@ type Deployment struct {
 func (opts *DeploymentOpts) InitStore(ctx context.Context, writer io.Writer) func() error {
 	return func() error {
 		var err error
-		opts.PodmanClient = podman.NewClient()
+		opts.ContainerEngine = container.New()
 		opts.Config = config.Default()
 		opts.CredStore = config.Default()
 		if opts.AtlasClusterListStore, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx)); err != nil {
@@ -165,7 +165,7 @@ func (opts *DeploymentOpts) IsCliAuthenticated() bool {
 }
 
 func (opts *DeploymentOpts) GetLocalDeployments(ctx context.Context) ([]Deployment, error) {
-	mdbContainers, err := opts.PodmanClient.ListContainers(ctx, MongodHostnamePrefix)
+	mdbContainers, err := opts.ContainerEngine.ContainerList(ctx, MongodHostnamePrefix)
 	if err != nil {
 		return nil, err
 	}

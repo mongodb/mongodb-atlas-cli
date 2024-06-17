@@ -52,7 +52,6 @@ func TestLogs_RunLocal(t *testing.T) {
 	buf := new(bytes.Buffer)
 	expectedLocalDeployment := "localDeployment"
 	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
-	mockPodman := deploymentTest.MockPodman
 
 	downloadOpts := &DownloadOpts{
 		DeploymentOpts: *deploymentTest.Opts,
@@ -63,7 +62,7 @@ func TestLogs_RunLocal(t *testing.T) {
 
 	deploymentTest.LocalMockFlow(ctx)
 
-	mockPodman.
+	deploymentTest.MockContainerEngine.
 		EXPECT().
 		ContainerLogs(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
 		Return([]string{"log1", "log2"}, nil).

@@ -41,7 +41,6 @@ const (
 func TestPause_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
-	mockPodman := deploymentTest.MockPodman
 	ctx := context.Background()
 
 	buf := new(bytes.Buffer)
@@ -55,10 +54,10 @@ func TestPause_RunLocal(t *testing.T) {
 
 	deploymentTest.LocalMockFlow(ctx)
 
-	mockPodman.
+	deploymentTest.MockContainerEngine.
 		EXPECT().
-		StopContainers(ctx, pauseOpts.LocalMongodHostname()).
-		Return([]byte{}, nil).
+		ContainerStop(ctx, pauseOpts.LocalMongodHostname()).
+		Return(nil).
 		Times(1)
 
 	if err := pauseOpts.Run(ctx); err != nil {

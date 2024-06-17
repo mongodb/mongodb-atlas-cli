@@ -376,7 +376,6 @@ type configMock struct {
 	url         string
 	project     string
 	org         string
-	userType    string
 }
 
 var _ Authenticator = configMock{}

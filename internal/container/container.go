@@ -18,7 +18,7 @@ import (
 	"context"
 )
 
-type Port struct {
+type PortMapping struct {
 	HostPort      int
 	ContainerPort int
 }
@@ -28,7 +28,7 @@ type RunFlags struct {
 	Detach     *bool
 	Remove     *bool
 	Hostname   *string
-	Ports      []Port
+	Ports      []PortMapping
 	Env        map[string]string
 	Cmd        *string
 	Args       []string
@@ -81,7 +81,7 @@ type Container struct {
 	Names  []string
 	State  string
 	Image  string
-	Ports  []Port
+	Ports  []PortMapping
 	Labels map[string]string
 }
 

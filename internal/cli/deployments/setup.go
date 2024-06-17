@@ -214,7 +214,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 	flags.Env = envVars
 	flags.BindIPAll = &opts.bindIPAll
 	flags.IP = &opts.mongodIP
-	flags.Ports = []container.Port{{HostPort: opts.Port, ContainerPort: internalMongodPort}}
+	flags.Ports = []container.PortMapping{{HostPort: opts.Port, ContainerPort: internalMongodPort}}
 	_, err := opts.ContainerEngine.ContainerRun(ctx, opts.MongodDockerImageName(), &flags)
 
 	return err

@@ -92,9 +92,9 @@ func (e *podmanImpl) ContainerList(ctx context.Context, nameFilter ...string) ([
 	}
 	result := make([]Container, 0, len(containers))
 	for _, c := range containers {
-		ports := make([]Port, 0, len(c.Ports))
+		ports := make([]PortMapping, 0, len(c.Ports))
 		for _, p := range c.Ports {
-			ports = append(ports, Port{
+			ports = append(ports, PortMapping{
 				ContainerPort: p.ContainerPort,
 				HostPort:      p.HostPort,
 			})

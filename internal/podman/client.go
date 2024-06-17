@@ -33,7 +33,7 @@ var (
 
 type Diagnostic struct {
 	Installed bool
-	Version   *Version
+	Version   map[string]any
 	Images    []string
 	Errors    []string
 }
@@ -87,30 +87,6 @@ type Image struct {
 	} `json:"Labels"`
 	Containers int `json:"Containers"`
 	Names      []string
-}
-
-type Version struct {
-	Client struct {
-		APIVersion string `json:"APIVersion"`
-		Version    string `json:"Version"`
-		GoVersion  string `json:"GoVersion"`
-		GitCommit  string `json:"GitCommit"`
-		BuiltTime  string `json:"BuiltTime"`
-		Built      int    `json:"Built"`
-		OsArch     string `json:"OsArch"`
-		Os         string `json:"Os"`
-	} `json:"Client"`
-
-	Server struct {
-		APIVersion string `json:"APIVersion"`
-		Version    string `json:"Version"`
-		GoVersion  string `json:"GoVersion"`
-		GitCommit  string `json:"GitCommit"`
-		BuiltTime  string `json:"BuiltTime"`
-		Built      int    `json:"Built"`
-		OsArch     string `json:"OsArch"`
-		Os         string `json:"Os"`
-	} `json:"Server"`
 }
 
 //go:generate mockgen -destination=../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman Client
@@ -320,17 +296,17 @@ func (o *client) PullImage(ctx context.Context, name string) ([]byte, error) {
 	return o.runPodman(ctx, "pull", name)
 }
 
-func (o *client) version(ctx context.Context) (version *Version, err error) {
+func (o *client) version(ctx context.Context) (map[string]any, error) {
 	output, err := o.runPodman(ctx, "version", "--format", "json")
 	if err != nil {
 		return nil, err
 	}
 
-	var v *Version
-	if err = json.Unmarshal(output, &v); err != nil {
+	var version map[string]any
+	if err = json.Unmarshal(output, &version); err != nil {
 		return nil, err
 	}
-	return v, err
+	return version, err
 }
 
 func (o *client) Logs(ctx context.Context) (map[string]interface{}, []error) {

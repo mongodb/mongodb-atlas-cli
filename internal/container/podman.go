@@ -71,8 +71,11 @@ func (e *podmanImpl) ContainerRun(ctx context.Context, image string, flags *RunF
 		if flags.IP != nil {
 			podmanOpts.IP = *flags.IP
 		}
-		for _, entry := range flags.Ports {
-			podmanOpts.Ports[entry.HostPort] = entry.ContainerPort
+		if flags.Ports != nil {
+			podmanOpts.Ports = map[int]int{}
+			for _, entry := range flags.Ports {
+				podmanOpts.Ports[entry.HostPort] = entry.ContainerPort
+			}
 		}
 		podmanOpts.Args = flags.Args
 		podmanOpts.EnvVars = flags.Env

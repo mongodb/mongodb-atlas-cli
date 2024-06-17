@@ -50,8 +50,14 @@ jobs:
           if echo "$labels" | grep -q "need-doc-review"; then
             echo "review_needed=true" >> "$GITHUB_ENV"
           fi
-      - uses: slackapi/slack-github-action@70cd7be8e40a46e8b0eced40b0de447bdb42f68e
+      - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        id: append_comment
         if: env.review_needed == 'true'
+        with:
+          header: pr-title-slack-doc
+          message: "APIx Bot :bowtie:: a message has been sent to Docs Slack channel :rocket:."
+      - uses: slackapi/slack-github-action@70cd7be8e40a46e8b0eced40b0de447bdb42f68e
+        if: env.review_needed == 'true' && steps.append_comment.outputs.previous_comment_id == ''
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DOCS }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
@@ -68,14 +74,3 @@ jobs:
                 }
               ]
             }
-      - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
-        if: env.review_needed == 'true'
-        with:
-          header: pr-title-slack-doc
-          delete: true
-      - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
-        if: env.review_needed == 'true'
-        with:
-          header: pr-title-slack-doc
-          append: true
-          message: "APIx Bot :bowtie:: a message has been sent to Docs Slack channel :rocket:."

@@ -30,6 +30,7 @@ var (
 		"5.0",
 		"6.0",
 		"7.0",
+		"8.0",
 	}
 	oses = []string{
 		"amazonlinux2",
@@ -215,7 +216,7 @@ func PublishSnapshotTasks(c *shrub.Configuration) {
 	publishVariant(
 		c,
 		v,
-		"5.0",
+		"8.0",
 		"",
 		dependency,
 		false,

@@ -23,16 +23,13 @@ import (
 )
 
 func NewMockLocalDeploymentOpts(ctrl *gomock.Controller, deploymentName string) MockDeploymentOpts {
-	mockPodman := mocks.NewMockClient(ctrl)
 	mockContainerEngine := mocks.NewMockEngine(ctrl)
 	mockDeploymentTelemetry := mocks.NewMockDeploymentTelemetry(ctrl)
 	mockOpts := MockDeploymentOpts{
 		ctrl:                    ctrl,
-		MockPodman:              mockPodman,
 		MockContainerEngine:     mockContainerEngine,
 		MockDeploymentTelemetry: mockDeploymentTelemetry,
 		Opts: &options.DeploymentOpts{
-			PodmanClient:        mockPodman,
 			ContainerEngine:     mockContainerEngine,
 			DeploymentName:      deploymentName,
 			DeploymentType:      "local",

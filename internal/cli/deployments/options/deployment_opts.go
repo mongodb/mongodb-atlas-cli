@@ -31,7 +31,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
@@ -91,7 +90,6 @@ type DeploymentOpts struct {
 	DBUsername            string
 	DBUserPassword        string
 	ContainerEngine       container.Engine
-	PodmanClient          podman.Client
 	CredStore             store.CredentialsGetter
 	s                     *spinner.Spinner
 	DefaultSetter         cli.DefaultSetterOpts
@@ -110,7 +108,6 @@ type Deployment struct {
 func (opts *DeploymentOpts) InitStore(ctx context.Context, writer io.Writer) func() error {
 	return func() error {
 		var err error
-		opts.PodmanClient = podman.NewClient()
 		opts.ContainerEngine = container.New()
 		opts.Config = config.Default()
 		opts.CredStore = config.Default()

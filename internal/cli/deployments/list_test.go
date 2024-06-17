@@ -42,7 +42,6 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockClusterLister(ctrl)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockProfileReader := mocks.NewMockProfileReader(ctrl)
-	mockPodman := mocks.NewMockClient(ctrl)
 	mockContainerEngine := mocks.NewMockEngine(ctrl)
 	ctx := context.Background()
 
@@ -86,7 +85,6 @@ func TestList_Run(t *testing.T) {
 	buf := new(bytes.Buffer)
 	listOpts := &ListOpts{
 		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:          mockPodman,
 			ContainerEngine:       mockContainerEngine,
 			CredStore:             mockCredentialsGetter,
 			AtlasClusterListStore: mockStore,
@@ -148,7 +146,6 @@ func TestList_Run_NoLocal(t *testing.T) {
 	mockStore := mocks.NewMockClusterLister(ctrl)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockProfileReader := mocks.NewMockProfileReader(ctrl)
-	mockPodman := mocks.NewMockClient(ctrl)
 	mockContainerEngine := mocks.NewMockEngine(ctrl)
 	ctx := context.Background()
 
@@ -179,7 +176,6 @@ func TestList_Run_NoLocal(t *testing.T) {
 	buf := new(bytes.Buffer)
 	listOpts := &ListOpts{
 		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:          mockPodman,
 			ContainerEngine:       mockContainerEngine,
 			CredStore:             mockCredentialsGetter,
 			AtlasClusterListStore: mockStore,
@@ -239,7 +235,6 @@ func TestList_Run_NoAtlas(t *testing.T) {
 	mockStore := mocks.NewMockClusterLister(ctrl)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockProfileReader := mocks.NewMockProfileReader(ctrl)
-	mockPodman := mocks.NewMockClient(ctrl)
 	mockContainerEngine := mocks.NewMockEngine(ctrl)
 	ctx := context.Background()
 
@@ -270,7 +265,6 @@ func TestList_Run_NoAtlas(t *testing.T) {
 	buf := new(bytes.Buffer)
 	listOpts := &ListOpts{
 		DeploymentOpts: options.DeploymentOpts{
-			PodmanClient:          mockPodman,
 			ContainerEngine:       mockContainerEngine,
 			CredStore:             mockCredentialsGetter,
 			AtlasClusterListStore: mockStore,

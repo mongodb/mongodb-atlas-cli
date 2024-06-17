@@ -36,14 +36,14 @@ func (m *MockEngine) EXPECT() *MockEngineMockRecorder {
 }
 
 // ContainerInspect mocks base method.
-func (m *MockEngine) ContainerInspect(arg0 context.Context, arg1 ...string) ([]*container.ContainerInspectData, error) {
+func (m *MockEngine) ContainerInspect(arg0 context.Context, arg1 ...string) ([]*container.InspectData, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0}
 	for _, a := range arg1 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "ContainerInspect", varargs...)
-	ret0, _ := ret[0].([]*container.ContainerInspectData)
+	ret0, _ := ret[0].([]*container.InspectData)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -215,6 +215,20 @@ func (mr *MockEngineMockRecorder) ImagePull(arg0, arg1 interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImagePull", reflect.TypeOf((*MockEngine)(nil).ImagePull), arg0, arg1)
 }
 
+// Name mocks base method.
+func (m *MockEngine) Name() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Name")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// Name indicates an expected call of Name.
+func (mr *MockEngineMockRecorder) Name() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Name", reflect.TypeOf((*MockEngine)(nil).Name))
+}
+
 // Ready mocks base method.
 func (m *MockEngine) Ready(arg0 context.Context) error {
 	m.ctrl.T.Helper()
@@ -227,4 +241,19 @@ func (m *MockEngine) Ready(arg0 context.Context) error {
 func (mr *MockEngineMockRecorder) Ready(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ready", reflect.TypeOf((*MockEngine)(nil).Ready), arg0)
+}
+
+// Version mocks base method.
+func (m *MockEngine) Version(arg0 context.Context) (map[string]interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Version", arg0)
+	ret0, _ := ret[0].(map[string]interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Version indicates an expected call of Version.
+func (mr *MockEngineMockRecorder) Version(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Version", reflect.TypeOf((*MockEngine)(nil).Version), arg0)
 }

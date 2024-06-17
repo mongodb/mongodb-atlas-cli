@@ -31,13 +31,6 @@ var (
 	ErrNetworkNotFound = errors.New("network ip range was not found")
 )
 
-type Diagnostic struct {
-	Installed bool
-	Version   map[string]any
-	Images    []string
-	Errors    []string
-}
-
 type RunContainerOpts struct {
 	Detach   bool
 	Remove   bool
@@ -93,7 +86,7 @@ type Image struct {
 
 type Client interface {
 	Ready(ctx context.Context) error
-	Diagnostics(ctx context.Context) *Diagnostic
+	Version(ctx context.Context) (map[string]any, error)
 	RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error)
 	ContainerInspect(ctx context.Context, names ...string) ([]*InspectContainerData, error)
 	StopContainers(ctx context.Context, names ...string) ([]byte, error)
@@ -108,34 +101,6 @@ type Client interface {
 }
 
 type client struct{}
-
-func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
-	d := &Diagnostic{
-		Installed: true,
-	}
-
-	err := Installed()
-	if err != nil {
-		d.Installed = false
-		d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman installed: %w", err).Error())
-	}
-
-	d.Version, err = o.version(ctx)
-	if err != nil {
-		d.Errors = append(d.Errors, fmt.Errorf("failed to collect podman version: %w", err).Error())
-	}
-
-	images, err := o.ListImages(ctx, "")
-	if err != nil {
-		d.Errors = append(d.Errors, fmt.Errorf("failed to list podman images: %w", err).Error())
-	} else {
-		d.Images = make([]string, 0, len(images))
-		for _, img := range images {
-			d.Images = append(d.Images, img.Names...)
-		}
-	}
-	return d
-}
 
 func Installed() error {
 	if _, err := exec.LookPath("podman"); err != nil {
@@ -296,7 +261,7 @@ func (o *client) PullImage(ctx context.Context, name string) ([]byte, error) {
 	return o.runPodman(ctx, "pull", name)
 }
 
-func (o *client) version(ctx context.Context) (map[string]any, error) {
+func (o *client) Version(ctx context.Context) (map[string]any, error) {
 	output, err := o.runPodman(ctx, "version", "--format", "json")
 	if err != nil {
 		return nil, err

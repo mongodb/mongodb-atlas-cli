@@ -25,7 +25,7 @@ import (
 
 const deploymentTypeLocal = "local"
 
-func (opts *DeploymentOpts) updateFields(c *container.ContainerInspectData) {
+func (opts *DeploymentOpts) updateFields(c *container.InspectData) {
 	opts.DeploymentType = deploymentTypeLocal
 	opts.MdbVersion = c.Config.Labels["version"]
 	portBind, ok := c.HostConfig.PortBindings["27017/tcp"]

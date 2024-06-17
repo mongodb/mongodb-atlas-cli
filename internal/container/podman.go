@@ -160,36 +160,44 @@ func (e *podmanImpl) ContainerUnpause(ctx context.Context, names ...string) erro
 	return err
 }
 
-func (e *podmanImpl) ContainerInspect(ctx context.Context, names ...string) ([]*ContainerInspectData, error) {
+func (e *podmanImpl) ContainerInspect(ctx context.Context, names ...string) ([]*InspectData, error) {
 	res, err := e.client.ContainerInspect(ctx, names...)
 	if err != nil {
 		return nil, err
 	}
 
-	results := []*ContainerInspectData{}
+	results := []*InspectData{}
 	for _, data := range res {
-		portBidings := map[string][]ContainerInspectDataHostPort{}
+		portBidings := map[string][]InspectDataHostPort{}
 
 		for key, values := range data.HostConfig.PortBindings {
 			for _, value := range values {
-				portBidings[key] = append(portBidings[key], ContainerInspectDataHostPort{
+				portBidings[key] = append(portBidings[key], InspectDataHostPort{
 					HostIP:   value.HostIP,
 					HostPort: value.HostPort,
 				})
 			}
 		}
 
-		results = append(results, &ContainerInspectData{
+		results = append(results, &InspectData{
 			ID:   data.ID,
 			Name: data.Name,
-			Config: &ContainerInspectDataConfig{
+			Config: &InspectDataConfig{
 				Labels: data.Config.Labels,
 			},
-			HostConfig: &ContainerInspectDataHostConfig{
+			HostConfig: &InspectDataHostConfig{
 				PortBindings: portBidings,
 			},
 		})
 	}
 
 	return results, nil
+}
+
+func (e *podmanImpl) Version(ctx context.Context) (map[string]any, error) {
+	return e.client.Version(ctx)
+}
+
+func (*podmanImpl) Name() string {
+	return "podman"
 }

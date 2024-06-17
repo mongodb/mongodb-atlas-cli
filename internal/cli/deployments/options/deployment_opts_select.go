@@ -33,7 +33,7 @@ var errNoDeployments = errors.New("currently there are no deployments")
 var ErrDeploymentNotFound = errors.New("deployment not found")
 var errDeploymentRequiredOnPipe = errors.New("deployment name is required  when piping the output of the command")
 
-func (opts *DeploymentOpts) findMongoDContainer(ctx context.Context) (*container.ContainerInspectData, error) {
+func (opts *DeploymentOpts) findMongoDContainer(ctx context.Context) (*container.InspectData, error) {
 	containers, err := opts.ContainerEngine.ContainerInspect(ctx, opts.LocalMongodHostname())
 	if err != nil {
 		_, _ = log.Debugf("Error: failed to retrieve Local deployments because %q\n", err.Error())

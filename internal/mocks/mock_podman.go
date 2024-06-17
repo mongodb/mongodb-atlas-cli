@@ -70,20 +70,6 @@ func (mr *MockClientMockRecorder) ContainerLogs(arg0, arg1 interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerLogs", reflect.TypeOf((*MockClient)(nil).ContainerLogs), arg0, arg1)
 }
 
-// Diagnostics mocks base method.
-func (m *MockClient) Diagnostics(arg0 context.Context) *podman.Diagnostic {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Diagnostics", arg0)
-	ret0, _ := ret[0].(*podman.Diagnostic)
-	return ret0
-}
-
-// Diagnostics indicates an expected call of Diagnostics.
-func (mr *MockClientMockRecorder) Diagnostics(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Diagnostics", reflect.TypeOf((*MockClient)(nil).Diagnostics), arg0)
-}
-
 // ListContainers mocks base method.
 func (m *MockClient) ListContainers(arg0 context.Context, arg1 string) ([]*podman.Container, error) {
 	m.ctrl.T.Helper()
@@ -251,4 +237,19 @@ func (mr *MockClientMockRecorder) UnpauseContainers(arg0 interface{}, arg1 ...in
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0}, arg1...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnpauseContainers", reflect.TypeOf((*MockClient)(nil).UnpauseContainers), varargs...)
+}
+
+// Version mocks base method.
+func (m *MockClient) Version(arg0 context.Context) (map[string]interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Version", arg0)
+	ret0, _ := ret[0].(map[string]interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Version indicates an expected call of Version.
+func (mr *MockClientMockRecorder) Version(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Version", reflect.TypeOf((*MockClient)(nil).Version), arg0)
 }

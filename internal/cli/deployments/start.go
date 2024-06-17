@@ -82,19 +82,11 @@ func (opts *StartOpts) startContainer(ctx context.Context, deployment options.De
 	}
 
 	if deployment.StateName == options.StoppedState {
-		if err := opts.ContainerEngine.ContainerStart(ctx, opts.LocalMongodHostname()); err != nil {
-			return err
-		}
-
-		return nil
+		return opts.ContainerEngine.ContainerStart(ctx, opts.LocalMongodHostname())
 	}
 
 	if deployment.StateName == options.PausedState {
-		if err := opts.ContainerEngine.ContainerUnpause(ctx, opts.LocalMongodHostname()); err != nil {
-			return err
-		}
-
-		return nil
+		return opts.ContainerEngine.ContainerUnpause(ctx, opts.LocalMongodHostname())
 	}
 
 	return ErrDeploymentIsDeleting

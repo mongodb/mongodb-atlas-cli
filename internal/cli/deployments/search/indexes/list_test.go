@@ -73,16 +73,16 @@ func TestList_RunLocal(t *testing.T) {
 	deploymentTest.MockContainerEngine.
 		EXPECT().
 		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
-		Return([]*container.ContainerInspectData{
+		Return([]*container.InspectData{
 			{
 				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
-				Config: &container.ContainerInspectDataConfig{
+				Config: &container.InspectDataConfig{
 					Labels: map[string]string{
 						"version": "7.0.1",
 					},
 				},
-				HostConfig: &container.ContainerInspectDataHostConfig{
-					PortBindings: map[string][]container.ContainerInspectDataHostPort{
+				HostConfig: &container.InspectDataHostConfig{
+					PortBindings: map[string][]container.InspectDataHostPort{
 						"27017/tcp": {
 							{
 								HostIP:   "127.0.0.1",

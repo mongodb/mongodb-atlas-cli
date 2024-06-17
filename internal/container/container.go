@@ -41,6 +41,7 @@ type RunFlags struct {
 //go:generate mockgen -destination=../mocks/mock_container.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container Engine
 
 type Engine interface {
+	Name() string
 	Ready(context.Context) error
 	ContainerLogs(context.Context, string) ([]string, error)
 	ContainerRun(context.Context, string, *RunFlags) (string, error)
@@ -49,9 +50,10 @@ type Engine interface {
 	ContainerStart(context.Context, ...string) error
 	ContainerStop(context.Context, ...string) error
 	ContainerUnpause(context.Context, ...string) error
-	ContainerInspect(context.Context, ...string) ([]*ContainerInspectData, error)
+	ContainerInspect(context.Context, ...string) ([]*InspectData, error)
 	ImageList(context.Context, ...string) ([]Image, error)
 	ImagePull(context.Context, string) error
+	Version(context.Context) (map[string]any, error)
 }
 
 type Image struct {
@@ -83,22 +85,22 @@ type Container struct {
 	Labels map[string]string
 }
 
-type ContainerInspectDataConfig struct {
+type InspectDataConfig struct {
 	Labels map[string]string `json:"Labels"`
 }
 
-type ContainerInspectData struct {
-	ID         string                          `json:"Id"`
-	Name       string                          `json:"Name"`
-	Config     *ContainerInspectDataConfig     `json:"Config"`
-	HostConfig *ContainerInspectDataHostConfig `json:"HostConfig"`
+type InspectData struct {
+	ID         string                 `json:"Id"`
+	Name       string                 `json:"Name"`
+	Config     *InspectDataConfig     `json:"Config"`
+	HostConfig *InspectDataHostConfig `json:"HostConfig"`
 }
 
-type ContainerInspectDataHostConfig struct {
-	PortBindings map[string][]ContainerInspectDataHostPort `json:"PortBindings"`
+type InspectDataHostConfig struct {
+	PortBindings map[string][]InspectDataHostPort `json:"PortBindings"`
 }
 
-type ContainerInspectDataHostPort struct {
+type InspectDataHostPort struct {
 	HostIP   string `json:"HostIp"`
 	HostPort string `json:"HostPort"`
 }

@@ -259,10 +259,6 @@ func withProjectID(cmd CmdFlags, c ProjectIDGetter) EventOpt {
 	}
 }
 
-type SourceGetter interface {
-	Source() string
-}
-
 func withUserType() EventOpt {
 	return func(event Event) {
 		event.Properties["user_type"] = config.UserType

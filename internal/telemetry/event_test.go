@@ -164,6 +164,7 @@ func TestWithService(t *testing.T) {
 }
 
 func TestWithUserType(t *testing.T) {
+	config.UserType = config.DefaultUser
 	a := assert.New(t)
 	e := newEvent(withUserType())
 	a.Equal(config.DefaultUser, e.Properties["user_type"])

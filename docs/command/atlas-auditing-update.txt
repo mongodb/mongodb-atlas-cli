@@ -61,6 +61,10 @@ Options
      - 
      - false
      - help for update
+   * - -o, --output
+     - string
+     - false
+     - Output format. Valid values are json, json-path, go-template, or go-template-file. To see the full output, use the -o json option.
    * - --projectId
      - string
      - false
@@ -89,8 +93,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   AUDIT AUTHORIZATION SUCCESS   AUDIT FILTER    CONFIGURATION TYPE    ENABLED
-   <AuditAuthorizationSuccess>   <AuditFilter>   <ConfigurationType>   <Enabled>
+   Auditing configuration successfully updated.
    
 
 Examples

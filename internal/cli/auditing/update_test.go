@@ -53,7 +53,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 	}
 
 	body, err := opts.newAuditLog()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	mockStore.
 		EXPECT().
 		UpdateAuditingConfig(opts.ConfigProjectID(), body).

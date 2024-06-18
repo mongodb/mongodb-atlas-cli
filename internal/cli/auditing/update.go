@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -72,6 +72,8 @@ func UpdateBuilder() *cobra.Command {
 		},
 		Example: `  # Audit all authentication events for known users:
   atlas auditing update --auditFilter "{"atype": "authenticate"}"
+# Audit all authentication events for known user via a configuration file:
+  atlas auditing update -f filter.json
 `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

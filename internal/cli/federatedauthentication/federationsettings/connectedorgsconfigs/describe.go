@@ -41,7 +41,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas federatedAuthentication connectedOrgsConfig describe --identityProviderId identityProviderId --federationSettingsId federationSettingsId [-o/--output output].
+// atlas federatedAuthentication federationSettings connectedOrgConfigsConfig describe --identityProviderId identityProviderId --federationSettingsId federationSettingsId [-o/--output output].
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{
 		DescribeOrgConfigsOpts: &DescribeOrgConfigsOpts{},
@@ -50,10 +50,10 @@ func DescribeBuilder() *cobra.Command {
 		Use:   "describe",
 		Short: "Describe a Connected Org Config.",
 		Args:  cobra.NoArgs,
-		Example: `  # Describe a connected org config with the current profile org and federationSettingsId 5d1113b25a115342acc2d1aa 
-			atlas federatedAuthentication connectedOrgsConfig connect --federationSettingsId 5d1113b25a115342acc2d1aa 
-			# Describe a connected org config with the org with ID 7d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa 
-			atlas federatedAuthentication connectedOrgs connect --orgId 7d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
+		Example: `  # Describe a connected org config from the current profile org and federationSettingsId 5d1113b25a115342acc2d1aa 
+			atlas federatedAuthentication federationSettings connectedOrgConfigsConfig describe --federationSettingsId 5d1113b25a115342acc2d1aa 
+			# Describe a connected org config from the org with ID 7d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa 
+			atlas federatedAuthentication federationSettings connectedOrgConfigs describe --orgId 7d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa 
 		`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

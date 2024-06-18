@@ -52,7 +52,7 @@ func TestExportBuckets(t *testing.T) {
 			iamRoleID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
 
@@ -70,7 +70,7 @@ func TestExportBuckets(t *testing.T) {
 			"list",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 		var buckets atlasv2.PaginatedBackupSnapshotExportBucket
 		r.NoError(json.Unmarshal(resp, &buckets))
@@ -87,7 +87,7 @@ func TestExportBuckets(t *testing.T) {
 			bucketID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 		var exportBucket atlasv2.DiskBackupSnapshotAWSExportBucket
 		r.NoError(json.Unmarshal(resp, &exportBucket))
@@ -104,7 +104,7 @@ func TestExportBuckets(t *testing.T) {
 			bucketID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})

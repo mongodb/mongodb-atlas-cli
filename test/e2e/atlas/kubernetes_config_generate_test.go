@@ -34,6 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	akoapi "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
@@ -144,7 +145,7 @@ func TestEmptyProject(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -177,7 +178,7 @@ func TestProjectWithNonDefaultSettings(t *testing.T) {
 			"--projectId",
 			generator.projectID)
 		cmd.Env = os.Environ()
-		settingsResp, err := cmd.CombinedOutput()
+		settingsResp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(settingsResp))
 
 		cmd = exec.Command(cliPath,
@@ -191,7 +192,7 @@ func TestProjectWithNonDefaultSettings(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -282,7 +283,7 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 			newAlertConfig.Matchers[0].Value,
 			"-o=json")
 		cmd.Env = os.Environ()
-		alertConfigResp, err := cmd.CombinedOutput()
+		alertConfigResp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(alertConfigResp))
 
 		cmd = exec.Command(cliPath,
@@ -296,7 +297,7 @@ func TestProjectWithNonDefaultAlertConf(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -336,7 +337,7 @@ func TestProjectWithAccessList(t *testing.T) {
 			"ipAddress",
 			"-o=json")
 		cmd.Env = os.Environ()
-		accessListResp, err := cmd.CombinedOutput()
+		accessListResp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(accessListResp))
 
 		cmd = exec.Command(cliPath,
@@ -350,7 +351,7 @@ func TestProjectWithAccessList(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -385,7 +386,7 @@ func TestProjectWithAccessRole(t *testing.T) {
 			generator.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		accessRoleResp, err := cmd.CombinedOutput()
+		accessRoleResp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(accessRoleResp))
 
 		cmd = exec.Command(cliPath,
@@ -399,7 +400,7 @@ func TestProjectWithAccessRole(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -447,7 +448,7 @@ func TestProjectWithCustomRole(t *testing.T) {
 			generator.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		dbRoleResp, err := cmd.CombinedOutput()
+		dbRoleResp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(dbRoleResp))
 
 		cmd = exec.Command(cliPath,
@@ -461,7 +462,7 @@ func TestProjectWithCustomRole(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -503,7 +504,7 @@ func TestProjectWithIntegration(t *testing.T) {
 			generator.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		_, err := cmd.CombinedOutput()
+		_, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err)
 
 		cmd = exec.Command(cliPath,
@@ -517,7 +518,7 @@ func TestProjectWithIntegration(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -560,7 +561,7 @@ func TestProjectWithMaintenanceWindow(t *testing.T) {
 			generator.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		_, err := cmd.CombinedOutput()
+		_, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err)
 
 		cmd = exec.Command(cliPath,
@@ -574,7 +575,7 @@ func TestProjectWithMaintenanceWindow(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -618,7 +619,7 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 			generator.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		t.Cleanup(func() {
 			deleteAllNetworkPeers(t, cliPath, generator.projectID, gcpEntity)
@@ -639,7 +640,7 @@ func TestProjectWithNetworkPeering(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		resp, err = cmd.CombinedOutput()
+		resp, err = e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -677,7 +678,7 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 			generator.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err)
 		t.Cleanup(func() {
 			deleteAllPrivateEndpoints(t, cliPath, generator.projectID, azureEntity)
@@ -693,7 +694,7 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 			createdNetworkPeer.GetId(),
 			"--projectId", generator.projectID)
 		cmd.Env = os.Environ()
-		_, err = cmd.CombinedOutput()
+		_, err = e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err)
 
 		cmd = exec.Command(cliPath,
@@ -707,7 +708,7 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		resp, err = cmd.CombinedOutput()
+		resp, err = e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -755,7 +756,7 @@ func TestProjectAndTeams(t *testing.T) {
 			generator.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		cmd = exec.Command(cliPath,
@@ -769,7 +770,7 @@ func TestProjectAndTeams(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		resp, err = cmd.CombinedOutput()
+		resp, err = e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -808,7 +809,7 @@ func TestProjectWithStreamsProcessing(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -860,8 +861,8 @@ func TestProjectWithStreamsProcessing(t *testing.T) {
 							},
 						},
 						Status: akov2status.AtlasStreamInstanceStatus{
-							Common: akov2status.Common{
-								Conditions: []akov2status.Condition{},
+							Common: akoapi.Common{
+								Conditions: []akoapi.Condition{},
 							},
 						},
 					},
@@ -909,8 +910,8 @@ func TestProjectWithStreamsProcessing(t *testing.T) {
 							},
 						},
 						Status: akov2status.AtlasStreamConnectionStatus{
-							Common: akov2status.Common{
-								Conditions: []akov2status.Condition{},
+							Common: akoapi.Common{
+								Conditions: []akoapi.Condition{},
 							},
 						},
 					},
@@ -963,8 +964,8 @@ func referenceTeam(name, namespace string, users []akov2.TeamUser, projectName s
 			Usernames: users,
 		},
 		Status: akov2status.TeamStatus{
-			Common: akov2status.Common{
-				Conditions: []akov2status.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 	}
@@ -1021,8 +1022,8 @@ func referenceProject(name, namespace string, labels map[string]string) *akov2.A
 			Labels:    labels,
 		},
 		Status: akov2status.AtlasProjectStatus{
-			Common: akov2status.Common{
-				Conditions: []akov2status.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 		Spec: akov2.AtlasProjectSpec{
@@ -1152,8 +1153,8 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 			},
 		},
 		Status: akov2status.AtlasDeploymentStatus{
-			Common: akov2status.Common{
-				Conditions: []akov2status.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 	}
@@ -1186,8 +1187,8 @@ func referenceServerless(name, region, namespace, projectName string, labels map
 			},
 		},
 		Status: akov2status.AtlasDeploymentStatus{
-			Common: akov2status.Common{
-				Conditions: []akov2status.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 	}
@@ -1401,7 +1402,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 			"--clusterName",
 			g.clusterName)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -1419,7 +1420,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -1472,7 +1473,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -1504,7 +1505,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -1559,7 +1560,7 @@ func TestKubernetesConfigGenerateSharedCluster(t *testing.T) {
 		"--includeSecrets")
 	cmd.Env = os.Environ()
 
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	t.Log(string(resp))
 	require.NoError(t, err, string(resp))
 	var objects []runtime.Object
@@ -1645,8 +1646,8 @@ func referenceDataFederation(name, namespace, projectName string, labels map[str
 			},
 		},
 		Status: akov2status.DataFederationStatus{
-			Common: akov2status.Common{
-				Conditions: []akov2status.Condition{},
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
 			},
 		},
 	}
@@ -1683,7 +1684,7 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 			targetNamespace)
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 
 		require.NoError(t, err, string(resp))
@@ -1725,7 +1726,7 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 			targetNamespace)
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 
@@ -1752,7 +1753,7 @@ func TestKubernetesConfigGenerate_DataFederation(t *testing.T) {
 			targetNamespace)
 		cmd.Env = os.Environ()
 
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 		require.NoError(t, err, string(resp))
 

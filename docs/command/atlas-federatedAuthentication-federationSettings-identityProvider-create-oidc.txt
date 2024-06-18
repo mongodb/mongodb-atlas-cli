@@ -74,7 +74,7 @@ Options
    * - --federationSettingsId
      - string
      - true
-     - Unique identifier of the federation settings.
+     - Unique 24-hexadecimal digit string that identifies the federation settings.
    * - --groupsClaim
      - string
      - true
@@ -130,3 +130,12 @@ If the command succeeds, the CLI returns output similar to the following sample.
    Identity provider '<Id>' created.
    
 
+Examples
+--------
+
+.. code-block::
+   :copyable: false
+
+   # Create an identity provider with name IDPName and from your federation settings with federationSettingsId 5d1113b25a115342acc2d1aa.
+ 		atlas federatedAuthentication federationSettings identityProvider create oidc IDPName --audience "audience" --authorizationType "GROUP" --clientId clientId --desc "IDPName test" --federationSettingsId "5d1113b25a115342acc2d1aa" --groupsClaim "groups" --idpType "WORKLOAD" --issuerUri uri" --userClaim "user"  --associatedDomain "domain"
+ 	

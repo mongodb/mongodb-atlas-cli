@@ -53,7 +53,7 @@ func TestAtlasProjects(t *testing.T) {
 			"--tag", "prod=false",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 
@@ -71,7 +71,7 @@ func TestAtlasProjects(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})
@@ -83,7 +83,7 @@ func TestAtlasProjects(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})
@@ -95,7 +95,7 @@ func TestAtlasProjects(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var project admin.Group
 		if err := json.Unmarshal(resp, &project); err != nil {
@@ -153,7 +153,7 @@ func TestAtlasProjects(t *testing.T) {
 				filename,
 				"-o=json")
 			cmd.Env = os.Environ()
-			resp, err := cmd.CombinedOutput()
+			resp, err := e2e.RunAndGetStdOut(cmd)
 			require.NoError(t, err, string(resp))
 
 			cmd = exec.Command(cliPath,
@@ -162,7 +162,7 @@ func TestAtlasProjects(t *testing.T) {
 				projectID,
 				"-o=json")
 			cmd.Env = os.Environ()
-			resp, err = cmd.CombinedOutput()
+			resp, err = e2e.RunAndGetStdOut(cmd)
 			require.NoError(t, err, string(resp))
 			var project admin.Group
 			if err := json.Unmarshal(resp, &project); err != nil {
@@ -184,7 +184,7 @@ func TestAtlasProjects(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -195,7 +195,7 @@ func TestAtlasProjects(t *testing.T) {
 			projectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 

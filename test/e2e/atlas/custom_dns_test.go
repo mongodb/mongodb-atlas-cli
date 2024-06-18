@@ -43,7 +43,7 @@ func TestCustomDNS(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -62,7 +62,7 @@ func TestCustomDNS(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -81,7 +81,7 @@ func TestCustomDNS(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))

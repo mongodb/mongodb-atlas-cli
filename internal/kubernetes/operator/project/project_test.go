@@ -33,6 +33,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	akoapi "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
@@ -407,8 +408,8 @@ func TestBuildAtlasProject(t *testing.T) {
 					Usernames: []akov2.TeamUser{akov2.TeamUser(teamUsers.GetResults()[0].Username)},
 				},
 				Status: akov2status.TeamStatus{
-					Common: akov2status.Common{
-						Conditions: []akov2status.Condition{},
+					Common: akoapi.Common{
+						Conditions: []akoapi.Condition{},
 					},
 				},
 			},
@@ -567,8 +568,8 @@ func TestBuildAtlasProject(t *testing.T) {
 				},
 			},
 			Status: akov2status.AtlasProjectStatus{
-				Common: akov2status.Common{
-					Conditions: []akov2status.Condition{},
+				Common: akoapi.Common{
+					Conditions: []akoapi.Condition{},
 				},
 			},
 		}

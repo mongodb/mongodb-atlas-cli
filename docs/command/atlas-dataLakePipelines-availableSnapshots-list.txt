@@ -90,6 +90,7 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
    # list available backup schedules for data lake pipeline called 'Pipeline1':
    atlas dataLakePipelines availableSnapshots list Pipeline1

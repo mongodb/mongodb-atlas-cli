@@ -76,7 +76,7 @@ func TestLDAPWithFlags(t *testing.T) {
 			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		assert.Contains(t, string(resp), "LDAP Configuration request completed.")
 	})
@@ -93,7 +93,7 @@ func TestLDAPWithFlags(t *testing.T) {
 			"json",
 		)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
@@ -136,7 +136,7 @@ func TestLDAPWithFlags(t *testing.T) {
 			"-o",
 			"json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
@@ -223,7 +223,7 @@ func testLDAPDelete(t *testing.T, cliPath, projectID string) {
 		"--projectId", projectID,
 		"--force")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	assert.Contains(t, string(resp), "LDAP configuration userToDNMapping deleted")
 }
@@ -232,7 +232,7 @@ func testLDAPVerifyCmd(t *testing.T, cmd *exec.Cmd) string {
 	t.Helper()
 
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	a := assert.New(t)
@@ -246,7 +246,7 @@ func testLDAPSaveCmd(t *testing.T, cmd *exec.Cmd) {
 	t.Helper()
 
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	a := assert.New(t)

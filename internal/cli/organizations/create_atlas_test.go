@@ -44,10 +44,12 @@ func TestCreateAtlasOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockOrganizationCreator(ctrl)
 
+	federationSettings := "federationId"
 	expected := &atlasv2.CreateOrganizationRequest{
-		ApiKey:     nil,
-		Name:       "Org 0",
-		OrgOwnerId: nil,
+		ApiKey:               nil,
+		Name:                 "Org 0",
+		OrgOwnerId:           nil,
+		FederationSettingsId: &federationSettings,
 	}
 	resp := &atlasv2.CreateOrganizationResponse{}
 	mockStore.
@@ -56,8 +58,9 @@ func TestCreateAtlasOpts_Run(t *testing.T) {
 		Times(1)
 
 	createOpts := &CreateAtlasOpts{
-		store: mockStore,
-		name:  "Org 0",
+		store:                mockStore,
+		name:                 "Org 0",
+		federationSettingsID: federationSettings,
 	}
 	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

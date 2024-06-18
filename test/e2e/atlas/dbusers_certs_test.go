@@ -47,7 +47,7 @@ func TestDBUserCerts(t *testing.T) {
 			dbusers.X509TypeManaged,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var user atlasv2.CloudDatabaseUser
 		require.NoError(t, json.Unmarshal(resp, &user), string(resp))
@@ -62,7 +62,7 @@ func TestDBUserCerts(t *testing.T) {
 			"--username", username,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -74,7 +74,7 @@ func TestDBUserCerts(t *testing.T) {
 			username,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var users atlasv2.PaginatedUserCert
@@ -91,7 +91,7 @@ func TestDBUserCerts(t *testing.T) {
 			"--authDB",
 			"$external")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("DB user '%s' deleted\n", username)

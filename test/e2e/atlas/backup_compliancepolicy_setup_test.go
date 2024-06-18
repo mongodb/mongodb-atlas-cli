@@ -66,7 +66,7 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 	)
 
 	cmd.Env = os.Environ()
-	resp, outputErr := cmd.CombinedOutput()
+	resp, outputErr := e2e.RunAndGetStdOut(cmd)
 
 	r.NoError(outputErr, string(resp))
 

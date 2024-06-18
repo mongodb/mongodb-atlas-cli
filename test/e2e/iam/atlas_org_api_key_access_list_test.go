@@ -57,7 +57,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 			entry,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.PaginatedApiUserAccessListResponse
 		require.NoError(t, json.Unmarshal(resp, &key))
@@ -73,7 +73,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 			apiKeyID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.PaginatedApiUserAccessListResponse
 		require.NoError(t, json.Unmarshal(resp, &key))
@@ -95,7 +95,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 			"--currentIp",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.PaginatedApiUserAccessListResponse
 		require.NoError(t, json.Unmarshal(resp, &key))
@@ -120,7 +120,7 @@ func deleteAtlasAccessListEntry(t *testing.T, cliPath, entry, apiKeyID string) {
 		apiKeyID,
 		"--force")
 	cmd.Env = os.Environ()
-	resp, err := cmd.CombinedOutput()
+	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	expected := fmt.Sprintf("Access list entry '%s' deleted\n", entry)
 	assert.Equal(t, expected, string(resp))

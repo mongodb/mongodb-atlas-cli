@@ -38,7 +38,7 @@ Options
    * - --federationSettingsId
      - string
      - true
-     - Unique identifier of the federation settings.
+     - Unique 24-hexadecimal digit string that identifies the federation settings.
    * - --file
      - string
      - true
@@ -76,7 +76,8 @@ Examples
 --------
 
 .. code-block::
+   :copyable: false
 
-   # Update the connected orgs config the current profile org and federationSettingsId 5d1113b25a115342acc2d1aa using the JSON configuration file config.json
- 			atlas federatedAuthentication connectedOrgs update --federationSettingsId 5d1113b25a115342acc2d1aa --file config.json
+   # Update the connected orgs config with the current profile org and federationSettingsId 5d1113b25a115342acc2d1aa using the JSON configuration file config.json
+ 			atlas federatedAuthentication federationSettings connectedOrgConfigs update --federationSettingsId 5d1113b25a115342acc2d1aa --file config.json
  		

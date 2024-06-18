@@ -57,7 +57,7 @@ func TestSetup(t *testing.T) {
 			"--accessListIp", arbitraryAccessListIP,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		assert.Contains(t, string(resp), "Cluster created.", string(resp))
 	})
@@ -72,7 +72,7 @@ func TestSetup(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var entries *atlasv2.PaginatedNetworkAccess
@@ -93,7 +93,7 @@ func TestSetup(t *testing.T) {
 			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var user atlasv2.CloudDatabaseUser
@@ -110,7 +110,7 @@ func TestSetup(t *testing.T) {
 			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var cluster atlasv2.AdvancedClusterDescription

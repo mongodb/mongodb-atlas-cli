@@ -46,7 +46,7 @@ func TestAccessRoles(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var iamRole atlasv2.CloudProviderAccessRole
@@ -63,7 +63,7 @@ func TestAccessRoles(t *testing.T) {
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
+		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var roles atlasv2.CloudProviderAccessRoles
 		require.NoError(t, json.Unmarshal(resp, &roles))

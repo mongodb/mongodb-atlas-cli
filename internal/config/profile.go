@@ -65,9 +65,9 @@ const (
 	ContainerizedHostNameEnv = "MONGODB_ATLAS_IS_CONTAINERIZED"
 	GitHubActionsHostNameEnv = "GITHUB_ACTIONS"
 	AtlasActionHostNameEnv   = "ATLAS_GITHUB_ACTION"
-	MongoDBUniversityUserEnv = "MONGODB_UNIVERSITY_USER" // MongoDBUniversityUserEnv is used to separate MongoDB University users from default users
-	DefaultUser              = "default"                 // Users that do NOT use ATLAS CLI with MongoDB University
-	UniversityUser           = "university"              // Users that uses ATLAS CLI with MongoDB University
+	CLIUserTypeEnv           = "CLI_USER_TYPE" // CLIUserTypeEnv is used to separate MongoDB University users from default users
+	DefaultUser              = "default"       // Users that do NOT use ATLAS CLI with MongoDB University
+	UniversityUser           = "university"    // Users that uses ATLAS CLI with MongoDB University
 	NativeHostName           = "native"
 	DockerContainerHostName  = "container"
 	GitHubActionsHostName    = "all_github_actions"
@@ -77,7 +77,7 @@ const (
 var (
 	HostName       = getConfigHostnameFromEnvs()
 	UserAgent      = fmt.Sprintf("%s/%s (%s;%s;%s)", AtlasCLI, version.Version, runtime.GOOS, runtime.GOARCH, HostName)
-	UserType       = getUserTypeFromEnvs()
+	CLIUserType    = newCLIUserTypeFromEnvs()
 	defaultProfile = newProfile()
 )
 
@@ -200,9 +200,9 @@ func getConfigHostnameFromEnvs() string {
 	return configHostName
 }
 
-// getUserTypeFromEnvs patches the user type information based on set env vars.
-func getUserTypeFromEnvs() string {
-	if envIsTrue(MongoDBUniversityUserEnv) {
+// newCLIUserTypeFromEnvs patches the user type information based on set env vars.
+func newCLIUserTypeFromEnvs() string {
+	if os.Getenv(CLIUserTypeEnv) == UniversityUser {
 		return UniversityUser
 	}
 

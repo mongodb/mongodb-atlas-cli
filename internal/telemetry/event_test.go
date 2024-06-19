@@ -163,15 +163,15 @@ func TestWithService(t *testing.T) {
 	a.Equal(url, e.Properties["ops_manager_url"])
 }
 
-func TestWithUserType(t *testing.T) {
-	config.UserType = config.DefaultUser
+func TestWithCLIUserType(t *testing.T) {
+	config.CLIUserType = config.DefaultUser
 	a := assert.New(t)
-	e := newEvent(withUserType())
-	a.Equal(config.DefaultUser, e.Properties["user_type"])
+	e := newEvent(withCLIUserType())
+	a.Equal(config.DefaultUser, e.Properties["cli_user_type"])
 
-	config.UserType = config.UniversityUser
-	e = newEvent(withUserType())
-	a.Equal(config.UniversityUser, e.Properties["user_type"])
+	config.CLIUserType = config.UniversityUser
+	e = newEvent(withCLIUserType())
+	a.Equal(config.UniversityUser, e.Properties["cli_user_type"])
 }
 
 func TestWithProjectID(t *testing.T) {

@@ -93,7 +93,7 @@ func UpdateBuilder() *cobra.Command {
 			"output": updateTemplate,
 		},
 		Example: `  # Audit all authentication events for known users:
-  atlas auditing update --auditFilter "{"atype": "authenticate"}"
+  atlas auditing update --auditFilter '{"atype": "authenticate"}'
 
   # Audit all authentication events for known user via a configuration file:
   atlas auditing update -f filter.json

@@ -103,7 +103,7 @@ Examples
    :copyable: false
 
    # Audit all authentication events for known users:
-   atlas auditing update --auditFilter "{"atype": "authenticate"}"
+   atlas auditing update --auditFilter '{"atype": "authenticate"}'
 
    
 .. code-block::

@@ -202,8 +202,8 @@ func getConfigHostnameFromEnvs() string {
 
 // newCLIUserTypeFromEnvs patches the user type information based on set env vars.
 func newCLIUserTypeFromEnvs() string {
-	if os.Getenv(CLIUserTypeEnv) == UniversityUser {
-		return UniversityUser
+	if value, ok := os.LookupEnv(CLIUserTypeEnv); ok {
+		return value
 	}
 
 	return DefaultUser

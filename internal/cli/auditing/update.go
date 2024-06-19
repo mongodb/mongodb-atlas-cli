@@ -121,6 +121,7 @@ func UpdateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagFilename(flag.File)
 
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.AuditFilter)
+	cmd.MarkFlagsOneRequired(flag.File, flag.AuditFilter)
 
 	return cmd
 }

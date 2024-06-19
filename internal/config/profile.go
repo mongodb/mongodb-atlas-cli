@@ -65,6 +65,9 @@ const (
 	ContainerizedHostNameEnv = "MONGODB_ATLAS_IS_CONTAINERIZED"
 	GitHubActionsHostNameEnv = "GITHUB_ACTIONS"
 	AtlasActionHostNameEnv   = "ATLAS_GITHUB_ACTION"
+	CLIUserTypeEnv           = "CLI_USER_TYPE" // CLIUserTypeEnv is used to separate MongoDB University users from default users
+	DefaultUser              = "default"       // Users that do NOT use ATLAS CLI with MongoDB University
+	UniversityUser           = "university"    // Users that uses ATLAS CLI with MongoDB University
 	NativeHostName           = "native"
 	DockerContainerHostName  = "container"
 	GitHubActionsHostName    = "all_github_actions"
@@ -74,6 +77,7 @@ const (
 var (
 	HostName       = getConfigHostnameFromEnvs()
 	UserAgent      = fmt.Sprintf("%s/%s (%s;%s;%s)", AtlasCLI, version.Version, runtime.GOOS, runtime.GOARCH, HostName)
+	CLIUserType    = newCLIUserTypeFromEnvs()
 	defaultProfile = newProfile()
 )
 
@@ -194,6 +198,15 @@ func getConfigHostnameFromEnvs() string {
 		return NativeHostName
 	}
 	return configHostName
+}
+
+// newCLIUserTypeFromEnvs patches the user type information based on set env vars.
+func newCLIUserTypeFromEnvs() string {
+	if value, ok := os.LookupEnv(CLIUserTypeEnv); ok {
+		return value
+	}
+
+	return DefaultUser
 }
 
 func envIsTrue(env string) bool {

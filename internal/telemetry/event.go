@@ -259,6 +259,12 @@ func withProjectID(cmd CmdFlags, c ProjectIDGetter) EventOpt {
 	}
 }
 
+func withCLIUserType() EventOpt {
+	return func(event Event) {
+		event.Properties["cli_user_type"] = config.CLIUserType
+	}
+}
+
 type OrgIDGetter interface {
 	OrgID() string
 }

@@ -21,6 +21,7 @@ import (
 )
 
 type PortMapping struct {
+	HostAddress       string
 	HostPort          int
 	ContainerPort     int
 	ContainerProtocol string

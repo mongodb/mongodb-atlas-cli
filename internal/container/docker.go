@@ -15,11 +15,13 @@
 package container
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"os/exec"
+	"strconv"
 	"strings"
 )
 
@@ -61,22 +63,59 @@ func (e *dockerImpl) ContainerLogs(ctx context.Context, name string) ([]string, 
 	return strings.Split(string(buf), "\n"), nil
 }
 
+func parsePortMapping(s string) ([]PortMapping, error) {
+	if s == "" {
+		return nil, nil
+	}
+
+	mappings := strings.Split(s, ",")
+	result := []PortMapping{}
+	for _, mapping := range mappings {
+		segments := strings.SplitN(mapping, "->", 2)             //nolint //max 2 fields
+		hostSegments := strings.SplitN(segments[0], ":", 2)      //nolint //max 2 fields
+		containerSegments := strings.SplitN(segments[1], "/", 2) //nolint //max 2 fields
+		hostPort, err := strconv.Atoi(hostSegments[1])
+		if err != nil {
+			return nil, err
+		}
+		containerPort, err := strconv.Atoi(containerSegments[0])
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, PortMapping{
+			HostAddress:       hostSegments[0],
+			HostPort:          hostPort,
+			ContainerPort:     containerPort,
+			ContainerProtocol: containerSegments[1],
+		})
+	}
+	return result, nil
+}
+
+func portMappingFlag(pm PortMapping) string {
+	result := fmt.Sprintf("%d:%d", pm.HostPort, pm.ContainerPort)
+	if pm.HostAddress != "" {
+		result = pm.HostAddress + ":" + result
+	}
+	if pm.ContainerProtocol != "" {
+		result = result + "/" + pm.ContainerProtocol
+	}
+
+	return result
+}
+
 func portsFlags(flags *RunFlags) []string {
 	if flags == nil {
 		return nil
 	}
 	args := []string{}
 	if flags.Ports != nil {
-		host := "127.0.0.1:"
-		if flags.BindIPAll != nil && *flags.BindIPAll {
-			host = ""
-		}
 		for _, mapping := range flags.Ports {
-			proto := ""
-			if mapping.ContainerProtocol != "" {
-				proto = "/" + mapping.ContainerProtocol
+			mapping.HostAddress = "127.0.0.1"
+			if flags.BindIPAll != nil && *flags.BindIPAll {
+				mapping.HostAddress = ""
 			}
-			args = append(args, "-p", fmt.Sprintf("%s%d:%d%s", host, mapping.HostPort, mapping.ContainerPort, proto))
+			args = append(args, "-p", portMappingFlag(mapping))
 		}
 	}
 	return args
@@ -94,6 +133,10 @@ func runFlags(flags *RunFlags) []string {
 
 	if flags.Remove != nil && *flags.Remove {
 		args = append(args, "--rm")
+	}
+
+	if flags.Name != nil {
+		args = append(args, "--name", *flags.Name)
 	}
 
 	if flags.Hostname != nil {
@@ -140,8 +183,48 @@ func (e *dockerImpl) ContainerRun(ctx context.Context, image string, flags *RunF
 	return string(buf), nil
 }
 
+func parseContainers(buf []byte) ([]Container, error) {
+	result := []Container{}
+	decoder := json.NewDecoder(bytes.NewBuffer(buf))
+	for decoder.More() {
+		c := map[string]any{}
+
+		if err := decoder.Decode(&c); err != nil {
+			return nil, err
+		}
+
+		cont := Container{
+			ID:    c["ID"].(string),
+			Names: []string{c["Names"].(string)},
+			State: c["State"].(string),
+			Image: c["Image"].(string),
+		}
+
+		pm, err := parsePortMapping(c["Ports"].(string))
+		if err != nil {
+			return nil, err
+		}
+		cont.Ports = pm
+
+		labels := c["Labels"].(string)
+		cont.Labels = map[string]string{}
+		for _, label := range strings.Split(labels, ",") {
+			segments := strings.SplitN(label, "=", 2) //nolint //max 2 fields
+			if len(segments) == 2 {                   //nolint //max 2 fields
+				cont.Labels[segments[0]] = segments[1]
+			} else {
+				cont.Labels[segments[0]] = ""
+			}
+		}
+
+		result = append(result, cont)
+	}
+
+	return result, nil
+}
+
 func (e *dockerImpl) ContainerList(ctx context.Context, names ...string) ([]Container, error) {
-	args := []string{"container", "ls", "--format", "json"}
+	args := []string{"container", "ls", "--all", "--format", "json"}
 
 	if len(names) > 0 {
 		for _, name := range names {
@@ -157,15 +240,11 @@ func (e *dockerImpl) ContainerList(ctx context.Context, names ...string) ([]Cont
 		return nil, nil
 	}
 
-	result := []Container{}
-	if err := json.Unmarshal(buf, &result); err != nil {
-		return nil, err
-	}
-	return result, nil
+	return parseContainers(buf)
 }
 
 func (e *dockerImpl) ContainerRm(ctx context.Context, names ...string) error {
-	args := []string{"container", "rm", "-v"}
+	args := []string{"container", "rm", "-v", "-f"}
 	args = append(args, names...)
 
 	_, err := e.run(ctx, args...)

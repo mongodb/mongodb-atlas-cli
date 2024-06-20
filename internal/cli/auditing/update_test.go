@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,43 +24,52 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
-func TestDescribeOpts_Run(t *testing.T) {
+func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAuditingDescriber(ctrl)
+	mockStore := mocks.NewMockAuditingUpdater(ctrl)
 	buf := new(bytes.Buffer)
-	opts := &DescribeOpts{
+	opts := &UpdateOpts{
 		store: mockStore,
 		OutputOpts: cli.OutputOpts{
-			Template:  describeTemplate,
 			OutWriter: buf,
+			Template:  updateTemplate,
 		},
+		auditFilter:               "test",
+		enabled:                   false,
+		auditAuthorizationSuccess: false,
 	}
 
-	expected := &atlasv2.AuditLog{}
+	expected := &atlasv2.AuditLog{
+		Enabled:                   pointer.Get(false),
+		AuditFilter:               pointer.Get("test"),
+		AuditAuthorizationSuccess: pointer.Get(false),
+	}
+
+	body, err := opts.newAuditLog()
+	require.NoError(t, err)
 	mockStore.
 		EXPECT().
-		Auditing(opts.ConfigProjectID()).
+		UpdateAuditingConfig(opts.ConfigProjectID(), body).
 		Return(expected, nil).
 		Times(1)
 
 	require.NoError(t, opts.Run())
-	assert.Equal(t, `AUDIT AUTHORIZATION SUCCESS   AUDIT FILTER   CONFIGURATION TYPE   ENABLED
-<nil>                         <nil>          <nil>                <nil>
-`, buf.String())
+	assert.Equal(t, "Auditing configuration successfully updated.\n", buf.String())
 	t.Log(buf.String())
 }
 
-func TestDescribeBuilder(t *testing.T) {
+func TestUpdateBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		UpdateBuilder(),
 		0,
-		[]string{flag.Output, flag.ProjectID},
+		[]string{flag.Output, flag.ProjectID, flag.AuditAuthorizationSuccess, flag.AuditFilter, flag.Enabled, flag.File},
 	)
 }

@@ -1,0 +1,10 @@
+{
+  "atype": "authCheck",
+  "param.command": {
+    "$in": [
+      "insert",
+      "update",
+      "delete"
+    ]
+  }
+}

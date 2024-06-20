@@ -23,6 +23,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
@@ -38,6 +39,41 @@ func TestAuditing(t *testing.T) {
 			auditingEntity,
 			"describe",
 			"--projectId", g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, string(resp))
+		var setting *atlasv2.AuditLog
+		require.NoError(t, json.Unmarshal(resp, &setting), string(resp))
+	})
+
+	t.Run("Update", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			auditingEntity,
+			"update",
+			"--projectId", g.projectID,
+			"--enabled",
+			"--auditAuthorizationSuccess",
+			"--auditFilter", "{\"atype\": \"authenticate\"}",
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, string(resp))
+		var setting *atlasv2.AuditLog
+		require.NoError(t, json.Unmarshal(resp, &setting), string(resp))
+		assert.True(t, *setting.Enabled)
+		assert.True(t, *setting.AuditAuthorizationSuccess)
+		assert.Equal(t, "{\"atype\": \"authenticate\"}", *setting.AuditFilter)
+	})
+
+	t.Run("Update via file", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			auditingEntity,
+			"update",
+			"--projectId", g.projectID,
+			"--enabled",
+			"--auditAuthorizationSuccess",
+			"-f", "data/update_auditing.json",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)

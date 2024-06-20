@@ -39,6 +39,7 @@ func (e *podmanImpl) ContainerLogs(ctx context.Context, name string) ([]string, 
 	return e.client.ContainerLogs(ctx, name)
 }
 
+//nolint:gocyclo
 func (e *podmanImpl) ContainerRun(ctx context.Context, image string, flags *RunFlags) (string, error) {
 	podmanOpts := podman.RunContainerOpts{
 		Image: image,
@@ -76,6 +77,21 @@ func (e *podmanImpl) ContainerRun(ctx context.Context, image string, flags *RunF
 			for _, entry := range flags.Ports {
 				podmanOpts.Ports[entry.HostPort] = entry.ContainerPort
 			}
+		}
+		if flags.HealthCmd != nil {
+			podmanOpts.HealthCmd = flags.HealthCmd
+		}
+		if flags.HealthInterval != nil {
+			podmanOpts.HealthInterval = flags.HealthInterval
+		}
+		if flags.HealthTimeout != nil {
+			podmanOpts.HealthTimeout = flags.HealthTimeout
+		}
+		if flags.HealthStartPeriod != nil {
+			podmanOpts.HealthStartPeriod = flags.HealthStartPeriod
+		}
+		if flags.HealthRetries != nil {
+			podmanOpts.HealthRetries = flags.HealthRetries
 		}
 		podmanOpts.Args = flags.Args
 		podmanOpts.EnvVars = flags.Env
@@ -138,6 +154,22 @@ func (e *podmanImpl) ImageList(ctx context.Context, nameFilter ...string) ([]Ima
 func (e *podmanImpl) ImagePull(ctx context.Context, name string) error {
 	_, err := e.client.PullImage(ctx, name)
 	return err
+}
+
+func (e *podmanImpl) ImageHealthCheck(ctx context.Context, name string) (*ImageHealthCheck, error) {
+	healthCheck, err := e.client.ImageHealthCheck(ctx, name)
+	if healthCheck == nil {
+		return nil, nil
+	}
+
+	imageHealthCheck := &ImageHealthCheck{
+		Test:        healthCheck.Test,
+		Interval:    &healthCheck.Interval,
+		Timeout:     &healthCheck.Timeout,
+		StartPeriod: &healthCheck.StartPeriod,
+		Retries:     &healthCheck.Retries,
+	}
+	return imageHealthCheck, err
 }
 
 func (e *podmanImpl) ContainerRm(ctx context.Context, names ...string) error {

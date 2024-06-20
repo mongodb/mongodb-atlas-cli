@@ -215,7 +215,27 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 	flags.BindIPAll = &opts.bindIPAll
 	flags.IP = &opts.mongodIP
 	flags.Ports = []container.PortMapping{{HostPort: opts.Port, ContainerPort: internalMongodPort}}
-	_, err := opts.ContainerEngine.ContainerRun(ctx, opts.MongodDockerImageName(), &flags)
+
+	healthCheck, err := opts.ContainerEngine.ImageHealthCheck(ctx, opts.MongodDockerImageName())
+	if err != nil {
+		return err
+	}
+
+	// Temporary fix until https://github.com/containers/podman/issues/18904 is closed
+	if healthCheck == nil {
+		const HealthcheckInterval = 30
+		const HealthStartPeriod = 1
+		const HealthTimeout = 30
+		const HealthRetries = 3
+
+		flags.HealthCmd = &[]string{"/usr/local/bin/runner", "healthcheck"}
+		flags.HealthInterval = pointer.Get(HealthcheckInterval * time.Second)
+		flags.HealthStartPeriod = pointer.Get(HealthStartPeriod * time.Second)
+		flags.HealthTimeout = pointer.Get(HealthTimeout * time.Second)
+		flags.HealthRetries = pointer.Get(HealthRetries)
+	}
+
+	_, err = opts.ContainerEngine.ContainerRun(ctx, opts.MongodDockerImageName(), &flags)
 
 	return err
 }

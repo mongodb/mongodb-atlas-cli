@@ -181,6 +181,21 @@ func (mr *MockEngineMockRecorder) ContainerUnpause(arg0 interface{}, arg1 ...int
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerUnpause", reflect.TypeOf((*MockEngine)(nil).ContainerUnpause), varargs...)
 }
 
+// ImageHealthCheck mocks base method.
+func (m *MockEngine) ImageHealthCheck(arg0 context.Context, arg1 string) (*container.ImageHealthCheck, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ImageHealthCheck", arg0, arg1)
+	ret0, _ := ret[0].(*container.ImageHealthCheck)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ImageHealthCheck indicates an expected call of ImageHealthCheck.
+func (mr *MockEngineMockRecorder) ImageHealthCheck(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageHealthCheck", reflect.TypeOf((*MockEngine)(nil).ImageHealthCheck), arg0, arg1)
+}
+
 // ImageList mocks base method.
 func (m *MockEngine) ImageList(arg0 context.Context, arg1 ...string) ([]container.Image, error) {
 	m.ctrl.T.Helper()

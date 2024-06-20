@@ -16,11 +16,14 @@ package container
 
 import (
 	"context"
+	"os"
+	"strings"
 )
 
 type PortMapping struct {
-	HostPort      int
-	ContainerPort int
+	HostPort          int
+	ContainerPort     int
+	ContainerProtocol string
 }
 
 type RunFlags struct {
@@ -105,6 +108,11 @@ type InspectDataHostPort struct {
 	HostPort string `json:"HostPort"`
 }
 
+const podmanEngine = "podman"
+
 func New() Engine {
-	return newPodmanEngine()
+	if strings.ToLower(os.Getenv("MONGODB_ATLAS_CONTAINER_ENGINE")) == podmanEngine {
+		return newPodmanEngine()
+	}
+	return newDockerEngine()
 }

@@ -25,8 +25,6 @@ import (
 
 var ErrDockerNotFound = errors.New("podman not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs")
 
-const filterBy = "name"
-
 type dockerImpl struct {
 }
 
@@ -47,7 +45,12 @@ func (*dockerImpl) Ready(context.Context) error {
 
 func (*dockerImpl) run(ctx context.Context, args ...string) ([]byte, error) {
 	cmd := exec.CommandContext(ctx, "docker", args...)
-	return cmd.Output()
+	buf, err := cmd.Output()
+	var exitErr *exec.ExitError
+	if errors.As(err, &exitErr) {
+		err = fmt.Errorf("%w: %s", exitErr, exitErr.Stderr)
+	}
+	return buf, err
 }
 
 func (e *dockerImpl) ContainerLogs(ctx context.Context, name string) ([]string, error) {
@@ -142,12 +145,16 @@ func (e *dockerImpl) ContainerList(ctx context.Context, names ...string) ([]Cont
 
 	if len(names) > 0 {
 		for _, name := range names {
-			args = append(args, "-f", filterBy+"="+name)
+			args = append(args, "-f", "name="+name)
 		}
 	}
 	buf, err := e.run(ctx, args...)
 	if err != nil {
 		return nil, err
+	}
+
+	if len(buf) == 0 {
+		return nil, nil
 	}
 
 	result := []Container{}
@@ -210,12 +217,16 @@ func (e *dockerImpl) ImageList(ctx context.Context, names ...string) ([]Image, e
 
 	if len(names) > 0 {
 		for _, name := range names {
-			args = append(args, "-f", filterBy+"="+name)
+			args = append(args, "-f", "reference="+name)
 		}
 	}
 	buf, err := e.run(ctx, args...)
 	if err != nil {
 		return nil, err
+	}
+
+	if len(buf) == 0 {
+		return nil, nil
 	}
 
 	result := []Image{}

@@ -217,9 +217,60 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 	flags.BindIPAll = &opts.bindIPAll
 	flags.IP = &opts.mongodIP
 	flags.Ports = []container.PortMapping{{HostPort: opts.Port, ContainerPort: internalMongodPort}}
-	_, err := opts.ContainerEngine.ContainerRun(ctx, opts.MongodDockerImageName(), &flags)
 
-	return err
+	healthCheck, err := opts.ContainerEngine.ImageHealthCheck(ctx, opts.MongodDockerImageName())
+	if err != nil {
+		return err
+	}
+
+	// Temporary fix until https://github.com/containers/podman/issues/18904 is closed
+	if healthCheck == nil {
+		const HealthcheckInterval = 30
+		const HealthStartPeriod = 1
+		const HealthTimeout = 30
+		const HealthRetries = 3
+
+		flags.HealthCmd = &[]string{"/usr/local/bin/runner", "healthcheck"}
+		flags.HealthInterval = pointer.Get(HealthcheckInterval * time.Second)
+		flags.HealthStartPeriod = pointer.Get(HealthStartPeriod * time.Second)
+		flags.HealthTimeout = pointer.Get(HealthTimeout * time.Second)
+		flags.HealthRetries = pointer.Get(HealthRetries)
+	}
+
+	_, err = opts.ContainerEngine.ContainerRun(ctx, opts.MongodDockerImageName(), &flags)
+	if err != nil {
+		return err
+	}
+
+	const healthyDeploymentTimeout = 2 * time.Minute
+
+	return opts.WaitForHealthyDeployment(ctx, healthyDeploymentTimeout)
+}
+
+func (opts *SetupOpts) WaitForHealthyDeployment(ctx context.Context, duration time.Duration) error {
+	start := time.Now()
+
+	for {
+		if time.Since(start) > duration {
+			return errors.New("timed out waiting for the deployment to be healthy")
+		}
+
+		status, err := opts.ContainerEngine.ContainerHealthStatus(ctx, opts.LocalMongodHostname())
+		if err != nil {
+			return err
+		}
+
+		switch status {
+		case container.DockerHealthcheckStatusHealthy:
+			return nil
+		case container.DockerHealthcheckStatusUnhealthy:
+			return errors.New("the deployment is unhealthy")
+		case container.DockerHealthcheckStatusNone:
+			return errors.New("the deployment does not have a healthcheck")
+		case container.DockerHealthcheckStatusStarting:
+			time.Sleep(1 * time.Second)
+		}
+	}
 }
 
 func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []container.Container) error {

@@ -23,6 +23,7 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var ErrDockerNotFound = errors.New("podman not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs")
@@ -318,6 +319,73 @@ func (e *dockerImpl) ImageList(ctx context.Context, names ...string) ([]Image, e
 func (e *dockerImpl) ImagePull(ctx context.Context, name string) error {
 	_, err := e.run(ctx, "image", "pull", name)
 	return err
+}
+
+func (e *dockerImpl) ImageHealthCheck(ctx context.Context, name string) (*ImageHealthCheck, error) {
+	bytes, err := e.run(ctx, "image", "inspect", "--format", "json", name)
+	if err != nil {
+		return nil, err
+	}
+
+	type PartialImageInspectConfigHealth struct {
+		Test        []string      `json:",omitempty"`
+		StartPeriod time.Duration `json:",omitempty"`
+		Interval    time.Duration `json:",omitempty"`
+		Timeout     time.Duration `json:",omitempty"`
+		Retries     int           `json:",omitempty"`
+	}
+
+	type PartialImageInspectConfig struct {
+		Healthcheck *PartialImageInspectConfigHealth
+	}
+
+	type PartialImageInspect struct {
+		Config PartialImageInspectConfig
+	}
+
+	var inspectOutput []PartialImageInspect
+	if err := json.Unmarshal(bytes, &inspectOutput); err != nil {
+		return nil, err
+	}
+
+	if len(inspectOutput) != 1 {
+		return nil, fmt.Errorf("expected 1 output, got %v", len(inspectOutput))
+	}
+
+	healthCheck := inspectOutput[0].Config.Healthcheck
+
+	if healthCheck == nil {
+		return nil, nil
+	}
+
+	return &ImageHealthCheck{
+		Test:        healthCheck.Test,
+		Interval:    &healthCheck.Interval,
+		Timeout:     &healthCheck.Timeout,
+		StartPeriod: &healthCheck.StartPeriod,
+		Retries:     &healthCheck.Retries,
+	}, nil
+}
+
+func (e *dockerImpl) ContainerHealthStatus(ctx context.Context, name string) (DockerHealthcheckStatus, error) {
+	buf, err := e.run(ctx, "inspect", "--format", "{{.State.Health.Status}}", name)
+	if err != nil {
+		return "", err
+	}
+
+	statusString := strings.TrimSpace(string(buf))
+	switch statusString {
+	case string(DockerHealthcheckStatusNone):
+		return DockerHealthcheckStatusNone, nil
+	case string(DockerHealthcheckStatusStarting):
+		return DockerHealthcheckStatusStarting, nil
+	case string(DockerHealthcheckStatusHealthy):
+		return DockerHealthcheckStatusHealthy, nil
+	case string(DockerHealthcheckStatusUnhealthy):
+		return DockerHealthcheckStatusUnhealthy, nil
+	default:
+		return "", fmt.Errorf("unknown health status: %s", statusString)
+	}
 }
 
 func (e *dockerImpl) Version(ctx context.Context) (map[string]any, error) {

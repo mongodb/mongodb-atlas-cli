@@ -35,6 +35,21 @@ func (m *MockClient) EXPECT() *MockClientMockRecorder {
 	return m.recorder
 }
 
+// ContainerHealthStatus mocks base method.
+func (m *MockClient) ContainerHealthStatus(arg0 context.Context, arg1 string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ContainerHealthStatus", arg0, arg1)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ContainerHealthStatus indicates an expected call of ContainerHealthStatus.
+func (mr *MockClientMockRecorder) ContainerHealthStatus(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerHealthStatus", reflect.TypeOf((*MockClient)(nil).ContainerHealthStatus), arg0, arg1)
+}
+
 // ContainerInspect mocks base method.
 func (m *MockClient) ContainerInspect(arg0 context.Context, arg1 ...string) ([]*podman.InspectContainerData, error) {
 	m.ctrl.T.Helper()
@@ -68,6 +83,21 @@ func (m *MockClient) ContainerLogs(arg0 context.Context, arg1 string) ([]string,
 func (mr *MockClientMockRecorder) ContainerLogs(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerLogs", reflect.TypeOf((*MockClient)(nil).ContainerLogs), arg0, arg1)
+}
+
+// ImageHealthCheck mocks base method.
+func (m *MockClient) ImageHealthCheck(arg0 context.Context, arg1 string) (*podman.Schema2HealthConfig, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ImageHealthCheck", arg0, arg1)
+	ret0, _ := ret[0].(*podman.Schema2HealthConfig)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ImageHealthCheck indicates an expected call of ImageHealthCheck.
+func (mr *MockClientMockRecorder) ImageHealthCheck(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImageHealthCheck", reflect.TypeOf((*MockClient)(nil).ImageHealthCheck), arg0, arg1)
 }
 
 // ListContainers mocks base method.

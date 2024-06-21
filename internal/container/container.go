@@ -16,6 +16,7 @@ package container
 
 import (
 	"context"
+	"time"
 )
 
 type PortMapping struct {
@@ -26,18 +27,23 @@ type PortMapping struct {
 }
 
 type RunFlags struct {
-	Name       *string
-	Detach     *bool
-	Remove     *bool
-	Hostname   *string
-	Ports      []PortMapping
-	Env        map[string]string
-	Cmd        *string
-	Args       []string
-	Network    *string
-	IP         *string
-	Entrypoint *string
-	BindIPAll  *bool
+	Name              *string
+	Detach            *bool
+	Remove            *bool
+	Hostname          *string
+	Ports             []PortMapping
+	Env               map[string]string
+	Cmd               *string
+	Args              []string
+	Network           *string
+	IP                *string
+	Entrypoint        *string
+	BindIPAll         *bool
+	HealthCmd         *[]string
+	HealthInterval    *time.Duration
+	HealthTimeout     *time.Duration
+	HealthStartPeriod *time.Duration
+	HealthRetries     *int
 }
 
 //go:generate mockgen -destination=../mocks/mock_container.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container Engine
@@ -53,8 +59,10 @@ type Engine interface {
 	ContainerStop(context.Context, ...string) error
 	ContainerUnpause(context.Context, ...string) error
 	ContainerInspect(context.Context, ...string) ([]*InspectData, error)
+	ContainerHealthStatus(context.Context, string) (DockerHealthcheckStatus, error)
 	ImageList(context.Context, ...string) ([]Image, error)
 	ImagePull(context.Context, string) error
+	ImageHealthCheck(context.Context, string) (*ImageHealthCheck, error)
 	Version(context.Context) (map[string]any, error)
 }
 
@@ -76,6 +84,14 @@ type Image struct {
 	}
 	Containers int
 	Names      []string
+}
+
+type ImageHealthCheck struct {
+	Test        []string
+	Interval    *time.Duration
+	Timeout     *time.Duration
+	StartPeriod *time.Duration
+	Retries     *int
 }
 
 type Container struct {
@@ -106,3 +122,12 @@ type InspectDataHostPort struct {
 	HostIP   string `json:"HostIp"`
 	HostPort string `json:"HostPort"`
 }
+
+type DockerHealthcheckStatus string
+
+const (
+	DockerHealthcheckStatusStarting  DockerHealthcheckStatus = "starting"
+	DockerHealthcheckStatusHealthy   DockerHealthcheckStatus = "healthy"
+	DockerHealthcheckStatusUnhealthy DockerHealthcheckStatus = "unhealthy"
+	DockerHealthcheckStatusNone      DockerHealthcheckStatus = "none"
+)

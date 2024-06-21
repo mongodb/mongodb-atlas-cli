@@ -22,6 +22,7 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 )
@@ -32,22 +33,25 @@ var (
 )
 
 type RunContainerOpts struct {
-	Detach   bool
-	Remove   bool
-	Image    string
-	Name     string
-	Hostname string
-	// map[hostVolume, pathInContainer]
-	Volumes map[string]string
-	// map[hostPort, containerPort]
-	Ports      map[int]int
-	BindIPAll  bool
-	Network    string
-	EnvVars    map[string]string
-	Args       []string
-	Entrypoint string
-	Cmd        string
-	IP         string
+	Detach            bool
+	Remove            bool
+	Image             string
+	Name              string
+	Hostname          string
+	Volumes           map[string]string
+	Ports             map[int]int
+	BindIPAll         bool
+	Network           string
+	EnvVars           map[string]string
+	Args              []string
+	Entrypoint        string
+	Cmd               string
+	IP                string
+	HealthCmd         *[]string
+	HealthInterval    *time.Duration
+	HealthTimeout     *time.Duration
+	HealthStartPeriod *time.Duration
+	HealthRetries     *int
 }
 
 type Container struct {
@@ -96,6 +100,8 @@ type Client interface {
 	ListContainers(ctx context.Context, nameFilter string) ([]*Container, error)
 	ListImages(ctx context.Context, nameFilter string) ([]*Image, error)
 	PullImage(ctx context.Context, name string) ([]byte, error)
+	ImageHealthCheck(ctx context.Context, name string) (*Schema2HealthConfig, error)
+	ContainerHealthStatus(ctx context.Context, name string) (string, error)
 	Logs(ctx context.Context) (map[string]interface{}, []error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
 }
@@ -152,6 +158,16 @@ func (o *client) ContainerInspect(ctx context.Context, names ...string) ([]*Insp
 	return containers, err
 }
 
+func (o *client) ContainerHealthStatus(ctx context.Context, name string) (string, error) {
+	buf, err := o.runPodman(ctx, "inspect", "--format", "{{.State.Health.Status}}", name)
+	if err != nil {
+		return "", err
+	}
+
+	return strings.TrimSpace(string(buf)), nil
+}
+
+//nolint:gocyclo
 func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error) {
 	arg := []string{"run",
 		"--name", opts.Name,
@@ -191,6 +207,31 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 		arg = append(arg, "--entrypoint", opts.Entrypoint)
 	}
 
+	if opts.HealthCmd != nil && len(*opts.HealthCmd) > 0 {
+		cmd := ""
+		for i, c := range *opts.HealthCmd {
+			if i != 0 {
+				cmd += ","
+			}
+
+			cmd = cmd + "\"" + c + "\""
+		}
+
+		arg = append(arg, fmt.Sprintf("--health-cmd=[%s]", cmd))
+	}
+	if opts.HealthInterval != nil {
+		arg = append(arg, "--health-interval", toMsString(*opts.HealthInterval))
+	}
+	if opts.HealthTimeout != nil {
+		arg = append(arg, "--health-timeout", toMsString(*opts.HealthTimeout))
+	}
+	if opts.HealthStartPeriod != nil {
+		arg = append(arg, "--health-start-period", toMsString(*opts.HealthStartPeriod))
+	}
+	if opts.HealthRetries != nil {
+		arg = append(arg, "--health-startup-retries", strconv.Itoa(*opts.HealthRetries))
+	}
+
 	arg = append(arg, opts.Image)
 
 	if opts.Cmd != "" {
@@ -200,6 +241,10 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 	arg = append(arg, opts.Args...)
 
 	return o.runPodman(ctx, arg...)
+}
+
+func toMsString(duration time.Duration) string {
+	return strconv.FormatInt(duration.Milliseconds(), 10) + "ms"
 }
 
 func (o *client) StopContainers(ctx context.Context, names ...string) ([]byte, error) {
@@ -259,6 +304,32 @@ func (o *client) ListImages(ctx context.Context, nameFilter string) ([]*Image, e
 
 func (o *client) PullImage(ctx context.Context, name string) ([]byte, error) {
 	return o.runPodman(ctx, "pull", name)
+}
+
+func (o *client) ImageHealthCheck(ctx context.Context, name string) (*Schema2HealthConfig, error) {
+	bytes, err := o.runPodman(ctx, "image", "inspect", "--format", "json", name)
+	if err != nil {
+		return nil, err
+	}
+
+	type PartialImageInspectConfig struct {
+		Healthcheck *Schema2HealthConfig
+	}
+
+	type PartialImageInspect struct {
+		Config PartialImageInspectConfig
+	}
+
+	var inspectOutput []PartialImageInspect
+	if err := json.Unmarshal(bytes, &inspectOutput); err != nil {
+		return nil, err
+	}
+
+	if len(inspectOutput) != 1 {
+		return nil, fmt.Errorf("expected 1 output, got %v", len(inspectOutput))
+	}
+
+	return inspectOutput[0].Config.Healthcheck, nil
 }
 
 func (o *client) Version(ctx context.Context) (map[string]any, error) {

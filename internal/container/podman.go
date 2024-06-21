@@ -252,5 +252,5 @@ func (e *podmanImpl) Version(ctx context.Context) (map[string]any, error) {
 }
 
 func (*podmanImpl) Name() string {
-	return "podman"
+	return podmanEngine
 }

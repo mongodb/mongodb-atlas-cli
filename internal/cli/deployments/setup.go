@@ -201,7 +201,9 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 }
 
 func (opts *SetupOpts) configureMongod(ctx context.Context) error {
-	envVars := map[string]string{}
+	envVars := map[string]string{
+		"TOOL": "ATLASCLI",
+	}
 	if opts.IsAuthEnabled() {
 		envVars["MONGODB_INITDB_ROOT_USERNAME"] = opts.DBUsername
 		envVars["MONGODB_INITDB_ROOT_PASSWORD"] = opts.DBUserPassword

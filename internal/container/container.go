@@ -16,8 +16,6 @@ package container
 
 import (
 	"context"
-	"os"
-	"strings"
 )
 
 type PortMapping struct {
@@ -46,7 +44,7 @@ type RunFlags struct {
 
 type Engine interface {
 	Name() string
-	Ready(context.Context) error
+	Ready() error
 	ContainerLogs(context.Context, string) ([]string, error)
 	ContainerRun(context.Context, string, *RunFlags) (string, error)
 	ContainerList(context.Context, ...string) ([]Container, error)
@@ -107,13 +105,4 @@ type InspectDataHostConfig struct {
 type InspectDataHostPort struct {
 	HostIP   string `json:"HostIp"`
 	HostPort string `json:"HostPort"`
-}
-
-const podmanEngine = "podman"
-
-func New() Engine {
-	if strings.ToLower(os.Getenv("MONGODB_ATLAS_CONTAINER_ENGINE")) == podmanEngine {
-		return newPodmanEngine()
-	}
-	return newDockerEngine()
 }

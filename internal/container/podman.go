@@ -31,8 +31,8 @@ func newPodmanEngine() Engine {
 	}
 }
 
-func (e *podmanImpl) Ready(ctx context.Context) error {
-	return e.client.Ready(ctx)
+func (e *podmanImpl) Ready() error {
+	return e.client.Ready(context.Background())
 }
 
 func (e *podmanImpl) ContainerLogs(ctx context.Context, name string) ([]string, error) {
@@ -197,6 +197,8 @@ func (e *podmanImpl) ContainerInspect(ctx context.Context, names ...string) ([]*
 func (e *podmanImpl) Version(ctx context.Context) (map[string]any, error) {
 	return e.client.Version(ctx)
 }
+
+const podmanEngine = "podman"
 
 func (*podmanImpl) Name() string {
 	return podmanEngine

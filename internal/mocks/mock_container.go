@@ -230,17 +230,17 @@ func (mr *MockEngineMockRecorder) Name() *gomock.Call {
 }
 
 // Ready mocks base method.
-func (m *MockEngine) Ready(arg0 context.Context) error {
+func (m *MockEngine) Ready() error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Ready", arg0)
+	ret := m.ctrl.Call(m, "Ready")
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Ready indicates an expected call of Ready.
-func (mr *MockEngineMockRecorder) Ready(arg0 interface{}) *gomock.Call {
+func (mr *MockEngineMockRecorder) Ready() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ready", reflect.TypeOf((*MockEngine)(nil).Ready), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ready", reflect.TypeOf((*MockEngine)(nil).Ready))
 }
 
 // Version mocks base method.

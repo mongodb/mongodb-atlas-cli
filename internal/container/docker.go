@@ -38,7 +38,7 @@ func (*dockerImpl) Name() string {
 	return "docker"
 }
 
-func (*dockerImpl) Ready(context.Context) error {
+func (*dockerImpl) Ready() error {
 	if _, err := exec.LookPath("docker"); err != nil {
 		return ErrDockerNotFound
 	}

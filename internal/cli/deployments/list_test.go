@@ -118,7 +118,7 @@ func TestList_Run(t *testing.T) {
 
 	mockContainerEngine.
 		EXPECT().
-		Ready(ctx).
+		Ready().
 		Return(nil).
 		Times(1)
 
@@ -209,7 +209,7 @@ func TestList_Run_NoLocal(t *testing.T) {
 
 	mockContainerEngine.
 		EXPECT().
-		Ready(ctx).
+		Ready().
 		Return(nil).
 		Times(1)
 
@@ -298,7 +298,7 @@ func TestList_Run_NoAtlas(t *testing.T) {
 
 	mockContainerEngine.
 		EXPECT().
-		Ready(ctx).
+		Ready().
 		Return(nil).
 		Times(1)
 

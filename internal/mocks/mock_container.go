@@ -35,6 +35,21 @@ func (m *MockEngine) EXPECT() *MockEngineMockRecorder {
 	return m.recorder
 }
 
+// ContainerHealthStatus mocks base method.
+func (m *MockEngine) ContainerHealthStatus(arg0 context.Context, arg1 string) (container.DockerHealthcheckStatus, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ContainerHealthStatus", arg0, arg1)
+	ret0, _ := ret[0].(container.DockerHealthcheckStatus)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ContainerHealthStatus indicates an expected call of ContainerHealthStatus.
+func (mr *MockEngineMockRecorder) ContainerHealthStatus(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerHealthStatus", reflect.TypeOf((*MockEngine)(nil).ContainerHealthStatus), arg0, arg1)
+}
+
 // ContainerInspect mocks base method.
 func (m *MockEngine) ContainerInspect(arg0 context.Context, arg1 ...string) ([]*container.InspectData, error) {
 	m.ctrl.T.Helper()

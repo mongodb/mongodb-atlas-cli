@@ -16,6 +16,7 @@ package container
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
@@ -224,6 +225,26 @@ func (e *podmanImpl) ContainerInspect(ctx context.Context, names ...string) ([]*
 	}
 
 	return results, nil
+}
+
+func (e *podmanImpl) ContainerHealthStatus(ctx context.Context, name string) (DockerHealthcheckStatus, error) {
+	stringStatus, err := e.client.ContainerHealthStatus(ctx, name)
+	if err != nil {
+		return DockerHealthcheckStatusNone, err
+	}
+
+	switch stringStatus {
+	case "starting":
+		return DockerHealthcheckStatusStarting, nil
+	case "healthy":
+		return DockerHealthcheckStatusHealthy, nil
+	case "unhealthy":
+		return DockerHealthcheckStatusUnhealthy, nil
+	case "none":
+		return DockerHealthcheckStatusNone, nil
+	default:
+		return DockerHealthcheckStatusNone, fmt.Errorf("unknown health status: %s", stringStatus)
+	}
 }
 
 func (e *podmanImpl) Version(ctx context.Context) (map[string]any, error) {

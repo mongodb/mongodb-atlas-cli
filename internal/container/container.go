@@ -57,6 +57,7 @@ type Engine interface {
 	ContainerStop(context.Context, ...string) error
 	ContainerUnpause(context.Context, ...string) error
 	ContainerInspect(context.Context, ...string) ([]*InspectData, error)
+	ContainerHealthStatus(context.Context, string) (DockerHealthcheckStatus, error)
 	ImageList(context.Context, ...string) ([]Image, error)
 	ImagePull(context.Context, string) error
 	ImageHealthCheck(context.Context, string) (*ImageHealthCheck, error)
@@ -119,6 +120,15 @@ type InspectDataHostPort struct {
 	HostIP   string `json:"HostIp"`
 	HostPort string `json:"HostPort"`
 }
+
+type DockerHealthcheckStatus string
+
+const (
+	DockerHealthcheckStatusStarting  DockerHealthcheckStatus = "starting"
+	DockerHealthcheckStatusHealthy   DockerHealthcheckStatus = "healthy"
+	DockerHealthcheckStatusUnhealthy DockerHealthcheckStatus = "unhealthy"
+	DockerHealthcheckStatusNone      DockerHealthcheckStatus = "none"
+)
 
 func New() Engine {
 	return newPodmanEngine()

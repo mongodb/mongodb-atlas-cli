@@ -101,6 +101,7 @@ type Client interface {
 	ListImages(ctx context.Context, nameFilter string) ([]*Image, error)
 	PullImage(ctx context.Context, name string) ([]byte, error)
 	ImageHealthCheck(ctx context.Context, name string) (*Schema2HealthConfig, error)
+	ContainerHealthStatus(ctx context.Context, name string) (string, error)
 	Logs(ctx context.Context) (map[string]interface{}, []error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
 }
@@ -155,6 +156,15 @@ func (o *client) ContainerInspect(ctx context.Context, names ...string) ([]*Insp
 	var containers []*InspectContainerData
 	err = json.Unmarshal(buf, &containers)
 	return containers, err
+}
+
+func (o *client) ContainerHealthStatus(ctx context.Context, name string) (string, error) {
+	buf, err := o.runPodman(ctx, "inspect", "--format", "{{.State.Health.Status}}", name)
+	if err != nil {
+		return "", err
+	}
+
+	return strings.TrimSpace(string(buf)), nil
 }
 
 //nolint:gocyclo

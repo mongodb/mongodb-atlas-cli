@@ -236,8 +236,39 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 	}
 
 	_, err = opts.ContainerEngine.ContainerRun(ctx, opts.MongodDockerImageName(), &flags)
+	if err != nil {
+		return err
+	}
 
-	return err
+	const healthyDeploymentTimeout = 2 * time.Minute
+
+	return opts.WaitForHealthyDeployment(ctx, healthyDeploymentTimeout)
+}
+
+func (opts *SetupOpts) WaitForHealthyDeployment(ctx context.Context, duration time.Duration) error {
+	start := time.Now()
+
+	for {
+		if time.Since(start) > duration {
+			return errors.New("timed out waiting for the deployment to be healthy")
+		}
+
+		status, err := opts.ContainerEngine.ContainerHealthStatus(ctx, opts.LocalMongodHostname())
+		if err != nil {
+			return err
+		}
+
+		switch status {
+		case container.DockerHealthcheckStatusHealthy:
+			return nil
+		case container.DockerHealthcheckStatusUnhealthy:
+			return errors.New("the deployment is unhealthy")
+		case container.DockerHealthcheckStatusNone:
+			return errors.New("the deployment does not have a healthcheck")
+		case container.DockerHealthcheckStatusStarting:
+			time.Sleep(1 * time.Second)
+		}
+	}
 }
 
 func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []container.Container) error {

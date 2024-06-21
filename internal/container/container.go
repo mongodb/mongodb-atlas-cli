@@ -16,8 +16,6 @@ package container
 
 import (
 	"context"
-	"os"
-	"strings"
 	"time"
 )
 
@@ -52,7 +50,7 @@ type RunFlags struct {
 
 type Engine interface {
 	Name() string
-	Ready(context.Context) error
+	Ready() error
 	ContainerLogs(context.Context, string) ([]string, error)
 	ContainerRun(context.Context, string, *RunFlags) (string, error)
 	ContainerList(context.Context, ...string) ([]Container, error)
@@ -133,12 +131,3 @@ const (
 	DockerHealthcheckStatusUnhealthy DockerHealthcheckStatus = "unhealthy"
 	DockerHealthcheckStatusNone      DockerHealthcheckStatus = "none"
 )
-
-const podmanEngine = "podman"
-
-func New() Engine {
-	if strings.ToLower(os.Getenv("MONGODB_ATLAS_CONTAINER_ENGINE")) == podmanEngine {
-		return newPodmanEngine()
-	}
-	return newDockerEngine()
-}

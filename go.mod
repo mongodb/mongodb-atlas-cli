@@ -13,7 +13,7 @@ require (
 	github.com/creack/pty v1.1.21
 	github.com/evergreen-ci/shrub v0.0.0-20240215220116-3f233ddeff2a
 	github.com/gemalto/kmip-go v0.0.10
-	github.com/go-test/deep v1.1.0
+	github.com/go-test/deep v1.1.1
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/golang/mock v1.6.0
 	github.com/google/go-github/v61 v61.0.0

@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -36,7 +35,7 @@ func (m *MockProjectOrgsLister) EXPECT() *MockProjectOrgsListerMockRecorder {
 }
 
 // GetOrgProjects mocks base method.
-func (m *MockProjectOrgsLister) GetOrgProjects(arg0 string, arg1 *mongodbatlas.ProjectsListOptions) (*opsmngr.Projects, error) {
+func (m *MockProjectOrgsLister) GetOrgProjects(arg0 string, arg1 *opsmngr.ProjectsListOptions) (*opsmngr.Projects, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrgProjects", arg0, arg1)
 	ret0, _ := ret[0].(*opsmngr.Projects)
@@ -51,10 +50,10 @@ func (mr *MockProjectOrgsListerMockRecorder) GetOrgProjects(arg0, arg1 interface
 }
 
 // Organization mocks base method.
-func (m *MockProjectOrgsLister) Organization(arg0 string) (*mongodbatlas.Organization, error) {
+func (m *MockProjectOrgsLister) Organization(arg0 string) (*opsmngr.Organization, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organization", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.Organization)
+	ret0, _ := ret[0].(*opsmngr.Organization)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -66,10 +65,10 @@ func (mr *MockProjectOrgsListerMockRecorder) Organization(arg0 interface{}) *gom
 }
 
 // Organizations mocks base method.
-func (m *MockProjectOrgsLister) Organizations(arg0 *mongodbatlas.OrganizationsListOptions) (*mongodbatlas.Organizations, error) {
+func (m *MockProjectOrgsLister) Organizations(arg0 *opsmngr.OrganizationsListOptions) (*opsmngr.Organizations, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organizations", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.Organizations)
+	ret0, _ := ret[0].(*opsmngr.Organizations)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -96,7 +95,7 @@ func (mr *MockProjectOrgsListerMockRecorder) Project(arg0 interface{}) *gomock.C
 }
 
 // Projects mocks base method.
-func (m *MockProjectOrgsLister) Projects(arg0 *mongodbatlas.ListOptions) (*opsmngr.Projects, error) {
+func (m *MockProjectOrgsLister) Projects(arg0 *opsmngr.ListOptions) (*opsmngr.Projects, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Projects", arg0)
 	ret0, _ := ret[0].(*opsmngr.Projects)

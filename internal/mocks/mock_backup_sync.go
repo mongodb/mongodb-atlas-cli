@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -36,7 +35,7 @@ func (m *MockSyncsLister) EXPECT() *MockSyncsListerMockRecorder {
 }
 
 // ListSyncs mocks base method.
-func (m *MockSyncsLister) ListSyncs(arg0 *mongodbatlas.ListOptions) (*opsmngr.BackupStores, error) {
+func (m *MockSyncsLister) ListSyncs(arg0 *opsmngr.ListOptions) (*opsmngr.BackupStores, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListSyncs", arg0)
 	ret0, _ := ret[0].(*opsmngr.BackupStores)

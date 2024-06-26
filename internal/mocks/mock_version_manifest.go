@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -112,10 +111,10 @@ func (m *MockVersionManifestUpdaterServiceVersionDescriber) EXPECT() *MockVersio
 }
 
 // ServiceVersion mocks base method.
-func (m *MockVersionManifestUpdaterServiceVersionDescriber) ServiceVersion() (*mongodbatlas.ServiceVersion, error) {
+func (m *MockVersionManifestUpdaterServiceVersionDescriber) ServiceVersion() (*opsmngr.ServiceVersion, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServiceVersion")
-	ret0, _ := ret[0].(*mongodbatlas.ServiceVersion)
+	ret0, _ := ret[0].(*opsmngr.ServiceVersion)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

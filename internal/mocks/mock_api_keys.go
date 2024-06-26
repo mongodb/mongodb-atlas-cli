@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockProjectAPIKeyLister is a mock of ProjectAPIKeyLister interface.
@@ -35,10 +35,10 @@ func (m *MockProjectAPIKeyLister) EXPECT() *MockProjectAPIKeyListerMockRecorder 
 }
 
 // ProjectAPIKeys mocks base method.
-func (m *MockProjectAPIKeyLister) ProjectAPIKeys(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.APIKey, error) {
+func (m *MockProjectAPIKeyLister) ProjectAPIKeys(arg0 string, arg1 *opsmngr.ListOptions) ([]opsmngr.APIKey, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectAPIKeys", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlas.APIKey)
+	ret0, _ := ret[0].([]opsmngr.APIKey)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockProjectAPIKeyCreator) EXPECT() *MockProjectAPIKeyCreatorMockRecorde
 }
 
 // CreateProjectAPIKey mocks base method.
-func (m *MockProjectAPIKeyCreator) CreateProjectAPIKey(arg0 string, arg1 *mongodbatlas.APIKeyInput) (*mongodbatlas.APIKey, error) {
+func (m *MockProjectAPIKeyCreator) CreateProjectAPIKey(arg0 string, arg1 *opsmngr.APIKeyInput) (*opsmngr.APIKey, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProjectAPIKey", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.APIKey)
+	ret0, _ := ret[0].(*opsmngr.APIKey)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (m *MockOrganizationAPIKeyLister) EXPECT() *MockOrganizationAPIKeyListerMoc
 }
 
 // OrganizationAPIKeys mocks base method.
-func (m *MockOrganizationAPIKeyLister) OrganizationAPIKeys(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.APIKey, error) {
+func (m *MockOrganizationAPIKeyLister) OrganizationAPIKeys(arg0 string, arg1 *opsmngr.ListOptions) ([]opsmngr.APIKey, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationAPIKeys", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlas.APIKey)
+	ret0, _ := ret[0].([]opsmngr.APIKey)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -149,10 +149,10 @@ func (m *MockOrganizationAPIKeyDescriber) EXPECT() *MockOrganizationAPIKeyDescri
 }
 
 // OrganizationAPIKey mocks base method.
-func (m *MockOrganizationAPIKeyDescriber) OrganizationAPIKey(arg0, arg1 string) (*mongodbatlas.APIKey, error) {
+func (m *MockOrganizationAPIKeyDescriber) OrganizationAPIKey(arg0, arg1 string) (*opsmngr.APIKey, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationAPIKey", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.APIKey)
+	ret0, _ := ret[0].(*opsmngr.APIKey)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -187,10 +187,10 @@ func (m *MockOrganizationAPIKeyUpdater) EXPECT() *MockOrganizationAPIKeyUpdaterM
 }
 
 // UpdateOrganizationAPIKey mocks base method.
-func (m *MockOrganizationAPIKeyUpdater) UpdateOrganizationAPIKey(arg0, arg1 string, arg2 *mongodbatlas.APIKeyInput) (*mongodbatlas.APIKey, error) {
+func (m *MockOrganizationAPIKeyUpdater) UpdateOrganizationAPIKey(arg0, arg1 string, arg2 *opsmngr.APIKeyInput) (*opsmngr.APIKey, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateOrganizationAPIKey", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.APIKey)
+	ret0, _ := ret[0].(*opsmngr.APIKey)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -225,10 +225,10 @@ func (m *MockOrganizationAPIKeyCreator) EXPECT() *MockOrganizationAPIKeyCreatorM
 }
 
 // CreateOrganizationAPIKey mocks base method.
-func (m *MockOrganizationAPIKeyCreator) CreateOrganizationAPIKey(arg0 string, arg1 *mongodbatlas.APIKeyInput) (*mongodbatlas.APIKey, error) {
+func (m *MockOrganizationAPIKeyCreator) CreateOrganizationAPIKey(arg0 string, arg1 *opsmngr.APIKeyInput) (*opsmngr.APIKey, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOrganizationAPIKey", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.APIKey)
+	ret0, _ := ret[0].(*opsmngr.APIKey)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -337,7 +337,7 @@ func (m *MockProjectAPIKeyAssigner) EXPECT() *MockProjectAPIKeyAssignerMockRecor
 }
 
 // AssignProjectAPIKey mocks base method.
-func (m *MockProjectAPIKeyAssigner) AssignProjectAPIKey(arg0, arg1 string, arg2 *mongodbatlas.AssignAPIKey) error {
+func (m *MockProjectAPIKeyAssigner) AssignProjectAPIKey(arg0, arg1 string, arg2 *opsmngr.AssignAPIKey) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AssignProjectAPIKey", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)

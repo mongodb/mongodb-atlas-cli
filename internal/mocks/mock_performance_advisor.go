@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockPerformanceAdvisorNamespacesLister is a mock of PerformanceAdvisorNamespacesLister interface.
@@ -35,10 +35,10 @@ func (m *MockPerformanceAdvisorNamespacesLister) EXPECT() *MockPerformanceAdviso
 }
 
 // PerformanceAdvisorNamespaces mocks base method.
-func (m *MockPerformanceAdvisorNamespacesLister) PerformanceAdvisorNamespaces(arg0, arg1 string, arg2 *mongodbatlas.NamespaceOptions) (*mongodbatlas.Namespaces, error) {
+func (m *MockPerformanceAdvisorNamespacesLister) PerformanceAdvisorNamespaces(arg0, arg1 string, arg2 *opsmngr.NamespaceOptions) (*opsmngr.Namespaces, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PerformanceAdvisorNamespaces", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.Namespaces)
+	ret0, _ := ret[0].(*opsmngr.Namespaces)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockPerformanceAdvisorSlowQueriesLister) EXPECT() *MockPerformanceAdvis
 }
 
 // PerformanceAdvisorSlowQueries mocks base method.
-func (m *MockPerformanceAdvisorSlowQueriesLister) PerformanceAdvisorSlowQueries(arg0, arg1 string, arg2 *mongodbatlas.SlowQueryOptions) (*mongodbatlas.SlowQueries, error) {
+func (m *MockPerformanceAdvisorSlowQueriesLister) PerformanceAdvisorSlowQueries(arg0, arg1 string, arg2 *opsmngr.SlowQueryOptions) (*opsmngr.SlowQueries, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PerformanceAdvisorSlowQueries", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.SlowQueries)
+	ret0, _ := ret[0].(*opsmngr.SlowQueries)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (m *MockPerformanceAdvisorIndexesLister) EXPECT() *MockPerformanceAdvisorIn
 }
 
 // PerformanceAdvisorIndexes mocks base method.
-func (m *MockPerformanceAdvisorIndexesLister) PerformanceAdvisorIndexes(arg0, arg1 string, arg2 *mongodbatlas.SuggestedIndexOptions) (*mongodbatlas.SuggestedIndexes, error) {
+func (m *MockPerformanceAdvisorIndexesLister) PerformanceAdvisorIndexes(arg0, arg1 string, arg2 *opsmngr.SuggestedIndexOptions) (*opsmngr.SuggestedIndexes, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PerformanceAdvisorIndexes", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.SuggestedIndexes)
+	ret0, _ := ret[0].(*opsmngr.SuggestedIndexes)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

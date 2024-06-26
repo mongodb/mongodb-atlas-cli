@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -231,7 +230,7 @@ func (mr *MockCloudManagerClustersListerMockRecorder) ListAllProjectClusters() *
 }
 
 // ProjectClusters mocks base method.
-func (m *MockCloudManagerClustersLister) ProjectClusters(arg0 string, arg1 *mongodbatlas.ListOptions) (*opsmngr.Clusters, error) {
+func (m *MockCloudManagerClustersLister) ProjectClusters(arg0 string, arg1 *opsmngr.ListOptions) (*opsmngr.Clusters, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectClusters", arg0, arg1)
 	ret0, _ := ret[0].(*opsmngr.Clusters)

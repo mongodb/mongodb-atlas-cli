@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -36,7 +35,7 @@ func (m *MockOrganizationsConnector) EXPECT() *MockOrganizationsConnectorMockRec
 }
 
 // ConnectOrganizations mocks base method.
-func (m *MockOrganizationsConnector) ConnectOrganizations(arg0 string, arg1 *mongodbatlas.LinkToken) (*opsmngr.ConnectionStatus, error) {
+func (m *MockOrganizationsConnector) ConnectOrganizations(arg0 string, arg1 *opsmngr.LinkToken) (*opsmngr.ConnectionStatus, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ConnectOrganizations", arg0, arg1)
 	ret0, _ := ret[0].(*opsmngr.ConnectionStatus)

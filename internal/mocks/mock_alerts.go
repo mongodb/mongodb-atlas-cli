@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockAlertDescriber is a mock of AlertDescriber interface.
@@ -35,10 +35,10 @@ func (m *MockAlertDescriber) EXPECT() *MockAlertDescriberMockRecorder {
 }
 
 // Alert mocks base method.
-func (m *MockAlertDescriber) Alert(arg0, arg1 string) (*mongodbatlas.Alert, error) {
+func (m *MockAlertDescriber) Alert(arg0, arg1 string) (*opsmngr.Alert, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Alert", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Alert)
+	ret0, _ := ret[0].(*opsmngr.Alert)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockAlertLister) EXPECT() *MockAlertListerMockRecorder {
 }
 
 // Alerts mocks base method.
-func (m *MockAlertLister) Alerts(arg0 string, arg1 *mongodbatlas.AlertsListOptions) (*mongodbatlas.AlertsResponse, error) {
+func (m *MockAlertLister) Alerts(arg0 string, arg1 *opsmngr.AlertsListOptions) (*opsmngr.AlertsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Alerts", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.AlertsResponse)
+	ret0, _ := ret[0].(*opsmngr.AlertsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (m *MockAlertAcknowledger) EXPECT() *MockAlertAcknowledgerMockRecorder {
 }
 
 // AcknowledgeAlert mocks base method.
-func (m *MockAlertAcknowledger) AcknowledgeAlert(arg0, arg1 string, arg2 *mongodbatlas.AcknowledgeRequest) (*mongodbatlas.Alert, error) {
+func (m *MockAlertAcknowledger) AcknowledgeAlert(arg0, arg1 string, arg2 *opsmngr.AcknowledgeRequest) (*opsmngr.Alert, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AcknowledgeAlert", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.Alert)
+	ret0, _ := ret[0].(*opsmngr.Alert)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

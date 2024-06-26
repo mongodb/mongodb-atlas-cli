@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -36,7 +35,7 @@ func (m *MockGlobalAPIKeyWhitelistLister) EXPECT() *MockGlobalAPIKeyWhitelistLis
 }
 
 // GlobalAPIKeyWhitelists mocks base method.
-func (m *MockGlobalAPIKeyWhitelistLister) GlobalAPIKeyWhitelists(arg0 *mongodbatlas.ListOptions) (*opsmngr.GlobalWhitelistAPIKeys, error) {
+func (m *MockGlobalAPIKeyWhitelistLister) GlobalAPIKeyWhitelists(arg0 *opsmngr.ListOptions) (*opsmngr.GlobalWhitelistAPIKeys, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GlobalAPIKeyWhitelists", arg0)
 	ret0, _ := ret[0].(*opsmngr.GlobalWhitelistAPIKeys)

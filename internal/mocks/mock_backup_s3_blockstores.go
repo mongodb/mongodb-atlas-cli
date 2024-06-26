@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -36,7 +35,7 @@ func (m *MockS3BlockstoresLister) EXPECT() *MockS3BlockstoresListerMockRecorder 
 }
 
 // ListS3Blockstores mocks base method.
-func (m *MockS3BlockstoresLister) ListS3Blockstores(arg0 *mongodbatlas.ListOptions) (*opsmngr.S3Blockstores, error) {
+func (m *MockS3BlockstoresLister) ListS3Blockstores(arg0 *opsmngr.ListOptions) (*opsmngr.S3Blockstores, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListS3Blockstores", arg0)
 	ret0, _ := ret[0].(*opsmngr.S3Blockstores)

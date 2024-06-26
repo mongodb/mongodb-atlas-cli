@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -74,7 +73,7 @@ func (m *MockBackupConfigLister) EXPECT() *MockBackupConfigListerMockRecorder {
 }
 
 // ListBackupConfigs mocks base method.
-func (m *MockBackupConfigLister) ListBackupConfigs(arg0 string, arg1 *mongodbatlas.ListOptions) (*opsmngr.BackupConfigs, error) {
+func (m *MockBackupConfigLister) ListBackupConfigs(arg0 string, arg1 *opsmngr.ListOptions) (*opsmngr.BackupConfigs, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListBackupConfigs", arg0, arg1)
 	ret0, _ := ret[0].(*opsmngr.BackupConfigs)

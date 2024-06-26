@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -164,7 +163,7 @@ func (m *MockUserLister) EXPECT() *MockUserListerMockRecorder {
 }
 
 // OrganizationUsers mocks base method.
-func (m *MockUserLister) OrganizationUsers(arg0 string, arg1 *mongodbatlas.ListOptions) (*opsmngr.UsersResponse, error) {
+func (m *MockUserLister) OrganizationUsers(arg0 string, arg1 *opsmngr.ListOptions) (*opsmngr.UsersResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationUsers", arg0, arg1)
 	ret0, _ := ret[0].(*opsmngr.UsersResponse)

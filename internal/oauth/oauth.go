@@ -20,7 +20,7 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
-	"go.mongodb.org/atlas/auth"
+	"go.mongodb.org/ops-manager/auth"
 )
 
 const (

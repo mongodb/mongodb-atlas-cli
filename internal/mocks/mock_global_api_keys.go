@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockGlobalAPIKeyLister is a mock of GlobalAPIKeyLister interface.
@@ -35,10 +35,10 @@ func (m *MockGlobalAPIKeyLister) EXPECT() *MockGlobalAPIKeyListerMockRecorder {
 }
 
 // GlobalAPIKeys mocks base method.
-func (m *MockGlobalAPIKeyLister) GlobalAPIKeys(arg0 *mongodbatlas.ListOptions) ([]mongodbatlas.APIKey, error) {
+func (m *MockGlobalAPIKeyLister) GlobalAPIKeys(arg0 *opsmngr.ListOptions) ([]opsmngr.APIKey, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GlobalAPIKeys", arg0)
-	ret0, _ := ret[0].([]mongodbatlas.APIKey)
+	ret0, _ := ret[0].([]opsmngr.APIKey)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockGlobalAPIKeyDescriber) EXPECT() *MockGlobalAPIKeyDescriberMockRecor
 }
 
 // GlobalAPIKey mocks base method.
-func (m *MockGlobalAPIKeyDescriber) GlobalAPIKey(arg0 string) (*mongodbatlas.APIKey, error) {
+func (m *MockGlobalAPIKeyDescriber) GlobalAPIKey(arg0 string) (*opsmngr.APIKey, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GlobalAPIKey", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.APIKey)
+	ret0, _ := ret[0].(*opsmngr.APIKey)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (m *MockGlobalAPIKeyUpdater) EXPECT() *MockGlobalAPIKeyUpdaterMockRecorder 
 }
 
 // UpdateGlobalAPIKey mocks base method.
-func (m *MockGlobalAPIKeyUpdater) UpdateGlobalAPIKey(arg0 string, arg1 *mongodbatlas.APIKeyInput) (*mongodbatlas.APIKey, error) {
+func (m *MockGlobalAPIKeyUpdater) UpdateGlobalAPIKey(arg0 string, arg1 *opsmngr.APIKeyInput) (*opsmngr.APIKey, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateGlobalAPIKey", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.APIKey)
+	ret0, _ := ret[0].(*opsmngr.APIKey)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -149,10 +149,10 @@ func (m *MockGlobalAPIKeyCreator) EXPECT() *MockGlobalAPIKeyCreatorMockRecorder 
 }
 
 // CreateGlobalAPIKey mocks base method.
-func (m *MockGlobalAPIKeyCreator) CreateGlobalAPIKey(arg0 *mongodbatlas.APIKeyInput) (*mongodbatlas.APIKey, error) {
+func (m *MockGlobalAPIKeyCreator) CreateGlobalAPIKey(arg0 *opsmngr.APIKeyInput) (*opsmngr.APIKey, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateGlobalAPIKey", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.APIKey)
+	ret0, _ := ret[0].(*opsmngr.APIKey)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

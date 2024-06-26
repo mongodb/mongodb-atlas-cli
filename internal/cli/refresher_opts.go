@@ -21,7 +21,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/oauth"
-	atlasauth "go.mongodb.org/atlas/auth"
+	opsmngrauth "go.mongodb.org/ops-manager/auth"
 	"go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -31,10 +31,10 @@ type RefresherOpts struct {
 
 //go:generate mockgen -destination=../mocks/mock_refresher.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli Refresher
 type Refresher interface {
-	RequestCode(context.Context) (*atlasauth.DeviceCode, *opsmngr.Response, error)
-	PollToken(context.Context, *atlasauth.DeviceCode) (*atlasauth.Token, *opsmngr.Response, error)
-	RefreshToken(context.Context, string) (*atlasauth.Token, *opsmngr.Response, error)
-	RegistrationConfig(ctx context.Context) (*atlasauth.RegistrationConfig, *opsmngr.Response, error)
+	RequestCode(context.Context) (*opsmngrauth.DeviceCode, *opsmngr.Response, error)
+	PollToken(context.Context, *opsmngrauth.DeviceCode) (*opsmngrauth.Token, *opsmngr.Response, error)
+	RefreshToken(context.Context, string) (*opsmngrauth.Token, *opsmngr.Response, error)
+	RegistrationConfig(ctx context.Context) (*opsmngrauth.RegistrationConfig, *opsmngr.Response, error)
 }
 
 func (opts *RefresherOpts) InitFlow(c oauth.ServiceGetter) func() error {
@@ -75,14 +75,14 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 	return config.Save()
 }
 
-func (opts *RefresherOpts) PollToken(c context.Context, d *atlasauth.DeviceCode) (*atlasauth.Token, *opsmngr.Response, error) {
+func (opts *RefresherOpts) PollToken(c context.Context, d *opsmngrauth.DeviceCode) (*opsmngrauth.Token, *opsmngr.Response, error) {
 	return opts.flow.PollToken(c, d)
 }
 
-func (opts *RefresherOpts) RequestCode(c context.Context) (*atlasauth.DeviceCode, *opsmngr.Response, error) {
+func (opts *RefresherOpts) RequestCode(c context.Context) (*opsmngrauth.DeviceCode, *opsmngr.Response, error) {
 	return opts.flow.RequestCode(c)
 }
 
-func (opts *RefresherOpts) RegistrationConfig(c context.Context) (*atlasauth.RegistrationConfig, *opsmngr.Response, error) {
+func (opts *RefresherOpts) RegistrationConfig(c context.Context) (*opsmngrauth.RegistrationConfig, *opsmngr.Response, error) {
 	return opts.flow.RegistrationConfig(c)
 }

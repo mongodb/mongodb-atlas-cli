@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockCheckpointsLister is a mock of CheckpointsLister interface.
@@ -35,10 +35,10 @@ func (m *MockCheckpointsLister) EXPECT() *MockCheckpointsListerMockRecorder {
 }
 
 // Checkpoints mocks base method.
-func (m *MockCheckpointsLister) Checkpoints(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.Checkpoints, error) {
+func (m *MockCheckpointsLister) Checkpoints(arg0, arg1 string, arg2 *opsmngr.ListOptions) (*opsmngr.Checkpoints, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Checkpoints", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.Checkpoints)
+	ret0, _ := ret[0].(*opsmngr.Checkpoints)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockContinuousJobLister) EXPECT() *MockContinuousJobListerMockRecorder 
 }
 
 // ContinuousRestoreJobs mocks base method.
-func (m *MockContinuousJobLister) ContinuousRestoreJobs(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.ContinuousJobs, error) {
+func (m *MockContinuousJobLister) ContinuousRestoreJobs(arg0, arg1 string, arg2 *opsmngr.ListOptions) (*opsmngr.ContinuousJobs, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ContinuousRestoreJobs", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.ContinuousJobs)
+	ret0, _ := ret[0].(*opsmngr.ContinuousJobs)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (m *MockContinuousJobCreator) EXPECT() *MockContinuousJobCreatorMockRecorde
 }
 
 // CreateContinuousRestoreJob mocks base method.
-func (m *MockContinuousJobCreator) CreateContinuousRestoreJob(arg0, arg1 string, arg2 *mongodbatlas.ContinuousJobRequest) (*mongodbatlas.ContinuousJobs, error) {
+func (m *MockContinuousJobCreator) CreateContinuousRestoreJob(arg0, arg1 string, arg2 *opsmngr.ContinuousJobRequest) (*opsmngr.ContinuousJobs, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateContinuousRestoreJob", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.ContinuousJobs)
+	ret0, _ := ret[0].(*opsmngr.ContinuousJobs)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -149,10 +149,10 @@ func (m *MockContinuousSnapshotsLister) EXPECT() *MockContinuousSnapshotsListerM
 }
 
 // ContinuousSnapshots mocks base method.
-func (m *MockContinuousSnapshotsLister) ContinuousSnapshots(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.ContinuousSnapshots, error) {
+func (m *MockContinuousSnapshotsLister) ContinuousSnapshots(arg0, arg1 string, arg2 *opsmngr.ListOptions) (*opsmngr.ContinuousSnapshots, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ContinuousSnapshots", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.ContinuousSnapshots)
+	ret0, _ := ret[0].(*opsmngr.ContinuousSnapshots)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

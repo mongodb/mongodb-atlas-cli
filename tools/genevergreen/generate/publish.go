@@ -44,10 +44,6 @@ var distros = map[string]Platform{
 		extension:     rpm,
 		architectures: []string{x86_64, aarch64},
 	},
-	"rhel70": {
-		extension:     rpm,
-		architectures: []string{x86_64},
-	},
 	"rhel80": {
 		extension:     rpm,
 		architectures: []string{x86_64, aarch64},

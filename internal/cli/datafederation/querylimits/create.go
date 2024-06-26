@@ -78,7 +78,7 @@ func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
 		Use:   "create <name>",
-		Short: "Creates a new Data Federation query limit.",
+		Short: "Creates a new Data Federation query limit. To learn more about the query limits, see https://dochub.mongodb.org/core/adf-query-limits.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:  require.ExactArgs(1),
 		Annotations: map[string]string{

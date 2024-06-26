@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-dataFederation-queryLimits-create` - Creates a new Data Federation query limit.
+* :ref:`atlas-dataFederation-queryLimits-create` - Creates a new Data Federation query limit. To learn more about the query limits, see https://dochub.mongodb.org/core/adf-query-limits.
 * :ref:`atlas-dataFederation-queryLimits-delete` - Remove the specified data federation query limit from your project.
 * :ref:`atlas-dataFederation-queryLimits-describe` - Return the details for the specified data federation query limit for your project.
 * :ref:`atlas-dataFederation-queryLimits-list` - Returns all data federation query limits for your project.

@@ -56,10 +56,6 @@ var distros = map[string]Platform{
 		extension:     rpm,
 		architectures: []string{x86_64, aarch64},
 	},
-	"debian10": {
-		extension:     deb,
-		architectures: []string{x86_64, arm64},
-	},
 	"debian11": {
 		extension:     deb,
 		architectures: []string{x86_64, arm64},

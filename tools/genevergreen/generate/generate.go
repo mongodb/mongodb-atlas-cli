@@ -37,7 +37,6 @@ var (
 		"centos7",
 		"centos8",
 		"rhel9",
-		"debian10",
 		"debian11",
 		"debian12",
 		"ubuntu20.04",
@@ -55,7 +54,6 @@ var (
 		"ubuntu22.04":  "ubuntu22.04-deb",
 		// TODO: CLOUDP-246693: Add Ubuntu 24.04
 		// "ubuntu24.04":  "ubuntu24.04-deb",
-		"debian10": "debian10-deb",
 		"debian11": "debian11-deb",
 		"debian12": "debian12-deb",
 	}
@@ -68,7 +66,6 @@ var (
 		"ubuntu22.04":  "ubuntu2204",
 		// TODO: CLOUDP-246693: Add Ubuntu 24.04
 		// "ubuntu24.04":     "ubuntu2404",
-		"debian10":        "debian10",
 		"debian11":        "debian11",
 		"debian12":        "debian12",
 		"amazonlinux2023": "amazon2023",

@@ -157,18 +157,6 @@ repos:
     repos:
       - apt/debian/dists/bullseye/mongodb-org
 
-  - name: debian10
-    type: deb
-    code_name: "buster"
-    bucket: repo.mongodb.org
-    edition: org
-    component: main
-    architectures:
-      - amd64
-      - arm64
-    repos:
-      - apt/debian/dists/buster/mongodb-org
-
   - name: ubuntu2004
     type: deb
     code_name: "focal"
@@ -314,18 +302,6 @@ repos:
       - arm64
     repos:
       - apt/debian/dists/bullseye/mongodb-enterprise
-
-  - name: debian10
-    type: deb
-    edition: enterprise
-    code_name: "buster"
-    bucket: repo.mongodb.com
-    component: main
-    architectures:
-      - amd64
-      - arm64
-    repos:
-      - apt/debian/dists/buster/mongodb-enterprise
 
   - name: ubuntu2004
     type: deb

@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockOrganizationInvitationLister is a mock of OrganizationInvitationLister interface.
@@ -35,10 +35,10 @@ func (m *MockOrganizationInvitationLister) EXPECT() *MockOrganizationInvitationL
 }
 
 // OrganizationInvitations mocks base method.
-func (m *MockOrganizationInvitationLister) OrganizationInvitations(arg0 string, arg1 *mongodbatlas.InvitationOptions) ([]*mongodbatlas.Invitation, error) {
+func (m *MockOrganizationInvitationLister) OrganizationInvitations(arg0 string, arg1 *opsmngr.InvitationOptions) ([]*opsmngr.Invitation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationInvitations", arg0, arg1)
-	ret0, _ := ret[0].([]*mongodbatlas.Invitation)
+	ret0, _ := ret[0].([]*opsmngr.Invitation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -110,10 +110,10 @@ func (m *MockOrganizationInvitationDescriber) EXPECT() *MockOrganizationInvitati
 }
 
 // OrganizationInvitation mocks base method.
-func (m *MockOrganizationInvitationDescriber) OrganizationInvitation(arg0, arg1 string) (*mongodbatlas.Invitation, error) {
+func (m *MockOrganizationInvitationDescriber) OrganizationInvitation(arg0, arg1 string) (*opsmngr.Invitation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationInvitation", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Invitation)
+	ret0, _ := ret[0].(*opsmngr.Invitation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -148,10 +148,10 @@ func (m *MockOrganizationInvitationUpdater) EXPECT() *MockOrganizationInvitation
 }
 
 // UpdateOrganizationInvitation mocks base method.
-func (m *MockOrganizationInvitationUpdater) UpdateOrganizationInvitation(arg0, arg1 string, arg2 *mongodbatlas.Invitation) (*mongodbatlas.Invitation, error) {
+func (m *MockOrganizationInvitationUpdater) UpdateOrganizationInvitation(arg0, arg1 string, arg2 *opsmngr.Invitation) (*opsmngr.Invitation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateOrganizationInvitation", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.Invitation)
+	ret0, _ := ret[0].(*opsmngr.Invitation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -186,10 +186,10 @@ func (m *MockOrganizationInviter) EXPECT() *MockOrganizationInviterMockRecorder 
 }
 
 // InviteUser mocks base method.
-func (m *MockOrganizationInviter) InviteUser(arg0 string, arg1 *mongodbatlas.Invitation) (*mongodbatlas.Invitation, error) {
+func (m *MockOrganizationInviter) InviteUser(arg0 string, arg1 *opsmngr.Invitation) (*opsmngr.Invitation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InviteUser", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Invitation)
+	ret0, _ := ret[0].(*opsmngr.Invitation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

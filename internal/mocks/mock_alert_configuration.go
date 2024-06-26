@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockAlertConfigurationLister is a mock of AlertConfigurationLister interface.
@@ -35,10 +35,10 @@ func (m *MockAlertConfigurationLister) EXPECT() *MockAlertConfigurationListerMoc
 }
 
 // AlertConfigurations mocks base method.
-func (m *MockAlertConfigurationLister) AlertConfigurations(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.AlertConfiguration, error) {
+func (m *MockAlertConfigurationLister) AlertConfigurations(arg0 string, arg1 *opsmngr.ListOptions) ([]opsmngr.AlertConfiguration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AlertConfigurations", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlas.AlertConfiguration)
+	ret0, _ := ret[0].([]opsmngr.AlertConfiguration)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockAlertConfigurationCreator) EXPECT() *MockAlertConfigurationCreatorM
 }
 
 // CreateAlertConfiguration mocks base method.
-func (m *MockAlertConfigurationCreator) CreateAlertConfiguration(arg0 *mongodbatlas.AlertConfiguration) (*mongodbatlas.AlertConfiguration, error) {
+func (m *MockAlertConfigurationCreator) CreateAlertConfiguration(arg0 *opsmngr.AlertConfiguration) (*opsmngr.AlertConfiguration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAlertConfiguration", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.AlertConfiguration)
+	ret0, _ := ret[0].(*opsmngr.AlertConfiguration)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -148,10 +148,10 @@ func (m *MockAlertConfigurationUpdater) EXPECT() *MockAlertConfigurationUpdaterM
 }
 
 // UpdateAlertConfiguration mocks base method.
-func (m *MockAlertConfigurationUpdater) UpdateAlertConfiguration(arg0 *mongodbatlas.AlertConfiguration) (*mongodbatlas.AlertConfiguration, error) {
+func (m *MockAlertConfigurationUpdater) UpdateAlertConfiguration(arg0 *opsmngr.AlertConfiguration) (*opsmngr.AlertConfiguration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAlertConfiguration", arg0)
-	ret0, _ := ret[0].(*mongodbatlas.AlertConfiguration)
+	ret0, _ := ret[0].(*opsmngr.AlertConfiguration)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -224,10 +224,10 @@ func (m *MockAlertConfigurationEnabler) EXPECT() *MockAlertConfigurationEnablerM
 }
 
 // EnableAlertConfiguration mocks base method.
-func (m *MockAlertConfigurationEnabler) EnableAlertConfiguration(arg0, arg1 string) (*mongodbatlas.AlertConfiguration, error) {
+func (m *MockAlertConfigurationEnabler) EnableAlertConfiguration(arg0, arg1 string) (*opsmngr.AlertConfiguration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "EnableAlertConfiguration", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.AlertConfiguration)
+	ret0, _ := ret[0].(*opsmngr.AlertConfiguration)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -262,10 +262,10 @@ func (m *MockAlertConfigurationDisabler) EXPECT() *MockAlertConfigurationDisable
 }
 
 // DisableAlertConfiguration mocks base method.
-func (m *MockAlertConfigurationDisabler) DisableAlertConfiguration(arg0, arg1 string) (*mongodbatlas.AlertConfiguration, error) {
+func (m *MockAlertConfigurationDisabler) DisableAlertConfiguration(arg0, arg1 string) (*opsmngr.AlertConfiguration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DisableAlertConfiguration", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.AlertConfiguration)
+	ret0, _ := ret[0].(*opsmngr.AlertConfiguration)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

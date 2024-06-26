@@ -9,8 +9,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	auth "go.mongodb.org/atlas/auth"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	auth "go.mongodb.org/ops-manager/auth"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockRefresher is a mock of Refresher interface.
@@ -37,11 +37,11 @@ func (m *MockRefresher) EXPECT() *MockRefresherMockRecorder {
 }
 
 // PollToken mocks base method.
-func (m *MockRefresher) PollToken(arg0 context.Context, arg1 *auth.DeviceCode) (*auth.Token, *mongodbatlas.Response, error) {
+func (m *MockRefresher) PollToken(arg0 context.Context, arg1 *auth.DeviceCode) (*auth.Token, *opsmngr.Response, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PollToken", arg0, arg1)
 	ret0, _ := ret[0].(*auth.Token)
-	ret1, _ := ret[1].(*mongodbatlas.Response)
+	ret1, _ := ret[1].(*opsmngr.Response)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
@@ -53,11 +53,11 @@ func (mr *MockRefresherMockRecorder) PollToken(arg0, arg1 interface{}) *gomock.C
 }
 
 // RefreshToken mocks base method.
-func (m *MockRefresher) RefreshToken(arg0 context.Context, arg1 string) (*auth.Token, *mongodbatlas.Response, error) {
+func (m *MockRefresher) RefreshToken(arg0 context.Context, arg1 string) (*auth.Token, *opsmngr.Response, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RefreshToken", arg0, arg1)
 	ret0, _ := ret[0].(*auth.Token)
-	ret1, _ := ret[1].(*mongodbatlas.Response)
+	ret1, _ := ret[1].(*opsmngr.Response)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
@@ -69,11 +69,11 @@ func (mr *MockRefresherMockRecorder) RefreshToken(arg0, arg1 interface{}) *gomoc
 }
 
 // RegistrationConfig mocks base method.
-func (m *MockRefresher) RegistrationConfig(arg0 context.Context) (*auth.RegistrationConfig, *mongodbatlas.Response, error) {
+func (m *MockRefresher) RegistrationConfig(arg0 context.Context) (*auth.RegistrationConfig, *opsmngr.Response, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RegistrationConfig", arg0)
 	ret0, _ := ret[0].(*auth.RegistrationConfig)
-	ret1, _ := ret[1].(*mongodbatlas.Response)
+	ret1, _ := ret[1].(*opsmngr.Response)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
@@ -85,11 +85,11 @@ func (mr *MockRefresherMockRecorder) RegistrationConfig(arg0 interface{}) *gomoc
 }
 
 // RequestCode mocks base method.
-func (m *MockRefresher) RequestCode(arg0 context.Context) (*auth.DeviceCode, *mongodbatlas.Response, error) {
+func (m *MockRefresher) RequestCode(arg0 context.Context) (*auth.DeviceCode, *opsmngr.Response, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RequestCode", arg0)
 	ret0, _ := ret[0].(*auth.DeviceCode)
-	ret1, _ := ret[1].(*mongodbatlas.Response)
+	ret1, _ := ret[1].(*opsmngr.Response)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }

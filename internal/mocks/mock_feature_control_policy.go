@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -36,7 +35,7 @@ func (m *MockFeatureControlPoliciesLister) EXPECT() *MockFeatureControlPoliciesL
 }
 
 // FeatureControlPolicies mocks base method.
-func (m *MockFeatureControlPoliciesLister) FeatureControlPolicies(arg0 string, arg1 *mongodbatlas.ListOptions) (*opsmngr.FeaturePolicy, error) {
+func (m *MockFeatureControlPoliciesLister) FeatureControlPolicies(arg0 string, arg1 *opsmngr.ListOptions) (*opsmngr.FeaturePolicy, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FeatureControlPolicies", arg0, arg1)
 	ret0, _ := ret[0].(*opsmngr.FeaturePolicy)

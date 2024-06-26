@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockHostMeasurementLister is a mock of HostMeasurementLister interface.
@@ -35,10 +35,10 @@ func (m *MockHostMeasurementLister) EXPECT() *MockHostMeasurementListerMockRecor
 }
 
 // HostMeasurements mocks base method.
-func (m *MockHostMeasurementLister) HostMeasurements(arg0, arg1 string, arg2 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessMeasurements, error) {
+func (m *MockHostMeasurementLister) HostMeasurements(arg0, arg1 string, arg2 *opsmngr.ProcessMeasurementListOptions) (*opsmngr.ProcessMeasurements, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HostMeasurements", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessMeasurements)
+	ret0, _ := ret[0].(*opsmngr.ProcessMeasurements)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockHostDiskMeasurementsLister) EXPECT() *MockHostDiskMeasurementsListe
 }
 
 // HostDiskMeasurements mocks base method.
-func (m *MockHostDiskMeasurementsLister) HostDiskMeasurements(arg0, arg1, arg2 string, arg3 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessDiskMeasurements, error) {
+func (m *MockHostDiskMeasurementsLister) HostDiskMeasurements(arg0, arg1, arg2 string, arg3 *opsmngr.ProcessMeasurementListOptions) (*opsmngr.ProcessDiskMeasurements, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HostDiskMeasurements", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessDiskMeasurements)
+	ret0, _ := ret[0].(*opsmngr.ProcessDiskMeasurements)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (m *MockHostDatabaseMeasurementsLister) EXPECT() *MockHostDatabaseMeasureme
 }
 
 // HostDatabaseMeasurements mocks base method.
-func (m *MockHostDatabaseMeasurementsLister) HostDatabaseMeasurements(arg0, arg1, arg2 string, arg3 *mongodbatlas.ProcessMeasurementListOptions) (*mongodbatlas.ProcessDatabaseMeasurements, error) {
+func (m *MockHostDatabaseMeasurementsLister) HostDatabaseMeasurements(arg0, arg1, arg2 string, arg3 *opsmngr.ProcessMeasurementListOptions) (*opsmngr.ProcessDatabaseMeasurements, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HostDatabaseMeasurements", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessDatabaseMeasurements)
+	ret0, _ := ret[0].(*opsmngr.ProcessDatabaseMeasurements)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

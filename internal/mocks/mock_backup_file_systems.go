@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -36,7 +35,7 @@ func (m *MockFileSystemsLister) EXPECT() *MockFileSystemsListerMockRecorder {
 }
 
 // ListFileSystems mocks base method.
-func (m *MockFileSystemsLister) ListFileSystems(arg0 *mongodbatlas.ListOptions) (*opsmngr.FileSystemStoreConfigurations, error) {
+func (m *MockFileSystemsLister) ListFileSystems(arg0 *opsmngr.ListOptions) (*opsmngr.FileSystemStoreConfigurations, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListFileSystems", arg0)
 	ret0, _ := ret[0].(*opsmngr.FileSystemStoreConfigurations)

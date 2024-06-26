@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -36,10 +35,10 @@ func (m *MockTeamLister) EXPECT() *MockTeamListerMockRecorder {
 }
 
 // Teams mocks base method.
-func (m *MockTeamLister) Teams(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.Team, error) {
+func (m *MockTeamLister) Teams(arg0 string, arg1 *opsmngr.ListOptions) ([]opsmngr.Team, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Teams", arg0, arg1)
-	ret0, _ := ret[0].([]mongodbatlas.Team)
+	ret0, _ := ret[0].([]opsmngr.Team)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -74,10 +73,10 @@ func (m *MockTeamDescriber) EXPECT() *MockTeamDescriberMockRecorder {
 }
 
 // TeamByID mocks base method.
-func (m *MockTeamDescriber) TeamByID(arg0, arg1 string) (*mongodbatlas.Team, error) {
+func (m *MockTeamDescriber) TeamByID(arg0, arg1 string) (*opsmngr.Team, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "TeamByID", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Team)
+	ret0, _ := ret[0].(*opsmngr.Team)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -89,10 +88,10 @@ func (mr *MockTeamDescriberMockRecorder) TeamByID(arg0, arg1 interface{}) *gomoc
 }
 
 // TeamByName mocks base method.
-func (m *MockTeamDescriber) TeamByName(arg0, arg1 string) (*mongodbatlas.Team, error) {
+func (m *MockTeamDescriber) TeamByName(arg0, arg1 string) (*opsmngr.Team, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "TeamByName", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Team)
+	ret0, _ := ret[0].(*opsmngr.Team)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -127,10 +126,10 @@ func (m *MockTeamCreator) EXPECT() *MockTeamCreatorMockRecorder {
 }
 
 // CreateTeam mocks base method.
-func (m *MockTeamCreator) CreateTeam(arg0 string, arg1 *mongodbatlas.Team) (*mongodbatlas.Team, error) {
+func (m *MockTeamCreator) CreateTeam(arg0 string, arg1 *opsmngr.Team) (*opsmngr.Team, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateTeam", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.Team)
+	ret0, _ := ret[0].(*opsmngr.Team)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -277,10 +276,10 @@ func (m *MockTeamRolesUpdater) EXPECT() *MockTeamRolesUpdaterMockRecorder {
 }
 
 // UpdateProjectTeamRoles mocks base method.
-func (m *MockTeamRolesUpdater) UpdateProjectTeamRoles(arg0, arg1 string, arg2 *mongodbatlas.TeamUpdateRoles) ([]mongodbatlas.TeamRoles, error) {
+func (m *MockTeamRolesUpdater) UpdateProjectTeamRoles(arg0, arg1 string, arg2 *opsmngr.TeamUpdateRoles) ([]opsmngr.TeamRoles, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateProjectTeamRoles", arg0, arg1, arg2)
-	ret0, _ := ret[0].([]mongodbatlas.TeamRoles)
+	ret0, _ := ret[0].([]opsmngr.TeamRoles)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

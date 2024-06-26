@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/auth"
+	"go.mongodb.org/ops-manager/auth"
 )
 
 //go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongodb-atlas-cli/mongocli/v2/internal/cli/auth LoginConfig

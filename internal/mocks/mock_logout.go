@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockRevoker is a mock of Revoker interface.
@@ -36,10 +36,10 @@ func (m *MockRevoker) EXPECT() *MockRevokerMockRecorder {
 }
 
 // RevokeToken mocks base method.
-func (m *MockRevoker) RevokeToken(arg0 context.Context, arg1, arg2 string) (*mongodbatlas.Response, error) {
+func (m *MockRevoker) RevokeToken(arg0 context.Context, arg1, arg2 string) (*opsmngr.Response, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RevokeToken", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.Response)
+	ret0, _ := ret[0].(*opsmngr.Response)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

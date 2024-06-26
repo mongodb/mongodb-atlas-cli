@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockOrganizationAPIKeyAccessListCreator is a mock of OrganizationAPIKeyAccessListCreator interface.
@@ -35,10 +35,10 @@ func (m *MockOrganizationAPIKeyAccessListCreator) EXPECT() *MockOrganizationAPIK
 }
 
 // CreateOrganizationAPIKeyAccessList mocks base method.
-func (m *MockOrganizationAPIKeyAccessListCreator) CreateOrganizationAPIKeyAccessList(arg0, arg1 string, arg2 []*mongodbatlas.AccessListAPIKeysReq) (*mongodbatlas.AccessListAPIKeys, error) {
+func (m *MockOrganizationAPIKeyAccessListCreator) CreateOrganizationAPIKeyAccessList(arg0, arg1 string, arg2 []*opsmngr.AccessListAPIKeysReq) (*opsmngr.AccessListAPIKeys, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOrganizationAPIKeyAccessList", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.AccessListAPIKeys)
+	ret0, _ := ret[0].(*opsmngr.AccessListAPIKeys)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -110,10 +110,10 @@ func (m *MockOrganizationAPIKeyAccessListLister) EXPECT() *MockOrganizationAPIKe
 }
 
 // OrganizationAPIKeyAccessLists mocks base method.
-func (m *MockOrganizationAPIKeyAccessListLister) OrganizationAPIKeyAccessLists(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.AccessListAPIKeys, error) {
+func (m *MockOrganizationAPIKeyAccessListLister) OrganizationAPIKeyAccessLists(arg0, arg1 string, arg2 *opsmngr.ListOptions) (*opsmngr.AccessListAPIKeys, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationAPIKeyAccessLists", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.AccessListAPIKeys)
+	ret0, _ := ret[0].(*opsmngr.AccessListAPIKeys)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

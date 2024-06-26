@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
+	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
 // MockOrganizationEventLister is a mock of OrganizationEventLister interface.
@@ -35,10 +35,10 @@ func (m *MockOrganizationEventLister) EXPECT() *MockOrganizationEventListerMockR
 }
 
 // OrganizationEvents mocks base method.
-func (m *MockOrganizationEventLister) OrganizationEvents(arg0 string, arg1 *mongodbatlas.EventListOptions) (*mongodbatlas.EventResponse, error) {
+func (m *MockOrganizationEventLister) OrganizationEvents(arg0 string, arg1 *opsmngr.EventListOptions) (*opsmngr.EventResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationEvents", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.EventResponse)
+	ret0, _ := ret[0].(*opsmngr.EventResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockProjectEventLister) EXPECT() *MockProjectEventListerMockRecorder {
 }
 
 // ProjectEvents mocks base method.
-func (m *MockProjectEventLister) ProjectEvents(arg0 string, arg1 *mongodbatlas.EventListOptions) (*mongodbatlas.EventResponse, error) {
+func (m *MockProjectEventLister) ProjectEvents(arg0 string, arg1 *opsmngr.EventListOptions) (*opsmngr.EventResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectEvents", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.EventResponse)
+	ret0, _ := ret[0].(*opsmngr.EventResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,10 +111,10 @@ func (m *MockEventLister) EXPECT() *MockEventListerMockRecorder {
 }
 
 // OrganizationEvents mocks base method.
-func (m *MockEventLister) OrganizationEvents(arg0 string, arg1 *mongodbatlas.EventListOptions) (*mongodbatlas.EventResponse, error) {
+func (m *MockEventLister) OrganizationEvents(arg0 string, arg1 *opsmngr.EventListOptions) (*opsmngr.EventResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationEvents", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.EventResponse)
+	ret0, _ := ret[0].(*opsmngr.EventResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -126,10 +126,10 @@ func (mr *MockEventListerMockRecorder) OrganizationEvents(arg0, arg1 interface{}
 }
 
 // ProjectEvents mocks base method.
-func (m *MockEventLister) ProjectEvents(arg0 string, arg1 *mongodbatlas.EventListOptions) (*mongodbatlas.EventResponse, error) {
+func (m *MockEventLister) ProjectEvents(arg0 string, arg1 *opsmngr.EventListOptions) (*opsmngr.EventResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectEvents", arg0, arg1)
-	ret0, _ := ret[0].(*mongodbatlas.EventResponse)
+	ret0, _ := ret[0].(*opsmngr.EventResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -8,7 +8,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	opsmngr "go.mongodb.org/ops-manager/opsmngr"
 )
 
@@ -112,10 +111,10 @@ func (m *MockHostDatabaseLister) EXPECT() *MockHostDatabaseListerMockRecorder {
 }
 
 // HostDatabases mocks base method.
-func (m *MockHostDatabaseLister) HostDatabases(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.ProcessDatabasesResponse, error) {
+func (m *MockHostDatabaseLister) HostDatabases(arg0, arg1 string, arg2 *opsmngr.ListOptions) (*opsmngr.ProcessDatabasesResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HostDatabases", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessDatabasesResponse)
+	ret0, _ := ret[0].(*opsmngr.ProcessDatabasesResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -150,10 +149,10 @@ func (m *MockHostDisksLister) EXPECT() *MockHostDisksListerMockRecorder {
 }
 
 // HostDisks mocks base method.
-func (m *MockHostDisksLister) HostDisks(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*mongodbatlas.ProcessDisksResponse, error) {
+func (m *MockHostDisksLister) HostDisks(arg0, arg1 string, arg2 *opsmngr.ListOptions) (*opsmngr.ProcessDisksResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HostDisks", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*mongodbatlas.ProcessDisksResponse)
+	ret0, _ := ret[0].(*opsmngr.ProcessDisksResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

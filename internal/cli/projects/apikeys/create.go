@@ -76,8 +76,8 @@ func CreateBuilder() *cobra.Command {
 			"output": createTemplate,
 		},
 		Args: require.NoArgs,
-		Example: `  # Create an organization API key with the ORG_OWNER role and assign it to the project with ID 5e2211c17a3e5a48f5497de3:
-  atlas projects apiKeys create --desc "My API key" --projectId 5e1234c17a3e5a48f5497de3 --role ORG_OWNER --output json`,
+		Example: `  # Create an organization API key with the GROUP_OWNER role and assign it to the project with ID 5e2211c17a3e5a48f5497de3:
+  atlas projects apiKeys create --desc "My API key" --projectId 5e1234c17a3e5a48f5497de3 --role GROUP_OWNER --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

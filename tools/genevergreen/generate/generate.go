@@ -35,7 +35,7 @@ var (
 	}
 
 	unsupportedOsByVersion = map[string][]string{
-		"8.0": {"debian11", "rhel70"},
+		"8.0": {"debian11", "rhel70", "amazon2"},
 	}
 
 	oses = []string{

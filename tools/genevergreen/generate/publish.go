@@ -16,6 +16,7 @@ package generate
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/evergreen-ci/shrub"
@@ -106,6 +107,9 @@ func publishVariant(c *shrub.Configuration, v *shrub.Variant, sv, stableSuffix s
 	}
 	for _, r := range repos {
 		for k, d := range distros {
+			if slices.Contains(unsupportedOsByVersion[sv], k) {
+				continue
+			}
 			for _, a := range d.architectures {
 				taskName := fmt.Sprintf("push_atlascli_%s_%s_%s%s%s", k, r, a, strings.ReplaceAll(taskSv, ".", ""), stableSuffix)
 				t := newPublishTask(taskName, d.extension, r, k, taskServerVersion, notaryKey, a, stable, dependency)

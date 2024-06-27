@@ -32,6 +32,11 @@ var (
 		"7.0",
 		"8.0",
 	}
+
+	unsupportedOsByVersion = map[string][]string{
+		"8.0": {"debian11", "rhel70", "amazon2"},
+	}
+
 	oses = []string{
 		"amazonlinux2",
 		"centos7",

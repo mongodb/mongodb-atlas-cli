@@ -56,6 +56,10 @@ func DeleteBuilder() *cobra.Command {
 		Short:   "Remove a serverless instance from your project.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Args:    require.ExactArgs(1),
+		Example: `  # Remove a serverlessInstance named myInstance for the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas serverless delete myInstance --projectId 5e2211c17a3e5a48f5497de3
+  # Remove a serverlessInstance named myInstance for the project with the ID 5e2211c17a3e5a48f5497de3 without requiring confirmation:
+  atlas serverless delete myInstance --projectId 5e2211c17a3e5a48f5497de3 --force`,
 		Annotations: map[string]string{
 			"instanceNameDesc": "Name of the instance to delete.",
 			"output":           opts.SuccessMessage(),

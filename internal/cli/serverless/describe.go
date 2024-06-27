@@ -62,6 +62,8 @@ func DescribeBuilder() *cobra.Command {
 		Short: "Return one serverless instance in the specified project.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Args:  require.ExactArgs(1),
+		Example: `  # Return the JSON-formatted details for the serverlessInstance named myInstance in the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas serverless describe myInstance --projectId 5e2211c17a3e5a48f5497de3`,
 		Annotations: map[string]string{
 			"instanceNameDesc": "Human-readable label that identifies your serverless instance.",
 			"output":           describeTemplate,

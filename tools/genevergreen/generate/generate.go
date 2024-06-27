@@ -16,6 +16,7 @@ package generate
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/evergreen-ci/shrub"
@@ -32,6 +33,11 @@ var (
 		"7.0",
 		"8.0",
 	}
+
+	unsupportedOsByVersion = map[string][]string{
+		"8.0": {"debian11", "rhel70"},
+	}
+
 	oses = []string{
 		"amazonlinux2",
 		"centos7",
@@ -91,6 +97,9 @@ func RepoTasks(c *shrub.Configuration) {
 		entrypoint := "atlas"
 
 		for _, os := range oses {
+			if slices.Contains(unsupportedOsByVersion[serverVersion], os) {
+				continue
+			}
 			for _, repo := range repos {
 				mongoRepo := "https://repo.mongodb.com"
 				if repo == "org" {

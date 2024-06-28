@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package plugin
+package pluginloader
 
 import (
 	"fmt"
@@ -34,8 +34,7 @@ type PluginManifest struct {
 	} `yaml:"commands"`
 }
 
-func GetPluginCommands() ([]*cobra.Command, error) {
-	pluginDir := "./plugins"
+func GetPluginCommands(pluginDir string) ([]*cobra.Command, error) {
 	files, err := os.ReadDir(pluginDir)
 
 	if err != nil {
@@ -76,6 +75,7 @@ func GetPluginCommands() ([]*cobra.Command, error) {
 		// pluginCmd := &cobra.Command{
 		// 	Use: pluginManifest.Name,
 		// }
+		
 	}
 
 	return commands, nil

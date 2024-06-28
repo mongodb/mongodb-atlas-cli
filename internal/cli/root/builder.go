@@ -66,7 +66,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/latestrelease"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pluginloader"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/sighandle"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
@@ -248,10 +248,20 @@ Use the --help flag with any command for more info on that command.`,
 		federatedauthentication.Builder(),
 	)
 
-	if commands, err := plugin.GetPluginCommands(); err != nil {
+	if commands, err := pluginloader.GetPluginCommands("./plugins"); err != nil {
 		log.Warningf("Could not load plugins: %s", err.Error())
 	} else {
 		rootCmd.AddCommand(commands...)
+	}
+
+	extraPluginDir := os.Getenv("ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY")
+
+	if extraPluginDir != "" {
+		if commands, err := pluginloader.GetPluginCommands(extraPluginDir); err != nil {
+			log.Warningf("Could not load plugins from folder %s provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s", extraPluginDir, err.Error())
+		} else {
+			rootCmd.AddCommand(commands...)
+		}
 	}
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)

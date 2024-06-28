@@ -229,7 +229,7 @@ func (e *dockerImpl) ContainerList(ctx context.Context, names ...string) ([]Cont
 
 	if len(names) > 0 {
 		for _, name := range names {
-			args = append(args, "-f", "name="+name)
+			args = append(args, "-f", "label="+name)
 		}
 	}
 	buf, err := e.run(ctx, args...)

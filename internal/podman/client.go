@@ -270,7 +270,7 @@ func (o *client) RemoveContainers(ctx context.Context, names ...string) ([]byte,
 func (o *client) ListContainers(ctx context.Context, nameFilter string) ([]*Container, error) {
 	args := []string{"ps", "--all", "--format", "json"}
 	if nameFilter != "" {
-		args = append(args, "--filter", "name="+nameFilter)
+		args = append(args, "--filter", "label="+nameFilter)
 	}
 
 	response, err := o.runPodman(ctx, args...)

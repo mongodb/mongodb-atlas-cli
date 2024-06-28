@@ -56,6 +56,7 @@ const (
 	MongoshConnect     = "mongosh"
 	PromptTypeMessage  = "What type of deployment would you like to work with?"
 	MaxItemsPerPage    = 500
+	ContainerFilter    = "mongodb-atlas-local=container"
 )
 
 var (
@@ -164,8 +165,12 @@ func (opts *DeploymentOpts) IsCliAuthenticated() bool {
 	return opts.CredStore.AuthType() != config.NotLoggedIn
 }
 
+func (opts *DeploymentOpts) GetLocalContainers(ctx context.Context) ([]container.Container, error) {
+	return opts.ContainerEngine.ContainerList(ctx, ContainerFilter)
+}
+
 func (opts *DeploymentOpts) GetLocalDeployments(ctx context.Context) ([]Deployment, error) {
-	mdbContainers, err := opts.ContainerEngine.ContainerList(ctx, MongodHostnamePrefix)
+	mdbContainers, err := opts.GetLocalContainers(ctx)
 	if err != nil {
 		return nil, err
 	}

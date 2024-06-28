@@ -34,12 +34,11 @@ var (
 	}
 
 	unsupportedOsByVersion = map[string][]string{
-		"8.0": {"debian11", "rhel70", "amazon2"},
+		"8.0": {"debian11"},
 	}
 
 	oses = []string{
 		"amazonlinux2",
-		"centos7",
 		"centos8",
 		"rhel9",
 		"debian11",
@@ -51,7 +50,6 @@ var (
 	}
 	repos      = []string{"org", "enterprise"}
 	postPkgImg = map[string]string{
-		"centos7":      "centos7-rpm",
 		"centos8":      "centos8-rpm",
 		"rhel9":        "rhel9-rpm",
 		"amazonlinux2": "amazonlinux2-rpm",
@@ -63,12 +61,10 @@ var (
 		"debian12": "debian12-deb",
 	}
 	newOs = map[string]string{
-		"centos7":      "rhel70",
-		"centos8":      "rhel80",
-		"rhel9":        "rhel90",
-		"amazonlinux2": "amazon2",
-		"ubuntu20.04":  "ubuntu2004",
-		"ubuntu22.04":  "ubuntu2204",
+		"centos8":     "rhel80",
+		"rhel9":       "rhel90",
+		"ubuntu20.04": "ubuntu2004",
+		"ubuntu22.04": "ubuntu2204",
 		// TODO: CLOUDP-246693: Add Ubuntu 24.04
 		// "ubuntu24.04":     "ubuntu2404",
 		"debian11":        "debian11",

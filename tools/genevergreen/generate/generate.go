@@ -34,12 +34,11 @@ var (
 	}
 
 	unsupportedOsByVersion = map[string][]string{
-		"8.0": {"debian11", "rhel70", "amazon2"},
+		"8.0": {"debian11", "amazon2"},
 	}
 
 	oses = []string{
 		"amazonlinux2",
-		"centos7",
 		"centos8",
 		"rhel9",
 		"debian11",
@@ -51,7 +50,6 @@ var (
 	}
 	repos      = []string{"org", "enterprise"}
 	postPkgImg = map[string]string{
-		"centos7":      "centos7-rpm",
 		"centos8":      "centos8-rpm",
 		"rhel9":        "rhel9-rpm",
 		"amazonlinux2": "amazonlinux2-rpm",
@@ -63,7 +61,6 @@ var (
 		"debian12": "debian12-deb",
 	}
 	newOs = map[string]string{
-		"centos7":      "rhel70",
 		"centos8":      "rhel80",
 		"rhel9":        "rhel90",
 		"amazonlinux2": "amazon2",

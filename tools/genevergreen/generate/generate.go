@@ -35,10 +35,12 @@ var (
 
 	unsupportedOsByVersion = map[string][]string{
 		"8.0": {"debian11"},
+		"7.0": {"ubuntu2404"},
+		"6.0": {"ubuntu2404"},
+		"5.0": {"ubuntu2404"},
 	}
 
 	oses = []string{
-		"amazonlinux2",
 		"centos8",
 		"rhel9",
 		"debian11",
@@ -49,14 +51,13 @@ var (
 	}
 	repos      = []string{"org", "enterprise"}
 	postPkgImg = map[string]string{
-		"centos8":      "centos8-rpm",
-		"rhel9":        "rhel9-rpm",
-		"amazonlinux2": "amazonlinux2-rpm",
-		"ubuntu20.04":  "ubuntu20.04-deb",
-		"ubuntu22.04":  "ubuntu22.04-deb",
-		"ubuntu24.04":  "ubuntu24.04-deb",
-		"debian11":     "debian11-deb",
-		"debian12":     "debian12-deb",
+		"centos8":     "centos8-rpm",
+		"rhel9":       "rhel9-rpm",
+		"ubuntu20.04": "ubuntu20.04-deb",
+		"ubuntu22.04": "ubuntu22.04-deb",
+		"ubuntu24.04": "ubuntu24.04-deb",
+		"debian11":    "debian11-deb",
+		"debian12":    "debian12-deb",
 	}
 	newOs = map[string]string{
 		"centos8":         "rhel80",

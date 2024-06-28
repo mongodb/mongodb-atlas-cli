@@ -34,7 +34,7 @@ var (
 	}
 
 	unsupportedOsByVersion = map[string][]string{
-		"8.0": {"debian11", "amazon2"},
+		"8.0": {"debian11"},
 	}
 
 	oses = []string{
@@ -61,11 +61,10 @@ var (
 		"debian12": "debian12-deb",
 	}
 	newOs = map[string]string{
-		"centos8":      "rhel80",
-		"rhel9":        "rhel90",
-		"amazonlinux2": "amazon2",
-		"ubuntu20.04":  "ubuntu2004",
-		"ubuntu22.04":  "ubuntu2204",
+		"centos8":     "rhel80",
+		"rhel9":       "rhel90",
+		"ubuntu20.04": "ubuntu2004",
+		"ubuntu22.04": "ubuntu2204",
 		// TODO: CLOUDP-246693: Add Ubuntu 24.04
 		// "ubuntu24.04":     "ubuntu2404",
 		"debian11":        "debian11",

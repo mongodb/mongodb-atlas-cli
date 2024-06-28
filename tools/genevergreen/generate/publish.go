@@ -37,10 +37,6 @@ const (
 
 // distros - if updating this list verify build/ci/repo_config.yaml matches.
 var distros = map[string]Platform{
-	"amazon2": {
-		extension:     rpm,
-		architectures: []string{x86_64, aarch64},
-	},
 	"amazon2023": {
 		extension:     rpm,
 		architectures: []string{x86_64, aarch64},

@@ -82,13 +82,6 @@ repos:
       - yum/redhat/9/mongodb-org
       - yum/redhat/9Server/mongodb-org
 
-  - name: amazon2
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - yum/amazon/2/mongodb-org
-
   - name: amazon2023
     type: rpm
     edition: org
@@ -203,13 +196,6 @@ repos:
     repos:
       - yum/redhat/9/mongodb-enterprise
       - yum/redhat/9Server/mongodb-enterprise
-
-  - name: amazon2
-    type: rpm
-    edition: enterprise
-    bucket: repo.mongodb.com
-    repos:
-      - yum/amazon/2/mongodb-enterprise
 
   - name: amazon2023
     type: rpm

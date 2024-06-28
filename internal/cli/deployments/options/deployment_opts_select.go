@@ -77,14 +77,13 @@ func (opts *DeploymentOpts) SelectLocal(ctx context.Context) error {
 	}
 
 	if len(containers) == 1 {
-		opts.DeploymentName = LocalDeploymentName(containers[0].Names[0])
+		opts.DeploymentName = containers[0].Names[0]
 		return nil
 	}
 
 	names := make([]string, 0, len(containers))
 	for _, c := range containers {
-		name := LocalDeploymentName(c.Names[0])
-		names = append(names, name)
+		names = append(names, c.Names[0])
 	}
 
 	return telemetry.TrackAskOne(&survey.Select{

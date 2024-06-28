@@ -39,10 +39,7 @@ import (
 )
 
 const (
-	MongodHostnamePrefix = "mongod"
-	MongotHostnamePrefix = "mongot"
-	CheckHostnamePrefix  = "check"
-	spinnerSpeed         = 100 * time.Millisecond
+	spinnerSpeed = 100 * time.Millisecond
 	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
 	clusterNamePattern = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	PausedState        = "PAUSED"
@@ -123,19 +120,11 @@ func (opts *DeploymentOpts) InitStore(ctx context.Context, writer io.Writer) fun
 }
 
 func (opts *DeploymentOpts) LocalMongodHostname() string {
-	return fmt.Sprintf("%s-%s", MongodHostnamePrefix, opts.DeploymentName)
-}
-
-func (opts *DeploymentOpts) LocalCheckHostname() string {
-	return fmt.Sprintf("%s-%s", CheckHostnamePrefix, opts.DeploymentName)
+	return opts.DeploymentName
 }
 
 func (opts *DeploymentOpts) MongodDockerImageName() string {
 	return "docker.io/mongodb/mongodb-atlas-local:" + opts.MdbVersion
-}
-
-func LocalDeploymentName(hostname string) string {
-	return strings.TrimPrefix(hostname, MongodHostnamePrefix+"-")
 }
 
 func (opts *DeploymentOpts) StartSpinner() {
@@ -185,7 +174,7 @@ func (opts *DeploymentOpts) GetLocalDeployments(ctx context.Context) ([]Deployme
 			stateName = strings.ToUpper(c.State)
 		}
 
-		name := strings.TrimPrefix(c.Names[0], MongodHostnamePrefix+"-")
+		name := c.Names[0]
 		deployments[i] = Deployment{
 			Type:           "LOCAL",
 			Name:           name,

@@ -26,7 +26,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
@@ -64,7 +63,7 @@ func TestLogs_RunLocal(t *testing.T) {
 
 	deploymentTest.MockContainerEngine.
 		EXPECT().
-		ContainerLogs(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
+		ContainerLogs(ctx, expectedLocalDeployment).
 		Return([]string{"log1", "log2"}, nil).
 		Times(1)
 

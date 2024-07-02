@@ -23,11 +23,9 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
@@ -89,60 +87,10 @@ func TestDelete_Run_Local(t *testing.T) {
 	deploymentsTest.LocalMockFlow(ctx)
 
 	deploymentsTest.
-		MockPodman.
+		MockContainerEngine.
 		EXPECT().
-		RemoveContainers(ctx, options.MongodHostnamePrefix+"-"+opts.DeploymentName).
-		Return(nil, nil).
-		Times(1)
-
-	deploymentsTest.
-		MockPodman.
-		EXPECT().
-		RemoveNetworks(ctx, "mdb-local-"+opts.DeploymentName).
-		Return(nil, nil).
-		Times(1)
-
-	const mongodLocalData = "mongod-local-data-"
-	deploymentsTest.
-		MockPodman.
-		EXPECT().
-		RemoveVolumes(ctx,
-			mongodLocalData+opts.DeploymentName,
-			"mongot-local-data-"+opts.DeploymentName,
-			"mongot-local-metrics-"+opts.DeploymentName,
-		).
-		Return(nil, nil).
-		Times(1)
-
-	deploymentsTest.
-		MockPodman.
-		EXPECT().
-		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+opts.DeploymentName).
-		Return([]*podman.InspectContainerData{
-			{
-				Name: options.MongodHostnamePrefix + "-" + opts.DeploymentName,
-				Config: &podman.InspectContainerConfig{
-					Labels: map[string]string{
-						"version": "7.0.1",
-					},
-				},
-				HostConfig: &podman.InspectContainerHostConfig{
-					PortBindings: map[string][]podman.InspectHostPort{
-						"27017/tcp": {
-							{
-								HostIP:   "127.0.0.1",
-								HostPort: "27017",
-							},
-						},
-					},
-				},
-				Mounts: []podman.InspectMount{
-					{
-						Name: mongodLocalData + opts.DeploymentName,
-					},
-				},
-			},
-		}, nil).
+		ContainerRm(ctx, opts.DeploymentName).
+		Return(nil).
 		Times(1)
 
 	if err := opts.Run(ctx); err != nil {

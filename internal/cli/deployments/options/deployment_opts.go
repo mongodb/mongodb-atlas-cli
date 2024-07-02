@@ -29,8 +29,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/setup"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
@@ -39,24 +39,21 @@ import (
 )
 
 const (
-	MongodHostnamePrefix = "mongod"
-	MongotHostnamePrefix = "mongot"
-	CheckHostnamePrefix  = "check"
-	spinnerSpeed         = 100 * time.Millisecond
+	spinnerSpeed = 100 * time.Millisecond
 	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
-	clusterNamePattern    = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
-	MongotDockerImageName = "docker.io/mongodb/mongodb-atlas-search:preview"
-	PausedState           = "PAUSED"
-	StoppedState          = "STOPPED"
-	IdleState             = "IDLE"
-	DeletingState         = "DELETING"
-	RestartingState       = "RESTARTING"
-	LocalCluster          = "local"
-	AtlasCluster          = "atlas"
-	CompassConnect        = "compass"
-	MongoshConnect        = "mongosh"
-	PromptTypeMessage     = "What type of deployment would you like to work with?"
-	MaxItemsPerPage       = 500
+	clusterNamePattern = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
+	PausedState        = "PAUSED"
+	StoppedState       = "STOPPED"
+	IdleState          = "IDLE"
+	DeletingState      = "DELETING"
+	RestartingState    = "RESTARTING"
+	LocalCluster       = "local"
+	AtlasCluster       = "atlas"
+	CompassConnect     = "compass"
+	MongoshConnect     = "mongosh"
+	PromptTypeMessage  = "What type of deployment would you like to work with?"
+	MaxItemsPerPage    = 500
+	ContainerFilter    = "mongodb-atlas-local=container"
 )
 
 var (
@@ -90,7 +87,7 @@ type DeploymentOpts struct {
 	Port                  int
 	DBUsername            string
 	DBUserPassword        string
-	PodmanClient          podman.Client
+	ContainerEngine       container.Engine
 	CredStore             store.CredentialsGetter
 	s                     *spinner.Spinner
 	DefaultSetter         cli.DefaultSetterOpts
@@ -109,7 +106,7 @@ type Deployment struct {
 func (opts *DeploymentOpts) InitStore(ctx context.Context, writer io.Writer) func() error {
 	return func() error {
 		var err error
-		opts.PodmanClient = podman.NewClient()
+		opts.ContainerEngine = container.New()
 		opts.Config = config.Default()
 		opts.CredStore = config.Default()
 		if opts.AtlasClusterListStore, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx)); err != nil {
@@ -123,39 +120,11 @@ func (opts *DeploymentOpts) InitStore(ctx context.Context, writer io.Writer) fun
 }
 
 func (opts *DeploymentOpts) LocalMongodHostname() string {
-	return fmt.Sprintf("%s-%s", MongodHostnamePrefix, opts.DeploymentName)
-}
-
-func (opts *DeploymentOpts) LocalMongotHostname() string {
-	return fmt.Sprintf("%s-%s", MongotHostnamePrefix, opts.DeploymentName)
-}
-
-func (opts *DeploymentOpts) LocalCheckHostname() string {
-	return fmt.Sprintf("%s-%s", CheckHostnamePrefix, opts.DeploymentName)
-}
-
-func (opts *DeploymentOpts) LocalNetworkName() string {
-	return "mdb-local-" + opts.DeploymentName
-}
-
-func (opts *DeploymentOpts) LocalMongotDataVolume() string {
-	return "mongot-local-data-" + opts.DeploymentName
-}
-
-func (opts *DeploymentOpts) LocalMongodDataVolume() string {
-	return "mongod-local-data-" + opts.DeploymentName
-}
-
-func (opts *DeploymentOpts) LocalMongoMetricsVolume() string {
-	return "mongot-local-metrics-" + opts.DeploymentName
+	return opts.DeploymentName
 }
 
 func (opts *DeploymentOpts) MongodDockerImageName() string {
-	return fmt.Sprintf("docker.io/mongodb/mongodb-enterprise-server:%s-ubi8", opts.MdbVersion)
-}
-
-func LocalDeploymentName(hostname string) string {
-	return strings.TrimPrefix(hostname, MongodHostnamePrefix+"-")
+	return "docker.io/mongodb/mongodb-atlas-local:" + opts.MdbVersion
 }
 
 func (opts *DeploymentOpts) StartSpinner() {
@@ -185,8 +154,12 @@ func (opts *DeploymentOpts) IsCliAuthenticated() bool {
 	return opts.CredStore.AuthType() != config.NotLoggedIn
 }
 
+func (opts *DeploymentOpts) GetLocalContainers(ctx context.Context) ([]container.Container, error) {
+	return opts.ContainerEngine.ContainerList(ctx, ContainerFilter)
+}
+
 func (opts *DeploymentOpts) GetLocalDeployments(ctx context.Context) ([]Deployment, error) {
-	mdbContainers, err := opts.PodmanClient.ListContainers(ctx, MongodHostnamePrefix)
+	mdbContainers, err := opts.GetLocalContainers(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -201,7 +174,7 @@ func (opts *DeploymentOpts) GetLocalDeployments(ctx context.Context) ([]Deployme
 			stateName = strings.ToUpper(c.State)
 		}
 
-		name := strings.TrimPrefix(c.Names[0], MongodHostnamePrefix+"-")
+		name := c.Names[0]
 		deployments[i] = Deployment{
 			Type:           "LOCAL",
 			Name:           name,

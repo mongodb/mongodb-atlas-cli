@@ -23,7 +23,7 @@ type MockDeploymentOpts struct {
 	ctrl                      *gomock.Controller
 	MockCredentialsGetter     *mocks.MockCredentialsGetter
 	MockAtlasClusterListStore *mocks.MockClusterLister
-	MockPodman                *mocks.MockClient
+	MockContainerEngine       *mocks.MockEngine
 	MockDeploymentTelemetry   *mocks.MockDeploymentTelemetry
 	Opts                      *options.DeploymentOpts
 }

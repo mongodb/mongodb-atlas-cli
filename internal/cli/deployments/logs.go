@@ -155,7 +155,7 @@ func (opts *DownloadOpts) newHostLogsParams() *admin.GetHostLogsApiParams {
 }
 
 func (opts *DownloadOpts) RunLocal(ctx context.Context) error {
-	logs, err := opts.PodmanClient.ContainerLogs(ctx, opts.LocalMongodHostname())
+	logs, err := opts.ContainerEngine.ContainerLogs(ctx, opts.LocalMongodHostname())
 	if err != nil {
 		return err
 	}

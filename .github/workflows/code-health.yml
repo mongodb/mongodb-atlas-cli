@@ -49,7 +49,7 @@ jobs:
       - run: make unit-test
       - name: Test Summary
         id: test_summary
-        uses: test-summary/action@v2.3
+        uses: test-summary/action@v2.4
         with:
           paths: unit-tests.xml
         if: always() && matrix.os == 'ubuntu-latest'

@@ -57,10 +57,10 @@ func TestRun_ConnectLocal(t *testing.T) {
 
 	deploymenTest.MockContainerEngine.
 		EXPECT().
-		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
+		ContainerInspect(ctx, expectedLocalDeployment).
 		Return([]*container.InspectData{
 			{
-				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
+				Name: expectedLocalDeployment,
 				Config: &container.InspectDataConfig{
 					Labels: map[string]string{
 						"version": "7.0.1",

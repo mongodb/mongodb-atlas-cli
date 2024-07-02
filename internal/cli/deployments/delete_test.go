@@ -23,7 +23,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
@@ -90,7 +89,7 @@ func TestDelete_Run_Local(t *testing.T) {
 	deploymentsTest.
 		MockContainerEngine.
 		EXPECT().
-		ContainerRm(ctx, options.MongodHostnamePrefix+"-"+opts.DeploymentName).
+		ContainerRm(ctx, opts.DeploymentName).
 		Return(nil).
 		Times(1)
 

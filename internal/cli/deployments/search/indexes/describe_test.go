@@ -23,7 +23,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -64,10 +63,10 @@ func TestDescribe_RunLocal(t *testing.T) {
 
 	deploymentTest.MockContainerEngine.
 		EXPECT().
-		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
+		ContainerInspect(ctx, expectedLocalDeployment).
 		Return([]*container.InspectData{
 			{
-				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
+				Name: expectedLocalDeployment,
 				Config: &container.InspectDataConfig{
 					Labels: map[string]string{
 						"version": "7.0.1",

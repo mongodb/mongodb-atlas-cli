@@ -224,12 +224,12 @@ func parseContainers(buf []byte) ([]Container, error) {
 	return result, nil
 }
 
-func (e *dockerImpl) ContainerList(ctx context.Context, names ...string) ([]Container, error) {
+func (e *dockerImpl) ContainerList(ctx context.Context, labels ...string) ([]Container, error) {
 	args := []string{"container", "ls", "--all", "--format", "json"}
 
-	if len(names) > 0 {
-		for _, name := range names {
-			args = append(args, "-f", "label="+name)
+	if len(labels) > 0 {
+		for _, label := range labels {
+			args = append(args, "-f", "label="+label)
 		}
 	}
 	buf, err := e.run(ctx, args...)
@@ -292,11 +292,11 @@ func (e *dockerImpl) ContainerInspect(ctx context.Context, names ...string) ([]*
 	return result, nil
 }
 
-func (e *dockerImpl) ImageList(ctx context.Context, names ...string) ([]Image, error) {
+func (e *dockerImpl) ImageList(ctx context.Context, references ...string) ([]Image, error) {
 	args := []string{"image", "ls", "--format", "json"}
 
-	if len(names) > 0 {
-		for _, name := range names {
+	if len(references) > 0 {
+		for _, name := range references {
 			args = append(args, "-f", "reference="+name)
 		}
 	}

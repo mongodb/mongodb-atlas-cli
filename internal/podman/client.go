@@ -267,10 +267,10 @@ func (o *client) RemoveContainers(ctx context.Context, names ...string) ([]byte,
 	return o.runPodman(ctx, append([]string{"rm", "-f", "-v"}, names...)...)
 }
 
-func (o *client) ListContainers(ctx context.Context, nameFilter string) ([]*Container, error) {
+func (o *client) ListContainers(ctx context.Context, label string) ([]*Container, error) {
 	args := []string{"ps", "--all", "--format", "json"}
-	if nameFilter != "" {
-		args = append(args, "--filter", "label="+nameFilter)
+	if label != "" {
+		args = append(args, "--filter", "label="+label)
 	}
 
 	response, err := o.runPodman(ctx, args...)
@@ -283,11 +283,11 @@ func (o *client) ListContainers(ctx context.Context, nameFilter string) ([]*Cont
 	return containers, err
 }
 
-func (o *client) ListImages(ctx context.Context, nameFilter string) ([]*Image, error) {
+func (o *client) ListImages(ctx context.Context, reference string) ([]*Image, error) {
 	args := []string{"image", "list", "--format", "json"}
 
-	if nameFilter != "" {
-		args = append(args, "--filter", "reference="+nameFilter)
+	if reference != "" {
+		args = append(args, "--filter", "reference="+reference)
 	}
 
 	response, err := o.runPodman(ctx, args...)

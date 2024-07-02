@@ -33,7 +33,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
 var indexID = "6509bc5080b2f007e6a2a0ce"

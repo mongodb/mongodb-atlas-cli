@@ -47,7 +47,7 @@ func (m *MockDeploymentOpts) LocalMockFlowWithMockContainer(ctx context.Context,
 		Times(1)
 	m.MockContainerEngine.
 		EXPECT().
-		ContainerList(ctx, options.MongodHostnamePrefix).
+		ContainerList(ctx, options.ContainerFilter).
 		Return(mockContainer, nil).
 		Times(1)
 

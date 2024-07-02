@@ -139,7 +139,7 @@ func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, st
 	opts.logStepStarted("Starting your local environment...", currentStep, steps)
 	defer opts.stop()
 
-	containers, errList := opts.ContainerEngine.ContainerList(ctx, options.MongodHostnamePrefix)
+	containers, errList := opts.GetLocalContainers(ctx)
 	if errList != nil {
 		return errList
 	}

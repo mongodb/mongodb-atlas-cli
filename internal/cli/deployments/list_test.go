@@ -124,7 +124,7 @@ func TestList_Run(t *testing.T) {
 
 	mockContainerEngine.
 		EXPECT().
-		ContainerList(ctx, options.MongodHostnamePrefix).
+		ContainerList(ctx, options.ContainerFilter).
 		Return(expectedLocalDeployments, nil).
 		Times(1)
 
@@ -215,7 +215,7 @@ func TestList_Run_NoLocal(t *testing.T) {
 
 	mockContainerEngine.
 		EXPECT().
-		ContainerList(ctx, options.MongodHostnamePrefix).
+		ContainerList(ctx, options.ContainerFilter).
 		Return(nil, errors.New("this is an error")).
 		Times(1)
 
@@ -304,7 +304,7 @@ func TestList_Run_NoAtlas(t *testing.T) {
 
 	mockContainerEngine.
 		EXPECT().
-		ContainerList(ctx, options.MongodHostnamePrefix).
+		ContainerList(ctx, options.ContainerFilter).
 		Return(nil, errors.New("new error test")).
 		Times(1)
 

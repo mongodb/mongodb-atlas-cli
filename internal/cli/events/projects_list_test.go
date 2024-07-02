@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/v20231115014/admin"
+	"go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
 func Test_projectListOpts_Run(t *testing.T) {

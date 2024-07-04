@@ -99,7 +99,7 @@ func main() {
 	}
 
 	rootCmd := root.Builder()
-	
+
 	initTrack(rootCmd)
 	createConfig()
 	trackInitError(loadConfig(), rootCmd)

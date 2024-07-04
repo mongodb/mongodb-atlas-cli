@@ -63,7 +63,7 @@ functions:
         script: |
           set -Eeou pipefail
 
-          curl -sL http://boxes.10gen.com/build/curator/curator-dist-rhel70-${curator_release|"latest"}.tar.gz | tar zx
+          curl -sL http://boxes.10gen.com/build/curator/curator-dist-rhel80-${curator_release|"latest"}.tar.gz | tar zx
   "generate notices":
     - command: subprocess.exec
       type: test

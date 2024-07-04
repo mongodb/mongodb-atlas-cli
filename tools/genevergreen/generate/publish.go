@@ -16,6 +16,7 @@ package generate
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/evergreen-ci/shrub"
@@ -36,17 +37,9 @@ const (
 
 // distros - if updating this list verify build/ci/repo_config.yaml matches.
 var distros = map[string]Platform{
-	"amazon2": {
-		extension:     rpm,
-		architectures: []string{x86_64, aarch64},
-	},
 	"amazon2023": {
 		extension:     rpm,
 		architectures: []string{x86_64, aarch64},
-	},
-	"rhel70": {
-		extension:     rpm,
-		architectures: []string{x86_64},
 	},
 	"rhel80": {
 		extension:     rpm,
@@ -55,10 +48,6 @@ var distros = map[string]Platform{
 	"rhel90": {
 		extension:     rpm,
 		architectures: []string{x86_64, aarch64},
-	},
-	"debian10": {
-		extension:     deb,
-		architectures: []string{x86_64, arm64},
 	},
 	"debian11": {
 		extension:     deb,
@@ -76,11 +65,10 @@ var distros = map[string]Platform{
 		extension:     deb,
 		architectures: []string{x86_64, arm64},
 	},
-	// TODO: CLOUDP-246693: Add Ubuntu 24.04
-	// "ubuntu2404": {
-	// 	extension:     deb,
-	// 	architectures: []string{x86_64, arm64},
-	// },
+	"ubuntu2404": {
+		extension:     deb,
+		architectures: []string{x86_64, arm64},
+	},
 }
 
 func newPublishTask(taskName, extension, edition, distro, taskServerVersion, notaryKey, arch string, stable bool, dependency []shrub.TaskDependency) *shrub.Task {
@@ -114,6 +102,9 @@ func publishVariant(c *shrub.Configuration, v *shrub.Variant, sv, stableSuffix s
 	}
 	for _, r := range repos {
 		for k, d := range distros {
+			if slices.Contains(unsupportedOsByVersion[sv], k) {
+				continue
+			}
 			for _, a := range d.architectures {
 				taskName := fmt.Sprintf("push_atlascli_%s_%s_%s%s%s", k, r, a, strings.ReplaceAll(taskSv, ".", ""), stableSuffix)
 				t := newPublishTask(taskName, d.extension, r, k, taskServerVersion, notaryKey, a, stable, dependency)

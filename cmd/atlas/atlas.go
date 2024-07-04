@@ -30,9 +30,8 @@ import (
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
+func execute(rootCmd *cobra.Command) {
 	ctx := telemetry.NewContext()
-	rootCmd := root.Builder()
 	// append here to avoid a recursive link on generated docs
 	rootCmd.Long += `
 
@@ -73,11 +72,11 @@ func createConfig() {
 	}
 }
 
-func trackInitError(e error) {
+func trackInitError(e error, rootCmd *cobra.Command) {
 	if e == nil {
 		return
 	}
-	if cmd, args, err := root.Builder().Find(os.Args[1:]); err == nil {
+	if cmd, args, err := rootCmd.Find(os.Args[1:]); err == nil {
 		if !telemetry.StartedTrackingCommand() {
 			telemetry.StartTrackingCommand(cmd, args)
 		}
@@ -88,8 +87,8 @@ func trackInitError(e error) {
 	log.Print(e)
 }
 
-func initTrack() {
-	cmd, args, _ := root.Builder().Find(os.Args[1:])
+func initTrack(rootCmd *cobra.Command) {
+	cmd, args, _ := rootCmd.Find(os.Args[1:])
 	telemetry.StartTrackingCommand(cmd, args)
 }
 
@@ -99,9 +98,11 @@ func main() {
 		core.DisableColor = true
 	}
 
-	initTrack()
-	createConfig()
-	trackInitError(loadConfig())
+	rootCmd := root.Builder()
 
-	Execute()
+	initTrack(rootCmd)
+	createConfig()
+	trackInitError(loadConfig(), rootCmd)
+
+	execute(rootCmd)
 }

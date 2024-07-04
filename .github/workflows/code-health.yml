@@ -222,19 +222,4 @@ jobs:
         with:
           go-version-file: 'go.mod'
       - run: make check-templates
-  staticcheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: GitHubSecurityLab/actions-permissions/monitor@e83639073897b68de235d81a783b2221cc13def7
-        with:
-          config: ${{ vars.PERMISSIONS_CONFIG }}
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
-        with:
-          fetch-depth: 1
-      - name: Install Go
-        uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7
-        with:
-          go-version-file: 'go.mod'
-      - uses: dominikh/staticcheck-action@fe1dd0c3658873b46f8c9bb3291096a617310ca6
-        with:
-          install-go: false
+

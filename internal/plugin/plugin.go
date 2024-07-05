@@ -94,7 +94,7 @@ func GetPluginCommands(pluginDir string) ([]*cobra.Command, error) {
 		pluginManifest, err := parseManifestFile(manifestFileData)
 
 		if err != nil {
-			log.Warningf("plugin invalid: manifest file could not be parsed\n")
+			log.Warningf("\n-- plugin invalid: manifest file could not be parsed\n")
 			continue
 		}
 
@@ -108,10 +108,11 @@ func GetPluginCommands(pluginDir string) ([]*cobra.Command, error) {
 		}
 
 		if valid, errors := pluginManifest.IsValid(); !valid {
-			log.Warningf("plugin in directory %s could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath)
+			log.Warningf("\n-- plugin invalid: plugin in directory %s could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath)
 			for _, error := range errors {
-				log.Warningf("\t%s\n", error.Error())
+				log.Warningf("\t- %s\n", error.Error())
 			}
+			log.Warning("\n")
 			continue;
 		}
 

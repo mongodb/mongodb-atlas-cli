@@ -27,12 +27,25 @@ func TestPublishSnapshotTasks(t *testing.T) {
 	c := &shrub.Configuration{}
 	PublishSnapshotTasks(c)
 	assert.Len(t, c.Tasks, 28)
+	for i := range c.Tasks {
+		t.Log(c.Tasks[i].Name)
+		for j := range c.Tasks[i].Commands {
+			t.Log(c.Tasks[i].Commands[j].Vars["server_version"])
+		}
+	}
 	assert.Len(t, c.Variants, 2)
 }
 
 func TestPublishStableTasks(t *testing.T) {
 	c := &shrub.Configuration{}
 	PublishStableTasks(c)
+	for i := range c.Tasks {
+		t.Log(c.Tasks[i].Name)
+		for j := range c.Tasks[i].Commands {
+			t.Log(c.Tasks[i].Commands[j].Vars["server_version"])
+		}
+	}
+
 	assert.Len(t, c.Variants, 4)
 	assert.Len(t, c.Tasks, 112)
 }

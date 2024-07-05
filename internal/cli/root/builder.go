@@ -249,16 +249,16 @@ Use the --help flag with any command for more info on that command.`,
 	)
 
 
-	if commands, err := plugin.GetPluginCommands("./plugins"); err != nil {
+	if pluginsWithCommands, err := plugin.GetPluginCommands("./plugins"); err != nil {
 		log.Warningf("Could not load plugins: %s", err.Error())
 	} else {
-		rootCmd.AddCommand(commands...)
+		rootCmd = addPluginCommandsToRootCmd(rootCmd, pluginsWithCommands)
 	}
 
 	extraPluginDir := os.Getenv("ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY")
 
 	if extraPluginDir != "" {
-		if commands, err := plugin.GetPluginCommands(extraPluginDir); err != nil {
+		if pluginsWithCommands, err := plugin.GetPluginCommands(extraPluginDir); err != nil {
 			log.Warningf("Could not load plugins from folder %s provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s", extraPluginDir, err.Error())
 		} else {
 			rootCmd.AddCommand(commands...)
@@ -272,6 +272,23 @@ Use the --help flag with any command for more info on that command.`,
 	_ = rootCmd.RegisterFlagCompletionFunc(flag.Profile, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return config.List(), cobra.ShellCompDirectiveDefault
 	})
+	return rootCmd
+}
+
+
+func addPluginCommandsToRootCmd(rootCmd *cobra.Command, pluginsWithCommands map[*plugin.PluginManifest][]*cobra.Command) *cobra.Command {
+	
+	pluginLoop: 
+	for pluginManifest, commands := range pluginsWithCommands {
+		for _, cmd := range commands {
+			if _, _, err := rootCmd.Find([]string{cmd.Name()}); err != nil {
+				log.Warningf("Could not load plugin %s because it contains a command %s that already exist in the AtlasCLI or in another plugin", pluginManifest.Name, cmd.Name())
+				continue pluginLoop
+			}
+		}
+		rootCmd.AddCommand(commands...)
+	}
+
 	return rootCmd
 }
 

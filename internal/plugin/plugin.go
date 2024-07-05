@@ -17,67 +17,24 @@ package plugin
 import (
 	"fmt"
 	"os"
-	"path/filepath"
-	"regexp"
+	"os/exec"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v3"
 )
 
-type PluginManifest struct {
-	Name        string `yaml:"name,omitempty"`
-	Description string `yaml:"description,omitempty"`
-	Binary      string `yaml:"binary,omitempty"`
-	Version     string `yaml:"version,omitempty"`
-	Commands    map[string]struct {
-		Description string `yaml:"description,omitempty"`
-	} `yaml:"commands,omitempty"`
+func GetAllValidPluginCommands(existingCommands []*cobra.Command) ([]*cobra.Command) {
+	
 }
 
-
-func (p *PluginManifest) IsValid() (bool, []error) {
-	var errors []error
-	errorMessage := `value "%s" is not defined`
-
-	if p.Name == "" {
-		errors = append(errors, fmt.Errorf(errorMessage, "name"))
-	}
-	if p.Description == "" {
-		errors = append(errors, fmt.Errorf(errorMessage, "description"))
-	}
-	if p.Binary == "" {
-		errors = append(errors, fmt.Errorf(errorMessage, "binary"))
-	}
-	if p.Version == "" {
-		errors = append(errors, fmt.Errorf(errorMessage, "version"))
-	} else if valid, _ := regexp.MatchString(`^\d+\.\d+\.\d+$`, p.Version); !valid {
-		errors = append(errors, fmt.Errorf(`value in field "version" is not a valid semantic version`))
-	}
-	if p.Commands == nil {
-		errors = append(errors, fmt.Errorf(errorMessage, "commands"))
-	} else {
-		for command, value := range p.Commands {
-			if value.Description == "" {
-				errors = append(errors, fmt.Errorf(`value "description" in command "%s" is not defined`, command))
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return false, errors
-	}
-	return true, nil
-}
-
-func GetPluginCommands(pluginDir string) ([]*cobra.Command, error) {
+func getPluginCommandsFromDirectory(pluginDir string) (map[*PluginManifest][]*cobra.Command, error) {
 	files, err := os.ReadDir(pluginDir)
 
 	if err != nil {
 		return nil, err
 	}
 
-	var commands []*cobra.Command
+	pluginsWithCommands := make(map[*PluginManifest][]*cobra.Command)
 	for _, directory := range files {
 		if !directory.IsDir() {
 			continue
@@ -98,58 +55,61 @@ func GetPluginCommands(pluginDir string) ([]*cobra.Command, error) {
 			continue
 		}
 
-		log.Debugf("manifest name %s\n", pluginManifest.Name)
-		log.Debugf("manifest description %s\n", pluginManifest.Description)
-		log.Debugf("manifest binary %s\n", pluginManifest.Binary)
-		log.Debugf("manifest version %s\n", pluginManifest.Version)
-
-		for command, value := range pluginManifest.Commands {
-			log.Debugf("\tcommand %s, Description: %s\n", command, value.Description)
-		}
-
 		if valid, errors := pluginManifest.IsValid(); !valid {
 			log.Warningf("\n-- plugin invalid: plugin in directory %s could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath)
-			for _, error := range errors {
-				log.Warningf("\t- %s\n", error.Error())
+			for _, err := range errors {
+				log.Warningf("\t- %s\n", err.Error())
 			}
 			log.Warning("\n")
-			continue;
-		}
-
-	}
-
-	return commands, nil
-}
-
-func getManifestFileBytes(pluginDirectoryPath string) ([]byte, error) {
-	validManifestFilenames := []string{"manifest.yml", "manifest.yaml"}
-
-	for _, filename := range validManifestFilenames {
-		manifestFilePath := filepath.Join(pluginDirectoryPath, filename)
-
-		info, err := os.Stat(manifestFilePath)
-		if os.IsNotExist(err) || info.IsDir() {
 			continue
 		}
 
-		manifestFileData, err := os.ReadFile(manifestFilePath)
+		binaryPath, err := getPathToExecutableBinary(pluginDirectoryPath, pluginManifest.Binary)
 
 		if err != nil {
-			continue
+			log.Warningf("\n-- plugin invalid: %s\n", err.Error())
 		}
-
-		return manifestFileData, nil
+		pluginsWithCommands[pluginManifest] = createCommandsFromManifest(*pluginManifest, binaryPath)
 	}
 
-	return nil, fmt.Errorf("plugin invalid: manifest file does not exist in plugin folder %s", pluginDirectoryPath)
+	return pluginsWithCommands, nil
 }
 
-func parseManifestFile(manifestFileData []byte) (*PluginManifest, error) {
-	var pluginManifest PluginManifest
+func createCommandsFromManifest(pluginManifest PluginManifest, binaryPath string) []*cobra.Command {
+	var commands []*cobra.Command
 
-	if err := yaml.Unmarshal(manifestFileData, &pluginManifest); err != nil {
-		return nil, err
+	for cmdName, value := range pluginManifest.Commands {
+		command := &cobra.Command{
+			Use:   cmdName,
+			Short: value.Description,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				execCmd := exec.Command(binaryPath, args...)
+				execCmd.Stdout = cmd.OutOrStdout()
+				execCmd.Stderr = cmd.OutOrStderr()
+				return execCmd.Run()
+			},
+		}
+
+		commands = append(commands, command)
 	}
 
-	return &pluginManifest, nil
+	return commands
+}
+
+func getPathToExecutableBinary(pluginDirectoryPath string, binaryName string) (string, error) {
+	binaryPath := fmt.Sprintf("%s/%s", pluginDirectoryPath, binaryName)
+
+	binaryFileInfo, err := os.Stat(binaryPath)
+
+	if err != nil {
+		return "", fmt.Errorf("binary %s does not exists", binaryPath)
+	}
+
+	// makes sure that the binary file is made executable if it is not already
+	binaryFileMode := binaryFileInfo.Mode()
+	if binaryFileMode&0111 == 0 {
+		os.Chmod(binaryPath, binaryFileMode|0111)
+	}
+
+	return binaryPath, nil
 }

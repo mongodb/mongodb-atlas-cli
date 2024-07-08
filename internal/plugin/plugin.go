@@ -164,12 +164,13 @@ func getPathToExecutableBinary(pluginDirectoryPath string, binaryName string) (s
 
 	// makes sure that the binary file is made executable if it is not already
 	binaryFileMode := binaryFileInfo.Mode()
+	const executablePermissions = 0o111
 
-	if binaryFileMode&0111 != 0 {
+	if binaryFileMode & executablePermissions != 0 {
 		return binaryPath, nil
 	}
 
-	if err := os.Chmod(binaryPath, binaryFileMode|0111); err != nil {
+	if err := os.Chmod(binaryPath, binaryFileMode | executablePermissions); err != nil {
 		return "", err
 	}
 

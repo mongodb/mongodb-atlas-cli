@@ -34,7 +34,7 @@ func GetAllValidPluginCommands(existingCommands []*cobra.Command) []*cobra.Comma
 	var pluginCommands []*cobra.Command
 
 	if pluginsWithCommands, err := getPluginCommandsFromDirectory("./plugins"); err != nil {
-		_, _ = log.Warningf("Could not load plugins from directory ./plugins because of error: %s", err.Error())
+		logPluginWarning(`could not load plugins from directory "./plugins" because of error: %s`, err.Error())
 	} else {
 		commands := filterUniqueCommands(pluginsWithCommands, existingCommandsMap)
 		pluginCommands = append(pluginCommands, commands...)
@@ -44,7 +44,7 @@ func GetAllValidPluginCommands(existingCommands []*cobra.Command) []*cobra.Comma
 
 	if extraPluginDir != "" {
 		if pluginsWithCommands, err := getPluginCommandsFromDirectory(extraPluginDir); err != nil {
-			_, _ = log.Warningf("Could not load plugins from folder %s provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s", extraPluginDir, err.Error())
+			logPluginWarning(`could not load plugins from folder "%s" provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s`, extraPluginDir, err.Error())
 		} else {
 			commands := filterUniqueCommands(pluginsWithCommands, existingCommandsMap)
 			pluginCommands = append(pluginCommands, commands...)
@@ -59,7 +59,7 @@ func filterUniqueCommands(pluginsWithCommands map[*Manifest][]*cobra.Command, ex
 
 	for pluginManifest, commands := range pluginsWithCommands {
 		if hasDuplicateCommand(commands, existingCommandsMap) {
-			_, _ = log.Warningf("Could not load plugin %s because it contains a command that already exists in the AtlasCLI or another plugin", pluginManifest.Name)
+			logPluginWarning(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, pluginManifest.Name)
 			continue
 		}
 		for _, cmd := range commands {
@@ -87,8 +87,6 @@ func getPluginCommandsFromDirectory(pluginDir string) (map[*Manifest][]*cobra.Co
 		return nil, err
 	}
 
-	var warningLog strings.Builder
-
 	pluginsWithCommands := make(map[*Manifest][]*cobra.Command)
 	for _, directory := range files {
 		if !directory.IsDir() {
@@ -106,28 +104,27 @@ func getPluginCommandsFromDirectory(pluginDir string) (map[*Manifest][]*cobra.Co
 		pluginManifest, err := parseManifestFile(manifestFileData)
 
 		if err != nil {
-			warningLog.WriteString("\n-- plugin invalid: manifest file could not be parsed\n")
+			logPluginWarning(`manifest file of plugin in directory "%s"could not be parsed`, pluginDirectoryPath)
 			continue
 		}
 
 		if valid, errors := pluginManifest.IsValid(); !valid {
-			warningLog.WriteString(fmt.Sprintf("\n-- plugin invalid: plugin in directory %s could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath))
+			var manifestErrorLog strings.Builder
+			manifestErrorLog.WriteString(fmt.Sprintf("plugin in directory \"%s\" could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath))
 			for _, err := range errors {
-				warningLog.WriteString(fmt.Sprintf("\t- %s\n", err.Error()))
+				manifestErrorLog.WriteString(fmt.Sprintf("\t- %s\n", err.Error()))
 			}
-			warningLog.WriteString("\n")
+			logPluginWarning(manifestErrorLog.String())
 			continue
 		}
 
 		binaryPath, err := getPathToExecutableBinary(pluginDirectoryPath, pluginManifest.Binary)
 
 		if err != nil {
-			warningLog.WriteString(fmt.Sprintf("\n-- plugin invalid: %s\n", err.Error()))
+			logPluginWarning(err.Error())
 		}
 		pluginsWithCommands[pluginManifest] = createCommandsFromManifest(*pluginManifest, binaryPath)
 	}
-
-	_, _ = log.Warning(warningLog.String())
 
 	return pluginsWithCommands, nil
 }
@@ -159,7 +156,7 @@ func getPathToExecutableBinary(pluginDirectoryPath string, binaryName string) (s
 	binaryFileInfo, err := os.Stat(binaryPath)
 
 	if err != nil {
-		return "", fmt.Errorf("binary %s does not exists", binaryPath)
+		return "", fmt.Errorf(`binary "%s" does not exists`, binaryPath)
 	}
 
 	// makes sure that the binary file is made executable if it is not already
@@ -175,4 +172,8 @@ func getPathToExecutableBinary(pluginDirectoryPath string, binaryName string) (s
 	}
 
 	return binaryPath, nil
+}
+
+func logPluginWarning(message string, args ...any) {
+	_, _ = log.Warningf(fmt.Sprintf("-- plugin warning: %s\n", message), args...)
 }

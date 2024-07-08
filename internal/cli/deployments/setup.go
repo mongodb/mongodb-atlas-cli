@@ -242,7 +242,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 	}
 
 	// This can be a high number because the container will become unhealthy before the 10 minutes is reached
-	const healthyDeploymentTimeout = 10 * time.Minute
+	const healthyDeploymentTimeout = 3 * time.Minute
 
 	return opts.WaitForHealthyDeployment(ctx, healthyDeploymentTimeout)
 }

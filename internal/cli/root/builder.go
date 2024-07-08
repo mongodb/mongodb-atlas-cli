@@ -260,23 +260,6 @@ Use the --help flag with any command for more info on that command.`,
 	return rootCmd
 }
 
-
-func addPluginCommandsToRootCmd(rootCmd *cobra.Command, pluginsWithCommands map[*plugin.PluginManifest][]*cobra.Command) *cobra.Command {
-	
-	pluginLoop: 
-	for pluginManifest, commands := range pluginsWithCommands {
-		for _, cmd := range commands {
-			if _, _, err := rootCmd.Find([]string{cmd.Name()}); err != nil {
-				log.Warningf("Could not load plugin %s because it contains a command %s that already exist in the AtlasCLI or in another plugin", pluginManifest.Name, cmd.Name())
-				continue pluginLoop
-			}
-		}
-		rootCmd.AddCommand(commands...)
-	}
-
-	return rootCmd
-}
-
 const verTemplate = `atlascli version: %s
 git version: %s
 Go version: %s

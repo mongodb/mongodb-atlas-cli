@@ -24,7 +24,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func GetAllValidPluginCommands(existingCommands []*cobra.Command) ([]*cobra.Command) {
+func GetAllValidPluginCommands(existingCommands []*cobra.Command) []*cobra.Command {
 	existingCommandsMap := make(map[string]bool)
 
 	for _, cmd := range existingCommands {
@@ -54,7 +54,7 @@ func GetAllValidPluginCommands(existingCommands []*cobra.Command) ([]*cobra.Comm
 	return pluginCommands
 }
 
-func filterUniqueCommands(pluginsWithCommands map[*PluginManifest][]*cobra.Command, existingCommandsMap map[string]bool) []*cobra.Command {
+func filterUniqueCommands(pluginsWithCommands map[*Manifest][]*cobra.Command, existingCommandsMap map[string]bool) []*cobra.Command {
 	var filteredPlugins []*cobra.Command
 
 	for pluginManifest, commands := range pluginsWithCommands {
@@ -80,7 +80,7 @@ func hasDuplicateCommand(commands []*cobra.Command, existingCommandsMap map[stri
 	return false
 }
 
-func getPluginCommandsFromDirectory(pluginDir string) (map[*PluginManifest][]*cobra.Command, error) {
+func getPluginCommandsFromDirectory(pluginDir string) (map[*Manifest][]*cobra.Command, error) {
 	files, err := os.ReadDir(pluginDir)
 
 	if err != nil {
@@ -89,7 +89,7 @@ func getPluginCommandsFromDirectory(pluginDir string) (map[*PluginManifest][]*co
 
 	var warningLog strings.Builder
 
-	pluginsWithCommands := make(map[*PluginManifest][]*cobra.Command)
+	pluginsWithCommands := make(map[*Manifest][]*cobra.Command)
 	for _, directory := range files {
 		if !directory.IsDir() {
 			continue
@@ -132,8 +132,8 @@ func getPluginCommandsFromDirectory(pluginDir string) (map[*PluginManifest][]*co
 	return pluginsWithCommands, nil
 }
 
-func createCommandsFromManifest(pluginManifest PluginManifest, binaryPath string) []*cobra.Command {
-	var commands []*cobra.Command
+func createCommandsFromManifest(pluginManifest Manifest, binaryPath string) []*cobra.Command {
+	commands := make([]*cobra.Command, 0, len(pluginManifest.Commands))
 
 	for cmdName, value := range pluginManifest.Commands {
 		command := &cobra.Command{
@@ -165,11 +165,11 @@ func getPathToExecutableBinary(pluginDirectoryPath string, binaryName string) (s
 	// makes sure that the binary file is made executable if it is not already
 	binaryFileMode := binaryFileInfo.Mode()
 
-	if binaryFileMode & 0111 != 0 {
+	if binaryFileMode&0111 != 0 {
 		return binaryPath, nil
 	}
 
-	if err := os.Chmod(binaryPath, binaryFileMode | 0111); err != nil {
+	if err := os.Chmod(binaryPath, binaryFileMode|0111); err != nil {
 		return "", err
 	}
 

@@ -19,7 +19,7 @@ import (
 	"regexp"
 )
 
-type PluginManifest struct {
+type Manifest struct {
 	Name        string `yaml:"name,omitempty"`
 	Description string `yaml:"description,omitempty"`
 	Binary      string `yaml:"binary,omitempty"`
@@ -29,7 +29,7 @@ type PluginManifest struct {
 	} `yaml:"commands,omitempty"`
 }
 
-func (p *PluginManifest) IsValid() (bool, []error) {
+func (p *Manifest) IsValid() (bool, []error) {
 	var errors []error
 	errorMessage := `value "%s" is not defined`
 

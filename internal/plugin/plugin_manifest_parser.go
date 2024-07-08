@@ -22,8 +22,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func parseManifestFile(manifestFileData []byte) (*PluginManifest, error) {
-	var pluginManifest PluginManifest
+func parseManifestFile(manifestFileData []byte) (*Manifest, error) {
+	var pluginManifest Manifest
 
 	if err := yaml.Unmarshal(manifestFileData, &pluginManifest); err != nil {
 		return nil, err

@@ -18,12 +18,10 @@ import (
 	"context"
 	"errors"
 	"runtime"
-	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	"github.com/shirou/gopsutil/v3/host"
 )
 
 func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID string) (Deployment, error) {
@@ -148,31 +146,10 @@ func localDeploymentSupportedByOs() bool {
 		// Windows is not supported
 		return false
 	case "linux":
-		// Depends on distro
-		support, err := isLinuxDistroSupported()
-		if err != nil {
-			// If something went wrong in finding OS distro, then assume support
-			_, _ = log.Debugln(err)
-			return true
-		}
-		return support
+		// Linux is supported
+		return true
 	default:
 		// Other unknown OS are not supported
 		return false
 	}
-}
-
-func isLinuxDistroSupported() (bool, error) {
-	hostInfo, err := host.Info()
-	if err != nil {
-		return false, err
-	}
-
-	distro := strings.ToLower(hostInfo.Platform)
-	if distro == "" {
-		return false, errors.New("unable to find OS distro")
-	}
-
-	_, _ = log.Debugln("Detected linux distro: ", distro)
-	return strings.Contains(distro, "centos") || strings.Contains(distro, "redhat") || strings.Contains(distro, "rhel"), nil
 }

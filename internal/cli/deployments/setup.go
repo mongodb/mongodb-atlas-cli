@@ -48,7 +48,6 @@ import (
 
 const (
 	internalMongodPort = 27017
-	mdb6               = "6.0"
 	mdb7               = "7.0"
 	defaultSettings    = "default"
 	customSettings     = "custom"
@@ -84,7 +83,7 @@ var (
 		options.CompassConnect: "MongoDB Compass",
 		skipConnect:            "Skip Connection",
 	}
-	mdbVersions = []string{mdb7, mdb6}
+	mdbVersions = []string{mdb7}
 )
 
 type SetupOpts struct {
@@ -242,7 +241,8 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 		return err
 	}
 
-	const healthyDeploymentTimeout = 2 * time.Minute
+	// This can be a high number because the container will become unhealthy before the 10 minutes is reached
+	const healthyDeploymentTimeout = 10 * time.Minute
 
 	return opts.WaitForHealthyDeployment(ctx, healthyDeploymentTimeout)
 }
@@ -432,7 +432,7 @@ func (opts *SetupOpts) validateFlags() error {
 		}
 	}
 
-	if opts.MdbVersion != "" && opts.MdbVersion != mdb6 && opts.MdbVersion != mdb7 {
+	if opts.MdbVersion != "" && opts.MdbVersion != mdb7 {
 		return fmt.Errorf("%w: %s", errInvalidMongoDBVersion, opts.MdbVersion)
 	}
 

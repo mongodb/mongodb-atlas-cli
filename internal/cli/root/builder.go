@@ -248,22 +248,7 @@ Use the --help flag with any command for more info on that command.`,
 		federatedauthentication.Builder(),
 	)
 
-
-	if pluginsWithCommands, err := plugin.GetPluginCommands("./plugins"); err != nil {
-		log.Warningf("Could not load plugins: %s", err.Error())
-	} else {
-		rootCmd = addPluginCommandsToRootCmd(rootCmd, pluginsWithCommands)
-	}
-
-	extraPluginDir := os.Getenv("ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY")
-
-	if extraPluginDir != "" {
-		if pluginsWithCommands, err := plugin.GetPluginCommands(extraPluginDir); err != nil {
-			log.Warningf("Could not load plugins from folder %s provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s", extraPluginDir, err.Error())
-		} else {
-			rootCmd.AddCommand(commands...)
-		}
-	}
+	rootCmd.AddCommand(plugin.GetAllValidPluginCommands(rootCmd.Commands())...)
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)
 	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)

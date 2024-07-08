@@ -24,7 +24,59 @@ import (
 )
 
 func GetAllValidPluginCommands(existingCommands []*cobra.Command) ([]*cobra.Command) {
-	
+	existingCommandsMap := make(map[string]bool)
+
+	for _, cmd := range existingCommands {
+		existingCommandsMap[cmd.Name()] = true
+	}
+
+	var pluginCommands []*cobra.Command
+
+	if pluginsWithCommands, err := getPluginCommandsFromDirectory("./plugins"); err != nil {
+		log.Warningf("Could not load plugins from directory ./plugins because of error: %s", err.Error())
+	} else {
+		commands := filterUniqueCommands(pluginsWithCommands, existingCommandsMap)
+		pluginCommands = append(pluginCommands, commands...)
+	}
+
+	extraPluginDir := os.Getenv("ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY")
+
+	if extraPluginDir != "" {
+		if pluginsWithCommands, err := getPluginCommandsFromDirectory(extraPluginDir); err != nil {
+			log.Warningf("Could not load plugins from folder %s provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s", extraPluginDir, err.Error())
+		} else {
+			commands := filterUniqueCommands(pluginsWithCommands, existingCommandsMap)
+			pluginCommands = append(pluginCommands, commands...)
+		}
+	}
+
+	return pluginCommands
+}
+
+func filterUniqueCommands(pluginsWithCommands map[*PluginManifest][]*cobra.Command, existingCommandsMap map[string]bool) []*cobra.Command {
+	var filteredPlugins []*cobra.Command
+
+	for pluginManifest, commands := range pluginsWithCommands {
+		if hasDuplicateCommand(commands, existingCommandsMap) {
+			log.Warningf("Could not load plugin %s because it contains a command that already exists in the AtlasCLI or another plugin", pluginManifest.Name)
+			continue
+		}
+		for _, cmd := range commands {
+			existingCommandsMap[cmd.Name()] = true
+		}
+		filteredPlugins = append(filteredPlugins, commands...)
+	}
+
+	return filteredPlugins
+}
+
+func hasDuplicateCommand(commands []*cobra.Command, existingCommandsMap map[string]bool) bool {
+	for _, cmd := range commands {
+		if existingCommandsMap[cmd.Name()] {
+			return true
+		}
+	}
+	return false
 }
 
 func getPluginCommandsFromDirectory(pluginDir string) (map[*PluginManifest][]*cobra.Command, error) {

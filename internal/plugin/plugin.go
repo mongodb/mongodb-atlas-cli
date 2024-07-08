@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/spf13/cobra"
@@ -33,7 +34,7 @@ func GetAllValidPluginCommands(existingCommands []*cobra.Command) ([]*cobra.Comm
 	var pluginCommands []*cobra.Command
 
 	if pluginsWithCommands, err := getPluginCommandsFromDirectory("./plugins"); err != nil {
-		log.Warningf("Could not load plugins from directory ./plugins because of error: %s", err.Error())
+		_, _ = log.Warningf("Could not load plugins from directory ./plugins because of error: %s", err.Error())
 	} else {
 		commands := filterUniqueCommands(pluginsWithCommands, existingCommandsMap)
 		pluginCommands = append(pluginCommands, commands...)
@@ -43,7 +44,7 @@ func GetAllValidPluginCommands(existingCommands []*cobra.Command) ([]*cobra.Comm
 
 	if extraPluginDir != "" {
 		if pluginsWithCommands, err := getPluginCommandsFromDirectory(extraPluginDir); err != nil {
-			log.Warningf("Could not load plugins from folder %s provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s", extraPluginDir, err.Error())
+			_, _ = log.Warningf("Could not load plugins from folder %s provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s", extraPluginDir, err.Error())
 		} else {
 			commands := filterUniqueCommands(pluginsWithCommands, existingCommandsMap)
 			pluginCommands = append(pluginCommands, commands...)
@@ -58,7 +59,7 @@ func filterUniqueCommands(pluginsWithCommands map[*PluginManifest][]*cobra.Comma
 
 	for pluginManifest, commands := range pluginsWithCommands {
 		if hasDuplicateCommand(commands, existingCommandsMap) {
-			log.Warningf("Could not load plugin %s because it contains a command that already exists in the AtlasCLI or another plugin", pluginManifest.Name)
+			_, _ = log.Warningf("Could not load plugin %s because it contains a command that already exists in the AtlasCLI or another plugin", pluginManifest.Name)
 			continue
 		}
 		for _, cmd := range commands {
@@ -86,6 +87,8 @@ func getPluginCommandsFromDirectory(pluginDir string) (map[*PluginManifest][]*co
 		return nil, err
 	}
 
+	var warningLog strings.Builder
+
 	pluginsWithCommands := make(map[*PluginManifest][]*cobra.Command)
 	for _, directory := range files {
 		if !directory.IsDir() {
@@ -103,26 +106,28 @@ func getPluginCommandsFromDirectory(pluginDir string) (map[*PluginManifest][]*co
 		pluginManifest, err := parseManifestFile(manifestFileData)
 
 		if err != nil {
-			log.Warningf("\n-- plugin invalid: manifest file could not be parsed\n")
+			warningLog.WriteString("\n-- plugin invalid: manifest file could not be parsed\n")
 			continue
 		}
 
 		if valid, errors := pluginManifest.IsValid(); !valid {
-			log.Warningf("\n-- plugin invalid: plugin in directory %s could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath)
+			warningLog.WriteString(fmt.Sprintf("\n-- plugin invalid: plugin in directory %s could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath))
 			for _, err := range errors {
-				log.Warningf("\t- %s\n", err.Error())
+				warningLog.WriteString(fmt.Sprintf("\t- %s\n", err.Error()))
 			}
-			log.Warning("\n")
+			warningLog.WriteString("\n")
 			continue
 		}
 
 		binaryPath, err := getPathToExecutableBinary(pluginDirectoryPath, pluginManifest.Binary)
 
 		if err != nil {
-			log.Warningf("\n-- plugin invalid: %s\n", err.Error())
+			warningLog.WriteString(fmt.Sprintf("\n-- plugin invalid: %s\n", err.Error()))
 		}
 		pluginsWithCommands[pluginManifest] = createCommandsFromManifest(*pluginManifest, binaryPath)
 	}
+
+	_, _ = log.Warning(warningLog.String())
 
 	return pluginsWithCommands, nil
 }
@@ -159,8 +164,13 @@ func getPathToExecutableBinary(pluginDirectoryPath string, binaryName string) (s
 
 	// makes sure that the binary file is made executable if it is not already
 	binaryFileMode := binaryFileInfo.Mode()
-	if binaryFileMode&0111 == 0 {
-		os.Chmod(binaryPath, binaryFileMode|0111)
+
+	if binaryFileMode & 0111 != 0 {
+		return binaryPath, nil
+	}
+
+	if err := os.Chmod(binaryPath, binaryFileMode | 0111); err != nil {
+		return "", err
 	}
 
 	return binaryPath, nil

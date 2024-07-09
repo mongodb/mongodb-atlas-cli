@@ -86,34 +86,20 @@ func (mr *MockClientMockRecorder) ContainerLogs(arg0, arg1 interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerLogs", reflect.TypeOf((*MockClient)(nil).ContainerLogs), arg0, arg1)
 }
 
-// ContainerStatus mocks base method.
-func (m *MockClient) ContainerStatus(arg0 context.Context, arg1 string) (string, error) {
+// ContainerStatusAndUptime mocks base method.
+func (m *MockClient) ContainerStatusAndUptime(arg0 context.Context, arg1 string) (string, time.Duration, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ContainerStatus", arg0, arg1)
+	ret := m.ctrl.Call(m, "ContainerStatusAndUptime", arg0, arg1)
 	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret1, _ := ret[1].(time.Duration)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
-// ContainerStatus indicates an expected call of ContainerStatus.
-func (mr *MockClientMockRecorder) ContainerStatus(arg0, arg1 interface{}) *gomock.Call {
+// ContainerStatusAndUptime indicates an expected call of ContainerStatusAndUptime.
+func (mr *MockClientMockRecorder) ContainerStatusAndUptime(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerStatus", reflect.TypeOf((*MockClient)(nil).ContainerStatus), arg0, arg1)
-}
-
-// ContainerUptime mocks base method.
-func (m *MockClient) ContainerUptime(arg0 context.Context, arg1 string) (time.Duration, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ContainerUptime", arg0, arg1)
-	ret0, _ := ret[0].(time.Duration)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ContainerUptime indicates an expected call of ContainerUptime.
-func (mr *MockClientMockRecorder) ContainerUptime(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerUptime", reflect.TypeOf((*MockClient)(nil).ContainerUptime), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerStatusAndUptime", reflect.TypeOf((*MockClient)(nil).ContainerStatusAndUptime), arg0, arg1)
 }
 
 // ImageHealthCheck mocks base method.

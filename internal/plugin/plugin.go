@@ -18,130 +18,72 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/spf13/cobra"
 )
 
-func GetAllValidPluginCommands(existingCommands []*cobra.Command) []*cobra.Command {
-	existingCommandsMap := make(map[string]bool)
+func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
+	var manifests []*Manifest
 
-	for _, cmd := range existingCommands {
-		existingCommandsMap[cmd.Name()] = true
-	}
-
-	var pluginCommands []*cobra.Command
-
-	if pluginsWithCommands, err := getPluginCommandsFromDirectory("./plugins"); err != nil {
-		logPluginWarning(`could not load plugins from directory "./plugins" because of error: %s`, err.Error())
+	if loadedManifests, err := getManifestsFromPluginDirectory("./plugins"); err != nil {
+		logPluginWarning(`could not load manifests from directory "./plugins" because of error: %s`, err.Error())
 	} else {
-		commands := filterUniqueCommands(pluginsWithCommands, existingCommandsMap)
-		pluginCommands = append(pluginCommands, commands...)
+		manifests = append(manifests, loadedManifests...)
 	}
 
 	extraPluginDir := os.Getenv("ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY")
 
 	if extraPluginDir != "" {
-		if pluginsWithCommands, err := getPluginCommandsFromDirectory(extraPluginDir); err != nil {
+		if loadedManifests, err := getManifestsFromPluginDirectory(extraPluginDir); err != nil {
 			logPluginWarning(`could not load plugins from folder "%s" provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s`, extraPluginDir, err.Error())
 		} else {
-			commands := filterUniqueCommands(pluginsWithCommands, existingCommandsMap)
-			pluginCommands = append(pluginCommands, commands...)
+			manifests = append(manifests, loadedManifests...)
 		}
 	}
 
-	return pluginCommands
+	manifests, duplicateManifest := getUniqueManifests(manifests, existingCommands)
+
+	for _, manifest := range duplicateManifest {
+		logPluginWarning(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, manifest.Name)
+	}
+
+	var plugins []*Plugin = make([]*Plugin, 0, len(manifests))
+
+	for _, manifest := range manifests {
+		plugins = append(plugins, createPluginFromManifest(manifest))
+	}
+
+	return plugins
 }
 
-func filterUniqueCommands(pluginsWithCommands map[*Manifest][]*cobra.Command, existingCommandsMap map[string]bool) []*cobra.Command {
-	var filteredPlugins []*cobra.Command
-
-	for pluginManifest, commands := range pluginsWithCommands {
-		if hasDuplicateCommand(commands, existingCommandsMap) {
-			logPluginWarning(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, pluginManifest.Name)
-			continue
-		}
-		for _, cmd := range commands {
-			existingCommandsMap[cmd.Name()] = true
-		}
-		filteredPlugins = append(filteredPlugins, commands...)
-	}
-
-	return filteredPlugins
+type Plugin struct {
+	Name        string
+	Description string
+	BinaryPath  string
+	Commands    []*Command
 }
 
-func hasDuplicateCommand(commands []*cobra.Command, existingCommandsMap map[string]bool) bool {
-	for _, cmd := range commands {
-		if existingCommandsMap[cmd.Name()] {
-			return true
-		}
-	}
-	return false
+type Command struct {
+	Name        string
+	Description string
 }
 
-func getPluginCommandsFromDirectory(pluginDir string) (map[*Manifest][]*cobra.Command, error) {
-	files, err := os.ReadDir(pluginDir)
-
-	if err != nil {
-		return nil, err
-	}
-
-	pluginsWithCommands := make(map[*Manifest][]*cobra.Command)
-	for _, directory := range files {
-		if !directory.IsDir() {
-			continue
-		}
-
-		pluginDirectoryPath := fmt.Sprintf("%s/%s", pluginDir, directory.Name())
-
-		manifestFileData, err := getManifestFileBytes(pluginDirectoryPath)
-
-		if err != nil {
-			continue
-		}
-
-		pluginManifest, err := parseManifestFile(manifestFileData)
-
-		if err != nil {
-			logPluginWarning(`manifest file of plugin in directory "%s"could not be parsed`, pluginDirectoryPath)
-			continue
-		}
-
-		if valid, errors := pluginManifest.IsValid(); !valid {
-			var manifestErrorLog strings.Builder
-			manifestErrorLog.WriteString(fmt.Sprintf("plugin in directory \"%s\" could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath))
-			for _, err := range errors {
-				manifestErrorLog.WriteString(fmt.Sprintf("\t- %s\n", err.Error()))
-			}
-			logPluginWarning(manifestErrorLog.String())
-			continue
-		}
-
-		binaryPath, err := getPathToExecutableBinary(pluginDirectoryPath, pluginManifest.Binary)
-
-		if err != nil {
-			logPluginWarning(err.Error())
-		}
-		pluginsWithCommands[pluginManifest] = createCommandsFromManifest(*pluginManifest, binaryPath)
-	}
-
-	return pluginsWithCommands, nil
+func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
+	execCmd := exec.Command(p.BinaryPath, args...)
+	execCmd.Stdout = cmd.OutOrStdout()
+	execCmd.Stderr = cmd.OutOrStderr()
+	return execCmd.Run()
 }
 
-func createCommandsFromManifest(pluginManifest Manifest, binaryPath string) []*cobra.Command {
-	commands := make([]*cobra.Command, 0, len(pluginManifest.Commands))
+func (p *Plugin) GetCobraCommands() []*cobra.Command {
+	commands := make([]*cobra.Command, 0, len(p.Commands))
 
-	for cmdName, value := range pluginManifest.Commands {
+	for _, command := range p.Commands {
 		command := &cobra.Command{
-			Use:   cmdName,
-			Short: value.Description,
-			RunE: func(cmd *cobra.Command, args []string) error {
-				execCmd := exec.Command(binaryPath, args...)
-				execCmd.Stdout = cmd.OutOrStdout()
-				execCmd.Stderr = cmd.OutOrStderr()
-				return execCmd.Run()
-			},
+			Use:   command.Name,
+			Short: command.Description,
+			RunE: p.Run,
 		}
 
 		commands = append(commands, command)
@@ -150,28 +92,19 @@ func createCommandsFromManifest(pluginManifest Manifest, binaryPath string) []*c
 	return commands
 }
 
-func getPathToExecutableBinary(pluginDirectoryPath string, binaryName string) (string, error) {
-	binaryPath := fmt.Sprintf("%s/%s", pluginDirectoryPath, binaryName)
-
-	binaryFileInfo, err := os.Stat(binaryPath)
-
-	if err != nil {
-		return "", fmt.Errorf(`binary "%s" does not exists`, binaryPath)
+func createPluginFromManifest(manifest *Manifest) *Plugin {
+	plugin := Plugin{
+		Name:        manifest.Name,
+		Description: manifest.Description,
+		BinaryPath:  manifest.BinaryPath,
+		Commands:    make([]*Command, 0, len(manifest.Commands)),
 	}
 
-	// makes sure that the binary file is made executable if it is not already
-	binaryFileMode := binaryFileInfo.Mode()
-	const executablePermissions = 0o111
-
-	if binaryFileMode&executablePermissions != 0 {
-		return binaryPath, nil
+	for cmdName, value := range manifest.Commands {
+		plugin.Commands = append(plugin.Commands, &Command{Name: cmdName, Description: value.Description})
 	}
 
-	if err := os.Chmod(binaryPath, binaryFileMode|executablePermissions); err != nil {
-		return "", err
-	}
-
-	return binaryPath, nil
+	return &plugin
 }
 
 func logPluginWarning(message string, args ...any) {

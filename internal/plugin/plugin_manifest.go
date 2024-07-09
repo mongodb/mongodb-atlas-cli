@@ -16,7 +16,13 @@ package plugin
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"regexp"
+	"strings"
+
+	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v2"
 )
 
 type Manifest struct {
@@ -27,6 +33,7 @@ type Manifest struct {
 	Commands    map[string]struct {
 		Description string `yaml:"description,omitempty"`
 	} `yaml:"commands,omitempty"`
+	BinaryPath 	string
 }
 
 func (p *Manifest) IsValid() (bool, []error) {
@@ -61,4 +68,147 @@ func (p *Manifest) IsValid() (bool, []error) {
 		return false, errors
 	}
 	return true, nil
+}
+
+func getManifestsFromPluginDirectory(pluginDirectory string) ([]*Manifest, error) {
+	files, err := os.ReadDir(pluginDirectory)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var manifests []*Manifest
+
+	for _, directory := range files {
+		if !directory.IsDir() {
+			continue
+		}
+		
+		pluginDirectoryPath := fmt.Sprintf("%s/%s", pluginDirectory, directory.Name())
+
+		manifestFileData, err := getManifestFileBytes(pluginDirectoryPath)
+
+		if err != nil {
+			continue
+		}
+		pluginManifest, err := parseManifestFile(manifestFileData)
+
+		if err != nil {
+			logPluginWarning(`manifest file of plugin in directory "%s"could not be parsed`, pluginDirectoryPath)
+			continue
+		}
+
+		if valid, errors := pluginManifest.IsValid(); !valid {
+			var manifestErrorLog strings.Builder
+			manifestErrorLog.WriteString(fmt.Sprintf("plugin in directory \"%s\" could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath))
+			for _, err := range errors {
+				manifestErrorLog.WriteString(fmt.Sprintf("\t- %s\n", err.Error()))
+			}
+			logPluginWarning(manifestErrorLog.String())
+			continue
+		}
+
+		binaryPath, err := getPathToExecutableBinary(pluginDirectoryPath, pluginManifest.Binary)
+
+		if err != nil {
+			logPluginWarning(err.Error())
+			continue
+		}
+		
+		pluginManifest.BinaryPath = binaryPath
+		
+		manifests = append(manifests, pluginManifest)
+	}
+	
+	return manifests, nil
+}
+
+func parseManifestFile(manifestFileData []byte) (*Manifest, error) {
+	var pluginManifest Manifest
+
+	if err := yaml.Unmarshal(manifestFileData, &pluginManifest); err != nil {
+		return nil, err
+	}
+
+	return &pluginManifest, nil
+}
+
+func getManifestFileBytes(pluginDirectoryPath string) ([]byte, error) {
+	validManifestFilenames := []string{"manifest.yml", "manifest.yaml"}
+
+	for _, filename := range validManifestFilenames {
+		manifestFilePath := filepath.Join(pluginDirectoryPath, filename)
+
+		info, err := os.Stat(manifestFilePath)
+		if os.IsNotExist(err) || info.IsDir() {
+			continue
+		}
+
+		manifestFileData, err := os.ReadFile(manifestFilePath)
+
+		if err != nil {
+			continue
+		}
+
+		return manifestFileData, nil
+	}
+
+	return nil, fmt.Errorf("plugin invalid: manifest file does not exist in plugin folder %s", pluginDirectoryPath)
+}
+
+func getUniqueManifests(manifests []*Manifest, existingCommands []*cobra.Command) ([]*Manifest, []*Manifest) {
+	existingCommandsMap := make(map[string]bool)
+	var uniqueManifests []*Manifest
+	var duplicateManifests []*Manifest
+
+	for _, cmd := range existingCommands {
+		existingCommandsMap[cmd.Name()] = true
+	}
+
+	for _, manifest := range manifests {
+		if hasDuplicateCommand(manifest, existingCommandsMap) {
+			duplicateManifests = append(duplicateManifests, manifest)
+			continue
+		}
+		for cmdName, _ := range manifest.Commands {
+			existingCommandsMap[cmdName] = true
+		}
+		uniqueManifests = append(uniqueManifests, manifest)
+	}
+
+
+	return uniqueManifests, duplicateManifests
+}
+
+func hasDuplicateCommand(manifest *Manifest, existingCommandsMap map[string]bool) bool {
+	for cmdName, _ := range manifest.Commands {
+		if existingCommandsMap[cmdName] {
+			return true
+		}
+	}
+	return false
+}
+
+func getPathToExecutableBinary(pluginDirectoryPath string, binaryName string) (string, error) {
+	binaryPath := fmt.Sprintf("%s/%s", pluginDirectoryPath, binaryName)
+
+	binaryFileInfo, err := os.Stat(binaryPath)
+
+	if err != nil {
+		return "", fmt.Errorf(`binary "%s" does not exists`, binaryPath)
+	}
+
+	// makes sure that the binary file is made executable if it is not already
+	binaryFileMode := binaryFileInfo.Mode()
+	const executablePermissions = 0o111
+
+	if binaryFileMode&executablePermissions != 0 {
+		return binaryPath, nil
+	}
+
+	if err := os.Chmod(binaryPath, binaryFileMode|executablePermissions); err != nil {
+		return "", err
+	}
+
+	return binaryPath, nil
 }

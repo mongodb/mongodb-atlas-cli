@@ -248,7 +248,10 @@ Use the --help flag with any command for more info on that command.`,
 		federatedauthentication.Builder(),
 	)
 
-	rootCmd.AddCommand(plugin.GetAllValidPluginCommands(rootCmd.Commands())...)
+	// add plugin commands to rootCmd
+	for _, plugin := range plugin.GetAllValidPlugins(registerCmd.Commands()) {
+		rootCmd.AddCommand(plugin.GetCobraCommands()...)
+	}
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)
 	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)

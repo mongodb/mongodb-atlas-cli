@@ -1,4 +1,4 @@
-FROM debian:10-slim
+FROM ubuntu:24.04
 
 ARG url
 ARG entrypoint
@@ -15,7 +15,7 @@ RUN set -eux; \
 		apt-get install -y --no-install-recommends procps; \
 	fi; \
 	curl -L https://www.mongodb.org/static/pgp/server-${server_version}.asc | apt-key add -; \
-	echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/debian buster/mongodb-org/${server_version} main" | tee /etc/apt/sources.list.d/mongodb-org-${server_version}.list; \
+	echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/${server_version} multiverse" | tee /etc/apt/sources.list.d/mongodb-org-${server_version}.list; \
 	rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \

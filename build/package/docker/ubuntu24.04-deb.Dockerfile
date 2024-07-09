@@ -1,4 +1,4 @@
-FROM debian:10-slim
+FROM ubuntu:24.04
 
 ARG url
 ARG entrypoint

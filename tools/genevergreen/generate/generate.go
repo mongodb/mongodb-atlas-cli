@@ -30,13 +30,19 @@ var (
 		"5.0",
 		"6.0",
 		"7.0",
+		"8.0",
 	}
+
+	unsupportedOsByVersion = map[string][]string{
+		"8.0": {"debian11"},
+		"7.0": {"ubuntu2404"},
+		"6.0": {"ubuntu2404"},
+		"5.0": {"ubuntu2404"},
+	}
+
 	oses = []string{
-		"amazonlinux2",
-		"centos7",
 		"centos8",
 		"rhel9",
-		"debian10",
 		"debian11",
 		"debian12",
 		"ubuntu20.04",
@@ -45,26 +51,20 @@ var (
 	}
 	repos      = []string{"org", "enterprise"}
 	postPkgImg = map[string]string{
-		"centos7":      "centos7-rpm",
-		"centos8":      "centos8-rpm",
-		"rhel9":        "rhel9-rpm",
-		"amazonlinux2": "amazonlinux2-rpm",
-		"ubuntu20.04":  "ubuntu20.04-deb",
-		"ubuntu22.04":  "ubuntu22.04-deb",
-		"ubuntu24.04":  "ubuntu24.04-deb",
-		"debian10":     "debian10-deb",
-		"debian11":     "debian11-deb",
-		"debian12":     "debian12-deb",
+		"centos8":     "centos8-rpm",
+		"rhel9":       "rhel9-rpm",
+		"ubuntu20.04": "ubuntu20.04-deb",
+		"ubuntu22.04": "ubuntu22.04-deb",
+		"ubuntu24.04": "ubuntu24.04-deb",
+		"debian11":    "debian11-deb",
+		"debian12":    "debian12-deb",
 	}
 	newOs = map[string]string{
-		"centos7":         "rhel70",
 		"centos8":         "rhel80",
 		"rhel9":           "rhel90",
-		"amazonlinux2":    "amazon2",
 		"ubuntu20.04":     "ubuntu2004",
 		"ubuntu22.04":     "ubuntu2204",
 		"ubuntu24.04":     "ubuntu2404",
-		"debian10":        "debian10",
 		"debian11":        "debian11",
 		"debian12":        "debian12",
 		"amazonlinux2023": "amazon2023",
@@ -215,7 +215,7 @@ func PublishSnapshotTasks(c *shrub.Configuration) {
 	publishVariant(
 		c,
 		v,
-		"5.0",
+		"8.0",
 		"",
 		dependency,
 		false,

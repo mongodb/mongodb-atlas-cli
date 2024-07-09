@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -41,6 +42,8 @@ const (
 	hourly             = "hourly"
 	weekly             = "weekly"
 	monthly            = "monthly"
+	yearly             = "yearly"
+	ondemand           = "ondemand"
 	backupPolicyLength = 6
 )
 
@@ -253,8 +256,9 @@ func validateID(policyID, policyItemID string) error {
 }
 
 func validateFrequencyType(frequencyType string) error {
-	if frequencyType != hourly && frequencyType != daily && frequencyType != weekly && frequencyType != monthly {
-		return errors.New("frequencyType was provided in an incorrect format. It must be equal to 'hourly', 'daily', 'weekly' or 'monthly'")
+	allowedValues := []string{hourly, daily, weekly, monthly, yearly, ondemand}
+	if !slices.Contains(allowedValues, frequencyType) {
+		return errors.New("frequencyType was provided in an incorrect format. It must be equal to 'hourly', 'daily', 'weekly', 'monthly', 'yearly' or 'ondemand'")
 	}
 	return nil
 }

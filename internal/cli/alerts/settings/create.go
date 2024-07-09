@@ -92,7 +92,9 @@ func CreateBuilder() *cobra.Command {
   --notificationIntervalMin 60 --notificationUsername john@example.com \
   --output json --projectId 5df90590f10fab5e33de2305
   # Create alert using json file containing alert configuration
-  atlas alerts settings create 5d1113b25a115342acc2d1aa --file alerts.json`,
+  atlas alerts settings create 5d1113b25a115342acc2d1aa --file alerts.json
+  # Create an alert that shows possible connection storms based on the number of connections
+  atlas alerts settings create --event OUTSIDE_METRIC_THRESHOLD --metricName CONNECTIONS --metricOperator LESS_THAN --metricThreshold 1 --metricUnits RAW --projectId 5df90590f10fab5e33de2305 --notificationType GROUP --notificationEmailEnabled --notificationIntervalMin 5 --enabled`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

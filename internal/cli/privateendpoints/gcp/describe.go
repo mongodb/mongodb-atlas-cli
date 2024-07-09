@@ -69,7 +69,7 @@ func DescribeBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"privateEndpointIdDesc": "Unique 22-character alphanumeric string that identifies the private endpoint.",
 		},
-		Example: `  atlas privateEndpoint gcp describe vpce-abcdefg0123456789`,
+		Example: `  atlas privateEndpoint gcp describe tester-1`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
 			return opts.PreRunE(

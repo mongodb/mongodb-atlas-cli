@@ -26,13 +26,13 @@ import (
 func TestPublishSnapshotTasks(t *testing.T) {
 	c := &shrub.Configuration{}
 	PublishSnapshotTasks(c)
-	assert.Len(t, c.Tasks, 42)
+	assert.Len(t, c.Tasks, 28)
 	assert.Len(t, c.Variants, 2)
 }
 
 func TestPublishStableTasks(t *testing.T) {
 	c := &shrub.Configuration{}
 	PublishStableTasks(c)
-	assert.Len(t, c.Variants, 3)
-	assert.Len(t, c.Tasks, 126)
+	assert.Len(t, c.Variants, 4)
+	assert.Len(t, c.Tasks, 112)
 }

@@ -163,6 +163,17 @@ func TestWithService(t *testing.T) {
 	a.Equal(url, e.Properties["ops_manager_url"])
 }
 
+func TestWithCLIUserType(t *testing.T) {
+	config.CLIUserType = config.DefaultUser
+	a := assert.New(t)
+	e := newEvent(withCLIUserType())
+	a.Equal(config.DefaultUser, e.Properties["cli_user_type"])
+
+	config.CLIUserType = config.UniversityUser
+	e = newEvent(withCLIUserType())
+	a.Equal(config.UniversityUser, e.Properties["cli_user_type"])
+}
+
 func TestWithProjectID(t *testing.T) {
 	cmd := &cobra.Command{
 		Use: "test-command",
@@ -397,6 +408,7 @@ func (c configMock) PublicAPIKey() string {
 func (c configMock) PrivateAPIKey() string {
 	return c.privateKey
 }
+
 func (c configMock) AccessToken() string {
 	return c.accessToken
 }

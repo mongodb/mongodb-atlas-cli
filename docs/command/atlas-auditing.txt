@@ -50,10 +50,12 @@ Related Commands
 ----------------
 
 * :ref:`atlas-auditing-describe` - Returns the auditing configuration for the specified project.
+* :ref:`atlas-auditing-update` - Updates the auditing configuration for the specified project
 
 
 .. toctree::
    :titlesonly:
 
    describe </command/atlas-auditing-describe>
+   update </command/atlas-auditing-update>
 

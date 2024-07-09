@@ -66,22 +66,6 @@ repos:
   #
   ####################
 
-  - name: rhel70
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - yum/redhat/7/mongodb-org
-      - yum/redhat/7Server/mongodb-org
-
-  - name: rhel72
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - yum/redhat/7/mongodb-org
-      - yum/redhat/7Server/mongodb-org
-
   - name: rhel80
     type: rpm
     edition: org
@@ -97,13 +81,6 @@ repos:
     repos:
       - yum/redhat/9/mongodb-org
       - yum/redhat/9Server/mongodb-org
-
-  - name: amazon2
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - yum/amazon/2/mongodb-org
 
   - name: amazon2023
     type: rpm
@@ -157,18 +134,6 @@ repos:
     repos:
       - apt/debian/dists/bullseye/mongodb-org
 
-  - name: debian10
-    type: deb
-    code_name: "buster"
-    bucket: repo.mongodb.org
-    edition: org
-    component: main
-    architectures:
-      - amd64
-      - arm64
-    repos:
-      - apt/debian/dists/buster/mongodb-org
-
   - name: ubuntu2004
     type: deb
     code_name: "focal"
@@ -215,30 +180,6 @@ repos:
   #
   ####################
 
-  - name: rhel70
-    type: rpm
-    edition: enterprise
-    bucket: repo.mongodb.com
-    repos:
-      - yum/redhat/7/mongodb-enterprise
-      - yum/redhat/7Server/mongodb-enterprise
-
-  - name: rhel71
-    type: rpm
-    edition: enterprise
-    bucket: repo.mongodb.com
-    repos:
-      - yum/redhat/7/mongodb-enterprise
-      - yum/redhat/7Server/mongodb-enterprise
-
-  - name: rhel72
-    type: rpm
-    edition: enterprise
-    bucket: repo.mongodb.com
-    repos:
-      - yum/redhat/7/mongodb-enterprise
-      - yum/redhat/7Server/mongodb-enterprise
-
   - name: rhel80
     type: rpm
     edition: enterprise
@@ -254,13 +195,6 @@ repos:
     repos:
       - yum/redhat/9/mongodb-enterprise
       - yum/redhat/9Server/mongodb-enterprise
-
-  - name: amazon2
-    type: rpm
-    edition: enterprise
-    bucket: repo.mongodb.com
-    repos:
-      - yum/amazon/2/mongodb-enterprise
 
   - name: amazon2023
     type: rpm
@@ -313,18 +247,6 @@ repos:
       - arm64
     repos:
       - apt/debian/dists/bullseye/mongodb-enterprise
-
-  - name: debian10
-    type: deb
-    edition: enterprise
-    code_name: "buster"
-    bucket: repo.mongodb.com
-    component: main
-    architectures:
-      - amd64
-      - arm64
-    repos:
-      - apt/debian/dists/buster/mongodb-enterprise
 
   - name: ubuntu2004
     type: deb

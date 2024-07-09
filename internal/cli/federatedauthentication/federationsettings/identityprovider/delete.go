@@ -47,7 +47,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteIdentityProvider, opts.FederationSettingsID, opts.Entry)
 }
 
-// atlas federatedAuthentication identityProvider delete <identityProviderId> --federationSettingsId federationSettingsId [--output output].
+// atlas federatedAuthentication federationSettings identityProvider delete <identityProviderId> --federationSettingsId federationSettingsId [--output output].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Identity provider '%s' deleted\n", "Identity provider not deleted"),
@@ -61,8 +61,8 @@ func DeleteBuilder() *cobra.Command {
 			"identityProviderIdDesc": "ID of the identityProvider.",
 			"output":                 opts.SuccessMessage(),
 		},
-		Example: `  # Delete the specified identity provider from your federation settings with ID 5d1113b25a115342acc2d1aa and federationSettingsId 5d1113b25a115342acc2d1aa.
-	atlas federatedAuthentication identityProvider delete 5d1113b25a115342acc2d1aa --federationSettingsId 5d1113b25a115342acc2d1aa
+		Example: `  # elete the identity provider with ID aa2223b25a115342acc1f108 from your federation settings with federationSettingsId 5d1113b25a115342acc2d1aa.
+	atlas federatedAuthentication federationSettings identityProvider delete aa2223b25a115342acc1f108 --federationSettingsId 5d1113b25a115342acc2d1aa
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(

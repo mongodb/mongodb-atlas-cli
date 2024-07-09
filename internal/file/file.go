@@ -59,20 +59,15 @@ var ErrFileNotFound = errors.New("file not found")
 // Load loads a given filename into the out interface.
 // The file should be a valid json or yaml format.
 func Load(fs afero.Fs, filename string, out interface{}) error {
-	if exists, err := afero.Exists(fs, filename); !exists || err != nil {
-		return fmt.Errorf("%w: %s", ErrFileNotFound, filename)
+	file, err := LoadFile(fs, filename)
+	if err != nil {
+		return err
 	}
 
 	t, err := configType(filename, supportedExts)
 	if err != nil {
 		return err
 	}
-
-	file, err := afero.ReadFile(fs, filename)
-	if err != nil {
-		return err
-	}
-
 	switch t {
 	case yamlName, ymlName:
 		if err := yaml.Unmarshal(file, out); err != nil {
@@ -85,6 +80,15 @@ func Load(fs afero.Fs, filename string, out interface{}) error {
 	}
 
 	return nil
+}
+
+// LoadFile loads a given filename into a byte slice.
+func LoadFile(fs afero.Fs, filename string) ([]byte, error) {
+	if exists, err := afero.Exists(fs, filename); !exists || err != nil {
+		return nil, fmt.Errorf("%w: %s", ErrFileNotFound, filename)
+	}
+
+	return afero.ReadFile(fs, filename)
 }
 
 // Save saves a given data interface into a given file path

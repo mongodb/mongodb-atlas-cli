@@ -22,11 +22,10 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
@@ -42,7 +41,6 @@ func TestDelete_RunLocal(t *testing.T) {
 	)
 
 	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
-	mockPodman := deploymentTest.MockPodman
 
 	opts := &DeleteOpts{
 		DeploymentOpts: *deploymentTest.Opts,
@@ -56,30 +54,25 @@ func TestDelete_RunLocal(t *testing.T) {
 
 	deploymentTest.LocalMockFlow(ctx)
 
-	mockPodman.
+	deploymentTest.MockContainerEngine.
 		EXPECT().
-		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
-		Return([]*podman.InspectContainerData{
+		ContainerInspect(ctx, expectedLocalDeployment).
+		Return([]*container.InspectData{
 			{
-				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
-				Config: &podman.InspectContainerConfig{
+				Name: expectedLocalDeployment,
+				Config: &container.InspectDataConfig{
 					Labels: map[string]string{
 						"version": "7.0.1",
 					},
 				},
-				HostConfig: &podman.InspectContainerHostConfig{
-					PortBindings: map[string][]podman.InspectHostPort{
+				HostConfig: &container.InspectDataHostConfig{
+					PortBindings: map[string][]container.InspectDataHostPort{
 						"27017/tcp": {
 							{
 								HostIP:   "127.0.0.1",
 								HostPort: "27017",
 							},
 						},
-					},
-				},
-				Mounts: []podman.InspectMount{
-					{
-						Name: opts.DeploymentOpts.LocalMongodDataVolume(),
 					},
 				},
 			},

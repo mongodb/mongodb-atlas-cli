@@ -70,15 +70,6 @@ func (opts *StartOpts) RunLocal(ctx context.Context, deployment options.Deployme
 		return err
 	}
 
-	mongotIPAddress, errIP := opts.MongotIP(ctx)
-	if errIP != nil {
-		return errIP
-	}
-
-	if err := opts.WaitForMongot(ctx, mongotIPAddress); err != nil {
-		return err
-	}
-
 	return opts.Print(
 		admin.AdvancedClusterDescription{
 			Name: &opts.DeploymentName,
@@ -91,19 +82,11 @@ func (opts *StartOpts) startContainer(ctx context.Context, deployment options.De
 	}
 
 	if deployment.StateName == options.StoppedState {
-		if _, err := opts.PodmanClient.StartContainers(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname()); err != nil {
-			return err
-		}
-
-		return nil
+		return opts.ContainerEngine.ContainerStart(ctx, opts.LocalMongodHostname())
 	}
 
 	if deployment.StateName == options.PausedState {
-		if _, err := opts.PodmanClient.UnpauseContainers(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname()); err != nil {
-			return err
-		}
-
-		return nil
+		return opts.ContainerEngine.ContainerUnpause(ctx, opts.LocalMongodHostname())
 	}
 
 	return ErrDeploymentIsDeleting

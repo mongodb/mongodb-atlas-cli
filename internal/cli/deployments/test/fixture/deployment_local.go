@@ -18,19 +18,19 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 )
 
 func NewMockLocalDeploymentOpts(ctrl *gomock.Controller, deploymentName string) MockDeploymentOpts {
-	mockPodman := mocks.NewMockClient(ctrl)
+	mockContainerEngine := mocks.NewMockEngine(ctrl)
 	mockDeploymentTelemetry := mocks.NewMockDeploymentTelemetry(ctrl)
 	mockOpts := MockDeploymentOpts{
 		ctrl:                    ctrl,
-		MockPodman:              mockPodman,
+		MockContainerEngine:     mockContainerEngine,
 		MockDeploymentTelemetry: mockDeploymentTelemetry,
 		Opts: &options.DeploymentOpts{
-			PodmanClient:        mockPodman,
+			ContainerEngine:     mockContainerEngine,
 			DeploymentName:      deploymentName,
 			DeploymentType:      "local",
 			DeploymentTelemetry: mockDeploymentTelemetry,
@@ -39,16 +39,15 @@ func NewMockLocalDeploymentOpts(ctrl *gomock.Controller, deploymentName string) 
 	return mockOpts
 }
 
-func (m *MockDeploymentOpts) LocalMockFlowWithMockContainer(ctx context.Context, mockContainer []*podman.Container) {
-	m.MockPodman.
+func (m *MockDeploymentOpts) LocalMockFlowWithMockContainer(ctx context.Context, mockContainer []container.Container) {
+	m.MockContainerEngine.
 		EXPECT().
-		Ready(ctx).
+		Ready().
 		Return(nil).
 		Times(1)
-
-	m.MockPodman.
+	m.MockContainerEngine.
 		EXPECT().
-		ListContainers(ctx, options.MongodHostnamePrefix).
+		ContainerList(ctx, options.ContainerFilter).
 		Return(mockContainer, nil).
 		Times(1)
 
@@ -59,19 +58,15 @@ func (m *MockDeploymentOpts) LocalMockFlowWithMockContainer(ctx context.Context,
 }
 
 func (m *MockDeploymentOpts) LocalMockFlow(ctx context.Context) {
-	m.LocalMockFlowWithMockContainer(ctx, m.MockContainer())
+	m.LocalMockFlowWithMockContainer(ctx, m.MockContainerWithState("running"))
 }
 
-func (m *MockDeploymentOpts) MockContainer() []*podman.Container {
-	return m.MockContainerWithState("running")
-}
-
-func (m *MockDeploymentOpts) MockContainerWithState(state string) []*podman.Container {
-	return []*podman.Container{
+func (m *MockDeploymentOpts) MockContainerWithState(state string) []container.Container {
+	return []container.Container{
 		{
 			Names:  []string{m.Opts.DeploymentName},
 			State:  state,
-			Labels: map[string]string{"version": "6.0.9"},
+			Labels: map[string]string{"version": "7.0.9"},
 			ID:     m.Opts.DeploymentName,
 		},
 	}

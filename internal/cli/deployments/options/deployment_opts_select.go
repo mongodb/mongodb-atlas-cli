@@ -22,8 +22,8 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 )
@@ -33,8 +33,8 @@ var errNoDeployments = errors.New("currently there are no deployments")
 var ErrDeploymentNotFound = errors.New("deployment not found")
 var errDeploymentRequiredOnPipe = errors.New("deployment name is required  when piping the output of the command")
 
-func (opts *DeploymentOpts) findMongoDContainer(ctx context.Context) (*podman.InspectContainerData, error) {
-	containers, err := opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname())
+func (opts *DeploymentOpts) findMongoDContainer(ctx context.Context) (*container.InspectData, error) {
+	containers, err := opts.ContainerEngine.ContainerInspect(ctx, opts.LocalMongodHostname())
 	if err != nil {
 		_, _ = log.Debugf("Error: failed to retrieve Local deployments because %q\n", err.Error())
 		return nil, fmt.Errorf("%w: %s", ErrDeploymentNotFound, opts.DeploymentName)
@@ -67,7 +67,7 @@ func (opts *DeploymentOpts) DetectLocalDeploymentName(ctx context.Context) error
 }
 
 func (opts *DeploymentOpts) SelectLocal(ctx context.Context) error {
-	containers, err := opts.PodmanClient.ListContainers(ctx, MongodHostnamePrefix)
+	containers, err := opts.GetLocalContainers(ctx)
 	if err != nil {
 		return err
 	}
@@ -77,14 +77,13 @@ func (opts *DeploymentOpts) SelectLocal(ctx context.Context) error {
 	}
 
 	if len(containers) == 1 {
-		opts.DeploymentName = LocalDeploymentName(containers[0].Names[0])
+		opts.DeploymentName = containers[0].Names[0]
 		return nil
 	}
 
 	names := make([]string, 0, len(containers))
 	for _, c := range containers {
-		name := LocalDeploymentName(c.Names[0])
-		names = append(names, name)
+		names = append(names, c.Names[0])
 	}
 
 	return telemetry.TrackAskOne(&survey.Select{

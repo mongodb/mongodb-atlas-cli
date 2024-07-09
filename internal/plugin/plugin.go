@@ -72,6 +72,9 @@ type Command struct {
 }
 
 func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
+	// suppressing lint error flagging potential tainted input or cmd arguments
+	// we are this can happen, it is by design
+	// #nosec G204
 	execCmd := exec.Command(p.BinaryPath, args...)
 	execCmd.Stdout = cmd.OutOrStdout()
 	execCmd.Stderr = cmd.OutOrStderr()
@@ -79,7 +82,7 @@ func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 }
 
 func (p *Plugin) GetCobraCommands() []*cobra.Command {
-	commands := make([]*cobra.Command, 0, len(p.Commands))
+	commands := make([]*cobra.Command, len(p.Commands))
 
 	for _, command := range p.Commands {
 		command := &cobra.Command{

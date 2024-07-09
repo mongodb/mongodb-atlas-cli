@@ -20,6 +20,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"errors"
 
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
@@ -37,35 +38,35 @@ type Manifest struct {
 }
 
 func (p *Manifest) IsValid() (bool, []error) {
-	var errors []error
+	var errorsList []error
 	errorMessage := `value "%s" is not defined`
 
 	if p.Name == "" {
-		errors = append(errors, fmt.Errorf(errorMessage, "name"))
+		errorsList = append(errorsList, fmt.Errorf(errorMessage, "name"))
 	}
 	if p.Description == "" {
-		errors = append(errors, fmt.Errorf(errorMessage, "description"))
+		errorsList = append(errorsList, fmt.Errorf(errorMessage, "description"))
 	}
 	if p.Binary == "" {
-		errors = append(errors, fmt.Errorf(errorMessage, "binary"))
+		errorsList = append(errorsList, fmt.Errorf(errorMessage, "binary"))
 	}
 	if p.Version == "" {
-		errors = append(errors, fmt.Errorf(errorMessage, "version"))
+		errorsList = append(errorsList, fmt.Errorf(errorMessage, "version"))
 	} else if valid, _ := regexp.MatchString(`^\d+\.\d+\.\d+$`, p.Version); !valid {
-		errors = append(errors, fmt.Errorf(`value in field "version" is not a valid semantic version`))
+		errorsList = append(errorsList, errors.New(`value in field "version" is not a valid semantic version`))
 	}
 	if p.Commands == nil {
-		errors = append(errors, fmt.Errorf(errorMessage, "commands"))
+		errorsList = append(errorsList, fmt.Errorf(errorMessage, "commands"))
 	} else {
 		for command, value := range p.Commands {
 			if value.Description == "" {
-				errors = append(errors, fmt.Errorf(`value "description" in command "%s" is not defined`, command))
+				errorsList = append(errorsList, fmt.Errorf(`value "description" in command "%s" is not defined`, command))
 			}
 		}
 	}
 
-	if len(errors) > 0 {
-		return false, errors
+	if len(errorsList) > 0 {
+		return false, errorsList
 	}
 	return true, nil
 }
@@ -116,7 +117,7 @@ func getManifestsFromPluginDirectory(pluginDirectory string) ([]*Manifest, error
 		}
 		
 		pluginManifest.BinaryPath = binaryPath
-		
+
 		manifests = append(manifests, pluginManifest)
 	}
 	

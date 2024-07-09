@@ -94,6 +94,7 @@ type InspectNetworkSettings struct {
 // as required to share information not in the original output.
 type InspectContainerData struct {
 	// Name is the name of the secret
+	ID              string                      `json:"Id"`
 	Name            string                      `json:"Name"`
 	Mounts          []InspectMount              `json:"Mounts"`
 	NetworkSettings *InspectNetworkSettings     `json:"NetworkSettings"`

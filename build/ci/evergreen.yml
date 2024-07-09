@@ -1301,10 +1301,18 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .atlas"
-  - name: e2e_local_deployments
-    display_name: "E2E Local Deployments Tests"
+  - name: e2e_local_deployments_podman
+    display_name: "E2E Local Deployments Tests (rhel/podman)"
     run_on:
       - rhel90-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+  - name: e2e_local_deployments_docker
+    display_name: "E2E Local Deployments Tests (ubuntu/docker)"
+    run_on:
+      - ubuntu2204-small
     expansions:
       <<: *go_linux_version
     tasks:

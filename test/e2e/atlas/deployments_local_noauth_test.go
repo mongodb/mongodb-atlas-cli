@@ -101,7 +101,7 @@ func TestDeploymentsLocal(t *testing.T) {
 		require.NoError(t, err, e)
 
 		outputLines := strings.Split(o, "\n")
-		req.Equal(`NAME   TYPE    MDB VER   STATE`, outputLines[0])
+		assert.Regexp(t, `NAME\s+TYPE\s+MDB VER\s+STATE`, outputLines[0])
 
 		cols := strings.Fields(outputLines[1])
 		assert.Equal(t, deploymentName, cols[0])

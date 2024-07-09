@@ -17,7 +17,6 @@ package deployments
 import (
 	"context"
 	"errors"
-	"os/exec"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
@@ -71,7 +70,7 @@ func (opts *PauseOpts) Run(ctx context.Context) error {
 }
 
 func (opts *PauseOpts) RunLocal(ctx context.Context, deployment options.Deployment) error {
-	if err := opts.pauseContainer(ctx, deployment); err != nil {
+	if err := opts.stopContainer(ctx, deployment); err != nil {
 		return err
 	}
 
@@ -81,7 +80,7 @@ func (opts *PauseOpts) RunLocal(ctx context.Context, deployment options.Deployme
 		})
 }
 
-func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.Deployment) error {
+func (opts *PauseOpts) stopContainer(ctx context.Context, deployment options.Deployment) error {
 	if deployment.StateName == options.PausedState || deployment.StateName == options.StoppedState {
 		return nil
 	}
@@ -92,18 +91,7 @@ func (opts *PauseOpts) pauseContainer(ctx context.Context, deployment options.De
 	opts.StartSpinner()
 	defer opts.StopSpinner()
 
-	// search for a process "java ... mongot", extract the process ID, kill the process with SIGTERM (15)
-	const stopMongot = "grep -l java.*mongot /proc/*/cmdline | awk -F'/' '{print $3; exit}' | while read -r pid; do kill -15 $pid; done"
-	if err := opts.PodmanClient.Exec(ctx, opts.LocalMongotHostname(), "/bin/sh", "-c", stopMongot); err != nil {
-		return err
-	}
-
-	err := opts.PodmanClient.Exec(ctx, opts.LocalMongodHostname(), "mongod", "--shutdown")
-	var exitErr *exec.ExitError
-	if errors.As(err, &exitErr) && exitErr.ExitCode() == podmanContainerTerminatedExitCode {
-		return nil
-	}
-	return err
+	return opts.ContainerEngine.ContainerStop(ctx, opts.LocalMongodHostname())
 }
 
 func (opts *PauseOpts) RunAtlas() error {
@@ -116,10 +104,6 @@ func (opts *PauseOpts) RunAtlas() error {
 	}
 
 	return opts.Print(r)
-}
-
-func (opts *PauseOpts) StopMongoD(ctx context.Context, names string) error {
-	return opts.PodmanClient.Exec(ctx, "-d", names, "mongod", "--shutdown")
 }
 
 func (opts *PauseOpts) PostRun() error {

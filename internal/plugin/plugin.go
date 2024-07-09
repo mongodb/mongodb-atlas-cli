@@ -26,6 +26,7 @@ import (
 func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 	var manifests []*Manifest
 
+	// Load manifests from plugin directories
 	if loadedManifests, err := getManifestsFromPluginDirectory("./plugins"); err != nil {
 		logPluginWarning(`could not load manifests from directory "./plugins" because of error: %s`, err.Error())
 	} else {
@@ -42,14 +43,15 @@ func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 		}
 	}
 
+	// Remove manifests that contain already existing commands
 	manifests, duplicateManifest := getUniqueManifests(manifests, existingCommands)
 
 	for _, manifest := range duplicateManifest {
 		logPluginWarning(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, manifest.Name)
 	}
 
+	// Convert manifests to plugins
 	var plugins []*Plugin = make([]*Plugin, 0, len(manifests))
-
 	for _, manifest := range manifests {
 		plugins = append(plugins, createPluginFromManifest(manifest))
 	}

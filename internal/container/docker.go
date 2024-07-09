@@ -73,9 +73,9 @@ func parsePortMapping(s string) ([]PortMapping, error) {
 	result := []PortMapping{}
 	for _, mapping := range mappings {
 		segments := strings.SplitN(mapping, "->", 2)             //nolint //max 2 fields
-		hostSegments := strings.SplitN(segments[0], ":", 2)      //nolint //max 2 fields
+		hostStr, hostPortStr := splitOnceLast(segments[0], ":")  
 		containerSegments := strings.SplitN(segments[1], "/", 2) //nolint //max 2 fields
-		hostPort, err := strconv.Atoi(hostSegments[1])
+		hostPort, err := strconv.Atoi(hostPortStr)
 		if err != nil {
 			return nil, err
 		}
@@ -84,13 +84,18 @@ func parsePortMapping(s string) ([]PortMapping, error) {
 			return nil, err
 		}
 		result = append(result, PortMapping{
-			HostAddress:       hostSegments[0],
+			HostAddress:       hostStr,
 			HostPort:          hostPort,
 			ContainerPort:     containerPort,
 			ContainerProtocol: containerSegments[1],
 		})
 	}
 	return result, nil
+}
+
+func splitOnceLast(s, sep string) (string, string) {
+	lastIndex := strings.LastIndex(s, sep)
+	return s[:lastIndex], s[lastIndex+1:]
 }
 
 func portMappingFlag(pm PortMapping) string {
@@ -146,7 +151,7 @@ func runFlags(flags *RunFlags) []string {
 
 	if flags.Env != nil {
 		for key, value := range flags.Env {
-			args = append(args, "-e", fmt.Sprintf("%s:%s", key, value))
+			args = append(args, "-e", fmt.Sprintf("%s=%s", key, value))
 		}
 	}
 

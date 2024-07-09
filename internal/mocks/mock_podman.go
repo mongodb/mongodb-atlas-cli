@@ -7,6 +7,7 @@ package mocks
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	gomock "github.com/golang/mock/gomock"
 	podman "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
@@ -83,6 +84,22 @@ func (m *MockClient) ContainerLogs(arg0 context.Context, arg1 string) ([]string,
 func (mr *MockClientMockRecorder) ContainerLogs(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerLogs", reflect.TypeOf((*MockClient)(nil).ContainerLogs), arg0, arg1)
+}
+
+// ContainerStatusAndUptime mocks base method.
+func (m *MockClient) ContainerStatusAndUptime(arg0 context.Context, arg1 string) (string, time.Duration, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ContainerStatusAndUptime", arg0, arg1)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(time.Duration)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// ContainerStatusAndUptime indicates an expected call of ContainerStatusAndUptime.
+func (mr *MockClientMockRecorder) ContainerStatusAndUptime(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContainerStatusAndUptime", reflect.TypeOf((*MockClient)(nil).ContainerStatusAndUptime), arg0, arg1)
 }
 
 // ImageHealthCheck mocks base method.
@@ -207,6 +224,20 @@ func (m *MockClient) RunContainer(arg0 context.Context, arg1 podman.RunContainer
 func (mr *MockClientMockRecorder) RunContainer(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunContainer", reflect.TypeOf((*MockClient)(nil).RunContainer), arg0, arg1)
+}
+
+// RunHealthcheck mocks base method.
+func (m *MockClient) RunHealthcheck(arg0 context.Context, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RunHealthcheck", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RunHealthcheck indicates an expected call of RunHealthcheck.
+func (mr *MockClientMockRecorder) RunHealthcheck(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunHealthcheck", reflect.TypeOf((*MockClient)(nil).RunHealthcheck), arg0, arg1)
 }
 
 // StartContainers mocks base method.

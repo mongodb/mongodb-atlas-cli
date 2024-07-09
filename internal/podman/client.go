@@ -92,6 +92,7 @@ type Client interface {
 	Ready(ctx context.Context) error
 	Version(ctx context.Context) (map[string]any, error)
 	RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error)
+	RunHealthcheck(ctx context.Context, name string) error
 	ContainerInspect(ctx context.Context, names ...string) ([]*InspectContainerData, error)
 	StopContainers(ctx context.Context, names ...string) ([]byte, error)
 	StartContainers(ctx context.Context, names ...string) ([]byte, error)
@@ -104,6 +105,7 @@ type Client interface {
 	ContainerHealthStatus(ctx context.Context, name string) (string, error)
 	Logs(ctx context.Context) (map[string]interface{}, []error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
+	ContainerStatusAndUptime(ctx context.Context, name string) (string, time.Duration, error)
 }
 
 type client struct{}
@@ -172,7 +174,10 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 	arg := []string{"run",
 		"--name", opts.Name,
 		"--hostname", opts.Hostname,
-		"--network", opts.Network,
+	}
+
+	if opts.Network != "" {
+		arg = append(arg, "--network", opts.Network)
 	}
 
 	for hostVolume, pathInContainer := range opts.Volumes {
@@ -241,6 +246,11 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 	arg = append(arg, opts.Args...)
 
 	return o.runPodman(ctx, arg...)
+}
+
+func (o *client) RunHealthcheck(ctx context.Context, name string) error {
+	_, err := o.runPodman(ctx, "healthcheck", "run", name)
+	return err
 }
 
 func toMsString(duration time.Duration) string {
@@ -381,6 +391,31 @@ func (o *client) ContainerLogs(ctx context.Context, name string) ([]string, erro
 
 	logs := strings.Split(string(output), "\n")
 	return logs, nil
+}
+
+func (o *client) ContainerStatusAndUptime(ctx context.Context, name string) (string, time.Duration, error) {
+	output, err := o.runPodman(ctx, "inspect", "--format", "[\"{{.State.Status}}\",\"{{.State.StartedAt}}\"]", name)
+	if err != nil {
+		return "", 0, err
+	}
+
+	var statusAndStartedAt []string
+	if err = json.Unmarshal(output, &statusAndStartedAt); err != nil {
+		return "", 0, err
+	}
+
+	const expectedArrayLength = 2
+	if len(statusAndStartedAt) != expectedArrayLength {
+		return "", 0, fmt.Errorf("parsing status and uptime: expected 2 output, got %v", len(statusAndStartedAt))
+	}
+
+	status := statusAndStartedAt[0]
+	startedAt, err := time.Parse("2006-01-02 15:04:05.999999999 -0700 MST", statusAndStartedAt[1])
+	if err != nil {
+		return "", 0, err
+	}
+
+	return status, time.Since(startedAt), nil
 }
 
 func NewClient() Client {

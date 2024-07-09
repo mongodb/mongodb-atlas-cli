@@ -84,11 +84,19 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 	}
 
 	d.Containers = append(d.Containers, &containerDiagnostic{
-		Inspect: inspectData[0],
+		Inspect: firstOrNil(inspectData),
 		Logs:    logs,
 	})
 
 	return opts.Print(d)
+}
+
+func firstOrNil[T any](slice []*T) *T {
+	if len(slice) == 0 {
+		return nil
+	}
+
+	return slice[0]
 }
 
 func DiagnosticsBuilder() *cobra.Command {

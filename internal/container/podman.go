@@ -21,6 +21,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 )
@@ -231,6 +232,27 @@ func (e *podmanImpl) ContainerInspect(ctx context.Context, names ...string) ([]*
 }
 
 func (e *podmanImpl) ContainerHealthStatus(ctx context.Context, name string) (DockerHealthcheckStatus, error) {
+	// podman falsly returns "starting" when the container has exited before coming healthy
+	// verify that the container is still running before checking the health status, if not, return unhealthy
+	status, uptime, err := e.client.ContainerStatusAndUptime(ctx, name)
+	if err != nil {
+		return DockerHealthcheckStatusNone, err
+	}
+
+	// possible statuses are created, exited, paused, running and unknown
+	if status == "exited" || status == "paused" {
+		return DockerHealthcheckStatusUnhealthy, nil
+	}
+
+	// when the container has been running more than 15 seconds, manually run the healthcheck.
+	// this is a workaround for the fact that podman does not always run the healthchecks
+	if uptime > 15*time.Second {
+		err := e.client.RunHealthcheck(ctx, name)
+		if err != nil {
+			return DockerHealthcheckStatusNone, err
+		}
+	}
+
 	stringStatus, err := e.client.ContainerHealthStatus(ctx, name)
 	if err != nil {
 		return DockerHealthcheckStatusNone, err

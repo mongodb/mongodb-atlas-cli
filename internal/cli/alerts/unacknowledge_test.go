@@ -36,7 +36,7 @@ func TestUnacknowledge_Run(t *testing.T) {
 		store:   mockStore,
 	}
 
-	ackReq := acknowledgeOpts.newAcknowledgeRequest()
+	ackReq := acknowledgeOpts.newUnacknowledgeRequest()
 	params := &atlasv2.AcknowledgeAlertApiParams{
 		GroupId:          acknowledgeOpts.ProjectID,
 		AlertId:          acknowledgeOpts.alertID,

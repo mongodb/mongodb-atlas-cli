@@ -47,7 +47,7 @@ func (opts *UnacknowledgeOpts) initStore(ctx context.Context) func() error {
 var unackTemplate = "Alert '{{.Id}}' unacknowledged\n"
 
 func (opts *UnacknowledgeOpts) Run() error {
-	body := opts.newAcknowledgeRequest()
+	body := opts.newUnacknowledgeRequest()
 	params := &atlasv2.AcknowledgeAlertApiParams{
 		GroupId:          opts.ConfigProjectID(),
 		AlertId:          opts.alertID,
@@ -61,10 +61,12 @@ func (opts *UnacknowledgeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UnacknowledgeOpts) newAcknowledgeRequest() *atlasv2.AcknowledgeAlert {
+func (opts *UnacknowledgeOpts) newUnacknowledgeRequest() *atlasv2.AcknowledgeAlert {
+	unacknowledge := true
 	return &atlasv2.AcknowledgeAlert{
 		AcknowledgedUntil:      nil,
 		AcknowledgementComment: &opts.comment,
+		UnacknowledgeAlert:     &unacknowledge,
 	}
 }
 

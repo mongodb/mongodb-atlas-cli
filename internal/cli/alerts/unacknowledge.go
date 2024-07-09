@@ -49,9 +49,9 @@ var unackTemplate = "Alert '{{.Id}}' unacknowledged\n"
 func (opts *UnacknowledgeOpts) Run() error {
 	body := opts.newAcknowledgeRequest()
 	params := &atlasv2.AcknowledgeAlertApiParams{
-		GroupId:              opts.ConfigProjectID(),
-		AlertId:              opts.alertID,
-		AlertViewForNdsGroup: body,
+		GroupId:          opts.ConfigProjectID(),
+		AlertId:          opts.alertID,
+		AcknowledgeAlert: body,
 	}
 	r, err := opts.store.AcknowledgeAlert(params)
 	if err != nil {
@@ -61,8 +61,8 @@ func (opts *UnacknowledgeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UnacknowledgeOpts) newAcknowledgeRequest() *atlasv2.AlertViewForNdsGroup {
-	return &atlasv2.AlertViewForNdsGroup{
+func (opts *UnacknowledgeOpts) newAcknowledgeRequest() *atlasv2.AcknowledgeAlert {
+	return &atlasv2.AcknowledgeAlert{
 		AcknowledgedUntil:      nil,
 		AcknowledgementComment: &opts.comment,
 	}

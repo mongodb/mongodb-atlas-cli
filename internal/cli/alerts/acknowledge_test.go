@@ -89,9 +89,9 @@ func TestAcknowledgeOpts_Run(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ackReq, _ := opts.newAcknowledgeRequest()
 			params := &atlasv2.AcknowledgeAlertApiParams{
-				GroupId:              opts.ProjectID,
-				AlertId:              opts.alertID,
-				AlertViewForNdsGroup: ackReq,
+				GroupId:          opts.ProjectID,
+				AlertId:          opts.alertID,
+				AcknowledgeAlert: ackReq,
 			}
 			if wantErr {
 				mockStore.

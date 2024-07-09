@@ -56,7 +56,7 @@ func TestExportBuckets(t *testing.T) {
 
 		r.NoError(err, string(resp))
 
-		var exportBucket atlasv2.DiskBackupSnapshotAWSExportBucket
+		var exportBucket atlasv2.DiskBackupSnapshotExportBucket
 		r.NoError(json.Unmarshal(resp, &exportBucket))
 		assert.Equal(t, bucketName, exportBucket.GetBucketName())
 		bucketID = exportBucket.GetId()
@@ -72,7 +72,7 @@ func TestExportBuckets(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
-		var buckets atlasv2.PaginatedBackupSnapshotExportBucket
+		var buckets atlasv2.PaginatedBackupSnapshotExportBuckets
 		r.NoError(json.Unmarshal(resp, &buckets))
 		assert.NotEmpty(t, buckets)
 	})
@@ -89,7 +89,7 @@ func TestExportBuckets(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
-		var exportBucket atlasv2.DiskBackupSnapshotAWSExportBucket
+		var exportBucket atlasv2.DiskBackupSnapshotExportBucket
 		r.NoError(json.Unmarshal(resp, &exportBucket))
 		assert.Equal(t, bucketName, exportBucket.GetBucketName())
 	})

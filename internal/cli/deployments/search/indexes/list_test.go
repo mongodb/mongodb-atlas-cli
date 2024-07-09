@@ -143,7 +143,7 @@ func TestList_RunAtlas(t *testing.T) {
 	mockStore := mocks.NewMockSearchIndexLister(ctrl)
 	ctx := context.Background()
 
-	const (
+	var (
 		expectedLocalDeployment = "localDeployment1"
 		expectedDB              = "db1"
 		expectedCollection      = "col1"
@@ -177,22 +177,22 @@ func TestList_RunAtlas(t *testing.T) {
 	mockStore.
 		EXPECT().
 		SearchIndexes(opts.ProjectID, opts.DeploymentName, opts.DBName, opts.Collection).
-		Return([]atlasv2.ClusterSearchIndex{
+		Return([]atlasv2.SearchIndexResponse{
 			{
-				Name:           expectedName,
-				Database:       expectedDB,
-				CollectionName: expectedCollection,
+				Name:           &expectedName,
+				Database:       &expectedDB,
+				CollectionName: &expectedCollection,
 				IndexID:        pointer.Get(expectedID),
 			},
 		}, nil).
 		Times(1)
 
-	expected := []*atlasv2.ClusterSearchIndex{
+	expected := []*atlasv2.SearchIndexResponse{
 		{
-			Name:           expectedName,
+			Name:           &expectedName,
 			IndexID:        pointer.Get(expectedID),
-			CollectionName: expectedCollection,
-			Database:       expectedDB,
+			CollectionName: &expectedCollection,
+			Database:       &expectedDB,
 		},
 	}
 

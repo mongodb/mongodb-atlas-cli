@@ -81,7 +81,7 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 	}
 	defer opts.mongodbClient.Disconnect()
 
-	opts.index, err = opts.NewSearchIndex()
+	opts.index, err = opts.DeprecatedNewSearchIndex()
 	if err != nil {
 		return err
 	}
@@ -105,7 +105,13 @@ func (opts *CreateOpts) RunAtlas() error {
 		return err
 	}
 
-	opts.index, err = opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, index)
+	// TODO: Update to use the new struct
+	result, err := opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, index)
+	if err != nil {
+		return err
+	}
+
+	opts.index = search.IndexResponseToDeprecated(result)
 	return err
 }
 

@@ -30,7 +30,7 @@ func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockExportBucketsCreator(ctrl)
 
-	expected := &atlasv2.DiskBackupSnapshotAWSExportBucket{}
+	expected := &atlasv2.DiskBackupSnapshotExportBucket{}
 
 	createOpts := &CreateOpts{
 		bucketName:    "testBucket",

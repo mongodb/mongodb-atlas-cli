@@ -57,9 +57,9 @@ func (opts *AcknowledgeOpts) Run() error {
 		return err
 	}
 	params := &admin.AcknowledgeAlertApiParams{
-		GroupId:              opts.ConfigProjectID(),
-		AlertId:              opts.alertID,
-		AlertViewForNdsGroup: body,
+		GroupId:          opts.ConfigProjectID(),
+		AlertId:          opts.alertID,
+		AcknowledgeAlert: body,
 	}
 
 	r, err := opts.store.AcknowledgeAlert(params)
@@ -70,7 +70,7 @@ func (opts *AcknowledgeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *AcknowledgeOpts) newAcknowledgeRequest() (*admin.AlertViewForNdsGroup, error) {
+func (opts *AcknowledgeOpts) newAcknowledgeRequest() (*admin.AcknowledgeAlert, error) {
 	if opts.forever {
 		// To acknowledge an alert “forever”, set the field value to 100 years in the future.
 		const years = 100
@@ -80,7 +80,7 @@ func (opts *AcknowledgeOpts) newAcknowledgeRequest() (*admin.AlertViewForNdsGrou
 	if err != nil {
 		return nil, err
 	}
-	return &admin.AlertViewForNdsGroup{
+	return &admin.AcknowledgeAlert{
 		AcknowledgedUntil:      &until,
 		AcknowledgementComment: &opts.comment,
 	}, nil

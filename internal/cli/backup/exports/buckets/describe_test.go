@@ -29,7 +29,7 @@ func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockExportBucketsDescriber(ctrl)
 
-	var expected atlasv2.DiskBackupSnapshotAWSExportBucket
+	var expected atlasv2.DiskBackupSnapshotExportBucket
 
 	describeOpts := &DescribeOpts{
 		store: mockStore,

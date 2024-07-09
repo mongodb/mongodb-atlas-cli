@@ -127,8 +127,11 @@ func TestDescribe_RunAtlas(t *testing.T) {
 	mockStore := mocks.NewMockSearchIndexDescriber(ctrl)
 	ctx := context.Background()
 
-	const (
+	var (
 		expectedLocalDeployment = "localDeployment1"
+		name                    = "name"
+		database                = "db"
+		collectionName          = "coll"
 	)
 
 	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, expectedLocalDeployment)
@@ -153,19 +156,19 @@ func TestDescribe_RunAtlas(t *testing.T) {
 	mockStore.
 		EXPECT().
 		SearchIndex(opts.ProjectID, opts.DeploymentName, opts.indexID).
-		Return(&atlasv2.ClusterSearchIndex{
-			Name:           "name",
-			Database:       "db",
-			CollectionName: "coll",
+		Return(&atlasv2.SearchIndexResponse{
+			Name:           &name,
+			Database:       &database,
+			CollectionName: &collectionName,
 			IndexID:        pointer.Get("test"),
 		}, nil).
 		Times(1)
 
-	expected := &atlasv2.ClusterSearchIndex{
-		Name:           "name",
+	expected := &atlasv2.SearchIndexResponse{
+		Name:           &name,
+		Database:       &database,
+		CollectionName: &collectionName,
 		IndexID:        pointer.Get("test"),
-		CollectionName: "coll",
-		Database:       "db",
 	}
 
 	test.VerifyOutputTemplate(t, describeTemplate, expected)

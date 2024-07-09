@@ -58,7 +58,7 @@ type ExportJobsCreator interface {
 }
 
 type ExportBucketsLister interface {
-	ExportBuckets(string, *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshotExportBucket, error)
+	ExportBuckets(string, *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshotExportBuckets, error)
 }
 
 type ExportJobsDescriber interface {
@@ -66,7 +66,7 @@ type ExportJobsDescriber interface {
 }
 
 type ExportBucketsCreator interface {
-	CreateExportBucket(string, *atlasv2.DiskBackupSnapshotAWSExportBucket) (*atlasv2.DiskBackupSnapshotAWSExportBucket, error)
+	CreateExportBucket(string, *atlasv2.DiskBackupSnapshotExportBucket) (*atlasv2.DiskBackupSnapshotExportBucket, error)
 }
 
 type ExportBucketsDeleter interface {
@@ -74,7 +74,7 @@ type ExportBucketsDeleter interface {
 }
 
 type ExportBucketsDescriber interface {
-	DescribeExportBucket(string, string) (*atlasv2.DiskBackupSnapshotAWSExportBucket, error)
+	DescribeExportBucket(string, string) (*atlasv2.DiskBackupSnapshotExportBucket, error)
 }
 
 type ScheduleDescriber interface {
@@ -163,7 +163,7 @@ func (s *Store) CreateExportJob(projectID, clusterName string, job *atlasv2.Disk
 }
 
 // ExportBuckets encapsulates the logic to manage different cloud providers.
-func (s *Store) ExportBuckets(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshotExportBucket, error) {
+func (s *Store) ExportBuckets(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshotExportBuckets, error) {
 	res := s.clientv2.CloudBackupsApi.ListExportBuckets(s.ctx, projectID)
 	if opts != nil {
 		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
@@ -173,7 +173,7 @@ func (s *Store) ExportBuckets(projectID string, opts *atlas.ListOptions) (*atlas
 }
 
 // CreateExportBucket encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateExportBucket(projectID string, bucket *atlasv2.DiskBackupSnapshotAWSExportBucket) (*atlasv2.DiskBackupSnapshotAWSExportBucket, error) {
+func (s *Store) CreateExportBucket(projectID string, bucket *atlasv2.DiskBackupSnapshotExportBucket) (*atlasv2.DiskBackupSnapshotExportBucket, error) {
 	result, _, err := s.clientv2.CloudBackupsApi.CreateExportBucket(s.ctx, projectID, bucket).Execute()
 	return result, err
 }
@@ -185,7 +185,7 @@ func (s *Store) DeleteExportBucket(projectID, bucketID string) error {
 }
 
 // DescribeExportBucket encapsulates the logic to manage different cloud providers.
-func (s *Store) DescribeExportBucket(projectID, bucketID string) (*atlasv2.DiskBackupSnapshotAWSExportBucket, error) {
+func (s *Store) DescribeExportBucket(projectID, bucketID string) (*atlasv2.DiskBackupSnapshotExportBucket, error) {
 	result, _, err := s.clientv2.CloudBackupsApi.GetExportBucket(s.ctx, projectID, bucketID).Execute()
 	return result, err
 }

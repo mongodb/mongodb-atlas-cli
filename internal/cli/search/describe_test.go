@@ -35,8 +35,8 @@ func TestDescribe_Run(t *testing.T) {
 		store:       mockStore,
 	}
 
-	expected := &atlasv2.ClusterSearchIndex{
-		Name: "test",
+	expected := &atlasv2.SearchIndexResponse{
+		Name: &describeOpts.clusterName,
 	}
 	mockStore.
 		EXPECT().

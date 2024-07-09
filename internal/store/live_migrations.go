@@ -25,7 +25,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_live_migrations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store LiveMigrationCreator,LiveMigrationDescriber
 
 type LiveMigrationCreator interface {
-	LiveMigrationCreate(string, *atlasv2.LiveMigrationRequest) (*atlasv2.LiveMigrationResponse, error)
+	LiveMigrationCreate(string, *atlasv2.LiveMigrationRequest20240530) (*atlasv2.LiveMigrationResponse, error)
 }
 
 type LiveMigrationDescriber interface {
@@ -33,7 +33,7 @@ type LiveMigrationDescriber interface {
 }
 
 // LiveMigrationCreate encapsulates the logic to manage different cloud providers.
-func (s *Store) LiveMigrationCreate(groupID string, liveMigrationRequest *atlasv2.LiveMigrationRequest) (*atlasv2.LiveMigrationResponse, error) {
+func (s *Store) LiveMigrationCreate(groupID string, liveMigrationRequest *atlasv2.LiveMigrationRequest20240530) (*atlasv2.LiveMigrationResponse, error) {
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

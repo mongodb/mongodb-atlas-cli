@@ -21,20 +21,20 @@ import (
 //go:generate mockgen -destination=../mocks/mock_search.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store SearchIndexLister,SearchIndexCreator,SearchIndexDescriber,SearchIndexUpdater,SearchIndexDeleter
 
 type SearchIndexLister interface {
-	SearchIndexes(string, string, string, string) ([]atlasv2.ClusterSearchIndex, error)
+	SearchIndexes(string, string, string, string) ([]atlasv2.SearchIndexResponse, error)
 }
 
 type SearchIndexCreator interface {
-	CreateSearchIndexes(string, string, *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error)
-	SearchIndex(string, string, string) (*atlasv2.ClusterSearchIndex, error)
+	CreateSearchIndexes(string, string, *atlasv2.SearchIndexCreateRequest) (*atlasv2.SearchIndexResponse, error)
+	SearchIndex(string, string, string) (*atlasv2.SearchIndexResponse, error)
 }
 
 type SearchIndexDescriber interface {
-	SearchIndex(string, string, string) (*atlasv2.ClusterSearchIndex, error)
+	SearchIndex(string, string, string) (*atlasv2.SearchIndexResponse, error)
 }
 
 type SearchIndexUpdater interface {
-	UpdateSearchIndexes(string, string, string, *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error)
+	UpdateSearchIndexes(string, string, string, *atlasv2.SearchIndexUpdateRequest) (*atlasv2.SearchIndexResponse, error)
 }
 
 type SearchIndexDeleter interface {
@@ -42,25 +42,25 @@ type SearchIndexDeleter interface {
 }
 
 // SearchIndexes encapsulate the logic to manage different cloud providers.
-func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string) ([]atlasv2.ClusterSearchIndex, error) {
+func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string) ([]atlasv2.SearchIndexResponse, error) {
 	result, _, err := s.clientv2.AtlasSearchApi.ListAtlasSearchIndexes(s.ctx, projectID, clusterName, collName, dbName).Execute()
 	return result, err
 }
 
 // CreateSearchIndexes encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error) {
+func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlasv2.SearchIndexCreateRequest) (*atlasv2.SearchIndexResponse, error) {
 	result, _, err := s.clientv2.AtlasSearchApi.CreateAtlasSearchIndex(s.ctx, projectID, clusterName, index).Execute()
 	return result, err
 }
 
 // SearchIndex encapsulate the logic to manage different cloud providers.
-func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlasv2.ClusterSearchIndex, error) {
+func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlasv2.SearchIndexResponse, error) {
 	index, _, err := s.clientv2.AtlasSearchApi.GetAtlasSearchIndex(s.ctx, projectID, clusterName, indexID).Execute()
 	return index, err
 }
 
 // UpdateSearchIndexes encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, index *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error) {
+func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, index *atlasv2.SearchIndexUpdateRequest) (*atlasv2.SearchIndexResponse, error) {
 	result, _, err := s.clientv2.AtlasSearchApi.UpdateAtlasSearchIndex(s.ctx, projectID, clusterName, indexID, index).Execute()
 	return result, err
 }

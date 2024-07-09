@@ -105,8 +105,7 @@ type Client interface {
 	ContainerHealthStatus(ctx context.Context, name string) (string, error)
 	Logs(ctx context.Context) (map[string]interface{}, []error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
-	ContainerUptime(ctx context.Context, name string) (time.Duration, error)
-	ContainerStatus(ctx context.Context, name string) (string, error)
+	ContainerStatusAndUptime(ctx context.Context, name string) (string, time.Duration, error)
 }
 
 type client struct{}
@@ -394,27 +393,29 @@ func (o *client) ContainerLogs(ctx context.Context, name string) ([]string, erro
 	return logs, nil
 }
 
-func (o *client) ContainerUptime(ctx context.Context, name string) (time.Duration, error) {
-	output, err := o.runPodman(ctx, "inspect", "--format", "{{.State.StartedAt}}", name)
+func (o *client) ContainerStatusAndUptime(ctx context.Context, name string) (string, time.Duration, error) {
+	output, err := o.runPodman(ctx, "inspect", "--format", "[\"{{.State.Status}}\",\"{{.State.StartedAt}}\"]", name)
 	if err != nil {
-		return 0, err
+		return "", 0, err
 	}
 
-	startedAt, err := time.Parse("2006-01-02 15:04:05.999999999 -0700 MST", strings.TrimSpace(string(output)))
-	if err != nil {
-		return 0, err
+	var statusAndStartedAt []string
+	if err = json.Unmarshal(output, &statusAndStartedAt); err != nil {
+		return "", 0, err
 	}
 
-	return time.Since(startedAt), nil
-}
-
-func (o *client) ContainerStatus(ctx context.Context, name string) (string, error) {
-	output, err := o.runPodman(ctx, "inspect", "--format", "{{.State.Status}}", name)
-	if err != nil {
-		return "", err
+	const expectedArrayLength = 2
+	if len(statusAndStartedAt) != expectedArrayLength {
+		return "", 0, fmt.Errorf("parsing status and uptime: expected 2 output, got %v", len(statusAndStartedAt))
 	}
 
-	return strings.TrimSpace(string(output)), nil
+	status := statusAndStartedAt[0]
+	startedAt, err := time.Parse("2006-01-02 15:04:05.999999999 -0700 MST", statusAndStartedAt[1])
+	if err != nil {
+		return "", 0, err
+	}
+
+	return status, time.Since(startedAt), nil
 }
 
 func NewClient() Client {

@@ -73,14 +73,8 @@ func isUnauthenticatedErr(err error) bool {
 		return true
 	}
 
-	openAPIErr := new(atlasv2.GenericOpenAPIError)
-	if !errors.As(err, &openAPIErr) {
-		return false
-	}
-
-	if *openAPIErr.Model().Reason == "Unauthorized" {
-		return true
-	}
+	target, ok := atlasv2.AsError(err)
+	return ok && target.GetReason() == "Unauthorized" 
 
 	return false
 }

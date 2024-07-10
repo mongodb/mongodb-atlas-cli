@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/spf13/afero"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
 const DefaultAnalyzer = "lucene.standard"
@@ -78,7 +78,7 @@ func (opts *IndexOpts) validateOpts() error {
 	return nil
 }
 
-func (opts *IndexOpts) NewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
+func (opts *IndexOpts) DeprecatedNewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
 	if len(opts.Filename) > 0 {
 		index := &atlasv2.ClusterSearchIndex{}
 		if err := file.Load(opts.Fs, opts.Filename, index); err != nil {
@@ -102,7 +102,6 @@ func (opts *IndexOpts) NewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
 	}
 
 	i := &atlasv2.ClusterSearchIndex{
-		Analyzer:       &opts.Analyzer,
 		CollectionName: opts.Collection,
 		Database:       opts.DBName,
 		Mappings: &atlasv2.ApiAtlasFTSMappings{
@@ -113,6 +112,92 @@ func (opts *IndexOpts) NewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
 		SearchAnalyzer: &opts.SearchAnalyzer,
 		// only search indexes can be created using flags
 		Type: pointer.Get(SearchIndexType),
+	}
+	return i, nil
+}
+
+func IndexResponseToDeprecated(r *atlasv2.SearchIndexResponse) *atlasv2.ClusterSearchIndex {
+	return &atlasv2.ClusterSearchIndex{
+		CollectionName: *r.CollectionName,
+		Database:       *r.Database,
+		Mappings:       (*atlasv2.ApiAtlasFTSMappings)(r.LatestDefinition.Mappings),
+		Name:           *r.Name,
+		SearchAnalyzer: r.LatestDefinition.SearchAnalyzer,
+		Status:         r.Status,
+		Type:           r.Type,
+		IndexID:        r.IndexID,
+	}
+}
+
+func (opts *IndexOpts) NewSearchIndex() (*atlasv2.SearchIndexCreateRequest, error) {
+	if len(opts.Filename) > 0 {
+		index := &atlasv2.SearchIndexCreateRequest{}
+		if err := file.Load(opts.Fs, opts.Filename, index); err != nil {
+			return nil, fmt.Errorf(failedToLoadIndexMessage, err.Error())
+		}
+
+		if index.Type == nil {
+			index.Type = pointer.Get(DefaultType)
+		}
+
+		return index, nil
+	}
+
+	f, err := opts.indexFields()
+	if err != nil {
+		return nil, err
+	}
+
+	if opts.SearchAnalyzer == "" {
+		opts.SearchAnalyzer = DefaultAnalyzer
+	}
+
+	i := &atlasv2.SearchIndexCreateRequest{
+		CollectionName: opts.Collection,
+		Database:       opts.DBName,
+		Name:           opts.Name,
+		// only search indexes can be created using flags
+		Type: pointer.Get(SearchIndexType),
+		Definition: &atlasv2.BaseSearchIndexCreateRequestDefinition{
+			Analyzer:       &opts.Analyzer,
+			SearchAnalyzer: &opts.SearchAnalyzer,
+			Mappings: &atlasv2.SearchMappings{
+				Dynamic: &opts.Dynamic,
+				Fields:  f,
+			},
+		},
+	}
+	return i, nil
+}
+
+func (opts *IndexOpts) NewSearchIndexUpdate() (*atlasv2.SearchIndexUpdateRequest, error) {
+	if len(opts.Filename) > 0 {
+		index := &atlasv2.SearchIndexUpdateRequest{}
+		if err := file.Load(opts.Fs, opts.Filename, index); err != nil {
+			return nil, fmt.Errorf(failedToLoadIndexMessage, err.Error())
+		}
+
+		return index, nil
+	}
+
+	f, err := opts.indexFields()
+	if err != nil {
+		return nil, err
+	}
+
+	if opts.SearchAnalyzer == "" {
+		opts.SearchAnalyzer = DefaultAnalyzer
+	}
+
+	i := &atlasv2.SearchIndexUpdateRequest{
+		Definition: atlasv2.SearchIndexUpdateRequestDefinition{
+			Analyzer:       &opts.Analyzer,
+			SearchAnalyzer: &opts.SearchAnalyzer,
+			Mappings: &atlasv2.SearchMappings{
+				Dynamic: &opts.Dynamic,
+				Fields:  f,
+			},
+		},
 	}
 	return i, nil
 }

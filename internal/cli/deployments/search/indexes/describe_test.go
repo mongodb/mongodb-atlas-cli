@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
 func TestDescribe_RunLocal(t *testing.T) {
@@ -127,8 +127,11 @@ func TestDescribe_RunAtlas(t *testing.T) {
 	mockStore := mocks.NewMockSearchIndexDescriber(ctrl)
 	ctx := context.Background()
 
-	const (
+	var (
 		expectedLocalDeployment = "localDeployment1"
+		name                    = "name"
+		database                = "db"
+		collectionName          = "coll"
 	)
 
 	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, expectedLocalDeployment)
@@ -153,19 +156,19 @@ func TestDescribe_RunAtlas(t *testing.T) {
 	mockStore.
 		EXPECT().
 		SearchIndex(opts.ProjectID, opts.DeploymentName, opts.indexID).
-		Return(&atlasv2.ClusterSearchIndex{
-			Name:           "name",
-			Database:       "db",
-			CollectionName: "coll",
+		Return(&atlasv2.SearchIndexResponse{
+			Name:           &name,
+			Database:       &database,
+			CollectionName: &collectionName,
 			IndexID:        pointer.Get("test"),
 		}, nil).
 		Times(1)
 
-	expected := &atlasv2.ClusterSearchIndex{
-		Name:           "name",
+	expected := &atlasv2.SearchIndexResponse{
+		Name:           &name,
+		Database:       &database,
+		CollectionName: &collectionName,
 		IndexID:        pointer.Get("test"),
-		CollectionName: "coll",
-		Database:       "db",
 	}
 
 	test.VerifyOutputTemplate(t, describeTemplate, expected)

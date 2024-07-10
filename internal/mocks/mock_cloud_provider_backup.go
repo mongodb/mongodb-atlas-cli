@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20231115014/admin"
+	admin "go.mongodb.org/atlas-sdk/v20240530002/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -415,10 +415,10 @@ func (m *MockExportBucketsLister) EXPECT() *MockExportBucketsListerMockRecorder 
 }
 
 // ExportBuckets mocks base method.
-func (m *MockExportBucketsLister) ExportBuckets(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedBackupSnapshotExportBucket, error) {
+func (m *MockExportBucketsLister) ExportBuckets(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedBackupSnapshotExportBuckets, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ExportBuckets", arg0, arg1)
-	ret0, _ := ret[0].(*admin.PaginatedBackupSnapshotExportBucket)
+	ret0, _ := ret[0].(*admin.PaginatedBackupSnapshotExportBuckets)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -453,10 +453,10 @@ func (m *MockExportBucketsCreator) EXPECT() *MockExportBucketsCreatorMockRecorde
 }
 
 // CreateExportBucket mocks base method.
-func (m *MockExportBucketsCreator) CreateExportBucket(arg0 string, arg1 *admin.DiskBackupSnapshotAWSExportBucket) (*admin.DiskBackupSnapshotAWSExportBucket, error) {
+func (m *MockExportBucketsCreator) CreateExportBucket(arg0 string, arg1 *admin.DiskBackupSnapshotExportBucket) (*admin.DiskBackupSnapshotExportBucket, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateExportBucket", arg0, arg1)
-	ret0, _ := ret[0].(*admin.DiskBackupSnapshotAWSExportBucket)
+	ret0, _ := ret[0].(*admin.DiskBackupSnapshotExportBucket)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -528,10 +528,10 @@ func (m *MockExportBucketsDescriber) EXPECT() *MockExportBucketsDescriberMockRec
 }
 
 // DescribeExportBucket mocks base method.
-func (m *MockExportBucketsDescriber) DescribeExportBucket(arg0, arg1 string) (*admin.DiskBackupSnapshotAWSExportBucket, error) {
+func (m *MockExportBucketsDescriber) DescribeExportBucket(arg0, arg1 string) (*admin.DiskBackupSnapshotExportBucket, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeExportBucket", arg0, arg1)
-	ret0, _ := ret[0].(*admin.DiskBackupSnapshotAWSExportBucket)
+	ret0, _ := ret[0].(*admin.DiskBackupSnapshotExportBucket)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

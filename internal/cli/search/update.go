@@ -48,7 +48,7 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 var updateTemplate = "Index {{.Name}} updated.\n"
 
 func (opts *UpdateOpts) Run() error {
-	index, err := opts.NewSearchIndex()
+	index, err := opts.NewSearchIndexUpdate()
 	if err != nil {
 		return err
 	}

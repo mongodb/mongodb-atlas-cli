@@ -94,6 +94,51 @@ func (mr *MockOperatorGenericStoreMockRecorder) AtlasClusterConfigurationOptions
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasClusterConfigurationOptions", reflect.TypeOf((*MockOperatorGenericStore)(nil).AtlasClusterConfigurationOptions), arg0, arg1)
 }
 
+// AtlasFederatedAuthOrgConfig mocks base method.
+func (m *MockOperatorGenericStore) AtlasFederatedAuthOrgConfig(arg0 *admin.GetConnectedOrgConfigApiParams) (*admin.ConnectedOrgConfig, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AtlasFederatedAuthOrgConfig", arg0)
+	ret0, _ := ret[0].(*admin.ConnectedOrgConfig)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AtlasFederatedAuthOrgConfig indicates an expected call of AtlasFederatedAuthOrgConfig.
+func (mr *MockOperatorGenericStoreMockRecorder) AtlasFederatedAuthOrgConfig(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasFederatedAuthOrgConfig", reflect.TypeOf((*MockOperatorGenericStore)(nil).AtlasFederatedAuthOrgConfig), arg0)
+}
+
+// AtlasIdentityProvider mocks base method.
+func (m *MockOperatorGenericStore) AtlasIdentityProvider(arg0 *admin.GetIdentityProviderApiParams) (*admin.FederationIdentityProvider, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AtlasIdentityProvider", arg0)
+	ret0, _ := ret[0].(*admin.FederationIdentityProvider)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AtlasIdentityProvider indicates an expected call of AtlasIdentityProvider.
+func (mr *MockOperatorGenericStoreMockRecorder) AtlasIdentityProvider(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasIdentityProvider", reflect.TypeOf((*MockOperatorGenericStore)(nil).AtlasIdentityProvider), arg0)
+}
+
+// AtlasIdentityProviderMetadata mocks base method.
+func (m *MockOperatorGenericStore) AtlasIdentityProviderMetadata(arg0 *admin.GetIdentityProviderMetadataApiParams) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AtlasIdentityProviderMetadata", arg0)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AtlasIdentityProviderMetadata indicates an expected call of AtlasIdentityProviderMetadata.
+func (mr *MockOperatorGenericStoreMockRecorder) AtlasIdentityProviderMetadata(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasIdentityProviderMetadata", reflect.TypeOf((*MockOperatorGenericStore)(nil).AtlasIdentityProviderMetadata), arg0)
+}
+
 // Auditing mocks base method.
 func (m *MockOperatorGenericStore) Auditing(arg0 string) (*admin.AuditLog, error) {
 	m.ctrl.T.Helper()
@@ -272,6 +317,21 @@ func (m *MockOperatorGenericStore) EncryptionAtRest(arg0 string) (*admin.Encrypt
 func (mr *MockOperatorGenericStoreMockRecorder) EncryptionAtRest(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EncryptionAtRest", reflect.TypeOf((*MockOperatorGenericStore)(nil).EncryptionAtRest), arg0)
+}
+
+// FederationSetting mocks base method.
+func (m *MockOperatorGenericStore) FederationSetting(arg0 *admin.GetFederationSettingsApiParams) (*admin.OrgFederationSettings, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FederationSetting", arg0)
+	ret0, _ := ret[0].(*admin.OrgFederationSettings)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FederationSetting indicates an expected call of FederationSetting.
+func (mr *MockOperatorGenericStoreMockRecorder) FederationSetting(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FederationSetting", reflect.TypeOf((*MockOperatorGenericStore)(nil).FederationSetting), arg0)
 }
 
 // GetOrgProjects mocks base method.

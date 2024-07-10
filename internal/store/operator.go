@@ -94,4 +94,6 @@ type OperatorGenericStore interface {
 	OperatorDBUsersStore
 	DataFederationStore
 	StreamProcessingStore
+	FederationAuthentificationStore
+	FederationSettingsDescriber
 }

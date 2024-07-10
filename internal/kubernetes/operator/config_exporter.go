@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/dbusers"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/deployment"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
+	federatedautentification "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/federatedauthentification"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/project"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/streamsprocessing"
@@ -142,6 +143,12 @@ func (e *ConfigExporter) Run() (string, error) {
 		return "", err
 	}
 	r = append(r, dataFederationResource...)
+
+	federatedAuthResource, err := e.exportAtlasFederatedAuth(projectName)
+	if err != nil {
+		return "", err
+	}
+	r = append(r, federatedAuthResource...)
 
 	streamProcessingResources, err := e.exportAtlasStreamProcessing(projectName)
 	if err != nil {
@@ -399,4 +406,18 @@ func (e *ConfigExporter) exportAtlasStreamProcessing(projectName string) ([]runt
 	}
 
 	return result, nil
+}
+
+func (e *ConfigExporter) exportAtlasFederatedAuth(projectName string) ([]runtime.Object, error) {
+	result := make([]runtime.Object, 0)
+	federatedAuthentificationSetting, err := e.dataProvider.FederationSetting(&admin.GetFederationSettingsApiParams{OrgId: e.orgID})
+	if err != nil {
+		return nil, err
+	}
+	federatedAuthentification, err := federatedautentification.BuildAtlasFederatedAuth(e.dataProvider, e.dataProvider, projectName, e.orgID, *federatedAuthentificationSetting, e.projectID, e.operatorVersion, e.targetNamespace, e.dictionaryForAtlasNames)
+	if err != nil {
+		return nil, err
+	}
+	result = append(result, federatedAuthentification)
+	return result, err
 }

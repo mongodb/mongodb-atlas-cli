@@ -462,3 +462,64 @@ func Test_getUniqueManifests(t *testing.T) {
 		t.Errorf("expected 1 duplicate manifest, got %d", len(duplicateManifests))
 	}
 }
+
+
+func Test_hasDuplicateCommand(t *testing.T) {
+	existingCommandsMap := map[string]bool{
+		"existingCmd1": true,
+		"existingCmd2": true,
+	}
+
+	tests := []struct {
+		name               string
+		manifest           *Manifest
+		existingCommandsMap map[string]bool
+		expectedResult     bool
+	}{
+		{
+			name: "Manifest without duplicate commands",
+			manifest: &Manifest{
+				Name:        "deployments",
+				Description: "this is the description of the deployments plugin",
+				Version:     "2.1.76",
+				Binary:      "deployments",
+				Commands: map[string]struct {
+					Description string `yaml:"description,omitempty"`
+				}{
+					"deployments":  {Description: "this is the deployments command"},
+					"deployments2": {Description: "this is the second description"},
+					"command":      {Description: "here is another command"},
+				},
+			},
+			existingCommandsMap: existingCommandsMap,
+			expectedResult: false,
+		},
+		{
+			name: "Manifest with duplicate commands",
+			manifest: &Manifest{
+				Name:        "kubernetes",
+				Description: "this is the description of the kubernetes plugin",
+				Version:     "1.2.3",
+				Binary:      "binary",
+				Commands: map[string]struct {
+					Description string `yaml:"description,omitempty"`
+				}{
+					"kubernetes": {Description: "this is the kubernetes command"},
+					"existingCmd2": {Description: "this command already exsists"},
+				},
+			},
+			existingCommandsMap: existingCommandsMap,
+			expectedResult: true,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			result := hasDuplicateCommand(tc.manifest, tc.existingCommandsMap)
+
+			if result != tc.expectedResult {
+				t.Errorf("expected result %v, got %v", tc.expectedResult, result)
+			}
+		})
+	}
+}

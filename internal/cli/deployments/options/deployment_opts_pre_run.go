@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID string) (Deployment, error) {
@@ -33,7 +34,7 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 			if opts.IsAtlasDeploymentType() {
 				return Deployment{}, atlasErr
 			}
-			if !errors.Is(atlasErr, ErrNotAuthenticated) {
+			if !isUnauthenticatedErr(atlasErr) {
 				_, _ = log.Warningf("Warning: failed to retrieve Atlas deployments because %q\n", atlasErr.Error())
 			}
 		}
@@ -65,6 +66,15 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 	}
 
 	return opts.findDeploymentByName(localDeployments, atlasDeployments)
+}
+
+func isUnauthenticatedErr(err error) bool {
+	if errors.Is(err, ErrNotAuthenticated) {
+		return true
+	}
+
+	target, ok := atlasv2.AsError(err)
+	return ok && target.GetReason() == "Unauthorized"
 }
 
 func (opts *DeploymentOpts) findDeploymentByName(localDeployments []Deployment, atlasDeployments []Deployment) (Deployment, error) {

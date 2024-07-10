@@ -19,6 +19,8 @@ import (
 	"os"
 	"reflect"
 	"testing"
+
+	"github.com/spf13/cobra"
 )
 
 func TestManifest_IsValid(t *testing.T) {
@@ -405,4 +407,58 @@ commands:
 	}
 }
 
+func Test_getUniqueManifests(t *testing.T) {
+	existingCommands := []*cobra.Command{
+		{Use: "existingCmd1"},
+		{Use: "existingCmd2"},
+	}
 
+	manifests := []*Manifest{
+		{
+			Name:        "deployments",
+			Description: "this is the description of the deployments plugin",
+			Version:     "2.1.76",
+			Binary:     "deployments",
+			Commands: map[string]struct {
+				Description string `yaml:"description,omitempty"`
+			}{
+				"deployments":  {Description: "this is the deployments command"},
+				"deployments2": {Description: "this is the second description"},
+				"command":      {Description: "here is another command"},
+			},
+		},
+		{
+			Name:        "Plugin2",
+			Description: "Another test plugin",
+			Binary:      "plugin2",
+			Version:     "1.0.0",
+			Commands: map[string]struct {
+				Description string `yaml:"description,omitempty"`
+			}{
+				"existingCmd1": {Description: "A duplicate command"},
+				"newCommand": {Description: "This command does not exist yet"},
+			},
+		},
+		{
+			Name:        "kubernetes",
+			Description: "this is the description of the kubernetes plugin",
+			Version:     "1.2.3",
+			Binary:     "binary",
+			Commands: map[string]struct {
+				Description string `yaml:"description,omitempty"`
+			}{
+				"kubernetes": {Description: "this is the kubernetes command"},
+			},
+		},
+	}
+
+	uniqueManifests, duplicateManifests := getUniqueManifests(manifests, existingCommands)
+
+	if len(uniqueManifests) != 2 {
+		t.Errorf("expected 2 unique manifests, got %d", len(uniqueManifests))
+	}
+
+	if len(duplicateManifests) != 1 {
+		t.Errorf("expected 1 duplicate manifest, got %d", len(duplicateManifests))
+	}
+}

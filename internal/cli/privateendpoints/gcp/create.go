@@ -64,7 +64,7 @@ func (opts *CreateOpts) newPrivateEndpointConnection() *atlasv2.CloudProviderEnd
 	return createRequest
 }
 
-// mongocli atlas privateEndpoints gcp create --region region [--projectId projectId].
+// atlas privateEndpoints gcp create --region region [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

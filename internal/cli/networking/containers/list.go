@@ -72,7 +72,7 @@ func (opts *ListOpts) newContainerListOptions() *atlas.ContainersListOptions {
 	}
 }
 
-// mongocli atlas networking container(s) list [--projectId projectId] [--page N] [--limit N] [--minDate minDate] [--maxDate maxDate].
+// atlas networking container(s) list [--projectId projectId] [--page N] [--limit N] [--minDate minDate] [--maxDate maxDate].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

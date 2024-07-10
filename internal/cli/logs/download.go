@@ -139,7 +139,7 @@ func (opts *DownloadOpts) newHostLogsParams() *admin.GetHostLogsApiParams {
 	return params
 }
 
-// mongocli atlas logs download <hostname> <mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gz> [--force] [--output destination] [--projectId projectId].
+// atlas logs download <hostname> <mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gz> [--force] [--output destination] [--projectId projectId].
 func DownloadBuilder() *cobra.Command {
 	const argsN = 2
 	opts := &DownloadOpts{}

@@ -62,7 +62,7 @@ var metricTemplate = `NAME	UNITS	TIMESTAMP		VALUE{{range valueOrEmptySlice .Meas
 {{ $name }}	{{ $unit }}	{{.Timestamp}}	{{if .Value }}	{{ .Value }}{{else}}	N/A {{end}}{{end}}{{end}}{{end}}
 `
 
-// mongocli atlas metric(s) process(es) <hostname:port> [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId].
+// atlas metric(s) process(es) <hostname:port> [--granularity granularity] [--period period] [--start start] [--end end] [--type type][--projectId projectId].
 func Builder() *cobra.Command {
 	opts := &Opts{}
 	cmd := &cobra.Command{

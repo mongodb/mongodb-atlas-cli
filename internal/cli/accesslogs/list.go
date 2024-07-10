@@ -110,7 +110,7 @@ func (opts *ListOpts) ValidateInput() error {
 	return nil
 }
 
-// mongocli atlas accessLogs(s) list|ls  [--projectId projectId] [--clusterName clusterName] [--start start] [--end end] [--nLogs nLogs] [--ipAddress ipAddress] [--authResult success|fail].
+// atlas accessLogs(s) list|ls  [--projectId projectId] [--clusterName clusterName] [--start start] [--end end] [--nLogs nLogs] [--ipAddress ipAddress] [--authResult success|fail].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

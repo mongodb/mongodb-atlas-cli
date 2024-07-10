@@ -89,7 +89,7 @@ func (opts *WatchOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// mongocli atlas networking peering watch <ID> [--projectId projectId].
+// atlas networking peering watch <ID> [--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{

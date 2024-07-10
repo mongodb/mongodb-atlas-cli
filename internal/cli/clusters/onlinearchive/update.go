@@ -92,7 +92,7 @@ func (opts *UpdateOpts) newOnlineArchive() (*atlasv2.BackupOnlineArchive, error)
 	return archive, nil
 }
 
-// mongocli atlas cluster(s) onlineArchive(s) start <archiveId> [--clusterName name][--archiveAfter N] [--projectId projectId].
+// atlas cluster(s) onlineArchive(s) start <archiveId> [--clusterName name][--archiveAfter N] [--projectId projectId].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{
 		fs: afero.NewOsFs(),

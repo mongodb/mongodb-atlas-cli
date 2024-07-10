@@ -67,7 +67,7 @@ func (opts *ListOpts) newDatalakePrivateEndpointsListOpts() *atlasv2.ListDataFed
 	}
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) dataLakes aws list|ls [--projectId projectId].
+// atlas privateEndpoint(s)|privateendpoint(s) dataLakes aws list|ls [--projectId projectId].
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{

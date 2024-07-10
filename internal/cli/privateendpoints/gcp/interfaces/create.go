@@ -89,7 +89,7 @@ func (opts *CreateOpts) newInterfaceEndpointConnection() *atlasv2.CreateEndpoint
 	}
 }
 
-// mongocli atlas privateEndpoint(s) gcp interface(s) create <endpointGroupId> --endpointServiceId endpointServiceId --gcpProjectId gcpProjectId --endpoint endpointName1@ipAddress1,...,endpointNameN@ipAddressN [--projectId projectId].
+// atlas privateEndpoint(s) gcp interface(s) create <endpointGroupId> --endpointServiceId endpointServiceId --gcpProjectId gcpProjectId --endpoint endpointName1@ipAddress1,...,endpointNameN@ipAddressN [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

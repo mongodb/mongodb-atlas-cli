@@ -66,7 +66,7 @@ func (opts *CreateOpts) newCloudProviderSnapshot() *atlasv2.DiskBackupOnDemandSn
 	return createRequest
 }
 
-// mongocli atlas backup snapshots create|take clusterName --desc description --retention days [--projectId projectId].
+// atlas backup snapshots create|take clusterName --desc description --retention days [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

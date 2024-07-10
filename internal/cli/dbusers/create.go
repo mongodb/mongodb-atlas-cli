@@ -183,7 +183,7 @@ func (opts *CreateOpts) validate() error {
 }
 
 // CreateBuilder
-// mongocli atlas dbuser(s) create
+// atlas dbuser(s) create
 //
 //	--username username --password password
 //	--role roleName@dbName

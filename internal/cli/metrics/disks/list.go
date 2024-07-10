@@ -59,7 +59,7 @@ var listTemplate = `PARTITION NAME{{range valueOrEmptySlice .Results}}
 {{.PartitionName}}{{end}}
 `
 
-// mongocli atlas metric(s) disks lists <hostname:port>.
+// atlas metric(s) disks lists <hostname:port>.
 func ListBuilder() *cobra.Command {
 	opts := &ListsOpts{}
 	cmd := &cobra.Command{

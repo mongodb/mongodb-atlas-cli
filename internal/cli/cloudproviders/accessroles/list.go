@@ -54,7 +54,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cloudProvider(s) accessRole(s) list --projectId projectId.
+// atlas cloudProvider(s) accessRole(s) list --projectId projectId.
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

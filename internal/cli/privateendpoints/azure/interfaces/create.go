@@ -64,7 +64,7 @@ func (opts *CreateOpts) newInterfaceEndpointConnection() *atlasv2.CreateEndpoint
 	return &r
 }
 
-// mongocli atlas privateEndpoint(s)|privateendpoint(s) azure interface(s) create <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID][--privateEndpointIPAddress privateEndpointIPAddress][--projectId projectId].
+// atlas privateEndpoint(s)|privateendpoint(s) azure interface(s) create <atlasPrivateEndpointId> [--privateEndpointId privateEndpointID][--privateEndpointIPAddress privateEndpointIPAddress][--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

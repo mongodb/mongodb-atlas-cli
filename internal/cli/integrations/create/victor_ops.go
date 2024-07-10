@@ -64,7 +64,7 @@ func (opts *VictorOpsOpts) newVictorOpsIntegration() *atlasv2.ThirdPartyIntegrat
 	}
 }
 
-// mongocli atlas integration(s) create VICTOR_OPS --apiKey apiKey --routingKey routingKey [--projectId projectId].
+// atlas integration(s) create VICTOR_OPS --apiKey apiKey --routingKey routingKey [--projectId projectId].
 func VictorOpsBuilder() *cobra.Command {
 	opts := &VictorOpsOpts{}
 	cmd := &cobra.Command{

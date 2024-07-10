@@ -68,7 +68,7 @@ func (opts *DisableOpts) Prompt() error {
 	return telemetry.TrackAskOne(prompt, &opts.confirm)
 }
 
-// mongocli atlas security certs disable --projectId projectId.
+// atlas security certs disable --projectId projectId.
 func DisableBuilder() *cobra.Command {
 	opts := &DisableOpts{}
 	cmd := &cobra.Command{

@@ -128,7 +128,7 @@ func (opts *SaveOpts) newLDAPConfiguration() *atlasv2.UserSecurity {
 	return ldapConfig
 }
 
-// SaveBuilder mongocli atlas security ldap save --hostname hostname --port port --bindUsername bindUsername --bindPassword bindPassword --caCertificate caCertificate
+// atlas security ldap save --hostname hostname --port port --bindUsername bindUsername --bindPassword bindPassword --caCertificate caCertificate
 // --authzQueryTemplate authzQueryTemplate [--mappingMatch mappingMatch (--mappingLdapQuery mappingLdapQuery | --mappingSubstitution mappingSubstitution)]
 // --authenticationEnabled authenticationEnabled --authorizationEnabled authorizationEnabled [--projectId projectId].
 func SaveBuilder() *cobra.Command {

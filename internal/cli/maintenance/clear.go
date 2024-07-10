@@ -68,7 +68,7 @@ func (opts *ClearOpts) Prompt() error {
 	return telemetry.TrackAskOne(p, &opts.Confirm)
 }
 
-// mongocli atlas maintenanceWindow(s) clear [--projectId projectId].
+// atlas maintenanceWindow(s) clear [--projectId projectId].
 func ClearBuilder() *cobra.Command {
 	opts := &ClearOpts{}
 	cmd := &cobra.Command{

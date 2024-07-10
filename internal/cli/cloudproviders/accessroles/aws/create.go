@@ -58,7 +58,7 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cloudProvider aws accessRoles create [--projectId projectId].
+// atlas cloudProvider aws accessRoles create [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

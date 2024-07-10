@@ -63,7 +63,7 @@ func (opts *ListOpts) newPeeringConnectionsListOptions() *store.ContainersListOp
 	}
 }
 
-// mongocli atlas networking peering list [--provider provider] [--projectId projectId] [--page N] [--limit N].
+// atlas networking peering list [--provider provider] [--projectId projectId] [--page N] [--limit N].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

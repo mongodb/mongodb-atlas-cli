@@ -44,7 +44,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteDataLake, opts.ConfigProjectID())
 }
 
-// mongocli atlas datalake(s) delete <name> --projectId projectId.
+// atlas datalake(s) delete <name> --projectId projectId.
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Data Lake '%s' deleted\n", "Data Lake not deleted"),

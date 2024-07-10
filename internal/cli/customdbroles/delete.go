@@ -45,7 +45,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteDatabaseRole, opts.ConfigProjectID(), opts.Entry)
 }
 
-// mongocli atlas dbrole(s) delete <roleName> --force.
+// atlas dbrole(s) delete <roleName> --force.
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Custom database role '%s' deleted\n", "Custom database role not deleted"),

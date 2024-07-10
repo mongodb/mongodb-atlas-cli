@@ -74,9 +74,7 @@ func isUnauthenticatedErr(err error) bool {
 	}
 
 	target, ok := atlasv2.AsError(err)
-	return ok && target.GetReason() == "Unauthorized" 
-
-	return false
+	return ok && target.GetReason() == "Unauthorized"
 }
 
 func (opts *DeploymentOpts) findDeploymentByName(localDeployments []Deployment, atlasDeployments []Deployment) (Deployment, error) {

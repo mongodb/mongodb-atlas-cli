@@ -105,7 +105,7 @@ func (opts *CreateOpts) RunAtlas() error {
 		return err
 	}
 
-	// TODO: Update to use the new struct
+	//TODO: CLOUDP-260963 Update to use the new struct
 	result, err := opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, index)
 	if err != nil {
 		return err

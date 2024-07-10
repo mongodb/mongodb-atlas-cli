@@ -523,3 +523,65 @@ func Test_hasDuplicateCommand(t *testing.T) {
 		})
 	}
 }
+
+func Test_getPathToExecutableBinary(t *testing.T) {
+	generateTestPlugin("kubernetes", "binary", "")
+	generateTestPlugin("deployments", "deployments", "")
+
+	defer deleteTestPlugins()
+
+	tests := []struct {
+		name           string
+		pluginName     string
+		binaryName     string
+		expectedPath   string
+		expectsError   bool
+	}{
+		{
+			name:         "Valid binary path",
+			pluginName:   "deployments",
+			binaryName:   "deployments",
+			expectedPath: "./plugins/deployments/deployments",
+			expectsError: false,
+		},
+		{
+			name:         "Valid binary path for another plugin",
+			pluginName:   "kubernetes",
+			binaryName:   "binary",
+			expectedPath: "./plugins/kubernetes/binary",
+			expectsError: false,
+		},
+		{
+			name:         "Non-existing plugin directory",
+			pluginName:   "nonexistentplugin",
+			binaryName:   "binary",
+			expectedPath: "",
+			expectsError: true,
+		},
+		{
+			name:         "Non-existing binary file",
+			pluginName:   "kubernetes",
+			binaryName:   "invalidbinary",
+			expectedPath: "",
+			expectsError: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			path, err := getPathToExecutableBinary("./plugins/" + tt.pluginName, tt.binaryName)
+
+			if tt.expectsError && err == nil {
+				t.Errorf("Expected an error but got none")
+			}
+
+			if !tt.expectsError && err != nil {
+				t.Errorf("Expected no error but got: %v", err)
+			}
+
+			if path != tt.expectedPath {
+				t.Errorf("Expected path: %s, got: %s", tt.expectedPath, path)
+			}
+		})
+	}
+}

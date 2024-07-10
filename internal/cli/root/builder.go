@@ -249,7 +249,7 @@ Use the --help flag with any command for more info on that command.`,
 	)
 
 	// add plugin commands to rootCmd
-	for _, plugin := range plugin.GetAllValidPlugins(registerCmd.Commands()) {
+	for _, plugin := range plugin.GetAllValidPlugins(rootCmd.Commands()) {
 		rootCmd.AddCommand(plugin.GetCobraCommands()...)
 	}
 

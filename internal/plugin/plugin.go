@@ -82,7 +82,7 @@ func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 }
 
 func (p *Plugin) GetCobraCommands() []*cobra.Command {
-	commands := make([]*cobra.Command, len(p.Commands))
+	commands := make([]*cobra.Command, 0, len(p.Commands))
 
 	for _, command := range p.Commands {
 		command := &cobra.Command{

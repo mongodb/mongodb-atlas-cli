@@ -267,7 +267,7 @@ commands:
 }
 
 func Test_parseManifestFile(t *testing.T) {
-		generateTestPlugin("kubernetes", "binary", `name: kubernetes
+	generateTestPlugin("kubernetes", "binary", `name: kubernetes
 description: this is the description of the kubernetes plugin
 version: 1.2.3
 binary: binary
@@ -289,11 +289,11 @@ commands:
 	defer deleteTestPlugins()
 
 	tests := []struct {
-		name                string
+		name                   string
 		manifestFileDataString string
-		pluginManifest	*Manifest
-		expectsError        bool
-	} {
+		pluginManifest         *Manifest
+		expectsError           bool
+	}{
 		{
 			name: "Valid manifest file data",
 			manifestFileDataString: `name: deployments
@@ -307,26 +307,26 @@ commands:
         description: this is the second description
     command:
         description: here is another command`,
-		pluginManifest: 				&Manifest{
-			Name:        "deployments",
-			Description: "this is the description of the deployments plugin",
-			Version:     "2.1.76",
-			Commands: map[string]struct {
-				Description string `yaml:"description,omitempty"`
-			}{
-				"deployments":  {Description: "this is the deployments command"},
-				"deployments2": {Description: "this is the second description"},
-				"command":      {Description: "here is another command"},
+			pluginManifest: &Manifest{
+				Name:        "deployments",
+				Description: "this is the description of the deployments plugin",
+				Version:     "2.1.76",
+				Commands: map[string]struct {
+					Description string `yaml:"description,omitempty"`
+				}{
+					"deployments":  {Description: "this is the deployments command"},
+					"deployments2": {Description: "this is the second description"},
+					"command":      {Description: "here is another command"},
+				},
+				Binary: "deployments",
 			},
-			Binary:     "deployments",
-		},
 			expectsError: false,
 		},
 		{
-			name: "Invalid manifest file data",
+			name:                   "Invalid manifest file data",
 			manifestFileDataString: `not a yaml format`,
-			pluginManifest: nil,
-			expectsError: true,
+			pluginManifest:         nil,
+			expectsError:           true,
 		},
 	}
 
@@ -349,3 +349,60 @@ commands:
 		})
 	}
 }
+
+func Test_getManifestFileBytes(t *testing.T) {
+	defer deleteTestPlugins()
+
+	tests := []struct {
+		name           string
+		pluginName     string
+		manifestAction func()
+		expectsError   bool
+	}{
+		{
+			name:       "Valid manifest file",
+			pluginName: "deployments",
+			manifestAction: func() {
+				generateTestPlugin("deployments", "binary", `name: deployments
+description: this is the description of the deployments plugin
+version: 2.1.76
+binary: deployments
+commands:
+    deployments:
+        description: this is the deployments command
+    deployments2:
+        description: this is the second description
+    command:
+        description: here is another command`)
+			},
+			expectsError: false,
+		},
+		{
+			name:           "Manifest file does not exists",
+			pluginName:     "invalidplugin",
+			manifestAction: func() { generateTestPluginDirectory("invalidplugin") },
+			expectsError:   true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.manifestAction()
+			manifestFileData, err := getManifestFileBytes("./plugins/" + tt.pluginName)
+
+			if tt.expectsError && err == nil {
+				t.Errorf("Expected an error but got none")
+			}
+
+			if !tt.expectsError && err != nil {
+				t.Errorf("Expected no error but got: %v", err)
+			}
+
+			if !tt.expectsError && manifestFileData == nil {
+				t.Errorf("Expected manifestFileData to not be nil but got nil")
+			}
+		})
+	}
+}
+
+

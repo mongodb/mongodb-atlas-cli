@@ -131,15 +131,24 @@ func TestManifest_IsValid(t *testing.T) {
 	}
 }
 
-func generateTestPlugin(directoryName string, binaryName string, manifestContent string) error {
-	directory := "./plugins/" + directoryName
-	err := os.MkdirAll(directory, 0755)
+func generateTestPluginDirectory(directoryName string) (string, error) {
+	directoryPath := "./plugins/" + directoryName
+	err := os.MkdirAll(directoryPath, 0755)
 	if err != nil {
-		return fmt.Errorf("error creating directory: %v", err)
+		return "", fmt.Errorf("error creating directory: %v", err)
+	}
+	return directoryPath, nil
+}
+
+func generateTestPlugin(directoryName string, binaryName string, manifestContent string) error {
+	directoryPath, err := generateTestPluginDirectory(directoryName)
+
+	if err != nil {
+		return err
 	}
 
 	// Write manifest.yml file
-	manifestFile, err := os.Create(directory + "/manifest.yml")
+	manifestFile, err := os.Create(directoryPath + "/manifest.yml")
 	if err != nil {
 		return fmt.Errorf("error creating manifest.yml: %v", err)
 	}
@@ -151,7 +160,7 @@ func generateTestPlugin(directoryName string, binaryName string, manifestContent
 	}
 
 	// Create empty binary file
-	binaryFile, err := os.Create(directory + "/" + binaryName)
+	binaryFile, err := os.Create(directoryPath + "/" + binaryName)
 	if err != nil {
 		return fmt.Errorf("error creating binary file: %v", err)
 	}
@@ -231,7 +240,7 @@ commands:
 			expectsError: false,
 		},
 		{
-			name:                "Empty plugin directory",
+			name:                "Missing plugin directory",
 			pluginDirectoryName: "./empty_plugins",
 			expectedManifests:   nil,
 			expectsError:        true,
@@ -252,6 +261,90 @@ commands:
 
 			if !reflect.DeepEqual(manifests, tt.expectedManifests) {
 				t.Errorf("Expected manifests: %+v, got: %+v", tt.expectedManifests, manifests)
+			}
+		})
+	}
+}
+
+func Test_parseManifestFile(t *testing.T) {
+		generateTestPlugin("kubernetes", "binary", `name: kubernetes
+description: this is the description of the kubernetes plugin
+version: 1.2.3
+binary: binary
+commands:
+    kubernetes:
+        description: this is the kubernetes command`)
+	generateTestPlugin("deployments", "deployments", `name: deployments
+description: this is the description of the deployments plugin
+version: 2.1.76
+binary: deployments
+commands:
+    deployments:
+        description: this is the deployments command
+    deployments2:
+        description: this is the second description
+    command:
+        description: here is another command`)
+
+	defer deleteTestPlugins()
+
+	tests := []struct {
+		name                string
+		manifestFileDataString string
+		pluginManifest	*Manifest
+		expectsError        bool
+	} {
+		{
+			name: "Valid manifest file data",
+			manifestFileDataString: `name: deployments
+description: this is the description of the deployments plugin
+version: 2.1.76
+binary: deployments
+commands:
+    deployments:
+        description: this is the deployments command
+    deployments2:
+        description: this is the second description
+    command:
+        description: here is another command`,
+		pluginManifest: 				&Manifest{
+			Name:        "deployments",
+			Description: "this is the description of the deployments plugin",
+			Version:     "2.1.76",
+			Commands: map[string]struct {
+				Description string `yaml:"description,omitempty"`
+			}{
+				"deployments":  {Description: "this is the deployments command"},
+				"deployments2": {Description: "this is the second description"},
+				"command":      {Description: "here is another command"},
+			},
+			Binary:     "deployments",
+		},
+			expectsError: false,
+		},
+		{
+			name: "Invalid manifest file data",
+			manifestFileDataString: `not a yaml format`,
+			pluginManifest: nil,
+			expectsError: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			manifestFileData := []byte(tt.manifestFileDataString)
+			manifest, err := parseManifestFile(manifestFileData)
+
+			if tt.expectsError && err == nil {
+				t.Errorf("Expected an error but got none")
+			}
+
+			if !tt.expectsError && err != nil {
+				t.Errorf("Expected no error but got: %v", err)
+			}
+
+			if !reflect.DeepEqual(manifest, tt.pluginManifest) {
+				t.Errorf("Expected manifests: %+v, got: %+v", tt.pluginManifest, manifest)
 			}
 		})
 	}

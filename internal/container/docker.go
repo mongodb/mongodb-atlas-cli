@@ -72,8 +72,8 @@ func parsePortMapping(s string) ([]PortMapping, error) {
 	mappings := strings.Split(s, ",")
 	result := []PortMapping{}
 	for _, mapping := range mappings {
-		segments := strings.SplitN(mapping, "->", 2)             //nolint //max 2 fields
-		hostStr, hostPortStr := splitOnceLast(segments[0], ":")  
+		segments := strings.SplitN(mapping, "->", 2) //nolint //max 2 fields
+		hostStr, hostPortStr := splitOnceLast(segments[0], ":")
 		containerSegments := strings.SplitN(segments[1], "/", 2) //nolint //max 2 fields
 		hostPort, err := strconv.Atoi(hostPortStr)
 		if err != nil {

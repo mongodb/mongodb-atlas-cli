@@ -169,38 +169,52 @@ func deleteTestPlugins() error {
 	return nil
 }
 
-func Test_getManifestsFromPluginDirectory(t *testing.T) { 
-	generateTestPlugin("kubernetes","binary",`
-name: kubernetes
+func Test_getManifestsFromPluginDirectory(t *testing.T) {
+	generateTestPlugin("kubernetes", "binary", `name: kubernetes
 description: this is the description of the kubernetes plugin
 version: 1.2.3
+binary: binary
 commands:
-	kubernetes:
-		description: this is the kubernetes command`)
-		generateTestPlugin("deployments", "deployments",`
-name: deployments
+    kubernetes:
+        description: this is the kubernetes command`)
+	generateTestPlugin("deployments", "deployments", `name: deployments
 description: this is the description of the deployments plugin
 version: 2.1.76
+binary: deployments
 commands:
-	deployments:
-		description: this is the deployments command
-	deployments2:
-		description: this is the second description
-	command:
-		description: here is another command`)
+    deployments:
+        description: this is the deployments command
+    deployments2:
+        description: this is the second description
+    command:
+        description: here is another command`)
 
 	defer deleteTestPlugins()
 
 	tests := []struct {
-		name               string
+		name                string
 		pluginDirectoryName string
-		expectedManifests  []*Manifest
-		expectsError       bool
+		expectedManifests   []*Manifest
+		expectsError        bool
 	}{
 		{
-			name:               "Valid plugin directory",
+			name:                "Valid plugin directory",
 			pluginDirectoryName: "./plugins",
 			expectedManifests: []*Manifest{
+				{
+					Name:        "deployments",
+					Description: "this is the description of the deployments plugin",
+					Version:     "2.1.76",
+					Commands: map[string]struct {
+						Description string `yaml:"description,omitempty"`
+					}{
+						"deployments":  {Description: "this is the deployments command"},
+						"deployments2": {Description: "this is the second description"},
+						"command":      {Description: "here is another command"},
+					},
+					Binary:     "deployments",
+					BinaryPath: "./plugins/deployments/deployments",
+				},
 				{
 					Name:        "kubernetes",
 					Description: "this is the description of the kubernetes plugin",
@@ -213,28 +227,14 @@ commands:
 					Binary:     "binary",
 					BinaryPath: "./plugins/kubernetes/binary",
 				},
-				{
-					Name:        "deployments",
-					Description: "this is the description of the deployments plugin",
-					Version:     "2.1.76",
-					Commands: map[string]struct {
-						Description string `yaml:"description,omitempty"`
-					}{
-						"deployments": {Description: "this is the deployments command"},
-						"deployments2": {Description: "this is the second description"},
-						"command": {Description: "here is another command"},
-					},
-					Binary:     "deployments",
-					BinaryPath: "./plugins/deployments/deployments",
-				},
-				},
+			},
 			expectsError: false,
 		},
 		{
-			name:               "Empty plugin directory",
+			name:                "Empty plugin directory",
 			pluginDirectoryName: "./empty_plugins",
-			expectedManifests:  []*Manifest{},
-			expectsError:       true,
+			expectedManifests:   nil,
+			expectsError:        true,
 		},
 	}
 

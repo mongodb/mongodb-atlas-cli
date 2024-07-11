@@ -25,16 +25,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	push = "push"
+)
+
 func TestPublishSnapshotTasks(t *testing.T) {
 	c := &shrub.Configuration{}
 	PublishSnapshotTasks(c)
 	assert.Len(t, c.Tasks, 28)
-	// validate server / distro
+	commandFound := false
 	for _, task := range c.Tasks {
 		for _, c := range task.Commands {
-			if c.FunctionName != "push" {
+			if c.FunctionName != push {
 				continue
 			}
+			commandFound = true
 			distro := c.Vars["distro"]
 			serverVersion := c.Vars["server_version"]
 			assert.NotContains(t, unsupportedNewOsByVersion[serverVersion], distro)
@@ -42,18 +47,21 @@ func TestPublishSnapshotTasks(t *testing.T) {
 		}
 	}
 
+	assert.True(t, commandFound, "expected to find a push command")
 	assert.Len(t, c.Variants, 2)
 }
 
 func TestPublishStableTasks(t *testing.T) {
 	c := &shrub.Configuration{}
 	PublishStableTasks(c)
-	// validate server / distro
+
+	commandFound := false
 	for _, task := range c.Tasks {
 		for _, c := range task.Commands {
-			if c.FunctionName != "push" {
+			if c.FunctionName != push {
 				continue
 			}
+			commandFound = true
 			distro := c.Vars["distro"]
 			serverVersion := c.Vars["server_version"]
 			// ensure unsupportedNewOs is not used
@@ -61,6 +69,8 @@ func TestPublishStableTasks(t *testing.T) {
 			assert.NotEmpty(t, distro)
 		}
 	}
+
+	assert.True(t, commandFound, "expected to find a push command")
 	assert.Len(t, c.Variants, 4)
 	assert.Len(t, c.Tasks, 112)
 }

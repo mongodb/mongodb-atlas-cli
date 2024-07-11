@@ -174,6 +174,12 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 					"image":          postPkgImg[os],
 					"server_version": sv,
 				})
+
+			// TODO: Re-enable meta package tests in 8.0 until mongosh is added.
+			if sv == "8.0" {
+				disable := true
+				t.Disable = &disable
+			}
 			c.Tasks = append(c.Tasks, t)
 			v.AddTasks(t.Name)
 		}

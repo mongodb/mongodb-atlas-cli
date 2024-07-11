@@ -35,7 +35,7 @@ type DeleteOpts struct {
 	store store.SearchNodesDeleter
 }
 
-const atlasFtsDeploymentDoesNotExist = "ATLAS_FTS_DEPLOYMENT_DOES_NOT_EXIST"
+const atlasFtsDeploymentDoesNotExist = "ATLAS_SEARCH_DEPLOYMENT_DOES_NOT_EXIST"
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 	return func() error {

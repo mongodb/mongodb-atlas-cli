@@ -18,7 +18,9 @@ package store
 
 //go:generate mockgen -destination=../mocks/mock_federated_authentication.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store FederationAuthentificationStore
 
-import atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
+import (
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
+)
 
 type FederationAuthenticationStore interface {
 	AtlasFederatedAuthOrgConfig(opts *atlasv2.GetConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error)

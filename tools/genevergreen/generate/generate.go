@@ -100,6 +100,11 @@ func RepoTasks(c *shrub.Configuration) {
 				t := &shrub.Task{
 					Name: fmt.Sprintf("test_repo_atlascli_%v_%v_%v", os, repo, serverVersion),
 				}
+
+				if slices.Contains(unsupportedNewOsByVersion[serverVersion], newOs[os]) {
+					continue
+				}
+
 				t = t.Stepback(false).
 					GitTagOnly(true).
 					Dependency(newDependency(os, serverVersion, repo)).

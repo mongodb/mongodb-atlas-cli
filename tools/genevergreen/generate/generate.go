@@ -41,6 +41,8 @@ var (
 		"5.0": {"ubuntu2404"},
 	}
 
+	newOsUse50Version = []string{"rhel80", "rhel90"} //TODO: CLOUDP-261224 Remove this once mongosh is added to 8.0
+
 	oses = []string{
 		"centos8",
 		"rhel9",
@@ -178,7 +180,7 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 
 func getServerVersionForOs(os string) string {
 	defaultServer := "8.0"
-	if slices.Contains(unsupportedNewOsByVersion[defaultServer], newOs[os]) {
+	if slices.Contains(unsupportedNewOsByVersion[defaultServer], newOs[os]) || slices.Contains(newOsUse50Version, newOs[os]) {
 		return "5.0"
 	}
 

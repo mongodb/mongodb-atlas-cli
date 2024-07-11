@@ -89,6 +89,7 @@ func TestPostPkgMetaTasks(t *testing.T) {
 			// find the key from the image
 			for key, value := range postPkgImg {
 				if value == image {
+					fmt.Printf("distro: %s, serverVersion: %s newOskey: %s\n", key, serverVersion, newOs[key])
 					assert.NotContains(t, unsupportedNewOsByVersion[serverVersion], newOs[key])
 				}
 			}

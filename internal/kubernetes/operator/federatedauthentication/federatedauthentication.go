@@ -43,7 +43,7 @@ type AtlasFederatedAuthBuildRequest struct {
 
 const credSecretFormat = "%s-credentials"
 
-// BuildAtlasFederatedAuth builds an AtlasFederatedAuth resource
+// BuildAtlasFederatedAuth builds an AtlasFederatedAuth resource.
 func BuildAtlasFederatedAuth(br *AtlasFederatedAuthBuildRequest) (*akov2.AtlasFederatedAuth, error) {
 	orgConfig, err := getOrgConfig(br)
 	if err != nil {
@@ -78,7 +78,7 @@ func getOrgConfig(br *AtlasFederatedAuthBuildRequest) (*atlasv2.ConnectedOrgConf
 	})
 }
 
-// getAtlasFederatedAuthSpec returns the spec for AtlasFederatedAuth
+// getAtlasFederatedAuthSpec returns the spec for AtlasFederatedAuth.
 func getAtlasFederatedAuthSpec(br AtlasFederatedAuthBuildRequest, orgConfig *atlasv2.ConnectedOrgConfig) akov2.AtlasFederatedAuthSpec {
 	domainAllowList := getDomainAllowList(orgConfig)
 	postAuthRoleGrants := getPostAuthRoleGrants(orgConfig)
@@ -130,7 +130,7 @@ func getSecretRef(br AtlasFederatedAuthBuildRequest) *akov2common.ResourceRefNam
 
 // getRoleMappings converts AuthFederationRoleMapping to RoleMapping.
 func getRoleMappings(mappings *[]atlasv2.AuthFederationRoleMapping, projectStore store.OperatorProjectStore) []akov2.RoleMapping {
-	var roleMappings []akov2.RoleMapping
+	roleMappings := make([]akov2.RoleMapping, 0, len(*mappings))
 	for _, mapping := range *mappings {
 		roleMappings = append(roleMappings, akov2.RoleMapping{
 			ExternalGroupName: mapping.ExternalGroupName,

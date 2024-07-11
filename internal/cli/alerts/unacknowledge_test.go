@@ -21,7 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 func TestUnacknowledge_Run(t *testing.T) {
@@ -36,11 +36,11 @@ func TestUnacknowledge_Run(t *testing.T) {
 		store:   mockStore,
 	}
 
-	ackReq := acknowledgeOpts.newUnacknowledgeRequest()
+	ackReq := acknowledgeOpts.newAcknowledgeRequest()
 	params := &atlasv2.AcknowledgeAlertApiParams{
-		GroupId:          acknowledgeOpts.ProjectID,
-		AlertId:          acknowledgeOpts.alertID,
-		AcknowledgeAlert: ackReq,
+		GroupId:              acknowledgeOpts.ProjectID,
+		AlertId:              acknowledgeOpts.alertID,
+		AlertViewForNdsGroup: ackReq,
 	}
 
 	mockStore.

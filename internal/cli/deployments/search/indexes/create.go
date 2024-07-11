@@ -31,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20240530002/admin"
+	"go.mongodb.org/atlas-sdk/v20231115014/admin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -81,7 +81,7 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 	}
 	defer opts.mongodbClient.Disconnect()
 
-	opts.index, err = opts.DeprecatedNewSearchIndex()
+	opts.index, err = opts.NewSearchIndex()
 	if err != nil {
 		return err
 	}
@@ -105,13 +105,7 @@ func (opts *CreateOpts) RunAtlas() error {
 		return err
 	}
 
-	//TODO: CLOUDP-260963 Update to use the new struct
-	result, err := opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, index)
-	if err != nil {
-		return err
-	}
-
-	opts.index = search.IndexResponseToDeprecated(result)
+	opts.index, err = opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, index)
 	return err
 }
 

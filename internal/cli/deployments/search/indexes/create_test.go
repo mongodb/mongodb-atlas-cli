@@ -33,8 +33,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 )
 
 var indexID = "6509bc5080b2f007e6a2a0ce"
@@ -146,7 +145,7 @@ func TestCreate_RunLocal(t *testing.T) {
 
 	mockDB.
 		EXPECT().
-		CreateSearchIndex(ctx, expectedCollection, gomock.Any()).
+		CreateSearchIndex(ctx, expectedCollection, index).
 		Return(indexWithID, nil).
 		Times(1)
 
@@ -287,22 +286,30 @@ func TestCreate_RunAtlas(t *testing.T) {
 		store: mockIndexStore,
 	}
 
-	index, err := opts.NewSearchIndex()
-	require.NoError(t, err)
-
-	indexWithID := &atlasv2.SearchIndexResponse{
-		CollectionName: &opts.Collection,
-		Database:       &opts.DBName,
-		LatestDefinition: &atlasv2.BaseSearchIndexResponseLatestDefinition{
-			Analyzer: &opts.Analyzer,
-			Mappings: &atlasv2.SearchMappings{
-				Dynamic: &opts.Dynamic,
-				Fields:  nil,
-			},
-			SearchAnalyzer: &opts.SearchAnalyzer,
+	index := &atlasv2.ClusterSearchIndex{
+		Analyzer:       &opts.Analyzer,
+		CollectionName: opts.Collection,
+		Database:       opts.DBName,
+		Mappings: &atlasv2.ApiAtlasFTSMappings{
+			Dynamic: &opts.Dynamic,
+			Fields:  nil,
 		},
-		Name:    &opts.Name,
-		IndexID: &indexID,
+		Name:           opts.Name,
+		SearchAnalyzer: &opts.SearchAnalyzer,
+		Type:           pointer.Get(search.DefaultType),
+	}
+
+	indexWithID := &atlasv2.ClusterSearchIndex{
+		Analyzer:       &opts.Analyzer,
+		CollectionName: opts.Collection,
+		Database:       opts.DBName,
+		Mappings: &atlasv2.ApiAtlasFTSMappings{
+			Dynamic: &opts.Dynamic,
+			Fields:  nil,
+		},
+		Name:           opts.Name,
+		SearchAnalyzer: &opts.SearchAnalyzer,
+		IndexID:        &indexID,
 	}
 
 	deploymentTest.CommonAtlasMocks(opts.ProjectID)

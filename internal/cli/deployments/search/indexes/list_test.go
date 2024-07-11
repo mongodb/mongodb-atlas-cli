@@ -179,9 +179,9 @@ func TestList_RunAtlas(t *testing.T) {
 		SearchIndexes(opts.ProjectID, opts.DeploymentName, opts.DBName, opts.Collection).
 		Return([]atlasv2.ClusterSearchIndex{
 			{
-				Name:           &expectedName,
-				Database:       &expectedDB,
-				CollectionName: &expectedCollection,
+				Name:           expectedName,
+				Database:       expectedDB,
+				CollectionName: expectedCollection,
 				IndexID:        pointer.Get(expectedID),
 			},
 		}, nil).
@@ -189,10 +189,10 @@ func TestList_RunAtlas(t *testing.T) {
 
 	expected := []*atlasv2.ClusterSearchIndex{
 		{
-			Name:           &expectedName,
+			Name:           expectedName,
 			IndexID:        pointer.Get(expectedID),
-			CollectionName: &expectedCollection,
-			Database:       &expectedDB,
+			CollectionName: expectedCollection,
+			Database:       expectedDB,
 		},
 	}
 

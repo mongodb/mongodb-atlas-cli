@@ -39,7 +39,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 
 		expected := &atlasv2.ClusterSearchIndex{}
 
-		request, err := updateOpts.NewSearchIndexUpdate()
+		request, err := updateOpts.NewSearchIndex()
 		require.NoError(t, err)
 		mockStore.
 			EXPECT().
@@ -65,7 +65,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 
 		expected := &atlasv2.ClusterSearchIndex{}
 
-		request, err := updateOpts.NewSearchIndexUpdate()
+		request, err := updateOpts.NewSearchIndex()
 		require.NoError(t, err)
 		mockStore.
 			EXPECT().

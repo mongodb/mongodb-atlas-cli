@@ -156,18 +156,18 @@ func TestDescribe_RunAtlas(t *testing.T) {
 	mockStore.
 		EXPECT().
 		SearchIndex(opts.ProjectID, opts.DeploymentName, opts.indexID).
-		Return(&atlasv2.SearchIndexResponse{
-			Name:           &name,
-			Database:       &database,
-			CollectionName: &collectionName,
+		Return(&atlasv2.ClusterSearchIndex{
+			Name:           name,
+			Database:       database,
+			CollectionName: collectionName,
 			IndexID:        pointer.Get("test"),
 		}, nil).
 		Times(1)
 
-	expected := &atlasv2.SearchIndexResponse{
-		Name:           &name,
-		Database:       &database,
-		CollectionName: &collectionName,
+	expected := &atlasv2.ClusterSearchIndex{
+		Name:           name,
+		Database:       database,
+		CollectionName: collectionName,
 		IndexID:        pointer.Get("test"),
 	}
 

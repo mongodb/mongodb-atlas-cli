@@ -105,13 +105,7 @@ func (opts *CreateOpts) RunAtlas() error {
 		return err
 	}
 
-	//TODO: CLOUDP-260963 Update to use the new struct
-	result, err := opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, index)
-	if err != nil {
-		return err
-	}
-
-	opts.index = search.IndexResponseToDeprecated(result)
+	opts.index, err = opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, index)
 	return err
 }
 

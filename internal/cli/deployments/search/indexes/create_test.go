@@ -290,19 +290,17 @@ func TestCreate_RunAtlas(t *testing.T) {
 	index, err := opts.NewSearchIndex()
 	require.NoError(t, err)
 
-	indexWithID := &atlasv2.SearchIndexResponse{
-		CollectionName: &opts.Collection,
-		Database:       &opts.DBName,
-		LatestDefinition: &atlasv2.BaseSearchIndexResponseLatestDefinition{
-			Analyzer: &opts.Analyzer,
-			Mappings: &atlasv2.SearchMappings{
-				Dynamic: &opts.Dynamic,
-				Fields:  nil,
-			},
-			SearchAnalyzer: &opts.SearchAnalyzer,
+	indexWithID := &atlasv2.ClusterSearchIndex{
+		CollectionName: opts.Collection,
+		Database:       opts.DBName,
+		Analyzer:       &opts.Analyzer,
+		Mappings: &atlasv2.ApiAtlasFTSMappings{
+			Dynamic: &opts.Dynamic,
+			Fields:  nil,
 		},
-		Name:    &opts.Name,
-		IndexID: &indexID,
+		SearchAnalyzer: &opts.SearchAnalyzer,
+		Name:           opts.Name,
+		IndexID:        &indexID,
 	}
 
 	deploymentTest.CommonAtlasMocks(opts.ProjectID)

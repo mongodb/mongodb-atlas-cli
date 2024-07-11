@@ -29,6 +29,6 @@ ENTRYPOINT=atlas
 docker build \
 	--build-arg url="${URL-}" \
 	--build-arg entrypoint="${ENTRYPOINT-}" \
-	--build-arg server_version="8.0" \
+	--build-arg server_version="5.0" \
 	-t "atlascli-${image-}" \
 	-f "${image-}.Dockerfile" .

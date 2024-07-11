@@ -70,10 +70,8 @@ func TestSearch(t *testing.T) {
 	"collectionName": "{{ .collectionName }}",
 	"database": "test",
 	"name": "{{ .indexName }}",
-	"definition": {
-		"mappings": {
-			"dynamic": true
-		}
+	"mappings": {
+		"dynamic": true
 	}
 }`))
 		require.NoError(t, tpl.Execute(file, map[string]string{
@@ -95,7 +93,7 @@ func TestSearch(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
-		var index atlasv2.SearchIndexResponse
+		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
 		assert.Equal(t, index.GetName(), indexName)
 		indexID = index.GetIndexID()
@@ -114,7 +112,7 @@ func TestSearch(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
-		var index atlasv2.SearchIndexResponse
+		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
 		assert.Equal(t, indexID, index.GetIndexID())
 	})
@@ -128,13 +126,15 @@ func TestSearch(t *testing.T) {
 		t.Cleanup(func() {
 			require.NoError(t, os.Remove(fileName))
 		})
+
 		tpl := template.Must(template.New("").Parse(`
 {
-	"definition": {
-		"analyzer": "{{ .analyzer }}",
-		"mappings": {
-			"dynamic": true
-		}
+	"collectionName": "{{ .collectionName }}",
+	"database": "test",
+	"name": "{{ .indexName }}",
+	"analyzer": "{{ .analyzer }}",
+	"mappings": {
+		"dynamic": true
 	}
 }`))
 		require.NoError(t, tpl.Execute(file, map[string]string{
@@ -158,12 +158,11 @@ func TestSearch(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
-		var index atlasv2.SearchIndexResponse
+		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
 		a := assert.New(t)
 		a.Equal(indexID, index.GetIndexID())
-		def := index.GetLatestDefinition()
-		a.Equal(analyzer, def.GetAnalyzer())
+		a.Equal(analyzer, index.GetAnalyzer())
 	})
 
 	t.Run("Delete", func(t *testing.T) {
@@ -197,33 +196,31 @@ func TestSearch(t *testing.T) {
   "collectionName": "planets",
   "database": "sample_guides",
   "name": "{{ .indexName }}",
-  "definition": {
-    "analyzer": "lucene.standard",
-	"searchAnalyzer": "lucene.standard",
-	"mappings": {
-		"dynamic": false,
-		"fields": {
-		"name": {
-			"type": "string",
-			"analyzer": "lucene.whitespace",
-			"multi": {
-			"mySecondaryAnalyzer": {
-				"type": "string",
-				"analyzer": "lucene.french"
-			}
-			}
-		},
-		"mainAtmosphere": {
-			"type": "string",
-			"analyzer": "lucene.standard"
-		},
-		"surfaceTemperatureC": {
-			"type": "document",
-			"dynamic": true,
-			"analyzer": "lucene.standard"
-		}
-		}
-	}
+  "analyzer": "lucene.standard",
+  "searchAnalyzer": "lucene.standard",
+  "mappings": {
+    "dynamic": false,
+    "fields": {
+      "name": {
+        "type": "string",
+        "analyzer": "lucene.whitespace",
+        "multi": {
+          "mySecondaryAnalyzer": {
+            "type": "string",
+            "analyzer": "lucene.french"
+          }
+        }
+      },
+      "mainAtmosphere": {
+        "type": "string",
+        "analyzer": "lucene.standard"
+      },
+      "surfaceTemperatureC": {
+        "type": "document",
+        "dynamic": true,
+        "analyzer": "lucene.standard"
+      }
+    }
   }
 }`))
 		require.NoError(t, tpl.Execute(file, map[string]string{
@@ -244,9 +241,9 @@ func TestSearch(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
-		var index atlasv2.SearchIndexResponse
+		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
-		assert.Equal(t, indexName, index.GetName())
+		assert.Equal(t, indexName, index.Name)
 	})
 
 	t.Run("Create staticMapping", func(t *testing.T) {
@@ -263,73 +260,71 @@ func TestSearch(t *testing.T) {
   "collectionName": "posts",
   "database": "sample_training",
   "name": "{{ .indexName }}",
-  "definition": {
-    "analyzer": "lucene.standard",
-	"searchAnalyzer": "lucene.standard",
-	"mappings": {
-		"dynamic": false,
-		"fields": {
-		"comments": {
-			"type": "document",
-			"fields": {
-			"body": {
-				"type": "string",
-				"analyzer": "lucene.simple",
-				"ignoreAbove": 255
-			},
-			"author": {
-				"type": "string",
-				"analyzer": "keywordLowerCase"
-			}
-			}
-		},
-		"body": {
-			"type": "string",
-			"analyzer": "lucene.whitespace",
-			"multi": {
-			"mySecondaryAnalyzer": {
-				"type": "string",
-				"analyzer": "keywordLowerCase"
-			}
-			}
-		},
-		"tags": {
-			"type": "string",
-			"analyzer": "standardLowerCase"
-		}
-		}
-	},
-	"analyzers":[
-		{
-			"charFilters":[
-				
-			],
-			"name":"keywordLowerCase",
-			"tokenFilters":[
-				{
-				"type":"lowercase"
-				}
-			],
-			"tokenizer":{
-				"type":"keyword"
-			}
-		},
-		{
-			"charFilters":[
-				
-			],
-			"name":"standardLowerCase",
-			"tokenFilters":[
-				{
-				"type":"lowercase"
-				}
-			],
-			"tokenizer":{
-				"type":"standard"
-			}
-		}
-	]
-	}
+  "analyzer": "lucene.standard",
+  "searchAnalyzer": "lucene.standard",
+  "mappings": {
+    "dynamic": false,
+    "fields": {
+      "comments": {
+        "type": "document",
+        "fields": {
+          "body": {
+            "type": "string",
+            "analyzer": "lucene.simple",
+            "ignoreAbove": 255
+          },
+          "author": {
+            "type": "string",
+            "analyzer": "keywordLowerCase"
+          }
+        }
+      },
+      "body": {
+        "type": "string",
+        "analyzer": "lucene.whitespace",
+        "multi": {
+          "mySecondaryAnalyzer": {
+            "type": "string",
+            "analyzer": "keywordLowerCase"
+          }
+        }
+      },
+      "tags": {
+        "type": "string",
+        "analyzer": "standardLowerCase"
+      }
+    }
+  },
+"analyzers":[
+      {
+         "charFilters":[
+            
+         ],
+         "name":"keywordLowerCase",
+         "tokenFilters":[
+            {
+               "type":"lowercase"
+            }
+         ],
+         "tokenizer":{
+            "type":"keyword"
+         }
+      },
+      {
+         "charFilters":[
+            
+         ],
+         "name":"standardLowerCase",
+         "tokenFilters":[
+            {
+               "type":"lowercase"
+            }
+         ],
+         "tokenizer":{
+            "type":"standard"
+         }
+      }
+   ]
 }`))
 		require.NoError(t, tpl.Execute(file, map[string]string{
 			"indexName": indexName,
@@ -349,9 +344,9 @@ func TestSearch(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
-		var index atlasv2.SearchIndexResponse
+		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
-		assert.Equal(t, indexName, index.GetName())
+		assert.Equal(t, indexName, index.Name)
 	})
 
 	t.Run("Create array mapping", func(t *testing.T) {
@@ -371,22 +366,20 @@ func TestSearch(t *testing.T) {
   "collectionName": "posts",
   "database": "sample_training",
   "name": "{{ .indexName }}",
-  "definition": {
-	"analyzer": "lucene.standard",
-	"searchAnalyzer": "lucene.standard",
-	"mappings": {
-		"dynamic": false,
-		"fields": {
-		"comments": [
-			{
-				"dynamic": true,
-				"type": "document"
-			},
-			{
-				"type": "string"
-			}]
-		}
-	}
+  "analyzer": "lucene.standard",
+  "searchAnalyzer": "lucene.standard",
+  "mappings": {
+    "dynamic": false,
+    "fields": {
+      "comments": [
+		{
+			"dynamic": true,
+			"type": "document"
+		},
+		{
+			"type": "string"
+		}]
+    }
   }
 }`))
 		require.NoError(t, tpl.Execute(file, map[string]string{
@@ -407,9 +400,9 @@ func TestSearch(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
-		var index atlasv2.SearchIndexResponse
+		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
-		assert.Equal(t, indexName, index.GetName())
+		assert.Equal(t, indexName, index.Name)
 	})
 
 	t.Run("list", func(t *testing.T) {
@@ -428,7 +421,7 @@ func TestSearch(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
-		var indexes []atlasv2.SearchIndexResponse
+		var indexes []atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &indexes))
 		assert.NotEmpty(t, indexes)
 	})

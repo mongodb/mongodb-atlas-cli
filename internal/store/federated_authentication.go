@@ -16,27 +16,20 @@
 
 package store
 
-//go:generate mockgen -destination=../mocks/mock_federated_authentification.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store FederationAuthentificationStore
+//go:generate mockgen -destination=../mocks/mock_federated_authentication.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store FederationAuthentificationStore
 
 import atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 
-type FederationAuthentificationStore interface {
+type FederationAuthenticationStore interface {
 	AtlasFederatedAuthOrgConfig(opts *atlasv2.GetConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error)
-	AtlasIdentityProviderMetadata(opts *atlasv2.GetIdentityProviderMetadataApiParams) (name string, error error)
 	AtlasIdentityProvider(ops *atlasv2.GetIdentityProviderApiParams) (*atlasv2.FederationIdentityProvider, error)
 }
 
-// FederationSetting encapsulate the logic to manage different cloud providers.
 func (s *Store) AtlasFederatedAuthOrgConfig(opts *atlasv2.GetConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error) {
 	result, _, err := s.clientv2.FederatedAuthenticationApi.GetConnectedOrgConfigWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
-// FederationSetting encapsulate the logic to manage different cloud providers.
-func (s *Store) AtlasIdentityProviderMetadata(opts *atlasv2.GetIdentityProviderMetadataApiParams) (name string, error error) {
-	result, _, err := s.clientv2.FederatedAuthenticationApi.GetIdentityProviderMetadataWithParams(s.ctx, opts).Execute()
-	return result, err
-}
 func (s *Store) AtlasIdentityProvider(opts *atlasv2.GetIdentityProviderApiParams) (*atlasv2.FederationIdentityProvider, error) {
 	result, _, err := s.clientv2.FederatedAuthenticationApi.GetIdentityProviderWithParams(s.ctx, opts).Execute()
 	return result, err

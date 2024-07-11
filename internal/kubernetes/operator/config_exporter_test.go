@@ -432,9 +432,11 @@ func TestExportFederatedAuth(t *testing.T) {
 		testOrganizationID := "test-org"
 
 		testProjectID := []string{"test-project-1", "test-project-2"}
+		secondTestProjectID := []string{"test-project-3", "test-project-4"}
 		testProjectName := []string{"test-project-name-1", "test-project-name-2"}
 		testRoleProject := []string{"GROUP_OWNER", "GROUP_OWNER"}
 		testRoleOrganization := []string{"ORG_OWNER", "ORG_OWNER"}
+		testExternalGroupName := []string{"org-admin", "dev-team"}
 
 		// Constructing federationSettings
 		federationSettings := &admin.OrgFederationSettings{
@@ -446,7 +448,7 @@ func TestExportFederatedAuth(t *testing.T) {
 		AuthRoleMappings := make([]admin.AuthFederationRoleMapping, len(testRoleProject)+len(testRoleOrganization))
 		for i := range testProjectID {
 			AuthRoleMappings[i] = admin.AuthFederationRoleMapping{
-				ExternalGroupName: "Developers",
+				ExternalGroupName: testExternalGroupName[i],
 				RoleAssignments: &[]admin.RoleAssignment{
 					{
 						GroupId: &testProjectID[i],
@@ -457,11 +459,15 @@ func TestExportFederatedAuth(t *testing.T) {
 		}
 		for i := range testRoleOrganization {
 			AuthRoleMappings[len(testProjectID)+i] = admin.AuthFederationRoleMapping{
-				ExternalGroupName: "Managers",
+				ExternalGroupName: testExternalGroupName[i],
 				RoleAssignments: &[]admin.RoleAssignment{
 					{
 						OrgId: &testOrganizationID,
 						Role:  &testRoleOrganization[i],
+					},
+					{
+						GroupId: &secondTestProjectID[i],
+						Role:    &testRoleProject[i],
 					},
 				},
 			}
@@ -504,14 +510,20 @@ func TestExportFederatedAuth(t *testing.T) {
 		atlasOperatorGenericStore.EXPECT().Project("test-project-2").
 			Return(secondProject, nil)
 
+		atlasOperatorGenericStore.EXPECT().Project("test-project-3").
+			Return(firstProject, nil)
+
+		atlasOperatorGenericStore.EXPECT().Project("test-project-4").
+			Return(secondProject, nil)
 		resources, err := ce.exportAtlasFederatedAuth("my-project")
 		require.NoError(t, err)
 
 		// Constructing roleMappings using a for loop
-		roleMappings := make([]akov2.RoleMapping, len(testRoleProject)+len(testRoleOrganization))
+		roleMappings := make([]akov2.RoleMapping, 0, len(testRoleProject)+len(testRoleOrganization))
+
 		for i := range testProjectID {
-			roleMappings[i] = akov2.RoleMapping{
-				ExternalGroupName: "Developers",
+			roleMapping := akov2.RoleMapping{
+				ExternalGroupName: testExternalGroupName[i],
 				RoleAssignments: []akov2.RoleAssignment{
 					{
 						ProjectName: testProjectName[i],
@@ -519,17 +531,25 @@ func TestExportFederatedAuth(t *testing.T) {
 					},
 				},
 			}
+			roleMappings = append(roleMappings, roleMapping)
 		}
+
 		for i := range testRoleOrganization {
-			roleMappings[len(testProjectID)+i] = akov2.RoleMapping{
-				ExternalGroupName: "Managers",
+			roleMapping := akov2.RoleMapping{
+				ExternalGroupName: testExternalGroupName[i],
 				RoleAssignments: []akov2.RoleAssignment{
 					{
 						Role: testRoleOrganization[i],
 					},
+					{
+						ProjectName: testProjectName[i],
+						Role:        testRoleProject[i],
+					},
 				},
 			}
+			roleMappings = append(roleMappings, roleMapping)
 		}
+
 		assert.Equal(
 			t,
 			[]runtime.Object{
@@ -543,10 +563,10 @@ func TestExportFederatedAuth(t *testing.T) {
 						Namespace: "test",
 					},
 					Spec: akov2.AtlasFederatedAuthSpec{
-						ConnectionSecretRef: akov2common.ResourceRefNamespaced{
-							Name:      "my-project",
-							Namespace: "test",
-						},
+						// ConnectionSecretRef: akov2common.ResourceRefNamespaced{
+						// 	Name:      "my-project",
+						// 	Namespace: "test",
+						// },
 						Enabled:                  true,
 						DomainAllowList:          []string{"example.com"},
 						PostAuthRoleGrants:       []string{"role1"},

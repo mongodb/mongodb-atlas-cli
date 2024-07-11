@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/dbusers"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/deployment"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
-	federatedautentification "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/federatedauthentification"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/federatedauthentication"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/project"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/streamsprocessing"
@@ -414,7 +414,18 @@ func (e *ConfigExporter) exportAtlasFederatedAuth(projectName string) ([]runtime
 	if err != nil {
 		return nil, err
 	}
-	federatedAuthentification, err := federatedautentification.BuildAtlasFederatedAuth(e.dataProvider, e.dataProvider, projectName, e.orgID, *federatedAuthentificationSetting, e.projectID, e.operatorVersion, e.targetNamespace, e.dictionaryForAtlasNames)
+	federatedAuthentification, err := federatedauthentication.BuildAtlasFederatedAuth(&federatedauthentication.AtlasFederatedAuthBuildRequest{
+		IncludeSecret:                 e.includeSecretsData,
+		FederationAuthenticationStore: e.dataProvider,
+		ProjectStore:                  e.dataProvider,
+		ProjectID:                     e.projectID,
+		OrgID:                         e.orgID,
+		TargetNamespace:               e.targetNamespace,
+		Version:                       e.operatorVersion,
+		Dictionary:                    e.dictionaryForAtlasNames,
+		ProjectName:                   projectName,
+		FederatedSettings:             federatedAuthentificationSetting,
+	})
 	if err != nil {
 		return nil, err
 	}

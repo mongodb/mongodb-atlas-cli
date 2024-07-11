@@ -1,0 +1,33 @@
+{
+	"collectionName": "planets",
+	"database": "sample_guides",
+	"name": "{{ .indexName }}",
+	"definition": {
+	  "analyzer": "lucene.standard",
+	  "searchAnalyzer": "lucene.standard",
+	  "mappings": {
+		  "dynamic": false,
+		  "fields": {
+		  "name": {
+			  "type": "string",
+			  "analyzer": "lucene.whitespace",
+			  "multi": {
+			  "mySecondaryAnalyzer": {
+				  "type": "string",
+				  "analyzer": "lucene.french"
+			  }
+			  }
+		  },
+		  "mainAtmosphere": {
+			  "type": "string",
+			  "analyzer": "lucene.standard"
+		  },
+		  "surfaceTemperatureC": {
+			  "type": "document",
+			  "dynamic": true,
+			  "analyzer": "lucene.standard"
+		  }
+		  }
+	  }
+	}
+  }

@@ -290,7 +290,7 @@ func TestCreate_RunAtlas(t *testing.T) {
 	index, err := opts.NewSearchIndex()
 	require.NoError(t, err)
 
-	indexWithID := &atlasv2.SearchIndexResponse{
+	indexWithID := &atlasv2.ClusterSearchIndex{
 		CollectionName: &opts.Collection,
 		Database:       &opts.DBName,
 		LatestDefinition: &atlasv2.BaseSearchIndexResponseLatestDefinition{

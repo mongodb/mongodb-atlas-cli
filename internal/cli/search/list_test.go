@@ -34,7 +34,7 @@ func TestList_Run(t *testing.T) {
 	}
 
 	name := "test"
-	expected := []atlasv2.SearchIndexResponse{
+	expected := []atlasv2.ClusterSearchIndex{
 		{
 			Name: &name,
 		},

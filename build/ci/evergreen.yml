@@ -1094,8 +1094,6 @@ tasks:
           E2E_PARALLEL: 16
   - name: atlas_deployments_local_noauth_e2e
     tags: ["e2e","deployments","local","noauth"]
-    # This test will be enabled in CLOUDP-237038
-    patch_only: true
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
@@ -1127,8 +1125,6 @@ tasks:
           E2E_TIMEOUT: 3h
   - name: atlas_deployments_local_auth_e2e
     tags: ["e2e","deployments","local","auth"]
-    # This test will be enabled in CLOUDP-237038
-    patch_only: true
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:

@@ -227,6 +227,7 @@ functions:
         include_expansions_in_env:
           - project
           - revision
+          - server_version
           - created_at
           - image
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/meta

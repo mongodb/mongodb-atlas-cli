@@ -420,13 +420,11 @@ func TestExportFederatedAuth(t *testing.T) {
 	t.Run("should return exported resources", func(t *testing.T) {
 		ctl := gomock.NewController(t)
 		defer ctl.Finish()
-		True := true
 		atlasOperatorGenericStore := mocks.NewMockOperatorGenericStore(ctl)
 		ce := NewConfigExporter(atlasOperatorGenericStore, nil, projectID, orgID).
 			WithTargetNamespace("test").
 			WithTargetOperatorVersion("2.3.0")
 
-		testFederationSettingsID := "TestFederationSettingID"
 		testIdentityProviderID := "TestIdentityProviderID"
 		testOrganizationID := "test-org"
 
@@ -439,11 +437,11 @@ func TestExportFederatedAuth(t *testing.T) {
 
 		// Constructing federationSettings
 		federationSettings := &admin.OrgFederationSettings{
-			Id:                 &testFederationSettingsID,
+			Id:                 pointer.Get("TestFederationSettingID"),
 			IdentityProviderId: &testIdentityProviderID,
 		}
 
-		// Constructing AuthRoleMappings using a for loop
+		// Constructing AuthRoleMappings
 		AuthRoleMappings := make([]admin.AuthFederationRoleMapping, len(testRoleProject)+len(testRoleOrganization))
 		for i := range testProjectID {
 			AuthRoleMappings[i] = admin.AuthFederationRoleMapping{
@@ -479,16 +477,13 @@ func TestExportFederatedAuth(t *testing.T) {
 			RoleMappings:             &AuthRoleMappings,
 		}
 		identityProvider := &admin.FederationIdentityProvider{
-			SsoDebugEnabled: &True,
+			SsoDebugEnabled: pointer.Get(true),
 		}
 		atlasOperatorGenericStore.EXPECT().FederationSetting(&admin.GetFederationSettingsApiParams{OrgId: orgID}).
 			Return(federationSettings, nil)
 
 		atlasOperatorGenericStore.EXPECT().AtlasFederatedAuthOrgConfig(&admin.GetConnectedOrgConfigApiParams{FederationSettingsId: *federationSettings.Id, OrgId: orgID}).
 			Return(orgConfig, nil)
-
-		// atlasOperatorGenericStore.EXPECT().AtlasIdentityProviderMetadata(&admin.GetIdentityProviderMetadataApiParams{FederationSettingsId: *federationSettings.Id, IdentityProviderId: testIdentityProviderID}).
-		// 	Return("IdentityProviderMetadata", nil)
 
 		atlasOperatorGenericStore.EXPECT().AtlasIdentityProvider(&admin.GetIdentityProviderApiParams{FederationSettingsId: *federationSettings.Id, IdentityProviderId: testIdentityProviderID}).
 			Return(identityProvider, nil)
@@ -517,7 +512,7 @@ func TestExportFederatedAuth(t *testing.T) {
 		resources, err := ce.exportAtlasFederatedAuth("my-project")
 		require.NoError(t, err)
 
-		// Constructing roleMappings using a for loop
+		// Constructing roleMappings
 		roleMappings := make([]akov2.RoleMapping, 0, len(testRoleProject)+len(testRoleOrganization))
 
 		for i := range testProjectID {
@@ -548,38 +543,38 @@ func TestExportFederatedAuth(t *testing.T) {
 			}
 			roleMappings = append(roleMappings, roleMapping)
 		}
-
-		assert.Equal(
-			t,
-			[]runtime.Object{
-				&akov2.AtlasFederatedAuth{
-					TypeMeta: metav1.TypeMeta{
-						Kind:       "AtlasFederatedAuth",
-						APIVersion: "atlas.mongodb.com/v1",
-					},
-					ObjectMeta: metav1.ObjectMeta{
-						Name:      "my-project-testfederationsettingid",
-						Namespace: "test",
-					},
-					Spec: akov2.AtlasFederatedAuthSpec{
-						// ConnectionSecretRef: akov2common.ResourceRefNamespaced{
-						// 	Name:      "my-project",
-						// 	Namespace: "test",
-						// },
-						Enabled:                  true,
-						DomainAllowList:          []string{"example.com"},
-						PostAuthRoleGrants:       []string{"role1"},
-						DomainRestrictionEnabled: &True,
-						SSODebugEnabled:          &True,
-						RoleMappings:             roleMappings,
-					},
-					Status: akov2status.AtlasFederatedAuthStatus{
-						Common: akoapi.Common{
-							Conditions: []akoapi.Condition{},
-						},
+		expected := []runtime.Object{
+			&akov2.AtlasFederatedAuth{
+				TypeMeta: metav1.TypeMeta{
+					Kind:       "AtlasFederatedAuth",
+					APIVersion: "atlas.mongodb.com/v1",
+				},
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "my-project-testfederationsettingid",
+					Namespace: "test",
+				},
+				Spec: akov2.AtlasFederatedAuthSpec{
+					// ConnectionSecretRef: akov2common.ResourceRefNamespaced{
+					// 	Name:      "my-project",
+					// 	Namespace: "test",
+					// },
+					Enabled:                  true,
+					DomainAllowList:          []string{"example.com"},
+					PostAuthRoleGrants:       []string{"role1"},
+					DomainRestrictionEnabled: pointer.Get(true),
+					SSODebugEnabled:          pointer.Get(true),
+					RoleMappings:             roleMappings,
+				},
+				Status: akov2status.AtlasFederatedAuthStatus{
+					Common: akoapi.Common{
+						Conditions: []akoapi.Condition{},
 					},
 				},
 			},
+		}
+		assert.Equal(
+			t,
+			expected,
 			resources,
 		)
 	})

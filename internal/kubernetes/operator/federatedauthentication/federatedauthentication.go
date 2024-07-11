@@ -43,12 +43,9 @@ type AtlasFederatedAuthBuildRequest struct {
 
 const credSecretFormat = "%s-credentials"
 
-// BuildAtlasFederatedAuth builds an AtlasFederatedAuth resource based on the provided build request.
+// BuildAtlasFederatedAuth builds an AtlasFederatedAuth resource
 func BuildAtlasFederatedAuth(br *AtlasFederatedAuthBuildRequest) (*akov2.AtlasFederatedAuth, error) {
-	orgConfig, err := br.FederationAuthenticationStore.AtlasFederatedAuthOrgConfig(&atlasv2.GetConnectedOrgConfigApiParams{
-		FederationSettingsId: *br.FederatedSettings.Id,
-		OrgId:                br.OrgID,
-	})
+	orgConfig, err := getOrgConfig(br)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get org config: %w", err)
 	}
@@ -73,24 +70,22 @@ func BuildAtlasFederatedAuth(br *AtlasFederatedAuthBuildRequest) (*akov2.AtlasFe
 	return federatedAuth, nil
 }
 
-// getAtlasFederatedAuthSpec returns the spec for AtlasFederatedAuth based on the provided build request and org config.
-func getAtlasFederatedAuthSpec(br AtlasFederatedAuthBuildRequest, orgConfig *atlasv2.ConnectedOrgConfig) akov2.AtlasFederatedAuthSpec {
-	var domainAllowList []string
-	if orgConfig.DomainAllowList != nil {
-		domainAllowList = *orgConfig.DomainAllowList
-	}
+// getOrgConfig retrieves the organization configuration for the AtlasFederatedAuth resource.
+func getOrgConfig(br *AtlasFederatedAuthBuildRequest) (*atlasv2.ConnectedOrgConfig, error) {
+	return br.FederationAuthenticationStore.AtlasFederatedAuthOrgConfig(&atlasv2.GetConnectedOrgConfigApiParams{
+		FederationSettingsId: *br.FederatedSettings.Id,
+		OrgId:                br.OrgID,
+	})
+}
 
-	var postAuthRoleGrants []string
-	if orgConfig.PostAuthRoleGrants != nil {
-		postAuthRoleGrants = *orgConfig.PostAuthRoleGrants
-	}
+// getAtlasFederatedAuthSpec returns the spec for AtlasFederatedAuth
+func getAtlasFederatedAuthSpec(br AtlasFederatedAuthBuildRequest, orgConfig *atlasv2.ConnectedOrgConfig) akov2.AtlasFederatedAuthSpec {
+	domainAllowList := getDomainAllowList(orgConfig)
+	postAuthRoleGrants := getPostAuthRoleGrants(orgConfig)
 
 	idp := getIdentityProvider(br.FederationAuthenticationStore, *br.FederatedSettings.Id, *br.FederatedSettings.IdentityProviderId)
 
-	secretRef := &akov2common.ResourceRefNamespaced{}
-	if br.IncludeSecret {
-		secretRef.Name = resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, br.ProjectName), br.Dictionary)
-	}
+	secretRef := getSecretRef(br)
 
 	authSpec := akov2.AtlasFederatedAuthSpec{
 		Enabled:                  true,
@@ -102,45 +97,66 @@ func getAtlasFederatedAuthSpec(br AtlasFederatedAuthBuildRequest, orgConfig *atl
 	}
 
 	if orgConfig.RoleMappings != nil {
-		var roleMappings []akov2.RoleMapping
-		for _, mapping := range *orgConfig.RoleMappings {
-			roleMappings = append(roleMappings, getRoleMappings(mapping, br.ProjectStore)...)
-		}
-		authSpec.RoleMappings = roleMappings
+		authSpec.RoleMappings = getRoleMappings(orgConfig.RoleMappings, br.ProjectStore)
 	}
 
 	return authSpec
 }
 
-// getRoleMappings converts AuthFederationRoleMapping to a slice of RoleMapping.
-func getRoleMappings(mapping atlasv2.AuthFederationRoleMapping, projectStore store.OperatorProjectStore) []akov2.RoleMapping {
+// getDomainAllowList retrieves the domain allow list from the organization configuration.
+func getDomainAllowList(orgConfig *atlasv2.ConnectedOrgConfig) []string {
+	if orgConfig.DomainAllowList != nil {
+		return *orgConfig.DomainAllowList
+	}
+	return nil
+}
+
+// getPostAuthRoleGrants retrieves the post-auth role grants from the organization configuration.
+func getPostAuthRoleGrants(orgConfig *atlasv2.ConnectedOrgConfig) []string {
+	if orgConfig.PostAuthRoleGrants != nil {
+		return *orgConfig.PostAuthRoleGrants
+	}
+	return nil
+}
+
+// getSecretRef generates a secret reference for the AtlasFederatedAuthSpec.
+func getSecretRef(br AtlasFederatedAuthBuildRequest) *akov2common.ResourceRefNamespaced {
+	secretRef := &akov2common.ResourceRefNamespaced{}
+	if br.IncludeSecret {
+		secretRef.Name = resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, br.ProjectName), br.Dictionary)
+	}
+	return secretRef
+}
+
+// getRoleMappings converts AuthFederationRoleMapping to RoleMapping.
+func getRoleMappings(mappings *[]atlasv2.AuthFederationRoleMapping, projectStore store.OperatorProjectStore) []akov2.RoleMapping {
+	var roleMappings []akov2.RoleMapping
+	for _, mapping := range *mappings {
+		roleMappings = append(roleMappings, akov2.RoleMapping{
+			ExternalGroupName: mapping.ExternalGroupName,
+			RoleAssignments:   getRoleAssignments(mapping.RoleAssignments, projectStore),
+		})
+	}
+	return roleMappings
+}
+
+// getRoleAssignments converts RoleAssignments from AuthFederationRoleMapping.
+func getRoleAssignments(assignments *[]atlasv2.RoleAssignment, projectStore store.OperatorProjectStore) []akov2.RoleAssignment {
 	var roleAssignments []akov2.RoleAssignment
-	if mapping.RoleAssignments != nil {
-		for _, ra := range *mapping.RoleAssignments {
+	if assignments != nil {
+		for _, ra := range *assignments {
+			roleAssignment := akov2.RoleAssignment{Role: *ra.Role}
 			if ra.GroupId != nil && *ra.GroupId != "" {
-				project, err := projectStore.Project(*ra.GroupId)
-				if err != nil {
+				if project, err := projectStore.Project(*ra.GroupId); err == nil {
+					roleAssignment.ProjectName = project.Name
+				} else {
 					log.Printf("failed to get project name for GroupId %s: %v", *ra.GroupId, err)
-					continue
 				}
-				roleAssignments = append(roleAssignments, akov2.RoleAssignment{
-					Role:        *ra.Role,
-					ProjectName: project.Name,
-				})
-			} else {
-				roleAssignments = append(roleAssignments, akov2.RoleAssignment{
-					Role: *ra.Role,
-				})
 			}
+			roleAssignments = append(roleAssignments, roleAssignment)
 		}
 	}
-
-	return []akov2.RoleMapping{
-		{
-			ExternalGroupName: mapping.ExternalGroupName,
-			RoleAssignments:   roleAssignments,
-		},
-	}
+	return roleAssignments
 }
 
 // getIdentityProvider retrieves the identity provider for the given federation settings and identity provider ID.

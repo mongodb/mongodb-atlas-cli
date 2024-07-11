@@ -52,6 +52,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/networking"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/organizations"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/performanceadvisor"
+	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/privateendpoints"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/processes"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/projects"
@@ -248,8 +249,12 @@ Use the --help flag with any command for more info on that command.`,
 		federatedauthentication.Builder(),
 	)
 
+	plugins := plugin.GetAllValidPlugins(rootCmd.Commands())
+
+	rootCmd.AddCommand(pluginCmd.Builder(plugins))
+
 	// add plugin commands to rootCmd
-	for _, plugin := range plugin.GetAllValidPlugins(rootCmd.Commands()) {
+	for _, plugin := range plugins {
 		rootCmd.AddCommand(plugin.GetCobraCommands()...)
 	}
 
@@ -307,6 +312,7 @@ func shouldCheckCredentials(cmd *cobra.Command) AuthRequirements {
 		fmt.Sprintf("%s %s", atlas, "whoami"):      NoAuth,       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "setup"):       NoAuth,       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "register"):    NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "plugin"):      NoAuth,       // plugin functionality requires no authentication
 		fmt.Sprintf("%s %s", atlas, "quickstart"):  NoAuth,       // command supports login
 		fmt.Sprintf("%s %s", atlas, "deployments"): OptionalAuth, // command supports local and Atlas
 	}

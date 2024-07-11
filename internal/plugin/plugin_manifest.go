@@ -15,12 +15,12 @@
 package plugin
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
-	"errors"
 
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
@@ -34,7 +34,7 @@ type Manifest struct {
 	Commands    map[string]struct {
 		Description string `yaml:"description,omitempty"`
 	} `yaml:"commands,omitempty"`
-	BinaryPath 	string
+	BinaryPath string
 }
 
 func (p *Manifest) IsValid() (bool, []error) {
@@ -78,13 +78,13 @@ func getManifestsFromPluginDirectory(pluginDirectory string) ([]*Manifest, error
 		return nil, err
 	}
 
-	var manifests []*Manifest
+	manifests := make([]*Manifest, 0, len(files))
 
 	for _, directory := range files {
 		if !directory.IsDir() {
 			continue
 		}
-		
+
 		pluginDirectoryPath := fmt.Sprintf("%s/%s", pluginDirectory, directory.Name())
 
 		manifestFileData, err := getManifestFileBytes(pluginDirectoryPath)
@@ -115,12 +115,12 @@ func getManifestsFromPluginDirectory(pluginDirectory string) ([]*Manifest, error
 			logPluginWarning(err.Error())
 			continue
 		}
-		
+
 		pluginManifest.BinaryPath = binaryPath
 
 		manifests = append(manifests, pluginManifest)
 	}
-	
+
 	return manifests, nil
 }
 
@@ -159,30 +159,31 @@ func getManifestFileBytes(pluginDirectoryPath string) ([]byte, error) {
 
 func getUniqueManifests(manifests []*Manifest, existingCommands []*cobra.Command) ([]*Manifest, []*Manifest) {
 	existingCommandsMap := make(map[string]bool)
-	var uniqueManifests []*Manifest
+	uniqueManifests := make([]*Manifest, 0, len(manifests))
 	var duplicateManifests []*Manifest
 
 	for _, cmd := range existingCommands {
 		existingCommandsMap[cmd.Name()] = true
 	}
+	// add reserved keyword for command plugin
+	existingCommandsMap["plugin"] = true
 
 	for _, manifest := range manifests {
 		if hasDuplicateCommand(manifest, existingCommandsMap) {
 			duplicateManifests = append(duplicateManifests, manifest)
 			continue
 		}
-		for cmdName, _ := range manifest.Commands {
+		for cmdName := range manifest.Commands {
 			existingCommandsMap[cmdName] = true
 		}
 		uniqueManifests = append(uniqueManifests, manifest)
 	}
 
-
 	return uniqueManifests, duplicateManifests
 }
 
 func hasDuplicateCommand(manifest *Manifest, existingCommandsMap map[string]bool) bool {
-	for cmdName, _ := range manifest.Commands {
+	for cmdName := range manifest.Commands {
 		if existingCommandsMap[cmdName] {
 			return true
 		}

@@ -51,7 +51,7 @@ func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 	}
 
 	// Convert manifests to plugins
-	var plugins []*Plugin = make([]*Plugin, 0, len(manifests))
+	plugins := make([]*Plugin, 0, len(manifests))
 	for _, manifest := range manifests {
 		plugins = append(plugins, createPluginFromManifest(manifest))
 	}
@@ -63,6 +63,7 @@ type Plugin struct {
 	Name        string
 	Description string
 	BinaryPath  string
+	Version     string
 	Commands    []*Command
 }
 
@@ -88,7 +89,7 @@ func (p *Plugin) GetCobraCommands() []*cobra.Command {
 		command := &cobra.Command{
 			Use:   command.Name,
 			Short: command.Description,
-			RunE: p.Run,
+			RunE:  p.Run,
 		}
 
 		commands = append(commands, command)
@@ -102,6 +103,7 @@ func createPluginFromManifest(manifest *Manifest) *Plugin {
 		Name:        manifest.Name,
 		Description: manifest.Description,
 		BinaryPath:  manifest.BinaryPath,
+		Version:     manifest.Version,
 		Commands:    make([]*Command, 0, len(manifest.Commands)),
 	}
 

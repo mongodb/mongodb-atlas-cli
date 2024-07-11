@@ -41,8 +41,6 @@ var (
 		"5.0": {"ubuntu2404"},
 	}
 
-	newOsUse50Version = []string{"rhel80", "rhel90"} //TODO: CLOUDP-261224 Remove this once mongosh is added to 8.0
-
 	oses = []string{
 		"centos8",
 		"rhel9",
@@ -160,31 +158,28 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 	}
 
 	for _, os := range oses {
-		t := &shrub.Task{
-			Name: "pkg_test_atlascli_meta_docker_" + os,
+		for _, sv := range serverVersions {
+			if slices.Contains(unsupportedNewOsByVersion[sv], newOs[os]) {
+				continue
+			}
+
+			t := &shrub.Task{
+				Name: "pkg_test_atlascli_meta_docker_" + sv + "_" + os,
+			}
+			t = t.Dependency(shrub.TaskDependency{
+				Name:    "package_goreleaser",
+				Variant: "goreleaser_atlascli_snapshot",
+			}).Function("clone").
+				FunctionWithVars("docker build meta", map[string]string{
+					"image":          postPkgImg[os],
+					"server_version": sv,
+				})
+			c.Tasks = append(c.Tasks, t)
+			v.AddTasks(t.Name)
 		}
-		t = t.Dependency(shrub.TaskDependency{
-			Name:    "package_goreleaser",
-			Variant: "goreleaser_atlascli_snapshot",
-		}).Function("clone").
-			FunctionWithVars("docker build meta", map[string]string{
-				"image":          postPkgImg[os],
-				"server_version": getServerVersionForOs(os),
-			})
-		c.Tasks = append(c.Tasks, t)
-		v.AddTasks(t.Name)
 	}
 
 	c.Variants = append(c.Variants, v)
-}
-
-func getServerVersionForOs(os string) string {
-	defaultServer := "8.0"
-	if slices.Contains(unsupportedNewOsByVersion[defaultServer], newOs[os]) || slices.Contains(newOsUse50Version, newOs[os]) {
-		return "5.0"
-	}
-
-	return defaultServer
 }
 
 const buildNamePrefix = "generated_release_atlascli_publish_"

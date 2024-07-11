@@ -17,7 +17,6 @@
 package generate
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 
@@ -89,14 +88,13 @@ func TestPostPkgMetaTasks(t *testing.T) {
 			// find the key from the image
 			for key, value := range postPkgImg {
 				if value == image {
-					fmt.Printf("distro: %s, serverVersion: %s newOskey: %s\n", key, serverVersion, newOs[key])
 					assert.NotContains(t, unsupportedNewOsByVersion[serverVersion], newOs[key])
 				}
 			}
 		}
 	}
 	assert.Len(t, c.Variants, 1)
-	assert.Len(t, c.Tasks, 7)
+	assert.Len(t, c.Tasks, 24)
 }
 
 func TestRepoTasks(t *testing.T) {
@@ -110,8 +108,6 @@ func TestRepoTasks(t *testing.T) {
 			}
 			image := c.Vars["image"]
 			serverVersion := c.Vars["server_version"]
-			fmt.Println("distro: ", image, "serverVersion: ", serverVersion)
-
 			// ensure unsupportedNewOs is not used
 			assert.NotContains(t, unsupportedNewOsByVersion[serverVersion], image)
 			assert.NotEmpty(t, image)

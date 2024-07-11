@@ -598,7 +598,10 @@ func (opts *SetupOpts) runLocal(ctx context.Context) error {
 	}
 
 	if err := opts.createLocalDeployment(ctx); err != nil {
-		_ = opts.RemoveLocal(ctx)
+		// in case the deployment already exists we shouldn't delete it
+		if !strings.Contains(err.Error(), "deployment already exists and is currently in") {
+			_ = opts.RemoveLocal(ctx)
+		}
 		return err
 	}
 

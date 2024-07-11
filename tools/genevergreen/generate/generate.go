@@ -16,6 +16,7 @@ package generate
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/evergreen-ci/shrub"
@@ -33,7 +34,7 @@ var (
 		"8.0",
 	}
 
-	unsupportedOsByVersion = map[string][]string{
+	unsupportedNewOsByVersion = map[string][]string{
 		"8.0": {"debian11"},
 		"7.0": {"ubuntu2404"},
 		"6.0": {"ubuntu2404"},
@@ -160,13 +161,23 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 			Variant: "goreleaser_atlascli_snapshot",
 		}).Function("clone").
 			FunctionWithVars("docker build meta", map[string]string{
-				"image": postPkgImg[os],
+				"image":          postPkgImg[os],
+				"server_version": getServerVersionForOs(os),
 			})
 		c.Tasks = append(c.Tasks, t)
 		v.AddTasks(t.Name)
 	}
 
 	c.Variants = append(c.Variants, v)
+}
+
+func getServerVersionForOs(os string) string {
+	defaultServer := "8.0"
+	if slices.Contains(unsupportedNewOsByVersion[defaultServer], newOs[os]) {
+		return "5.0"
+	}
+
+	return defaultServer
 }
 
 const buildNamePrefix = "generated_release_atlascli_publish_"

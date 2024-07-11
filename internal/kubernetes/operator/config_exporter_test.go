@@ -417,7 +417,6 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 	})
 }
 func TestExportFederatedAuth(t *testing.T) {
-
 	t.Run("should return exported resources", func(t *testing.T) {
 		ctl := gomock.NewController(t)
 		defer ctl.Finish()

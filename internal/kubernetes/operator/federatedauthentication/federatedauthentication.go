@@ -24,7 +24,6 @@ import (
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	"go.mongodb.org/atlas-sdk/v20231115014/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -36,7 +35,7 @@ type AtlasFederatedAuthBuildRequest struct {
 	ProjectName                   string
 	OrgID                         string
 	ProjectID                     string
-	FederatedSettings             *admin.OrgFederationSettings
+	FederatedSettings             *atlasv2.OrgFederationSettings
 	Version                       string
 	TargetNamespace               string
 	Dictionary                    map[string]string
@@ -46,7 +45,7 @@ const credSecretFormat = "%s-credentials"
 
 // BuildAtlasFederatedAuth builds an AtlasFederatedAuth resource based on the provided build request.
 func BuildAtlasFederatedAuth(br *AtlasFederatedAuthBuildRequest) (*akov2.AtlasFederatedAuth, error) {
-	orgConfig, err := br.FederationAuthenticationStore.AtlasFederatedAuthOrgConfig(&admin.GetConnectedOrgConfigApiParams{
+	orgConfig, err := br.FederationAuthenticationStore.AtlasFederatedAuthOrgConfig(&atlasv2.GetConnectedOrgConfigApiParams{
 		FederationSettingsId: *br.FederatedSettings.Id,
 		OrgId:                br.OrgID,
 	})
@@ -114,7 +113,7 @@ func getAtlasFederatedAuthSpec(br AtlasFederatedAuthBuildRequest, orgConfig *atl
 }
 
 // getRoleMappings converts AuthFederationRoleMapping to a slice of RoleMapping.
-func getRoleMappings(mapping admin.AuthFederationRoleMapping, projectStore store.OperatorProjectStore) []akov2.RoleMapping {
+func getRoleMappings(mapping atlasv2.AuthFederationRoleMapping, projectStore store.OperatorProjectStore) []akov2.RoleMapping {
 	var roleAssignments []akov2.RoleAssignment
 	if mapping.RoleAssignments != nil {
 		for _, ra := range *mapping.RoleAssignments {
@@ -145,7 +144,7 @@ func getRoleMappings(mapping admin.AuthFederationRoleMapping, projectStore store
 }
 
 // getIdentityProvider retrieves the identity provider for the given federation settings and identity provider ID.
-func getIdentityProvider(store store.FederationAuthenticationStore, federationSettingsID, identityProviderID string) *admin.FederationIdentityProvider {
+func getIdentityProvider(store store.FederationAuthenticationStore, federationSettingsID, identityProviderID string) *atlasv2.FederationIdentityProvider {
 	idp, err := store.AtlasIdentityProvider(&atlasv2.GetIdentityProviderApiParams{
 		FederationSettingsId: federationSettingsID,
 		IdentityProviderId:   identityProviderID,

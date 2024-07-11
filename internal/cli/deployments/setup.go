@@ -59,6 +59,7 @@ const (
 
 var (
 	errCancel                   = errors.New("the setup was cancelled")
+	ErrDeploymentExists         = errors.New("deployment already exists")
 	errMustBeInt                = errors.New("you must specify an integer")
 	errPortOutOfRange           = errors.New("you must specify a port within the range 1..65535")
 	errPortNotAvailable         = errors.New("the port is unavailable")
@@ -278,7 +279,7 @@ func (opts *SetupOpts) validateLocalDeploymentsSettings(containers []container.C
 	for _, c := range containers {
 		for _, n := range c.Names {
 			if n == mongodContainerName {
-				return fmt.Errorf("\"%s\" deployment already exists and is currently in \"%s\" state", opts.DeploymentName, c.State)
+				return fmt.Errorf("%w: \"%s\", state:\"%s\"", ErrDeploymentExists, opts.DeploymentName, c.State)
 			}
 		}
 	}
@@ -598,7 +599,10 @@ func (opts *SetupOpts) runLocal(ctx context.Context) error {
 	}
 
 	if err := opts.createLocalDeployment(ctx); err != nil {
-		_ = opts.RemoveLocal(ctx)
+		// in case the deployment already exists we shouldn't delete it
+		if !errors.Is(err, ErrDeploymentExists) {
+			_ = opts.RemoveLocal(ctx)
+		}
 		return err
 	}
 

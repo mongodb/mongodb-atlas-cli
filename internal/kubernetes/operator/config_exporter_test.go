@@ -416,7 +416,7 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 		)
 	})
 }
-func TestExportFederatedAuth(t *testing.T) {
+func Test_ExportFederatedAuth(t *testing.T) {
 	t.Run("should return exported resources", func(t *testing.T) {
 		ctl := gomock.NewController(t)
 		defer ctl.Finish()
@@ -437,8 +437,10 @@ func TestExportFederatedAuth(t *testing.T) {
 
 		// Constructing federationSettings
 		federationSettings := &admin.OrgFederationSettings{
-			Id:                 pointer.Get("TestFederationSettingID"),
-			IdentityProviderId: &testIdentityProviderID,
+			Id:                     pointer.Get("TestFederationSettingID"),
+			IdentityProviderId:     &testIdentityProviderID,
+			IdentityProviderStatus: pointer.Get("ACTIVE"),
+			HasRoleMappings:        pointer.Get(true),
 		}
 
 		// Constructing AuthRoleMappings
@@ -577,5 +579,28 @@ func TestExportFederatedAuth(t *testing.T) {
 			expected,
 			resources,
 		)
+	})
+	t.Run("should return noting because no IDP", func(t *testing.T) {
+		ctl := gomock.NewController(t)
+		defer ctl.Finish()
+		atlasOperatorGenericStore := mocks.NewMockOperatorGenericStore(ctl)
+		ce := NewConfigExporter(atlasOperatorGenericStore, nil, projectID, orgID).
+			WithTargetNamespace("test").
+			WithTargetOperatorVersion("2.3.0")
+
+		// Constructing federationSettings
+		federationSettings := &admin.OrgFederationSettings{
+			Id:                     pointer.Get("TestFederationSettingID"),
+			IdentityProviderStatus: pointer.Get("INACTIVE"),
+			HasRoleMappings:        pointer.Get(false),
+		}
+
+		atlasOperatorGenericStore.EXPECT().FederationSetting(&admin.GetFederationSettingsApiParams{OrgId: orgID}).
+			Return(federationSettings, nil)
+
+		resources, err := ce.exportAtlasFederatedAuth("my-project")
+		require.NoError(t, err)
+
+		assert.Empty(t, resources)
 	})
 }

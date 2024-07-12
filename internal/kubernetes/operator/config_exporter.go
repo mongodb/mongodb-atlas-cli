@@ -410,10 +410,16 @@ func (e *ConfigExporter) exportAtlasStreamProcessing(projectName string) ([]runt
 
 func (e *ConfigExporter) exportAtlasFederatedAuth(projectName string) ([]runtime.Object, error) {
 	result := make([]runtime.Object, 0)
+	// Gets the FederationAuthSetting
 	federatedAuthentificationSetting, err := e.dataProvider.FederationSetting(&admin.GetFederationSettingsApiParams{OrgId: e.orgID})
 	if err != nil {
 		return nil, err
 	}
+	// Does not have an IdenityProvider set then no need to geenrate
+	if federatedAuthentificationSetting.IdentityProviderStatus == nil || *federatedAuthentificationSetting.IdentityProviderStatus == "INACTIVE" {
+		return result, err
+	}
+	// Does have an IdentityProvider and then we can generate the config
 	federatedAuthentification, err := federatedauthentication.BuildAtlasFederatedAuth(&federatedauthentication.AtlasFederatedAuthBuildRequest{
 		IncludeSecret:                 e.includeSecretsData,
 		FederationAuthenticationStore: e.dataProvider,
@@ -426,9 +432,6 @@ func (e *ConfigExporter) exportAtlasFederatedAuth(projectName string) ([]runtime
 		ProjectName:                   projectName,
 		FederatedSettings:             federatedAuthentificationSetting,
 	})
-	if err != nil {
-		return nil, err
-	}
 	result = append(result, federatedAuthentification)
 	return result, err
 }

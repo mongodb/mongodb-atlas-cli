@@ -25,8 +25,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
-func TestList_Run(t *testing.T) {
-	plugins := []*plugin.Plugin{
+func getTestPlugins() []*plugin.Plugin {
+	return []*plugin.Plugin{
 		{
 			Name:        "plugin1",
 			Description: "plugin1 description",
@@ -46,6 +46,10 @@ func TestList_Run(t *testing.T) {
 			},
 		},
 	}
+}
+
+func TestList_Run(t *testing.T) {
+	plugins := getTestPlugins()
 
 	listOpts := &ListOps{
 		plugins: plugins,
@@ -58,6 +62,8 @@ func TestList_Run(t *testing.T) {
 	if err := listOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
 
-	test.VerifyOutputTemplate(t, listTemplate, plugins)
+func TestList_Template(t *testing.T) {
+	test.VerifyOutputTemplate(t, listTemplate, getTestPlugins())
 }

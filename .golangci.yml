@@ -47,6 +47,8 @@ linters-settings:
         alias: kmsv1
       - pkg: github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/config
         alias: cliconfig
+      - pkg: github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin
+        alias: pluginCmd
   misspell:
     locale: US
     ignore-words:

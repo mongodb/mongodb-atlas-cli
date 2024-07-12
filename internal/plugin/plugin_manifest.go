@@ -19,9 +19,9 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -54,7 +54,7 @@ func (p *Manifest) IsValid() (bool, []error) {
 	}
 	if p.Version == "" {
 		errorsList = append(errorsList, fmt.Errorf(errorMessage, "version"))
-	} else if valid, _ := regexp.MatchString(`^\d+\.\d+\.\d+$`, p.Version); !valid {
+	} else if _, err := semver.NewVersion(p.Version); err != nil {
 		errorsList = append(errorsList, errors.New(`value in field "version" is not a valid semantic version`))
 	}
 

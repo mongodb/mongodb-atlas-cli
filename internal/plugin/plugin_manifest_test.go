@@ -61,7 +61,7 @@ func TestManifest_IsValid(t *testing.T) {
 			manifest: Manifest{
 				Name:    "Kubernetes",
 				Binary:  "kubernetes",
-				Version: "1.3",
+				Version: "version1.3",
 				Commands: map[string]ManifestCommand{
 					"kubernetes": {Description: "the kubernetes command"},
 				},

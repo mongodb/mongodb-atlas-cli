@@ -20,6 +20,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func RegisterCommands(rootCmd *cobra.Command) {
+	plugins := plugin.GetAllValidPlugins(rootCmd.Commands())
+
+	rootCmd.AddCommand(Builder(plugins))
+
+	for _, plugin := range plugins {
+		rootCmd.AddCommand(plugin.GetCobraCommands()...)
+	}
+}
+
 func Builder(plugins []*plugin.Plugin) *cobra.Command {
 	const use = "plugin"
 	cmd := &cobra.Command{

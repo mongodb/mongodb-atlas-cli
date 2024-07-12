@@ -52,7 +52,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/networking"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/organizations"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/performanceadvisor"
-	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/privateendpoints"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/processes"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/projects"
@@ -67,7 +67,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/latestrelease"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/sighandle"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
@@ -249,14 +248,7 @@ Use the --help flag with any command for more info on that command.`,
 		federatedauthentication.Builder(),
 	)
 
-	plugins := plugin.GetAllValidPlugins(rootCmd.Commands())
-
-	rootCmd.AddCommand(pluginCmd.Builder(plugins))
-
-	// add plugin commands to rootCmd
-	for _, plugin := range plugins {
-		rootCmd.AddCommand(plugin.GetCobraCommands()...)
-	}
+	plugin.RegisterCommands(rootCmd)
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)
 	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)

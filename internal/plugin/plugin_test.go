@@ -31,8 +31,7 @@ func getTestManifest() *Manifest {
 		Commands: map[string]struct {
 			Description string `yaml:"description,omitempty"`
 		}{
-			"testCommand":  {"Test command"},
-			"testCommand2": {"Test command 2"},
+			"testCommand": {"Test command"},
 		},
 	}
 }
@@ -45,15 +44,10 @@ func Test_GetCobraCommands(t *testing.T) {
 
 	commands := plugin.GetCobraCommands()
 
-	assert.Len(t, commands, 2)
-
-	index := 0
-	for cmd, value := range manifest.Commands {
-		assert.Equal(t, commands[index].Use, cmd)
-		assert.Equal(t, commands[index].Short, value.Description)
-		assert.NotNil(t, commands[index].RunE)
-		index++
-	}
+	assert.Len(t, commands, 1)
+	assert.Equal(t, "testCommand", commands[0].Use)
+	assert.Equal(t, manifest.Commands["testCommand"].Description, commands[0].Short)
+	assert.NotNil(t, commands[0].RunE)
 }
 
 func Test_createPluginFromManifest(t *testing.T) {

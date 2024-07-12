@@ -82,8 +82,7 @@ func getK8SEntitie(data []byte) ([]runtime.Object, error) {
 	}
 	return result, nil
 }
-func TIP(t *testing.T) {
-
+func TestFederatedAuthTest(t *testing.T) {
 	req := require.New(t)
 
 	cliPath, err := e2e.AtlasCLIBin()
@@ -247,7 +246,7 @@ func refPj(name, namespace string, labels map[string]string) *akov2.AtlasProject
 		Spec: akov2.AtlasProjectSpec{
 			Name: name,
 			ConnectionSecret: &akov2common.ResourceRefNamespaced{
-				Name: resources.NormalizeAtlasName(name+"-credentials", dictionary),
+				Name: "",
 			},
 			Settings: &akov2.ProjectSettings{
 				IsCollectDatabaseSpecificsStatisticsEnabled: pointer.Get(true),
@@ -265,21 +264,21 @@ func refPj(name, namespace string, labels map[string]string) *akov2.AtlasProject
 					Enabled: pointer.Get(false),
 					Valid:   pointer.Get(false),
 					SecretRef: akov2common.ResourceRefNamespaced{
-						Name:      resources.NormalizeAtlasName(name+"-aws-credentials", dictionary),
+						Name:      "resources.NormalizeAtlasName(name+, dictionary)",
 						Namespace: namespace,
 					},
 				},
 				AzureKeyVault: akov2.AzureKeyVault{
 					Enabled: pointer.Get(false),
 					SecretRef: akov2common.ResourceRefNamespaced{
-						Name:      resources.NormalizeAtlasName(name+"-azure-credentials", dictionary),
+						Name:      " resources.NormalizeAtlasName(name+, dictionary)",
 						Namespace: namespace,
 					},
 				},
 				GoogleCloudKms: akov2.GoogleCloudKms{
 					Enabled: pointer.Get(false),
 					SecretRef: akov2common.ResourceRefNamespaced{
-						Name:      resources.NormalizeAtlasName(name+"-gcp-credentials", dictionary),
+						Name:      "resources.NormalizeAtlasName(name+, dictionary)",
 						Namespace: namespace,
 					},
 				},

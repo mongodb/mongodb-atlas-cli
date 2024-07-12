@@ -109,7 +109,7 @@ nfpms:
   meta: true
   overrides:
     deb:
-      dependencies:
+      recommends:
         - docker-ce
         - docker-ce-cli
     rpm:

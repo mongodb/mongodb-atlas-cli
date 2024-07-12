@@ -581,7 +581,7 @@ func Test_ExportFederatedAuth(t *testing.T) {
 			resources,
 		)
 	})
-	t.Run("should return noting because no IDP", func(t *testing.T) {
+	t.Run("should return nothing because no IDP", func(t *testing.T) {
 		ctl := gomock.NewController(t)
 		defer ctl.Finish()
 		atlasOperatorGenericStore := mocks.NewMockOperatorGenericStore(ctl)

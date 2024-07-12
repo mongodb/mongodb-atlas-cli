@@ -36,9 +36,7 @@ func TestManifest_IsValid(t *testing.T) {
 				Description: "Kubernetes plugin",
 				Binary:      "kubernetes",
 				Version:     "1.2.3",
-				Commands: map[string]struct {
-					Description string `yaml:"description,omitempty"`
-				}{
+				Commands: map[string]ManifestCommand{
 					"kubernetes": {Description: "the kubernetes command"},
 				},
 			},
@@ -51,9 +49,7 @@ func TestManifest_IsValid(t *testing.T) {
 				Description: "Kubernetes plugin",
 				Binary:      "kubernetes",
 				Version:     "1.2.3",
-				Commands: map[string]struct {
-					Description string `yaml:"description,omitempty"`
-				}{
+				Commands: map[string]ManifestCommand{
 					"kubernetes": {Description: "the kubernetes command"},
 				},
 			},
@@ -66,9 +62,7 @@ func TestManifest_IsValid(t *testing.T) {
 				Name:    "Kubernetes",
 				Binary:  "kubernetes",
 				Version: "1.3",
-				Commands: map[string]struct {
-					Description string `yaml:"description,omitempty"`
-				}{
+				Commands: map[string]ManifestCommand{
 					"kubernetes": {Description: "the kubernetes command"},
 				},
 			},
@@ -90,9 +84,7 @@ func TestManifest_IsValid(t *testing.T) {
 			manifest: Manifest{
 				Name:    "Kubernetes",
 				Version: "1.2.3",
-				Commands: map[string]struct {
-					Description string `yaml:"description,omitempty"`
-				}{
+				Commands: map[string]ManifestCommand{
 					"kubernetes": {Description: "the kubernetes command"},
 				},
 			},
@@ -105,9 +97,7 @@ func TestManifest_IsValid(t *testing.T) {
 				Description: "Kubernetes plugin",
 				Binary:      "kubernetes",
 				Version:     "1.2.3",
-				Commands: map[string]struct {
-					Description string `yaml:"description,omitempty"`
-				}{
+				Commands: map[string]ManifestCommand{
 					"kubernetes":  {},
 					"kubernetes2": {},
 				},
@@ -144,9 +134,7 @@ func Test_getUniqueManifests(t *testing.T) {
 			Description: "this is the description of the deployments plugin",
 			Version:     "2.1.76",
 			Binary:      "deployments",
-			Commands: map[string]struct {
-				Description string `yaml:"description,omitempty"`
-			}{
+			Commands: map[string]ManifestCommand{
 				"deployments":  {Description: "this is the deployments command"},
 				"deployments2": {Description: "this is the second description"},
 				"command":      {Description: "here is another command"},
@@ -157,9 +145,7 @@ func Test_getUniqueManifests(t *testing.T) {
 			Description: "Another test plugin",
 			Binary:      "plugin2",
 			Version:     "1.0.0",
-			Commands: map[string]struct {
-				Description string `yaml:"description,omitempty"`
-			}{
+			Commands: map[string]ManifestCommand{
 				"existingCmd1": {Description: "A duplicate command"},
 				"newCommand":   {Description: "This command does not exist yet"},
 			},
@@ -169,9 +155,7 @@ func Test_getUniqueManifests(t *testing.T) {
 			Description: "this is the description of the kubernetes plugin",
 			Version:     "1.2.3",
 			Binary:      "binary",
-			Commands: map[string]struct {
-				Description string `yaml:"description,omitempty"`
-			}{
+			Commands: map[string]ManifestCommand{
 				"kubernetes": {Description: "this is the kubernetes command"},
 			},
 		},
@@ -207,9 +191,7 @@ func Test_hasDuplicateCommand(t *testing.T) {
 				Description: "this is the description of the deployments plugin",
 				Version:     "2.1.76",
 				Binary:      "deployments",
-				Commands: map[string]struct {
-					Description string `yaml:"description,omitempty"`
-				}{
+				Commands: map[string]ManifestCommand{
 					"deployments":  {Description: "this is the deployments command"},
 					"deployments2": {Description: "this is the second description"},
 					"command":      {Description: "here is another command"},
@@ -225,9 +207,7 @@ func Test_hasDuplicateCommand(t *testing.T) {
 				Description: "this is the description of the kubernetes plugin",
 				Version:     "1.2.3",
 				Binary:      "binary",
-				Commands: map[string]struct {
-					Description string `yaml:"description,omitempty"`
-				}{
+				Commands: map[string]ManifestCommand{
 					"kubernetes":   {Description: "this is the kubernetes command"},
 					"existingCmd2": {Description: "this command already exsists"},
 				},

@@ -28,9 +28,7 @@ func getTestManifest() *Manifest {
 		Description: "Test plugin description",
 		BinaryPath:  "/plugins/testPlugin/binary",
 		Version:     "1.2.3",
-		Commands: map[string]struct {
-			Description string `yaml:"description,omitempty"`
-		}{
+		Commands: map[string]ManifestCommand{
 			"testCommand": {"Test command"},
 		},
 	}

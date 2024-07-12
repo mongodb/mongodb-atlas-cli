@@ -26,15 +26,17 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Manifest struct {
-	Name        string `yaml:"name,omitempty"`
+type ManifestCommand struct {
 	Description string `yaml:"description,omitempty"`
-	Binary      string `yaml:"binary,omitempty"`
-	Version     string `yaml:"version,omitempty"`
-	Commands    map[string]struct {
-		Description string `yaml:"description,omitempty"`
-	} `yaml:"commands,omitempty"`
-	BinaryPath string
+}
+
+type Manifest struct {
+	Name        string                     `yaml:"name,omitempty"`
+	Description string                     `yaml:"description,omitempty"`
+	Binary      string                     `yaml:"binary,omitempty"`
+	Version     string                     `yaml:"version,omitempty"`
+	Commands    map[string]ManifestCommand `yaml:"commands,omitempty"`
+	BinaryPath  string
 }
 
 func (p *Manifest) IsValid() (bool, []error) {

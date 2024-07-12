@@ -54,7 +54,7 @@ const (
 	cancelSettings     = "cancel"
 	skipConnect        = "skip"
 	spinnerSpeed       = 100 * time.Millisecond
-	shortStepCount     = 2
+	steps              = 3
 )
 
 var (
@@ -115,24 +115,11 @@ func (opts *SetupOpts) logStepStarted(msg string, currentStep int, totalSteps in
 	opts.start()
 }
 
-func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, currentStep int, steps int) error {
-	opts.logStepStarted("Downloading the MongoDB binaries to your local environment...", currentStep, steps)
+func (opts *SetupOpts) downloadImage(ctx context.Context, currentStep int, steps int) error {
+	opts.logStepStarted("Downloading the latest MongoDB image to your local environment...", currentStep, steps)
 	defer opts.stop()
 
-	var mongodImages []container.Image
-	var err error
-
-	if mongodImages, err = opts.ContainerEngine.ImageList(ctx, opts.MongodDockerImageName()); err != nil {
-		return err
-	}
-
-	if len(mongodImages) == 0 {
-		if err = opts.ContainerEngine.ImagePull(ctx, opts.MongodDockerImageName()); err != nil {
-			return err
-		}
-	}
-
-	return nil
+	return opts.ContainerEngine.ImagePull(ctx, opts.MongodDockerImageName())
 }
 
 func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, steps int) error {
@@ -147,37 +134,10 @@ func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, st
 	return opts.validateLocalDeploymentsSettings(containers)
 }
 
-func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needToPullImages bool, err error) {
-	steps = 2
-	needToPullImages = false
-
-	images, err := opts.ContainerEngine.ImageList(ctx, opts.MongodDockerImageName())
-
-	if err != nil {
-		return 0, false, err
-	}
-
-	foundMongod := len(images) > 0
-
-	if !foundMongod {
-		steps++
-		needToPullImages = true
-	}
-	return steps, needToPullImages, nil
-}
-
 func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
-	steps, needToPullImages, err := opts.planSteps(ctx)
-	if err != nil {
-		return err
-	}
 	currentStep := 1
-	longWaitWarning := ""
-	if steps > shortStepCount {
-		longWaitWarning = " [this might take several minutes]"
-	}
 
-	_, _ = log.Warningf("Creating your cluster %s%s\n", opts.DeploymentName, longWaitWarning)
+	_, _ = log.Warningf("Creating your cluster %s [this might take several minutes]\n", opts.DeploymentName)
 
 	// containers check
 	if err := opts.startEnvironment(ctx, currentStep, steps); err != nil {
@@ -185,13 +145,11 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	}
 	currentStep++
 
-	// pull images if not available
-	if needToPullImages {
-		if err := opts.downloadImagesIfNotAvailable(ctx, currentStep, steps); err != nil {
-			return err
-		}
-		currentStep++
+	// always download the latest image
+	if err := opts.downloadImage(ctx, currentStep, steps); err != nil {
+		return err
 	}
+	currentStep++
 
 	// create local deployment
 	opts.logStepStarted(fmt.Sprintf("Creating your deployment %s...", opts.DeploymentName), currentStep, steps)

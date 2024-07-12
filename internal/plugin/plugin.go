@@ -79,6 +79,7 @@ func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 	execCmd := exec.Command(p.BinaryPath, args...)
 	execCmd.Stdout = cmd.OutOrStdout()
 	execCmd.Stderr = cmd.OutOrStderr()
+	execCmd.Env = os.Environ()
 	return execCmd.Run()
 }
 

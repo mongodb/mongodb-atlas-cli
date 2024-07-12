@@ -47,8 +47,10 @@ func TestExportFederatedAuth(t *testing.T) {
 		testExternalGroupName := []string{"org-admin", "dev-team"}
 
 		federationSettings := &admin.OrgFederationSettings{
-			Id:                 pointer.Get("TestFederationSettingID"),
-			IdentityProviderId: &testIdentityProviderID,
+			Id:                     pointer.Get("TestFederationSettingID"),
+			IdentityProviderId:     &testIdentityProviderID,
+			IdentityProviderStatus: pointer.Get("ACTIVE"),
+			HasRoleMappings:        pointer.Get(true),
 		}
 		input := &AtlasFederatedAuthBuildRequest{
 			IncludeSecret:                 false,
@@ -174,10 +176,6 @@ func TestExportFederatedAuth(t *testing.T) {
 					Namespace: "test",
 				},
 				Spec: akov2.AtlasFederatedAuthSpec{
-					// ConnectionSecretRef: akov2common.ResourceRefNamespaced{
-					// 	Name:      "my-project",
-					// 	Namespace: "test",
-					// },
 					Enabled:                  true,
 					DomainAllowList:          []string{"example.com"},
 					PostAuthRoleGrants:       []string{"role1"},

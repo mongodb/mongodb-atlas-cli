@@ -95,8 +95,7 @@ func getAtlasFederatedAuthSpec(br AtlasFederatedAuthBuildRequest, orgConfig *atl
 		PostAuthRoleGrants:       postAuthRoleGrants,
 		SSODebugEnabled:          idp.SsoDebugEnabled,
 	}
-
-	if orgConfig.RoleMappings != nil {
+	if br.FederatedSettings.HasRoleMappings != nil && *br.FederatedSettings.HasRoleMappings && orgConfig.RoleMappings != nil {
 		authSpec.RoleMappings = getRoleMappings(orgConfig.RoleMappings, br.ProjectStore)
 	}
 
@@ -124,6 +123,7 @@ func getSecretRef(br AtlasFederatedAuthBuildRequest) *akov2common.ResourceRefNam
 	secretRef := &akov2common.ResourceRefNamespaced{}
 	if br.IncludeSecret {
 		secretRef.Name = resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, br.ProjectName), br.Dictionary)
+		secretRef.Namespace = br.TargetNamespace
 	}
 	return secretRef
 }

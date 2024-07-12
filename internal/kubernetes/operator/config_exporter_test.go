@@ -423,7 +423,8 @@ func Test_ExportFederatedAuth(t *testing.T) {
 		atlasOperatorGenericStore := mocks.NewMockOperatorGenericStore(ctl)
 		ce := NewConfigExporter(atlasOperatorGenericStore, nil, projectID, orgID).
 			WithTargetNamespace("test").
-			WithTargetOperatorVersion("2.3.0")
+			WithTargetOperatorVersion("2.3.0").
+			WithSecretsData(true)
 
 		testIdentityProviderID := "TestIdentityProviderID"
 		testOrganizationID := "test-org"
@@ -556,10 +557,10 @@ func Test_ExportFederatedAuth(t *testing.T) {
 					Namespace: "test",
 				},
 				Spec: akov2.AtlasFederatedAuthSpec{
-					// ConnectionSecretRef: akov2common.ResourceRefNamespaced{
-					// 	Name:      "my-project",
-					// 	Namespace: "test",
-					// },
+					ConnectionSecretRef: akov2common.ResourceRefNamespaced{
+						Name:      "my-project-credentials",
+						Namespace: "test",
+					},
 					Enabled:                  true,
 					DomainAllowList:          []string{"example.com"},
 					PostAuthRoleGrants:       []string{"role1"},

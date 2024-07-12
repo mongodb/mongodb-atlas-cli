@@ -106,9 +106,15 @@ nfpms:
   dependencies:
     - mongodb-atlas-cli
     - mongodb-mongosh
-  recommends:
-    - podman
   meta: true
+  overrides:
+    deb:
+      dependencies:
+        - docker
+    rpm:
+      recommends:
+        - podman
+        - docker
 checksum:
   name_template: checksums.txt
   extra_files:

@@ -18,6 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -194,7 +195,7 @@ func hasDuplicateCommand(manifest *Manifest, existingCommandsMap map[string]bool
 }
 
 func getPathToExecutableBinary(pluginDirectoryPath string, binaryName string) (string, error) {
-	binaryPath := fmt.Sprintf("%s/%s", pluginDirectoryPath, binaryName)
+	binaryPath := path.Join(pluginDirectoryPath, binaryName)
 
 	binaryFileInfo, err := os.Stat(binaryPath)
 

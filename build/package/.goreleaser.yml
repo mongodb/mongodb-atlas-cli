@@ -109,11 +109,11 @@ nfpms:
   meta: true
   overrides:
     deb:
-      recommends:
+      suggests:
         - docker-ce
         - docker-ce-cli
     rpm:
-      recommends:
+      suggests:
         - podman
         - docker-ce
         - docker-ce-cli

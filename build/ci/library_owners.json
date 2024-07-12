@@ -33,7 +33,7 @@
 	"github.com/stretchr/testify": "mongocli",
 	"github.com/tangzero/inflector": "mongocli",
 	"go.mongodb.org/atlas": "mongocli",
-	"go.mongodb.org/atlas-sdk/v20231115014": "mongocli",
+	"go.mongodb.org/atlas-sdk/v20240530002": "mongocli",
 	"go.mongodb.org/mongo-driver": "mongocli",
 	"golang.org/x/tools": "mongocli",
 	"google.golang.org/api": "mongocli",
@@ -50,6 +50,5 @@
 	"sigs.k8s.io/controller-runtime": "atlas_kubernetes_team",
 	"sigs.k8s.io/kind": "atlas_kubernetes_team",
 	"golang.org/x/exp": "atlas_kubernetes_team",
-	"github.com/shirou/gopsutil/v3": "mongocli",
 	"github.com/denisbrodbeck/machineid": "mongocli"
 }

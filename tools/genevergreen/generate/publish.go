@@ -102,7 +102,7 @@ func publishVariant(c *shrub.Configuration, v *shrub.Variant, sv, stableSuffix s
 	}
 	for _, r := range repos {
 		for k, d := range distros {
-			if slices.Contains(unsupportedOsByVersion[sv], k) {
+			if slices.Contains(unsupportedNewOsByVersion[sv], k) {
 				continue
 			}
 			for _, a := range d.architectures {

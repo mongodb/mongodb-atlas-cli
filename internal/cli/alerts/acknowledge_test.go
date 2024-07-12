@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
 func TestAcknowledgeBuilder(t *testing.T) {
@@ -89,9 +89,9 @@ func TestAcknowledgeOpts_Run(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ackReq, _ := opts.newAcknowledgeRequest()
 			params := &atlasv2.AcknowledgeAlertApiParams{
-				GroupId:              opts.ProjectID,
-				AlertId:              opts.alertID,
-				AlertViewForNdsGroup: ackReq,
+				GroupId:          opts.ProjectID,
+				AlertId:          opts.alertID,
+				AcknowledgeAlert: ackReq,
 			}
 			if wantErr {
 				mockStore.

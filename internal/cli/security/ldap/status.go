@@ -66,6 +66,7 @@ func StatusBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"requestIdDesc": "ID of the request to verify an LDAP configuration.",
 			"output":        verifyStatusTemplate,
+			"toc":           "true",
 		},
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

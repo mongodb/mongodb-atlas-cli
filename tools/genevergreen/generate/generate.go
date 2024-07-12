@@ -16,6 +16,7 @@ package generate
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/evergreen-ci/shrub"
@@ -33,7 +34,7 @@ var (
 		"8.0",
 	}
 
-	unsupportedOsByVersion = map[string][]string{
+	unsupportedNewOsByVersion = map[string][]string{
 		"8.0": {"debian11"},
 		"7.0": {"ubuntu2404"},
 		"6.0": {"ubuntu2404"},
@@ -99,6 +100,11 @@ func RepoTasks(c *shrub.Configuration) {
 				t := &shrub.Task{
 					Name: fmt.Sprintf("test_repo_atlascli_%v_%v_%v", os, repo, serverVersion),
 				}
+
+				if slices.Contains(unsupportedNewOsByVersion[serverVersion], newOs[os]) {
+					continue
+				}
+
 				t = t.Stepback(false).
 					GitTagOnly(true).
 					Dependency(newDependency(os, serverVersion, repo)).
@@ -152,18 +158,31 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 	}
 
 	for _, os := range oses {
-		t := &shrub.Task{
-			Name: "pkg_test_atlascli_meta_docker_" + os,
+		for _, sv := range serverVersions {
+			if slices.Contains(unsupportedNewOsByVersion[sv], newOs[os]) {
+				continue
+			}
+
+			t := &shrub.Task{
+				Name: "pkg_test_atlascli_meta_docker_" + sv + "_" + os,
+			}
+			t = t.Dependency(shrub.TaskDependency{
+				Name:    "package_goreleaser",
+				Variant: "goreleaser_atlascli_snapshot",
+			}).Function("clone").
+				FunctionWithVars("docker build meta", map[string]string{
+					"image":          postPkgImg[os],
+					"server_version": sv,
+				})
+
+			// TODO: Re-enable meta package tests in 8.0 until mongosh is added.
+			if sv == "8.0" {
+				disable := true
+				t.Disable = &disable
+			}
+			c.Tasks = append(c.Tasks, t)
+			v.AddTasks(t.Name)
 		}
-		t = t.Dependency(shrub.TaskDependency{
-			Name:    "package_goreleaser",
-			Variant: "goreleaser_atlascli_snapshot",
-		}).Function("clone").
-			FunctionWithVars("docker build meta", map[string]string{
-				"image": postPkgImg[os],
-			})
-		c.Tasks = append(c.Tasks, t)
-		v.AddTasks(t.Name)
 	}
 
 	c.Variants = append(c.Variants, v)

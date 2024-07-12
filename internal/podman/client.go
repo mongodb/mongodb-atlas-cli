@@ -20,12 +20,11 @@ import (
 	"errors"
 	"fmt"
 	"os/exec"
-	"runtime"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/shirou/gopsutil/v3/mem"
 )
 
 var (
@@ -33,47 +32,26 @@ var (
 	ErrNetworkNotFound = errors.New("network ip range was not found")
 )
 
-const (
-	defaultMachineCPUs       = "2"
-	defaultMachineMemory     = "2048"
-	notEnoughMemoryAvailable = `
-Your available memory '%d' is below '%s'. Using default podman memory settings.
-
-`
-	notEnoughCPUsAvailable = `
-Your available CPU cores '%d' is below '%s'. Using default podman CPU settings.
-
-`
-)
-
-type Diagnostic struct {
-	Installed       bool
-	MachineRequired bool
-	MachineFound    bool
-	MachineState    string
-	MachineInfo     *InspectInfo
-	Version         *Version
-	Images          []string
-	Errors          []string
-}
-
 type RunContainerOpts struct {
-	Detach   bool
-	Remove   bool
-	Image    string
-	Name     string
-	Hostname string
-	// map[hostVolume, pathInContainer]
-	Volumes map[string]string
-	// map[hostPort, containerPort]
-	Ports      map[int]int
-	BindIPAll  bool
-	Network    string
-	EnvVars    map[string]string
-	Args       []string
-	Entrypoint string
-	Cmd        string
-	IP         string
+	Detach            bool
+	Remove            bool
+	Image             string
+	Name              string
+	Hostname          string
+	Volumes           map[string]string
+	Ports             map[int]int
+	BindIPAll         bool
+	Network           string
+	EnvVars           map[string]string
+	Args              []string
+	Entrypoint        string
+	Cmd               string
+	IP                string
+	HealthCmd         *[]string
+	HealthInterval    *time.Duration
+	HealthTimeout     *time.Duration
+	HealthStartPeriod *time.Duration
+	HealthRetries     *int
 }
 
 type Container struct {
@@ -108,168 +86,29 @@ type Image struct {
 	Names      []string
 }
 
-type Version struct {
-	Client struct {
-		APIVersion string `json:"APIVersion"`
-		Version    string `json:"Version"`
-		GoVersion  string `json:"GoVersion"`
-		GitCommit  string `json:"GitCommit"`
-		BuiltTime  string `json:"BuiltTime"`
-		Built      int    `json:"Built"`
-		OsArch     string `json:"OsArch"`
-		Os         string `json:"Os"`
-	} `json:"Client"`
-
-	Server struct {
-		APIVersion string `json:"APIVersion"`
-		Version    string `json:"Version"`
-		GoVersion  string `json:"GoVersion"`
-		GitCommit  string `json:"GitCommit"`
-		BuiltTime  string `json:"BuiltTime"`
-		Built      int    `json:"Built"`
-		OsArch     string `json:"OsArch"`
-		Os         string `json:"Os"`
-	} `json:"Server"`
-}
-
 //go:generate mockgen -destination=../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman Client
 
 type Client interface {
 	Ready(ctx context.Context) error
-	Diagnostics(ctx context.Context) *Diagnostic
-	CreateNetwork(ctx context.Context, name string) ([]byte, error)
-	CreateVolume(ctx context.Context, name string) ([]byte, error)
+	Version(ctx context.Context) (map[string]any, error)
 	RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error)
-	CopyFileToContainer(ctx context.Context, localFile string, containerName string, filePathInContainer string) ([]byte, error)
+	RunHealthcheck(ctx context.Context, name string) error
 	ContainerInspect(ctx context.Context, names ...string) ([]*InspectContainerData, error)
 	StopContainers(ctx context.Context, names ...string) ([]byte, error)
 	StartContainers(ctx context.Context, names ...string) ([]byte, error)
 	UnpauseContainers(ctx context.Context, names ...string) ([]byte, error)
 	RemoveContainers(ctx context.Context, names ...string) ([]byte, error)
-	RemoveVolumes(ctx context.Context, names ...string) ([]byte, error)
-	RemoveNetworks(ctx context.Context, names ...string) ([]byte, error)
 	ListContainers(ctx context.Context, nameFilter string) ([]*Container, error)
 	ListImages(ctx context.Context, nameFilter string) ([]*Image, error)
 	PullImage(ctx context.Context, name string) ([]byte, error)
-	Version(ctx context.Context) (*Version, error)
+	ImageHealthCheck(ctx context.Context, name string) (*Schema2HealthConfig, error)
+	ContainerHealthStatus(ctx context.Context, name string) (string, error)
 	Logs(ctx context.Context) (map[string]interface{}, []error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
-	Network(ctx context.Context, names ...string) ([]*Network, error)
-	Exec(ctx context.Context, name string, args ...string) error
+	ContainerStatusAndUptime(ctx context.Context, name string) (string, time.Duration, error)
 }
 
 type client struct{}
-
-func (o *client) Diagnostics(ctx context.Context) *Diagnostic {
-	d := &Diagnostic{
-		Installed:       true,
-		MachineRequired: podmanMachineIsRequired(),
-		MachineFound:    true,
-	}
-
-	err := Installed()
-	if err != nil {
-		d.Installed = false
-		d.Errors = append(d.Errors, fmt.Errorf("failed to detect podman installed: %w", err).Error())
-	}
-
-	d.Version, err = o.Version(ctx)
-	if err != nil {
-		d.Errors = append(d.Errors, fmt.Errorf("failed to collect podman version: %w", err).Error())
-	}
-
-	info, err := o.machineInspect(ctx)
-	if err != nil {
-		d.MachineFound = false
-		if d.MachineRequired {
-			d.Errors = append(d.Errors, fmt.Sprintf("failed to detect podman machine: %s", err))
-		}
-	} else {
-		d.MachineInfo = info
-		d.MachineState = info.State
-	}
-
-	images, err := o.ListImages(ctx, "")
-	if err != nil {
-		d.Errors = append(d.Errors, fmt.Errorf("failed to list podman images: %w", err).Error())
-	} else {
-		d.Images = make([]string, 0, len(images))
-		for _, img := range images {
-			d.Images = append(d.Images, img.Names...)
-		}
-	}
-	return d
-}
-
-func (o *client) machineInit(ctx context.Context) error {
-	_, err := o.machineInspect(ctx)
-	if err == nil { // machine is already present
-		return nil
-	}
-
-	if _, err = o.runPodman(ctx, newMachineInitArgs()...); err != nil {
-		return err
-	}
-	return nil
-}
-
-func newMachineInitArgs() []string {
-	args := []string{"machine", "init"}
-	memory, _ := mem.VirtualMemory()
-	defaultMachineMemoryUint64, err := strconv.ParseUint(defaultMachineMemory, 10, 64)
-	if err != nil {
-		_, _ = log.Warning(err)
-		return args
-	}
-
-	if memory.Available > defaultMachineMemoryUint64 {
-		args = append(args, "--memory", defaultMachineMemory)
-	} else {
-		_, _ = log.Warningf(notEnoughMemoryAvailable, memory.Available, defaultMachineMemory)
-	}
-
-	cores := runtime.NumCPU()
-	defaultCPUs, err := strconv.Atoi(defaultMachineCPUs)
-	if err != nil {
-		_, _ = log.Warning(err)
-		return args
-	}
-
-	if cores >= defaultCPUs {
-		args = append(args, "--cpus", defaultMachineCPUs)
-	} else {
-		_, _ = log.Warningf(notEnoughCPUsAvailable, cores, defaultMachineCPUs)
-	}
-
-	return args
-}
-
-func (o *client) machineInspect(ctx context.Context) (*InspectInfo, error) {
-	b, err := o.runPodman(ctx, "machine", "inspect", DefaultMachineName)
-	if err != nil {
-		return nil, err
-	}
-	var info []InspectInfo
-	if err := json.Unmarshal(b, &info); err != nil {
-		return nil, err
-	}
-	return &info[0], nil
-}
-
-func (o *client) machineStart(ctx context.Context) error {
-	info, err := o.machineInspect(ctx)
-	if err != nil {
-		return err
-	}
-	if info.State != Running {
-		_, err := o.runPodman(ctx, "machine", "start")
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
 
 func Installed() error {
 	if _, err := exec.LookPath("podman"); err != nil {
@@ -278,25 +117,8 @@ func Installed() error {
 	return nil
 }
 
-func podmanMachineIsRequired() bool {
-	// macOS and Windows require VMs
-	return runtime.GOOS == "windows" || runtime.GOOS == "darwin"
-}
-
-func (o *client) Ready(ctx context.Context) error {
-	if err := Installed(); err != nil {
-		return err
-	}
-
-	if !podmanMachineIsRequired() {
-		return nil
-	}
-
-	if err := o.machineInit(ctx); err != nil {
-		return err
-	}
-
-	return o.machineStart(ctx)
+func (*client) Ready(_ context.Context) error {
+	return Installed()
 }
 
 func extractErrorMessage(exitErr *exec.ExitError) error {
@@ -326,14 +148,6 @@ func (*client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
 	return output, err
 }
 
-func (o *client) CreateNetwork(ctx context.Context, name string) ([]byte, error) {
-	return o.runPodman(ctx, "network", "create", name)
-}
-
-func (o *client) CreateVolume(ctx context.Context, name string) ([]byte, error) {
-	return o.runPodman(ctx, "volume", "create", name)
-}
-
 func (o *client) ContainerInspect(ctx context.Context, names ...string) ([]*InspectContainerData, error) {
 	args := append([]string{"container", "inspect"}, names...)
 	buf, err := o.runPodman(ctx, args...)
@@ -346,11 +160,24 @@ func (o *client) ContainerInspect(ctx context.Context, names ...string) ([]*Insp
 	return containers, err
 }
 
+func (o *client) ContainerHealthStatus(ctx context.Context, name string) (string, error) {
+	buf, err := o.runPodman(ctx, "inspect", "--format", "{{.State.Health.Status}}", name)
+	if err != nil {
+		return "", err
+	}
+
+	return strings.TrimSpace(string(buf)), nil
+}
+
+//nolint:gocyclo
 func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error) {
 	arg := []string{"run",
 		"--name", opts.Name,
 		"--hostname", opts.Hostname,
-		"--network", opts.Network,
+	}
+
+	if opts.Network != "" {
+		arg = append(arg, "--network", opts.Network)
 	}
 
 	for hostVolume, pathInContainer := range opts.Volumes {
@@ -385,6 +212,31 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 		arg = append(arg, "--entrypoint", opts.Entrypoint)
 	}
 
+	if opts.HealthCmd != nil && len(*opts.HealthCmd) > 0 {
+		cmd := ""
+		for i, c := range *opts.HealthCmd {
+			if i != 0 {
+				cmd += ","
+			}
+
+			cmd = cmd + "\"" + c + "\""
+		}
+
+		arg = append(arg, fmt.Sprintf("--health-cmd=[%s]", cmd))
+	}
+	if opts.HealthInterval != nil {
+		arg = append(arg, "--health-interval", toMsString(*opts.HealthInterval))
+	}
+	if opts.HealthTimeout != nil {
+		arg = append(arg, "--health-timeout", toMsString(*opts.HealthTimeout))
+	}
+	if opts.HealthStartPeriod != nil {
+		arg = append(arg, "--health-start-period", toMsString(*opts.HealthStartPeriod))
+	}
+	if opts.HealthRetries != nil {
+		arg = append(arg, "--health-startup-retries", strconv.Itoa(*opts.HealthRetries))
+	}
+
 	arg = append(arg, opts.Image)
 
 	if opts.Cmd != "" {
@@ -396,8 +248,13 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 	return o.runPodman(ctx, arg...)
 }
 
-func (o *client) CopyFileToContainer(ctx context.Context, localFile string, containerName string, filePathInContainer string) ([]byte, error) {
-	return o.runPodman(ctx, "cp", localFile, containerName+":"+filePathInContainer)
+func (o *client) RunHealthcheck(ctx context.Context, name string) error {
+	_, err := o.runPodman(ctx, "healthcheck", "run", name)
+	return err
+}
+
+func toMsString(duration time.Duration) string {
+	return strconv.FormatInt(duration.Milliseconds(), 10) + "ms"
 }
 
 func (o *client) StopContainers(ctx context.Context, names ...string) ([]byte, error) {
@@ -417,21 +274,13 @@ func (o *client) UnpauseContainers(ctx context.Context, names ...string) ([]byte
 }
 
 func (o *client) RemoveContainers(ctx context.Context, names ...string) ([]byte, error) {
-	return o.runPodman(ctx, append([]string{"rm", "-f"}, names...)...)
+	return o.runPodman(ctx, append([]string{"rm", "-f", "-v"}, names...)...)
 }
 
-func (o *client) RemoveVolumes(ctx context.Context, names ...string) ([]byte, error) {
-	return o.runPodman(ctx, append([]string{"volume", "rm", "-f"}, names...)...)
-}
-
-func (o *client) RemoveNetworks(ctx context.Context, names ...string) ([]byte, error) {
-	return o.runPodman(ctx, append([]string{"network", "rm", "-f"}, names...)...)
-}
-
-func (o *client) ListContainers(ctx context.Context, nameFilter string) ([]*Container, error) {
+func (o *client) ListContainers(ctx context.Context, label string) ([]*Container, error) {
 	args := []string{"ps", "--all", "--format", "json"}
-	if nameFilter != "" {
-		args = append(args, "--filter", "name="+nameFilter)
+	if label != "" {
+		args = append(args, "--filter", "label="+label)
 	}
 
 	response, err := o.runPodman(ctx, args...)
@@ -444,11 +293,11 @@ func (o *client) ListContainers(ctx context.Context, nameFilter string) ([]*Cont
 	return containers, err
 }
 
-func (o *client) ListImages(ctx context.Context, nameFilter string) ([]*Image, error) {
+func (o *client) ListImages(ctx context.Context, reference string) ([]*Image, error) {
 	args := []string{"image", "list", "--format", "json"}
 
-	if nameFilter != "" {
-		args = append(args, "--filter", "reference="+nameFilter)
+	if reference != "" {
+		args = append(args, "--filter", "reference="+reference)
 	}
 
 	response, err := o.runPodman(ctx, args...)
@@ -467,17 +316,43 @@ func (o *client) PullImage(ctx context.Context, name string) ([]byte, error) {
 	return o.runPodman(ctx, "pull", name)
 }
 
-func (o *client) Version(ctx context.Context) (version *Version, err error) {
+func (o *client) ImageHealthCheck(ctx context.Context, name string) (*Schema2HealthConfig, error) {
+	bytes, err := o.runPodman(ctx, "image", "inspect", "--format", "json", name)
+	if err != nil {
+		return nil, err
+	}
+
+	type PartialImageInspectConfig struct {
+		Healthcheck *Schema2HealthConfig
+	}
+
+	type PartialImageInspect struct {
+		Config PartialImageInspectConfig
+	}
+
+	var inspectOutput []PartialImageInspect
+	if err := json.Unmarshal(bytes, &inspectOutput); err != nil {
+		return nil, err
+	}
+
+	if len(inspectOutput) != 1 {
+		return nil, fmt.Errorf("expected 1 output, got %v", len(inspectOutput))
+	}
+
+	return inspectOutput[0].Config.Healthcheck, nil
+}
+
+func (o *client) Version(ctx context.Context) (map[string]any, error) {
 	output, err := o.runPodman(ctx, "version", "--format", "json")
 	if err != nil {
 		return nil, err
 	}
 
-	var v *Version
-	if err = json.Unmarshal(output, &v); err != nil {
+	var version map[string]any
+	if err = json.Unmarshal(output, &version); err != nil {
 		return nil, err
 	}
-	return v, err
+	return version, err
 }
 
 func (o *client) Logs(ctx context.Context) (map[string]interface{}, []error) {
@@ -518,29 +393,29 @@ func (o *client) ContainerLogs(ctx context.Context, name string) ([]string, erro
 	return logs, nil
 }
 
-func (o *client) Network(ctx context.Context, names ...string) ([]*Network, error) {
-	args := []string{"network", "inspect", "--format", "json"}
-	args = append(args, names...)
-	output, err := o.runPodman(ctx, args...)
+func (o *client) ContainerStatusAndUptime(ctx context.Context, name string) (string, time.Duration, error) {
+	output, err := o.runPodman(ctx, "inspect", "--format", "[\"{{.State.Status}}\",\"{{.State.StartedAt}}\"]", name)
 	if err != nil {
-		return nil, err
+		return "", 0, err
 	}
 
-	var n []*Network
-	if err = json.Unmarshal(output, &n); err != nil {
-		return nil, err
+	var statusAndStartedAt []string
+	if err = json.Unmarshal(output, &statusAndStartedAt); err != nil {
+		return "", 0, err
 	}
 
-	if len(n) == 0 {
-		return nil, ErrNetworkNotFound
+	const expectedArrayLength = 2
+	if len(statusAndStartedAt) != expectedArrayLength {
+		return "", 0, fmt.Errorf("parsing status and uptime: expected 2 output, got %v", len(statusAndStartedAt))
 	}
 
-	return n, err
-}
+	status := statusAndStartedAt[0]
+	startedAt, err := time.Parse("2006-01-02 15:04:05.999999999 -0700 MST", statusAndStartedAt[1])
+	if err != nil {
+		return "", 0, err
+	}
 
-func (o *client) Exec(ctx context.Context, name string, args ...string) error {
-	_, err := o.runPodman(ctx, append([]string{"exec", name}, args...)...)
-	return err
+	return status, time.Since(startedAt), nil
 }
 
 func NewClient() Client {

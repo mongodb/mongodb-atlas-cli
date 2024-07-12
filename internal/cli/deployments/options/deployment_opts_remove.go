@@ -16,28 +16,5 @@ package options
 import "context"
 
 func (opts *DeploymentOpts) RemoveLocal(ctx context.Context) error {
-	volumes := []string{opts.LocalMongodDataVolume(), opts.LocalMongotDataVolume(), opts.LocalMongoMetricsVolume()}
-
-	if c, _ := opts.PodmanClient.ContainerInspect(ctx, opts.LocalMongodHostname()); c != nil {
-		for _, m := range c[0].Mounts {
-			if m.Name != opts.LocalMongodDataVolume() {
-				volumes = append(volumes, m.Name)
-				break
-			}
-		}
-	}
-
-	if _, errRemove := opts.PodmanClient.RemoveContainers(ctx, opts.LocalMongodHostname(), opts.LocalMongotHostname()); errRemove != nil {
-		return errRemove
-	}
-
-	if _, errRemove := opts.PodmanClient.RemoveNetworks(ctx, opts.LocalNetworkName()); errRemove != nil {
-		return errRemove
-	}
-
-	if _, errRemove := opts.PodmanClient.RemoveVolumes(ctx, volumes...); errRemove != nil {
-		return errRemove
-	}
-
-	return nil
+	return opts.ContainerEngine.ContainerRm(ctx, opts.LocalMongodHostname())
 }

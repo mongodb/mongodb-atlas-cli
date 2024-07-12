@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/spf13/afero"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
 const DefaultAnalyzer = "lucene.standard"
@@ -78,6 +78,44 @@ func (opts *IndexOpts) validateOpts() error {
 	return nil
 }
 
+func (opts *IndexOpts) DeprecatedNewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
+	if len(opts.Filename) > 0 {
+		index := &atlasv2.ClusterSearchIndex{}
+		if err := file.Load(opts.Fs, opts.Filename, index); err != nil {
+			return nil, fmt.Errorf(failedToLoadIndexMessage, err.Error())
+		}
+
+		if index.Type == nil {
+			index.Type = pointer.Get(DefaultType)
+		}
+
+		return index, nil
+	}
+
+	f, err := opts.indexFields()
+	if err != nil {
+		return nil, err
+	}
+
+	if opts.SearchAnalyzer == "" {
+		opts.SearchAnalyzer = DefaultAnalyzer
+	}
+
+	i := &atlasv2.ClusterSearchIndex{
+		CollectionName: opts.Collection,
+		Database:       opts.DBName,
+		Mappings: &atlasv2.ApiAtlasFTSMappings{
+			Dynamic: &opts.Dynamic,
+			Fields:  f,
+		},
+		Name:           opts.Name,
+		SearchAnalyzer: &opts.SearchAnalyzer,
+		// only search indexes can be created using flags
+		Type: pointer.Get(SearchIndexType),
+	}
+	return i, nil
+}
+
 func (opts *IndexOpts) NewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
 	if len(opts.Filename) > 0 {
 		index := &atlasv2.ClusterSearchIndex{}
@@ -102,17 +140,17 @@ func (opts *IndexOpts) NewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
 	}
 
 	i := &atlasv2.ClusterSearchIndex{
-		Analyzer:       &opts.Analyzer,
 		CollectionName: opts.Collection,
 		Database:       opts.DBName,
+		Name:           opts.Name,
+		// only search indexes can be created using flags
+		Type:           pointer.Get(SearchIndexType),
+		Analyzer:       &opts.Analyzer,
+		SearchAnalyzer: &opts.SearchAnalyzer,
 		Mappings: &atlasv2.ApiAtlasFTSMappings{
 			Dynamic: &opts.Dynamic,
 			Fields:  f,
 		},
-		Name:           opts.Name,
-		SearchAnalyzer: &opts.SearchAnalyzer,
-		// only search indexes can be created using flags
-		Type: pointer.Get(SearchIndexType),
 	}
 	return i, nil
 }

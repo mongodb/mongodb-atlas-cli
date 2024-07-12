@@ -33,7 +33,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20231115014/admin"
+	"go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
 type DownloadOpts struct {
@@ -96,7 +96,7 @@ func (*DownloadOpts) write(w io.Writer, r io.Reader) error {
 
 	written := false
 	for {
-		n, err := io.CopyN(w, gr, 1024) //nolint:gomnd // 1k each write to avoid compression bomb
+		n, err := io.CopyN(w, gr, 1024) //nolint:mnd // 1k each write to avoid compression bomb
 		if n > 0 {
 			written = true
 		}
@@ -155,7 +155,7 @@ func (opts *DownloadOpts) newHostLogsParams() *admin.GetHostLogsApiParams {
 }
 
 func (opts *DownloadOpts) RunLocal(ctx context.Context) error {
-	logs, err := opts.PodmanClient.ContainerLogs(ctx, opts.LocalMongodHostname())
+	logs, err := opts.ContainerEngine.ContainerLogs(ctx, opts.LocalMongodHostname())
 	if err != nil {
 		return err
 	}

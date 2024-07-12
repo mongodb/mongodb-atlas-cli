@@ -22,7 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
 func TestDescribe_Run(t *testing.T) {
@@ -36,7 +36,7 @@ func TestDescribe_Run(t *testing.T) {
 	}
 
 	expected := &atlasv2.ClusterSearchIndex{
-		Name: "test",
+		Name: describeOpts.clusterName,
 	}
 	mockStore.
 		EXPECT().

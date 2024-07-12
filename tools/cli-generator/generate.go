@@ -237,8 +237,8 @@ func cleanupFile(filePath string) error {
 	if err != nil {
 		return err
 	}
-	const filePerm = 0600
-	return os.WriteFile(filePath, r, filePerm)
+	const filePermissions = 0600
+	return os.WriteFile(filePath, r, filePermissions)
 }
 
 func goGenerate(filePath string) error {

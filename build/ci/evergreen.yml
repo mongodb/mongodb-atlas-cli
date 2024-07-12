@@ -1094,8 +1094,6 @@ tasks:
           E2E_PARALLEL: 16
   - name: atlas_deployments_local_noauth_e2e
     tags: ["e2e","deployments","local","noauth"]
-    # This test will be enabled in CLOUDP-237038
-    patch_only: true
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
@@ -1127,8 +1125,6 @@ tasks:
           E2E_TIMEOUT: 3h
   - name: atlas_deployments_local_auth_e2e
     tags: ["e2e","deployments","local","auth"]
-    # This test will be enabled in CLOUDP-237038
-    patch_only: true
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
@@ -1301,10 +1297,18 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .atlas"
-  - name: e2e_local_deployments
-    display_name: "E2E Local Deployments Tests"
+  - name: e2e_local_deployments_podman
+    display_name: "E2E Local Deployments Tests (rhel/podman)"
     run_on:
       - rhel90-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+  - name: e2e_local_deployments_docker
+    display_name: "E2E Local Deployments Tests (ubuntu/docker)"
+    run_on:
+      - ubuntu2204-small
     expansions:
       <<: *go_linux_version
     tasks:

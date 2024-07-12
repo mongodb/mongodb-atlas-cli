@@ -18,12 +18,11 @@ import (
 	"context"
 	"errors"
 	"runtime"
-	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	"github.com/shirou/gopsutil/v3/host"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
 func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID string) (Deployment, error) {
@@ -35,7 +34,7 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 			if opts.IsAtlasDeploymentType() {
 				return Deployment{}, atlasErr
 			}
-			if !errors.Is(atlasErr, ErrNotAuthenticated) {
+			if !isUnauthenticatedErr(atlasErr) {
 				_, _ = log.Warningf("Warning: failed to retrieve Atlas deployments because %q\n", atlasErr.Error())
 			}
 		}
@@ -67,6 +66,15 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 	}
 
 	return opts.findDeploymentByName(localDeployments, atlasDeployments)
+}
+
+func isUnauthenticatedErr(err error) bool {
+	if errors.Is(err, ErrNotAuthenticated) {
+		return true
+	}
+
+	target, ok := atlasv2.AsError(err)
+	return ok && target.GetReason() == "Unauthorized"
 }
 
 func (opts *DeploymentOpts) findDeploymentByName(localDeployments []Deployment, atlasDeployments []Deployment) (Deployment, error) {
@@ -130,12 +138,12 @@ func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, er
 	return deployments, nil
 }
 
-func (opts *DeploymentOpts) LocalDeploymentPreRun(ctx context.Context) error {
+func (opts *DeploymentOpts) LocalDeploymentPreRun(_ context.Context) error {
 	if !localDeploymentSupportedByOs() {
 		_, _ = log.Warningln("Local deployments are not supported on this OS, to see local deployments requirements visit https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-deploy-local/.")
 	}
 
-	return opts.PodmanClient.Ready(ctx)
+	return opts.ContainerEngine.Ready()
 }
 
 func localDeploymentSupportedByOs() bool {
@@ -148,31 +156,10 @@ func localDeploymentSupportedByOs() bool {
 		// Windows is not supported
 		return false
 	case "linux":
-		// Depends on distro
-		support, err := isLinuxDistroSupported()
-		if err != nil {
-			// If something went wrong in finding OS distro, then assume support
-			_, _ = log.Debugln(err)
-			return true
-		}
-		return support
+		// Linux is supported
+		return true
 	default:
 		// Other unknown OS are not supported
 		return false
 	}
-}
-
-func isLinuxDistroSupported() (bool, error) {
-	hostInfo, err := host.Info()
-	if err != nil {
-		return false, err
-	}
-
-	distro := strings.ToLower(hostInfo.Platform)
-	if distro == "" {
-		return false, errors.New("unable to find OS distro")
-	}
-
-	_, _ = log.Debugln("Detected linux distro: ", distro)
-	return strings.Contains(distro, "centos") || strings.Contains(distro, "redhat") || strings.Contains(distro, "rhel"), nil
 }

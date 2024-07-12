@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
 const minSearchNodesMDBVersion = "6.0"
@@ -59,7 +59,7 @@ func TestSearchNodes(t *testing.T) {
 		respStr := string(resp)
 
 		require.Error(t, err, respStr)
-		require.Contains(t, respStr, "ATLAS_FTS_DEPLOYMENT_DOES_NOT_EXIST", respStr)
+		require.Contains(t, respStr, "ATLAS_SEARCH_DEPLOYMENT_DOES_NOT_EXIST", respStr)
 	})
 
 	t.Run("Create search node", func(t *testing.T) {

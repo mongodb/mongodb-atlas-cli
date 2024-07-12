@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
 type DeleteOpts struct {
@@ -35,7 +35,7 @@ type DeleteOpts struct {
 	store store.SearchNodesDeleter
 }
 
-const atlasFtsDeploymentDoesNotExist = "ATLAS_FTS_DEPLOYMENT_DOES_NOT_EXIST"
+const atlasFtsDeploymentDoesNotExist = "ATLAS_SEARCH_DEPLOYMENT_DOES_NOT_EXIST"
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 	return func() error {

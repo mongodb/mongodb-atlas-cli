@@ -315,21 +315,3 @@ func LoginBuilder() *cobra.Command {
 	_ = cmd.Flags().MarkDeprecated("skipConfig", "if you configured a profile, the command skips the config step by default.")
 	return cmd
 }
-
-func Builder() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "auth",
-		Short: "Manage the CLI's authentication state.",
-		Annotations: map[string]string{
-			"toc": "true",
-		},
-	}
-	cmd.AddCommand(
-		LoginBuilder(),
-		WhoAmIBuilder(),
-		LogoutBuilder(),
-		RegisterBuilder(),
-	)
-
-	return cmd
-}

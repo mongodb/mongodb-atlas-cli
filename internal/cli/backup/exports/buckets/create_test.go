@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockExportBucketsCreator(ctrl)
 
-	expected := &atlasv2.DiskBackupSnapshotAWSExportBucket{}
+	expected := &atlasv2.DiskBackupSnapshotExportBucket{}
 
 	createOpts := &CreateOpts{
 		bucketName:    "testBucket",

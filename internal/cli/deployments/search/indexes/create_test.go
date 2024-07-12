@@ -24,17 +24,17 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/search"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20231115014/admin"
+	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
 var indexID = "6509bc5080b2f007e6a2a0ce"
@@ -53,7 +53,6 @@ func TestCreate_RunLocal(t *testing.T) {
 	ctx := context.Background()
 
 	testDeployments := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
-	mockPodman := testDeployments.MockPodman
 
 	buf := new(bytes.Buffer)
 	opts := &CreateOpts{
@@ -72,30 +71,25 @@ func TestCreate_RunLocal(t *testing.T) {
 
 	testDeployments.LocalMockFlow(ctx)
 
-	mockPodman.
+	testDeployments.MockContainerEngine.
 		EXPECT().
-		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
-		Return([]*podman.InspectContainerData{
+		ContainerInspect(ctx, expectedLocalDeployment).
+		Return([]*container.InspectData{
 			{
-				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
-				Config: &podman.InspectContainerConfig{
+				Name: expectedLocalDeployment,
+				Config: &container.InspectDataConfig{
 					Labels: map[string]string{
 						"version": "7.0.1",
 					},
 				},
-				HostConfig: &podman.InspectContainerHostConfig{
-					PortBindings: map[string][]podman.InspectHostPort{
+				HostConfig: &container.InspectDataHostConfig{
+					PortBindings: map[string][]container.InspectDataHostPort{
 						"27017/tcp": {
 							{
 								HostIP:   "127.0.0.1",
 								HostPort: "27017",
 							},
 						},
-					},
-				},
-				Mounts: []podman.InspectMount{
-					{
-						Name: opts.DeploymentOpts.LocalMongodDataVolume(),
 					},
 				},
 			},
@@ -152,7 +146,7 @@ func TestCreate_RunLocal(t *testing.T) {
 
 	mockDB.
 		EXPECT().
-		CreateSearchIndex(ctx, expectedCollection, index).
+		CreateSearchIndex(ctx, expectedCollection, gomock.Any()).
 		Return(indexWithID, nil).
 		Times(1)
 
@@ -175,7 +169,6 @@ func TestCreate_Duplicated(t *testing.T) {
 	ctx := context.Background()
 
 	testDeployments := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
-	mockPodman := testDeployments.MockPodman
 
 	buf := new(bytes.Buffer)
 	opts := &CreateOpts{
@@ -194,30 +187,25 @@ func TestCreate_Duplicated(t *testing.T) {
 
 	testDeployments.LocalMockFlow(ctx)
 
-	mockPodman.
+	testDeployments.MockContainerEngine.
 		EXPECT().
-		ContainerInspect(ctx, options.MongodHostnamePrefix+"-"+expectedLocalDeployment).
-		Return([]*podman.InspectContainerData{
+		ContainerInspect(ctx, expectedLocalDeployment).
+		Return([]*container.InspectData{
 			{
-				Name: options.MongodHostnamePrefix + "-" + expectedLocalDeployment,
-				Config: &podman.InspectContainerConfig{
+				Name: expectedLocalDeployment,
+				Config: &container.InspectDataConfig{
 					Labels: map[string]string{
 						"version": "7.0.1",
 					},
 				},
-				HostConfig: &podman.InspectContainerHostConfig{
-					PortBindings: map[string][]podman.InspectHostPort{
+				HostConfig: &container.InspectDataHostConfig{
+					PortBindings: map[string][]container.InspectDataHostPort{
 						"27017/tcp": {
 							{
 								HostIP:   "127.0.0.1",
 								HostPort: "27017",
 							},
 						},
-					},
-				},
-				Mounts: []podman.InspectMount{
-					{
-						Name: opts.DeploymentOpts.LocalMongodDataVolume(),
 					},
 				},
 			},
@@ -299,29 +287,19 @@ func TestCreate_RunAtlas(t *testing.T) {
 		store: mockIndexStore,
 	}
 
-	index := &atlasv2.ClusterSearchIndex{
-		Analyzer:       &opts.Analyzer,
-		CollectionName: opts.Collection,
-		Database:       opts.DBName,
-		Mappings: &atlasv2.ApiAtlasFTSMappings{
-			Dynamic: &opts.Dynamic,
-			Fields:  nil,
-		},
-		Name:           opts.Name,
-		SearchAnalyzer: &opts.SearchAnalyzer,
-		Type:           pointer.Get(search.DefaultType),
-	}
+	index, err := opts.NewSearchIndex()
+	require.NoError(t, err)
 
 	indexWithID := &atlasv2.ClusterSearchIndex{
-		Analyzer:       &opts.Analyzer,
 		CollectionName: opts.Collection,
 		Database:       opts.DBName,
+		Analyzer:       &opts.Analyzer,
 		Mappings: &atlasv2.ApiAtlasFTSMappings{
 			Dynamic: &opts.Dynamic,
 			Fields:  nil,
 		},
-		Name:           opts.Name,
 		SearchAnalyzer: &opts.SearchAnalyzer,
+		Name:           opts.Name,
 		IndexID:        &indexID,
 	}
 

@@ -30,18 +30,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20231115014/admin"
+	"go.mongodb.org/atlas-sdk/v20240530002/admin"
 	"go.mongodb.org/atlas/auth"
 )
-
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		4,
-		[]string{},
-	)
-}
 
 func TestLoginBuilder(t *testing.T) {
 	test.CmdValidator(

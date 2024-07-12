@@ -27,12 +27,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20231115014/admin"
+	"go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
 func TestStart_RunLocal_PausedContainers(t *testing.T) {
@@ -40,7 +39,6 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 	ctx := context.Background()
 
 	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
-	mockPodman := deploymentsTest.MockPodman
 
 	buf := new(bytes.Buffer)
 	startOpts := &StartOpts{
@@ -57,34 +55,10 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 	expected := deploymentsTest.MockContainerWithState("paused")
 	deploymentsTest.LocalMockFlowWithMockContainer(ctx, expected)
 
-	mockPodman.
+	deploymentsTest.MockContainerEngine.
 		EXPECT().
-		ContainerInspect(ctx, startOpts.LocalMongotHostname()).
-		Return([]*podman.InspectContainerData{
-			{
-				NetworkSettings: &podman.InspectNetworkSettings{
-					Networks: map[string]*podman.InspectAdditionalNetwork{
-						startOpts.LocalNetworkName(): {
-							InspectBasicNetworkConfig: podman.InspectBasicNetworkConfig{
-								IPAddress: "1.2.3.4",
-							},
-						},
-					},
-				},
-			},
-		}, nil).
-		Times(1)
-
-	mockPodman.
-		EXPECT().
-		Exec(gomock.Any(), startOpts.LocalMongodHostname(), "/bin/sh", "-c", gomock.Any()).
+		ContainerUnpause(ctx, startOpts.LocalMongodHostname()).
 		Return(nil).
-		Times(1)
-
-	mockPodman.
-		EXPECT().
-		UnpauseContainers(ctx, startOpts.LocalMongodHostname(), startOpts.LocalMongotHostname()).
-		Return(nil, nil).
 		Times(1)
 
 	require.NoError(t, startOpts.Run(ctx))
@@ -97,7 +71,6 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 	ctx := context.Background()
 
 	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
-	mockPodman := deploymentsTest.MockPodman
 
 	buf := new(bytes.Buffer)
 	startOpts := &StartOpts{
@@ -114,34 +87,10 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 	expected := deploymentsTest.MockContainerWithState("exited")
 	deploymentsTest.LocalMockFlowWithMockContainer(ctx, expected)
 
-	mockPodman.
+	deploymentsTest.MockContainerEngine.
 		EXPECT().
-		ContainerInspect(ctx, startOpts.LocalMongotHostname()).
-		Return([]*podman.InspectContainerData{
-			{
-				NetworkSettings: &podman.InspectNetworkSettings{
-					Networks: map[string]*podman.InspectAdditionalNetwork{
-						startOpts.LocalNetworkName(): {
-							InspectBasicNetworkConfig: podman.InspectBasicNetworkConfig{
-								IPAddress: "1.2.3.4",
-							},
-						},
-					},
-				},
-			},
-		}, nil).
-		Times(1)
-
-	mockPodman.
-		EXPECT().
-		Exec(gomock.Any(), startOpts.LocalMongodHostname(), "/bin/sh", "-c", gomock.Any()).
+		ContainerStart(ctx, startOpts.LocalMongodHostname()).
 		Return(nil).
-		Times(1)
-
-	mockPodman.
-		EXPECT().
-		StartContainers(ctx, startOpts.LocalMongodHostname(), startOpts.LocalMongotHostname()).
-		Return(nil, nil).
 		Times(1)
 
 	require.NoError(t, startOpts.Run(ctx))

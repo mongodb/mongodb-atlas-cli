@@ -63,7 +63,7 @@ functions:
         script: |
           set -Eeou pipefail
 
-          curl -sL http://boxes.10gen.com/build/curator/curator-dist-rhel80-${curator_release|"latest"}.tar.gz | tar zx
+          curl -sL http://boxes.10gen.com/build/curator/curator-dist-rhel70-${curator_release|"latest"}.tar.gz | tar zx
   "generate notices":
     - command: subprocess.exec
       type: test
@@ -227,6 +227,7 @@ functions:
         include_expansions_in_env:
           - project
           - revision
+          - server_version
           - created_at
           - image
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/meta

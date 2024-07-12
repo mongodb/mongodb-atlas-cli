@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20231115014/admin"
+	admin "go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
 // MockLiveMigrationValidationsCreator is a mock of LiveMigrationValidationsCreator interface.
@@ -35,7 +35,7 @@ func (m *MockLiveMigrationValidationsCreator) EXPECT() *MockLiveMigrationValidat
 }
 
 // CreateValidation mocks base method.
-func (m *MockLiveMigrationValidationsCreator) CreateValidation(arg0 string, arg1 *admin.LiveMigrationRequest) (*admin.LiveImportValidation, error) {
+func (m *MockLiveMigrationValidationsCreator) CreateValidation(arg0 string, arg1 *admin.LiveMigrationRequest20240530) (*admin.LiveImportValidation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateValidation", arg0, arg1)
 	ret0, _ := ret[0].(*admin.LiveImportValidation)

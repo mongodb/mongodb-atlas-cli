@@ -57,9 +57,13 @@ func (p *Manifest) IsValid() (bool, []error) {
 	} else if valid, _ := regexp.MatchString(`^\d+\.\d+\.\d+$`, p.Version); !valid {
 		errorsList = append(errorsList, errors.New(`value in field "version" is not a valid semantic version`))
 	}
-	if p.Commands == nil {
+
+	switch {
+	case p.Commands == nil:
 		errorsList = append(errorsList, fmt.Errorf(errorMessage, "commands"))
-	} else {
+	case len(p.Commands) == 0:
+		errorsList = append(errorsList, errors.New("the plugin needs to contain at least one command"))
+	default:
 		for command, value := range p.Commands {
 			if value.Description == "" {
 				errorsList = append(errorsList, fmt.Errorf(`value "description" in command "%s" is not defined`, command))

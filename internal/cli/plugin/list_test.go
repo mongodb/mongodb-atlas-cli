@@ -48,6 +48,15 @@ func getTestPlugins() []*plugin.Plugin {
 	}
 }
 
+func TestLoginBuilder(t *testing.T) {
+	test.CmdValidator(
+		t,
+		ListBuilder(nil),
+		0,
+		[]string{},
+	)
+}
+
 func TestList_Run(t *testing.T) {
 	plugins := getTestPlugins()
 

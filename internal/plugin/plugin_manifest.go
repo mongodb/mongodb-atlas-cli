@@ -92,14 +92,12 @@ func getManifestsFromPluginDirectory(pluginDirectory string) ([]*Manifest, error
 		}
 
 		pluginDirectoryPath := fmt.Sprintf("%s/%s", pluginDirectory, directory.Name())
-
 		manifestFileData, err := getManifestFileBytes(pluginDirectoryPath)
-
 		if err != nil {
 			continue
 		}
-		pluginManifest, err := parseManifestFile(manifestFileData)
 
+		pluginManifest, err := parseManifestFile(manifestFileData)
 		if err != nil {
 			logPluginWarning(`manifest file of plugin in directory "%s"could not be parsed`, pluginDirectoryPath)
 			continue
@@ -116,14 +114,12 @@ func getManifestsFromPluginDirectory(pluginDirectory string) ([]*Manifest, error
 		}
 
 		binaryPath, err := getPathToExecutableBinary(pluginDirectoryPath, pluginManifest.Binary)
-
 		if err != nil {
 			logPluginWarning(err.Error())
 			continue
 		}
 
 		pluginManifest.BinaryPath = binaryPath
-
 		manifests = append(manifests, pluginManifest)
 	}
 

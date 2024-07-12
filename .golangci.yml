@@ -89,7 +89,7 @@ linters-settings:
       - name: constant-logical-expr
       - name: confusing-naming
       - name: unnecessary-stmt
-      - name: imports-blacklist
+      - name: imports-blocklist
         arguments:
           - "github.com/pkg/errors"
   gci:
@@ -221,4 +221,4 @@ issues:
         - gocyclo
     - path: internal/test/fixture # Don't check for magic numbers on fixtures.
       linters:
-        - gomnd
+        - mnd

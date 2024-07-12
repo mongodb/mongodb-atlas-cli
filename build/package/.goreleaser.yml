@@ -110,11 +110,13 @@ nfpms:
   overrides:
     deb:
       dependencies:
-        - docker
+        - docker-ce
+        - docker-ce-cli
     rpm:
       recommends:
         - podman
-        - docker
+        - docker-ce
+        - docker-ce-cli
 checksum:
   name_template: checksums.txt
   extra_files:

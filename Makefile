@@ -1,6 +1,6 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
-GOLANGCI_VERSION=v1.56.2
+GOLANGCI_VERSION=v1.59.1
 COVERAGE=coverage.out
 
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)

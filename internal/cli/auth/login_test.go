@@ -34,15 +34,6 @@ import (
 	"go.mongodb.org/atlas/auth"
 )
 
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		4,
-		[]string{},
-	)
-}
-
 func TestLoginBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,

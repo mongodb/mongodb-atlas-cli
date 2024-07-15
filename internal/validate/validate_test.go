@@ -311,9 +311,11 @@ func TestOptionalURL(t *testing.T) {
 }
 
 func TestPath(t *testing.T) {
-	f, err := os.CreateTemp(t.TempDir(), "TestPath")
+	f, err := os.CreateTemp("", "TestPath")
 	require.NoError(t, err)
-
+	t.Cleanup(func() {
+		os.Remove(f.Name())
+	})
 	tests := []struct {
 		name    string
 		val     any
@@ -351,9 +353,11 @@ func TestPath(t *testing.T) {
 }
 
 func TestOptionalPath(t *testing.T) {
-	f, err := os.CreateTemp(t.TempDir(), "TestOptionalPath")
+	f, err := os.CreateTemp("", "TestOptionalPath")
 	require.NoError(t, err)
-
+	t.Cleanup(func() {
+		os.Remove(f.Name())
+	})
 	tests := []struct {
 		name    string
 		val     any

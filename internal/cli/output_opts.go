@@ -109,7 +109,7 @@ func (opts *OutputOpts) IsCygwinTerminal() bool {
 }
 
 // Print will evaluate the defined format and try to parse it accordingly outputting to the set writer.
-func (opts *OutputOpts) Print(o interface{}) error {
+func (opts *OutputOpts) Print(o any) error {
 	if opts.ConfigOutput() == jsonFormat {
 		return jsonwriter.Print(opts.ConfigWriter(), o)
 	}
@@ -131,7 +131,7 @@ func (opts *OutputOpts) Print(o interface{}) error {
 	return err
 }
 
-func (opts *OutputOpts) PrintForCompactResultsResponse(o interface{}) error {
+func (opts *OutputOpts) PrintForCompactResultsResponse(o any) error {
 	if opts.ConfigOutput() == jsonFormat {
 		compactResponse, err := mapReduceResults(o)
 		if err == nil {
@@ -159,13 +159,13 @@ func (opts *OutputOpts) PrintForCompactResultsResponse(o interface{}) error {
 	return err
 }
 
-func mapReduceResults(o interface{}) (interface{}, error) {
+func mapReduceResults(o any) (any, error) {
 	jsonString, err := json.Marshal(o)
 	if err != nil {
 		return nil, err
 	}
 
-	var val interface{}
+	var val any
 	if e := json.Unmarshal(jsonString, &val); e != nil {
 		return nil, e
 	}

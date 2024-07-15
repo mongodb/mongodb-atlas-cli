@@ -48,7 +48,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 
 func (opts *ListOpts) Run() error {
 	listOptions := opts.NewAtlasListOptions()
-	var r interface{}
+	var r any
 	var err error
 	if opts.OrgID != "" {
 		r, err = opts.store.GetOrgProjects(opts.OrgID, listOptions)

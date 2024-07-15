@@ -46,7 +46,7 @@ func NewDeleteOpts(successMsg, failMsg string) *DeleteOpts {
 
 // Delete deletes a resource not associated to a project, it expects a callback
 // that should perform the deletion from the store.
-func (opts *DeleteOpts) Delete(d interface{}, a ...string) error {
+func (opts *DeleteOpts) Delete(d any, a ...string) error {
 	if !opts.Confirm {
 		fmt.Println(opts.FailMessage())
 		return nil

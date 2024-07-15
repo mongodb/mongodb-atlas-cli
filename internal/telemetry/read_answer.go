@@ -44,7 +44,7 @@ func listFields(target reflect.Value) []fieldValue {
 	return ret
 }
 
-func findAnswerInStruct(target reflect.Value, name string) (interface{}, error) { // based on https://pkg.go.dev/github.com/AlecAivazis/survey/v2/core#WriteAnswer
+func findAnswerInStruct(target reflect.Value, name string) (any, error) { // based on https://pkg.go.dev/github.com/AlecAivazis/survey/v2/core#WriteAnswer
 	if target.Kind() == reflect.Ptr {
 		target = target.Elem()
 	}
@@ -75,8 +75,8 @@ func findAnswerInStruct(target reflect.Value, name string) (interface{}, error) 
 	return nil, fmt.Errorf("%w: %s", ErrFieldNotFound, name)
 }
 
-func readAnswer(response interface{}, name string) (interface{}, error) {
-	v, ok := response.(map[string]interface{})
+func readAnswer(response any, name string) (any, error) {
+	v, ok := response.(map[string]any)
 	if ok {
 		ret, ok := v[name]
 		if !ok {

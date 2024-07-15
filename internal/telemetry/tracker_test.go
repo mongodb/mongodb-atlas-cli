@@ -153,7 +153,7 @@ func TestSave(t *testing.T) {
 		cacheDir:         cacheDir,
 	}
 
-	var properties = map[string]interface{}{
+	var properties = map[string]any{
 		"command": "mock-command",
 	}
 	var event = Event{
@@ -184,7 +184,7 @@ func TestSaveOverMaxCacheFileSize(t *testing.T) {
 		cacheDir:         cacheDir,
 	}
 
-	var properties = map[string]interface{}{
+	var properties = map[string]any{
 		"command": "mock-command",
 	}
 	var event = Event{

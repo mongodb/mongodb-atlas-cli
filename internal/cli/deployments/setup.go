@@ -281,7 +281,7 @@ func (opts *SetupOpts) promptDeploymentName() error {
 		Default: opts.DeploymentName,
 	}
 
-	return telemetry.TrackAskOne(p, &opts.DeploymentName, survey.WithValidator(func(ans interface{}) error {
+	return telemetry.TrackAskOne(p, &opts.DeploymentName, survey.WithValidator(func(ans any) error {
 		name, _ := ans.(string)
 		return options.ValidateDeploymentName(name)
 	}))
@@ -342,7 +342,7 @@ func (opts *SetupOpts) promptPort() error {
 		Default: exportPort,
 	}
 
-	err := telemetry.TrackAskOne(p, &exportPort, survey.WithValidator(func(ans interface{}) error {
+	err := telemetry.TrackAskOne(p, &exportPort, survey.WithValidator(func(ans any) error {
 		input, _ := ans.(string)
 		value, err := strconv.Atoi(input)
 		if err != nil {

@@ -59,7 +59,7 @@ var listTemplate = `ID	TYPE	CREATED{{range valueOrEmptySlice .Results}}
 `
 
 func (opts *ListOpts) Run() error {
-	var r interface{}
+	var r any
 	var err error
 
 	if opts.orgID != "" {

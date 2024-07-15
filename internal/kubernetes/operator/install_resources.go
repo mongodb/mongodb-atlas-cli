@@ -53,7 +53,7 @@ type InstallConfig struct {
 }
 
 type Installer interface {
-	InstallCRDs(ctx context.Context, version string, namespaced bool) error
+	InstallCRDs(ctx context.Context, v string, namespaced bool) error
 	InstallConfiguration(ctx context.Context, installConfig *InstallConfig) error
 	InstallCredentials(ctx context.Context, namespace, orgID, publicKey, privateKey string, projectName string) error
 }
@@ -66,14 +66,14 @@ type InstallResources struct {
 	subDeletionProtection bool
 }
 
-func (ir *InstallResources) InstallCRDs(ctx context.Context, version string, namespaced bool) error {
+func (ir *InstallResources) InstallCRDs(ctx context.Context, v string, namespaced bool) error {
 	target := installationTargetClusterWide
 
 	if namespaced {
 		target = installationTargetNamespaced
 	}
 
-	data, err := ir.versionProvider.DownloadResource(ctx, version, fmt.Sprintf("deploy/%s/crds.yaml", target))
+	data, err := ir.versionProvider.DownloadResource(ctx, v, fmt.Sprintf("deploy/%s/crds.yaml", target))
 	if err != nil {
 		return fmt.Errorf("unable to retrieve CRDs from repository: %w", err)
 	}
@@ -130,7 +130,7 @@ func (ir *InstallResources) InstallConfiguration(ctx context.Context, installCon
 	return nil
 }
 
-func (ir *InstallResources) handleKind(ctx context.Context, installConfig *InstallConfig, config map[string]interface{}) error {
+func (ir *InstallResources) handleKind(ctx context.Context, installConfig *InstallConfig, config map[string]any) error {
 	switch config["kind"] {
 	case "ServiceAccount":
 		return ir.addServiceAccount(ctx, config, installConfig.Namespace)
@@ -178,7 +178,7 @@ func (ir *InstallResources) InstallCredentials(ctx context.Context, namespace, o
 	return nil
 }
 
-func (ir *InstallResources) addServiceAccount(ctx context.Context, config map[string]interface{}, namespace string) error {
+func (ir *InstallResources) addServiceAccount(ctx context.Context, config map[string]any, namespace string) error {
 	obj := &corev1.ServiceAccount{}
 	err := ir.objConverter.FromUnstructured(config, obj)
 	if err != nil {
@@ -195,7 +195,7 @@ func (ir *InstallResources) addServiceAccount(ctx context.Context, config map[st
 	return nil
 }
 
-func (ir *InstallResources) addRoles(ctx context.Context, config map[string]interface{}, namespace string, watch []string) error {
+func (ir *InstallResources) addRoles(ctx context.Context, config map[string]any, namespace string, watch []string) error {
 	namespaces := map[string]struct{}{namespace: {}}
 
 	if !isLeaderElectionResource(config, leaderElectionRoleName) {
@@ -222,7 +222,7 @@ func (ir *InstallResources) addRoles(ctx context.Context, config map[string]inte
 	return nil
 }
 
-func (ir *InstallResources) addClusterRole(ctx context.Context, config map[string]interface{}, namespace string) error {
+func (ir *InstallResources) addClusterRole(ctx context.Context, config map[string]any, namespace string) error {
 	obj := &rbacv1.ClusterRole{}
 	err := ir.objConverter.FromUnstructured(config, obj)
 	if err != nil {
@@ -239,7 +239,7 @@ func (ir *InstallResources) addClusterRole(ctx context.Context, config map[strin
 	return nil
 }
 
-func (ir *InstallResources) addRoleBindings(ctx context.Context, config map[string]interface{}, namespace string, watch []string) error {
+func (ir *InstallResources) addRoleBindings(ctx context.Context, config map[string]any, namespace string, watch []string) error {
 	namespaces := map[string]struct{}{namespace: {}}
 
 	if !isLeaderElectionResource(config, leaderElectionRoleBindingName) {
@@ -267,7 +267,7 @@ func (ir *InstallResources) addRoleBindings(ctx context.Context, config map[stri
 	return nil
 }
 
-func (ir *InstallResources) addClusterRoleBinding(ctx context.Context, config map[string]interface{}, namespace string) error {
+func (ir *InstallResources) addClusterRoleBinding(ctx context.Context, config map[string]any, namespace string) error {
 	obj := &rbacv1.ClusterRoleBinding{}
 	err := ir.objConverter.FromUnstructured(config, obj)
 	if err != nil {
@@ -285,7 +285,7 @@ func (ir *InstallResources) addClusterRoleBinding(ctx context.Context, config ma
 	return nil
 }
 
-func (ir *InstallResources) addDeployment(ctx context.Context, config map[string]interface{}, installConfig *InstallConfig) error {
+func (ir *InstallResources) addDeployment(ctx context.Context, config map[string]any, installConfig *InstallConfig) error {
 	obj := &appsv1.Deployment{}
 	err := ir.objConverter.FromUnstructured(config, obj)
 	if err != nil {
@@ -338,13 +338,13 @@ func (ir *InstallResources) addDeployment(ctx context.Context, config map[string
 	return nil
 }
 
-func parseYaml(data io.ReadCloser) ([]map[string]interface{}, error) {
-	var k8sResources []map[string]interface{}
+func parseYaml(data io.ReadCloser) ([]map[string]any, error) {
+	var k8sResources []map[string]any
 
 	decoder := yaml.NewDecoder(data)
 
 	for {
-		obj := map[string]interface{}{}
+		obj := map[string]any{}
 		err := decoder.Decode(obj)
 		if err != nil {
 			if err == io.EOF {
@@ -384,13 +384,13 @@ func joinNamespaces(namespace string, watched []string) string {
 	return strings.Join(list, ",")
 }
 
-func isLeaderElectionResource(config map[string]interface{}, leaderElectionID string) bool {
+func isLeaderElectionResource(config map[string]any, leaderElectionID string) bool {
 	value, ok := config["metadata"]
 	if !ok {
 		return false
 	}
 
-	metadata, ok := value.(map[string]interface{})
+	metadata, ok := value.(map[string]any)
 	if !ok {
 		return false
 	}

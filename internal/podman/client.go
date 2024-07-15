@@ -28,8 +28,7 @@ import (
 )
 
 var (
-	ErrPodmanNotFound  = errors.New("podman not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs")
-	ErrNetworkNotFound = errors.New("network ip range was not found")
+	ErrPodmanNotFound = errors.New("podman not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs")
 )
 
 type RunContainerOpts struct {
@@ -103,7 +102,7 @@ type Client interface {
 	PullImage(ctx context.Context, name string) ([]byte, error)
 	ImageHealthCheck(ctx context.Context, name string) (*Schema2HealthConfig, error)
 	ContainerHealthStatus(ctx context.Context, name string) (string, error)
-	Logs(ctx context.Context) (map[string]interface{}, []error)
+	Logs(ctx context.Context) (map[string]any, []error)
 	ContainerLogs(ctx context.Context, name string) ([]string, error)
 	ContainerStatusAndUptime(ctx context.Context, name string) (string, time.Duration, error)
 }
@@ -355,14 +354,14 @@ func (o *client) Version(ctx context.Context) (map[string]any, error) {
 	return version, err
 }
 
-func (o *client) Logs(ctx context.Context) (map[string]interface{}, []error) {
-	l := map[string]interface{}{}
+func (o *client) Logs(ctx context.Context) (map[string]any, []error) {
+	l := map[string]any{}
 	var errs []error
 	output, err := o.runPodman(ctx, "ps", "--all", "--format", "json", "--filter", "name=mongo")
 	if err != nil {
 		errs = append(errs, err)
 	} else {
-		var podmanLogs []interface{}
+		var podmanLogs []any
 		if err = json.Unmarshal(output, &podmanLogs); err != nil {
 			errs = append(errs, err)
 		}
@@ -373,7 +372,7 @@ func (o *client) Logs(ctx context.Context) (map[string]interface{}, []error) {
 	if err != nil {
 		errs = append(errs, err)
 	} else {
-		var networks []interface{}
+		var networks []any
 		if err = json.Unmarshal(output, &networks); err != nil {
 			errs = append(errs, err)
 		}

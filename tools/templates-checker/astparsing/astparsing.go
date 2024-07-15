@@ -43,8 +43,8 @@ type CommandBuilderInfo struct {
 	TemplateValue     string
 }
 
-func LoadCommandBuilderInfos(packages []*packages.Package) []*CommandBuilderInfo {
-	commandBuilderFuncDecls := findCommandBuilderFuncDecl(packages)
+func LoadCommandBuilderInfos(p []*packages.Package) []*CommandBuilderInfo {
+	commandBuilderFuncDecls := findCommandBuilderFuncDecl(p)
 
 	builderFuncs := make([]*CommandBuilderInfo, 0)
 
@@ -63,11 +63,11 @@ func LoadCommandBuilderInfos(packages []*packages.Package) []*CommandBuilderInfo
 }
 
 // Iterate through all to find all command builder functions.
-func findCommandBuilderFuncDecl(packages []*packages.Package) []*CommandBuilderFunc {
+func findCommandBuilderFuncDecl(p []*packages.Package) []*CommandBuilderFunc {
 	builderFuncs := make([]*CommandBuilderFunc, 0)
 
 	// Loop through all declarations in every package, file
-	for _, pkg := range packages {
+	for _, pkg := range p {
 		for _, file := range pkg.Syntax {
 			// Loop through all declarations, this can be variable, function, ... declarations
 			for _, declaration := range file.Decls {

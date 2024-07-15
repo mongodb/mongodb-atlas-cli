@@ -158,17 +158,17 @@ func (opts *IndexOpts) NewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
 // indexFieldParts index field should be fieldName:analyzer:fieldType.
 const indexFieldParts = 2
 
-func (opts *IndexOpts) indexFields() (map[string]interface{}, error) {
+func (opts *IndexOpts) indexFields() (map[string]any, error) {
 	if len(opts.fields) == 0 {
 		return nil, nil
 	}
-	fields := make(map[string]interface{})
+	fields := make(map[string]any)
 	for _, p := range opts.fields {
 		f := strings.Split(p, ":")
 		if len(f) != indexFieldParts {
 			return nil, fmt.Errorf("partition should be fieldName:fieldType, got: %s", p)
 		}
-		fields[f[0]] = map[string]interface{}{
+		fields[f[0]] = map[string]any{
 			"type": f[1],
 		}
 	}

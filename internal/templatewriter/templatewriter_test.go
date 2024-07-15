@@ -25,7 +25,7 @@ import (
 type printTest struct {
 	name     string
 	template string
-	data     interface{}
+	data     any
 	expected string
 	wantErr  require.ErrorAssertionFunc
 }

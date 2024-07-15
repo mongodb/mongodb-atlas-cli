@@ -74,7 +74,7 @@ func (opts *Opts) askDBUserOptions() error {
 	return telemetry.TrackAsk(qs, opts)
 }
 
-func (opts *Opts) validateUniqueUsername(val interface{}) error {
+func (opts *Opts) validateUniqueUsername(val any) error {
 	username, ok := val.(string)
 	if !ok {
 		return fmt.Errorf("the username %s is not valid", username)

@@ -29,12 +29,11 @@ import (
 )
 
 const (
-	listSearchIndexes      = "$listSearchIndexes"
-	addFields              = "$addFields"
-	idField                = "id"
-	collectionField        = "collection"
-	databaseField          = "database"
-	defaultSearchIndexType = "search"
+	listSearchIndexes = "$listSearchIndexes"
+	addFields         = "$addFields"
+	idField           = "id"
+	collectionField   = "collection"
+	databaseField     = "database"
 )
 
 var ErrSearchIndexNotFound = errors.New("search Index not found")
@@ -59,7 +58,7 @@ type SearchIndexDefinition struct {
 }
 
 // todo: CLOUDP-199915 Use go-driver search index management helpers instead of createSearchIndex command
-func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
+func (d *database) CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
 	// To maintain formatting of the SDK, marshal object into JSON and then unmarshal into BSON
 	jsonIndex, err := json.Marshal(idx)
 	if err != nil {
@@ -75,14 +74,14 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 	// Empty these fields so that they are not included into the index definition for the MongoDB command
 	index = removeFields(index, "id", "collectionName", "database", "type")
 
-	options := options.SearchIndexes().SetName(idx.Name)
+	o := options.SearchIndexes().SetName(idx.Name)
 	if idx.Type != nil {
-		options.SetType(*idx.Type)
+		o.SetType(*idx.Type)
 	}
 
-	_, err = o.db.Collection(collection).SearchIndexes().CreateOne(ctx, mongo.SearchIndexModel{
+	_, err = d.db.Collection(collection).SearchIndexes().CreateOne(ctx, mongo.SearchIndexModel{
 		Definition: index,
-		Options:    options,
+		Options:    o,
 	})
 
 	_, _ = log.Debugln("Creating search index with definition: ", index)
@@ -90,7 +89,7 @@ func (o *database) CreateSearchIndex(ctx context.Context, collection string, idx
 		return nil, err
 	}
 
-	return o.SearchIndexByName(ctx, idx.Name, collection)
+	return d.SearchIndexByName(ctx, idx.Name, collection)
 }
 
 func removeFields(doc bson.D, fields ...string) bson.D {
@@ -107,15 +106,15 @@ func removeFields(doc bson.D, fields ...string) bson.D {
 	return cleanedDoc
 }
 
-func (o *database) SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error) {
-	collectionNames, err := o.db.ListCollectionNames(ctx, bson.D{}, nil)
+func (d *database) SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error) {
+	collectionNames, err := d.db.ListCollectionNames(ctx, bson.D{}, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	// We search the index in all the collections of the database
 	for _, coll := range collectionNames {
-		cursor, err := o.db.Collection(coll).Aggregate(ctx, newSearchIndexPipeline(id))
+		cursor, err := d.db.Collection(coll).Aggregate(ctx, newSearchIndexPipeline(id))
 		if err != nil || cursor == nil {
 			return nil, err
 		}
@@ -128,7 +127,7 @@ func (o *database) SearchIndex(ctx context.Context, id string) (*admin.ClusterSe
 				ID:         results[0].ID,
 				Name:       results[0].Name,
 				Collection: coll,
-				Database:   o.db.Name(),
+				Database:   d.db.Name(),
 				Status:     results[0].Status,
 			}
 			return newClusterSearchIndex(searchIndexDef), nil
@@ -138,14 +137,14 @@ func (o *database) SearchIndex(ctx context.Context, id string) (*admin.ClusterSe
 	return nil, fmt.Errorf("index `%s` not found: %w", id, ErrSearchIndexNotFound)
 }
 
-func (o *database) SearchIndexByName(ctx context.Context, name string, collection string) (*admin.ClusterSearchIndex, error) {
-	indexes, err := o.SearchIndexes(ctx, collection)
+func (d *database) SearchIndexByName(ctx context.Context, name string, collection string) (*admin.ClusterSearchIndex, error) {
+	indexes, err := d.SearchIndexes(ctx, collection)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, index := range indexes {
-		if index.Name == name && index.Database == o.db.Name() {
+		if index.Name == name && index.Database == d.db.Name() {
 			return index, nil
 		}
 	}
@@ -153,8 +152,8 @@ func (o *database) SearchIndexByName(ctx context.Context, name string, collectio
 	return nil, ErrSearchIndexNotFound
 }
 
-func (o *database) SearchIndexes(ctx context.Context, coll string) ([]*admin.ClusterSearchIndex, error) {
-	cursor, err := o.db.Collection(coll).Aggregate(ctx, newSearchIndexesPipeline(o.db.Name(), coll))
+func (d *database) SearchIndexes(ctx context.Context, coll string) ([]*admin.ClusterSearchIndex, error) {
+	cursor, err := d.db.Collection(coll).Aggregate(ctx, newSearchIndexesPipeline(d.db.Name(), coll))
 	if err != nil || cursor == nil {
 		return nil, err
 	}

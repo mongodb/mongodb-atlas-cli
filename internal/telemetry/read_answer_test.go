@@ -23,17 +23,17 @@ import (
 
 func TestReadAnswer(t *testing.T) {
 	testCases := []struct {
-		input    interface{}
+		input    any
 		name     string
-		expected interface{}
+		expected any
 	}{
 		{
-			input:    map[string]interface{}{"test": "value", "test2": 2},
+			input:    map[string]any{"test": "value", "test2": 2},
 			name:     "test",
 			expected: "value",
 		},
 		{
-			input:    map[string]interface{}{"test": "value", "test2": 2},
+			input:    map[string]any{"test": "value", "test2": 2},
 			name:     "test2",
 			expected: 2,
 		},
@@ -130,11 +130,11 @@ func TestReadAnswer(t *testing.T) {
 
 func TestReadAnswerNotFound(t *testing.T) {
 	testCases := []struct {
-		input interface{}
+		input any
 		name  string
 	}{
 		{
-			input: map[string]interface{}{"test": "value", "test2": 2},
+			input: map[string]any{"test": "value", "test2": 2},
 			name:  "test3",
 		},
 		{
@@ -183,7 +183,7 @@ func TestReadAnswerNotStructOrMap(t *testing.T) {
 	test := "value"
 
 	testCases := []struct {
-		input interface{}
+		input any
 		name  string
 	}{
 		{

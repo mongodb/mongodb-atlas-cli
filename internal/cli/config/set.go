@@ -44,7 +44,7 @@ func (opts *SetOpts) Run() error {
 			return err
 		}
 	}
-	var value interface{}
+	var value any
 	value = opts.val
 	if slices.Contains(config.BooleanProperties(), opts.prop) {
 		value = config.IsTrue(opts.val)

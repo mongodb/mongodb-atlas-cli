@@ -38,10 +38,10 @@ const (
 	speed       = 100 * time.Millisecond
 )
 
-type Watcher func() (interface{}, bool, error)
+type Watcher func() (any, bool, error)
 
 // Watch allow to init the OutputOpts in a functional way.
-func (opts *WatchOpts) Watch(f Watcher) (interface{}, error) {
+func (opts *WatchOpts) Watch(f Watcher) (any, error) {
 	if f == nil {
 		return nil, errors.New("no watcher provided")
 	}
@@ -63,7 +63,7 @@ func (opts *WatchOpts) Watch(f Watcher) (interface{}, error) {
 
 var backoffCoefficients = []float32{0.5, 1, 2}
 
-func (opts *WatchOpts) exponentialBackoff(f Watcher) (interface{}, bool, error) {
+func (opts *WatchOpts) exponentialBackoff(f Watcher) (any, bool, error) {
 	if opts.IsRetryableErr == nil {
 		return f()
 	}

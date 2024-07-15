@@ -20,7 +20,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 )
 
-func TrackAsk(qs []*survey.Question, response interface{}, opts ...survey.AskOpt) error {
+func TrackAsk(qs []*survey.Question, response any, opts ...survey.AskOpt) error {
 	err := survey.Ask(qs, response, opts...)
 	if !config.TelemetryEnabled() {
 		return err
@@ -35,7 +35,7 @@ func TrackAsk(qs []*survey.Question, response interface{}, opts ...survey.AskOpt
 	return err
 }
 
-func TrackAskOne(p survey.Prompt, response interface{}, opts ...survey.AskOpt) error {
+func TrackAskOne(p survey.Prompt, response any, opts ...survey.AskOpt) error {
 	err := survey.AskOne(p, response, opts...)
 	if !config.TelemetryEnabled() {
 		return err

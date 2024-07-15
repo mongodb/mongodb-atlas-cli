@@ -35,9 +35,9 @@ import (
 )
 
 type Event struct {
-	Timestamp  time.Time              `json:"timestamp"`
-	Source     string                 `json:"source"`
-	Properties map[string]interface{} `json:"properties"`
+	Timestamp  time.Time      `json:"timestamp"`
+	Source     string         `json:"source"`
+	Properties map[string]any `json:"properties"`
 }
 
 type EventOpt func(Event)
@@ -336,7 +336,7 @@ func newEvent(opts ...EventOpt) Event {
 	var event = Event{
 		Timestamp: time.Now(),
 		Source:    config.AtlasCLI,
-		Properties: map[string]interface{}{
+		Properties: map[string]any{
 			"result": "SUCCESS",
 		},
 	}

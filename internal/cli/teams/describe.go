@@ -49,7 +49,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	var r interface{}
+	var r any
 	var err error
 
 	if opts.name != "" {

@@ -21,6 +21,7 @@ import (
 	"testing"
 
 	"github.com/spf13/viper"
+	"github.com/stretchr/testify/require"
 )
 
 func TestURL(t *testing.T) {
@@ -310,86 +311,81 @@ func TestOptionalURL(t *testing.T) {
 }
 
 func TestPath(t *testing.T) {
-	f, err := os.CreateTemp(t.TempDir(), "sample")
-	if err != nil {
-		t.Fatal(err)
-	}
+	f, err := os.CreateTemp(t.TempDir(), "TestPath")
+	require.NoError(t, err)
+
 	tests := []struct {
 		name    string
 		val     any
-		wantErr bool
+		wantErr require.ErrorAssertionFunc
 	}{
 		{
 			name:    "valid",
 			val:     f.Name(),
-			wantErr: false,
+			wantErr: require.NoError,
 		},
 		{
 			name:    "empty",
 			val:     "",
-			wantErr: true,
+			wantErr: require.Error,
 		},
 		{
 			name:    "nil",
 			val:     nil,
-			wantErr: true,
+			wantErr: require.Error,
 		},
 		{
 			name:    "invalid value",
 			val:     1,
-			wantErr: true,
+			wantErr: require.Error,
 		},
 	}
 	for _, tt := range tests {
 		val := tt.val
 		wantErr := tt.wantErr
 		t.Run(tt.name, func(t *testing.T) {
-			if err2 := Path(val); (err2 != nil) != wantErr {
-				t.Errorf("Path() error = %v, wantErr %v", err2, wantErr)
-			}
+			t.Parallel()
+			wantErr(t, Path(val))
 		})
 	}
 }
 
 func TestOptionalPath(t *testing.T) {
-	f, err := os.CreateTemp(t.TempDir(), "sample")
-	if err != nil {
-		t.Fatal(err)
-	}
+	f, err := os.CreateTemp(t.TempDir(), "TestOptionalPath")
+	require.NoError(t, err)
 
 	tests := []struct {
 		name    string
 		val     any
-		wantErr bool
+		wantErr require.ErrorAssertionFunc
 	}{
 		{
 			name:    "valid",
 			val:     f.Name(),
-			wantErr: false,
+			wantErr: require.NoError,
 		},
 		{
 			name:    "empty",
 			val:     "",
-			wantErr: false,
+			wantErr: require.NoError,
 		},
 		{
 			name:    "nil",
 			val:     nil,
-			wantErr: false,
+			wantErr: require.NoError,
 		},
 		{
 			name:    "invalid value",
 			val:     1,
-			wantErr: true,
+			wantErr: require.Error,
 		},
 	}
 	for _, tt := range tests {
 		val := tt.val
 		wantErr := tt.wantErr
 		t.Run(tt.name, func(t *testing.T) {
-			if err2 := OptionalPath(val); (err2 != nil) != wantErr {
-				t.Errorf("OptionalPath() error = %v, wantErr %v", err2, wantErr)
-			}
+			t.Parallel()
+			wantErr(t, OptionalPath(val))
 		})
 	}
 }
@@ -398,41 +394,40 @@ func TestClusterName(t *testing.T) {
 	tests := []struct {
 		name    string
 		val     any
-		wantErr bool
+		wantErr require.ErrorAssertionFunc
 	}{
 		{
 			name:    "valid (single word)",
 			val:     "Cluster0",
-			wantErr: false,
+			wantErr: require.NoError,
 		},
 		{
 			name:    "valid (dashed)",
 			val:     "Cluster-0",
-			wantErr: false,
+			wantErr: require.NoError,
 		},
 		{
 			name:    "invalid (space)",
 			val:     "Cluster 0",
-			wantErr: true,
+			wantErr: require.Error,
 		},
 		{
 			name:    "invalid (underscore)",
 			val:     "Cluster_0",
-			wantErr: true,
+			wantErr: require.Error,
 		},
 		{
 			name:    "invalid (spacial char)",
 			val:     "Cluster-ñ",
-			wantErr: true,
+			wantErr: require.Error,
 		},
 	}
 	for _, tt := range tests {
 		val := tt.val
 		wantErr := tt.wantErr
 		t.Run(tt.name, func(t *testing.T) {
-			if err := ClusterName(val); (err != nil) != wantErr {
-				t.Errorf("ClusterName() error = %v, wantErr %v", err, wantErr)
-			}
+			t.Parallel()
+			wantErr(t, ClusterName(val))
 		})
 	}
 }
@@ -441,41 +436,40 @@ func TestDBUsername(t *testing.T) {
 	tests := []struct {
 		name    string
 		val     any
-		wantErr bool
+		wantErr require.ErrorAssertionFunc
 	}{
 		{
 			name:    "valid (single word)",
 			val:     "admin",
-			wantErr: false,
+			wantErr: require.NoError,
 		},
 		{
 			name:    "valid (dashed)",
 			val:     "admin-test",
-			wantErr: false,
+			wantErr: require.NoError,
 		},
 		{
 			name:    "valid (underscore)",
 			val:     "admin_test",
-			wantErr: false,
+			wantErr: require.NoError,
 		},
 		{
 			name:    "invalid (space)",
 			val:     "admin test",
-			wantErr: true,
+			wantErr: require.Error,
 		},
 		{
 			name:    "invalid (spacial char)",
 			val:     "admin-ñ",
-			wantErr: true,
+			wantErr: require.Error,
 		},
 	}
 	for _, tt := range tests {
 		val := tt.val
 		wantErr := tt.wantErr
 		t.Run(tt.name, func(t *testing.T) {
-			if err := DBUsername(val); (err != nil) != wantErr {
-				t.Errorf("DBUsername() error = %v, wantErr %v", err, wantErr)
-			}
+			t.Parallel()
+			wantErr(t, DBUsername(val))
 		})
 	}
 }
@@ -484,31 +478,30 @@ func TestWeakPassword(t *testing.T) {
 	tests := []struct {
 		name    string
 		val     any
-		wantErr bool
+		wantErr require.ErrorAssertionFunc
 	}{
 		{
 			name:    "valid password",
 			val:     "password!@3!",
-			wantErr: false,
+			wantErr: require.NoError,
 		},
 		{
 			name:    "weak password",
 			val:     "password",
-			wantErr: true,
+			wantErr: require.Error,
 		},
 		{
 			name:    "weak password",
 			val:     "password1",
-			wantErr: true,
+			wantErr: require.Error,
 		},
 	}
 	for _, tt := range tests {
 		val := tt.val
 		wantErr := tt.wantErr
 		t.Run(tt.name, func(t *testing.T) {
-			if err := WeakPassword(val); (err != nil) != wantErr {
-				t.Errorf("WeakPassword() error = %v, wantErr %v", err, wantErr)
-			}
+			t.Parallel()
+			wantErr(t, WeakPassword(val))
 		})
 	}
 }

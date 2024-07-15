@@ -54,7 +54,7 @@ func TestProjectSettings(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
-		var settings map[string]interface{}
+		var settings map[string]any
 		if err := json.Unmarshal(resp, &settings); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}

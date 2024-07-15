@@ -83,10 +83,15 @@ func (opts *DownloadOpts) RunAtlas() error {
 	if err := opts.downloadLogFile(); err != nil {
 		return err
 	}
-	defer opts.Fs.Remove(opts.Out) //nolint:errcheck
+	defer func() {
+		_ = opts.Fs.Remove(opts.Out)
+	}()
 
 	return nil
 }
+
+// maxBytes  1k each write to avoid compression bomb.
+const maxBytes = 1024
 
 func (*DownloadOpts) write(w io.Writer, r io.Reader) error {
 	gr, errGz := gzip.NewReader(r)
@@ -96,7 +101,7 @@ func (*DownloadOpts) write(w io.Writer, r io.Reader) error {
 
 	written := false
 	for {
-		n, err := io.CopyN(w, gr, 1024) //nolint:mnd // 1k each write to avoid compression bomb
+		n, err := io.CopyN(w, gr, maxBytes)
 		if n > 0 {
 			written = true
 		}

@@ -215,7 +215,7 @@ func (t *tracker) remove() error {
 	return err
 }
 
-func castBool(i interface{}) bool {
+func castBool(i any) bool {
 	b, ok := i.(bool)
 	if ok {
 		return b
@@ -231,7 +231,7 @@ func castBool(i interface{}) bool {
 	return ret
 }
 
-func castString(i interface{}) string {
+func castString(i any) string {
 	s, ok := i.(string)
 	if ok {
 		return s
@@ -247,7 +247,7 @@ func castString(i interface{}) string {
 	return ret
 }
 
-func (t *tracker) trackSurvey(p survey.Prompt, response interface{}, e error) error {
+func (t *tracker) trackSurvey(p survey.Prompt, response any, e error) error {
 	o := t.defaultCommandOptions()
 
 	if e != nil {

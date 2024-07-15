@@ -155,11 +155,11 @@ Successfully logged in as test@10gen.com.
 
 type confirmMock struct{}
 
-func (confirmMock) Prompt(_ *survey.PromptConfig) (interface{}, error) {
+func (confirmMock) Prompt(_ *survey.PromptConfig) (any, error) {
 	return true, nil
 }
 
-func (confirmMock) Cleanup(_ *survey.PromptConfig, _ interface{}) error {
+func (confirmMock) Cleanup(_ *survey.PromptConfig, _ any) error {
 	return nil
 }
 

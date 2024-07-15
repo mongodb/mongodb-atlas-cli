@@ -53,8 +53,8 @@ func (opts *UpdateOpts) InitStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *UpdateOpts) fillReadOnlyValues(config *atlasv2.ConnectedOrgConfig) {
-	config.OrgId = opts.ConfigOrgID()
+func (opts *UpdateOpts) fillReadOnlyValues(c *atlasv2.ConnectedOrgConfig) {
+	c.OrgId = opts.ConfigOrgID()
 }
 
 func (opts *UpdateOpts) Run() error {

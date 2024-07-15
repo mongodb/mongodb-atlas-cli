@@ -143,7 +143,7 @@ func TestDeploymentsLocal(t *testing.T) {
 	})
 
 	t.Run("Seed database", func(t *testing.T) {
-		ids, err := myCol.InsertMany(ctx, []interface{}{
+		ids, err := myCol.InsertMany(ctx, []any{
 			bson.M{
 				"name": "test1",
 			},
@@ -157,7 +157,7 @@ func TestDeploymentsLocal(t *testing.T) {
 		b, err := os.ReadFile("data/sample_embedded_movies.json")
 		require.NoError(t, err)
 
-		var movies []interface{}
+		var movies []any
 		require.NoError(t, json.Unmarshal(b, &movies))
 
 		ids, err = client.Database(vectorSearchDB).Collection(vectorSearchCol).InsertMany(ctx, movies)
@@ -331,7 +331,7 @@ func TestDeploymentsLocal(t *testing.T) {
 		b, err := os.ReadFile("data/sample_vector_search_pipeline.json")
 		req.NoError(err)
 
-		var pipeline []map[string]interface{}
+		var pipeline []map[string]any
 		err = json.Unmarshal(b, &pipeline)
 		req.NoError(err)
 

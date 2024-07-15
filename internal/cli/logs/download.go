@@ -58,6 +58,9 @@ func (opts *DownloadOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
+// maxBytes  1k each write to avoid compression bomb.
+const maxBytes = 1024
+
 func (opts *DownloadOpts) write(w io.Writer, r io.Reader) error {
 	if !opts.decompress {
 		_, err := io.Copy(w, r)
@@ -71,7 +74,7 @@ func (opts *DownloadOpts) write(w io.Writer, r io.Reader) error {
 
 	written := false
 	for {
-		n, err := io.CopyN(w, gr, 1024) //nolint:mnd // 1k each write to avoid compression bomb
+		n, err := io.CopyN(w, gr, maxBytes)
 		if n > 0 {
 			written = true
 		}

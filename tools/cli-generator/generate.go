@@ -228,6 +228,8 @@ func (cli *CLI) generateCommand(cmd *Command) error {
 	return nil
 }
 
+const filePermissions = 0o600
+
 func cleanupFile(filePath string) error {
 	b, err := os.ReadFile(filePath)
 	if err != nil {
@@ -237,7 +239,6 @@ func cleanupFile(filePath string) error {
 	if err != nil {
 		return err
 	}
-	const filePermissions = 0600
 	return os.WriteFile(filePath, r, filePermissions)
 }
 

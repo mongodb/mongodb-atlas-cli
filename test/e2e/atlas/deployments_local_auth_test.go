@@ -154,7 +154,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 	})
 
 	t.Run("Seed database", func(t *testing.T) {
-		ids, err := myCol.InsertMany(ctx, []interface{}{
+		ids, err := myCol.InsertMany(ctx, []any{
 			bson.M{
 				"name": "test1",
 			}, bson.M{

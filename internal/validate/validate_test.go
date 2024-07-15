@@ -26,7 +26,7 @@ import (
 func TestURL(t *testing.T) {
 	tests := []struct {
 		name    string
-		val     interface{}
+		val     any
 		wantErr bool
 	}{
 		{
@@ -60,7 +60,7 @@ func TestURL(t *testing.T) {
 func TestOptionalObjectID(t *testing.T) {
 	tests := []struct {
 		name    string
-		val     interface{}
+		val     any
 		wantErr bool
 	}{
 		{
@@ -273,7 +273,7 @@ func TestOptionalURL(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name    string
-		val     interface{}
+		val     any
 		wantErr bool
 	}{
 		{
@@ -310,17 +310,13 @@ func TestOptionalURL(t *testing.T) {
 }
 
 func TestPath(t *testing.T) {
-	f, err := os.CreateTemp("", "sample")
+	f, err := os.CreateTemp(t.TempDir(), "sample")
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Cleanup(func() {
-		os.Remove(f.Name())
-	})
-
 	tests := []struct {
 		name    string
-		val     interface{}
+		val     any
 		wantErr bool
 	}{
 		{
@@ -356,17 +352,14 @@ func TestPath(t *testing.T) {
 }
 
 func TestOptionalPath(t *testing.T) {
-	f, err := os.CreateTemp("", "sample")
+	f, err := os.CreateTemp(t.TempDir(), "sample")
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Cleanup(func() {
-		os.Remove(f.Name())
-	})
 
 	tests := []struct {
 		name    string
-		val     interface{}
+		val     any
 		wantErr bool
 	}{
 		{
@@ -404,7 +397,7 @@ func TestOptionalPath(t *testing.T) {
 func TestClusterName(t *testing.T) {
 	tests := []struct {
 		name    string
-		val     interface{}
+		val     any
 		wantErr bool
 	}{
 		{
@@ -447,7 +440,7 @@ func TestClusterName(t *testing.T) {
 func TestDBUsername(t *testing.T) {
 	tests := []struct {
 		name    string
-		val     interface{}
+		val     any
 		wantErr bool
 	}{
 		{
@@ -490,7 +483,7 @@ func TestDBUsername(t *testing.T) {
 func TestWeakPassword(t *testing.T) {
 	tests := []struct {
 		name    string
-		val     interface{}
+		val     any
 		wantErr bool
 	}{
 		{

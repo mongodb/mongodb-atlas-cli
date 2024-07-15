@@ -86,8 +86,8 @@ func TestOutputOpts_mapReduceResults(t *testing.T) {
 			t.Fatalf("mapReduceResults() unexpected error: %v", err)
 		}
 
-		mapArrayResponse := reflect.ValueOf(compactResults).Interface().([]interface{})
-		mapResponse := mapArrayResponse[0].(map[string]interface{})
+		mapArrayResponse := reflect.ValueOf(compactResults).Interface().([]any)
+		mapResponse := mapArrayResponse[0].(map[string]any)
 		gotID := mapResponse["id"]
 		gotName := mapResponse["name"]
 		if gotID != wantID {

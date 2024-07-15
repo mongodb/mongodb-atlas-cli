@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
+	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
 )
 
@@ -84,12 +85,12 @@ func TestAwsOpts_Run(t *testing.T) {
 }
 
 func TestNormalizeAtlasRegion(t *testing.T) {
-	type test struct {
+	type tc struct {
 		input string
 		want  string
 	}
 
-	tests := []test{
+	tests := []tc{
 		{input: "eu-west-1", want: "EU_WEST_1"},
 		{input: "eu_west-1", want: "EU_WEST_1"},
 		{input: "eu-west_1", want: "EU_WEST_1"},
@@ -97,11 +98,12 @@ func TestNormalizeAtlasRegion(t *testing.T) {
 		{input: "eu_west_1", want: "EU_WEST_1"},
 	}
 
-	for _, tc := range tests {
-		got := normalizeAtlasRegion(tc.input)
-		if tc.want != got {
-			t.Errorf("expected: %s, got: %s", tc.want, got)
-		}
+	for _, c := range tests {
+		t.Run(c.input, func(t *testing.T) {
+			t.Parallel()
+			got := normalizeAtlasRegion(c.input)
+			assert.Equal(t, c.want, got)
+		})
 	}
 }
 

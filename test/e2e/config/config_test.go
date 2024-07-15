@@ -27,6 +27,7 @@ import (
 	pseudotty "github.com/creack/pty"
 	"github.com/hinshun/vt10x"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/stretchr/testify/require"
 )
 
 const (
@@ -36,10 +37,7 @@ const (
 
 func TestConfig(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
+	require.NoError(t, err)
 	t.Run("config", func(t *testing.T) {
 		key := os.Getenv("MCLI_PRIVATE_API_KEY")
 		_ = os.Unsetenv("MCLI_PRIVATE_API_KEY")
@@ -142,7 +140,7 @@ func TestConfig(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		var config map[string]interface{}
+		var config map[string]any
 		if err := json.Unmarshal(resp, &config); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}

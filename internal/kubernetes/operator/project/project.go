@@ -140,12 +140,12 @@ func BuildAtlasProject(br *AtlasProjectBuildRequest) (*AtlasProjectResult, error
 	}
 
 	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureEncryptionAtRest) {
-		encryptionAtRest, secrets, ferr := buildEncryptionAtRest(br.ProjectStore, br.ProjectID, br.Project.Name, br.TargetNamespace, br.Dictionary)
+		encryptionAtRest, s, ferr := buildEncryptionAtRest(br.ProjectStore, br.ProjectID, br.Project.Name, br.TargetNamespace, br.Dictionary)
 		if ferr != nil {
 			return nil, ferr
 		}
 		projectResult.Spec.EncryptionAtRest = encryptionAtRest
-		result.Secrets = append(result.Secrets, secrets...)
+		result.Secrets = append(result.Secrets, s...)
 	}
 
 	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureCloudProviderAccessRoles) {
@@ -173,12 +173,12 @@ func BuildAtlasProject(br *AtlasProjectBuildRequest) (*AtlasProjectResult, error
 	}
 
 	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureAlertConfiguration) {
-		alertConfigurations, secrets, ferr := buildAlertConfigurations(br.ProjectStore, br.ProjectID, br.Project.Name, br.TargetNamespace, br.Dictionary)
+		alertConfigurations, s, ferr := buildAlertConfigurations(br.ProjectStore, br.ProjectID, br.Project.Name, br.TargetNamespace, br.Dictionary)
 		if ferr != nil {
 			return nil, ferr
 		}
 		projectResult.Spec.AlertConfigurations = alertConfigurations
-		result.Secrets = append(result.Secrets, secrets...)
+		result.Secrets = append(result.Secrets, s...)
 	}
 
 	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureCustomRoles) {

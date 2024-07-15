@@ -49,9 +49,9 @@ func NewClient() MongoDBClient {
 	}
 }
 
-func NewClientWithContext(context context.Context) MongoDBClient {
+func NewClientWithContext(ctx context.Context) MongoDBClient {
 	return &mongodbClient{
-		ctx: context,
+		ctx: ctx,
 	}
 }
 

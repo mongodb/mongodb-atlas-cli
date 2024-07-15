@@ -21,13 +21,13 @@ import (
 )
 
 type Collection interface {
-	Aggregate(context.Context, interface{}) (*mongo.Cursor, error)
+	Aggregate(context.Context, any) (*mongo.Cursor, error)
 }
 
 type collection struct {
 	collection *mongo.Collection
 }
 
-func (o *collection) Aggregate(ctx context.Context, pipeline interface{}) (*mongo.Cursor, error) {
+func (o *collection) Aggregate(ctx context.Context, pipeline any) (*mongo.Cursor, error) {
 	return o.collection.Aggregate(ctx, pipeline)
 }

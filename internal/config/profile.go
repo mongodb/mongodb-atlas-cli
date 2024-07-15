@@ -82,11 +82,11 @@ var (
 )
 
 type Setter interface {
-	Set(string, interface{})
+	Set(string, any)
 }
 
 type GlobalSetter interface {
-	SetGlobal(string, interface{})
+	SetGlobal(string, any)
 }
 
 type Saver interface {
@@ -263,20 +263,20 @@ func (p *Profile) SetName(name string) error {
 	return nil
 }
 
-func Set(name string, value interface{}) { Default().Set(name, value) }
-func (p *Profile) Set(name string, value interface{}) {
+func Set(name string, value any) { Default().Set(name, value) }
+func (p *Profile) Set(name string, value any) {
 	settings := viper.GetStringMap(p.Name())
 	settings[name] = value
 	viper.Set(p.name, settings)
 }
 
-func SetGlobal(name string, value interface{}) { viper.Set(name, value) }
-func (*Profile) SetGlobal(name string, value interface{}) {
+func SetGlobal(name string, value any) { viper.Set(name, value) }
+func (*Profile) SetGlobal(name string, value any) {
 	SetGlobal(name, value)
 }
 
-func Get(name string) interface{} { return Default().Get(name) }
-func (p *Profile) Get(name string) interface{} {
+func Get(name string) any { return Default().Get(name) }
+func (p *Profile) Get(name string) any {
 	if viper.IsSet(name) && viper.Get(name) != "" {
 		return viper.Get(name)
 	}

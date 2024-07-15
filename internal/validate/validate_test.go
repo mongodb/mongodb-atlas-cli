@@ -314,7 +314,8 @@ func TestPath(t *testing.T) {
 	f, err := os.CreateTemp("", "TestPath")
 	require.NoError(t, err)
 	t.Cleanup(func() {
-		os.Remove(f.Name())
+		require.NoError(t, f.Close())
+		require.NoError(t, os.Remove(f.Name()))
 	})
 	tests := []struct {
 		name    string
@@ -356,7 +357,8 @@ func TestOptionalPath(t *testing.T) {
 	f, err := os.CreateTemp("", "TestOptionalPath")
 	require.NoError(t, err)
 	t.Cleanup(func() {
-		os.Remove(f.Name())
+		require.NoError(t, f.Close())
+		require.NoError(t, os.Remove(f.Name()))
 	})
 	tests := []struct {
 		name    string

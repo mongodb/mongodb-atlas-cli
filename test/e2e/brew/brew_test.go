@@ -49,12 +49,9 @@ func TestAtlasCLIConfig(t *testing.T) {
 		cmd := exec.Command(cliPath, "projects", "ls")
 		cmd.Env = append(os.Environ(), tempDirEnv)
 		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
 		got := string(resp)
-
-		if !strings.Contains(got, errorMessage) {
-			t.Errorf("want %q; got %q\n", errorMessage, got)
-		}
+		require.Error(t, err, got)
+		assert.Contains(t, got, errorMessage)
 	})
 
 	t.Run("help", func(t *testing.T) {

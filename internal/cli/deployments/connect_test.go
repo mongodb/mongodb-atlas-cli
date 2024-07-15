@@ -23,7 +23,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -45,7 +44,7 @@ func TestRun_ConnectLocal(t *testing.T) {
 	buf := new(bytes.Buffer)
 
 	deploymenTest := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
-	connectOpts := &options.ConnectOpts{
+	connectOpts := &ConnectOpts{
 		ConnectWith:    "connectionString",
 		DeploymentOpts: *deploymenTest.Opts,
 		OutputOpts: cli.OutputOpts{
@@ -96,10 +95,10 @@ func TestRun_ConnectAtlas(t *testing.T) {
 	mockAtlasClusterDescriber := mocks.NewMockClusterDescriber(ctrl)
 	deploymenTest := fixture.NewMockAtlasDeploymentOpts(ctrl, expectedAtlasDeployment)
 
-	connectOpts := &options.ConnectOpts{
+	connectOpts := &ConnectOpts{
 		ConnectWith:    "connectionString",
 		DeploymentOpts: *deploymenTest.Opts,
-		ConnectToAtlasOpts: options.ConnectToAtlasOpts{
+		ConnectToAtlasOpts: ConnectToAtlasOpts{
 			Store: mockAtlasClusterDescriber,
 			GlobalOpts: cli.GlobalOpts{
 				ProjectID: "projectID",
@@ -147,7 +146,7 @@ func TestPostRun(t *testing.T) {
 	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
 	buf := new(bytes.Buffer)
 
-	opts := &options.ConnectOpts{
+	opts := &ConnectOpts{
 		DeploymentOpts: *deploymentsTest.Opts,
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,

@@ -72,8 +72,9 @@ var (
 	errUnsupportedConnectWith     = fmt.Errorf("the --%s flag is unsupported", flag.ConnectWith)
 	errFlagUsernameRequired       = fmt.Errorf("the --%s is required to enable authentication when --%s flag is set",
 		flag.Username, flag.BindIPAll)
-	settingOptions      = []string{defaultSettings, customSettings, cancelSettings}
-	settingsDescription = map[string]string{
+	errFailedToDownloadImage = errors.New("failed to download the MongoDB image")
+	settingOptions           = []string{defaultSettings, customSettings, cancelSettings}
+	settingsDescription      = map[string]string{
 		defaultSettings: "With default settings",
 		customSettings:  "With custom settings",
 		cancelSettings:  "Cancel setup",
@@ -119,7 +120,18 @@ func (opts *SetupOpts) downloadImage(ctx context.Context, currentStep int, steps
 	opts.logStepStarted("Downloading the latest MongoDB image to your local environment...", currentStep, steps)
 	defer opts.stop()
 
-	return opts.ContainerEngine.ImagePull(ctx, opts.MongodDockerImageName())
+	err := opts.ContainerEngine.ImagePull(ctx, opts.MongodDockerImageName())
+	if err == nil {
+		return nil
+	}
+
+	// In case we already have an image present and the download fails, we can continue with the existing image
+	images, _ := opts.ContainerEngine.ImageList(ctx, opts.MongodDockerImageName())
+	if len(images) != 0 {
+		return nil
+	}
+
+	return errFailedToDownloadImage
 }
 
 func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, steps int) error {

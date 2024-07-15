@@ -112,6 +112,51 @@ func TestFederatedAuthTest(t *testing.T) {
 		federationSettingsID = settings.GetId()
 	})
 
+	t.Run("Create OIDC IdP WORKFORCE", func(t *testing.T) {
+		idpName, err := RandIdentityProviderName()
+		req.NoError(err)
+
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			identityProviderEntity,
+			"create",
+			"oidc",
+			idpName,
+			"--federationSettingsId",
+			federationSettingsID,
+			"--audience",
+			idpName, // using random as audience also should be unique
+			"--authorizationType",
+			"GROUP",
+			"--clientId",
+			"cliClients",
+			"--desc",
+			"CLI TEST Provider",
+			"--groupsClaim",
+			"groups",
+			"--idpType",
+			"WORKFORCE",
+			"--issuerUri",
+			"https://accounts.google.com",
+			"--userClaim",
+			"user",
+			"--associatedDomain",
+			"iam-test-domain-dev.com",
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
+
+		var provider atlasv2.FederationIdentityProvider
+		req.NoError(json.Unmarshal(resp, &provider))
+
+		assert.NotEmpty(t, provider.GetId())
+		oidcIWorkforceIdpID = provider.Id
+	})
+
 	t.Run("Connect OIDC IdP WORKFORCE", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
@@ -124,20 +169,24 @@ func TestFederatedAuthTest(t *testing.T) {
 			federationSettingsID,
 			"-o=json",
 		)
-		s := STP(t)
-		cliPath := s.cliPath
-		generator := s.generator
+
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
-		expectedProject := s.expectedProject
+
 		var config atlasv2.ConnectedOrgConfig
 		req.NoError(json.Unmarshal(resp, &config))
 
 		assert.NotEmpty(t, config.DataAccessIdentityProviderIds)
 		assert.Contains(t, config.GetDataAccessIdentityProviderIds(), oidcIWorkforceIdpID)
+	})
 
-		secondCmd := exec.Command(cliPath,
+	t.Run("Config generate for federated auth", func(t *testing.T) {
+		s := STP(t)
+		cliPath := s.cliPath
+		generator := s.generator
+		expectedProject := s.expectedProject
+		cmd := exec.Command(cliPath,
 			"kubernetes",
 			"config",
 			"generate",
@@ -149,7 +198,7 @@ func TestFederatedAuthTest(t *testing.T) {
 			"--includeSecrets")
 		cmd.Env = os.Environ()
 
-		secondResp, err := e2e.RunAndGetStdOut(secondCmd)
+		secondResp, err := e2e.RunAndGetStdOut(cmd)
 		t.Log(string(secondResp))
 		require.NoError(t, err, string(secondResp))
 

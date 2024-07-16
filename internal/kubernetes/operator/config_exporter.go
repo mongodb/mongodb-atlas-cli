@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -421,16 +421,18 @@ func (e *ConfigExporter) exportAtlasFederatedAuth(projectName string) ([]runtime
 	}
 	// Does have an IdentityProvider and then we can generate the config
 	federatedAuthentification, err := federatedauthentication.BuildAtlasFederatedAuth(&federatedauthentication.AtlasFederatedAuthBuildRequest{
-		IncludeSecret:                 e.includeSecretsData,
-		FederationAuthenticationStore: e.dataProvider,
-		ProjectStore:                  e.dataProvider,
-		ProjectID:                     e.projectID,
-		OrgID:                         e.orgID,
-		TargetNamespace:               e.targetNamespace,
-		Version:                       e.operatorVersion,
-		Dictionary:                    e.dictionaryForAtlasNames,
-		ProjectName:                   projectName,
-		FederatedSettings:             federatedAuthentificationSetting,
+		IncludeSecret:                e.includeSecretsData,
+		IdentityProviderLister:       e.dataProvider,
+		ConnectedOrgConfigsDescriber: e.dataProvider,
+		IdentityProviderDescriber:    e.dataProvider,
+		ProjectStore:                 e.dataProvider,
+		ProjectID:                    e.projectID,
+		OrgID:                        e.orgID,
+		TargetNamespace:              e.targetNamespace,
+		Version:                      e.operatorVersion,
+		Dictionary:                   e.dictionaryForAtlasNames,
+		ProjectName:                  projectName,
+		FederatedSettings:            federatedAuthentificationSetting,
 	})
 	result = append(result, federatedAuthentification)
 	return result, err

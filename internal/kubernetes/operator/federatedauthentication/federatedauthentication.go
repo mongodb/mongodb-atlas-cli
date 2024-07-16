@@ -15,8 +15,8 @@
 package federatedauthentication
 
 import (
+	"errors"
 	"fmt"
-	"log"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
@@ -28,17 +28,24 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+var (
+	ErrNoIndentityProvider = errors.New("could not find the identity provider")
+	ErrProjectName         = errors.New("could not get the project name")
+)
+
 type AtlasFederatedAuthBuildRequest struct {
-	IncludeSecret                 bool
-	FederationAuthenticationStore store.FederationAuthenticationStore
-	ProjectStore                  store.OperatorProjectStore
-	ProjectName                   string
-	OrgID                         string
-	ProjectID                     string
-	FederatedSettings             *atlasv2.OrgFederationSettings
-	Version                       string
-	TargetNamespace               string
-	Dictionary                    map[string]string
+	IncludeSecret                bool
+	IdentityProviderLister       store.IdentityProviderLister
+	ConnectedOrgConfigsDescriber store.ConnectedOrgConfigsDescriber
+	ProjectStore                 store.OperatorProjectStore
+	IdentityProviderDescriber    store.IdentityProviderDescriber
+	ProjectName                  string
+	OrgID                        string
+	ProjectID                    string
+	FederatedSettings            *atlasv2.OrgFederationSettings
+	Version                      string
+	TargetNamespace              string
+	Dictionary                   map[string]string
 }
 
 const credSecretFormat = "%s-credentials"
@@ -47,9 +54,13 @@ const credSecretFormat = "%s-credentials"
 func BuildAtlasFederatedAuth(br *AtlasFederatedAuthBuildRequest) (*akov2.AtlasFederatedAuth, error) {
 	orgConfig, err := getOrgConfig(br)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get org config: %w", err)
+		return nil, err
 	}
 
+	spec, err := getAtlasFederatedAuthSpec(*br, orgConfig)
+	if err != nil {
+		return nil, err
+	}
 	federatedAuth := &akov2.AtlasFederatedAuth{
 		TypeMeta: metav1.TypeMeta{
 			APIVersion: "atlas.mongodb.com/v1",
@@ -59,7 +70,7 @@ func BuildAtlasFederatedAuth(br *AtlasFederatedAuthBuildRequest) (*akov2.AtlasFe
 			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", br.ProjectName, *br.FederatedSettings.Id), br.Dictionary),
 			Namespace: br.TargetNamespace,
 		},
-		Spec: getAtlasFederatedAuthSpec(*br, orgConfig),
+		Spec: *spec,
 		Status: akov2status.AtlasFederatedAuthStatus{
 			Common: akoapi.Common{
 				Conditions: []akoapi.Condition{},
@@ -72,19 +83,21 @@ func BuildAtlasFederatedAuth(br *AtlasFederatedAuthBuildRequest) (*akov2.AtlasFe
 
 // getOrgConfig retrieves the organization configuration for the AtlasFederatedAuth resource.
 func getOrgConfig(br *AtlasFederatedAuthBuildRequest) (*atlasv2.ConnectedOrgConfig, error) {
-	return br.FederationAuthenticationStore.AtlasFederatedAuthOrgConfig(&atlasv2.GetConnectedOrgConfigApiParams{
+	return br.ConnectedOrgConfigsDescriber.GetConnectedOrgConfig(&atlasv2.GetConnectedOrgConfigApiParams{
 		FederationSettingsId: *br.FederatedSettings.Id,
 		OrgId:                br.OrgID,
 	})
 }
 
 // getAtlasFederatedAuthSpec returns the spec for AtlasFederatedAuth.
-func getAtlasFederatedAuthSpec(br AtlasFederatedAuthBuildRequest, orgConfig *atlasv2.ConnectedOrgConfig) akov2.AtlasFederatedAuthSpec {
+func getAtlasFederatedAuthSpec(br AtlasFederatedAuthBuildRequest, orgConfig *atlasv2.ConnectedOrgConfig) (*akov2.AtlasFederatedAuthSpec, error) {
 	domainAllowList := getDomainAllowList(orgConfig)
 	postAuthRoleGrants := getPostAuthRoleGrants(orgConfig)
 
-	idp := getIdentityProvider(br.FederationAuthenticationStore, *br.FederatedSettings.Id, *br.FederatedSettings.IdentityProviderId)
-
+	idp, err := GetIdentityProviderForFederatedSettings(br.IdentityProviderLister, *br.FederatedSettings.Id, *br.FederatedSettings.IdentityProviderId)
+	if err != nil {
+		return nil, err
+	}
 	secretRef := getSecretRef(br)
 
 	authSpec := akov2.AtlasFederatedAuthSpec{
@@ -96,10 +109,13 @@ func getAtlasFederatedAuthSpec(br AtlasFederatedAuthBuildRequest, orgConfig *atl
 		SSODebugEnabled:          idp.SsoDebugEnabled,
 	}
 	if br.FederatedSettings.HasRoleMappings != nil && *br.FederatedSettings.HasRoleMappings && orgConfig.RoleMappings != nil {
-		authSpec.RoleMappings = getRoleMappings(orgConfig.RoleMappings, br.ProjectStore)
+		authSpec.RoleMappings, err = getRoleMappings(orgConfig.RoleMappings, br.ProjectStore)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	return authSpec
+	return &authSpec, nil
 }
 
 // getDomainAllowList retrieves the domain allow list from the organization configuration.
@@ -129,45 +145,53 @@ func getSecretRef(br AtlasFederatedAuthBuildRequest) *akov2common.ResourceRefNam
 }
 
 // getRoleMappings converts AuthFederationRoleMapping to RoleMapping.
-func getRoleMappings(mappings *[]atlasv2.AuthFederationRoleMapping, projectStore store.OperatorProjectStore) []akov2.RoleMapping {
+func getRoleMappings(mappings *[]atlasv2.AuthFederationRoleMapping, projectStore store.OperatorProjectStore) ([]akov2.RoleMapping, error) {
 	roleMappings := make([]akov2.RoleMapping, 0, len(*mappings))
 	for _, mapping := range *mappings {
+		roleAssignemnts, err := getRoleAssignments(mapping.RoleAssignments, projectStore)
+		if err != nil {
+			return nil, err
+		}
 		roleMappings = append(roleMappings, akov2.RoleMapping{
 			ExternalGroupName: mapping.ExternalGroupName,
-			RoleAssignments:   getRoleAssignments(mapping.RoleAssignments, projectStore),
+			RoleAssignments:   roleAssignemnts,
 		})
 	}
-	return roleMappings
+	return roleMappings, nil
 }
 
 // getRoleAssignments converts RoleAssignments from AuthFederationRoleMapping.
-func getRoleAssignments(assignments *[]atlasv2.RoleAssignment, projectStore store.OperatorProjectStore) []akov2.RoleAssignment {
+func getRoleAssignments(assignments *[]atlasv2.RoleAssignment, projectStore store.OperatorProjectStore) ([]akov2.RoleAssignment, error) {
 	var roleAssignments []akov2.RoleAssignment
 	if assignments != nil {
 		for _, ra := range *assignments {
 			roleAssignment := akov2.RoleAssignment{Role: *ra.Role}
 			if ra.GroupId != nil && *ra.GroupId != "" {
-				if project, err := projectStore.Project(*ra.GroupId); err == nil {
-					roleAssignment.ProjectName = project.Name
-				} else {
-					log.Printf("failed to get project name for GroupId %s: %v", *ra.GroupId, err)
+				project, err := projectStore.Project(*ra.GroupId)
+				if err != nil {
+					return nil, ErrProjectName
 				}
+				roleAssignment.ProjectName = project.Name
 			}
 			roleAssignments = append(roleAssignments, roleAssignment)
 		}
 	}
-	return roleAssignments
+	return roleAssignments, nil
 }
 
-// getIdentityProvider retrieves the identity provider for the given federation settings and identity provider ID.
-func getIdentityProvider(store store.FederationAuthenticationStore, federationSettingsID, identityProviderID string) *atlasv2.FederationIdentityProvider {
-	idp, err := store.AtlasIdentityProvider(&atlasv2.GetIdentityProviderApiParams{
+// GetIdentityProviderForFederatedSettings retrieves the list of the identity provider for the given federation settings.
+func GetIdentityProviderForFederatedSettings(store store.IdentityProviderLister, federationSettingsID string, identityProviderID string) (*atlasv2.FederationIdentityProvider, error) {
+	identityProviders, err := store.IdentityProviders(&atlasv2.ListIdentityProvidersApiParams{
 		FederationSettingsId: federationSettingsID,
-		IdentityProviderId:   identityProviderID,
 	})
 	if err != nil {
-		log.Printf("failed to get identity provider for FederationSettingsId %s and IdentityProviderId %s: %v", federationSettingsID, identityProviderID, err)
-		return nil
+		return nil, err
 	}
-	return idp
+
+	for _, identityProvider := range identityProviders.GetResults() {
+		if identityProvider.GetOktaIdpId() == identityProviderID {
+			return &identityProvider, nil
+		}
+	}
+	return nil, ErrNoIndentityProvider
 }

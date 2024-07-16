@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -426,6 +426,7 @@ func Test_ExportFederatedAuth(t *testing.T) {
 			WithTargetOperatorVersion("2.3.0").
 			WithSecretsData(true)
 
+		legacyTestIdentityProviderID := "LegacyTestIdentityProviderID"
 		testIdentityProviderID := "TestIdentityProviderID"
 		testOrganizationID := "test-org"
 
@@ -439,7 +440,7 @@ func Test_ExportFederatedAuth(t *testing.T) {
 		// Constructing federationSettings
 		federationSettings := &admin.OrgFederationSettings{
 			Id:                     pointer.Get("TestFederationSettingID"),
-			IdentityProviderId:     &testIdentityProviderID,
+			IdentityProviderId:     &legacyTestIdentityProviderID,
 			IdentityProviderStatus: pointer.Get("ACTIVE"),
 			HasRoleMappings:        pointer.Get(true),
 		}
@@ -475,21 +476,30 @@ func Test_ExportFederatedAuth(t *testing.T) {
 
 		orgConfig := &admin.ConnectedOrgConfig{
 			DomainAllowList:          &[]string{"example.com"},
-			PostAuthRoleGrants:       &[]string{"role1"},
+			PostAuthRoleGrants:       &[]string{"ORG_OWNER"},
 			DomainRestrictionEnabled: true,
 			RoleMappings:             &AuthRoleMappings,
-		}
-		identityProvider := &admin.FederationIdentityProvider{
-			SsoDebugEnabled: pointer.Get(true),
+			IdentityProviderId:       &legacyTestIdentityProviderID,
 		}
 		atlasOperatorGenericStore.EXPECT().FederationSetting(&admin.GetFederationSettingsApiParams{OrgId: orgID}).
 			Return(federationSettings, nil)
 
-		atlasOperatorGenericStore.EXPECT().AtlasFederatedAuthOrgConfig(&admin.GetConnectedOrgConfigApiParams{FederationSettingsId: *federationSettings.Id, OrgId: orgID}).
+		atlasOperatorGenericStore.EXPECT().GetConnectedOrgConfig(&admin.GetConnectedOrgConfigApiParams{FederationSettingsId: *federationSettings.Id, OrgId: orgID}).
 			Return(orgConfig, nil)
-
-		atlasOperatorGenericStore.EXPECT().AtlasIdentityProvider(&admin.GetIdentityProviderApiParams{FederationSettingsId: *federationSettings.Id, IdentityProviderId: testIdentityProviderID}).
-			Return(identityProvider, nil)
+		identityProvider := &admin.FederationIdentityProvider{
+			SsoDebugEnabled: pointer.Get(true),
+			OktaIdpId:       *federationSettings.IdentityProviderId,
+			Id:              testIdentityProviderID,
+		}
+		paginatedResult := &admin.PaginatedFederationIdentityProvider{
+			Links: nil,
+			Results: &[]admin.FederationIdentityProvider{
+				*identityProvider,
+			},
+			TotalCount: pointer.Get(1),
+		}
+		atlasOperatorGenericStore.EXPECT().IdentityProviders(&admin.ListIdentityProvidersApiParams{FederationSettingsId: *federationSettings.Id}).
+			Return(paginatedResult, nil)
 
 		firstProject := &admin.Group{
 			Id:    pointer.Get("test-project-1"),
@@ -563,7 +573,7 @@ func Test_ExportFederatedAuth(t *testing.T) {
 					},
 					Enabled:                  true,
 					DomainAllowList:          []string{"example.com"},
-					PostAuthRoleGrants:       []string{"role1"},
+					PostAuthRoleGrants:       []string{"ORG_OWNER"},
 					DomainRestrictionEnabled: pointer.Get(true),
 					SSODebugEnabled:          pointer.Get(true),
 					RoleMappings:             roleMappings,

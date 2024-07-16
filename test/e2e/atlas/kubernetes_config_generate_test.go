@@ -51,6 +51,9 @@ import (
 )
 
 const targetNamespace = "importer-namespace"
+const credSuffixTest = "-credentials"
+
+var federationSettingsID string
 
 var expectedLabels = map[string]string{
 	features.ResourceVersion: features.LatestOperatorMajorVersion,
@@ -124,6 +127,123 @@ func InitialSetup(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	// always register atlas entities
 	require.NoError(t, akov2.AddToScheme(scheme.Scheme))
 	return s
+}
+
+func TestFederatedAuthTest(t *testing.T) {
+	t.Run("PreRequisite Get the federation setting ID", func(t *testing.T) {
+		s := InitialSetup(t)
+		cliPath := s.cliPath
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			"describe",
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, string(resp))
+
+		var settings atlasv2.OrgFederationSettings
+		require.NoError(t, json.Unmarshal(resp, &settings))
+
+		a := assert.New(t)
+		a.NotEmpty(settings.GetId())
+		a.NotEmpty(settings.GetIdentityProviderStatus())
+		federationSettingsID = settings.GetId()
+	})
+	t.Run("PreRequisite Test SAML IdP present and active", func(t *testing.T) {
+		s := InitialSetup(t)
+		cliPath := s.cliPath
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			identityProviderEntity,
+			"list",
+			"--federationSettingsId",
+			federationSettingsID,
+			"--protocol",
+			"SAML",
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, string(resp))
+		assert.NotEmpty(t, len(resp), "No SAML IdP found")
+
+		var provider atlasv2.FederationIdentityProvider
+		require.NoError(t, json.Unmarshal(resp, &provider))
+		assert.Equal(t, "ACTIVE", provider.GetStatus())
+	})
+	t.Run("Config generate for federated auth", func(t *testing.T) {
+		s := InitialSetup(t)
+		cliPath := s.cliPath
+		generator := s.generator
+		cmd := exec.Command(cliPath,
+			"kubernetes",
+			"config",
+			"generate",
+			"--projectId",
+			generator.projectID,
+			"--targetNamespace",
+			targetNamespace,
+			"--includeSecrets")
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		t.Log(string(resp))
+		require.NoError(t, err, string(resp))
+		var objects []runtime.Object
+		objects, err = getK8SEntities(resp)
+		t.Log(federatedAuthentification(objects)[0])
+		assert.Equal(t, expectedFederatedAuth(s.generator.projectName, targetNamespace, "669501c620104e45f030e2ab"), federatedAuthentification(objects)[0])
+		require.NoError(t, err, "should not fail on decode")
+		require.NotEmpty(t, objects)
+		secret, found := findSecret(objects)
+		require.True(t, found, "Secret is not found in results")
+		assert.Equal(t, targetNamespace, secret.Namespace)
+	})
+}
+func federatedAuthentification(objects []runtime.Object) []*akov2.AtlasFederatedAuth {
+	var ds []*akov2.AtlasFederatedAuth
+	for i := range objects {
+		d, ok := objects[i].(*akov2.AtlasFederatedAuth)
+		if ok {
+			ds = append(ds, d)
+		}
+	}
+	return ds
+}
+func expectedFederatedAuth(name, namespace string, identityProviderID string) *akov2.AtlasFederatedAuth {
+	dictionary := resources.AtlasNameToKubernetesName()
+	expected := &akov2.AtlasFederatedAuth{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "AtlasFederatedAuth",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", name, identityProviderID), dictionary),
+			Namespace: namespace,
+		},
+		Spec: akov2.AtlasFederatedAuthSpec{
+			ConnectionSecretRef: akov2common.ResourceRefNamespaced{
+				Name:      resources.NormalizeAtlasName(name+credSuffixTest, dictionary),
+				Namespace: namespace,
+			},
+			Enabled:                  true,
+			DomainAllowList:          []string{"munob.ro"},
+			PostAuthRoleGrants:       []string{"ORG_OWNER"},
+			DomainRestrictionEnabled: pointer.Get(false),
+			SSODebugEnabled:          pointer.Get(true),
+			RoleMappings:             nil,
+		},
+		Status: akov2status.AtlasFederatedAuthStatus{
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
+			},
+		},
+	}
+	return expected
 }
 
 func TestEmptyProject(t *testing.T) {

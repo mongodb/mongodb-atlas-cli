@@ -87,9 +87,6 @@ type StreamProcessingStore interface {
 	StreamsConnectionLister
 }
 
-type FederationAuthenticationStore interface {
-	FederationAuthenticationDescriber
-}
 type OperatorGenericStore interface {
 	OperatorOrgStore
 	OperatorProjectStore
@@ -97,6 +94,8 @@ type OperatorGenericStore interface {
 	OperatorDBUsersStore
 	DataFederationStore
 	StreamProcessingStore
-	FederationAuthenticationStore
 	FederationSettingsDescriber
+	IdentityProviderLister
+	ConnectedOrgConfigsDescriber
+	IdentityProviderDescriber
 }

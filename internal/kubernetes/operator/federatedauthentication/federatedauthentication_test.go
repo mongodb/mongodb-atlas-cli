@@ -37,7 +37,6 @@ func TestExportFederatedAuth(t *testing.T) {
 		ctl := gomock.NewController(t)
 		defer ctl.Finish()
 		atlasOperatorGenericStore := mocks.NewMockOperatorGenericStore(ctl)
-		testIdentityProviderID := "TestIdentityProviderID"
 		testOrganizationID := "TestOrgID"
 		testProjectID := []string{"test-project-1", "test-project-2"}
 		secondTestProjectID := []string{"test-project-3", "test-project-4"}
@@ -45,24 +44,27 @@ func TestExportFederatedAuth(t *testing.T) {
 		testRoleProject := []string{"GROUP_OWNER", "GROUP_OWNER"}
 		testRoleOrganization := []string{"ORG_OWNER", "ORG_OWNER"}
 		testExternalGroupName := []string{"org-admin", "dev-team"}
-
+		legacyTestIdentityProviderID := "LegacyTestIdentityProviderID"
+		testIdentityProviderID := "TestIdentityProviderID"
 		federationSettings := &admin.OrgFederationSettings{
 			Id:                     pointer.Get("TestFederationSettingID"),
-			IdentityProviderId:     &testIdentityProviderID,
+			IdentityProviderId:     &legacyTestIdentityProviderID,
 			IdentityProviderStatus: pointer.Get("ACTIVE"),
 			HasRoleMappings:        pointer.Get(true),
 		}
 		input := &AtlasFederatedAuthBuildRequest{
-			IncludeSecret:                 false,
-			FederationAuthenticationStore: atlasOperatorGenericStore,
-			ProjectStore:                  atlasOperatorGenericStore,
-			ProjectID:                     "TestProjectID",
-			OrgID:                         testOrganizationID,
-			TargetNamespace:               "test",
-			Version:                       "2.3.1",
-			Dictionary:                    resources.AtlasNameToKubernetesName(),
-			ProjectName:                   "my-project",
-			FederatedSettings:             federationSettings,
+			IncludeSecret:                false,
+			ProjectStore:                 atlasOperatorGenericStore,
+			ConnectedOrgConfigsDescriber: atlasOperatorGenericStore,
+			IdentityProviderLister:       atlasOperatorGenericStore,
+			IdentityProviderDescriber:    atlasOperatorGenericStore,
+			ProjectID:                    "TestProjectID",
+			OrgID:                        testOrganizationID,
+			TargetNamespace:              "test",
+			Version:                      "2.3.1",
+			Dictionary:                   resources.AtlasNameToKubernetesName(),
+			ProjectName:                  "my-project",
+			FederatedSettings:            federationSettings,
 		}
 
 		// Constructing AuthRoleMappings
@@ -96,18 +98,28 @@ func TestExportFederatedAuth(t *testing.T) {
 
 		orgConfig := &admin.ConnectedOrgConfig{
 			DomainAllowList:          &[]string{"example.com"},
-			PostAuthRoleGrants:       &[]string{"role1"},
+			PostAuthRoleGrants:       &[]string{"ORG_OWNER"},
 			DomainRestrictionEnabled: true,
 			RoleMappings:             &AuthRoleMappings,
+			IdentityProviderId:       &legacyTestIdentityProviderID,
 		}
+
+		atlasOperatorGenericStore.EXPECT().GetConnectedOrgConfig(&admin.GetConnectedOrgConfigApiParams{FederationSettingsId: *federationSettings.Id, OrgId: testOrganizationID}).
+			Return(orgConfig, nil)
 		identityProvider := &admin.FederationIdentityProvider{
 			SsoDebugEnabled: pointer.Get(true),
+			OktaIdpId:       *federationSettings.IdentityProviderId,
+			Id:              testIdentityProviderID,
 		}
-		atlasOperatorGenericStore.EXPECT().AtlasFederatedAuthOrgConfig(&admin.GetConnectedOrgConfigApiParams{FederationSettingsId: *federationSettings.Id, OrgId: testOrganizationID}).
-			Return(orgConfig, nil)
-
-		atlasOperatorGenericStore.EXPECT().AtlasIdentityProvider(&admin.GetIdentityProviderApiParams{FederationSettingsId: *federationSettings.Id, IdentityProviderId: testIdentityProviderID}).
-			Return(identityProvider, nil)
+		paginatedResult := &admin.PaginatedFederationIdentityProvider{
+			Links: nil,
+			Results: &[]admin.FederationIdentityProvider{
+				*identityProvider,
+			},
+			TotalCount: pointer.Get(1),
+		}
+		atlasOperatorGenericStore.EXPECT().IdentityProviders(&admin.ListIdentityProvidersApiParams{FederationSettingsId: *federationSettings.Id}).
+			Return(paginatedResult, nil)
 
 		firstProject := &admin.Group{
 			Id:    pointer.Get("test-project-1"),
@@ -178,7 +190,7 @@ func TestExportFederatedAuth(t *testing.T) {
 				Spec: akov2.AtlasFederatedAuthSpec{
 					Enabled:                  true,
 					DomainAllowList:          []string{"example.com"},
-					PostAuthRoleGrants:       []string{"role1"},
+					PostAuthRoleGrants:       []string{"ORG_OWNER"},
 					DomainRestrictionEnabled: pointer.Get(true),
 					SSODebugEnabled:          pointer.Get(true),
 					RoleMappings:             roleMappings,

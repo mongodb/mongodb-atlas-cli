@@ -35,6 +35,8 @@ type SearchIndexDescriber interface {
 
 type SearchIndexUpdater interface {
 	UpdateSearchIndexes(string, string, string, *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error)
+	SearchIndex(string, string, string) (*atlasv2.ClusterSearchIndex, error)
+	SearchIndexes(string, string, string, string) ([]atlasv2.ClusterSearchIndex, error)
 }
 
 type SearchIndexDeleter interface {

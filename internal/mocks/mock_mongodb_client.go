@@ -274,6 +274,21 @@ func (mr *MockDatabaseMockRecorder) SearchIndexes(arg0, arg1 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndexes", reflect.TypeOf((*MockDatabase)(nil).SearchIndexes), arg0, arg1)
 }
 
+// UpdateSearchIndex mocks base method.
+func (m *MockDatabase) UpdateSearchIndex(arg0 context.Context, arg1 string, arg2 *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateSearchIndex", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateSearchIndex indicates an expected call of UpdateSearchIndex.
+func (mr *MockDatabaseMockRecorder) UpdateSearchIndex(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSearchIndex", reflect.TypeOf((*MockDatabase)(nil).UpdateSearchIndex), arg0, arg1, arg2)
+}
+
 // MockSearchIndex is a mock of SearchIndex interface.
 type MockSearchIndex struct {
 	ctrl     *gomock.Controller
@@ -355,4 +370,19 @@ func (m *MockSearchIndex) SearchIndexes(arg0 context.Context, arg1 string) ([]*a
 func (mr *MockSearchIndexMockRecorder) SearchIndexes(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndexes", reflect.TypeOf((*MockSearchIndex)(nil).SearchIndexes), arg0, arg1)
+}
+
+// UpdateSearchIndex mocks base method.
+func (m *MockSearchIndex) UpdateSearchIndex(arg0 context.Context, arg1 string, arg2 *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateSearchIndex", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateSearchIndex indicates an expected call of UpdateSearchIndex.
+func (mr *MockSearchIndexMockRecorder) UpdateSearchIndex(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSearchIndex", reflect.TypeOf((*MockSearchIndex)(nil).UpdateSearchIndex), arg0, arg1, arg2)
 }

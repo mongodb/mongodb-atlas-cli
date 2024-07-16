@@ -40,6 +40,7 @@ var ErrSearchIndexNotFound = errors.New("search Index not found")
 
 type SearchIndex interface {
 	CreateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error)
+	UpdateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error)
 	SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error)
 	SearchIndexes(ctx context.Context, coll string) ([]*admin.ClusterSearchIndex, error)
 	SearchIndexByName(ctx context.Context, name string, collection string) (*admin.ClusterSearchIndex, error)
@@ -85,6 +86,37 @@ func (d *database) CreateSearchIndex(ctx context.Context, collection string, idx
 	})
 
 	_, _ = log.Debugln("Creating search index with definition: ", index)
+	if err != nil {
+		return nil, err
+	}
+
+	return d.SearchIndexByName(ctx, idx.Name, collection)
+}
+
+func (d *database) UpdateSearchIndex(ctx context.Context, collection string, idx *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
+	// To maintain formatting of the SDK, marshal object into JSON and then unmarshal into BSON
+	jsonIndex, err := json.Marshal(idx)
+	if err != nil {
+		return nil, err
+	}
+
+	var index bson.D
+	err = bson.UnmarshalExtJSON(jsonIndex, true, &index)
+	if err != nil {
+		return nil, err
+	}
+
+	// Empty these fields so that they are not included into the index definition for the MongoDB command
+	index = removeFields(index, "id", "collectionName", "database", "name", "type")
+
+	o := options.SearchIndexes().SetName(idx.Name)
+	if idx.Type != nil {
+		o.SetType(*idx.Type)
+	}
+
+	err = d.db.Collection(collection).SearchIndexes().UpdateOne(ctx, idx.Name, index)
+
+	_, _ = log.Debugln("Updating search index with definition: ", index)
 	if err != nil {
 		return nil, err
 	}

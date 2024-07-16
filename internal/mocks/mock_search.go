@@ -163,6 +163,36 @@ func (m *MockSearchIndexUpdater) EXPECT() *MockSearchIndexUpdaterMockRecorder {
 	return m.recorder
 }
 
+// SearchIndex mocks base method.
+func (m *MockSearchIndexUpdater) SearchIndex(arg0, arg1, arg2 string) (*admin.ClusterSearchIndex, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchIndex", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*admin.ClusterSearchIndex)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchIndex indicates an expected call of SearchIndex.
+func (mr *MockSearchIndexUpdaterMockRecorder) SearchIndex(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndex", reflect.TypeOf((*MockSearchIndexUpdater)(nil).SearchIndex), arg0, arg1, arg2)
+}
+
+// SearchIndexes mocks base method.
+func (m *MockSearchIndexUpdater) SearchIndexes(arg0, arg1, arg2, arg3 string) ([]admin.ClusterSearchIndex, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchIndexes", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].([]admin.ClusterSearchIndex)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchIndexes indicates an expected call of SearchIndexes.
+func (mr *MockSearchIndexUpdaterMockRecorder) SearchIndexes(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchIndexes", reflect.TypeOf((*MockSearchIndexUpdater)(nil).SearchIndexes), arg0, arg1, arg2, arg3)
+}
+
 // UpdateSearchIndexes mocks base method.
 func (m *MockSearchIndexUpdater) UpdateSearchIndexes(arg0, arg1, arg2 string, arg3 *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error) {
 	m.ctrl.T.Helper()

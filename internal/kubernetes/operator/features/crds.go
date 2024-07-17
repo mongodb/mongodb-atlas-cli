@@ -27,19 +27,20 @@ import (
 )
 
 const (
-	LatestOperatorMajorVersion    = "2.4.0"
-	maxDepth                      = 100
-	ResourceVersion               = "mongodb.com/atlas-resource-version"
-	ResourceAtlasProject          = "atlasprojects"
-	ResourceAtlasDeployment       = "atlasdeployments"
-	ResourceAtlasDatabaseUser     = "atlasdatabaseusers"
-	ResourceAtlasBackupSchedule   = "atlasbackupschedules"
-	ResourceAtlasBackupPolicy     = "atlasbackuppolicies"
-	ResourceAtlasTeam             = "atlasteams"
-	ResourceAtlasDataFederation   = "atlasdatafederations"
-	ResourceAtlasFederatedAuth    = "atlasfederatedauths"
-	ResourceAtlasStreamInstance   = "atlasstreaminstances"
-	ResourceAtlasStreamConnection = "atlasstreamconnections"
+	LatestOperatorMajorVersion          = "2.4.0"
+	maxDepth                            = 100
+	ResourceVersion                     = "mongodb.com/atlas-resource-version"
+	ResourceAtlasProject                = "atlasprojects"
+	ResourceAtlasDeployment             = "atlasdeployments"
+	ResourceAtlasDatabaseUser           = "atlasdatabaseusers"
+	ResourceAtlasBackupSchedule         = "atlasbackupschedules"
+	ResourceAtlasBackupPolicy           = "atlasbackuppolicies"
+	ResourceAtlasTeam                   = "atlasteams"
+	ResourceAtlasDataFederation         = "atlasdatafederations"
+	ResourceAtlasFederatedAuth          = "atlasfederatedauths"
+	ResourceAtlasStreamInstance         = "atlasstreaminstances"
+	ResourceAtlasStreamConnection       = "atlasstreamconnections"
+	ResourceAtlasBackupCompliancePolicy = "atlasbackupcompliancepolicies"
 )
 
 var (
@@ -94,7 +95,7 @@ var (
 			resource{ResourceAtlasFederatedAuth, NopPatcher()},
 			resource{ResourceAtlasStreamInstance, NopPatcher()},
 			resource{ResourceAtlasStreamConnection, NopPatcher()},
-			resource{ResourceAtlasBackupPolicy, NopPatcher()},
+			resource{ResourceAtlasBackupCompliancePolicy, NopPatcher()},
 		},
 	}
 )

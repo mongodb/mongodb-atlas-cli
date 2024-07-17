@@ -234,6 +234,11 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 		r = append(r, s)
 	}
 
+	// Backup Compliance Policy
+	if projectData.BCP != nil {
+		r = append(r, projectData.BCP)
+	}
+
 	return r, projectData.Project.Name, nil
 }
 

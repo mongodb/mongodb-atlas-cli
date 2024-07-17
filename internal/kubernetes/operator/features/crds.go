@@ -52,16 +52,6 @@ var (
 	ErrDocumentHasNoSpec         = errors.New("document contains no Spec")
 
 	versionsToResourcesMap = map[string][]resource{
-		"2.1.0": {
-			resource{ResourceAtlasDatabaseUser, NopPatcher()},
-			resource{ResourceAtlasProject, NopPatcher()},
-			resource{ResourceAtlasDeployment, NopPatcher()},
-			resource{ResourceAtlasBackupSchedule, NopPatcher()},
-			resource{ResourceAtlasBackupPolicy, PatcherFunc(UnknownBackupPolicyFrequencyTypesPruner)},
-			resource{ResourceAtlasTeam, NopPatcher()},
-			resource{ResourceAtlasDataFederation, NopPatcher()},
-			resource{ResourceAtlasFederatedAuth, NopPatcher()},
-		},
 		"2.2.0": {
 			resource{ResourceAtlasDatabaseUser, NopPatcher()},
 			resource{ResourceAtlasProject, NopPatcher()},

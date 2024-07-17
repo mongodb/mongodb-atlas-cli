@@ -94,6 +94,7 @@ var (
 			resource{ResourceAtlasFederatedAuth, NopPatcher()},
 			resource{ResourceAtlasStreamInstance, NopPatcher()},
 			resource{ResourceAtlasStreamConnection, NopPatcher()},
+			resource{ResourceAtlasBackupPolicy, NopPatcher()},
 		},
 	}
 )

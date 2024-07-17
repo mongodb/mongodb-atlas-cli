@@ -54,7 +54,7 @@ const targetNamespace = "importer-namespace"
 const credSuffixTest = "-credentials"
 
 var federationSettingsID string
-var samlIdentityProviderID string
+var identityProviderStatus string
 var expectedLabels = map[string]string{
 	features.ResourceVersion: features.LatestOperatorMajorVersion,
 }
@@ -148,39 +148,17 @@ func TestFederatedAuthTest(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &settings))
 
 		a := assert.New(t)
-		a.NotEmpty(settings.GetId())
-		a.NotEmpty(settings.GetIdentityProviderStatus())
+		a.NotEmpty(settings)
 		federationSettingsID = settings.GetId()
-	})
-	t.Run("PreRequisite Test SAML IdP present and active", func(t *testing.T) {
-		s := InitialSetup(t)
-		cliPath := s.cliPath
-		cmd := exec.Command(cliPath,
-			federatedAuthenticationEntity,
-			federationSettingsEntity,
-			identityProviderEntity,
-			"list",
-			"--federationSettingsId",
-			federationSettingsID,
-			"--protocol",
-			"SAML",
-			"-o=json",
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := e2e.RunAndGetStdOut(cmd)
-		require.NoError(t, err, string(resp))
-		assert.NotEmpty(t, len(resp), "No SAML IdP was found")
-		var providers atlasv2.PaginatedFederationIdentityProvider
-		require.NoError(t, json.Unmarshal(resp, &providers))
-		for _, identityProvider := range providers.GetResults() {
-			if identityProvider.GetStatus() == "ACTIVE" {
-				samlIdentityProviderID = identityProvider.GetId()
-			}
-		}
-		assert.NotEmpty(t, samlIdentityProviderID, "No active SAML Idp was found")
+		a.NotEmpty(federationSettingsID, "no federation settings was present")
+		a.NotEmpty(settings.IdentityProviderId, "no SAML IdP was found")
+		a.Equal("ACTIVE", settings.GetIdentityProviderStatus(), "no active SAML IdP present for this federation")
+		identityProviderStatus = settings.GetIdentityProviderStatus()
 	})
 	t.Run("Config generate for federated auth", func(t *testing.T) {
+		if identityProviderStatus != "ACTIVE" {
+			t.Fatalf("There is no need to check this test since there is no SAML IdP configured and active")
+		}
 		s := InitialSetup(t)
 		cliPath := s.cliPath
 		generator := s.generator
@@ -199,12 +177,14 @@ func TestFederatedAuthTest(t *testing.T) {
 		require.NoError(t, err, string(resp))
 		var objects []runtime.Object
 		objects, err = getK8SEntities(resp)
-		assert.Equal(t, expectedFederatedAuth(s.generator.projectName, targetNamespace, samlIdentityProviderID), federatedAuthentification(objects)[0])
+
+		a := assert.New(t)
+		a.Equal(expectedFederatedAuth(s.generator.projectName, targetNamespace, federationSettingsID), federatedAuthentification(objects)[0])
 		require.NoError(t, err, "should not fail on decode")
 		require.NotEmpty(t, objects)
 		secret, found := findSecret(objects)
-		require.True(t, found, "Secret is not found in results")
-		assert.Equal(t, targetNamespace, secret.Namespace)
+		require.True(t, found, "secret is not found in results")
+		a.Equal(targetNamespace, secret.Namespace)
 	})
 }
 func federatedAuthentification(objects []runtime.Object) []*akov2.AtlasFederatedAuth {

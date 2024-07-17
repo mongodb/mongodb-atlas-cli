@@ -30,7 +30,6 @@ import (
 
 var (
 	ErrNoIndentityProvider = errors.New("could not find the identity provider")
-	ErrProjectName         = errors.New("could not get the project name")
 )
 
 type AtlasFederatedAuthBuildRequest struct {
@@ -169,7 +168,7 @@ func getRoleAssignments(assignments *[]atlasv2.RoleAssignment, projectStore stor
 			if ra.GroupId != nil && *ra.GroupId != "" {
 				project, err := projectStore.Project(*ra.GroupId)
 				if err != nil {
-					return nil, ErrProjectName
+					return nil, err
 				}
 				roleAssignment.ProjectName = project.Name
 			}
@@ -179,9 +178,9 @@ func getRoleAssignments(assignments *[]atlasv2.RoleAssignment, projectStore stor
 	return roleAssignments, nil
 }
 
-// GetIdentityProviderForFederatedSettings retrieves the list of the identity provider for the given federation settings.
-func GetIdentityProviderForFederatedSettings(store store.IdentityProviderLister, federationSettingsID string, identityProviderID string) (*atlasv2.FederationIdentityProvider, error) {
-	identityProviders, err := store.IdentityProviders(&atlasv2.ListIdentityProvidersApiParams{
+// GetIdentityProviderForFederatedSettings retrieves the requested identityprovider from a list of the identity provider for the given federation settings.
+func GetIdentityProviderForFederatedSettings(st store.IdentityProviderLister, federationSettingsID string, identityProviderID string) (*atlasv2.FederationIdentityProvider, error) {
+	identityProviders, err := st.IdentityProviders(&atlasv2.ListIdentityProvidersApiParams{
 		FederationSettingsId: federationSettingsID,
 	})
 	if err != nil {

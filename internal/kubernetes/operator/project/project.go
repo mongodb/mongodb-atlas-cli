@@ -1007,7 +1007,7 @@ func buildBCP(bcpProvider store.CompliancePolicyDescriber, projectName, projectI
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backupschedule", projectName), dictionary),
+			Name:      resources.NormalizeAtlasName(projectName+"-bcp", dictionary),
 			Namespace: targetNamespace,
 			Labels: map[string]string{
 				features.ResourceVersion: version,

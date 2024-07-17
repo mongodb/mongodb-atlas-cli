@@ -446,7 +446,7 @@ func TestBuildAtlasProject(t *testing.T) {
 				APIVersion: "atlas.mongodb.com/v1",
 			},
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-backupschedule", p.Name), dictionary),
+				Name:      resources.NormalizeAtlasName(p.Name+"-bcp", dictionary),
 				Namespace: targetNamespace,
 				Labels: map[string]string{
 					features.ResourceVersion: resourceVersion,

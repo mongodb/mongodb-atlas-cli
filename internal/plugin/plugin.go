@@ -23,17 +23,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	DefaultPluginDirectory     = "./plugins"
+	ExtraPluginDirectoryEnvKey = "ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY"
+)
+
 func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 	var manifests []*Manifest
 
 	// Load manifests from plugin directories
-	if loadedManifests, err := getManifestsFromPluginDirectory("./plugins"); err != nil {
+	if loadedManifests, err := getManifestsFromPluginDirectory(DefaultPluginDirectory); err != nil {
 		logPluginWarning(`could not load manifests from directory "./plugins" because of error: %s`, err.Error())
 	} else {
 		manifests = append(manifests, loadedManifests...)
 	}
 
-	extraPluginDir := os.Getenv("ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY")
+	extraPluginDir := os.Getenv(ExtraPluginDirectoryEnvKey)
 
 	if extraPluginDir != "" {
 		if loadedManifests, err := getManifestsFromPluginDirectory(extraPluginDir); err != nil {

@@ -416,45 +416,6 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 		)
 	})
 }
-func defaultTestConfigExporter(t *testing.T, genStore *mocks.MockOperatorGenericStore, featureValidator *mocks.MockFeatureValidator) *ConfigExporter {
-	t.Helper()
-	return NewConfigExporter(genStore, nil, projectID, orgID).
-		WithTargetNamespace("test").
-		WithFeatureValidator(featureValidator).
-		WithTargetOperatorVersion("2.3.0").
-		WithSecretsData(true)
-}
-
-func setupAuthRoleMappings(testProjectID, secondTestProjectID, testRoleProject, testRoleOrganization, testExternalGroupName []string, testOrganizationID string) []admin.AuthFederationRoleMapping {
-	AuthRoleMappings := make([]admin.AuthFederationRoleMapping, len(testRoleProject)+len(testRoleOrganization))
-	for i := range testProjectID {
-		AuthRoleMappings[i] = admin.AuthFederationRoleMapping{
-			ExternalGroupName: testExternalGroupName[i],
-			RoleAssignments: &[]admin.RoleAssignment{
-				{
-					GroupId: &testProjectID[i],
-					Role:    &testRoleProject[i],
-				},
-			},
-		}
-	}
-	for i := range testRoleOrganization {
-		AuthRoleMappings[len(testProjectID)+i] = admin.AuthFederationRoleMapping{
-			ExternalGroupName: testExternalGroupName[i],
-			RoleAssignments: &[]admin.RoleAssignment{
-				{
-					OrgId: &testOrganizationID,
-					Role:  &testRoleOrganization[i],
-				},
-				{
-					GroupId: &secondTestProjectID[i],
-					Role:    &testRoleProject[i],
-				},
-			},
-		}
-	}
-	return AuthRoleMappings
-}
 
 const (
 	legacyTestIdentityProviderID = "LegacyTestIdentityProviderID"
@@ -658,4 +619,43 @@ func Test_ExportFederatedAuth(t *testing.T) {
 			assert.Equal(t, tc.expected, resources)
 		})
 	}
+}
+func defaultTestConfigExporter(t *testing.T, genStore *mocks.MockOperatorGenericStore, featureValidator *mocks.MockFeatureValidator) *ConfigExporter {
+	t.Helper()
+	return NewConfigExporter(genStore, nil, projectID, orgID).
+		WithTargetNamespace("test").
+		WithFeatureValidator(featureValidator).
+		WithTargetOperatorVersion("2.3.0").
+		WithSecretsData(true)
+}
+
+func setupAuthRoleMappings(testProjectID, secondTestProjectID, testRoleProject, testRoleOrganization, testExternalGroupName []string, testOrganizationID string) []admin.AuthFederationRoleMapping {
+	AuthRoleMappings := make([]admin.AuthFederationRoleMapping, len(testRoleProject)+len(testRoleOrganization))
+	for i := range testProjectID {
+		AuthRoleMappings[i] = admin.AuthFederationRoleMapping{
+			ExternalGroupName: testExternalGroupName[i],
+			RoleAssignments: &[]admin.RoleAssignment{
+				{
+					GroupId: &testProjectID[i],
+					Role:    &testRoleProject[i],
+				},
+			},
+		}
+	}
+	for i := range testRoleOrganization {
+		AuthRoleMappings[len(testProjectID)+i] = admin.AuthFederationRoleMapping{
+			ExternalGroupName: testExternalGroupName[i],
+			RoleAssignments: &[]admin.RoleAssignment{
+				{
+					OrgId: &testOrganizationID,
+					Role:  &testRoleOrganization[i],
+				},
+				{
+					GroupId: &secondTestProjectID[i],
+					Role:    &testRoleProject[i],
+				},
+			},
+		}
+	}
+	return AuthRoleMappings
 }

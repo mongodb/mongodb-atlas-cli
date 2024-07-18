@@ -159,6 +159,7 @@ func TestFederatedAuthTest(t *testing.T) {
 		if identityProviderStatus != "ACTIVE" {
 			t.Fatalf("There is no need to check this test since there is no SAML IdP configured and active")
 		}
+		dictionary := resources.AtlasNameToKubernetesName()
 		s := InitialSetup(t)
 		cliPath := s.cliPath
 		generator := s.generator
@@ -179,7 +180,33 @@ func TestFederatedAuthTest(t *testing.T) {
 		objects, err = getK8SEntities(resp)
 
 		a := assert.New(t)
-		a.Equal(expectedFederatedAuth(s.generator.projectName, targetNamespace, federationSettingsID), federatedAuthentification(objects)[0])
+		a.Equal(&akov2.AtlasFederatedAuth{
+			TypeMeta: metav1.TypeMeta{
+				Kind:       "AtlasFederatedAuth",
+				APIVersion: "atlas.mongodb.com/v1",
+			},
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", s.generator.projectName, federationSettingsID), dictionary),
+				Namespace: targetNamespace,
+			},
+			Spec: akov2.AtlasFederatedAuthSpec{
+				ConnectionSecretRef: akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(s.generator.projectName+credSuffixTest, dictionary),
+					Namespace: targetNamespace,
+				},
+				Enabled:                  true,
+				DomainAllowList:          []string{"munob.ro"},
+				PostAuthRoleGrants:       []string{"ORG_OWNER"},
+				DomainRestrictionEnabled: pointer.Get(false),
+				SSODebugEnabled:          pointer.Get(true),
+				RoleMappings:             nil,
+			},
+			Status: akov2status.AtlasFederatedAuthStatus{
+				Common: akoapi.Common{
+					Conditions: []akoapi.Condition{},
+				},
+			},
+		}, federatedAuthentification(objects)[0])
 		require.NoError(t, err, "should not fail on decode")
 		require.NotEmpty(t, objects)
 		secret, found := findSecret(objects)
@@ -196,37 +223,6 @@ func federatedAuthentification(objects []runtime.Object) []*akov2.AtlasFederated
 		}
 	}
 	return ds
-}
-func expectedFederatedAuth(name, namespace string, identityProviderID string) *akov2.AtlasFederatedAuth {
-	dictionary := resources.AtlasNameToKubernetesName()
-	expected := &akov2.AtlasFederatedAuth{
-		TypeMeta: metav1.TypeMeta{
-			Kind:       "AtlasFederatedAuth",
-			APIVersion: "atlas.mongodb.com/v1",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", name, identityProviderID), dictionary),
-			Namespace: namespace,
-		},
-		Spec: akov2.AtlasFederatedAuthSpec{
-			ConnectionSecretRef: akov2common.ResourceRefNamespaced{
-				Name:      resources.NormalizeAtlasName(name+credSuffixTest, dictionary),
-				Namespace: namespace,
-			},
-			Enabled:                  true,
-			DomainAllowList:          []string{"munob.ro"},
-			PostAuthRoleGrants:       []string{"ORG_OWNER"},
-			DomainRestrictionEnabled: pointer.Get(false),
-			SSODebugEnabled:          pointer.Get(true),
-			RoleMappings:             nil,
-		},
-		Status: akov2status.AtlasFederatedAuthStatus{
-			Common: akoapi.Common{
-				Conditions: []akoapi.Condition{},
-			},
-		},
-	}
-	return expected
 }
 
 func TestEmptyProject(t *testing.T) {

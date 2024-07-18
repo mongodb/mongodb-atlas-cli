@@ -28,6 +28,7 @@ import (
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20240530002/admin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -309,7 +310,7 @@ func Test_BuildAtlasFederatedAuth(t *testing.T) {
 				FederatedSettings:            tc.federationSettings,
 			})
 
-			assert.ErrorIs(t, err, tc.expectedError)
+			require.ErrorIs(t, err, tc.expectedError)
 			assert.Equal(t, tc.expected, resources)
 		})
 	}

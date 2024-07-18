@@ -201,15 +201,17 @@ func BuildAtlasProject(br *AtlasProjectBuildRequest) (*AtlasProjectResult, error
 	}
 
 	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureBCP) {
-		var bcpRef akov2common.ResourceRefNamespaced
 		bcp, err := buildBCP(br.ProjectStore, br.Project.Name, br.ProjectID, br.TargetNamespace, br.Version, br.Dictionary)
 		if err != nil {
 			return nil, err
 		}
-		bcpRef.Name = bcp.Name
-		bcpRef.Namespace = bcp.Namespace
-		result.BCP = bcp
-		projectResult.Spec.BackupCompliancePolicyRef = &bcpRef
+		if bcp != nil {
+			result.BCP = bcp
+			projectResult.Spec.BackupCompliancePolicyRef = &akov2common.ResourceRefNamespaced{
+				Name:      bcp.Name,
+				Namespace: bcp.Namespace,
+			}
+		}
 	}
 
 	return result, nil
@@ -992,12 +994,12 @@ func buildBCP(bcpProvider store.CompliancePolicyDescriber, projectName, projectI
 	}
 
 	policyItems := make([]akov2.AtlasBackupPolicyItem, len(bcp.GetScheduledPolicyItems()))
-	for i, policy := range *bcp.ScheduledPolicyItems {
+	for i, policy := range bcp.GetScheduledPolicyItems() {
 		policyItems[i] = akov2.AtlasBackupPolicyItem{
-			FrequencyInterval: policy.FrequencyInterval,
-			FrequencyType:     policy.FrequencyType,
-			RetentionUnit:     policy.RetentionUnit,
-			RetentionValue:    policy.RetentionValue,
+			FrequencyInterval: policy.GetFrequencyInterval(),
+			FrequencyType:     policy.GetFrequencyType(),
+			RetentionUnit:     policy.GetRetentionUnit(),
+			RetentionValue:    policy.GetRetentionValue(),
 		}
 	}
 
@@ -1023,8 +1025,8 @@ func buildBCP(bcpProvider store.CompliancePolicyDescriber, projectName, projectI
 			RestoreWindowDays:       bcp.GetRestoreWindowDays(),
 			ScheduledPolicyItems:    policyItems,
 			OnDemandPolicy: akov2.AtlasOnDemandPolicy{
-				RetentionUnit:  bcp.OnDemandPolicyItem.RetentionUnit,
-				RetentionValue: bcp.OnDemandPolicyItem.RetentionValue,
+				RetentionUnit:  bcp.OnDemandPolicyItem.GetRetentionUnit(),
+				RetentionValue: bcp.OnDemandPolicyItem.GetRetentionValue(),
 			},
 		},
 		Status: akov2status.BackupCompliancePolicyStatus{},

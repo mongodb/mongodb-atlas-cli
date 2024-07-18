@@ -15,7 +15,6 @@
 package federatedauthentication
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
@@ -27,10 +26,6 @@ import (
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-)
-
-var (
-	ErrNoIndentityProvider = errors.New("could not find the identity provider")
 )
 
 type AtlasFederatedAuthBuildRequest struct {
@@ -92,7 +87,7 @@ func getOrgConfig(br *AtlasFederatedAuthBuildRequest) (*atlasv2.ConnectedOrgConf
 func getAtlasFederatedAuthSpec(br AtlasFederatedAuthBuildRequest, orgConfig *atlasv2.ConnectedOrgConfig) (*akov2.AtlasFederatedAuthSpec, error) {
 	idp, err := GetIdentityProviderForFederatedSettings(br.IdentityProviderLister, br.FederatedSettings.GetId(), br.FederatedSettings.GetIdentityProviderId())
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to retrieve the federated authentication spec: %w", err)
 	}
 	authSpec := akov2.AtlasFederatedAuthSpec{
 		Enabled:                  true,
@@ -105,7 +100,7 @@ func getAtlasFederatedAuthSpec(br AtlasFederatedAuthBuildRequest, orgConfig *atl
 	if br.FederatedSettings.HasHasRoleMappings() && orgConfig.HasRoleMappings() {
 		authSpec.RoleMappings, err = getRoleMappings(orgConfig.GetRoleMappings(), br.ProjectStore)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to retrieve the role mappings: %w", err)
 		}
 	}
 
@@ -129,7 +124,7 @@ func getRoleMappings(mappings []atlasv2.AuthFederationRoleMapping, projectStore 
 		if mapping.HasRoleAssignments() {
 			roleAssignemnts, err := getRoleAssignments(mapping.GetRoleAssignments(), projectStore)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("failed to retrieve the role assignments: %w", err)
 			}
 			roleMappings = append(roleMappings, akov2.RoleMapping{
 				ExternalGroupName: mapping.GetExternalGroupName(),
@@ -148,7 +143,7 @@ func getRoleAssignments(assignments []atlasv2.RoleAssignment, projectStore store
 		if ra.HasGroupId() {
 			project, err := projectStore.Project(ra.GetGroupId())
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("failed to retrieve the project: %w", err)
 			}
 			roleAssignment.ProjectName = project.GetName()
 		}
@@ -163,7 +158,7 @@ func GetIdentityProviderForFederatedSettings(st store.IdentityProviderLister, fe
 		FederationSettingsId: federationSettingsID,
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to retrieve the federation setting's identity providers: %w", err)
 	}
 
 	for _, identityProvider := range identityProviders.GetResults() {
@@ -171,5 +166,5 @@ func GetIdentityProviderForFederatedSettings(st store.IdentityProviderLister, fe
 			return &identityProvider, nil
 		}
 	}
-	return nil, ErrNoIndentityProvider
+	return nil, fmt.Errorf("failed to retrieve the saml identity provider matching the legacy ID: %w", err)
 }

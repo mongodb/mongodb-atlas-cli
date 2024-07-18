@@ -409,13 +409,16 @@ func (e *ConfigExporter) exportAtlasStreamProcessing(projectName string) ([]runt
 }
 
 func (e *ConfigExporter) exportAtlasFederatedAuth(projectName string) ([]runtime.Object, error) {
+	if !e.featureValidator.IsResourceSupported(features.ResourceAtlasFederatedAuth) {
+		return nil, nil
+	}
 	result := make([]runtime.Object, 0)
 	// Gets the FederationAuthSetting
 	federatedAuthentificationSetting, err := e.dataProvider.FederationSetting(&admin.GetFederationSettingsApiParams{OrgId: e.orgID})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to retrieve federation settings: %w", err)
 	}
-	// Does not have an IdenityProvider set then no need to generate
+	// Does not have an IdenityProvider set then no need to generate so not need to geenrate
 	if !federatedAuthentificationSetting.HasIdentityProviderStatus() || federatedAuthentificationSetting.GetIdentityProviderStatus() == "INACTIVE" {
 		return nil, err
 	}
@@ -434,6 +437,8 @@ func (e *ConfigExporter) exportAtlasFederatedAuth(projectName string) ([]runtime
 		ProjectName:                  projectName,
 		FederatedSettings:            federatedAuthentificationSetting,
 	})
-	result = append(result, federatedAuthentification)
-	return result, err
+	if err != nil {
+		return nil, fmt.Errorf("failed to export federated authentication: %w", err)
+	}
+	return append(result, federatedAuthentification), err
 }

@@ -416,25 +416,13 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 		)
 	})
 }
-func setupMockController(t *testing.T) (*gomock.Controller, *mocks.MockOperatorGenericStore, *ConfigExporter) {
+func defaultTestConfigExporter(t *testing.T, genStore *mocks.MockOperatorGenericStore, featureValidator *mocks.MockFeatureValidator) *ConfigExporter {
 	t.Helper()
-	ctl := gomock.NewController(t)
-	atlasOperatorGenericStore := mocks.NewMockOperatorGenericStore(ctl)
-	ce := NewConfigExporter(atlasOperatorGenericStore, nil, projectID, orgID).
+	return NewConfigExporter(genStore, nil, projectID, orgID).
 		WithTargetNamespace("test").
+		WithFeatureValidator(featureValidator).
 		WithTargetOperatorVersion("2.3.0").
 		WithSecretsData(true)
-	return ctl, atlasOperatorGenericStore, ce
-}
-
-func setupFederationSettings() *admin.OrgFederationSettings {
-	legacyTestIdentityProviderID := "LegacyTestIdentityProviderID"
-	return &admin.OrgFederationSettings{
-		Id:                     pointer.Get("TestFederationSettingID"),
-		IdentityProviderId:     &legacyTestIdentityProviderID,
-		IdentityProviderStatus: pointer.Get("ACTIVE"),
-		HasRoleMappings:        pointer.Get(true),
-	}
 }
 
 func setupAuthRoleMappings(testProjectID, secondTestProjectID, testRoleProject, testRoleOrganization, testExternalGroupName []string, testOrganizationID string) []admin.AuthFederationRoleMapping {
@@ -484,17 +472,26 @@ var (
 func Test_ExportFederatedAuth(t *testing.T) {
 	testCases := []struct {
 		name          string
-		setupMocks    func(*mocks.MockOperatorGenericStore)
+		setupMocks    func(*mocks.MockOperatorGenericStore, *mocks.MockFeatureValidator)
 		expected      []runtime.Object
 		expectedError error
 	}{
 		{
 			name: "should return exported resources",
-			setupMocks: func(store *mocks.MockOperatorGenericStore) {
-				federationSettings := setupFederationSettings()
+			setupMocks: func(store *mocks.MockOperatorGenericStore, featureValidator *mocks.MockFeatureValidator) {
+				legacyTestIdentityProviderID := "LegacyTestIdentityProviderID"
+				federationSettings := &admin.OrgFederationSettings{
+					Id:                     pointer.Get("TestFederationSettingID"),
+					IdentityProviderId:     &legacyTestIdentityProviderID,
+					IdentityProviderStatus: pointer.Get("ACTIVE"),
+					HasRoleMappings:        pointer.Get(true),
+				}
+
+				featureValidator.EXPECT().
+					IsResourceSupported(features.ResourceAtlasFederatedAuth).
+					Return(true)
 				store.EXPECT().FederationSetting(&admin.GetFederationSettingsApiParams{OrgId: orgID}).
 					Return(federationSettings, nil)
-
 				orgConfig := &admin.ConnectedOrgConfig{
 					DomainAllowList:          &[]string{"example.com"},
 					PostAuthRoleGrants:       &[]string{"ORG_OWNER"},
@@ -603,13 +600,16 @@ func Test_ExportFederatedAuth(t *testing.T) {
 		},
 		{
 			name: "should return nothing because the IDP is not active",
-			setupMocks: func(store *mocks.MockOperatorGenericStore) {
+			setupMocks: func(store *mocks.MockOperatorGenericStore, featureValidator *mocks.MockFeatureValidator) {
 				federationSettings := &admin.OrgFederationSettings{
 					Id:                     pointer.Get("TestFederationSettingID"),
 					IdentityProviderStatus: pointer.Get("INACTIVE"),
 					IdentityProviderId:     pointer.Get(legacyTestIdentityProviderID),
 					HasRoleMappings:        pointer.Get(false),
 				}
+				featureValidator.EXPECT().
+					IsResourceSupported(features.ResourceAtlasFederatedAuth).
+					Return(true)
 				store.EXPECT().FederationSetting(&admin.GetFederationSettingsApiParams{OrgId: orgID}).
 					Return(federationSettings, nil)
 			},
@@ -618,13 +618,26 @@ func Test_ExportFederatedAuth(t *testing.T) {
 		},
 		{
 			name: "should return nothing because the IDP is not present",
-			setupMocks: func(store *mocks.MockOperatorGenericStore) {
+			setupMocks: func(store *mocks.MockOperatorGenericStore, featureValidator *mocks.MockFeatureValidator) {
 				federationSettings := &admin.OrgFederationSettings{
 					Id:              pointer.Get("TestFederationSettingID"),
 					HasRoleMappings: pointer.Get(false),
 				}
+				featureValidator.EXPECT().
+					IsResourceSupported(features.ResourceAtlasFederatedAuth).
+					Return(true)
 				store.EXPECT().FederationSetting(&admin.GetFederationSettingsApiParams{OrgId: orgID}).
 					Return(federationSettings, nil)
+			},
+			expected:      nil,
+			expectedError: nil,
+		},
+		{
+			name: "should return nil when resource is not supported",
+			setupMocks: func(_ *mocks.MockOperatorGenericStore, featureValidator *mocks.MockFeatureValidator) {
+				featureValidator.EXPECT().
+					IsResourceSupported(features.ResourceAtlasFederatedAuth).
+					Return(false)
 			},
 			expected:      nil,
 			expectedError: nil,
@@ -633,9 +646,12 @@ func Test_ExportFederatedAuth(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			ctl, store, ce := setupMockController(t)
+			ctl := gomock.NewController(t)
+			atlasOperatorGenericStore := mocks.NewMockOperatorGenericStore(ctl)
+			featureValidator := mocks.NewMockFeatureValidator(ctl)
+			ce := defaultTestConfigExporter(t, atlasOperatorGenericStore, featureValidator)
 			defer ctl.Finish()
-			tc.setupMocks(store)
+			tc.setupMocks(atlasOperatorGenericStore, featureValidator)
 
 			resources, err := ce.exportAtlasFederatedAuth("my-project")
 			require.Equal(t, tc.expectedError, err)

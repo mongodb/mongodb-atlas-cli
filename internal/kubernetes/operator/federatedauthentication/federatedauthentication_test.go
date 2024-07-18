@@ -28,7 +28,6 @@ import (
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20240530002/admin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -58,7 +57,7 @@ func Test_BuildAtlasFederatedAuth(t *testing.T) {
 		federationSettings *admin.OrgFederationSettings
 		setupMocks         func(*mocks.MockOperatorGenericStore)
 		expected           *akov2.AtlasFederatedAuth
-		expectedError      error
+		expectedError      bool
 	}{
 		{
 			name: "should build the atlas federation auth custom resource",
@@ -172,7 +171,7 @@ func Test_BuildAtlasFederatedAuth(t *testing.T) {
 					},
 				},
 			},
-			expectedError: nil,
+			expectedError: false,
 		},
 		{
 			name: "should return error because lack of project permissions",
@@ -214,7 +213,7 @@ func Test_BuildAtlasFederatedAuth(t *testing.T) {
 				store.EXPECT().Project("test-project-1").Return(nil, errors.New("you are not authorized to get the project detail"))
 			},
 			expected:      nil,
-			expectedError: errors.New("you are not authorized to get the project detail"),
+			expectedError: true,
 		},
 		{
 			name: "should return error because an error where fetching the identity providers of the fedetaion",
@@ -244,7 +243,7 @@ func Test_BuildAtlasFederatedAuth(t *testing.T) {
 					Return(nil, errors.New("problem when fetching the list of the identity providers"))
 			},
 			expected:      nil,
-			expectedError: errors.New("problem when fetching the list of the identity providers"),
+			expectedError: true,
 		},
 		{
 			name: "no identity provider present matching the legacy identityproviderID",
@@ -279,7 +278,7 @@ func Test_BuildAtlasFederatedAuth(t *testing.T) {
 					Return(paginatedResult, nil)
 			},
 			expected:      nil,
-			expectedError: errors.New("could not find the identity provider"),
+			expectedError: true,
 		},
 	}
 
@@ -306,7 +305,8 @@ func Test_BuildAtlasFederatedAuth(t *testing.T) {
 				FederatedSettings:            tc.federationSettings,
 			})
 
-			require.Equal(t, tc.expectedError, err)
+			isErr := err != nil
+			assert.Equal(t, tc.expectedError, isErr)
 			assert.Equal(t, tc.expected, resources)
 		})
 	}

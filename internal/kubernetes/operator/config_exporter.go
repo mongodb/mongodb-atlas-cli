@@ -420,7 +420,7 @@ func (e *ConfigExporter) exportAtlasFederatedAuth(projectName string) ([]runtime
 	}
 	// Does not have an IdenityProvider set then no need to generate so not need to geenrate
 	if !federatedAuthentificationSetting.HasIdentityProviderStatus() || federatedAuthentificationSetting.GetIdentityProviderStatus() == "INACTIVE" {
-		return nil, err
+		return nil, nil
 	}
 	// Does have an IdentityProvider and then we can generate the config
 	federatedAuthentification, err := federatedauthentication.BuildAtlasFederatedAuth(&federatedauthentication.AtlasFederatedAuthBuildRequest{

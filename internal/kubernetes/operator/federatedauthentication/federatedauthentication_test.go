@@ -50,6 +50,10 @@ var (
 	testRoleOrganizations  = []string{"ORG_OWNER", "ORG_OWNER"}
 	testExternalGroupNames = []string{"org-admin", "dev-team"}
 )
+var (
+	ErrGetProvidersList       = errors.New("problem when fetching the list of the identity providers")
+	ErrGetProjectUnauthorized = errors.New("you are not authorized to get this project details")
+)
 
 func Test_BuildAtlasFederatedAuth(t *testing.T) {
 	testCases := []struct {
@@ -57,7 +61,7 @@ func Test_BuildAtlasFederatedAuth(t *testing.T) {
 		federationSettings *admin.OrgFederationSettings
 		setupMocks         func(*mocks.MockOperatorGenericStore)
 		expected           *akov2.AtlasFederatedAuth
-		expectedError      bool
+		expectedError      error
 	}{
 		{
 			name: "should build the atlas federation auth custom resource",
@@ -171,7 +175,7 @@ func Test_BuildAtlasFederatedAuth(t *testing.T) {
 					},
 				},
 			},
-			expectedError: false,
+			expectedError: nil,
 		},
 		{
 			name: "should return error because lack of project permissions",
@@ -210,10 +214,10 @@ func Test_BuildAtlasFederatedAuth(t *testing.T) {
 					IdentityProviders(&admin.ListIdentityProvidersApiParams{FederationSettingsId: *pointer.Get(testFederationSettingID)}).
 					Return(paginatedResult, nil)
 
-				store.EXPECT().Project("test-project-1").Return(nil, errors.New("you are not authorized to get the project detail"))
+				store.EXPECT().Project("test-project-1").Return(nil, ErrGetProjectUnauthorized)
 			},
 			expected:      nil,
-			expectedError: true,
+			expectedError: ErrGetProjectUnauthorized,
 		},
 		{
 			name: "should return error because an error where fetching the identity providers of the fedetaion",
@@ -240,10 +244,10 @@ func Test_BuildAtlasFederatedAuth(t *testing.T) {
 
 				store.EXPECT().
 					IdentityProviders(&admin.ListIdentityProvidersApiParams{FederationSettingsId: *pointer.Get(testFederationSettingID)}).
-					Return(nil, errors.New("problem when fetching the list of the identity providers"))
+					Return(nil, ErrGetProvidersList)
 			},
 			expected:      nil,
-			expectedError: true,
+			expectedError: ErrGetProvidersList,
 		},
 		{
 			name: "no identity provider present matching the legacy identityproviderID",
@@ -278,7 +282,7 @@ func Test_BuildAtlasFederatedAuth(t *testing.T) {
 					Return(paginatedResult, nil)
 			},
 			expected:      nil,
-			expectedError: true,
+			expectedError: ErrNoMatchingSAMLProvider,
 		},
 	}
 
@@ -305,8 +309,7 @@ func Test_BuildAtlasFederatedAuth(t *testing.T) {
 				FederatedSettings:            tc.federationSettings,
 			})
 
-			isErr := err != nil
-			assert.Equal(t, tc.expectedError, isErr)
+			assert.ErrorIs(t, err, tc.expectedError)
 			assert.Equal(t, tc.expected, resources)
 		})
 	}

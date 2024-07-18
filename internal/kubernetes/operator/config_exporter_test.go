@@ -625,7 +625,7 @@ func defaultTestConfigExporter(t *testing.T, genStore *mocks.MockOperatorGeneric
 	return NewConfigExporter(genStore, nil, projectID, orgID).
 		WithTargetNamespace("test").
 		WithFeatureValidator(featureValidator).
-		WithTargetOperatorVersion("2.3.0").
+		WithTargetOperatorVersion("2.4.0").
 		WithSecretsData(true)
 }
 

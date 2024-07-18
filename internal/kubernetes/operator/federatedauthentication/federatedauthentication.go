@@ -15,6 +15,7 @@
 package federatedauthentication
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
@@ -26,6 +27,10 @@ import (
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+var (
+	ErrNoMatchingSAMLProvider = errors.New("failed to retrieve the SAML identity provider matching the legacy ID")
 )
 
 type AtlasFederatedAuthBuildRequest struct {
@@ -166,5 +171,5 @@ func GetIdentityProviderForFederatedSettings(st store.IdentityProviderLister, fe
 			return &identityProvider, nil
 		}
 	}
-	return nil, fmt.Errorf("failed to retrieve the saml identity provider matching the legacy ID: %w", err)
+	return nil, ErrNoMatchingSAMLProvider
 }

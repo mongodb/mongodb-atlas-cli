@@ -154,9 +154,12 @@ func InstallBuilder(plugins []*plugin.Plugin) *cobra.Command {
 	opts := &InstallOpts{plugins: plugins}
 	const use = "install"
 	cmd := &cobra.Command{
-		Use:     use + " <github-owner>/<github-repository-name>",
+		Use:     use + " [<github-owner>/<github-repository-name>]",
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Install Atlas CLI plugin from a GitHub repository.",
+		Annotations: map[string]string{
+			"<github-owner>/<github-repository-name>Desc": "Repository identifier.",
+		},
+		Short: "Install Atlas CLI plugin from a GitHub repository.",
 		Long: `Install an Atlas CLI plugin from a GitHub repository.
 The GitHub repository can be specified using either the "<github-owner>/<github-repository-name>" format or a full URL.
 By default, the latest release on GitHub will be used to install the plugin.

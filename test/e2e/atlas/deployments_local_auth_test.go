@@ -270,6 +270,31 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		assert.Len(t, results, 1)
 	})
 
+	t.Run("Update search index", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
+			"update",
+			"--deploymentName",
+			deploymentName,
+			"--type",
+			"LOCAL",
+			"--file",
+			"data/update_search_index.json",
+			"-w",
+			"--username",
+			dbUsername,
+			"--password",
+			dbUserPassword,
+		)
+
+		cmd.Env = os.Environ()
+
+		r, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, string(r))
+	})
+
 	t.Run("Delete Index", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,

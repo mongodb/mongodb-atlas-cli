@@ -1,0 +1,13 @@
+{
+    "database": "myDB",
+    "collectionName": "myCol",
+    "name": "indexTest",
+    "mappings": {
+        "dynamic": false,
+        "fields": {
+            "name": {
+                "type": "string"
+            }
+        }
+    }
+}

@@ -119,7 +119,7 @@ func (opts *InstallOpts) getPluginAssets() ([]*github.ReleaseAsset, error) {
 	return release.Assets, nil
 }
 
-func (opts *InstallOpts) getAssetID() (int64, error) {
+func (opts *InstallOpts) getAssetInfo() (int64, string, error) {
 	operatingSystem, architecture := runtime.GOOS, runtime.GOARCH
 	for _, asset := range opts.pluginAssets {
 		if *asset.ContentType != "application/gzip" {
@@ -128,15 +128,15 @@ func (opts *InstallOpts) getAssetID() (int64, error) {
 		name := *asset.Name
 
 		if strings.Contains(name, operatingSystem) && strings.Contains(name, architecture) {
-			return *asset.ID, nil
+			return *asset.ID, *asset.Name, nil
 		}
 	}
 
-	return 0, fmt.Errorf("could not find an asset to download from %s for %s %s", opts.fullRepositoryDefinition(), operatingSystem, architecture)
+	return 0, "", fmt.Errorf("could not find an asset to download from %s for %s %s", opts.fullRepositoryDefinition(), operatingSystem, architecture)
 }
 
 func (opts *InstallOpts) Run() error {
-	assetID, err := opts.getAssetID()
+	assetID, assetName, err := opts.getAssetInfo()
 
 	if err != nil {
 		return err
@@ -155,7 +155,7 @@ func (opts *InstallOpts) Run() error {
 		return errors.New("could not find plugin directory")
 	}
 
-	pluginFile, err := os.Create(filepath.Join(pluginDirectory, "temp_plugin"))
+	pluginFile, err := os.Create(filepath.Join(pluginDirectory, assetName))
 
 	if err != nil {
 		return errors.New("could not open plugin directory")

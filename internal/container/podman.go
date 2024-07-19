@@ -19,6 +19,7 @@ package container
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -37,7 +38,16 @@ func newPodmanEngine() Engine {
 }
 
 func (e *podmanImpl) Ready() error {
-	return e.client.Ready(context.Background())
+	err := e.client.Ready(context.Background())
+	if err == nil {
+		return nil
+	}
+
+	if errors.Is(err, podman.ErrPodmanNotFound) {
+		err = errors.Join(err, ErrContainerEngineNotFound)
+	}
+
+	return err
 }
 
 func (e *podmanImpl) ContainerLogs(ctx context.Context, name string) ([]string, error) {

@@ -153,6 +153,8 @@ func TestStartOpts_PostRun(t *testing.T) {
 		AppendDeploymentType().
 		Times(1)
 
+	deploymentsTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
+
 	require.NoError(t, opts.PostRun())
 }
 

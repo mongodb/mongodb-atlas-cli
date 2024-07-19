@@ -16,6 +16,7 @@ package container
 
 import (
 	"context"
+	"errors"
 	"time"
 )
 
@@ -130,4 +131,8 @@ const (
 	DockerHealthcheckStatusHealthy   DockerHealthcheckStatus = "healthy"
 	DockerHealthcheckStatusUnhealthy DockerHealthcheckStatus = "unhealthy"
 	DockerHealthcheckStatusNone      DockerHealthcheckStatus = "none"
+)
+
+var (
+	ErrContainerEngineNotFound = errors.New("container engine not found")
 )

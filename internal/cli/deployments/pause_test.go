@@ -124,6 +124,8 @@ func TestPauseOpts_PostRun(t *testing.T) {
 		AppendDeploymentType().
 		Times(1)
 
+	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
+
 	if err := opts.PostRun(); err != nil {
 		t.Fatalf("PostRun() unexpected error: %v", err)
 	}

@@ -26,7 +26,7 @@ import (
 	"time"
 )
 
-var ErrDockerNotFound = errors.New("podman not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs")
+var ErrDockerNotFound = fmt.Errorf("%w: docker not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs", ErrContainerEngineNotFound)
 
 type dockerImpl struct {
 }

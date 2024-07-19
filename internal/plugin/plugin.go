@@ -15,16 +15,18 @@
 package plugin
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
+	"path"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/spf13/cobra"
 )
 
 const (
-	DefaultPluginDirectory     = "./plugins"
 	ExtraPluginDirectoryEnvKey = "ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY"
 )
 
@@ -32,15 +34,15 @@ func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 	var manifests []*Manifest
 
 	// Load manifests from plugin directories
-	if loadedManifests, err := getManifestsFromPluginDirectory(DefaultPluginDirectory); err != nil {
-		logPluginWarning(`could not load manifests from directory "./plugins" because of error: %s`, err.Error())
-	} else {
-		manifests = append(manifests, loadedManifests...)
+	if defaultPluginDirectory, err := GetDefaultPluginDirectory(); err != nil {
+		if loadedManifests, err := getManifestsFromPluginDirectory(defaultPluginDirectory); err != nil {
+			logPluginWarning(`could not load manifests from directory "./plugins" because of error: %s`, err.Error())
+		} else {
+			manifests = append(manifests, loadedManifests...)
+		}
 	}
 
-	extraPluginDir := os.Getenv(ExtraPluginDirectoryEnvKey)
-
-	if extraPluginDir != "" {
+	if extraPluginDir := os.Getenv("ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY"); extraPluginDir != "" {
 		if loadedManifests, err := getManifestsFromPluginDirectory(extraPluginDir); err != nil {
 			logPluginWarning(`could not load plugins from folder "%s" provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s`, extraPluginDir, err.Error())
 		} else {
@@ -62,6 +64,23 @@ func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 	}
 
 	return plugins
+}
+
+func GetDefaultPluginDirectory() (string, error) {
+	configHome, err := config.CLIConfigHome()
+
+	if err != nil {
+		return "", err
+	}
+
+	pluginDirectoryPath := path.Join(configHome, "plugins")
+
+	err = os.MkdirAll(pluginDirectoryPath, os.ModePerm)
+	if err != nil {
+		return "", errors.New("failed to create default plugin directory")
+	}
+
+	return pluginDirectoryPath, nil
 }
 
 type Plugin struct {

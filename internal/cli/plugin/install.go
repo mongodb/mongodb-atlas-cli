@@ -18,7 +18,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 
@@ -122,7 +125,6 @@ func (opts *InstallOpts) getAssetID() (int64, error) {
 		if *asset.ContentType != "application/gzip" {
 			continue
 		}
-		fmt.Printf("%s | type: %s\n", *asset.Name, *asset.ContentType)
 		name := *asset.Name
 
 		if strings.Contains(name, operatingSystem) && strings.Contains(name, architecture) {
@@ -146,6 +148,24 @@ func (opts *InstallOpts) Run() error {
 		return fmt.Errorf("could not download asset with ID %d from %s", assetID, opts.fullRepositoryDefinition())
 	}
 	defer rc.Close()
+
+	pluginDirectory, err := plugin.GetDefaultPluginDirectory()
+
+	if err != nil {
+		return errors.New("could not find plugin directory")
+	}
+
+	pluginFile, err := os.Create(filepath.Join(pluginDirectory, "temp_plugin"))
+
+	if err != nil {
+		return errors.New("could not open plugin directory")
+	}
+	defer pluginFile.Close()
+
+	_, err = io.Copy(pluginFile, rc)
+	if err != nil {
+		return errors.New("failed to save asset to plugin directory: " + err.Error())
+	}
 
 	return opts.Print(fmt.Sprintf("Plugin %s successfully installed", opts.fullRepositoryDefinition()))
 }
@@ -199,8 +219,6 @@ An example plugin can be found here: https://github.com/mongodb/atlas-cli-plugin
 			return nil
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
-			fmt.Printf("Operating System: %s\n", runtime.GOOS)
-			fmt.Printf("Architecture: %s\n", runtime.GOARCH)
 			return opts.Run()
 		},
 	}

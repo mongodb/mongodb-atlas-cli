@@ -85,7 +85,7 @@ func (opts *CreateOpts) newServerlessCreateRequestParams() *atlasv2.ServerlessIn
 	return req
 }
 
-// mongocli atlas serverless|sl create <instanceName> --backingProviderName backingProviderName --providerName providerName --regionName regionName [--projectId projectId].
+// atlas serverless|sl create <instanceName> --backingProviderName backingProviderName --providerName providerName --regionName regionName [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

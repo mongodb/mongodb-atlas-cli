@@ -45,7 +45,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteProjectIPAccessList, opts.ConfigProjectID())
 }
 
-// mongocli atlas accessList delete <entry> --force.
+// atlas accessList delete <entry> --force.
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Project access list entry '%s' deleted\n", "Project access list entry not deleted"),

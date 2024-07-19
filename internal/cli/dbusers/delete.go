@@ -47,7 +47,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteDatabaseUser, opts.authDB, opts.ConfigProjectID())
 }
 
-// mongocli atlas dbuser(s) delete <username> --force.
+// atlas dbuser(s) delete <username> --force.
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("DB user '%s' deleted\n", "DB user not deleted"),

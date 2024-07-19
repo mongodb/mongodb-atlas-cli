@@ -61,7 +61,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas dbuser(s) list --projectId projectId [--page N] [--limit N].
+// atlas dbuser(s) list --projectId projectId [--page N] [--limit N].
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{

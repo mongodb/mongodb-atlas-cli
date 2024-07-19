@@ -56,7 +56,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas backup(s) restore(s) job(s) describe <ID>.
+// atlas backup(s) restore(s) job(s) describe <ID>.
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{

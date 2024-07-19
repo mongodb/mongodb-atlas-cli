@@ -64,7 +64,7 @@ func (opts *CreateOpts) newPrivateEndpointConnection() *atlasv2.CloudProviderEnd
 	return createRequest
 }
 
-// mongocli atlas privateEndpoint(s) azure create [--region <name>] --projectId projectId.
+// atlas privateEndpoint(s) azure create [--region <name>] --projectId projectId.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

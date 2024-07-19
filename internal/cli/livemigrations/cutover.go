@@ -51,7 +51,7 @@ func (opts *CutoverOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// mongocli atlas liveMigrations|lm cutover [--liveMigrationID liveMigrationId] [--projectId projectId].
+// atlas liveMigrations|lm cutover [--liveMigrationID liveMigrationId] [--projectId projectId].
 func CutoverBuilder() *cobra.Command {
 	opts := &CutoverOpts{}
 	cmd := &cobra.Command{

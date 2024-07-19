@@ -45,7 +45,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteContainer, opts.ConfigProjectID())
 }
 
-// mongocli atlas networking container(s) delete <ID> [--projectId projectId].
+// atlas networking container(s) delete <ID> [--projectId projectId].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Network peering container '%s' deleted\n", "Network peering container not deleted"),

@@ -61,7 +61,7 @@ func (opts *WatchOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// mongocli atlas serverless|sl watch <instanceName> [--projectId projectId].
+// atlas serverless|sl watch <instanceName> [--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{

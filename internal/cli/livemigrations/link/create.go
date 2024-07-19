@@ -60,7 +60,7 @@ func (opts *CreateOpts) newTokenCreateRequest() *atlasv2.TargetOrgRequest {
 	}
 }
 
-// mongocli atlas liveMigrations|lm link create [--accessListIp accessListIp] [--orgId orgId].
+// atlas liveMigrations|lm link create [--accessListIp accessListIp] [--orgId orgId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

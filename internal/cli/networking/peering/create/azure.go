@@ -118,7 +118,7 @@ func (opts *AzureOpts) newAzurePeer(containerID string) *atlasv2.BaseNetworkPeer
 	}
 }
 
-// mongocli atlas networking peering create azure
+// atlas networking peering create azure
 // --atlasCidrBlock atlasCidrBlock: CIDR block that Atlas uses for the Network Peering containers in your project.
 // --directoryId azureDirectoryId: Unique identifier for an Azure AD directory.
 // --subscriptionId azureSubscriptionId: Unique identifier of the Azure subscription in which the VNet resides.

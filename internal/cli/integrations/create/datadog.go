@@ -64,7 +64,7 @@ func (opts *DatadogOpts) newDatadogIntegration() *atlasv2.ThirdPartyIntegration 
 	}
 }
 
-// mongocli atlas integration(s) create DATADOG --apiKey apiKey --region region [--projectId projectId].
+// atlas integration(s) create DATADOG --apiKey apiKey --region region [--projectId projectId].
 func DatadogBuilder() *cobra.Command {
 	opts := &DatadogOpts{}
 	cmd := &cobra.Command{

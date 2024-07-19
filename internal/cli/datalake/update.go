@@ -83,7 +83,7 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas datalake(s) update <name> --projectId projectId [--role role] [--testBucket bucket] [--region region].
+// atlas datalake(s) update <name> --projectId projectId [--role role] [--testBucket bucket] [--region region].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{

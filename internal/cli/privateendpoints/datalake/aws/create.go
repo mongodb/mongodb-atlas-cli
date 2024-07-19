@@ -66,7 +66,7 @@ func (opts *CreateOpts) newPrivateLinkEndpointDataLake() *atlasv2.PrivateNetwork
 	return createRequest
 }
 
-// mongocli atlas privateEndpoint(s) dataLake aws create [--privateEndpointId privateEndpointId] [--comment comment] --projectId projectId.
+// atlas privateEndpoint(s) dataLake aws create [--privateEndpointId privateEndpointId] [--comment comment] --projectId projectId.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

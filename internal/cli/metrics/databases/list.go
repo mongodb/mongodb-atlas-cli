@@ -59,7 +59,7 @@ func (opts *ListsOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas metric(s) database(s) lists <hostname:port>.
+// atlas metric(s) database(s) lists <hostname:port>.
 func ListBuilder() *cobra.Command {
 	opts := &ListsOpts{}
 	cmd := &cobra.Command{

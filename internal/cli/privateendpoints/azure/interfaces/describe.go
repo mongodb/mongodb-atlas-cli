@@ -57,7 +57,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s) azure interface(s) describe <endpointId> [--endpointServiceID endpointServiceID][--projectId projectId].
+// atlas privateEndpoint(s) azure interface(s) describe <endpointId> [--endpointServiceID endpointServiceID][--projectId projectId].
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{

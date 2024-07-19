@@ -45,7 +45,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteInterfaceEndpointDeprecated, opts.ConfigProjectID(), opts.privateEndpointID)
 }
 
-// mongocli atlas privateEndpoint(s) interface(s) delete <interfaceEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId].
+// atlas privateEndpoint(s) interface(s) delete <interfaceEndpointId> [--privateEndpointId privateEndpointID][--projectId projectId].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Interface endpoint '%s' deleted\n", "Interface endpoint not deleted"),

@@ -111,7 +111,7 @@ func (opts *AWSOpts) newPeer(containerID string) *atlasv2.BaseNetworkPeeringConn
 	}
 }
 
-// AwsBuilder mongocli atlas networking peering create aws
+// AwsBuilder atlas networking peering create aws
 // --accepterRegionName accepterRegionName: Specifies the region where the peer VPC resides.
 // --awsAccountId awsAccountId: Account ID of the owner of the peer VPC.
 // --containerId containerId: Unique identifier of the Atlas VPC container for the region.

@@ -61,7 +61,7 @@ func (opts *WatchOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// mongocli atlas privateEndpoint(s) aws watch <name> [--projectId projectId].
+// atlas privateEndpoint(s) aws watch <name> [--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{

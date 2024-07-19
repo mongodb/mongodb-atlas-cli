@@ -57,7 +57,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas backup(s) restore(s) job(s) list <clusterName> [--page N] [--limit N].
+// atlas backup(s) restore(s) job(s) list <clusterName> [--page N] [--limit N].
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)
 	cmd := &cobra.Command{

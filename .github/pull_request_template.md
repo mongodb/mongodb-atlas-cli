@@ -1,5 +1,5 @@
 <!--
-Thanks for contributing to MongoDB CLI!
+Thanks for contributing to MongoDB Atlas CLI!
 
 Before you submit your pull request, please review our contribution guidelines:
 https://github.com/mongodb/mongodb-atlas-cli/blob/master/CONTRIBUTING.md
@@ -18,7 +18,7 @@ If it fixes a bug or resolves a feature request, be sure to link to that issue.
 _Jira ticket:_ CLOUDP-#
 
 <!--
-What MongoDB CLI issue does this PR address? (for example, #1234), remove this section if none.
+What MongoDB Atlas CLI issue does this PR address? (for example, #1234), remove this section if none.
 -->
 
 Closes #[issue number]

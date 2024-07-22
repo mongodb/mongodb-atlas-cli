@@ -993,6 +993,11 @@ func buildBCP(bcpProvider store.CompliancePolicyDescriber, projectName, projectI
 		return nil, err
 	}
 
+	// Backup Compliance Policy always returns 200, even when unset, so we must check if it's empty.
+	if (*bcp == atlasv2.DataProtectionSettings20231001{}) {
+		return nil, nil
+	}
+
 	policyItems := make([]akov2.AtlasBackupPolicyItem, len(bcp.GetScheduledPolicyItems()))
 	for i, policy := range bcp.GetScheduledPolicyItems() {
 		policyItems[i] = akov2.AtlasBackupPolicyItem{

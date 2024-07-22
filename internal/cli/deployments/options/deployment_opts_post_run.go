@@ -17,8 +17,8 @@ package options
 import (
 	"errors"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman"
 )
 
 func (opts *DeploymentOpts) PostRunMessages() error {
@@ -28,8 +28,8 @@ func (opts *DeploymentOpts) PostRunMessages() error {
 		}
 	}
 
-	if err := podman.Installed(); errors.Is(err, podman.ErrPodmanNotFound) {
-		if _, err = log.Warningln("\nTo get output for both local and Atlas deployments, install Podman."); err != nil {
+	if err := opts.ContainerEngine.Ready(); errors.Is(err, container.ErrContainerEngineNotFound) {
+		if _, err = log.Warningln("\nTo get output for both local and Atlas deployments, install " + opts.ContainerEngine.Name()); err != nil {
 			return err
 		}
 	}

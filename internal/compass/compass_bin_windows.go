@@ -14,4 +14,47 @@
 
 package compass
 
+import (
+	"fmt"
+	"os/exec"
+	"path"
+
+	"golang.org/x/sys/windows/registry"
+)
+
 const compassBin = "MongoDBCompass.exe"
+
+func binPath() string {
+	// Find the path to the MongoDB Compass binary using the registry
+	directory, err := compassDirectory()
+	if directory == "" || err != nil {
+		// If the directory is not found in the registry, search in the PATH environment variable
+		p, err := exec.LookPath(compassBin)
+		if err != nil {
+			return ""
+		}
+
+		return p
+	}
+
+	return path.Join(directory, compassBin)
+}
+
+// Finds the path to the MongoDB Compass directory.
+// The path can be found in the registry:
+// Location: HKEY_LOCAL_MACHINE\SOFTWARE\MongoDB\MongoDB Compass
+// Key: Directory
+func compassDirectory() (string, error) {
+	key, err := registry.OpenKey(registry.LOCAL_MACHINE, `SOFTWARE\MongoDB\MongoDB Compass`, registry.QUERY_VALUE)
+	if err != nil {
+		return "", fmt.Errorf("Error opening registry key: %v", err)
+	}
+	defer key.Close()
+
+	directory, _, err := key.GetStringValue("Directory")
+	if err != nil {
+		return "", fmt.Errorf("Error reading Directory value: %v", err)
+	}
+
+	return directory, nil
+}

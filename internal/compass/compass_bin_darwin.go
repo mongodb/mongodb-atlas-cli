@@ -15,3 +15,7 @@
 package compass
 
 const compassBin = "/Applications/MongoDB Compass.app/Contents/MacOS/MongoDB Compass"
+
+func binPath() string {
+	return compassBin
+}

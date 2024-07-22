@@ -15,3 +15,7 @@
 package compass
 
 const compassBin = "/usr/bin/mongodb-compass" //nolint:gosec
+
+func binPath() string {
+	return compassBin
+}

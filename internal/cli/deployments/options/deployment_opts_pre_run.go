@@ -153,8 +153,8 @@ func localDeploymentSupportedByOs() bool {
 		// MacOS Intel and M1 are supported
 		return true
 	case "windows":
-		// Windows is not supported
-		return false
+		// Windows is supported
+		return true
 	case "linux":
 		// Linux is supported
 		return true

@@ -31,7 +31,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation"
 )
 
-const defaultTargetlNamespace = "default"
+const defaultTargetNamespace = "default"
 
 var ErrUnsupportedOperatorVersionFmt = "version %q is not supported. Supported versions: %v"
 
@@ -50,7 +50,7 @@ type GenerateOpts struct {
 
 func (opts *GenerateOpts) defaults() error {
 	if opts.targetNamespace == "" {
-		opts.targetNamespace = defaultTargetlNamespace
+		opts.targetNamespace = defaultTargetNamespace
 	}
 
 	return nil

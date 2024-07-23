@@ -192,12 +192,16 @@ func extractTarGz(src string, dest string) error {
 				return errors.New("failed to create file while extracting plugin asset")
 			}
 			defer outFile.Close()
-
-			// each extracted file can be a maximum of 0.5GB in size to avoid G110 DoS decompression bomb
-			maxBytesToCopy := 500000000
-			if _, err := io.CopyN(outFile, tarReader, int64(maxBytesToCopy)); err != nil && err != io.EOF {
-				return errors.New("failed to copy file content while extracting plugin asset")
+			for {
+				_, err := io.CopyN(outFile, tarReader, 1024) //nolint:mnd // 1k each write to avoid compression bomb
+				if err != nil {
+					if err == io.EOF {
+						break
+					}
+					return errors.New("failed to copy file content while extracting plugin asset")
+				}
 			}
+
 		default:
 			return errors.New("failed to read tar archive")
 		}

@@ -15,9 +15,7 @@
 package mongosh
 
 import (
-	"os"
 	"os/exec"
-	"syscall"
 )
 
 func Detect() bool {
@@ -30,12 +28,6 @@ func binPath() string {
 	}
 
 	return ""
-}
-
-func execCommand(args ...string) error {
-	a := append([]string{mongoshBin}, args...)
-	env := os.Environ()
-	return syscall.Exec(binPath(), a, env) //nolint:gosec // false positive, this path won't be tampered
 }
 
 func SetTelemetry(enable bool) error {

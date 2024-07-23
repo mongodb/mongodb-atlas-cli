@@ -23,6 +23,8 @@ import (
 func RegisterCommands(rootCmd *cobra.Command) {
 	plugins := plugin.GetAllValidPlugins(rootCmd.Commands())
 
+	rootCmd.AddGroup(&cobra.Group{ID: "plugin", Title: "commands from plugins"})
+
 	for _, p := range plugins {
 		rootCmd.AddCommand(p.GetCobraCommands()...)
 	}

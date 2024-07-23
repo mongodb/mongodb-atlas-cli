@@ -126,9 +126,10 @@ func (p *Plugin) GetCobraCommands() []*cobra.Command {
 
 	for _, command := range p.Commands {
 		command := &cobra.Command{
-			Use:   command.Name,
-			Short: command.Description,
-			RunE:  p.Run,
+			Use:     command.Name,
+			Short:   command.Description,
+			RunE:    p.Run,
+			GroupID: "plugin",
 		}
 
 		commands = append(commands, command)

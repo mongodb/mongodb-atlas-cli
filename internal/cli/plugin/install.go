@@ -43,6 +43,33 @@ func (opts *InstallOpts) validateForExistingPlugins() error {
 	return nil
 }
 
+func (opts *InstallOpts) validatePlugin(pluginDirectoryPath string) error {
+	manifest, err := plugin.GetManifestFromPluginDirectory(pluginDirectoryPath)
+	if err != nil {
+		return err
+	}
+
+	if valid, errorList := manifest.IsValid(); !valid {
+		var manifestErrorLog strings.Builder
+		manifestErrorLog.WriteString(fmt.Sprintf("plugin in directory \"%s\" could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath))
+		for _, err := range errorList {
+			manifestErrorLog.WriteString(fmt.Sprintf("\t- %s\n", err.Error()))
+		}
+
+		return errors.New(manifestErrorLog.String())
+	}
+
+	existingCommandsMap := make(map[string]bool)
+	for _, cmd := range opts.existingCommands {
+		existingCommandsMap[cmd.Name()] = true
+	}
+	if plugin.HasDuplicateCommand(manifest, existingCommandsMap) {
+		return fmt.Errorf(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, opts.fullRepositoryDefinition())
+	}
+
+	return nil
+}
+
 func (opts *InstallOpts) Run() error {
 	rc, err := opts.getPluginAssetAsReadCloser()
 	if err != nil {
@@ -60,30 +87,10 @@ func (opts *InstallOpts) Run() error {
 		return err
 	}
 
-	manifest, err := plugin.GetManifestFromPluginDirectory(pluginDirectoryPath)
+	err = opts.validatePlugin(pluginDirectoryPath)
 	if err != nil {
 		os.RemoveAll(pluginDirectoryPath)
 		return err
-	}
-
-	if valid, errorList := manifest.IsValid(); !valid {
-		var manifestErrorLog strings.Builder
-		manifestErrorLog.WriteString(fmt.Sprintf("plugin in directory \"%s\" could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath))
-		for _, err := range errorList {
-			manifestErrorLog.WriteString(fmt.Sprintf("\t- %s\n", err.Error()))
-		}
-
-		os.RemoveAll(pluginDirectoryPath)
-		return errors.New(manifestErrorLog.String())
-	}
-
-	existingCommandsMap := make(map[string]bool)
-	for _, cmd := range opts.existingCommands {
-		existingCommandsMap[cmd.Name()] = true
-	}
-	if plugin.HasDuplicateCommand(manifest, existingCommandsMap) {
-		os.RemoveAll(pluginDirectoryPath)
-		return fmt.Errorf(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, opts.fullRepositoryDefinition())
 	}
 
 	return opts.Print(fmt.Sprintf("Plugin %s successfully installed", opts.fullRepositoryDefinition()))

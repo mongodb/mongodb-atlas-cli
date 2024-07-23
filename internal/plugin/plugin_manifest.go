@@ -193,6 +193,7 @@ func getUniqueManifests(manifests []*Manifest, existingCommands []*cobra.Command
 	for _, cmd := range existingCommands {
 		existingCommandsMap[cmd.Name()] = true
 	}
+	existingCommandsMap["plugin"] = true
 
 	for _, manifest := range manifests {
 		if HasDuplicateCommand(manifest, existingCommandsMap) {

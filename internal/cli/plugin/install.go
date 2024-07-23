@@ -15,17 +15,11 @@
 package plugin
 
 import (
-	"context"
 	"errors"
 	"fmt"
-	"io"
-	"net/http"
 	"os"
-	"path/filepath"
-	"runtime"
 	"strings"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v61/github"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -34,144 +28,75 @@ import (
 )
 
 type InstallOpts struct {
+	cli.GlobalOpts
 	cli.OutputOpts
-	ghClient        *github.Client
-	repositoryOwner string
-	repositoryName  string
-	releaseVersion  string
-	plugins         []*plugin.Plugin
-	pluginAssets    []*github.ReleaseAsset
+	AssetOpts
+	plugins []*plugin.Plugin
 }
 
-func (opts *InstallOpts) fullRepositoryDefinition() string {
-	return fmt.Sprintf("%s/%s", opts.repositoryOwner, opts.repositoryName)
-}
-
-func parseGithubValues(arg string) (string, string, error) {
-	arg = strings.Split(arg, "@")[0]
-	arg = strings.TrimSuffix(arg, "/")
-
-	parts := strings.Split(arg, "/")
-
-	err := errors.New(`github parameter is invalid. It needs to have the format "<github-owner>/<github-repository-name>"`)
-
-	minParts := 2
-	if len(parts) < minParts {
-		return "", "", err
-	}
-	owner := parts[len(parts)-2]
-	name := parts[len(parts)-1]
-
-	if owner == "" || name == "" {
-		return "", "", err
-	}
-
-	return owner, name, nil
-}
-
-func parseReleaseVersion(arg string) (string, error) {
-	parts := strings.Split(arg, "@")
-
-	minParts := 2
-	if len(parts) < minParts {
-		return "", nil
-	}
-
-	version := parts[1]
-
-	if version == "" || version == "latest" {
-		return "", nil
-	}
-
-	parsedVersion, err := semver.NewVersion(version)
-
-	if err != nil {
-		return "", errors.New(`the specified version is invalid, it needs to follow the rules of Semantic Versioning`)
-	}
-
-	return parsedVersion.String(), nil
-}
-
-func (opts *InstallOpts) getPluginAssets() ([]*github.ReleaseAsset, error) {
-	var err error
-	var release *github.RepositoryRelease
-
-	// download latest release if version is not specified
-	if opts.releaseVersion == "" {
-		release, _, err = opts.ghClient.Repositories.GetLatestRelease(context.Background(), opts.repositoryOwner, opts.repositoryName)
-
-		if err != nil {
-			return nil, fmt.Errorf("could not find latest release for %s", opts.fullRepositoryDefinition())
-		}
-	} else {
-		// try to find the release with the version tag with v prefix, if it does not exist try again without the prefix
-		release, _, err = opts.ghClient.Repositories.GetReleaseByTag(context.Background(), opts.repositoryOwner, opts.repositoryName, "v"+opts.releaseVersion)
-
-		if release == nil || err != nil {
-			release, _, err = opts.ghClient.Repositories.GetReleaseByTag(context.Background(), opts.repositoryOwner, opts.repositoryName, opts.releaseVersion)
-		}
-
-		if err != nil {
-			return nil, fmt.Errorf("could not find the release %s release for %s", opts.releaseVersion, opts.fullRepositoryDefinition())
+func (opts *InstallOpts) validateForExistingPlugins() error {
+	for _, plugin := range opts.plugins {
+		if plugin.Github != nil && plugin.Github.Equals(opts.repositoryOwner, opts.repositoryName) {
+			return fmt.Errorf("a plugin from the repository %s is already installed.\nTo update the plugin run: \n\tatlas plugin update %s", opts.fullRepositoryDefinition(), opts.fullRepositoryDefinition())
 		}
 	}
-
-	return release.Assets, nil
-}
-
-func (opts *InstallOpts) getAssetInfo() (int64, string, error) {
-	operatingSystem, architecture := runtime.GOOS, runtime.GOARCH
-	for _, asset := range opts.pluginAssets {
-		if *asset.ContentType != "application/gzip" {
-			continue
-		}
-		name := *asset.Name
-
-		if strings.Contains(name, operatingSystem) && strings.Contains(name, architecture) {
-			return *asset.ID, *asset.Name, nil
-		}
-	}
-
-	return 0, "", fmt.Errorf("could not find an asset to download from %s for %s %s", opts.fullRepositoryDefinition(), operatingSystem, architecture)
+	return nil
 }
 
 func (opts *InstallOpts) Run() error {
-	assetID, assetName, err := opts.getAssetInfo()
-
+	rc, err := opts.getPluginAssetAsReadCloser()
 	if err != nil {
 		return err
 	}
 
-	rc, _, err := opts.ghClient.Repositories.DownloadReleaseAsset(context.Background(), opts.repositoryOwner, opts.repositoryName, assetID, http.DefaultClient)
-
+	pluginZipFilePath, err := saveReadCloserToPluginAssetZipFile(rc)
+	defer os.Remove(pluginZipFilePath)
 	if err != nil {
-		return fmt.Errorf("could not download asset with ID %d from %s", assetID, opts.fullRepositoryDefinition())
-	}
-	defer rc.Close()
-
-	pluginDirectory, err := plugin.GetDefaultPluginDirectory()
-
-	if err != nil {
-		return errors.New("could not find plugin directory")
+		return err
 	}
 
-	pluginFile, err := os.Create(filepath.Join(pluginDirectory, assetName))
-
+	pluginDirectoryPath, err := opts.extractPluginAssetZipFile(pluginZipFilePath)
 	if err != nil {
-		return errors.New("could not open plugin directory")
+		return err
 	}
-	defer pluginFile.Close()
 
-	_, err = io.Copy(pluginFile, rc)
+	manifest, err := plugin.GetManifestFromPluginDirectory(pluginDirectoryPath)
 	if err != nil {
-		return errors.New("failed to save asset to plugin directory: " + err.Error())
+		os.RemoveAll(pluginDirectoryPath)
+		return err
+	}
+
+	if valid, errorList := manifest.IsValid(); !valid {
+		var manifestErrorLog strings.Builder
+		manifestErrorLog.WriteString(fmt.Sprintf("plugin in directory \"%s\" could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath))
+		for _, err := range errorList {
+			manifestErrorLog.WriteString(fmt.Sprintf("\t- %s\n", err.Error()))
+		}
+
+		os.RemoveAll(pluginDirectoryPath)
+		return errors.New(manifestErrorLog.String())
+	}
+
+	existingCommandsMap := make(map[string]bool)
+	for _, cmd := range opts.existingCommands {
+		existingCommandsMap[cmd.Name()] = true
+	}
+	if plugin.HasDuplicateCommand(manifest, existingCommandsMap) {
+		os.RemoveAll(pluginDirectoryPath)
+		return fmt.Errorf(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, opts.fullRepositoryDefinition())
 	}
 
 	return opts.Print(fmt.Sprintf("Plugin %s successfully installed", opts.fullRepositoryDefinition()))
 }
 
-func InstallBuilder(plugins []*plugin.Plugin) *cobra.Command {
-	opts := &InstallOpts{plugins: plugins}
+func InstallBuilder(plugins []*plugin.Plugin, existingCommands []*cobra.Command) *cobra.Command {
+	opts := &InstallOpts{
+		plugins: plugins,
+		AssetOpts: AssetOpts{
+			existingCommands: existingCommands,
+		},
+	}
+
 	const use = "install"
 	cmd := &cobra.Command{
 		Use:     use + " [<github-owner>/<github-repository-nam>]",
@@ -216,7 +141,7 @@ An example plugin can be found here: https://github.com/mongodb/atlas-cli-plugin
 			}
 			opts.pluginAssets = assets
 
-			return nil
+			return opts.PreRunE(opts.validateForExistingPlugins)
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()

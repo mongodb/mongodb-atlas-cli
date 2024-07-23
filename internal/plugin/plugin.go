@@ -34,8 +34,8 @@ func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 	var manifests []*Manifest
 
 	// Load manifests from plugin directories
-	if defaultPluginDirectory, err := GetDefaultPluginDirectory(); err != nil {
-		if loadedManifests, err := getManifestsFromPluginDirectory(defaultPluginDirectory); err != nil {
+	if defaultPluginDirectory, err := GetDefaultPluginDirectory(); err == nil {
+		if loadedManifests, err := getManifestsFromPluginsDirectory(defaultPluginDirectory); err != nil {
 			logPluginWarning(`could not load manifests from directory "./plugins" because of error: %s`, err.Error())
 		} else {
 			manifests = append(manifests, loadedManifests...)
@@ -43,7 +43,7 @@ func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 	}
 
 	if extraPluginDir := os.Getenv("ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY"); extraPluginDir != "" {
-		if loadedManifests, err := getManifestsFromPluginDirectory(extraPluginDir); err != nil {
+		if loadedManifests, err := getManifestsFromPluginsDirectory(extraPluginDir); err != nil {
 			logPluginWarning(`could not load plugins from folder "%s" provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s`, extraPluginDir, err.Error())
 		} else {
 			manifests = append(manifests, loadedManifests...)
@@ -83,17 +83,31 @@ func GetDefaultPluginDirectory() (string, error) {
 	return pluginDirectoryPath, nil
 }
 
+type Command struct {
+	Name        string
+	Description string
+}
+
+type Github struct {
+	Owner string
+	Name  string
+}
+
+func (g *Github) Equals(owner string, name string) bool {
+	if g.Owner == owner && g.Name == name {
+		return true
+	}
+
+	return false
+}
+
 type Plugin struct {
 	Name        string
 	Description string
 	BinaryPath  string
 	Version     string
 	Commands    []*Command
-}
-
-type Command struct {
-	Name        string
-	Description string
+	Github      *Github
 }
 
 func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
@@ -130,6 +144,13 @@ func createPluginFromManifest(manifest *Manifest) *Plugin {
 		BinaryPath:  manifest.BinaryPath,
 		Version:     manifest.Version,
 		Commands:    make([]*Command, 0, len(manifest.Commands)),
+	}
+
+	if manifest.Github != nil {
+		plugin.Github = &Github{
+			Owner: manifest.Github.Owner,
+			Name:  manifest.Github.Name,
+		}
 	}
 
 	for cmdName, value := range manifest.Commands {

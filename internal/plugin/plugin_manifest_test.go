@@ -105,6 +105,36 @@ func TestManifest_IsValid(t *testing.T) {
 			wantValid:    false,
 			wantErrCount: 3,
 		},
+		{
+			name: "Github defined but owner missing",
+			manifest: Manifest{
+				Name:        "Kubernetes",
+				Description: "Kubernetes plugin",
+				Binary:      "kubernetes",
+				Version:     "1.2.3",
+				Github:      &ManifestGithubValues{Name: "repo-name"},
+				Commands: map[string]ManifestCommand{
+					"kubernetes": {Description: "the kubernetes command"},
+				},
+			},
+			wantValid:    false,
+			wantErrCount: 1,
+		},
+		{
+			name: "Github defined but owner and name missing",
+			manifest: Manifest{
+				Name:        "Kubernetes",
+				Description: "Kubernetes plugin",
+				Binary:      "kubernetes",
+				Version:     "1.2.3",
+				Github:      &ManifestGithubValues{},
+				Commands: map[string]ManifestCommand{
+					"kubernetes": {Description: "the kubernetes command"},
+				},
+			},
+			wantValid:    false,
+			wantErrCount: 2,
+		},
 	}
 
 	for _, tt := range tests {
@@ -219,7 +249,7 @@ func Test_hasDuplicateCommand(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			result := hasDuplicateCommand(tc.manifest, tc.existingCommandsMap)
+			result := HasDuplicateCommand(tc.manifest, tc.existingCommandsMap)
 
 			if result != tc.expectedResult {
 				t.Errorf("expected result %v, got %v", tc.expectedResult, result)

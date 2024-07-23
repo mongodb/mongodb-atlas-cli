@@ -27,6 +27,11 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type ManifestGithubValues struct {
+	Owner string `yaml:"owner,omitempty"`
+	Name  string `yaml:"name,omitempty"`
+}
+
 type ManifestCommand struct {
 	Description string `yaml:"description,omitempty"`
 }
@@ -36,6 +41,7 @@ type Manifest struct {
 	Description string                     `yaml:"description,omitempty"`
 	Binary      string                     `yaml:"binary,omitempty"`
 	Version     string                     `yaml:"version,omitempty"`
+	Github      *ManifestGithubValues      `yaml:"github"`
 	Commands    map[string]ManifestCommand `yaml:"commands,omitempty"`
 	BinaryPath  string
 }
@@ -59,6 +65,15 @@ func (p *Manifest) IsValid() (bool, []error) {
 		errorsList = append(errorsList, errors.New(`value in field "version" is not a valid semantic version`))
 	}
 
+	if p.Github != nil {
+		if p.Github.Owner == "" {
+			errorsList = append(errorsList, fmt.Errorf(errorMessage, "github owner"))
+		}
+		if p.Github.Name == "" {
+			errorsList = append(errorsList, fmt.Errorf(errorMessage, "github name"))
+		}
+	}
+
 	switch {
 	case p.Commands == nil:
 		errorsList = append(errorsList, fmt.Errorf(errorMessage, "commands"))
@@ -78,8 +93,8 @@ func (p *Manifest) IsValid() (bool, []error) {
 	return true, nil
 }
 
-func getManifestsFromPluginDirectory(pluginDirectory string) ([]*Manifest, error) {
-	files, err := os.ReadDir(pluginDirectory)
+func getManifestsFromPluginsDirectory(pluginsDirectory string) ([]*Manifest, error) {
+	files, err := os.ReadDir(pluginsDirectory)
 
 	if err != nil {
 		return nil, err
@@ -92,39 +107,49 @@ func getManifestsFromPluginDirectory(pluginDirectory string) ([]*Manifest, error
 			continue
 		}
 
-		pluginDirectoryPath := fmt.Sprintf("%s/%s", pluginDirectory, directory.Name())
-		manifestFileData, err := getManifestFileBytes(pluginDirectoryPath)
+		pluginDirectoryPath := fmt.Sprintf("%s/%s", pluginsDirectory, directory.Name())
+		manifest, err := GetManifestFromPluginDirectory(pluginDirectoryPath)
 		if err != nil {
 			continue
 		}
 
-		pluginManifest, err := parseManifestFile(manifestFileData)
-		if err != nil {
-			logPluginWarning(`manifest file of plugin in directory "%s"could not be parsed`, pluginDirectoryPath)
-			continue
-		}
-
-		if valid, errorList := pluginManifest.IsValid(); !valid {
-			var manifestErrorLog strings.Builder
-			manifestErrorLog.WriteString(fmt.Sprintf("plugin in directory \"%s\" could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath))
-			for _, err := range errorList {
-				manifestErrorLog.WriteString(fmt.Sprintf("\t- %s\n", err.Error()))
-			}
-			logPluginWarning(manifestErrorLog.String())
-			continue
-		}
-
-		binaryPath, err := getPathToExecutableBinary(pluginDirectoryPath, pluginManifest.Binary)
-		if err != nil {
-			logPluginWarning(err.Error())
-			continue
-		}
-
-		pluginManifest.BinaryPath = binaryPath
-		manifests = append(manifests, pluginManifest)
+		manifests = append(manifests, manifest)
 	}
 
 	return manifests, nil
+}
+
+func GetManifestFromPluginDirectory(pluginDirectoryPath string) (*Manifest, error) {
+	manifestFileData, err := getManifestFileBytes(pluginDirectoryPath)
+	if err != nil {
+		return nil, err
+	}
+
+	manifest, err := parseManifestFile(manifestFileData)
+	if err != nil {
+		logPluginWarning(`manifest file of plugin in directory "%s"could not be parsed`, pluginDirectoryPath)
+		return nil, err
+	}
+
+	if valid, errorList := manifest.IsValid(); !valid {
+		var manifestErrorLog strings.Builder
+		manifestErrorLog.WriteString(fmt.Sprintf("plugin in directory \"%s\" could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath))
+		for _, err := range errorList {
+			manifestErrorLog.WriteString(fmt.Sprintf("\t- %s\n", err.Error()))
+		}
+		logPluginWarning(manifestErrorLog.String())
+		return nil, err
+	}
+
+	binaryPath, err := getPathToExecutableBinary(pluginDirectoryPath, manifest.Binary)
+	if err != nil {
+		logPluginWarning(err.Error())
+		return nil, err
+	}
+
+	manifest.BinaryPath = binaryPath
+
+	return manifest, nil
 }
 
 func parseManifestFile(manifestFileData []byte) (*Manifest, error) {
@@ -168,11 +193,9 @@ func getUniqueManifests(manifests []*Manifest, existingCommands []*cobra.Command
 	for _, cmd := range existingCommands {
 		existingCommandsMap[cmd.Name()] = true
 	}
-	// add reserved keyword for command plugin
-	existingCommandsMap["plugin"] = true
 
 	for _, manifest := range manifests {
-		if hasDuplicateCommand(manifest, existingCommandsMap) {
+		if HasDuplicateCommand(manifest, existingCommandsMap) {
 			duplicateManifests = append(duplicateManifests, manifest)
 			continue
 		}
@@ -185,7 +208,7 @@ func getUniqueManifests(manifests []*Manifest, existingCommands []*cobra.Command
 	return uniqueManifests, duplicateManifests
 }
 
-func hasDuplicateCommand(manifest *Manifest, existingCommandsMap map[string]bool) bool {
+func HasDuplicateCommand(manifest *Manifest, existingCommandsMap map[string]bool) bool {
 	for cmdName := range manifest.Commands {
 		if existingCommandsMap[cmdName] {
 			return true

@@ -90,7 +90,7 @@ func (opts *UpdateOpts) newUpdateRequest() (*admin.DataLakeTenant, error) {
 
 	if opts.awsRoleID != "" || opts.awsTestBucket != "" {
 		ret.CloudProviderConfig = &admin.DataLakeCloudProviderConfig{
-			Aws: admin.DataLakeAWSCloudProviderConfig{
+			Aws: &admin.DataLakeAWSCloudProviderConfig{
 				RoleId:       opts.awsRoleID,
 				TestS3Bucket: opts.awsTestBucket,
 			},

@@ -50,7 +50,7 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 	t.Run("Can import Data Federations", func(t *testing.T) {
 		dataFederation := &atlasv2.DataLakeTenant{
 			CloudProviderConfig: &atlasv2.DataLakeCloudProviderConfig{
-				Aws: atlasv2.DataLakeAWSCloudProviderConfig{
+				Aws: &atlasv2.DataLakeAWSCloudProviderConfig{
 					RoleId:       "TestRoleID",
 					TestS3Bucket: "TestBucket",
 				},

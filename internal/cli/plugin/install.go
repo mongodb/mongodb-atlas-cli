@@ -110,7 +110,7 @@ func InstallBuilder(plugins []*plugin.Plugin, existingCommands []*cobra.Command)
 
 	const use = "install"
 	cmd := &cobra.Command{
-		Use:     use + " [<github-owner>/<github-repository-nam>]",
+		Use:     use + " [<github-owner>/<github-repository-name>]",
 		Aliases: cli.GenerateAliases(use),
 		Annotations: map[string]string{
 			"<github-owner>/<github-repository-name>Desc": "Repository identifier.",

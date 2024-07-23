@@ -84,6 +84,10 @@ func (opts *InstallOpts) Run() error {
 
 	pluginDirectoryPath, err := opts.extractPluginAssetZipFile(pluginZipFilePath)
 	if err != nil {
+		if pluginDirectoryPath != "" {
+			os.RemoveAll(pluginDirectoryPath)
+		}
+
 		return err
 	}
 

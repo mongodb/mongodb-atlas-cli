@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530004/admin"
 )
 
 func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID string) (Deployment, error) {

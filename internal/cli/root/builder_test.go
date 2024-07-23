@@ -31,20 +31,10 @@ import (
 )
 
 func TestBuilder(t *testing.T) {
-	rootCmd := Builder()
-
-	pluginCommandsCount := 0
-	for _, cmd := range rootCmd.Commands() {
-		if cmd.GroupID != "plugin" {
-			continue
-		}
-		pluginCommandsCount++
-	}
-
 	test.CmdValidator(
 		t,
-		rootCmd,
-		41+pluginCommandsCount,
+		Builder(),
+		40,
 		[]string{},
 	)
 }

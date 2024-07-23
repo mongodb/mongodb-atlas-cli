@@ -36,7 +36,7 @@ func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 	// Load manifests from plugin directories
 	if defaultPluginDirectory, err := GetDefaultPluginDirectory(); err == nil {
 		if loadedManifests, err := getManifestsFromPluginsDirectory(defaultPluginDirectory); err != nil {
-			logPluginWarning(`could not load manifests from directory "./plugins" because of error: %s`, err.Error())
+			logPluginWarning(`could not load manifests from directory "%s" because of error: %s`, defaultPluginDirectory, err.Error())
 		} else {
 			manifests = append(manifests, loadedManifests...)
 		}
@@ -126,10 +126,9 @@ func (p *Plugin) GetCobraCommands() []*cobra.Command {
 
 	for _, command := range p.Commands {
 		command := &cobra.Command{
-			Use:     command.Name,
-			Short:   command.Description,
-			RunE:    p.Run,
-			GroupID: "plugin",
+			Use:   command.Name,
+			Short: command.Description,
+			RunE:  p.Run,
 		}
 
 		commands = append(commands, command)

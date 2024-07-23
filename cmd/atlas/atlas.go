@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2/core"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/root"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
@@ -99,6 +100,7 @@ func main() {
 	}
 
 	rootCmd := root.Builder()
+	plugin.RegisterCommands(rootCmd)
 
 	initTrack(rootCmd)
 	createConfig()

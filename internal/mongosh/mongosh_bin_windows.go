@@ -14,18 +14,4 @@
 
 package mongosh
 
-import (
-	"os"
-	"os/exec"
-)
-
 const mongoshBin = "mongosh.exe"
-
-func execCommand(args ...string) error {
-	cmd := exec.Command(mongoshBin, args...)
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-
-	return cmd.Run()
-}

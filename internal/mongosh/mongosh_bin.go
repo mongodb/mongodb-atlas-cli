@@ -16,15 +16,4 @@
 
 package mongosh
 
-import (
-	"os"
-	"syscall"
-)
-
 const mongoshBin = "mongosh"
-
-func execCommand(args ...string) error {
-	a := append([]string{mongoshBin}, args...)
-	env := os.Environ()
-	return syscall.Exec(binPath(), a, env) //nolint:gosec // false positive, this path won't be tampered
-}

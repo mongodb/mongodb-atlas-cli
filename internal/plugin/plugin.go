@@ -26,6 +26,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	errCreateDefaultPluginDir = errors.New("failed to create default plugin directory")
+)
+
 const (
 	ExtraPluginDirectoryEnvKey = "ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY"
 )
@@ -35,19 +39,19 @@ func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 
 	// Load manifests from plugin directories
 	if defaultPluginDirectory, err := GetDefaultPluginDirectory(); err == nil {
-		if loadedManifests, err := getManifestsFromPluginsDirectory(defaultPluginDirectory); err != nil {
+		loadedManifests, err := getManifestsFromPluginsDirectory(defaultPluginDirectory)
+		if err != nil {
 			logPluginWarning(`could not load manifests from directory "%s" because of error: %s`, defaultPluginDirectory, err.Error())
-		} else {
-			manifests = append(manifests, loadedManifests...)
 		}
+		manifests = append(manifests, loadedManifests...)
 	}
 
 	if extraPluginDir := os.Getenv("ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY"); extraPluginDir != "" {
-		if loadedManifests, err := getManifestsFromPluginsDirectory(extraPluginDir); err != nil {
+		loadedManifests, err := getManifestsFromPluginsDirectory(extraPluginDir)
+		if err != nil {
 			logPluginWarning(`could not load plugins from folder "%s" provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s`, extraPluginDir, err.Error())
-		} else {
-			manifests = append(manifests, loadedManifests...)
 		}
+		manifests = append(manifests, loadedManifests...)
 	}
 
 	// Remove manifests that contain already existing commands
@@ -70,14 +74,14 @@ func GetDefaultPluginDirectory() (string, error) {
 	configHome, err := config.CLIConfigHome()
 
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to retrieve CLI config home: %w", err)
 	}
 
 	pluginDirectoryPath := path.Join(configHome, "plugins")
 
 	err = os.MkdirAll(pluginDirectoryPath, os.ModePerm)
 	if err != nil {
-		return "", errors.New("failed to create default plugin directory")
+		return "", errCreateDefaultPluginDir
 	}
 
 	return pluginDirectoryPath, nil

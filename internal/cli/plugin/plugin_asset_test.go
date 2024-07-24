@@ -21,14 +21,15 @@ import (
 	"runtime"
 	"testing"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v61/github"
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_fullRepositoryDefinition(t *testing.T) {
-	opts := &AssetOpts{repositoryOwner: "repoOwner", repositoryName: "repoName"}
+func Test_repository(t *testing.T) {
+	opts := &AssetOpts{githubRelease: &GithubRelease{owner: "repoOwner", name: "repoName"}}
 
-	assert.Equal(t, opts.repositoryOwner+"/"+opts.repositoryName, opts.fullRepositoryDefinition())
+	assert.Equal(t, opts.githubRelease.owner+"/"+opts.githubRelease.name, opts.repository())
 }
 
 func Test_getAssetID(t *testing.T) {
@@ -95,7 +96,7 @@ func Test_getAssetID(t *testing.T) {
 	}
 }
 
-func Test_parseGithubValues(t *testing.T) {
+func Test_parseGithubRepoValues(t *testing.T) {
 	const (
 		expectedOwner = "mongodb"
 		expectedName  = "atlas-cli-plugin-example"
@@ -110,11 +111,11 @@ func Test_parseGithubValues(t *testing.T) {
 			expectError: false,
 		},
 		{
-			arg:         "mongodb/atlas-cli-plugin-example@1.2.3",
+			arg:         "mongodb/atlas-cli-plugin-example",
 			expectError: false,
 		},
 		{
-			arg:         "mongodb/atlas-cli-plugin-example@latest",
+			arg:         "mongodb/atlas-cli-plugin-example",
 			expectError: false,
 		},
 		{
@@ -130,7 +131,7 @@ func Test_parseGithubValues(t *testing.T) {
 			expectError: false,
 		},
 		{
-			arg:         "/mongodb/atlas-cli-plugin-example/@something",
+			arg:         "/mongodb/atlas-cli-plugin-example/",
 			expectError: false,
 		},
 		{
@@ -149,7 +150,7 @@ func Test_parseGithubValues(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.arg, func(t *testing.T) {
-			owner, name, err := parseGithubValues(tt.arg)
+			owner, name, err := parseGithubRepoValues(tt.arg)
 			if (err != nil) != tt.expectError {
 				t.Errorf("expected error: %v, got: %v", tt.expectError, err)
 			}
@@ -165,61 +166,49 @@ func Test_parseGithubValues(t *testing.T) {
 	}
 }
 
-func TestParseReleaseVersion(t *testing.T) {
+func Test_parseGithubReleaseVersion(t *testing.T) {
 	tests := []struct {
 		arg             string
 		expectedVersion string
 		expectError     bool
 	}{
 		{
-			arg:             "mongodb/atlas-cli-plugin-example@1.2.3",
+			arg:             "1.2.3",
 			expectedVersion: "1.2.3",
 			expectError:     false,
 		},
 		{
-			arg:             "mongodb/atlas-cli-plugin-example@v1.2.3",
+			arg:             "v1.2.3",
 			expectedVersion: "1.2.3",
 			expectError:     false,
 		},
 		{
-			arg:             "mongodb/atlas-cli-plugin-example@1.2",
+			arg:             "1.2",
 			expectedVersion: "1.2.0",
 			expectError:     false,
 		},
 		{
-			arg:             "mongodb/atlas-cli-plugin-example@v5",
-			expectedVersion: "5.0.0",
-			expectError:     false,
-		},
-		{
-			arg:             "mongodb/atlas-cli-plugin-example@latest",
-			expectedVersion: "",
-			expectError:     false,
-		},
-		{
-			arg:             "mongodb/atlas-cli-plugin-example",
-			expectedVersion: "",
-			expectError:     false,
-		},
-		{
-			arg:             "mongodb/atlas-cli-plugin-example@invalid-version",
+			arg:             "invalid-version",
 			expectedVersion: "",
 			expectError:     true,
-		},
-		{
-			arg:             "mongodb/atlas-cli-plugin-example@",
-			expectedVersion: "",
-			expectError:     false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.arg, func(t *testing.T) {
-			version, err := parseReleaseVersion(tt.arg)
+			version, err := parseGithubReleaseVersion(tt.arg)
 			if (err != nil) != tt.expectError {
 				t.Errorf("expected error: %v, got: %v", tt.expectError, err)
+				return
 			}
-			if version != tt.expectedVersion {
+			if version == nil {
+				if tt.expectedVersion != "" {
+					t.Errorf("expected version to be nil, got: %s", version)
+				}
+				return
+			}
+			expectedVersion, _ := semver.NewVersion(tt.expectedVersion)
+			if !version.Equal(expectedVersion) {
 				t.Errorf("expected version: %s, got: %s", tt.expectedVersion, version)
 			}
 		})

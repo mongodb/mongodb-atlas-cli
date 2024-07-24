@@ -34,7 +34,7 @@ func Test_InstallBuilder(t *testing.T) {
 	)
 }
 
-func Test_validateForExistingPlugins(t *testing.T) {
+func Test_checkForDuplicatePlugins(t *testing.T) {
 	github1 := &plugin.Github{Name: "repoName1", Owner: "repoOwner1"}
 	github2 := &plugin.Github{Name: "repoName2", Owner: "repoOwner2"}
 
@@ -61,15 +61,16 @@ func Test_validateForExistingPlugins(t *testing.T) {
 		},
 	}
 
-	opts := InstallOpts{plugins: plugins}
+	opts := InstallOpts{
+		plugins: plugins,
+	}
 
-	opts.repositoryName = github1.Name
-	opts.repositoryOwner = github1.Owner
-	err := opts.validateForExistingPlugins()
+	opts.githubRelease = &GithubRelease{name: github1.Name, owner: github1.Owner}
+	err := opts.checkForDuplicatePlugins()
 	require.Error(t, err)
 
-	opts.repositoryName = github2.Name
-	opts.repositoryOwner = "differentOwner"
-	err = opts.validateForExistingPlugins()
+	opts.githubRelease.name = github2.Name
+	opts.githubRelease.owner = "differentOwner"
+	err = opts.checkForDuplicatePlugins()
 	assert.NoError(t, err)
 }

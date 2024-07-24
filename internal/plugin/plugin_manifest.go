@@ -107,7 +107,7 @@ func getManifestsFromPluginsDirectory(pluginsDirectory string) ([]*Manifest, err
 			continue
 		}
 
-		pluginDirectoryPath := fmt.Sprintf("%s/%s", pluginsDirectory, directory.Name())
+		pluginDirectoryPath := path.Join(pluginsDirectory, directory.Name())
 		manifest, err := GetManifestFromPluginDirectory(pluginDirectoryPath)
 		if err != nil {
 			continue

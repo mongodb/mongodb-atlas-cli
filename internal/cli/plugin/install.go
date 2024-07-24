@@ -117,18 +117,18 @@ func InstallBuilder(plugins []*plugin.Plugin, existingCommands []*cobra.Command)
 		},
 		Short: "Install Atlas CLI plugin from a GitHub repository.",
 		Long: `Install an Atlas CLI plugin from a GitHub repository.
-The GitHub repository can be specified using either the "<github-owner>/<github-repository-name>" format or a full URL.
-By default, the latest release on GitHub will be used to install the plugin.
-If a specific version is needed, it can be specified using the --version flag.
+You can specify a GitHub repository using either the "<github-owner>/<github-repository-name>" format or a full URL.
+When you install the plugin, its latest release on GitHub is used by default.
+To install a specific version of the plugin, append the version number directly to the plugin name using the @ symbol.
 
-An example plugin can be found here: https://github.com/mongodb/atlas-cli-plugin-example
+MongoDB provides an example plugin: https://github.com/mongodb/atlas-cli-plugin-example
 `,
 		Args: require.ExactArgs(1),
-		Example: `  # Install latest version of plugin:
+		Example: `  # Install the latest version of the plugin:
   atlas plugin install mongodb/atlas-cli-plugin-example
   atlas plugin install https://github.com/mongodb/atlas-cli-plugin-example
   
-  # Install a specific version of plugin:
+  # Install a specific version of the plugin:
   atlas plugin install mongodb/atlas-cli-plugin-example@1.0.4
   atlas plugin install https://github.com/mongodb/atlas-cli-plugin-example/@v1.2.3`,
 		PreRunE: func(_ *cobra.Command, args []string) error {

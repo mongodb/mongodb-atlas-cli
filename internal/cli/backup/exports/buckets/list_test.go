@@ -37,7 +37,7 @@ func TestListOpts_Run(t *testing.T) {
 		Results: &[]atlasv2.DiskBackupSnapshotExportBucket{
 			{
 				Id:            pointer.Get("1"),
-				CloudProvider: pointer.Get("AWS"),
+				CloudProvider: "AWS",
 			},
 		},
 	}

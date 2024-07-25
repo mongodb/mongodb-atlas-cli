@@ -50,7 +50,7 @@ func (opts *DisableOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas customDns aws disable [--projectId projectId].
+// atlas customDns aws disable [--projectId projectId].
 func DisableBuilder() *cobra.Command {
 	opts := &DisableOpts{}
 	cmd := &cobra.Command{

@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 type AWSOpts struct {
@@ -111,7 +111,7 @@ func (opts *AWSOpts) newPeer(containerID string) *atlasv2.BaseNetworkPeeringConn
 	}
 }
 
-// AwsBuilder mongocli atlas networking peering create aws
+// AwsBuilder atlas networking peering create aws
 // --accepterRegionName accepterRegionName: Specifies the region where the peer VPC resides.
 // --awsAccountId awsAccountId: Account ID of the owner of the peer VPC.
 // --containerId containerId: Unique identifier of the Atlas VPC container for the region.

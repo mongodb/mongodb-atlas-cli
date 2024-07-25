@@ -40,7 +40,7 @@ import (
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -273,6 +273,29 @@ func TestBuildAtlasProject(t *testing.T) {
 			TotalCount: pointer.Get(1),
 		}
 
+		bcp := &atlasv2.DataProtectionSettings20231001{
+			AuthorizedEmail:         "test@example.com",
+			AuthorizedUserFirstName: "John",
+			AuthorizedUserLastName:  "Smith",
+			CopyProtectionEnabled:   pointer.Get(false),
+			EncryptionAtRestEnabled: pointer.Get(false),
+			OnDemandPolicyItem: &atlasv2.BackupComplianceOnDemandPolicyItem{
+				RetentionUnit:  "days",
+				RetentionValue: 20,
+			},
+			PitEnabled:        pointer.Get(true),
+			ProjectId:         pointer.Get("TestID"),
+			RestoreWindowDays: pointer.Get(14),
+			ScheduledPolicyItems: &[]atlasv2.BackupComplianceScheduledPolicyItem{
+				{
+					FrequencyInterval: 1,
+					FrequencyType:     "daily",
+					RetentionUnit:     "weeks",
+					RetentionValue:    1,
+				},
+			},
+		}
+
 		listOption := &store.ListOptions{ItemsPerPage: MaxItems}
 		listAlterOpt := &atlasv2.ListAlertConfigurationsApiParams{
 			GroupId:      projectID,
@@ -299,6 +322,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		projectStore.EXPECT().ProjectTeams(projectID, nil).Return(projectTeams, nil)
 		projectStore.EXPECT().TeamByID(orgID, teamID).Return(teams, nil)
 		projectStore.EXPECT().TeamUsers(orgID, teamID).Return(teamUsers, nil)
+		projectStore.EXPECT().DescribeCompliancePolicy(projectID).Return(bcp, nil)
 
 		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureAccessLists).Return(true)
 		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureMaintenanceWindows).Return(true)
@@ -312,6 +336,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureAlertConfiguration).Return(true)
 		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureCustomRoles).Return(true)
 		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureTeams).Return(true)
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureBCP).Return(true)
 
 		dictionary := resources.AtlasNameToKubernetesName()
 		projectResult, err := BuildAtlasProject(&AtlasProjectBuildRequest{
@@ -330,6 +355,7 @@ func TestBuildAtlasProject(t *testing.T) {
 		}
 		gotProject := projectResult.Project
 		gotTeams := projectResult.Teams
+		gotBCP := projectResult.BCP
 
 		alertConfigs := alertConfigResult.GetResults()
 		expectedThreshold := &akov2.Threshold{
@@ -413,6 +439,41 @@ func TestBuildAtlasProject(t *testing.T) {
 					},
 				},
 			},
+		}
+		expectedBCP := &akov2.AtlasBackupCompliancePolicy{
+			TypeMeta: metav1.TypeMeta{
+				Kind:       "AtlasBackupCompliancePolicy",
+				APIVersion: "atlas.mongodb.com/v1",
+			},
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      resources.NormalizeAtlasName(p.Name+"-bcp", dictionary),
+				Namespace: targetNamespace,
+				Labels: map[string]string{
+					features.ResourceVersion: resourceVersion,
+				},
+			},
+			Spec: akov2.AtlasBackupCompliancePolicySpec{
+				AuthorizedEmail:         "test@example.com",
+				AuthorizedUserFirstName: "John",
+				AuthorizedUserLastName:  "Smith",
+				CopyProtectionEnabled:   false,
+				EncryptionAtRestEnabled: false,
+				OnDemandPolicy: akov2.AtlasOnDemandPolicy{
+					RetentionUnit:  "days",
+					RetentionValue: 20,
+				},
+				PITEnabled:        true,
+				RestoreWindowDays: 14,
+				ScheduledPolicyItems: []akov2.AtlasBackupPolicyItem{
+					{
+						FrequencyInterval: 1,
+						FrequencyType:     "daily",
+						RetentionUnit:     "weeks",
+						RetentionValue:    1,
+					},
+				},
+			},
+			Status: akov2status.BackupCompliancePolicyStatus{},
 		}
 		expectedProject := &akov2.AtlasProject{
 			TypeMeta: metav1.TypeMeta{
@@ -566,6 +627,10 @@ func TestBuildAtlasProject(t *testing.T) {
 						Roles: []akov2.TeamRole{akov2.TeamRole(projectTeams.GetResults()[0].GetRoleNames()[0])},
 					},
 				},
+				BackupCompliancePolicyRef: &akov2common.ResourceRefNamespaced{
+					Name:      expectedBCP.ObjectMeta.Name,
+					Namespace: expectedBCP.ObjectMeta.Namespace,
+				},
 			},
 			Status: akov2status.AtlasProjectStatus{
 				Common: akoapi.Common{
@@ -576,6 +641,7 @@ func TestBuildAtlasProject(t *testing.T) {
 
 		assert.Equal(t, expectedProject, gotProject)
 		assert.Equal(t, expectedTeams, gotTeams)
+		assert.Equal(t, expectedBCP, gotBCP)
 	})
 }
 

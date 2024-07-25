@@ -1,6 +1,6 @@
-# Contributing to MongoDB CLI
+# Contributing to MongoDB Atlas CLI
 
-Thanks for your interest in contributing to MongoDB Atlas CLI and MongoDB CLI,
+Thanks for your interest in contributing to MongoDB Atlas CLI,
 this document describes some guidelines necessary to participate in the community.
 
 ## Asking Support Questions

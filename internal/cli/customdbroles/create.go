@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 const createTemplate = "Custom database role '{{.RoleName}}' successfully created.\n"
@@ -78,7 +78,7 @@ func (opts *CreateOpts) validate() error {
 	return nil
 }
 
-// mongocli atlas dbrole(s) create <roleName> --privilege action[@dbName.collection] --inheritedRole role@db.
+// atlas dbrole(s) create <roleName> --privilege action[@dbName.collection] --inheritedRole role@db.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

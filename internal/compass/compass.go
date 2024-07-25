@@ -18,7 +18,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os/exec"
 	"time"
 )
 
@@ -26,22 +25,12 @@ const waitForRunningStateDuration = 10 * time.Second
 
 var errCompassExited = errors.New("MongoDB Compass process has exited")
 
-func binPath() string {
-	if p, err := exec.LookPath(compassBin); err == nil {
-		return p
-	}
-	return ""
-}
-
 func Detect() bool {
 	return binPath() != ""
 }
 
 func Run(username, password, mongoURI string) error {
 	path := binPath()
-	if path != compassBin {
-		path += compassBin
-	}
 
 	cmd := compassCmd(path, username, password, mongoURI)
 	if err := cmd.Start(); err != nil {

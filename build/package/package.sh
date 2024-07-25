@@ -35,10 +35,10 @@ VERSION_GIT="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d
 
 if [[ "${unstable-}" == "-unstable" ]]; then
 	# avoid race conditions on the notarization step by using `-p 1`
-	./bin/goreleaser --config "build/package/.goreleaser.yml" --rm-dist --release-notes "CHANGELOG.md" -p 1 --snapshot
+	./bin/goreleaser --config "build/package/.goreleaser.yml" --clean --release-notes "CHANGELOG.md" -p 1 --snapshot
 else
 	# avoid race conditions on the notarization step by using `-p 1`
-	./bin/goreleaser --config "build/package/.goreleaser.yml" --rm-dist --release-notes "CHANGELOG.md" -p 1
+	./bin/goreleaser --config "build/package/.goreleaser.yml" --clean --release-notes "CHANGELOG.md" -p 1
 fi
 
 gh-token revoke -t "$GITHUB_TOKEN"

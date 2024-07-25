@@ -58,7 +58,7 @@ var ErrFileNotFound = errors.New("file not found")
 
 // Load loads a given filename into the out interface.
 // The file should be a valid json or yaml format.
-func Load(fs afero.Fs, filename string, out interface{}) error {
+func Load(fs afero.Fs, filename string, out any) error {
 	file, err := LoadFile(fs, filename)
 	if err != nil {
 		return err
@@ -93,7 +93,7 @@ func LoadFile(fs afero.Fs, filename string) ([]byte, error) {
 
 // Save saves a given data interface into a given file path
 // The file should be a yaml format.
-func Save(fs afero.Fs, filePath string, data interface{}) error {
+func Save(fs afero.Fs, filePath string, data any) error {
 	var content []byte
 
 	if _, err := configType(filePath, []string{yamlName}); err != nil {

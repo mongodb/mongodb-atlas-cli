@@ -25,7 +25,7 @@ import (
 
 var ErrEmptyPath = errors.New("empty jsonpath")
 
-func Print(w io.Writer, path string, obj interface{}) error {
+func Print(w io.Writer, path string, obj any) error {
 	if path == "" {
 		return ErrEmptyPath
 	}
@@ -35,7 +35,7 @@ func Print(w io.Writer, path string, obj interface{}) error {
 		return err
 	}
 
-	var val interface{}
+	var val any
 	if e := json.Unmarshal(jsonString, &val); e != nil {
 		return e
 	}

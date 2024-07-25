@@ -25,7 +25,7 @@ const (
 	indent = "  "
 )
 
-func Print(w io.Writer, obj interface{}) error {
+func Print(w io.Writer, obj any) error {
 	prettyJSON, err := json.MarshalIndent(obj, prefix, indent)
 	if err != nil {
 		return err

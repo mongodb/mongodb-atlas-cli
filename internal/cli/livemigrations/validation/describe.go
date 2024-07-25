@@ -53,7 +53,7 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas liveMigrations|lm validation(s) describe|get <validationId> [--projectId projectId].
+// atlas liveMigrations|lm validation(s) describe|get <validationId> [--projectId projectId].
 
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)

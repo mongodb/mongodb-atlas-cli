@@ -55,7 +55,7 @@ var listTemplate = `ID SUBJECT CREATED AT{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.Subject}}	{{.CreatedAt}}{{end}}
 `
 
-// mongocli atlas dbuser(s) certs list|ls <username> [--projectId projectId].
+// atlas dbuser(s) certs list|ls <username> [--projectId projectId].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

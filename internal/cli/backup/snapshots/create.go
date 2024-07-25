@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 type CreateOpts struct {
@@ -66,7 +66,7 @@ func (opts *CreateOpts) newCloudProviderSnapshot() *atlasv2.DiskBackupOnDemandSn
 	return createRequest
 }
 
-// mongocli atlas backup snapshots create|take clusterName --desc description --retention days [--projectId projectId].
+// atlas backup snapshots create|take clusterName --desc description --retention days [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 type AzureOpts struct {
@@ -118,7 +118,7 @@ func (opts *AzureOpts) newAzurePeer(containerID string) *atlasv2.BaseNetworkPeer
 	}
 }
 
-// mongocli atlas networking peering create azure
+// atlas networking peering create azure
 // --atlasCidrBlock atlasCidrBlock: CIDR block that Atlas uses for the Network Peering containers in your project.
 // --directoryId azureDirectoryId: Unique identifier for an Azure AD directory.
 // --subscriptionId azureSubscriptionId: Unique identifier of the Azure subscription in which the VNet resides.

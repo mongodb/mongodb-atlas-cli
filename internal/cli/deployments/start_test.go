@@ -31,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20240530002/admin"
+	"go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 func TestStart_RunLocal_PausedContainers(t *testing.T) {
@@ -152,6 +152,8 @@ func TestStartOpts_PostRun(t *testing.T) {
 		EXPECT().
 		AppendDeploymentType().
 		Times(1)
+
+	deploymentsTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
 
 	require.NoError(t, opts.PostRun())
 }

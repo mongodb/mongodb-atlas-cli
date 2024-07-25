@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 const providerName = "SERVERLESS"
@@ -85,7 +85,7 @@ func (opts *CreateOpts) newServerlessCreateRequestParams() *atlasv2.ServerlessIn
 	return req
 }
 
-// mongocli atlas serverless|sl create <instanceName> --backingProviderName backingProviderName --providerName providerName --regionName regionName [--projectId projectId].
+// atlas serverless|sl create <instanceName> --backingProviderName backingProviderName --providerName providerName --regionName regionName [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

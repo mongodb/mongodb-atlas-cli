@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 func TestProjectSettings(t *testing.T) {
@@ -54,7 +54,7 @@ func TestProjectSettings(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
-		var settings map[string]interface{}
+		var settings map[string]any
 		if err := json.Unmarshal(resp, &settings); err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}

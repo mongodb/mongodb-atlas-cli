@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20240530002/admin"
+	"go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 type UpdateOpts struct {
@@ -90,7 +90,7 @@ func (opts *UpdateOpts) newUpdateRequest() (*admin.DataLakeTenant, error) {
 
 	if opts.awsRoleID != "" || opts.awsTestBucket != "" {
 		ret.CloudProviderConfig = &admin.DataLakeCloudProviderConfig{
-			Aws: admin.DataLakeAWSCloudProviderConfig{
+			Aws: &admin.DataLakeAWSCloudProviderConfig{
 				RoleId:       opts.awsRoleID,
 				TestS3Bucket: opts.awsTestBucket,
 			},

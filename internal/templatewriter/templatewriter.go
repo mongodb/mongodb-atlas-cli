@@ -32,7 +32,7 @@ var funcMap = template.FuncMap{
 	"valueOrEmptySlice": valueOrEmptySlice,
 }
 
-func valueOrEmptySlice(slice interface{}) (result interface{}) {
+func valueOrEmptySlice(slice any) (result any) {
 	if slice == nil {
 		return result
 	}
@@ -54,7 +54,7 @@ func newTabWriter(output io.Writer) *tabwriter.Writer {
 // if the optional t is given then it's processed as a go-template,
 // this template will be handled with a tabwriter so you can use tabs (\t)
 // and new lines (\n) to space your content evenly.
-func Print(writer io.Writer, t string, v interface{}) error {
+func Print(writer io.Writer, t string, v any) error {
 	tmpl, err := template.New("output").Funcs(funcMap).Parse(t)
 	if err != nil {
 		return err

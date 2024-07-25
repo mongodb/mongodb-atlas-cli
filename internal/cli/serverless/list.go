@@ -56,7 +56,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas serverless|sl list [--projectId projectId] [--page N] [--limit N].
+// atlas serverless|sl list [--projectId projectId] [--page N] [--limit N].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

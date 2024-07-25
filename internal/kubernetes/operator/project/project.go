@@ -32,7 +32,7 @@ import (
 	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8snames "k8s.io/apiserver/pkg/storage/names"
@@ -53,6 +53,7 @@ const (
 	featureAlertConfiguration       = "alertConfigurations"
 	featureCustomRoles              = "customRoles"
 	featureTeams                    = "teams"
+	featureBCP                      = "backupCompliancePolicyRef"
 	cidrException                   = "/32"
 	datadogIntegrationType          = "DATADOG"
 	newRelicIntegrationType         = "NEW_RELIC"
@@ -81,6 +82,7 @@ type AtlasProjectResult struct {
 	Project *akov2.AtlasProject
 	Secrets []*corev1.Secret
 	Teams   []*akov2.AtlasTeam
+	BCP     *akov2.AtlasBackupCompliancePolicy
 }
 
 func BuildAtlasProject(br *AtlasProjectBuildRequest) (*AtlasProjectResult, error) { //nolint:gocyclo
@@ -140,12 +142,12 @@ func BuildAtlasProject(br *AtlasProjectBuildRequest) (*AtlasProjectResult, error
 	}
 
 	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureEncryptionAtRest) {
-		encryptionAtRest, secrets, ferr := buildEncryptionAtRest(br.ProjectStore, br.ProjectID, br.Project.Name, br.TargetNamespace, br.Dictionary)
+		encryptionAtRest, s, ferr := buildEncryptionAtRest(br.ProjectStore, br.ProjectID, br.Project.Name, br.TargetNamespace, br.Dictionary)
 		if ferr != nil {
 			return nil, ferr
 		}
 		projectResult.Spec.EncryptionAtRest = encryptionAtRest
-		result.Secrets = append(result.Secrets, secrets...)
+		result.Secrets = append(result.Secrets, s...)
 	}
 
 	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureCloudProviderAccessRoles) {
@@ -173,12 +175,12 @@ func BuildAtlasProject(br *AtlasProjectBuildRequest) (*AtlasProjectResult, error
 	}
 
 	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureAlertConfiguration) {
-		alertConfigurations, secrets, ferr := buildAlertConfigurations(br.ProjectStore, br.ProjectID, br.Project.Name, br.TargetNamespace, br.Dictionary)
+		alertConfigurations, s, ferr := buildAlertConfigurations(br.ProjectStore, br.ProjectID, br.Project.Name, br.TargetNamespace, br.Dictionary)
 		if ferr != nil {
 			return nil, ferr
 		}
 		projectResult.Spec.AlertConfigurations = alertConfigurations
-		result.Secrets = append(result.Secrets, secrets...)
+		result.Secrets = append(result.Secrets, s...)
 	}
 
 	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureCustomRoles) {
@@ -196,6 +198,20 @@ func BuildAtlasProject(br *AtlasProjectBuildRequest) (*AtlasProjectResult, error
 		}
 		projectResult.Spec.Teams = teamsRefs
 		result.Teams = teams
+	}
+
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureBCP) {
+		bcp, err := buildBCP(br.ProjectStore, br.Project.Name, br.ProjectID, br.TargetNamespace, br.Version, br.Dictionary)
+		if err != nil {
+			return nil, err
+		}
+		if bcp != nil {
+			result.BCP = bcp
+			projectResult.Spec.BackupCompliancePolicyRef = &akov2common.ResourceRefNamespaced{
+				Name:      bcp.Name,
+				Namespace: bcp.Namespace,
+			}
+		}
 	}
 
 	return result, nil
@@ -969,6 +985,59 @@ func buildTeams(teamsProvider store.OperatorTeamsStore, orgID, projectID, projec
 	}
 
 	return teamsRefs, atlasTeamCRs, nil
+}
+
+func buildBCP(bcpProvider store.CompliancePolicyDescriber, projectName, projectID, targetNamespace, version string, dictionary map[string]string) (*akov2.AtlasBackupCompliancePolicy, error) {
+	bcp, err := bcpProvider.DescribeCompliancePolicy(projectID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Backup Compliance Policy always returns 200, even when unset, so we must check if it's empty.
+	if (*bcp == atlasv2.DataProtectionSettings20231001{}) {
+		return nil, nil
+	}
+
+	policyItems := make([]akov2.AtlasBackupPolicyItem, len(bcp.GetScheduledPolicyItems()))
+	for i, policy := range bcp.GetScheduledPolicyItems() {
+		policyItems[i] = akov2.AtlasBackupPolicyItem{
+			FrequencyInterval: policy.GetFrequencyInterval(),
+			FrequencyType:     policy.GetFrequencyType(),
+			RetentionUnit:     policy.GetRetentionUnit(),
+			RetentionValue:    policy.GetRetentionValue(),
+		}
+	}
+
+	compliancePolicy := &akov2.AtlasBackupCompliancePolicy{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "AtlasBackupCompliancePolicy",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      resources.NormalizeAtlasName(projectName+"-bcp", dictionary),
+			Namespace: targetNamespace,
+			Labels: map[string]string{
+				features.ResourceVersion: version,
+			},
+		},
+		Spec: akov2.AtlasBackupCompliancePolicySpec{
+			AuthorizedEmail:         bcp.GetAuthorizedEmail(),
+			AuthorizedUserFirstName: bcp.GetAuthorizedUserFirstName(),
+			AuthorizedUserLastName:  bcp.GetAuthorizedUserLastName(),
+			CopyProtectionEnabled:   bcp.GetCopyProtectionEnabled(),
+			EncryptionAtRestEnabled: bcp.GetEncryptionAtRestEnabled(),
+			PITEnabled:              bcp.GetPitEnabled(),
+			RestoreWindowDays:       bcp.GetRestoreWindowDays(),
+			ScheduledPolicyItems:    policyItems,
+			OnDemandPolicy: akov2.AtlasOnDemandPolicy{
+				RetentionUnit:  bcp.OnDemandPolicyItem.GetRetentionUnit(),
+				RetentionValue: bcp.OnDemandPolicyItem.GetRetentionValue(),
+			},
+		},
+		Status: akov2status.BackupCompliancePolicyStatus{},
+	}
+
+	return compliancePolicy, nil
 }
 
 func firstElementOrZeroValue[T any](collection []T) T {

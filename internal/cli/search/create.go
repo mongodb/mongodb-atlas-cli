@@ -65,7 +65,7 @@ func (opts *CreateOpts) Run() error {
 //
 // Usage:
 //
-//	mongocli atlas clusters search index create [indexName] [flags]
+//	atlas clusters search index create [indexName] [flags]
 //
 // Flags:
 //

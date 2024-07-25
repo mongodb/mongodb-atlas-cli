@@ -9,7 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	admin "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	admin "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 // MockOperatorGenericStore is a mock of OperatorGenericStore interface.
@@ -227,6 +227,21 @@ func (m *MockOperatorGenericStore) DatabaseUsers(arg0 string, arg1 *store.ListOp
 func (mr *MockOperatorGenericStoreMockRecorder) DatabaseUsers(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseUsers", reflect.TypeOf((*MockOperatorGenericStore)(nil).DatabaseUsers), arg0, arg1)
+}
+
+// DescribeCompliancePolicy mocks base method.
+func (m *MockOperatorGenericStore) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings20231001, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DescribeCompliancePolicy", arg0)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DescribeCompliancePolicy indicates an expected call of DescribeCompliancePolicy.
+func (mr *MockOperatorGenericStoreMockRecorder) DescribeCompliancePolicy(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeCompliancePolicy", reflect.TypeOf((*MockOperatorGenericStore)(nil).DescribeCompliancePolicy), arg0)
 }
 
 // DescribeSchedule mocks base method.

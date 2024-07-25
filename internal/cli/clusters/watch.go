@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20240530002/admin"
+	"go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 type WatchOpts struct {
@@ -69,7 +69,7 @@ func (opts *WatchOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// mongocli atlas cluster(s) watch <clusterName> [--projectId projectId].
+// atlas cluster(s) watch <clusterName> [--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
 	cmd := &cobra.Command{

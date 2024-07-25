@@ -47,7 +47,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteSearchIndex, opts.ConfigProjectID(), opts.clusterName)
 }
 
-// mongocli atlas cluster(s) search(s) index(es) delete <id> [--clusterName name][--projectId projectId][--force].
+// atlas cluster(s) search(s) index(es) delete <id> [--clusterName name][--projectId projectId][--force].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Index '%s' deleted\n", "Index not deleted"),

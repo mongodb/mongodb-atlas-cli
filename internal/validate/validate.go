@@ -30,7 +30,7 @@ import (
 const minPasswordLength = 10
 
 // toString tries to cast an interface to string.
-func toString(val interface{}) (string, error) {
+func toString(val any) (string, error) {
 	var u string
 	var ok bool
 	if u, ok = val.(string); !ok {
@@ -40,7 +40,7 @@ func toString(val interface{}) (string, error) {
 }
 
 // URL validates a value is a valid URL for the cli store.
-func URL(val interface{}) error {
+func URL(val any) error {
 	s, err := toString(val)
 	if err != nil {
 		return err
@@ -57,7 +57,7 @@ func URL(val interface{}) error {
 }
 
 // OptionalURL validates a value is a valid URL for the cli store.
-func OptionalURL(val interface{}) error {
+func OptionalURL(val any) error {
 	if val == nil {
 		return nil
 	}
@@ -73,7 +73,7 @@ func OptionalURL(val interface{}) error {
 }
 
 // OptionalObjectID validates a value is a valid ObjectID.
-func OptionalObjectID(val interface{}) error {
+func OptionalObjectID(val any) error {
 	if val == nil {
 		return nil
 	}
@@ -162,7 +162,7 @@ func ConditionalFlagNotInSlice(conditionalFlag string, conditionalFlagValue stri
 
 var ErrInvalidPath = errors.New("invalid path")
 
-func Path(val interface{}) error {
+func Path(val any) error {
 	path, ok := val.(string)
 	if !ok {
 		return fmt.Errorf("%w: %v", ErrInvalidPath, val)
@@ -175,7 +175,7 @@ func Path(val interface{}) error {
 	return nil
 }
 
-func OptionalPath(val interface{}) error {
+func OptionalPath(val any) error {
 	if val == nil {
 		return nil
 	}
@@ -188,7 +188,7 @@ func OptionalPath(val interface{}) error {
 
 var ErrInvalidClusterName = errors.New("invalid cluster name")
 
-func ClusterName(val interface{}) error {
+func ClusterName(val any) error {
 	name, ok := val.(string)
 	if !ok {
 		return fmt.Errorf("%w: %v", ErrInvalidClusterName, val)
@@ -203,7 +203,7 @@ func ClusterName(val interface{}) error {
 
 var ErrInvalidDBUsername = errors.New("invalid db username")
 
-func DBUsername(val interface{}) error {
+func DBUsername(val any) error {
 	name, ok := val.(string)
 	if !ok {
 		return fmt.Errorf("%w: %v", ErrInvalidDBUsername, val)
@@ -219,7 +219,7 @@ func DBUsername(val interface{}) error {
 var ErrWeakPassword = errors.New("the password provided is too common")
 var ErrShortPassword = errors.New("the password provided is too short")
 
-func WeakPassword(val interface{}) error {
+func WeakPassword(val any) error {
 	password, ok := val.(string)
 	if !ok {
 		return ErrWeakPassword

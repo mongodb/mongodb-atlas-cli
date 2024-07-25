@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 var victorOpsIntegrationType = "VICTOR_OPS"
@@ -64,7 +64,7 @@ func (opts *VictorOpsOpts) newVictorOpsIntegration() *atlasv2.ThirdPartyIntegrat
 	}
 }
 
-// mongocli atlas integration(s) create VICTOR_OPS --apiKey apiKey --routingKey routingKey [--projectId projectId].
+// atlas integration(s) create VICTOR_OPS --apiKey apiKey --routingKey routingKey [--projectId projectId].
 func VictorOpsBuilder() *cobra.Command {
 	opts := &VictorOpsOpts{}
 	cmd := &cobra.Command{

@@ -32,7 +32,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20240530002/admin"
+	"go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 var errEmptyLog = errors.New("log is empty")
@@ -58,6 +58,9 @@ func (opts *DownloadOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
+// maxBytes  1k each write to avoid compression bomb.
+const maxBytes = 1024
+
 func (opts *DownloadOpts) write(w io.Writer, r io.Reader) error {
 	if !opts.decompress {
 		_, err := io.Copy(w, r)
@@ -71,7 +74,7 @@ func (opts *DownloadOpts) write(w io.Writer, r io.Reader) error {
 
 	written := false
 	for {
-		n, err := io.CopyN(w, gr, 1024) //nolint:mnd // 1k each write to avoid compression bomb
+		n, err := io.CopyN(w, gr, maxBytes)
 		if n > 0 {
 			written = true
 		}
@@ -139,7 +142,7 @@ func (opts *DownloadOpts) newHostLogsParams() *admin.GetHostLogsApiParams {
 	return params
 }
 
-// mongocli atlas logs download <hostname> <mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gz> [--force] [--output destination] [--projectId projectId].
+// atlas logs download <hostname> <mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gz> [--force] [--output destination] [--projectId projectId].
 func DownloadBuilder() *cobra.Command {
 	const argsN = 2
 	opts := &DownloadOpts{}

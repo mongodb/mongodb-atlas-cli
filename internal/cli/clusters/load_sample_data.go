@@ -53,7 +53,7 @@ func (opts *LoadSampleDataOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas cluster loadSampleData <clusterName> --projectId projectId -o json.
+// atlas cluster loadSampleData <clusterName> --projectId projectId -o json.
 func LoadSampleDataBuilder(deprecate bool) *cobra.Command {
 	opts := &LoadSampleDataOpts{}
 	cmd := &cobra.Command{

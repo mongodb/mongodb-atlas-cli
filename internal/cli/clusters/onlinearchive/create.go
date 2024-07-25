@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 type CreateOpts struct {
@@ -111,7 +111,7 @@ func (opts *CreateOpts) partitionFields() []atlasv2.PartitionField {
 	return fields
 }
 
-// mongocli atlas cluster(s) onlineArchive(s) create [--clusterName clusterName] [--db dbName][--collection collection][--partition fieldName:fieldType][--projectId projectId].
+// atlas cluster(s) onlineArchive(s) create [--clusterName clusterName] [--db dbName][--collection collection][--partition fieldName:fieldType][--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{
 		fs: afero.NewOsFs(),

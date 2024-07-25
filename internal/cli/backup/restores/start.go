@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20240530002/admin"
+	"go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 const (
@@ -134,7 +134,7 @@ func markRequiredPointInTimeRestoreFlags(cmd *cobra.Command) error {
 	return cmd.MarkFlagRequired(flag.TargetClusterName)
 }
 
-// mongocli atlas backup(s) restore(s) job(s) start <automated|download|pointInTime>.
+// atlas backup(s) restore(s) job(s) start <automated|download|pointInTime>.
 func StartBuilder() *cobra.Command {
 	opts := new(StartOpts)
 	cmd := &cobra.Command{

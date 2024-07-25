@@ -32,7 +32,7 @@ import (
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20240530002/admin"
+	"go.mongodb.org/atlas-sdk/v20240530003/admin"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -292,7 +292,7 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 		ce := NewConfigExporter(atlasOperatorGenericStore, nil, projectID, orgID).
 			WithFeatureValidator(featureValidator).
 			WithTargetNamespace("test").
-			WithTargetOperatorVersion("2.3.0")
+			WithTargetOperatorVersion("2.4.0")
 
 		resources, err := ce.exportAtlasStreamProcessing("my-project")
 		require.NoError(t, err)
@@ -308,7 +308,7 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 						Name:      "my-project-instance-0",
 						Namespace: "test",
 						Labels: map[string]string{
-							"mongodb.com/atlas-resource-version": "2.3.0",
+							"mongodb.com/atlas-resource-version": "2.4.0",
 						},
 					},
 					Spec: akov2.AtlasStreamInstanceSpec{
@@ -348,7 +348,7 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 						Name:      "my-project-instance-0-samplelowlinestreamlowlinesolar",
 						Namespace: "test",
 						Labels: map[string]string{
-							"mongodb.com/atlas-resource-version": "2.3.0",
+							"mongodb.com/atlas-resource-version": "2.4.0",
 						},
 					},
 					Spec: akov2.AtlasStreamConnectionSpec{
@@ -370,7 +370,7 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 						Name:      "my-project-instance-0-kafka-config",
 						Namespace: "test",
 						Labels: map[string]string{
-							"mongodb.com/atlas-resource-version": "2.3.0",
+							"mongodb.com/atlas-resource-version": "2.4.0",
 						},
 					},
 					Spec: akov2.AtlasStreamConnectionSpec{

@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/randgen"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 func (opts *Opts) createDatabaseUser() error {
@@ -74,7 +74,7 @@ func (opts *Opts) askDBUserOptions() error {
 	return telemetry.TrackAsk(qs, opts)
 }
 
-func (opts *Opts) validateUniqueUsername(val interface{}) error {
+func (opts *Opts) validateUniqueUsername(val any) error {
 	username, ok := val.(string)
 	if !ok {
 		return fmt.Errorf("the username %s is not valid", username)

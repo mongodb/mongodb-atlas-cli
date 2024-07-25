@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 const updateTemplate = "Custom database role '{{.RoleName}}' successfully updated.\n"
@@ -89,7 +89,7 @@ func (opts *UpdateOpts) validate() error {
 	return nil
 }
 
-// mongocli atlas dbrole(s) update create <roleName> --privilege action[@dbName.collection] --inheritedRole role@db --append.
+// atlas dbrole(s) update create <roleName> --privilege action[@dbName.collection] --inheritedRole role@db --append.
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
 	cmd := &cobra.Command{

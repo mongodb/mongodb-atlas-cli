@@ -1,6 +1,5 @@
 # yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
 project_name: atlascli
-
 monorepo:
   tag_prefix: atlascli/
 
@@ -58,21 +57,18 @@ archives:
       - third_party_notices/**/*
   wrap_in_directory: true
   format: tar.gz
-  rlcp: false
 - id: macos
   name_template: mongodb-atlas-cli_{{ .Version }}_{{- if eq .Os "darwin" }}macos{{- else }}{{ .Os }}{{ end }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [macos]
   <<: *archive_defaults
   format: zip
   wrap_in_directory: false
-  rlcp: false
 - id: windows
   name_template: mongodb-atlas-cli_{{ .Version }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
   builds: [windows]
   <<: *archive_defaults
   wrap_in_directory: false
   format: zip
-  rlcp: false
 nfpms:
 - id: linux_package
   package_name: mongodb-atlas-cli
@@ -106,9 +102,17 @@ nfpms:
   dependencies:
     - mongodb-atlas-cli
     - mongodb-mongosh
-  recommends:
-    - podman
   meta: true
+  overrides:
+    deb:
+      suggests:
+        - docker-ce
+        - docker-ce-cli
+    rpm:
+      suggests:
+        - podman
+        - docker-ce
+        - docker-ce-cli
 checksum:
   name_template: checksums.txt
   extra_files:
@@ -138,3 +142,4 @@ release:
   name_template: "MongoDB Atlas CLI {{.Version}}"
   extra_files:
     - glob: ./bin/*.msi
+version: 2

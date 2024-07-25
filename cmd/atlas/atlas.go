@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2/core"
@@ -58,21 +57,6 @@ func loadConfig() error {
 	return nil
 }
 
-// createConfig creates the atlasCLI config file if not existent.
-func createConfig() {
-	atlasConfigHomePath, err := config.CLIConfigHome()
-	if err != nil {
-		return
-	}
-
-	atlasConfigPath := path.Join(atlasConfigHomePath, "config.toml")
-	f, err := os.Open(atlasConfigPath) // if config.toml is already there, exit
-	if err == nil {
-		f.Close()
-		return
-	}
-}
-
 func trackInitError(e error, rootCmd *cobra.Command) {
 	if e == nil {
 		return
@@ -103,7 +87,6 @@ func main() {
 	plugin.RegisterCommands(rootCmd)
 
 	initTrack(rootCmd)
-	createConfig()
 	trackInitError(loadConfig(), rootCmd)
 
 	execute(rootCmd)

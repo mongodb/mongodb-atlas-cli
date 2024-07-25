@@ -41,12 +41,12 @@ func DumpToTemp(files embed.FS, srcFile, destFile string) error {
 	return os.WriteFile(destFile, content, fs.ModePerm)
 }
 
-func parseJSON(contents []byte) ([]map[string]interface{}, error) {
-	var res []map[string]interface{}
+func parseJSON(contents []byte) ([]map[string]any, error) {
+	var res []map[string]any
 
 	s := bufio.NewScanner(bytes.NewReader(contents))
 	for s.Scan() {
-		var item map[string]interface{}
+		var item map[string]any
 		err := json.Unmarshal(s.Bytes(), &item)
 		if err != nil {
 			return nil, err

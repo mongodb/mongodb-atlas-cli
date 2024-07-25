@@ -50,7 +50,7 @@ func (opts *DisableOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s) regionalMode(s) disable [--projectId projectId].
+// atlas privateEndpoint(s) regionalMode(s) disable [--projectId projectId].
 func DisableBuilder() *cobra.Command {
 	opts := &DisableOpts{}
 	cmd := &cobra.Command{

@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 var pagerDutyIntegrationType = "PAGER_DUTY"
@@ -62,7 +62,7 @@ func (opts *PagerDutyOpts) newPagerDutyIntegration() *atlasv2.ThirdPartyIntegrat
 	}
 }
 
-// mongocli atlas integration(s) create PAGER_DUTY --serviceKey serviceKey [--projectId projectId].
+// atlas integration(s) create PAGER_DUTY --serviceKey serviceKey [--projectId projectId].
 func PagerDutyBuilder() *cobra.Command {
 	opts := &PagerDutyOpts{}
 	cmd := &cobra.Command{

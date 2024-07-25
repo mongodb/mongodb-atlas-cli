@@ -26,7 +26,7 @@ import (
 	"time"
 )
 
-var ErrDockerNotFound = errors.New("podman not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs")
+var ErrDockerNotFound = fmt.Errorf("%w: docker not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs", ErrContainerEngineNotFound)
 
 type dockerImpl struct {
 }
@@ -327,7 +327,7 @@ func (e *dockerImpl) ImagePull(ctx context.Context, name string) error {
 }
 
 func (e *dockerImpl) ImageHealthCheck(ctx context.Context, name string) (*ImageHealthCheck, error) {
-	bytes, err := e.run(ctx, "image", "inspect", "--format", "json", name)
+	b, err := e.run(ctx, "image", "inspect", "--format", "json", name)
 	if err != nil {
 		return nil, err
 	}
@@ -349,7 +349,7 @@ func (e *dockerImpl) ImageHealthCheck(ctx context.Context, name string) (*ImageH
 	}
 
 	var inspectOutput []PartialImageInspect
-	if err := json.Unmarshal(bytes, &inspectOutput); err != nil {
+	if err := json.Unmarshal(b, &inspectOutput); err != nil {
 		return nil, err
 	}
 

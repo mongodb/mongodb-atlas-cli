@@ -25,16 +25,16 @@ type User interface {
 	DropUser(ctx context.Context, username string) error
 }
 
-func (o *database) CreateUser(ctx context.Context, username, password string, roles []string) error {
+func (d *database) CreateUser(ctx context.Context, username, password string, roles []string) error {
 	rolesDoc := bson.A{}
 	for _, r := range roles {
 		rolesDoc = append(rolesDoc, bson.D{
 			{Key: "role", Value: r},
-			{Key: "db", Value: o.db.Name()},
+			{Key: "db", Value: d.db.Name()},
 		})
 	}
 
-	return o.db.Client().
+	return d.db.Client().
 		Database("admin").
 		RunCommand(ctx, bson.D{
 			{Key: "createUser", Value: username},
@@ -43,8 +43,8 @@ func (o *database) CreateUser(ctx context.Context, username, password string, ro
 		}).Err()
 }
 
-func (o *database) DropUser(ctx context.Context, username string) error {
-	return o.db.Client().
+func (d *database) DropUser(ctx context.Context, username string) error {
+	return d.db.Client().
 		Database("admin").
 		RunCommand(ctx, bson.D{
 			{Key: "dropUser", Value: username},

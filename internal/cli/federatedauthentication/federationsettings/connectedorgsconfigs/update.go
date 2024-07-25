@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 type UpdateOpts struct {
@@ -53,8 +53,8 @@ func (opts *UpdateOpts) InitStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *UpdateOpts) fillReadOnlyValues(config *atlasv2.ConnectedOrgConfig) {
-	config.OrgId = opts.ConfigOrgID()
+func (opts *UpdateOpts) fillReadOnlyValues(c *atlasv2.ConnectedOrgConfig) {
+	c.OrgId = opts.ConfigOrgID()
 }
 
 func (opts *UpdateOpts) Run() error {

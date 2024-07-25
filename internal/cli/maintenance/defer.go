@@ -50,7 +50,7 @@ func (opts *DeferOpts) Run() error {
 	return opts.Print(nil)
 }
 
-// mongocli atlas maintenanceWindow(s) defer [--projectId projectId].
+// atlas maintenanceWindow(s) defer [--projectId projectId].
 func DeferBuilder() *cobra.Command {
 	opts := &DeferOpts{}
 	cmd := &cobra.Command{

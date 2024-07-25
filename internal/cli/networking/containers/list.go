@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -72,7 +72,7 @@ func (opts *ListOpts) newContainerListOptions() *atlas.ContainersListOptions {
 	}
 }
 
-// mongocli atlas networking container(s) list [--projectId projectId] [--page N] [--limit N] [--minDate minDate] [--maxDate maxDate].
+// atlas networking container(s) list [--projectId projectId] [--page N] [--limit N] [--minDate minDate] [--maxDate maxDate].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

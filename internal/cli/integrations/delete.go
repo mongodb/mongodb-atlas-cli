@@ -45,7 +45,7 @@ func (opts *DeleteOpts) Run() error {
 	return opts.Delete(opts.store.DeleteIntegration, opts.ConfigProjectID())
 }
 
-// mongocli atlas integration(s) delete <TYPE> [--force] --projectId projectId.
+// atlas integration(s) delete <TYPE> [--force] --projectId projectId.
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
 		DeleteOpts: cli.NewDeleteOpts("Integration '%s' deleted\n", "Integration not deleted"),

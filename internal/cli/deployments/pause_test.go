@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/v20240530002/admin"
+	"go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 const (
@@ -123,6 +123,8 @@ func TestPauseOpts_PostRun(t *testing.T) {
 		EXPECT().
 		AppendDeploymentType().
 		Times(1)
+
+	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
 
 	if err := opts.PostRun(); err != nil {
 		t.Fatalf("PostRun() unexpected error: %v", err)

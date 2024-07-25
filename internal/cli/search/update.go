@@ -65,7 +65,7 @@ func (opts *UpdateOpts) Run() error {
 //
 // Usage:
 //
-//	mongocli atlas clusters search indexes update <ID> [flags]
+//	atlas clusters search indexes update <ID> [flags]
 //
 // Flags:
 //

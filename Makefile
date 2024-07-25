@@ -139,6 +139,7 @@ unit-test: ## Run unit-tests
 	$(TEST_CMD) --tags="$(UNIT_TAGS)" -race -cover -count=1 -coverprofile $(COVERAGE) ./...
 
 .PHONY: install
+install: ## Install a binary in $GOPATH/bin
 	@echo "==> Installing $(ATLAS_BINARY_NAME) to $(ATLAS_INSTALL_PATH)"
 	go install -ldflags "$(ATLAS_LINKER_FLAGS)" $(ATLAS_SOURCE_FILES)
 	@echo "==> Done..."

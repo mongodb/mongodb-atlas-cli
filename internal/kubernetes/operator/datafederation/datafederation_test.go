@@ -30,7 +30,7 @@ import (
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -50,7 +50,7 @@ func Test_BuildAtlasDataFederation(t *testing.T) {
 	t.Run("Can import Data Federations", func(t *testing.T) {
 		dataFederation := &atlasv2.DataLakeTenant{
 			CloudProviderConfig: &atlasv2.DataLakeCloudProviderConfig{
-				Aws: atlasv2.DataLakeAWSCloudProviderConfig{
+				Aws: &atlasv2.DataLakeAWSCloudProviderConfig{
 					RoleId:       "TestRoleID",
 					TestS3Bucket: "TestBucket",
 				},

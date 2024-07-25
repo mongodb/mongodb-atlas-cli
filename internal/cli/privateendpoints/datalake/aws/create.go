@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 type CreateOpts struct {
@@ -66,7 +66,7 @@ func (opts *CreateOpts) newPrivateLinkEndpointDataLake() *atlasv2.PrivateNetwork
 	return createRequest
 }
 
-// mongocli atlas privateEndpoint(s) dataLake aws create [--privateEndpointId privateEndpointId] [--comment comment] --projectId projectId.
+// atlas privateEndpoint(s) dataLake aws create [--privateEndpointId privateEndpointId] [--comment comment] --projectId projectId.
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

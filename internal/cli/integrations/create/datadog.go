@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 var datadogType = "DATADOG"
@@ -64,7 +64,7 @@ func (opts *DatadogOpts) newDatadogIntegration() *atlasv2.ThirdPartyIntegration 
 	}
 }
 
-// mongocli atlas integration(s) create DATADOG --apiKey apiKey --region region [--projectId projectId].
+// atlas integration(s) create DATADOG --apiKey apiKey --region region [--projectId projectId].
 func DatadogBuilder() *cobra.Command {
 	opts := &DatadogOpts{}
 	cmd := &cobra.Command{

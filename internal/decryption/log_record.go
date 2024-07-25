@@ -67,7 +67,7 @@ func (logLine *AuditLogLine) decodeLogRecord() (*DecodedLogRecord, error) {
 	}, nil
 }
 
-func processLogRecord(decryptConfig *DecryptSection, logLine *AuditLogLine, lineNb int) (bsonData interface{}, keyInvocationCount uint64, err error) {
+func processLogRecord(decryptConfig *DecryptSection, logLine *AuditLogLine, lineNb int) (bsonData any, keyInvocationCount uint64, err error) {
 	encryptedLogRecord, decodeErr := logLine.decodeLogRecord()
 	if decodeErr != nil {
 		return nil, 0, fmt.Errorf("at line %v: %w: %w", lineNb, ErrLogCorrupted, decodeErr)
@@ -90,7 +90,7 @@ func processLogRecord(decryptConfig *DecryptSection, logLine *AuditLogLine, line
 		return nil, 0, fmt.Errorf("%w at line %v: %w", ErrDecompressionFailure, lineNb, decompressErr)
 	}
 
-	var bsonParsedLogRecord map[string]interface{}
+	var bsonParsedLogRecord map[string]any
 	if bsonErr := bson.Unmarshal(decompressedLogRecord, &bsonParsedLogRecord); bsonErr != nil {
 		return nil, 0, fmt.Errorf("%w at line %v: %w", ErrParse, lineNb, bsonErr)
 	}

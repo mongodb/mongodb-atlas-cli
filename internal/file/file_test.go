@@ -53,13 +53,13 @@ func TestLoad(t *testing.T) {
 	t.Run("load valid json file", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		_ = afero.WriteFile(appFS, jsonFileName, []byte("{}"), 0600)
-		out := new(map[string]interface{})
+		out := new(map[string]any)
 		require.NoError(t, Load(appFS, jsonFileName, out))
 	})
 	t.Run("load valid yaml file", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		_ = afero.WriteFile(appFS, yamlFileName, []byte(""), 0600)
-		out := new(map[string]interface{})
+		out := new(map[string]any)
 		err := Load(appFS, yamlFileName, out)
 		require.NotErrorIs(t, err, ErrMissingFileType)
 	})

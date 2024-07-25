@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 type CreateOpts struct {
@@ -183,7 +183,7 @@ func (opts *CreateOpts) validate() error {
 }
 
 // CreateBuilder
-// mongocli atlas dbuser(s) create
+// atlas dbuser(s) create
 //
 //	--username username --password password
 //	--role roleName@dbName

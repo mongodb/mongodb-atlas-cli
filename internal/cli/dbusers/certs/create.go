@@ -53,7 +53,7 @@ func (opts *CreateOpts) Run() error {
 
 var createTemplate = "{{.}}\n"
 
-// mongocli atlas dbuser(s) certs create --username <username> [--monthsUntilExpiration number] [--projectId projectId].
+// atlas dbuser(s) certs create --username <username> [--monthsUntilExpiration number] [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{

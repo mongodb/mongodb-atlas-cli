@@ -34,7 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/v20240530002/admin"
+	"go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 func TestList_Run(t *testing.T) {
@@ -362,6 +362,8 @@ func TestListOpts_PostRun(t *testing.T) {
 		EXPECT().
 		AppendDeploymentType().
 		Times(1)
+
+	deploymentsTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
 
 	if err := listOpts.PostRun(); err != nil {
 		t.Fatalf("PostRun() unexpected error: %v", err)

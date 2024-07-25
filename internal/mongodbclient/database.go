@@ -23,8 +23,8 @@ import (
 )
 
 type Database interface {
-	RunCommand(ctx context.Context, runCommand interface{}) (interface{}, error)
-	InsertOne(ctx context.Context, collection string, doc interface{}) (interface{}, error)
+	RunCommand(ctx context.Context, runCommand any) (any, error)
+	InsertOne(ctx context.Context, collection string, doc any) (any, error)
 	InitiateReplicaSet(ctx context.Context, rsName string, hostname string, internalPort int, externalPort int) error
 	SearchIndex
 	User
@@ -35,14 +35,14 @@ type database struct {
 	db *mongo.Database
 }
 
-func (o *database) Collection(name string) Collection {
+func (d *database) Collection(name string) Collection {
 	return &collection{
-		collection: o.db.Collection(name),
+		collection: d.db.Collection(name),
 	}
 }
 
-func (o *database) RunCommand(ctx context.Context, runCmd interface{}) (interface{}, error) {
-	r := o.db.RunCommand(ctx, runCmd)
+func (d *database) RunCommand(ctx context.Context, runCmd any) (any, error) {
+	r := d.db.RunCommand(ctx, runCmd)
 	if err := r.Err(); err != nil {
 		return nil, err
 	}
@@ -54,12 +54,12 @@ func (o *database) RunCommand(ctx context.Context, runCmd interface{}) (interfac
 	return cmdResult, nil
 }
 
-func (o *database) InsertOne(ctx context.Context, col string, doc interface{}) (interface{}, error) {
-	return o.db.Collection(col).InsertOne(ctx, doc)
+func (d *database) InsertOne(ctx context.Context, col string, doc any) (any, error) {
+	return d.db.Collection(col).InsertOne(ctx, doc)
 }
 
-func (o *database) InitiateReplicaSet(ctx context.Context, rsName string, hostname string, internalPort int, externalPort int) error {
-	return o.db.RunCommand(ctx, bson.D{{Key: "replSetInitiate", Value: bson.M{
+func (d *database) InitiateReplicaSet(ctx context.Context, rsName string, hostname string, internalPort int, externalPort int) error {
+	return d.db.RunCommand(ctx, bson.D{{Key: "replSetInitiate", Value: bson.M{
 		"_id":       rsName,
 		"version":   1,
 		"configsvr": false,

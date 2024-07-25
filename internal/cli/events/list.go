@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20240530002/admin"
+	"go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 type EventListOpts struct {
@@ -59,7 +59,7 @@ var listTemplate = `ID	TYPE	CREATED{{range valueOrEmptySlice .Results}}
 `
 
 func (opts *ListOpts) Run() error {
-	var r interface{}
+	var r any
 	var err error
 
 	if opts.orgID != "" {

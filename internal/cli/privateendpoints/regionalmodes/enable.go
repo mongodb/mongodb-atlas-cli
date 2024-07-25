@@ -50,7 +50,7 @@ func (opts *EnableOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas privateEndpoint(s) regionalMode(s) enable [--projectId projectId].
+// atlas privateEndpoint(s) regionalMode(s) enable [--projectId projectId].
 func EnableBuilder() *cobra.Command {
 	opts := &EnableOpts{}
 	cmd := &cobra.Command{

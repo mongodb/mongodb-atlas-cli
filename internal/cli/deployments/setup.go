@@ -54,7 +54,7 @@ const (
 	cancelSettings     = "cancel"
 	skipConnect        = "skip"
 	spinnerSpeed       = 100 * time.Millisecond
-	shortStepCount     = 2
+	steps              = 3
 )
 
 var (
@@ -72,8 +72,9 @@ var (
 	errUnsupportedConnectWith     = fmt.Errorf("the --%s flag is unsupported", flag.ConnectWith)
 	errFlagUsernameRequired       = fmt.Errorf("the --%s is required to enable authentication when --%s flag is set",
 		flag.Username, flag.BindIPAll)
-	settingOptions      = []string{defaultSettings, customSettings, cancelSettings}
-	settingsDescription = map[string]string{
+	errFailedToDownloadImage = errors.New("failed to download the MongoDB image")
+	settingOptions           = []string{defaultSettings, customSettings, cancelSettings}
+	settingsDescription      = map[string]string{
 		defaultSettings: "With default settings",
 		customSettings:  "With custom settings",
 		cancelSettings:  "Cancel setup",
@@ -115,24 +116,22 @@ func (opts *SetupOpts) logStepStarted(msg string, currentStep int, totalSteps in
 	opts.start()
 }
 
-func (opts *SetupOpts) downloadImagesIfNotAvailable(ctx context.Context, currentStep int, steps int) error {
-	opts.logStepStarted("Downloading the MongoDB binaries to your local environment...", currentStep, steps)
+func (opts *SetupOpts) downloadImage(ctx context.Context, currentStep int, steps int) error {
+	opts.logStepStarted("Downloading the latest MongoDB image to your local environment...", currentStep, steps)
 	defer opts.stop()
 
-	var mongodImages []container.Image
-	var err error
-
-	if mongodImages, err = opts.ContainerEngine.ImageList(ctx, opts.MongodDockerImageName()); err != nil {
-		return err
+	err := opts.ContainerEngine.ImagePull(ctx, opts.MongodDockerImageName())
+	if err == nil {
+		return nil
 	}
 
-	if len(mongodImages) == 0 {
-		if err = opts.ContainerEngine.ImagePull(ctx, opts.MongodDockerImageName()); err != nil {
-			return err
-		}
+	// In case we already have an image present and the download fails, we can continue with the existing image
+	images, _ := opts.ContainerEngine.ImageList(ctx, opts.MongodDockerImageName())
+	if len(images) != 0 {
+		return nil
 	}
 
-	return nil
+	return errFailedToDownloadImage
 }
 
 func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, steps int) error {
@@ -147,37 +146,10 @@ func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, st
 	return opts.validateLocalDeploymentsSettings(containers)
 }
 
-func (opts *SetupOpts) planSteps(ctx context.Context) (steps int, needToPullImages bool, err error) {
-	steps = 2
-	needToPullImages = false
-
-	images, err := opts.ContainerEngine.ImageList(ctx, opts.MongodDockerImageName())
-
-	if err != nil {
-		return 0, false, err
-	}
-
-	foundMongod := len(images) > 0
-
-	if !foundMongod {
-		steps++
-		needToPullImages = true
-	}
-	return steps, needToPullImages, nil
-}
-
 func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
-	steps, needToPullImages, err := opts.planSteps(ctx)
-	if err != nil {
-		return err
-	}
 	currentStep := 1
-	longWaitWarning := ""
-	if steps > shortStepCount {
-		longWaitWarning = " [this might take several minutes]"
-	}
 
-	_, _ = log.Warningf("Creating your cluster %s%s\n", opts.DeploymentName, longWaitWarning)
+	_, _ = log.Warningf("Creating your cluster %s [this might take several minutes]\n", opts.DeploymentName)
 
 	// containers check
 	if err := opts.startEnvironment(ctx, currentStep, steps); err != nil {
@@ -185,13 +157,11 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	}
 	currentStep++
 
-	// pull images if not available
-	if needToPullImages {
-		if err := opts.downloadImagesIfNotAvailable(ctx, currentStep, steps); err != nil {
-			return err
-		}
-		currentStep++
+	// always download the latest image
+	if err := opts.downloadImage(ctx, currentStep, steps); err != nil {
+		return err
 	}
+	currentStep++
 
 	// create local deployment
 	opts.logStepStarted(fmt.Sprintf("Creating your deployment %s...", opts.DeploymentName), currentStep, steps)
@@ -311,7 +281,7 @@ func (opts *SetupOpts) promptDeploymentName() error {
 		Default: opts.DeploymentName,
 	}
 
-	return telemetry.TrackAskOne(p, &opts.DeploymentName, survey.WithValidator(func(ans interface{}) error {
+	return telemetry.TrackAskOne(p, &opts.DeploymentName, survey.WithValidator(func(ans any) error {
 		name, _ := ans.(string)
 		return options.ValidateDeploymentName(name)
 	}))
@@ -372,7 +342,7 @@ func (opts *SetupOpts) promptPort() error {
 		Default: exportPort,
 	}
 
-	err := telemetry.TrackAskOne(p, &exportPort, survey.WithValidator(func(ans interface{}) error {
+	err := telemetry.TrackAskOne(p, &exportPort, survey.WithValidator(func(ans any) error {
 		input, _ := ans.(string)
 		value, err := strconv.Atoi(input)
 		if err != nil {

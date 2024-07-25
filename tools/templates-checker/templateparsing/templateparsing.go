@@ -159,8 +159,8 @@ func ident(value string, depth int) string {
 	return fmt.Sprintf("%*s%s", depth*spacesPerDepth, "", value)
 }
 
-func ParseTemplate(template string) (*TemplateCallTree, error) {
-	parseTree, err := parse.Parse("templ", template, "{{", "}}", templateFuncs)
+func ParseTemplate(t string) (*TemplateCallTree, error) {
+	parseTree, err := parse.Parse("templ", t, "{{", "}}", templateFuncs)
 	if err != nil {
 		return nil, err
 	}
@@ -349,7 +349,7 @@ func pipelineToIdentifiers(pipeline *parse.PipeNode) ([]string, error) {
 	}
 }
 
-func IsNil(i interface{}) bool {
+func IsNil(i any) bool {
 	return i == nil || (reflect.ValueOf(i).Kind() == reflect.Ptr && reflect.ValueOf(i).IsNil())
 }
 

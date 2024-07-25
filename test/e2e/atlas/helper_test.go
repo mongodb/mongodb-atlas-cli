@@ -31,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -1027,7 +1027,7 @@ func compareStingsWithHiddenPart(expectedSting, actualString string, specialChar
 
 // createJSONFile creates a new JSON file at the specified path with the specified data
 // and also registers its deletion on test cleanup.
-func createJSONFile(t *testing.T, data interface{}, path string) {
+func createJSONFile(t *testing.T, data any, path string) {
 	t.Helper()
 	jsonData, err := json.Marshal(data)
 	if err != nil {

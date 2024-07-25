@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 type UpdateOpts struct {
@@ -92,7 +92,7 @@ func (opts *UpdateOpts) newOnlineArchive() (*atlasv2.BackupOnlineArchive, error)
 	return archive, nil
 }
 
-// mongocli atlas cluster(s) onlineArchive(s) start <archiveId> [--clusterName name][--archiveAfter N] [--projectId projectId].
+// atlas cluster(s) onlineArchive(s) start <archiveId> [--clusterName name][--archiveAfter N] [--projectId projectId].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{
 		fs: afero.NewOsFs(),

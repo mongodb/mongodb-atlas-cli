@@ -53,7 +53,7 @@ func (opts *GetOpts) Run() error {
 	return opts.Print(r)
 }
 
-// mongocli atlas security ldap get --projectId projectId.
+// atlas security ldap get --projectId projectId.
 func GetBuilder() *cobra.Command {
 	opts := &GetOpts{}
 	cmd := &cobra.Command{

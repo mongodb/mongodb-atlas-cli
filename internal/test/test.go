@@ -43,7 +43,7 @@ func CmdValidator(t *testing.T, subject *cobra.Command, nSubCommands int, flags 
 }
 
 // VerifyOutputTemplate validates that the given template string is valid.
-func VerifyOutputTemplate(t *testing.T, tmpl string, typeValue interface{}) {
+func VerifyOutputTemplate(t *testing.T, tmpl string, typeValue any) {
 	t.Helper()
 	var buf bytes.Buffer
 	require.NoError(t, templatewriter.Print(&buf, tmpl, typeValue))

@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20240530002/admin"
+	"go.mongodb.org/atlas-sdk/v20240530003/admin"
 	"go.mongodb.org/atlas/auth"
 )
 
@@ -155,11 +155,11 @@ Successfully logged in as test@10gen.com.
 
 type confirmMock struct{}
 
-func (confirmMock) Prompt(_ *survey.PromptConfig) (interface{}, error) {
+func (confirmMock) Prompt(_ *survey.PromptConfig) (any, error) {
 	return true, nil
 }
 
-func (confirmMock) Cleanup(_ *survey.PromptConfig, _ interface{}) error {
+func (confirmMock) Cleanup(_ *survey.PromptConfig, _ any) error {
 	return nil
 }
 

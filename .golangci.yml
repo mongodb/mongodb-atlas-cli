@@ -62,12 +62,15 @@ linters-settings:
       - name: blank-imports
       - name: context-as-argument
       - name: context-keys-type
+      - name: defer
       - name: dot-imports
       - name: error-return
       - name: error-strings
       - name: error-naming
+      - name: early-return
       - name: errorf
       - name: exported
+      - name: import-shadowing
       - name: indent-error-flow
       - name: if-return
       - name: increment-decrement
@@ -91,6 +94,7 @@ linters-settings:
       - name: constant-logical-expr
       - name: confusing-naming
       - name: unnecessary-stmt
+      - name: use-any
       - name: imports-blocklist
         arguments:
           - "github.com/pkg/errors"

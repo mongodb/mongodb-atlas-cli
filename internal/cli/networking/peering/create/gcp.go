@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 )
 
 type GCPOpts struct {
@@ -99,7 +99,7 @@ func (opts *GCPOpts) newPeer(containerID string) *atlasv2.BaseNetworkPeeringConn
 	}
 }
 
-// mongocli atlas networking peering create gcp [--atlasCidrBlock atlasCidrBlock][--gcpProjectId gcpProjectId][--network networkName]
+// atlas networking peering create gcp [--atlasCidrBlock atlasCidrBlock][--gcpProjectId gcpProjectId][--network networkName]
 // [--regions region][--projectId projectId]
 // --atlasCidrBlock atlasCidrBlock: CIDR block that Atlas uses for the Network Peering containers in your project.
 // --gcpProjectId gcpProjectId: GCP project ID of the owner of the network peer.

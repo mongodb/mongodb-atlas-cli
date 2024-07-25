@@ -42,7 +42,7 @@ import (
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -836,7 +836,7 @@ func TestProjectWithStreamsProcessing(t *testing.T) {
 							),
 							Namespace: targetNamespace,
 							Labels: map[string]string{
-								"mongodb.com/atlas-resource-version": "2.3.0",
+								"mongodb.com/atlas-resource-version": "2.4.0",
 							},
 						},
 						Spec: akov2.AtlasStreamInstanceSpec{
@@ -885,7 +885,7 @@ func TestProjectWithStreamsProcessing(t *testing.T) {
 							),
 							Namespace: targetNamespace,
 							Labels: map[string]string{
-								"mongodb.com/atlas-resource-version": "2.3.0",
+								"mongodb.com/atlas-resource-version": "2.4.0",
 							},
 						},
 						Spec: akov2.AtlasStreamConnectionSpec{

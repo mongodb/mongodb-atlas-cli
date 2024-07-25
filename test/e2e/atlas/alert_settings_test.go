@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20240530003/admin"
+	"go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestAlertConfig(t *testing.T) {

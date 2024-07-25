@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20240530003/admin"
+	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 // MockLogsDownloader is a mock of LogsDownloader interface.

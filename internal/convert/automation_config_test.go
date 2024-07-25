@@ -26,8 +26,9 @@ import (
 
 func TestFromAutomationConfig(t *testing.T) {
 	name := "cluster_1"
+	pName := name + "_0"
 	fipsMode := true
-	t.Run("replica set", func(t *testing.T) {
+	t.Run("replica set all enabled", func(t *testing.T) {
 		t.Parallel()
 		config := fixture.AutomationConfigWithOneReplicaSet(name, false)
 		expected := []*ClusterConfig{
@@ -54,7 +55,65 @@ func TestFromAutomationConfig(t *testing.T) {
 							Votes:                       pointer.Get[float64](1),
 							FeatureCompatibilityVersion: "4.2",
 							Version:                     "4.2.2",
-							Name:                        name + "_0",
+							Name:                        pName,
+							OplogSizeMB:                 pointer.Get(10),
+							TLS: &TLS{
+								CAFile:                     "CAFile",
+								CertificateKeyFile:         "CertificateKeyFile",
+								CertificateKeyFilePassword: "CertificateKeyFilePassword",
+								CertificateSelector:        "CertificateSelector",
+								ClusterCertificateSelector: "ClusterCertificateSelector",
+								ClusterFile:                "ClusterFile",
+								ClusterPassword:            "ClusterPassword",
+								CRLFile:                    "CRLFile",
+								DisabledProtocols:          "DisabledProtocols",
+								FIPSMode:                   &fipsMode,
+								Mode:                       "Mode",
+								PEMKeyFile:                 "PEMKeyFile",
+							},
+							Security: &map[string]interface{}{
+								"test": "test",
+							},
+						},
+					},
+				},
+				MongoURI: "mongodb://host0:27017",
+			},
+		}
+
+		result := FromAutomationConfig(config)
+		if diff := deep.Equal(result, expected); diff != nil {
+			t.Error(diff)
+		}
+	})
+	t.Run("replica set with disabled members", func(t *testing.T) {
+		t.Parallel()
+		config := fixture.AutomationConfigWithOneReplicaSet(name, true)
+		expected := []*ClusterConfig{
+			{
+				RSConfig: RSConfig{
+					Name: name,
+					Processes: []*ProcessConfig{
+						{
+							ArbiterOnly:                 pointer.Get(false),
+							BuildIndexes:                pointer.Get(true),
+							DBPath:                      "/data/db/",
+							Disabled:                    true,
+							Hidden:                      pointer.Get(false),
+							Hostname:                    "host0",
+							LogPath:                     "/data/db/mongodb.log",
+							LogDestination:              file,
+							AuditLogDestination:         file,
+							AuditLogPath:                "/data/db/audit.log",
+							Port:                        27017,
+							Priority:                    pointer.Get[float64](1),
+							ProcessType:                 mongod,
+							SlaveDelay:                  pointer.Get[float64](1),
+							SecondaryDelaySecs:          pointer.Get[float64](1),
+							Votes:                       pointer.Get[float64](1),
+							FeatureCompatibilityVersion: "4.2",
+							Version:                     "4.2.2",
+							Name:                        pName,
 							OplogSizeMB:                 pointer.Get(10),
 							TLS: &TLS{
 								CAFile:                     "CAFile",

@@ -441,5 +441,5 @@ func (e *ConfigExporter) exportAtlasFederatedAuth(projectName string) ([]runtime
 	if err != nil {
 		return nil, fmt.Errorf("failed to export federated authentication: %w", err)
 	}
-	return append(result, federatedAuthentification), err
+	return append(result, federatedAuthentification), nil
 }

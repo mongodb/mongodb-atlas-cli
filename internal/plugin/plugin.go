@@ -39,19 +39,19 @@ func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 
 	// Load manifests from plugin directories
 	if defaultPluginDirectory, err := GetDefaultPluginDirectory(); err == nil {
-		loadedManifests, err := getManifestsFromPluginsDirectory(defaultPluginDirectory)
-		if err != nil {
+		if loadedManifests, err := getManifestsFromPluginsDirectory(defaultPluginDirectory); err != nil {
 			logPluginWarning(`could not load manifests from directory "%s" because of error: %s`, defaultPluginDirectory, err.Error())
+		} else {
+			manifests = append(manifests, loadedManifests...)
 		}
-		manifests = append(manifests, loadedManifests...)
 	}
 
 	if extraPluginDir := os.Getenv("ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY"); extraPluginDir != "" {
-		loadedManifests, err := getManifestsFromPluginsDirectory(extraPluginDir)
-		if err != nil {
+		if loadedManifests, err := getManifestsFromPluginsDirectory(extraPluginDir); err != nil {
 			logPluginWarning(`could not load plugins from folder "%s" provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s`, extraPluginDir, err.Error())
+		} else {
+			manifests = append(manifests, loadedManifests...)
 		}
-		manifests = append(manifests, loadedManifests...)
 	}
 
 	// Remove manifests that contain already existing commands

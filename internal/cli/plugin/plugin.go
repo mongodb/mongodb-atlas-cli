@@ -23,14 +23,14 @@ import (
 func RegisterCommands(rootCmd *cobra.Command) {
 	plugins := plugin.GetAllValidPlugins(rootCmd.Commands())
 
-	rootCmd.AddCommand(Builder(plugins))
-
-	for _, plugin := range plugins {
-		rootCmd.AddCommand(plugin.GetCobraCommands()...)
+	for _, p := range plugins {
+		rootCmd.AddCommand(p.GetCobraCommands()...)
 	}
+
+	rootCmd.AddCommand(Builder(plugins, rootCmd.Commands()))
 }
 
-func Builder(plugins []*plugin.Plugin) *cobra.Command {
+func Builder(plugins []*plugin.Plugin, existingCommands []*cobra.Command) *cobra.Command {
 	const use = "plugin"
 	cmd := &cobra.Command{
 		Use:     use,
@@ -38,7 +38,9 @@ func Builder(plugins []*plugin.Plugin) *cobra.Command {
 		Short:   "Manage plugins for the AtlasCLI.",
 	}
 
-	cmd.AddCommand(ListBuilder(plugins))
+	cmd.AddCommand(
+		ListBuilder(plugins),
+		InstallBuilder(plugins, existingCommands))
 
 	return cmd
 }

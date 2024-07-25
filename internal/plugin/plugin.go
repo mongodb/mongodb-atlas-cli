@@ -15,28 +15,39 @@
 package plugin
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
+	"path"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/spf13/cobra"
+)
+
+var (
+	errCreateDefaultPluginDir = errors.New("failed to create default plugin directory")
+)
+
+const (
+	ExtraPluginDirectoryEnvKey = "ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY"
 )
 
 func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 	var manifests []*Manifest
 
 	// Load manifests from plugin directories
-	if loadedManifests, err := getManifestsFromPluginDirectory("./plugins"); err != nil {
-		logPluginWarning(`could not load manifests from directory "./plugins" because of error: %s`, err.Error())
-	} else {
-		manifests = append(manifests, loadedManifests...)
+	if defaultPluginDirectory, err := GetDefaultPluginDirectory(); err == nil {
+		if loadedManifests, err := getManifestsFromPluginsDirectory(defaultPluginDirectory); err != nil {
+			logPluginWarning(`could not load manifests from directory "%s" because of error: %s`, defaultPluginDirectory, err.Error())
+		} else {
+			manifests = append(manifests, loadedManifests...)
+		}
 	}
 
-	extraPluginDir := os.Getenv("ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY")
-
-	if extraPluginDir != "" {
-		if loadedManifests, err := getManifestsFromPluginDirectory(extraPluginDir); err != nil {
+	if extraPluginDir := os.Getenv("ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY"); extraPluginDir != "" {
+		if loadedManifests, err := getManifestsFromPluginsDirectory(extraPluginDir); err != nil {
 			logPluginWarning(`could not load plugins from folder "%s" provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s`, extraPluginDir, err.Error())
 		} else {
 			manifests = append(manifests, loadedManifests...)
@@ -59,17 +70,48 @@ func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 	return plugins
 }
 
+func GetDefaultPluginDirectory() (string, error) {
+	configHome, err := config.CLIConfigHome()
+
+	if err != nil {
+		return "", fmt.Errorf("failed to retrieve CLI config home: %w", err)
+	}
+
+	pluginDirectoryPath := path.Join(configHome, "plugins")
+
+	err = os.MkdirAll(pluginDirectoryPath, os.ModePerm)
+	if err != nil {
+		return "", errCreateDefaultPluginDir
+	}
+
+	return pluginDirectoryPath, nil
+}
+
+type Command struct {
+	Name        string
+	Description string
+}
+
+type Github struct {
+	Owner string
+	Name  string
+}
+
+func (g *Github) Equals(owner string, name string) bool {
+	if g.Owner == owner && g.Name == name {
+		return true
+	}
+
+	return false
+}
+
 type Plugin struct {
 	Name        string
 	Description string
 	BinaryPath  string
 	Version     string
 	Commands    []*Command
-}
-
-type Command struct {
-	Name        string
-	Description string
+	Github      *Github
 }
 
 func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
@@ -106,6 +148,13 @@ func createPluginFromManifest(manifest *Manifest) *Plugin {
 		BinaryPath:  manifest.BinaryPath,
 		Version:     manifest.Version,
 		Commands:    make([]*Command, 0, len(manifest.Commands)),
+	}
+
+	if manifest.Github != nil {
+		plugin.Github = &Github{
+			Owner: manifest.Github.Owner,
+			Name:  manifest.Github.Name,
+		}
 	}
 
 	for cmdName, value := range manifest.Commands {

@@ -52,7 +52,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/networking"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/organizations"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/performanceadvisor"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/privateendpoints"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/processes"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/projects"
@@ -247,8 +246,6 @@ Use the --help flag with any command for more info on that command.`,
 		deployments.Builder(),
 		federatedauthentication.Builder(),
 	)
-
-	plugin.RegisterCommands(rootCmd)
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)
 	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)

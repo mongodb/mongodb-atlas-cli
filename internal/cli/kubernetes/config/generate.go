@@ -31,8 +31,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation"
 )
 
-const defaultTargetNamespace = "default"
-
 var ErrUnsupportedOperatorVersionFmt = "version %q is not supported. Supported versions: %v"
 
 type GenerateOpts struct {
@@ -48,14 +46,10 @@ type GenerateOpts struct {
 	crdsProvider       crds.AtlasOperatorCRDProvider
 }
 
-func (opts *GenerateOpts) defaults() error {
-	if opts.targetNamespace == "" {
-		opts.targetNamespace = defaultTargetNamespace
-	}
-
-	return nil
-}
 func (opts *GenerateOpts) ValidateTargetNamespace() error {
+	if opts.targetNamespace == "" {
+		return nil
+	}
 	if errs := validation.IsDNS1123Label(opts.targetNamespace); len(errs) != 0 {
 		return fmt.Errorf("%s parameter is invalid: %v", flag.OperatorTargetNamespace, errs)
 	}
@@ -137,7 +131,6 @@ func GenerateBuilder() *cobra.Command {
   atlas kubernetes config generate --projectId=<projectId> --dataFederationName=<data-federation-name-1, data-federation-name-2> --targetNamespace=<namespace>`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
-				opts.defaults,
 				opts.ValidateProjectID,
 				opts.ValidateTargetNamespace,
 				opts.ValidateOperatorVersion,

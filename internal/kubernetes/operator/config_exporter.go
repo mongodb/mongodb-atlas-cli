@@ -39,7 +39,7 @@ const (
 	yamlSeparator        = "---\r\n"
 	maxClusters          = 500
 	DefaultClustersCount = 10
-	INACTIVE_STATUS      = "INACTIVE"
+	InactiveStatus       = "INACTIVE"
 )
 
 type ConfigExporter struct {
@@ -420,7 +420,7 @@ func (e *ConfigExporter) exportAtlasFederatedAuth(projectName string) ([]runtime
 		return nil, fmt.Errorf("failed to retrieve federation settings: %w", err)
 	}
 	// Does not have an IdenityProvider set then no need to generate so not need to generate
-	if !federatedAuthentificationSetting.HasIdentityProviderStatus() || federatedAuthentificationSetting.GetIdentityProviderStatus() == INACTIVE_STATUS {
+	if !federatedAuthentificationSetting.HasIdentityProviderStatus() || federatedAuthentificationSetting.GetIdentityProviderStatus() == InactiveStatus {
 		return nil, nil
 	}
 	// Does have an IdentityProvider and then we can generate the config

@@ -125,6 +125,21 @@ func (mr *MockOperatorProjectStoreMockRecorder) DatabaseRoles(arg0 interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseRoles", reflect.TypeOf((*MockOperatorProjectStore)(nil).DatabaseRoles), arg0)
 }
 
+// DescribeCompliancePolicy mocks base method.
+func (m *MockOperatorProjectStore) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings20231001, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DescribeCompliancePolicy", arg0)
+	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DescribeCompliancePolicy indicates an expected call of DescribeCompliancePolicy.
+func (mr *MockOperatorProjectStoreMockRecorder) DescribeCompliancePolicy(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeCompliancePolicy", reflect.TypeOf((*MockOperatorProjectStore)(nil).DescribeCompliancePolicy), arg0)
+}
+
 // EncryptionAtRest mocks base method.
 func (m *MockOperatorProjectStore) EncryptionAtRest(arg0 string) (*admin.EncryptionAtRest, error) {
 	m.ctrl.T.Helper()

@@ -49,6 +49,7 @@ type OperatorProjectStore interface {
 	AlertConfigurationLister
 	DatabaseRoleLister
 	ProjectAPIKeyCreator
+	CompliancePolicyDescriber
 }
 
 type OperatorDBUsersStore interface {

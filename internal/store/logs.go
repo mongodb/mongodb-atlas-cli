@@ -18,7 +18,7 @@ import (
 	"errors"
 	"io"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store LogsDownloader

@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530003/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -37,7 +37,7 @@ func TestListOpts_Run(t *testing.T) {
 		Results: &[]atlasv2.DiskBackupSnapshotExportBucket{
 			{
 				Id:            pointer.Get("1"),
-				CloudProvider: pointer.Get("AWS"),
+				CloudProvider: "AWS",
 			},
 		},
 	}

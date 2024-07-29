@@ -81,11 +81,9 @@ func Test_getAssetID(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			opts := &AssetOpts{
-				pluginAssets: tt.pluginAssets,
-			}
+			opts := &AssetOpts{}
 
-			assetID, err := opts.getAssetID()
+			assetID, err := opts.getAssetID(tt.pluginAssets)
 			if (err != nil) != tt.expectError {
 				t.Errorf("expected error: %v, got: %v", tt.expectError, err)
 			}

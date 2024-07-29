@@ -76,8 +76,22 @@ func (opts *InstallOpts) validatePlugin(pluginDirectoryPath string) error {
 }
 
 func (opts *InstallOpts) Run() error {
+	opts.ghClient = github.NewClient(nil)
+
+	// get all plugin assets info from github repository
+	assets, err := opts.getPluginAssetInfo()
+	if err != nil {
+		return err
+	}
+
+	// find correct assetID using system requirements
+	assetID, err := opts.getAssetID(assets)
+	if err != nil {
+		return err
+	}
+
 	// download plugin asset zip file and save it as ReadCloser
-	rc, err := opts.getPluginAssetAsReadCloser()
+	rc, err := opts.getPluginAssetAsReadCloser(assetID)
 	if err != nil {
 		return err
 	}
@@ -143,13 +157,6 @@ MongoDB provides an example plugin: https://github.com/mongodb/atlas-cli-plugin-
 				return err
 			}
 			opts.githubRelease = githubRelease
-			opts.ghClient = github.NewClient(nil)
-
-			assets, err := opts.getPluginAssetInfo()
-			if err != nil {
-				return err
-			}
-			opts.pluginAssets = assets
 
 			return opts.PreRunE(opts.checkForDuplicatePlugins)
 		},

@@ -54,7 +54,6 @@ type AssetOpts struct {
 	existingCommands []*cobra.Command
 	ghClient         *github.Client
 	githubRelease    *GithubRelease
-	pluginAssets     []*github.ReleaseAsset
 }
 
 func (opts *AssetOpts) repository() string {
@@ -91,9 +90,9 @@ func (opts *AssetOpts) getPluginAssetInfo() ([]*github.ReleaseAsset, error) {
 	return release.Assets, nil
 }
 
-func (opts *AssetOpts) getAssetID() (int64, error) {
+func (opts *AssetOpts) getAssetID(assets []*github.ReleaseAsset) (int64, error) {
 	operatingSystem, architecture := runtime.GOOS, runtime.GOARCH
-	for _, asset := range opts.pluginAssets {
+	for _, asset := range assets {
 		if *asset.ContentType != "application/gzip" {
 			continue
 		}
@@ -107,13 +106,7 @@ func (opts *AssetOpts) getAssetID() (int64, error) {
 	return 0, fmt.Errorf("could not find an asset to download from %s for %s %s", opts.repository(), operatingSystem, architecture)
 }
 
-func (opts *AssetOpts) getPluginAssetAsReadCloser() (io.ReadCloser, error) {
-	assetID, err := opts.getAssetID()
-
-	if err != nil {
-		return nil, err
-	}
-
+func (opts *AssetOpts) getPluginAssetAsReadCloser(assetID int64) (io.ReadCloser, error) {
 	rc, _, err := opts.ghClient.Repositories.DownloadReleaseAsset(context.Background(), opts.githubRelease.owner, opts.githubRelease.name, assetID, http.DefaultClient)
 
 	if err != nil {

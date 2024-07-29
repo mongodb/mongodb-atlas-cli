@@ -24,6 +24,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"strings"
 
@@ -54,7 +55,6 @@ type AssetOpts struct {
 	existingCommands []*cobra.Command
 	ghClient         *github.Client
 	githubRelease    *GithubRelease
-	pluginAssets     []*github.ReleaseAsset
 }
 
 func (opts *AssetOpts) repository() string {
@@ -91,9 +91,9 @@ func (opts *AssetOpts) getPluginAssetInfo() ([]*github.ReleaseAsset, error) {
 	return release.Assets, nil
 }
 
-func (opts *AssetOpts) getAssetID() (int64, error) {
+func (opts *AssetOpts) getAssetID(assets []*github.ReleaseAsset) (int64, error) {
 	operatingSystem, architecture := runtime.GOOS, runtime.GOARCH
-	for _, asset := range opts.pluginAssets {
+	for _, asset := range assets {
 		if *asset.ContentType != "application/gzip" {
 			continue
 		}
@@ -107,13 +107,7 @@ func (opts *AssetOpts) getAssetID() (int64, error) {
 	return 0, fmt.Errorf("could not find an asset to download from %s for %s %s", opts.repository(), operatingSystem, architecture)
 }
 
-func (opts *AssetOpts) getPluginAssetAsReadCloser() (io.ReadCloser, error) {
-	assetID, err := opts.getAssetID()
-
-	if err != nil {
-		return nil, err
-	}
-
+func (opts *AssetOpts) getPluginAssetAsReadCloser(assetID int64) (io.ReadCloser, error) {
 	rc, _, err := opts.ghClient.Repositories.DownloadReleaseAsset(context.Background(), opts.githubRelease.owner, opts.githubRelease.name, assetID, http.DefaultClient)
 
 	if err != nil {
@@ -124,55 +118,37 @@ func (opts *AssetOpts) getPluginAssetAsReadCloser() (io.ReadCloser, error) {
 }
 
 func parseGithubReleaseValues(arg string) (*GithubRelease, error) {
-	parts := strings.Split(arg, "@")
-
-	owner, name, err := parseGithubRepoValues(parts[0])
+	regexPattern := `^((https?://(www\.)?)?github\.com/)?(?P<owner>[\w.\-]+)/(?P<name>[\w.\-]+)/?(@(?P<version>v?(\d+)(\.\d+)?(\.\d+)?|latest))?$`
+	regex, err := regexp.Compile(regexPattern)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error compiling regex: %w", err)
 	}
 
-	var version *semver.Version
-	versionPartsCount := 2
-	if len(parts) == versionPartsCount {
-		version, err = parseGithubReleaseVersion(parts[1])
-		if err != nil {
-			return nil, err
+	matches := regex.FindStringSubmatch(arg)
+	if matches == nil {
+		return nil, errGithubParametersInvalid
+	}
+
+	names := regex.SubexpNames()
+	groupMap := make(map[string]string)
+	for i, match := range matches {
+		if i == 0 {
+			continue
 		}
+		groupMap[names[i]] = match
 	}
 
-	return &GithubRelease{owner: owner, name: name, version: version}, nil
-}
+	githubRelease := &GithubRelease{owner: groupMap["owner"], name: groupMap["name"]}
 
-func parseGithubRepoValues(arg string) (string, string, error) {
-	arg = strings.TrimSuffix(arg, "/")
-
-	parts := strings.Split(arg, "/")
-
-	minParts := 2
-	if len(parts) < minParts {
-		return "", "", errGithubParametersInvalid
+	if version, ok := groupMap["version"]; ok && version != "latest" && version != "" {
+		semverVersion, err := semver.NewVersion(version)
+		if err != nil {
+			return nil, fmt.Errorf(`the specified version "%s" is invalid, it needs to follow the rules of Semantic Versioning`, version)
+		}
+		githubRelease.version = semverVersion
 	}
 
-	owner := parts[len(parts)-2]
-	name := parts[len(parts)-1]
-	if owner == "" || name == "" {
-		return "", "", errGithubParametersInvalid
-	}
-
-	return owner, name, nil
-}
-
-func parseGithubReleaseVersion(arg string) (*semver.Version, error) {
-	if arg == "" || arg == "latest" {
-		return nil, nil
-	}
-
-	version, err := semver.NewVersion(arg)
-	if err != nil {
-		return nil, fmt.Errorf(`the specified version "%s" is invalid, it needs to follow the rules of Semantic Versioning`, arg)
-	}
-
-	return version, nil
+	return githubRelease, nil
 }
 
 func extractTarGz(src string, dest string) error {

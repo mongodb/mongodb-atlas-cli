@@ -222,6 +222,7 @@ func extractTarGz(src string, dest string) error {
 					if err == io.EOF {
 						break
 					}
+					outFile.Close()
 					return errCopyFileContentExtraction
 				}
 			}

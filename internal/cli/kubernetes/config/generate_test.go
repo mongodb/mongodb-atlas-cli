@@ -21,6 +21,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGenerateBuilder(t *testing.T) {
@@ -34,4 +35,51 @@ func TestGenerateBuilder(t *testing.T) {
 			flag.OperatorIncludeSecrets,
 			flag.OperatorTargetNamespace,
 		})
+}
+func TestValidNamespace(t *testing.T) {
+	tests := []struct {
+		name            string
+		targetNamespace string
+		expectedErr     string
+	}{
+		{
+			name:            "Valid Namespace",
+			targetNamespace: "valid-namespace",
+			expectedErr:     "",
+		},
+		{
+			name:            "Invalid Namespace with special characters",
+			targetNamespace: "invalid_namespace!",
+			expectedErr:     "targetNamespace parameter is invalid: [a lowercase RFC 1123 label must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc', regex used for validation is '[a-z0-9]([-a-z0-9]*[a-z0-9])?')]",
+		},
+		{
+			name:            "Invalid Namespace starting with non-alphanumeric",
+			targetNamespace: "-invalidnamespace",
+			expectedErr:     "targetNamespace parameter is invalid: [a lowercase RFC 1123 label must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc', regex used for validation is '[a-z0-9]([-a-z0-9]*[a-z0-9])?')]",
+		},
+		{
+			name:            "Invalid Namespace ending with non-alphanumeric",
+			targetNamespace: "invalidnamespace-",
+			expectedErr:     "targetNamespace parameter is invalid: [a lowercase RFC 1123 label must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc', regex used for validation is '[a-z0-9]([-a-z0-9]*[a-z0-9])?')]",
+		},
+		{
+			name:            "Invalid Namespace with uppercase letters",
+			targetNamespace: "InvalidNamespace",
+			expectedErr:     "targetNamespace parameter is invalid: [a lowercase RFC 1123 label must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc', regex used for validation is '[a-z0-9]([-a-z0-9]*[a-z0-9])?')]",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			opts := &GenerateOpts{
+				targetNamespace: tt.targetNamespace,
+			}
+			err := opts.ValidateTargetNamespace()
+
+			if tt.expectedErr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.expectedErr)
+			}
+		})
+	}
 }

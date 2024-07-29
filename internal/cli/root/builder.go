@@ -152,9 +152,9 @@ Use the --help flag with any command for more info on that command.`,
 					func() error {
 						if err := opts.RefreshAccessToken(cmd.Context()); err != nil {
 							if authReq == RequiredAuth {
+								_, _ = log.Warningf("Could not refresh access token: %s\n", err.Error())
 								return err
 							}
-							_, _ = log.Warningf("Could not refresh access token: %s\n", err.Error())
 						}
 						return nil
 					},

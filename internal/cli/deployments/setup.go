@@ -683,7 +683,7 @@ func SetupBuilder() *cobra.Command {
 	// Local and Atlas
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentTypeSetup)
 	cmd.Flags().StringVar(&opts.MdbVersion, flag.MDBVersion, "", usage.DeploymentMDBVersion)
-	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWith)
+	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWithSetup)
 
 	// Local only
 	cmd.Flags().IntVar(&opts.Port, flag.Port, 0, usage.MongodPort)

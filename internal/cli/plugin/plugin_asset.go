@@ -216,17 +216,17 @@ func extractTarGz(src string, dest string) error {
 			if err != nil {
 				return errCreateFileForExtracting
 			}
-			defer outFile.Close()
 			for {
 				_, err := io.CopyN(outFile, tarReader, 1024) //nolint:mnd // 1k each write to avoid compression bomb
 				if err != nil {
 					if err == io.EOF {
 						break
 					}
+					outFile.Close()
 					return errCopyFileContentExtraction
 				}
 			}
-
+			outFile.Close()
 		default:
 			return errReadTar
 		}

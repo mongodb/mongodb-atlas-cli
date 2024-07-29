@@ -35,8 +35,8 @@ type InstallOpts struct {
 }
 
 func (opts *InstallOpts) checkForDuplicatePlugins() error {
-	for _, plugin := range opts.plugins {
-		if plugin.Github != nil && plugin.Github.Equals(opts.githubRelease.owner, opts.githubRelease.name) {
+	for _, p := range opts.plugins {
+		if p.Github != nil && p.Github.Equals(opts.githubRelease.owner, opts.githubRelease.name) {
 			return fmt.Errorf("a plugin from the repository %s is already installed.\nTo update the plugin run: \n\tatlas plugin update %s", opts.repository(), opts.repository())
 		}
 	}

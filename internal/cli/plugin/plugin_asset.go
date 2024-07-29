@@ -118,7 +118,7 @@ func (opts *AssetOpts) getPluginAssetAsReadCloser(assetID int64) (io.ReadCloser,
 }
 
 func parseGithubReleaseValues(arg string) (*GithubRelease, error) {
-	regexPattern := `^(^(http|https)://(www\.)?(github\.com/)|^(www\.)?(github\.com/))?(?P<owner>[A-Za-z0-9.\-_]+)/(?P<name>[A-Za-z0-9.\-_]+)(/)?(@(?P<version>v?(\d+)(.\d+)?(.\d+)?|latest))?$`
+	regexPattern := `^((https?://(www\.)?)?github\.com/)?(?P<owner>[\w.\-]+)/(?P<name>[\w.\-]+)/?(@(?P<version>v?(\d+)(\.\d+)?(\.\d+)?|latest))?$`
 	regex, err := regexp.Compile(regexPattern)
 	if err != nil {
 		return nil, fmt.Errorf("error compiling regex: %w", err)

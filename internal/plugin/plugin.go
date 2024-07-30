@@ -35,6 +35,13 @@ const (
 	SourceType                 = "plugin"
 )
 
+func IsPluginCmd(cmd *cobra.Command) bool {
+	if cmdSourceType, ok := cmd.Annotations["sourceType"]; ok && cmdSourceType == SourceType {
+		return true
+	}
+	return false
+}
+
 func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 	var manifests []*Manifest
 
@@ -130,10 +137,10 @@ func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 func (p *Plugin) GetCobraCommands() []*cobra.Command {
 	commands := make([]*cobra.Command, 0, len(p.Commands))
 
-	for _, command := range p.Commands {
+	for _, pluginCmd := range p.Commands {
 		command := &cobra.Command{
-			Use:   command.Name,
-			Short: command.Description,
+			Use:   pluginCmd.Name,
+			Short: pluginCmd.Description,
 			Annotations: map[string]string{
 				"sourceType": SourceType,
 			},

@@ -36,7 +36,7 @@ func TestBuilder(t *testing.T) {
 
 	pluginCommandCount := 0
 	for _, cmd := range rootCmd.Commands() {
-		if sourceType, ok := cmd.Annotations["sourceType"]; ok && sourceType == plugin.SourceType {
+		if plugin.IsPluginCmd(cmd) {
 			pluginCommandCount++
 		}
 	}

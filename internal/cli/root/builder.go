@@ -318,7 +318,7 @@ func shouldCheckCredentials(cmd *cobra.Command) AuthRequirements {
 		}
 	}
 
-	if sourceType, ok := cmd.Annotations["sourceType"]; ok && sourceType == plugin.SourceType {
+	if plugin.IsPluginCmd(cmd) {
 		return OptionalAuth
 	}
 

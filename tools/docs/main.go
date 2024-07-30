@@ -44,7 +44,7 @@ func main() {
 	atlasBuilder := root.Builder()
 
 	for _, cmd := range atlasBuilder.Commands() {
-		if sourceType, ok := cmd.Annotations["sourceType"]; ok && sourceType == plugin.SourceType {
+		if plugin.IsPluginCmd(cmd) {
 			atlasBuilder.RemoveCommand(cmd)
 		}
 	}

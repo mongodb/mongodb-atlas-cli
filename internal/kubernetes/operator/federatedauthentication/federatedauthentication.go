@@ -57,11 +57,11 @@ func BuildAtlasFederatedAuth(br *AtlasFederatedAuthBuildRequest) (*akov2.AtlasFe
 		return nil, err
 	}
 
-	spec, err := getAtlasFederatedAuthSpec(*br, orgConfig)
+	spec, err := atlasFederatedAuthSpec(*br, orgConfig)
 	if err != nil {
 		return nil, err
 	}
-	federatedAuth := &akov2.AtlasFederatedAuth{
+	return &akov2.AtlasFederatedAuth{
 		TypeMeta: metav1.TypeMeta{
 			APIVersion: "atlas.mongodb.com/v1",
 			Kind:       "AtlasFederatedAuth",
@@ -76,8 +76,7 @@ func BuildAtlasFederatedAuth(br *AtlasFederatedAuthBuildRequest) (*akov2.AtlasFe
 				Conditions: []akoapi.Condition{},
 			},
 		},
-	}
-	return federatedAuth, nil
+	}, nil
 }
 
 // getOrgConfig retrieves the organization configuration for the AtlasFederatedAuth resource.
@@ -88,8 +87,8 @@ func getOrgConfig(br *AtlasFederatedAuthBuildRequest) (*atlasv2.ConnectedOrgConf
 	})
 }
 
-// getAtlasFederatedAuthSpec returns the spec for AtlasFederatedAuth.
-func getAtlasFederatedAuthSpec(br AtlasFederatedAuthBuildRequest, orgConfig *atlasv2.ConnectedOrgConfig) (*akov2.AtlasFederatedAuthSpec, error) {
+// atlasFederatedAuthSpec returns the spec for AtlasFederatedAuth.
+func atlasFederatedAuthSpec(br AtlasFederatedAuthBuildRequest, orgConfig *atlasv2.ConnectedOrgConfig) (*akov2.AtlasFederatedAuthSpec, error) {
 	idp, err := GetIdentityProviderForFederatedSettings(br.IdentityProviderLister, br.FederatedSettings.GetId(), br.FederatedSettings.GetIdentityProviderId())
 	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve the federated authentication spec: %w", err)

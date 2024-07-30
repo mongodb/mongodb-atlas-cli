@@ -419,7 +419,7 @@ func (e *ConfigExporter) exportAtlasFederatedAuth(projectName string) ([]runtime
 	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve federation settings: %w", err)
 	}
-	// Does not have an IdenityProvider set then no need to generate so not need to generate
+	// Does not have an IdenityProvider set then no need to generate
 	if !federatedAuthentificationSetting.HasIdentityProviderStatus() || federatedAuthentificationSetting.GetIdentityProviderStatus() == InactiveStatus {
 		return nil, nil
 	}

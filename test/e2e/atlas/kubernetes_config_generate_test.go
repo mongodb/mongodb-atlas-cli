@@ -195,7 +195,7 @@ func TestFederatedAuthTest(t *testing.T) {
 					Namespace: targetNamespace,
 				},
 				Enabled:                  true,
-				DomainAllowList:          []string{"munob.ro"},
+				DomainAllowList:          []string{"iam-test-domain-dev.com"},
 				PostAuthRoleGrants:       []string{"ORG_OWNER"},
 				DomainRestrictionEnabled: pointer.Get(false),
 				SSODebugEnabled:          pointer.Get(true),

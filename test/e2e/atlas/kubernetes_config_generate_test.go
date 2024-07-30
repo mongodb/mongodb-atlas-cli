@@ -628,7 +628,7 @@ func TestProjectWithIntegration(t *testing.T) {
 		require.NotEmpty(t, objects)
 
 		checkProject(t, objects, expectedProject)
-		assert.Len(t, objects, 3, "should have 3 objects in the output: project, integration secret, atlas secret")
+		assert.Len(t, objects, 4, "should have 4 objects in the output: project, integration secret, atlas secret, federated-auth secret")
 		integrationSecret := objects[1].(*corev1.Secret)
 		password, ok := integrationSecret.Data["password"]
 		assert.True(t, ok, "should have password field in the integration secret")

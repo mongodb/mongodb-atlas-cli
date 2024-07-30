@@ -20,6 +20,7 @@ import (
 
 	"github.com/mongodb-labs/cobra2snooty"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/root"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/spf13/cobra"
 )
 
@@ -41,6 +42,13 @@ func main() {
 	}
 
 	atlasBuilder := root.Builder()
+
+	for _, cmd := range atlasBuilder.Commands() {
+		if sourceType, ok := cmd.Annotations["sourceType"]; ok && sourceType == plugin.SourceType {
+			atlasBuilder.RemoveCommand(cmd)
+		}
+	}
+
 	atlasBuilder.InitDefaultCompletionCmd()
 
 	setDisableAutoGenTag(atlasBuilder)

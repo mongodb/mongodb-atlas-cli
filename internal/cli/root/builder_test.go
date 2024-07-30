@@ -25,16 +25,25 @@ import (
 	"github.com/google/go-github/v61/github"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/latestrelease"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/afero"
 )
 
 func TestBuilder(t *testing.T) {
+	rootCmd := Builder()
+
+	pluginCommandCount := 0
+	for _, cmd := range rootCmd.Commands() {
+		if sourceType, ok := cmd.Annotations["sourceType"]; ok && sourceType == plugin.SourceType {
+			pluginCommandCount++
+		}
+	}
 	test.CmdValidator(
 		t,
-		Builder(),
-		40,
+		rootCmd,
+		41+pluginCommandCount,
 		[]string{},
 	)
 }

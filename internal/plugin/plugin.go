@@ -32,6 +32,7 @@ var (
 
 const (
 	ExtraPluginDirectoryEnvKey = "ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY"
+	SourceType                 = "plugin"
 )
 
 func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
@@ -132,7 +133,10 @@ func (p *Plugin) GetCobraCommands() []*cobra.Command {
 		command := &cobra.Command{
 			Use:   command.Name,
 			Short: command.Description,
-			RunE:  p.Run,
+			Annotations: map[string]string{
+				"sourceType": SourceType,
+			},
+			RunE: p.Run,
 		}
 
 		commands = append(commands, command)

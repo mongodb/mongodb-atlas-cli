@@ -52,6 +52,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/networking"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/organizations"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/performanceadvisor"
+	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/privateendpoints"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/processes"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/projects"
@@ -66,6 +67,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/latestrelease"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/sighandle"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
@@ -128,6 +130,49 @@ Use the --help flag with any command for more info on that command.`,
 		SilenceUsage: true,
 		Annotations: map[string]string{
 			"toc": "true",
+		},
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			log.SetWriter(cmd.ErrOrStderr())
+			if debugLevel {
+				log.SetLevel(log.DebugLevel)
+			}
+
+			if err := cli.InitProfile(profile); err != nil {
+				return err
+			}
+
+			telemetry.StartTrackingCommand(cmd, args)
+
+			handleSignal()
+
+			if shouldSetService(cmd) {
+				config.SetService(config.CloudService)
+			}
+
+			authReq := shouldCheckCredentials(cmd)
+			if authReq == NoAuth {
+				return nil
+			}
+
+			if err := prerun.ExecuteE(
+				opts.InitFlow(config.Default()),
+				func() error {
+					err := opts.RefreshAccessToken(cmd.Context())
+					if err != nil && authReq == RequiredAuth {
+						_, _ = log.Warningf("Could not refresh access token: %s\n", err.Error())
+						return err
+					}
+					return nil
+				},
+			); err != nil {
+				return err
+			}
+
+			if authReq == RequiredAuth {
+				return validate.Credentials()
+			}
+
+			return nil
 		},
 		PersistentPostRun: func(cmd *cobra.Command, _ []string) {
 			// we don't run the release alert feature on the completion command
@@ -207,56 +252,7 @@ Use the --help flag with any command for more info on that command.`,
 		federatedauthentication.Builder(),
 	)
 
-	// create copy of the subcommands slice before adding the commands from the plugins
-	// That allows us to differentiate between normal subcommands and plugin subcommands
-	// and we can use it to set all normal subcommands to RequireAuth
-	// and all plugin subcommands to OptionalAuth in shouldCheckCredentials
-	subCommandsWithoutPlugins := make([]*cobra.Command, len(rootCmd.Commands()))
-	copy(subCommandsWithoutPlugins, rootCmd.Commands())
-
-	rootCmd.PersistentPreRunE = func(cmd *cobra.Command, args []string) error {
-		log.SetWriter(cmd.ErrOrStderr())
-		if debugLevel {
-			log.SetLevel(log.DebugLevel)
-		}
-
-		if err := cli.InitProfile(profile); err != nil {
-			return err
-		}
-
-		telemetry.StartTrackingCommand(cmd, args)
-
-		handleSignal()
-
-		if shouldSetService(cmd) {
-			config.SetService(config.CloudService)
-		}
-
-		authReq := shouldCheckCredentials(cmd, subCommandsWithoutPlugins)
-		if authReq == NoAuth {
-			return nil
-		}
-
-		if err := prerun.ExecuteE(
-			opts.InitFlow(config.Default()),
-			func() error {
-				err := opts.RefreshAccessToken(cmd.Context())
-				if err != nil && authReq == RequiredAuth {
-					_, _ = log.Warningf("Could not refresh access token: %s\n", err.Error())
-					return err
-				}
-				return nil
-			},
-		); err != nil {
-			return err
-		}
-
-		if authReq == RequiredAuth {
-			return validate.Credentials()
-		}
-
-		return nil
-	}
+	pluginCmd.RegisterCommands(rootCmd)
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)
 	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)
@@ -292,13 +288,13 @@ func shouldSetService(cmd *cobra.Command) bool {
 	return true
 }
 
-func shouldCheckCredentials(invokedCmd *cobra.Command, subCommands []*cobra.Command) AuthRequirements {
+func shouldCheckCredentials(cmd *cobra.Command) AuthRequirements {
 	searchByName := []string{
 		"__complete",
 		"help",
 	}
 	for _, n := range searchByName {
-		if invokedCmd.Name() == n {
+		if cmd.Name() == n {
 			return NoAuth
 		}
 	}
@@ -317,18 +313,16 @@ func shouldCheckCredentials(invokedCmd *cobra.Command, subCommands []*cobra.Comm
 		fmt.Sprintf("%s %s", atlas, "deployments"): OptionalAuth, // command supports local and Atlas
 	}
 	for p, r := range customRequirements {
-		if strings.HasPrefix(invokedCmd.CommandPath(), p) {
+		if strings.HasPrefix(cmd.CommandPath(), p) {
 			return r
 		}
 	}
 
-	for _, subCmd := range subCommands {
-		if strings.HasPrefix(invokedCmd.CommandPath(), fmt.Sprintf("%s %s", atlas, subCmd.Name())) {
-			return RequiredAuth
-		}
+	if sourceType, ok := cmd.Annotations["sourceType"]; ok && sourceType == plugin.SourceType {
+		return OptionalAuth
 	}
 
-	return OptionalAuth
+	return RequiredAuth
 }
 
 func formattedVersion() string {

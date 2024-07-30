@@ -120,6 +120,7 @@ func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 	// we are this can happen, it is by design
 	// #nosec G204
 	execCmd := exec.Command(p.BinaryPath, args...)
+	execCmd.Stdin = cmd.InOrStdin()
 	execCmd.Stdout = cmd.OutOrStdout()
 	execCmd.Stderr = cmd.OutOrStderr()
 	execCmd.Env = os.Environ()

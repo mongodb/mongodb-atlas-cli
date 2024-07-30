@@ -47,6 +47,9 @@ type GenerateOpts struct {
 }
 
 func (opts *GenerateOpts) ValidateTargetNamespace() error {
+	if opts.targetNamespace == "" {
+		return nil
+	}
 	if errs := validation.IsDNS1123Label(opts.targetNamespace); len(errs) != 0 {
 		return fmt.Errorf("%s parameter is invalid: %v", flag.OperatorTargetNamespace, errs)
 	}

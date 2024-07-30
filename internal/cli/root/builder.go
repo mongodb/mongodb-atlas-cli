@@ -129,46 +129,6 @@ Use the --help flag with any command for more info on that command.`,
 		Annotations: map[string]string{
 			"toc": "true",
 		},
-		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			log.SetWriter(cmd.ErrOrStderr())
-			if debugLevel {
-				log.SetLevel(log.DebugLevel)
-			}
-
-			if err := cli.InitProfile(profile); err != nil {
-				return err
-			}
-
-			telemetry.StartTrackingCommand(cmd, args)
-
-			handleSignal()
-
-			if shouldSetService(cmd) {
-				config.SetService(config.CloudService)
-			}
-			if authReq := shouldCheckCredentials(cmd); authReq != NoAuth {
-				if err := prerun.ExecuteE(
-					opts.InitFlow(config.Default()),
-					func() error {
-						if err := opts.RefreshAccessToken(cmd.Context()); err != nil {
-							if authReq == RequiredAuth {
-								_, _ = log.Warningf("Could not refresh access token: %s\n", err.Error())
-								return err
-							}
-						}
-						return nil
-					},
-				); err != nil {
-					return err
-				}
-
-				if authReq == RequiredAuth {
-					return validate.Credentials()
-				}
-			}
-
-			return nil
-		},
 		PersistentPostRun: func(cmd *cobra.Command, _ []string) {
 			// we don't run the release alert feature on the completion command
 			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "completion")) {
@@ -247,6 +207,57 @@ Use the --help flag with any command for more info on that command.`,
 		federatedauthentication.Builder(),
 	)
 
+	// create copy of the subcommands slice before adding the commands from the plugins
+	// That allows us to differentiate between normal subcommands and plugin subcommands
+	// and we can use it to set all normal subcommands to RequireAuth
+	// and all plugin subcommands to OptionalAuth in shouldCheckCredentials
+	subCommandsWithoutPlugins := make([]*cobra.Command, len(rootCmd.Commands()))
+	copy(subCommandsWithoutPlugins, rootCmd.Commands())
+
+	rootCmd.PersistentPreRunE = func(cmd *cobra.Command, args []string) error {
+		log.SetWriter(cmd.ErrOrStderr())
+		if debugLevel {
+			log.SetLevel(log.DebugLevel)
+		}
+
+		if err := cli.InitProfile(profile); err != nil {
+			return err
+		}
+
+		telemetry.StartTrackingCommand(cmd, args)
+
+		handleSignal()
+
+		if shouldSetService(cmd) {
+			config.SetService(config.CloudService)
+		}
+
+		authReq := shouldCheckCredentials(cmd, subCommandsWithoutPlugins)
+		if authReq == NoAuth {
+			return nil
+		}
+
+		if err := prerun.ExecuteE(
+			opts.InitFlow(config.Default()),
+			func() error {
+				err := opts.RefreshAccessToken(cmd.Context())
+				if err != nil && authReq == RequiredAuth {
+					_, _ = log.Warningf("Could not refresh access token: %s\n", err.Error())
+					return err
+				}
+				return nil
+			},
+		); err != nil {
+			return err
+		}
+
+		if authReq == RequiredAuth {
+			return validate.Credentials()
+		}
+
+		return nil
+	}
+
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)
 	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)
 	_ = rootCmd.PersistentFlags().MarkHidden(flag.Debug)
@@ -281,13 +292,13 @@ func shouldSetService(cmd *cobra.Command) bool {
 	return true
 }
 
-func shouldCheckCredentials(cmd *cobra.Command) AuthRequirements {
+func shouldCheckCredentials(invokedCmd *cobra.Command, subCommands []*cobra.Command) AuthRequirements {
 	searchByName := []string{
 		"__complete",
 		"help",
 	}
 	for _, n := range searchByName {
-		if cmd.Name() == n {
+		if invokedCmd.Name() == n {
 			return NoAuth
 		}
 	}
@@ -306,11 +317,18 @@ func shouldCheckCredentials(cmd *cobra.Command) AuthRequirements {
 		fmt.Sprintf("%s %s", atlas, "deployments"): OptionalAuth, // command supports local and Atlas
 	}
 	for p, r := range customRequirements {
-		if strings.HasPrefix(cmd.CommandPath(), p) {
+		if strings.HasPrefix(invokedCmd.CommandPath(), p) {
 			return r
 		}
 	}
-	return RequiredAuth
+
+	for _, subCmd := range subCommands {
+		if strings.HasPrefix(invokedCmd.CommandPath(), fmt.Sprintf("%s %s", atlas, subCmd.Name())) {
+			return RequiredAuth
+		}
+	}
+
+	return OptionalAuth
 }
 
 func formattedVersion() string {

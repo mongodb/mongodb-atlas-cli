@@ -19,6 +19,7 @@ package plugin
 import (
 	"testing"
 
+	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -32,6 +33,17 @@ func getTestManifest() *Manifest {
 			"testCommand": {"Test command"},
 		},
 	}
+}
+
+func Test_IsPluginCmd(t *testing.T) {
+	pluginCmd := cobra.Command{
+		Annotations: map[string]string{
+			"sourceType": SourceType,
+		}}
+	cmd := cobra.Command{}
+
+	assert.True(t, IsPluginCmd(&pluginCmd))
+	assert.False(t, IsPluginCmd(&cmd))
 }
 
 func Test_GetCobraCommands(t *testing.T) {

@@ -32,7 +32,15 @@ var (
 
 const (
 	ExtraPluginDirectoryEnvKey = "ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY"
+	SourceType                 = "plugin"
 )
+
+func IsPluginCmd(cmd *cobra.Command) bool {
+	if cmdSourceType, ok := cmd.Annotations["sourceType"]; ok && cmdSourceType == SourceType {
+		return true
+	}
+	return false
+}
 
 func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 	var manifests []*Manifest
@@ -119,6 +127,7 @@ func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 	// we are this can happen, it is by design
 	// #nosec G204
 	execCmd := exec.Command(p.BinaryPath, args...)
+	execCmd.Stdin = cmd.InOrStdin()
 	execCmd.Stdout = cmd.OutOrStdout()
 	execCmd.Stderr = cmd.OutOrStderr()
 	execCmd.Env = os.Environ()
@@ -128,11 +137,14 @@ func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 func (p *Plugin) GetCobraCommands() []*cobra.Command {
 	commands := make([]*cobra.Command, 0, len(p.Commands))
 
-	for _, command := range p.Commands {
+	for _, pluginCmd := range p.Commands {
 		command := &cobra.Command{
-			Use:   command.Name,
-			Short: command.Description,
-			RunE:  p.Run,
+			Use:   pluginCmd.Name,
+			Short: pluginCmd.Description,
+			Annotations: map[string]string{
+				"sourceType": SourceType,
+			},
+			RunE: p.Run,
 		}
 
 		commands = append(commands, command)

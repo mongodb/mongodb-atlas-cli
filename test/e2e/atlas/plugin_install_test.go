@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && plugin)
+//go:build e2e || (atlas && plugin && install)
 
 package atlas_test
 
@@ -101,8 +101,8 @@ description: description
 version: 1.2.3
 binary: binary
 commands:
-    testplugin:
-        description: this is the a test command`)
+    example:
+        description: command with same name as plugin command`)
 	require.NoError(t, err)
 	runTest(t, cliPath, "Plugin with same command already installed", true, examplePluginRepository)
 

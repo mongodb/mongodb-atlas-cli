@@ -62,9 +62,14 @@ func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 		}
 	}
 
+	// Remove manifests with duplicate names
+	manifests, duplicateManifestNames := removeManifestsWithDuplicateNames(manifests)
+	for _, name := range duplicateManifestNames {
+		logPluginWarning(`could not load plugin "%s" because there are multiple plugins with that name`, name)
+	}
+
 	// Remove manifests that contain already existing commands
 	manifests, duplicateManifest := getUniqueManifests(manifests, existingCommands)
-
 	for _, manifest := range duplicateManifest {
 		logPluginWarning(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, manifest.Name)
 	}

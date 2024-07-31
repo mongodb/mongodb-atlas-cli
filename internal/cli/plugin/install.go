@@ -63,6 +63,13 @@ func (opts *InstallOpts) validatePlugin(pluginDirectoryPath string) error {
 		return errors.New(manifestErrorLog.String())
 	}
 
+	// check for duplicate plugin names
+	for _, p := range opts.plugins {
+		if manifest.Name == p.Name {
+			return fmt.Errorf("a plugin with the name %s already exists", manifest.Name)
+		}
+	}
+
 	// Check for duplicate commands
 	existingCommandsMap := make(map[string]bool)
 	for _, cmd := range opts.existingCommands {

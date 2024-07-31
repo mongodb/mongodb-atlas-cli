@@ -105,6 +105,18 @@ commands:
         description: this is the a test command`)
 	require.NoError(t, err)
 	runTest(t, cliPath, "Plugin with same command already installed", true, examplePluginRepository)
+
+	err = deleteAllPlugins()
+	require.NoError(t, err)
+	err = generateTestPlugin("testplugin", "binary", `name: atlas-cli-plugin-example
+description: description
+version: 1.2.3
+binary: binary
+commands:
+    testplugin:
+        description: this is the a test command`)
+	require.NoError(t, err)
+	runTest(t, cliPath, "Plugin with same name already installed", true, examplePluginRepository)
 }
 
 func runTest(t *testing.T, cliPath string, testName string, requireError bool, pluginValue string) {

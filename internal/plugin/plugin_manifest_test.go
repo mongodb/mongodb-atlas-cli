@@ -202,6 +202,94 @@ func Test_getUniqueManifests(t *testing.T) {
 	}
 }
 
+func Test_removeManifestsWithDuplicateNames(t *testing.T) {
+	tests := []struct {
+		name                        string
+		manifests                   []*Manifest
+		expectedUniqueManifestCount int
+		expectedDuplicateNamesCount int
+	}{
+		{
+			name: "No duplicate manifests",
+			manifests: []*Manifest{
+				{
+					Name: "manifestName1",
+				},
+				{
+					Name: "manifestName2",
+				},
+				{
+					Name: "manifestName3",
+				},
+			},
+			expectedUniqueManifestCount: 3,
+			expectedDuplicateNamesCount: 0,
+		},
+		{
+			name: "Two duplicate manifests",
+			manifests: []*Manifest{
+				{
+					Name: "manifestName1",
+				},
+				{
+					Name: "manifestName2",
+				},
+				{
+					Name: "manifestName2",
+				},
+			},
+			expectedUniqueManifestCount: 1,
+			expectedDuplicateNamesCount: 1,
+		},
+		{
+			name: "Multiple uplicate manifests",
+			manifests: []*Manifest{
+				{
+					Name: "manifestName1",
+				},
+				{
+					Name: "manifestName2",
+				},
+				{
+					Name: "manifestName2",
+				},
+				{
+					Name: "manifestName3",
+				},
+				{
+					Name: "manifestName4",
+				},
+				{
+					Name: "manifestName5",
+				},
+				{
+					Name: "manifestName5",
+				},
+				{
+					Name: "manifestName5",
+				},
+				{
+					Name: "manifestName5",
+				},
+			},
+			expectedUniqueManifestCount: 3,
+			expectedDuplicateNamesCount: 2,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			uniqueManifests, duplicateNames := removeManifestsWithDuplicateNames(tt.manifests)
+			if len(uniqueManifests) != tt.expectedUniqueManifestCount {
+				t.Errorf("Expected %d unique manifests, got %d", tt.expectedUniqueManifestCount, len(uniqueManifests))
+			}
+			if len(duplicateNames) != tt.expectedDuplicateNamesCount {
+				t.Errorf("Expected %d duplicate names, got %d", tt.expectedDuplicateNamesCount, len(duplicateNames))
+			}
+		})
+	}
+}
+
 func Test_hasDuplicateCommand(t *testing.T) {
 	existingCommandsMap := map[string]bool{
 		"existingCmd1": true,

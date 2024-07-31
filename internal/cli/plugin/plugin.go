@@ -40,7 +40,9 @@ func Builder(plugins []*plugin.Plugin, existingCommands []*cobra.Command) *cobra
 
 	cmd.AddCommand(
 		ListBuilder(plugins),
-		InstallBuilder(plugins, existingCommands))
+		InstallBuilder(plugins, existingCommands),
+		UninstallBuilder(plugins),
+	)
 
 	return cmd
 }

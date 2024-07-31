@@ -46,41 +46,41 @@ type Manifest struct {
 	BinaryPath  string
 }
 
-func (p *Manifest) IsValid() (bool, []error) {
+func (m *Manifest) IsValid() (bool, []error) {
 	var errorsList []error
 	errorMessage := `value "%s" is not defined`
 
-	if p.Name == "" {
+	if m.Name == "" {
 		errorsList = append(errorsList, fmt.Errorf(errorMessage, "name"))
 	}
-	if p.Description == "" {
+	if m.Description == "" {
 		errorsList = append(errorsList, fmt.Errorf(errorMessage, "description"))
 	}
-	if p.Binary == "" {
+	if m.Binary == "" {
 		errorsList = append(errorsList, fmt.Errorf(errorMessage, "binary"))
 	}
-	if p.Version == "" {
+	if m.Version == "" {
 		errorsList = append(errorsList, fmt.Errorf(errorMessage, "version"))
-	} else if _, err := semver.NewVersion(p.Version); err != nil {
+	} else if _, err := semver.NewVersion(m.Version); err != nil {
 		errorsList = append(errorsList, errors.New(`value in field "version" is not a valid semantic version`))
 	}
 
-	if p.Github != nil {
-		if p.Github.Owner == "" {
+	if m.Github != nil {
+		if m.Github.Owner == "" {
 			errorsList = append(errorsList, fmt.Errorf(errorMessage, "github owner"))
 		}
-		if p.Github.Name == "" {
+		if m.Github.Name == "" {
 			errorsList = append(errorsList, fmt.Errorf(errorMessage, "github name"))
 		}
 	}
 
 	switch {
-	case p.Commands == nil:
+	case m.Commands == nil:
 		errorsList = append(errorsList, fmt.Errorf(errorMessage, "commands"))
-	case len(p.Commands) == 0:
+	case len(m.Commands) == 0:
 		errorsList = append(errorsList, errors.New("the plugin needs to contain at least one command"))
 	default:
-		for command, value := range p.Commands {
+		for command, value := range m.Commands {
 			if value.Description == "" {
 				errorsList = append(errorsList, fmt.Errorf(`value "description" in command "%s" is not defined`, command))
 			}
@@ -183,6 +183,32 @@ func getManifestFileBytes(pluginDirectoryPath string) ([]byte, error) {
 	}
 
 	return nil, fmt.Errorf("plugin invalid: manifest file does not exist in plugin folder %s", pluginDirectoryPath)
+}
+
+func removeManifestsWithDuplicateNames(manifests []*Manifest) ([]*Manifest, []string) {
+	manifestCountMap := make(map[string]int)
+	uniqueManifestMap := make(map[string]*Manifest)
+	var duplicateManifestNames []string
+
+	// iterate through all manifests and add them to a map, if a manifest with the same name
+	// has alread been added remove it from said map and add name to slice of duplicate manifest names
+	for _, manifest := range manifests {
+		manifestCountMap[manifest.Name]++
+
+		if manifestCountMap[manifest.Name] == 1 {
+			uniqueManifestMap[manifest.Name] = manifest
+		} else if _, ok := uniqueManifestMap[manifest.Name]; ok {
+			delete(uniqueManifestMap, manifest.Name)
+			duplicateManifestNames = append(duplicateManifestNames, manifest.Name)
+		}
+	}
+
+	uniqueManifests := make([]*Manifest, 0, len(uniqueManifestMap))
+	for _, manifest := range uniqueManifestMap {
+		uniqueManifests = append(uniqueManifests, manifest)
+	}
+
+	return uniqueManifests, duplicateManifestNames
 }
 
 func getUniqueManifests(manifests []*Manifest, existingCommands []*cobra.Command) ([]*Manifest, []*Manifest) {

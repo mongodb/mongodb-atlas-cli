@@ -61,7 +61,9 @@ func TestList_Run(t *testing.T) {
 	plugins := getTestPlugins()
 
 	listOpts := &ListOps{
-		plugins: plugins,
+		Opts: Opts{
+			plugins: plugins,
+		},
 		OutputOpts: cli.OutputOpts{
 			Template:  listTemplate,
 			OutWriter: new(bytes.Buffer),

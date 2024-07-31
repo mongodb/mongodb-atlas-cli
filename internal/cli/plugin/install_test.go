@@ -62,7 +62,9 @@ func Test_checkForDuplicatePlugins(t *testing.T) {
 	}
 
 	opts := InstallOpts{
-		plugins: plugins,
+		Opts: Opts{
+			plugins: plugins,
+		},
 	}
 
 	opts.githubRelease = &GithubRelease{name: github1.Name, owner: github1.Owner}

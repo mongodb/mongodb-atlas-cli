@@ -12,10 +12,14 @@ atlas plugin install
    :depth: 1
    :class: singlecol
 
-Uninstall Atlas CLI plugin.
+Install Atlas CLI plugin from a GitHub repository.
 
-Uninstall an Atlas CLI plugin.
-You can specify a plugin to uninstall using either the "<github-owner>/<github-repository-name>" format or the plugin name.
+Install an Atlas CLI plugin from a GitHub repository.
+You can specify a GitHub repository using either the "<github-owner>/<github-repository-name>" format or a full URL.
+When you install the plugin, its latest release on GitHub is used by default.
+To install a specific version of the plugin, append the version number directly to the plugin name using the @ symbol.
+
+MongoDB provides an example plugin: https://github.com/mongodb/atlas-cli-plugin-example
 
 
 Syntax
@@ -24,7 +28,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas plugin install [plugin] [options]
+   atlas plugin install [<github-owner>/<github-repository-name>] [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -39,10 +43,10 @@ Arguments
      - Type
      - Required
      - Description
-   * - plugin
+   * - <github-owner>/<github-repository-name>
      - string
      - false
-     - Plugin identifier.
+     - Repository identifier.
 
 Options
 -------
@@ -82,6 +86,14 @@ Examples
 .. code-block::
    :copyable: false
 
-   # Uninstall a plugin:
-   atlas plugin uninstall mongodb/atlas-cli-plugin-example
-   atlas plugin uninstall atlas-cli-plugin-example
+   # Install the latest version of the plugin:
+   atlas plugin install mongodb/atlas-cli-plugin-example
+   atlas plugin install https://github.com/mongodb/atlas-cli-plugin-example
+   
+   
+.. code-block::
+   :copyable: false
+
+   # Install a specific version of the plugin:
+   atlas plugin install mongodb/atlas-cli-plugin-example@1.0.4
+   atlas plugin install https://github.com/mongodb/atlas-cli-plugin-example/@v1.2.3

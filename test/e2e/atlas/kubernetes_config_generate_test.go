@@ -52,9 +52,11 @@ import (
 
 const targetNamespace = "importer-namespace"
 const credSuffixTest = "-credentials"
+const activeStatus = "ACTIVE"
 
 var federationSettingsID string
 var identityProviderStatus string
+var samlIdentityProviderID string
 var expectedLabels = map[string]string{
 	features.ResourceVersion: features.LatestOperatorMajorVersion,
 }
@@ -151,12 +153,92 @@ func TestFederatedAuthTest(t *testing.T) {
 		a.NotEmpty(settings)
 		federationSettingsID = settings.GetId()
 		a.NotEmpty(federationSettingsID, "no federation settings was present")
-		a.NotEmpty(settings.IdentityProviderId, "no SAML IdP was found")
-		a.Equal("ACTIVE", settings.GetIdentityProviderStatus(), "no active SAML IdP present for this federation")
 		identityProviderStatus = settings.GetIdentityProviderStatus()
 	})
+	t.Run("List SAML IdPs", func(_ *testing.T) {
+		if identityProviderStatus != activeStatus {
+			s := InitialSetup(t)
+			cliPath := s.cliPath
+			cmd := exec.Command(cliPath,
+				federatedAuthenticationEntity,
+				federationSettingsEntity,
+				identityProviderEntity,
+				"list",
+				"--federationSettingsId",
+				federationSettingsID,
+				"--protocol",
+				"SAML",
+				"-o=json",
+			)
+
+			cmd.Env = os.Environ()
+			resp, err := e2e.RunAndGetStdOut(cmd)
+			require.NoError(t, err, string(resp))
+
+			var providers atlasv2.PaginatedFederationIdentityProvider
+			require.NoError(t, json.Unmarshal(resp, &providers))
+			a := assert.New(t)
+			a.True(providers.HasResults())
+			providersList := providers.GetResults()
+			samlIdentityProviderID = providersList[0].GetOktaIdpId()
+		}
+	})
+	t.Run("PreRequisite Connect SAML IdP", func(t *testing.T) {
+		if identityProviderStatus != activeStatus && samlIdentityProviderID != "" {
+			s := InitialSetup(t)
+			cliPath := s.cliPath
+			cmd := exec.Command(cliPath,
+				federatedAuthenticationEntity,
+				federationSettingsEntity,
+				connectedOrgsConfigsEntity,
+				"connect",
+				"--identityProviderId",
+				samlIdentityProviderID,
+				"--federationSettingsId",
+				federationSettingsID,
+				"--protocol",
+				"SAML",
+				"-o=json",
+			)
+
+			cmd.Env = os.Environ()
+			resp, err := e2e.RunAndGetStdOut(cmd)
+			require.NoError(t, err, string(resp))
+
+			var config atlasv2.ConnectedOrgConfig
+			require.NoError(t, json.Unmarshal(resp, &config))
+			assert.NotNil(t, config.GetIdentityProviderId())
+		}
+	})
+	t.Run("Prerequisite Check active SAML configuration", func(t *testing.T) {
+		if identityProviderStatus != activeStatus {
+			s := InitialSetup(t)
+			cliPath := s.cliPath
+			cmd := exec.Command(cliPath,
+				federatedAuthenticationEntity,
+				federationSettingsEntity,
+				"describe",
+				"-o=json",
+			)
+
+			cmd.Env = os.Environ()
+			resp, err := e2e.RunAndGetStdOut(cmd)
+			require.NoError(t, err, string(resp))
+
+			var settings atlasv2.OrgFederationSettings
+			require.NoError(t, json.Unmarshal(resp, &settings))
+
+			a := assert.New(t)
+			a.NotEmpty(settings)
+			federationSettingsID = settings.GetId()
+			a.NotEmpty(federationSettingsID, "no federation settings was present")
+			a.NotEmpty(settings.IdentityProviderId, "no SAML IdP was found")
+			a.Equal(activeStatus, settings.GetIdentityProviderStatus(), "no active SAML IdP present for this federation")
+			identityProviderStatus = settings.GetIdentityProviderStatus()
+		}
+	})
 	t.Run("Config generate for federated auth", func(t *testing.T) {
-		if identityProviderStatus != "ACTIVE" {
+		if identityProviderStatus != activeStatus {
 			t.Fatalf("There is no need to check this test since there is no SAML IdP configured and active")
 		}
 		dictionary := resources.AtlasNameToKubernetesName()

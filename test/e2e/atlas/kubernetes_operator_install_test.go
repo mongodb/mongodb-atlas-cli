@@ -171,7 +171,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		operator := setupCluster(t, clusterName, operatorNamespace)
 		context := contextPrefix + clusterName
 		projectName := "MyK8sProject"
-
+		defer cleanUpKeys(t, operator, operatorNamespace, cliPath)
 		cmd := exec.Command(cliPath,
 			"kubernetes",
 			"operator",
@@ -233,8 +233,6 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		if !projectDeleted {
 			t.Errorf("project %s was not cleaned up", projectName)
 		}
-
-		cleanUpKeys(t, operator, operatorNamespace, cliPath)
 	})
 
 	t.Run("should install operator importing atlas existing resources", func(t *testing.T) {
@@ -246,7 +244,7 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		clusterName := "install-import"
 		operator := setupCluster(t, clusterName, operatorNamespace)
 		context := contextPrefix + clusterName
-
+		defer cleanUpKeys(t, operator, operatorNamespace, cliPath)
 		cmd := exec.Command(cliPath,
 			"kubernetes",
 			"operator",
@@ -263,8 +261,6 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		checkDeployment(t, operator, operatorNamespace)
 		checkK8sAtlasProject(t, operator, client.ObjectKey{Name: prepareK8sName(g.projectName), Namespace: operatorNamespace})
 		checkK8sAtlasDeployment(t, operator, client.ObjectKey{Name: prepareK8sName(fmt.Sprintf("%s-%s", g.projectName, g.clusterName)), Namespace: operatorNamespace})
-
-		cleanUpKeys(t, operator, operatorNamespace, cliPath)
 	})
 
 	t.Run("should install operator with deletion protection and sub resource protection disabled", func(t *testing.T) {
@@ -272,11 +268,10 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		g.enableBackup = true
 		g.generateProject("k8sOperatorInstall")
 		g.generateCluster()
-
 		clusterName := "install-import-without-dp"
 		operator := setupCluster(t, clusterName, operatorNamespace)
 		context := contextPrefix + clusterName
-
+		defer cleanUpKeys(t, operator, operatorNamespace, cliPath)
 		cmd := exec.Command(cliPath,
 			"kubernetes",
 			"operator",
@@ -300,8 +295,6 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 		))
 		assert.Contains(t, deployment.Spec.Template.Spec.Containers[0].Args, "--resourceDeletionProtection=false")
 		assert.Contains(t, deployment.Spec.Template.Spec.Containers[0].Args, "--subresourceDeletionProtection=false")
-
-		cleanUpKeys(t, operator, operatorNamespace, cliPath)
 	})
 }
 

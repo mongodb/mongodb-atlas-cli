@@ -26,7 +26,7 @@ type Opts struct {
 	plugins []*plugin.Plugin
 }
 
-func (opts *Opts) findPluginByGithubValues(owner string, name string) (*plugin.Plugin, error) {
+func (opts *Opts) findPluginWithGithubValues(owner string, name string) (*plugin.Plugin, error) {
 	for _, p := range opts.plugins {
 		if p.Github != nil && p.Github.Equals(owner, name) {
 			return p, nil
@@ -35,7 +35,7 @@ func (opts *Opts) findPluginByGithubValues(owner string, name string) (*plugin.P
 	return nil, fmt.Errorf(`could not find plugin with github values %s/%s`, owner, name)
 }
 
-func (opts *Opts) findPluginByName(name string) (*plugin.Plugin, error) {
+func (opts *Opts) findPluginWithName(name string) (*plugin.Plugin, error) {
 	for _, p := range opts.plugins {
 		if p.Name == name {
 			return p, nil

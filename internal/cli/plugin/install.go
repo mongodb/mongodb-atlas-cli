@@ -35,7 +35,7 @@ type InstallOpts struct {
 }
 
 func (opts *InstallOpts) checkForDuplicatePlugins() error {
-	_, err := opts.findPluginByGithubValues(opts.githubRelease.owner, opts.githubRelease.name)
+	_, err := opts.findPluginWithGithubValues(opts.githubRelease.owner, opts.githubRelease.name)
 	if err != nil {
 		return nil
 	}

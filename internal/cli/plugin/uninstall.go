@@ -67,9 +67,9 @@ You can specify a plugin to uninstall using either the "<github-owner>/<github-r
 			var plugin *plugin.Plugin
 
 			if err == nil {
-				plugin, err = opts.findPluginByGithubValues(githubValues.owner, githubValues.name)
+				plugin, err = opts.findPluginWithGithubValues(githubValues.owner, githubValues.name)
 			} else {
-				plugin, err = opts.findPluginByName(arg[0])
+				plugin, err = opts.findPluginWithName(arg[0])
 			}
 
 			if err != nil {

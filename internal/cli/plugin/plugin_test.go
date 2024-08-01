@@ -67,7 +67,7 @@ func getTestPlugins() []*plugin.Plugin {
 	}
 }
 
-func Test_findPluginByGithubValues(t *testing.T) {
+func Test_findPluginWithGithubValues(t *testing.T) {
 	tests := []struct {
 		name      string
 		owner     string
@@ -96,7 +96,7 @@ func Test_findPluginByGithubValues(t *testing.T) {
 			opts := &Opts{
 				plugins: getTestPlugins(),
 			}
-			got, err := opts.findPluginByGithubValues(tt.owner, tt.nameValue)
+			got, err := opts.findPluginWithGithubValues(tt.owner, tt.nameValue)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("findPluginByGithubValues() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -111,7 +111,7 @@ func Test_findPluginByGithubValues(t *testing.T) {
 	}
 }
 
-func Test_findPluginByName(t *testing.T) {
+func Test_findPluginWithName(t *testing.T) {
 	tests := []struct {
 		testName string
 		name     string
@@ -137,7 +137,7 @@ func Test_findPluginByName(t *testing.T) {
 			opts := &Opts{
 				plugins: getTestPlugins(),
 			}
-			got, err := opts.findPluginByName(tt.name)
+			got, err := opts.findPluginWithName(tt.name)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("findPluginByName() error = %v, wantErr %v", err, tt.wantErr)
 				return

@@ -24,16 +24,12 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const (
-	examplePluginName = "atlas-cli-plugin-example"
-)
-
 func TestPluginUninstall(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
-	runPluginUninstallTest(t, cliPath, "Uninstall Successful with repository values", false, examplePluginRepository)
-	runPluginUninstallTest(t, cliPath, "Uninstall Successful with plugin name", false, examplePluginName)
+	runPluginUninstallTest(t, cliPath, "Uninstall Successful with repository values", false, "mongodb/atlas-cli-plugin-example")
+	runPluginUninstallTest(t, cliPath, "Uninstall Successful with plugin name", false, "atlas-cli-plugin-example")
 	runPluginUninstallTest(t, cliPath, "Plugin could not be found", true, "invalid plugin")
 }
 
@@ -61,7 +57,7 @@ func installExamplePlugin(t *testing.T, cliPath string) {
 	cmd := exec.Command(cliPath,
 		"plugin",
 		"install",
-		examplePluginRepository)
+		"mongodb/atlas-cli-plugin-example")
 	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 }

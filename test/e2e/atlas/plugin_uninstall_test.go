@@ -17,9 +17,12 @@
 package atlas_test
 
 import (
+	"os"
 	"os/exec"
+	"path"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/require"
 )
@@ -48,7 +51,7 @@ func runPluginUninstallTest(t *testing.T, cliPath string, testName string, requi
 			require.NoError(t, err, string(resp))
 		}
 	})
-	err := deleteAllPlugins()
+	err := deleteExamplePlugin()
 	require.NoError(t, err)
 }
 
@@ -60,4 +63,13 @@ func installExamplePlugin(t *testing.T, cliPath string) {
 		"mongodb/atlas-cli-plugin-example")
 	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
+}
+
+func deleteExamplePlugin() error {
+	defaultPluginDir, err := plugin.GetDefaultPluginDirectory()
+	if err != nil {
+		return err
+	}
+	err = os.RemoveAll(path.Join(defaultPluginDir, "mongodb@atlas-cli-plugin-example"))
+	return err
 }

@@ -51,8 +51,7 @@ func runPluginUninstallTest(t *testing.T, cliPath string, testName string, requi
 			require.NoError(t, err, string(resp))
 		}
 	})
-	err := deleteExamplePlugin()
-	require.NoError(t, err)
+	deleteExamplePlugin(t)
 }
 
 func installExamplePlugin(t *testing.T, cliPath string) {
@@ -65,11 +64,10 @@ func installExamplePlugin(t *testing.T, cliPath string) {
 	require.NoError(t, err, string(resp))
 }
 
-func deleteExamplePlugin() error {
+func deleteExamplePlugin(t *testing.T) {
+	t.Helper()
 	defaultPluginDir, err := plugin.GetDefaultPluginDirectory()
-	if err != nil {
-		return err
-	}
+	require.NoError(t, err)
 	err = os.RemoveAll(path.Join(defaultPluginDir, "mongodb@atlas-cli-plugin-example"))
-	return err
+	require.NoError(t, err)
 }

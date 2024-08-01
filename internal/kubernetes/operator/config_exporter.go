@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/dbusers"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/deployment"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/federatedauthentication"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/project"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/streamsprocessing"
@@ -38,6 +39,7 @@ const (
 	yamlSeparator        = "---\r\n"
 	maxClusters          = 500
 	DefaultClustersCount = 10
+	InactiveStatus       = "INACTIVE"
 )
 
 type ConfigExporter struct {
@@ -142,6 +144,12 @@ func (e *ConfigExporter) Run() (string, error) {
 		return "", err
 	}
 	r = append(r, dataFederationResource...)
+
+	federatedAuthResource, err := e.exportAtlasFederatedAuth(projectName)
+	if err != nil {
+		return "", err
+	}
+	r = append(r, federatedAuthResource...)
 
 	streamProcessingResources, err := e.exportAtlasStreamProcessing(projectName)
 	if err != nil {
@@ -399,4 +407,39 @@ func (e *ConfigExporter) exportAtlasStreamProcessing(projectName string) ([]runt
 	}
 
 	return result, nil
+}
+
+func (e *ConfigExporter) exportAtlasFederatedAuth(projectName string) ([]runtime.Object, error) {
+	if !e.featureValidator.IsResourceSupported(features.ResourceAtlasFederatedAuth) {
+		return nil, nil
+	}
+	result := make([]runtime.Object, 0)
+	// Gets the FederationAuthSetting
+	federatedAuthentificationSetting, err := e.dataProvider.FederationSetting(&admin.GetFederationSettingsApiParams{OrgId: e.orgID})
+	if err != nil {
+		return nil, fmt.Errorf("failed to retrieve federation settings: %w", err)
+	}
+	// Does not have an IdenityProvider set then no need to generate
+	if !federatedAuthentificationSetting.HasIdentityProviderStatus() || federatedAuthentificationSetting.GetIdentityProviderStatus() == InactiveStatus {
+		return nil, nil
+	}
+	// Does have an IdentityProvider and then we can generate the config
+	federatedAuthentification, err := federatedauthentication.BuildAtlasFederatedAuth(&federatedauthentication.AtlasFederatedAuthBuildRequest{
+		IncludeSecret:                e.includeSecretsData,
+		IdentityProviderLister:       e.dataProvider,
+		ConnectedOrgConfigsDescriber: e.dataProvider,
+		IdentityProviderDescriber:    e.dataProvider,
+		ProjectStore:                 e.dataProvider,
+		ProjectID:                    e.projectID,
+		OrgID:                        e.orgID,
+		TargetNamespace:              e.targetNamespace,
+		Version:                      e.operatorVersion,
+		Dictionary:                   e.dictionaryForAtlasNames,
+		ProjectName:                  projectName,
+		FederatedSettings:            federatedAuthentificationSetting,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to export federated authentication: %w", err)
+	}
+	return append(result, federatedAuthentification), nil
 }

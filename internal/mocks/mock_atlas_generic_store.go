@@ -274,6 +274,36 @@ func (mr *MockOperatorGenericStoreMockRecorder) EncryptionAtRest(arg0 interface{
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EncryptionAtRest", reflect.TypeOf((*MockOperatorGenericStore)(nil).EncryptionAtRest), arg0)
 }
 
+// FederationSetting mocks base method.
+func (m *MockOperatorGenericStore) FederationSetting(arg0 *admin.GetFederationSettingsApiParams) (*admin.OrgFederationSettings, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FederationSetting", arg0)
+	ret0, _ := ret[0].(*admin.OrgFederationSettings)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FederationSetting indicates an expected call of FederationSetting.
+func (mr *MockOperatorGenericStoreMockRecorder) FederationSetting(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FederationSetting", reflect.TypeOf((*MockOperatorGenericStore)(nil).FederationSetting), arg0)
+}
+
+// GetConnectedOrgConfig mocks base method.
+func (m *MockOperatorGenericStore) GetConnectedOrgConfig(arg0 *admin.GetConnectedOrgConfigApiParams) (*admin.ConnectedOrgConfig, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetConnectedOrgConfig", arg0)
+	ret0, _ := ret[0].(*admin.ConnectedOrgConfig)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetConnectedOrgConfig indicates an expected call of GetConnectedOrgConfig.
+func (mr *MockOperatorGenericStoreMockRecorder) GetConnectedOrgConfig(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetConnectedOrgConfig", reflect.TypeOf((*MockOperatorGenericStore)(nil).GetConnectedOrgConfig), arg0)
+}
+
 // GetOrgProjects mocks base method.
 func (m *MockOperatorGenericStore) GetOrgProjects(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedAtlasGroup, error) {
 	m.ctrl.T.Helper()
@@ -317,6 +347,36 @@ func (m *MockOperatorGenericStore) GlobalCluster(arg0, arg1 string) (*admin.GeoS
 func (mr *MockOperatorGenericStoreMockRecorder) GlobalCluster(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GlobalCluster", reflect.TypeOf((*MockOperatorGenericStore)(nil).GlobalCluster), arg0, arg1)
+}
+
+// IdentityProvider mocks base method.
+func (m *MockOperatorGenericStore) IdentityProvider(arg0 *admin.GetIdentityProviderApiParams) (*admin.FederationIdentityProvider, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IdentityProvider", arg0)
+	ret0, _ := ret[0].(*admin.FederationIdentityProvider)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IdentityProvider indicates an expected call of IdentityProvider.
+func (mr *MockOperatorGenericStoreMockRecorder) IdentityProvider(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IdentityProvider", reflect.TypeOf((*MockOperatorGenericStore)(nil).IdentityProvider), arg0)
+}
+
+// IdentityProviders mocks base method.
+func (m *MockOperatorGenericStore) IdentityProviders(arg0 *admin.ListIdentityProvidersApiParams) (*admin.PaginatedFederationIdentityProvider, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IdentityProviders", arg0)
+	ret0, _ := ret[0].(*admin.PaginatedFederationIdentityProvider)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IdentityProviders indicates an expected call of IdentityProviders.
+func (mr *MockOperatorGenericStoreMockRecorder) IdentityProviders(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IdentityProviders", reflect.TypeOf((*MockOperatorGenericStore)(nil).IdentityProviders), arg0)
 }
 
 // Integrations mocks base method.

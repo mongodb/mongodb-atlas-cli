@@ -87,12 +87,12 @@ func TestPluginInstall(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
-	runTest(t, cliPath, "Invalid version for plugin", true, examplePluginRepository+"@2.3.4.5.6")
-	runTest(t, cliPath, "Plugin version does not exist", true, examplePluginRepository+"@300.200.100")
-	runTest(t, cliPath, "Repository Values invalid", true, "invalid-repository")
-	runTest(t, cliPath, "Plugin does not exist", true, "github-repo/does-not-exist")
-	runTest(t, cliPath, "Install Successful", false, examplePluginRepository)
-	runTest(t, cliPath, "Plugin already installed", true, examplePluginRepository)
+	runPluginInstallTest(t, cliPath, "Invalid version for plugin", true, examplePluginRepository+"@2.3.4.5.6")
+	runPluginInstallTest(t, cliPath, "Plugin version does not exist", true, examplePluginRepository+"@300.200.100")
+	runPluginInstallTest(t, cliPath, "Repository Values invalid", true, "invalid-repository")
+	runPluginInstallTest(t, cliPath, "Plugin does not exist", true, "github-repo/does-not-exist")
+	runPluginInstallTest(t, cliPath, "Install Successful", false, examplePluginRepository)
+	runPluginInstallTest(t, cliPath, "Plugin already installed", true, examplePluginRepository)
 
 	err = deleteAllPlugins()
 	require.NoError(t, err)
@@ -104,7 +104,7 @@ commands:
     example:
         description: command with same name as plugin command`)
 	require.NoError(t, err)
-	runTest(t, cliPath, "Plugin with same command already installed", true, examplePluginRepository)
+	runPluginInstallTest(t, cliPath, "Plugin with same command already installed", true, examplePluginRepository)
 
 	err = deleteAllPlugins()
 	require.NoError(t, err)
@@ -116,10 +116,10 @@ commands:
     testplugin:
         description: this is the a test command`)
 	require.NoError(t, err)
-	runTest(t, cliPath, "Plugin with same name already installed", true, examplePluginRepository)
+	runPluginInstallTest(t, cliPath, "Plugin with same name already installed", true, examplePluginRepository)
 }
 
-func runTest(t *testing.T, cliPath string, testName string, requireError bool, pluginValue string) {
+func runPluginInstallTest(t *testing.T, cliPath string, testName string, requireError bool, pluginValue string) {
 	t.Helper()
 	t.Run(testName, func(t *testing.T) {
 		cmd := exec.Command(cliPath,

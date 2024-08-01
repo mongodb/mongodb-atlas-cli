@@ -37,13 +37,13 @@ type ManifestCommand struct {
 }
 
 type Manifest struct {
-	Name        string                     `yaml:"name,omitempty"`
-	Description string                     `yaml:"description,omitempty"`
-	Binary      string                     `yaml:"binary,omitempty"`
-	Version     string                     `yaml:"version,omitempty"`
-	Github      *ManifestGithubValues      `yaml:"github"`
-	Commands    map[string]ManifestCommand `yaml:"commands,omitempty"`
-	BinaryPath  string
+	Name                string                     `yaml:"name,omitempty"`
+	Description         string                     `yaml:"description,omitempty"`
+	Binary              string                     `yaml:"binary,omitempty"`
+	Version             string                     `yaml:"version,omitempty"`
+	Github              *ManifestGithubValues      `yaml:"github"`
+	Commands            map[string]ManifestCommand `yaml:"commands,omitempty"`
+	PluginDirectoryPath string
 }
 
 func (m *Manifest) IsValid() (bool, []error) {
@@ -141,13 +141,12 @@ func GetManifestFromPluginDirectory(pluginDirectoryPath string) (*Manifest, erro
 		return nil, err
 	}
 
-	binaryPath, err := getPathToExecutableBinary(pluginDirectoryPath, manifest.Binary)
+	manifest.PluginDirectoryPath = pluginDirectoryPath
+	_, err = getPathToExecutableBinary(manifest)
 	if err != nil {
 		logPluginWarning(err.Error())
 		return nil, err
 	}
-
-	manifest.BinaryPath = binaryPath
 
 	return manifest, nil
 }
@@ -244,8 +243,8 @@ func HasDuplicateCommand(manifest *Manifest, existingCommandsMap map[string]bool
 	return false
 }
 
-func getPathToExecutableBinary(pluginDirectoryPath string, binaryName string) (string, error) {
-	binaryPath := path.Join(pluginDirectoryPath, binaryName)
+func getPathToExecutableBinary(manifest *Manifest) (string, error) {
+	binaryPath := path.Join(manifest.PluginDirectoryPath, manifest.Binary)
 
 	binaryFileInfo, err := os.Stat(binaryPath)
 

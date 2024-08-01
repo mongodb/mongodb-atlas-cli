@@ -119,24 +119,30 @@ func (g *Github) Equals(owner string, name string) bool {
 }
 
 type Plugin struct {
-	Name        string
-	Description string
-	BinaryPath  string
-	Version     string
-	Commands    []*Command
-	Github      *Github
+	Name                string
+	Description         string
+	PluginDirectoryPath string
+	BinaryName          string
+	Version             string
+	Commands            []*Command
+	Github              *Github
 }
 
 func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
+	binaryPath := path.Join(p.PluginDirectoryPath, p.BinaryName)
 	// suppressing lint error flagging potential tainted input or cmd arguments
 	// we are this can happen, it is by design
 	// #nosec G204
-	execCmd := exec.Command(p.BinaryPath, args...)
+	execCmd := exec.Command(binaryPath, args...)
 	execCmd.Stdin = cmd.InOrStdin()
 	execCmd.Stdout = cmd.OutOrStdout()
 	execCmd.Stderr = cmd.OutOrStderr()
 	execCmd.Env = os.Environ()
 	return execCmd.Run()
+}
+
+func (p *Plugin) Uninstall() error {
+	return os.RemoveAll(p.PluginDirectoryPath)
 }
 
 func (p *Plugin) GetCobraCommands() []*cobra.Command {
@@ -160,11 +166,12 @@ func (p *Plugin) GetCobraCommands() []*cobra.Command {
 
 func createPluginFromManifest(manifest *Manifest) *Plugin {
 	plugin := Plugin{
-		Name:        manifest.Name,
-		Description: manifest.Description,
-		BinaryPath:  manifest.BinaryPath,
-		Version:     manifest.Version,
-		Commands:    make([]*Command, 0, len(manifest.Commands)),
+		Name:                manifest.Name,
+		Description:         manifest.Description,
+		PluginDirectoryPath: manifest.PluginDirectoryPath,
+		BinaryName:          manifest.Binary,
+		Version:             manifest.Version,
+		Commands:            make([]*Command, 0, len(manifest.Commands)),
 	}
 
 	if manifest.Github != nil {

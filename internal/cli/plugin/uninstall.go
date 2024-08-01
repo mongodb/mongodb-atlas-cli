@@ -30,6 +30,11 @@ type UninstallOpts struct {
 }
 
 func (opts *UninstallOpts) Run() error {
+	err := opts.pluginToUninstall.Uninstall()
+	if err != nil {
+		return fmt.Errorf(`plugin %s could not be uninstalled: %w`, opts.pluginToUninstall.Name, err)
+	}
+
 	return opts.Print(fmt.Sprintf("Plugin %s uninstalled successfully", opts.pluginToUninstall.Name))
 }
 
@@ -56,10 +61,12 @@ You can specify a plugin to uninstall using either the "<github-owner>/<github-r
   atlas plugin uninstall mongodb/atlas-cli-plugin-example
   atlas plugin uninstall atlas-cli-plugin-example`,
 		PreRunE: func(_ *cobra.Command, arg []string) error {
+			// try to parse input to github values
+			// if parsing fails it will be assumed that the input is the plugin name
 			githubValues, err := parseGithubReleaseValues(arg[0])
 			var plugin *plugin.Plugin
 
-			if err != nil {
+			if err == nil {
 				plugin, err = opts.findPluginByGithubValues(githubValues.owner, githubValues.name)
 			} else {
 				plugin, err = opts.findPluginByName(arg[0])

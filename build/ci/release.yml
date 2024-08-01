@@ -443,7 +443,7 @@ buildvariants:
   - name: release_mongocli_github
     display_name: "Release MongoCLI (goreleaser)"
     run_on:
-      - rhel80-small
+      - rhel90-small
     git_tag_only: true
     expansions:
       <<: *go_linux_version

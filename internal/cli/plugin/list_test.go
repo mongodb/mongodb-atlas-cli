@@ -21,32 +21,8 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
-
-func getTestPlugins() []*plugin.Plugin {
-	return []*plugin.Plugin{
-		{
-			Name:        "plugin1",
-			Description: "plugin1 description",
-			Version:     "1.4.5",
-			Commands: []*plugin.Command{
-				{Name: "command1"},
-				{Name: "command 2"},
-			},
-		},
-		{
-			Name:        "plugin2",
-			Description: "plugin2 description",
-			Version:     "1.2.3",
-			Commands: []*plugin.Command{
-				{Name: "command3"},
-				{Name: "command4"},
-			},
-		},
-	}
-}
 
 func TestLoginBuilder(t *testing.T) {
 	test.CmdValidator(

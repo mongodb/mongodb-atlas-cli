@@ -26,16 +26,31 @@ import (
 type UninstallOpts struct {
 	cli.OutputOpts
 	Opts
-	pluginToUninstall *plugin.Plugin
+	pluginName string
 }
 
 func (opts *UninstallOpts) Run() error {
-	err := opts.pluginToUninstall.Uninstall()
-	if err != nil {
-		return fmt.Errorf(`plugin %s could not be uninstalled: %w`, opts.pluginToUninstall.Name, err)
+	// try to parse input to github values
+	// if parsing fails it will be assumed that the input is the plugin name
+	githubValues, err := parseGithubReleaseValues(opts.pluginName)
+	var pluginToUninstall *plugin.Plugin
+
+	if err == nil {
+		pluginToUninstall, err = opts.findPluginWithGithubValues(githubValues.owner, githubValues.name)
+	} else {
+		pluginToUninstall, err = opts.findPluginWithName(opts.pluginName)
 	}
 
-	return opts.Print(fmt.Sprintf("Plugin %s uninstalled successfully", opts.pluginToUninstall.Name))
+	if err != nil {
+		return err
+	}
+
+	err = pluginToUninstall.Uninstall()
+	if err != nil {
+		return fmt.Errorf(`plugin %s could not be uninstalled: %w`, pluginToUninstall.Name, err)
+	}
+
+	return opts.Print(fmt.Sprintf("Plugin %s uninstalled successfully", pluginToUninstall.Name))
 }
 
 func UninstallBuilder(plugins []*plugin.Plugin) *cobra.Command {
@@ -60,25 +75,8 @@ You can specify a plugin to uninstall using either the "<github-owner>/<github-r
 		Example: `  # Uninstall a plugin:
   atlas plugin uninstall mongodb/atlas-cli-plugin-example
   atlas plugin uninstall atlas-cli-plugin-example`,
-		PreRunE: func(_ *cobra.Command, arg []string) error {
-			// try to parse input to github values
-			// if parsing fails it will be assumed that the input is the plugin name
-			githubValues, err := parseGithubReleaseValues(arg[0])
-			var plugin *plugin.Plugin
-
-			if err == nil {
-				plugin, err = opts.findPluginWithGithubValues(githubValues.owner, githubValues.name)
-			} else {
-				plugin, err = opts.findPluginWithName(arg[0])
-			}
-
-			if err != nil {
-				return err
-			}
-
-			opts.pluginToUninstall = plugin
-
-			return nil
+		PreRun: func(_ *cobra.Command, arg []string) {
+			opts.pluginName = arg[0]
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()

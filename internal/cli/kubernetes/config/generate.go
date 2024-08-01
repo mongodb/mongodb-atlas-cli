@@ -111,7 +111,7 @@ func GenerateBuilder() *cobra.Command {
 		Args:    require.NoArgs,
 		Aliases: cli.GenerateAliases(use),
 		Short:   "Generate Kubernetes configuration resources for use with Atlas Kubernetes Operator.",
-		Long:    `This command exports configurations for Atlas objects including projects, deployments, and users in a Kubernetes-compatible format, allowing you to manage these resources using the Atlas Kubernetes Operator. For more information, see https://www.mongodb.com/docs/atlas/atlas-operator/`,
+		Long:    `This command exports configurations for Atlas objects including projects, deployments, and users in a Kubernetes-compatible format, allowing you to manage these resources using the Atlas Kubernetes Operator. For more information, see https://www.mongodb.com/docs/atlas/atlas-operator/. Note that the command doesn't include the spec.deploymentSpec.mongoDBMajorVersion, which is needed for applying the exported deployment, in the generated output.`,
 		Example: `# Export Project, DatabaseUsers, Deployments resources for a specific project without connection and integration secrets:
   atlas kubernetes config generate --projectId=<projectId>
 

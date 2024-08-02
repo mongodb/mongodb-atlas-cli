@@ -25,10 +25,11 @@ import (
 
 func getTestManifest() *Manifest {
 	return &Manifest{
-		Name:        "testPlugin",
-		Description: "Test plugin description",
-		BinaryPath:  "/plugins/testPlugin/binary",
-		Version:     "1.2.3",
+		Name:                "testPlugin",
+		Description:         "Test plugin description",
+		Binary:              "binary",
+		PluginDirectoryPath: "/plugins/testPlugin",
+		Version:             "1.2.3",
 		Commands: map[string]ManifestCommand{
 			"testCommand": {"Test command"},
 		},
@@ -67,7 +68,8 @@ func Test_createPluginFromManifest(t *testing.T) {
 
 	assert.Equal(t, plugin.Name, manifest.Name)
 	assert.Equal(t, plugin.Description, manifest.Description)
-	assert.Equal(t, plugin.BinaryPath, manifest.BinaryPath)
+	assert.Equal(t, plugin.BinaryName, manifest.Binary)
+	assert.Equal(t, plugin.PluginDirectoryPath, manifest.PluginDirectoryPath)
 	assert.Equal(t, plugin.Version, manifest.Version)
 
 	assert.Len(t, plugin.Commands, len(manifest.Commands))

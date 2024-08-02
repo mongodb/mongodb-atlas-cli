@@ -30,17 +30,17 @@ import (
 type InstallOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
+	Opts
 	AssetOpts
-	plugins []*plugin.Plugin
 }
 
 func (opts *InstallOpts) checkForDuplicatePlugins() error {
-	for _, p := range opts.plugins {
-		if p.Github != nil && p.Github.Equals(opts.githubRelease.owner, opts.githubRelease.name) {
-			return fmt.Errorf("a plugin from the repository %s is already installed.\nTo update the plugin run: \n\tatlas plugin update %s", opts.repository(), opts.repository())
-		}
+	_, err := opts.findPluginWithGithubValues(opts.githubRelease.owner, opts.githubRelease.name)
+	if err != nil {
+		return nil
 	}
-	return nil
+
+	return fmt.Errorf("a plugin from the repository %s is already installed.\nTo update the plugin run: \n\tatlas plugin update %s", opts.repository(), opts.repository())
 }
 
 // checks if the plugin manifest is valid and that the plugin
@@ -61,6 +61,13 @@ func (opts *InstallOpts) validatePlugin(pluginDirectoryPath string) error {
 		}
 
 		return errors.New(manifestErrorLog.String())
+	}
+
+	// check for duplicate plugin names
+	for _, p := range opts.plugins {
+		if manifest.Name == p.Name {
+			return fmt.Errorf("a plugin with the name %s already exists", manifest.Name)
+		}
 	}
 
 	// Check for duplicate commands
@@ -122,7 +129,9 @@ func (opts *InstallOpts) Run() error {
 
 func InstallBuilder(plugins []*plugin.Plugin, existingCommands []*cobra.Command) *cobra.Command {
 	opts := &InstallOpts{
-		plugins: plugins,
+		Opts: Opts{
+			plugins: plugins,
+		},
 		AssetOpts: AssetOpts{
 			existingCommands: existingCommands,
 		},

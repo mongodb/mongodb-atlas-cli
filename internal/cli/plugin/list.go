@@ -22,7 +22,7 @@ import (
 
 type ListOps struct {
 	cli.OutputOpts
-	plugins []*plugin.Plugin
+	Opts
 }
 
 func (opts *ListOps) Run() error {
@@ -37,7 +37,9 @@ const listTemplate = `NAME	DESCRIPTION	VERSION {{range valueOrEmptySlice .}}
 
 func ListBuilder(plugins []*plugin.Plugin) *cobra.Command {
 	opts := &ListOps{
-		plugins: plugins,
+		Opts: Opts{
+			plugins: plugins,
+		},
 	}
 	const use = "list"
 	cmd := &cobra.Command{

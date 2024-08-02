@@ -15,10 +15,34 @@
 package plugin
 
 import (
+	"fmt"
+
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/spf13/cobra"
 )
+
+type Opts struct {
+	plugins []*plugin.Plugin
+}
+
+func (opts *Opts) findPluginWithGithubValues(owner string, name string) (*plugin.Plugin, error) {
+	for _, p := range opts.plugins {
+		if p.Github != nil && p.Github.Equals(owner, name) {
+			return p, nil
+		}
+	}
+	return nil, fmt.Errorf(`could not find plugin with github values %s/%s`, owner, name)
+}
+
+func (opts *Opts) findPluginWithName(name string) (*plugin.Plugin, error) {
+	for _, p := range opts.plugins {
+		if p.Name == name {
+			return p, nil
+		}
+	}
+	return nil, fmt.Errorf(`could not find plugin with name %s`, name)
+}
 
 func RegisterCommands(rootCmd *cobra.Command) {
 	plugins := plugin.GetAllValidPlugins(rootCmd.Commands())
@@ -40,7 +64,9 @@ func Builder(plugins []*plugin.Plugin, existingCommands []*cobra.Command) *cobra
 
 	cmd.AddCommand(
 		ListBuilder(plugins),
-		InstallBuilder(plugins, existingCommands))
+		InstallBuilder(plugins, existingCommands),
+		UninstallBuilder(plugins),
+	)
 
 	return cmd
 }

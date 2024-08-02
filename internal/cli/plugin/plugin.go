@@ -26,6 +26,25 @@ type Opts struct {
 	plugins []*plugin.Plugin
 }
 
+func (opts *Opts) findPluginWithArg(arg string) (*plugin.Plugin, error) {
+	// try to parse input to github values
+	// if parsing fails it will be assumed that the input is the plugin name
+	githubValues, err := parseGithubReleaseValues(arg)
+	var pluginToUninstall *plugin.Plugin
+
+	if err == nil {
+		pluginToUninstall, err = opts.findPluginWithGithubValues(githubValues.owner, githubValues.name)
+	} else {
+		pluginToUninstall, err = opts.findPluginWithName(arg)
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return pluginToUninstall, nil
+}
+
 func (opts *Opts) findPluginWithGithubValues(owner string, name string) (*plugin.Plugin, error) {
 	for _, p := range opts.plugins {
 		if p.Github != nil && p.Github.Equals(owner, name) {
@@ -66,6 +85,7 @@ func Builder(plugins []*plugin.Plugin, existingCommands []*cobra.Command) *cobra
 		ListBuilder(plugins),
 		InstallBuilder(plugins, existingCommands),
 		UninstallBuilder(plugins),
+		UpdateBuilder(plugins),
 	)
 
 	return cmd

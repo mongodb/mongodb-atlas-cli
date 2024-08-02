@@ -156,7 +156,7 @@ func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(nil, nil),
-		3,
+		4,
 		[]string{},
 	)
 }

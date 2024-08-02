@@ -118,7 +118,7 @@ const (
 	APIKey                                    = "apiKey"                                    // APIKey flag
 	APIKeyRole                                = "apiKeyRole"                                // APIKeyRole flag
 	RoutingKey                                = "routingKey"                                // RoutingKey flag
-	NotificationRegion                        = "notificationRegion"                        // NotificationRegion flag
+	NotificationRegion                        = "notificAationRegion"                       // NotificationRegion flag
 	NotificationDelayMin                      = "notificationDelayMin"                      // NotificationDelayMin flag
 	NotificationEmailAddress                  = "notificationEmailAddress"                  // NotificationEmailAddress flag
 	NotificationEmailEnabled                  = "notificationEmailEnabled"                  // NotificationEmailEnabled flag
@@ -307,6 +307,7 @@ const (
 	BindIPAll                                 = "bindIpAll"                                 // BindIpAll flag
 	FrequencyType                             = "frequencyType"                             // FrequencyType flag
 	FrequencyInterval                         = "frequencyInterval"                         // FrequencyInterval flag
+	All                                       = "all"                                       // All flag
 	RetentionUnit                             = "retentionUnit"                             // RetentionUnit flag
 	RetentionValue                            = "retentionValue"                            // RetentionValue flag
 	FederationSettingsID                      = "federationSettingsId"                      // FederationSettingsId flag

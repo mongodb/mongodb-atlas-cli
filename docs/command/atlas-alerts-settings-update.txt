@@ -105,10 +105,6 @@ Options
      - string
      - false
      - Units for the threshold value. Valid values are BITS, BYTES, DAYS, GIGABITS, GIGABYTES, HOURS, KILOBITS, KILOBYTES, MEGABITS, MEGABYTES, MILLISECONDS, MINUTES, PETABYTES, RAW, SECONDS, TERABYTES.
-   * - --notificAationRegion
-     - string
-     - false
-     - Region that indicates which API URL to use.
    * - --notificationChannelName
      - string
      - false
@@ -133,6 +129,10 @@ Options
      - string
      - false
      - Mobile number to which alert notifications are sent.
+   * - --notificationRegion
+     - string
+     - false
+     - Region that indicates which API URL to use.
    * - --notificationRole
      - strings
      - false

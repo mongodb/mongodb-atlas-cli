@@ -118,7 +118,7 @@ const (
 	APIKey                                    = "apiKey"                                    // APIKey flag
 	APIKeyRole                                = "apiKeyRole"                                // APIKeyRole flag
 	RoutingKey                                = "routingKey"                                // RoutingKey flag
-	NotificationRegion                        = "notificAationRegion"                       // NotificationRegion flag
+	NotificationRegion                        = "notificationRegion"                        // NotificationRegion flag
 	NotificationDelayMin                      = "notificationDelayMin"                      // NotificationDelayMin flag
 	NotificationEmailAddress                  = "notificationEmailAddress"                  // NotificationEmailAddress flag
 	NotificationEmailEnabled                  = "notificationEmailEnabled"                  // NotificationEmailEnabled flag

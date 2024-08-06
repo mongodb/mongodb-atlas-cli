@@ -280,8 +280,8 @@ func TestStreams(t *testing.T) {
 		got := []struct {
 			Name, Type, BootstrapServers string
 		}{
-			{Name: connections[0].GetName(), Type: connections[0].GetName(), BootstrapServers: pointer.GetOrZero(connections[0].BootstrapServers)},
-			{Name: connections[1].GetName(), Type: connections[1].GetName(), BootstrapServers: pointer.GetOrZero(connections[1].BootstrapServers)},
+			{Name: connections[0].GetName(), Type: connections[0].GetType(), BootstrapServers: pointer.GetOrZero(connections[0].BootstrapServers)},
+			{Name: connections[1].GetName(), Type: connections[1].GetType(), BootstrapServers: pointer.GetOrZero(connections[1].BootstrapServers)},
 		}
 
 		a.ElementsMatch(expected, got)

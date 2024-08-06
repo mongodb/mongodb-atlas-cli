@@ -268,8 +268,9 @@ func TestStreams(t *testing.T) {
 
 		connections := response.GetResults()
 		a := assert.New(t)
-		a.Len(connections, 1)
 		a.Equal(connectionName, connections[0].GetName())
+		a.Equal(connectionName, connections[1].GetName())
+		a.Equal(connectionName, connections[2].GetName())
 		a.Equal("Kafka", connections[0].GetType())
 		a.Equal("example.com:8080,fraud.example.com:8000", *connections[0].BootstrapServers)
 	})

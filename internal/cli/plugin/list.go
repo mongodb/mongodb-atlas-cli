@@ -16,7 +16,6 @@ package plugin
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/spf13/cobra"
 )
 
@@ -35,12 +34,10 @@ const listTemplate = `NAME	DESCRIPTION	VERSION {{range valueOrEmptySlice .}}
 		{{end}}
 `
 
-func ListBuilder(plugins []*plugin.Plugin) *cobra.Command {
-	opts := &ListOps{
-		Opts: Opts{
-			plugins: plugins,
-		},
-	}
+func ListBuilder(pluginOpts *Opts) *cobra.Command {
+	opts := &ListOps{}
+	opts.Opts = *pluginOpts
+
 	const use = "list"
 	cmd := &cobra.Command{
 		Use:     use,

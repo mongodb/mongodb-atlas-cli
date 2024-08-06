@@ -19,8 +19,10 @@ package plugin
 import (
 	"testing"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func getTestManifest() *Manifest {
@@ -51,7 +53,8 @@ func Test_GetCobraCommands(t *testing.T) {
 	manifest := getTestManifest()
 
 	// Create a mock Plugin from the mock Manifest
-	plugin := createPluginFromManifest(manifest)
+	plugin, err := createPluginFromManifest(manifest)
+	require.NoError(t, err)
 
 	commands := plugin.GetCobraCommands()
 
@@ -64,13 +67,17 @@ func Test_GetCobraCommands(t *testing.T) {
 func Test_createPluginFromManifest(t *testing.T) {
 	manifest := getTestManifest()
 
-	plugin := createPluginFromManifest(manifest)
+	plugin, err := createPluginFromManifest(manifest)
+	require.NoError(t, err)
 
 	assert.Equal(t, plugin.Name, manifest.Name)
 	assert.Equal(t, plugin.Description, manifest.Description)
 	assert.Equal(t, plugin.BinaryName, manifest.Binary)
 	assert.Equal(t, plugin.PluginDirectoryPath, manifest.PluginDirectoryPath)
-	assert.Equal(t, plugin.Version, manifest.Version)
+
+	manifestSemverVersion, err := semver.NewVersion(manifest.Version)
+	require.NoError(t, err)
+	assert.True(t, plugin.Version.Equal(manifestSemverVersion))
 
 	assert.Len(t, plugin.Commands, len(manifest.Commands))
 }

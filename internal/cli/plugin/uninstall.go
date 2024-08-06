@@ -19,7 +19,6 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/spf13/cobra"
 )
 
@@ -43,12 +42,9 @@ func (opts *UninstallOpts) Run() error {
 	return opts.Print(fmt.Sprintf("Plugin %s uninstalled successfully", pluginToUninstall.Name))
 }
 
-func UninstallBuilder(plugins []*plugin.Plugin) *cobra.Command {
-	opts := &UninstallOpts{
-		Opts: Opts{
-			plugins: plugins,
-		},
-	}
+func UninstallBuilder(pluginOpts *Opts) *cobra.Command {
+	opts := &UninstallOpts{}
+	opts.Opts = *pluginOpts
 
 	const use = "uninstall"
 	cmd := &cobra.Command{

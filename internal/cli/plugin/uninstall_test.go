@@ -25,7 +25,7 @@ import (
 func Test_UninstallBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		UninstallBuilder(nil),
+		UninstallBuilder(&Opts{}),
 		0,
 		[]string{},
 	)

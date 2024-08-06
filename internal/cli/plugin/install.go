@@ -15,10 +15,8 @@
 package plugin
 
 import (
-	"errors"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/google/go-github/v61/github"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -31,16 +29,16 @@ type InstallOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	Opts
-	AssetOpts
+	githubAssetManager *GithubAssetManager
 }
 
 func (opts *InstallOpts) checkForDuplicatePlugins() error {
-	_, err := opts.findPluginWithGithubValues(opts.githubRelease.owner, opts.githubRelease.name)
+	_, err := opts.findPluginWithGithubValues(opts.githubAssetManager.owner, opts.githubAssetManager.name)
 	if err != nil {
 		return nil
 	}
 
-	return fmt.Errorf("a plugin from the repository %s is already installed.\nTo update the plugin run: \n\tatlas plugin update %s", opts.repository(), opts.repository())
+	return fmt.Errorf("a plugin from the repository %s is already installed.\nTo update the plugin run: \n\tatlas plugin update %s", opts.githubAssetManager.repository(), opts.githubAssetManager.repository())
 }
 
 // checks if the plugin manifest is valid and that the plugin
@@ -52,15 +50,9 @@ func (opts *InstallOpts) validatePlugin(pluginDirectoryPath string) error {
 		return err
 	}
 
-	// Validate the manifest
-	if valid, errorList := manifest.IsValid(); !valid {
-		var manifestErrorLog strings.Builder
-		manifestErrorLog.WriteString(fmt.Sprintf("plugin in directory \"%s\" could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath))
-		for _, err := range errorList {
-			manifestErrorLog.WriteString(fmt.Sprintf("\t- %s\n", err.Error()))
-		}
-
-		return errors.New(manifestErrorLog.String())
+	err = validateManifest(manifest)
+	if err != nil {
+		return err
 	}
 
 	// check for duplicate plugin names
@@ -76,29 +68,27 @@ func (opts *InstallOpts) validatePlugin(pluginDirectoryPath string) error {
 		existingCommandsMap[cmd.Name()] = true
 	}
 	if plugin.HasDuplicateCommand(manifest, existingCommandsMap) {
-		return fmt.Errorf(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, opts.repository())
+		return fmt.Errorf(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, opts.githubAssetManager.repository())
 	}
 
 	return nil
 }
 
 func (opts *InstallOpts) Run() error {
-	opts.ghClient = github.NewClient(nil)
-
 	// get all plugin assets info from github repository
-	assets, err := opts.getPluginAssetInfo()
+	assets, err := opts.githubAssetManager.getPluginAssetInfo()
 	if err != nil {
 		return err
 	}
 
 	// find correct assetID using system requirements
-	assetID, err := opts.getAssetID(assets)
+	assetID, err := opts.githubAssetManager.getAssetID(assets)
 	if err != nil {
 		return err
 	}
 
 	// download plugin asset zip file and save it as ReadCloser
-	rc, err := opts.getPluginAssetAsReadCloser(assetID)
+	rc, err := opts.githubAssetManager.getPluginAssetAsReadCloser(assetID)
 	if err != nil {
 		return err
 	}
@@ -111,7 +101,7 @@ func (opts *InstallOpts) Run() error {
 	defer os.Remove(pluginZipFilePath) // delete zip file after install command finishes
 
 	// try to extract content of plugin zip file and save it in default plugin directory
-	pluginDirectoryPath, err := opts.extractPluginAssetZipFile(pluginZipFilePath)
+	pluginDirectoryPath, err := extractPluginAssetZipFile(pluginZipFilePath, opts.githubAssetManager.getPluginDirectoryName())
 	if err != nil {
 		return err
 	}
@@ -124,18 +114,12 @@ func (opts *InstallOpts) Run() error {
 		return err
 	}
 
-	return opts.Print(fmt.Sprintf("Plugin %s successfully installed", opts.repository()))
+	return opts.Print(fmt.Sprintf("Plugin %s successfully installed", opts.githubAssetManager.repository()))
 }
 
-func InstallBuilder(plugins []*plugin.Plugin, existingCommands []*cobra.Command) *cobra.Command {
-	opts := &InstallOpts{
-		Opts: Opts{
-			plugins: plugins,
-		},
-		AssetOpts: AssetOpts{
-			existingCommands: existingCommands,
-		},
-	}
+func InstallBuilder(pluginOpts *Opts) *cobra.Command {
+	opts := &InstallOpts{}
+	opts.Opts = *pluginOpts
 
 	const use = "install"
 	cmd := &cobra.Command{
@@ -161,11 +145,12 @@ MongoDB provides an example plugin: https://github.com/mongodb/atlas-cli-plugin-
   atlas plugin install mongodb/atlas-cli-plugin-example@1.0.4
   atlas plugin install https://github.com/mongodb/atlas-cli-plugin-example/@v1.2.3`,
 		PreRunE: func(_ *cobra.Command, args []string) error {
-			githubRelease, err := parseGithubReleaseValues(args[0])
+			githubAssetRelease, err := parseGithubReleaseValues(args[0])
 			if err != nil {
 				return err
 			}
-			opts.githubRelease = githubRelease
+			opts.githubAssetManager = githubAssetRelease
+			opts.githubAssetManager.ghClient = github.NewClient(nil)
 
 			return opts.PreRunE(opts.checkForDuplicatePlugins)
 		},

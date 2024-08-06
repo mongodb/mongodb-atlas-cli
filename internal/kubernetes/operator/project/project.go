@@ -683,13 +683,29 @@ func buildAlertConfigurations(acProvider store.AlertConfigurationLister, project
 		return nil, nil, err
 	}
 
+	mapValueOrEmptyStr := func(data map[string]interface{}, key string) string {
+		if _, ok := data[key]; !ok {
+			return ""
+		}
+		if result, ok := data[key].(string); ok {
+			return result
+		}
+		return ""
+	}
+
 	convertMatchers := func(atlasMatcher []map[string]interface{}) []akov2.Matcher {
 		var res []akov2.Matcher
 		for _, m := range atlasMatcher {
+			if m == nil {
+				continue
+			}
 			res = append(res, akov2.Matcher{
-				FieldName: (m["FieldName"]).(string),
-				Operator:  (m["Operator"]).(string),
-				Value:     (m["Value"]).(string),
+				FieldName: mapValueOrEmptyStr(m, "FieldName"),
+				Operator:  mapValueOrEmptyStr(m, "Operator"),
+				Value:     mapValueOrEmptyStr(m, "Value"),
+				// FieldName: (m["FieldName"]).(string),
+				// Operator:  (m["Operator"]).(string),
+				// Value:     (m["Value"]).(string),
 			})
 		}
 		return res

@@ -19,6 +19,8 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"strings"
@@ -118,6 +120,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 	})
 
 	ctx := context.Background()
+	const localFile = "sampledata.archive"
+	var connectionString string
 	var client *mongo.Client
 	var myDB *mongo.Database
 	var myCol *mongo.Collection
@@ -142,7 +146,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		r, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(r))
 
-		connectionString := strings.TrimSpace(string(r))
+		connectionString = strings.TrimSpace(string(r))
 		client, err = mongo.Connect(ctx, options.Client().ApplyURI(connectionString))
 		req.NoError(err)
 		myDB = client.Database(databaseName)
@@ -153,16 +157,33 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		require.NoError(t, client.Disconnect(ctx))
 	})
 
-	t.Run("Seed database", func(t *testing.T) {
-		ids, err := myCol.InsertMany(ctx, []any{
-			bson.M{
-				"name": "test1",
-			}, bson.M{
-				"name": "test2",
-			},
-		})
+	t.Run("Download sample dataset", func(t *testing.T) {
+		out, err := os.Create(localFile)
+		defer out.Close()
 		req.NoError(err)
-		t.Log(ids)
+		resp, err := http.Get("https://atlas-education.s3.amazonaws.com/sampledata.archive")
+		defer resp.Body.Close()
+		req.NoError(err)
+		_, err = io.Copy(out, resp.Body)
+		req.NoError(err)
+	})
+
+	t.Cleanup(func() {
+		os.Remove(localFile)
+	})
+
+	t.Run("Seed database", func(t *testing.T) {
+		cmd := exec.Command("mongorestore",
+			"--uri", connectionString,
+			"--username", dbUsername,
+			"--password", dbUserPassword,
+			"--archive", localFile,
+		)
+
+		cmd.Env = os.Environ()
+
+		r, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, string(r))
 	})
 
 	t.Run("Create Search Index", func(t *testing.T) {

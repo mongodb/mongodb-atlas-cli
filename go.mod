@@ -42,8 +42,8 @@ require (
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0
 	go.mongodb.org/mongo-driver v1.16.0
 	golang.org/x/exp v0.0.0-20240318143956-a85f2c67cd81
-	golang.org/x/mod v0.19.0
-	golang.org/x/sys v0.22.0
+	golang.org/x/mod v0.20.0
+	golang.org/x/sys v0.23.0
 	golang.org/x/tools v0.23.0
 	google.golang.org/api v0.189.0
 	google.golang.org/protobuf v1.34.2

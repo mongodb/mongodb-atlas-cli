@@ -290,16 +290,26 @@ func TestDeploymentsLocal(t *testing.T) {
 				"$search": bson.M{
 					"index": searchIndexName,
 					"text": bson.M{
-						"query": "test1",
-						"path":  "name",
+						"query": "baseball",
+						"path":  "plot",
 					},
+				},
+			},
+			bson.M{
+				"$limit": 5,
+			},
+			bson.M{
+				"$project": bson.M{
+					"_id":   0,
+					"title": 1,
+					"plot":  1,
 				},
 			},
 		})
 		require.NoError(t, err)
 		var results []bson.M
 		require.NoError(t, c.All(ctx, &results))
-		assert.Len(t, results, 1)
+		assert.Len(t, results, 5)
 	})
 
 	t.Run("Test vectorSearch Index", func(t *testing.T) {

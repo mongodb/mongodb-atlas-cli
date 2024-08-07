@@ -159,13 +159,13 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 
 	t.Run("Download sample dataset", func(t *testing.T) {
 		out, err := os.Create(localFile)
+		require.NoError(t, err)
 		defer out.Close()
-		req.NoError(err)
 		resp, err := http.Get("https://atlas-education.s3.amazonaws.com/sampledata.archive")
+		require.NoError(t, err)
 		defer resp.Body.Close()
-		req.NoError(err)
 		_, err = io.Copy(out, resp.Body)
-		req.NoError(err)
+		require.NoError(t, err)
 	})
 
 	t.Cleanup(func() {
@@ -175,9 +175,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 	t.Run("Seed database", func(t *testing.T) {
 		cmd := exec.Command("mongorestore",
 			"--uri", connectionString,
-			"--username", dbUsername,
-			"--password", dbUserPassword,
-			"--archive", localFile,
+			"--archive="+localFile,
 		)
 
 		cmd.Env = os.Environ()

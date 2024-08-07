@@ -268,10 +268,23 @@ func TestStreams(t *testing.T) {
 
 		connections := response.GetResults()
 		a := assert.New(t)
-		a.Len(connections, 1)
-		a.Equal(connectionName, connections[0].GetName())
-		a.Equal("Kafka", connections[0].GetType())
-		a.Equal("example.com:8080,fraud.example.com:8000", *connections[0].BootstrapServers)
+		a.Len(connections, 2)
+
+		expected := []struct {
+			Name, Type, BootstrapServers string
+		}{
+			{Name: connectionName, Type: "Kafka", BootstrapServers: "example.com:8080,fraud.example.com:8000"},
+			// sample_stream_solar is a sample connection which is added by default to new stream instances
+			{Name: "sample_stream_solar", Type: "Sample", BootstrapServers: ""},
+		}
+		got := []struct {
+			Name, Type, BootstrapServers string
+		}{
+			{Name: connections[0].GetName(), Type: connections[0].GetType(), BootstrapServers: connections[0].GetBootstrapServers()},
+			{Name: connections[1].GetName(), Type: connections[1].GetType(), BootstrapServers: connections[1].GetBootstrapServers()},
+		}
+
+		a.ElementsMatch(expected, got)
 	})
 
 	t.Run("Updating a streams connection", func(t *testing.T) {
